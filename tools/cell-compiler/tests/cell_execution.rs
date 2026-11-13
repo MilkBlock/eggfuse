@@ -233,11 +233,60 @@ fn existing_constructor_results_continue_into_worker_unit_storage() {
                 continue;
             }
             assert!(units["prefix_instances"].as_u64().unwrap()>0,"{units}");
-            assert_eq!(units["prefix_rows"].as_u64().unwrap(),units["prefix_instances"].as_u64().unwrap()*2);
+            assert_eq!(units["prefix_rows"].as_u64().unwrap()+units["prefix_existing"].as_u64().unwrap(),
+                units["prefix_instances"].as_u64().unwrap()*2);
             assert_eq!(units["continuation_bytes"].as_u64().unwrap(),units["prefix_instances"].as_u64().unwrap()*48);
             assert!(candidate.graph.stats.unit_prepared_consumed>0);
             assert!(candidate.graph.stats.unit_prepared_invalidated>0,"repeated Stamp must discard the duplicate row");
             assert_eq!(candidate.graph.stats.unit_prepared_prefix_discarded,0);
+        }
+    }
+}
+
+#[test]
+fn worker_unit_witnesses_preserve_source_deletion_recreation_and_pending_union() {
+    for change in ["same", "delete", "recreate", "union"] {
+        let mut source=String::from(r#"
+(datatype E (N i64) (F E) (Seen E))
+(function Stamp (E) Unit :merge old)
+(function Ticket (E) Unit :merge new)
+(ruleset step) (ruleset observe)
+"#);
+        match change {
+            "delete" | "recreate" => {
+                source+="(rule ((= x (N n))) ((delete (Stamp x)) (delete (Ticket (F x)))) :ruleset step)\n";
+                if change=="recreate" {
+                    source+="(rule ((= x (N n))) ((set (Stamp x) ()) (set (Ticket (F x)) ())) :ruleset step)\n";
+                }
+            }
+            "union" => source+="(rule ((= x (N n)) (= n 1)) ((union x (N 0))) :ruleset step)\n",
+            _ => (),
+        }
+        source+=r#"
+(rule ((= x (N n))) ((set (Stamp x) ())) :ruleset step)
+(rule ((= x (N n))) ((let a (F x)) (set (Ticket a) ())) :ruleset step)
+(rule ((Stamp x) (Ticket (F x))) ((Seen x)) :ruleset observe)
+"#;
+        for n in 0..64 {source+=&format!("(set (Stamp (N {n})) ()) (set (Ticket (F (N {n}))) ())\n");}
+        source+="(run-schedule (seq (run step) (run observe)))";
+        let mut control=executor(&source,0);control.execute().unwrap();
+        for workers in [1,4] {
+            let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+            candidate.execute().unwrap();same(&control,&candidate);
+            assert_eq!(candidate.graph.stats.merge_calls,control.graph.stats.merge_calls);
+            let report=candidate.report();let units=&report["query_workers"]["stats"]["execution"]["units"];
+            if workers==1 {assert_eq!(units["probes"],0);continue;}
+            assert!(units["existing"].as_u64().unwrap()>0,"{change}: {units}");
+            assert!(units["prefix_existing"].as_u64().unwrap()>0,"{change}: {units}");
+            match change {
+                "same" => {
+                    assert_eq!(units["rows"],0);
+                    assert!(candidate.graph.stats.unit_prepared_existing>0);
+                    assert_eq!(candidate.graph.stats.unit_prepared_stale,0);
+                }
+                "union" => assert!(candidate.graph.stats.unit_prepared_generation_fallback>0),
+                _ => assert!(candidate.graph.stats.unit_prepared_witness_rejected>0),
+            }
         }
     }
 }

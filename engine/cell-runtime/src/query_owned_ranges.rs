@@ -222,9 +222,10 @@ pub(super) fn run(
                         known.facts.with_rows(frame.witnesses.iter().copied()),
                         epoch,
                     );
-                    local[code.rule].prepare(
+                    local[code.rule].prepare_with_reads(
                         &templates[code.template],
                         &mut answer,
+                        Some(reads),
                         &mut done.counts.execution,
                     );
                     if let Some(plan) = &local[code.rule].constructor {

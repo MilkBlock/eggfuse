@@ -430,7 +430,7 @@ impl Executor {
                         (slot, field.operand_in(reads.parents, |col| &entry.values[col], &frame.values, None).into_owned())),&mut counts.execution),
                     epoch, parent: None, continuation: None, compiled: true,
                 };
-                local.prepare(template,&mut answer,&mut counts.execution);
+                local.prepare_with_reads(template,&mut answer,Some(&reads),&mut counts.execution);
                 if let Some(plan) = &local.constructor {
                     plan.complete(&mut answer,Some(&reads),&mut frame.constructors,
                         &mut counts.constructors,&mut counts.execution);
@@ -460,7 +460,7 @@ impl Executor {
             self.graph.stats.register_result_writes += counts.result_writes;
             self.graph.stats.key_operations += counts.key_operations;
             self.graph.stats.residual_candidates += counts.point_reads;
-            self.graph.key_lookup_calls.set(self.graph.key_lookup_calls.get() + counts.point_reads + counts.execution.constructor.lookups);
+            self.graph.key_lookup_calls.set(self.graph.key_lookup_calls.get() + counts.point_reads + counts.execution.constructor.lookups + counts.execution.units.probes);
             out.append(&mut answers);
         }
         Ok(true)
@@ -944,7 +944,7 @@ impl Workers {
         #[cfg(feature="parallel-residuals")] schedule:&crate::entry_schedule::Scheduler) -> Result<()> {
         #[cfg(feature="cell-sync-diagnostics")]
         let mut diagnostic = crate::sync_diagnostics::Clock::new();
-        let constructor_groups = self.matched.constructor_groups;
+        let read_groups = self.matched.constructor_groups + self.matched.unit_groups;
         self.completed_rules.clear();
         let mut ready = ready::take(g, matches, spine, &mut self.matched);
         let range_pending = {
@@ -962,7 +962,7 @@ impl Workers {
         let residual_active=!prepared.is_empty();
         #[cfg(not(feature="parallel-residuals"))]
         let residual_active=false;
-        let reads = if self.cell_queries.is_empty() && !range_pending && constructor_groups == self.matched.constructor_groups { None }
+        let reads = if self.cell_queries.is_empty() && !range_pending && read_groups == self.matched.constructor_groups + self.matched.unit_groups { None }
             else { g.query_reads(&[], &mut self.stats.admission_table_checks) };
         if (!self.cell_queries.is_empty() || range_pending) && reads.is_none() {
             return Err("Cell query Run snapshot changed before completion".into());
@@ -1082,7 +1082,7 @@ impl Workers {
                 probe.end(matches!(answer, Ok(Some(_))), answer.is_err());
                 match answer {
                     Ok(Some(mut answer)) => {
-                        local[code.rule].prepare(&templates[code.template],&mut answer,&mut counts.execution);
+                        local[code.rule].prepare_with_reads(&templates[code.template],&mut answer,Some(&reads),&mut counts.execution);
                         if let Some(plan) = &local[code.rule].constructor {
                             plan.complete(&mut answer,Some(&reads),&mut frame.constructors,
                                 &mut counts.constructors,&mut counts.execution);
@@ -1317,7 +1317,7 @@ impl Workers {
         drop(ready);
         drop(reads);
         g.record_constructor_query_work(&completed.constructors);
-        g.key_lookup_calls.set(g.key_lookup_calls.get() + completed.execution.constructor.lookups);
+        g.key_lookup_calls.set(g.key_lookup_calls.get() + completed.execution.constructor.lookups + completed.execution.units.probes);
         self.stats.constructors.add(&completed.constructors);
         self.stats.execution.add(&completed.execution);
         self.matched.execution.add(&completed.execution);
@@ -1387,7 +1387,7 @@ impl Workers {
             self.stats.spine_entries += counts.entries;
             self.stats.spine_point_reads += counts.point_reads;
             spine.stats.record_query_worker(&counts);
-            g.key_lookup_calls.set(g.key_lookup_calls.get() + counts.point_reads + counts.execution.constructor.lookups);
+            g.key_lookup_calls.set(g.key_lookup_calls.get() + counts.point_reads + counts.execution.constructor.lookups + counts.execution.units.probes);
             g.stats.key_operations += counts.key_operations;
             self.absorb(&counts, worker);
             self.stats.completion_headers += counts.completion_headers;
@@ -1410,7 +1410,7 @@ impl Workers {
                 self.stats.spine_point_reads+=done.counts.point_reads;
                 spine.stats.record_query_worker(&done.counts);
                 g.record_constructor_query_work(&done.counts.constructors);
-                g.key_lookup_calls.set(g.key_lookup_calls.get()+done.counts.point_reads+done.counts.execution.constructor.lookups);
+                g.key_lookup_calls.set(g.key_lookup_calls.get()+done.counts.point_reads+done.counts.execution.constructor.lookups+done.counts.execution.units.probes);
                 g.stats.key_operations+=done.counts.key_operations;
                 self.absorb(&done.counts,done.worker);
 

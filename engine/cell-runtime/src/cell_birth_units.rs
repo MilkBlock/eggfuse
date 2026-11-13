@@ -9,6 +9,7 @@ pub(super) struct Site {
     pub table: usize,
     pub keys: Vec<Arg>,
 }
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(super) struct Tail {
     pub sites: Vec<Site>,
@@ -23,8 +24,8 @@ pub(crate) struct Row {
     pub(super) registered: Option<(usize, bool, bool, bool)>,
 }
 impl Row {
-    pub(crate) fn prepared(table: usize, key: Vec<Value>) -> Self {
-        let fields = Graph::shared_fields(&key, &Value::Int(0));
+    pub(crate) fn prepared(table: usize, key: &[Value]) -> Self {
+        let fields = Graph::shared_fields(key, &Value::Int(0));
         Self { fields:fields.clone(), registered: None, function: Function { writer: None,
             #[cfg(feature="receipt-slots")] port_slot: 0,
             table, fields, canonical:true, projected:false, epoch: 0, live: true, origin: None } }
@@ -159,6 +160,41 @@ impl Plan {
     }
 }
 impl Graph {
+    // Only the typed Unit preparation plan creates these witnesses, against
+    // the current Run's immutable inputs. Function indices are not recycled;
+    // keys change only through union repair, which expires this generation.
+    // This is not a general replacement for looking up an arbitrary receipt.
+    pub(crate) fn apply_prepared_unit(&mut self, unit: crate::cell::unit_prepare::Unit,
+        origin: Option<FactRef>, keep_key: bool) -> Result<Option<(usize, bool, Option<Vec<Value>>)>> {
+        use crate::cell::unit_prepare::Unit;
+        let table = unit.table();
+        if !self.accept_prepared_unit(table) { self.stats.unit_prepared_stale += 1; return Ok(None); }
+        match unit {
+            Unit::Row(mut row) => {
+                row.function.origin = origin;
+                row.function.epoch = self.epoch;
+                let key = keep_key.then(||row.function.key().to_vec());
+                let (index, inserted) = self.commit_unit_row(row)?;
+                self.stats.unit_prepared_consumed += 1;
+                self.stats.unit_prepared_invalidated += u64::from(!inserted);
+                Ok(Some((index, inserted, key)))
+            }
+            Unit::Existing(w) => {
+                let Some(row) = self.functions.get(w.index).filter(|f| f.live && f.table == table
+                    && f.epoch == w.epoch && f.canonical && !f.projected && f.value() == &Value::Int(0)) else {
+                    self.stats.unit_prepared_witness_rejected += 1;
+                    self.stats.unit_prepared_stale += 1;
+                    return Ok(None);
+                };
+                let key = keep_key.then(||row.key().to_vec());
+                // Keep ordinary merge accounting, but neither build a duplicate
+                // row nor rehash its key. Unit old/new merge is total and exact.
+                self.merge_value(table, Value::Int(0), Value::Int(0))?;
+                self.stats.unit_prepared_existing += 1;
+                Ok(Some((w.index, false, key)))
+            }
+        }
+    }
     pub(crate) fn prepares_unit_storage(&self, table: usize) -> bool { !self.units.owned[table] }
     pub(crate) fn accept_prepared_unit(&mut self, table: usize) -> bool {
         if self.units.owned[table] { self.stats.unit_prepared_storage_fallback += 1; return false; }
@@ -217,5 +253,60 @@ impl Graph {
             else {self.stats.unit_registry_deferred_subscriptions+=1;}
         }
         Ok((index, true))
+    }
+}
+
+#[cfg(test)]
+mod witness_tests {
+    use super::*;
+    use crate::cell::unit_prepare::Unit;
+
+    #[test]
+    fn exact_unit_witness_is_checked_at_its_source_effect() {
+        for change in ["same", "delete", "recreate", "pending", "union", "epoch", "noncanonical"] {
+            let p=serde_json::from_value(serde_json::json!({
+                "tables":[{"name":"Ticket","schema":[{"kind":"eq","name":"E"},{"kind":"Unit","name":"Unit"}],
+                    "constructor":false,"virtual_fact":false,"internal":false,"merge":{"var":"old"}}],
+                "templates":[],"rules":[],"sets":{},"control":[],"initial":[],"table_templates":[],"artifact":{},
+                "multi_stage":crate::multistage::MultiStage::default(),
+                "entry_schedule":crate::entry_schedule::Plan::default()
+            })).unwrap();
+            let mut g=Graph::new(p).unwrap();
+            g.merge_programs_enabled=false;
+            g.set_function(0,vec![Value::Eq(9)],Value::Int(0)).unwrap();
+            g.set_function(0,vec![Value::Eq(10)],Value::Int(0)).unwrap();
+            g.repair().unwrap();g.changes.clear();
+            let reads=g.query_reads(&[],&mut 0).unwrap();
+            let witness=reads.unit_witness(0,&[Value::Eq(9)]).unwrap();
+            assert_ne!(witness.index,reads.unit_witness(0,&[Value::Eq(10)]).unwrap().index);
+            assert!(reads.unit_witness(0,&[Value::Eq(11)]).is_none());
+            drop(reads);
+            g.sealed_generation=Some(g.stats.unions);g.epoch+=1;
+            match change {
+                "delete" | "recreate" => {
+                    assert!(g.hide(0,&[Value::Eq(9)],true).unwrap());
+                    if change=="recreate" {g.set_function(0,vec![Value::Eq(9)],Value::Int(0)).unwrap();}
+                }
+                "pending" | "union" => {
+                    g.enqueue_union(Value::Eq(9),Value::Eq(7)).unwrap();
+                    if change=="union" {g.repair().unwrap();}
+                }
+                "epoch" => g.functions[witness.index].epoch+=1,
+                "noncanonical" => g.functions[witness.index].canonical=false,
+                _ => (),
+            }
+            let before=(g.functions.len(),g.key_lookup_calls.get(),g.stats.function_updates,g.stats.merge_calls);
+            let result=g.apply_prepared_unit(Unit::Existing(witness),None,true).unwrap();
+            assert_eq!((g.functions.len(),g.key_lookup_calls.get(),g.stats.function_updates),(before.0,before.1,before.2));
+            if change=="same" {
+                assert_eq!(result,Some((witness.index,false,Some(vec![Value::Eq(9)]))));
+                assert_eq!(g.stats.merge_calls,before.3+1);
+                assert_eq!(g.stats.unit_prepared_existing,1);
+            } else {
+                assert!(result.is_none(),"{change}");
+                assert_eq!(g.stats.merge_calls,before.3);
+                assert_eq!(g.stats.unit_prepared_stale,1);
+            }
+        }
     }
 }

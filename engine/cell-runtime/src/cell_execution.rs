@@ -287,8 +287,13 @@ impl Plan {
     pub fn prepare(
         &self, template: &Template, instance: &mut super::Instance, counts: &mut Counts,
     ) {
+        self.prepare_with_reads(template, instance, None, counts);
+    }
+    #[cfg(feature = "sparse-cells")]
+    pub fn prepare_with_reads(&self, template: &Template, instance: &mut super::Instance,
+        reads: Option<&crate::graph::query_reads::QueryReads<'_>>, counts: &mut Counts) {
         self.prepare_scalars(template, instance, counts);
-        if let Some(plan) = &self.units { plan.prepare(instance, &mut counts.units); }
+        if let Some(plan) = &self.units { plan.prepare(instance, reads, &mut counts.units); }
     }
     #[cfg(feature = "sparse-cells")]
     fn prepare_scalars(

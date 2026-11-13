@@ -232,6 +232,12 @@ pub struct Stats {
     pub unit_prepared_generation_fallback: u64,
     #[serde(default)]
     pub unit_prepared_prefix_discarded: u64,
+    #[serde(default)]
+    pub unit_prepared_existing: u64,
+    #[serde(default)]
+    pub unit_prepared_witness_rejected: u64,
+    #[serde(default)]
+    pub unit_prepared_prefix_witness_discarded: u64,
     pub unit_registry_batches: u64,
     pub unit_registry_candidates: u64,
     pub unit_registry_installs: u64,
@@ -1021,7 +1027,7 @@ impl Graph {
         write: &crate::row_kernel::Write,
         keep_key: bool,
         #[cfg(feature="sparse-cells")] prepared:usize,
-        #[cfg(feature="sparse-cells")] unit: Option<cell_births::units::Row>,
+        #[cfg(feature="sparse-cells")] unit: Option<crate::cell::unit_prepare::Unit>,
     ) -> Result<(u32, usize, Option<Vec<Value>>, bool)> {
         let template = self.program.rules[rule].template;
         let id = self.reserve_cell_id()?;
@@ -1030,11 +1036,8 @@ impl Graph {
         self.stats.single_writes += 1;
         let before = self.stats.function_updates;
         #[cfg(feature="sparse-cells")]
-        if let Some(mut row) = unit {
-            if self.accept_prepared_unit(write.table) {
-                row.function.epoch = self.epoch;
-                let key = keep_key.then(||row.function.key().to_vec());
-                let (index, changed) = self.commit_unit_row(row)?;
+        if let Some(unit) = unit {
+            if let Some((index, changed, key)) = self.apply_prepared_unit(unit,None,keep_key)? {
                 if changed {
                     let frame = self.new_cell(template, values, parent);
                     self.keep_writer(index, id, write.op, frame);
@@ -1042,11 +1045,8 @@ impl Graph {
                     self.stats.rhs_frames_avoided += 1;
                     self.stats.transient_writes += 1;
                 }
-                self.stats.unit_prepared_consumed += 1;
-                self.stats.unit_prepared_invalidated += u64::from(!changed);
                 return Ok((id, index, key, changed));
             }
-            self.stats.unit_prepared_stale += 1;
         }
         #[cfg(feature="sparse-cells")]
         if parent.is_none() && let Some(ports)=&write.ports {

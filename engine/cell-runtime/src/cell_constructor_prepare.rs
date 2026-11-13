@@ -218,7 +218,7 @@ impl Plan {
         scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
         counts: &mut super::execution::Counts) {
         self.prepare(instance, reads, scratch, work, &mut counts.constructor);
-        self.prepare_units(instance, &mut counts.units);
+        self.prepare_units(instance, reads, &mut counts.units);
     }
     pub fn has_unit_tail(&self) -> bool { self.units.is_some() }
     pub fn derive(p: &Program, rule: usize) -> Option<Self> {

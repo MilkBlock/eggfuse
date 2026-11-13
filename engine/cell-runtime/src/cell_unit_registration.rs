@@ -517,7 +517,7 @@ mod tests {
         for stop in [0,1,31,32,63,64] {
             let mut g=graph(true);let mut expected=graph(true);
             let mut done:Vec<_>=(0..64).map(|cell|completed((0..2).map(|table|
-                units::Row::prepared(table,key(cell%19,true))).collect())).collect();
+                units::Row::prepared(table,&key(cell%19,true))).collect())).collect();
             let mut pending=g.prepare_cell_registration(&mut done).unwrap();
             let tasks=std::mem::take(&mut pending.tasks);
             let (continue_tx,continue_rx)=mpsc::channel();let continue_rx=Mutex::new(continue_rx);
@@ -551,7 +551,7 @@ mod tests {
             });
             assert!(released && finished.load(Ordering::Acquire));assert_eq!(adopted,stop);
             g.finish_cell_registration(pending.registration);
-            for cell in 0..stop {for table in 0..2 {expected.commit_unit_row(units::Row::prepared(table,key(cell%19,true))).unwrap();}}
+            for cell in 0..stop {for table in 0..2 {expected.commit_unit_row(units::Row::prepared(table,&key(cell%19,true))).unwrap();}}
             assert_eq!(g.export().unwrap(),expected.export().unwrap());
             assert_eq!(g.query_versions,expected.query_versions);
             assert_eq!((g.changes.events,g.changes.distinct_events),(expected.changes.events,expected.changes.distinct_events));
@@ -565,7 +565,7 @@ mod tests {
         for scalar in [false,true] {for preexisting in [false,true] {for stop in [0,1,2,5,19,64] {
             let mut g=graph(scalar);let mut expected=graph(scalar);
             if preexisting {for graph in [&mut g,&mut expected] {graph.set_function(0,key(0,scalar),Value::Int(0)).unwrap();}}
-            let rows:Vec<_>=(0..64).map(|i|units::Row::prepared(i%2,key((i/2)%9,scalar))).collect();
+            let rows:Vec<_>=(0..64).map(|i|units::Row::prepared(i%2,&key((i/2)%9,scalar))).collect();
             let fields:Vec<_>=rows.iter().map(|r|std::sync::Arc::downgrade(&r.fields)).collect();
             let mut done=vec![completed(rows)];
             let registration=g.plan_cell_registration(&mut done,&pool).unwrap();
@@ -578,7 +578,7 @@ mod tests {
                 let pointer=row.fields.as_ptr();let (index,new)=g.commit_unit_row(row).unwrap();
                 if new {assert_eq!(g.functions[index].fields.as_ptr(),pointer,"adopt the worker's row allocation");}
                 actual.push((index,new));
-                reference.push(expected.commit_unit_row(units::Row::prepared(i%2,key((i/2)%9,scalar))).unwrap());
+                reference.push(expected.commit_unit_row(units::Row::prepared(i%2,&key((i/2)%9,scalar))).unwrap());
             }
             // This is also the normal error path: restore only the committed
             // prefix and invalidate the prepared suffix, without a worker join.
@@ -621,7 +621,7 @@ mod tests {
     fn held_tables_cannot_be_read_as_empty_or_as_unallocated_rows() {
         let pool=rayon::ThreadPoolBuilder::new().num_threads(2).build().unwrap();
         let mut g=graph(true);g.set_function(0,key(0,true),Value::Int(0)).unwrap();
-        let mut done=vec![completed((0..40).map(|i|units::Row::prepared(i%2,key(i,true))).collect())];
+        let mut done=vec![completed((0..40).map(|i|units::Row::prepared(i%2,&key(i,true))).collect())];
         let registration=g.plan_cell_registration(&mut done,&pool).unwrap();
         assert!((registration.start..registration.end).all(|i|g.function(i).is_none()),
             "reserved slots never impersonate committed rows");

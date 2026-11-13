@@ -1,7 +1,7 @@
 //! Total Unit writes whose operands come exclusively from the successful Cell
 //! match and its pure scalar program. Candidates stay in that same instance;
 //! only the source winner may give a row an origin and publish its receipt.
-use crate::{cell::{Definition, Instance}, graph::cell_births::units::Row,
+use crate::{cell::{Definition, Instance}, graph::{cell_births::units::Row, query_reads::QueryReads},
     program::{Arg, Call, Op, Program}, value::Value};
 use serde::Serialize;
 
@@ -10,10 +10,18 @@ struct Site { operation: usize, table: usize, keys: Vec<Arg> }
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) struct Plan { sites: Vec<Site>, required: Vec<usize> }
 #[derive(Default, Debug)]
-pub(crate) struct Prepared(Vec<(usize, Row)>);
+pub(crate) struct Prepared(Vec<(usize, Unit)>);
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct Witness { pub table: usize, pub index: usize, pub epoch: u64 }
+#[derive(Debug)]
+pub(crate) enum Unit { Row(Row), Existing(Witness) }
+impl Unit {
+    pub fn table(&self) -> usize { match self { Self::Row(row) => row.function.table, Self::Existing(w) => w.table } }
+}
 impl Prepared {
     pub fn len(&self) -> usize { self.0.len() }
-    pub fn take(&mut self, operation: usize) -> Option<Row> {
+    pub fn witnesses(&self) -> usize { self.0.iter().filter(|(_,u)|matches!(u,Unit::Existing(_))).count() }
+    pub fn take(&mut self, operation: usize) -> Option<Unit> {
         let rows = &mut self.0;
         // Stored in reverse source order. An earlier operation can have been
         // supplied by a proven Cursor; discard its unused candidate here.
@@ -25,6 +33,7 @@ impl Prepared {
 pub(crate) struct Counts {
     pub instances: u64, pub rows: u64, pub bytes: u64, pub missing: u64,
     pub prefix_instances: u64, pub prefix_rows: u64, pub continuation_bytes: u64,
+    pub probes: u64, pub existing: u64, pub prefix_existing: u64, pub key_spill_bytes: u64,
 }
 impl Counts {
     pub fn add(&mut self, other: &Self) {
@@ -32,6 +41,8 @@ impl Counts {
         self.bytes += other.bytes; self.missing += other.missing;
         self.prefix_instances += other.prefix_instances; self.prefix_rows += other.prefix_rows;
         self.continuation_bytes += other.continuation_bytes;
+        self.probes += other.probes; self.existing += other.existing;
+        self.prefix_existing += other.prefix_existing; self.key_spill_bytes += other.key_spill_bytes;
     }
 }
 impl Plan {
@@ -76,13 +87,13 @@ impl Plan {
             + self.required.capacity()*std::mem::size_of::<usize>()
             + self.sites.iter().map(|s|s.keys.capacity()*std::mem::size_of::<Arg>()).sum::<usize>()
     }
-    pub fn prepare(&self, instance: &mut Instance, counts: &mut Counts) {
+    pub fn prepare(&self, instance: &mut Instance, reads: Option<&QueryReads<'_>>, counts: &mut Counts) {
         if !instance.constructor.pending() { return; }
         instance.constructor = super::constructor_prepare::Prepared::Absent;
-        let rows = self.rows(instance, counts);
+        let rows = self.rows(instance, reads, counts);
         if rows.len() != 0 { instance.constructor = super::constructor_prepare::Prepared::Units(rows); }
     }
-    pub(super) fn rows(&self, instance: &Instance, counts: &mut Counts) -> Prepared {
+    pub(super) fn rows(&self, instance: &Instance, reads: Option<&QueryReads<'_>>, counts: &mut Counts) -> Prepared {
         // Inline small Runs already have the final source executor on their
         // host. Materializing another candidate there adds allocation without
         // increasing parallel work; leave their ordinary write path intact.
@@ -96,13 +107,23 @@ impl Plan {
         for site in &self.sites {
             let Some(keys) = site.keys.iter().map(|a| match a {
                 Arg::Slot(s) => instance.values.get(s).cloned(), Arg::Literal(v) => Some(v.clone()),
-            }).collect::<Option<Vec<_>>>() else { counts.missing += 1; continue; };
-            let row = Row::prepared(site.table, keys);
+            }).collect::<Option<smallvec::SmallVec<[Value;4]>>>() else { counts.missing += 1; continue; };
+            if keys.spilled() { counts.key_spill_bytes += (keys.capacity()*std::mem::size_of::<Value>()) as u64; }
+            if let Some(reads) = reads {
+                counts.probes += 1;
+                if let Some(witness) = reads.unit_witness(site.table, &keys) {
+                    counts.existing += 1;
+                    rows.push((site.operation, Unit::Existing(witness)));
+                    continue;
+                }
+            }
+            let row = Row::prepared(site.table, &keys);
             counts.bytes += (row.fields.len()*std::mem::size_of::<Value>()) as u64;
-            rows.push((site.operation, row));
+            counts.rows += 1;
+            rows.push((site.operation, Unit::Row(row)));
         }
-        counts.bytes += (rows.capacity()*std::mem::size_of::<(usize, Row)>()) as u64;
-        counts.instances += 1; counts.rows += rows.len() as u64;
+        counts.bytes += (rows.capacity()*std::mem::size_of::<(usize, Unit)>()) as u64;
+        counts.instances += 1;
         rows.reverse();
         Prepared(rows)
     }

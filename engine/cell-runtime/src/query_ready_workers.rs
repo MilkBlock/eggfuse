@@ -17,6 +17,7 @@ pub(crate) struct Stats {
     pub header_growths: u64,
     pub header_capacity_bytes: u64,
     pub constructor_groups: u64,
+    pub unit_groups: u64,
     pub mixed_invocations: u64,
     pub matched_only_invocations: u64,
     pub instances: u64,
@@ -67,6 +68,7 @@ pub(super) fn take<'a>(g: &'a Graph, matches: &mut [(usize, Vec<Instance>)],
         groups.push(Group { code, template: &g.program.templates[g.program.rules[*rule].template],
             rows: Rows::Matched(std::mem::take(rows)), rule: *rule, target });
         stats.constructor_groups += u64::from(code.constructor.is_some());
+        stats.unit_groups += u64::from(code.constructor.is_none() && code.units.is_some());
     }
     for (rule, rows) in spine.deferred_rows() {
         let code = &g.program.executions[rule];
@@ -76,6 +78,7 @@ pub(super) fn take<'a>(g: &'a Graph, matches: &mut [(usize, Vec<Instance>)],
         groups.push(Group { code, template: &g.program.templates[g.program.rules[rule].template],
             rows: Rows::Deferred(std::mem::take(rows)), rule, target: usize::MAX });
         stats.constructor_groups += u64::from(code.constructor.is_some());
+        stats.unit_groups += u64::from(code.constructor.is_none() && code.units.is_some());
         stats.deferred_groups += 1;
     }
     stats.groups += groups.len() as u64;
@@ -148,13 +151,13 @@ impl Work {
             super::with_worker_frame(|frame| {
                 for row in rows {
                     let row = row.frame_mut();
-                    code.prepare(template, row, &mut work.execution);
+                    code.prepare_with_reads(template, row, reads, &mut work.execution);
                     plan.complete(row, reads, &mut frame.constructors, &mut work.constructors,
                         &mut work.execution);
                 }
             });
         } else {
-            for row in rows { code.prepare(template, row.frame_mut(), &mut work.execution); }
+            for row in rows { code.prepare_with_reads(template, row.frame_mut(), reads, &mut work.execution); }
         }
         if deferred { work.deferred_instances = work.instances; work.deferred_operations = work.execution.operations; }
         work.empty_chunks = u64::from(work.execution.operations == 0);

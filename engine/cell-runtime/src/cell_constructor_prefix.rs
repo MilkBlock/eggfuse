@@ -59,14 +59,17 @@ impl Plan {
     }
     pub(crate) fn prefix_width(&self) -> usize { self.prefix.len() }
     pub(crate) fn prepare_units(&self, instance: &mut Instance,
+        reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         counts: &mut super::super::unit_prepare::Counts) {
         let Some(plan) = &self.units else { return; };
         if !matches!(instance.constructor, Prepared::Prefix(_)) || instance.prepared != self.prefix.len() { return; }
-        let units = plan.rows(instance, counts);
+        let before = (counts.rows, counts.existing);
+        let units = plan.rows(instance, reads, counts);
         if units.len() == 0 { return; }
         let Prepared::Prefix(results) = std::mem::take(&mut instance.constructor) else { unreachable!() };
         counts.prefix_instances += 1;
-        counts.prefix_rows += units.len() as u64;
+        counts.prefix_rows += counts.rows - before.0;
+        counts.prefix_existing += counts.existing - before.1;
         counts.continuation_bytes += std::mem::size_of::<PrefixUnits>() as u64;
         instance.constructor = Prepared::PrefixUnits(Box::new(PrefixUnits { results, units }));
     }
@@ -161,7 +164,9 @@ impl Graph {
         self.stats.constructor_prefix_table_checks += checks;
         if valid { Some((count, results)) } else {
             self.stats.constructor_prefix_rejected += 1;
-            self.stats.unit_prepared_prefix_discarded += units.len() as u64;
+            let witnesses = units.witnesses();
+            self.stats.unit_prepared_prefix_discarded += (units.len() - witnesses) as u64;
+            self.stats.unit_prepared_prefix_witness_discarded += witnesses as u64;
             *units = Default::default();
             // Eq evidence may expire without invalidating captured scalars.
             // The initial segment had to succeed before the first prefix step.
@@ -282,7 +287,7 @@ mod tests {
             plan.prepare(&mut instance,g.query_reads(&[],&mut 0).as_ref(),
                 &mut Default::default(),&mut Default::default(),&mut Counts::default());
             let mut instance=rayon::ThreadPoolBuilder::new().num_threads(1).build().unwrap().install(move|| {
-                plan.prepare_units(&mut instance,&mut Default::default());instance
+                plan.prepare_units(&mut instance,None,&mut Default::default());instance
             });
             assert_eq!(instance.values.get(&1),Some(&first));
             assert_eq!(instance.values.get(&2),Some(&second));
@@ -298,7 +303,8 @@ mod tests {
             let mut witness=None;
             let prefix=g.seal_constructor_prefix(0,&mut instance.values,&mut instance.prepared,results,&mut witness,&mut units);
             if change=="same" {
-                assert_eq!(units.take(2).unwrap().fields[0],second);
+                let crate::cell::unit_prepare::Unit::Row(row)=units.take(2).unwrap() else {panic!("prepared row")};
+                assert_eq!(row.fields[0],second);
                 assert_eq!(g.consume_constructor_prefix(0,prefix.unwrap().0,false),2);
                 assert_eq!(instance.values.get(&1),Some(&first));
                 assert_eq!(g.stats.constructor_prefix_operations,2);

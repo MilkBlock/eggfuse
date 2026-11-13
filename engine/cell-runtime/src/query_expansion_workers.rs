@@ -363,7 +363,7 @@ impl Workers {
         g.stats.register_seeds+=c.entries-w.admission_rejected;g.stats.register_answers+=c.answers;
         g.stats.register_result_writes+=c.result_writes;g.stats.register_expansion_rows+=w.expansion_rows;
         g.stats.residual_candidates+=c.point_reads+w.row_reads;g.stats.key_operations+=c.key_operations;
-        g.key_lookup_calls.set(g.key_lookup_calls.get()+c.point_reads+c.execution.constructor.lookups);
+        g.key_lookup_calls.set(g.key_lookup_calls.get()+c.point_reads+c.execution.constructor.lookups+c.execution.units.probes);
         self.absorb(&c,worker);
     }
     pub(super) fn record_expansion_run(&mut self,seconds:f64,pooled:bool,header_capacity:usize) {
@@ -515,7 +515,7 @@ impl Host<'_, '_, '_> {
             (slot,f.operand_in(self.reads.parents,|c|&self.entry.values[c],&self.frame.values,expanded).into_owned())),&mut self.counts.execution),
             self.known.with_rows(self.frame.witnesses.iter().copied()),epoch);
         answer.compiled=true;
-        self.local.prepare(self.template,&mut answer,&mut self.counts.execution);
+        self.local.prepare_with_reads(self.template,&mut answer,Some(self.reads),&mut self.counts.execution);
         if let Some(plan) = &self.local.constructor {
             plan.complete(&mut answer,Some(self.reads),&mut self.frame.constructors,
                 &mut self.counts.constructors,&mut self.counts.execution);

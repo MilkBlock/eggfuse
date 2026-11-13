@@ -209,17 +209,12 @@ impl Executor {
         #[cfg(not(feature = "view-consumers"))]
         let source = None;
         #[cfg(feature="sparse-cells")]
-        if let Some(mut row) = execution.units.take(position) {
-            if self.graph.accept_prepared_unit(row.function.table) {
-                row.function.origin = Some(FactRef { cell: execution.cell, op: position as u32 });
-                row.function.epoch = self.graph.epoch;
-                let (index, inserted) = self.graph.commit_unit_row(row)?;
+        if let Some(unit) = execution.units.take(position) {
+            if let Some((index, _, _)) = self.graph.apply_prepared_unit(unit,
+                Some(FactRef { cell: execution.cell, op: position as u32 }),false)? {
                 execution.effects.writer().record(position, Dependency::Function(index));
-                self.graph.stats.unit_prepared_consumed += 1;
-                self.graph.stats.unit_prepared_invalidated += u64::from(!inserted);
                 return Ok(true);
             }
-            self.graph.stats.unit_prepared_stale += 1;
         }
         (crate::cell::RhsFrame { cell: execution.cell, receipts: &mut execution.effects })
             .execute(&mut self.graph, position, op, source)

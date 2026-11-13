@@ -55,6 +55,14 @@ impl Graph {
     }
 }
 impl QueryReads<'_> {
+    /// A typed Unit continuation can reuse this exact row at its source effect
+    /// position if the original Run generation and row lifecycle still hold.
+    pub(crate) fn unit_witness(&self, table: usize, keys: &[Value]) -> Option<crate::cell::unit_prepare::Witness> {
+        let &index = self.keys[table].get(keys, self.functions)?;
+        let f = self.functions.get(index)?;
+        (f.live && f.table == table && f.canonical && !f.projected && f.value() == &Value::Int(0))
+            .then_some(crate::cell::unit_prepare::Witness { table, index, epoch:f.epoch })
+    }
     pub fn constructor_available(&self, table: usize) -> bool {
         match &self.constructors {
             Some(Constructors::Canonical(_)) => true,
