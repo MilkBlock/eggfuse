@@ -138,3 +138,44 @@ then compare with:
 ```sh
 python3 benchmarks/cell-bake-owner-merge/barrier_results.py out/cell-restoration-boundaries out/cell-explicit-barriers benchmarks/cell-bake-owner-merge/barrier-results.json
 ```
+
+## Stable-node projection scope
+
+An offline join of the same saved live fact lifecycles with component frame
+ordinals and shared shape programs covers every stable node exactly. No new
+runtime census state or rerun was needed. `template_projection_census.py` rejects
+missing source frames, duplicate directories, absent layouts and mismatched
+stable-node totals.
+
+| case | stable nodes | no dynamic scalar fields | scalar-bearing nodes |
+| --- | ---: | ---: | ---: |
+| fact | 948 | 653 | 295 |
+| loopfact | 892 | 633 | 259 |
+| sum-bits | 2,895 | 1,825 | 1,070 |
+| dot-product | 2,825 | 2,023 | 802 |
+
+These scalar-free records are candidates for complete removal from the stable
+node map, deriving their field descriptors from the existing authoritative
+FactState, frame ordinal and shared template. This is 63%–72% of record counts,
+not 63%–72% of Graph bytes. Scalar payloads, fact liveness, equality state and
+boundary indexes remain necessary. No records have been removed by this census.
+
+Current `Fields` retains two Arc handles per node (program and ports), component,
+operation and a scalar slice; `Stored` also retains table. Program and port wiring
+are already shared; eliminating those handles is distinct from deleting shared
+wiring. The structural worktree's template projection implementation is relevant
+prior work, not yet proof of integration into this parallel branch.
+
+The hard integration obligation is `port_guard::Snapshot`: its nodes and
+components represent an immutable read epoch while the coordinator can retire
+facts. A projected lookup must use matching frozen membership and wiring, not
+live Cells. Preserve source-frame restoration slices, actual constructor results,
+coordinator liveness checks and panic cleanup. Charge any new snapshot membership
+records and lookup work against the removed stable records; cloning the full
+instance graph would invalidate the intended savings.
+
+Reproduce without executing the workload again:
+
+```sh
+python3 benchmarks/cell-bake-owner-merge/template_projection_census.py out/cell-explicit-barriers benchmarks/cell-bake-owner-merge/template-projection-census.json
+```

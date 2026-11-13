@@ -1,0 +1,41 @@
+{
+  "scope": "Offline projection eligibility census; no deleted records or measured savings",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "stable_nodes": 948,
+      "scalar_free_nodes": 653,
+      "scalar_bearing_nodes": 295,
+      "scalar_fields": 377,
+      "scalar_free_fraction": 0.6888185654008439
+    },
+    {
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "stable_nodes": 892,
+      "scalar_free_nodes": 633,
+      "scalar_bearing_nodes": 259,
+      "scalar_fields": 320,
+      "scalar_free_fraction": 0.7096412556053812
+    },
+    {
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "stable_nodes": 2895,
+      "scalar_free_nodes": 1825,
+      "scalar_bearing_nodes": 1070,
+      "scalar_fields": 1392,
+      "scalar_free_fraction": 0.6303972366148531
+    },
+    {
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "stable_nodes": 2825,
+      "scalar_free_nodes": 2023,
+      "scalar_bearing_nodes": 802,
+      "scalar_fields": 991,
+      "scalar_free_fraction": 0.7161061946902655
+    }
+  ]
+}
