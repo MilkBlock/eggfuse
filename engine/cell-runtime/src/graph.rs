@@ -339,6 +339,10 @@ pub struct Stats {
     #[serde(default)]
     pub completed_symbolic_slots_elided:u64,
     #[serde(default)]
+    pub completed_scalar_slots_elided:u64,
+    #[serde(default)]
+    pub completed_scalar_slots_restored:u64,
+    #[serde(default)]
     pub shared_owner_frames_restored:u64,
     #[serde(default)]
     pub shared_owner_inherited_frames:u64,
@@ -1049,6 +1053,8 @@ impl Graph {
             return Ok(canon(v, &self.parents));
         }
         if self.cells.cell_metadata(cell).is_some_and(|c| c.symbolic_slots) {
+            #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+            if let Some(value)=self.completed_scalar_slot(cell,template,i,None) {return Ok(value);}
             if let Some(value) = self.inherited_cell_slot(cell, template, i) {
                 return Ok(value);
             }
@@ -2484,6 +2490,8 @@ impl Graph {
             if crate::receipt_trace::enabled() {
                 crate::receipt_trace::retire(Dependency::Fact(f),r.table,self.cells.cell_metadata(f.cell).map(|c|c.template),self.receipt_tracking);
             }
+            #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+            self.preserve_completed_scalars(f);
             let owned=self.retire_owned(f,r.table);
             let local = self.cells.fact_state(f).unwrap().local_union_owned;
             self.end_local_ownership(f, r.table, true);

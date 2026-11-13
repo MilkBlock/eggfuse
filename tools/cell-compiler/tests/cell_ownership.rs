@@ -1321,3 +1321,80 @@ fn immutable_transition_directory_matches_all_compiled_routes() {
     let mut missing=plan.transitions[0].0.clone();missing.shape=usize::MAX;
     assert_eq!(plan.transition(&missing),None);
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_scalar_provider_retirement_preserves_child_binding() {
+    let src="(datatype E (N i64) (Start E i64) (Pair E E) (Seen i64))
+        (ruleset a) (ruleset b) (ruleset c)
+        (rule ((= x (N n))) ((Start x (+ n 7))) :ruleset a)
+        (rule ((= s (Start x i))) ((Pair s x)) :ruleset b)
+        (rule ((Start x i)) ((Seen i)) :ruleset c)
+        (N 1) (N 2) (run a 1) (run b 1) (run c 1)";
+    let p=program(src);
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        let mut moved=0;
+        loop {
+            let n=reference.steps.len();
+            reference.execute_until(Some(n+1)).unwrap();actual.execute_until(Some(n+1)).unwrap();
+            if reference.steps.len()==n {break;}
+            moved+=actual.graph.transfer_completed_owners().unwrap();
+            assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+        }
+        assert!(moved>0);
+        assert!(actual.graph.stats.completed_scalar_slots_elided>0);
+        let table=actual.graph.program.tables.iter().position(|t|t.name=="Start").unwrap();
+        let witness=actual.graph.witnesses(table)[0];
+        let eggfuse_cell_runtime::graph::Dependency::Fact(parent)=witness else {panic!("constructor")};
+        assert!(actual.graph.cells.get(&parent.cell).is_none(),"exercise completed owner fallback");
+        let (template,slot)=actual.graph.program.templates.iter().enumerate().find_map(|(tid,t)| {
+            if !t.name.contains("Seen") {return None;}
+            t.parent_columns.keys().find(|&&s|t.sorts[s]["kind"]=="i64").map(|&s|(tid,s))
+        }).unwrap();
+        let child=actual.graph.linked_frame(template,Default::default(),Some(parent)).unwrap();
+        let expected=actual.graph.slot(child,slot).unwrap();
+        let row=actual.graph.row(witness).unwrap().unwrap();
+        actual.graph.hide(table,&row.values[..row.values.len()-1],true).unwrap();
+        reference.graph.hide(table,&row.values[..row.values.len()-1],true).unwrap();
+        actual.graph.collect_garbage();reference.graph.collect_garbage();
+        assert_eq!(actual.graph.slot(child,slot).unwrap(),expected);
+        assert!(actual.graph.stats.completed_scalar_slots_restored>0);
+        assert!(actual.graph.stats.shared_owner_frames_restored>0);
+        assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+    }
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn scalar_binding_uses_another_provider_until_the_last_one_retires() {
+    let p=program("(datatype E (N i64) (A i64) (B i64) (Seen i64))
+        (ruleset r) (ruleset s)
+        (rule ((N n)) ((let v (+ n 7)) (A v) (B v)) :ruleset r)
+        (rule ((A n)) ((Seen n)) :ruleset s)
+        (N 1) (run r 1) (run s 1)");
+    let mut e=Executor::new(Graph::new_with_local_congruence(p).unwrap(),false);
+    e.use_completed_parent_takeover().unwrap();e.execute().unwrap();
+    assert!(e.graph.stats.completed_scalar_slots_elided>0);
+    let table=|name:&str|e.graph.program.tables.iter().position(|t|t.name==name).unwrap();
+    let a=table("A");let b=table("B");
+    let witness=e.graph.witnesses(a)[0];
+    let eggfuse_cell_runtime::graph::Dependency::Fact(parent)=witness else {panic!("constructor")};
+    let (template,slot)=e.graph.program.templates.iter().enumerate().find_map(|(i,t)| {
+        if !t.name.contains("Seen") {return None;}
+        t.parent_columns.keys().find(|&&s|t.sorts[s]["kind"]=="i64").map(|&s|(i,s))
+    }).unwrap();
+    let child=e.graph.linked_frame(template,Default::default(),Some(parent)).unwrap();
+    let expected=e.graph.slot(child,slot).unwrap();
+    let restored=e.graph.stats.completed_scalar_slots_restored;
+    for (table,last) in [(a,false),(b,true)] {
+        let row=e.graph.row(e.graph.witnesses(table)[0]).unwrap().unwrap();
+        e.graph.hide(table,&row.values[..row.values.len()-1],true).unwrap();
+        assert_eq!(e.graph.slot(child,slot).unwrap(),expected);
+        if last {assert!(e.graph.stats.completed_scalar_slots_restored>restored);}
+        else {assert_eq!(e.graph.stats.completed_scalar_slots_restored,restored);}
+    }
+}

@@ -96,3 +96,52 @@ columns. The copied-directory column requires the pre-change runtime; its saved
 reports are preserved as `candidate-copied-directory-heap.json`. Generate the
 tracked small report with `summarize.py ARTIFACT_ROOT OUTPUT.json`. Generated
 programs, full traces, binaries and Python caches are not tracked.
+
+## Completed scalar bindings (follow-up)
+
+The frozen shared catalog exposes duplicate retained state: Eq slots already
+read composed symbols, but scalar operands were still held both in source slots
+and stable constructor fields. Completion now derives `(slot, operation, column)`
+projections from the original typed constructor instructions and Copy aliases.
+Only immutable primitive scalars are admitted; container values and mutable
+function reads are not recomputed. The existing execution plan holds this static
+layout, without changing port-program identity or keeping another binding map.
+
+A completed instance removes an explicit slot only after finding an actual local
+stable constructor field with the same value. A reused foreign constructor does
+not supply a synthetic local address. Parent handoff can use the same projections.
+Before retiring the final provider of a delegated slot, the runtime restores its
+value; completed shared storage is unsealed when necessary. Other live providers
+avoid that restoration. This uses static template wiring, not consumer lists.
+
+The same four candidate artifacts, without retraining, give:
+
+| Input | Prior Graph bytes | Scalar delegation | Explicit slots before → after |
+|---|---:|---:|---:|
+| fact | 778,319 | 775,343 | 1,190 → 1,066 |
+| loopfact | 682,265 | 679,001 | 1,158 → 1,022 |
+| sum-bits | 2,073,387 | 2,057,283 | 3,989 → 3,276 |
+| dot-product | 2,047,203 | 2,035,803 | 3,954 → 3,479 |
+
+The final parent-link counts remain 89, 76, 216 and 231: this does **not** retire
+the dominated source instances. Sum-bits elides 731 scalar slots over execution
+and restores 18 on retirement; the other inputs restore none. The added compiled
+layout costs 12,608 retained Program bytes per input, separately from Graph.
+Runtime costs include provider lookups, a temporary list at completion, and
+restoration/unsealing at retirement. No latency benefit is claimed.
+
+The batched verifier now disables completed-parent takeover on the control lane,
+so both sides cannot mask the same delegation error. All 2,652 source Run graph,
+ordered-RHS and physical-write comparisons pass. The 44 ownership and 8 Unit tests
+include retirement after shared-owner transfer, surviving child reads, worker
+execution, and retaining an alternative scalar provider until the last retires.
+
+The previously accepted **marked** sum-bits artifact separately falls from
+2,477,174 to 2,460,662 Graph bytes, with the same final-state digest as its reviewed
+saved export. The saved-export `choice_diagnosis.py` gate passes. This is a
+final-state check, not a new native Run-boundary proof for the unmarked batch.
+
+Reproduce by rebuilding the two examples above, running `verify`, and measuring
+the unchanged candidate artifacts with `runtime_storage_peak ... inherited-owners
+--port-domains-only`. Results are in `scalar-results.json`; the earlier directory
+and batch measurements are intentionally retained as their own controls.

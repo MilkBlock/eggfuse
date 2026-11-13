@@ -412,6 +412,7 @@ impl Executor {
         for rid in 0..self.graph.program.rules.len() {
             // An empty plan still enables completed port delegation; None is disabled.
             self.graph.program.executions[rid].completed_dead_slots=Some(crate::cell::completion_lifetime::dead_slots(&self.graph.program,rid).unwrap_or_default());
+            self.graph.program.executions[rid].completed_scalar_slots=Some(crate::cell::completion_lifetime::scalar_layout(&self.graph.program,rid));
             self.graph.program.executions[rid].parent_completion=crate::cell::completion_lifetime::parent_layout(&self.graph.program,rid);
         }
         Ok(())

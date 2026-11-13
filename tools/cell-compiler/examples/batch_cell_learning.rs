@@ -8,9 +8,10 @@ use std::{fs,path::Path,error::Error};
 type Result<T>=std::result::Result<T,Box<dyn Error>>;
 fn read(p:impl AsRef<Path>)->Result<Value> {Ok(serde_json::from_slice(&fs::read(p)?)?)}
 fn write(p:impl AsRef<Path>,v:&Value)->Result<()> {Ok(fs::write(p,serde_json::to_vec(v)?)?)}
-fn executor(raw:Value)->Result<Executor> {
+fn executor(raw:Value)->Result<Executor> {executor_control(raw,true)}
+fn executor_control(raw:Value,takeover:bool)->Result<Executor> {
     let mut g=Graph::new_with_local_congruence(Program::parse(raw)?)?;g.use_port_domains_only()?;
-    let mut e=Executor::new(g,false);e.use_completed_parent_takeover()?;Ok(e)
+    let mut e=Executor::new(g,false);if takeover {e.use_completed_parent_takeover()?;}Ok(e)
 }
 fn step(e:&mut Executor,n:usize)->Result<Value> {
     audit::take_digests();audit::take_write_digests();
@@ -87,7 +88,7 @@ fn main()->Result<()> {
         let mut reports=vec![];
         for case in manifest["cases"].as_array().unwrap() {
             let name=case["case"].as_str().unwrap();let dir=root.join(name);
-            let mut base=executor(read(dir.join("baseline.json"))?)?;
+            let mut base=executor_control(read(dir.join("baseline.json"))?,false)?;
             let mut target=executor(read(dir.join("candidate.json"))?)?;
             let mut runs=0;
             loop {

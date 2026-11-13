@@ -1,0 +1,83 @@
+{
+  "scope": "Actual standalone Cell runtime, frozen shared catalog; scalar slot delegation, not source-instance retirement or speed measurement",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "runs": 418,
+      "graph_before": 778319,
+      "graph_after": 775343,
+      "saved_graph_bytes": 2976,
+      "program_bytes_added": 12608,
+      "slots_before": 1190,
+      "slots_after": 1066,
+      "parent_links_before": 89,
+      "parent_links_after": 89,
+      "elided": 124,
+      "restored": 0,
+      "final_state_equal": true
+    },
+    {
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "runs": 398,
+      "graph_before": 682265,
+      "graph_after": 679001,
+      "saved_graph_bytes": 3264,
+      "program_bytes_added": 12608,
+      "slots_before": 1158,
+      "slots_after": 1022,
+      "parent_links_before": 76,
+      "parent_links_after": 76,
+      "elided": 136,
+      "restored": 0,
+      "final_state_equal": true
+    },
+    {
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "runs": 882,
+      "graph_before": 2073387,
+      "graph_after": 2057283,
+      "saved_graph_bytes": 16104,
+      "program_bytes_added": 12608,
+      "slots_before": 3989,
+      "slots_after": 3276,
+      "parent_links_before": 216,
+      "parent_links_after": 216,
+      "elided": 731,
+      "restored": 18,
+      "final_state_equal": true
+    },
+    {
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "runs": 954,
+      "graph_before": 2047203,
+      "graph_after": 2035803,
+      "saved_graph_bytes": 11400,
+      "program_bytes_added": 12608,
+      "slots_before": 3954,
+      "slots_after": 3479,
+      "parent_links_before": 231,
+      "parent_links_after": 231,
+      "elided": 475,
+      "restored": 0,
+      "final_state_equal": true
+    }
+  ],
+  "marked_sum_bits": {
+    "graph_before": 2477174,
+    "graph_after": 2460662,
+    "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+    "elided": 731,
+    "restored": 18
+  },
+  "validation": {
+    "run_checks": 2652,
+    "control_completed_parent_takeover": false,
+    "ownership_tests": 44,
+    "unit_tests": 8,
+    "marked_final_state_choice_gate": "pass"
+  }
+}
