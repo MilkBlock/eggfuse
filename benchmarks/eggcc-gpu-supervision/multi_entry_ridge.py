@@ -37,6 +37,28 @@ def template(rule):
     return np.array(vectors,np.float32),request
 
 
+def neighborhood_template(rule,rounds=2):
+    """Bake neighboring operand roles/literals; never read instance outcomes."""
+    base,_=template(rule);state=base.copy();operations=[]
+    for side,ops in [('query',rule['query']),('effect',rule['effects'])]:
+        for op in ops:
+            operands=[(str(i),a) for i,a in enumerate(op.get('args',[]))]
+            operands += [(key,op[key]) for key in ('arg','value') if key in op]
+            if 'dst' in op:operands.append(('out',dict(slot=op['dst'])))
+            label=(side,op.get('kind','query'),op.get('call',{}))
+            operations.append((label,operands))
+    for _ in range(rounds):
+        messages=[[] for _ in rule['slots']]
+        for label,operands in operations:
+            parts=[np.tanh((state[a['slot']] if 'slot' in a else vec(('literal-operand',a)))+vec(('position',pos))) for pos,a in operands]
+            context=np.tanh(vec(label)+sum(parts,np.zeros(64,np.float32))/np.sqrt(max(1,len(parts))))
+            for pos,a in operands:
+                if 'slot' in a:messages[a['slot']].append(np.tanh(context+vec(('position',pos))))
+        state=np.array([np.tanh(base[i]+sum(m,np.zeros(64,np.float32))/np.sqrt(max(1,len(m)))) for i,m in enumerate(messages)],np.float32)
+    request=np.tanh(state.sum(0)/np.sqrt(max(1,len(state)))) if len(state) else np.zeros(64,np.float32)
+    return state,request
+
+
 def scalar(value):
     # Values remain dynamic floating inputs; strings/categories use a fixed code.
     raw=value.get('value')
@@ -49,7 +71,7 @@ def scalar(value):
 
 
 def encode(rows,roles,encoding="slot"):
-    if encoding not in ("slot","class-balanced","class-interface","class-history","class-history-split","class-history-repeat","class-history-fallback","class-history-earliest"):raise ValueError("unknown token encoding")
+    if encoding not in ("slot","class-balanced","class-interface","class-history","class-history-split","class-history-repeat","class-history-fallback","class-history-earliest","class-history-neighborhood","class-history-neighborhood-input"):raise ValueError("unknown token encoding")
     groups=defaultdict(list)
     for slot,value,key in rows:
         if key is not None:groups[key].append(slot)
@@ -78,7 +100,7 @@ def input_rows(binding):
 def input_seed(binding,roles,connected,encoding):
     # Connected Eq slots still carry interface correlations between providers.
     rows=input_rows(binding)
-    return encode([r for r in rows if encoding in ('class-interface','class-history','class-history-split','class-history-repeat','class-history-fallback','class-history-earliest') or r[0] not in connected],roles,encoding)
+    return encode([r for r in rows if encoding in ('class-interface','class-history','class-history-split','class-history-repeat','class-history-fallback','class-history-earliest','class-history-neighborhood','class-history-neighborhood-input') or r[0] not in connected],roles,encoding)
 
 
 def output_rows(binding):
@@ -126,9 +148,11 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
     routing=np.random.default_rng(777).normal(0,1/np.sqrt(128),(128,role_channels-1)).astype(np.float32)
     if encoding.startswith('class-history'):
         from historical_cell_sources import link_history
-        links=link_history(trace,fallback_only=encoding in ('class-history-fallback','class-history-earliest'),earliest=encoding=='class-history-earliest')
+        links=link_history(trace,fallback_only=encoding in ('class-history-fallback','class-history-earliest','class-history-neighborhood','class-history-neighborhood-input'),earliest=encoding in ('class-history-earliest','class-history-neighborhood','class-history-neighborhood-input'))
     else:links=link(trace)
-    compiled=[template(r) for r in trace['recipe']['rules']]
+    targets=[template(r) for r in trace['recipe']['rules']]
+    neighborhoods=[neighborhood_template(r) for r in trace['recipe']['rules']] if encoding in ('class-history-neighborhood','class-history-neighborhood-input') else None
+    compiled=neighborhoods if encoding=='class-history-neighborhood' else targets
     families=[template_identity(r) for r in trace['recipe']['rules']]
     nodes=[];addresses={};by_consumer={}
     for w in links['windows']:
@@ -153,7 +177,10 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
                         route=context_route(route,port.get('relation')=='historical_observed_identity',encoding)
                         incoming.append((source,edge/np.sqrt(len(g['providers']))));routes.append(route)
             seed=input_seed(b,roles,connected,encoding)
-            target=encode(output_rows(b),roles,encoding)
+            if encoding=='class-history-neighborhood-input':
+                nr,nq=neighborhoods[b['rule']]
+                q=np.concatenate([q,input_seed(b,nr,connected,encoding),nq])
+            target=encode(output_rows(b),targets[b['rule']][0],encoding)
             valid=b['rhs']['completed'] and all('unavailable' not in s for s in b['rhs']['slots'])
             # A missing full local state is an explicit CPU boundary in this probe.
             depth=1+max((nodes[i]['depth'] for i,_ in incoming),default=-1)
@@ -232,7 +259,7 @@ def metric(pred,target,mask):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('training',type=Path);p.add_argument('validation',type=Path)
-    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface','class-history','class-history-split','class-history-repeat','class-history-fallback','class-history-earliest'],default='slot');a=p.parse_args()
+    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface','class-history','class-history-split','class-history-repeat','class-history-fallback','class-history-earliest','class-history-neighborhood','class-history-neighborhood-input'],default='slot');a=p.parse_args()
     preparation_started=time.monotonic()
     corpus_raw=a.corpus_manifest.read_bytes();corpus=json.loads(corpus_raw);corpus_sha=hashlib.sha256(corpus_raw).hexdigest()
     all_nodes=[];partition=[];provenance=dict(corpus_manifest=corpus_sha)
@@ -254,7 +281,7 @@ def main():
     if original['recipe']!=test_trace['recipe']:raise ValueError('test recipe mismatch')
     test=dataset(test_trace,a.channels,a.zero_role_channels,a.encoding);provenance['test_trace']=hashlib.sha256(raw).hexdigest()
     seed,q,target=arrays(all_nodes);pool=pooling(all_nodes,target)
-    raw_width=192+256*a.channels
+    raw_width=seed.shape[1]+q.shape[1]+256*a.channels
     rng=np.random.default_rng(412);w=rng.normal(0,1/np.sqrt(raw_width),(raw_width,256)).astype(np.float32)
     x=features(seed,q,pool,w,np);parts=np.array(partition);valid=np.array([n['valid'] for n in all_nodes])
     preparation_seconds=time.monotonic()-preparation_started
@@ -289,7 +316,7 @@ def main():
         test_cases=len(test),cpu_boundary_tokens=int((~valid).sum()),depths=max(n['depth'] for n in test)+1,
         reports={label:dict(gold_provider_inputs=metric(np.array(oracle),target,m),predicted_provider_inputs=metric(pred,target,m),no_provider_refit=metric(no_provider,target,m),shuffled_providers=metric(shuffled_pred,target,m))
                  for label,m in [('all_valid',valid),('linked',valid&linked),('multiple_providers',valid&multiple)]},
-        history_context=(('earliest' if a.encoding=='class-history-earliest' else 'latest')+' observed constructor Run per typed identity; unproved lifetime') if a.encoding.startswith('class-history') else None,
+        history_context=(('earliest' if a.encoding in ('class-history-earliest','class-history-neighborhood','class-history-neighborhood-input') else 'latest')+' observed constructor Run per typed identity; unproved lifetime') if a.encoding.startswith('class-history') else None,
         encoding_audit=dict(train_validation=encoding_audit(all_nodes),test=encoding_audit(test)),no_provider_fit=zero_fit,
         numerical_audit=dict(passed=bool(audit and outside==0 and oracle_outside==0),rollout_outside=outside,gold_outside=oracle_outside),
         gpu_replay_wall_seconds=gpu_wall,cpu_replay_wall_seconds=cpu_wall,

@@ -110,3 +110,19 @@ compilation uses only `recipe`: 548 rules, 397 supported completed templates,
 post-state labels or runtime transfers are used or claimed. Nine tests passed
 across `test_continuation_contract` and `test_cell_token_successors`; malformed
 witness coverage, duplicate witnesses and inconsistent bindings are rejected.
+
+## Reference update: 794a2afd
+
+The tracked branch advanced to `794a2afd` after the initial pin. Its checked Entry
+address reuse retains `(FactRef, component ID)` in existing selection scratch;
+reuse still checks the anchor, current shape and source at the saved ordinal.
+Relocation, suffix change or retirement falls back to resolution. This is not a
+cached value or permission to cross mutations. GPU continuation must retain the
+same distinction between stable semantic token identity and a currently valid
+storage address. Recycling introduces an additional generation check. No native
+code was merged in this update.
+
+The runtime target remains repeated GPU token production to a verified fixed
+point, followed by the next original stage/ruleset, rather than host enumeration
+of a predetermined successful path. New local-feature experiments are supporting
+model work, not evidence that device matching or ownership transfer is complete.

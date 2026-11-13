@@ -1,0 +1,90 @@
+{
+  "scope": "Standalone frozen-model numeric replay with observed CPU wiring; no matching, lifecycle, or semantic completion",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "runs": {
+    "baseline": {
+      "model_sha256": "27fb0eb822ce043796b0581126ce8ffa0f3ca54556088687dbe58f8a824b4de4",
+      "costs": {
+        "unique_coefficient_bytes": 40262112,
+        "shared_groups": 0,
+        "shared_rows": 0,
+        "layers": 45,
+        "readouts": 45,
+        "aggregation_groups": 87,
+        "zero_input_groups": 1,
+        "padded_edges": 76254,
+        "coefficient_bytes": 40262112,
+        "source_index_bytes": 305016,
+        "destination_index_bytes": 22212,
+        "peak_layer_coefficient_bytes": 7014480
+      },
+      "encoding_seconds": 0.89837599999737,
+      "plan_seconds": 0.04851412499556318,
+      "gpu_setup_seconds": 0.014496666030026972,
+      "gpu_cold_seconds": 0.021597584011033177,
+      "cpu_setup_seconds": 0.0139298330177553,
+      "cpu_execute_seconds": 0.02208629105007276,
+      "numeric_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 1.0967254638671875e-05
+      },
+      "warm_gpu_seconds": [
+        0.008288917015306652,
+        0.006041291984729469,
+        0.00562329200329259,
+        0.005985791969578713,
+        0.005593458015937358,
+        0.005536957993172109
+      ],
+      "warm_gpu_median_seconds": 0.005804541986435652
+    },
+    "candidate": {
+      "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+      "costs": {
+        "unique_coefficient_bytes": 40262112,
+        "shared_groups": 0,
+        "shared_rows": 0,
+        "layers": 45,
+        "readouts": 45,
+        "aggregation_groups": 87,
+        "zero_input_groups": 1,
+        "padded_edges": 76254,
+        "coefficient_bytes": 40262112,
+        "source_index_bytes": 305016,
+        "destination_index_bytes": 22212,
+        "peak_layer_coefficient_bytes": 7014480
+      },
+      "encoding_seconds": 1.2394770829705521,
+      "plan_seconds": 0.0501244580373168,
+      "gpu_setup_seconds": 0.014371707977261394,
+      "gpu_cold_seconds": 0.019227624987252057,
+      "cpu_setup_seconds": 0.011305166990496218,
+      "cpu_execute_seconds": 0.020897916983813047,
+      "numeric_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 3.725290298461914e-06
+      },
+      "warm_gpu_seconds": [
+        0.007518999977037311,
+        0.006111374997999519,
+        0.005913125001825392,
+        0.005360874987673014,
+        0.005800916987936944,
+        0.005331458000000566
+      ],
+      "warm_gpu_median_seconds": 0.005857020994881168
+    }
+  },
+  "median_replay_ratio": 0.9910399828698956,
+  "limitations": [
+    "Cold timing includes execution compilation; paired warm timing reuses plans",
+    "Preparation, upload/setup and CPU numeric audit reported separately",
+    "CPU timing is NumPy execution of the numeric model, not egglog or Eggfuse",
+    "Final-state transfer and semantic Eq readout/audit are not included in warm GPU timing",
+    "Models have different accuracy; runtime ratio alone cannot authorize replacement"
+  ]
+}
