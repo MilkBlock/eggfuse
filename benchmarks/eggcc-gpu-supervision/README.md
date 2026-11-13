@@ -355,3 +355,61 @@ timings include compilation and are not evidence of runtime speedup. GPU query
 completion, constructor/union commitment and autonomous whole-program execution
 remain absent; GPU-completed bindings remain zero. This result shows that the current pooled encoder and ridge readout are not
 reliable enough for completion. It does not disprove other ridge representations.
+
+## Separate known Cell effects from learned Eq proposals
+
+`proven_unions.py RELATION_TRACE OUTPUT_DIR` is a conservative CPU proof-coverage
+oracle over the complete recipe. It compiles exact input-port unions, resolves
+RHS constructor calls already witnessed in the successful query, and preserves
+unresolved results as symbolic local ports. Primitive evaluation and mutable
+reads/updates are barriers. A `set` to a **constructor** is different: it adds
+`F(args) = supplied_result`, so constructor congruence can establish Eq. This
+covers real TCPair/Context rules that explicit-union-only analysis misses.
+
+The audit closes only known constructor relationships and symbolic constructor
+prefixes. It runs once without history and once retaining earlier Run evidence.
+Stable identities are related to current roots only from pre-Run observations;
+post-Run roots are comparison targets. Source-order barriers remain, and any
+Run containing subsume/delete discards retained evidence and is excluded from
+the proof path. A generated result port is a symbolic term reference, not an
+assumed actual object address. Constructor reuse is represented by congruence
+with an existing witnessed term. No second fact graph is added to the runtime:
+this standalone oracle intentionally materializes proof facts to measure what
+shared Cell wiring would need to explain.
+
+Full sum-bits observation:
+
+| Evidence | New Eq pairs explained / observed |
+|---|---:|
+| Compiled input unions and their transitive closure | 230 / 518 |
+| Add current-Run constructor calls and assignments | 333 / 518 |
+| Retain earlier-Run constructor evidence | 512 / 518 |
+
+There are zero observed false derived pairs among 17,526 candidate input pairs.
+This is **proof coverage of an observed trace**, not learned prediction accuracy
+or full graph correctness. `context` accounts for 297 changes and all 297 are
+explained with history; terms-helpers-helpers accounts for 103, of which 102 are
+explained. Six residual examples retain exact Run/rule/slot locations for CPU
+investigation. New RHS nodes and non-Eq graph changes are not counted as covered
+merely because these input-port comparisons pass.
+
+Cost matters: the history variant retains up to 6,747 facts, reads 1,387,822
+historical facts and performs 4,165,432 constructor-key checks, versus 46,237
+checks without history. CPU audit took 4.104 s versus 0.143 s without history in
+this diagnostic. These are not native-runtime benchmark timings. No runtime
+operations have been removed and no GPU binding has completed. The oracle is
+not a candidate GPU execution algorithm; reproducing its dynamic index on GPU
+would preserve the wrong work.
+
+The measured opportunity for Bake is the 179 additional Eq observations made
+provable by cross-Run constructor evidence. Templates must retain actual result
+ports and establish legal visibility/lifetime before replacing historical
+search with static connections. The previous pooled ridge should not be asked
+to rediscover all these known operations. The intended destination remains
+GPU-resident Cell state and compiled connections, with CPU checking uncovered
+boundaries, not CPU execution of the proven majority.
+
+Five added tests cover constructor witnesses, ordered barriers, multi-input
+congruence, cross-stage constructor assignments, history invalidation and
+rejection when post-Run observations contradict a derived result. All 26 Python
+tests pass. Saved counts and residual examples are in `proven-union-results.json`.
