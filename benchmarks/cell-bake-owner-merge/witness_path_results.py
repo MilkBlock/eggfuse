@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 def collect(root):
-    report=json.loads((root/'checked.json').read_text())
+    report=json.loads((root/'witness-checked.json').read_text())
     rows=[]
     for case in report['cases']:
         if case['all_saved_run_checks_equal'] is not True:raise ValueError('unaudited trace')
@@ -20,6 +20,7 @@ def collect(root):
             for op,frame,source_op in path['constructor_positions']:
                 if rule['effects'][op].get('kind')!='construct':raise ValueError('not a constructor')
                 if frame<0 or source_op<0:raise ValueError('negative position')
+            if not path['query_positions']:raise ValueError('missing query anchor')
             groups[path['rule'],path['shape']].append(path)
             ranked.append(dict(path,rule_name=rule['metadata']['name'],ruleset=rule['metadata']['source_set']))
         ranked.sort(key=lambda p:-p['applications']*len(p['constructor_positions']))

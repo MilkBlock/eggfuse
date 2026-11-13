@@ -9,6 +9,8 @@ pub mod effects;
 pub mod queries;
 #[path = "ownership_saturation.rs"]
 mod saturation;
+#[path = "ownership_witness_plan.rs"]
+mod witness_plan;
 
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 pub struct Source {

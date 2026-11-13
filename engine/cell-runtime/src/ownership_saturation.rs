@@ -34,11 +34,11 @@ impl Trace {
             json!({"rule":rule,"shape":shape,"frame_codes":codes,"query_sites":anchors,"rhs_sites":results,
                 "applications":applications})).collect::<Vec<_>>();
         // Compatibility projection of the same recipes, not a second trace.
-        let mut paths=BTreeMap::<(usize,usize,Sites),u64>::new();
-        for ((rule,shape,_,_,sites),applications) in &self.witnesses {
-            *paths.entry((*rule,*shape,sites.clone())).or_default()+=applications;
+        let mut paths=BTreeMap::<(usize,usize,Sites,Sites),u64>::new();
+        for ((rule,shape,_,anchors,sites),applications) in &self.witnesses {
+            *paths.entry((*rule,*shape,sites.clone(),anchors.clone())).or_default()+=applications;
         }
-        let paths=paths.into_iter().map(|((rule,shape,sites),applications)|json!({"rule":rule,"shape":shape,"constructor_positions":sites,"applications":applications})).collect::<Vec<_>>();
+        let paths=paths.into_iter().map(|((rule,shape,sites,anchors),applications)|json!({"rule":rule,"shape":shape,"constructor_positions":sites,"query_positions":anchors,"applications":applications})).collect::<Vec<_>>();
         json!({"rows":rows,"witness_recipes":witnesses,"witness_paths":paths,
             "witness_path_scope":"projection of observed full RHS recipes; positions contain no instance IDs and do not alone prove executable replacement",
             "witness_contract":"positions are [query atom or RHS operation, component frame, fact operation]; only local matched receipts are listed; full query and dynamic key/visibility obligations remain authoritative; observations are not static proofs",

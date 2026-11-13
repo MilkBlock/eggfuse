@@ -24,7 +24,18 @@ fn step_storage(e:&mut Executor,n:usize,nested:bool)->Result<Value> {
 fn main()->Result<()> {
     let a=std::env::args().skip(1).collect::<Vec<_>>();
     if a.len()<2 {return Err("batch_cell_learning prepare SUITE OUTPUT CASE... | apply OUTPUT | verify OUTPUT | observe OUTPUT | apply-passive ROOT VARIANT | check-passive ROOT VARIANT | check-nested ROOT VARIANT".into());}
-    if a[0]=="prepare" {
+    if a[0]=="compile-witness" {
+        let root=Path::new(&a[1]);
+        for name in ["fact","loopfact","sum-bits","dot-product"] {
+            let dir=root.join(name);
+            let observation=read(dir.join("witness-checked.json"))?;
+            if observation["all_saved_run_checks_equal"]!=true {return Err("unaudited witness trace".into());}
+            let e=executor(read(dir.join("candidate.json"))?)?;
+            let plan=e.graph.compile_ownership_witness_candidates(&observation["program"],&observation["catalog_trace"]["saturation"])?;
+            write(dir.join("witness-candidates.json"),&plan)?;
+            eprintln!("{name}: {} candidate addresses",plan["entries"].as_array().unwrap().len());
+        }
+    } else if a[0]=="prepare" {
         if a.len()<4 {return Err("prepare needs suite, output and cases".into());}
         let suite=read(&a[1])?;let base=Path::new(&a[1]).parent().unwrap();let out=Path::new(&a[2]);
         fs::create_dir_all(out)?;let mut cases=vec![];
@@ -184,10 +195,19 @@ fn main()->Result<()> {
                     "stable_ports":target.graph.stable_port_report(),
                     "key_lookup_calls":target.graph.key_lookup_calls.get(),"runtime_stats":target.graph.stats,
                     "final_state":artifact_digest(&target.graph.export()?)}));
+                if a.get(3).is_some_and(|a|a=="witness-trace") {
+                    let report=reports.last_mut().unwrap();
+                    let saturation=report["catalog_trace"]["saturation"].take();
+                    report["catalog_trace"]=json!({"saturation":saturation});
+                    for field in ["source_storage","stable_ports","completion_batches"] {report.as_object_mut().unwrap().remove(field);}
+                    let tmp=dir.join("witness-checked.json.tmp");
+                    write(&tmp,report)?;
+                    fs::rename(tmp,dir.join("witness-checked.json"))?;
+                }
                 eprintln!("checked {name}: {} Runs",checks.len());
             }
         }
-        write(variant.join(if a[0]=="apply-passive" {"compiled.json"} else if a[0]=="check-nested" {"checked-nested.json"} else {"checked.json"}),&json!({"cases":reports}))?;
+        write(variant.join(if a[0]=="apply-passive" {"compiled.json"} else if a[0]=="check-nested" {"checked-nested.json"} else if a.get(3).is_some_and(|a|a=="witness-trace") {"witness-checked.json"} else {"checked.json"}),&json!({"cases":reports}))?;
     } else if a[0]=="verify" || a[0]=="observe" {
         let observe=a[0]=="observe";
         let root=Path::new(&a[1]);let manifest=read(root.join("manifest.json"))?;

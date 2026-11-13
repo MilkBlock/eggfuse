@@ -376,3 +376,59 @@ no ranked-path results or successful end-to-end replay are claimed. Two complete
 local test executables were removed to reclaim build space; source files, saved
 traces and benchmark evidence were retained. A fresh replay/output validation is
 still required before using the new witness-path data for compilation.
+
+## Query anchors and durable observation output
+
+Witness paths now include query positions `(query atom, source frame ordinal,
+source operation)` in the same component. They are part of the aggregation key;
+no runtime instance IDs are pooled. These anchors identify how an existing query
+receipt can locate the component before selecting a constructor candidate.
+
+Witness mode saves only saturation evidence, atomically checkpoints each case to
+`CASE/witness-checked.json`, and writes the aggregate to `witness-checked.json`.
+Ordinary `checked.json` is no longer overwritten by this mode. The two observer
+regression tests pass, including relative query-anchor coordinates.
+
+A concrete ambiguity is already present in the sum-bits trace: rule 90,
+`BodyContainsExpr(body, Get(tup, i)) -> BodyContainsExpr(body, tup)`, shape 654,
+query anchor `(1,2,0)`, has witnessed targets `(0,0,0)` and `(0,1,0)`, each observed
+10 times. Thus even the same rule/shape/query-position tuple cannot select one
+fixed target. Different matched bindings can require different witnesses. Bake
+must retain a small typed candidate set and prove or check the remaining argument
+correspondence; it must not choose a target solely by historical frequency.
+
+Fresh replay completed successfully: 2,652 Run checks and all terminal checks
+pass, with a 711 KiB aggregate. Fact/loopfact/sum-bits/dot-product produced
+29/24/90/79 observed anchored paths, covering 57/30/179/165 applications.
+Their rule/shape groups include 5/5/20/16 groups with multiple paths (which may
+also have different query anchors). Full ranked evidence is saved in
+`witness-path-results.json`. Weighted constructor-position counts are
+75/39/217/207, including already static aliases; these are not saved operations.
+
+## Typed bounded candidate compilation
+
+`compile_ownership_witness_candidates` binds observations to the exact source
+program digest and produces deduplicated candidate addresses grouped by rule,
+shape and query anchor. It checks source/anchor frame layout widths and that their
+shared layout admits the required operator. Shared-layout operator compatibility
+is not an instance operator proof: the latter remains a runtime check.
+
+Initial coverage is only operation-zero constructors whose operands are query
+inputs or literals. Already static-skipped operations are excluded. Other
+positions and noninstalled shapes remain unsupported, rather than causing a
+runtime scan. No plan is installed into execution yet; this commit does not claim
+query elimination, publication savings or a saturation certificate.
+
+Two saturation regression tests pass, including wrong-source rejection. Compiling
+saved actual traces without re-execution produces 19/17/44/28 candidate addresses
+for fact/loopfact/sum-bits/dot-product. Plans remain reproducible generated output.
+
+```sh
+target/debug/examples/batch_cell_learning compile-witness out/cell-bake-owner-merge/batch/owned-state
+```
+
+Entries encode `(rule,shape,query_atom,anchor_frame,anchor_operation,
+RHS_operation,target_frame,target_operation,table)`. The execution integration
+must consume these through existing constructor preparation/handoff and check
+current arguments, fact visibility/incarnation and stage ordering. A candidate
+miss cannot justify suppressing ordinary residual matching or future union matches.
