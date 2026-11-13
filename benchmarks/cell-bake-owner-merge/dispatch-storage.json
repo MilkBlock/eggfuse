@@ -1,0 +1,111 @@
+{
+  "scope": "Standalone Cell CPU requested heap; same artifacts, two frozen runtimes; no timing claim",
+  "builds": {
+    "control": {
+      "commit": "15fc6d393f8c69c9d1e0f33d5d42cf3f483cffda",
+      "binary_sha256": "726d09d6770ba389f43152e63ffa5f2da6af5c2a2c090dfd90c9ff83878bb63b"
+    },
+    "candidate": {
+      "commit": "4205ca2e2ac85996d9a16321c0df15a42af8fe0d",
+      "binary_sha256": "ee06dcde842128c796b7f558eecd434f120c4cdeba4972d5e7c48a503cd570e6"
+    }
+  },
+  "cases": [
+    {
+      "case": "fact",
+      "program": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+      "runs": 418,
+      "final_state": "d04728e6402e21992b9748a09ec99ace5f6639bc268ac5bcafbc24d0fd52f2f0",
+      "field_deltas": {
+        "graph_fields": {},
+        "program_fields": {
+          "ownership.witnesses": -1752
+        }
+      },
+      "control": {
+        "graph_bytes": 658935,
+        "program_bytes": 158707073,
+        "witness_plan_bytes": 89168,
+        "execution_peak_bytes": 162306924
+      },
+      "candidate": {
+        "graph_bytes": 658935,
+        "program_bytes": 158705321,
+        "witness_plan_bytes": 87416,
+        "execution_peak_bytes": 162305174
+      }
+    },
+    {
+      "case": "loopfact",
+      "program": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+      "runs": 398,
+      "final_state": "623c3b05d895a4200f8ea907ea4468a92a000c975f654483e54c42c96c90bf7a",
+      "field_deltas": {
+        "graph_fields": {},
+        "program_fields": {
+          "ownership.witnesses": 1712
+        }
+      },
+      "control": {
+        "graph_bytes": 585105,
+        "program_bytes": 158198815,
+        "witness_plan_bytes": 86448,
+        "execution_peak_bytes": 161582478
+      },
+      "candidate": {
+        "graph_bytes": 585105,
+        "program_bytes": 158200527,
+        "witness_plan_bytes": 88160,
+        "execution_peak_bytes": 161584192
+      }
+    },
+    {
+      "case": "sum-bits",
+      "program": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+      "runs": 882,
+      "final_state": "3bae7a5ad756595f8c454b27baabbf7e830cf06b61d6aa69c0f7437ee747ab2a",
+      "field_deltas": {
+        "graph_fields": {},
+        "program_fields": {
+          "ownership.witnesses": -8888
+        }
+      },
+      "control": {
+        "graph_bytes": 1773131,
+        "program_bytes": 160578651,
+        "witness_plan_bytes": 210240,
+        "execution_peak_bytes": 166926063
+      },
+      "candidate": {
+        "graph_bytes": 1773131,
+        "program_bytes": 160569763,
+        "witness_plan_bytes": 201352,
+        "execution_peak_bytes": 166917177
+      }
+    },
+    {
+      "case": "dot-product",
+      "program": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+      "runs": 954,
+      "final_state": "191d2a4bd738e7afd0783d30b5d5c1f1219ac92887bb96b95239edfec27141d9",
+      "field_deltas": {
+        "graph_fields": {},
+        "program_fields": {
+          "ownership.witnesses": -4536
+        }
+      },
+      "control": {
+        "graph_bytes": 1720731,
+        "program_bytes": 162039919,
+        "witness_plan_bytes": 192096,
+        "execution_peak_bytes": 168082698
+      },
+      "candidate": {
+        "graph_bytes": 1720731,
+        "program_bytes": 162035383,
+        "witness_plan_bytes": 187560,
+        "execution_peak_bytes": 168078164
+      }
+    }
+  ]
+}
