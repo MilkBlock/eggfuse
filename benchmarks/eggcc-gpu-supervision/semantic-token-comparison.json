@@ -1,0 +1,259 @@
+{
+  "scope": "same original Cell semantics, same actual witnesses and frozen weights; not a speed measurement",
+  "before_sha256": "10dc3905b6b7c492d5d4ff2bcf8dace8f665aee78aef86880c10e098d5fcc271",
+  "after_sha256": "793a810832d9ddb8a37f5128e3667d317038a0d6682ddfac09dd46f574248903",
+  "samples": 40,
+  "integer_boolean_capture_arrays_equal": 528,
+  "target_tokens_and_partitions_equal": true,
+  "model_weights_unchanged": true,
+  "decoder_weights_unchanged": true,
+  "before": {
+    "cpu_target_token": {
+      "instances": 40,
+      "query_instances": 40,
+      "exact_partitions": 35,
+      "false_merges": 0,
+      "missed_equalities": 5,
+      "nontransitive": 0,
+      "closure_false_merges": 0
+    },
+    "gpu_predicted_token": {
+      "instances": 40,
+      "query_instances": 40,
+      "exact_partitions": 11,
+      "false_merges": 146,
+      "missed_equalities": 15,
+      "nontransitive": 0,
+      "closure_false_merges": 146
+    }
+  },
+  "after": {
+    "cpu_target_token": {
+      "instances": 40,
+      "query_instances": 40,
+      "exact_partitions": 35,
+      "false_merges": 0,
+      "missed_equalities": 5,
+      "nontransitive": 0,
+      "closure_false_merges": 0
+    },
+    "gpu_predicted_token": {
+      "instances": 40,
+      "query_instances": 40,
+      "exact_partitions": 17,
+      "false_merges": 8,
+      "missed_equalities": 31,
+      "nontransitive": 0,
+      "closure_false_merges": 8
+    }
+  },
+  "before_groups": {
+    "rule_283": {
+      "cpu_target_token": {
+        "instances": 13,
+        "query_instances": 13,
+        "exact_partitions": 13,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 13,
+        "query_instances": 13,
+        "exact_partitions": 11,
+        "false_merges": 8,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 8
+      }
+    },
+    "rule_290": {
+      "cpu_target_token": {
+        "instances": 22,
+        "query_instances": 22,
+        "exact_partitions": 22,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 22,
+        "query_instances": 22,
+        "exact_partitions": 0,
+        "false_merges": 138,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 138
+      }
+    },
+    "rule_293": {
+      "cpu_target_token": {
+        "instances": 5,
+        "query_instances": 5,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 5,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 5,
+        "query_instances": 5,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 15,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      }
+    },
+    "direct_source": {
+      "cpu_target_token": {
+        "instances": 36,
+        "query_instances": 36,
+        "exact_partitions": 31,
+        "false_merges": 0,
+        "missed_equalities": 5,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 36,
+        "query_instances": 36,
+        "exact_partitions": 10,
+        "false_merges": 130,
+        "missed_equalities": 15,
+        "nontransitive": 0,
+        "closure_false_merges": 130
+      }
+    },
+    "generated_source": {
+      "cpu_target_token": {
+        "instances": 4,
+        "query_instances": 4,
+        "exact_partitions": 4,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 4,
+        "query_instances": 4,
+        "exact_partitions": 1,
+        "false_merges": 16,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 16
+      }
+    }
+  },
+  "after_groups": {
+    "rule_283": {
+      "cpu_target_token": {
+        "instances": 13,
+        "query_instances": 13,
+        "exact_partitions": 13,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 13,
+        "query_instances": 13,
+        "exact_partitions": 11,
+        "false_merges": 8,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 8
+      }
+    },
+    "rule_290": {
+      "cpu_target_token": {
+        "instances": 22,
+        "query_instances": 22,
+        "exact_partitions": 22,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 22,
+        "query_instances": 22,
+        "exact_partitions": 6,
+        "false_merges": 0,
+        "missed_equalities": 16,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      }
+    },
+    "rule_293": {
+      "cpu_target_token": {
+        "instances": 5,
+        "query_instances": 5,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 5,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 5,
+        "query_instances": 5,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 15,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      }
+    },
+    "direct_source": {
+      "cpu_target_token": {
+        "instances": 36,
+        "query_instances": 36,
+        "exact_partitions": 31,
+        "false_merges": 0,
+        "missed_equalities": 5,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 36,
+        "query_instances": 36,
+        "exact_partitions": 16,
+        "false_merges": 4,
+        "missed_equalities": 29,
+        "nontransitive": 0,
+        "closure_false_merges": 4
+      }
+    },
+    "generated_source": {
+      "cpu_target_token": {
+        "instances": 4,
+        "query_instances": 4,
+        "exact_partitions": 4,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 4,
+        "query_instances": 4,
+        "exact_partitions": 1,
+        "false_merges": 4,
+        "missed_equalities": 2,
+        "nontransitive": 0,
+        "closure_false_merges": 4
+      }
+    }
+  },
+  "limitations": [
+    "Training program; no new held-out generalization result",
+    "Raw compiler-slot baseline uses a different semantic interface and is not this comparison",
+    "Exact execution still authorizes completion"
+  ]
+}

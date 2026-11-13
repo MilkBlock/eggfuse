@@ -5,7 +5,7 @@ Witnesses remain shared readers. A joint match is not an ownership proof.
 import numpy as np
 from device_query_join import compile_query,match_inputs
 from device_input_features import compile_inputs
-from multi_entry_ridge import template,neighborhood_template
+from device_semantic_template import template,neighborhood_template
 from device_ridge_transition import infer
 from device_token_commit import commit
 from device_slot_owners import shape as slot_shape,has as has_slot,read as read_slot

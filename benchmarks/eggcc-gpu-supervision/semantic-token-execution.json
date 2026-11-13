@@ -1,0 +1,348 @@
+{
+  "execution": {
+    "scope": "real selected construct/union family on GPU; not full Eggcc",
+    "rules": [
+      283,
+      290,
+      293
+    ],
+    "snapshot_run": 466,
+    "stage": "context",
+    "trace_sha256": "7928ece79308b9253ac58dc9f80add806e2145904013beb263a2b89eb59926ae",
+    "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+    "lowered_sets": [
+      {
+        "rule": 1,
+        "source_operation": 2,
+        "lowered_operation": 2,
+        "temporary_slot": 7
+      },
+      {
+        "rule": 2,
+        "source_operation": 2,
+        "lowered_operation": 2,
+        "temporary_slot": 6
+      }
+    ],
+    "seed_rows": 98,
+    "generated_cells": 40,
+    "fresh_ids": 5,
+    "original_cpu_fresh_ids": 2,
+    "lowered_cpu_fresh_ids": 5,
+    "released_owner_rows": 34,
+    "generated_source_consumers": 4,
+    "cpu_runs": [
+      {
+        "new_equivalences": 5,
+        "applications": 33,
+        "per_rule_applications": [
+          9,
+          19,
+          5
+        ],
+        "new_constructors": 3
+      },
+      {
+        "new_equivalences": 0,
+        "applications": 33,
+        "per_rule_applications": [
+          11,
+          18,
+          4
+        ],
+        "new_constructors": 2
+      },
+      {
+        "new_equivalences": 1,
+        "applications": 35,
+        "per_rule_applications": [
+          12,
+          19,
+          4
+        ]
+      },
+      {
+        "new_equivalences": 0,
+        "applications": 35,
+        "per_rule_applications": [
+          13,
+          18,
+          4
+        ]
+      }
+    ],
+    "lowered_cpu_runs": [
+      {
+        "new_equivalences": 7,
+        "applications": 33,
+        "per_rule_applications": [
+          9,
+          19,
+          5
+        ],
+        "new_constructors": 3
+      },
+      {
+        "new_equivalences": 1,
+        "applications": 33,
+        "per_rule_applications": [
+          11,
+          18,
+          4
+        ],
+        "new_constructors": 2
+      },
+      {
+        "new_equivalences": 1,
+        "applications": 35,
+        "per_rule_applications": [
+          12,
+          19,
+          4
+        ]
+      },
+      {
+        "new_equivalences": 0,
+        "applications": 35,
+        "per_rule_applications": [
+          13,
+          18,
+          4
+        ]
+      }
+    ],
+    "gpu_matches_per_run": [
+      33,
+      33,
+      35,
+      35
+    ],
+    "gpu_matches_per_rule": [
+      [
+        9,
+        19,
+        5
+      ],
+      [
+        11,
+        18,
+        4
+      ],
+      [
+        12,
+        19,
+        4
+      ],
+      [
+        13,
+        18,
+        4
+      ]
+    ],
+    "gpu_runs": 4,
+    "gpu_run_changes": [
+      true,
+      true,
+      true,
+      false
+    ],
+    "graph_check": {
+      "passed": true,
+      "errors": [],
+      "actual_facts": 96,
+      "expected_facts": 96,
+      "mapped_classes": 66
+    },
+    "boundary_checks": [
+      {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 95,
+        "expected_facts": 95,
+        "mapped_classes": 66
+      },
+      {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 97,
+        "expected_facts": 97,
+        "mapped_classes": 67
+      },
+      {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 96,
+        "expected_facts": 96,
+        "mapped_classes": 66
+      },
+      {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 96,
+        "expected_facts": 96,
+        "mapped_classes": 66
+      }
+    ],
+    "lowering_check": {
+      "passed": true,
+      "errors": [],
+      "actual_facts": 96,
+      "expected_facts": 96,
+      "mapped_classes": 66
+    },
+    "views_complete": true,
+    "query_checks": [
+      {
+        "checked": 9,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 9,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      },
+      {
+        "checked": 19,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 19,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      },
+      {
+        "checked": 5,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 5,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      },
+      {
+        "checked": 11,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 2,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      },
+      {
+        "checked": 18,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 2,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      },
+      {
+        "checked": 4,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 0,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      },
+      {
+        "checked": 12,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 1,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      },
+      {
+        "checked": 19,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 1,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      },
+      {
+        "checked": 4,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 0,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      },
+      {
+        "checked": 13,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 1,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      },
+      {
+        "checked": 18,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 0,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      },
+      {
+        "checked": 4,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": true,
+        "overflow": false,
+        "accepted": 0,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      }
+    ],
+    "finished": true,
+    "failed_run": false,
+    "passed": true,
+    "gpu_compile_upload_execute_seconds": 34.798802833945956,
+    "cpu_reference_and_audit_seconds": 0.13983275002101436,
+    "limitations": [
+      "One projected source ruleset, omitted external rules/tables remain uncovered",
+      "Lowering adds temporary slots and potentially fresh IDs/unions",
+      "Exact kernels authorize completion; ridge quality for lowered templates is not established",
+      "No claim of identical intermediate allocation or native full-graph execution"
+    ],
+    "capture": {
+      "schema": "device-composed-witness/v1",
+      "artifact_sha256": "563a7f7cb3d40eec7aedc38df324687ad263a1b3200b28c9602029b3b913bae6",
+      "passed": true,
+      "target_labels_included": false,
+      "logical_array_bytes": 10234860
+    }
+  },
+  "labels": {
+    "schema": "device-joint-witness/v3",
+    "case": "024-pascals-row",
+    "partition": "train",
+    "corpus_manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "program_file_sha256": "e62834ff6592b2dd555f974b7da2802e9bd5ec902ba583427bbb598ec26bf0e1",
+    "passed": true,
+    "samples": 40,
+    "continued_samples": 4,
+    "distinct_inputs": 15,
+    "distinct_targets": 13,
+    "dynamic_eq_queries": 175,
+    "dynamic_eq_positive": 59,
+    "artifact_sha256": "793a810832d9ddb8a37f5128e3667d317038a0d6682ddfac09dd46f574248903",
+    "source_capture_sha256": "563a7f7cb3d40eec7aedc38df324687ad263a1b3200b28c9602029b3b913bae6",
+    "feature_reconstruction_max_abs": 2.175569534301758e-06,
+    "cpu_label_and_capture_audit_seconds": 0.40387949999421835,
+    "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+    "backpropagation": false,
+    "limitations": [
+      "Labels are final family states, not every intermediate state",
+      "Selected context rules, not full Eggcc",
+      "Source tokens come from exact completed GPU states; recursive predicted-source rollout not established"
+    ]
+  }
+}

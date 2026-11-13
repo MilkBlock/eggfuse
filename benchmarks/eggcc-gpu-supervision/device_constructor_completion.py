@@ -10,6 +10,7 @@ from device_witness_views import compile_view,project
 from device_constructor_results import execute_site
 from device_copy_effects import compile_copies,execute_copy
 from device_input_features import compile_inputs
+from device_semantic_template import token_required
 from device_token_refresh import refresh
 from device_eq_completion import compile_unions,union_inputs,close,finish_unions
 from device_semantic_keys import compile_types
@@ -51,7 +52,7 @@ def compile_completion(recipe,width,include_unions=False):
         base=compile_inputs(rule)
         layout=dict(required=np.zeros((1,width),bool),eq=np.zeros((1,width),bool),sorts=np.full((1,width),-1,np.int32),
                     roles=np.zeros((1,width,64),np.float32),numeric_roles=np.zeros((1,width,64),np.float32))
-        layout['required'][:,:n]=True
+        layout['required'][:,:n]=token_required(rule)
         for key in ('eq','sorts','numeric_roles'):layout[key][:,:n]=base[key]
         layout['roles'][:,:n]=base['roles'][:,:,:64]
         layouts.append((rid,layout))

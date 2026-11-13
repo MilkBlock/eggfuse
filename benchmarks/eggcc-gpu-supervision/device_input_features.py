@@ -4,7 +4,8 @@ Equality identity stays integer. Numeric scalar features use f32 arithmetic;
 exact semantic scalar storage and operations remain outside this encoder.
 """
 import numpy as np
-from multi_entry_ridge import template,neighborhood_template,vec
+from multi_entry_ridge import vec
+from device_semantic_template import template,neighborhood_template
 from device_token_refresh import encode_batch
 
 

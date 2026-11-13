@@ -23,13 +23,15 @@ def main():
     for key in ('capture','decoder','decoder_report','output'):p.add_argument(key,type=Path)
     a=p.parse_args();started=time.monotonic();meta=json.loads(a.capture.with_suffix('.json').read_text());report=json.loads(a.decoder_report.read_text())
     if hashlib.sha256(a.capture.read_bytes()).hexdigest()!=meta['capture']['artifact_sha256']:raise ValueError('capture hash')
-    if meta['capture']['schema']!='device-joint-witness/v2' or not meta['capture']['passed']:raise ValueError('unverified target capture')
+    if meta['capture']['schema'] not in ('device-joint-witness/v2','device-joint-witness/v3') or not meta['capture']['passed']:raise ValueError('unverified target capture')
+    if meta['capture']['schema']=='device-joint-witness/v3' and 'semantic_recipe' not in meta:raise ValueError('semantic target definition missing')
     if hashlib.sha256(a.decoder.read_bytes()).hexdigest()!=report['weights_sha256']:raise ValueError('decoder hash')
     if meta['model_sha256']!=report['model_sha256']:raise ValueError('decoder parent model mismatch')
     with np.load(a.capture) as data:
         ids=[meta['source_rules'].index(int(r)) for r in data['rules']]
-        rows=rows_from_labels(meta['recipe'],ids,data['target_eq_classes'])
+        rows=rows_from_labels(meta.get('semantic_recipe',meta['recipe']),ids,data['target_eq_classes'])
         targets=data['targets'];predicted=data['predicted_tokens']
+        sample_rules=data['rules'].copy();generated=data['generated_source'].copy() if 'generated_source' in data else None
         label_stats=dict(full_pair_queries=sum(len(r['pairs']) for r in rows),static_equalities=sum(int(r['static'].sum()) for r in rows),
             dynamic_quotient_queries=sum(len(r['quotient']['representatives']) for r in rows),dynamic_true_equalities=sum(int(r['y'][r['quotient']['representatives']].sum()) for r in rows),
             distinct_rule_partitions=len({(int(rid),tuple(classes)) for rid,classes in zip(data['rules'],data['target_eq_classes'])}))
@@ -41,8 +43,18 @@ def main():
     for name,tokens in [('cpu_target_token',targets),('gpu_predicted_token',predicted)]:
         features,_=materialize(readout_rows(rows,True),tokens,weights['w'],True)
         result[name]=summarize(rows,(features@coef).reshape(-1))
+    groups={}
+    selectors={('rule_'+str(int(r))):sample_rules==r for r in np.unique(sample_rules)}
+    if generated is not None:selectors.update(direct_source=~generated,generated_source=generated)
+    for group,mask in selectors.items():
+        selected=[r for r,m in zip(rows,mask) if m]
+        if not selected:continue
+        groups[group]={}
+        for name,tokens in [('cpu_target_token',targets),('gpu_predicted_token',predicted)]:
+            x,_=materialize(readout_rows(selected,True),tokens,weights['w'],True)
+            groups[group][name]=summarize(selected,(x@coef).reshape(-1))
     out=dict(scope='actual selected-family GPU token Eq readout; no fitting or union authorization',case=meta['capture']['case'],partition=meta['capture']['partition'],
-        capture_sha256=meta['capture']['artifact_sha256'],adapter_sha256=meta.get('adapter_sha256'),inference_coefficients_sha256=meta.get('inference_coefficients_sha256'),decoder_sha256=report['weights_sha256'],label_statistics=label_stats,results=result,
+        capture_sha256=meta['capture']['artifact_sha256'],adapter_sha256=meta.get('adapter_sha256'),inference_coefficients_sha256=meta.get('inference_coefficients_sha256'),decoder_sha256=report['weights_sha256'],label_statistics=label_stats,results=result,groups=groups,
         cpu_readout_audit_seconds=time.monotonic()-started,backpropagation=False,union_authorized=False,
         limitations=['Small selected immutable Cell family, not full Eggcc','Exact execution establishes completion; ridge is audited separately','Test samples must not be used for fitting'])
     a.output.write_text(json.dumps(out,indent=2)+'\n');print(json.dumps(out,indent=2))

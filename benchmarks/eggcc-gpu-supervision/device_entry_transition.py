@@ -4,7 +4,7 @@ No saved successful bindings are consumed. Existing catalog coverage remains the
 limit: this does not implement multi-source joins or prove stage saturation.
 """
 import numpy as np
-from multi_entry_ridge import template,neighborhood_template
+from device_semantic_template import template,neighborhood_template
 from device_input_features import compile_inputs,encode_inputs
 from device_ridge_transition import infer
 from device_token_commit import closed_entry_proposals,commit
