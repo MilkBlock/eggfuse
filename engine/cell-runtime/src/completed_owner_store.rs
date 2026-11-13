@@ -8,18 +8,21 @@ use std::collections::HashSet;
 #[path="completed_fact_storage.rs"]
 mod fact_storage;
 use fact_storage::Facts;
-use crate::graph::fact_states::{OwnedFact,RestoreCause};
+use crate::graph::fact_states::{OwnedFact,RestoreCause,FactStates};
 pub(super) const COMPLETED:u32=1<<31;
 use super::super::CellMetadata as Metadata;
 pub(super) struct Frame {
     pub(super) routing:Option<crate::graph::cell_ownership::composition::Frame>,
     pub id:u32,
     pub owner:usize,
-    started_epoch:u64,
-    recipe_depth:u32,
     layout:Arc<Layout>,
     slot_start:usize,
     fact_start:usize,
+}
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]
+struct Stage { epoch:u64, depth:u32 }
+impl From<Metadata> for Stage {
+    fn from(meta:Metadata)->Self {Self{epoch:meta.started_epoch,depth:meta.recipe_depth}}
 }
 /// Sparse operation/slot positions only; no values, Eq proofs or lifecycle.
 #[derive(Hash,PartialEq,Eq)]
@@ -31,17 +34,26 @@ struct Layout {
     ops:Box<[u32]>,
 }
 impl Frame {
-    fn meta(&self)->Metadata {
+    fn meta(&self,stage:Stage)->Metadata {
         Metadata{template:self.layout.template,completed_prefix:self.layout.completed_prefix,
             symbolic_slots:self.layout.symbolic_slots,completed:true,
-            started_epoch:self.started_epoch,recipe_depth:self.recipe_depth}
+            started_epoch:stage.epoch,recipe_depth:stage.depth}
     }
     fn slots(&self)->Range<usize> {self.slot_start..self.slot_start+self.layout.slots.len()}
 }
+#[derive(Default)]
 pub(super) struct Owner {
     pub frames:usize,
     pub slots:Box<[Value]>,
     facts:Facts,
+    // The sources already share this physical owner. Their exact common stage
+    // lives here; only differing sources need an entry in stage_exceptions.
+    started_epoch:u64,
+    recipe_depth:u32,
+    stage_exceptions:u32,
+}
+impl Owner {
+    fn stage(&self)->Stage {Stage{epoch:self.started_epoch,depth:self.recipe_depth}}
 }
 #[derive(Default,serde::Serialize)]
 struct Restoration {
@@ -59,6 +71,9 @@ struct Restoration {
 pub(super) struct Completed {
     pub frames:Vec<Frame>,
     pub owners:Vec<Owner>,
+    stage_exceptions:rustc_hash::FxHashMap<u32,Stage>,
+    stage_plan_sources:u64,
+    stage_exception_writes:u64,
     pub representation_fallbacks:u64,
     retired_slot_clears:u64,
     restorations:[Restoration;3],
@@ -67,6 +82,21 @@ pub(super) struct Completed {
     layout_reuses:u64,
 }
 impl Completed {
+    fn stage(&self,frame:&Frame)->Stage {
+        let owner=&self.owners[frame.owner];
+        if owner.stage_exceptions!=0 {
+            if let Some(stage)=self.stage_exceptions.get(&frame.id) {return *stage;}
+        }
+        owner.stage()
+    }
+    fn meta(&self,frame:&Frame)->Metadata {frame.meta(self.stage(frame))}
+    fn set_stage(&mut self,id:u32,stage:Stage,common:Stage)->bool {
+        if stage==common {self.stage_exceptions.remove(&id);false}
+        else {self.stage_exceptions.insert(id,stage);self.stage_exception_writes+=1;true}
+    }
+    fn stage_exception_bytes(&self)->usize {
+        self.stage_exceptions.capacity()*std::mem::size_of::<(u32,Stage)>()
+    }
     fn layout(&mut self,meta:Metadata,slots:Vec<usize>,ops:Vec<u32>)->Arc<Layout> {
         self.layout_checks+=1;
         assert!(meta.completed,"only completed sources share stage layouts");
@@ -105,6 +135,21 @@ fn reserve_bounded<T>(records:&mut Vec<T>,added:usize) {
     }
 }
 impl Cells {
+    // Temporary selection over existing source metadata, not a retained history
+    // or a template assumption. Ties preserve source order. Stage inheritance
+    // never merges the independently mutable lifecycle of the facts themselves.
+    fn common_completed_stage(&mut self,ids:&[u32])->Stage {
+        let mut counts=smallvec::SmallVec::<[(Stage,usize);4]>::new();
+        for &id in ids {
+            let stage=Stage::from(self.cell_metadata(id).expect("checked completed source"));
+            if let Some((_,n))=counts.iter_mut().find(|(s,_)|*s==stage) {*n+=1;}
+            else {counts.push((stage,1));}
+        }
+        self.completed.stage_plan_sources+=ids.len() as u64;
+        let mut common=counts[0];
+        for &item in &counts[1..] {if item.1>common.1 {common=item;}}
+        common.0
+    }
     pub(crate) fn completed_ids(&self)->impl Iterator<Item=u32> {self.completed.frames.iter().map(|f|f.id)}
     pub(crate) fn release_source_capacity(&mut self) {
         self.records.shrink_to_fit();
@@ -119,7 +164,7 @@ impl Cells {
         (address & COMPLETED != 0).then_some((address & !COMPLETED).wrapping_sub(1) as usize)
     }
     pub(crate) fn completed_meta(&self,id:u32)->Option<Metadata> {
-        Some(self.completed.frames.get(self.completed_index(id)?)?.meta())
+        Some(self.completed.meta(self.completed.frames.get(self.completed_index(id)?)?))
     }
     pub(crate) fn completed_slots(&self,id:u32)->Option<Slots<'_>> {
         let f=self.completed.frames.get(self.completed_index(id)?)?;
@@ -132,11 +177,12 @@ impl Cells {
     }
     pub(crate) fn completed_facts(&self,id:u32)->Option<fact_storage::View<'_>> {
         let f=self.completed.frames.get(self.completed_index(id)?)?;
-        Some(self.completed.owners[f.owner].facts.view(f.fact_start,&f.layout.ops,f.started_epoch))
+        Some(self.completed.owners[f.owner].facts.view(f.fact_start,&f.layout.ops,self.completed.stage(f).epoch))
     }
     pub(crate) fn take_completed_fact(&mut self,f:super::super::FactRef)->Option<OwnedFact> {
         let frame=&self.completed.frames[self.completed_index(f.cell)?];
-        self.completed.owners[frame.owner].facts.take(frame.fact_start,&frame.layout.ops,frame.started_epoch,f.op)
+        let epoch=self.completed.stage(frame).epoch;
+        self.completed.owners[frame.owner].facts.take(frame.fact_start,&frame.layout.ops,epoch,f.op)
     }
     /// Called only for checked completed sources, at an idle Run boundary.
     /// Reject the whole group before moving any source frame.
@@ -157,6 +203,8 @@ impl Cells {
     }
     fn transfer_segment(&mut self,ids:&[u32],minimum:usize)->bool {
         if !self.can_transfer_segment(ids,minimum) {return false;}
+        let common=self.common_completed_stage(ids);
+        let mut stage_exceptions=0;
         reserve_bounded(&mut self.completed.frames,ids.len());
         reserve_bounded(&mut self.completed.owners,1);
         let slots=ids.iter().map(|id|self.get(id).unwrap().values.len()).sum();
@@ -167,6 +215,7 @@ impl Cells {
         for &id in ids {
             let c=self.remove(&id).unwrap();
             let meta=Metadata::from(&c);
+            stage_exceptions+=u32::from(self.completed.set_stage(id,meta.into(),common));
             let slot_start=values.len();let fact_start=states.len();
             let mut slots=Vec::new();let mut ops=Vec::new();
             for (slot,value) in c.values.into_unshared().unwrap() {slots.push(slot);values.push(value);}
@@ -174,11 +223,12 @@ impl Cells {
             let layout=self.completed.layout(meta,slots,ops);
             let position=u32::try_from(self.completed.frames.len()+1).unwrap();
             assert!(position<COMPLETED);
-            self.completed.frames.push(Frame{routing:self.route_fallback.remove(&id),id,owner,started_epoch:meta.started_epoch,recipe_depth:meta.recipe_depth,layout,slot_start,fact_start});
+            self.completed.frames.push(Frame{routing:self.route_fallback.remove(&id),id,owner,layout,slot_start,fact_start});
             self.positions[id as usize]=COMPLETED|position;
         }
         let facts=states.finish();
-        self.completed.owners.push(Owner{frames:ids.len(),slots:values.into_boxed_slice(),facts});
+        self.completed.owners.push(Owner{frames:ids.len(),slots:values.into_boxed_slice(),facts,
+            started_epoch:common.epoch,recipe_depth:common.depth,stage_exceptions});
         true
     }
     /// A larger completed Cell can retain several existing storage segments.
@@ -232,6 +282,8 @@ impl Cells {
         if owners.is_empty() || ids.len()<2 || (added==0 && owners.len()==1)
             || owners.iter().any(|&(o,n)|self.completed.owners[o].frames!=n)
             || self.completed.frames.len().saturating_add(added)>=COMPLETED as usize {return None;}
+        let common=self.common_completed_stage(ids);
+        let mut stage_exceptions=0;
         reserve_bounded(&mut self.completed.frames,added);
         let destination=owners[0].0;
         let mut slot_count=0;let mut fact_count=0;
@@ -239,7 +291,7 @@ impl Cells {
             if let Some(i)=self.completed_index(id) {
                 let f=&self.completed.frames[i];let o=&self.completed.owners[f.owner];
                 slot_count+=f.layout.slots.len();
-                fact_count+=o.facts.view(f.fact_start,&f.layout.ops,f.started_epoch).iter().count();
+                fact_count+=o.facts.view(f.fact_start,&f.layout.ops,self.completed.stage(f).epoch).iter().count();
             } else {let c=self.get(&id).unwrap();slot_count+=c.values.len();fact_count+=c.facts.len();}
         }
         let mut values=Vec::with_capacity(slot_count);let mut facts=Facts::builder(fact_count);
@@ -249,14 +301,14 @@ impl Cells {
             let mut slots=Vec::new();let mut ops=Vec::new();
             if let Some(i)=self.completed_index(id) {
                 let frame=&self.completed.frames[i];
-                let meta=frame.meta();
+                let meta=self.completed.meta(frame);
                 let owner=&mut self.completed.owners[frame.owner];
                 for (slot,value) in frame.layout.slots.iter().zip(&mut owner.slots[frame.slots()]) {
                     slots.push(*slot);values.push(std::mem::replace(value,Value::Int(0)));moved_slots+=1;
                 }
                 for (offset,op) in frame.layout.ops.iter().enumerate() {
-                    if let Some(state)=owner.facts.take_at(frame.fact_start+offset,frame.started_epoch) {
-                        ops.push(*op);facts.push(Some(state),frame.started_epoch);moved_facts+=1;
+                    if let Some(state)=owner.facts.take_at(frame.fact_start+offset,meta.started_epoch) {
+                        ops.push(*op);facts.push(Some(state),meta.started_epoch);moved_facts+=1;
                     }
                 }
                 let layout=self.completed.layout(meta,slots,ops);
@@ -264,21 +316,24 @@ impl Cells {
                 let old=std::mem::replace(&mut frame.layout,layout);
                 frame.owner=destination;frame.slot_start=slot_start;frame.fact_start=fact_start;
                 self.completed.release_layout(old);
+                stage_exceptions+=u32::from(self.completed.set_stage(id,meta.into(),common));
             } else {
                 let c=self.remove(&id).unwrap();let meta=Metadata::from(&c);
+                stage_exceptions+=u32::from(self.completed.set_stage(id,meta.into(),common));
                 for (slot,value) in c.values.into_unshared().unwrap() {slots.push(slot);values.push(value);}
                 for (op,state) in c.facts {ops.push(op);facts.push(Some(OwnedFact::checked(&state).expect("checked owner fact")),meta.started_epoch);}
                 let layout=self.completed.layout(meta,slots,ops);
                 let index=self.completed.frames.len();
-                self.completed.frames.push(Frame{routing:self.route_fallback.remove(&id),id,owner:destination,started_epoch:meta.started_epoch,recipe_depth:meta.recipe_depth,layout,slot_start,fact_start});
+                self.completed.frames.push(Frame{routing:self.route_fallback.remove(&id),id,owner:destination,layout,slot_start,fact_start});
                 self.positions[id as usize]=COMPLETED|(index as u32+1);
             }
         }
         for &(owner,_) in &owners {
-            self.completed.owners[owner]=Owner{frames:0,slots:Box::default(),facts:Facts::default()};
+            self.completed.owners[owner]=Owner::default();
         }
         let facts=facts.finish();
-        self.completed.owners[destination]=Owner{frames:ids.len(),slots:values.into_boxed_slice(),facts};
+        self.completed.owners[destination]=Owner{frames:ids.len(),slots:values.into_boxed_slice(),facts,
+            started_epoch:common.epoch,recipe_depth:common.depth,stage_exceptions};
         Some((added,owners.len()-1,moved_slots,moved_facts))
     }
     /// Boundary fallback: move the remaining fields/facts back before a
@@ -286,7 +341,7 @@ impl Cells {
     pub(crate) fn unseal_completed(&mut self,id:u32,cause:RestoreCause)->Option<Cell> {
         let index=self.completed_index(id)?;
         let frame=&self.completed.frames[index];
-        let meta=frame.meta();
+        let meta=self.completed.meta(frame);
         let owner=&mut self.completed.owners[frame.owner];
         let values=frame.layout.slots.iter().zip(owner.slots[frame.slots()].iter_mut())
             .map(|(s,v)|(*s,std::mem::replace(v,Value::Int(0)))).collect();
@@ -316,7 +371,8 @@ impl Cells {
     pub(crate) fn write_completed_fact(&mut self,f:super::super::FactRef,state:super::super::FactState) {
         if let Some(compact)=OwnedFact::checked(&state) {
             let frame=&self.completed.frames[self.completed_index(f.cell).expect("live completed writer")];
-            self.completed.owners[frame.owner].facts.write(frame.fact_start,&frame.layout.ops,frame.started_epoch,f.op,compact);
+            let epoch=self.completed.stage(frame).epoch;
+            self.completed.owners[frame.owner].facts.write(frame.fact_start,&frame.layout.ops,epoch,f.op,compact);
         } else {
             let mut cell=self.unseal_completed(f.cell,RestoreCause::Representation).expect("exceptional completed writer");
             *cell.facts.get_mut(&f.op).expect("live completed fact")=state;
@@ -334,6 +390,7 @@ impl Cells {
             self.positions[moved.id as usize]=COMPLETED|u32::try_from(index+1).unwrap();
         }
         let owner=&mut self.completed.owners[removed.owner];
+        if self.completed.stage_exceptions.remove(&id).is_some() {owner.stage_exceptions-=1;}
         owner.frames-=1;
         if owner.frames==0 {owner.slots=Box::default();owner.facts=Facts::default();}
         else {
@@ -358,8 +415,8 @@ impl Cells {
             "template":template,"completed_prefix":prefix,"symbolic_slots":symbolic,"slots":slots,"ops":ops
         })).collect::<Vec<_>>();
         let mut frames=self.completed.frames.iter().map(|f|serde_json::json!({
-            "cell":f.id,"owner":f.owner,"layout":ids[&key(f)],"started_epoch":f.started_epoch,
-            "recipe_depth":f.recipe_depth,"slot_start":f.slot_start,"fact_start":f.fact_start
+            "cell":f.id,"owner":f.owner,"layout":ids[&key(f)],"started_epoch":self.completed.stage(f).epoch,
+            "recipe_depth":self.completed.stage(f).depth,"slot_start":f.slot_start,"fact_start":f.fact_start
         })).collect::<Vec<_>>();
         frames.sort_by_key(|f|f["cell"].as_u64().unwrap());
         let owners=self.completed.owners.iter().enumerate().filter(|(_,o)|o.frames>0).map(|(id,o)|
@@ -379,7 +436,7 @@ impl Cells {
         let mut widths=BTreeMap::<usize,usize>::new();
         for f in &self.completed.frames {
             *templates.entry(f.layout.template).or_default()+=1;
-            epochs.entry(f.owner).or_default().insert(f.started_epoch);
+            epochs.entry(f.owner).or_default().insert(self.completed.stage(f).epoch);
         }
         for owner in self.completed.owners.iter().filter(|o|o.frames>0) {*widths.entry(owner.frames).or_default()+=1;}
         let slots=self.completed.owners.iter().map(|o|o.slots.len()).sum::<usize>();
@@ -396,6 +453,13 @@ impl Cells {
                 "scope":"restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"},
             "fact_storage_encoding":"shared sparse membership; instance hashes and lifecycle exceptions",
             "source_frame_bytes":std::mem::size_of::<Frame>(),
+            "stage_inheritance":{"exceptions":self.completed.stage_exceptions.len(),
+                "mixed_owners":self.completed.owners.iter().filter(|o|o.stage_exceptions!=0).count(),
+                "exception_capacity":self.completed.stage_exceptions.capacity(),
+                "exception_payload_estimate_bytes":self.completed.stage_exception_bytes(),
+                "source_metadata_reads_at_grouping":self.completed.stage_plan_sources,
+                "exception_writes":self.completed.stage_exception_writes,
+                "read_path":"common owners read their stage directly; mixed owners also probe exact source exceptions"},
             "shared_membership_layouts":self.completed.layouts.len(),"layout_checks":self.completed.layout_checks,
             "layout_reuses":self.completed.layout_reuses,"layout_estimated_bytes":self.completed.layout_bytes(),
             "owner_grouping":"physical arrays may span logical components; source frames restore independently",
@@ -416,7 +480,8 @@ impl Cells {
     }
     pub(crate) fn completed_storage(&self)->(usize,usize,usize,usize) {
         (self.completed.frames.capacity()*std::mem::size_of::<Frame>()
-            +self.completed.owners.capacity()*std::mem::size_of::<Owner>()+self.completed.layout_bytes(),
+            +self.completed.owners.capacity()*std::mem::size_of::<Owner>()+self.completed.layout_bytes()
+            +self.completed.stage_exception_bytes(),
          self.completed.owners.iter().map(|o|std::mem::size_of_val(o.slots.as_ref())).sum(),
          self.completed.owners.iter().map(|o|o.facts.bytes()).sum(),
          self.completed.frames.len())
@@ -426,6 +491,48 @@ impl Cells {
 #[cfg(test)]
 mod stage_layout_tests {
     use super::*;
+    #[test]
+    fn owner_stage_changes_preserve_source_and_fact_lifecycles() {
+        let mut cells=Cells::default();
+        for id in 1..=6 {
+            let (epoch,depth)=if id==2 || id==3 {(20,2)} else {(10,1)};
+            cells.insert(id,Cell{template:0,completed_prefix:1,symbolic_slots:false,
+                started_epoch:epoch,recipe_depth:depth,completed:true,parent:None,
+                values:[(0,Value::Int(id as i64))].into_iter().collect(),
+                facts:[(0,OwnedFact::inherited(epoch,0).restore())].into_iter().collect()});
+        }
+        assert!(cells.transfer_completed(&[1,2,3]));
+        assert!(cells.transfer_completed(&[4,5,6]));
+        assert_eq!(cells.completed.stage_exceptions.len(),1);
+        assert_eq!(cells.completed.owners[0].started_epoch,20);
+        let mut changed=cells.completed_facts(3).unwrap().get(0).unwrap().restore();
+        changed.hidden=true;changed.epoch=99;
+        cells.write_completed_fact(super::super::super::FactRef{cell:3,op:0},changed);
+        assert!(cells.extend_completed(&[1,2,3,4,5,6]).is_some());
+        let owner=cells.completed.frames[cells.completed_index(1).unwrap()].owner;
+        assert_eq!(cells.completed.owners[owner].started_epoch,10);
+        assert_eq!(cells.completed.owners[owner].stage_exceptions,2);
+        assert_eq!(cells.completed.stage_exceptions.len(),2);
+        assert!(!cells.completed.stage_exceptions.contains_key(&1),"old exception now inherits");
+        for id in 1..=6 {
+            let meta=cells.completed_meta(id).unwrap();
+            let expected=if id==2 || id==3 {(20,2)} else {(10,1)};
+            assert_eq!((meta.started_epoch,meta.recipe_depth),expected);
+            let fact=cells.completed_facts(id).unwrap().get(0).unwrap();
+            assert_eq!(fact.read().born,expected.0);
+            assert_eq!(fact.read().epoch,if id==3 {99} else {expected.0});
+            assert_eq!(fact.read().hidden,id==3);
+        }
+        assert!(cells.retire_completed(2));
+        assert_eq!(cells.completed.owners[owner].stage_exceptions,1);
+        let restored=cells.unseal_completed(3,RestoreCause::ComponentRetirement).unwrap();
+        assert_eq!((restored.started_epoch,restored.recipe_depth),(20,2));
+        assert_eq!((restored.facts[&0].born,restored.facts[&0].epoch),(20,99));
+        assert!(restored.facts[&0].hidden);
+        assert!(cells.completed.stage_exceptions.is_empty());
+        assert_eq!(cells.completed.owners[owner].stage_exceptions,0);
+        assert_eq!(cells.completed_meta(6).unwrap().started_epoch,10);
+    }
     #[test]
     fn retired_source_releases_heap_values_without_moving_live_siblings() {
         let mut cells=Cells::default();

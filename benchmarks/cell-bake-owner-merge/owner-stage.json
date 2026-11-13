@@ -1,0 +1,65 @@
+{
+  "scope": "actual standalone Cell runtime requested heap; no timing or upstream egglog claim",
+  "before": {
+    "graph_owned_teardown_bytes": 1242855,
+    "retained_program_teardown_bytes": 107935263,
+    "execution_and_takeover_peak_bytes": 113752343,
+    "max_takeover_extra_bytes": 19568
+  },
+  "after": {
+    "graph_owned_teardown_bytes": 1233775,
+    "retained_program_teardown_bytes": 107935263,
+    "execution_and_takeover_peak_bytes": 113744261,
+    "max_takeover_extra_bytes": 17776
+  },
+  "graph_saved_bytes": 9080,
+  "historical_denominator": 3979373,
+  "historical_denominator_limit": "working-tree observation, not isolated immutable baseline executable",
+  "threshold_bytes": 1193811,
+  "remaining_bytes": 39964,
+  "stage_inheritance": {
+    "exceptions": 81,
+    "mixed_owners": 40,
+    "exception_capacity": 111,
+    "exception_payload_estimate_bytes": 2664,
+    "source_metadata_reads_at_grouping": 2492,
+    "exception_writes": 89,
+    "read_path": "common owners read their stage directly; mixed owners also probe exact source exceptions"
+  },
+  "same_run_sequence": true,
+  "same_final_digest": true,
+  "same_logical_ownership": true,
+  "same_fact_lifecycles": true,
+  "source_inventory_equality": {
+    "frames": true,
+    "layouts": true,
+    "owners": true,
+    "routing": true
+  },
+  "run_boundary_checks": {
+    "runs": 882,
+    "every_run_graph_and_ordered_audits_equal": true,
+    "saved_checks_equal": true
+  },
+  "native_semantic_status": "pass",
+  "jobs": {
+    "runtime_218_tests": 403,
+    "ownership_69_tests_build_and_memory": 404,
+    "run_checks": 405,
+    "native_minimal_and_worker_feature_tests": 407,
+    "worker_read_and_publication_tests": 408
+  },
+  "sha256": {
+    "runtime_storage_peak": "38a4e735b663ef45f92c68e60ab6de68fa9f59ed7eda3ce15528460f7cdcd8a8",
+    "runtime_storage_comparison": "5fd1dd8408b9eda489a868510bfbef2c34d6961079cb39bbbb2db4f1375f1700",
+    "memory.json": "acc63ee80880882fa1c1183d731171c6acbccc45185d28d792fab695a0fb68fd",
+    "checked.json": "7384beef216ad8c6aa0b1ed4df3852fd90d2a5bad587ba12933cc2fa645fb24e",
+    "semantic.json": "107438ef63ad7bb3b8c544c6619575a23813f6ab4c78aff186e93bd99d145976"
+  },
+  "field_changes": {
+    "cells": {
+      "before": 394562,
+      "after": 385482
+    }
+  }
+}
