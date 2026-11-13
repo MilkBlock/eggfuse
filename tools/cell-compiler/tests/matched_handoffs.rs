@@ -72,3 +72,45 @@ fn selected_paths_relower_without_expansion_and_reject_removed_publications() {
     assert!(Catalog::relower_selected(&p,&mut plan,&policy).is_err());
     assert_eq!(plan,invalid);
 }
+
+#[test]
+fn matched_handoffs_seed_from_typed_producers_without_spine_blocks() {
+    let source=fixture::SOURCE.replace("((B x n) (= a (A x)) (Edge x y)) ((Out a y))",
+        "((B x n) (Edge x y)) ((Out (A x) y))");
+    let core=eggfuse_bake::device_frontend::core("root-only-handoff",&source).unwrap();
+    let raw=eggfuse_cell_runtime::compiler::compile(core,&Default::default()).unwrap();
+    assert!(raw.get("spine_blocks").is_none());
+    assert!(raw.get("iterative_bake").is_none());
+    let p=Program::parse(raw).unwrap();
+    assert!(Catalog::seed(&p,Default::default()).is_err(),"empty catalogs still require a real root");
+    let mut no_plan=serde_json::Value::Null;
+    Catalog::emit_matched_routes(&p,&mut no_plan,&[]).unwrap();
+    assert!(no_plan.is_null(),"an empty route request must not add maintenance");
+    let fast=install(&p);
+    assert!(fast.artifact.get("spine_blocks").is_none());
+    let base=execute(p,false,false);
+    for (owned,workers) in [(false,false),(true,false),(true,true)] {
+        let e=execute(fast.clone(),owned,workers);
+        assert_eq!(base.snapshots,e.snapshots);
+        assert_eq!(base.binding_audit,e.binding_audit);
+        assert!(e.graph.stats.handoff_lets>base.graph.stats.handoff_lets,
+            "root-only catalog must consume actual retained results");
+        assert!(e.graph.key_lookup_calls.get()<base.graph.key_lookup_calls.get(),
+            "root-only handoff must remove queries, not merely dispatch a new state");
+        assert!(e.report()["stage_spine"]["stats"]["matched_entry_resumptions"].as_u64().unwrap()>0);
+    }
+}
+
+#[test]
+fn root_only_route_without_rhs_reuse_does_not_create_a_catalog() {
+    let core=eggfuse_bake::device_frontend::core("no-reuse-root",fixture::SOURCE).unwrap();
+    let p=Program::parse(eggfuse_cell_runtime::compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let rules=p.artifact["recipe"]["rules"].as_array().unwrap();
+    let id=|name|rules.iter().position(|r|r["metadata"]["name"]==name).unwrap();
+    let (producer,consumer)=(id("producer"),id("consumer"));
+    let output=rules[producer]["effects"].as_array().unwrap().iter().position(|e|e["call"]["table"]=="B").unwrap();
+    let pivot=p.rules[consumer].query.iter().position(|a|matches!(a.call,Call::Table(t) if p.tables[t].name=="B")).unwrap();
+    let mut plan=serde_json::Value::Null;
+    Catalog::emit_matched_routes(&p,&mut plan,&[(producer,output,consumer,pivot)]).unwrap();
+    assert!(plan.is_null(),"query overlap alone must not add a result-history catalog");
+}

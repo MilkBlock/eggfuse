@@ -177,10 +177,13 @@ impl Catalog {
     pub fn seed_with_roots(p: &Program, limits: Limits, roots: &[usize]) -> Result<J> {
         limits.validate()?;
         let seed = &p.artifact["spine_blocks"];
-        let entries = seed["entries"]
-            .as_array()
-            .ok_or("warm start requires validated spine blocks")?;
-        if entries.is_empty() || entries.len().saturating_add(roots.len()) > limits.total {
+        // Completed typed producers can seed matched handoffs without an
+        // unrelated query-expansion block. Non-null block artifacts must still
+        // supply their validated entry array and remain part of the digest.
+        let entries: &[J] = if seed.is_null() { &[] } else {
+            seed["entries"].as_array().ok_or("invalid spine block seed")?
+        };
+        if (entries.is_empty() && roots.is_empty()) || entries.len().saturating_add(roots.len()) > limits.total {
             return Err("seed size outside catalog budget".into());
         }
         if roots.iter().any(|&r| r >= p.rules.len()) || roots.windows(2).any(|w| w[0] >= w[1]) {
@@ -219,7 +222,7 @@ impl Catalog {
         // Duplicate-path validation is a construction obligation, not runtime
         // state. Drop its owned keys when the checked catalog is complete.
         let mut paths = BTreeSet::new();
-        for e in array(&p.artifact["spine_blocks"]["entries"])? {
+        for e in p.artifact["spine_blocks"]["entries"].as_array().into_iter().flatten() {
             let entry = (
                 e["consumer"].as_u64().unwrap() as usize,
                 Some(e["pivot"].as_u64().unwrap() as usize),

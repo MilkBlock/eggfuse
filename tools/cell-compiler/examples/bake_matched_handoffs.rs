@@ -35,8 +35,9 @@ fn main()->Result<(),Box<dyn Error>> {
     // Retain the exact selected source fragments as an experimental candidate,
     // rechecking their typed shapes below; runtime admission remains mandatory.
     raw.as_object_mut().unwrap().remove("ownership_markers");
-    if raw.get("ownership_fragments").is_some() {
-        raw["ownership_fragments"]["source"]=eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw).into();
+    let source=eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw);
+    for field in ["ownership_fragments","ownership_witnesses"] {
+        if raw.get(field).is_some() {raw[field]["source"]=source.clone().into();}
     }
     raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=artifact_digest(&raw).into();
     let mut checked=Program::parse(raw.clone())?;

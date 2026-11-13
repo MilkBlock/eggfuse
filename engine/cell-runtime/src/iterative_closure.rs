@@ -53,6 +53,9 @@ impl Catalog {
             selected.push(json!({"producer":producer,"output":output,"consumer":consumer,"pivot":pivot}));
             catalog=trial;
         }
+        // A null initial catalog with no useful typed reuse remains absent.
+        // Do not manufacture roots, captures or dispatch for rejected routes.
+        if catalog.units.is_empty() { return Ok(()); }
         encode_catalog(p,plan,&catalog)?;
         Self::emit_policy(p,plan,true,true,true,true,true,false,None)?;
         plan["matched_route_selection"]=json!({"routes":selected,
