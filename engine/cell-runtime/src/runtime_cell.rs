@@ -48,7 +48,7 @@ pub(super) struct Execution {
     pub cursor: Option<crate::stage_spine::Started>,
     pub effects: crate::cell::Effects,
     #[cfg(feature = "sparse-cells")]
-    pub constructor: Option<FactRef>,
+    pub constructor: Option<crate::graph::ConstructorWitness>,
     #[cfg(feature = "sparse-cells")]
     pub births: Option<crate::graph::cell_births::Window>,
     pub continuation: bool,

@@ -52,6 +52,19 @@ pub struct FactRef {
     pub cell: u32,
     pub op: u32,
 }
+/// Source validation consumes a prepared snapshot once. Rejected snapshots
+/// retain their actual witness for the ordinary forwarding/exact-key check.
+#[derive(Clone, Copy, Debug)]
+pub(crate) enum ConstructorWitness {
+    Snapshot(FactRef),
+    Key(FactRef),
+}
+impl From<FactRef> for ConstructorWitness {
+    fn from(fact: FactRef) -> Self { Self::Snapshot(fact) }
+}
+impl ConstructorWitness {
+    fn fact(self) -> FactRef { match self { Self::Snapshot(f) | Self::Key(f) => f } }
+}
 impl FactRef {
     fn ordered_id(self) -> u64 {
         (u64::from(self.cell) << 32) | u64::from(self.op)
@@ -1990,7 +2003,7 @@ impl Graph {
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn construct_prepared(&mut self, cell: u32, op: usize, table: usize,
-        args: &[Arg], dst: usize, receipt: Option<&mut Option<Dependency>>, witness: FactRef) -> Result<Value> {
+        args: &[Arg], dst: usize, receipt: Option<&mut Option<Dependency>>, witness: ConstructorWitness) -> Result<Value> {
         self.construct_inner(cell, op, table, args, dst, None, receipt, Some(witness))
     }
     /// The checked preparation plan uses immutable captured inputs and their
@@ -2000,7 +2013,7 @@ impl Graph {
     /// the ordinary exact-key check. Callers must consume the prepared witness
     /// at its selected source operation, never treat arbitrary receipts this way.
     #[cfg(feature = "sparse-cells")]
-    fn sealed_constructor_result(&mut self, cell: u32, table: usize, witness: FactRef) -> Result<Option<Point>> {
+    pub(crate) fn sealed_constructor_result(&mut self, cell: u32, table: usize, witness: FactRef) -> Result<Option<Point>> {
         self.stats.constructor_prepared_certificates += 1;
         if self.sealed_input_cell != Some(cell)
             || self.sealed_generation != Some(self.stats.unions)
@@ -2066,11 +2079,11 @@ impl Graph {
         dst: usize,
         visible: Option<&mut bool>,
         receipt: Option<&mut Option<Dependency>>,
-        witness: Option<FactRef>,
+        witness: Option<ConstructorWitness>,
     ) -> Result<Value> {
         self.stats.constructor_requests += 1;
         #[cfg(feature = "sparse-cells")]
-        if let Some(witness) = witness
+        if let Some(ConstructorWitness::Snapshot(witness)) = witness
             && let Some(point) = self.sealed_constructor_result(cell, t, witness)? {
             if let Some(receipt) = receipt { *receipt = Some(point.witness); }
             if let Some(visible) = visible { *visible = true; }
@@ -2079,7 +2092,7 @@ impl Graph {
             return Ok(point.value);
         }
         let key = self.inline_arguments(cell, aa)?;
-        let row = self.lookup_prepared_constructor(t, &key, witness)?;
+        let row = self.lookup_prepared_constructor(t, &key, witness.map(ConstructorWitness::fact))?;
         if let Some(row) = row {
             if let Some(receipt) = receipt {
                 *receipt = Some(row.witness);

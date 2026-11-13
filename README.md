@@ -20,6 +20,8 @@ The [structural Bake refresh](benchmarks/cell-bake-refresh/README.md) adds poole
 
 The latest [root continuation checkpoint](benchmarks/cell-root-continuation/README.md) consumes existing constructor results during Cell admission, removing repeated parameter preparation while retaining exact lookup and source ordering.
 
+[Prepared Cell continuation](benchmarks/cell-prepared-continuation/README.md) consumes valid worker witnesses before conflict/key preparation and releases completed instances that have no publication responsibility.
+
 ## Quick start
 
 Requires Rust/Cargo and the vendored dependencies in this repository. From the repository root, use fresh output directories:

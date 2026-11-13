@@ -827,6 +827,60 @@ fn deleted_prepared_witnesses_cannot_supply_new_constructor_identity() {
 }
 
 #[test]
+fn prepared_cells_complete_beside_pending_roots_and_reject_retired_providers_once() {
+    let seed=(0..48).map(|n|format!("(F (N {n}))")).collect::<Vec<_>>().join("\n");
+    for mode in ["live","delete","hide"] {
+        let retire=match mode {
+            "delete"=>"(rule ((= x (N n))) ((delete (F x))) :ruleset step)",
+            "hide"=>"(rule ((= x (N n))) ((subsume (F x))) :ruleset step)",
+            _=>"",
+        };
+        let source=format!(r#"
+(datatype E (N i64) (F E) (Fresh E) (Tail E))
+(ruleset step)
+{retire}
+(rule ((= x (N n))) ((let f (Fresh x)) (Tail f)) :ruleset step)
+(rule ((= x (N n))) ((F x)) :ruleset step)
+{seed}
+(run-schedule (run step))
+"#);
+        egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+        let mut control=executor(&source,4);control.execute().unwrap();
+        let mut candidate=executor(&source,4);candidate.use_cell_execution(1).unwrap();
+        #[cfg(feature="storage-metrics")]
+        eggfuse_cell_runtime::rhs_projection_trace::start(2048,&candidate.graph.program);
+        candidate.execute().unwrap();same(&control,&candidate);
+        #[cfg(feature="storage-metrics")]
+        {
+            let trace=eggfuse_cell_runtime::rhs_projection_trace::finish();
+            if mode=="live" {
+                let table=candidate.graph.program.tables.iter().position(|t|t.name=="F").unwrap();
+                let events=trace["trace"]["boundaries"].as_array().unwrap().iter()
+                    .filter(|e|e["table"]==table).collect::<Vec<_>>();
+                assert!(!events.is_empty());
+                assert!(events.iter().all(|e|e["success"]==true && !e["receipt"].is_null()),
+                    "the observer must see actual undemanded witnesses: {trace}");
+            }
+        }
+        let report=candidate.report();let counts=&report["cell_execution"]["runtime"]["stats"]["scheduler"];
+        if mode=="live" {
+            assert!(counts["prepared_resumptions"].as_u64().unwrap()>0,"{counts}");
+            assert!(counts["completed_without_queue"].as_u64().unwrap()>0,"{counts}");
+            assert_eq!(counts["prepared_key_fallbacks"],0);
+        } else {
+            assert!(counts["prepared_key_fallbacks"].as_u64().unwrap()>0,"{counts}");
+            assert_eq!(counts["prepared_resumptions"],0);
+            assert_eq!(candidate.graph.stats.constructor_prepared_rejected,48);
+        }
+        assert_eq!(candidate.graph.stats.constructor_prepared_certificates,48,"one certificate per prepared source operation: {mode}");
+        for key in ["constructor_requests","constructor_reused","logical_facts_created","function_updates","unions"] {
+            assert_eq!(report["stats"][key],control.report()["stats"][key],"{mode}: {key}");
+        }
+        assert_eq!(candidate.graph.stats.rhs_suspend_holds,candidate.graph.stats.rhs_suspend_releases);
+    }
+}
+
+#[test]
 fn absent_constructor_preparation_does_not_prove_absence_at_source_position() {
     let source = format!(r#"{HEADER}
 (rule ((= x (N n))) ((F x n)) :ruleset step)

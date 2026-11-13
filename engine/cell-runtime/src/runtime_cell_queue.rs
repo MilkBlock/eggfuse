@@ -146,6 +146,40 @@ impl Executor {
             }
         }
     }
+    /// The original read snapshot already proved this constructor's key. A
+    /// live foreign witness cannot depend on a root still being born by a peer.
+    /// Consume that proof at its source position, before preparing conflict keys.
+    fn resume_prepared_cell(&mut self, execution: &mut owned_cell::Execution, position: usize) -> Result<bool> {
+        use crate::graph::ConstructorWitness;
+        let Some(ConstructorWitness::Snapshot(witness)) = execution.constructor else { return Ok(false); };
+        if execution.births.is_some() || witness.cell == execution.cell
+            || execution.aliases.as_ref().is_some_and(|a|a[position])
+            || execution.transfers.get(execution.transfer).is_some_and(|t|t.op==position)
+            || !self.graph.program.executions[execution.rule].constructor.as_ref()
+                .is_some_and(|p|p.operation==position)
+            || !self.graph.pipelined_births_ready() { return Ok(false); }
+        let Op::Let(dst,Call::Table(table),_) = &execution.ops[position]
+            else { unreachable!("checked constructor preparation"); };
+        let Some(point) = self.graph.sealed_constructor_result(execution.cell,*table,witness)? else {
+            execution.constructor=Some(ConstructorWitness::Key(witness));
+            self.cell_execution.as_mut().unwrap().counts.scheduler.prepared_key_fallbacks+=1;
+            return Ok(false);
+        };
+        #[cfg(feature="storage-metrics")]
+        let probe=crate::rhs_projection_trace::before(&self.graph,execution.rule,execution.cell,position,&execution.known);
+        execution.effects.writer().record(position,point.witness);
+        let frame=self.graph.rhs_frame_mut(execution.cell).unwrap();
+        frame.values.insert(*dst,point.value);
+        frame.completed_prefix=position+1;
+        execution.constructor=None;
+        execution.work.constructors+=1;
+        self.graph.stats.constructor_requests+=1;
+        self.graph.stats.constructor_reused+=1;
+        self.cell_execution.as_mut().unwrap().counts.scheduler.prepared_resumptions+=1;
+        #[cfg(feature="storage-metrics")]
+        crate::rhs_projection_trace::after(&self.graph,probe,&crate::cell::SingleEffect(position,point.witness),true);
+        Ok(true)
+    }
     fn adopt_cell_event(&mut self, parked: Parked, completed: Option<Completed>,
         publication:Option<crate::graph::cell_births::Publication>) -> Result<()> {
         let mut execution = parked.execution;
@@ -377,7 +411,14 @@ impl Executor {
                         .unwrap()
                         .completed_prefix;
                     if position == execution.ops.len() {
-                        if queue.is_empty() {
+                        // No newly written fact, source effect or Cursor owns a
+                        // publication here. Finishing only releases this instance;
+                        // it need not wait behind unrelated infallible worker tails.
+                        let release = execution.cursor.is_none()
+                            && self.graph.program.rules[rid].completion == crate::cell::Completion::Constructors
+                            && execution.work.facts == 0 && execution.work.updates == 0 && execution.work.unions == 0;
+                        if queue.is_empty() || release {
+                            if !queue.is_empty() {self.cell_execution.as_mut().unwrap().counts.scheduler.completed_without_queue+=1;}
                             self.finish_attached_cell(execution)?;
                         } else {
                             self.park_cell(queue, execution, None);
@@ -392,6 +433,7 @@ impl Executor {
                         self.graph.rhs_frame_mut(execution.cell).unwrap().completed_prefix = position + 1;
                         continue;
                     }
+                    if self.resume_prepared_cell(&mut execution,position)? {continue;}
                     let prepared_root=execution.constructor.is_some() && self.graph.program.executions[rid]
                         .constructor.as_ref().is_some_and(|plan|plan.operation==position);
                     if roots && execution.births.is_none() && !prepared_root {

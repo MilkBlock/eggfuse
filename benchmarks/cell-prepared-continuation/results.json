@@ -1,0 +1,1160 @@
+{
+  "scope": "actual standalone Cell CPU; work/semantics, no speed claim or native Raytrace proof",
+  "control_commit": "64f022a8",
+  "control_runtime_sha256": "79c5a023ab5d10ca8b3f12918112ef373f47047b8c577e6568ea552c23e1e24a",
+  "candidate_runtime_sha256": "919dc257ce752dcdaa2b26b2c85b942d07d6442045807ff5591e8e892f7de9fe",
+  "validation": [
+    {
+      "name": "runtime",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication",
+        "--lib"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-parallel_residuals",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "parallel_residuals"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-query_workers",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "query_workers"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-scoped_completion",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "scoped_completion"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-entry_publications",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "entry_publications"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-parallel_publication",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "parallel_publication"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-cell_execution",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "cell_execution"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-joint_results",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "joint_results"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-cell_owner_pipeline",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "cell_owner_pipeline"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "collisions",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "cell_execution",
+        "--test",
+        "cell_owner_pipeline"
+      ],
+      "environment": {
+        "CELL_CPU_HASH_BITS": "0",
+        "CELL_CPU_SIEVE_COLLISIONS": "1",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "collision-registration",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication",
+        "--lib",
+        "cell_births::unit_registration"
+      ],
+      "environment": {
+        "CELL_CPU_HASH_BITS": "0",
+        "CELL_CPU_SIEVE_COLLISIONS": "1",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "all-features",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--all-features"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "sparse",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--no-default-features",
+        "--features",
+        "sparse-cells"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "legacy",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--no-default-features"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "collision-roots",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication",
+        "--lib",
+        "graph::cell_births::roots"
+      ],
+      "environment": {
+        "CELL_CPU_HASH_BITS": "0",
+        "CELL_CPU_SIEVE_COLLISIONS": "1",
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "collision-fused",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication",
+        "--lib",
+        "constructor_registration::fused"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CELL_CPU_HASH_BITS": "0",
+        "CELL_CPU_SIEVE_COLLISIONS": "1",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "storage-prepared",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication,storage-metrics",
+        "--test",
+        "cell_execution",
+        "prepared_cells_complete"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "integration-cell_ownership",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication,storage-metrics",
+        "--test",
+        "cell_ownership"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "storage-root-trace",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication,storage-metrics",
+        "--lib",
+        "graph::cell_births::roots"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "readme-compile",
+      "command": [
+        "cargo",
+        "cell-compile",
+        "--case",
+        "sum-bits",
+        "--output",
+        "out/cell-prepared-continuation/readme-program"
+      ],
+      "exit_code": 0,
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      }
+    },
+    {
+      "name": "readme-run",
+      "command": [
+        "cargo",
+        "cell-run",
+        "--program",
+        "out/cell-prepared-continuation/readme-program/program.json",
+        "--output",
+        "out/cell-prepared-continuation/readme-run"
+      ],
+      "exit_code": 0,
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      }
+    },
+    {
+      "name": "readme-bench",
+      "command": [
+        "cargo",
+        "cell-bench",
+        "--program",
+        "out/cell-prepared-continuation/readme-program/program.json",
+        "--repeat",
+        "1"
+      ],
+      "exit_code": 0,
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      }
+    },
+    {
+      "name": "release-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication"
+      ],
+      "environment": {
+        "CARGO_INCREMENTAL": "0",
+        "CARGO_BUILD_JOBS": "1"
+      },
+      "exit_code": 0
+    }
+  ],
+  "workloads": {
+    "sum": {
+      "program_sha256": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "runs": 1428,
+      "exact_final_state_run_summaries_and_effects": true,
+      "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec",
+      "logical_effects": {
+        "constructor_requests": 8014,
+        "constructor_reused": 4910,
+        "logical_facts_created": 3739,
+        "function_updates": 1450,
+        "union_requests": 2434,
+        "unions": 1039,
+        "bindings": 7193
+      },
+      "existing_iterative_evidence_unchanged": true,
+      "added_iterative_counters": {},
+      "work": {
+        "control": {
+          "key_lookup_calls": 12910,
+          "frames": 5195,
+          "source_boundaries": [
+            5362,
+            0,
+            3379,
+            310,
+            75,
+            0,
+            0
+          ],
+          "births": {
+            "root_bucket_probes": 1356,
+            "root_bucket_fallbacks": 255,
+            "root_pending": 0,
+            "root_boundary_probes": 451,
+            "root_isolated": 951,
+            "root_hash_bytes": 12288,
+            "directory_checks": 15886,
+            "root_jobs": 1101,
+            "root_births": 1014,
+            "root_reuses": 87,
+            "local_births": 1563,
+            "local_reuses": 106,
+            "worker_operations": 1502,
+            "committed_rows": 1563,
+            "source_operand_reads": 4132,
+            "operand_reads": 1038,
+            "candidate_probes": 211,
+            "field_checks": 306,
+            "shared_slots": 618,
+            "shared_bytes": 274144,
+            "slot_leases": 1101,
+            "slot_reattachments": 1101,
+            "slot_bytes": 11616,
+            "sealed_bytes": 61656,
+            "unit_candidates": 395,
+            "unit_inserts": 233,
+            "unit_invalidated": 162,
+            "pending_bytes": 4480,
+            "execution_groups": 770,
+            "evaluations": 643,
+            "duplicate_evaluations": 25,
+            "hashes": 1686,
+            "unit_worker_rows": 383,
+            "unit_bytes": 71720,
+            "frame_handles": 437,
+            "result_handles": 623,
+            "slot_growths": 95,
+            "shared_growths": 570,
+            "pending_growths": 10,
+            "value_writes": 106,
+            "root_existing_reuses": 255,
+            "root_existing_key_fields": 602,
+            "root_collision_misses": 0
+          },
+          "scheduler": {
+            "jobs": 1101,
+            "batches": 135,
+            "queue_bytes": 2704272,
+            "event_bytes": 1036176,
+            "admission_waves": 2,
+            "effect_flushes": 0,
+            "dependency_flushes": 0,
+            "event_completed_early": 210,
+            "event_early_cells": 393,
+            "rule_group_carries": 253,
+            "mixed_rule_batches": 73,
+            "outside_group_fences": 37,
+            "run_end_fences": 74,
+            "error_fences": 0,
+            "prepared_resumptions": 0,
+            "prepared_key_fallbacks": 0,
+            "completed_without_queue": 0
+          },
+          "registration": {
+            "constructor_registry_adopted": 328,
+            "constructor_registry_batches": 11,
+            "constructor_registry_bytes": 17984,
+            "constructor_registry_discarded": 0,
+            "constructor_registry_fragments": 328,
+            "constructor_registry_frame_bytes": 26000,
+            "constructor_registry_frame_events": 9,
+            "constructor_registry_frame_transfers": 250,
+            "constructor_registry_functionless_batches": 5,
+            "constructor_registry_independent_batches": 11,
+            "constructor_registry_independent_rows": 328,
+            "constructor_registry_pre_return_cells": 32,
+            "constructor_registry_retirement_checks": 11,
+            "constructor_registry_rows": 328,
+            "constructor_registry_worker_rows": 328,
+            "unit_registry_accepted_cells": 83,
+            "unit_registry_batches": 7,
+            "unit_registry_bytes": 22888,
+            "unit_registry_candidates": 132,
+            "unit_registry_capacity_growth_bytes": 0,
+            "unit_registry_decision_bytes": 4224,
+            "unit_registry_decision_fragments": 12,
+            "unit_registry_deferred_subscriptions": 78,
+            "unit_registry_discarded": 0,
+            "unit_registry_early_cells": 16,
+            "unit_registry_event_bytes": 13312,
+            "unit_registry_field_handles": 132,
+            "unit_registry_identity_rows": 132,
+            "unit_registry_installs": 78,
+            "unit_registry_key_candidates": 48,
+            "unit_registry_key_handles": 18,
+            "unit_registry_owner_tables": 12,
+            "unit_registry_pool_calls": 7,
+            "unit_registry_ready_prefixes": 8,
+            "unit_registry_reserved_bytes": 7392,
+            "unit_registry_reserved_slots": 132,
+            "unit_registry_retained_holes": 52,
+            "unit_registry_subscription_queue_bytes": 8320,
+            "unit_registry_subscription_tasks": 10,
+            "unit_registry_tables": 12,
+            "unit_registry_trimmed_slots": 2,
+            "unit_registry_worker_identity_rows": 132,
+            "unit_registry_worker_subscriptions": 78
+          },
+          "source_installs_of_local_rows": 1235,
+          "fused": {
+            "constructor_fused_cells": 167,
+            "constructor_fused_early_cells": 55,
+            "constructor_fused_planned_operations": 191,
+            "constructor_fused_regions": 4,
+            "constructor_fused_rows": 174,
+            "constructor_fused_staging_bytes": 0
+          },
+          "maintenance": {
+            "dependency_headers": 0,
+            "reverse_headers": 2193,
+            "stats": {
+              "canonical_subscription_calls": 328,
+              "live_reverse_edges": 10262,
+              "peak_reverse_edges": 10262,
+              "repair_candidate_checks": 844,
+              "repair_key_probes": 1046,
+              "reverse_edges_coalesced": 508,
+              "reverse_edges_created": 13418,
+              "reverse_edges_removed": 2648,
+              "reverse_insert_attempts": 13418,
+              "reverse_merge_inserts": 2369,
+              "reverse_remove_attempts": 2648,
+              "subscription_calls": 6716,
+              "subscription_root_reads_omitted": 1192,
+              "subscription_rows_reused": 547,
+              "subscription_scalar_fields_skipped": 97,
+              "subscription_sets_replaced_in_place": 0,
+              "subscription_value_visits": 21403,
+              "union_frontier_probes": 1039,
+              "union_redirected_edges": 2441,
+              "union_wake_visits": 2441
+            },
+            "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+          }
+        },
+        "candidate": {
+          "key_lookup_calls": 12910,
+          "frames": 5195,
+          "source_boundaries": [
+            4651,
+            0,
+            3379,
+            310,
+            75,
+            0,
+            0
+          ],
+          "births": {
+            "root_bucket_probes": 1356,
+            "root_bucket_fallbacks": 255,
+            "root_pending": 0,
+            "root_boundary_probes": 193,
+            "root_isolated": 951,
+            "root_hash_bytes": 12160,
+            "directory_checks": 15830,
+            "root_jobs": 1101,
+            "root_births": 1014,
+            "root_reuses": 87,
+            "local_births": 1563,
+            "local_reuses": 106,
+            "worker_operations": 1502,
+            "committed_rows": 1563,
+            "source_operand_reads": 3557,
+            "operand_reads": 1035,
+            "candidate_probes": 211,
+            "field_checks": 301,
+            "shared_slots": 622,
+            "shared_bytes": 276256,
+            "slot_leases": 1101,
+            "slot_reattachments": 1101,
+            "slot_bytes": 11616,
+            "sealed_bytes": 61656,
+            "unit_candidates": 395,
+            "unit_inserts": 233,
+            "unit_invalidated": 162,
+            "pending_bytes": 4480,
+            "execution_groups": 773,
+            "evaluations": 646,
+            "duplicate_evaluations": 24,
+            "hashes": 1685,
+            "unit_worker_rows": 383,
+            "unit_bytes": 71720,
+            "frame_handles": 441,
+            "result_handles": 624,
+            "slot_growths": 95,
+            "shared_growths": 574,
+            "pending_growths": 10,
+            "value_writes": 106,
+            "root_existing_reuses": 255,
+            "root_existing_key_fields": 602,
+            "root_collision_misses": 0
+          },
+          "scheduler": {
+            "jobs": 1101,
+            "batches": 135,
+            "queue_bytes": 2659808,
+            "event_bytes": 1026840,
+            "admission_waves": 2,
+            "effect_flushes": 0,
+            "dependency_flushes": 0,
+            "event_completed_early": 206,
+            "event_early_cells": 381,
+            "rule_group_carries": 253,
+            "mixed_rule_batches": 73,
+            "outside_group_fences": 37,
+            "run_end_fences": 74,
+            "error_fences": 0,
+            "prepared_resumptions": 711,
+            "prepared_key_fallbacks": 0,
+            "completed_without_queue": 18
+          },
+          "registration": {
+            "constructor_registry_adopted": 320,
+            "constructor_registry_batches": 11,
+            "constructor_registry_bytes": 17400,
+            "constructor_registry_discarded": 0,
+            "constructor_registry_fragments": 320,
+            "constructor_registry_frame_bytes": 26104,
+            "constructor_registry_frame_events": 9,
+            "constructor_registry_frame_transfers": 251,
+            "constructor_registry_functionless_batches": 5,
+            "constructor_registry_independent_batches": 11,
+            "constructor_registry_independent_rows": 320,
+            "constructor_registry_pre_return_cells": 0,
+            "constructor_registry_retirement_checks": 11,
+            "constructor_registry_rows": 320,
+            "constructor_registry_worker_rows": 320,
+            "unit_registry_accepted_cells": 84,
+            "unit_registry_batches": 7,
+            "unit_registry_bytes": 22952,
+            "unit_registry_candidates": 138,
+            "unit_registry_capacity_growth_bytes": 0,
+            "unit_registry_decision_bytes": 4416,
+            "unit_registry_decision_fragments": 12,
+            "unit_registry_deferred_subscriptions": 77,
+            "unit_registry_discarded": 0,
+            "unit_registry_early_cells": 36,
+            "unit_registry_event_bytes": 14976,
+            "unit_registry_field_handles": 138,
+            "unit_registry_identity_rows": 138,
+            "unit_registry_installs": 77,
+            "unit_registry_key_candidates": 54,
+            "unit_registry_key_handles": 24,
+            "unit_registry_owner_tables": 12,
+            "unit_registry_pool_calls": 7,
+            "unit_registry_ready_prefixes": 7,
+            "unit_registry_reserved_bytes": 7728,
+            "unit_registry_reserved_slots": 138,
+            "unit_registry_retained_holes": 57,
+            "unit_registry_subscription_queue_bytes": 5824,
+            "unit_registry_subscription_tasks": 7,
+            "unit_registry_tables": 12,
+            "unit_registry_trimmed_slots": 4,
+            "unit_registry_worker_identity_rows": 138,
+            "unit_registry_worker_subscriptions": 77
+          },
+          "source_installs_of_local_rows": 1243,
+          "fused": {
+            "constructor_fused_cells": 167,
+            "constructor_fused_early_cells": 62,
+            "constructor_fused_planned_operations": 191,
+            "constructor_fused_regions": 4,
+            "constructor_fused_rows": 174,
+            "constructor_fused_staging_bytes": 0
+          },
+          "maintenance": {
+            "dependency_headers": 0,
+            "reverse_headers": 2193,
+            "stats": {
+              "canonical_subscription_calls": 320,
+              "live_reverse_edges": 10262,
+              "peak_reverse_edges": 10262,
+              "repair_candidate_checks": 844,
+              "repair_key_probes": 1046,
+              "reverse_edges_coalesced": 508,
+              "reverse_edges_created": 13418,
+              "reverse_edges_removed": 2648,
+              "reverse_insert_attempts": 13418,
+              "reverse_merge_inserts": 2369,
+              "reverse_remove_attempts": 2648,
+              "subscription_calls": 6716,
+              "subscription_root_reads_omitted": 1176,
+              "subscription_rows_reused": 547,
+              "subscription_scalar_fields_skipped": 90,
+              "subscription_sets_replaced_in_place": 0,
+              "subscription_value_visits": 21410,
+              "union_frontier_probes": 1039,
+              "union_redirected_edges": 2441,
+              "union_wake_visits": 2441
+            },
+            "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+          }
+        }
+      },
+      "prepared_and_lifecycle": {
+        "control": {
+          "constructor_prepared_certificates": 1704,
+          "constructor_prepared_sealed": 1704,
+          "constructor_prepared_fields": 0,
+          "constructor_prepared_result_reads": 1704,
+          "rhs_context_suspends": 1439,
+          "rhs_context_resumes": 1439,
+          "rhs_suspend_holds": 1158,
+          "rhs_suspend_releases": 1158
+        },
+        "candidate": {
+          "constructor_prepared_certificates": 1704,
+          "constructor_prepared_sealed": 1704,
+          "constructor_prepared_fields": 0,
+          "constructor_prepared_result_reads": 1704,
+          "rhs_context_suspends": 1421,
+          "rhs_context_resumes": 1421,
+          "rhs_suspend_holds": 1158,
+          "rhs_suspend_releases": 1158
+        }
+      }
+    },
+    "ray": {
+      "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "runs": 16883,
+      "exact_final_state_run_summaries_and_effects": true,
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+      "logical_effects": {
+        "constructor_requests": 1618848,
+        "constructor_reused": 867798,
+        "logical_facts_created": 820439,
+        "function_updates": 1675916,
+        "union_requests": 508209,
+        "unions": 226523,
+        "bindings": 2743465
+      },
+      "existing_iterative_evidence_unchanged": true,
+      "added_iterative_counters": {},
+      "work": {
+        "control": {
+          "key_lookup_calls": 3825298,
+          "frames": 1024723,
+          "source_boundaries": [
+            1045071,
+            0,
+            1288109,
+            29924,
+            9349,
+            0,
+            92
+          ],
+          "births": {
+            "root_bucket_probes": 217142,
+            "root_bucket_fallbacks": 13900,
+            "root_pending": 139,
+            "root_boundary_probes": 61326,
+            "root_isolated": 197708,
+            "root_hash_bytes": 1870912,
+            "directory_checks": 3150652,
+            "root_jobs": 203103,
+            "root_births": 199484,
+            "root_reuses": 3619,
+            "local_births": 352528,
+            "local_reuses": 5329,
+            "worker_operations": 329441,
+            "committed_rows": 352528,
+            "source_operand_reads": 605964,
+            "operand_reads": 267366,
+            "candidate_probes": 115572,
+            "field_checks": 124568,
+            "shared_slots": 39637,
+            "shared_bytes": 18218120,
+            "slot_leases": 215913,
+            "slot_reattachments": 215913,
+            "slot_bytes": 1855800,
+            "sealed_bytes": 12091128,
+            "unit_candidates": 140354,
+            "unit_inserts": 90492,
+            "unit_invalidated": 49862,
+            "pending_bytes": 780160,
+            "execution_groups": 52173,
+            "evaluations": 41497,
+            "duplicate_evaluations": 1860,
+            "hashes": 360450,
+            "unit_worker_rows": 139449,
+            "unit_bytes": 25703376,
+            "frame_handles": 30194,
+            "result_handles": 40317,
+            "slot_growths": 7316,
+            "shared_growths": 33379,
+            "pending_growths": 166,
+            "value_writes": 5329,
+            "root_existing_reuses": 13900,
+            "root_existing_key_fields": 26551,
+            "root_collision_misses": 0
+          },
+          "scheduler": {
+            "jobs": 215913,
+            "batches": 6602,
+            "queue_bytes": 200742168,
+            "event_bytes": 192306024,
+            "admission_waves": 2963,
+            "effect_flushes": 3,
+            "dependency_flushes": 0,
+            "event_completed_early": 29886,
+            "event_early_cells": 71795,
+            "rule_group_carries": 4589,
+            "mixed_rule_batches": 1835,
+            "outside_group_fences": 414,
+            "run_end_fences": 1355,
+            "error_fences": 0,
+            "prepared_resumptions": 0,
+            "prepared_key_fallbacks": 0,
+            "completed_without_queue": 0
+          },
+          "registration": {
+            "constructor_registry_adopted": 189816,
+            "constructor_registry_batches": 3035,
+            "constructor_registry_bytes": 15292968,
+            "constructor_registry_discarded": 0,
+            "constructor_registry_fragments": 189816,
+            "constructor_registry_frame_bytes": 11160552,
+            "constructor_registry_frame_events": 7985,
+            "constructor_registry_frame_transfers": 107313,
+            "constructor_registry_functionless_batches": 1415,
+            "constructor_registry_independent_batches": 2044,
+            "constructor_registry_independent_rows": 85018,
+            "constructor_registry_pre_return_cells": 43177,
+            "constructor_registry_retirement_checks": 3031,
+            "constructor_registry_rows": 189816,
+            "constructor_registry_worker_rows": 189816,
+            "unit_registry_accepted_cells": 102412,
+            "unit_registry_batches": 2916,
+            "unit_registry_bytes": 14800528,
+            "unit_registry_candidates": 123596,
+            "unit_registry_capacity_growth_bytes": 0,
+            "unit_registry_decision_bytes": 3955072,
+            "unit_registry_decision_fragments": 5611,
+            "unit_registry_deferred_subscriptions": 79641,
+            "unit_registry_discarded": 0,
+            "unit_registry_early_cells": 34257,
+            "unit_registry_event_bytes": 6110208,
+            "unit_registry_field_handles": 123596,
+            "unit_registry_identity_rows": 123596,
+            "unit_registry_installs": 79641,
+            "unit_registry_key_candidates": 43123,
+            "unit_registry_key_handles": 28082,
+            "unit_registry_owner_tables": 3203,
+            "unit_registry_pool_calls": 2916,
+            "unit_registry_ready_prefixes": 5039,
+            "unit_registry_reserved_bytes": 6921376,
+            "unit_registry_reserved_slots": 123596,
+            "unit_registry_retained_holes": 43684,
+            "unit_registry_subscription_queue_bytes": 1504256,
+            "unit_registry_subscription_tasks": 1808,
+            "unit_registry_tables": 3146,
+            "unit_registry_trimmed_slots": 271,
+            "unit_registry_worker_identity_rows": 123596,
+            "unit_registry_worker_subscriptions": 79641
+          },
+          "source_installs_of_local_rows": 162712,
+          "fused": {
+            "constructor_fused_cells": 4901,
+            "constructor_fused_early_cells": 1243,
+            "constructor_fused_planned_operations": 5777,
+            "constructor_fused_regions": 119,
+            "constructor_fused_rows": 5756,
+            "constructor_fused_staging_bytes": 0
+          },
+          "maintenance": {
+            "dependency_headers": 0,
+            "reverse_headers": 524655,
+            "stats": {
+              "canonical_subscription_calls": 194201,
+              "live_reverse_edges": 2796816,
+              "peak_reverse_edges": 2796826,
+              "repair_candidate_checks": 161769,
+              "repair_key_probes": 224478,
+              "reverse_edges_coalesced": 208879,
+              "reverse_edges_created": 3807774,
+              "reverse_edges_removed": 802079,
+              "reverse_insert_attempts": 3807774,
+              "reverse_merge_inserts": 688189,
+              "reverse_remove_attempts": 802079,
+              "subscription_calls": 1879948,
+              "subscription_root_reads_omitted": 790765,
+              "subscription_rows_reused": 226161,
+              "subscription_scalar_fields_skipped": 81863,
+              "subscription_sets_replaced_in_place": 0,
+              "subscription_value_visits": 6341919,
+              "union_frontier_probes": 226523,
+              "union_redirected_edges": 704057,
+              "union_wake_visits": 704057
+            },
+            "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+          }
+        },
+        "candidate": {
+          "key_lookup_calls": 3824859,
+          "frames": 1025396,
+          "source_boundaries": [
+            973955,
+            0,
+            1288109,
+            29924,
+            9349,
+            0,
+            92
+          ],
+          "births": {
+            "root_bucket_probes": 217636,
+            "root_bucket_fallbacks": 13925,
+            "root_pending": 139,
+            "root_boundary_probes": 33568,
+            "root_isolated": 198147,
+            "root_hash_bytes": 1867296,
+            "directory_checks": 3169253,
+            "root_jobs": 203572,
+            "root_births": 199943,
+            "root_reuses": 3629,
+            "local_births": 352972,
+            "local_reuses": 5324,
+            "worker_operations": 329880,
+            "committed_rows": 352972,
+            "source_operand_reads": 561509,
+            "operand_reads": 267574,
+            "candidate_probes": 116197,
+            "field_checks": 124806,
+            "shared_slots": 40045,
+            "shared_bytes": 18468944,
+            "slot_leases": 216382,
+            "slot_reattachments": 216382,
+            "slot_bytes": 1856760,
+            "sealed_bytes": 12117392,
+            "unit_candidates": 140354,
+            "unit_inserts": 90492,
+            "unit_invalidated": 49862,
+            "pending_bytes": 780160,
+            "execution_groups": 51730,
+            "evaluations": 42088,
+            "duplicate_evaluations": 2043,
+            "hashes": 361003,
+            "unit_worker_rows": 139449,
+            "unit_bytes": 25703312,
+            "frame_handles": 30657,
+            "result_handles": 40862,
+            "slot_growths": 7326,
+            "shared_growths": 33825,
+            "pending_growths": 166,
+            "value_writes": 5324,
+            "root_existing_reuses": 13925,
+            "root_existing_key_fields": 26583,
+            "root_collision_misses": 0
+          },
+          "scheduler": {
+            "jobs": 216382,
+            "batches": 6550,
+            "queue_bytes": 198942712,
+            "event_bytes": 192482888,
+            "admission_waves": 2912,
+            "effect_flushes": 3,
+            "dependency_flushes": 0,
+            "event_completed_early": 30517,
+            "event_early_cells": 70849,
+            "rule_group_carries": 4590,
+            "mixed_rule_batches": 1830,
+            "outside_group_fences": 414,
+            "run_end_fences": 1355,
+            "error_fences": 0,
+            "prepared_resumptions": 71777,
+            "prepared_key_fallbacks": 0,
+            "completed_without_queue": 4863
+          },
+          "registration": {
+            "constructor_registry_adopted": 192942,
+            "constructor_registry_batches": 3094,
+            "constructor_registry_bytes": 15498280,
+            "constructor_registry_discarded": 0,
+            "constructor_registry_fragments": 192942,
+            "constructor_registry_frame_bytes": 11436048,
+            "constructor_registry_frame_events": 8129,
+            "constructor_registry_frame_transfers": 109962,
+            "constructor_registry_functionless_batches": 1463,
+            "constructor_registry_independent_batches": 2110,
+            "constructor_registry_independent_rows": 87842,
+            "constructor_registry_pre_return_cells": 45111,
+            "constructor_registry_retirement_checks": 3090,
+            "constructor_registry_rows": 192942,
+            "constructor_registry_worker_rows": 192942,
+            "unit_registry_accepted_cells": 104550,
+            "unit_registry_batches": 2964,
+            "unit_registry_bytes": 14791744,
+            "unit_registry_candidates": 124062,
+            "unit_registry_capacity_growth_bytes": 0,
+            "unit_registry_decision_bytes": 3969984,
+            "unit_registry_decision_fragments": 5639,
+            "unit_registry_deferred_subscriptions": 79891,
+            "unit_registry_discarded": 0,
+            "unit_registry_early_cells": 34581,
+            "unit_registry_event_bytes": 6218368,
+            "unit_registry_field_handles": 124062,
+            "unit_registry_identity_rows": 124062,
+            "unit_registry_installs": 79891,
+            "unit_registry_key_candidates": 43277,
+            "unit_registry_key_handles": 28215,
+            "unit_registry_owner_tables": 3223,
+            "unit_registry_pool_calls": 2964,
+            "unit_registry_ready_prefixes": 5125,
+            "unit_registry_reserved_bytes": 6947472,
+            "unit_registry_reserved_slots": 124062,
+            "unit_registry_retained_holes": 43889,
+            "unit_registry_subscription_queue_bytes": 1528384,
+            "unit_registry_subscription_tasks": 1837,
+            "unit_registry_tables": 3156,
+            "unit_registry_trimmed_slots": 282,
+            "unit_registry_worker_identity_rows": 124062,
+            "unit_registry_worker_subscriptions": 79891
+          },
+          "source_installs_of_local_rows": 160030,
+          "fused": {
+            "constructor_fused_cells": 5412,
+            "constructor_fused_early_cells": 1373,
+            "constructor_fused_planned_operations": 6245,
+            "constructor_fused_regions": 130,
+            "constructor_fused_rows": 6234,
+            "constructor_fused_staging_bytes": 0
+          },
+          "maintenance": {
+            "dependency_headers": 0,
+            "reverse_headers": 524655,
+            "stats": {
+              "canonical_subscription_calls": 197327,
+              "live_reverse_edges": 2796816,
+              "peak_reverse_edges": 2796826,
+              "repair_candidate_checks": 161769,
+              "repair_key_probes": 224478,
+              "reverse_edges_coalesced": 208879,
+              "reverse_edges_created": 3807774,
+              "reverse_edges_removed": 802079,
+              "reverse_insert_attempts": 3807774,
+              "reverse_merge_inserts": 688189,
+              "reverse_remove_attempts": 802079,
+              "subscription_calls": 1879948,
+              "subscription_root_reads_omitted": 801222,
+              "subscription_rows_reused": 226161,
+              "subscription_scalar_fields_skipped": 82261,
+              "subscription_sets_replaced_in_place": 0,
+              "subscription_value_visits": 6341521,
+              "union_frontier_probes": 226523,
+              "union_redirected_edges": 704057,
+              "union_wake_visits": 704057
+            },
+            "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+          }
+        }
+      },
+      "prepared_and_lifecycle": {
+        "control": {
+          "constructor_prepared_certificates": 249772,
+          "constructor_prepared_sealed": 248685,
+          "constructor_prepared_fields": 0,
+          "constructor_prepared_result_reads": 248685,
+          "rhs_context_suspends": 264984,
+          "rhs_context_resumes": 264984,
+          "rhs_suspend_holds": 208597,
+          "rhs_suspend_releases": 208597
+        },
+        "candidate": {
+          "constructor_prepared_certificates": 249772,
+          "constructor_prepared_sealed": 248685,
+          "constructor_prepared_fields": 0,
+          "constructor_prepared_result_reads": 248685,
+          "rhs_context_suspends": 261045,
+          "rhs_context_resumes": 261045,
+          "rhs_suspend_holds": 208875,
+          "rhs_suspend_releases": 208875
+        }
+      }
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505"
+  }
+}

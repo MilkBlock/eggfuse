@@ -2551,7 +2551,7 @@ impl Executor {
             aliases: static_skip, known: b.known, cursor: stage_cursor,
             effects: effect_receipts, continuation: origin.is_some(),
             #[cfg(feature = "sparse-cells")]
-            constructor,
+            constructor: constructor.map(Into::into),
             #[cfg(feature = "sparse-cells")]
             births,
             work: owned_cell::Work::started(&self.graph, facts, updates, stage_counts),

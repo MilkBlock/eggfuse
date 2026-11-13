@@ -72,6 +72,7 @@ impl Counts {
 pub(crate) struct QueueCounts {
     pub rule_groups:u64,pub instances:u64,pub jobs:u64,pub batches:u64,
     pub rule_group_carries:u64,pub mixed_rule_batches:u64,
+    pub prepared_resumptions:u64,pub prepared_key_fallbacks:u64,pub completed_without_queue:u64,
     pub outside_group_fences:u64,pub run_end_fences:u64,pub error_fences:u64,
     pub queue_growths:u64,pub queue_bytes:u64,pub operand_reads:u64,
     pub dependency_flushes:u64,pub effect_flushes:u64,pub revalidations:u64,pub max_ready:usize,pub wait_ns:u64,

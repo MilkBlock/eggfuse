@@ -75,7 +75,7 @@ mod tests {
             }
             let cell=g.begin_transient(0,instance.values,None).unwrap();
             let lookups=g.key_lookup_calls.get();
-            let result=g.construct_prepared(cell,0,0,&[Arg::Slot(0)],1,None,witness).unwrap();
+            let result=g.construct_prepared(cell,0,0,&[Arg::Slot(0)],1,None,witness.into()).unwrap();
             let accepted=matches!(change,"unchanged"|"union");
             assert_eq!(g.key_lookup_calls.get()-lookups,u64::from(!accepted),"{change}");
             assert_eq!(g.stats.constructor_prepared_accepted,u64::from(accepted),"{change}");
@@ -111,13 +111,43 @@ mod tests {
             g.sealed_generation = Some(generation);
             let cell = g.begin_transient(0,instance.values,None).unwrap();
             let reads = g.key_lookup_calls.get();
-            let result = g.construct_prepared(cell,0,0,&[Arg::Slot(0)],1,None,witness).unwrap();
+            let result = g.construct_prepared(cell,0,0,&[Arg::Slot(0)],1,None,witness.into()).unwrap();
             assert_eq!(g.stats.constructor_prepared_certificates,1,"{change}");
             assert_eq!(g.stats.constructor_prepared_sealed,u64::from(change == "unchanged"),"{change}");
             assert_eq!(g.stats.constructor_prepared_key_fields_avoided,u64::from(change == "unchanged"));
             assert_eq!(g.stats.constructor_prepared_fields,u64::from(change == "union"));
             assert_eq!(g.key_lookup_calls.get()-reads,u64::from(matches!(change,"delete"|"hide")));
             if change == "delete" { assert_ne!(result,old); } else { assert_eq!(result,old); }
+        }
+    }
+
+    #[test]
+    fn rejected_snapshot_uses_exact_keys_without_repeating_the_certificate() {
+        use crate::graph::ConstructorWitness;
+        assert_eq!(std::mem::size_of::<Option<ConstructorWitness>>(),std::mem::size_of::<Option<FactRef>>());
+        for change in ["delete","hide","union"] {
+            let mut g=graph();
+            let producer=g.linked_frame(0,BTreeMap::from([(0,Value::Eq(9))]),None).unwrap();
+            let old=g.construct(producer,0,0,&[Arg::Slot(0)],1).unwrap();g.repair().unwrap();
+            let generation=g.stats.unions;
+            let witness=FactRef{cell:producer,op:0};
+            g.epoch=1;
+            match change {
+                "delete"=>{g.hide(0,&[Value::Eq(9)],true).unwrap();},
+                "hide"=>{g.hide(0,&[Value::Eq(9)],false).unwrap();},
+                _=>{g.enqueue_union(Value::Eq(9),Value::Eq(7)).unwrap();g.repair().unwrap();},
+            }
+            g.sealed_generation=Some(generation);
+            let mut values=Slots::with_capacity(1);values.insert(0,Value::Eq(9));
+            let cell=g.begin_transient(0,values,None).unwrap();
+            assert!(g.sealed_constructor_result(cell,0,witness).unwrap().is_none());
+            let mut receipt=None;
+            let value=g.construct_prepared(cell,0,0,&[Arg::Slot(0)],1,Some(&mut receipt),ConstructorWitness::Key(witness)).unwrap();
+            assert_eq!(g.stats.constructor_prepared_certificates,1,"{change}");
+            assert_eq!(g.stats.constructor_prepared_fields,u64::from(change=="union"));
+            assert_eq!(g.stats.constructor_prepared_rejected,u64::from(change!="union"));
+            if change=="delete" {assert_ne!(value,old);assert_ne!(receipt,Some(Dependency::Fact(witness)));}
+            else {assert_eq!(value,old);assert_eq!(receipt,Some(Dependency::Fact(witness)));}
         }
     }
 }
