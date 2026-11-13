@@ -1,0 +1,133 @@
+{
+  "scope": "saved final standalone Cell CPU states; exact boundary membership replay, not measured runtime savings",
+  "obligations": [
+    "Native ports remain implicit; include them separately in actual query and union dispatch.",
+    "Static plans need concrete operator codes, not port layouts alone.",
+    "Future suffix activation must update the selected static wiring without per-producer consumer lists.",
+    "Union dispatch needs old-root membership or a proven safe superset after root mutation.",
+    "Deletion, query classes, source order, epochs and concurrent read snapshots remain live obligations.",
+    "Payload estimates exclude hash/tree allocation, new plan handles and maintenance; do not subtract them from Graph heap.",
+    "Operator replay is exhaustive on saved groups but is not execution-frequency weighted or a timing result."
+  ],
+  "cases": [
+    {
+      "case": "fact",
+      "input_sha256": "d8d5a5510eae493aaf2f18630c3adf314876e34d5a018242fea5c55838c55518",
+      "program_sha256": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+      "runs": 418,
+      "boundary_signals": 1282,
+      "component_root_records": 1164,
+      "coalesced_symbol_records": 118,
+      "root_component_widths": {
+        "1": 1073,
+        "2": 78,
+        "3": 1,
+        "4": 10,
+        "5": 2
+      },
+      "replay": {
+        "operator_cases": 3002,
+        "static_symbol_checks": 11271,
+        "returned_symbol_routes": 1701,
+        "empty_operator_cases": 1405,
+        "unfiltered_symbol_checks": 8132
+      },
+      "concrete_static_plans": 168,
+      "static_symbol_positions": 1283,
+      "old_signal_payload_bytes": 20512,
+      "proposed_component_id_payload_bytes": 4656,
+      "graph_boundary_heap_bytes": 70040,
+      "graph_bytes": 535367
+    },
+    {
+      "case": "loopfact",
+      "input_sha256": "4ac65a1af9a3f4ea1420bbb9b7811b563aa9994631245663339e12d0d6aa8d4e",
+      "program_sha256": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+      "runs": 398,
+      "boundary_signals": 1231,
+      "component_root_records": 1119,
+      "coalesced_symbol_records": 112,
+      "root_component_widths": {
+        "1": 1031,
+        "2": 76,
+        "3": 3,
+        "4": 6,
+        "5": 3
+      },
+      "replay": {
+        "operator_cases": 2850,
+        "static_symbol_checks": 10278,
+        "returned_symbol_routes": 1610,
+        "empty_operator_cases": 1340,
+        "unfiltered_symbol_checks": 7562
+      },
+      "concrete_static_plans": 187,
+      "static_symbol_positions": 1554,
+      "old_signal_payload_bytes": 19696,
+      "proposed_component_id_payload_bytes": 4476,
+      "graph_boundary_heap_bytes": 68264,
+      "graph_bytes": 512765
+    },
+    {
+      "case": "sum-bits",
+      "input_sha256": "c922cc1ccf30f153ffe3203abee739420cab26a08c8b370a2e5b838426d19be8",
+      "program_sha256": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+      "runs": 882,
+      "boundary_signals": 4699,
+      "component_root_records": 3965,
+      "coalesced_symbol_records": 734,
+      "root_component_widths": {
+        "1": 3408,
+        "2": 439,
+        "3": 75,
+        "4": 30,
+        "5": 11,
+        "6": 1,
+        "7": 1
+      },
+      "replay": {
+        "operator_cases": 11627,
+        "static_symbol_checks": 50560,
+        "returned_symbol_routes": 6350,
+        "empty_operator_cases": 6051,
+        "unfiltered_symbol_checks": 36872
+      },
+      "concrete_static_plans": 314,
+      "static_symbol_positions": 3602,
+      "old_signal_payload_bytes": 75184,
+      "proposed_component_id_payload_bytes": 15860,
+      "graph_boundary_heap_bytes": 215144,
+      "graph_bytes": 1486983
+    },
+    {
+      "case": "dot-product",
+      "input_sha256": "d02f32416f314a923565ee753928cc0002d24e19b0efe6ebc1d1efaea937af5c",
+      "program_sha256": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+      "runs": 954,
+      "boundary_signals": 4032,
+      "component_root_records": 3508,
+      "coalesced_symbol_records": 524,
+      "root_component_widths": {
+        "1": 3123,
+        "2": 306,
+        "3": 40,
+        "4": 19,
+        "5": 19,
+        "6": 1
+      },
+      "replay": {
+        "operator_cases": 12430,
+        "static_symbol_checks": 50988,
+        "returned_symbol_routes": 5440,
+        "empty_operator_cases": 7479,
+        "unfiltered_symbol_checks": 35513
+      },
+      "concrete_static_plans": 263,
+      "static_symbol_positions": 3064,
+      "old_signal_payload_bytes": 64512,
+      "proposed_component_id_payload_bytes": 14032,
+      "graph_boundary_heap_bytes": 197792,
+      "graph_bytes": 1434643
+    }
+  ]
+}
