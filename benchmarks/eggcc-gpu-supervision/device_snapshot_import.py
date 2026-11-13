@@ -23,6 +23,7 @@ def prepare_family(recipe,snapshot,rules,spare,include_effects=True):
     if include_effects:
         for op in (op for original in originals for op in original['effects']):
             if op['kind']=='copy' and 'slot' in op.get('arg',{}):continue
+            if op['kind']=='union' and len(op['args'])==2 and all('slot' in a for a in op['args']):continue
             if op['kind']=='construct' and all('slot' in a for a in op['args']):
                 required.append(op['call']['table']);continue
             raise ValueError('unsupported snapshot effect')
@@ -93,3 +94,20 @@ def reference_keys(rule,rows,ids,key_width,limit=100000):
         if len(bindings)>limit:raise ValueError('CPU reference budget exceeded')
     inputs=[i for i,s in enumerate(rule['slots']) if s['definition']=='query']
     return {tuple([0]+[ids[b[i]] for i in inputs]+[-1]*(key_width-1-len(inputs))) for b in bindings}
+
+
+def eq_registry(ids,sort_names,reserve=256):
+    """Typed identity registry at an audited, already canonical seed boundary.
+
+    Scalar IDs share the address namespace but can never authorize an Eq merge.
+    Unallocated capacity is untyped until a constructor actually allocates it.
+    """
+    if reserve<0 or len(set(sort_names))!=len(sort_names):raise ValueError('invalid registry layout')
+    if sorted(ids.values())!=list(range(len(ids))):raise ValueError('noncontiguous seed IDs')
+    sorts=np.full(len(ids)+reserve,-1,np.int32)
+    for value,index in ids.items():
+        field=json.loads(value)
+        if 'eq' in field:
+            if field['sort'] not in sort_names:raise ValueError('uncovered seed Eq sort')
+            sorts[index]=sort_names.index(field['sort'])
+    return dict(roots=np.arange(len(sorts),dtype=np.int32),sorts=sorts)
