@@ -101,5 +101,5 @@
     "write_comparison": "ordered logical writes including Unit membership; no physical storage index"
   },
   "physical_write_changed_runs": 258,
-  "admission": "Graph compression only; retained Program and process peak regress; baseline unchanged"
+  "admission": "accepted for runtime Graph compression by user scope; retained compiled Program is reported separately, not an admission blocker"
 }

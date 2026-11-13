@@ -38,8 +38,11 @@ Actual standalone Cell runtime on sum-bits, requested allocation bytes, not RSS:
 | Execution/takeover process peak | 125,400,997 | 127,612,142 |
 
 Graph improves by 115,047 bytes (4.40%). Graph plus Program regresses by 2,176,576
-bytes. The accepted baseline therefore stays unchanged. This is not the 30%
-target, a speedup, or proof that internal facts no longer need materialization.
+bytes. The user explicitly accepts the runtime Graph reduction independently of
+compiled Program size. This candidate is therefore the new Graph-compression
+comparison point; retained Program and process totals remain separate reported
+costs. The original denominator for the 30% target is not rebased. This is not the
+30% target, a speedup, or proof that internal facts no longer need materialization.
 
 The largest Graph changes are function storage -120,032 bytes and reverse-use
 storage -39,932 bytes, charged against new component/boundary/stable-field costs.

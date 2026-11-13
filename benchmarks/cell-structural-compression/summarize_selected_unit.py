@@ -40,5 +40,5 @@ result = dict(scope='actual standalone Cell runtime, requested allocation bytes;
     audit={k:audit[k] for k in ['source_specialization_verified','baseline_saved_checks_equal',
                               'graph_rhs_writes_equal','resume_changed_runs','write_comparison']},
     physical_write_changed_runs=len(audit['physical_write_changed_runs']),
-    admission='Graph compression only; retained Program and process peak regress; baseline unchanged')
+    admission='accepted for runtime Graph compression by user scope; retained compiled Program is reported separately, not an admission blocker')
 output.write_text(json.dumps(result, indent=2)+'\n')
