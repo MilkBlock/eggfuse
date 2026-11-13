@@ -11,6 +11,8 @@ pub type Id = usize;
 // None denotes a completed producer, which is never a matching entry. Some
 // serializes as the old pivot number, preserving existing catalog artifacts.
 pub(crate) type Entry = (usize, Option<usize>);
+#[path = "iterative_closure.rs"]
+mod closure;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Serialize, Deserialize)]
 pub struct Join {
     pub left: Id,
@@ -70,6 +72,7 @@ pub struct Catalog {
     pub limits: Limits,
     units: Vec<Unit>,
     leaves: BTreeMap<Entry, Id>,
+    pub(crate) matched_entries: BTreeMap<usize, Vec<usize>>,
     jumps: BTreeMap<Join, Id>,
     switch: crate::result_handoff::Switch,
     inherited: Option<Vec<bool>>,
@@ -232,6 +235,21 @@ impl Catalog {
                 path: path.into_boxed_slice(),
             });
         }
+        if let Some(entries)=raw.get("matched_entries") {
+            for entry in array(entries)? {
+                let (rid,pivot):(usize,usize)=serde_json::from_value(entry.clone()).map_err(|e|e.to_string())?;
+                let rule=p.rules.get(rid).ok_or("matched entry rule")?;
+                if !rule.seminaive || !matches!(rule.query.get(pivot).map(|a|&a.call),Some(Call::Table(_))) {
+                    return Err("matched entry requires a seminaive table atom".into());
+                }
+                let entry=(rid,Some(pivot));
+                if s.leaves.contains_key(&entry) {return Err("duplicate matched entry".into());}
+                s.matched_entries.entry(rid).or_default().push(pivot);
+                let path=vec![(None,entry)];
+                s.leaves.insert(entry,s.units.len());paths.insert(path.clone());
+                s.units.push(Unit {path:path.into_boxed_slice()});
+            }
+        }
         for rule in roots {
             let entry = (rule, None);
             let path = vec![(None, entry)];
@@ -241,6 +259,7 @@ impl Catalog {
                 path: path.into_boxed_slice(),
             });
         }
+        if s.units.len()>limits.total {return Err("matched leaves exceed catalog budget".into());}
         for j in array(&raw["joins"])? {
             let join: Join = serde_json::from_value(j.clone()).map_err(|e| e.to_string())?;
             let u = s
@@ -342,6 +361,23 @@ impl Catalog {
     pub fn state_contracts(&self, p: &Program) -> J {
         self.switch.state_contracts(p, |u| self.units[u].last())
     }
+    /// Classify selected historical extensions with source-derived closure
+    /// proofs. This does not install a speculative runtime transition.
+    pub fn closure_transfers(&self, p: &Program) -> J {
+        let rows = self.units.iter().enumerate().filter(|(_,u)|u.path.len() > 1)
+            .map(|(unit,u)| {
+                let before = crate::cell_completion::normalize(p,&u.path[..u.path.len()-1]);
+                let after = crate::cell_completion::normalize(p,&u.path);
+                let proof = match (before,after) {
+                    (Some(a),Some(b)) => crate::cell_completion::closure_transfer(&a,&b),
+                    _ => json!({"kind":"unsupported","reason":"typed_normalization_unavailable"}),
+                };
+                json!({"unit":unit,"consumer_rule":u.last().0,"proof":proof,
+                    "after_source_runs":crate::cell_completion::cross_run_closure_transfer(p,&u.path)})
+            }).collect::<Vec<_>>();
+        json!({"schema":"eggfuse-cell-closure-transfers/v1","transfers":rows,
+            "scope":"compile-only finite selected Cell paths; no skipped execution or whole-program saturation claim"})
+    }
     /// Compile-only routing information. Program IDs are existing switch PCs,
     /// not a second completion graph or an instance-side binding registry.
     pub fn completion_entries(&self, p: &Program) -> J {
@@ -428,6 +464,23 @@ impl Catalog {
             "recipe":p.artifact["recipe"]["sha256"],"structures":structures,"stage_structures":stage_structures,"implementations":implementations,
             "transitions":transitions,
             "scope":"finite positive constructor closure; not whole-program saturation"})
+    }
+    /// Recompile selected paths against the target typed Cells without searching
+    /// for additional paths or carrying source receipt/layout certificates.
+    pub fn relower_selected(p: &Program, plan: &mut J, policy: &J) -> Result<()> {
+        let (congruence, queries, completion, lazy) = match policy["schema"].as_str() {
+            Some("eggfuse-result-switch/v1") => (false,false,false,false),
+            Some("eggfuse-result-switch/v2") => (true,false,false,false),
+            Some("eggfuse-result-switch/v3") => (true,true,false,false),
+            Some("eggfuse-result-switch/v4") => (true,true,true,false),
+            Some("eggfuse-result-switch/v5") => (true,true,true,true),
+            _ => return Err("unsupported selected-path policy".into()),
+        };
+        let reuse=policy["reuse_results"].as_bool().ok_or("missing reuse policy")?;
+        let mut candidate=plan.clone();
+        Self::emit_policy(p,&mut candidate,reuse,congruence,queries,completion,lazy,false,None)?;
+        *plan=candidate;
+        Ok(())
     }
     pub fn emit_handoffs(p: &Program, plan: &mut J) -> Result<()> {
         Self::emit_switch(p, plan, true)
@@ -620,14 +673,13 @@ impl Catalog {
     /// Training also observes unspecialized roots, so their first continuation
     /// can enter the candidate set before any catalog demands those receipts.
     pub(crate) fn root_state(&self, rule: usize, run: usize, collect_pairs: bool) -> Option<State> {
-        if !self.switch.congruence {
-            return None;
-        }
-        let pc = self.switch.unique_root(rule, !collect_pairs)?;
+        let pc=if self.switch.congruence {self.switch.unique_root(rule,!collect_pairs)} else {None};
+        let pc=match pc {Some(pc)=>pc,None if collect_pairs=>0,None=>return None};
         Some(State {
             pc,
             discovery: collect_pairs.then(|| Rc::new(Discovery {
-                stack: vec![Segment { unit: self.switch.active(pc), incoming: 0 }], ..Default::default()
+                stack: if pc!=0 {vec![Segment {unit:self.switch.active(pc),incoming:0}]} else {vec![]},
+                ..Default::default()
             })),
             last_run: run,
             collect_pairs,
@@ -636,7 +688,7 @@ impl Catalog {
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn root_has_state(&self, rule: usize, collect_pairs: bool) -> bool {
-        self.switch.congruence && self.switch.unique_root(rule, !collect_pairs).is_some()
+        collect_pairs || (self.switch.congruence && self.switch.unique_root(rule, true).is_some())
     }
     pub(crate) fn program(&self, s: &State) -> &[crate::result_handoff::Reuse] {
         self.switch
@@ -973,18 +1025,36 @@ pub struct ObservedCompletions {
 #[derive(Clone, Serialize)]
 struct TraceEvent {
     parent: Option<usize>,
-    unit: Id,
+    // An executed producer can precede every currently compiled root.
+    unit: Option<Id>,
     entry: Entry,
     output: usize,
     run: usize,
     producer_run: usize,
     witness: Option<crate::graph::Dependency>,
     truncated_parent: bool,
+    execution: Option<ExecutionObservation>,
+    capture: Option<crate::result_handoff::CaptureWork>,
+}
+#[derive(Clone, Serialize)]
+struct ExecutionObservation {
+    cell: u32,
+    registered: bool,
+    frame: Option<FrameObservation>,
+}
+#[derive(Clone, Serialize)]
+struct FrameObservation {
+    template: usize,
+    parent: Option<crate::graph::FactRef>,
+    logical_slots: usize,
+    retained_facts: usize,
+    non_hidden_facts: usize,
 }
 #[derive(Default)]
 pub struct Training {
     trace: Vec<TraceEvent>,
     trace_dropped: u64,
+    pub(crate) trace_event_limit: Option<usize>,
     pub(crate) collect_pairs: bool,
     pairs: BTreeMap<Join, Evidence>,
     hits: BTreeMap<Id, u64>,
@@ -996,6 +1066,32 @@ pub struct Training {
     pub(crate) seal_moves: u64,
 }
 impl Training {
+    pub(crate) fn execution_trace_start(&self) -> Option<usize> {
+        self.collect_pairs.then_some(self.trace.len())
+    }
+    /// Observational snapshot after RHS, before source-Run repair. A reserved
+    /// execution id can have no registered/transient frame; writer-owned storage
+    /// is outside this snapshot. Neither fact count nor logical
+    /// slot count denotes new mutations or unique allocated bytes.
+    pub(crate) fn trace_execution(&mut self, start:Option<usize>, g:&crate::graph::Graph, cell:u32) {
+        let Some(start)=start else {return};
+        if self.trace.len()==start {return;} // disabled route or archive overflow
+        assert_eq!(self.trace.len(),start+1,"one completed event per source apply");
+        let registered=g.cells.contains_key(&cell);
+        let frame=g.rhs_frame(cell).map(|c|FrameObservation {
+            template:c.template,parent:c.parent,logical_slots:c.values.len(),
+            retained_facts:c.facts.len(),non_hidden_facts:c.facts.values().filter(|f|!f.hidden).count(),
+        });
+        self.trace[start].execution=Some(ExecutionObservation {cell,registered,frame});
+    }
+    /// Per-event actual capture work, excluding later publication and deferred
+    /// root materialization. Missing observations are not zero-cost evidence.
+    pub(crate) fn trace_capture(&mut self, start:Option<usize>, work:crate::result_handoff::CaptureWork) {
+        let Some(start)=start else {return};
+        if self.trace.len()==start {return;}
+        assert_eq!(self.trace.len(),start+1,"one capture per completed event");
+        self.trace[start].capture=Some(work);
+    }
     /// Count completed paths on actual cursor ancestry, never by joining
     /// marginal pair frequencies. Compile-time ranking only; missing history
     /// cannot establish support and does not invalidate direct pair evidence.
@@ -1028,7 +1124,9 @@ impl Training {
         }
         // In training only, retain a bounded witness window. With a multi-step
         // right operand its *first* Run identifies the sampled join boundary.
-        self.trace_completed(c, s, id, parent_run);
+        if s.collect_pairs {
+            self.trace_completed(c, s, Some(id), c.units[id].last(), parent_run);
+        }
         let Some(discovery) = &s.discovery else { return };
         let Some(j) = discovery.pending else { return };
         // Once a right operand already takes the direct origin, extending its
@@ -1070,19 +1168,21 @@ impl Training {
         e.witness = sample.2;
         if saves_key { e.avoidable_origin_slots += inputs as u64; }
     }
-    pub(crate) fn trace_root(&mut self, c: &Catalog, s: &mut State) {
-        if let Some(id) = s.compiled_unit(c) { self.trace_completed(c, s, id, 0); }
+    pub(crate) fn trace_root(&mut self, c: &Catalog, s: &mut State, rule:usize) {
+        let id=s.compiled_unit(c);
+        let entry=id.map_or((rule,None),|id|c.units[id].last());
+        self.trace_completed(c,s,id,entry,0);
     }
-    fn trace_completed(&mut self, c: &Catalog, s: &mut State, id: Id, parent_run: usize) {
+    fn trace_completed(&mut self, c:&Catalog, s:&mut State, id:Option<Id>, entry:Entry, parent_run:usize) {
         if s.collect_pairs {
             let output = s.output;
             let discovery = s.discover();
             let parent = discovery.samples.as_deref().and_then(|w| w.last()).and_then(|s| s.3);
-            let trace = if self.trace.len() < c.limits.candidates.saturating_mul(c.limits.depth.min(c.limits.nodes)) {
+            let trace = if self.trace.len() < self.trace_event_limit.unwrap_or_else(|| c.limits.candidates.saturating_mul(c.limits.depth.min(c.limits.nodes))) {
                 let index = self.trace.len();
-                self.trace.push(TraceEvent { parent, unit:id, entry:c.units[id].last(),
+                self.trace.push(TraceEvent { parent, unit:id, entry,
                     output, run:self.run, producer_run:parent_run, witness:discovery.witness,
-                    truncated_parent:parent.is_none() && parent_run!=0 });
+                    truncated_parent:parent.is_none() && parent_run!=0, execution:None, capture:None });
                 Some(index)
             } else { self.trace_dropped += 1; None };
             let window = Rc::make_mut(discovery.samples.get_or_insert_with(Default::default));
@@ -1099,9 +1199,9 @@ impl Training {
             let Some(parent) = event.parent.map(|i| &self.trace[i]) else { continue };
             if parent.run >= event.run { continue; }
             let Some(&right) = catalog.leaves.get(&event.entry) else { continue };
-            joins.insert(Join {left:parent.unit, output:event.output, right});
+            if let Some(left)=parent.unit {joins.insert(Join {left,output:event.output,right});}
         }
-        let mut units = self.trace.iter().map(|e|e.unit).collect::<BTreeSet<_>>();
+        let mut units = self.trace.iter().filter_map(|e|e.unit).collect::<BTreeSet<_>>();
         // Existing bounded pair samples survive raw-event truncation. They are
         // successful applications, not synthetic event ancestry.
         for (join, evidence) in &self.pairs {
@@ -1156,15 +1256,18 @@ impl Training {
                 "consumer_run":evidence.consumer_run,"witness":evidence.witness,
                 "origin":"bounded-completed-pair-sample","sample_policy":"latest-retained-application"}));
         }
-        json!({"schema":"eggfuse-cell-runtime-history/v1",
+        json!({"schema":"eggfuse-cell-runtime-history/v2",
+            "uncompiled_root_events":self.trace.iter().filter(|e|e.unit.is_none()).count(),
             "sampled_applications":applications,"pair_counter_prunes":self.evictions,
             "program_sha256":p.artifact["sha256"],"events":self.trace,
             "event_units":event_units,"dropped_events":self.trace_dropped,
+            "event_limit":self.trace_event_limit.unwrap_or_else(|| p.iterative.limits.candidates.saturating_mul(p.iterative.limits.depth.min(p.iterative.limits.nodes))),
             "contracts":catalog.completion_contracts(p),
+            "closure_transfers":catalog.closure_transfers(p),
             "scope":"bounded completed cursor lineage; not all matches or committed mutations"})
     }
     pub fn report(&self) -> J {
-        json!({"applied_units":self.hits,"trace_events":self.trace.len(),"trace_dropped":self.trace_dropped,"candidate_shapes":self.pairs.len(),"counter_prunes":self.evictions,"oversized_applied_pairs":self.capped_events,"direct_origins":self.direct_origins,"saved_origin_key_slots":self.saved_key_slots,"saved_answer_slot_copies":self.seal_moves})
+        json!({"applied_units":self.hits,"trace_events":self.trace.len(),"uncompiled_root_events":self.trace.iter().filter(|e|e.unit.is_none()).count(),"trace_dropped":self.trace_dropped,"candidate_shapes":self.pairs.len(),"counter_prunes":self.evictions,"oversized_applied_pairs":self.capped_events,"direct_origins":self.direct_origins,"saved_origin_key_slots":self.saved_key_slots,"saved_answer_slot_copies":self.seal_moves})
     }
 }
 
@@ -1223,8 +1326,8 @@ mod tests {
     #[test]
     fn bridge_support_requires_one_completed_cross_stage_ancestry() {
         let event = |rule, parent, run| TraceEvent {
-            parent, unit:rule, entry:(rule,Some(0)), output:0, run,
-            producer_run:0, witness:None, truncated_parent:false,
+            parent, unit:Some(rule), entry:(rule,Some(0)), output:0, run,
+            producer_run:0, witness:None, truncated_parent:false, execution:None, capture:None,
         };
         let mut training = Training::default();
         // A->B and a separate B->C cannot establish A->B->C.
@@ -1240,6 +1343,32 @@ mod tests {
         let mut wrong = event(2,Some(1),7); wrong.output=1;
         training.trace.extend([wrong,event(2,None,8),event(2,Some(1),2)]);
         assert_eq!(training.completed_path_support(&path),2);
+    }
+
+    #[test]
+    fn uncompiled_root_keeps_ancestry_without_claiming_an_executable_unit() {
+        let mut catalog=Catalog::default();
+        catalog.leaves.insert((1,Some(0)),0);
+        catalog.units.push(Unit {path:vec![(None,(1,Some(0)))].into_boxed_slice()});
+        assert!(catalog.root_state(99,1,false).is_none());
+        let mut root=catalog.root_state(99,1,true).unwrap();
+        assert_eq!(root.compiled_unit(&catalog),None);
+        assert!(root.history.current().is_none());
+        let mut training=Training {run:1,..Default::default()};
+        training.trace_root(&catalog,&mut root,99);
+        assert_eq!(training.trace[0].unit,None);
+        assert_eq!(training.trace[0].entry,(99,None));
+        let mut child=root.clone();
+        catalog.dispatch(&mut child,1,0,true,Dependency::Function(0));
+        training.run=2;training.applied(&catalog,&mut child,1);
+        assert_eq!(training.trace[1].parent,Some(0));
+        assert_eq!(training.trace[1].producer_run,1);
+        assert_eq!(training.completed_path_support(&[(None,(99,None)),(Some(0),(1,Some(0)))]),1);
+        let observed=training.completion_observations(&catalog);
+        assert_eq!(observed.units,[0].into_iter().collect());
+        assert!(observed.joins.is_empty(),"unknown root is not an existing catalog index");
+        assert_eq!(root.compiled_unit(&catalog),None);
+        assert_eq!(root.discovery.as_ref().unwrap().samples.as_ref().unwrap().len(),1);
     }
 
     #[test]
@@ -1283,6 +1412,59 @@ mod tests {
         assert!(ordinary.discovery.as_ref().unwrap().samples.is_none());
         assert_eq!(training.trace_dropped,1);
     }
+    #[test]
+    #[cfg(feature="sparse-cells")]
+    fn execution_observation_distinguishes_transient_and_registered_frames() {
+        let mut g=crate::query::test_projection_graph();
+        g.program.templates.push(Template {name:"trace".into(),sorts:vec![json!({"kind":"i64"})],
+            defs:Default::default(),parent_columns:Default::default(),ops:vec![].into()});
+        let mut values=crate::slots::Slots::default();values.insert(0,crate::value::Value::Int(7));
+        let cell=g.begin_transient(0,values,None).unwrap();
+        let c=Catalog::default();
+        let mut state=c.root_state(99,1,true).unwrap();
+        let mut training=Training {collect_pairs:true,run:1,..Default::default()};
+        let start=training.execution_trace_start();
+        training.trace_root(&c,&mut state,99);
+        training.trace_execution(start,&g,cell);
+        let observation=training.trace[0].execution.as_ref().unwrap();
+        assert!(!observation.registered);
+        assert_eq!(observation.frame.as_ref().unwrap().logical_slots,1);
+        g.promote_active();
+        training.trace_execution(start,&g,cell);
+        assert!(training.trace[0].execution.as_ref().unwrap().registered);
+        g.release_empty(cell);
+        training.trace_execution(start,&g,cell);
+        assert!(training.trace[0].execution.as_ref().unwrap().frame.is_none());
+        training.trace_capture(start, crate::result_handoff::CaptureWork {
+            allocations:2, slots:3, inherited:4, ..Default::default()
+        });
+        let work=training.trace[0].capture.as_ref().unwrap();
+        assert_eq!((work.allocations,work.slots,work.inherited),(2,3,4));
+        // A dropped or disabled event cannot overwrite the last retained one.
+        training.trace_capture(Some(training.trace.len()),Default::default());
+        training.trace_capture(None,Default::default());
+        assert_eq!(training.trace[0].capture.as_ref().unwrap().allocations,2);
+    }
+
+    #[test]
+    fn diagnostic_event_budget_does_not_change_candidate_limits() {
+        let c=Catalog::default();
+        let mut training=Training {trace_event_limit:Some(1),run:1,..Default::default()};
+        let mut root=c.root_state(99,1,true).unwrap();
+        training.trace_root(&c,&mut root,99);
+        training.run=2;
+        training.trace_root(&c,&mut root,99);
+        assert_eq!(training.trace.len(),1);
+        assert_eq!(training.trace_dropped,1);
+        training.trace_event_limit=Some(3);
+        training.run=3;
+        training.trace_completed(&c,&mut root,None,(99,None),2);
+        assert_eq!(training.trace.len(),2);
+        assert_eq!(training.trace[1].parent,None);
+        assert!(training.trace[1].truncated_parent,"raising the cap cannot reconstruct a dropped parent");
+        assert_eq!(c.limits.candidates,Limits::default().candidates);
+    }
+
     #[test]
     fn tail_counters_remain_bounded_and_credit_only_complete_entries() {
         let mut c = Catalog::default();

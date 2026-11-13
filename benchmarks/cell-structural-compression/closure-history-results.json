@@ -1,0 +1,70 @@
+{
+  "scope": "actual standalone runtime lineage with compile-only finite closure proofs",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "events": 1428,
+  "dropped_events": 0,
+  "classifications": {
+    "guarded": {
+      "compiled_paths": 4,
+      "completed_events": 14,
+      "cross_run_events": 14,
+      "introduced_fact_opportunities": 28,
+      "ordered_union_obligations": 0,
+      "overlapping_pair_support": 5
+    },
+    "internal_completion": {
+      "compiled_paths": 2,
+      "completed_events": 3,
+      "cross_run_events": 3,
+      "introduced_fact_opportunities": 3,
+      "ordered_union_obligations": 1,
+      "overlapping_pair_support": 1
+    },
+    "root": {
+      "completed_events": 983,
+      "cross_run_events": 0,
+      "introduced_fact_opportunities": 0,
+      "ordered_union_obligations": 0
+    },
+    "unsupported": {
+      "compiled_paths": 29,
+      "completed_events": 428,
+      "cross_run_events": 428,
+      "introduced_fact_opportunities": 0,
+      "ordered_union_obligations": 0,
+      "overlapping_pair_support": 26
+    }
+  },
+  "after_verified_source_run_boundaries": {
+    "guarded": {
+      "completed_events": 127,
+      "introduced_fact_opportunities": 158,
+      "ordered_union_obligations": 48
+    },
+    "internal_completion": {
+      "completed_events": 57,
+      "introduced_fact_opportunities": 57,
+      "ordered_union_obligations": 41
+    },
+    "saturated": {
+      "completed_events": 209,
+      "introduced_fact_opportunities": 0,
+      "ordered_union_obligations": 0
+    },
+    "unsupported": {
+      "completed_events": 52,
+      "introduced_fact_opportunities": 0,
+      "ordered_union_obligations": 0
+    }
+  },
+  "fully_covered_rhs_opportunities": {
+    "applications": 373,
+    "covered_prefix_ops": 888,
+    "prefix_copy_ops": 500,
+    "prefix_static_alias_ops": 0,
+    "prefix_remaining_effect_ops": 388
+  },
+  "limitation": "No runtime skip or injection installed. Pair samples overlap event history; never add them. Remaining source effects may already be removed by dynamic completion and are not measured savings. Introduced facts are symbolic obligations, not committed mutations.",
+  "input_sha256": "5f7eaa811faba8121abb63f61c1e42837c63e7e9ce3f800e60863df676dcbbbb"
+}

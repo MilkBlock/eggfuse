@@ -1,0 +1,755 @@
+{
+  "scope": "actual standalone Cell runtime, passive pre-execution RHS coverage; no rules skipped",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "applications_observed": 7265,
+  "fully_covered_rhs_candidates": 373,
+  "outcomes": {
+    "missing_local_constructor": {
+      "applications": 4569,
+      "covered_prefix_ops": 4470,
+      "rhs_ops": 17464,
+      "query_atoms": 10153,
+      "cross_epoch_applications": 4569
+    },
+    "no_local_component": {
+      "applications": 30,
+      "covered_prefix_ops": 0,
+      "rhs_ops": 344,
+      "query_atoms": 28,
+      "cross_epoch_applications": 0
+    },
+    "nontrivial_union": {
+      "applications": 157,
+      "covered_prefix_ops": 113,
+      "rhs_ops": 270,
+      "query_atoms": 224,
+      "cross_epoch_applications": 0
+    },
+    "primitive_proof_missing": {
+      "applications": 358,
+      "covered_prefix_ops": 454,
+      "rhs_ops": 1454,
+      "query_atoms": 1403,
+      "cross_epoch_applications": 304
+    },
+    "rhs_covered": {
+      "applications": 151,
+      "covered_prefix_ops": 250,
+      "rhs_ops": 250,
+      "query_atoms": 308,
+      "cross_epoch_applications": 151
+    },
+    "rhs_covered_by_inputs": {
+      "applications": 222,
+      "covered_prefix_ops": 638,
+      "rhs_ops": 638,
+      "query_atoms": 444,
+      "cross_epoch_applications": 0
+    },
+    "visibility_effect": {
+      "applications": 75,
+      "covered_prefix_ops": 0,
+      "rhs_ops": 75,
+      "query_atoms": 110,
+      "cross_epoch_applications": 0
+    },
+    "write_effect": {
+      "applications": 1703,
+      "covered_prefix_ops": 2741,
+      "rhs_ops": 5388,
+      "query_atoms": 3717,
+      "cross_epoch_applications": 627
+    }
+  },
+  "covered_rule_states": [
+    {
+      "rule": 317,
+      "shape": null,
+      "cross_epoch": false,
+      "outcome": "rhs_covered_by_inputs",
+      "counts": {
+        "applications": 131,
+        "covered_prefix_ops": 393,
+        "rhs_ops": 393,
+        "query_atoms": 262
+      }
+    },
+    {
+      "rule": 145,
+      "shape": null,
+      "cross_epoch": false,
+      "outcome": "rhs_covered_by_inputs",
+      "counts": {
+        "applications": 63,
+        "covered_prefix_ops": 189,
+        "rhs_ops": 189,
+        "query_atoms": 126
+      }
+    },
+    {
+      "rule": 58,
+      "shape": 450,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 17,
+        "covered_prefix_ops": 17,
+        "rhs_ops": 17,
+        "query_atoms": 17
+      }
+    },
+    {
+      "rule": 90,
+      "shape": 516,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 16,
+        "covered_prefix_ops": 16,
+        "rhs_ops": 16,
+        "query_atoms": 32
+      }
+    },
+    {
+      "rule": 518,
+      "shape": 374,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 12,
+        "covered_prefix_ops": 24,
+        "rhs_ops": 24,
+        "query_atoms": 24
+      }
+    },
+    {
+      "rule": 576,
+      "shape": null,
+      "cross_epoch": false,
+      "outcome": "rhs_covered_by_inputs",
+      "counts": {
+        "applications": 10,
+        "covered_prefix_ops": 20,
+        "rhs_ops": 20,
+        "query_atoms": 20
+      }
+    },
+    {
+      "rule": 64,
+      "shape": 523,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 8,
+        "covered_prefix_ops": 16,
+        "rhs_ops": 16,
+        "query_atoms": 8
+      }
+    },
+    {
+      "rule": 90,
+      "shape": 377,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 8,
+        "covered_prefix_ops": 8,
+        "rhs_ops": 8,
+        "query_atoms": 16
+      }
+    },
+    {
+      "rule": 572,
+      "shape": null,
+      "cross_epoch": false,
+      "outcome": "rhs_covered_by_inputs",
+      "counts": {
+        "applications": 7,
+        "covered_prefix_ops": 14,
+        "rhs_ops": 14,
+        "query_atoms": 14
+      }
+    },
+    {
+      "rule": 134,
+      "shape": null,
+      "cross_epoch": false,
+      "outcome": "rhs_covered_by_inputs",
+      "counts": {
+        "applications": 6,
+        "covered_prefix_ops": 12,
+        "rhs_ops": 12,
+        "query_atoms": 12
+      }
+    },
+    {
+      "rule": 425,
+      "shape": 133,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 6,
+        "covered_prefix_ops": 12,
+        "rhs_ops": 12,
+        "query_atoms": 18
+      }
+    },
+    {
+      "rule": 523,
+      "shape": 540,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 5,
+        "covered_prefix_ops": 10,
+        "rhs_ops": 10,
+        "query_atoms": 10
+      }
+    },
+    {
+      "rule": 532,
+      "shape": 571,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 5,
+        "covered_prefix_ops": 15,
+        "rhs_ops": 15,
+        "query_atoms": 15
+      }
+    },
+    {
+      "rule": 23,
+      "shape": null,
+      "cross_epoch": false,
+      "outcome": "rhs_covered_by_inputs",
+      "counts": {
+        "applications": 4,
+        "covered_prefix_ops": 8,
+        "rhs_ops": 8,
+        "query_atoms": 8
+      }
+    },
+    {
+      "rule": 421,
+      "shape": 135,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 4,
+        "covered_prefix_ops": 8,
+        "rhs_ops": 8,
+        "query_atoms": 16
+      }
+    },
+    {
+      "rule": 90,
+      "shape": 446,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 3,
+        "covered_prefix_ops": 3,
+        "rhs_ops": 3,
+        "query_atoms": 6
+      }
+    },
+    {
+      "rule": 90,
+      "shape": 563,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 3,
+        "covered_prefix_ops": 3,
+        "rhs_ops": 3,
+        "query_atoms": 6
+      }
+    },
+    {
+      "rule": 90,
+      "shape": 578,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 3,
+        "covered_prefix_ops": 3,
+        "rhs_ops": 3,
+        "query_atoms": 6
+      }
+    },
+    {
+      "rule": 90,
+      "shape": 585,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 3,
+        "covered_prefix_ops": 3,
+        "rhs_ops": 3,
+        "query_atoms": 6
+      }
+    },
+    {
+      "rule": 241,
+      "shape": 452,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 3,
+        "covered_prefix_ops": 9,
+        "rhs_ops": 9,
+        "query_atoms": 12
+      }
+    },
+    {
+      "rule": 514,
+      "shape": 551,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 3,
+        "covered_prefix_ops": 6,
+        "rhs_ops": 6,
+        "query_atoms": 6
+      }
+    },
+    {
+      "rule": 518,
+      "shape": 414,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 3,
+        "covered_prefix_ops": 6,
+        "rhs_ops": 6,
+        "query_atoms": 6
+      }
+    },
+    {
+      "rule": 518,
+      "shape": 483,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 3,
+        "covered_prefix_ops": 6,
+        "rhs_ops": 6,
+        "query_atoms": 6
+      }
+    },
+    {
+      "rule": 88,
+      "shape": 586,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 4,
+        "rhs_ops": 4,
+        "query_atoms": 4
+      }
+    },
+    {
+      "rule": 90,
+      "shape": 477,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 4
+      }
+    },
+    {
+      "rule": 90,
+      "shape": 546,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 4
+      }
+    },
+    {
+      "rule": 90,
+      "shape": 568,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 4
+      }
+    },
+    {
+      "rule": 91,
+      "shape": 490,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 4,
+        "rhs_ops": 4,
+        "query_atoms": 4
+      }
+    },
+    {
+      "rule": 312,
+      "shape": 594,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 4,
+        "rhs_ops": 4,
+        "query_atoms": 6
+      }
+    },
+    {
+      "rule": 514,
+      "shape": 499,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 4,
+        "rhs_ops": 4,
+        "query_atoms": 4
+      }
+    },
+    {
+      "rule": 516,
+      "shape": 543,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 4,
+        "rhs_ops": 4,
+        "query_atoms": 4
+      }
+    },
+    {
+      "rule": 517,
+      "shape": 543,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 4,
+        "rhs_ops": 4,
+        "query_atoms": 4
+      }
+    },
+    {
+      "rule": 518,
+      "shape": 430,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 4,
+        "rhs_ops": 4,
+        "query_atoms": 4
+      }
+    },
+    {
+      "rule": 518,
+      "shape": 570,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 4,
+        "rhs_ops": 4,
+        "query_atoms": 4
+      }
+    },
+    {
+      "rule": 522,
+      "shape": 430,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 4,
+        "rhs_ops": 4,
+        "query_atoms": 4
+      }
+    },
+    {
+      "rule": 532,
+      "shape": 424,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 2,
+        "covered_prefix_ops": 6,
+        "rhs_ops": 6,
+        "query_atoms": 6
+      }
+    },
+    {
+      "rule": 58,
+      "shape": 392,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 1,
+        "rhs_ops": 1,
+        "query_atoms": 1
+      }
+    },
+    {
+      "rule": 88,
+      "shape": 418,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 88,
+      "shape": 432,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 88,
+      "shape": 585,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 90,
+      "shape": 545,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 1,
+        "rhs_ops": 1,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 92,
+      "shape": 578,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 1,
+        "rhs_ops": 1,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 92,
+      "shape": 585,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 1,
+        "rhs_ops": 1,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 312,
+      "shape": 526,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 3
+      }
+    },
+    {
+      "rule": 425,
+      "shape": 223,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 3
+      }
+    },
+    {
+      "rule": 486,
+      "shape": 371,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 486,
+      "shape": 540,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 516,
+      "shape": 374,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 516,
+      "shape": 430,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 517,
+      "shape": 374,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 517,
+      "shape": 430,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 522,
+      "shape": 483,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 523,
+      "shape": 371,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 523,
+      "shape": 430,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 523,
+      "shape": 483,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    },
+    {
+      "rule": 534,
+      "shape": 424,
+      "cross_epoch": true,
+      "outcome": "rhs_covered",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 3,
+        "rhs_ops": 3,
+        "query_atoms": 3
+      }
+    },
+    {
+      "rule": 580,
+      "shape": null,
+      "cross_epoch": false,
+      "outcome": "rhs_covered_by_inputs",
+      "counts": {
+        "applications": 1,
+        "covered_prefix_ops": 2,
+        "rhs_ops": 2,
+        "query_atoms": 2
+      }
+    }
+  ],
+  "observer_component_checks": 10654,
+  "observer_fact_checks": 118826,
+  "limitations": "not a saturation certificate for all matches; query elimination, delta ownership, audit replacement and future invalidation still require compilation; unsupported effects are not skippable; no saved work claimed",
+  "input_sha256": "0e4a4c5ec30f59d4eb713a5207d71c2aaac4dacb3c2cda0a56e920a6114c7947"
+}

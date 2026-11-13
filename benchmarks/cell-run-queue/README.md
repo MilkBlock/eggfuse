@@ -85,9 +85,13 @@ These counts are not additive saved operations; required internal dependency,
 effect and capacity boundaries still apply. Capacities are cumulative allocation
 capacities, not peak memory.
 
-The cost is visible: retaining pending Cells suppresses existing direct/iterative
-completion shortcuts until their ordering obligations are satisfied. That path
-now exposes 19 / 4,106 more source frames, and the root path handles more jobs.
+The cost is visible: there are 19 / 4,106 more source frames, and the root path
+handles more jobs. A subsequent merge audit corrected the original attribution
+to direct/iterative completion: matched completion and closed handoff counts are
+unchanged, and Ripsat direct completion is zero in both frozen workloads.
+`defer_constructor_prefix` also disables ordinary constructor reuse while a
+queue is pending; this is the concrete next path to investigate. These counters
+alone do not prove the cause of every additional frame.
 Registration grouping changes as well. Sum-bits queue storage grows despite
 fewer dispatches; Raytrace completion and shared-result storage grow while queue
 storage falls. This removes a real redundant handoff but does not yet eliminate

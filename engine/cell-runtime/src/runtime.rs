@@ -262,6 +262,13 @@ impl Executor {
     pub fn collect_iterative_pairs(&mut self) {
         self.stage_spine.training.collect_pairs = true;
     }
+    /// Diagnostic archive budget, independent of candidate-shape selection.
+    /// Zero retains pair counters without raw events. Does not alter the catalog.
+    #[cfg(feature = "iterative-bake")]
+    pub fn collect_iterative_history(&mut self, event_limit: usize) {
+        self.collect_iterative_pairs();
+        self.stage_spine.training.trace_event_limit = Some(event_limit);
+    }
     #[cfg(feature = "iterative-bake")]
     pub fn iterative_training(&self) -> &crate::iterative::Training {
         &self.stage_spine.training
@@ -398,6 +405,19 @@ impl Executor {
         e.deliver();
         e.graph.changes.clear();
         e
+    }
+    /// Opt-in completed-state lifetime analysis for parent inheritance and
+    /// dead matched inputs. Physical owner replacement is enabled separately.
+    #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+    pub fn use_completed_parent_takeover(&mut self) -> Result<()> {
+        if !self.steps.is_empty() {return Err("configure parent takeover before execution".into());}
+        if !self.graph.ownership_enabled() {return Err("parent takeover requires composed Cell symbols".into());}
+        for rid in 0..self.graph.program.rules.len() {
+            // An empty plan still enables completed port delegation; None is disabled.
+            self.graph.program.executions[rid].completed_dead_slots=Some(crate::cell::completion_lifetime::dead_slots(&self.graph.program,rid).unwrap_or_default());
+            self.graph.program.executions[rid].parent_completion=crate::cell::completion_lifetime::parent_layout(&self.graph.program,rid);
+        }
+        Ok(())
     }
     #[cfg(feature = "sparse-cells")]
     pub fn use_entry_publications(&mut self) -> Result<()> {
@@ -2141,6 +2161,7 @@ impl Executor {
         defer_constructor_prefix: bool,
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
     ) -> Result<Option<owned_cell::Execution>> {
+        self.graph.observe_saturated_apply(rid, &b, !pending.is_empty());
         #[cfg(feature = "iterative-bake")]
         let mut b = b;
         #[cfg(feature = "sparse-cells")]
@@ -2171,6 +2192,10 @@ impl Executor {
         { self.graph.stats.constructor_prepared_inputs += u64::from(constructor.is_some()); }
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::rhs(rid);
+        #[cfg(all(feature="sparse-cells",feature="iterative-bake"))]
+        if b.direct.is_none() {
+            b.direct=self.stage_spine.resume_matched(&self.graph,&self.entry_schedule,rid,&b);
+        }
         let stage_cursor = self.stage_spine.begin_step(
             &self.graph.program,
             rid,
@@ -2265,6 +2290,8 @@ impl Executor {
                     |_| key.take().ok_or("missing single-write boundary key".into()),
                 )?;
             }
+            #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+            if changed {self.graph.retire_completed_writer_inputs(cell,rid);}
             return Ok(None);
         }
         #[cfg(feature = "sparse-cells")]
@@ -2569,7 +2596,7 @@ impl Executor {
         {
             self.stage_spine.training.run = self.steps.len() + 1;
         }
-        if self.completion.is_none() { self.graph.receipt_forwards.clear(); }
+        if self.completion.is_none() { self.graph.clear_receipt_forwards(); }
         self.graph.epoch = self.graph.epoch.checked_add(1).ok_or("epoch exhausted")?;
         self.graph.changed = false;
         #[cfg(feature = "family-survey")]

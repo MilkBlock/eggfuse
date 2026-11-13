@@ -1,0 +1,40 @@
+{
+  "scope": "actual standalone Cell runtime allocation lane; not timing or full Run-boundary acceptance",
+  "program_sha256": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+  "runs": 1428,
+  "final_state_equal": true,
+  "heap": {
+    "graph_owned_teardown_bytes": [
+      2617317,
+      2617317
+    ],
+    "retained_program_teardown_bytes": [
+      117318509,
+      117318989
+    ],
+    "execution_and_takeover_peak_bytes": [
+      125400997,
+      125401475
+    ],
+    "net_growth_over_setup_bytes": [
+      5570091,
+      5570091
+    ],
+    "max_takeover_extra_bytes": [
+      50320,
+      50320
+    ]
+  },
+  "ordinary_source_records": [
+    1598,
+    1598
+  ],
+  "graph_field_changes": {},
+  "net_retained_growth": 480,
+  "admission": "rejected; experimental runtime patch not applied",
+  "limits": [
+    "Local regression proves source retirement, not workload coverage.",
+    "Unchanged final heap does not prove the path never ran.",
+    "No new per-Run semantic acceptance was run for this rejected experiment."
+  ]
+}

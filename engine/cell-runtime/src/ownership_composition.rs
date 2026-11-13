@@ -7,6 +7,8 @@ pub mod conditions;
 pub mod effects;
 #[path = "ownership_queries.rs"]
 pub mod queries;
+#[path = "ownership_saturation.rs"]
+mod saturation;
 
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 pub struct Source {
@@ -28,9 +30,17 @@ pub struct Shape {
 pub struct Instruction {
     pub frame: usize,
     pub op: u32,
-    pub columns: Arc<Vec<usize>>,
 }
 impl Shape {
+    /// Project the authoritative static wiring instead of owning another copy
+    /// of every instruction's field incidences. Enumeration preserves order.
+    pub fn columns<'a>(&'a self, programs: &'a [Arc<PortProgram>], symbol: usize, step: &Instruction)
+        -> impl Iterator<Item = usize> + 'a
+    {
+        let ports = &self.ports[step.frame];
+        programs[self.programs[step.frame]].fields[step.op as usize].iter().enumerate()
+            .filter_map(move |(column, local)| local.is_some_and(|local| ports[local] == symbol).then_some(column))
+    }
     fn initial(id: usize, p: &PortProgram) -> Self {
         Self::default().append(id, p, &[]).0
     }
@@ -67,28 +77,17 @@ impl Shape {
             Arc::make_mut(&mut shape.signals[symbol]).extend(steps.iter().map(|s| Instruction {
                 frame,
                 op: s.op,
-                columns: Arc::new(s.columns.clone()),
             }));
         }
-        // Several checked query inputs may substitute to the same symbol.
-        // Coalesce their columns once in the shape, not on every equality.
-        // The old prefix is already ordered and its column arrays are shared.
-        // Only modified slices copy instruction handles; untouched slices and
-        // all previous frame port maps retain their existing allocations.
+        // Several checked inputs may substitute to one symbol. Keep one site;
+        // its columns are already encoded by the program fields and port map.
+        // Only modified slices copy handles; untouched slices and all previous
+        // frame port maps retain their existing allocations.
         for symbol in touched {
             let steps = Arc::make_mut(&mut shape.signals[symbol]);
             let prefix = steps.partition_point(|s| s.frame < frame);
             steps[prefix..].sort_unstable_by_key(|s| s.op);
-            steps.dedup_by(|next, prev| {
-                if (next.frame, next.op) != (prev.frame, prev.op) {
-                    return false;
-                }
-                let columns = Arc::make_mut(&mut prev.columns);
-                columns.extend_from_slice(&next.columns);
-                columns.sort_unstable();
-                columns.dedup();
-                true
-            });
+            steps.dedup_by_key(|step| (step.frame, step.op));
         }
         shape.ports.push(Arc::new(ports));
         (shape, copied_steps)
@@ -139,10 +138,20 @@ pub fn source_digest(raw: &J) -> String {
         &["sha256", "ownership_markers", "ownership_fragments"],
     )
 }
+/// A bounded training/catalog policy, never evidence for an equality.
+pub fn checked_frame_limit(raw: Option<&J>) -> Result<usize> {
+    let n = match raw {
+        None => 4,
+        Some(value) => value.as_u64().ok_or("max_frames must be an integer")?,
+    };
+    if !(2..=32).contains(&n) { return Err("max_frames must be in 2..=32".into()); }
+    Ok(n as usize)
+}
 /// Rank repeated, actually used local continuations within a static code budget.
 /// The score is a proposal heuristic. Whole-execution timing admits speedups.
 pub fn select_profile(profile: &J) -> Result<J> {
     let format = wire::Format::profile(profile)?;
+    let max_frames = checked_frame_limit(profile.get("max_frames"))?;
     let records = profile["records"]
         .as_array()
         .ok_or("missing fragment observations")?;
@@ -165,6 +174,7 @@ pub fn select_profile(profile: &J) -> Result<J> {
         let net = 2 * i128::from(saved) - i128::from(probes);
         let fragment: Fragment =
             serde_json::from_value(row["fragment"].clone()).map_err(|e| e.to_string())?;
+        if fragment.hops.len() >= max_frames { return Err("profile fragment exceeds max_frames".into()); }
         code_costs.insert(fragment.clone(), cost);
         if uses >= 2 && net > 0 {
             ranked.push((net as f64 / (1.0 + cost as f64), fragment, cost, net));
@@ -195,7 +205,7 @@ pub fn select_profile(profile: &J) -> Result<J> {
         }
     }
     Ok(
-        json!({"schema":format.fragment_schema(),"source":profile["source"],"fragments":selected,
+        json!({"schema":format.fragment_schema(),"source":profile["source"],"max_frames":max_frames,"fragments":selected,
         "ranking":{"minimum_activations":2,"max_fragments":256,"instruction_handle_budget":16384,
             "charged_static_handles":handles,"sum_of_candidate_scores_not_global_savings":net,"alternatives_overlap":true,
             "rule":"rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
@@ -203,6 +213,34 @@ pub fn select_profile(profile: &J) -> Result<J> {
     )
 }
 impl Plan {
+    #[cfg(feature = "storage-metrics")]
+    pub(crate) fn release_storage_by_field(self, live_bytes: &impl Fn() -> usize, rows: &mut Vec<(&'static str, usize)>) {
+        assert!(rows.capacity() - rows.len() >= 32);
+        let before = live_bytes();
+        drop(self.sources);
+        rows.push(("composition.sources", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.active_rules);
+        rows.push(("composition.active_rules", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.shapes);
+        rows.push(("composition.shapes", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.conditions);
+        rows.push(("composition.conditions", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.effects);
+        rows.push(("composition.effects", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.queries);
+        rows.push(("composition.queries", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.fragments);
+        rows.push(("composition.fragments", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.transitions);
+        rows.push(("composition.transitions", before - live_bytes()));
+    }
     pub(super) fn derive(
         p: &Program,
         markers: &[Marker],
@@ -249,7 +287,7 @@ impl Plan {
                 .map(|root| Fragment { root, hops: vec![] })
                 .collect(),
             transitions: vec![],
-            max_frames: 4,
+            max_frames: checked_frame_limit(p.artifact.get("ownership_fragments").and_then(|f|f.get("max_frames")))?,
         };
         let mut transitions = BTreeMap::new();
         // Guard history selects a transition; code identity is just the local
@@ -329,19 +367,57 @@ impl Plan {
     }
     pub fn prepare_queries(&mut self, programs: &[Arc<PortProgram>]) {
         if self.queries.is_empty() {
-            self.queries = self.shapes.iter()
-                .map(|shape| Arc::new(queries::Plan::derive(shape, programs))).collect();
+            // The interner exists only while compiling; no runtime lookup or
+            // extra maintained binding directory is introduced.
+            let mut shared = std::collections::HashSet::new();
+            self.queries = self.shapes.iter().map(|shape| {
+                let mut plan = queries::Plan::derive(shape, programs);
+                plan.share_columns(&mut shared);
+                Arc::new(plan)
+            }).collect();
         }
     }
     pub fn prepare_conditions(&mut self, programs: &[Arc<PortProgram>], templates: &[Template], markers: &[Marker]) {
         if self.conditions.is_empty() {
             let operators = conditions::operators(templates, markers, programs);
-            self.conditions = self
-                .shapes
-                .iter()
-                .map(|shape| Arc::new(conditions::Plan::derive(shape, programs, &operators)))
-                .collect();
+            let mut sites = std::collections::HashSet::new();
+            let mut conditions = std::collections::HashSet::new();
+            self.conditions = self.shapes.iter().map(|shape| {
+                let mut plan = conditions::Plan::derive(shape, programs, &operators);
+                // Full typed code equality, not observed instance equality.
+                // Local site/symbol indices retain their original meaning.
+                for site in &mut plan.sites {
+                    if let Some(shared) = sites.get(site) {
+                        *site = Arc::clone(shared);
+                    } else {
+                        sites.insert(site.clone());
+                    }
+                }
+                for condition in &mut plan.conditions {
+                    if let Some(shared) = conditions.get(condition) {
+                        *condition = Arc::clone(shared);
+                    } else {
+                        conditions.insert(condition.clone());
+                    }
+                }
+                Arc::new(plan)
+            }).collect();
         }
+    }
+    /// Check a migrated candidate using the same typed substitutions as derive.
+    /// This proves wiring availability, not observed frequency or net savings.
+    pub fn supports_fragment(&self, p:&Program, fragment:&Fragment)->bool {
+        let programs=&p.cell_ownership.programs;
+        if fragment.root>=programs.len() || fragment.hops.len()>=self.max_frames {return false;}
+        let Some(root)=self.shapes.get(fragment.root) else {return false;};
+        let mut shape=(**root).clone();
+        for hop in &fragment.hops {
+            let Some(rule)=p.rules.get(hop.rule) else {return false;};
+            let program=p.cell_ownership.markers[rule.template].program_id;
+            let Some(subst)=substitutions(&self.sources,programs,&shape,hop) else {return false;};
+            shape=shape.append(program,&programs[program],&subst).0;
+        }
+        true
     }
     fn substitutions(
         &self,
@@ -380,6 +456,13 @@ pub struct Observation {
     pub transition_probes: u64,
 }
 #[derive(Default)]
+pub(super) struct CatalogTrace {
+    max_frames: usize,
+    records: BTreeMap<Key, (Fragment, u64, u64, usize)>,
+    uncovered_births: u64,
+    saturation: saturation::Trace,
+}
+#[derive(Default)]
 pub(super) struct Training {
     fragments: Vec<Fragment>,
     observations: BTreeMap<usize, Observation>,
@@ -406,46 +489,46 @@ pub(super) struct Frame {
 /// imported IDs without paying a hash lookup on every local port access.
 #[derive(Default)]
 pub(super) struct Frames {
-    dense: Vec<Option<Frame>>,
-    outliers: HashMap<u32, Frame>,
-    live: usize,
+    // Logical Cell IDs never move. Only live frame records occupy the arena;
+    // the directory keeps a four-byte position instead of an entire Option.
+    dense: Vec<u32>,
+    records: Vec<(u32, Frame)>,
+    outliers: HashMap<u32, u32>,
 }
 impl Frames {
+    fn position(&self, id: &u32) -> Option<usize> {
+        let n = self.dense.get(*id as usize).copied().unwrap_or(0);
+        let n = if n != 0 { n } else { *self.outliers.get(id)? };
+        Some(n as usize - 1)
+    }
     pub fn get(&self, id: &u32) -> Option<&Frame> {
-        self.dense
-            .get(*id as usize)
-            .and_then(Option::as_ref)
-            .or_else(|| self.outliers.get(id))
+        Some(&self.records[self.position(id)?].1)
     }
-    pub fn contains_key(&self, id: &u32) -> bool {
-        self.get(id).is_some()
-    }
-    pub fn insert(&mut self, id: u32, frame: Frame) {
-        if let Some(old) = self.outliers.get_mut(&id) {
-            *old = frame;
-            return;
-        }
+    pub fn contains_key(&self, id: &u32) -> bool { self.position(id).is_some() }
+    fn address(&mut self, id: u32, position: u32) {
         let n = id as usize;
         if n <= self.dense.len().saturating_add(65536) {
-            if n >= self.dense.len() {
-                self.dense.resize(n + 1, None);
-            }
-            self.live += usize::from(self.dense[n].replace(frame).is_none());
+            if n >= self.dense.len() { self.dense.resize(n+1,0); }
+            self.dense[n] = position;
+            self.outliers.remove(&id);
         } else {
-            self.live += usize::from(self.outliers.insert(id, frame).is_none());
+            self.outliers.insert(id,position);
         }
     }
+    pub fn insert(&mut self, id: u32, frame: Frame) {
+        if let Some(i) = self.position(&id) { self.records[i].1 = frame; return; }
+        let position = u32::try_from(self.records.len()+1).expect("too many live composition frames");
+        self.records.push((id,frame));
+        self.address(id,position);
+    }
     pub fn remove(&mut self, id: &u32) {
-        let old = self
-            .dense
-            .get_mut(*id as usize)
-            .and_then(Option::take)
-            .or_else(|| self.outliers.remove(id));
-        self.live -= usize::from(old.is_some());
+        let Some(i) = self.position(id) else { return; };
+        if let Some(position) = self.dense.get_mut(*id as usize) { *position = 0; }
+        self.outliers.remove(id);
+        self.records.swap_remove(i);
+        if let Some(&(moved,_)) = self.records.get(i) { self.address(moved, i as u32+1); }
     }
-    pub fn len(&self) -> usize {
-        self.live
-    }
+    pub fn len(&self) -> usize { self.records.len() }
 }
 impl std::ops::Index<&u32> for Frames {
     type Output = Frame;
@@ -474,6 +557,7 @@ pub(super) struct Runtime {
     pub shapes: Vec<Option<Arc<Shape>>>,
     pub transitions: HashMap<Key, usize>,
     pub training: Option<Training>,
+    pub catalog_trace: Option<Box<CatalogTrace>>,
     pub entry: Option<Entry>,
     pub heap: Vec<Cursor>,
     pub columns: Vec<usize>,
@@ -503,6 +587,7 @@ impl Runtime {
             shapes: p.shapes.iter().cloned().map(Some).collect(),
             transitions: p.transitions.iter().cloned().collect(),
             training: None,
+            catalog_trace: None,
             entry: None,
             heap: vec![],
             columns: vec![],
@@ -530,23 +615,60 @@ impl Runtime {
     }
 }
 impl Graph {
+    /// Observe extensions without installing speculative shapes or changing
+    /// production's frame bound. The trace is not an admitted Bake profile.
+    pub fn trace_ownership_catalog(&mut self, max_frames: usize) -> Result<()> {
+        let max_frames = checked_frame_limit(Some(&json!(max_frames)))?;
+        let m = self.ownership.as_mut().ok_or("enable ownership before tracing")?;
+        if m.stats.marker_entries != 0 || m.composition.training.is_some() || m.composition.catalog_trace.is_some() {
+            return Err("start catalog tracing once, before execution and without exploratory training".into());
+        }
+        m.composition.catalog_trace = Some(Box::new(CatalogTrace { max_frames, ..Default::default() }));
+        Ok(())
+    }
+    pub fn ownership_catalog_trace(&self) -> Result<J> {
+        let m = self.ownership.as_ref().ok_or("ownership is disabled")?;
+        let trace = m.composition.catalog_trace.as_ref().ok_or("catalog tracing is disabled")?;
+        let records = trace.records.iter().map(|(key, (fragment, births, inputs, handles))| json!({
+            "source_shape":key.shape,"fragment":fragment,"matched_births":births,
+            "available_shared_inputs":inputs,"static_instruction_handles":handles,
+        })).collect::<Vec<_>>();
+        Ok(json!({"schema":"eggfuse-ownership-catalog-trace/v1", "source":source_digest(&self.program.artifact),
+            "catalog_sha256":self.program.artifact["sha256"], "max_frames":trace.max_frames,
+            "executed_max_frames":self.program.cell_ownership.composition.max_frames,
+            "seed_shapes":self.program.cell_ownership.composition.shapes.len(),
+            "seed_transitions":self.program.cell_ownership.composition.transitions.len(),
+            "uncovered_births":trace.uncovered_births,"alternatives_overlap":true,
+            "scope":"observed unmatched owned births in installed catalog execution; proposed reuse is not saved work or committed mutations",
+            "records":records,"saturation":trace.saturation.report()}))
+    }
     pub fn train_ownership_fragments(&mut self) -> Result<()> {
+        self.train_ownership_fragments_with_limit(4)
+    }
+    pub fn train_ownership_fragments_with_limit(&mut self, max_frames: usize) -> Result<()> {
+        self.start_ownership_fragment_training(max_frames, false)
+    }
+    /// Learn continuations while executing the currently checked catalog.
+    /// Existing shape IDs and proof programs remain authoritative.
+    pub fn continue_ownership_fragment_training(&mut self, max_frames: usize) -> Result<()> {
+        self.start_ownership_fragment_training(max_frames, true)
+    }
+    fn start_ownership_fragment_training(&mut self, max_frames: usize, extend: bool) -> Result<()> {
+        let max_frames = checked_frame_limit(Some(&json!(max_frames)))?;
         let m = self
             .ownership
             .as_mut()
             .ok_or("enable ownership before profiling fragments")?;
-        if m.stats.marker_entries != 0 {
-            return Err("start fragment profiling before execution".into());
+        if m.stats.marker_entries != 0 || m.composition.catalog_trace.is_some() {
+            return Err("start fragment profiling before execution and without catalog tracing".into());
         }
-        if !self
-            .program
-            .cell_ownership
-            .composition
-            .transitions
-            .is_empty()
-        {
+        if !extend && !self.program.cell_ownership.composition.transitions.is_empty() {
             return Err("profile fragments from the unbaked source catalog".into());
         }
+        if self.program.cell_ownership.composition.shapes.iter().any(|s| s.programs.len() > max_frames) {
+            return Err("training limit is smaller than the existing catalog".into());
+        }
+        self.program.cell_ownership.composition.max_frames = max_frames;
         m.composition.training = Some(Training {
             fragments: self.program.cell_ownership.composition.fragments.clone(),
             ..Training::default()
@@ -617,6 +739,9 @@ impl Graph {
         })).collect::<Vec<_>>();
         Ok(
             json!({"schema":self.program.cell_ownership.format.profile_schema(),"source":source_digest(&self.program.artifact),
+                "max_frames":self.program.cell_ownership.composition.max_frames,
+                "seed_catalog":{"shapes":self.program.cell_ownership.composition.shapes.len(),
+                    "transitions":self.program.cell_ownership.composition.transitions.len()},
             "scope":"checked Entry applications with actual owned births; diagnostic training, not production latency",
             "alternatives_overlap":true,
             "credit":"one avoided binding creation plus one avoided boundary insertion per observed shared input, minus transition probes; uncalibrated ranking only",
@@ -630,93 +755,124 @@ impl Graph {
             template: self.program.rules[rid].template, anchors });
     }
     pub(super) fn ensure_composition_frame(&mut self, cell: u32) {
-        let template = self.cells[&cell].template;
+        let template = self.cells.cell_metadata(cell).unwrap().template;
         let program = self.program.cell_ownership.markers[template].program_id;
         let m = self.ownership.as_mut().unwrap();
         if m.composition.frames.contains_key(&cell) {
             return;
         }
         let mut selected = None;
+        let mut proposals = Vec::new(); // Allocates only in explicit trace mode.
         if let Some(source) = &m.composition.entry
             && source.template == template {
             let rid = source.rule;
-            for (entry, anchor) in source.anchors.iter().copied().enumerate() {
-                m.stats.composition_entry_reads += 1;
-                let Some(Dependency::Fact(f)) = anchor else {
-                    continue;
-                };
-                if !self
-                    .cells
-                    .get(&f.cell)
-                    .and_then(|c| c.facts.get(&f.op))
-                    .is_some_and(|s| s.owned)
-                {
-                    m.stats.composition_missing_sources += 1;
-                    continue;
-                }
-                let Some(frame) = m.composition.frames.get(&f.cell).copied() else {
-                    continue;
-                };
-                let c = m.composition.components[frame.component as usize]
-                    .as_ref()
-                    .unwrap();
-                if c.frames.len() >= self.program.cell_ownership.composition.max_frames {
-                    m.stats.composition_capacity_cuts += 1;
-                    continue;
-                }
-                if c.frames.last().is_some_and(|&last| last >= cell) {
-                    continue;
-                }
-                let key = Key {
-                    shape: c.shape,
-                    hop: Hop {
-                        source_frame: frame.ordinal,
-                        rule: rid,
-                        entry,
-                        op: f.op,
-                    },
-                };
-                m.stats.composition_transition_probes += 1;
-                let shape = if let Some(&shape) = m.composition.transitions.get(&key) {
-                    m.stats.composition_cache_hits += 1;
-                    m.stats.composition_baked_hits +=
-                        u64::from(shape < self.program.cell_ownership.composition.shapes.len());
-                    shape
-                } else if m.composition.training.is_some() {
-                    let Some(subst) = substitutions(
-                        &self.program.cell_ownership.composition.sources,
-                        &self.program.cell_ownership.programs,
-                        m.composition.shapes[c.shape].as_ref().unwrap(),
-                        &key.hop,
-                    ) else {
+            // Reproduce the installed catalog's choice before exploring an
+            // uncovered anchor. Otherwise training can steal a production hit.
+            let prefer_catalog = m.composition.training.is_some()
+                && !self.program.cell_ownership.composition.transitions.is_empty();
+            'candidate: for pass in 0..=usize::from(prefer_catalog) {
+                for (entry, anchor) in source.anchors.iter().copied().enumerate() {
+                    m.stats.composition_entry_reads += 1;
+                    let Some(Dependency::Fact(f)) = anchor else {
                         continue;
                     };
-                    let (code, steps) = m.composition.shapes[c.shape].as_ref().unwrap().append(
-                        program,
-                        &self.program.cell_ownership.programs[program],
-                        &subst,
-                    );
-                    let t = m.composition.training.as_mut().unwrap();
-                    let mut fragment = t.fragments[c.shape].clone();
+                    if !self
+                        .cells.fact_state(f)
+                        .is_some_and(|s| s.owned)
+                    {
+                        m.stats.composition_missing_sources += 1;
+                        continue;
+                    }
+                    let Some(frame) = m.composition.frames.get(&f.cell).copied() else {
+                        continue;
+                    };
+                    let c = m.composition.components[frame.component as usize]
+                        .as_ref()
+                        .unwrap();
+                    if let Some(trace) = &m.composition.catalog_trace {
+                        if c.frames.len() < trace.max_frames && c.frames.last().is_none_or(|&last| last < cell) {
+                            proposals.push(Key { shape: c.shape, hop: Hop { source_frame: frame.ordinal, rule: rid, entry, op: f.op } });
+                        }
+                    }
+                    if c.frames.len() >= self.program.cell_ownership.composition.max_frames {
+                        m.stats.composition_capacity_cuts += 1;
+                        continue;
+                    }
+                    if c.frames.last().is_some_and(|&last| last >= cell) {
+                        continue;
+                    }
+                    let key = Key {
+                        shape: c.shape,
+                        hop: Hop {
+                            source_frame: frame.ordinal,
+                            rule: rid,
+                            entry,
+                            op: f.op,
+                        },
+                    };
+                    if prefer_catalog {
+                        let installed = m.composition.transitions.get(&key)
+                            .is_some_and(|&shape| shape < self.program.cell_ownership.composition.shapes.len());
+                        if installed != (pass == 0) { continue; }
+                    }
+                    m.stats.composition_transition_probes += 1;
+                    let shape = if let Some(&shape) = m.composition.transitions.get(&key) {
+                        m.stats.composition_cache_hits += 1;
+                        m.stats.composition_baked_hits +=
+                            u64::from(shape < self.program.cell_ownership.composition.shapes.len());
+                        shape
+                    } else if m.composition.training.is_some() {
+                        let Some(subst) = substitutions(
+                            &self.program.cell_ownership.composition.sources,
+                            &self.program.cell_ownership.programs,
+                            m.composition.shapes[c.shape].as_ref().unwrap(),
+                            &key.hop,
+                        ) else {
+                            continue;
+                        };
+                        let (code, steps) = m.composition.shapes[c.shape].as_ref().unwrap().append(
+                            program,
+                            &self.program.cell_ownership.programs[program],
+                            &subst,
+                        );
+                        let t = m.composition.training.as_mut().unwrap();
+                        let mut fragment = t.fragments[c.shape].clone();
+                        fragment.hops.push(key.hop.clone());
+                        t.fragments.push(fragment);
+                        let id = m.composition.shapes.len();
+                        m.composition.shapes.push(Some(Arc::new(code)));
+                        m.composition.transitions.insert(key, id);
+                        m.stats.composition_shape_builds += 1;
+                        m.stats.composition_materializations += 1;
+                        m.stats.composition_shape_steps += steps as u64;
+                        id
+                    } else {
+                        m.stats.composition_unbaked_fallbacks += 1;
+                        continue;
+                    };
+                    selected = Some((
+                        frame.component,
+                        shape,
+                        self.cells.cell_metadata(f.cell).unwrap().started_epoch != self.epoch,
+                    ));
+                    break 'candidate;
+                }
+            }
+        }
+        if selected.is_none() && let Some(trace) = &mut m.composition.catalog_trace {
+            trace.uncovered_births += 1;
+            let plan = &self.program.cell_ownership.composition;
+            for key in proposals {
+                let Some(subst) = plan.substitutions(&self.program.cell_ownership.programs, key.shape, &key.hop) else { continue; };
+                let entry = trace.records.entry(key.clone()).or_insert_with(|| {
+                    let mut fragment = plan.fragments[key.shape].clone();
                     fragment.hops.push(key.hop.clone());
-                    t.fragments.push(fragment);
-                    let id = m.composition.shapes.len();
-                    m.composition.shapes.push(Some(Arc::new(code)));
-                    m.composition.transitions.insert(key, id);
-                    m.stats.composition_shape_builds += 1;
-                    m.stats.composition_materializations += 1;
-                    m.stats.composition_shape_steps += steps as u64;
-                    id
-                } else {
-                    m.stats.composition_unbaked_fallbacks += 1;
-                    continue;
-                };
-                selected = Some((
-                    frame.component,
-                    shape,
-                    self.cells[&f.cell].started_epoch != self.epoch,
-                ));
-                break;
+                    let code = plan.shapes[key.shape].append(program, &self.program.cell_ownership.programs[program], &subst).0;
+                    let handles = code.signals.iter().map(|s|s.len()).sum();
+                    (fragment, 0, 0, handles)
+                });
+                entry.1 += 1;
+                entry.2 += subst.len() as u64;
             }
         }
         let (component, ordinal) = if let Some((component, shape, cross_stage)) = selected {
@@ -815,7 +971,32 @@ impl Graph {
                     }
                 }
             }
+            // A component may die before a source frame's external users do.
+            // Restore its delegated slots before invalidating the shared owner.
             for id in &c.frames {
+                #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+                if self.parent_users.get(id).copied().unwrap_or(0)>0
+                    && self.cells.completed_meta(*id).is_some_and(|meta|meta.symbolic_slots) {
+                    let restored=self.cells.unseal_completed(*id).unwrap();
+                    self.cells.insert(*id,restored);
+                    self.stats.shared_owner_frames_restored+=1;
+                }
+                if let Some(cell) = self.cells.get_mut(id) {
+                    if cell.symbolic_slots {
+                        let frame = m.composition.frames[id];
+                        let ports = &m.composition.shapes[c.shape].as_ref().unwrap().ports[frame.ordinal];
+                        let program = &self.program.cell_ownership.markers[cell.template].program;
+                        for (slot, local) in program.slots.iter().enumerate() {
+                            if cell.values.contains_key(&slot) { continue; }
+                            if let Some(local) = local {
+                                if let Some(id) = c.signals[ports[*local]] {
+                                    cell.values.insert(slot, Value::Eq(id));
+                                }
+                            }
+                        }
+                        cell.symbolic_slots = false;
+                    }
+                }
                 m.composition.frames.remove(id);
             }
             m.composition.components.retire(f.component as usize);
@@ -855,6 +1036,7 @@ mod tests {
     #[test]
     fn appending_a_receiver_preserves_unrelated_program_storage() {
         let producer = PortProgram {
+            fields: (0..200).map(|symbol| vec![Some(symbol)]).collect(),
             signals: (0..200)
                 .map(|op| {
                     vec![slices::Step {
@@ -866,6 +1048,7 @@ mod tests {
             ..PortProgram::default()
         };
         let receiver = PortProgram {
+            fields: vec![vec![Some(0)]],
             signals: vec![vec![slices::Step {
                 op: 0,
                 columns: vec![0],
@@ -882,4 +1065,33 @@ mod tests {
             assert!(Arc::ptr_eq(&parent.signals[symbol], &child.signals[symbol]));
         }
     }
+    #[test]
+    fn inherited_wiring_coalesces_alias_columns_without_a_second_column_list() {
+        let producer = Arc::new(PortProgram {
+            fields: vec![vec![Some(0)]],
+            signals: vec![vec![slices::Step { op: 0, columns: vec![0] }]],
+            ..PortProgram::default()
+        });
+        let receiver = Arc::new(PortProgram {
+            fields: vec![vec![Some(0), Some(1), None, Some(2)]],
+            signals: vec![
+                vec![slices::Step { op: 0, columns: vec![0] }],
+                vec![slices::Step { op: 0, columns: vec![1] }],
+                vec![slices::Step { op: 0, columns: vec![3] }],
+            ],
+            ..PortProgram::default()
+        });
+        let parent = Shape::initial(0, &producer);
+        let child = parent.append(1, &receiver, &[(0, 0), (1, 0)]).0;
+        let programs = [producer, receiver];
+        assert_eq!(child.signals[0].len(), 2, "aliased inputs name one receiver site");
+        assert_eq!(child.columns(&programs, 0, &child.signals[0][1]).collect::<Vec<_>>(), vec![0, 1]);
+        let output = child.ports[1][2];
+        assert_eq!(child.columns(&programs, output, &child.signals[output][0]).collect::<Vec<_>>(), vec![3]);
+        assert_eq!(parent.columns(&programs, 0, &parent.signals[0][0]).collect::<Vec<_>>(), vec![0]);
+        let effects = effects::Plan::derive(&child, &programs);
+        assert_eq!(effects.signals[0][1].output, Some(output));
+        assert_eq!(effects.signals[output][0].output, None, "output-only alias is not an input guard");
+    }
+
 }

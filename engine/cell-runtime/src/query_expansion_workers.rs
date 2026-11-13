@@ -161,7 +161,7 @@ impl Plans {
             let Call::Table(table)=p.rules[rid].query[pivot].call else {return None;};
             let code=codes.len();
             codes.push(CellCode {first_read:None,query:k.query.clone(),inputs:p.rules[rid].inputs.clone(),
-                rule:rid,template:p.rules[rid].template,pivot,slots:k.query.result_slots(),reads:p.rules[rid].query.len(),expansion:true,
+                rule:rid,template:p.rules[rid].template,pivot,inherits_entry:false,slots:k.query.result_slots(),reads:p.rules[rid].query.len(),expansion:true,
                 #[cfg(feature="cell-query-sharing-audit")] audit_prefixes:Vec::new(),});
             Some(Plan {layout:layout.into_iter().map(|(t,c)|(t,c.into_iter().collect())).collect(),
                 tables:tables.into_iter().collect(),expanded:expanded.atom,code,table,active:false,

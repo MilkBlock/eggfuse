@@ -1,4 +1,5 @@
 //! Access to the live producer of a committed fact.
+use crate::graph::FactStates as _;
 use super::*;
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 #[serde(default)]
@@ -53,16 +54,13 @@ impl Graph {
             });
         }
         let f = if let Dependency::Fact(f) = w {
-            self.cells
-                .get(&f.cell)?
-                .facts
-                .get(&f.op)?
+            self.cells.fact_state(f)?
                 .entry
                 .unwrap_or(f)
         } else {
             actual
         };
-        let c = self.cells.get(&f.cell)?;
+        let c = self.cells.cell_metadata(f.cell)?;
         Some(Context {
             completed: c.completed,
             cell: f.cell,

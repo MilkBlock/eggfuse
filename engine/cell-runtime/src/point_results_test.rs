@@ -50,7 +50,7 @@ fn point_results_follow_full_rows_without_retaining_their_fields() {
         let key=key.iter().map(|v|canon(v,&g.parents)).collect::<Vec<_>>();
         compare(&mut g,t,&key);
         let i=g.function_index(t,&key).unwrap();
-        g.function_decoded[i]=None;
+        g.functions[i].canonical=false;
         compare(&mut g,t,&key);
         g.hide(t,&key,true).unwrap();
         compare(&mut g,t,&key);

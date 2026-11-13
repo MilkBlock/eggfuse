@@ -2,25 +2,90 @@
 use super::*;
 impl Graph {
     /// Diagnostic memory-pressure operation at an idle source Run boundary.
-    /// Logical IDs, facts, slots, index entries and shared owners are unchanged.
+    /// Logical IDs, facts and reads are preserved. Completed bindings may
+    /// delegate to checked component symbols or existing recipe definitions.
     pub fn compact_retained_capacity(&mut self) -> Result<()> {
         if self.active_rhs.is_some() {
             return Err("cannot compact an active RHS".into());
         }
+        self.take_over_parent_links()?;
+        self.take_over_instance_slots();
+        self.elide_reconstructible_slots();
         self.cells.compact_capacity();
         for function in &mut self.functions {
-            function.key.shrink_to_fit();
             if let Some(writer) = function.writer.as_deref_mut() {
                 writer.values.compact_capacity();
             }
         }
         self.functions.shrink_to_fit();
-        self.function_decoded.shrink_to_fit();
         Ok(())
+    }
+
+    /// Remove completed bindings only when the existing typed recipe can
+    /// reconstruct the same value without that binding. No new alias map.
+    fn elide_reconstructible_slots(&mut self) {
+        struct Without<'a> {
+            values: &'a crate::slots::FrameSlots,
+            slot: usize,
+        }
+        impl crate::slots::ReadSlots for Without<'_> {
+            fn get(&self, slot: &usize) -> Option<&Value> {
+                if *slot == self.slot {
+                    None
+                } else {
+                    self.values.get(slot)
+                }
+            }
+        }
+        let ids = self
+            .cells
+            .iter()
+            .filter(|(_, c)| c.completed)
+            .map(|(&id, _)| id)
+            .collect::<Vec<_>>();
+        for id in ids {
+            let slots = self.cells[&id].values.owned_slots();
+            for slot in slots {
+                let c = &self.cells[&id];
+                let old = canon(c.values.get(&slot).unwrap(), &self.parents);
+                let values = Without {
+                    values: &c.values,
+                    slot,
+                };
+                if self
+                    .slot_fields(id, c.template, c.parent, &values, slot)
+                    .ok()
+                    .as_ref()
+                    == Some(&old)
+                {
+                    self.cells.get_mut(&id).unwrap().values.remove(&slot);
+                }
+            }
+        }
+    }
+
+    /// Snapshot only: correlate existing fact lifecycle state with composed owners
+    /// offline. No execution-time fact graph or additional retained bindings.
+    fn fact_lifecycle_trace(&self) -> J {
+        let frames=self.cells.cell_ids().map(|id| {
+            let meta=self.cells.cell_metadata(id).unwrap();
+            let facts=self.cells.fact_states(id).map(|(fact,state)| {
+                json!({"op":fact.op,"epoch":state.epoch,"born":state.born,
+                    "hidden":state.hidden,"owned":state.owned,
+                    "local_union_owned":state.local_union_owned,
+                    "entry":state.entry,"decoded":state.decoded.is_some()})
+            }).collect::<Vec<_>>();
+            json!({"cell":id,"template":meta.template,"completed":meta.completed,
+                "started_epoch":meta.started_epoch,"facts":facts})
+        }).collect::<Vec<_>>();
+        json!({"scope":"post-execution live fact lifecycle; equal values are observations, not static proof",
+            "fact_state_bytes":std::mem::size_of::<FactState>(),
+            "epoch_pair_bytes":2*std::mem::size_of::<u64>(),"frames":frames})
     }
 
     pub fn retained_cell_storage(&self) -> J {
         let (records, positions, outliers) = self.cells.storage_bytes();
+        let (completed_records,completed_slots,completed_facts,completed_frames)=self.cells.completed_storage();
         let mut frames = BTreeSet::new();
         let mut decoded = BTreeSet::new();
         let (mut slots, mut facts, mut rows, mut removals) = (0, 0, 0, 0);
@@ -42,33 +107,25 @@ impl Graph {
                 }
             }
         }
-        for fields in self.function_decoded.iter().flatten() {
-            if decoded.insert(fields.as_ptr() as usize) {
-                rows += std::mem::size_of_val(fields.as_ref()) + 2 * std::mem::size_of::<usize>();
-            }
+        for id in self.cells.completed_ids() {
+            let count=self.cells.fact_count(id).unwrap();
+            fact_count+=count;
+            *arities.entry(count).or_default()+=1;
         }
+        slots+=completed_slots;facts+=completed_facts;
         let function_records = self.functions.capacity() * std::mem::size_of::<Function>();
-        let function_keys = self
-            .functions
-            .iter()
-            .map(|f| f.key.capacity() * std::mem::size_of::<Value>())
-            .sum::<usize>();
-        let decoded_directory =
-            self.function_decoded.capacity() * std::mem::size_of::<Option<RowFields>>();
+        let function_rows = self.functions.iter().map(|f| {
+            if decoded.insert(f.fields.as_ptr() as usize) {
+                std::mem::size_of_val(f.fields.as_ref()) + 2 * std::mem::size_of::<usize>()
+            } else { 0 }
+        }).sum::<usize>();
         let mut degrees = BTreeMap::<usize, usize>::new();
         for uses in self.uses.values() {
             *degrees.entry(uses.len()).or_default() += 1;
         }
         let uses_header = self.uses.capacity() * std::mem::size_of::<(u64, UseSet)>();
         let uses_heap = self.uses.values().map(UseSet::heap_payload).sum::<usize>();
-        let forward = self.dependencies.capacity()
-            * std::mem::size_of::<(Dependency, smallvec::SmallVec<[u64; 3]>)>()
-            + self
-                .dependencies
-                .values()
-                .filter(|v| v.spilled())
-                .map(|v| v.capacity() * 8)
-                .sum::<usize>();
+        let forward = 0; // sparse rows own operands; no forward dependency directory
         let functions_index = self
             .function_keys
             .iter()
@@ -95,6 +152,21 @@ impl Graph {
             writer_slots += bytes;
             removals += removed;
         }
+        // Offline attribution only: rows are not candidates for deletion merely
+        // because their producer is unread. Keep writer ownership separate from
+        // ordinary origins, which can share a source with other table rows.
+        let mut origin_tables = BTreeMap::<usize, (usize, usize, usize, BTreeSet<u32>)>::new();
+        for f in &self.functions {
+            let entry = origin_tables.entry(f.table).or_default();
+            entry.0 += usize::from(f.live);
+            entry.1 += usize::from(f.origin.is_some());
+            entry.2 += usize::from(f.writer.is_some());
+            if let Some(origin) = f.origin { entry.3.insert(origin.cell); }
+        }
+        let origin_tables = origin_tables.into_iter().map(|(table,(live,origins,writers,sources))|
+            json!({"table":self.program.tables[table].name,"live_function_rows":live,
+                "retained_origins":origins,"inline_writers":writers,
+                "source_cells":sources})).collect::<Vec<_>>();
         let writer_records = writer_count * std::mem::size_of::<writer_frames::Writer>();
         let writers = writer_records + writer_slots + self.writer_dir.storage_bytes();
         let index_payload = uses_header + uses_heap + forward + functions_index + intern;
@@ -104,15 +176,16 @@ impl Graph {
             "reverse_index_heap_payload":uses_heap,"reverse_degrees":degrees,
             "forward_index_payload":forward,"function_index_payload":functions_index,"constructor_index_header_payload":intern,
             "members_array_bytes":member_arrays,"members_tree_entries":member_tree_entries,
-            "union_find":self.parents.storage_payload(),"writer_bytes":writers,"writer_count":writer_count,
+            "origin_tables":origin_tables,"union_find":self.parents.storage_payload(),"writer_bytes":writers,"writer_count":writer_count,
             "accounting_note":"HashMap capacities measure entry payload only, not buckets/control allocation; estimates are separate from counted array bytes",
-            "cell_records_bytes":records,"cell_positions_bytes":positions,"id_outliers":outliers,
+            "parent_links":self.cells.values().filter(|c|c.parent.is_some()).count(),"delegated_cell_frames":self.cells.values().filter(|c| c.symbolic_slots).count(),"explicit_cell_slots":self.cells.values().map(|c|c.values.len()).sum::<usize>()+self.cells.completed_ids().map(|id|self.cells.completed_slots(id).unwrap().0.len()).sum::<usize>(),
+            "fact_lifecycle":self.fact_lifecycle_trace(),"completed_owners":self.cells.completed_profile(),"cell_records_bytes":records,"completed_owner_records_bytes":completed_records,"completed_owner_frames":completed_frames,"cell_positions_bytes":positions,"id_outliers":outliers,
             "cell_slot_bytes":slots,"shared_slot_owners":frames.len(),"removal_entries":removals,
             "fact_record_capacity_bytes":facts,"fact_record_live_bytes":fact_count*std::mem::size_of::<(u32,FactState)>(),
             "decoded_row_bytes":rows,"decoded_row_owners":decoded.len(),
-            "function_records_bytes":function_records,"function_key_array_bytes":function_keys,
-            "function_decoded_directory_bytes":decoded_directory,"cell_fact_arities":arities,
-            "counted_bytes":records+positions+slots+facts+rows+function_records+function_keys+decoded_directory+writers+member_arrays})
+            "function_records_bytes":function_records,"function_row_bytes":function_rows,
+            "cell_fact_arities":arities,
+            "counted_bytes":records+completed_records+positions+slots+facts+rows+function_records+function_rows+writers+member_arrays})
     }
 }
 
@@ -124,7 +197,7 @@ impl Graph {
         live_bytes: impl Fn() -> usize,
         rows: &mut Vec<(&'static str, usize)>,
     ) -> Program {
-        assert!(rows.capacity() - rows.len() >= 23);
+        assert!(rows.capacity() - rows.len() >= 40);
         macro_rules! release {
             ($field:ident) => {{
                 let before = live_bytes();
@@ -134,11 +207,12 @@ impl Graph {
         }
         release!(cells);
         release!(functions);
-        release!(function_decoded);
         release!(parents);
         release!(writer_dir);
         release!(local_unions);
-        release!(ownership);
+        if let Some(ownership)=self.ownership {
+            ownership.release_runtime_storage(&live_bytes,rows);
+        }
         release!(stable_ports);
         release!(repair_ports);
         release!(union_digest);
@@ -146,7 +220,6 @@ impl Graph {
         release!(intern);
         release!(function_keys);
         release!(uses);
-        release!(dependencies);
         release!(changes);
         release!(anchors);
         release!(dirty);

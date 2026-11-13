@@ -5,6 +5,8 @@ mod spine_blocks;
 #[cfg(feature = "spine-blocks")]
 pub use spine_blocks::{bake_spine_blocks, bake_stage_blocks};
 mod recipe;
+mod unit_facts;
+pub use unit_facts::{specialize_unit_facts,specialize_unit_facts_selected,validate_unit_fact_specialization};
 use crate::{
     cell::{Definition, Site, bind_relation, project_rows, unique_projection},
     program::*,
@@ -151,6 +153,53 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
         .collect::<Vec<_>>();
     json!({"schema":"eggfuse-multistage/v1","recipe_sha256":ir["sha256"],"control":ir["control"],"rule_sets":sets,"routes":routes,"entries":entries,"finishes":finishes,"stage_entries":crate::stage_spine::compile_entries(p),"data_loaders":loaders,
         "contract":{"activation":"committed producer fact; current visible exhaustive projection","publication":"original Run occurrence, after all entry bindings are gathered","late_input":"ordinary delta route remains authoritative","alias_alternatives":"residual matching whenever a projection is not exhaustive"}})
+}
+
+/// Specialize ordinary typed Cell instructions after whole-program proof.
+/// The optimized source core is explicit: no source-validation bypass and no
+/// constructor receipt is fabricated from the View row.
+fn entry_value_core(p: &Program) -> Result<(J,Vec<crate::cell_entry_invariants::Projection>)> {
+    let mut core=p.artifact["source_core"].clone();
+    let projections=crate::cell_entry_invariants::discover(p);
+    for (set_id,set) in array(&p.artifact["recipe"]["rulesets"] )?.iter().enumerate() {
+        for (position,rid) in array(&set["rule_ids"] )?.iter().enumerate() {
+            let rid=rid.as_u64().ok_or("rule id")? as usize;
+            for projection in projections.iter().filter(|x|x.rule==rid) {
+                let effect=&mut core["rulesets"][set_id]["rules"][position]["head"][projection.operation];
+                let dst=effect["dst"].clone();
+                let sort=effect["sort"].clone();
+                let name=p.artifact["recipe"]["rules"][rid]["slots"][projection.result_slot]["name"].clone();
+                *effect=json!({"op":"copy","dst":dst,"sort":sort,"arg":{"var":name,"sort":sort}});
+            }
+        }
+    }
+    core.as_object_mut().ok_or("core object")?.remove("sha256");
+    core["sha256"]=crate::checksum::artifact_digest(&core).into();
+    Ok((core,projections))
+}
+
+/// Admit only the exact source rewrite re-proven from the original typed Cells.
+/// This extends source acceptance without weakening graph or effect checks.
+pub fn validate_entry_value_specialization(source:&Program,target:&Program)->Result<()> {
+    let (core,projections)=entry_value_core(source)?;
+    let proof=&target.artifact["entry_value_specialization"];
+    if target.artifact["source_core"]!=core
+        || proof["source_program"]!=source.artifact["sha256"]
+        || proof["projections"]!=serde_json::to_value(projections).map_err(|e|e.to_string())? {
+        return Err("unproved Entry source specialization".into());
+    }
+    Ok(())
+}
+
+pub fn specialize_entry_values(p: &Program) -> Result<J> {
+    let (core,projections)=entry_value_core(p)?;
+    let markers=p.marker_tables.iter().map(|&t|p.tables[t].name.clone()).collect();
+    let mut result=compile(core,&markers)?;
+    result.as_object_mut().unwrap().remove("sha256");
+    result["entry_value_specialization"]=json!({"source_program":p.artifact["sha256"],
+        "projections":projections,"contract":"all-writer proof; explicit optimized core; regenerate receipt and publication plans"});
+    result["sha256"]=crate::checksum::artifact_digest(&result).into();
+    Ok(result)
 }
 
 pub fn compile(core: J, markers: &BTreeSet<String>) -> Result<J> {

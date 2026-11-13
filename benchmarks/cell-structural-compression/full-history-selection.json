@@ -1,0 +1,758 @@
+{
+  "schema": "eggfuse-history-closure-selection/v1",
+  "history_program": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "selected": [
+    {
+      "unit": 33,
+      "support": 195,
+      "kind": "saturated",
+      "added_prefixes": 0,
+      "added_roots": 0,
+      "source_path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "unit": 37,
+      "support": 40,
+      "kind": "internal_completion",
+      "added_prefixes": 0,
+      "added_roots": 0,
+      "source_path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            55,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "unit": 44,
+      "support": 31,
+      "kind": "saturated",
+      "added_prefixes": 0,
+      "added_roots": 0,
+      "source_path": [
+        [
+          null,
+          [
+            55,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "unit": 65,
+      "support": 23,
+      "kind": "internal_completion",
+      "added_prefixes": 1,
+      "added_roots": 1,
+      "source_path": [
+        [
+          null,
+          [
+            60,
+            null
+          ]
+        ],
+        [
+          0,
+          [
+            143,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "unit": 49,
+      "support": 14,
+      "kind": "saturated",
+      "added_prefixes": 0,
+      "added_roots": 0,
+      "source_path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            55,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "unit": 66,
+      "support": 9,
+      "kind": "saturated",
+      "added_prefixes": 1,
+      "added_roots": 0,
+      "source_path": [
+        [
+          null,
+          [
+            137,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "unit": 46,
+      "support": 9,
+      "kind": "internal_completion",
+      "added_prefixes": 0,
+      "added_roots": 0,
+      "source_path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            58,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "unit": 47,
+      "support": 9,
+      "kind": "saturated",
+      "added_prefixes": 0,
+      "added_roots": 0,
+      "source_path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "unit": 38,
+      "support": 5,
+      "kind": "internal_completion",
+      "added_prefixes": 0,
+      "added_roots": 0,
+      "source_path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          0,
+          [
+            58,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "unit": 39,
+      "support": 5,
+      "kind": "saturated",
+      "added_prefixes": 0,
+      "added_roots": 0,
+      "source_path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          0,
+          [
+            143,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "unit": 63,
+      "support": 2,
+      "kind": "internal_completion",
+      "added_prefixes": 0,
+      "added_roots": 0,
+      "source_path": [
+        [
+          null,
+          [
+            114,
+            0
+          ]
+        ],
+        [
+          0,
+          [
+            420,
+            0
+          ]
+        ]
+      ]
+    }
+  ],
+  "added_units": 3,
+  "redundant_terminal_transfers": [
+    {
+      "source_path": [
+        [
+          null,
+          [
+            340,
+            null
+          ]
+        ],
+        [
+          3,
+          [
+            58,
+            0
+          ]
+        ]
+      ],
+      "support": 45,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            340,
+            null
+          ]
+        ],
+        [
+          3,
+          [
+            143,
+            0
+          ]
+        ]
+      ],
+      "support": 45,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            340,
+            null
+          ]
+        ],
+        [
+          3,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ]
+      ],
+      "support": 45,
+      "avoided_units": 3,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            324,
+            null
+          ]
+        ],
+        [
+          2,
+          [
+            58,
+            0
+          ]
+        ]
+      ],
+      "support": 27,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            324,
+            null
+          ]
+        ],
+        [
+          2,
+          [
+            143,
+            0
+          ]
+        ]
+      ],
+      "support": 27,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            324,
+            null
+          ]
+        ],
+        [
+          2,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ]
+      ],
+      "support": 27,
+      "avoided_units": 3,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            60,
+            null
+          ]
+        ],
+        [
+          0,
+          [
+            58,
+            0
+          ]
+        ]
+      ],
+      "support": 23,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            343,
+            null
+          ]
+        ],
+        [
+          3,
+          [
+            55,
+            0
+          ]
+        ]
+      ],
+      "support": 11,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            137,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            58,
+            0
+          ]
+        ]
+      ],
+      "support": 9,
+      "avoided_units": 1,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            338,
+            null
+          ]
+        ],
+        [
+          4,
+          [
+            65,
+            0
+          ]
+        ]
+      ],
+      "support": 8,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            321,
+            null
+          ]
+        ],
+        [
+          4,
+          [
+            64,
+            0
+          ]
+        ]
+      ],
+      "support": 6,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            21,
+            null
+          ]
+        ],
+        [
+          3,
+          [
+            65,
+            0
+          ]
+        ]
+      ],
+      "support": 2,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            21,
+            null
+          ]
+        ],
+        [
+          4,
+          [
+            65,
+            0
+          ]
+        ]
+      ],
+      "support": 2,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            116,
+            null
+          ]
+        ],
+        [
+          0,
+          [
+            64,
+            0
+          ]
+        ]
+      ],
+      "support": 2,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            119,
+            null
+          ]
+        ],
+        [
+          0,
+          [
+            65,
+            0
+          ]
+        ]
+      ],
+      "support": 2,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            122,
+            null
+          ]
+        ],
+        [
+          0,
+          [
+            58,
+            0
+          ]
+        ]
+      ],
+      "support": 2,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            122,
+            null
+          ]
+        ],
+        [
+          0,
+          [
+            143,
+            0
+          ]
+        ]
+      ],
+      "support": 2,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            137,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ]
+      ],
+      "support": 2,
+      "avoided_units": 1,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ],
+        [
+          2,
+          [
+            137,
+            0
+          ]
+        ]
+      ],
+      "support": 2,
+      "avoided_units": 1,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    },
+    {
+      "source_path": [
+        [
+          null,
+          [
+            249,
+            null
+          ]
+        ],
+        [
+          2,
+          [
+            420,
+            0
+          ]
+        ]
+      ],
+      "support": 2,
+      "avoided_units": 2,
+      "reason": "existing-suffix-has-same-terminal-transfer"
+    }
+  ],
+  "admission_lowerings": 23,
+  "boundary_rejections": 0,
+  "guarded_paths": 37,
+  "unsupported_paths": 49,
+  "budget_rejections": 0,
+  "scope": "history selects routes; existing typed result-switch rechecks executable lowering; not measured savings"
+}

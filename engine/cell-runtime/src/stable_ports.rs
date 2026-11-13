@@ -40,10 +40,37 @@ impl Field {
         }
     }
 }
+/// Only dynamic scalar values belong to an instance. Equality field locations
+/// are shared Bake wiring; composition preserves its old prefix without copying.
+#[derive(Clone, Debug)]
+struct Fields {
+    component: u32,
+    program: Arc<PortProgram>,
+    ports: Arc<Vec<usize>>,
+    operation: usize,
+    scalars: Box<[Value]>,
+}
+impl Fields {
+    fn len(&self) -> usize { self.program.fields[self.operation].len() }
+    fn get(&self, column: usize) -> Option<Field> {
+        let fields = &self.program.fields[self.operation];
+        Some(match *fields.get(column)? {
+            Some(local) => Field::Port(PortRef { component: self.component, symbol: self.ports[local] }),
+            None => {
+                let index = fields[..column].iter().filter(|s|s.is_none()).count();
+                Field::Scalar(self.scalars[index].clone())
+            }
+        })
+    }
+    fn iter(&self) -> impl Iterator<Item = Field> + '_ {
+        (0..self.len()).map(|i| self.get(i).unwrap())
+    }
+    fn last(&self) -> Option<Field> { self.get(self.len().checked_sub(1)?) }
+}
 #[derive(Clone, Debug)]
 pub struct Stored {
     pub(super) table: usize,
-    fields: Vec<Field>,
+    fields: Fields,
 }
 #[derive(Default, Serialize)]
 pub(in crate::graph) struct Runtime {
@@ -103,12 +130,8 @@ impl Graph {
         let facts = self
             .cells
             .iter()
-            .flat_map(|(&cell, c)| {
-                c.facts
-                    .iter()
-                    .filter(|(_, s)| s.owned)
-                    .map(move |(&op, _)| FactRef { cell, op })
-            })
+            .flat_map(|(&cell, _)| self.cells.fact_states(cell)
+                .filter(|(_,s)|s.owned).map(|(f,_)|f))
             .collect::<Vec<_>>();
         for f in facts {
             let row = self.fact(f)?.ok_or("missing initial owned fact")?;
@@ -143,8 +166,7 @@ impl Graph {
         let program = self.program.cell_ownership.code_programs[frame.code].clone();
         let symbols = &program.fields[f.op as usize];
         assert_eq!(symbols.len(), values.len());
-        let mut fields = self.stable_ports.as_ref()
-            .map(|_| Vec::with_capacity(values.len()));
+        let mut scalars = self.stable_ports.as_ref().map(|_| Vec::new());
         let mut count = 0;
         for (value, symbol) in values.iter().zip(symbols) {
             if let Some(&local) = symbol.as_ref() {
@@ -153,25 +175,19 @@ impl Graph {
                 if BIND {
                     self.bind_cell_port(f, local, port, *id);
                 }
-                if let Some(fields) = &mut fields {
-                    count += 1;
-                    fields.push(Field::Port(port));
-                }
-            } else if let Some(fields) = &mut fields {
+                if scalars.is_some() { count += 1; }
+            } else if let Some(scalars) = &mut scalars {
                 assert!(
                     !matches!(value, Value::Eq(_) | Value::Set(_)),
                     "scalar ownership field"
                 );
-                fields.push(Field::Scalar(value.clone()));
+                scalars.push(value.clone());
             }
         }
-        let Some(fields) = fields else { return; };
+        let Some(scalars) = scalars else { return; };
+        let fields = Fields { component: frame.component, program, ports, operation: f.op as usize, scalars: scalars.into_boxed_slice() };
         let state = self
-            .cells
-            .get_mut(&f.cell)
-            .unwrap()
-            .facts
-            .get_mut(&f.op)
+            .cells.fact_state_mut(f)
             .unwrap();
         state.decoded = None;
         let stats = self.stable_ports.as_mut().unwrap();
@@ -201,7 +217,7 @@ impl Graph {
     pub fn fact_port(&self, f: FactRef, column: usize) -> Option<PortRef> {
         let fields = &self.stable_node(f)?.fields;
         match fields.get(column)? {
-            Field::Port(p) => Some(*p),
+            Field::Port(p) => Some(p),
             Field::Scalar(_) => None,
         }
     }
@@ -233,7 +249,7 @@ impl Graph {
         let result = stored
             .fields
             .iter()
-            .map(|field| view.field_value(field, meter, &mut work))
+            .map(|field| view.field_value(&field, meter, &mut work))
             .collect::<Result<Vec<_>>>();
         // Preserve successful-prefix work even when a later port has expired.
         if meter && work.port_reads != 0 {
@@ -279,11 +295,7 @@ impl Graph {
         let unique = port_key && stable.unwrap().1 && self.unique_port_input(f, columns);
         let m = self.ownership.as_mut().unwrap();
         let state = self
-            .cells
-            .get_mut(&f.cell)
-            .unwrap()
-            .facts
-            .get_mut(&f.op)
+            .cells.fact_state_mut(f)
             .unwrap();
         let mut stats = stable.map(|_| self.stable_ports.as_mut().unwrap());
         let (table, key) = if let Some((table, key)) = stable {
@@ -358,9 +370,9 @@ impl Graph {
         };
         let mut nodes = 0;
         let mut ports = 0;
-        for (&cell_id, cell) in self.cells.iter() {
-            for (&op, fact) in cell.facts.iter() {
-                if let Some(row) = stats.nodes.get(&FactRef { cell: cell_id, op }) {
+        for cell_id in self.cells.cell_ids() {
+            for (id, fact) in self.cells.fact_states(cell_id) {
+                if let Some(row) = stats.nodes.get(&id) {
                     assert!(fact.owned && fact.decoded.is_none());
                     nodes += 1;
                     ports += row
@@ -397,7 +409,7 @@ impl Graph {
             .map(|(t, _)| self.witness_count(t))
             .sum::<usize>();
         assert_eq!(
-            indexed_port_keys, port_key_facts,
+            indexed_port_keys, if self.port_birth_hints {port_key_facts} else {0},
             "immutable birth hints follow fact lifetime only"
         );
         let pending_canonical_keys = self
@@ -413,7 +425,7 @@ impl Graph {
             .count();
         json!({"enabled":true,"scope":"standalone Cell CPU; stable stored fields; global Run barrier still enabled",
             "stats":stats,"unique_publication":self.unique_publication_report(),"local_conditions":self.local_condition_report(),"parallel_guards":self.parallel_guard_report(),"completion_batches":self.completion_batch_report(),"live_stable_nodes":nodes,"live_port_fields":ports,
-            "birth_indexed_port_keys":indexed_port_keys,"port_key_matching":stats.keys,
+            "birth_hints_enabled":self.port_birth_hints,"birth_indexed_port_keys":indexed_port_keys,"port_key_matching":stats.keys,
             "pending_canonical_keys":pending_canonical_keys,
             "pending_port_equality_checks":self.ownership.as_ref().unwrap().pending.len()-pending_canonical_keys})
     }

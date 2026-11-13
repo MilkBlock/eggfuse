@@ -81,8 +81,7 @@ impl Plan {
                 Arg::Slot(s) => instance.values.get(s).cloned(), Arg::Literal(v) => Some(v.clone()),
             }).collect::<Option<Vec<_>>>() else { counts.missing += 1; continue; };
             let row = Row::prepared(site.table, keys);
-            counts.bytes += (row.function.key.capacity()*std::mem::size_of::<Value>()
-                + row.fields.len()*std::mem::size_of::<Value>()) as u64;
+            counts.bytes += (row.fields.len()*std::mem::size_of::<Value>()) as u64;
             rows.push((site.operation, row));
         }
         counts.bytes += (rows.capacity()*std::mem::size_of::<(usize, Row)>()) as u64;

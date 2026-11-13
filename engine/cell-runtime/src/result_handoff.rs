@@ -387,7 +387,7 @@ pub(crate) struct History {
     // republishing the same results into another history container.
     empty: usize,
 }
-#[derive(Default)]
+#[derive(Clone, Default, Serialize)]
 pub(crate) struct CaptureWork {
     pub reads: usize,
     pub slots: usize,
@@ -403,7 +403,7 @@ impl History {
         if let Some(frame) = &self.frames { census.frame(frame); }
     }
     /// Advance across a Cell with no actual exported results. The existing
-    /// immutable frames stay shared; trim only when the compiled lifetime ends.
+    /// result owners stay shared; trim only when the compiled lifetime ends.
     fn carry(&mut self, limit: usize, work: &mut CaptureWork) {
         if self.frames.is_none() { return; }
         self.empty += 1;
@@ -834,7 +834,9 @@ impl Switch {
         };
         let mut nodes = vec![blank()];
         let mut ids = BTreeMap::new();
-        let mut initial = vec![0; leaves.len()];
+        // History admission may append a producer leaf after composed units.
+        // Leaf ids are catalog addresses, not a dense leaf-only index.
+        let mut initial = vec![0; leaves.values().copied().max().map_or(0, |id| id + 1)];
         let mut exports = vec![vec![]; p.rules.len()];
         let mut depth = 0;
         for (path, mut program) in paths {
@@ -1171,6 +1173,35 @@ impl Switch {
     }
     pub(crate) fn enabled(&self) -> bool {
         !self.nodes.is_empty()
+    }
+    /// Admission compares the actual terminal transfer reached by a history,
+    /// including existing suffix fallback. This is not whole-automaton or
+    /// semantic Cell equivalence: different future routes remain possible.
+    pub(crate) fn transfer_signature(&self,path:&[(Option<usize>,Entry)]) -> serde_json::Value {
+        // An observed but uncompiled producer starts at PC zero. Its first
+        // recognized consumer still follows the ordinary suffix reset.
+        let path=if let Some((_,(rule,None)))=path.first()
+            && self.roots.get(*rule).copied().flatten().is_none() {&path[1..]} else {path};
+        let id=self.replay(path);
+        self.signature_at(id)
+    }
+    pub(crate) fn observe_advance(&self, state:usize, output:usize, entry:Entry) -> usize {
+        let leaf=match entry {
+            (rule,Some(pivot))=>self.leaf(rule,pivot),
+            (rule,None)=>self.roots.get(rule).copied().flatten().map(|id|id.get()-1),
+        };
+        leaf.map_or(0, |leaf|self.advance(state,output,leaf))
+    }
+    pub(crate) fn signature_at(&self,id:usize) -> serde_json::Value {
+        let node=&self.nodes[id];
+        let port=|p:ResultPort|(p.rule(),p.slot());
+        serde_json::json!({"program":node.program,
+            "reuse_ports":node.program.reuse.iter().map(|r|(r.op,r.port.map(port))).collect::<Vec<_>>(),
+            "query_ports":node.program.queries.iter().map(|q|(q.atom,q.port.map(port))).collect::<Vec<_>>(),
+            "captures":node.supply.iter().map(|c|(c.site,port(c.port))).collect::<Vec<_>>(),
+            "keep_history":node.keep_history,
+            "layout":node.layout.as_ref().map(|l|(l.rule,l.sources.iter().map(|p|p.map(port)).collect::<Vec<_>>())),
+            "direct":self.direct(id).map(|p|p.artifact())})
     }
     pub(crate) fn replay(&self, path: &[(Option<usize>, Entry)]) -> usize {
         path.iter().fold(0, |s, (op, e)| {

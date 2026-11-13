@@ -1,0 +1,64 @@
+{
+  "scope": "actual standalone Cell runtime; saved audited work, no latency claim",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "final_states_equal": true,
+  "lanes": {
+    "diagnosis": {
+      "stage": {
+        "ripsat_completed": 165,
+        "ripsat_witness_fallbacks": 44,
+        "ripsat_witness_missing": 0,
+        "ripsat_witness_retired": 44,
+        "ripsat_witness_wrong_table": 0,
+        "ripsat_witness_hidden": 0,
+        "history_allocations": 320,
+        "history_seal_reads": 284,
+        "history_seal_writes": 65
+      },
+      "constructor_requests": 8023,
+      "key_lookup_calls": 12124
+    },
+    "rejected_eager_sealing": {
+      "stage": {
+        "ripsat_completed": 174,
+        "ripsat_witness_fallbacks": 35,
+        "ripsat_witness_missing": 0,
+        "ripsat_witness_retired": 35,
+        "ripsat_witness_wrong_table": 0,
+        "ripsat_witness_hidden": 0,
+        "history_allocations": 311,
+        "history_seal_reads": 497,
+        "history_seal_writes": 80,
+        "history_seal_materialized_slots": 33,
+        "history_seal_allocations": 22
+      },
+      "constructor_requests": 8014,
+      "key_lookup_calls": 12115
+    },
+    "rejected_query_refresh": {
+      "stage": {
+        "ripsat_completed": 165,
+        "ripsat_witness_fallbacks": 44,
+        "ripsat_witness_missing": 0,
+        "ripsat_witness_retired": 44,
+        "ripsat_witness_wrong_table": 0,
+        "ripsat_witness_hidden": 0,
+        "history_allocations": 320,
+        "history_seal_reads": 284,
+        "history_seal_writes": 65,
+        "ripsat_query_refreshes": 0,
+        "ripsat_matched_result_reads": 0
+      },
+      "constructor_requests": 8023,
+      "key_lookup_calls": 12124
+    }
+  },
+  "decision": "retain failure classification only; neither trial is enabled",
+  "limitations": "Eager sealing restores nine direct completions but scans and copies shared results; its seal_writes counts changed identities, not all materialized slots. Query refresh has no hits. These trials do not establish a speedup, rule-match elimination or memory compression.",
+  "inputs_sha256": {
+    "closure-diagnosis-work.json": "0af9baa8ff0e702ffdb29233dc4122a209f610b096ad75902e49728d0ddd1963",
+    "closure-sealed-work.json": "cf0468a2b2cba9df1e7d6155851caff642f86b14f6d04d1b506777fdaeff0a49",
+    "closure-refreshed-work.json": "0da8068414d3cacc85d5a702786c97b791b70faab13653b7d90d3904e76fdf45"
+  }
+}

@@ -1,0 +1,4213 @@
+{
+  "scope": "actual standalone Cell runtime; offline causal observation, not executable closure proof or speedup",
+  "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "events": 4938,
+  "dropped_events": 0,
+  "event_counts": {
+    "clear": 2085,
+    "forward": 994,
+    "retire": 844,
+    "parent_scan": 83,
+    "capture": 766,
+    "refresh": 77,
+    "parent_forward": 63,
+    "failure": 26
+  },
+  "failures": 26,
+  "historical_target_visible_at_failure": 26,
+  "historical_chain_crosses_clear": 26,
+  "historical_chain_crosses_source_run": 26,
+  "chain_hops": {
+    "1": 26
+  },
+  "source_run_ages": {
+    "3": 2,
+    "4": 18,
+    "10": 2,
+    "12": 1,
+    "13": 3
+  },
+  "failures_with_prior_refresh_of_same_receipt": 20,
+  "failures_with_capture_after_prior_refresh": 0,
+  "failure_sites": {
+    "137:{\"Effect\":2}:323": 26
+  },
+  "parent_forwarding": {
+    "scan_boundaries": 83,
+    "frames_visited": 82488,
+    "parents_visited": 11371,
+    "candidates": 63,
+    "unique_factless_source_frames": 29,
+    "factless_source_slots_at_last_observation": 40,
+    "unique_children": 63,
+    "visible_targets": 63,
+    "parent_cycles": 0,
+    "factless_sources": 29,
+    "single_holder_factless_sources": 26,
+    "details": [
+      {
+        "run": 106,
+        "kind": "parent_forward",
+        "child": 474,
+        "from": {
+          "Fact": {
+            "cell": 129,
+            "op": 118
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 112
+          }
+        },
+        "source_users": 66,
+        "source_facts": 87,
+        "source_slots": 8,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 106,
+        "kind": "parent_forward",
+        "child": 570,
+        "from": {
+          "Fact": {
+            "cell": 536,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 78
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 106,
+        "kind": "parent_forward",
+        "child": 573,
+        "from": {
+          "Fact": {
+            "cell": 539,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 108
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 106,
+        "kind": "parent_forward",
+        "child": 578,
+        "from": {
+          "Fact": {
+            "cell": 541,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 74
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 106,
+        "kind": "parent_forward",
+        "child": 685,
+        "from": {
+          "Fact": {
+            "cell": 474,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 473,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 106,
+        "kind": "parent_forward",
+        "child": 831,
+        "from": {
+          "Fact": {
+            "cell": 570,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 467,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 106,
+        "kind": "parent_forward",
+        "child": 833,
+        "from": {
+          "Fact": {
+            "cell": 573,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 472,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 106,
+        "kind": "parent_forward",
+        "child": 834,
+        "from": {
+          "Fact": {
+            "cell": 578,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 469,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 110,
+        "kind": "parent_forward",
+        "child": 473,
+        "from": {
+          "Fact": {
+            "cell": 129,
+            "op": 112
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 86
+          }
+        },
+        "source_users": 65,
+        "source_facts": 85,
+        "source_slots": 8,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 110,
+        "kind": "parent_forward",
+        "child": 832,
+        "from": {
+          "Fact": {
+            "cell": 571,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 470,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 110,
+        "kind": "parent_forward",
+        "child": 684,
+        "from": {
+          "Fact": {
+            "cell": 473,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 471,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 110,
+        "kind": "parent_forward",
+        "child": 571,
+        "from": {
+          "Fact": {
+            "cell": 537,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 82
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 110,
+        "kind": "parent_forward",
+        "child": 882,
+        "from": {
+          "Fact": {
+            "cell": 828,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 822,
+            "op": 2
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 114,
+        "kind": "parent_forward",
+        "child": 879,
+        "from": {
+          "Fact": {
+            "cell": 825,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 22
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 114,
+        "kind": "parent_forward",
+        "child": 880,
+        "from": {
+          "Fact": {
+            "cell": 826,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 86
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 114,
+        "kind": "parent_forward",
+        "child": 1046,
+        "from": {
+          "Fact": {
+            "cell": 1014,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 1004,
+            "op": 2
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 114,
+        "kind": "parent_forward",
+        "child": 1181,
+        "from": {
+          "Fact": {
+            "cell": 879,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 463,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 114,
+        "kind": "parent_forward",
+        "child": 1182,
+        "from": {
+          "Fact": {
+            "cell": 880,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 471,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 118,
+        "kind": "parent_forward",
+        "child": 1043,
+        "from": {
+          "Fact": {
+            "cell": 1007,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 28
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 118,
+        "kind": "parent_forward",
+        "child": 1044,
+        "from": {
+          "Fact": {
+            "cell": 1011,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 128
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 118,
+        "kind": "parent_forward",
+        "child": 1210,
+        "from": {
+          "Fact": {
+            "cell": 1178,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 1168,
+            "op": 2
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 118,
+        "kind": "parent_forward",
+        "child": 1335,
+        "from": {
+          "Fact": {
+            "cell": 1043,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 464,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 118,
+        "kind": "parent_forward",
+        "child": 1336,
+        "from": {
+          "Fact": {
+            "cell": 1044,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 475,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 122,
+        "kind": "parent_forward",
+        "child": 1207,
+        "from": {
+          "Fact": {
+            "cell": 1170,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 32
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 122,
+        "kind": "parent_forward",
+        "child": 1208,
+        "from": {
+          "Fact": {
+            "cell": 1175,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 132
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 122,
+        "kind": "parent_forward",
+        "child": 1355,
+        "from": {
+          "Fact": {
+            "cell": 1333,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 1325,
+            "op": 2
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 122,
+        "kind": "parent_forward",
+        "child": 1462,
+        "from": {
+          "Fact": {
+            "cell": 1207,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 465,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 122,
+        "kind": "parent_forward",
+        "child": 1463,
+        "from": {
+          "Fact": {
+            "cell": 1208,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 476,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 126,
+        "kind": "parent_forward",
+        "child": 1352,
+        "from": {
+          "Fact": {
+            "cell": 1328,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 38
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 126,
+        "kind": "parent_forward",
+        "child": 1353,
+        "from": {
+          "Fact": {
+            "cell": 1330,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 82
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 126,
+        "kind": "parent_forward",
+        "child": 1479,
+        "from": {
+          "Fact": {
+            "cell": 1455,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 28
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 126,
+        "kind": "parent_forward",
+        "child": 1480,
+        "from": {
+          "Fact": {
+            "cell": 1457,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 134
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 126,
+        "kind": "parent_forward",
+        "child": 1482,
+        "from": {
+          "Fact": {
+            "cell": 1460,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 1448,
+            "op": 2
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 126,
+        "kind": "parent_forward",
+        "child": 1562,
+        "from": {
+          "Fact": {
+            "cell": 1352,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 466,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 126,
+        "kind": "parent_forward",
+        "child": 1563,
+        "from": {
+          "Fact": {
+            "cell": 1353,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 470,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 458,
+        "kind": "parent_forward",
+        "child": 1561,
+        "from": {
+          "Fact": {
+            "cell": 1354,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 470,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 458,
+        "kind": "parent_forward",
+        "child": 1354,
+        "from": {
+          "Fact": {
+            "cell": 1325,
+            "op": 2
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 82
+          }
+        },
+        "source_users": 2,
+        "source_facts": 1,
+        "source_slots": 4,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 458,
+        "kind": "parent_forward",
+        "child": 1481,
+        "from": {
+          "Fact": {
+            "cell": 1448,
+            "op": 2
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 134
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 1,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 458,
+        "kind": "parent_forward",
+        "child": 1651,
+        "from": {
+          "Fact": {
+            "cell": 1481,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 468,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 461,
+        "kind": "parent_forward",
+        "child": 1180,
+        "from": {
+          "Fact": {
+            "cell": 881,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 471,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 461,
+        "kind": "parent_forward",
+        "child": 881,
+        "from": {
+          "Fact": {
+            "cell": 822,
+            "op": 2
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 86
+          }
+        },
+        "source_users": 2,
+        "source_facts": 2,
+        "source_slots": 4,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 489,
+        "kind": "parent_forward",
+        "child": 3283,
+        "from": {
+          "Fact": {
+            "cell": 3277,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 532,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 489,
+        "kind": "parent_forward",
+        "child": 3367,
+        "from": {
+          "Fact": {
+            "cell": 3283,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 572,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 493,
+        "kind": "parent_forward",
+        "child": 3328,
+        "from": {
+          "Fact": {
+            "cell": 3320,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 78
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 493,
+        "kind": "parent_forward",
+        "child": 3423,
+        "from": {
+          "Fact": {
+            "cell": 3328,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 467,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 497,
+        "kind": "parent_forward",
+        "child": 3376,
+        "from": {
+          "Fact": {
+            "cell": 3364,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 82
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 497,
+        "kind": "parent_forward",
+        "child": 3433,
+        "from": {
+          "Fact": {
+            "cell": 3420,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 134
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 497,
+        "kind": "parent_forward",
+        "child": 3463,
+        "from": {
+          "Fact": {
+            "cell": 3376,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 470,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 816,
+        "kind": "parent_forward",
+        "child": 4706,
+        "from": {
+          "Fact": {
+            "cell": 3581,
+            "op": 3
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 3577,
+            "op": 3
+          }
+        },
+        "source_users": 5,
+        "source_facts": 1,
+        "source_slots": 12,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 816,
+        "kind": "parent_forward",
+        "child": 4707,
+        "from": {
+          "Fact": {
+            "cell": 3598,
+            "op": 3
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 3593,
+            "op": 3
+          }
+        },
+        "source_users": 2,
+        "source_facts": 0,
+        "source_slots": 13,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 816,
+        "kind": "parent_forward",
+        "child": 4708,
+        "from": {
+          "Fact": {
+            "cell": 3623,
+            "op": 3
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 3614,
+            "op": 3
+          }
+        },
+        "source_users": 2,
+        "source_facts": 0,
+        "source_slots": 13,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 816,
+        "kind": "parent_forward",
+        "child": 4709,
+        "from": {
+          "Fact": {
+            "cell": 3622,
+            "op": 3
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 3615,
+            "op": 3
+          }
+        },
+        "source_users": 2,
+        "source_facts": 0,
+        "source_slots": 13,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 823,
+        "kind": "parent_forward",
+        "child": 5025,
+        "from": {
+          "Fact": {
+            "cell": 4973,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 3568,
+            "op": 3
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 823,
+        "kind": "parent_forward",
+        "child": 5280,
+        "from": {
+          "Fact": {
+            "cell": 5025,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 3574,
+            "op": 3
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 826,
+        "kind": "parent_forward",
+        "child": 5170,
+        "from": {
+          "Fact": {
+            "cell": 5141,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 3579,
+            "op": 3
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 826,
+        "kind": "parent_forward",
+        "child": 5374,
+        "from": {
+          "Fact": {
+            "cell": 5170,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 3591,
+            "op": 3
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 829,
+        "kind": "parent_forward",
+        "child": 5290,
+        "from": {
+          "Fact": {
+            "cell": 5279,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 3595,
+            "op": 3
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 829,
+        "kind": "parent_forward",
+        "child": 5383,
+        "from": {
+          "Fact": {
+            "cell": 5373,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 3594,
+            "op": 3
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 829,
+        "kind": "parent_forward",
+        "child": 5420,
+        "from": {
+          "Fact": {
+            "cell": 5290,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 3605,
+            "op": 3
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 874,
+        "kind": "parent_forward",
+        "child": 1047,
+        "from": {
+          "Fact": {
+            "cell": 1015,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 38
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 874,
+        "kind": "parent_forward",
+        "child": 1337,
+        "from": {
+          "Fact": {
+            "cell": 1047,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 466,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 874,
+        "kind": "parent_forward",
+        "child": 1211,
+        "from": {
+          "Fact": {
+            "cell": 1179,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 129,
+            "op": 28
+          }
+        },
+        "source_users": 1,
+        "source_facts": 1,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      },
+      {
+        "run": 874,
+        "kind": "parent_forward",
+        "child": 1464,
+        "from": {
+          "Fact": {
+            "cell": 1211,
+            "op": 1
+          }
+        },
+        "to": {
+          "Fact": {
+            "cell": 464,
+            "op": 1
+          }
+        },
+        "source_users": 1,
+        "source_facts": 0,
+        "source_slots": 0,
+        "target_visible": true,
+        "parent_cycle": false
+      }
+    ],
+    "limitations": "Candidates are observations, not safe reparenting proofs. Counts can repeat across boundaries; other holders and non-parent dependencies remain live."
+  },
+  "details": [
+    {
+      "index": 474,
+      "run": 110,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 536,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 536,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 78
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 415,
+          "run": 106,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 536,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 78
+            }
+          },
+          "epoch": 106
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 243,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 281,
+          "run": 102,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 366,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 448,
+          "run": 106,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 536,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 78
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 416,
+        "run": 106,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 536,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 478,
+      "run": 110,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 539,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 539,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 108
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 417,
+          "run": 106,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 539,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 108
+            }
+          },
+          "epoch": 106
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 252,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 284,
+          "run": 102,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 372,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 451,
+          "run": 106,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 539,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 108
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 418,
+        "run": 106,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 539,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 482,
+      "run": 110,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 129,
+          "op": 118
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 129,
+          "op": 118
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 112
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 389,
+          "run": 106,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 129,
+              "op": 118
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 112
+            }
+          },
+          "epoch": 106
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 215,
+          "run": 98,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 255,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 321,
+          "run": 102,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 453,
+          "run": 106,
+          "kind": "refresh",
+          "path": "publication",
+          "rule": 137,
+          "slot": 2,
+          "from": {
+            "Fact": {
+              "cell": 129,
+              "op": 118
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 112
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 390,
+        "run": 106,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 129,
+            "op": 118
+          }
+        },
+        "table": 323,
+        "template": 375,
+        "tracking": true
+      }
+    },
+    {
+      "index": 486,
+      "run": 110,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 541,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 541,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 74
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 419,
+          "run": 106,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 541,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 74
+            }
+          },
+          "epoch": 106
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 258,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 289,
+          "run": 102,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 375,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 445,
+          "run": 106,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 541,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 74
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 420,
+        "run": 106,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 541,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 587,
+      "run": 114,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 537,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 537,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 82
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 543,
+          "run": 110,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 537,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          },
+          "epoch": 110
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 246,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 282,
+          "run": 102,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 369,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 566,
+          "run": 110,
+          "kind": "refresh",
+          "path": "publication",
+          "rule": 137,
+          "slot": 2,
+          "from": {
+            "Fact": {
+              "cell": 537,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 544,
+        "run": 110,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 537,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 591,
+      "run": 114,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 129,
+          "op": 112
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 129,
+          "op": 112
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 86
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 519,
+          "run": 110,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 129,
+              "op": 112
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          },
+          "epoch": 110
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 214,
+          "run": 98,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 249,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 318,
+          "run": 102,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 485,
+          "run": 110,
+          "rule": 137,
+          "slot": 2
+        },
+        {
+          "index": 500,
+          "run": 110,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 565,
+          "run": 110,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 129,
+              "op": 112
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          }
+        },
+        {
+          "index": 568,
+          "run": 110,
+          "kind": "refresh",
+          "path": "publication",
+          "rule": 137,
+          "slot": 2,
+          "from": {
+            "Fact": {
+              "cell": 129,
+              "op": 112
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 520,
+        "run": 110,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 129,
+            "op": 112
+          }
+        },
+        "table": 323,
+        "template": 375,
+        "tracking": true
+      }
+    },
+    {
+      "index": 682,
+      "run": 118,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 825,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 825,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 22
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 631,
+          "run": 114,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 825,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 22
+            }
+          },
+          "epoch": 114
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 348,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 469,
+          "run": 110,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 623,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 658,
+          "run": 114,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 825,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 22
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 632,
+        "run": 114,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 825,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 686,
+      "run": 118,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 826,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 826,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 86
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 633,
+          "run": 114,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 826,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          },
+          "epoch": 114
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 351,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 470,
+          "run": 110,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 626,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 662,
+          "run": 114,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 826,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 634,
+        "run": 114,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 826,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 774,
+      "run": 122,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1007,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1007,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 28
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 720,
+          "run": 118,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1007,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 28
+            }
+          },
+          "epoch": 118
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 491,
+          "run": 110,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 582,
+          "run": 114,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 712,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 755,
+          "run": 118,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1007,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 28
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 721,
+        "run": 118,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1007,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 778,
+      "run": 122,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1011,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1011,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 128
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 722,
+          "run": 118,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1011,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 128
+            }
+          },
+          "epoch": 118
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 503,
+          "run": 110,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 583,
+          "run": 114,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 715,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 751,
+          "run": 118,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1011,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 128
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 723,
+        "run": 118,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1011,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 869,
+      "run": 126,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1170,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1170,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 32
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 814,
+          "run": 122,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1170,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 32
+            }
+          },
+          "epoch": 122
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 596,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 677,
+          "run": 118,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 804,
+          "run": 122,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 849,
+          "run": 122,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1170,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 32
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 815,
+        "run": 122,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1170,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 873,
+      "run": 126,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1175,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1175,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 132
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 816,
+          "run": 122,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1175,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 132
+            }
+          },
+          "epoch": 122
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 608,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 678,
+          "run": 118,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 807,
+          "run": 122,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 846,
+          "run": 122,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1175,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 132
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 817,
+        "run": 122,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1175,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 970,
+      "run": 130,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1328,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1328,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 38
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 896,
+          "run": 126,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1328,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 38
+            }
+          },
+          "epoch": 126
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 694,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 770,
+          "run": 122,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 887,
+          "run": 126,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 949,
+          "run": 126,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1328,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 38
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 897,
+        "run": 126,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1328,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 974,
+      "run": 130,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1330,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1330,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 82
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 898,
+          "run": 126,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1330,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          },
+          "epoch": 126
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 700,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 771,
+          "run": 122,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 890,
+          "run": 126,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 945,
+          "run": 126,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1330,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 899,
+        "run": 126,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1330,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1723,
+      "run": 471,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 822,
+          "op": 2
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 822,
+          "op": 2
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 86
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1677,
+          "run": 461,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 822,
+              "op": 2
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          },
+          "epoch": 461
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 10,
+      "captures_of_original": [
+        {
+          "index": 354,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 471,
+          "run": 110,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 620,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 1678,
+        "run": 461,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 822,
+            "op": 2
+          }
+        },
+        "table": 323,
+        "template": 138,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1727,
+      "run": 471,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1325,
+          "op": 2
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1325,
+          "op": 2
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 82
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1591,
+          "run": 458,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1325,
+              "op": 2
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          },
+          "epoch": 458
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 13,
+      "captures_of_original": [
+        {
+          "index": 703,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 772,
+          "run": 122,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 884,
+          "run": 126,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 1592,
+        "run": 458,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1325,
+            "op": 2
+          }
+        },
+        "table": 323,
+        "template": 138,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1731,
+      "run": 471,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1448,
+          "op": 2
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1448,
+          "op": 2
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 134
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1601,
+          "run": 458,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1448,
+              "op": 2
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 134
+            }
+          },
+          "epoch": 458
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 13,
+      "captures_of_original": [
+        {
+          "index": 795,
+          "run": 122,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 867,
+          "run": 126,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 985,
+          "run": 130,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 1602,
+        "run": 458,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1448,
+            "op": 2
+          }
+        },
+        "table": 323,
+        "template": 137,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1735,
+      "run": 471,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 822,
+          "op": 2
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 822,
+          "op": 2
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 86
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1677,
+          "run": 461,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 822,
+              "op": 2
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          },
+          "epoch": 461
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 10,
+      "captures_of_original": [
+        {
+          "index": 354,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 471,
+          "run": 110,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 620,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 1678,
+        "run": 461,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 822,
+            "op": 2
+          }
+        },
+        "table": 323,
+        "template": 138,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1739,
+      "run": 471,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1325,
+          "op": 2
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1325,
+          "op": 2
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 82
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1591,
+          "run": 458,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1325,
+              "op": 2
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          },
+          "epoch": 458
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 13,
+      "captures_of_original": [
+        {
+          "index": 703,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 772,
+          "run": 122,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 884,
+          "run": 126,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 1592,
+        "run": 458,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1325,
+            "op": 2
+          }
+        },
+        "table": 323,
+        "template": 138,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1871,
+      "run": 493,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 3277,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 3277,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 532,
+          "op": 1
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1838,
+          "run": 489,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 3277,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 532,
+              "op": 1
+            }
+          },
+          "epoch": 489
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 1788,
+          "run": 483,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 1805,
+          "run": 486,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 1832,
+          "run": 489,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 1859,
+          "run": 489,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 3277,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 532,
+              "op": 1
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 1839,
+        "run": 489,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 3277,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1970,
+      "run": 497,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 3320,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 3320,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 78
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1891,
+          "run": 493,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 3320,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 78
+            }
+          },
+          "epoch": 493
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 1807,
+          "run": 486,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 1824,
+          "run": 489,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 1885,
+          "run": 493,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 1957,
+          "run": 493,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 3320,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 78
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 1892,
+        "run": 493,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 3320,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 2027,
+      "run": 501,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 3364,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 3364,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 82
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1984,
+          "run": 497,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 3364,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          },
+          "epoch": 497
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 1826,
+          "run": 489,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 1870,
+          "run": 493,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 1978,
+          "run": 497,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 2013,
+          "run": 497,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 3364,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 1985,
+        "run": 497,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 3364,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 2923,
+      "run": 826,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 4973,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 4973,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 3568,
+          "op": 3
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 2901,
+          "run": 823,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 4973,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3568,
+              "op": 3
+            }
+          },
+          "epoch": 823
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 3,
+      "captures_of_original": [
+        {
+          "index": 2819,
+          "run": 816,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 2876,
+          "run": 820,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 2897,
+          "run": 823,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 2912,
+          "run": 823,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 4973,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3568,
+              "op": 3
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 2902,
+        "run": 823,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 4973,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 2960,
+      "run": 829,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 5141,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 5141,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 3579,
+          "op": 3
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 2938,
+          "run": 826,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 5141,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3579,
+              "op": 3
+            }
+          },
+          "epoch": 826
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 3,
+      "captures_of_original": [
+        {
+          "index": 2878,
+          "run": 820,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 2892,
+          "run": 823,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 2934,
+          "run": 826,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 2949,
+          "run": 826,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 5141,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3579,
+              "op": 3
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 2939,
+        "run": 826,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 5141,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 3005,
+      "run": 833,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 5279,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 5279,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 3595,
+          "op": 3
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 2972,
+          "run": 829,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 5279,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3595,
+              "op": 3
+            }
+          },
+          "epoch": 829
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 2894,
+          "run": 823,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 2922,
+          "run": 826,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 2968,
+          "run": 829,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 2991,
+          "run": 829,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 5279,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3595,
+              "op": 3
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 2973,
+        "run": 829,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 5279,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 3169,
+      "run": 886,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1015,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1015,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 38
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 3071,
+          "run": 874,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1015,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 38
+            }
+          },
+          "epoch": 874
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 12,
+      "captures_of_original": [
+        {
+          "index": 515,
+          "run": 110,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 586,
+          "run": 114,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 718,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 3072,
+        "run": 874,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1015,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    }
+  ],
+  "limitations": [
+    "capture/refresh events identify receipts and logical sites, not unique shared storage owners",
+    "only forwarding created while ordinary receipt tracking is enabled is archived",
+    "visibility is sampled at failure; it does not authorize early RHS publication",
+    "the archive is not a proposed persistent runtime forwarding index"
+  ]
+}

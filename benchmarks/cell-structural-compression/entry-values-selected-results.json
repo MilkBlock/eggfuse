@@ -1,0 +1,99 @@
+{
+  "scope": "actual standalone Cell runtime; no timing claim",
+  "base_program": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+  "program_sha256": "dba1eca7f078f8613ff59abaf97d3c9b77484970d9e35b7f24234526635cb805",
+  "runs": 1428,
+  "source_specialization_verified": true,
+  "graph_rhs_writes_equal": true,
+  "resume_changed_runs": 0,
+  "metrics": {
+    "graph_work.constructor_requests": {
+      "before": 8014,
+      "after": 7910,
+      "delta": -104
+    },
+    "graph_work.decoded_rows": {
+      "before": 2922,
+      "after": 3168,
+      "delta": 246
+    },
+    "graph_work.cells_created": {
+      "before": 2893,
+      "after": 2893,
+      "delta": 0
+    },
+    "graph_work.logical_facts_created": {
+      "before": 3739,
+      "after": 3739,
+      "delta": 0
+    },
+    "graph_work.completed_dead_slots_elided": {
+      "before": 5375,
+      "after": 5375,
+      "delta": 0
+    },
+    "source_storage.explicit_cell_slots": {
+      "before": 5740,
+      "after": 5636,
+      "delta": -104
+    },
+    "source_storage.cell_slot_bytes": {
+      "before": 155520,
+      "after": 153024,
+      "delta": -2496
+    },
+    "source_storage.parent_links": {
+      "before": 216,
+      "after": 216,
+      "delta": 0
+    },
+    "key_lookup_calls": {
+      "before": 12106,
+      "after": 12002,
+      "delta": -104
+    },
+    "stage.history_allocations": {
+      "before": 302,
+      "after": 302,
+      "delta": 0
+    },
+    "stage.history_capture_reads": {
+      "before": 70,
+      "after": 70,
+      "delta": 0
+    },
+    "graph_owned_teardown_bytes": {
+      "before": 2617317,
+      "after": 2614757,
+      "delta": -2560
+    },
+    "retained_program_teardown_bytes": {
+      "before": 117318509,
+      "after": 119765150,
+      "delta": 2446641
+    },
+    "net_growth_over_setup_bytes": {
+      "before": 5570091,
+      "after": 5567531,
+      "delta": -2560
+    },
+    "execution_and_takeover_peak_bytes": {
+      "before": 125400997,
+      "after": 127845072,
+      "delta": 2444075
+    }
+  },
+  "binding_changes": [
+    {
+      "template": 250,
+      "before": 10,
+      "after": 8
+    },
+    {
+      "template": 507,
+      "before": 714,
+      "after": 612
+    }
+  ],
+  "large_egraph_compression_proven": false
+}

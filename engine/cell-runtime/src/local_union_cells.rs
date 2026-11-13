@@ -231,7 +231,7 @@ impl Graph {
             return false;
         };
         m.counts.birth_attempts += 1;
-        let template = self.cells[&f.cell].template;
+        let template = self.cells.cell_metadata(f.cell).unwrap().template;
         if !self
             .program
             .local_union_cells
@@ -257,9 +257,7 @@ impl Graph {
         for f in m.pending.drain(..) {
             m.counts.prepare_reads += 1;
             if let Some(s) = self
-                .cells
-                .get_mut(&f.cell)
-                .and_then(|c| c.facts.get_mut(&f.op))
+                .cells.fact_state_mut(f)
             {
                 if let Some((t, fields)) = s.decoded.take() {
                     rows.push((f, t, fields, 0));
@@ -281,7 +279,7 @@ impl Graph {
         self.local_unions.as_mut().unwrap().counts.completion_waves += 1;
         rows.retain_mut(|(f, table, fields, next_obligation)| {
             let (f, table) = (*f, *table);
-            let Some(state) = self.cells.get(&f.cell).and_then(|c| c.facts.get(&f.op)) else {
+            let Some(state) = self.cells.fact_state(f) else {
                 return false;
             };
             let hash = state.hash;
@@ -304,7 +302,7 @@ impl Graph {
                 }
             }
             if !changed {
-                let template = self.cells[&f.cell].template;
+                let template = self.cells.cell_metadata(f.cell).unwrap().template;
                 let proof = &self.program.local_union_cells.templates[template]
                     .as_ref()
                     .unwrap()
@@ -357,13 +355,9 @@ impl Graph {
                     m.counts.unchanged += 1;
                 }
                 self.end_local_ownership(f, table, false);
-                self.subscribe_edges(Dependency::Fact(f), fields);
+                self.replace_row_edges(Dependency::Fact(f), &[], fields);
                 let s = self
-                    .cells
-                    .get_mut(&f.cell)
-                    .unwrap()
-                    .facts
-                    .get_mut(&f.op)
+                    .cells.fact_state_mut(f)
                     .unwrap();
                 s.decoded = Some((table, fields.clone()));
                 if changed {
@@ -377,7 +371,7 @@ impl Graph {
         Ok(rows)
     }
     pub(super) fn note_local_collision(&mut self, f: FactRef) {
-        if self.cells[&f.cell].facts[&f.op].local_union_owned {
+        if self.cells.fact_state(f).unwrap().local_union_owned {
             self.local_unions
                 .as_mut()
                 .unwrap()
@@ -386,8 +380,8 @@ impl Graph {
         }
     }
     pub(super) fn end_local_ownership(&mut self, f: FactRef, table: usize, retired: bool) {
-        let c = self.cells.get_mut(&f.cell).unwrap();
-        let state = c.facts.get_mut(&f.op).unwrap();
+        let template = self.cells.cell_metadata(f.cell).unwrap().template;
+        let state = self.cells.fact_state_mut(f).unwrap();
         if !std::mem::take(&mut state.local_union_owned) {
             return;
         }
@@ -396,10 +390,10 @@ impl Graph {
         m.counts.owned_live -= 1;
         if retired {
             m.counts.retired_unsubscribed += 1;
-            m.counts.by_template[c.template][1] += 1;
+            m.counts.by_template[template][1] += 1;
         } else {
             m.counts.boundary_subscriptions += 1;
-            m.counts.by_template[c.template][2] += 1;
+            m.counts.by_template[template][2] += 1;
         }
     }
 }

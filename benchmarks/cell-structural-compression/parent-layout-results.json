@@ -1,0 +1,436 @@
+{
+  "scope": "typed parent projection coverage at observed completions; static mapping does not prove live component binding or retirement",
+  "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "templates": [
+    {
+      "template": 55,
+      "name": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+      "parented_completion_observations": 70,
+      "fully_mapped": false,
+      "fields": [
+        {
+          "slot": 0,
+          "column": 0,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": 0,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 1,
+          "column": 1,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        }
+      ]
+    },
+    {
+      "template": 58,
+      "name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+      "parented_completion_observations": 220,
+      "fully_mapped": false,
+      "fields": [
+        {
+          "slot": 0,
+          "column": 0,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": 0,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 1,
+          "column": 1,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        },
+        {
+          "slot": 2,
+          "column": 2,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        }
+      ]
+    },
+    {
+      "template": 64,
+      "name": "(rule ((= lhs (Top a b c d)))\n      ((Not-Just-Concat lhs))\n        :ruleset always-run )",
+      "parented_completion_observations": 16,
+      "fully_mapped": false,
+      "fields": [
+        {
+          "slot": 0,
+          "column": 0,
+          "sort": {
+            "name": "TernaryOp",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        },
+        {
+          "slot": 1,
+          "column": 1,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        },
+        {
+          "slot": 2,
+          "column": 2,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        },
+        {
+          "slot": 3,
+          "column": 3,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        },
+        {
+          "slot": 4,
+          "column": 4,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": 0,
+          "read_by_template_operation": true
+        }
+      ]
+    },
+    {
+      "template": 100,
+      "name": "(rule ((Const _n _ty _ctx))\n      ((ExprIsPure (Const _n _ty _ctx)))\n        :ruleset always-run )",
+      "parented_completion_observations": 5,
+      "fully_mapped": false,
+      "fields": [
+        {
+          "slot": 0,
+          "column": 0,
+          "sort": {
+            "name": "Constant",
+            "kind": "eq"
+          },
+          "symbol": 0,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 1,
+          "column": 1,
+          "sort": {
+            "name": "Type",
+            "kind": "eq"
+          },
+          "symbol": 1,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 2,
+          "column": 2,
+          "sort": {
+            "name": "Assumption",
+            "kind": "eq"
+          },
+          "symbol": 2,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 3,
+          "column": 3,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        }
+      ]
+    },
+    {
+      "template": 114,
+      "name": "(rule ((Const c ty ctx))\n      ((ContextOf (Const c ty ctx) ctx))\n        :ruleset always-run )",
+      "parented_completion_observations": 5,
+      "fully_mapped": false,
+      "fields": [
+        {
+          "slot": 0,
+          "column": 0,
+          "sort": {
+            "name": "Constant",
+            "kind": "eq"
+          },
+          "symbol": 0,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 1,
+          "column": 1,
+          "sort": {
+            "name": "Type",
+            "kind": "eq"
+          },
+          "symbol": 1,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 2,
+          "column": 2,
+          "sort": {
+            "name": "Assumption",
+            "kind": "eq"
+          },
+          "symbol": 2,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 3,
+          "column": 3,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        }
+      ]
+    },
+    {
+      "template": 137,
+      "name": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+      "parented_completion_observations": 30,
+      "fully_mapped": false,
+      "fields": [
+        {
+          "slot": 0,
+          "column": 0,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": 0,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 1,
+          "column": 1,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "symbol": null,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 2,
+          "column": 3,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": 2,
+          "read_by_template_operation": true
+        }
+      ]
+    },
+    {
+      "template": 143,
+      "name": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+      "parented_completion_observations": 206,
+      "fully_mapped": false,
+      "fields": [
+        {
+          "slot": 0,
+          "column": 0,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": 0,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 1,
+          "column": 1,
+          "sort": {
+            "name": "i64",
+            "kind": "i64"
+          },
+          "symbol": null,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 2,
+          "column": 2,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        }
+      ]
+    },
+    {
+      "template": 420,
+      "name": "(rule ((= lhs (Const _n _ty _ctx)))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )",
+      "parented_completion_observations": 5,
+      "fully_mapped": false,
+      "fields": [
+        {
+          "slot": 0,
+          "column": 0,
+          "sort": {
+            "name": "Constant",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        },
+        {
+          "slot": 1,
+          "column": 1,
+          "sort": {
+            "name": "Type",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        },
+        {
+          "slot": 2,
+          "column": 2,
+          "sort": {
+            "name": "Assumption",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        },
+        {
+          "slot": 3,
+          "column": 3,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": 0,
+          "read_by_template_operation": true
+        }
+      ]
+    },
+    {
+      "template": 502,
+      "name": "(rule ((= lhs (Const c ty ass)))\n      ((PotentialExtractedExpr lhs (TCPair (TermConst c) 1)))\n        :ruleset terms )",
+      "parented_completion_observations": 5,
+      "fully_mapped": false,
+      "fields": [
+        {
+          "slot": 0,
+          "column": 0,
+          "sort": {
+            "name": "Constant",
+            "kind": "eq"
+          },
+          "symbol": 0,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 1,
+          "column": 1,
+          "sort": {
+            "name": "Type",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        },
+        {
+          "slot": 2,
+          "column": 2,
+          "sort": {
+            "name": "Assumption",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        },
+        {
+          "slot": 3,
+          "column": 3,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": 3,
+          "read_by_template_operation": true
+        }
+      ]
+    },
+    {
+      "template": 506,
+      "name": "(rule ((PotentialExtractedExpr expr termandcost))\n      ((set (ExtractedExpr expr) (TCPair (NoTerm ) 10000000000000000)))\n        :ruleset terms-helpers )",
+      "parented_completion_observations": 193,
+      "fully_mapped": false,
+      "fields": [
+        {
+          "slot": 0,
+          "column": 0,
+          "sort": {
+            "name": "Expr",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": true
+        },
+        {
+          "slot": 1,
+          "column": 1,
+          "sort": {
+            "name": "TermAndCost",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        },
+        {
+          "slot": 2,
+          "column": 2,
+          "sort": {
+            "name": "___PotentialExtractedExprSort",
+            "kind": "eq"
+          },
+          "symbol": null,
+          "read_by_template_operation": false
+        }
+      ]
+    }
+  ]
+}

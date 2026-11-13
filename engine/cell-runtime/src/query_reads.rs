@@ -1,13 +1,12 @@
 //! A source-Run borrow of authoritative function slots and Cell fields.
 //! It owns no rows, bindings, indexes, snapshots or invalidation state.
+use crate::graph::FactStates as _;
 use super::*;
 pub(crate) use cell_ownership::query_read::{Scratch, Work};
 
 pub(crate) struct QueryReads<'a> {
     keys: &'a [scalar_keys::FunctionKeys],
     functions: &'a [Function],
-    #[cfg(feature = "parallel-residuals")]
-    decoded: &'a [Option<RowFields>],
     constructors: Option<Constructors<'a>>,
     tables: &'a [Table],
     pub parents: &'a Parents,
@@ -52,8 +51,6 @@ impl Graph {
                 members: &self.members, hash_mask: self.constructor_hash_mask() }))
         } else { self.constructor_query_reader().map(Constructors::Ports) };
         Some(QueryReads { keys: &self.function_keys, functions: &self.functions, parents: &self.parents,
-            #[cfg(feature = "parallel-residuals")]
-            decoded: &self.function_decoded,
             constructors, tables: &self.program.tables })
     }
 }
@@ -72,14 +69,14 @@ impl QueryReads<'_> {
         match witness {
             Dependency::Fact(fact) => {
                 let Some(Constructors::Canonical(read)) = &self.constructors else { return Err("unsealed expansion fields".into()); };
-                let Some(state) = read.cells.get(&fact.cell).and_then(|c| c.facts.get(&fact.op)) else { return Ok(None) };
+                let Some(state) = read.cells.fact_state(fact) else { return Ok(None) };
                 let (table, values) = state.decoded.as_ref().ok_or("canonical expansion lacks decoded fields")?;
                 Ok(Some(Row { table:*table, values:values.clone(), hidden:state.hidden, epoch:state.epoch, witness }))
             }
             Dependency::Function(index) => {
                 let Some(f) = self.functions.get(index).filter(|f| f.live) else { return Ok(None) };
-                let values = self.decoded[index].clone().unwrap_or_else(|| row_fields(
-                    f.key.iter().chain(std::iter::once(&f.value)).map(|v| canon(v,self.parents)).collect()));
+                let values = if f.canonical { f.fields.clone() } else { row_fields(
+                    f.fields.iter().map(|v| canon(v,self.parents)).collect()) };
                 Ok(Some(Row { table:f.table, values, hidden:false, epoch:f.epoch, witness }))
             }
         }
@@ -89,7 +86,7 @@ impl QueryReads<'_> {
         match witness {
             Dependency::Fact(fact) => {
                 let Some(Constructors::Canonical(read)) = &self.constructors else { return None };
-                read.cells.get(&fact.cell)?.facts.get(&fact.op).filter(|s| !s.hidden).map(|s| s.epoch)
+                read.cells.fact_state(fact).filter(|s| !s.hidden).map(|s| s.epoch)
             }
             Dependency::Function(i) => self.functions.get(i).filter(|f| f.live).map(|f| f.epoch),
         }
@@ -102,16 +99,16 @@ impl QueryReads<'_> {
                 Constructors::Ports(read) => read.point(table, keys, scratch, work),
             };
         }
-        let Some(&index) = self.keys[table].get(keys) else { return Ok(None) };
+        let Some(&index) = self.keys[table].get(keys, self.functions) else { return Ok(None) };
         let Some(f) = self.functions.get(index).filter(|f| f.live && f.table == table) else { return Ok(None) };
-        Ok(Some((canon(&f.value, self.parents), f.epoch, Dependency::Function(index))))
+        Ok(Some((canon(f.value(), self.parents), f.epoch, Dependency::Function(index))))
     }
 }
 impl Canonical<'_> {
     fn candidate(&self, fact: FactRef, table: usize, key: &[Value], work: &mut Work)
         -> Result<Option<(Value, u64, Dependency, bool)>> {
         work.canonical_candidates += 1;
-        let Some(state) = self.cells.get(&fact.cell).and_then(|c| c.facts.get(&fact.op)) else {
+        let Some(state) = self.cells.fact_state(fact) else {
             return Ok(None);
         };
         let (stored_table, fields) = state.decoded.as_ref()

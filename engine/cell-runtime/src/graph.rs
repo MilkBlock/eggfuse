@@ -12,6 +12,9 @@ pub mod maintenance;
 pub mod local_union_cells;
 #[path = "cell_ownership.rs"]
 pub mod cell_ownership;
+#[path="fact_states.rs"]
+mod fact_states;
+pub(crate) use fact_states::FactStates;
 use crate::program::*;
 use crate::value::{self, Parents, Value, canon, exported, root};
 use rustc_hash::FxHashMap as HashMap;
@@ -87,6 +90,9 @@ pub struct FactState {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Cell {
+    /// Equality slots delegated to this instance's existing composed symbols.
+    #[serde(default)]
+    pub symbolic_slots: bool,
     #[serde(default)]
     pub completed_prefix: usize,
     #[serde(default)]
@@ -101,26 +107,39 @@ pub struct Cell {
     #[serde(default)]
     pub recipe_depth: u32,
 }
+#[derive(Clone,Copy)]
+pub(crate) struct CellMetadata {
+    pub template:usize,
+    pub started_epoch:u64,
+    pub completed_prefix:usize,
+    pub recipe_depth:u32,
+    pub completed:bool,
+    pub symbolic_slots:bool,
+}
+impl From<&Cell> for CellMetadata {
+    fn from(c:&Cell)->Self {Self{template:c.template,started_epoch:c.started_epoch,
+        completed_prefix:c.completed_prefix,recipe_depth:c.recipe_depth,completed:c.completed,symbolic_slots:c.symbolic_slots}}
+}
 #[cfg(feature = "sparse-cells")]
 #[path = "cell_births.rs"]
 pub(crate) mod cell_births;
 #[cfg(feature = "sparse-cells")]
 #[path = "cell_writes.rs"]
 pub(crate) mod cell_writes;
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[path = "function_row.rs"]
+mod function_row;
+#[derive(Clone, Debug)]
 pub struct Function {
     #[cfg(feature = "sparse-cells")]
-    #[serde(skip)]
     writer: Option<Box<writer_frames::Writer>>,
     #[cfg(feature = "receipt-slots")]
-    #[serde(skip)]
     port_slot: u32,
     pub table: usize,
-    pub key: Vec<Value>,
-    pub value: Value,
+    fields: RowFields,
+    canonical: bool,
+    projected: bool,
     pub epoch: u64,
     pub live: bool,
-    #[serde(default)]
     pub origin: Option<FactRef>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -224,6 +243,8 @@ pub struct Stats {
     #[serde(default)]
     pub unit_registry_retained_holes:u64,
     #[serde(default)]
+    pub unit_registry_key_candidates:u64,
+    pub unit_registry_key_handles:u64,
     pub unit_registry_field_handles:u64,
     #[serde(default)]
     pub unit_registry_event_bytes:u64,
@@ -421,6 +442,30 @@ pub struct Stats {
     #[serde(default)]
     pub rhs_frames_avoided: u64,
     pub empty_frames_released: u64,
+    #[serde(default)]
+    pub shared_owner_slots_delegated:u64,
+    #[serde(default)]
+    pub completed_symbolic_slot_checks:u64,
+    #[serde(default)]
+    pub completed_symbolic_slots_elided:u64,
+    #[serde(default)]
+    pub shared_owner_frames_restored:u64,
+    #[serde(default)]
+    pub shared_owner_inherited_frames:u64,
+    #[serde(default)]
+    pub shared_owner_dead_slots_elided:u64,
+    #[serde(default)]
+    pub completed_dead_slots_elided:u64,
+    #[serde(default)]
+    pub completed_dead_frames_compacted:u64,
+    #[serde(default)]
+    pub completed_parent_candidates: u64,
+    #[serde(default)]
+    pub completed_parent_slot_checks: u64,
+    #[serde(default)]
+    pub completed_parent_detachments: u64,
+    #[serde(default)]
+    pub completed_parent_slots_delegated: u64,
     pub native_table_reads: u64,
     pub native_table_writes: u64,
     pub native_free_join_calls: u64,
@@ -487,10 +532,6 @@ pub struct Graph {
     #[cfg(feature = "sparse-cells")]
     pub cells: arena::Cells,
     pub functions: Vec<Function>,
-    // Derived row views belong to the coordinator. Keeping them out of the
-    // authoritative function slots lets a Cell query borrow those slots across
-    // workers without copying values or changing every Rc into an atomic Arc.
-    function_decoded: Vec<Option<RowFields>>,
     pub parents: Parents,
     pub epoch: u64,
     pub changed: bool,
@@ -513,6 +554,7 @@ pub struct Graph {
     #[cfg(feature = "receipt-slots")]
     pub(crate) retired_port_slots: HashMap<Dependency, u32>,
     pub receipt_tracking: bool,
+    pub(crate) port_birth_hints: bool,
     pub receipt_forwards: HashMap<Dependency, Dependency>,
 
     // A table's kind supplies the witness tag for every member.
@@ -528,8 +570,6 @@ pub struct Graph {
     uses: rustc_hash::FxHashMap<u64, UseSet>,
     #[cfg(not(feature = "sparse-cells"))]
     dependencies: HashMap<Dependency, BTreeSet<u64>>,
-    #[cfg(feature = "sparse-cells")]
-    dependencies: HashMap<Dependency, smallvec::SmallVec<[u64; 3]>>,
     dirty: BTreeSet<Dependency>,
     dirty_markers: BTreeSet<FactRef>,
     dirty_facts: Vec<BTreeSet<FactRef>>,
@@ -545,6 +585,9 @@ pub(crate) mod query_reads;
 #[cfg(all(feature = "sparse-cells", feature = "storage-metrics"))]
 #[path = "graph_storage.rs"]
 mod storage;
+#[cfg(all(feature = "sparse-cells",feature="storage-metrics"))]
+#[path = "completed_parent.rs"]
+mod completed_parent;
 #[path = "unit_ports.rs"]
 mod unit_ports;
 fn hashkey(table: usize, key: &[Value]) -> u64 {
@@ -573,10 +616,7 @@ impl Graph {
     pub(crate) fn current_port_slot(&self, w: Dependency) -> Option<u32> {
         match w {
             Dependency::Fact(f) => self
-                .cells
-                .get(&f.cell)?
-                .facts
-                .get(&f.op)
+                .cells.fact_state(f)
                 .map(|f| f.port_slot),
             Dependency::Function(i) => self.functions.get(i).map(|f| f.port_slot),
         }
@@ -594,11 +634,7 @@ impl Graph {
     pub(crate) fn set_port_slot(&mut self, w: Dependency, id: u32) {
         match w {
             Dependency::Fact(f) => {
-                self.cells
-                    .get_mut(&f.cell)
-                    .unwrap()
-                    .facts
-                    .get_mut(&f.op)
+                self.cells.fact_state_mut(f)
                     .unwrap()
                     .port_slot = id
             }
@@ -619,7 +655,7 @@ impl Graph {
         let writers = json!({"live":self.writer_dir.live,"peak":self.writer_dir.peak,"installed":self.writer_dir.installations,"promoted":self.writer_dir.promoted,"from_general_rhs":self.writer_dir.general});
         #[cfg(not(feature = "sparse-cells"))]
         let writers = J::Null;
-        json!({"sealed_slot_reads": self.sealed_read_count(), "embedded_writers":writers,"full_cells":self.cells.len(),"cell_fact_arity_0_1_2_3_4plus":arity,"intern_sizes_0_1_2_3plus":buckets,"intern_headers":self.intern.len(),"forward_dependency_headers":self.dependencies.len(),"reverse_dependency_headers":self.uses.len(),"dependency_edges":self.dependencies.values().map(|v|v.len()).sum::<usize>(),"live_functions":self.functions.iter().filter(|f|f.live).count(),"function_slots":self.functions.len(),"cell_id_high_water":self.next_cell})
+        json!({"sealed_slot_reads": self.sealed_read_count(), "embedded_writers":writers,"full_cells":self.cells.len(),"cell_fact_arity_0_1_2_3_4plus":arity,"intern_sizes_0_1_2_3plus":buckets,"intern_headers":self.intern.len(),"forward_dependency_headers":self.forward_dependency_size().0,"reverse_dependency_headers":self.uses.len(),"dependency_edges":self.forward_dependency_size().1,"live_functions":self.functions.iter().filter(|f|f.live).count(),"function_slots":self.functions.len(),"cell_id_high_water":self.next_cell})
     }
     /// Follow only storage relocation and proved same-key coalescence in this
     /// commit. Equal result classes alone never establish a row receipt.
@@ -631,9 +667,7 @@ impl Graph {
             Dependency::Fact(f) => {
                 self.live_table(w) == Some(table)
                     && self
-                        .cells
-                        .get(&f.cell)
-                        .and_then(|c| c.facts.get(&f.op))
+                        .cells.fact_state(f)
                         .is_some_and(|s| !s.hidden)
             }
             Dependency::Function(i) => self
@@ -641,6 +675,16 @@ impl Graph {
                 .get(i)
                 .is_some_and(|f| f.live && f.table == table),
         }
+    }
+    fn forward_receipt(&mut self,from:Dependency,to:Dependency) {
+        #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+        crate::receipt_trace::forward(from,to,self.epoch);
+        self.receipt_forwards.insert(from,to);
+    }
+    pub(crate) fn clear_receipt_forwards(&mut self) {
+        #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+        { self.trace_forwarded_parents(); crate::receipt_trace::clear(self.epoch,self.receipt_forwards.len()); }
+        self.receipt_forwards.clear();
     }
     pub fn resolve_receipt(&self, w: Dependency) -> Dependency { self.resolve_receipt_origin(w).0 }
     #[inline(always)]
@@ -729,7 +773,6 @@ impl Graph {
             program,
             cells: Default::default(),
             functions: vec![],
-            function_decoded: vec![],
             parents: Default::default(),
             epoch: 0,
             changed: false,
@@ -756,6 +799,7 @@ impl Graph {
             #[cfg(feature = "receipt-slots")]
             retired_port_slots: HashMap::default(),
             receipt_forwards: HashMap::default(),
+            port_birth_hints: true,
 
             members: vec![TableRows::default(); n],
             intern: HashMap::default(),
@@ -764,6 +808,7 @@ impl Graph {
             #[cfg(feature = "sparse-cells")]
             function_keys: typed_keys,
             uses: Default::default(),
+            #[cfg(not(feature = "sparse-cells"))]
             dependencies: Default::default(),
             dirty: BTreeSet::new(),
             dirty_markers: BTreeSet::new(),
@@ -868,7 +913,7 @@ impl Graph {
     #[cfg(feature = "cell-absorption")]
     pub(crate) fn absorption_rejection(&self, table: usize, index: usize) -> Option<i64> {
         let f = self.functions.get(index)?;
-        match f.value { Value::Int(v) if f.live && f.table == table => Some(v), _ => None }
+        match f.value() { Value::Int(v) if f.live && f.table == table => Some(*v), _ => None }
     }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn reserve_completed_cell(&mut self) -> Result<u32> {
@@ -895,6 +940,7 @@ impl Graph {
         }
 
         Cell {
+            symbolic_slots: false,
             template,
             values:values.into(),
             parent,
@@ -956,7 +1002,7 @@ impl Graph {
         if let Some(mut row) = unit {
             if self.accept_prepared_unit(write.table) {
                 row.function.epoch = self.epoch;
-                let key = keep_key.then(||row.function.key.clone());
+                let key = keep_key.then(||row.function.key().to_vec());
                 let (index, changed) = self.commit_unit_row(row)?;
                 if changed {
                     let frame = self.new_cell(template, values, parent);
@@ -1035,6 +1081,10 @@ impl Graph {
         #[cfg(feature = "sparse-cells")]
         if let Some(w) = self.writer(cell) {
             return self.slot_fields(cell, w.template, w.parent, &w.values, i);
+        }
+        #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+        if let Some(meta)=self.cells.completed_meta(cell) {
+            return self.slot_fields(cell,meta.template,None,&self.cells.completed_slots(cell).unwrap(),i);
         }
         Err("expired Cell reference".into())
     }
@@ -1128,6 +1178,11 @@ impl Graph {
             }
             return Ok(canon(v, &self.parents));
         }
+        if self.cells.cell_metadata(cell).is_some_and(|c| c.symbolic_slots) {
+            if let Some(value) = self.inherited_cell_slot(cell, template, i) {
+                return Ok(value);
+            }
+        }
         let arg = |a: &Arg| match a {
             Arg::Literal(v) => Ok(canon(v, &self.parents)),
             Arg::Slot(s) => self.slot_fields(cell, template, parent, values, *s),
@@ -1165,7 +1220,7 @@ impl Graph {
         }
         // Recipe parameters are immutable even after this fact is hidden/deleted.
         // Derived Cells can keep their binding without copying the parent's fields.
-        let template = self.cells.get(&f.cell).map(|c| c.template);
+        let template = self.cells.cell_metadata(f.cell).map(|c| c.template);
         #[cfg(feature = "sparse-cells")]
         let template = template.or_else(|| self.writer(f.cell).map(|w| w.template));
         match self.program.templates[template.ok_or("expired parent Cell")?]
@@ -1211,10 +1266,7 @@ impl Graph {
     }
     #[inline]
     pub fn fact(&self, f: FactRef) -> Result<Option<Row>> {
-        let Some(c) = self.cells.get(&f.cell) else {
-            return Ok(None);
-        };
-        let Some(s) = c.facts.get(&f.op) else {
+        let Some(s) = self.cells.fact_state(f) else {
             return Ok(None);
         };
         if let Some(stored) = self.stable_node(f) {
@@ -1230,13 +1282,16 @@ impl Graph {
             }));
         }
 
-        self.decode_fact(f, c, s).map(Some)
+        // Stable fields and cached rows need only the fact's logical identity.
+        // The ordinary recipe fallback still requires the original frame.
+        let c = self.cells.cell_metadata(f.cell).ok_or("live fact lacks recipe owner")?;
+        self.decode_fact(f, c.template, s).map(Some)
     }
 
     #[inline(never)]
-    fn decode_fact(&self, f: FactRef, c: &Cell, s: &FactState) -> Result<Row> {
+    fn decode_fact(&self, f: FactRef, template:usize, s: &FactState) -> Result<Row> {
         self.fact_decode_calls.set(self.fact_decode_calls.get() + 1);
-        let op = self.program.templates[c.template]
+        let op = self.program.templates[template]
             .ops
             .get(f.op as usize)
             .ok_or("invalid live fact position")?;
@@ -1248,9 +1303,9 @@ impl Graph {
         self.fact_decode_ports.set(self.fact_decode_ports.get() + args.len() as u64 + 1);
         let mut values = Vec::with_capacity(args.len() + 1);
         for arg in args {
-            values.push(self.argument_in(f.cell, c, arg)?);
+            values.push(self.argument(f.cell, arg)?);
         }
-        values.push(self.argument_in(f.cell, c, &result)?);
+        values.push(self.argument(f.cell, &result)?);
         Ok(Row {
             table,
             values: row_fields(values),
@@ -1275,16 +1330,20 @@ impl Graph {
             std::rc::Rc::new(fields)
         }
     }
+    fn indexed_function(&self, t: usize, key: &[Value]) -> Option<usize> {
+        #[cfg(feature = "sparse-cells")]
+        { self.function_keys[t].get(key, &self.functions).copied() }
+        #[cfg(not(feature = "sparse-cells"))]
+        { self.function_keys[t].get(key).copied() }
+    }
     fn function_index(&self, t: usize, key: &[Value]) -> Option<usize> {
-        self.function_keys[t]
-            .get(key)
-            .copied()
-            .or_else(|| self.units.lookup(t, key))
+        self.indexed_function(t, key).or_else(|| self.units.lookup(t, key))
     }
     #[cfg(feature = "view-consumers")]
     pub(crate) fn published_view(&self, i: usize) -> Option<crate::view_plan::Tuple> {
         let f = self.functions.get(i).filter(|f| f.live)?;
-        if let Some(fields) = &self.function_decoded[i] {
+        if f.canonical {
+            let fields = &f.fields;
             return Some(crate::view_plan::Tuple {
                 witness: Dependency::Function(i),
                 epoch: f.epoch,
@@ -1309,7 +1368,7 @@ impl Graph {
         if !f.live {
             return None;
         }
-        let values = self.function_decoded[i].clone().unwrap_or_else(|| self.decode_function(i, f));
+        let values = if f.canonical { f.fields.clone() } else { self.decode_function(i, f) };
         Some(Row {
             table: f.table,
             values,
@@ -1320,15 +1379,15 @@ impl Graph {
     }
     #[inline(never)]
     fn decode_function(&self, i: usize, f: &Function) -> RowFields {
-        if f.key.is_empty()
+        if f.key().is_empty()
             && self.units.counts[f.table] > 0
-            && let Some(values) = self.units.values(i, &self.parents, &f.value)
+            && let Some(values) = self.units.values(i, &self.parents, f.value())
         {
             return values;
         }
-        let mut values = Vec::with_capacity(f.key.len() + 1);
-        values.extend(f.key.iter().map(|v| canon(v, &self.parents)));
-        values.push(canon(&f.value, &self.parents));
+        let mut values = Vec::with_capacity(f.key().len() + 1);
+        values.extend(f.key().iter().map(|v| canon(v, &self.parents)));
+        values.push(canon(f.value(), &self.parents));
         row_fields(values)
     }
     #[inline]
@@ -1341,10 +1400,7 @@ impl Graph {
     pub(crate) fn visible_epoch(&self, w: Dependency) -> Option<u64> {
         match w {
             Dependency::Fact(f) => self
-                .cells
-                .get(&f.cell)?
-                .facts
-                .get(&f.op)
+                .cells.fact_state(f)
                 .filter(|s| !s.hidden)
                 .map(|s| s.epoch),
             Dependency::Function(i) => self.functions.get(i).filter(|f| f.live).map(|f| f.epoch),
@@ -1355,8 +1411,8 @@ impl Graph {
         match w {
             Dependency::Function(i) => self.functions.get(i).filter(|f| f.live).map(|f| f.table),
             Dependency::Fact(f) => {
-                let c = self.cells.get(&f.cell)?;
-                c.facts.get(&f.op)?;
+                let c = self.cells.cell_metadata(f.cell)?;
+                self.cells.fact_state(f)?;
 
                 match self.program.templates[c.template].ops.get(f.op as usize)? {
                     Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => Some(*t),
@@ -1400,7 +1456,7 @@ impl Graph {
         match w {
             Dependency::Function(i) => self.functions.get(i).map(|f| f.table),
             Dependency::Fact(f) => {
-                let c = self.cells.get(&f.cell)?;
+                let c = self.cells.cell_metadata(f.cell)?;
 
                 match self.program.templates[c.template].ops.get(f.op as usize)? {
                     Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => Some(*t),
@@ -1459,7 +1515,7 @@ impl Graph {
                     .copied()
                     .filter(|w| match w {
                         Dependency::Fact(f) => {
-                            self.cells.get(&f.cell).is_some_and(|c| {
+                            self.cells.cell_metadata(f.cell).is_some_and(|c| {
                                 match &self.program.templates[c.template].ops[f.op as usize] {
                                     Op::Let(_, Call::Table(t), _) | Op::Set(t, _, _) => *t == table,
                                     _ => false,
@@ -1518,8 +1574,7 @@ impl Graph {
                 let f = self.functions.get(i).filter(|f| f.live)?;
                 // Match function() exactly even at a scoped completion boundary:
                 // a retained decoded row is authoritative until invalidated.
-                let value = self.function_decoded[i].as_ref().map_or_else(
-                    || canon(&f.value, &self.parents), |fields| fields.last().unwrap().clone());
+                let value = if f.canonical { f.value().clone() } else { canon(f.value(), &self.parents) };
                 Some(Point { value, hidden: false, epoch: f.epoch, witness: Dependency::Function(i) })
             });
             self.stats.function_point_reads += u64::from(point.is_some());
@@ -1591,22 +1646,45 @@ impl Graph {
             _ => {}
         }
     }
-    fn subscribe(&mut self, table: usize, d: Dependency, values: &[Value]) {
-        self.query_versions[table] += 1;
+    fn forward_dependency_size(&self) -> (usize, usize) {
         #[cfg(feature = "sparse-cells")]
-        if !values.is_empty()
-            && let Some(columns) = self.program.repair_ports.key_eq_columns.get(table).and_then(Option::as_ref)
+        { (0, 0) }
+        #[cfg(not(feature = "sparse-cells"))]
+        { (self.dependencies.len(), self.dependencies.values().map(|v| v.len()).sum()) }
+    }
+    /// Rows already own the Eq operands. Derive the old/new footprint at an
+    /// explicit lifecycle boundary, rather than storing another binding set.
+    fn subscribe_rows(&mut self, table: usize, d: Dependency, old: &[Value], new: &[Value]) {
+        self.query_versions[table] += 1;
+        self.replace_row_edges(d, old, new);
+    }
+    fn subscribe_function(&mut self, table: usize, index: usize, old: &[Value], new: &[Value]) {
+        self.subscribe_rows(table, Dependency::Function(index), old, new);
+    }
+    fn replace_row_edges(&mut self, d: Dependency, old: &[Value], new: &[Value]) {
+        #[cfg(not(feature = "sparse-cells"))]
+        { let _ = old; self.subscribe_edges(d, new); }
+        #[cfg(feature = "sparse-cells")]
         {
-            // This existing typed Cell footprint excludes containers and names
-            // every Eq input. The output is Eq too. Birth operands and repaired
-            // Row views are already canonical at this call; no graph effect
-            // occurs between obtaining those fields and installing their uses.
-            // Raw local-completion fields still use subscribe_edges below.
-            maintenance::subscribe_canonical_constructor(&mut self.uses,&mut self.dependencies,
-                &mut self.maintenance,&self.parents,d,values,columns);
-            return;
+            self.maintenance.subscription_calls += 1;
+            // Ordinary fact/function repair only canonicalizes an immutable
+            // row. union() has already moved all of its reverse incidences.
+            if std::ptr::eq(old, new) {
+                self.maintenance.subscription_rows_reused += 1;
+                return;
+            }
+            let old = self.subscription_refs(old);
+            let new = self.subscription_refs(new);
+            for id in &old {
+                if !new.contains(id) && let Some(bucket) = self.uses.get_mut(id) {
+                    maintenance::remove(bucket, &mut self.maintenance, d);
+                    if bucket.is_empty() { self.uses.remove(id); }
+                }
+            }
+            for id in new {
+                if !old.contains(&id) { maintenance::insert(&mut self.uses, &mut self.maintenance, id, d); }
+            }
         }
-        self.subscribe_edges(d, values);
     }
     #[cfg(not(feature = "sparse-cells"))]
     fn subscribe_edges(&mut self, d: Dependency, values: &[Value]) {
@@ -1636,8 +1714,7 @@ impl Graph {
         self.dependencies.insert(d, refs);
     }
     #[cfg(feature = "sparse-cells")]
-    fn subscribe_edges(&mut self, d: Dependency, values: &[Value]) {
-        self.maintenance.subscription_calls += 1;
+    fn subscription_refs(&mut self, values: &[Value]) -> smallvec::SmallVec<[u64; 3]> {
         type Refs = smallvec::SmallVec<[u64; 3]>;
         fn collect(v: &Value, p: &Parents, out: &mut Refs, visits: &mut u64) {
             *visits += 1;
@@ -1655,11 +1732,9 @@ impl Graph {
         for v in values {
             collect(v, &self.parents, &mut refs, &mut self.maintenance.subscription_value_visits);
         }
-        self.replace_subscriptions(d, refs);
-    }
-    #[cfg(feature = "sparse-cells")]
-    fn replace_subscriptions(&mut self, d: Dependency, refs: smallvec::SmallVec<[u64; 3]>) {
-        maintenance::replace_subscriptions(&mut self.uses,&mut self.dependencies,&mut self.maintenance,&self.parents,d,refs);
+        refs.sort_unstable();
+        refs.dedup();
+        refs
     }
 
     fn activate(
@@ -1698,17 +1773,19 @@ impl Graph {
     /// Adopt the actual row allocation. Local Cell construction has already
     /// computed its canonical fields/hash; source registration remains ordered.
     fn activate_fields(&mut self, f:FactRef, t:usize, vs:RowFields, h:u64, hidden:bool) -> Result<()> {
+        #[cfg(feature="slot-transfer-audit")]
+        if !self.program.tables[t].constructor {
+            let (value,key)=vs.split_last().ok_or("membership result")?;
+            crate::transfer_audit::logical_write(self.epoch,t,key,None,value)?;
+        }
         let port_key = self.port_keys_enabled(t);
         #[cfg(feature = "sparse-cells")]
         self.promote_owner(f.cell);
         let local_union_owned = self.defer_local_birth(f, t);
         let owned = self.owns_birth(f);
         assert!(!port_key || owned, "port-key constructor lacks shared-template coverage");
-        let facts = &mut self.cells.get_mut(&f.cell).unwrap().facts;
-        #[cfg(feature = "sparse-cells")]
-        facts.reserve_first();
-        facts.insert(
-            f.op,
+        self.cells.insert_fact_state(
+            f,
             FactState {
                 owned,
                 local_union_owned,
@@ -1724,10 +1801,10 @@ impl Graph {
             },
         );
         self.members[t].insert(f.ordered_id());
-        self.intern.entry(h).or_default().insert(f);
+        if self.constructor_hint_enabled(t) {self.intern.entry(h).or_default().insert(f);}
         if owned { self.query_versions[t] += 1; self.publish_owned_birth(f,t,&vs); }
         else if local_union_owned { self.query_versions[t] += 1; }
-        else { self.subscribe(t, Dependency::Fact(f), &vs); }
+        else { self.subscribe_rows(t, Dependency::Fact(f), &[], &vs); }
         self.changes.touch(t, Dependency::Fact(f));
         self.stats.logical_facts_created += 1;
 
@@ -1919,8 +1996,8 @@ impl Graph {
         }
         self.stats.constructor_prepared_liveness_checks += 1;
         if self.receipt_forwards.contains_key(&Dependency::Fact(witness)) { return Ok(None); }
-        let Some(frame) = self.cells.get(&witness.cell) else { return Ok(None); };
-        let Some(state) = frame.facts.get(&witness.op).filter(|s| !s.hidden) else { return Ok(None); };
+        let Some(frame) = self.cells.cell_metadata(witness.cell) else { return Ok(None); };
+        let Some(state) = self.cells.fact_state(witness).filter(|s| !s.hidden) else { return Ok(None); };
         let (actual, args, result) = match &self.program.templates[frame.template].ops[witness.op as usize] {
             Op::Let(dst, Call::Table(t), args) => (*t, args, Arg::Slot(*dst)),
             Op::Set(t, args, value) => (*t, args, value.clone()),
@@ -1933,7 +2010,7 @@ impl Graph {
         } else if let Some((_, values)) = &state.decoded {
             values.last().expect("constructor result").clone()
         } else {
-            self.argument_in(witness.cell, frame, &result)?
+            self.argument(witness.cell, &result)?
         };
         let point = Point { value, hidden: false, epoch: state.epoch, witness: Dependency::Fact(witness) };
         self.stats.constructor_prepared_checks += 1;
@@ -2154,13 +2231,11 @@ impl Graph {
             }
             let table = self.dependency_table(*d);
             if let Dependency::Function(i) = d {
-                self.function_decoded[*i] = None;
+                self.functions[*i].canonical = false;
             }
             if !retained && let Dependency::Fact(f) = d
                 && let Some(state) = self
-                    .cells
-                    .get_mut(&f.cell)
-                    .and_then(|c| c.facts.get_mut(&f.op))
+                    .cells.fact_state_mut(*f)
             {
                 state.decoded = None;
             }
@@ -2463,26 +2538,26 @@ impl Graph {
     ) -> Result<usize> {
         let index = self.function_index(t, key);
         if let Some(i) = index {
-            let old = canon(&self.functions[i].value, &self.parents);
+            let old = canon(self.functions[i].value(), &self.parents);
             let next = self.merge_value(t, old.clone(), value)?;
             if next != old {
-                self.function_decoded[i] = Some(Self::shared_fields(key, &next));
+                let changes_refs = matches!(old, Value::Eq(_) | Value::Set(_))
+                    || matches!(next, Value::Eq(_) | Value::Set(_));
+                let previous = changes_refs.then(|| self.function(i).unwrap().values);
+                self.functions[i].set_fields(Self::shared_fields(key, &next));
                 #[cfg(feature = "slot-transfer-audit")]
                 crate::transfer_audit::effective(self.epoch, t, i, key, Some(&old), &next)?;
-                self.functions[i].value = next;
                 self.functions[i].epoch = self.epoch;
                 self.changed = true;
                 self.stats.function_updates += 1;
                 self.changes.touch(t, Dependency::Function(i));
                 // A scalar result change preserves every subscribed eclass.
                 // Publish the row version without rebuilding its reverse uses.
-                if !matches!(old, Value::Eq(_) | Value::Set(_))
-                    && !matches!(self.functions[i].value, Value::Eq(_) | Value::Set(_))
-                {
+                if !changes_refs {
                     self.query_versions[t] += 1;
                 } else {
                     let row = self.function(i).unwrap();
-                    self.subscribe(row.table, row.witness, &row.values);
+                    self.subscribe_function(row.table, i, previous.as_deref().unwrap(), &row.values);
                 }
             }
             Ok(i)
@@ -2498,24 +2573,24 @@ impl Graph {
             } else {
                 false
             };
-            let (stored_key, decoded) = if compact {
-                (Vec::new(), None)
+            let fields = if compact {
+                Self::shared_fields(&[], &value)
             } else {
                 #[cfg(feature = "sparse-cells")]
                 self.function_keys[t].insert(key, i);
                 #[cfg(not(feature = "sparse-cells"))]
                 self.function_keys[t].insert(key.to_vec(), i);
-                (key.to_vec(), Some(Self::shared_fields(key, &value)))
+                Self::shared_fields(key, &value)
             };
-            self.function_decoded.push(decoded);
             self.functions.push(Function {
                 #[cfg(feature = "sparse-cells")]
                 writer: None,
                 #[cfg(feature = "receipt-slots")]
                 port_slot: 0,
                 table: t,
-                key: stored_key,
-                value,
+                fields,
+                canonical: !compact,
+                projected: compact,
                 epoch: self.epoch,
                 live: true,
                 origin: None,
@@ -2526,18 +2601,22 @@ impl Graph {
             self.changes.touch(t, Dependency::Function(i));
             if compact {
                 // Unit contributes no equality dependency.
-                self.subscribe(t, Dependency::Function(i), key);
+                self.subscribe_function(t, i, &[], key);
             } else {
                 let row = self.function(i).unwrap();
-                self.subscribe(row.table, row.witness, &row.values);
+                self.subscribe_function(row.table, i, &[], &row.values);
             }
             Ok(i)
         }
     }
     fn retire(&mut self, f: FactRef) -> Result<()> {
         if let Some(r) = self.fact(f)? {
+            #[cfg(all(feature="storage-metrics",feature="sparse-cells"))]
+            if crate::receipt_trace::enabled() {
+                crate::receipt_trace::retire(Dependency::Fact(f),r.table,self.cells.cell_metadata(f.cell).map(|c|c.template),self.receipt_tracking);
+            }
             let owned=self.retire_owned(f,r.table);
-            let local = self.cells[&f.cell].facts[&f.op].local_union_owned;
+            let local = self.cells.fact_state(f).unwrap().local_union_owned;
             self.end_local_ownership(f, r.table, true);
             if let Some(matcher) = self.union_digest.as_mut() {
                 matcher.removed(f);
@@ -2545,11 +2624,7 @@ impl Graph {
             self.changes.retire(r.table, Dependency::Fact(f));
             self.query_versions[r.table] += 1;
             let s = self
-                .cells
-                .get_mut(&f.cell)
-                .unwrap()
-                .facts
-                .remove(&f.op)
+                .cells.remove_fact_state(f)
                 .unwrap();
             self.retire_stable_node(f);
             #[cfg(feature = "receipt-slots")]
@@ -2558,7 +2633,7 @@ impl Graph {
                     .insert(Dependency::Fact(f), s.port_slot);
             }
             self.members[r.table].remove(&f.ordered_id());
-            if let Some(b) = self.intern.get_mut(&s.hash) {
+            if self.constructor_hint_enabled(r.table) && let Some(b) = self.intern.get_mut(&s.hash) {
                 b.remove(&f);
                 #[cfg(feature = "sparse-cells")]
                 if b.is_empty() {
@@ -2566,7 +2641,7 @@ impl Graph {
                 }
             }
             if local || owned { self.query_versions[r.table] += 1; }
-            else { self.subscribe(r.table, Dependency::Fact(f), &[]); }
+            else { self.subscribe_rows(r.table, Dependency::Fact(f), &r.values, &[]); }
             self.garbage.insert(f.cell);
         }
         Ok(())
@@ -2603,17 +2678,13 @@ impl Graph {
         };
         match row.witness {
             Dependency::Fact(f) => {
-                let born = self.cells[&f.cell].facts[&f.op].born;
+                let born = self.cells.fact_state(f).unwrap().born;
                 if delete {
                     self.retire(f)?;
                     self.changed = true;
                 } else {
                     let s = self
-                        .cells
-                        .get_mut(&f.cell)
-                        .unwrap()
-                        .facts
-                        .get_mut(&f.op)
+                        .cells.fact_state_mut(f)
                         .unwrap();
                     if !s.hidden {
                         self.query_versions[t] += 1;
@@ -2649,9 +2720,12 @@ impl Graph {
                 if self.units.remove(i) {
                     self.units.stats.deleted += 1;
                 } else {
+                    #[cfg(feature = "sparse-cells")]
+                    self.function_keys[t].remove(key, i);
+                    #[cfg(not(feature = "sparse-cells"))]
                     self.function_keys[t].remove(key);
                 }
-                self.subscribe(row.table, row.witness, &[]);
+                self.subscribe_function(row.table, i, &row.values, &[]);
                 self.changed = true;
                 Ok(true)
             }
@@ -2709,7 +2783,7 @@ impl Graph {
     }
     fn commit_constructor_collision(&mut self, f: FactRef, r: Row, h: Option<u64>, found: Option<Row>) -> Result<()> {
         let d = Dependency::Fact(f);
-        let old = self.cells[&f.cell].facts[&f.op].hash;
+        let old = self.cells.fact_state(f).unwrap().hash;
         self.stats.repair_key_hash_changes += u64::from(h.is_some_and(|h|h != old));
         if h.is_some() && let Some(bucket) = self.intern.get_mut(&old) {
             bucket.remove(&f);
@@ -2722,11 +2796,7 @@ impl Graph {
             if let Dependency::Fact(keep) = other.witness {
                 self.query_versions[r.table] += 1;
                 let target = self
-                    .cells
-                    .get_mut(&keep.cell)
-                    .unwrap()
-                    .facts
-                    .get_mut(&keep.op)
+                    .cells.fact_state_mut(keep)
                     .unwrap();
                 #[cfg(feature = "receipt-slots")]
                 if r.hidden && target.port_slot != 0 {
@@ -2744,27 +2814,23 @@ impl Graph {
                 }
             }
             if self.receipt_tracking {
-                self.receipt_forwards
-                    .insert(Dependency::Fact(f), other.witness);
+                self.forward_receipt(Dependency::Fact(f), other.witness);
             }
             self.retire(f)?;
         } else {
+            let was_local = self.cells.fact_state(f).unwrap().local_union_owned;
             self.end_local_ownership(f, r.table, false);
             if let Some(h) = h { self.intern.entry(h).or_default().insert(f); }
             let s = self
-                .cells
-                .get_mut(&f.cell)
-                .unwrap()
-                .facts
-                .get_mut(&f.op)
+                .cells.fact_state_mut(f)
                 .unwrap();
 
             s.decoded = if self.stable_ports.is_none() || !s.owned { Some((r.table, r.values.clone())) } else { None };
             if let Some(h) = h { s.hash = h; }
             s.epoch = self.epoch;
-            if self.cells[&f.cell].facts[&f.op].owned {
+            if self.cells.fact_state(f).unwrap().owned {
                 self.query_versions[r.table]+=1;
-            } else { self.subscribe(r.table, d, &r.values); }
+            } else { self.subscribe_rows(r.table, d, if was_local { &[] } else { &r.values }, &r.values); }
             self.changes.touch(r.table, d);
         }
         Ok(())
@@ -2833,8 +2899,11 @@ impl Graph {
                     };
                     let key = row.values[..row.values.len() - 1].to_vec();
                     let compressed = self.units.remove(i);
-                    let oldkey = &self.functions[i].key;
-                    if !compressed && self.function_keys[row.table].get(oldkey) == Some(&i) {
+                    let oldkey = self.functions[i].key();
+                    if !compressed && self.indexed_function(row.table, oldkey) == Some(i) {
+                        #[cfg(feature = "sparse-cells")]
+                        self.function_keys[row.table].remove(oldkey, i);
+                        #[cfg(not(feature = "sparse-cells"))]
                         self.function_keys[row.table].remove(oldkey);
                     }
                     if let Some(j) = self.function_index(row.table, &key) {
@@ -2848,15 +2917,16 @@ impl Graph {
                             let shared_unit = cfg!(feature = "view-storage")
                                 && self.units.owned[row.table]
                                 && row.values.last() == Some(&Value::Int(0))
-                                && self.functions[j].value == Value::Int(0)
-                                && (self.functions[j].key == key
+                                && *self.functions[j].value() == Value::Int(0)
+                                && (self.functions[j].key() == key
                                     || self.units.change_block(j, &row.values));
+                            let previous_target = (!shared_unit).then(|| self.function(j).unwrap().values);
                             let value_changed = if shared_unit {
-                                self.function_decoded[j] = Some(row.values.clone());
+                                self.functions[j].set_fields(row.values.clone());
                                 self.units.stats.fast_merges += 1;
                                 false
                             } else {
-                                let old = canon(&self.functions[j].value, &self.parents);
+                                let old = canon(self.functions[j].value(), &self.parents);
                                 #[cfg(feature = "slot-transfer-audit")]
                                 let before = old.clone();
                                 let next = self.merge_value(
@@ -2877,8 +2947,7 @@ impl Graph {
                                 }
                                 let changed = old != next;
                                 if changed {
-                                    self.function_decoded[j] = None;
-                                    self.functions[j].value = next;
+                                    self.functions[j].set_value(next);
                                 }
                                 changed
                             };
@@ -2899,17 +2968,16 @@ impl Graph {
                             self.functions[i].live = false;
                             self.changes.retire(row.table, d);
                             if self.receipt_tracking {
-                                self.receipt_forwards
-                                    .insert(Dependency::Function(i), Dependency::Function(j));
+                                self.forward_receipt(Dependency::Function(i), Dependency::Function(j));
                             }
                             self.function_origin(i, None);
                             self.members[row.table].remove(&(i as u64));
-                            self.subscribe(row.table, d, &[]);
+                            self.subscribe_function(row.table, i, &row.values, &[]);
                             if shared_unit {
                                 self.query_versions[row.table] += 1;
                             } else {
                                 let target = self.function(j).unwrap();
-                                self.subscribe(target.table, target.witness, &target.values);
+                                self.subscribe_function(target.table, j, previous_target.as_deref().unwrap(), &target.values);
                             }
                             continue;
                         }
@@ -2917,15 +2985,14 @@ impl Graph {
                     if compressed {
                         self.units.stats.promoted += 1;
                     }
-                    self.function_decoded[i] = Some(row.values.clone());
-                    self.functions[i].key = key.clone();
-                    self.functions[i].value = row.values.last().unwrap().clone();
+                    self.functions[i].projected = false;
+                    self.functions[i].set_fields(row.values.clone());
                     self.functions[i].epoch = self.epoch;
                     #[cfg(feature = "sparse-cells")]
                     self.function_keys[row.table].insert(&key, i);
                     #[cfg(not(feature = "sparse-cells"))]
                     self.function_keys[row.table].insert(key, i);
-                    self.subscribe(row.table, d, &row.values);
+                    self.subscribe_function(row.table, i, &row.values, &row.values);
                     self.changes.touch(row.table, d);
                 }
             }
@@ -2973,13 +3040,15 @@ impl Graph {
     }
     fn retire_empty(&mut self, cell: u32) {
         if self.parent_users.get(&cell).copied().unwrap_or(0) == 0
-            && self.cells.get(&cell).is_some_and(|c| c.facts.is_empty())
+            && self.cells.fact_count(cell)==Some(0)
         {
             if let Some(c) = self.cells.remove(&cell) {
                 if let Some(p) = c.parent {
                     self.release_reference(p);
                 }
             }
+            #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+            self.cells.retire_completed(cell);
             self.parent_users.remove(&cell);
             self.stats.empty_frames_released += 1;
         }

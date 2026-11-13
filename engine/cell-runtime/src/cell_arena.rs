@@ -1,8 +1,14 @@
 //! Dense live Cells with stable logical IDs. Removing a Cell relocates at
 //! most one physical record and fixes its reverse slot; FactRef IDs never move.
 use super::Cell;
+#[cfg(feature="storage-metrics")]
+#[path="completed_owner_store.rs"]
+mod completed;
+
 #[derive(Default)]
 pub struct Cells {
+    #[cfg(feature="storage-metrics")]
+    completed:completed::Completed,
     records: Vec<(u32, Cell)>,
     positions: Vec<u32>,
     outliers: rustc_hash::FxHashMap<u32, u32>,
@@ -26,6 +32,8 @@ impl Cells {
     fn position(&self, id: &u32) -> Option<usize> {
         {
             let v = self.positions.get(*id as usize).copied().unwrap_or(0);
+            #[cfg(feature="storage-metrics")]
+            if v & completed::COMPLETED != 0 {return None;}
             if v != 0 {
                 Some((v - 1) as usize)
             } else if self.outliers.is_empty() {
@@ -48,6 +56,8 @@ impl Cells {
         self.position(id).is_some()
     }
     pub fn insert(&mut self, id: u32, c: Cell) -> Option<Cell> {
+        #[cfg(feature="storage-metrics")]
+        assert!(self.completed_index(id).is_none(),"cannot overwrite a transferred completed owner");
         if let Some(i) = self.position(&id) {
             return Some(std::mem::replace(&mut self.records[i].1, c));
         }
@@ -106,6 +116,7 @@ mod tests {
     use super::*;
     fn cell(t: usize) -> Cell {
         Cell {
+            symbolic_slots: false,
             template: t,
             started_epoch: 0,
             parent: None,

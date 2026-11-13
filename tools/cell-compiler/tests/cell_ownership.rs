@@ -19,6 +19,50 @@ fn program(src: &str) -> Program {
     raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
     Program::parse(raw).unwrap()
 }
+
+#[test]
+fn saturation_observer_sees_birth_free_effects_and_rejects_unproved_work() {
+    for (body, outcome) in [
+        ("(N n)", "rhs_covered"),
+        ("(union x x)", "rhs_covered_by_inputs"),
+        ("(F x)", "missing_local_constructor"),
+        ("(union x (N 1))", "write_effect"),
+    ] {
+        let source = format!("(datatype E (N i64) (F E)) (N 0) (N 1) (ruleset r)\n(rule ((= x (N n))) ({body}) :ruleset r) (run r 1)");
+        let core = eggfuse_bake::device_frontend::core("saturation", &source).unwrap();
+        let p = Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap();
+        let mut a = Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(), true);
+        let mut g = Graph::new_with_cell_ownership(p).unwrap();
+        g.trace_ownership_catalog(8).unwrap();
+        let mut b = Executor::new(g, true);
+        a.execute().unwrap(); b.execute().unwrap();
+        assert_eq!(a.graph.export().unwrap(), b.graph.export().unwrap());
+        assert_eq!(a.snapshots, b.snapshots);
+        assert_eq!(a.binding_audit, b.binding_audit);
+        let report = b.graph.ownership_catalog_trace().unwrap();
+        let rows = report["saturation"]["rows"].as_array().unwrap();
+        assert!(rows.iter().any(|r|r["outcome"] == outcome), "{body}: {report}");
+        let applications = rows.iter().map(|r|r["counts"]["applications"].as_u64().unwrap()).sum::<u64>();
+        assert_eq!(applications, 2, "count applications, not anchor alternatives");
+    }
+}
+
+#[test]
+fn saturation_observer_does_not_skip_a_nontrivial_union() {
+    let source = "(datatype E (N i64)) (N 0) (N 1) (ruleset r)
+        (rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset r) (run r 1)";
+    let core = eggfuse_bake::device_frontend::core("union-coverage", source).unwrap();
+    let p = Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap();
+    let mut g = Graph::new_with_cell_ownership(p).unwrap();
+    g.trace_ownership_catalog(8).unwrap();
+    let mut e = Executor::new(g, false);
+    e.execute().unwrap();
+    let report = e.graph.ownership_catalog_trace().unwrap();
+    let rows = report["saturation"]["rows"].as_array().unwrap();
+    assert_eq!(rows.len(), 1, "{report}");
+    assert_eq!(rows[0]["outcome"], "nontrivial_union", "{report}");
+    assert_eq!(rows[0]["counts"]["applications"], 1);
+}
 fn compare(src: &str) -> Executor {
     let p = program(src);
     let mut a = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), true);
@@ -841,4 +885,387 @@ fn retained_inactive_routes_do_not_return_deleted_candidates() {
     egglog::EGraph::default()
         .parse_and_run_program(None, src)
         .unwrap();
+}
+
+#[test]
+fn baked_cells_rederive_the_same_plan_without_materialized_marker_json() {
+    use std::{fs,process::Command};
+    let p=program(STAGES);
+    let temp=tempfile::tempdir().unwrap();
+    let input=temp.path().join("input.json");
+    fs::write(&input,serde_json::to_vec(&p.artifact).unwrap()).unwrap();
+    let materialized=temp.path().join("materialized");
+    let compact=temp.path().join("compact");
+    for (input,out,flag) in [(input,materialized.clone(),"true"),
+        (materialized.join("program.json"),compact.clone(),"false")] {
+        let r=Command::new(env!("CARGO_BIN_EXE_eggfuse-cell-compiler"))
+            .args(["bake-cell-ownership","--program"]).arg(input)
+            .arg("--output").arg(out).args(["--materialize-markers",flag,"--query-classes","true"]).output().unwrap();
+        assert!(r.status.success(),"{}",String::from_utf8_lossy(&r.stderr));
+    }
+    assert!(materialized.join("markers.json").exists());
+    assert!(!compact.join("markers.json").exists());
+    let load=|path:std::path::PathBuf| {
+        Program::parse(serde_json::from_slice(&fs::read(path).unwrap()).unwrap()).unwrap()
+    };
+    let mut a=Executor::new(Graph::new_with_local_congruence(load(materialized.join("program.json"))).unwrap(),true);
+    let mut b=Executor::new(Graph::new_with_local_congruence(load(compact.join("program.json"))).unwrap(),true);
+    assert!(b.graph.program.artifact.get("ownership_markers").is_none());
+    assert_eq!(b.graph.program.artifact["ownership_fragments"]["query_classes"],true);
+    assert!(a.graph.program.artifact["ownership_fragments"]["query_classes"].is_object());
+    assert_eq!(a.graph.program.cell_ownership,b.graph.program.cell_ownership);
+    a.execute().unwrap();b.execute().unwrap();
+    assert_eq!(a.graph.export().unwrap(),b.graph.export().unwrap());
+    assert_eq!(a.snapshots,b.snapshots);
+    assert_eq!(a.binding_audit,b.binding_audit);
+}
+
+#[test]
+fn bounded_longer_catalog_preserves_cross_run_execution() {
+    use eggfuse_cell_runtime::{checksum::artifact_digest, graph::cell_ownership::composition};
+    assert_eq!(composition::checked_frame_limit(None).unwrap(), 4);
+    for invalid in [json!(0), json!(1), json!(33), json!(-1), json!("16")] {
+        assert!(composition::checked_frame_limit(Some(&invalid)).is_err());
+    }
+    let src = r#"
+(datatype E (N i64) (A E) (B E) (C E) (D E) (F E) (G E))
+(ruleset a) (ruleset b) (ruleset c) (ruleset d) (ruleset f) (ruleset g)
+(rule ((= x (N n))) ((A x)) :ruleset a)
+(rule ((= x (A y))) ((B x)) :ruleset b)
+(rule ((= x (B y))) ((C x)) :ruleset c)
+(rule ((= x (C y))) ((D x)) :ruleset d)
+(rule ((= x (D y))) ((F x)) :ruleset f)
+(rule ((= x (F y))) ((G x)) :ruleset g)
+(N 0)
+(run-schedule (seq (run a) (run b) (run c) (run d) (run f) (run g)))
+"#;
+    let core = eggfuse_bake::device_frontend::core("longer-owner", src).unwrap();
+    let raw = compiler::compile(core, &BTreeSet::new()).unwrap();
+    let p = Program::parse(raw.clone()).unwrap();
+    let mut graph = Graph::new_with_cell_ownership(p.clone()).unwrap();
+    graph.train_ownership_fragments_with_limit(8).unwrap();
+    let mut training = Executor::new(graph, false);
+    training.execute().unwrap();
+    let profile = training.graph.ownership_fragment_profile().unwrap();
+    assert_eq!(profile["max_frames"], 8);
+    assert!(profile["records"].as_array().unwrap().iter()
+        .any(|r|r["fragment"]["hops"].as_array().unwrap().len() >= 4));
+    let mut raw = raw;
+    raw["ownership_fragments"] = json!({"schema":"eggfuse-ownership-fragments/v2",
+        "source":profile["source"], "max_frames":8,
+        "fragments":profile["records"].as_array().unwrap().iter().map(|r|r["fragment"].clone()).collect::<Vec<_>>()});
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = artifact_digest(&raw).into();
+    let baked = Program::parse(raw.clone()).unwrap();
+    assert_eq!(baked.cell_ownership.composition.max_frames, 8);
+    let mut reference = Executor::new(Graph::new_with_repair_ports(p).unwrap(), false);
+    let mut actual = Executor::new(Graph::new_with_cell_ownership(baked).unwrap(), false);
+    for run in 1..=6 {
+        reference.execute_until(Some(run)).unwrap();
+        actual.execute_until(Some(run)).unwrap();
+        assert_eq!(reference.graph.export().unwrap(), actual.graph.export().unwrap());
+        assert_eq!(reference.steps.len(), actual.steps.len());
+        for (left, right) in reference.steps.iter().zip(&actual.steps) {
+            for key in ["ordinal", "ruleset", "path", "iterations", "epoch", "logical_matches", "executed_bindings", "changed"] {
+                assert_eq!(left[key], right[key], "{key}");
+            }
+        }
+    }
+    assert!(actual.graph.ownership_report()["inventory"]["largest_component_frames"].as_u64().unwrap() > 4);
+    raw["ownership_fragments"]["max_frames"] = json!(4);
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = artifact_digest(&raw).into();
+    assert!(Program::parse(raw.clone()).is_err(), "a lower bound must reject deeper code");
+    raw["ownership_fragments"]["fragments"].as_array_mut().unwrap()
+        .retain(|f|f["hops"].as_array().unwrap().len() < 4);
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"] = artifact_digest(&raw).into();
+    let prefix_catalog = Program::parse(raw).unwrap();
+    let seed_transitions = prefix_catalog.cell_ownership.composition.transitions.len();
+    assert!(seed_transitions > 0);
+    let mut observed_graph = Graph::new_with_cell_ownership(prefix_catalog.clone()).unwrap();
+    observed_graph.trace_ownership_catalog(16).unwrap();
+    assert!(observed_graph.continue_ownership_fragment_training(16).is_err());
+    let mut observed = Executor::new(observed_graph, false);
+    let mut unchanged = Executor::new(Graph::new_with_cell_ownership(prefix_catalog.clone()).unwrap(), false);
+    let audit_run = |e: &mut Executor, run| {
+        use eggfuse_cell_runtime::transfer_audit as audit;
+        audit::take_digests(); audit::take_write_digests(); audit::take_resume_digests();
+        audit::set_active(true); audit::enable_write_audit();
+        e.execute_until(Some(run)).unwrap();
+        audit::set_active(false);
+        json!({"rhs":audit::take_digests(),"writes":audit::take_write_digests(),"resumes":audit::take_resume_digests()})
+    };
+    for run in 1..=6 {
+        assert_eq!(audit_run(&mut unchanged, run), audit_run(&mut observed, run));
+        assert_eq!(unchanged.graph.export().unwrap(), observed.graph.export().unwrap());
+        assert_eq!(unchanged.graph.ownership_report()["inventory"], observed.graph.ownership_report()["inventory"]);
+        assert_eq!(serde_json::to_value(unchanged.graph.cells.iter().collect::<Vec<_>>()).unwrap(),
+            serde_json::to_value(observed.graph.cells.iter().collect::<Vec<_>>()).unwrap());
+    }
+    let trace = observed.graph.ownership_catalog_trace().unwrap();
+    assert_eq!(trace["executed_max_frames"], 4);
+    assert_eq!(trace["seed_transitions"], seed_transitions);
+    assert!(!trace["records"].as_array().unwrap().is_empty());
+    assert_eq!(observed.graph.ownership_report()["stats"]["composition_shape_builds"], 0);
+    assert!(composition::select_profile(&trace).is_err(), "proposals must not masquerade as saved work");
+    let mut graph = Graph::new_with_cell_ownership(prefix_catalog).unwrap();
+    assert!(graph.train_ownership_fragments().is_err(), "fresh training must stay explicit");
+    assert!(graph.continue_ownership_fragment_training(2).is_err());
+    graph.continue_ownership_fragment_training(8).unwrap();
+    let mut continued = Executor::new(graph, false);
+    continued.execute().unwrap();
+    assert_eq!(reference.graph.export().unwrap(), continued.graph.export().unwrap());
+    let profile = continued.graph.ownership_fragment_profile().unwrap();
+    assert_eq!(profile["seed_catalog"]["transitions"], seed_transitions);
+    assert!(profile["records"].as_array().unwrap().iter()
+        .any(|r|r["fragment"]["hops"].as_array().unwrap().len() >= 4));
+    let report = continued.graph.ownership_report();
+    assert!(report["stats"]["composition_baked_hits"].as_u64().unwrap() > 0);
+    assert!(report["stats"]["composition_shape_builds"].as_u64().unwrap() > 0);
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_component_discharges_parent_without_advancing_run_gc() {
+    let src="(datatype E (N i64) (Start E) (Pair E E))
+        (ruleset a) (ruleset b)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (N 1) (N 2) (run a 1) (run b 1)";
+    let p=program(src);
+    let mut reference=Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(),true);
+    reference.execute().unwrap();
+    for workers in [0,2] {
+        let mut e=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+        e.use_completed_parent_takeover().unwrap();
+        if workers>0 { e.use_query_workers(workers,1).unwrap(); }
+        e.execute().unwrap();
+        assert_eq!(reference.graph.export().unwrap(),e.graph.export().unwrap());
+        assert_eq!(reference.snapshots,e.snapshots);
+        assert!(e.graph.stats.completed_parent_detachments>0,"{}",e.report());
+    }
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_layout_distinguishes_dead_inputs_from_scalar_and_result_readers() {
+    for body in ["(Pair x x)","(Indexed x i)","(Pair (Get x i) x)"] {
+        let src=format!("(datatype E (N i64) (Get E i64) (Pair E E) (Indexed E i64))
+            (ruleset init) (ruleset a) (ruleset b)
+            (rule ((= x (N n))) ((Get x 7)) :ruleset init)
+            (rule ((= g (Get x i))) ({body}) :ruleset a)
+            (rule ((= q (Pair x y))) ((Indexed y 9)) :ruleset b)
+            (N 1) (N 2) (run init 1) (run a 1) (run b 1)");
+        let p=program(&src);
+        let mut reference=Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(),true);
+        reference.execute().unwrap();
+        for workers in [0,2] {
+            let mut e=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+            e.use_completed_parent_takeover().unwrap();
+            if workers>0 {e.use_query_workers(workers,1).unwrap();}
+            e.execute().unwrap();
+            assert_eq!(reference.graph.export().unwrap(),e.graph.export().unwrap(),"{body}");
+            assert_eq!(reference.snapshots,e.snapshots,"{body}");
+            if body=="(Pair x x)" {
+                assert!(e.graph.stats.completed_parent_detachments>0,"unused i and g must not retain the full parent");
+            }
+        }
+    }
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn shared_completed_owners_survive_later_reads_and_deletion() {
+    for parent_takeover in [false,true] {
+    let src="(datatype E (N i64) (Start E) (Pair E E) (Seen E)) (relation Flag ())
+        (ruleset a) (ruleset b) (ruleset c) (ruleset d)
+        (rule ((= x (N n)) (Flag)) ((Start x)) :ruleset a)
+        (rule ((= s (Start x)) (Flag)) ((Pair s x)) :ruleset b)
+        (rule ((Pair s x)) ((Seen x)) :ruleset c)
+        (rule ((= x (N 1)) (= y (N 2))) ((union x y)) :ruleset d)
+        (N 1) (N 2) (Flag) (run a 1) (run b 1) (run c 1) (run d 1) (run c 1)";
+    let src=if parent_takeover {src.replace(" (Flag))", ")")} else {src.to_owned()};
+    let p=program(&src);
+    for workers in [0,2] {
+    let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+    let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+    if parent_takeover {actual.use_completed_parent_takeover().unwrap();}
+    if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+    let mut moved=0;
+    loop {
+        let n=reference.steps.len();
+        reference.execute_until(Some(n+1)).unwrap();actual.execute_until(Some(n+1)).unwrap();
+        if reference.steps.len()==n {break;}
+        moved+=actual.graph.transfer_completed_owners().unwrap();
+        assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap(),"Run {}",n+1);
+        actual.graph.ownership_report();actual.graph.stable_port_report();
+    }
+    assert!(moved>0,"exercise physical source-frame removal");
+    if parent_takeover {
+        assert!(actual.graph.stats.completed_parent_detachments>0);
+        assert!(actual.graph.stats.shared_owner_inherited_frames>0,"inherited frames must enter shared storage");
+    }
+    let table=actual.graph.program.tables.iter().position(|t|t.name=="Pair").unwrap();
+    let witness=actual.graph.witnesses(table)[0];
+    let eggfuse_cell_runtime::graph::Dependency::Fact(parent)=witness else {panic!("constructor fact")};
+    assert!(actual.graph.cells.get(&parent.cell).is_none(),"Pair must have physically transferred");
+    let template=actual.graph.program.templates.iter().position(|t|
+        !t.parent_columns.is_empty() && t.name.contains("Seen")).unwrap();
+    let slot=*actual.graph.program.templates[template].parent_columns.keys().next().unwrap();
+    let child=actual.graph.linked_frame(template,Default::default(),Some(parent)).unwrap();
+    let expected=actual.graph.slot(child,slot).unwrap();
+    let storage=actual.graph.ownership_storage_trace();
+    let frames=storage["components"].as_array().unwrap().iter()
+        .find(|c|c["frames"].as_array().unwrap().iter().any(|id|*id==parent.cell)).unwrap()["frames"].clone();
+    let mut deletions=Vec::new();
+    for t in 0..actual.graph.program.tables.len() {
+        for witness in actual.graph.witnesses(t) {
+            if let eggfuse_cell_runtime::graph::Dependency::Fact(f)=witness
+                && frames.as_array().unwrap().iter().any(|id|*id==f.cell) {
+                deletions.push(actual.graph.row(witness).unwrap().unwrap());
+            }
+        }
+    }
+    for row in deletions {
+        let key=&row.values[..row.values.len()-1];
+        actual.graph.hide(row.table,key,true).unwrap();reference.graph.hide(row.table,key,true).unwrap();
+    }
+    actual.graph.collect_garbage();reference.graph.collect_garbage();
+    assert_eq!(actual.graph.slot(child,slot).unwrap(),expected,"parent projection survives component death");
+    assert!(actual.graph.stats.shared_owner_frames_restored>0);
+    assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+    }
+}
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_instance_retires_unused_match_inputs_without_owner_transfer() {
+    let p=program("(datatype E (N i64) (Start E) (Pair E E) (Seen E))
+        (relation Unused (i64))
+        (ruleset a) (ruleset b) (ruleset c)
+        (rule ((= x (N n)) (Unused j)) ((Start x)) :ruleset a)
+        (rule ((= s (Start x)) (Unused j)) ((Pair s x)) :ruleset b)
+        (rule ((Pair s x)) ((Seen x)) :ruleset c)
+        (N 1) (N 2) (Unused 17) (run a 1) (run b 1) (run c 1)");
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        loop {
+            let n=reference.steps.len();
+            reference.execute_until(Some(n+1)).unwrap();actual.execute_until(Some(n+1)).unwrap();
+            if reference.steps.len()==n {break;}
+            assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+        }
+        assert!(actual.graph.stats.completed_dead_slots_elided>0,
+            "unused match inputs must retire without shared-owner transfer");
+    }
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_writer_retires_unused_inputs_before_storage_handoff() {
+    let p=program("(datatype E (N i64))
+        (function Score (E) i64 :merge (max old new))
+        (relation Unused (i64)) (relation Seen (E i64))
+        (ruleset a) (ruleset b)
+        (rule ((= x (N n)) (Unused j)) ((set (Score x) n)) :ruleset a)
+        (rule ((= n (Score x))) ((Seen x n)) :ruleset b)
+        (N 1) (N 2) (Unused 17) (run a 1) (run b 1)");
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        reference.execute_until(Some(1)).unwrap();actual.execute_until(Some(1)).unwrap();
+        assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+        assert!(actual.graph.stats.completed_dead_slots_elided>0);
+        let old=reference.graph.retained_cell_storage();let new=actual.graph.retained_cell_storage();
+        assert!(new["writer_count"].as_u64().unwrap()>0);
+        assert!(new["writer_bytes"].as_u64().unwrap()<old["writer_bytes"].as_u64().unwrap());
+        reference.execute_until(None).unwrap();actual.execute_until(None).unwrap();
+        assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+    }
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn port_domains_replace_birth_hints_across_union_and_deletion() {
+    let p=program("(datatype E (N i64) (F E) (G E E))
+        (ruleset a) (ruleset b) (ruleset c) (ruleset d)
+        (rule ((= x (N n))) ((F x)) :ruleset a)
+        (rule ((= x (N 1)) (= y (N 2))) ((union x y)) :ruleset b)
+        (rule ((= u (F x))) ((G x u)) :ruleset c)
+        (rule ((= u (F x))) ((delete (F x))) :ruleset d)
+        (N 1) (N 2) (run a 1) (run b 1) (run c 1)
+        (run d 1) (run a 1) (run c 1)");
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        actual.graph.use_port_domains_only().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        loop {
+            let n=reference.steps.len();
+            reference.execute_until(Some(n+1)).unwrap();actual.execute_until(Some(n+1)).unwrap();
+            assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+            let report=actual.graph.stable_port_report();
+            assert_eq!(report["birth_indexed_port_keys"],0);
+            assert_eq!(report["birth_hints_enabled"],false);
+            assert_eq!(actual.graph.ownership_report()["stats"]["domain_legacy_visits"],0);
+            if reference.steps.len()==n {break;}
+        }
+    }
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_scalar_chain_releases_operands_but_preserves_later_fact_reads() {
+    let p=program("(datatype E (N i64) (Out i64) (Seen i64))
+        (ruleset a) (ruleset retire) (ruleset b)
+        (rule ((= x (N n))) ((let t (+ n 1)) (let v (* t 2)) (Out v)) :ruleset a)
+        (rule ((= x (N n))) ((delete (N n))) :ruleset retire)
+        (rule ((Out v)) ((Seen v)) :ruleset b)
+        (N 3) (N 7) (run a 1) (run retire 1) (run b 1)");
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        for run in 1..=3 {
+            reference.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
+            assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap(),"Run {run}");
+            assert_eq!(reference.steps.len(),actual.steps.len());
+        }
+        assert!(actual.graph.stats.completed_dead_slots_elided>=2,
+            "completed scalar intermediates must not survive as execution scratch");
+        assert!(actual.graph.stats.completed_parent_detachments>0,
+            "a scalar operand needed only during execution must not pin the parent");
+    }
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_singleton_uses_existing_ports_without_physical_owner_transfer() {
+    let p=program("(datatype E (N i64) (F E) (H E) (Pair E E) (Seen E E))
+        (ruleset a) (ruleset b) (ruleset retire)
+        (rule ((F x) (H y)) ((Pair x y)) :ruleset a)
+        (rule ((Pair x y)) ((Seen x y)) :ruleset b)
+        (rule ((Pair x y)) ((delete (Pair x y))) :ruleset retire)
+        (F (N 1)) (H (N 2)) (run a 1) (run b 1) (run retire 1)");
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        for run in 1..=3 {
+            reference.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
+            assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap(),"Run {run}");
+        }
+        assert!(actual.graph.stats.completed_symbolic_slots_elided>0,
+            "completed bindings must use existing ports before any storage transfer");
+        assert_eq!(actual.graph.retained_cell_storage()["completed_owner_frames"],0);
+    }
 }

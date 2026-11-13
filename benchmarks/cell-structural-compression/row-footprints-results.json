@@ -1,0 +1,82 @@
+{
+  "scope": "actual standalone Cell runtime; Graph teardown and separate single-lane process requested-heap observer",
+  "runs": 1428,
+  "all_run_graph_and_ordered_audits_equal": true,
+  "graph_heap_before": 2898525,
+  "graph_heap_after": 2781877,
+  "graph_heap_saved": 116648,
+  "changed_field_release_bytes": {
+    "dependencies": {
+      "before": 116648,
+      "after": 0
+    }
+  },
+  "process_peak_before": 125880355,
+  "process_peak_after": 125763673,
+  "initialization_relative_peak_growth_before": 5967009,
+  "initialization_relative_peak_growth_after": 5862977,
+  "takeover_extra_peak_before": 16548,
+  "takeover_extra_peak_after": 16548,
+  "limitation": "process peaks and initialization-relative net growth are not Graph-exclusive peaks; field teardown charges shared allocations to last owner",
+  "input_sha256": {
+    "function-row-trace.json": "7bf3cb09696171e66f8df48e42f6cfa11998e6688c376031ac46df79533652a5",
+    "row-footprints-trace.json": "af5cdb02b2ca5485e3f7768349eb7477ed52a775b706da032863db3623c4aaf5",
+    "footprints-control-metrics.json": "66cd792a256ecacfe9c5bc837f4d4301b0dd16cf181d6eb840177e4bfe094711",
+    "footprints-current-metrics.json": "1985a45036437255c5c1ffbc62e28bbd0f283ff12bb0bda61ace76dbd9267448"
+  },
+  "maintenance": {
+    "before": {
+      "stats": {
+        "subscription_calls": 2291,
+        "subscription_value_visits": 8408,
+        "canonical_subscription_calls": 128,
+        "subscription_scalar_fields_skipped": 28,
+        "subscription_root_reads_omitted": 245,
+        "subscription_sets_replaced_in_place": 436,
+        "reverse_insert_attempts": 3748,
+        "reverse_remove_attempts": 859,
+        "reverse_edges_created": 3748,
+        "reverse_edges_removed": 751,
+        "union_frontier_probes": 1039,
+        "union_wake_visits": 453,
+        "union_redirected_edges": 453,
+        "reverse_merge_inserts": 403,
+        "reverse_edges_coalesced": 112,
+        "live_reverse_edges": 2885,
+        "peak_reverse_edges": 2885,
+        "repair_key_probes": 0,
+        "repair_candidate_checks": 0
+      },
+      "reverse_headers": 663,
+      "dependency_headers": 1150,
+      "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "after": {
+      "stats": {
+        "subscription_calls": 2291,
+        "subscription_value_visits": 7829,
+        "canonical_subscription_calls": 0,
+        "subscription_scalar_fields_skipped": 0,
+        "subscription_root_reads_omitted": 0,
+        "subscription_sets_replaced_in_place": 0,
+        "subscription_rows_reused": 449,
+        "reverse_insert_attempts": 3748,
+        "reverse_remove_attempts": 751,
+        "reverse_edges_created": 3748,
+        "reverse_edges_removed": 751,
+        "union_frontier_probes": 1039,
+        "union_wake_visits": 453,
+        "union_redirected_edges": 453,
+        "reverse_merge_inserts": 403,
+        "reverse_edges_coalesced": 112,
+        "live_reverse_edges": 2885,
+        "peak_reverse_edges": 2885,
+        "repair_key_probes": 0,
+        "repair_candidate_checks": 0
+      },
+      "reverse_headers": 663,
+      "dependency_headers": 0,
+      "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    }
+  }
+}

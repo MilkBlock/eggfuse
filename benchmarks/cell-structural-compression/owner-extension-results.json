@@ -1,0 +1,107 @@
+{
+  "scope": "actual standalone Cell runtime; requested heap, not RSS or speed",
+  "programs": [
+    "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+    "d1b7f85c9e7a9353a0dedfd7d90fb13bf5c461536ca216113b34d7f82c05a3be"
+  ],
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "final_state_equal": true,
+  "heap": {
+    "graph_owned_teardown_bytes": [
+      2659437,
+      2655541
+    ],
+    "retained_program_teardown_bytes": [
+      117318509,
+      117380922
+    ],
+    "execution_and_takeover_peak_bytes": [
+      125443265,
+      125496318
+    ],
+    "net_growth_over_setup_bytes": [
+      5612363,
+      5602747
+    ],
+    "max_takeover_extra_bytes": [
+      49576,
+      41192
+    ]
+  },
+  "net_graph_and_program_growth_bytes": 58517,
+  "live_components": [
+    1392,
+    1345
+  ],
+  "live_source_frames": [
+    2385,
+    2385
+  ],
+  "source_storage": {
+    "explicit_cell_slots": [
+      7482,
+      7440
+    ],
+    "parent_links": [
+      216,
+      216
+    ],
+    "cell_slot_bytes": [
+      197640,
+      196752
+    ],
+    "cell_records_bytes": [
+      191760,
+      186360
+    ],
+    "completed_owner_records_bytes": [
+      102400,
+      102400
+    ],
+    "completed_owner_frames": [
+      787,
+      832
+    ],
+    "fact_record_capacity_bytes": [
+      263664,
+      263088
+    ],
+    "fact_record_live_bytes": [
+      208440,
+      208440
+    ],
+    "writer_count": [
+      490,
+      490
+    ],
+    "writer_bytes": [
+      132488,
+      132488
+    ]
+  },
+  "graph_field_changes": {
+    "cells": [
+      788232,
+      781368
+    ],
+    "ownership.components": [
+      279488,
+      280400
+    ],
+    "ownership.shapes": [
+      4976,
+      5232
+    ],
+    "ownership.boundaries": [
+      212648,
+      214448
+    ]
+  },
+  "admission": "reject-net-retained-memory-growth",
+  "limitations": [
+    "Reduced component count is not a count of retired facts or instances.",
+    "Process execution peak is not a Graph-exclusive within-Run peak.",
+    "Retained Program costs include selection provenance and compiled plans."
+  ]
+}

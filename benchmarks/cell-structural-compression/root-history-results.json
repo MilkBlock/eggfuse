@@ -1,0 +1,11 @@
+{
+  "scope": "actual standalone Cell runtime, bounded diagnostic observation; not a speed or compression measurement",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "schema": "eggfuse-cell-runtime-history/v2",
+  "events": 2048,
+  "uncompiled_root_events": 1185,
+  "dropped_events": 2872,
+  "semantic_status": "pass"
+}

@@ -1,0 +1,355 @@
+{
+  "scope": "actual standalone Cell runtime; post-execution last-owner release order, not inclusive independent field sizes",
+  "runs": 1428,
+  "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+  "original_program_bytes": 115462476,
+  "current_program_bytes": 116171431,
+  "program_delta_bytes": 708955,
+  "current_graph_bytes": 2781877,
+  "charged_graph_plus_positive_program_delta_bytes": 3490832,
+  "changed_owners": [
+    {
+      "owner": "artifact",
+      "original": 98103972,
+      "current": 98651231,
+      "delta": 547259
+    },
+    {
+      "owner": "composition.conditions",
+      "original": 220616,
+      "current": 404920,
+      "delta": 184304
+    },
+    {
+      "owner": "composition.fragments",
+      "original": 11616,
+      "current": 55744,
+      "delta": 44128
+    },
+    {
+      "owner": "composition.queries",
+      "original": 304704,
+      "current": 124640,
+      "delta": -180064
+    },
+    {
+      "owner": "composition.shapes",
+      "original": 519768,
+      "current": 620664,
+      "delta": 100896
+    },
+    {
+      "owner": "composition.transitions",
+      "original": 0,
+      "current": 12432,
+      "delta": 12432
+    }
+  ],
+  "all_owners": [
+    {
+      "owner": "artifact",
+      "original": 98103972,
+      "current": 98651231,
+      "delta": 547259
+    },
+    {
+      "owner": "cached_key_nodes",
+      "original": 88,
+      "current": 88,
+      "delta": 0
+    },
+    {
+      "owner": "cell_links",
+      "original": 572880,
+      "current": 572880,
+      "delta": 0
+    },
+    {
+      "owner": "cell_queries",
+      "original": 227866,
+      "current": 227866,
+      "delta": 0
+    },
+    {
+      "owner": "completion_plan",
+      "original": 0,
+      "current": 0,
+      "delta": 0
+    },
+    {
+      "owner": "composition.active_rules",
+      "original": 582,
+      "current": 582,
+      "delta": 0
+    },
+    {
+      "owner": "composition.conditions",
+      "original": 220616,
+      "current": 404920,
+      "delta": 184304
+    },
+    {
+      "owner": "composition.effects",
+      "original": 0,
+      "current": 0,
+      "delta": 0
+    },
+    {
+      "owner": "composition.fragments",
+      "original": 11616,
+      "current": 55744,
+      "delta": 44128
+    },
+    {
+      "owner": "composition.max_frames",
+      "original": 0,
+      "current": 0,
+      "delta": 0
+    },
+    {
+      "owner": "composition.queries",
+      "original": 304704,
+      "current": 124640,
+      "delta": -180064
+    },
+    {
+      "owner": "composition.shapes",
+      "original": 519768,
+      "current": 620664,
+      "delta": 100896
+    },
+    {
+      "owner": "composition.sources",
+      "original": 60528,
+      "current": 60528,
+      "delta": 0
+    },
+    {
+      "owner": "composition.transitions",
+      "original": 0,
+      "current": 12432,
+      "delta": 12432
+    },
+    {
+      "owner": "context_cuts",
+      "original": 66240,
+      "current": 66240,
+      "delta": 0
+    },
+    {
+      "owner": "control",
+      "original": 316945,
+      "current": 316945,
+      "delta": 0
+    },
+    {
+      "owner": "depth_plan",
+      "original": 72,
+      "current": 72,
+      "delta": 0
+    },
+    {
+      "owner": "entry_join",
+      "original": 213130,
+      "current": 213130,
+      "delta": 0
+    },
+    {
+      "owner": "entry_schedule",
+      "original": 646104,
+      "current": 646104,
+      "delta": 0
+    },
+    {
+      "owner": "executions",
+      "original": 465816,
+      "current": 465816,
+      "delta": 0
+    },
+    {
+      "owner": "initial",
+      "original": 183198,
+      "current": 183198,
+      "delta": 0
+    },
+    {
+      "owner": "iterative",
+      "original": 24272,
+      "current": 24272,
+      "delta": 0
+    },
+    {
+      "owner": "kernels",
+      "original": 770838,
+      "current": 770838,
+      "delta": 0
+    },
+    {
+      "owner": "known_results",
+      "original": 279831,
+      "current": 279831,
+      "delta": 0
+    },
+    {
+      "owner": "local_contexts",
+      "original": 8248,
+      "current": 8248,
+      "delta": 0
+    },
+    {
+      "owner": "local_union_cells",
+      "original": 93128,
+      "current": 93128,
+      "delta": 0
+    },
+    {
+      "owner": "marker_tables",
+      "original": 720,
+      "current": 720,
+      "delta": 0
+    },
+    {
+      "owner": "merge_programs",
+      "original": 18750,
+      "current": 18750,
+      "delta": 0
+    },
+    {
+      "owner": "multi_stage",
+      "original": 4133408,
+      "current": 4133408,
+      "delta": 0
+    },
+    {
+      "owner": "neighbor_plans",
+      "original": 38624,
+      "current": 38624,
+      "delta": 0
+    },
+    {
+      "owner": "ownership.code_operators",
+      "original": 44448,
+      "current": 44448,
+      "delta": 0
+    },
+    {
+      "owner": "ownership.code_programs",
+      "original": 658600,
+      "current": 658600,
+      "delta": 0
+    },
+    {
+      "owner": "ownership.entries",
+      "original": 34192,
+      "current": 34192,
+      "delta": 0
+    },
+    {
+      "owner": "ownership.format",
+      "original": 0,
+      "current": 0,
+      "delta": 0
+    },
+    {
+      "owner": "ownership.markers",
+      "original": 23592,
+      "current": 23592,
+      "delta": 0
+    },
+    {
+      "owner": "ownership.programs",
+      "original": 2904,
+      "current": 2904,
+      "delta": 0
+    },
+    {
+      "owner": "ownership.query_classes",
+      "original": 0,
+      "current": 0,
+      "delta": 0
+    },
+    {
+      "owner": "ownership.routes",
+      "original": 43736,
+      "current": 43736,
+      "delta": 0
+    },
+    {
+      "owner": "ownership.tables",
+      "original": 401,
+      "current": 401,
+      "delta": 0
+    },
+    {
+      "owner": "physical",
+      "original": 114657,
+      "current": 114657,
+      "delta": 0
+    },
+    {
+      "owner": "repair_cells",
+      "original": 1620319,
+      "current": 1620319,
+      "delta": 0
+    },
+    {
+      "owner": "repair_ports",
+      "original": 15832,
+      "current": 15832,
+      "delta": 0
+    },
+    {
+      "owner": "rules",
+      "original": 489941,
+      "current": 489941,
+      "delta": 0
+    },
+    {
+      "owner": "sets",
+      "original": 9901,
+      "current": 9901,
+      "delta": 0
+    },
+    {
+      "owner": "spine_blocks",
+      "original": 15849,
+      "current": 15849,
+      "delta": 0
+    },
+    {
+      "owner": "table_templates",
+      "original": 4096,
+      "current": 4096,
+      "delta": 0
+    },
+    {
+      "owner": "tables",
+      "original": 717386,
+      "current": 717386,
+      "delta": 0
+    },
+    {
+      "owner": "templates",
+      "original": 4360620,
+      "current": 4360620,
+      "delta": 0
+    },
+    {
+      "owner": "view_blocks",
+      "original": 6858,
+      "current": 6858,
+      "delta": 0
+    },
+    {
+      "owner": "writes",
+      "original": 17200,
+      "current": 17200,
+      "delta": 0
+    }
+  ],
+  "inputs_sha256": {
+    "original": "675f18d5ea6fdbaf9374a9d57142908cf753b5fd10becfff91d3d043273d704a",
+    "current": "213a5362e451f72eede4c28571be35c7e4e1702e2e9d03c01d00ee3d0ea27418"
+  },
+  "limitation": "matching final state is only a diagnostic; use the full per-Run audit and semantic acceptance for correctness"
+}

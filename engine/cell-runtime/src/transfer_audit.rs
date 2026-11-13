@@ -83,6 +83,7 @@ pub(crate) fn effective(
     old: Option<&crate::value::Value>,
     new: &crate::value::Value,
 ) -> Result<(), String> {
+    logical_write(epoch,table,key,old,new)?;
     observation::write(epoch, SOURCE.get(), table, index, key, old, new);
     WRITES.with_borrow_mut(|state| -> Result<(),String> {
         if let Some((count, hash)) = state {
@@ -92,6 +93,12 @@ pub(crate) fn effective(
         }
         Ok(())
     })?;
+    Ok(())
+}
+/// Storage-independent effective function/Unit-membership writes. Physical
+/// function indices cannot survive migration to Cell FactRef identities.
+pub(crate) fn logical_write(epoch:u64,table:usize,key:&[crate::value::Value],
+    old:Option<&crate::value::Value>,new:&crate::value::Value)->Result<(),String> {
     LOGICAL_WRITES.with_borrow_mut(|state| {
         if let Some((count,hash))=state {
             serde_json::to_writer(hash,&(epoch,SOURCE.get(),table,key,old,new)).map_err(|e|e.to_string())?;
@@ -100,16 +107,17 @@ pub(crate) fn effective(
         Ok(())
     })
 }
+
 pub(crate) fn end_writes() {
     use sha2::Digest;
     if let Some((n, h)) = RESUMES.take() {
         RESUME_RUNS.with_borrow_mut(|runs| runs.push((n, format!("{:x}", h.finalize()))));
     }
+    if let Some((n,h))=LOGICAL_WRITES.take() {
+        LOGICAL_RUNS.with_borrow_mut(|runs|runs.push((n,format!("{:x}",h.finalize()))));
+    }
     if let Some((n, h)) = WRITES.take() {
         WRITE_RUNS.with_borrow_mut(|rs| rs.push((n, format!("{:x}", h.finalize()))));
-    }
-    if let Some((n,h))=LOGICAL_WRITES.take() {
-        LOGICAL_RUNS.with_borrow_mut(|rs|rs.push((n,format!("{:x}",h.finalize()))));
     }
 }
 pub fn take_write_digests() -> Vec<(u64, String)> {

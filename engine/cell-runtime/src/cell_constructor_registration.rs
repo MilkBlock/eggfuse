@@ -33,7 +33,7 @@ pub(crate) struct Owned {
     epoch:u64,input:std::sync::Arc<Input>,
 }
 pub(crate) struct Subscriptions {
-    uses:HashMap<u64,UseSet>,dependencies:HashMap<Dependency,smallvec::SmallVec<[u64;3]>>,
+    uses:HashMap<u64,UseSet>,
     metrics:maintenance::Metrics,columns:std::sync::Arc<[Option<Vec<usize>>]>,
     input:std::sync::Arc<Input>,
 }
@@ -59,7 +59,7 @@ impl Owned {
             CellReady {facts:std::mem::take(&mut frame.facts),installed}
         }).collect()).collect();
         let subscriptions=Subscriptions {uses:std::mem::take(&mut graph.uses),
-            dependencies:std::mem::take(&mut graph.dependencies),metrics:std::mem::take(&mut graph.maintenance),
+            metrics:std::mem::take(&mut graph.maintenance),
             columns:graph.program.repair_ports.key_eq_columns.clone(),input:input.clone()};
         let rows=Self {frames,intern:std::mem::take(&mut graph.intern),members:std::mem::take(&mut graph.members),
             changes,epoch:graph.epoch,input};
@@ -97,18 +97,18 @@ impl Owned {
 impl Subscriptions {
     pub fn install(&mut self) {
         for group in &self.input.groups {for row in &self.input.rows[group.rows.clone()] {
-            maintenance::subscribe_fresh(&mut self.uses,&mut self.dependencies,&mut self.metrics,
+            maintenance::subscribe_fresh(&mut self.uses,&mut self.metrics,
                 Dependency::Fact(FactRef {cell:group.cell,op:row.operation as u32}),&row.fields,
                 Some(self.columns[row.table].as_ref().unwrap()));
         }}
     }
     pub fn unit(&mut self,index:usize,fields:&[Value]) {
-        maintenance::subscribe_fresh(&mut self.uses,&mut self.dependencies,&mut self.metrics,
+        maintenance::subscribe_fresh(&mut self.uses,&mut self.metrics,
             Dependency::Function(index),fields,None);
     }
     pub fn restore(self,graph:&mut Graph) {
-        assert!(graph.uses.is_empty() && graph.dependencies.is_empty());
-        graph.uses=self.uses;graph.dependencies=self.dependencies;graph.maintenance=self.metrics;
+        assert!(graph.uses.is_empty());
+        graph.uses=self.uses;graph.maintenance=self.metrics;
     }
 }
 fn install_cell(cell:u32,facts:&mut crate::slots::FrameMap<u32,FactState>,rows:&[Born],epoch:u64,
@@ -176,13 +176,13 @@ impl Registration {
                 .map(|(&op,state)|(FactRef {cell:installed.cell,op},state.hash,state.decoded.as_ref().unwrap().0))
                 .collect();
             for (f,hash,table) in discarded {
-                graph.cells.get_mut(&f.cell).unwrap().facts.remove(&f.op);
+                let state=graph.cells.get_mut(&f.cell).unwrap().facts.remove(&f.op).unwrap();
+                let fields=state.decoded.unwrap().1;
                 let bucket=graph.intern.get_mut(&hash).unwrap();bucket.remove(&f);
                 if bucket.is_empty() {graph.intern.remove(&hash);}
                 assert!(graph.members[table].remove(&f.ordered_id()));
                 graph.changes.discard_prepared_row(table,Dependency::Fact(f));
-                maintenance::replace_subscriptions(&mut graph.uses,&mut graph.dependencies,
-                    &mut graph.maintenance,&graph.parents,Dependency::Fact(f),Default::default());
+                graph.replace_row_edges(Dependency::Fact(f),&fields,&[]);
                 graph.stats.constructor_registry_discarded+=1;
             }
         }
@@ -277,7 +277,7 @@ mod tests {
             assert_eq!(g.export().unwrap(),expected.export().unwrap());
             assert_eq!(g.query_versions,expected.query_versions);
             assert_eq!((g.changes.events,g.changes.distinct_events),(expected.changes.events,expected.changes.distinct_events));
-            assert_eq!(g.dependencies,expected.dependencies);
+            assert_eq!(g.forward_dependency_size(),expected.forward_dependency_size());
             let uses=|g:&Graph|g.uses.iter().map(|(k,v)|(*k,v.iter().copied().collect::<BTreeSet<_>>())).collect::<BTreeMap<_,_>>();
             assert_eq!(uses(&g),uses(&expected));
             assert_eq!(g.stats.constructor_registry_adopted,2*stop as u64);

@@ -25,9 +25,9 @@ pub(crate) struct Row {
 impl Row {
     pub(crate) fn prepared(table: usize, key: Vec<Value>) -> Self {
         let fields = Graph::shared_fields(&key, &Value::Int(0));
-        Self { fields, registered: None, function: Function { writer: None,
+        Self { fields:fields.clone(), registered: None, function: Function { writer: None,
             #[cfg(feature="receipt-slots")] port_slot: 0,
-            table, key, value: Value::Int(0), epoch: 0, live: true, origin: None } }
+            table, fields, canonical:true, projected:false, epoch: 0, live: true, origin: None } }
     }
 }
 impl Tail {
@@ -131,8 +131,7 @@ impl Plan {
                     #[cfg(feature = "receipt-slots")]
                     port_slot: 0,
                     table: site.table,
-                    key,
-                    value: Value::Int(0),
+                    fields:fields.clone(), canonical:true, projected:false,
                     epoch,
                     live: true,
                     origin: Some(FactRef {
@@ -151,8 +150,7 @@ impl Plan {
             + rows
                 .iter()
                 .map(|r| {
-                    r.function.key.capacity() * std::mem::size_of::<Value>()
-                        + r.fields.len() * std::mem::size_of::<Value>()
+                    r.fields.len() * std::mem::size_of::<Value>()
                 })
                 .sum::<usize>()) as u64;
         piece.units = rows;
@@ -176,30 +174,30 @@ impl Graph {
         } = row;
         let table = function.table;
         if let Some(index) = registered.filter(|(_,new,_,_)|!*new).map(|(i,_,_,_)|i)
-            .or_else(||registered.is_none().then(||self.function_index(table, &function.key)).flatten()) {
+            .or_else(||registered.is_none().then(||self.function_index(table, function.key())).flatten()) {
             // The typed old/new Unit merge preserves the first source witness.
             // The losing candidate is invalidated by dropping its actual row.
             self.merge_value(table, Value::Int(0), Value::Int(0))?;
             return Ok((index, false));
         }
         let index = registered.map_or_else(||self.functions.len(),|(index,new,_,_)| {
-            assert!(new && !self.functions[index].live && self.function_decoded[index].is_none(),"unpublished Unit reservation");index
+            assert!(new && !self.functions[index].live,"unpublished Unit reservation");index
         });
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::effective(
             self.epoch,
             table,
             index,
-            &function.key,
+            function.key(),
             None,
-            &function.value,
+            function.value(),
         )?;
-        if registered.is_none() { self.function_keys[table].insert(&function.key, index); }
+        if registered.is_none() { self.function_keys[table].insert(function.key(), index); }
         let origin = function.origin.take();
         if registered.is_some() {
-            self.functions[index]=function;self.function_decoded[index]=Some(fields.clone());
+            self.functions[index]=function;
         } else {
-            self.functions.push(function);self.function_decoded.push(Some(fields.clone()));
+            self.functions.push(function);
         }
         if origin.is_some_and(|o| self.active_rhs.as_ref().is_some_and(|(id, _)| *id == o.cell)) {
             self.active_origin = Some(index);
@@ -210,12 +208,12 @@ impl Graph {
         self.stats.function_updates += 1;
         if registered.is_none() {
             self.changes.touch(table, Dependency::Function(index));
-            self.subscribe(table, Dependency::Function(index), &fields);
+            self.subscribe_rows(table, Dependency::Function(index), &[], &fields);
         } else {
             if registered.unwrap().2 { self.changes.activate_new_table(table); }
             // A fresh Unit result needs no reverse-edge read before the Run
             // fence. Its existing registration owner installs those edges.
-            if !registered.unwrap().3 {self.subscribe_edges(Dependency::Function(index), &fields);}
+            if !registered.unwrap().3 {self.replace_row_edges(Dependency::Function(index), &[], &fields);}
             else {self.stats.unit_registry_deferred_subscriptions+=1;}
         }
         Ok((index, true))

@@ -66,6 +66,7 @@ pub(super) struct Stats {
     #[cfg(feature = "cell-query-sharing-audit")]
     pub sharing_audit: sharing_audit::Counts,
     pub fixed_read_probes: u64,
+    pub entry_parent_handoffs: u64,
     pub fixed_read_fills: u64,
     pub fixed_read_hits: u64,
     pub fixed_read_clears: u64,
@@ -323,7 +324,7 @@ impl Executor {
             Some(std::sync::Arc::new(rayon::ThreadPoolBuilder::new().num_threads(workers)
                 .thread_name(|i| format!("cell-query-{i}")).build().map_err(|e| e.to_string())?))
         };
-        let (cell_plans, mut cell_codes) = CellPlan::compile(&self.graph.program);
+        let (cell_plans, mut cell_codes) = CellPlan::compile(&self.graph.program,self.stage_spine.permanent_tables());
         let first_reads = FirstReads::compile(&mut cell_codes);
         let fixed_read_storage_bytes = first_reads.bytes();
         #[cfg(feature = "cell-query-sharing-audit")]
@@ -597,6 +598,7 @@ struct CellCode {
     rule: usize,
     template: usize,
     pivot: usize,
+    inherits_entry: bool,
     slots: usize,
     reads: usize,
     #[cfg(feature = "cell-query-sharing-audit")]
@@ -647,7 +649,7 @@ struct RuleRun {
     first_source:usize,
 }
 impl CellPlan {
-    fn compile(p: &Program) -> (Vec<Option<Self>>, Vec<CellCode>) {
+    fn compile(p: &Program, permanent:&[bool]) -> (Vec<Option<Self>>, Vec<CellCode>) {
         let mut local = p.rules.iter().map(|r| vec![false; r.query.len()]).collect::<Vec<_>>();
         for route in p.multi_stage.routes.values() {
             local[route.consumer][route.anchor] |= route.reads.iter().any(|r| r.witness.is_some());
@@ -665,7 +667,7 @@ impl CellPlan {
                 let code = codes.len();
                 codes.push(CellCode {
                     #[cfg(feature = "parallel-residuals")] expansion:false,
-                    first_read: None, rule: rid, template:r.template, pivot, slots: query.result_slots(), reads: query.steps.len() + 1,
+                    first_read: None, rule: rid, template:r.template, pivot, inherits_entry:crate::cell::inherits_entry(p,rid,pivot,permanent), slots: query.result_slots(), reads: query.steps.len() + 1,
                     #[cfg(feature = "cell-query-sharing-audit")]
                     audit_prefixes: prefixes.compile(&query),
                     inputs: r.inputs.clone(), query });
@@ -729,7 +731,7 @@ fn append_query<'a>(source: usize, queries: &'a [CellQuery], codes: &'a [CellCod
 fn physical_cell(g: &Graph, row: &Row) -> (usize, Dependency) {
     // Use the actual result's Cell, including foreign constructor reuse.
     let actual = g.origin(row.witness).and_then(|f| {
-        g.cells.get(&f.cell).map(|c| (c.template, f.cell))
+        g.cells.cell_metadata(f.cell).map(|c| (c.template, f.cell))
             .or_else(|| g.continuation_context(row.witness)
                 .filter(|c| c.cell == f.cell).map(|c| (c.template, c.cell)))
     });
@@ -1223,12 +1225,18 @@ impl Workers {
                             completed=std::mem::take(&mut completed).add(work);
                         }
                         completion::Event::Point(mut chunk)=>{
-                            for (source,answer) in chunk.0.drain(..) {
+                            for (source,mut answer) in chunk.0.drain(..) {
                                 let q=&self.cell_queries[source];let code=&codes[q.code];
                                 #[cfg(feature="parallel-residuals")]
                                 if code.expansion {
                                     let position=plans.position(code.rule,code.pivot,q.ordinal);
                                     outputs[code.rule].rows.push(((position,q.order),answer));continue;
+                                }
+                                if code.inherits_entry && !g.has_visibility_changes(q.row.table)
+                                    && let Dependency::Fact(parent)=q.row.witness {
+                                    answer.parent=Some(parent);
+                                    self.stats.entry_parent_handoffs+=1;
+                                    spine.stats.record_entry_parent();
                                 }
                                 spine.record_worker_answer(code.rule,(q.row.witness,code.pivot),answer,
                                     q.cursor.borrow_mut().take().expect("one positive completion per Cell query"));

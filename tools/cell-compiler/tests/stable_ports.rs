@@ -502,3 +502,52 @@ fn equal_input_ports_do_not_collapse_distinct_scalar_keys() {
         .unwrap();
     assert_eq!(e.graph.witness_count(f), 2);
 }
+
+#[cfg(all(feature="sparse-cells", feature="storage-metrics"))]
+#[test]
+fn composed_slots_replace_owned_bindings_across_runs_and_late_union() {
+    let p = baked(LOCAL_STAGES);
+    let mut reference = Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(), true);
+    let mut shared = Executor::new(Graph::new_with_local_congruence(p).unwrap(), true);
+    reference.execute().unwrap();
+    let mut delegated = 0;
+    loop {
+        let n = shared.steps.len();
+        shared.execute_until(Some(n+1)).unwrap();
+        if shared.steps.len() == n { break; }
+        shared.graph.compact_retained_capacity().unwrap();
+        delegated = delegated.max(shared.graph.cells.values().filter(|c|c.symbolic_slots).count());
+    }
+    assert!(delegated > 0, "test must exercise removal of original bindings");
+    assert_execution_equal(&reference, &shared);
+    assert_eq!(reference.graph.export().unwrap(), shared.graph.export().unwrap());
+}
+
+#[cfg(all(feature="sparse-cells", feature="storage-metrics"))]
+#[test]
+fn retiring_shared_owner_restores_delegated_source_slots_before_gc() {
+    let src = r#"
+(datatype E (N i64) (F E))
+(ruleset build)
+(rule ((= a (N n))) ((F a)) :ruleset build)
+(N 0)
+(run-schedule (run build))
+"#;
+    let p = source(src);
+    let table = p.tables.iter().position(|t|t.name=="F").unwrap();
+    let mut e = Executor::new(Graph::new_with_local_congruence(p).unwrap(), false);
+    e.execute().unwrap();
+    let witness = e.graph.witnesses(table).into_iter().next().unwrap();
+    let Dependency::Fact(f) = witness else { panic!("constructor fact") };
+    let row = e.graph.row(witness).unwrap().unwrap();
+    let template = e.graph.cells[&f.cell].template;
+    let saved = (0..e.graph.program.templates[template].sorts.len())
+        .filter_map(|slot| e.graph.slot(f.cell,slot).ok().map(|v|(slot,v))).collect::<Vec<_>>();
+    e.graph.compact_retained_capacity().unwrap();
+    assert!(e.graph.cells[&f.cell].symbolic_slots, "{:?}",e.graph.cells[&f.cell]);
+    e.graph.hide(table, &row.values[..row.values.len()-1], true).unwrap();
+    assert!(e.graph.row(witness).unwrap().is_none());
+    assert!(!e.graph.cells[&f.cell].symbolic_slots, "restore before dropping component");
+    for (slot,value) in saved { assert_eq!(e.graph.slot(f.cell,slot).unwrap(),value); }
+    e.graph.collect_garbage();
+}

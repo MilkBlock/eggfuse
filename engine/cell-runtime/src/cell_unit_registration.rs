@@ -9,9 +9,9 @@ pub(crate) struct Owner {
     table:usize,keys:scalar_keys::FunctionKeys,members:TableRows<u64>,version:u64,
     changes:rustc_hash::FxHashMap<Dependency,crate::change_batch::Change>,added:Vec<NewRow>,subscribed:bool,
 }
-pub(crate) struct TableJob {owner:Owner,items:Vec<Item>,start:usize,deferred:bool}
+pub(crate) struct TableJob {owner:Owner,items:Vec<Item>,existing:Vec<(usize,RowFields)>,start:usize,deferred:bool}
 pub(crate) struct Structure {
-    functions:Vec<Function>,decoded:Vec<Option<RowFields>>,end:usize,first_table:usize,
+    functions:Vec<Function>,end:usize,first_table:usize,
     constructors:Option<constructor_registration::Owned>,growth:usize,
 }
 pub(crate) enum RegistrationTask {Table(TableJob),Structure(Box<Structure>),Constructors(Box<constructor_registration::Owned>),Subscriptions(Box<constructor_registration::Subscriptions>),UnitSubscriptions(Box<constructor_registration::Subscriptions>,Vec<Owner>)}
@@ -33,7 +33,14 @@ impl RegistrationTask {
                 let mut items=job.items.into_iter();
                 while let Some(item)=items.next() {
                     let key=&item.fields[..item.fields.len()-1];
-                    let found=owner.keys.get(key).copied();
+                    let found=owner.keys.get_if(key,|index| {
+                        let fields=if index<job.start {
+                            job.existing.binary_search_by_key(&index,|r|r.0).ok().map(|i|&job.existing[i].1)
+                        } else {
+                            owner.added.binary_search_by_key(&index,|r|r.index).ok().map(|i|&owner.added[i].fields)
+                        };
+                        fields.is_some_and(|fields|&fields[..fields.len()-1]==key)
+                    }).copied();
                     let (index,new)=found.map_or((job.start+item.source,true),|index|(index,false));
                     let activate=new && owner.changes.is_empty();
                     if new {
@@ -50,13 +57,12 @@ impl RegistrationTask {
                 emit(RegistrationEvent::Table(job.owner));
             }
             Self::Structure(mut state)=> {
-                let before=(state.functions.capacity(),state.decoded.capacity());
+                let before=state.functions.capacity();
+                let empty=row_fields(vec![Value::Int(0)]);
                 state.functions.resize_with(state.end,||Function {writer:None,
                     #[cfg(feature="receipt-slots")] port_slot:0,
-                    table:state.first_table,key:Vec::new(),value:Value::Int(0),epoch:0,live:false,origin:None});
-                state.decoded.resize_with(state.end,||None);
-                state.growth=(state.functions.capacity()-before.0)*std::mem::size_of::<Function>()
-                    +(state.decoded.capacity()-before.1)*std::mem::size_of::<Option<RowFields>>();
+                    table:state.first_table,fields:empty.clone(),canonical:true,projected:false,epoch:0,live:false,origin:None});
+                state.growth=(state.functions.capacity()-before)*std::mem::size_of::<Function>();
                 let constructors=state.constructors.take();
                 emit(RegistrationEvent::Structure(state,constructors.is_none()));
                 if let Some(mut owner)=constructors {
@@ -111,9 +117,9 @@ impl PendingRegistration {
             RegistrationEvent::Cells(ready)=>self.registration.constructors.as_mut().unwrap().receive(graph,ready),
             RegistrationEvent::Constructors(owner)=> {owner.restore(graph);self.constructor_finished=true;}
             RegistrationEvent::Structure(state,_)=> {
-                assert!(graph.functions.is_empty() && graph.function_decoded.is_empty());
-                let Structure {functions,decoded,growth,..}=*state;
-                graph.functions=functions;graph.function_decoded=decoded;
+                assert!(graph.functions.is_empty());
+                let Structure {functions,growth,..}=*state;
+                graph.functions=functions;
                 graph.stats.unit_registry_capacity_growth_bytes+=growth as u64;
                 self.structure_ready=true;
             }
@@ -189,10 +195,27 @@ impl Graph {
             tables.entry(r.function.table).or_default().push(Item {cell,row,source,fields:r.fields.clone()});source+=1;
         }}
         self.stats.unit_registry_bytes+=tables.values().map(|v|v.capacity()*std::mem::size_of::<Item>()).sum::<usize>() as u64;
-        let mut tasks:Vec<_>=tables.into_iter().map(|(table,items)|RegistrationTask::Table(TableJob {items,start,deferred:births,owner:Owner {
-            table,keys:self.function_keys[table].take_owner(),members:self.members[table].take_owner(),
-            version:self.query_versions[table],changes:self.changes.take_new_row_table(table),added:Vec::new(),subscribed:false,
-        }})).collect();
+        let mut tasks:Vec<_>=tables.into_iter().map(|(table,items)| {
+            // Borrow handles only for old rows in the requested hash buckets.
+            // Full key equality and new-key selection remain on the table worker.
+            let keys=&self.function_keys[table];let mut ids=Vec::new();
+            for item in &items {
+                if let Some(bucket)=keys.candidates(&item.fields[..item.fields.len()-1]) {
+                    self.stats.unit_registry_key_candidates+=bucket.len() as u64;
+                    ids.extend(bucket.iter().copied());
+                }
+            }
+            ids.sort_unstable();ids.dedup();
+            let existing:Vec<_>=ids.iter().filter_map(|&i|self.functions.get(i)
+                .filter(|f|f.live).map(|f|(i,f.fields.clone()))).collect();
+            self.stats.unit_registry_key_handles+=existing.len() as u64;
+            self.stats.unit_registry_bytes+=(ids.capacity()*std::mem::size_of::<usize>()
+                +existing.capacity()*std::mem::size_of::<(usize,RowFields)>()) as u64;
+            RegistrationTask::Table(TableJob {items,existing,start,deferred:births,owner:Owner {
+                table,keys:self.function_keys[table].take_owner(),members:self.members[table].take_owner(),
+                version:self.query_versions[table],changes:self.changes.take_new_row_table(table),added:Vec::new(),subscribed:false,
+            }})
+        }).collect();
         let table_count=tasks.len();
         let mut constructor_registration=None;
         let constructors=births.then(|| {
@@ -209,7 +232,7 @@ impl Graph {
         });
         if let Some(first_table)=first_table {
             tasks.push(RegistrationTask::Structure(Box::new(Structure {
-                functions:std::mem::take(&mut self.functions),decoded:std::mem::take(&mut self.function_decoded),
+                functions:std::mem::take(&mut self.functions),
                 end,first_table,constructors,growth:0,
             })));
         } else {
@@ -233,7 +256,7 @@ impl Graph {
         self.stats.unit_registry_worker_identity_rows+=if crate::sync_diagnostics::registry_inline() {0}else{count as u64};
         self.stats.unit_registry_owner_tables+=table_count as u64;
         self.stats.unit_registry_reserved_slots+=count as u64;
-        self.stats.unit_registry_reserved_bytes+=(count*(std::mem::size_of::<Function>()+std::mem::size_of::<Option<RowFields>>())) as u64;
+        self.stats.unit_registry_reserved_bytes+=(count*(std::mem::size_of::<Function>())) as u64;
         Some(PendingRegistration {tasks,registration:Registration {owners,start,end,constructors:constructor_registration},structure_ready:count==0,subscriptions_expected:births,accepted:0,subscriptions:None,waiting:Vec::new(),constructor_finished:!births})
     }
 
@@ -256,7 +279,7 @@ impl Graph {
         // Unused suffix slots never escaped as witnesses. Interior invalid
         // slots remain stable; live winners and their relative order never move.
         while self.functions.len()>registration.start && !self.functions.last().unwrap().live {
-            self.functions.pop();self.function_decoded.pop();
+            self.functions.pop();
             self.stats.unit_registry_trimmed_slots+=1;
         }
         let adopted=self.functions.len();
@@ -269,10 +292,10 @@ impl Graph {
                 "source adoption must be a prefix, not an arbitrary subset");
             installed+=retained;
             for row in &owner.added[retained..] {
-                owner.keys.remove(&row.fields[..row.fields.len()-1]);
+                owner.keys.remove(&row.fields[..row.fields.len()-1],row.index);
                 assert!(owner.members.remove(&(row.index as u64)));
                 assert!(owner.changes.remove(&Dependency::Function(row.index)).is_some());
-                if owner.subscribed {self.replace_subscriptions(Dependency::Function(row.index),Default::default());}
+                if owner.subscribed {self.replace_row_edges(Dependency::Function(row.index),&row.fields,&[]);}
             }
             assert_eq!(self.query_versions[owner.table],owner.version-total as u64,"no intervening table effects");
             self.function_keys[owner.table]=owner.keys;self.members[owner.table]=owner.members;
@@ -299,6 +322,7 @@ mod tests {
             t.schema.push(json!({"kind":"Unit"}));
             t.merge=json!({"var":if table==0 {"old"} else {"new"}});
             g.function_keys[table]=scalar_keys::FunctionKeys::new(t);
+            if !scalar {g.function_keys[table].hash_mask=0;}
         }
         g
     }
@@ -372,7 +396,7 @@ mod tests {
                 let cell=d.done.cell;expected.commit_local_job(d.done,&mut d.effects.writer()).unwrap();expected.release_empty(cell);
             }
             assert_eq!(g.export().unwrap(),expected.export().unwrap());
-            assert_eq!(g.dependencies,expected.dependencies);
+            assert_eq!(g.forward_dependency_size(),expected.forward_dependency_size());
             assert_eq!(g.query_versions,expected.query_versions);
             assert_eq!(g.stats.constructor_registry_adopted,3*stop.div_ceil(2) as u64);
             for graph in [&mut g,&mut expected] {graph.union(100,101).unwrap();graph.repair().unwrap();}
@@ -384,13 +408,13 @@ mod tests {
     fn independent_constructor_registration_never_leases_function_storage() {
         let pool=rayon::ThreadPoolBuilder::new().num_threads(1).build().unwrap();
         let (mut g,mut done)=constructor_units(0);let (mut expected,reference)=constructor_units(0);
-        g.functions.reserve(7);g.function_decoded.reserve(7);
-        let storage=(g.functions.as_ptr(),g.functions.capacity(),g.function_decoded.as_ptr(),g.function_decoded.capacity());
+        g.functions.reserve(7);
+        let storage=(g.functions.as_ptr(),g.functions.capacity());
         let mut pending=g.prepare_cell_registration(&mut done).unwrap();
         assert!(pending.structure_ready);
         assert_eq!(pending.tasks.len(),2,"only fact registration and subscriptions");
         assert!(!pending.tasks.iter().any(|t|matches!(t,RegistrationTask::Structure(_)|RegistrationTask::Table(_))));
-        assert_eq!(storage,(g.functions.as_ptr(),g.functions.capacity(),g.function_decoded.as_ptr(),g.function_decoded.capacity()));
+        assert_eq!(storage,(g.functions.as_ptr(),g.functions.capacity()));
         let tasks=std::mem::take(&mut pending.tasks);
         crate::completion_events::fragments_with_followups(tasks,Some(&pool),RegistrationTask::run,|events,tasks| {
             for event in events.drain(..) {pending.accept(&mut g,&mut done,event);}
@@ -404,7 +428,7 @@ mod tests {
         pending.restore_subscriptions(&mut g);g.finish_cell_registration(pending.registration);
         for mut d in reference {expected.commit_local_job(d.done,&mut d.effects.writer()).unwrap();}
         assert_eq!(g.export().unwrap(),expected.export().unwrap());assert!(done.is_empty());
-        assert_eq!(storage,(g.functions.as_ptr(),g.functions.capacity(),g.function_decoded.as_ptr(),g.function_decoded.capacity()));
+        assert_eq!(storage,(g.functions.as_ptr(),g.functions.capacity()));
         assert_eq!(g.stats.constructor_registry_independent_rows,128);
         assert_eq!(g.stats.unit_registry_reserved_slots,0);
     }
@@ -545,13 +569,14 @@ mod tests {
             let fields:Vec<_>=rows.iter().map(|r|std::sync::Arc::downgrade(&r.fields)).collect();
             let mut done=vec![completed(rows)];
             let registration=g.plan_cell_registration(&mut done,&pool).unwrap();
+            if preexisting && !scalar {assert!(g.stats.unit_registry_key_handles>0);}
             let mut actual=Vec::new();let mut reference=Vec::new();
             let mut identities=BTreeMap::new();
             if preexisting {identities.insert(0,0);}
             for (i,row) in done.pop().unwrap().done.piece.units.into_iter().enumerate() {
                 if i>=stop {drop(row);continue;}
                 let pointer=row.fields.as_ptr();let (index,new)=g.commit_unit_row(row).unwrap();
-                if new {assert_eq!(g.function_decoded[index].as_ref().unwrap().as_ptr(),pointer,"adopt the worker's row allocation");}
+                if new {assert_eq!(g.functions[index].fields.as_ptr(),pointer,"adopt the worker's row allocation");}
                 actual.push((index,new));
                 reference.push(expected.commit_unit_row(units::Row::prepared(i%2,key((i/2)%9,scalar))).unwrap());
             }
@@ -581,8 +606,8 @@ mod tests {
             let vacant=g.functions.iter().enumerate().filter(|(_,f)|!f.live).count();
             assert_eq!(vacant as u64,g.stats.unit_registry_retained_holes);
             for (i,f) in g.functions.iter().enumerate().filter(|(_,f)|!f.live) {
-                assert!(g.function(i).is_none() && g.function_decoded[i].is_none());
-                assert!(f.origin.is_none() && !g.dependencies.contains_key(&Dependency::Function(i)));
+                assert!(g.function(i).is_none());
+                assert!(f.origin.is_none() && g.uses.values().all(|uses|!uses.iter().any(|d|*d==Dependency::Function(i))));
             }
             // Deleted reserved identities can be reused by the next ordinary
             // write; there must be no dangling index or membership left.

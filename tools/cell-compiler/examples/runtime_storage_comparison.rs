@@ -52,13 +52,19 @@ fn step(exec: &mut Executor, next: usize) -> Result<Value, Box<dyn std::error::E
 }
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    if args.len() != 2 {
-        return Err("usage: runtime_storage_comparison PROGRAM OUTPUT".into());
+    if !(2..=3).contains(&args.len()) {
+        return Err("usage: runtime_storage_comparison PROGRAM OUTPUT [OPTIMIZED_PROGRAM]".into());
     }
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
     let program = p.artifact["sha256"].clone();
     let mut baseline = Executor::new(Graph::new_with_local_congruence(p.clone())?, false);
-    let mut compact = Executor::new(Graph::new_with_local_congruence(p)?, false);
+    let optimized = if let Some(path) = args.get(2) {
+        Program::parse(serde_json::from_slice(&fs::read(path)?)?)?
+    } else {
+        p
+    };
+    let mut compact = Executor::new(Graph::new_with_local_congruence(optimized)?, false);
+    let mut run_checks = Vec::new();
     let mut runs = 0;
     let mut peak_before = 0;
     let mut peak_after = 0;
@@ -76,18 +82,31 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let start = Instant::now();
         compact.graph.compact_retained_capacity()?;
         compaction_seconds += start.elapsed().as_secs_f64();
-        if baseline.graph.export()? != compact.graph.export()? {
+        let graph = baseline.graph.export()?;
+        if graph != compact.graph.export()? {
             return Err("compaction changed graph state".into());
         }
+        run_checks.push(json!({"graph":eggfuse_cell_runtime::checksum::artifact_digest(&graph), "audit":eggfuse_cell_runtime::checksum::artifact_digest(&a)}));
         let a = baseline.graph.retained_cell_storage();
         let b = compact.graph.retained_cell_storage();
         peak_before = peak_before.max(a["counted_bytes"].as_u64().unwrap());
         peak_after = peak_after.max(b["counted_bytes"].as_u64().unwrap());
     }
     let mut result = json!({"program_sha256":program,"runs":runs,"every_run_graph_and_ordered_audits_equal":true,
-        "baseline":baseline.graph.retained_cell_storage(),"compacted":compact.graph.retained_cell_storage(),
+        "run_checks":run_checks,"baseline":baseline.graph.retained_cell_storage(),"compacted":compact.graph.retained_cell_storage(),
         "boundary_peak_before":peak_before,"boundary_peak_after":peak_after,"compaction_seconds":compaction_seconds,
-        "scope":"actual Cell runtime capacity reclamation; boundary peaks exclude within-Run peaks; not a speed benchmark or complete heap census"});
+        "scope":"actual Cell runtime state takeover and capacity reclamation; boundary array peaks exclude within-Run peaks; not a speed benchmark"});
+    result["instance_trace"] = serde_json::to_value(
+        compact
+            .graph
+            .cells
+            .iter()
+            .map(|(&id, c)| (id, c))
+            .collect::<Vec<_>>(),
+    )?;
+    result["ownership"] = compact.graph.ownership_report();
+    result["function_trace"] = serde_json::to_value(&compact.graph.functions)?;
+    result["final_state"] = compact.graph.export()?;
     // Drop executor caches before measurement. Both source Programs survive
     // both graph drops, so shared source/template data is not attributed to Graph.
     let baseline = detach(baseline);

@@ -1,0 +1,736 @@
+{
+  "scope": "saved actual final Cell runtime owners, not simulated compression or static coverage",
+  "runs": 1428,
+  "final_graph_matches_audited_trace": true,
+  "counts": {
+    "bound_symbols": 6785,
+    "distinct_roots_summed_per_component": 6053,
+    "composition_frames": 2368,
+    "composition_frames_without_physical_source_cell": 191,
+    "source_eq_slots_total": 7336,
+    "source_eq_slots_outside_live_composition_frames": 1244
+  },
+  "component_frame_histogram": {
+    "1": 892,
+    "2": 199,
+    "3": 126,
+    "4": 175
+  },
+  "source_eq_slot_categories": {
+    "completed_mapped_root_in_component": 186,
+    "completed_mapped_root_outside_component": 1062,
+    "completed_unmapped_root_in_component": 1463,
+    "completed_unmapped_root_outside_component": 2930,
+    "initial_mapped_root_in_component": 451
+  },
+  "templates": {
+    "0": {
+      "completed_unmapped_root_outside_component": 56,
+      "completed_mapped_root_outside_component": 8,
+      "completed_mapped_root_in_component": 12,
+      "completed_unmapped_root_in_component": 16
+    },
+    "21": {
+      "completed_unmapped_root_in_component": 4,
+      "completed_unmapped_root_outside_component": 2
+    },
+    "51": {
+      "completed_unmapped_root_outside_component": 4,
+      "completed_mapped_root_in_component": 2,
+      "completed_mapped_root_outside_component": 10
+    },
+    "54": {
+      "completed_unmapped_root_outside_component": 4
+    },
+    "55": {
+      "completed_unmapped_root_in_component": 23
+    },
+    "56": {
+      "completed_unmapped_root_outside_component": 6
+    },
+    "57": {
+      "completed_unmapped_root_outside_component": 43,
+      "completed_unmapped_root_in_component": 15
+    },
+    "58": {
+      "completed_unmapped_root_in_component": 38,
+      "completed_unmapped_root_outside_component": 24
+    },
+    "59": {
+      "completed_unmapped_root_in_component": 123,
+      "completed_unmapped_root_outside_component": 43,
+      "completed_mapped_root_outside_component": 16,
+      "completed_mapped_root_in_component": 8
+    },
+    "61": {
+      "completed_unmapped_root_in_component": 9,
+      "completed_unmapped_root_outside_component": 23
+    },
+    "62": {
+      "completed_unmapped_root_in_component": 50,
+      "completed_mapped_root_outside_component": 134,
+      "completed_unmapped_root_outside_component": 17
+    },
+    "63": {
+      "completed_unmapped_root_outside_component": 8
+    },
+    "64": {
+      "completed_unmapped_root_in_component": 32
+    },
+    "65": {
+      "completed_unmapped_root_outside_component": 48
+    },
+    "67": {
+      "completed_unmapped_root_outside_component": 4
+    },
+    "69": {
+      "completed_unmapped_root_outside_component": 16
+    },
+    "70": {
+      "completed_unmapped_root_outside_component": 2
+    },
+    "84": {
+      "completed_unmapped_root_outside_component": 6
+    },
+    "85": {
+      "completed_unmapped_root_outside_component": 5,
+      "completed_unmapped_root_in_component": 1
+    },
+    "86": {
+      "completed_unmapped_root_outside_component": 2
+    },
+    "88": {
+      "completed_unmapped_root_outside_component": 42,
+      "completed_unmapped_root_in_component": 30,
+      "completed_mapped_root_outside_component": 28
+    },
+    "90": {
+      "completed_unmapped_root_in_component": 25,
+      "completed_unmapped_root_outside_component": 79
+    },
+    "91": {
+      "completed_unmapped_root_in_component": 95,
+      "completed_unmapped_root_outside_component": 61,
+      "completed_mapped_root_outside_component": 82,
+      "completed_mapped_root_in_component": 4
+    },
+    "92": {
+      "completed_unmapped_root_in_component": 53,
+      "completed_unmapped_root_outside_component": 53
+    },
+    "94": {
+      "completed_unmapped_root_in_component": 13,
+      "completed_unmapped_root_outside_component": 7,
+      "completed_mapped_root_in_component": 2,
+      "completed_mapped_root_outside_component": 6
+    },
+    "95": {
+      "completed_unmapped_root_outside_component": 3
+    },
+    "100": {
+      "completed_mapped_root_outside_component": 15,
+      "completed_unmapped_root_in_component": 5
+    },
+    "102": {
+      "completed_mapped_root_outside_component": 45,
+      "completed_unmapped_root_in_component": 15,
+      "completed_unmapped_root_outside_component": 45
+    },
+    "103": {
+      "completed_mapped_root_outside_component": 4,
+      "completed_unmapped_root_in_component": 4,
+      "completed_unmapped_root_outside_component": 4
+    },
+    "104": {
+      "completed_mapped_root_outside_component": 30,
+      "completed_unmapped_root_in_component": 15,
+      "completed_unmapped_root_outside_component": 30
+    },
+    "105": {
+      "completed_unmapped_root_in_component": 26,
+      "completed_unmapped_root_outside_component": 26,
+      "completed_mapped_root_outside_component": 23
+    },
+    "107": {
+      "completed_mapped_root_outside_component": 8,
+      "completed_unmapped_root_in_component": 2,
+      "completed_unmapped_root_outside_component": 8
+    },
+    "110": {
+      "completed_mapped_root_outside_component": 4,
+      "completed_unmapped_root_in_component": 2
+    },
+    "113": {
+      "completed_mapped_root_outside_component": 3,
+      "completed_unmapped_root_in_component": 3
+    },
+    "114": {
+      "completed_mapped_root_outside_component": 10,
+      "completed_unmapped_root_in_component": 5
+    },
+    "115": {
+      "completed_mapped_root_outside_component": 2,
+      "completed_unmapped_root_in_component": 2
+    },
+    "119": {
+      "completed_mapped_root_outside_component": 42,
+      "completed_unmapped_root_in_component": 18,
+      "completed_unmapped_root_outside_component": 12
+    },
+    "120": {
+      "completed_mapped_root_outside_component": 3,
+      "completed_unmapped_root_in_component": 1,
+      "completed_unmapped_root_outside_component": 1
+    },
+    "121": {
+      "completed_mapped_root_outside_component": 2,
+      "completed_unmapped_root_in_component": 4
+    },
+    "122": {
+      "completed_unmapped_root_in_component": 41,
+      "completed_mapped_root_outside_component": 4,
+      "completed_unmapped_root_outside_component": 5
+    },
+    "123": {
+      "completed_mapped_root_outside_component": 36,
+      "completed_unmapped_root_in_component": 57,
+      "completed_unmapped_root_outside_component": 7,
+      "completed_mapped_root_in_component": 3
+    },
+    "124": {
+      "completed_mapped_root_outside_component": 16,
+      "completed_unmapped_root_in_component": 9,
+      "completed_unmapped_root_outside_component": 9,
+      "completed_mapped_root_in_component": 2
+    },
+    "125": {
+      "completed_unmapped_root_in_component": 53,
+      "completed_mapped_root_outside_component": 17,
+      "completed_unmapped_root_outside_component": 17
+    },
+    "128": {
+      "completed_mapped_root_outside_component": 4,
+      "completed_unmapped_root_in_component": 1,
+      "completed_unmapped_root_outside_component": 1
+    },
+    "129": {
+      "completed_mapped_root_outside_component": 2,
+      "completed_unmapped_root_in_component": 1,
+      "completed_unmapped_root_outside_component": 1
+    },
+    "136": {
+      "completed_unmapped_root_outside_component": 3
+    },
+    "138": {
+      "completed_mapped_root_outside_component": 11,
+      "completed_mapped_root_in_component": 1
+    },
+    "139": {
+      "completed_unmapped_root_outside_component": 2
+    },
+    "140": {
+      "completed_unmapped_root_outside_component": 16
+    },
+    "142": {
+      "completed_unmapped_root_outside_component": 8
+    },
+    "143": {
+      "completed_unmapped_root_in_component": 85,
+      "completed_mapped_root_in_component": 111,
+      "completed_unmapped_root_outside_component": 61
+    },
+    "144": {
+      "completed_unmapped_root_in_component": 56,
+      "completed_unmapped_root_outside_component": 72
+    },
+    "237": {
+      "completed_unmapped_root_outside_component": 6
+    },
+    "242": {
+      "completed_unmapped_root_outside_component": 14
+    },
+    "243": {
+      "completed_unmapped_root_outside_component": 9,
+      "completed_unmapped_root_in_component": 6
+    },
+    "248": {
+      "completed_unmapped_root_outside_component": 5
+    },
+    "249": {
+      "completed_unmapped_root_outside_component": 28,
+      "completed_mapped_root_outside_component": 12
+    },
+    "250": {
+      "completed_mapped_root_outside_component": 4,
+      "completed_unmapped_root_outside_component": 4,
+      "completed_unmapped_root_in_component": 2
+    },
+    "251": {
+      "completed_unmapped_root_outside_component": 66
+    },
+    "264": {
+      "completed_unmapped_root_outside_component": 18
+    },
+    "270": {
+      "completed_unmapped_root_in_component": 3
+    },
+    "271": {
+      "completed_unmapped_root_in_component": 2
+    },
+    "272": {
+      "completed_unmapped_root_in_component": 1
+    },
+    "312": {
+      "completed_unmapped_root_outside_component": 149,
+      "completed_unmapped_root_in_component": 47
+    },
+    "321": {
+      "completed_mapped_root_in_component": 7,
+      "completed_unmapped_root_in_component": 4
+    },
+    "322": {
+      "completed_mapped_root_in_component": 7,
+      "completed_unmapped_root_in_component": 7
+    },
+    "324": {
+      "completed_unmapped_root_in_component": 35,
+      "completed_mapped_root_outside_component": 37,
+      "completed_unmapped_root_outside_component": 7
+    },
+    "327": {
+      "completed_unmapped_root_in_component": 20
+    },
+    "328": {
+      "completed_unmapped_root_in_component": 28,
+      "completed_mapped_root_in_component": 17,
+      "completed_unmapped_root_outside_component": 2,
+      "completed_mapped_root_outside_component": 6
+    },
+    "334": {
+      "completed_unmapped_root_outside_component": 4,
+      "completed_mapped_root_outside_component": 2
+    },
+    "335": {
+      "completed_unmapped_root_outside_component": 3
+    },
+    "336": {
+      "completed_unmapped_root_outside_component": 3
+    },
+    "338": {
+      "completed_unmapped_root_in_component": 4,
+      "completed_unmapped_root_outside_component": 12,
+      "completed_mapped_root_outside_component": 13
+    },
+    "339": {
+      "completed_mapped_root_outside_component": 3,
+      "completed_unmapped_root_outside_component": 2
+    },
+    "340": {
+      "completed_unmapped_root_in_component": 20,
+      "completed_unmapped_root_outside_component": 70,
+      "completed_mapped_root_outside_component": 71,
+      "completed_mapped_root_in_component": 2
+    },
+    "343": {
+      "completed_unmapped_root_outside_component": 18,
+      "completed_unmapped_root_in_component": 4,
+      "completed_mapped_root_outside_component": 3,
+      "completed_mapped_root_in_component": 1
+    },
+    "344": {
+      "completed_unmapped_root_in_component": 8,
+      "completed_unmapped_root_outside_component": 26,
+      "completed_mapped_root_outside_component": 23,
+      "completed_mapped_root_in_component": 3
+    },
+    "346": {
+      "completed_mapped_root_in_component": 1,
+      "completed_unmapped_root_outside_component": 4,
+      "completed_mapped_root_outside_component": 4
+    },
+    "350": {
+      "completed_unmapped_root_outside_component": 16,
+      "completed_mapped_root_in_component": 3,
+      "completed_mapped_root_outside_component": 3
+    },
+    "403": {
+      "completed_unmapped_root_outside_component": 8
+    },
+    "419": {
+      "completed_unmapped_root_outside_component": 8
+    },
+    "420": {
+      "completed_unmapped_root_outside_component": 15
+    },
+    "422": {
+      "completed_unmapped_root_outside_component": 80
+    },
+    "423": {
+      "completed_unmapped_root_outside_component": 6
+    },
+    "424": {
+      "completed_unmapped_root_outside_component": 42
+    },
+    "425": {
+      "completed_unmapped_root_outside_component": 104
+    },
+    "426": {
+      "completed_unmapped_root_outside_component": 66
+    },
+    "428": {
+      "completed_unmapped_root_outside_component": 16
+    },
+    "429": {
+      "completed_unmapped_root_outside_component": 4
+    },
+    "430": {
+      "completed_unmapped_root_outside_component": 6
+    },
+    "432": {
+      "completed_unmapped_root_outside_component": 4
+    },
+    "466": {
+      "completed_unmapped_root_outside_component": 15,
+      "completed_unmapped_root_in_component": 5,
+      "completed_mapped_root_outside_component": 5
+    },
+    "487": {
+      "completed_unmapped_root_in_component": 2
+    },
+    "491": {
+      "completed_mapped_root_outside_component": 6,
+      "completed_unmapped_root_outside_component": 4,
+      "completed_unmapped_root_in_component": 2
+    },
+    "493": {
+      "completed_unmapped_root_outside_component": 2
+    },
+    "498": {
+      "completed_unmapped_root_outside_component": 83,
+      "completed_unmapped_root_in_component": 21
+    },
+    "499": {
+      "completed_unmapped_root_outside_component": 40,
+      "completed_unmapped_root_in_component": 8
+    },
+    "500": {
+      "completed_unmapped_root_outside_component": 4
+    },
+    "501": {
+      "completed_unmapped_root_in_component": 34,
+      "completed_unmapped_root_outside_component": 82
+    },
+    "502": {
+      "completed_unmapped_root_outside_component": 10,
+      "completed_mapped_root_outside_component": 6
+    },
+    "503": {
+      "completed_unmapped_root_outside_component": 8,
+      "completed_mapped_root_outside_component": 3
+    },
+    "504": {
+      "completed_unmapped_root_in_component": 32,
+      "completed_unmapped_root_outside_component": 146,
+      "completed_mapped_root_outside_component": 36
+    },
+    "505": {
+      "completed_unmapped_root_in_component": 25,
+      "completed_unmapped_root_outside_component": 33,
+      "completed_mapped_root_outside_component": 18
+    },
+    "506": {
+      "completed_unmapped_root_outside_component": 3
+    },
+    "512": {
+      "completed_unmapped_root_outside_component": 2,
+      "completed_unmapped_root_in_component": 4
+    },
+    "513": {
+      "completed_unmapped_root_outside_component": 48,
+      "completed_unmapped_root_in_component": 12
+    },
+    "514": {
+      "completed_unmapped_root_outside_component": 4
+    },
+    "518": {
+      "completed_unmapped_root_in_component": 26,
+      "completed_unmapped_root_outside_component": 20
+    },
+    "521": {
+      "completed_unmapped_root_in_component": 33,
+      "completed_unmapped_root_outside_component": 35
+    },
+    "522": {
+      "completed_unmapped_root_in_component": 46,
+      "completed_unmapped_root_outside_component": 44
+    },
+    "523": {
+      "completed_unmapped_root_outside_component": 28,
+      "completed_unmapped_root_in_component": 2
+    },
+    "524": {
+      "completed_unmapped_root_outside_component": 5
+    },
+    "525": {
+      "completed_unmapped_root_outside_component": 3
+    },
+    "527": {
+      "completed_unmapped_root_outside_component": 2,
+      "completed_mapped_root_outside_component": 1
+    },
+    "528": {
+      "completed_unmapped_root_outside_component": 5,
+      "completed_mapped_root_outside_component": 1
+    },
+    "531": {
+      "completed_unmapped_root_outside_component": 68,
+      "completed_unmapped_root_in_component": 10
+    },
+    "532": {
+      "completed_unmapped_root_in_component": 18,
+      "completed_unmapped_root_outside_component": 42,
+      "completed_mapped_root_outside_component": 4
+    },
+    "533": {
+      "completed_unmapped_root_outside_component": 14,
+      "completed_mapped_root_outside_component": 2
+    },
+    "534": {
+      "completed_unmapped_root_in_component": 2,
+      "completed_unmapped_root_outside_component": 6
+    },
+    "538": {
+      "completed_unmapped_root_outside_component": 79,
+      "completed_mapped_root_outside_component": 24,
+      "completed_unmapped_root_in_component": 8
+    },
+    "539": {
+      "completed_unmapped_root_outside_component": 101,
+      "completed_mapped_root_outside_component": 98,
+      "completed_unmapped_root_in_component": 1
+    },
+    "540": {
+      "completed_unmapped_root_outside_component": 192,
+      "completed_unmapped_root_in_component": 6,
+      "completed_mapped_root_outside_component": 78
+    },
+    "541": {
+      "completed_unmapped_root_outside_component": 8,
+      "completed_mapped_root_outside_component": 2
+    },
+    "542": {
+      "completed_unmapped_root_outside_component": 16,
+      "completed_unmapped_root_in_component": 2
+    },
+    "544": {
+      "completed_mapped_root_outside_component": 3,
+      "completed_unmapped_root_in_component": 3
+    },
+    "546": {
+      "completed_unmapped_root_outside_component": 2,
+      "completed_mapped_root_outside_component": 1
+    },
+    "547": {
+      "completed_unmapped_root_outside_component": 7,
+      "completed_mapped_root_outside_component": 1,
+      "completed_unmapped_root_in_component": 1
+    },
+    "548": {
+      "completed_unmapped_root_outside_component": 2
+    },
+    "551": {
+      "completed_mapped_root_outside_component": 2,
+      "completed_unmapped_root_in_component": 2,
+      "completed_unmapped_root_outside_component": 2
+    },
+    "552": {
+      "completed_mapped_root_outside_component": 6,
+      "completed_unmapped_root_in_component": 6,
+      "completed_unmapped_root_outside_component": 6
+    },
+    "553": {
+      "completed_unmapped_root_in_component": 1
+    },
+    "554": {
+      "completed_mapped_root_outside_component": 10,
+      "completed_unmapped_root_in_component": 5,
+      "completed_unmapped_root_outside_component": 10
+    },
+    "557": {
+      "completed_unmapped_root_outside_component": 10,
+      "completed_mapped_root_outside_component": 5
+    },
+    "559": {
+      "completed_unmapped_root_outside_component": 8,
+      "completed_unmapped_root_in_component": 2
+    },
+    "560": {
+      "completed_unmapped_root_outside_component": 4,
+      "completed_mapped_root_outside_component": 2
+    },
+    "565": {
+      "completed_unmapped_root_outside_component": 8,
+      "completed_mapped_root_outside_component": 2
+    },
+    "573": {
+      "completed_unmapped_root_in_component": 5,
+      "completed_unmapped_root_outside_component": 2
+    },
+    "577": {
+      "completed_unmapped_root_outside_component": 6,
+      "completed_unmapped_root_in_component": 16
+    },
+    "582": {
+      "initial_mapped_root_in_component": 1
+    },
+    "583": {
+      "initial_mapped_root_in_component": 9
+    },
+    "584": {
+      "initial_mapped_root_in_component": 1
+    },
+    "595": {
+      "initial_mapped_root_in_component": 1
+    },
+    "600": {
+      "initial_mapped_root_in_component": 6
+    },
+    "602": {
+      "initial_mapped_root_in_component": 56
+    },
+    "603": {
+      "initial_mapped_root_in_component": 1
+    },
+    "608": {
+      "initial_mapped_root_in_component": 1
+    },
+    "770": {
+      "initial_mapped_root_in_component": 1
+    },
+    "777": {
+      "initial_mapped_root_in_component": 1
+    },
+    "789": {
+      "initial_mapped_root_in_component": 1
+    },
+    "790": {
+      "initial_mapped_root_in_component": 1
+    },
+    "791": {
+      "initial_mapped_root_in_component": 1
+    },
+    "792": {
+      "initial_mapped_root_in_component": 1
+    },
+    "793": {
+      "initial_mapped_root_in_component": 1
+    },
+    "794": {
+      "initial_mapped_root_in_component": 1
+    },
+    "795": {
+      "initial_mapped_root_in_component": 1
+    },
+    "796": {
+      "initial_mapped_root_in_component": 1
+    },
+    "797": {
+      "initial_mapped_root_in_component": 1
+    },
+    "799": {
+      "initial_mapped_root_in_component": 1
+    },
+    "800": {
+      "initial_mapped_root_in_component": 1
+    },
+    "801": {
+      "initial_mapped_root_in_component": 1
+    },
+    "802": {
+      "initial_mapped_root_in_component": 1
+    },
+    "807": {
+      "initial_mapped_root_in_component": 1
+    },
+    "808": {
+      "initial_mapped_root_in_component": 1
+    },
+    "820": {
+      "initial_mapped_root_in_component": 1
+    },
+    "829": {
+      "initial_mapped_root_in_component": 1
+    },
+    "843": {
+      "initial_mapped_root_in_component": 1
+    },
+    "844": {
+      "initial_mapped_root_in_component": 1
+    },
+    "852": {
+      "initial_mapped_root_in_component": 1
+    },
+    "858": {
+      "initial_mapped_root_in_component": 1
+    },
+    "862": {
+      "initial_mapped_root_in_component": 1
+    },
+    "869": {
+      "initial_mapped_root_in_component": 1
+    },
+    "871": {
+      "initial_mapped_root_in_component": 1
+    },
+    "884": {
+      "initial_mapped_root_in_component": 1
+    },
+    "886": {
+      "initial_mapped_root_in_component": 1
+    },
+    "888": {
+      "initial_mapped_root_in_component": 4
+    },
+    "902": {
+      "initial_mapped_root_in_component": 1
+    },
+    "903": {
+      "initial_mapped_root_in_component": 1
+    },
+    "904": {
+      "initial_mapped_root_in_component": 1
+    },
+    "906": {
+      "initial_mapped_root_in_component": 206
+    },
+    "907": {
+      "initial_mapped_root_in_component": 1
+    },
+    "908": {
+      "initial_mapped_root_in_component": 1
+    },
+    "910": {
+      "initial_mapped_root_in_component": 1
+    },
+    "934": {
+      "initial_mapped_root_in_component": 2
+    },
+    "946": {
+      "initial_mapped_root_in_component": 6
+    },
+    "964": {
+      "initial_mapped_root_in_component": 48
+    },
+    "965": {
+      "initial_mapped_root_in_component": 39
+    },
+    "968": {
+      "initial_mapped_root_in_component": 36
+    }
+  },
+  "limitation": "root membership does not prove the mapped local symbol has that value or that a reusable template can forward it; no savings credited",
+  "input_sha256": {
+    "ownership-storage-trace.json": "687702ba14592c95e521b876227480fa415a0614f5195e140dddfc4faea11e16",
+    "function-row-trace.json": "7bf3cb09696171e66f8df48e42f6cfa11998e6688c376031ac46df79533652a5"
+  }
+}

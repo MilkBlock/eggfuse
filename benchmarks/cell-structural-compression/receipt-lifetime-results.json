@@ -1,0 +1,2809 @@
+{
+  "scope": "actual standalone Cell runtime; offline causal observation, not executable closure proof or speedup",
+  "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "events": 4792,
+  "dropped_events": 0,
+  "event_counts": {
+    "clear": 2085,
+    "forward": 994,
+    "retire": 844,
+    "capture": 766,
+    "refresh": 77,
+    "failure": 26
+  },
+  "failures": 26,
+  "historical_target_visible_at_failure": 26,
+  "historical_chain_crosses_clear": 26,
+  "historical_chain_crosses_source_run": 26,
+  "chain_hops": {
+    "1": 26
+  },
+  "source_run_ages": {
+    "3": 2,
+    "4": 18,
+    "10": 2,
+    "12": 1,
+    "13": 3
+  },
+  "failures_with_prior_refresh_of_same_receipt": 20,
+  "failures_with_capture_after_prior_refresh": 0,
+  "failure_sites": {
+    "137:{\"Effect\":2}:323": 26
+  },
+  "details": [
+    {
+      "index": 455,
+      "run": 110,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 536,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 536,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 78
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 405,
+          "run": 106,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 536,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 78
+            }
+          },
+          "epoch": 106
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 233,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 271,
+          "run": 102,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 356,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 438,
+          "run": 106,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 536,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 78
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 406,
+        "run": 106,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 536,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 459,
+      "run": 110,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 539,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 539,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 108
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 407,
+          "run": 106,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 539,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 108
+            }
+          },
+          "epoch": 106
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 242,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 274,
+          "run": 102,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 362,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 441,
+          "run": 106,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 539,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 108
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 408,
+        "run": 106,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 539,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 463,
+      "run": 110,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 129,
+          "op": 118
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 129,
+          "op": 118
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 112
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 379,
+          "run": 106,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 129,
+              "op": 118
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 112
+            }
+          },
+          "epoch": 106
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 205,
+          "run": 98,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 245,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 311,
+          "run": 102,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 443,
+          "run": 106,
+          "kind": "refresh",
+          "path": "publication",
+          "rule": 137,
+          "slot": 2,
+          "from": {
+            "Fact": {
+              "cell": 129,
+              "op": 118
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 112
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 380,
+        "run": 106,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 129,
+            "op": 118
+          }
+        },
+        "table": 323,
+        "template": 375,
+        "tracking": true
+      }
+    },
+    {
+      "index": 467,
+      "run": 110,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 541,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 541,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 74
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 409,
+          "run": 106,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 541,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 74
+            }
+          },
+          "epoch": 106
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 248,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 279,
+          "run": 102,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 365,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 435,
+          "run": 106,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 541,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 74
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 410,
+        "run": 106,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 541,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 562,
+      "run": 114,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 537,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 537,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 82
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 524,
+          "run": 110,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 537,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          },
+          "epoch": 110
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 236,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 272,
+          "run": 102,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 359,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 547,
+          "run": 110,
+          "kind": "refresh",
+          "path": "publication",
+          "rule": 137,
+          "slot": 2,
+          "from": {
+            "Fact": {
+              "cell": 537,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 525,
+        "run": 110,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 537,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 566,
+      "run": 114,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 129,
+          "op": 112
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 129,
+          "op": 112
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 86
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 500,
+          "run": 110,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 129,
+              "op": 112
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          },
+          "epoch": 110
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 204,
+          "run": 98,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 239,
+          "run": 98,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 308,
+          "run": 102,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 466,
+          "run": 110,
+          "rule": 137,
+          "slot": 2
+        },
+        {
+          "index": 481,
+          "run": 110,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 546,
+          "run": 110,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 129,
+              "op": 112
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          }
+        },
+        {
+          "index": 549,
+          "run": 110,
+          "kind": "refresh",
+          "path": "publication",
+          "rule": 137,
+          "slot": 2,
+          "from": {
+            "Fact": {
+              "cell": 129,
+              "op": 112
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 501,
+        "run": 110,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 129,
+            "op": 112
+          }
+        },
+        "table": 323,
+        "template": 375,
+        "tracking": true
+      }
+    },
+    {
+      "index": 651,
+      "run": 118,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 825,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 825,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 22
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 606,
+          "run": 114,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 825,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 22
+            }
+          },
+          "epoch": 114
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 338,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 450,
+          "run": 110,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 598,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 633,
+          "run": 114,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 825,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 22
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 607,
+        "run": 114,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 825,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 655,
+      "run": 118,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 826,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 826,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 86
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 608,
+          "run": 114,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 826,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          },
+          "epoch": 114
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 341,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 451,
+          "run": 110,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 601,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 637,
+          "run": 114,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 826,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 609,
+        "run": 114,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 826,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 737,
+      "run": 122,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1007,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1007,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 28
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 689,
+          "run": 118,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1007,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 28
+            }
+          },
+          "epoch": 118
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 472,
+          "run": 110,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 557,
+          "run": 114,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 681,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 724,
+          "run": 118,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1007,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 28
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 690,
+        "run": 118,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1007,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 741,
+      "run": 122,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1011,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1011,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 128
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 691,
+          "run": 118,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1011,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 128
+            }
+          },
+          "epoch": 118
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 484,
+          "run": 110,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 558,
+          "run": 114,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 684,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 720,
+          "run": 118,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1011,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 128
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 692,
+        "run": 118,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1011,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 826,
+      "run": 126,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1170,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1170,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 32
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 777,
+          "run": 122,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1170,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 32
+            }
+          },
+          "epoch": 122
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 571,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 646,
+          "run": 118,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 767,
+          "run": 122,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 812,
+          "run": 122,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1170,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 32
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 778,
+        "run": 122,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1170,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 830,
+      "run": 126,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1175,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1175,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 132
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 779,
+          "run": 122,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1175,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 132
+            }
+          },
+          "epoch": 122
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 583,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 647,
+          "run": 118,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 770,
+          "run": 122,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 809,
+          "run": 122,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1175,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 132
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 780,
+        "run": 122,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1175,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 919,
+      "run": 130,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1328,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1328,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 38
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 853,
+          "run": 126,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1328,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 38
+            }
+          },
+          "epoch": 126
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 663,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 733,
+          "run": 122,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 844,
+          "run": 126,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 906,
+          "run": 126,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1328,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 38
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 854,
+        "run": 126,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1328,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 923,
+      "run": 130,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1330,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1330,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 82
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 855,
+          "run": 126,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1330,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          },
+          "epoch": 126
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 669,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 734,
+          "run": 122,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 847,
+          "run": 126,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 902,
+          "run": 126,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 1330,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 856,
+        "run": 126,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1330,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1648,
+      "run": 471,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 822,
+          "op": 2
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 822,
+          "op": 2
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 86
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1605,
+          "run": 461,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 822,
+              "op": 2
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          },
+          "epoch": 461
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 10,
+      "captures_of_original": [
+        {
+          "index": 344,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 452,
+          "run": 110,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 595,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 1606,
+        "run": 461,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 822,
+            "op": 2
+          }
+        },
+        "table": 323,
+        "template": 138,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1652,
+      "run": 471,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1325,
+          "op": 2
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1325,
+          "op": 2
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 82
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1524,
+          "run": 458,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1325,
+              "op": 2
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          },
+          "epoch": 458
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 13,
+      "captures_of_original": [
+        {
+          "index": 672,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 735,
+          "run": 122,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 841,
+          "run": 126,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 1525,
+        "run": 458,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1325,
+            "op": 2
+          }
+        },
+        "table": 323,
+        "template": 138,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1656,
+      "run": 471,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1448,
+          "op": 2
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1448,
+          "op": 2
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 134
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1534,
+          "run": 458,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1448,
+              "op": 2
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 134
+            }
+          },
+          "epoch": 458
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 13,
+      "captures_of_original": [
+        {
+          "index": 758,
+          "run": 122,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 824,
+          "run": 126,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 934,
+          "run": 130,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 1535,
+        "run": 458,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1448,
+            "op": 2
+          }
+        },
+        "table": 323,
+        "template": 137,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1660,
+      "run": 471,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 822,
+          "op": 2
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 822,
+          "op": 2
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 86
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1605,
+          "run": 461,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 822,
+              "op": 2
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 86
+            }
+          },
+          "epoch": 461
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 10,
+      "captures_of_original": [
+        {
+          "index": 344,
+          "run": 106,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 452,
+          "run": 110,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 595,
+          "run": 114,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 1606,
+        "run": 461,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 822,
+            "op": 2
+          }
+        },
+        "table": 323,
+        "template": 138,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1664,
+      "run": 471,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1325,
+          "op": 2
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1325,
+          "op": 2
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 82
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1524,
+          "run": 458,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1325,
+              "op": 2
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          },
+          "epoch": 458
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 13,
+      "captures_of_original": [
+        {
+          "index": 672,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 735,
+          "run": 122,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 841,
+          "run": 126,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 1525,
+        "run": 458,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1325,
+            "op": 2
+          }
+        },
+        "table": 323,
+        "template": 138,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1790,
+      "run": 493,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 3277,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 3277,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 532,
+          "op": 1
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1760,
+          "run": 489,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 3277,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 532,
+              "op": 1
+            }
+          },
+          "epoch": 489
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 1712,
+          "run": 483,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 1728,
+          "run": 486,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 1754,
+          "run": 489,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 1781,
+          "run": 489,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 3277,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 532,
+              "op": 1
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 1761,
+        "run": 489,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 3277,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1886,
+      "run": 497,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 3320,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 3320,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 78
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1810,
+          "run": 493,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 3320,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 78
+            }
+          },
+          "epoch": 493
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 1730,
+          "run": 486,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 1746,
+          "run": 489,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 1804,
+          "run": 493,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 1876,
+          "run": 493,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 3320,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 78
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 1811,
+        "run": 493,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 3320,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 1939,
+      "run": 501,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 3364,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 3364,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 82
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 1900,
+          "run": 497,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 3364,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          },
+          "epoch": 497
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 1748,
+          "run": 489,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 1789,
+          "run": 493,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 1894,
+          "run": 497,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 1929,
+          "run": 497,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 3364,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 82
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 1901,
+        "run": 497,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 3364,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 2810,
+      "run": 826,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 4973,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 4973,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 3568,
+          "op": 3
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 2791,
+          "run": 823,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 4973,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3568,
+              "op": 3
+            }
+          },
+          "epoch": 823
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 3,
+      "captures_of_original": [
+        {
+          "index": 2715,
+          "run": 816,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 2767,
+          "run": 820,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 2787,
+          "run": 823,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 2802,
+          "run": 823,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 4973,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3568,
+              "op": 3
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 2792,
+        "run": 823,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 4973,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 2844,
+      "run": 829,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 5141,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 5141,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 3579,
+          "op": 3
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 2825,
+          "run": 826,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 5141,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3579,
+              "op": 3
+            }
+          },
+          "epoch": 826
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 3,
+      "captures_of_original": [
+        {
+          "index": 2769,
+          "run": 820,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 2782,
+          "run": 823,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 2821,
+          "run": 826,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 2836,
+          "run": 826,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 5141,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3579,
+              "op": 3
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 2826,
+        "run": 826,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 5141,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 2885,
+      "run": 833,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 5279,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 5279,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 3595,
+          "op": 3
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 2856,
+          "run": 829,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 5279,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3595,
+              "op": 3
+            }
+          },
+          "epoch": 829
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 4,
+      "captures_of_original": [
+        {
+          "index": 2784,
+          "run": 823,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 2809,
+          "run": 826,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 2852,
+          "run": 829,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [
+        {
+          "index": 2875,
+          "run": 829,
+          "kind": "refresh",
+          "path": "seal_local",
+          "rule": 143,
+          "slot": 1,
+          "from": {
+            "Fact": {
+              "cell": 5279,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 3595,
+              "op": 3
+            }
+          }
+        }
+      ],
+      "retirement_of_original": {
+        "index": 2857,
+        "run": 829,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 5279,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    },
+    {
+      "index": 3044,
+      "run": 886,
+      "kind": "failure",
+      "rule": 137,
+      "site": {
+        "Effect": 2
+      },
+      "slot": 2,
+      "table": 323,
+      "original": {
+        "Fact": {
+          "cell": 1015,
+          "op": 1
+        }
+      },
+      "resolved": {
+        "Fact": {
+          "cell": 1015,
+          "op": 1
+        }
+      },
+      "archived_target": {
+        "Fact": {
+          "cell": 129,
+          "op": 38
+        }
+      },
+      "hops": 1,
+      "target_table": 323,
+      "target_visible": true,
+      "chain": [
+        {
+          "index": 2951,
+          "run": 874,
+          "kind": "forward",
+          "from": {
+            "Fact": {
+              "cell": 1015,
+              "op": 1
+            }
+          },
+          "to": {
+            "Fact": {
+              "cell": 129,
+              "op": 38
+            }
+          },
+          "epoch": 874
+        }
+      ],
+      "cleared_chain_edges": 1,
+      "source_run_age": 12,
+      "captures_of_original": [
+        {
+          "index": 496,
+          "run": 110,
+          "rule": 143,
+          "slot": 1
+        },
+        {
+          "index": 561,
+          "run": 114,
+          "rule": 55,
+          "slot": 0
+        },
+        {
+          "index": 687,
+          "run": 118,
+          "rule": 143,
+          "slot": 1
+        }
+      ],
+      "refreshes_of_original": [],
+      "retirement_of_original": {
+        "index": 2952,
+        "run": 874,
+        "kind": "retire",
+        "fact": {
+          "Fact": {
+            "cell": 1015,
+            "op": 1
+          }
+        },
+        "table": 323,
+        "template": 143,
+        "tracking": true
+      }
+    }
+  ],
+  "limitations": [
+    "capture/refresh events identify receipts and logical sites, not unique shared storage owners",
+    "only forwarding created while ordinary receipt tracking is enabled is archived",
+    "visibility is sampled at failure; it does not authorize early RHS publication",
+    "the archive is not a proposed persistent runtime forwarding index"
+  ]
+}

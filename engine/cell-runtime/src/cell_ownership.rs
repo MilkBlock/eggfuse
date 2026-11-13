@@ -54,12 +54,46 @@ pub struct Marker {
     pub program: Arc<PortProgram>,
 }
 impl Plan {
+    #[cfg(feature = "storage-metrics")]
+    pub(crate) fn release_storage_by_field(self, live_bytes: &impl Fn() -> usize, rows: &mut Vec<(&'static str, usize)>) {
+        assert!(rows.capacity() - rows.len() >= 32);
+        let before = live_bytes();
+        drop(self.tables);
+        rows.push(("ownership.tables", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.markers);
+        rows.push(("ownership.markers", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.programs);
+        rows.push(("ownership.programs", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.code_programs);
+        rows.push(("ownership.code_programs", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.code_operators);
+        rows.push(("ownership.code_operators", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.query_classes);
+        rows.push(("ownership.query_classes", before - live_bytes()));
+        self.composition.release_storage_by_field(live_bytes, rows);
+        let before = live_bytes();
+        drop(self.entries);
+        rows.push(("ownership.entries", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.routes);
+        rows.push(("ownership.routes", before - live_bytes()));
+    }
     pub(crate) fn derive(p: &Program) -> Result<Self> {
         let tables = p
             .repair_ports
             .key_eq_columns
             .iter()
-            .map(Option::is_some)
+            .enumerate()
+            .map(|(id,columns)| columns.is_some() || (p.artifact["unit_fact_ownership"]==true
+                && p.tables[id].virtual_fact && !p.tables[id].constructor
+                && p.tables[id].schema.last().is_some_and(|s|s["kind"]=="Unit")
+                && p.tables[id].schema.iter().all(|s|matches!(s["kind"].as_str(),
+                    Some("eq"|"i64"|"f64"|"String"|"bool"|"Unit"|"structural_key")))))
             .collect::<Vec<_>>();
         let format = wire::Format::program(p)?;
         let mut shared = BTreeMap::new();
@@ -120,7 +154,9 @@ impl Plan {
         }
         if let Some(raw) = p.artifact["ownership_fragments"].get("query_classes") {
             plan.prepare_codes(&p.templates);
-            plan.query_classes = Some(Arc::new(query_classes::Plan::validate(raw, p, &plan)?));
+            plan.query_classes = Some(Arc::new(if raw == &J::Bool(true) {
+                query_classes::Plan::bake(p,&plan)
+            } else {query_classes::Plan::validate(raw,p,&plan)?}));
         }
         Ok(plan)
     }
@@ -211,6 +247,7 @@ struct Stats {
     dispatch_heap_pops: u64,
     dispatch_comparisons: u64,
     dispatch_scratch_growths: u64,
+    dispatch_static_field_tests: u64,
     dispatch_scratch_bytes: usize,
     signal_binding_reads: u64,
     signal_root_queries: Counter<u64>,
@@ -278,13 +315,37 @@ pub(super) struct Runtime {
     barriers: Vec<Barrier>,
 }
 impl Graph {
+    /// Saved after execution for offline storage analysis. These are the
+    /// existing owners, not an additional maintained fact/history graph.
+    #[cfg(feature = "storage-metrics")]
+    pub fn ownership_storage_trace(&self) -> J {
+        let Some(m) = &self.ownership else { return J::Null; };
+        let c = &m.composition;
+        let components = c.components.iter().enumerate().filter_map(|(id,component)| {
+            let component = component.as_ref()?;
+            Some(json!({"id":id,"shape":component.shape,"frames":component.frames.as_slice(),
+                "signals":component.signals,"live_facts":c.live_facts[id],
+                "roots":component.signals.iter().map(|v|v.map(|id|root(&self.parents,id))).collect::<Vec<_>>(),
+                "frame_codes":component.frames.iter().map(|id| c.frames[id].code).collect::<Vec<_>>()}))
+        }).collect::<Vec<_>>();
+        json!({"scope":"final live composition owners; diagnostic export after observation, not retained runtime state",
+            "source_eq_bindings":self.cells.iter().map(|(&id,cell)| json!({
+                "cell":id,"template":cell.template,"completed":cell.completed,
+                "slots":(0..self.program.templates[cell.template].sorts.len()).filter_map(|slot|
+                    match cell.values.get(&slot) { Some(Value::Eq(id))=>Some((slot,*id,root(&self.parents,*id))),_=>None }).collect::<Vec<_>>()
+            })).collect::<Vec<_>>(),
+            "components":components,"shapes":c.shapes,"programs":self.program.cell_ownership.programs,
+            "operators":self.program.cell_ownership.code_operators,
+            "fragments":self.program.cell_ownership.composition.fragments,
+            "transitions":self.program.cell_ownership.composition.transitions})
+    }
     pub fn ownership_enabled(&self) -> bool {
         self.ownership.is_some()
     }
     pub(crate) fn needs_ownership_entry(&self, rid: usize) -> bool {
         self.ownership.as_ref().is_some_and(|m| {
             self.program.cell_ownership.markers[self.program.rules[rid].template].program.active()
-                && (m.composition.training.is_some()
+                && (m.composition.catalog_trace.is_some() || m.composition.training.is_some()
                     || self.program.cell_ownership.composition.active_rules[rid])
         })
     }
@@ -342,20 +403,13 @@ impl Graph {
             if !self.program.cell_ownership.tables[row.table] {
                 continue;
             }
-            self.subscribe_edges(Dependency::Fact(f), &[]);
+            self.replace_row_edges(Dependency::Fact(f), &row.values, &[]);
+            #[cfg(not(feature = "sparse-cells"))]
             self.dependencies.remove(&Dependency::Fact(f));
-            self.cells
-                .get_mut(&f.cell)
-                .unwrap()
-                .facts
-                .get_mut(&f.op)
+            self.cells.fact_state_mut(f)
                 .unwrap()
                 .owned = true;
-            self.cells
-                .get_mut(&f.cell)
-                .unwrap()
-                .facts
-                .get_mut(&f.op)
+            self.cells.fact_state_mut(f)
                 .unwrap()
                 .decoded = Some((row.table, row.values.clone()));
             let m = self.ownership.as_mut().unwrap();
@@ -392,7 +446,7 @@ impl Graph {
         if self.ownership.is_none() {
             return false;
         }
-        let template = self.cells[&f.cell].template;
+        let template = self.cells.cell_metadata(f.cell).unwrap().template;
         if !self.program.cell_ownership.markers[template].program.covers(f.op as usize) {
             self.ownership.as_mut().unwrap().stats.uncovered_births += 1;
             return false;
@@ -474,9 +528,7 @@ impl Graph {
                 if shape.signals[signal.symbol].iter().any(|step| {
                     step.frame < frame.ordinal
                         && self
-                            .cells
-                            .get(&c.frames[step.frame])
-                            .and_then(|cell| cell.facts.get(&step.op))
+                            .cells.fact_state(FactRef{cell:c.frames[step.frame],op:step.op})
                             .is_some_and(|fact| fact.owned)
                 }) {
                     m.composition
@@ -522,9 +574,7 @@ impl Graph {
                 op: step.op,
             };
             if self
-                .cells
-                .get(&fact.cell)
-                .and_then(|c| c.facts.get(&fact.op))
+                .cells.fact_state(fact)
                 .is_some_and(|s| s.owned)
             {
                 return Some(composition::Cursor {
@@ -621,10 +671,12 @@ impl Graph {
                 let c = m.composition.components[cursor.signal.component as usize]
                     .as_ref()
                     .unwrap();
-                let step = &m.composition.shapes[c.shape].as_ref().unwrap().signals
-                    [cursor.signal.symbol][cursor.position];
+                let shape = m.composition.shapes[c.shape].as_ref().unwrap();
+                let step = &shape.signals[cursor.signal.symbol][cursor.position];
                 let old = columns.capacity();
-                columns.extend_from_slice(&step.columns);
+                m.stats.dispatch_static_field_tests += self.program.cell_ownership.programs[shape.programs[step.frame]]
+                    .fields[step.op as usize].len() as u64;
+                columns.extend(shape.columns(&self.program.cell_ownership.programs, cursor.signal.symbol, step));
                 m.stats.dispatch_scratch_growths += u64::from(old != columns.capacity());
                 pieces += 1;
                 if let Some(next) = self.next_composed_step(cursor.signal, cursor.position + 1) {
@@ -667,7 +719,7 @@ impl Graph {
         self.complete_canonical_cell(f, r)
     }
     pub(super) fn retire_owned(&mut self, f: FactRef, t: usize) -> bool {
-        if !self.cells[&f.cell].facts[&f.op].owned {
+        if !self.cells.fact_state(f).unwrap().owned {
             return false;
         }
         self.composition_retire_fact(f.cell);
@@ -703,11 +755,12 @@ impl Graph {
             });
         }
     }
-    fn smallest_signal_domain(&self, bound: &[Option<Value>]) -> Option<(usize, u64)> {
+    fn smallest_signal_domain(&self, table:usize, bound: &[Option<Value>]) -> Option<(usize, u64)> {
         let m = self.ownership.as_ref()?;
         m.stats
             .domain_planning_calls
             .set(m.stats.domain_planning_calls.get() + 1);
+        let complete = m.tables[table] == self.witness_count(table);
         bound
             .iter()
             .enumerate()
@@ -722,7 +775,7 @@ impl Graph {
                 // must never be used as a candidate-count upper bound.
                 let count = m.boundaries.get(&id).map_or(0, |s| s.len())
                     + usize::from(self.native_signal(id).is_some())
-                    + self.uses.get(&id).map_or(0, UseSet::len);
+                    + if complete {0} else {self.uses.get(&id).map_or(0, UseSet::len)};
                 Some((column, id, count))
             })
             .min_by_key(|x| x.2)
@@ -738,7 +791,7 @@ impl Graph {
         table: usize,
         bound: &[Option<Value>],
     ) -> Vec<Dependency> {
-        let Some((column, id)) = self.smallest_signal_domain(bound) else {
+        let Some((column, id)) = self.smallest_signal_domain(table,bound) else {
             let rows = self.witnesses(table);
             let s = &self.ownership.as_ref().unwrap().stats;
             s.unbound_query_calls.set(s.unbound_query_calls.get() + 1);
@@ -781,7 +834,7 @@ impl Graph {
                     self.stable_node(fact).is_some_and(|node| node.table == table)
                 } else {
                     s.domain_legacy_fact_probes.set(s.domain_legacy_fact_probes.get() + 1);
-                    self.cells.get(&fact.cell).and_then(|c| c.facts.get(&fact.op))
+                    self.cells.fact_state(fact)
                         .is_some_and(|state| state.owned && state.decoded.as_ref().unwrap().0 == table)
                 };
                 if matches {
@@ -789,10 +842,15 @@ impl Graph {
                 }
             }
         }
-        for &d in self.uses.get(&id).into_iter().flat_map(|s| s.iter()) {
-            s.domain_legacy_visits.set(s.domain_legacy_visits.get() + 1);
-            if self.dependency_table(d) == Some(table) {
-                result.insert(d);
+        // Every live row is already represented by checked Cell wiring.
+        // Foreign legacy uses cannot add a candidate to this table. Partial
+        // coverage still requires the complete residual subscription path.
+        if owner.tables[table] != self.witness_count(table) {
+            for &d in self.uses.get(&id).into_iter().flat_map(|s| s.iter()) {
+                s.domain_legacy_visits.set(s.domain_legacy_visits.get() + 1);
+                if self.dependency_table(d) == Some(table) {
+                    result.insert(d);
+                }
             }
         }
         s.domain_results
@@ -855,13 +913,13 @@ impl Graph {
                     assert!(!self.signal_is_native(signal, id));
                 }
             }
-            for (&cell, c) in self.cells.iter() {
-                for (&op, s) in c.facts.iter().filter(|(_, s)| s.owned) {
-                    let f = FactRef { cell, op };
+            for cell in self.cells.cell_ids() {
+                for (f, s) in self.cells.fact_states(cell).filter(|(_, s)| s.owned) {
+                    #[cfg(not(feature = "sparse-cells"))]
                     assert!(!self.dependencies.contains_key(&Dependency::Fact(f)));
                     across += u64::from(s.born < self.epoch);
                     let program =
-                        &self.program.cell_ownership.markers[self.cells[&f.cell].template].program;
+                        &self.program.cell_ownership.markers[self.cells.cell_metadata(f.cell).unwrap().template].program;
                     let values = if let Some(stored) = self.stable_ports.as_ref().and_then(|p| p.nodes.get(&f)) {
                         self.stable_values(stored, false).expect("read owned stable body")
                     } else { s.decoded.as_ref().expect("settled owned body").1.clone() };
@@ -911,9 +969,111 @@ impl Graph {
             .len();
         json!({"routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":self.program.cell_ownership.format.marker_schema(),"port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
-            "inventory":{"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
+            "inventory":{"shared_field_layout_bytes":0,"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
                 "eligible_live_facts":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>(),
                 "unsupported_live_rows":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|!**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>()},
             "stats":self.ownership.as_ref().map(|m|&m.stats),"pending_keys":self.ownership.as_ref().map_or(0,|m|m.pending.len())})
+    }
+}
+
+impl Graph {
+    pub(super) fn inherited_cell_slot(&self, cell: u32, template: usize, slot: usize) -> Option<Value> {
+        let m = self.ownership.as_ref()?;
+        let frame = m.composition.frames.get(&cell)?;
+        let component = m.composition.components.get(frame.component as usize)?.as_ref()?;
+        let local = self.program.cell_ownership.markers[template].program.slots.get(slot).copied().flatten()?;
+        let symbol = m.composition.shapes[component.shape].as_ref()?.ports[frame.ordinal][local];
+        Some(Value::Eq(root(&self.parents, component.signals[symbol]?)))
+    }
+    /// Transfer only completed, proven-equal slots to existing shared symbols.
+    /// It does not introduce a binding table or retire externally visible facts.
+    #[cfg(all(feature="sparse-cells", feature="storage-metrics"))]
+    pub(super) fn take_over_instance_slots(&mut self) -> usize {
+        let Some(m) = self.ownership.as_ref() else { return 0; };
+        let mut saved = 0;
+        let ids = self.cells.iter().map(|(&id,_)|id).collect::<Vec<_>>();
+        for id in ids {
+            let c = self.cells.get_mut(&id).unwrap();
+            if !c.completed { continue; }
+            let Some(frame) = m.composition.frames.get(&id) else { continue; };
+            let component = m.composition.components[frame.component as usize].as_ref().unwrap();
+            let ports = &m.composition.shapes[component.shape].as_ref().unwrap().ports[frame.ordinal];
+            let slots = &self.program.cell_ownership.markers[c.template].program.slots;
+            let removed = c.values.retain_owned(|slot, value| {
+                let Value::Eq(value) = value else { return true; };
+                let Some(local) = slots.get(*slot).copied().flatten() else { return true; };
+                let Some(bound) = component.signals[ports[local]] else { return true; };
+                root(&self.parents, *value) != root(&self.parents, bound)
+            });
+            if removed != 0 { c.symbolic_slots = true; }
+            saved += removed;
+        }
+        saved
+    }
+    #[cfg(all(feature="sparse-cells", feature="storage-metrics"))]
+    pub(super) fn take_over_parent_links(&mut self) -> Result<usize> {
+        let ids = self.cells.iter().filter(|(_,c)| c.completed && c.parent.is_some())
+            .map(|(&id,_)|id).collect::<Vec<_>>();
+        let mut detached = 0;
+        for id in ids {
+            let c = &self.cells[&id];
+            let template = c.template;
+            let parent = c.parent.unwrap();
+            // Compute the whole handoff before changing ownership. Failed or
+            // uncovered projections keep the source frame's normal lifetime.
+            let mut owned = Vec::new();
+            let mut delegated = false;
+            for &slot in self.program.templates[template].parent_columns.keys() {
+                let value = self.slot(id, slot)?;
+                if self.inherited_cell_slot(id, template, slot).as_ref() == Some(&value) {
+                    delegated = true;
+                } else {
+                    owned.push((slot, value));
+                }
+            }
+            let c = self.cells.get_mut(&id).unwrap();
+            for (slot,value) in owned { c.values.insert(slot,value); }
+            c.symbolic_slots |= delegated;
+            c.parent = None;
+            self.release_reference(parent);
+            detached += 1;
+        }
+        self.collect_garbage();
+        Ok(detached)
+    }
+
+}
+
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+#[path="shared_owner_transfer.rs"]
+mod shared_owner_transfer;
+
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+impl Runtime {
+    /// Destructive observer only. Preserve last-owner accounting, and never
+    /// allocate the output buffer while measuring a field release.
+    pub(super) fn release_runtime_storage(self, live: &impl Fn()->usize, rows: &mut Vec<(&'static str,usize)>) {
+        assert!(rows.capacity()-rows.len()>=17);
+        macro_rules! release {
+            ($name:literal,$value:expr)=>{{
+                let before=live();drop($value);rows.push(($name,before-live()));
+            }};
+        }
+        release!("ownership.components",self.composition.components);
+        release!("ownership.live_facts",self.composition.live_facts);
+        release!("ownership.frames",self.composition.frames);
+        release!("ownership.shapes",self.composition.shapes);
+        release!("ownership.transitions",self.composition.transitions);
+        release!("ownership.training",self.composition.training);
+        release!("ownership.catalog_trace",self.composition.catalog_trace);
+        release!("ownership.entry",self.composition.entry);
+        release!("ownership.heap",self.composition.heap);
+        release!("ownership.columns",self.composition.columns);
+        release!("ownership.boundaries",self.boundaries);
+        release!("ownership.port_completion",self.port_completion);
+        release!("ownership.pending",self.pending);
+        release!("ownership.tables",self.tables);
+        release!("ownership.stats",self.stats);
+        release!("ownership.barriers",self.barriers);
     }
 }

@@ -1,6 +1,7 @@
 //! Source-scheduled Cell programs. A committed producer supplies the next
 //! stage's complete context; the stage consumes it without a structural join.
 //! Coverage is proved from functional table keys, not from observed frequency.
+use crate::graph::FactStates as _;
 use crate::{
     entry_schedule::{Inputs, Seed},
     graph::{Dependency, Graph, Row},
@@ -201,6 +202,10 @@ pub(crate) enum Started {
         producer: usize,
         epoch: u64,
         set: StageTag,
+        // One demanded query witness stays in the existing pending root until
+        // an Entry actually selects it. No result owner exists for losers.
+        #[cfg(feature = "sparse-cells")]
+        deferred_capture: Option<(usize, Dependency)>,
     },
     Live(Cursor),
 }
@@ -313,6 +318,27 @@ impl Started {
             })
             .collect()
     }
+    #[cfg(feature = "sparse-cells")]
+    fn seed_completed_root(&mut self, cat:&crate::iterative::Catalog, rule:usize, run:usize,
+        collect:bool, defer:bool, read:impl Fn(usize)->Option<Dependency>, stats:&mut Stats) {
+        let Self::Root {deferred_capture,..}=self else {return};
+        let Some(state)=cat.root_state(rule,run,collect) else {return};
+        if defer && !collect {
+            let (sources,depth,_,_)=cat.capture(&state);
+            if depth==1 && let [capture]=sources && let Site::Query(atom)=capture.site {
+                stats.history_deferred_root_probes+=1;
+                if let Some(witness)=read(atom) {
+                    *deferred_capture=Some((run,witness));
+                    stats.history_deferred_root_captures+=1;
+                    return;
+                }
+            }
+        }
+        self.cursor(stats);
+        let Self::Live(cursor)=self else {unreachable!()};
+        cursor.state=state;
+        stats.root_completion_seeds+=1;
+    }
     #[cfg(feature = "iterative-bake")]
     fn seed_root(
         &mut self,
@@ -343,7 +369,7 @@ impl Started {
         forwarded: u64,
         #[cfg(feature = "sparse-cells")] prepared: Option<crate::cell::Results>,
         stats: &mut Stats,
-    ) {
+    ) -> crate::result_handoff::CaptureWork {
         if let Self::Live(c) = self {
             let (sources, depth, inherit, layout) = cat.capture(&c.state);
             #[cfg(feature = "sparse-cells")]
@@ -368,7 +394,9 @@ impl Started {
             stats.history_inherited_slots += work.inherited as u64;
             stats.history_heap_frames += work.heap_frames as u64;
             stats.history_shared_slots += work.shared_slots as u64;
+            return work;
         }
+        Default::default()
     }
     fn cursor(&mut self, stats: &mut Stats) -> &Cursor {
         if let Self::Root {
@@ -376,8 +404,12 @@ impl Started {
             producer,
             epoch,
             set,
+            #[cfg(feature = "sparse-cells")]
+            deferred_capture,
         } = self
         {
+            #[cfg(feature = "sparse-cells")]
+            assert!(deferred_capture.is_none(), "pending root must materialize its capture first");
             *self = Self::Live(Cursor {
                 root: Rc::new(Root {
                     id: *id,
@@ -470,6 +502,12 @@ impl Serialize for SetCounts {
 #[cfg(test)]
 mod set_counts_test {
     use super::*;
+    #[cfg(feature = "sparse-cells")]
+    #[test]
+    fn deferred_root_fits_existing_cursor_variant() {
+        assert!(std::mem::size_of::<Started>() <= std::mem::size_of::<Cursor>() + std::mem::align_of::<Cursor>());
+    }
+
     #[cfg(feature = "sparse-cells")]
     #[test]
     fn fused_worker_selection_matches_source_order_then_stable_depth_selection() {
@@ -681,7 +719,7 @@ mod set_counts_test {
         second.record(1, Dependency::Function(21));
         let original = first.slot(0).unwrap() as *mut Option<Dependency> as usize;
         spine.pending_steps.push(Completion::new(Started::Root {
-            id: 1, producer: 0, epoch: 0, set: 0,
+            id: 1, producer: 0, epoch: 0, set: 0, deferred_capture: None,
         }));
         spine.install_delivery(0, 0, 0, false);
         spine.finish_effects_to(first, Some(0));
@@ -709,6 +747,11 @@ mod set_counts_test {
 }
 #[derive(Default, Serialize)]
 pub struct Stats {
+    pub matched_entry_probes:u64,
+    pub matched_entry_rows:u64,
+    pub matched_entry_fields:u64,
+    pub matched_entry_resumptions:u64,
+
     candidate_cursor_stores: u64,
     candidate_cursor_growths: u64,
     candidate_cursor_peak_bytes: u64,
@@ -725,6 +768,10 @@ pub struct Stats {
     origin_map_writes: u64,
     origin_map_probes: u64,
     history_capture_reads: u64,
+    entry_parent_handoffs: u64,
+    history_deferred_root_probes: u64,
+    history_deferred_root_captures: u64,
+    history_deferred_root_promotions: u64,
     history_shared_slots: u64,
     joint_history_checks: u64,
     joint_history_frames: u64,
@@ -765,11 +812,17 @@ pub struct Stats {
     ripsat_layout_fallbacks: u64,
     ripsat_boundary_fallbacks: u64,
     ripsat_witness_fallbacks: u64,
+    ripsat_witness_missing: u64,
+    ripsat_witness_retired: u64,
+    ripsat_witness_wrong_table: u64,
+    ripsat_witness_hidden: u64,
     history_slots_written: u64,
     history_seal_checks: u64,
     history_seal_reads: u64,
     history_seal_writes: u64,
     history_seal_shared: u64,
+    history_publication_slot_probes: u64,
+    history_publication_slot_writes: u64,
     history_allocations: u64,
     history_empty_slots_written: u64,
     history_carried_steps: u64,
@@ -1498,6 +1551,10 @@ impl Programs {
                     }
                 }
             }
+            #[cfg(feature="iterative-bake")]
+            if p.iterative.matched_entries.contains_key(&rid) {
+                query_facts=QueryFacts::Ports(vec![None;r.query.len()]);
+            }
             s.alias_query_facts.push(query_facts);
         }
         #[cfg(feature = "spine-shapes")]
@@ -1550,6 +1607,34 @@ impl Programs {
         self.begin_step(p, rid, &Default::default(), set, epoch, None)
     }
 
+    #[cfg(all(feature="sparse-cells",feature="iterative-bake"))]
+    pub(crate) fn resume_matched(&mut self,g:&Graph,entries:&crate::entry_schedule::Scheduler,
+        rid:usize,answer:&Matched)->Option<DirectOrigin> {
+        if !self.enabled {return None;}
+        for &pivot in g.program.iterative.matched_entries.get(&rid)? {
+            self.stats.matched_entry_probes+=1;
+            let Some(witness)=answer.known.receipt(pivot) else {continue;};
+            let Call::Table(table)=g.program.rules[rid].query[pivot].call else {continue;};
+            self.stats.matched_entry_rows+=1;
+            let Some(row)=g.row(witness).ok().flatten() else {continue;};
+            if row.hidden || row.table!=table {continue;}
+            if !g.program.rules[rid].query[pivot].args.iter().zip(row.values.iter()).all(|(a,v)| {
+                self.stats.matched_entry_fields+=1;
+                match a {Arg::Literal(x)=>canon(x,&g.parents)==*v,
+                    Arg::Slot(s)=>answer.values.get(s).is_some_and(|x|canon(x,&g.parents)==*v)}
+            }) {continue;}
+            let Some(published)=entries.matched_publication(table,witness).or_else(||self.entries.get(&witness)) else {continue;};
+            let mut cursor=published.expand();
+            let (selected,_)=g.program.iterative.dispatch(&mut cursor.state,rid,pivot,true,witness);
+            if !selected || !cursor.state.direct {continue;}
+            cursor.via_block=true;
+            self.stats.matched_entry_resumptions+=1;
+            let token=DirectOrigin(self.sealed_cursors.len());
+            self.sealed_cursors.push(Some(cursor));
+            return Some(token);
+        }
+        None
+    }
     pub(crate) fn begin_step(
         &mut self,
         p: &Program,
@@ -1654,6 +1739,8 @@ impl Programs {
                 set: self.root_set.clone(),
                 #[cfg(feature = "sparse-cells")]
                 set: self.stage_number,
+                #[cfg(feature = "sparse-cells")]
+                deferred_capture: None,
             })
         }
     }
@@ -1854,12 +1941,27 @@ impl Programs {
         let Some(results)=cursor.state.history.project_complete(plan,&mut self.stats.ripsat_projection_checks) else {
             self.stats.ripsat_layout_fallbacks+=1; return None;
         };
-        for &(_,table,slot) in &plan.outputs {
+        for &(site,table,slot) in &plan.outputs {
             self.stats.ripsat_witness_checks+=1;
             let port=crate::cell::ResultPort::new(rid,slot);
-            let Some(w)=results.get(port) else {self.stats.ripsat_witness_fallbacks+=1;return None};
-            if !g.receipt_visible(g.resolve_receipt(w),table) {
-                self.stats.ripsat_witness_fallbacks+=1; return None;
+            let Some(w)=results.get(port) else {
+                self.stats.ripsat_witness_fallbacks+=1;
+                self.stats.ripsat_witness_missing+=1;
+                return None;
+            };
+            let resolved=g.resolve_receipt(w);
+            if !g.receipt_visible(resolved,table) {
+                #[cfg(feature="storage-metrics")]
+                crate::receipt_trace::failure(g,rid,site,slot,table,w,resolved);
+                #[cfg(not(feature="storage-metrics"))]
+                let _=site;
+                self.stats.ripsat_witness_fallbacks+=1;
+                match g.live_table(resolved) {
+                    None => self.stats.ripsat_witness_retired+=1,
+                    Some(actual) if actual!=table => self.stats.ripsat_witness_wrong_table+=1,
+                    Some(_) => self.stats.ripsat_witness_hidden+=1,
+                }
+                return None;
             }
         }
         Some((results,plan.unions.clone()))
@@ -1928,6 +2030,10 @@ impl Programs {
         #[cfg(feature = "sparse-cells")]
         let mut effects = effects;
         self.stats.completed_steps += 1;
+        #[cfg(feature = "iterative-bake")]
+        let trace_start=self.training.execution_trace_start();
+        #[cfg(feature = "iterative-bake")]
+        let mut capture_work=crate::result_handoff::CaptureWork::default();
         // A selected query continuation is not an applied rule. Record its
         // bounded provenance only after every source RHS operation succeeded.
         // Queued unions still retain their original publication boundary.
@@ -1938,6 +2044,11 @@ impl Programs {
         }
         self.stats.history_inheritance_marks += effects.forwarded().count_ones() as u64;
         if self.outputs.get(rid).is_none_or(Vec::is_empty) {
+            #[cfg(feature = "iterative-bake")]
+            {
+                self.training.trace_execution(trace_start,g,_cell);
+                self.training.trace_capture(trace_start,capture_work);
+            }
             self.finish_effects(effects);
             return Ok(());
         }
@@ -1959,18 +2070,16 @@ impl Programs {
         let step = {
             let mut s = step;
             let root = matches!(s, Started::Root { .. });
-            s.seed_root(
-                &g.program.iterative,
-                rid,
-                self.training.run,
-                self.training.collect_pairs,
-                &mut self.stats,
-            );
+            #[cfg(feature = "sparse-cells")]
+            s.seed_completed_root(&g.program.iterative,rid,self.training.run,self.training.collect_pairs,
+                !joint,&query_fact,&mut self.stats);
+            #[cfg(not(feature = "sparse-cells"))]
+            s.seed_root(&g.program.iterative,rid,self.training.run,self.training.collect_pairs,&mut self.stats);
             if root && let Started::Live(cursor) = &mut s {
-                self.training.trace_root(&g.program.iterative, &mut cursor.state);
+                self.training.trace_root(&g.program.iterative, &mut cursor.state, rid);
             }
             if !joint {
-                s.remember(&g.program.iterative, rid,
+                capture_work=s.remember(&g.program.iterative, rid,
                     &query_fact, |i| effects.get(i), effects.forwarded(),
                     #[cfg(feature = "sparse-cells")] None, &mut self.stats);
             }
@@ -2059,7 +2168,7 @@ impl Programs {
             // unchanged. Move it once after boundary registration is done.
             let prepared = effects.take_results(rid).unwrap();
             let CompletionPhase::Started(step) = &mut self.pending_steps[slot].phase else { unreachable!() };
-            step.remember(&g.program.iterative, rid, |_| unreachable!(), |_| unreachable!(),
+            capture_work=step.remember(&g.program.iterative, rid, |_| unreachable!(), |_| unreachable!(),
                 effects.forwarded(), Some(prepared), &mut self.stats);
         }
         #[cfg(feature = "sparse-cells")]
@@ -2068,6 +2177,11 @@ impl Programs {
         let publish = false;
         self.finish_effects_to(effects, publish.then_some(slot));
         self.stats.captured_contexts += 1;
+        #[cfg(feature = "iterative-bake")]
+        {
+            self.training.trace_execution(trace_start,g,_cell);
+            self.training.trace_capture(trace_start,capture_work);
+        }
         if let Some(clock) = clock { self.stats.capture_seconds += clock.elapsed().as_secs_f64(); }
         Ok(())
     }
@@ -2100,7 +2214,7 @@ impl Programs {
             || g.program.iterative.root_has_state(rid, self.training.collect_pairs) {
             return Ok(Some(step));
         }
-        let Started::Root { id, producer, epoch, set } = step else { unreachable!() };
+        let Started::Root { id, producer, epoch, set, .. } = step else { unreachable!() };
         debug_assert_eq!(producer, rid);
         self.stats.completed_steps += 1;
         let published = Published {
@@ -2202,15 +2316,24 @@ impl Programs {
         let cursor = {
             let phase = &mut self.pending_steps[slot].phase;
             if !matches!(phase, CompletionPhase::Published(_)) {
-                let CompletionPhase::Started(started) = std::mem::replace(phase, CompletionPhase::Moving) else {
+                let CompletionPhase::Started(mut started) = std::mem::replace(phase, CompletionPhase::Moving) else {
                     unreachable!("Cell completion promotion");
                 };
+                if let Started::Root {producer,deferred_capture:Some(_),..}=&mut started {
+                    let rid=*producer;
+                    let Started::Root {deferred_capture,..}=&mut started else {unreachable!()};
+                    let (run,witness)=deferred_capture.take().unwrap();
+                    started.seed_root(&_g.program.iterative,rid,run,false,&mut self.stats);
+                    started.remember(&_g.program.iterative,rid,|_|Some(witness),|_|unreachable!("query-only root capture"),
+                        0,None,&mut self.stats);
+                    self.stats.history_deferred_root_promotions+=1;
+                }
                 let base = match started {
-                    Started::Root { id, producer, epoch, set } if self.outputs[producer].len() == 1 => {
+                    Started::Root { id, producer, epoch, set, .. } if self.outputs[producer].len() == 1 => {
                         self.stats.deferred_single_roots += 1;
                         PublishedBase::Solo { id, producer, epoch, stage: set, root: OnceCell::new() }
                     }
-                    Started::Root { id, producer, epoch, set } => {
+                    Started::Root { id, producer, epoch, set, .. } => {
                         self.stats.root_handles_created += 1;
                         PublishedBase::Root(Rc::new(Root { id, epoch, set, context: OnceCell::new() }), producer)
                     }
@@ -2349,9 +2472,7 @@ impl Programs {
                 self.stats.legacy_retirement_checks += 1;
                 let live = match *w {
                     Dependency::Fact(f) => g
-                        .cells
-                        .get(&f.cell)
-                        .and_then(|c| c.facts.get(&f.op))
+                        .cells.fact_state(f)
                         .is_some_and(|f| !f.hidden),
                     Dependency::Function(i) => g.functions.get(i).is_some_and(|f| f.live),
                 };
@@ -2532,6 +2653,14 @@ impl Programs {
                                 self.finish_boundary(g, slot, entries)?;
                             }
                             let w = g.resolve_receipt(old);
+                            if w!=old && matches!(&delivery.source,OutputSource::History(_)) {
+                                let port=self.effect_plans[rule].get().unwrap().history_output(position);
+                                self.stats.history_publication_slot_probes+=1;
+                                if !self.pending_steps[slot].results().forward_output(port,w) {
+                                    return Err("published Cell output lost its result slot".into());
+                                }
+                                self.stats.history_publication_slot_writes+=1;
+                            }
                             let publication = Publication {
                                 slot, receipt: Some(old), output: output.operation,
                                 #[cfg(feature = "spine-shapes")]
@@ -2896,6 +3025,8 @@ impl Programs {
             g.program.executions[rid].constructor.as_ref()
                 .filter(|plan| plan.handoff).map(|plan| plan.operation)
         };
+        #[cfg(feature="sparse-cells")]
+        let inherited_pivot=g.program.rules[rid].direct.filter(|&pivot|crate::cell::inherits_entry(&g.program,rid,pivot,&self.permanent));
         'answer: for (_ordinal, (pivot, row, cursor)) in ready.into_iter().enumerate() {
             let mut epoch = row.epoch;
             let mut local = if self.local_witness_entries[rid][pivot] {
@@ -3015,6 +3146,11 @@ impl Programs {
                 #[cfg(feature = "sparse-cells")]
                 {
                     let mut answer = Matched::matched(inputs, facts, epoch);
+                    if inherited_pivot==Some(pivot) && !g.has_visibility_changes(row.table)
+                        && let Dependency::Fact(parent)=row.witness {
+                        answer.parent=Some(parent);
+                        self.stats.entry_parent_handoffs+=1;
+                    }
                     if let Some(operation) = preparation_operation {
                         cursor.retain_constructor_handoff(&g.program.iterative, operation, &mut answer, &mut self.stats);
                     }
@@ -3351,6 +3487,8 @@ impl Programs {
             "joint_result_storage":"cell-results/v1",
             "union_completion":"cell-union-ports/v1",
             "history_sealing":"unique-cell-results/v1",
+            "history_publication_forwarding":"shared-result-slots/v1",
+            "completion_witness_diagnosis":"receipt-lifetime/v1",
             "completion_record_bytes":std::mem::size_of::<Completion>(),
             "joint_result_plan_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.joint_bytes()).sum::<usize>(),
             "effect_plan_registration_bytes":self.effect_plans.iter().filter_map(|p|p.get()).map(|p|p.registration_bytes()).sum::<usize>(),
@@ -3395,6 +3533,7 @@ impl Programs {
 
 #[cfg(feature = "sparse-cells")]
 impl Stats {
+    pub(crate) fn record_entry_parent(&mut self) { self.entry_parent_handoffs += 1; }
     pub(crate) fn record_query_worker(&mut self, counts: &crate::executor::query_workers::Counts) {
         self.cell_query_entries += counts.entries;
         self.cell_query_steps += counts.steps;

@@ -70,9 +70,7 @@ impl Graph {
         let stats = self.repair_ports.as_mut().unwrap();
         stats.attempts += 1;
         let Some(state) = self
-            .cells
-            .get_mut(&f.cell)
-            .and_then(|c| c.facts.get_mut(&f.op))
+            .cells.fact_state_mut(f)
         else {
             return false;
         };
@@ -109,8 +107,8 @@ impl Graph {
         self.query_versions[*table] += 1;
         self.changes.touch(*table, Dependency::Fact(f));
         // union() redirects every reverse incidence from `from` to `to` after
-        // this callback. Keeping old IDs in dependencies is valid: subscribe/retire
-        // canonicalize them before removing incidences.
+        // this callback. Retirement reads the row's operands and canonicalizes
+        // them before removing incidences; no second forward footprint is needed.
         stats.result_events += 1;
         stats.by_table[*table] += 1;
         true

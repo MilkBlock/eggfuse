@@ -1,0 +1,247 @@
+{
+  "scope": "actual standalone Cell runtime; work counts, not time or full egraph memory",
+  "baseline_program": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "candidate_program": "67e91a1612d32579b53f71de881619d411886bcdcbe100aea6c6dea0cc5f98e4",
+  "runs": 1428,
+  "both_saved_run_checks_equal": true,
+  "added_units": 3,
+  "new_paths": [
+    {
+      "unit": 65,
+      "support": 23,
+      "kind": "internal_completion",
+      "added_prefixes": 1,
+      "added_roots": 1,
+      "source_path": [
+        [
+          null,
+          [
+            60,
+            null
+          ]
+        ],
+        [
+          0,
+          [
+            143,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "unit": 66,
+      "support": 9,
+      "kind": "saturated",
+      "added_prefixes": 1,
+      "added_roots": 0,
+      "source_path": [
+        [
+          null,
+          [
+            137,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ]
+      ]
+    }
+  ],
+  "counter_count": 515,
+  "changed_counters": {
+    "cell_ownership/stats/domain_legacy_visits": {
+      "before": 12015,
+      "after": 12014,
+      "delta": -1
+    },
+    "cell_ownership/stats/domain_planning_calls": {
+      "before": 4720,
+      "after": 4719,
+      "delta": -1
+    },
+    "cell_ownership/stats/domain_queries": {
+      "before": 4720,
+      "after": 4719,
+      "delta": -1
+    },
+    "cell_ownership/stats/domain_results": {
+      "before": 4744,
+      "after": 4743,
+      "delta": -1
+    },
+    "cell_ownership/stats/domain_route_probes": {
+      "before": 38228,
+      "after": 38214,
+      "delta": -14
+    },
+    "cell_ownership/stats/domain_signal_visits": {
+      "before": 38228,
+      "after": 38214,
+      "delta": -14
+    },
+    "cell_ownership/stats/domain_slice_steps": {
+      "before": 38022,
+      "after": 38009,
+      "delta": -13
+    },
+    "cell_ownership/stats/domain_type_guards": {
+      "before": 38022,
+      "after": 38009,
+      "delta": -13
+    },
+    "key_lookup_calls": {
+      "before": 12106,
+      "after": 12088,
+      "delta": -18
+    },
+    "stable_ports/stats/birth_hint_probes": {
+      "before": 11053,
+      "after": 11035,
+      "delta": -18
+    },
+    "stable_ports/stats/key_candidates": {
+      "before": 12174,
+      "after": 12156,
+      "delta": -18
+    },
+    "stable_ports/stats/key_field_comparisons": {
+      "before": 25191,
+      "after": 25173,
+      "delta": -18
+    },
+    "stable_ports/stats/node_lookups": {
+      "before": 2829721,
+      "after": 2829716,
+      "delta": -5
+    },
+    "stable_ports/stats/port_domain_probes": {
+      "before": 4720,
+      "after": 4719,
+      "delta": -1
+    },
+    "stable_ports/stats/port_reads": {
+      "before": 7455403,
+      "after": 7455385,
+      "delta": -18
+    },
+    "stable_ports/stats/root_parent_probes": {
+      "before": 8168806,
+      "after": 8168787,
+      "delta": -19
+    },
+    "stable_ports/stats/root_resolutions": {
+      "before": 7455403,
+      "after": 7455385,
+      "delta": -18
+    },
+    "stage_spine/stats/effect_slots_initialized": {
+      "before": 7507,
+      "after": 7511,
+      "delta": 4
+    },
+    "stage_spine/stats/history_allocations": {
+      "before": 302,
+      "after": 452,
+      "delta": 150
+    },
+    "stage_spine/stats/history_capture_reads": {
+      "before": 70,
+      "after": 216,
+      "delta": 146
+    },
+    "stage_spine/stats/history_publication_slot_probes": {
+      "before": 12,
+      "after": 13,
+      "delta": 1
+    },
+    "stage_spine/stats/history_publication_slot_writes": {
+      "before": 12,
+      "after": 13,
+      "delta": 1
+    },
+    "stage_spine/stats/history_seal_checks": {
+      "before": 172,
+      "after": 210,
+      "delta": 38
+    },
+    "stage_spine/stats/history_seal_reads": {
+      "before": 272,
+      "after": 310,
+      "delta": 38
+    },
+    "stage_spine/stats/history_slots_written": {
+      "before": 70,
+      "after": 216,
+      "delta": 146
+    },
+    "stage_spine/stats/joint_history_frames": {
+      "before": 232,
+      "after": 236,
+      "delta": 4
+    },
+    "stage_spine/stats/joint_history_query_reads": {
+      "before": 232,
+      "after": 236,
+      "delta": 4
+    },
+    "stage_spine/stats/joint_history_query_writes": {
+      "before": 232,
+      "after": 236,
+      "delta": 4
+    },
+    "stage_spine/stats/joint_output_reads": {
+      "before": 415,
+      "after": 419,
+      "delta": 4
+    },
+    "stage_spine/stats/publication_buffer_moves": {
+      "before": 3416,
+      "after": 3412,
+      "delta": -4
+    },
+    "stage_spine/stats/root_handles_created": {
+      "before": 1641,
+      "after": 1787,
+      "delta": 146
+    },
+    "stats/constructor_requests": {
+      "before": 8014,
+      "after": 7996,
+      "delta": -18
+    },
+    "stats/handoff_attempts": {
+      "before": 100,
+      "after": 123,
+      "delta": 23
+    }
+  },
+  "direct_completions": [
+    183,
+    183
+  ],
+  "history_storage_before": {
+    "owners": 133,
+    "owner_payload_bytes": 8512,
+    "result_array_bytes": 6336,
+    "history_array_bytes": 0,
+    "layouts": 2,
+    "layout_bytes": 256,
+    "rc_header_bytes": 2160
+  },
+  "history_storage_after": {
+    "owners": 147,
+    "owner_payload_bytes": 9408,
+    "result_array_bytes": 6336,
+    "history_array_bytes": 0,
+    "layouts": 2,
+    "layout_bytes": 256,
+    "rc_header_bytes": 2384
+  },
+  "limitation": "Counters overlap; do not sum them into saved operations. Trace support is not an execution hit count. Retained history census is not peak or complete graph memory."
+}

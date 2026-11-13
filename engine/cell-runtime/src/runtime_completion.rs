@@ -551,7 +551,7 @@ impl Executor {
         self.stage_spine.refresh_entry_owners(&self.entry_schedule);
         let matched = self.completion.as_ref().is_some_and(|s| s.matched);
         if !matched && self.stage_spine.pending_publication_counts().0 == 0 {
-            self.graph.receipt_forwards.clear();
+            self.graph.clear_receipt_forwards();
         }
         let conditions_published=self.publication.publish(
             #[cfg(feature = "family-survey")]

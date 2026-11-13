@@ -141,7 +141,11 @@ impl Executor {
         }
         execution.phase = Phase::Failed;
         let before = Work::read(&self.graph);
+        #[cfg(feature="storage-metrics")]
+        let probe=crate::rhs_projection_trace::before(&self.graph,execution.rule,execution.cell,position,&execution.known);
         let result = self.execute_cell_boundary(execution, position);
+        #[cfg(feature="storage-metrics")]
+        crate::rhs_projection_trace::after(&self.graph,probe,&execution.effects,matches!(result,Ok(true)));
         execution.work.add_since(&self.graph, before);
         match result {
             Ok(live) => {
@@ -231,6 +235,9 @@ impl Executor {
         };
         let (rid, cell) = (execution.rule, execution.cell);
         self.graph.rhs_frame_mut(cell).unwrap().completed = completed;
+        #[cfg(feature="storage-metrics")]
+        if completed {crate::rhs_projection_trace::completed(&self.graph,rid,cell,
+            execution.work.facts,execution.work.updates,execution.work.unions,execution.work.constructors);}
         if execution.continuation {
             self.continuation_stats.published_facts += execution.work.facts;
             self.continuation_stats.function_updates += execution.work.updates;
@@ -260,7 +267,13 @@ impl Executor {
                 }
             }
         }
+        // Result/history capture is complete. Retire dead bindings before a
+        // private Cell moves into its functional writer's retained storage.
+        #[cfg(feature="storage-metrics")]
+        if completed {self.graph.retire_completed_inputs(cell,rid);}
         self.graph.release_empty(cell);
+        #[cfg(feature="storage-metrics")]
+        if completed { self.graph.complete_parent_handoff(cell, rid)?; }
         Ok(())
     }
 }

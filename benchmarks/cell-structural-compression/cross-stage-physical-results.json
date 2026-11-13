@@ -1,0 +1,192 @@
+{
+  "scope": "physical snapshots immediately after successful RHS, before source-Run repair; not peak storage or saved allocations",
+  "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "runs": 1428,
+  "events": 4920,
+  "all_saved_run_checks_equal": true,
+  "families": [
+    {
+      "producer_rule": 340,
+      "bundles": 45,
+      "anchor_owned_by_producer_execution": 0,
+      "roles": {
+        "producer_event": {
+          "events": 45,
+          "unique_execution_ids": 45,
+          "frames_at_completion": 45,
+          "registered_frames": 0,
+          "transient_rhs_frames": 45,
+          "execution_ids_without_rhs_or_registered_frames": 0,
+          "frames_with_facts": 0,
+          "logical_slot_observations": 495,
+          "retained_fact_observations": 0,
+          "non_hidden_fact_observations": 0,
+          "parented_frames": 0
+        },
+        "rule58_event": {
+          "events": 45,
+          "unique_execution_ids": 45,
+          "frames_at_completion": 45,
+          "registered_frames": 19,
+          "transient_rhs_frames": 26,
+          "execution_ids_without_rhs_or_registered_frames": 0,
+          "frames_with_facts": 19,
+          "logical_slot_observations": 161,
+          "retained_fact_observations": 19,
+          "non_hidden_fact_observations": 19,
+          "parented_frames": 0
+        },
+        "rule143_event": {
+          "events": 45,
+          "unique_execution_ids": 45,
+          "frames_at_completion": 45,
+          "registered_frames": 45,
+          "transient_rhs_frames": 0,
+          "execution_ids_without_rhs_or_registered_frames": 0,
+          "frames_with_facts": 45,
+          "logical_slot_observations": 180,
+          "retained_fact_observations": 45,
+          "non_hidden_fact_observations": 45,
+          "parented_frames": 0
+        },
+        "rule137_event": {
+          "events": 45,
+          "unique_execution_ids": 45,
+          "frames_at_completion": 0,
+          "registered_frames": 0,
+          "transient_rhs_frames": 0,
+          "execution_ids_without_rhs_or_registered_frames": 45,
+          "frames_with_facts": 0,
+          "logical_slot_observations": 0,
+          "retained_fact_observations": 0,
+          "non_hidden_fact_observations": 0,
+          "parented_frames": 0
+        }
+      }
+    },
+    {
+      "producer_rule": 324,
+      "bundles": 27,
+      "anchor_owned_by_producer_execution": 0,
+      "roles": {
+        "producer_event": {
+          "events": 27,
+          "unique_execution_ids": 27,
+          "frames_at_completion": 27,
+          "registered_frames": 11,
+          "transient_rhs_frames": 16,
+          "execution_ids_without_rhs_or_registered_frames": 0,
+          "frames_with_facts": 11,
+          "logical_slot_observations": 156,
+          "retained_fact_observations": 17,
+          "non_hidden_fact_observations": 17,
+          "parented_frames": 0
+        },
+        "rule58_event": {
+          "events": 27,
+          "unique_execution_ids": 27,
+          "frames_at_completion": 27,
+          "registered_frames": 7,
+          "transient_rhs_frames": 20,
+          "execution_ids_without_rhs_or_registered_frames": 0,
+          "frames_with_facts": 7,
+          "logical_slot_observations": 101,
+          "retained_fact_observations": 7,
+          "non_hidden_fact_observations": 7,
+          "parented_frames": 0
+        },
+        "rule143_event": {
+          "events": 27,
+          "unique_execution_ids": 27,
+          "frames_at_completion": 27,
+          "registered_frames": 27,
+          "transient_rhs_frames": 0,
+          "execution_ids_without_rhs_or_registered_frames": 0,
+          "frames_with_facts": 27,
+          "logical_slot_observations": 108,
+          "retained_fact_observations": 27,
+          "non_hidden_fact_observations": 27,
+          "parented_frames": 0
+        },
+        "rule137_event": {
+          "events": 27,
+          "unique_execution_ids": 27,
+          "frames_at_completion": 0,
+          "registered_frames": 0,
+          "transient_rhs_frames": 0,
+          "execution_ids_without_rhs_or_registered_frames": 27,
+          "frames_with_facts": 0,
+          "logical_slot_observations": 0,
+          "retained_fact_observations": 0,
+          "non_hidden_fact_observations": 0,
+          "parented_frames": 0
+        }
+      }
+    },
+    {
+      "producer_rule": 60,
+      "bundles": 1,
+      "anchor_owned_by_producer_execution": 0,
+      "roles": {
+        "producer_event": {
+          "events": 1,
+          "unique_execution_ids": 1,
+          "frames_at_completion": 1,
+          "registered_frames": 0,
+          "transient_rhs_frames": 1,
+          "execution_ids_without_rhs_or_registered_frames": 0,
+          "frames_with_facts": 0,
+          "logical_slot_observations": 5,
+          "retained_fact_observations": 0,
+          "non_hidden_fact_observations": 0,
+          "parented_frames": 0
+        },
+        "rule58_event": {
+          "events": 1,
+          "unique_execution_ids": 1,
+          "frames_at_completion": 1,
+          "registered_frames": 0,
+          "transient_rhs_frames": 1,
+          "execution_ids_without_rhs_or_registered_frames": 0,
+          "frames_with_facts": 0,
+          "logical_slot_observations": 4,
+          "retained_fact_observations": 0,
+          "non_hidden_fact_observations": 0,
+          "parented_frames": 0
+        },
+        "rule143_event": {
+          "events": 1,
+          "unique_execution_ids": 1,
+          "frames_at_completion": 1,
+          "registered_frames": 0,
+          "transient_rhs_frames": 1,
+          "execution_ids_without_rhs_or_registered_frames": 0,
+          "frames_with_facts": 0,
+          "logical_slot_observations": 5,
+          "retained_fact_observations": 0,
+          "non_hidden_fact_observations": 0,
+          "parented_frames": 0
+        },
+        "rule137_event": {
+          "events": 1,
+          "unique_execution_ids": 1,
+          "frames_at_completion": 0,
+          "registered_frames": 0,
+          "transient_rhs_frames": 0,
+          "execution_ids_without_rhs_or_registered_frames": 1,
+          "frames_with_facts": 0,
+          "logical_slot_observations": 0,
+          "retained_fact_observations": 0,
+          "non_hidden_fact_observations": 0,
+          "parented_frames": 0
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Logical slots are not allocated bytes; inherited/shared storage can overlap.",
+    "Facts observed at separate completion points are not a final or peak graph census.",
+    "Existing facts may be owned by a different producer; execution id is not a universal result address.",
+    "Absent rhs/registered frame does not exclude retained writer storage or prior execution cost; writer census remains separate."
+  ]
+}

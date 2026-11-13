@@ -1,0 +1,13 @@
+{
+  "base_commit": "5290c39c",
+  "scope": "actual completed-instance candidates; projection layout compiled but takeover deliberately not enabled",
+  "candidate_slots": 956,
+  "slot_record_bytes": 24,
+  "maximum_final_slot_payload_saved": 22944,
+  "added_shared_layout_bytes": 29816,
+  "best_possible_net_final_increase_bytes": 6872,
+  "admitted": false,
+  "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+  "runs": 1428,
+  "raw_trace_sha256": "4dfa32358a80d8a394d2abf3d9a6dbb9eaeb27fd00478837ee0de9a0ebf74ed1"
+}

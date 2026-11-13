@@ -6,6 +6,8 @@
 use super::{Definition, Output, Site};
 use crate::{graph::Dependency, program::Program};
 use std::{num::NonZeroU32, sync::Arc};
+#[cfg(feature="sparse-cells")]
+use std::cell::Cell;
 
 /// The completion interface is independent of receipt storage. Single writes
 /// carry their one actual return inline; other Cells own their result buffers.
@@ -264,7 +266,7 @@ pub(crate) struct Effects {
     #[cfg(feature = "sparse-cells")]
     prepared_buffer: bool,
     #[cfg(feature = "sparse-cells")]
-    history: Vec<Option<Dependency>>,
+    history: Vec<Cell<Option<Dependency>>>,
 }
 impl Effects {
     #[cfg(feature = "sparse-cells")]
@@ -286,8 +288,8 @@ impl Effects {
         debug_assert!(buffer.is_empty(), "joint results own only private transient scratch");
         let joint = plan.joint.as_ref().unwrap();
         buffer.resize(joint.transient_width, None);
-        let mut history = vec![None; joint.width];
-        for &(atom, slot) in &joint.queries { history[slot] = facts.receipt(atom); }
+        let history = vec![Cell::new(None); joint.width];
+        for &(atom, slot) in &joint.queries { history[slot].set(facts.receipt(atom)); }
         let reads = joint.queries.len();
         let keep = plan.outputs;
         (Self { plan: Some(plan), buffer, keep, probes: 0, targets: 0, forwarded: 0, joint: true, prepared_buffer:false, history }, reads)
@@ -348,7 +350,7 @@ impl Effects {
         self.targets+=1;
         #[cfg(feature = "sparse-cells")]
         if self.joint {
-            if slot.history != 0 { self.history[slot.history as usize - 1] = Some(receipt); }
+            if slot.history != 0 { self.history[slot.history as usize - 1].set(Some(receipt)); }
             else if let Some(index) = plan.joint.as_ref().unwrap().transient[index.get() as usize - 1] {
                 self.buffer[index] = Some(receipt);
             }
@@ -373,7 +375,7 @@ impl Effects {
         if self.keep == 0 { return None; }
         let plan = self.plan.as_ref()?.registration.as_ref()?;
         debug_assert!((0..self.keep).all(|position| plan.query_aliases.contains(&position)
-            || if self.joint { self.history[self.plan.as_ref().unwrap().history_output(position)].is_some() }
+            || if self.joint { self.history[self.plan.as_ref().unwrap().history_output(position)].get().is_some() }
                else { self.buffer[position].is_some() }), "completed Cell must supply every proven effect result");
         Some((plan.direct, plan.aliases, plan.query_aliases.len()))
     }
@@ -397,14 +399,14 @@ impl Effects {
     }
 }
 
-/// Borrow the existing output slots across a worker invocation. The Rc owner
-/// stays on the coordinator; its immutable plan and unique arrays are shared
-/// by reference, without another result packet or layout conversion.
+/// Borrow the existing output slots on their execution owner. The immutable
+/// plan is shared through Arc; the unique result arrays travel with the Cell,
+/// without another result packet or layout conversion.
 #[cfg(feature = "sparse-cells")]
 pub(crate) struct EffectWriter<'a> {
     plan: Option<&'a EffectPlan>,
     buffer: &'a mut Vec<Option<Dependency>>,
-    history: &'a mut Vec<Option<Dependency>>,
+    history: &'a mut Vec<Cell<Option<Dependency>>>,
     joint: bool,
     probes: &'a mut u64,
     targets: &'a mut u64,
@@ -419,7 +421,7 @@ impl<'a> EffectWriter<'a> {
         let slot=if self.joint {
             if descriptor.history!=0 {
                 *self.targets+=1;
-                return self.history.get_mut(descriptor.history as usize-1);
+                return self.history.get_mut(descriptor.history as usize-1).map(Cell::get_mut);
             }
             plan.joint.as_ref()?.transient[slot]?
         } else {slot};
@@ -442,7 +444,7 @@ impl CompletedEffects for Effects {
         let slot = descriptor.index?.get() as usize - 1;
         #[cfg(feature = "sparse-cells")]
         let slot = if self.joint {
-            if descriptor.history != 0 { return self.history.get(descriptor.history as usize - 1).copied().flatten(); }
+            if descriptor.history != 0 { return self.history.get(descriptor.history as usize - 1).and_then(Cell::get); }
             plan.joint.as_ref()?.transient[slot]?
         } else { slot };
         self.buffer[slot]

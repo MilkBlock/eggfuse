@@ -152,6 +152,63 @@ pub fn call(j: &J, names: &BTreeMap<String, usize>) -> Result<Call> {
     }
 }
 impl Program {
+    /// Destructive storage diagnostic, after the Graph and Executor are gone.
+    /// Shared allocations are attributed to the last released owner.
+    #[cfg(feature = "storage-metrics")]
+    pub fn release_storage_by_field(
+        self,
+        live_bytes: impl Fn() -> usize,
+        rows: &mut Vec<(&'static str, usize)>,
+    ) {
+        assert!(rows.capacity() - rows.len() >= 64);
+        macro_rules! release {
+            ($field:ident) => {{
+                let before = live_bytes();
+                drop(self.$field);
+                rows.push((stringify!($field), before - live_bytes()));
+            }};
+        }
+        #[cfg(feature = "sparse-cells")]
+        release!(cached_key_nodes);
+        #[cfg(feature = "rhs-locals")]
+        release!(local_rhs);
+        release!(depth_plan);
+        release!(view_blocks);
+        release!(neighbor_plans);
+        release!(context_cuts);
+        release!(local_contexts);
+        release!(writes);
+        release!(kernels);
+        release!(physical);
+        release!(repair_ports);
+        release!(local_union_cells);
+        self.cell_ownership.release_storage_by_field(&live_bytes, rows);
+        release!(completion_plan);
+        #[cfg(feature = "spine-blocks")]
+        release!(repair_cells);
+        release!(entry_join);
+        release!(known_results);
+        release!(merge_programs);
+        #[cfg(feature = "spine-blocks")]
+        release!(spine_blocks);
+        #[cfg(feature = "iterative-bake")]
+        release!(iterative);
+        release!(marker_tables);
+        release!(cell_queries);
+        release!(executions);
+        release!(cell_links);
+        release!(multi_stage);
+        release!(entry_schedule);
+        release!(tables);
+        release!(templates);
+        release!(rules);
+        release!(sets);
+        release!(control);
+        release!(initial);
+        release!(table_templates);
+        release!(artifact);
+    }
+
     pub fn prepare_cell_ownership(&mut self) -> Result<()> {
         if self.cell_ownership.markers.is_empty() {
             self.cell_ownership = crate::graph::cell_ownership::Plan::derive(self)?;
@@ -506,7 +563,8 @@ impl Program {
                 .ok_or("unknown marker table")?;
             if p.tables[t].constructor
                 || p.tables[t].schema.last().unwrap()["kind"] != "Unit"
-                || p.tables[t].merge != serde_json::json!({"var":"old"})
+                || !(p.tables[t].merge == serde_json::json!({"var":"old"})
+                    || (p.tables[t].virtual_fact && p.tables[t].merge.is_null()))
             {
                 return Err("invalid marker relation".into());
             }

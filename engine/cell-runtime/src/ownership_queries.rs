@@ -4,7 +4,7 @@ use super::*;
 
 /// The low bit records an input use. One word replaces the separate condition
 /// input directory without widening each stored query position.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Position(usize);
 impl Position {
     fn new(index: usize, input: bool) -> Self {
@@ -15,26 +15,38 @@ impl Position {
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Plan {
     /// Symbol -> column -> positions in Shape::signals[symbol].
-    pub columns: Vec<Vec<Vec<Position>>>,
+    pub columns: Vec<Arc<Vec<Vec<Position>>>>,
 }
 impl Plan {
     pub fn derive(shape: &Shape, programs: &[Arc<PortProgram>]) -> Self {
         let columns = shape
             .signals
             .iter()
-            .map(|steps| {
+            .enumerate()
+            .map(|(symbol, steps)| {
                 let mut columns = Vec::<Vec<Position>>::new();
                 for (position, step) in steps.iter().enumerate() {
                     let width = programs[shape.programs[step.frame]].fields[step.op as usize].len();
-                    for &column in step.columns.iter() {
+                    for column in shape.columns(programs, symbol, step) {
                         columns.resize_with(columns.len().max(column + 1), Vec::new);
                         columns[column].push(Position::new(position, column + 1 < width));
                     }
                 }
-                columns
+                Arc::new(columns)
             })
             .collect();
         Self { columns }
+    }
+    /// Content-address only immutable relative positions and input-use bits.
+    /// The caller's shape still supplies the actual instruction/frame identity.
+    pub(super) fn share_columns(&mut self, shared: &mut std::collections::HashSet<Arc<Vec<Vec<Position>>>>) {
+        for columns in &mut self.columns {
+            if let Some(existing) = shared.get(columns) {
+                *columns = existing.clone();
+            } else {
+                shared.insert(columns.clone());
+            }
+        }
     }
     fn positions(&self, symbol: usize, column: usize) -> &[Position] {
         self.columns[symbol].get(column).map_or(&[], Vec::as_slice)
@@ -51,6 +63,7 @@ pub(in crate::graph::cell_ownership) struct FieldUses<'a> {
     positions: Option<&'a [Position]>,
     programs: &'a [Arc<PortProgram>],
     column: usize,
+    symbol: usize,
 }
 impl FieldUses<'_> {
     pub fn indexed(&self) -> bool {
@@ -71,7 +84,7 @@ impl FieldUses<'_> {
             &self.steps[encoded >> 1]
         } else {
             let step = &self.steps[position];
-            if !step.columns.contains(&self.column) {
+            if !self.shape.columns(self.programs, self.symbol, step).any(|column|column == self.column) {
                 return None;
             }
             if inputs_only {
@@ -94,7 +107,7 @@ impl<'a> FieldUses<'a> {
         symbol: usize, column: usize) -> Self {
         Self { component, shape, steps: &shape.signals[symbol],
             positions: plan.composition.queries.get(component.shape).map(|p| p.positions(symbol, column)),
-            programs: &plan.programs, column }
+            programs: &plan.programs, column, symbol }
     }
 }
 impl Graph {

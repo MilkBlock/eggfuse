@@ -1,0 +1,60 @@
+{
+  "scope": "offline switch replay; not runtime hits, witness validation or saved work",
+  "base_program": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "candidate_program": "67e91a1612d32579b53f71de881619d411886bcdcbe100aea6c6dea0cc5f98e4",
+  "events": 4920,
+  "base_unit_mismatches": 0,
+  "direct_plan_opportunities": [
+    209,
+    209
+  ],
+  "changed_transfer_events": 173,
+  "changed_by_entry": [
+    {
+      "entry": [
+        60,
+        null
+      ],
+      "events": 146
+    },
+    {
+      "entry": [
+        137,
+        0
+      ],
+      "events": 4
+    },
+    {
+      "entry": [
+        143,
+        0
+      ],
+      "events": 23
+    }
+  ],
+  "filtered_added_units": 2,
+  "actual_ancestry_rejections": [
+    {
+      "source_path": [
+        [
+          null,
+          [
+            137,
+            0
+          ]
+        ],
+        [
+          1,
+          [
+            143,
+            0
+          ]
+        ]
+      ],
+      "support": 9,
+      "avoided_units": 1,
+      "reason": "actual-ancestry-already-has-same-terminal-transfer"
+    }
+  ],
+  "limitation": "Replay lacks runtime witness validity and cannot establish time or memory savings. Admission is profile guided, not permanent dominance."
+}

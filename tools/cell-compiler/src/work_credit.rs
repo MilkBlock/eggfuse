@@ -16,6 +16,7 @@ impl Work {
                 "root_handles_created", "contexts_created", "capture_reads",
                 "origin_key_slots", "origin_map_writes", "origin_map_probes",
                 "history_capture_reads", "history_slots_written", "history_allocations",
+                "history_deferred_root_probes", "history_deferred_root_captures", "history_deferred_root_promotions",
                 "ripsat_plan_probes", "ripsat_layout_checks", "ripsat_witness_checks", "ripsat_projection_checks", "ripsat_boundary_reads",
                 "history_inherited_reads", "history_inheritance_marks", "history_heap_frames", "effect_slots_initialized",
                 "query_receipt_attempts", "context_reads", "port_cache_fills", "guards", "cell_query_result_writes",
@@ -80,6 +81,15 @@ impl Work {
                 _ => return Err("unknown Cell suspension accounting".into()),
             };
             work.insert(format!("stats/{field}"), value);
+        }
+        // Older executions had no completed-parent takeover. Charge probing
+        // and field proof work, never count detachments as saved operations.
+        for field in ["completed_parent_candidates", "completed_parent_slot_checks"] {
+            let count=match report["stats"].get(field) {
+                None=>0,
+                Some(value)=>value.as_u64().ok_or_else(||format!("invalid parent takeover counter {field}"))?,
+            };
+            work.insert(format!("stats/{field}"),count);
         }
         // Constructor preparation replaces a source lookup only after checked
         // evidence. All speculative lookups already enter key_lookup_calls;
@@ -232,6 +242,30 @@ impl Work {
                     report["stage_spine"]["stats"][field].as_u64()
                         .ok_or_else(||format!("missing Cell union work {field}"))?,
                 _ => return Err("unknown Cell union completion".into()),
+            };
+            work.insert(format!("stage_spine/stats/{field}"),value);
+        }
+        // Only failed visible-receipt checks do the extra live-table lookup
+        // for diagnosis. Each failure belongs to exactly one category.
+        for field in ["ripsat_witness_retired", "ripsat_witness_wrong_table", "ripsat_witness_hidden"] {
+            let value=match report["stage_spine"].get("completion_witness_diagnosis") {
+                None=>0,
+                Some(J::String(v)) if v=="receipt-lifetime/v1" =>
+                    report["stage_spine"]["stats"][field].as_u64()
+                        .ok_or_else(||format!("missing Cell witness diagnosis work {field}"))?,
+                _=>return Err("unknown Cell witness diagnosis".into()),
+            };
+            work.insert(format!("stage_spine/stats/{field}"),value);
+        }
+        // Output delivery already resolves forwarding. Charge only the added
+        // shared-slot address and write, not a second receipt lookup.
+        for field in ["history_publication_slot_probes", "history_publication_slot_writes"] {
+            let value=match report["stage_spine"].get("history_publication_forwarding") {
+                None=>0,
+                Some(J::String(v)) if v=="shared-result-slots/v1" =>
+                    report["stage_spine"]["stats"][field].as_u64()
+                        .ok_or_else(||format!("missing Cell publication forwarding work {field}"))?,
+                _=>return Err("unknown Cell publication forwarding".into()),
             };
             work.insert(format!("stage_spine/stats/{field}"),value);
         }
@@ -762,6 +796,24 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         member_report["neighbor_context"]["absorption"]["row_completion"] = "unknown".into();
         assert!(Work::read(&member_report).is_err());
     }
+    let mut diagnosis=report.clone();
+    diagnosis["stage_spine"]["stats"]["ripsat_witness_retired"]=7.into();
+    assert_eq!(Work::read(&diagnosis).unwrap().0["stage_spine/stats/ripsat_witness_retired"],7);
+    diagnosis["stage_spine"]["stats"].as_object_mut().unwrap().remove("ripsat_witness_hidden");
+    assert!(Work::read(&diagnosis).unwrap_err().contains("missing Cell witness diagnosis"));
+    diagnosis["stage_spine"].as_object_mut().unwrap().remove("completion_witness_diagnosis");
+    assert_eq!(Work::read(&diagnosis).unwrap().0["stage_spine/stats/ripsat_witness_retired"],0);
+    diagnosis["stage_spine"]["completion_witness_diagnosis"]="unknown".into();
+    assert!(Work::read(&diagnosis).is_err());
+    let mut forwarding=report.clone();
+    forwarding["stage_spine"]["stats"]["history_publication_slot_writes"]=5.into();
+    assert_eq!(Work::read(&forwarding).unwrap().0["stage_spine/stats/history_publication_slot_writes"],5);
+    forwarding["stage_spine"]["stats"].as_object_mut().unwrap().remove("history_publication_slot_probes");
+    assert!(Work::read(&forwarding).unwrap_err().contains("missing Cell publication forwarding"));
+    forwarding["stage_spine"].as_object_mut().unwrap().remove("history_publication_forwarding");
+    assert_eq!(Work::read(&forwarding).unwrap().0["stage_spine/stats/history_publication_slot_writes"],0);
+    forwarding["stage_spine"]["history_publication_forwarding"]="unknown".into();
+    assert!(Work::read(&forwarding).is_err());
     let mut sealed_report = report.clone();
     sealed_report["stage_spine"]["stats"]["history_seal_reads"] = 7.into();
     assert_eq!(Work::read(&sealed_report).unwrap().0["stage_spine/stats/history_seal_reads"], 7);

@@ -5,6 +5,7 @@
 mod publication_workers;
 #[cfg(feature = "parallel-publication")]
 pub(crate) use publication_workers::PublicationTask;
+use crate::graph::FactStates as _;
 use crate::{
     graph::{Dependency, Graph, Row},
     program::*,
@@ -864,6 +865,13 @@ impl Scheduler {
         Some(&self.publications[id.get() - 1].as_ref()?.published)
     }
     #[cfg(feature = "sparse-cells")]
+    pub(crate) fn matched_publication(&self, table:usize, witness:Dependency) -> Option<&crate::stage_spine::Published> {
+        let node=self.publication_nodes.get(table).copied().flatten()?;
+        let Entries::Owned(rows)=&self.states[node].rows else {return None;};
+        let id=rows.get(&witness)?.publication?;
+        Some(&self.publications.get(id.get()-1)?.as_ref()?.published)
+    }
+    #[cfg(feature = "sparse-cells")]
     pub(crate) fn owns_publications(&self, table: usize) -> bool {
         self.publication_nodes[table].is_some()
     }
@@ -903,8 +911,7 @@ impl Scheduler {
                     } else {
                         self.stats.entry_retirement_checks += 1;
                         match w {
-                            Dependency::Fact(f) => g.cells.get(&f.cell)
-                                .and_then(|c| c.facts.get(&f.op)).is_some_and(|f| !f.hidden),
+                            Dependency::Fact(f) => g.cells.fact_state(f).is_some_and(|f| !f.hidden),
                             Dependency::Function(i) => g.functions.get(i).is_some_and(|f| f.live),
                         }
                     };

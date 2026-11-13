@@ -1,0 +1,23 @@
+{
+  "scope": "offline typed-symbol opportunity on first visible-reuse boundary per Cell; not executed savings",
+  "program_sha256": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+  "counts": {
+    "distinct_cells_observed": 1405,
+    "cells_with_extra_ports": 25,
+    "extra_ports_over_best_single_anchor": 25
+  },
+  "eligible_cells_by_rule": {
+    "540": 9,
+    "538": 12,
+    "523": 4
+  },
+  "limitations": [
+    "Only already retained witnesses in the existing reuse trace are available.",
+    "This is not a census of all creation-time ownership Entries.",
+    "Compare to best single anchor, not necessarily the source actually chosen.",
+    "Count distinct child symbols, never repeated parent columns or multiple observations of one Cell.",
+    "Missing scalar positions and sources in different components are not merged.",
+    "Potential port sharing does not establish a removable source frame or fact.",
+    "No additional runtime guards, indexes or representation are admitted by this analysis."
+  ]
+}

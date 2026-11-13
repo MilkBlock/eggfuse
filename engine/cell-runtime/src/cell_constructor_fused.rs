@@ -43,7 +43,7 @@ impl Graph {
             members:std::mem::take(&mut self.members),changes:tables.into_iter()
                 .map(|t|(t,self.changes.take_new_row_table(t))).collect(),epoch:self.epoch,input:input.clone()};
         let subscriptions=Subscriptions {uses:std::mem::take(&mut self.uses),
-            dependencies:std::mem::take(&mut self.dependencies),metrics:std::mem::take(&mut self.maintenance),
+            metrics:std::mem::take(&mut self.maintenance),
             columns:self.program.repair_ports.key_eq_columns.clone(),input};
         self.stats.constructor_fused_regions+=1;self.stats.constructor_fused_cells+=tasks.len() as u64;
         self.stats.constructor_fused_planned_operations+=operations as u64;
@@ -71,7 +71,7 @@ impl Owner {
             });
         let subscriptions=&mut self.subscriptions;
         for row in rows {
-            maintenance::subscribe_fresh(&mut subscriptions.uses,&mut subscriptions.dependencies,&mut subscriptions.metrics,
+            maintenance::subscribe_fresh(&mut subscriptions.uses,&mut subscriptions.metrics,
                 Dependency::Fact(FactRef {cell,op:row.operation as u32}),&row.fields,
                 Some(subscriptions.columns[row.table].as_ref().unwrap()));
         }
@@ -169,7 +169,7 @@ mod tests {
                 let cell=d.done.cell;expected.commit_local_job(d.done,&mut d.effects.writer()).unwrap();expected.release_empty(cell);
             }
             assert_eq!(g.export().unwrap(),expected.export().unwrap());
-            assert_eq!(g.dependencies,expected.dependencies);assert_eq!(g.query_versions,expected.query_versions);
+            assert_eq!(g.forward_dependency_size(),expected.forward_dependency_size());assert_eq!(g.query_versions,expected.query_versions);
             assert_eq!((g.changes.events,g.changes.distinct_events),(expected.changes.events,expected.changes.distinct_events));
             assert_eq!(g.stats.constructor_registry_adopted,3*stop.div_ceil(2) as u64);
             assert_eq!(g.stats.constructor_registry_adopted+g.stats.constructor_registry_discarded,96);

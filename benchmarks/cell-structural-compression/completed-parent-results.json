@@ -1,0 +1,17 @@
+{
+  "scope": "rejected automatic parent-handoff experiment, actual standalone Cell runtime; not a memory benchmark",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "work": {
+    "completed_parent_candidates": 413,
+    "completed_parent_slot_checks": 762,
+    "completed_parent_detachments": 1,
+    "completed_parent_slots_delegated": 3
+  },
+  "decision": "do not enable default: one detachment for 413 candidates and 762 slot checks; no measured whole-egraph compression",
+  "validation": {
+    "runtime_tests": 147,
+    "ownership_tests": 32,
+    "ripsat_tests": 21
+  }
+}

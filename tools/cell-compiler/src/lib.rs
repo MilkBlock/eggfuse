@@ -305,7 +305,7 @@ pub fn cli(default_bench: bool) -> Result<()> {
         return Ok(());
     }
     if cmd == "bake-cell-completion" && args.iter().any(|a| a == "--help") {
-        println!("cargo run --release --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-cells,view-ports -- bake-cell-completion --program INPUT --output NEW_DIR");
+        println!("cargo run --release --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-cells,view-ports -- bake-cell-completion --program INPUT --output NEW_DIR [--lazy-unions true|false | --history AUDITED_HISTORY --extra-units N]");
         return Ok(());
     }
     if cmd == "bake-cell-ownership" && args.iter().any(|a| a == "--help") {

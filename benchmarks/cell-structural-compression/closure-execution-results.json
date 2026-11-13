@@ -1,0 +1,246 @@
+{
+  "scope": "actual standalone Cell runtime; work counts only, not timing",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "activation_changes": {
+    "graph_work": {
+      "completion_frame_growth_bytes": {
+        "before": 14040,
+        "after": 2520
+      },
+      "completion_frame_growths": {
+        "before": 195,
+        "after": 35
+      },
+      "completion_frame_result_writes": {
+        "before": 195,
+        "after": 35
+      },
+      "constructor_requests": {
+        "before": 8014,
+        "after": 8023
+      },
+      "constructor_reused": {
+        "before": 4910,
+        "after": 4919
+      },
+      "handoff_attempts": {
+        "before": 466,
+        "after": 136
+      },
+      "handoff_closed": {
+        "before": 160,
+        "after": 0
+      },
+      "handoff_closed_fallback": {
+        "before": 35,
+        "after": 44
+      },
+      "handoff_lets": {
+        "before": 271,
+        "after": 92
+      },
+      "handoff_noop_unions": {
+        "before": 160,
+        "after": 0
+      },
+      "handoff_sets": {
+        "before": 160,
+        "after": 0
+      },
+      "handoff_stale": {
+        "before": 35,
+        "after": 44
+      }
+    },
+    "stage_work": {
+      "constructor_requests": {
+        "before": 6867,
+        "after": 6876
+      },
+      "effect_buffer_returns": {
+        "before": 4317,
+        "after": 4149
+      },
+      "effect_buffer_reuses": {
+        "before": 4196,
+        "after": 4028
+      },
+      "effect_buffer_takes": {
+        "before": 4372,
+        "after": 4207
+      },
+      "effect_frames": {
+        "before": 4372,
+        "after": 4207
+      },
+      "effect_slot_probes": {
+        "before": 9070,
+        "after": 8740
+      },
+      "effect_slot_targets": {
+        "before": 7283,
+        "after": 6953
+      },
+      "effect_slots_initialized": {
+        "before": 8056,
+        "after": 7561
+      },
+      "history_allocations": {
+        "before": 485,
+        "after": 320
+      },
+      "history_inherited_reads": {
+        "before": 0,
+        "after": 18
+      },
+      "history_result_reads": {
+        "before": 466,
+        "after": 136
+      },
+      "history_seal_reads": {
+        "before": 409,
+        "after": 284
+      },
+      "history_seal_shared": {
+        "before": 0,
+        "after": 60
+      },
+      "history_seal_writes": {
+        "before": 78,
+        "after": 65
+      },
+      "history_shared_slots": {
+        "before": 1050,
+        "after": 1245
+      },
+      "joint_history_checks": {
+        "before": 419,
+        "after": 254
+      },
+      "joint_history_frames": {
+        "before": 415,
+        "after": 250
+      },
+      "joint_history_query_reads": {
+        "before": 415,
+        "after": 250
+      },
+      "joint_history_query_writes": {
+        "before": 415,
+        "after": 250
+      },
+      "joint_scratch_borrows": {
+        "before": 415,
+        "after": 250
+      },
+      "joint_scratch_growth_bytes": {
+        "before": 128,
+        "after": 0
+      },
+      "joint_scratch_growths": {
+        "before": 2,
+        "after": 0
+      },
+      "owned_effect_frames": {
+        "before": 4372,
+        "after": 4207
+      },
+      "receipt_redirects": {
+        "before": 437,
+        "after": 448
+      },
+      "ripsat_boundary_reads": {
+        "before": 0,
+        "after": 170
+      },
+      "ripsat_completed": {
+        "before": 0,
+        "after": 165
+      },
+      "ripsat_layout_checks": {
+        "before": 0,
+        "after": 209
+      },
+      "ripsat_plan_probes": {
+        "before": 0,
+        "after": 1950
+      },
+      "ripsat_projected_slots": {
+        "before": 0,
+        "after": 495
+      },
+      "ripsat_projection_checks": {
+        "before": 0,
+        "after": 18
+      },
+      "ripsat_union_cells": {
+        "before": 0,
+        "after": 5
+      },
+      "ripsat_union_result_reads": {
+        "before": 0,
+        "after": 10
+      },
+      "ripsat_witness_checks": {
+        "before": 0,
+        "after": 618
+      },
+      "ripsat_witness_fallbacks": {
+        "before": 0,
+        "after": 44
+      },
+      "unmaterialized_anchor_keys": {
+        "before": 7608,
+        "after": 7438
+      }
+    },
+    "query_work": {}
+  },
+  "additional_route_changes": {
+    "graph_work": {},
+    "stage_work": {},
+    "query_work": {}
+  },
+  "key_lookup_calls": [
+    12115,
+    12124,
+    12124
+  ],
+  "published_history_storage": [
+    {
+      "owners": 136,
+      "owner_payload_bytes": 8704,
+      "result_array_bytes": 6368,
+      "history_array_bytes": 0,
+      "layouts": 0,
+      "layout_bytes": 0,
+      "rc_header_bytes": 2176
+    },
+    {
+      "owners": 133,
+      "owner_payload_bytes": 8512,
+      "result_array_bytes": 6336,
+      "history_array_bytes": 0,
+      "layouts": 2,
+      "layout_bytes": 256,
+      "rc_header_bytes": 2160
+    },
+    {
+      "owners": 133,
+      "owner_payload_bytes": 8512,
+      "result_array_bytes": 6336,
+      "history_array_bytes": 0,
+      "layouts": 2,
+      "layout_bytes": 256,
+      "rc_header_bytes": 2160
+    }
+  ],
+  "admission": "existing-directory lowering has measured maintenance savings and nine extra constructor lookups; the additional route has no measured work benefit and is not the selected sum-bits configuration",
+  "limitations": "RHS direct completion still follows matching. No query-elimination, end-to-end speedup or complete memory result claimed. History storage is a partial census with shared layouts counted once; do not sum overlapping counters.",
+  "inputs_sha256": {
+    "closure-baseline-work.json": "46409a1ea8817c1f4d91c9bc68387ac557a46b1c64465c4cef011681b530b449",
+    "closure-existing-work.json": "4bc331cce2a9150f05b2a05ac0f8789aee98c4ba316df737e4a05acbb0555ec6",
+    "closure-admitted-work.json": "3dccea409b85bfebd2935da7d927ca99da73401747948a3714965e4682b0e0f9"
+  }
+}

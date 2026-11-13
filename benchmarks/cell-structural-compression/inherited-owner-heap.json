@@ -1,0 +1,271 @@
+{
+  "scope": "actual standalone Cell runtime; requested heap, not RSS or timing",
+  "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+  "runs": 1428,
+  "final_state_matches_audit": true,
+  "graph_saved_bytes": 103472,
+  "graph_saved_percent": 3.372518368902116,
+  "lanes": [
+    {
+      "graph_owned_teardown_bytes": 3068093,
+      "graph_unlisted_teardown_bytes": 55820,
+      "retained_program_teardown_bytes": 117207936,
+      "execution_and_takeover_peak_bytes": 125830976,
+      "max_takeover_extra_bytes": 0,
+      "trace_buffer_bytes": 196608,
+      "mode": "record-control",
+      "last_run_live_bytes": 125248790,
+      "peak_run": {
+        "run": 1255,
+        "before": 125537224,
+        "execution_peak": 125830976,
+        "before_takeover": 125828682,
+        "takeover_peak": 125828682,
+        "after": 125546562
+      }
+    },
+    {
+      "graph_owned_teardown_bytes": 2964621,
+      "graph_unlisted_teardown_bytes": 55820,
+      "retained_program_teardown_bytes": 117208416,
+      "execution_and_takeover_peak_bytes": 125636524,
+      "max_takeover_extra_bytes": 49552,
+      "trace_buffer_bytes": 196608,
+      "mode": "inherited-owners",
+      "last_run_live_bytes": 125145802,
+      "peak_run": {
+        "run": 1255,
+        "before": 125436252,
+        "execution_peak": 125636524,
+        "before_takeover": 125634230,
+        "takeover_peak": 125634646,
+        "after": 125444726
+      }
+    }
+  ],
+  "graph_fields": [
+    {
+      "field": "cells",
+      "control": 1074680,
+      "takeover": 971208,
+      "saved": 103472
+    },
+    {
+      "field": "functions",
+      "control": 354408,
+      "takeover": 354408,
+      "saved": 0
+    },
+    {
+      "field": "ownership.components",
+      "control": 279488,
+      "takeover": 279488,
+      "saved": 0
+    },
+    {
+      "field": "stable_ports",
+      "control": 224118,
+      "takeover": 224118,
+      "saved": 0
+    },
+    {
+      "field": "ownership.boundaries",
+      "control": 214568,
+      "takeover": 214568,
+      "saved": 0
+    },
+    {
+      "field": "ownership.frames",
+      "control": 163584,
+      "takeover": 163584,
+      "saved": 0
+    },
+    {
+      "field": "uses",
+      "control": 119468,
+      "takeover": 119468,
+      "saved": 0
+    },
+    {
+      "field": "intern",
+      "control": 102408,
+      "takeover": 102408,
+      "saved": 0
+    },
+    {
+      "field": "ownership.barriers",
+      "control": 98304,
+      "takeover": 98304,
+      "saved": 0
+    },
+    {
+      "field": "members",
+      "control": 83640,
+      "takeover": 83640,
+      "saved": 0
+    },
+    {
+      "field": "function_keys",
+      "control": 70716,
+      "takeover": 70716,
+      "saved": 0
+    },
+    {
+      "field": "changes",
+      "control": 63212,
+      "takeover": 63212,
+      "saved": 0
+    },
+    {
+      "field": "parents",
+      "control": 35848,
+      "takeover": 35848,
+      "saved": 0
+    },
+    {
+      "field": "writer_dir",
+      "control": 28912,
+      "takeover": 28912,
+      "saved": 0
+    },
+    {
+      "field": "ownership.transitions",
+      "control": 25096,
+      "takeover": 25096,
+      "saved": 0
+    },
+    {
+      "field": "parent_users",
+      "control": 17416,
+      "takeover": 17416,
+      "saved": 0
+    },
+    {
+      "field": "ownership.live_facts",
+      "control": 16384,
+      "takeover": 16384,
+      "saved": 0
+    },
+    {
+      "field": "dirty_facts",
+      "control": 12744,
+      "takeover": 12744,
+      "saved": 0
+    },
+    {
+      "field": "anchors",
+      "control": 10247,
+      "takeover": 10247,
+      "saved": 0
+    },
+    {
+      "field": "ownership.shapes",
+      "control": 4976,
+      "takeover": 4976,
+      "saved": 0
+    },
+    {
+      "field": "receipt_forwards",
+      "control": 4232,
+      "takeover": 4232,
+      "saved": 0
+    },
+    {
+      "field": "ownership.tables",
+      "control": 3208,
+      "takeover": 3208,
+      "saved": 0
+    },
+    {
+      "field": "repair_ports",
+      "control": 3208,
+      "takeover": 3208,
+      "saved": 0
+    },
+    {
+      "field": "ownership.heap",
+      "control": 1024,
+      "takeover": 1024,
+      "saved": 0
+    },
+    {
+      "field": "dirty",
+      "control": 192,
+      "takeover": 192,
+      "saved": 0
+    },
+    {
+      "field": "ownership.pending",
+      "control": 104,
+      "takeover": 104,
+      "saved": 0
+    },
+    {
+      "field": "garbage",
+      "control": 56,
+      "takeover": 56,
+      "saved": 0
+    },
+    {
+      "field": "ownership.columns",
+      "control": 32,
+      "takeover": 32,
+      "saved": 0
+    },
+    {
+      "field": "local_unions",
+      "control": 0,
+      "takeover": 0,
+      "saved": 0
+    },
+    {
+      "field": "ownership.training",
+      "control": 0,
+      "takeover": 0,
+      "saved": 0
+    },
+    {
+      "field": "ownership.catalog_trace",
+      "control": 0,
+      "takeover": 0,
+      "saved": 0
+    },
+    {
+      "field": "ownership.entry",
+      "control": 0,
+      "takeover": 0,
+      "saved": 0
+    },
+    {
+      "field": "ownership.port_completion",
+      "control": 0,
+      "takeover": 0,
+      "saved": 0
+    },
+    {
+      "field": "ownership.stats",
+      "control": 0,
+      "takeover": 0,
+      "saved": 0
+    },
+    {
+      "field": "union_digest",
+      "control": 0,
+      "takeover": 0,
+      "saved": 0
+    },
+    {
+      "field": "dirty_markers",
+      "control": 0,
+      "takeover": 0,
+      "saved": 0
+    }
+  ],
+  "limitations": [
+    "Graph teardown attributes shared allocations to their last owner",
+    "process peak includes compiled Program, Executor and fixed trace buffer",
+    "matching final state does not independently validate intermediate Runs",
+    "no additional RHS skipping is established by memory measurements"
+  ]
+}

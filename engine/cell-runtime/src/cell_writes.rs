@@ -109,7 +109,7 @@ mod tests {
             g.write_cells(0, &mut tasks(1000), &pool, &mut counts, Some(false))
                 .unwrap();
             assert_eq!(g.slot(old.cell, 1).unwrap(), Value::Int(17));
-            assert_eq!(g.functions[17].value, Value::Int(1017));
+            assert_eq!(g.functions[17].value(), &Value::Int(1017));
             assert!(g.writer_dir.get(old.cell).is_none());
             assert_eq!(g.writer_dir.promoted, 1);
             assert_eq!(g.members[0].len(), 128);
@@ -158,7 +158,6 @@ mod tests {
             );
             assert_eq!(g.next_cell, next);
             assert!(g.functions.is_empty());
-            assert!(g.function_decoded.is_empty());
             assert!(g.changes.is_empty());
             assert_eq!(g.export().unwrap(), before);
             assert_eq!(counts.owner_candidates, 0);
@@ -243,7 +242,6 @@ enum Previous {
 
 struct Target<'a> {
     function: &'a mut Function,
-    decoded: &'a mut Option<RowFields>,
     group: &'a mut [Task],
     retained: bool,
     finished: Option<Finished>,
@@ -251,13 +249,11 @@ struct Target<'a> {
 struct Completion<'a> {
     lifecycle: writer_frames::Owner<'a>,
     uses: &'a mut HashMap<u64, UseSet>,
-    dependencies: &'a mut HashMap<Dependency, smallvec::SmallVec<[u64; 3]>>,
     maintenance: &'a mut maintenance::Metrics,
     members: &'a mut TableRows<u64>,
     version: &'a mut u64,
     changes: &'a mut crate::change_batch::ChangeBatch,
     changed: &'a mut bool,
-    parents: &'a Parents,
     counts: &'a mut Counts,
     table: usize,
     merges: u64,
@@ -302,9 +298,9 @@ impl Completion<'_> {
             self.members.insert(index as u64);
             // The authoritative PortWrite proof is Eq -> i64. The input key
             // was canonicalized in this same read epoch; no union can intervene.
-            // Reuse ordinary subscription replacement without scanning the
-            // scalar output or rereading this row through Graph::function.
-            let [Value::Eq(id)] = f.key.as_slice() else {
+            // A fresh row needs one reverse incidence, without scanning the
+            // scalar output or maintaining a second forward dependency map.
+            let [Value::Eq(id)] = f.key() else {
                 unreachable!("typed scalar key")
             };
             self.maintenance.subscription_calls += 1;
@@ -312,14 +308,7 @@ impl Completion<'_> {
             self.maintenance.subscription_value_visits += 1;
             self.maintenance.subscription_scalar_fields_skipped += 1;
             self.maintenance.subscription_root_reads_omitted += 1;
-            maintenance::replace_subscriptions(
-                self.uses,
-                self.dependencies,
-                self.maintenance,
-                self.parents,
-                witness,
-                smallvec::smallvec![*id],
-            );
+            maintenance::insert(self.uses,self.maintenance,*id,witness);
         }
         *self.version += result.updates;
     }
@@ -398,20 +387,17 @@ impl Graph {
         let next_cell = &mut self.next_cell;
         let keys = &mut self.function_keys[table];
         let functions = &mut self.functions;
-        let decoded = &mut self.function_decoded;
         let parent_users = &mut self.parent_users;
         let directory = &mut self.writer_dir;
         let cells = &mut self.cells;
         let garbage = &mut self.garbage;
         let stats = &mut self.stats;
         let uses = &mut self.uses;
-        let dependencies = &mut self.dependencies;
         let maintenance = &mut self.maintenance;
         let members = &mut self.members[table];
         let version = &mut self.query_versions[table];
         let changes = &mut self.changes;
         let changed = &mut self.changed;
-        let parent_directory = &self.parents;
         let merge_kind = self.merge_kinds[table].as_deref();
         let parents = self.parents.reader();
         counts.boundary_ns += boundary.elapsed().as_nanos() as u64;
@@ -434,7 +420,7 @@ impl Graph {
                     }
                     // The checked Eq-to-i64 plan excludes compact Unit aliases.
                     task.index = keys
-                        .get(std::slice::from_ref(&task.key))
+                        .get(std::slice::from_ref(&task.key), functions)
                         .copied()
                         .unwrap_or(usize::MAX);
                     (None, 1)
@@ -464,7 +450,7 @@ impl Graph {
             for task in tasks.iter_mut().filter(|task| task.index == usize::MAX) {
                 counts.new_key_rechecks += 1;
                 let key = std::slice::from_ref(&task.key);
-                task.index = if let Some(&i) = keys.get(key) {
+                task.index = if let Some(&i) = keys.get(key, functions) {
                     i
                 } else {
                     let i = functions.len();
@@ -476,37 +462,30 @@ impl Graph {
                         #[cfg(feature = "receipt-slots")]
                         port_slot: 0,
                         table,
-                        key: key.to_vec(),
-                        value: Value::Int(0),
+                        fields:Graph::shared_fields(key,&Value::Int(0)), canonical:true, projected:false,
                         epoch,
                         live: false,
                         origin: None,
                     });
-                    decoded.push(None);
                     i
                 };
             }
             tasks.par_sort_unstable_by_key(|task| (task.index, task.ordinal));
             counts.owner_sort_rows += length as u64;
             let mut functions = functions.as_mut_slice();
-            let mut decoded = decoded.as_mut_slice();
             let mut offset = 0;
             let mut targets = Vec::with_capacity(tasks.len());
             for group in tasks.chunk_by_mut(|a, b| a.index == b.index) {
                 let skip = group[0].index - offset;
                 functions = &mut functions[skip..];
-                decoded = &mut decoded[skip..];
                 let (f, rest) = functions.split_first_mut().unwrap();
-                let (d, rest_d) = decoded.split_first_mut().unwrap();
                 functions = rest;
-                decoded = rest_d;
                 offset = group[0].index + 1;
                 let retained = f.origin.is_some_and(|origin| {
                     parent_users.get(&origin.cell).copied().unwrap_or(0) != 0
                 });
                 targets.push(Target {
                     function: f,
-                    decoded: d,
                     group,
                     retained,
                     finished: None,
@@ -526,13 +505,11 @@ impl Graph {
                     stats,
                 },
                 uses,
-                dependencies,
                 maintenance,
                 members,
                 version,
                 changes,
                 changed,
-                parents: parent_directory,
                 counts,
                 table,
                 merges: 0,
@@ -592,7 +569,6 @@ impl Target<'_> {
         operation: usize,
     ) {
         let f = &mut *self.function;
-        let decoded = &mut *self.decoded;
         let group = &mut *self.group;
         let retained = self.retained;
 
@@ -600,7 +576,7 @@ impl Target<'_> {
         let mut current = if new {
             None
         } else {
-            let Value::Int(v) = f.value else {
+            let Value::Int(v) = *f.value() else {
                 unreachable!("typed scalar Cell row")
             };
             Some(v)
@@ -684,10 +660,9 @@ impl Target<'_> {
                 cell: task.cell,
                 op: operation as u32,
             });
-            f.value = Value::Int(current.unwrap());
+            f.set_fields(Graph::shared_fields(f.key(),&Value::Int(current.unwrap())));
             f.epoch = epoch;
             f.live = true;
-            *decoded = Some(Graph::shared_fields(&f.key, &f.value));
             prior
         } else {
             None

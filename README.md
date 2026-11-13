@@ -14,6 +14,8 @@ This branch develops **Cell-oriented parallel execution**: workers borrow Entry 
 
 Recent checkpoints: [shared completion slots](benchmarks/cell-completion-slots/README.md), [producer-owned constructor registration](benchmarks/cell-fused-registration/README.md), [independent constructor registration](benchmarks/cell-independent-registration/README.md), [continuous worker Cell runs](benchmarks/cell-worker-runs/README.md), [worker constructor roots](benchmarks/cell-root-births/README.md), [in-place Cell fact leases](benchmarks/cell-fact-lease/README.md), [per-Cell registration return](benchmarks/cell-local-registration/README.md), [registration completion events](benchmarks/cell-registration-events/README.md), [stable Unit reservations](benchmarks/cell-unit-reservations/README.md), [constructor registration owners](benchmarks/cell-constructor-registry/README.md), [task completion payload](benchmarks/cell-event-payload/README.md), [rule-local Entry coverage](benchmarks/cell-query-coverage/README.md), [borrowed Entry ranges](benchmarks/cell-selected-entries/README.md), [in-place condition state](benchmarks/cell-condition-borrows/README.md), and [table completion events](benchmarks/cell-table-events/README.md).
 
+It also integrates [cross-stage completion and structural compression](benchmarks/cell-structural-compression/README.md), with [merge validation and integration limits](benchmarks/cell-bake-merge/README.md). Shared-owner storage and selected Unit specialization remain opt-in; storage measurements do not establish a parallel speedup.
+
 ## Quick start
 
 Requires Rust/Cargo and the vendored dependencies in this repository. From the repository root, use fresh output directories:

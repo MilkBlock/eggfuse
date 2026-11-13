@@ -1,0 +1,1294 @@
+{
+  "scope": "compile-time all-writer induction; result values only, not constructor receipts or saved runtime work",
+  "program_sha256": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+  "exports": [
+    {
+      "table": "CellSpineApplied592",
+      "final_rows": 0,
+      "all_key_columns_covered": false,
+      "relations": [
+        {
+          "constructor": "DoWhile",
+          "columns": [
+            14,
+            17,
+            9
+          ],
+          "writers": [
+            {
+              "rule": 1,
+              "operation": 27,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineApplied605",
+      "final_rows": 0,
+      "all_key_columns_covered": false,
+      "relations": [
+        {
+          "constructor": "DoWhile",
+          "columns": [
+            8,
+            13,
+            5
+          ],
+          "writers": [
+            {
+              "rule": 10,
+              "operation": 70,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "TupleT",
+          "columns": [
+            14,
+            1
+          ],
+          "writers": [
+            {
+              "rule": 10,
+              "operation": 70,
+              "donor": {
+                "Query": 9
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView0",
+      "final_rows": 0,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "Cons",
+          "columns": [
+            4,
+            5,
+            3
+          ],
+          "writers": [
+            {
+              "rule": 278,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 556,
+              "operation": 1,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 570,
+              "operation": 1,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "Switch",
+          "columns": [
+            1,
+            2,
+            3,
+            0
+          ],
+          "writers": [
+            {
+              "rule": 278,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 556,
+              "operation": 1,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 570,
+              "operation": 1,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView10",
+      "final_rows": 2,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "UnaryOpIsPure",
+          "columns": [
+            1,
+            3
+          ],
+          "writers": [
+            {
+              "rule": 250,
+              "operation": 3,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 288,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "Uop",
+          "columns": [
+            1,
+            2,
+            0
+          ],
+          "writers": [
+            {
+              "rule": 250,
+              "operation": 3,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 288,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView12",
+      "final_rows": 0,
+      "all_key_columns_covered": false,
+      "relations": [
+        {
+          "constructor": "Get",
+          "columns": [
+            2,
+            4,
+            3
+          ],
+          "writers": [
+            {
+              "rule": 290,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView13",
+      "final_rows": 0,
+      "all_key_columns_covered": false,
+      "relations": [
+        {
+          "constructor": "Get",
+          "columns": [
+            2,
+            4,
+            3
+          ],
+          "writers": [
+            {
+              "rule": 291,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView14",
+      "final_rows": 0,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "Get",
+          "columns": [
+            3,
+            5,
+            4
+          ],
+          "writers": [
+            {
+              "rule": 292,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "InIf",
+          "columns": [
+            1,
+            2,
+            3,
+            0
+          ],
+          "writers": [
+            {
+              "rule": 292,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView15",
+      "final_rows": 0,
+      "all_key_columns_covered": false,
+      "relations": [
+        {
+          "constructor": "Get",
+          "columns": [
+            3,
+            6,
+            5
+          ],
+          "writers": [
+            {
+              "rule": 293,
+              "operation": 1,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView18",
+      "final_rows": 7,
+      "all_key_columns_covered": false,
+      "relations": [
+        {
+          "constructor": "Get",
+          "columns": [
+            4,
+            5,
+            0
+          ],
+          "writers": [
+            {
+              "rule": 16,
+              "operation": 23,
+              "donor": {
+                "Query": 3
+              }
+            },
+            {
+              "rule": 16,
+              "operation": 24,
+              "donor": {
+                "Query": 9
+              }
+            },
+            {
+              "rule": 296,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 464,
+              "operation": 12,
+              "donor": {
+                "Query": 3
+              }
+            },
+            {
+              "rule": 464,
+              "operation": 13,
+              "donor": {
+                "Query": 4
+              }
+            },
+            {
+              "rule": 465,
+              "operation": 19,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 465,
+              "operation": 20,
+              "donor": {
+                "Query": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView20",
+      "final_rows": 0,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "Const",
+          "columns": [
+            0,
+            2,
+            3,
+            1
+          ],
+          "writers": [
+            {
+              "rule": 42,
+              "operation": 14,
+              "donor": {
+                "Effect": 4
+              }
+            },
+            {
+              "rule": 276,
+              "operation": 20,
+              "donor": {
+                "Effect": 4
+              }
+            },
+            {
+              "rule": 277,
+              "operation": 20,
+              "donor": {
+                "Effect": 4
+              }
+            },
+            {
+              "rule": 298,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView23",
+      "final_rows": 0,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "AddIntOrInfinity",
+          "columns": [
+            1,
+            2,
+            0
+          ],
+          "writers": [
+            {
+              "rule": 301,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "I",
+          "columns": [
+            3,
+            2
+          ],
+          "writers": [
+            {
+              "rule": 301,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView24",
+      "final_rows": 0,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "AddIntOrInfinity",
+          "columns": [
+            1,
+            2,
+            0
+          ],
+          "writers": [
+            {
+              "rule": 302,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "I",
+          "columns": [
+            3,
+            1
+          ],
+          "writers": [
+            {
+              "rule": 302,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView25",
+      "final_rows": 0,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "IntIntervalValid",
+          "columns": [
+            0,
+            3
+          ],
+          "writers": [
+            {
+              "rule": 303,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "MkIntInterval",
+          "columns": [
+            1,
+            2,
+            0
+          ],
+          "writers": [
+            {
+              "rule": 303,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView26",
+      "final_rows": 0,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "ConsIfNonEmpty",
+          "columns": [
+            1,
+            2,
+            3,
+            0
+          ],
+          "writers": [
+            {
+              "rule": 261,
+              "operation": 3,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 304,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "IntIntervalValid",
+          "columns": [
+            2,
+            4
+          ],
+          "writers": [
+            {
+              "rule": 261,
+              "operation": 3,
+              "donor": {
+                "Effect": 0
+              }
+            },
+            {
+              "rule": 304,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView27",
+      "final_rows": 0,
+      "all_key_columns_covered": false,
+      "relations": [
+        {
+          "constructor": "Get",
+          "columns": [
+            5,
+            4,
+            8
+          ],
+          "writers": [
+            {
+              "rule": 305,
+              "operation": 1,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView29",
+      "final_rows": 4,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "Const",
+          "columns": [
+            0,
+            2,
+            3,
+            1
+          ],
+          "writers": [
+            {
+              "rule": 307,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView3",
+      "final_rows": 2,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "Not",
+          "columns": [
+            0
+          ],
+          "writers": [
+            {
+              "rule": 281,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 375,
+              "operation": 218,
+              "donor": {
+                "Effect": 48
+              }
+            },
+            {
+              "rule": 465,
+              "operation": 18,
+              "donor": {
+                "Effect": 10
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "Uop",
+          "columns": [
+            0,
+            2,
+            1
+          ],
+          "writers": [
+            {
+              "rule": 281,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 375,
+              "operation": 218,
+              "donor": {
+                "Effect": 72
+              }
+            },
+            {
+              "rule": 465,
+              "operation": 18,
+              "donor": {
+                "Effect": 11
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView30",
+      "final_rows": 0,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "Arg",
+          "columns": [
+            1,
+            2,
+            0
+          ],
+          "writers": [
+            {
+              "rule": 308,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "InLoop",
+          "columns": [
+            3,
+            4,
+            2
+          ],
+          "writers": [
+            {
+              "rule": 308,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView31",
+      "final_rows": 0,
+      "all_key_columns_covered": false,
+      "relations": [
+        {
+          "constructor": "Switch",
+          "columns": [
+            6,
+            7,
+            1,
+            5
+          ],
+          "writers": [
+            {
+              "rule": 309,
+              "operation": 1,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView32",
+      "final_rows": 0,
+      "all_key_columns_covered": false,
+      "relations": [
+        {
+          "constructor": "Get",
+          "columns": [
+            0,
+            4,
+            3
+          ],
+          "writers": [
+            {
+              "rule": 310,
+              "operation": 1,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView4",
+      "final_rows": 0,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "Neg",
+          "columns": [
+            0
+          ],
+          "writers": [
+            {
+              "rule": 16,
+              "operation": 20,
+              "donor": {
+                "Effect": 8
+              }
+            },
+            {
+              "rule": 282,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "Uop",
+          "columns": [
+            0,
+            2,
+            1
+          ],
+          "writers": [
+            {
+              "rule": 16,
+              "operation": 20,
+              "donor": {
+                "Effect": 9
+              }
+            },
+            {
+              "rule": 282,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView5",
+      "final_rows": 0,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "Abs",
+          "columns": [
+            0
+          ],
+          "writers": [
+            {
+              "rule": 283,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "Uop",
+          "columns": [
+            0,
+            2,
+            1
+          ],
+          "writers": [
+            {
+              "rule": 283,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView6",
+      "final_rows": 8,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "Select",
+          "columns": [
+            0
+          ],
+          "writers": [
+            {
+              "rule": 0,
+              "operation": 20,
+              "donor": {
+                "Effect": 8
+              }
+            },
+            {
+              "rule": 284,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "Top",
+          "columns": [
+            0,
+            2,
+            3,
+            4,
+            1
+          ],
+          "writers": [
+            {
+              "rule": 0,
+              "operation": 20,
+              "donor": {
+                "Effect": 11
+              }
+            },
+            {
+              "rule": 284,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView7",
+      "final_rows": 0,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "Top",
+          "columns": [
+            0,
+            2,
+            3,
+            4,
+            1
+          ],
+          "writers": [
+            {
+              "rule": 285,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "Write",
+          "columns": [
+            0
+          ],
+          "writers": [
+            {
+              "rule": 285,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView8",
+      "final_rows": 192,
+      "all_key_columns_covered": true,
+      "relations": [
+        {
+          "constructor": "PotentialExtractedExpr",
+          "columns": [
+            1,
+            2,
+            0
+          ],
+          "writers": [
+            {
+              "rule": 286,
+              "operation": 2,
+              "donor": {
+                "Query": 0
+              }
+            },
+            {
+              "rule": 502,
+              "operation": 10,
+              "donor": {
+                "Effect": 3
+              }
+            },
+            {
+              "rule": 503,
+              "operation": 10,
+              "donor": {
+                "Effect": 3
+              }
+            },
+            {
+              "rule": 504,
+              "operation": 11,
+              "donor": {
+                "Effect": 4
+              }
+            },
+            {
+              "rule": 505,
+              "operation": 11,
+              "donor": {
+                "Effect": 4
+              }
+            },
+            {
+              "rule": 507,
+              "operation": 4,
+              "donor": {
+                "Query": 3
+              }
+            }
+          ]
+        },
+        {
+          "constructor": "TCPair",
+          "columns": [
+            3,
+            4,
+            2
+          ],
+          "writers": [
+            {
+              "rule": 286,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 502,
+              "operation": 10,
+              "donor": {
+                "Effect": 2
+              }
+            },
+            {
+              "rule": 503,
+              "operation": 10,
+              "donor": {
+                "Effect": 2
+              }
+            },
+            {
+              "rule": 504,
+              "operation": 11,
+              "donor": {
+                "Effect": 3
+              }
+            },
+            {
+              "rule": 505,
+              "operation": 11,
+              "donor": {
+                "Effect": 3
+              }
+            },
+            {
+              "rule": 507,
+              "operation": 4,
+              "donor": {
+                "Query": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "table": "CellSpineView9",
+      "final_rows": 103,
+      "all_key_columns_covered": false,
+      "relations": [
+        {
+          "constructor": "TCPair",
+          "columns": [
+            3,
+            4,
+            2
+          ],
+          "writers": [
+            {
+              "rule": 287,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            },
+            {
+              "rule": 509,
+              "operation": 2,
+              "donor": {
+                "Query": 2
+              }
+            },
+            {
+              "rule": 510,
+              "operation": 2,
+              "donor": {
+                "Query": 2
+              }
+            },
+            {
+              "rule": 511,
+              "operation": 2,
+              "donor": {
+                "Query": 1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "projections": [
+    {
+      "rule": 250,
+      "operation": 1,
+      "query_atom": 1,
+      "result_slot": 2,
+      "proof": {
+        "view": 138,
+        "constructor": 372,
+        "columns": [
+          1,
+          2,
+          0
+        ],
+        "writers": [
+          {
+            "rule": 250,
+            "operation": 3,
+            "donor": {
+              "Query": 1
+            }
+          },
+          {
+            "rule": 288,
+            "operation": 2,
+            "donor": {
+              "Query": 0
+            }
+          }
+        ],
+        "view_name": "CellSpineView10",
+        "constructor_name": "Uop"
+      }
+    },
+    {
+      "rule": 449,
+      "operation": 7,
+      "query_atom": 3,
+      "result_slot": 6,
+      "proof": {
+        "view": 167,
+        "constructor": 373,
+        "columns": [
+          0
+        ],
+        "writers": [
+          {
+            "rule": 285,
+            "operation": 2,
+            "donor": {
+              "Query": 0
+            }
+          }
+        ],
+        "view_name": "CellSpineView7",
+        "constructor_name": "Write"
+      }
+    },
+    {
+      "rule": 452,
+      "operation": 1,
+      "query_atom": 1,
+      "result_slot": 0,
+      "proof": {
+        "view": 167,
+        "constructor": 373,
+        "columns": [
+          0
+        ],
+        "writers": [
+          {
+            "rule": 285,
+            "operation": 2,
+            "donor": {
+              "Query": 0
+            }
+          }
+        ],
+        "view_name": "CellSpineView7",
+        "constructor_name": "Write"
+      }
+    },
+    {
+      "rule": 507,
+      "operation": 2,
+      "query_atom": 3,
+      "result_slot": 7,
+      "proof": {
+        "view": 168,
+        "constructor": 334,
+        "columns": [
+          3,
+          4,
+          2
+        ],
+        "writers": [
+          {
+            "rule": 286,
+            "operation": 2,
+            "donor": {
+              "Query": 1
+            }
+          },
+          {
+            "rule": 502,
+            "operation": 10,
+            "donor": {
+              "Effect": 2
+            }
+          },
+          {
+            "rule": 503,
+            "operation": 10,
+            "donor": {
+              "Effect": 2
+            }
+          },
+          {
+            "rule": 504,
+            "operation": 11,
+            "donor": {
+              "Effect": 3
+            }
+          },
+          {
+            "rule": 505,
+            "operation": 11,
+            "donor": {
+              "Effect": 3
+            }
+          },
+          {
+            "rule": 507,
+            "operation": 4,
+            "donor": {
+              "Query": 3
+            }
+          }
+        ],
+        "view_name": "CellSpineView8",
+        "constructor_name": "TCPair"
+      }
+    }
+  ],
+  "limitations": [
+    "All-key coverage is a static relation property, not a replacement layout or saved bytes.",
+    "No runtime result alias, receipt or row retirement has been enabled.",
+    "Proofs assume closed source Program; externally inserted View rows require separate validation."
+  ]
+}

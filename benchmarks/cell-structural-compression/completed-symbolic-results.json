@@ -1,0 +1,99 @@
+{
+  "scope": "actual standalone Cell runtime; requested heap, not RSS or speed",
+  "program_sha256": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+  "runs": 1428,
+  "all_saved_run_checks_equal": true,
+  "source_storage": {
+    "explicit_cell_slots": [
+      7482,
+      5740
+    ],
+    "cell_slot_bytes": [
+      197640,
+      155520
+    ],
+    "writer_bytes": [
+      132488,
+      132488
+    ],
+    "parent_links": [
+      216,
+      216
+    ],
+    "completed_owner_frames": [
+      787,
+      787
+    ],
+    "cell_fact_arities": [
+      {
+        "0": 211,
+        "1": 1747,
+        "2": 225,
+        "3": 194,
+        "4": 6,
+        "7": 1,
+        "85": 1
+      },
+      {
+        "0": 211,
+        "1": 1747,
+        "2": 225,
+        "3": 194,
+        "4": 6,
+        "7": 1,
+        "85": 1
+      }
+    ]
+  },
+  "live_source_frames": [
+    2385,
+    2385
+  ],
+  "graph_work_changes": {
+    "completed_symbolic_slot_checks": [
+      null,
+      4813
+    ],
+    "completed_symbolic_slots_elided": [
+      null,
+      4813
+    ],
+    "shared_owner_inherited_frames": [
+      37,
+      898
+    ],
+    "shared_owner_slots_delegated": [
+      2260,
+      0
+    ]
+  },
+  "heap": {
+    "graph_owned_teardown_bytes": [
+      2659437,
+      2617317
+    ],
+    "retained_program_teardown_bytes": [
+      117318509,
+      117318509
+    ],
+    "execution_and_takeover_peak_bytes": [
+      125443265,
+      125400997
+    ],
+    "net_growth_over_setup_bytes": [
+      5612363,
+      5570091
+    ],
+    "max_takeover_extra_bytes": [
+      49576,
+      50320
+    ]
+  },
+  "net_graph_and_program_saved_bytes": 42120,
+  "limitations": [
+    "New per-completion equality checks are charged, not assumed free.",
+    "Cumulative removed slots differ from final live slot reduction.",
+    "Stable fact identity, source descriptors and necessary boundary indices remain.",
+    "No large whole-egraph compression or timing claim."
+  ]
+}

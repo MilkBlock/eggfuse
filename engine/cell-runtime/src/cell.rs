@@ -441,3 +441,18 @@ mod output_receipt_tests {
             |op| { assert_eq!(op, 9); Some(17) }), Some(17));
     }
 }
+
+/// The ordinary single-table recipe already defines the column projection.
+/// Reuse it for actual Entry facts only where source visibility is permanent.
+#[cfg(feature="sparse-cells")]
+pub(crate) fn inherits_entry(p:&Program, rule:usize, pivot:usize, permanent:&[bool])->bool {
+    let r=&p.rules[rule];
+    if r.direct!=Some(pivot) {return false;}
+    let Call::Table(table)=r.query[pivot].call else {return false};
+    let source=&p.tables[table];
+    source.constructor && source.virtual_fact && permanent[table]
+}
+
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+#[path="cell_completion_lifetime.rs"]
+pub(crate) mod completion_lifetime;

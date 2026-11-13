@@ -12,6 +12,7 @@ pub(crate) struct Work {
     pub canonical_result_reads: u64,
     pub lookups: u64,
     pub candidates: u64,
+    pub port_lookups: u64,
     pub hint_probes: u64,
     pub hint_hits: u64,
     pub domains: u64,
@@ -35,7 +36,7 @@ pub(crate) struct Work {
 impl Work {
     pub fn add(&mut self, other: &Self) {
         macro_rules! add { ($($f:ident),*) => { $(self.$f += other.$f;)* }; }
-        add!(lookups, candidates, hint_probes, hint_hits, domains, signal_visits, slice_steps,
+        add!(lookups, candidates, port_lookups, hint_probes, hint_hits, domains, signal_visits, slice_steps,
             column_checks, type_guards, type_rejections, results, class_probes, class_jumps,
             signal_root_lookups, signal_parent_probes, domain_key_fields, metadata_reads,
             candidate_pushes, candidate_growths, candidate_sort_comparisons);
@@ -69,6 +70,7 @@ pub(in crate::graph) struct Read<'a> {
     guard: guard::ReadView<'a>,
     key_columns: &'a [Option<Vec<usize>>],
     port_keys: bool,
+    birth_hints: bool,
 }
 impl Graph {
     pub(in crate::graph) fn constructor_query_table(&self, table: usize) -> bool {
@@ -89,6 +91,7 @@ impl Graph {
                 .filter(|_| owner.composition.training.is_none()),
             key_columns: &self.program.repair_ports.key_eq_columns,
             port_keys: self.port_constructor_keys_active(),
+            birth_hints: self.port_birth_hints,
         })
     }
     pub(crate) fn record_constructor_query_work(&self, w: &Work) {
@@ -135,7 +138,7 @@ impl Read<'_> {
         let Some(node) = self.guard.node(fact, &mut w.reads) else { return Ok(None) };
         if !self.guard.key_matches(node, table, key, &mut w.reads)? { return Ok(None); }
         w.metadata_reads += 1;
-        let state = self.cells.get(&fact.cell).and_then(|c| c.facts.get(&fact.op))
+        let state = self.cells.fact_state(fact)
             .ok_or("live stable constructor has no lifecycle state")?;
         Ok(Some((self.guard.result(node, &mut w.reads)?, state.epoch, Dependency::Fact(fact), state.hidden)))
     }
@@ -143,13 +146,16 @@ impl Read<'_> {
         -> Result<Option<(Value, u64, Dependency)>> {
         w.lookups += 1;
         let port_key = self.port_keys && self.key_columns[table].as_ref().is_some_and(|c| !c.is_empty());
-        w.hint_probes += u64::from(port_key);
-        for &fact in self.intern.get(&(hashkey(table, key) & self.hash_mask)).into_iter().flatten() {
-            if let Some((value, epoch, fact, hidden)) = self.candidate(fact, table, key, w)? {
-                w.hint_hits += u64::from(port_key);
-                // The ordinary query filters visibility after selecting its
-                // ordered exact candidate; do not pick a different hidden tie.
-                return Ok((!hidden).then_some((value, epoch, fact)));
+        w.port_lookups += u64::from(port_key);
+        if !port_key || self.birth_hints {
+            w.hint_probes += u64::from(port_key);
+            for &fact in self.intern.get(&(hashkey(table, key) & self.hash_mask)).into_iter().flatten() {
+                if let Some((value, epoch, fact, hidden)) = self.candidate(fact, table, key, w)? {
+                    w.hint_hits += u64::from(port_key);
+                    // The ordinary query filters visibility after selecting its
+                    // ordered exact candidate; do not pick a different hidden tie.
+                    return Ok((!hidden).then_some((value, epoch, fact)));
+                }
             }
         }
         if !port_key { return Ok(None); }

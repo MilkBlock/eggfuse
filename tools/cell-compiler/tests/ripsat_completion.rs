@@ -45,7 +45,15 @@ fn alternate_routes_share_the_native_cell_registry_but_keep_entry_proofs() {
     // The native compiler enables serde_json/preserve_order transitively;
     // the standalone runtime need not. Reordering schema objects must not
     // change the checked Cell identity embedded in the same artifact.
-    let compiled=eggfuse_cell_compiler::completion_bake::compile(p).unwrap();
+    let mut with_classes=p.artifact.clone();
+    let mut prepared=p;prepared.prepare_cell_ownership().unwrap();
+    with_classes["ownership_fragments"]=json!({
+        "schema":prepared.cell_ownership.fragment_schema(),
+        "source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&with_classes),
+        "fragments":[],"query_classes":true});
+    let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(seal(with_classes)).unwrap()).unwrap();
+    assert_eq!(compiled["ownership_fragments"]["query_classes"],true,
+        "iterative completion must preserve derivation instead of rematerializing class JSON");
     let mut sorted=compiled.clone();
     sorted.sort_all_objects();
     assert_ne!(serde_json::to_string(&compiled).unwrap(),serde_json::to_string(&sorted).unwrap(),
@@ -81,6 +89,213 @@ fn failed_rhs_does_not_train_a_completed_transition() {
         assert_ne!(entry["expanded"].as_array().unwrap().last().unwrap()[1][0],bridge,
             "the bridge RHS failed and must not establish its completion: {hits:?}");
     }
+}
+
+#[test]
+fn actual_completed_history_distinguishes_internal_completion_from_saturation() {
+    let source=include_str!("fixtures/history-retention.egg").replace("(run retire)", "");
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(&source,&dir.path().join("case")).unwrap();
+    let raw=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let p=Program::parse(raw).unwrap();
+    let mut e=Executor::new(Graph::new(p).unwrap(),true);
+    e.collect_iterative_pairs();
+    e.execute().unwrap();
+    let history=e.iterative_training().completion_history(&e.graph.program);
+    let transfers=history["closure_transfers"]["transfers"].as_array().unwrap();
+    let named=|row:&Value,name:&str| {
+        let rule=row["consumer_rule"].as_u64().unwrap() as usize;
+        e.graph.program.templates[e.graph.program.rules[rule].template].name == name
+    };
+    assert!(transfers.iter().any(|r|named(r,"bridge") && r["proof"]["kind"]=="internal_completion"), "{history}");
+    assert!(transfers.iter().any(|r|named(r,"consume") && r["proof"]["kind"]=="saturated"), "{history}");
+    assert!(transfers.iter().all(|r|r["proof"]["publication"].is_null() || r["proof"]["publication"]=="original-source-run"));
+}
+
+#[test]
+fn completed_source_run_union_can_authorize_a_saturated_consumer() {
+    use eggfuse_cell_runtime::program::{Call,Op};
+    let source=r#"
+    (datatype E (N i64) (F E) (G E))
+    (ruleset a) (ruleset b)
+    (rule ((= x (N i))) ((union (F x) (G x))) :ruleset a :name "producer")
+    (rule ((= g (G x))) ((union g (F x))) :ruleset b :name "consumer")
+    (N 0) (run a 1) (run b 1)
+    "#;
+    let core=eggfuse_bake::device_frontend::core("settled-prefix",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let rule=|name:&str|p.rules.iter().position(|r|p.templates[r.template].name==name).unwrap();
+    let a=rule("producer"); let b=rule("consumer");
+    let output=p.templates[p.rules[a].template].ops.iter().position(|op| match op {
+        Op::Let(_,Call::Table(t),_) | Op::Set(t,_,_) => p.tables[*t].name=="G",
+        _=>false,
+    }).unwrap();
+    let proof=eggfuse_cell_runtime::cell_completion::cross_run_closure_transfer(
+        &p,&[(None,(a,Some(0))),(Some(output),(b,Some(0)))]);
+    assert_eq!(proof["kind"],"saturated","{proof}");
+    assert_eq!(proof["requires_completed_source_runs"],true);
+    assert_eq!(proof["ordered_union_obligations"],0);
+    assert!(proof["introduced_facts"].as_array().unwrap().is_empty());
+}
+
+#[test]
+#[cfg(feature = "sparse-cells")]
+fn repeated_saturated_suffix_does_not_spend_another_cell_budget() {
+    // Synthetic ancestry tests admission only; it is not runtime support data.
+    let source=r#"
+(datatype E (N i64) (A E) (B E))
+(ruleset a) (ruleset b)
+(rule ((A x)) ((B x)) :ruleset a :name "a")
+(rule ((B x)) ((A x)) :ruleset b :name "b")
+(A (N 0)) (run a 1) (run b 1)
+"#;
+    let core=eggfuse_bake::device_frontend::core("saturated-suffix",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let a=p.rules.iter().position(|r|p.templates[r.template].name=="a").unwrap();
+    let b=p.rules.iter().position(|r|p.templates[r.template].name=="b").unwrap();
+    let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":([a,b].map(|r|json!({"edge":[0,0,r,0],"visits":2})))});
+    let blocks=compiler::bake_spine_blocks(&p,&profile,&p,2).unwrap();
+    let entries=blocks["entries"].as_array().unwrap();
+    let leaf=|rid|entries.iter().position(|e|e["consumer"]==rid).unwrap();
+    let (left,right)=(leaf(a),leaf(b));
+    let leaf_count=entries.len();
+    let mut raw=p.artifact;raw["spine_blocks"]=blocks;
+    let p=Program::parse(seal(raw)).unwrap();
+    let mut plan=Catalog::seed(&p,Limits::default()).unwrap();
+    plan["joins"]=json!([{"left":left,"output":0,"right":right}]);
+    let mut events=vec![];
+    for base in [0,4] {
+        for (offset,rid) in [a,b,a,b].into_iter().enumerate() {
+            events.push(json!({"entry":[rid,0],"output":0,"run":base+offset+1,
+                "parent":(offset>0).then(||base+offset-1)}));
+        }
+    }
+    let history=json!({"schema":"eggfuse-cell-runtime-history/v1",
+        "program_sha256":p.artifact["sha256"],"events":events});
+    let mut already_covered=plan.clone();
+    let joined=leaf_count;
+    already_covered["joins"].as_array_mut().unwrap().push(json!({"left":joined,"output":0,"right":left}));
+    Catalog::emit_history_closures(&p,&mut already_covered,&history,8).unwrap();
+    assert!(already_covered["closure_selection"]["redundant_terminal_transfers"].as_array().unwrap().iter().any(|r|
+        r["reason"]=="actual-ancestry-already-has-same-terminal-transfer"), "{}",already_covered["closure_selection"]);
+    Catalog::emit_history_closures(&p,&mut plan,&history,8).unwrap();
+    let selection=&plan["closure_selection"];
+    let redundant=selection["redundant_terminal_transfers"].as_array().unwrap();
+    assert!(redundant.iter().any(|r|r["source_path"].as_array().unwrap().len()==4),"{selection}");
+    // The missing opposite-direction completion is still useful and admitted.
+    assert!(selection["selected"].as_array().unwrap().iter().any(|r|
+        r["added_prefixes"].as_u64().unwrap()>0 && r["source_path"].as_array().unwrap().len()==3),"{selection}");
+}
+
+#[test]
+#[cfg(feature = "sparse-cells")]
+fn history_selected_closure_executes_without_replaying_constructor_rhs() {
+    let source=include_str!("fixtures/history-retention.egg")
+        .replace("(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)","")
+        .replace("(run retire)","");
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(&source,&dir.path().join("case")).unwrap();
+    let mut raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let p=Program::parse(raw.clone()).unwrap();
+    let mut plan=raw["iterative_bake"].clone();
+    plan["joins"].as_array_mut().unwrap().truncate(1);
+    Catalog::emit_switch(&p,&mut plan,true).unwrap();
+    raw["iterative_bake"]=plan;
+    let raw=seal(raw);
+    let p=Program::parse(raw.clone()).unwrap();
+    let mut training=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+    training.collect_iterative_pairs();training.execute().unwrap();
+    let history=training.iterative_training().completion_history(&training.graph.program);
+    assert!(history["uncompiled_root_events"].as_u64().unwrap()>0);
+    assert!(history["events"].as_array().unwrap().iter().all(|e|e["execution"]["cell"].as_u64().is_some()), "successful history events retain their actual execution identity");
+    let compiled=eggfuse_cell_compiler::completion_bake::compile_history_closures(p.clone(),&history,8).unwrap();
+    assert!(compiled["iterative_bake"]["closure_selection"]["redundant_terminal_transfers"].as_array().unwrap().iter().any(|r| r["source_path"][0][1][1].is_null()), "uncompiled roots with no additional reuse must not spend the budget");
+    assert!(compiled["iterative_bake"]["closure_selection"]["added_units"].as_u64().unwrap()>0);
+    let (before,a)=execute(raw);let (after,b)=execute(compiled.clone());
+    assert_eq!(a,b,"Run graph and ordered execution remain authoritative");
+    let old=before.report();let new=after.report();
+    assert!(new["stage_spine"]["stats"]["ripsat_completed"].as_u64().unwrap()>0,"{new}");
+    assert!(after.graph.stats.constructor_requests < before.graph.stats.constructor_requests,"{old}\n{new}");
+    let mut foreign=history.clone();foreign["program_sha256"]=json!("other");
+    assert!(eggfuse_cell_compiler::completion_bake::compile_history_closures(p.clone(),&foreign,8).is_err());
+    let mut invalid=history.clone();invalid["events"][0]["parent"]=json!(0);
+    assert!(eggfuse_cell_compiler::completion_bake::compile_history_closures(p.clone(),&invalid,8).is_err());
+    let mut same_run=history.clone();
+    for event in same_run["events"].as_array_mut().unwrap() {event["run"]=json!(0);}
+    let rejected=eggfuse_cell_compiler::completion_bake::compile_history_closures(p.clone(),&same_run,8).unwrap();
+    assert!(rejected["iterative_bake"]["closure_selection"]["selected"].as_array().unwrap().is_empty(),
+        "same-Run ancestry cannot authorize settled-union closure");
+    assert!(eggfuse_cell_compiler::completion_bake::compile_history_closures(p,&history,9).is_err());
+}
+
+#[test]
+#[cfg(feature = "sparse-cells")]
+fn history_admits_a_missing_root_only_with_new_result_reuse() {
+    let source=include_str!("fixtures/history-retention.egg")
+        .replace("(rule ((= x (N 2))) ((delete (Right x))) :ruleset retire)","")
+        .replace("(run retire)","")
+        .replace("((Start x)) :ruleset init", "((Left x) (Right x) (Start x)) :ruleset init");
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(&source,&dir.path().join("case")).unwrap();
+    let mut raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let p=Program::parse(raw.clone()).unwrap();
+    let mut plan=raw["iterative_bake"].clone();
+    plan["joins"].as_array_mut().unwrap().truncate(1);
+    Catalog::emit_switch(&p,&mut plan,true).unwrap();
+    raw["iterative_bake"]=plan;
+    let raw=seal(raw);
+    let p=Program::parse(raw.clone()).unwrap();
+    let mut training=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+    training.collect_iterative_pairs();training.execute().unwrap();
+    let history=training.iterative_training().completion_history(&training.graph.program);
+    assert!(history["uncompiled_root_events"].as_u64().unwrap()>0);
+    assert!(history["events"].as_array().unwrap().iter().all(|e|e["execution"]["cell"].as_u64().is_some()), "successful history events retain their actual execution identity");
+    let compiled=eggfuse_cell_compiler::completion_bake::compile_history_closures(p.clone(),&history,8).unwrap();
+    assert!(compiled["iterative_bake"]["closure_selection"]["selected"].as_array().unwrap().iter().any(|r| r["added_roots"].as_u64()==Some(1)), "{}", compiled["iterative_bake"]["closure_selection"]);
+    assert!(compiled["iterative_bake"]["closure_selection"]["added_units"].as_u64().unwrap()>0);
+    let (before,a)=execute(raw);let (after,b)=execute(compiled.clone());
+    assert_eq!(a,b,"Run graph and ordered execution remain authoritative");
+    let old=before.report();let new=after.report();
+    assert!(new["stage_spine"]["stats"]["ripsat_completed"].as_u64().unwrap()>0,"{new}");
+    assert!(after.graph.stats.constructor_requests < before.graph.stats.constructor_requests,"{old}\n{new}");
+}
+
+#[test]
+#[cfg(feature = "sparse-cells")]
+fn query_only_root_capture_waits_until_an_entry_wins() {
+    let source=r#"
+(datatype E (N i64) (Single E) (Get E i64) (Tag i64))
+(ruleset make) (ruleset use)
+(rule ((Single x) (Tag t)) ((union (Get x 0) x)) :ruleset make :name "producer")
+(rule ((Get x i)) ((Single (Get x i))) :ruleset use :name "consumer")
+(Single (N 1)) (Single (N 2)) (Tag 0) (Tag 1) (Tag 2)
+(run-schedule (seq (run make) (run use)))
+"#;
+    let core=eggfuse_bake::device_frontend::core("pending-root",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let rid=|name|p.artifact["recipe"]["rules"].as_array().unwrap().iter()
+        .position(|r|r["metadata"]["name"]==name).unwrap();
+    let (producer,consumer)=(rid("producer"),rid("consumer"));
+    let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":[{"edge":[producer,0,consumer,0],"visits":2}]});
+    let blocks=compiler::bake_stage_blocks(&p,&profile,&p,1).unwrap();
+    assert_eq!(blocks["entries"].as_array().unwrap().len(),1);
+    let mut raw=p.artifact;raw["spine_blocks"]=blocks;
+    let p=Program::parse(seal(raw)).unwrap();
+    let mut plan=Catalog::seed_with_roots(&p,Limits::default(),&[producer]).unwrap();
+    plan["joins"]=json!([{"left":1,"output":0,"right":0}]);
+    Catalog::emit_query_handoffs(&p,&mut plan).unwrap();
+    let mut raw=p.artifact;raw["iterative_bake"]=plan;
+    let compiled=eggfuse_cell_compiler::completion_bake::compile(Program::parse(seal(raw)).unwrap()).unwrap();
+    let (actual,checks)=execute(compiled.clone());
+    let mut observed=Executor::new(Graph::new_with_local_congruence(Program::parse(compiled).unwrap()).unwrap(),false);
+    observed.collect_iterative_pairs();observed.execute().unwrap();
+    assert_eq!(actual.graph.export().unwrap(),observed.graph.export().unwrap());
+    let stats=&actual.report()["stage_spine"]["stats"];
+    assert!(stats["history_deferred_root_captures"].as_u64().unwrap()>stats["history_deferred_root_promotions"].as_u64().unwrap(),"{stats}");
+    assert!(stats["history_deferred_root_promotions"].as_u64().unwrap()>0,"{stats}");
+    assert!(checks["states"].as_array().unwrap().len()>1);
 }
 
 #[cfg(feature = "sparse-cells")]
@@ -710,4 +925,121 @@ fn constructor_set_keeps_actual_results_distinct_until_commit() {
     }
     assert_ne!(shapes[0]["structure"],shapes[1]["structure"],
         "pending Set cannot change the key of a later constructor");
+    let settled=["actual","requested","unknown"].map(|name| {
+        let rule=rules.iter().position(|r|r["metadata"]["name"]==name).unwrap();
+        eggfuse_cell_runtime::cell_completion::describe_settled_path(&p,&[(None,(rule,Some(0)))])
+    });
+    for state in &settled {
+        assert_eq!(state["kind"],"settled");
+        assert_eq!(state["requires_completed_source_runs"],1);
+    }
+    assert_eq!(settled[0]["structure"],settled[1]["structure"],
+        "after commit the two G keys become congruent");
+    assert_ne!(settled[0]["structure"],settled[2]["structure"],
+        "settlement cannot invent a missing G fact");
+}
+
+#[test]
+#[cfg(feature = "sparse-cells")]
+fn shared_entry_parent_inheritance_preserves_worker_run_boundaries() {
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(include_str!("fixtures/history-retention.egg"),&dir.path().join("case")).unwrap();
+    let raw:Value=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let execute=|workers| {
+        let p=Program::parse(raw.clone()).unwrap();
+        let mut e=Executor::new(Graph::new_with_local_congruence(p).unwrap(),false);
+        if workers>0 {e.use_query_workers(workers,1).unwrap();}
+        let mut states=Vec::new();
+        loop {
+            let n=e.steps.len();e.execute_until(Some(n+1)).unwrap();
+            if e.steps.len()==n {break;}
+            states.push(e.graph.export().unwrap());
+        }
+        let handoffs=e.report()["stage_spine"]["stats"]["entry_parent_handoffs"].as_u64().unwrap();
+        assert!(handoffs>0,"exercise actual Entry inheritance");
+        states
+    };
+    assert_eq!(execute(0),execute(2),"inheritance must preserve visibility through the retirement Run");
+}
+
+#[test]
+fn iterative_completion_preserves_longer_owner_layouts() {
+    let source=r#"
+(datatype E (N i64) (A E) (B E) (C E) (D E) (F E) (G E))
+(ruleset a) (ruleset b) (ruleset c) (ruleset d) (ruleset f) (ruleset g)
+(rule ((= x (N n))) ((A x)) :ruleset a)
+(rule ((= x (A y))) ((B x)) :ruleset b)
+(rule ((= x (B y))) ((C x)) :ruleset c)
+(rule ((= x (C y))) ((D x)) :ruleset d)
+(rule ((= x (D y))) ((F x)) :ruleset f)
+(rule ((= x (F y))) ((G x)) :ruleset g)
+(N 0)
+(run-schedule (seq (run a) (run b) (run c) (run d) (run f) (run g)))
+"#;
+    let core=eggfuse_bake::device_frontend::core("rebake-long-owner",source).unwrap();
+    let p=Program::parse(compiler::compile(core,&Default::default()).unwrap()).unwrap();
+    let profile=json!({"schema":"eggfuse-spine-shapes/v1","program_sha256":p.artifact["sha256"],
+        "prefixes":(0..p.rules.len()).map(|r|json!({"edge":[0,0,r,0],"visits":2})).collect::<Vec<_>>()});
+    let blocks=compiler::bake_spine_blocks(&p,&profile,&p,p.rules.len()).unwrap();
+    let mut raw=p.artifact.clone();raw["spine_blocks"]=blocks;
+    let p=Program::parse(seal(raw)).unwrap();
+    let mut raw=p.artifact.clone();
+    raw["iterative_bake"]=Catalog::seed(&p,Limits::default()).unwrap();
+    let p=Program::parse(seal(raw)).unwrap();
+    let mut graph=Graph::new_with_cell_ownership(p.clone()).unwrap();
+    graph.train_ownership_fragments_with_limit(8).unwrap();
+    let mut train=Executor::new(graph,false);train.execute().unwrap();
+    let profile=train.graph.ownership_fragment_profile().unwrap();
+    let fragments=profile["records"].as_array().unwrap().iter().map(|r|r["fragment"].clone()).collect::<Vec<_>>();
+    assert!(fragments.iter().any(|f|f["hops"].as_array().unwrap().len()>=4));
+    let mut raw=p.artifact;
+    raw["ownership_fragments"]=json!({"schema":"eggfuse-ownership-fragments/v2",
+        "source":profile["source"],"max_frames":8,"fragments":fragments,"query_classes":true});
+    let baseline=Program::parse(seal(raw)).unwrap();
+    let mut current=baseline.clone();
+    for round in 0..3 {
+        let raw=if round==1 {eggfuse_cell_compiler::completion_bake::compile_lazy_unions(current).unwrap()}
+            else {eggfuse_cell_compiler::completion_bake::compile(current).unwrap()};
+        assert_eq!(raw["ownership_fragments"]["max_frames"],8,"round {round}");
+        assert_eq!(raw["ownership_fragments"]["query_classes"],true);
+        assert_eq!(raw["ownership_fragments"]["fragments"],baseline.artifact["ownership_fragments"]["fragments"]);
+        current=Program::parse(raw).unwrap();
+        assert_eq!(current.cell_ownership.composition.max_frames,8);
+    }
+    let mut a=Executor::new(Graph::new_with_cell_ownership(baseline).unwrap(),false);
+    let mut b=Executor::new(Graph::new_with_cell_ownership(current).unwrap(),false);
+    for run in 1..=6 {
+        a.execute_until(Some(run)).unwrap();b.execute_until(Some(run)).unwrap();
+        assert_eq!(a.graph.export().unwrap(),b.graph.export().unwrap(),"Run {run}");
+        assert_eq!(a.steps.len(),b.steps.len());
+        for (x,y) in a.steps.iter().zip(&b.steps) {
+            for key in ["ordinal","ruleset","path","iterations","epoch","logical_matches","executed_bindings","changed"] {
+                assert_eq!(x[key],y[key],"Run {run}: {key}");
+            }
+        }
+    }
+    assert!(b.graph.ownership_report()["inventory"]["largest_component_frames"].as_u64().unwrap()>4);
+}
+
+#[test]
+fn successful_zero_birth_rhs_already_advances_completion_history() {
+    let source=include_str!("fixtures/history-retention.egg")
+        .replace("(N 1) (N 2)","(N 1) (N 2) (Mid (N 1)) (Mid (N 2))")
+        .replace("(run retire)", "");
+    let dir=tempfile::tempdir().unwrap();
+    fixture::emit(&source,&dir.path().join("case")).unwrap();
+    let raw=serde_json::from_slice(&std::fs::read(dir.path().join("case/program.json")).unwrap()).unwrap();
+    let p=Program::parse(raw).unwrap();
+    let bridge=p.rules.iter().position(|r|p.templates[r.template].name=="bridge").unwrap();
+    let mut e=Executor::new(Graph::new_with_cell_ownership(p).unwrap(),true);
+    e.collect_iterative_pairs();
+    e.execute_until(Some(2)).unwrap();
+    let facts=e.graph.stats.logical_facts_created;
+    let requests=e.graph.stats.constructor_requests;
+    e.execute_until(Some(3)).unwrap();
+    assert_eq!(e.graph.stats.logical_facts_created,facts,"bridge only returns existing Mid constructors");
+    assert!(e.graph.stats.constructor_requests>requests,"bridge actually executed");
+    let history=e.iterative_training().completion_history(&e.graph.program);
+    let completed=history["events"].as_array().unwrap().iter().filter(|event|event["entry"][0]==bridge).count();
+    assert_eq!(completed,2,"zero births must not suppress either successful completion");
 }

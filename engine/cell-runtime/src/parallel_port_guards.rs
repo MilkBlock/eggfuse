@@ -204,7 +204,7 @@ impl Graph {
                     candidate,
                     pending,
                     target,
-                    condition: candidate.condition.map(|id| &plan.conditions[id]),
+                    condition: candidate.condition.map(|id| plan.conditions[id].as_ref()),
                     result: Ok(false),
                     work: guard::Work::default(),
                     worker: usize::MAX,
@@ -324,8 +324,8 @@ impl Graph {
             if let Some(selected) = selected {
                 let candidate = selected?;
                 let target = candidate.fact;
-                let cross_stage = self.cells[&source.cell].started_epoch
-                    != self.cells[&target.cell].started_epoch;
+                let cross_stage = self.cells.cell_metadata(source.cell).unwrap().started_epoch
+                    != self.cells.cell_metadata(target.cell).unwrap().started_epoch;
                 let local = self.local_condition_stats();
                 if candidate.condition.is_some() {
                     local.completed_conditions += 1;
@@ -333,7 +333,7 @@ impl Graph {
                 } else {
                     local.boundary_collisions += 1;
                 }
-                let state = &self.cells[&target.cell].facts[&target.op];
+                let state = self.cells.fact_state(target).unwrap();
                 return self
                     .read_stable_fact(target, state, self.stable_node(target).unwrap())
                     .map(|row| Some(Some(row)));

@@ -1,0 +1,1787 @@
+{
+  "scope": "actual standalone Cell runtime final retained origin census; not native egglog",
+  "program_sha256": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+  "runs": 1428,
+  "final_state_equal": true,
+  "unread_unit_tables": [
+    {
+      "table": "CellSpineApplied119",
+      "live_function_rows": 102,
+      "retained_origins": 102,
+      "inline_writers": 0,
+      "source_cells": [
+        2233,
+        2235,
+        2237,
+        2239,
+        2240,
+        2241,
+        2242,
+        2298,
+        2300,
+        2302,
+        2304,
+        2306,
+        2308,
+        2310,
+        2312,
+        2313,
+        2314,
+        2315,
+        2316,
+        2414,
+        2416,
+        2418,
+        2420,
+        2422,
+        2424,
+        2426,
+        2427,
+        2429,
+        2431,
+        2433,
+        2434,
+        2435,
+        2436,
+        2576,
+        2578,
+        2580,
+        2582,
+        2584,
+        2586,
+        2588,
+        2590,
+        2680,
+        2682,
+        2684,
+        2686,
+        2688,
+        2690,
+        2692,
+        2765,
+        2767,
+        2769,
+        2771,
+        2773,
+        2850,
+        2852,
+        2854,
+        2892,
+        2903,
+        4278,
+        4279,
+        4295,
+        4296,
+        4297,
+        4298,
+        4323,
+        4324,
+        4325,
+        4327,
+        4328,
+        4329,
+        4331,
+        4378,
+        4380,
+        4382,
+        4384,
+        4386,
+        4434,
+        4436,
+        4438,
+        4440,
+        4486,
+        4488,
+        4490,
+        4492,
+        4541,
+        4563,
+        6846,
+        6848,
+        6850,
+        6852,
+        6854,
+        6856,
+        6906,
+        6908,
+        6910,
+        6912,
+        6974,
+        6976,
+        6998,
+        7000,
+        7046,
+        7076
+      ]
+    },
+    {
+      "table": "CellSpineApplied120",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied121",
+      "live_function_rows": 24,
+      "retained_origins": 24,
+      "inline_writers": 0,
+      "source_cells": [
+        2408,
+        2409,
+        2558,
+        2559,
+        2560,
+        2561,
+        2562,
+        2563,
+        2677,
+        2762,
+        2844,
+        2845,
+        2889,
+        4269,
+        4270,
+        4271,
+        4431,
+        4483,
+        4538,
+        4560,
+        6962,
+        6963,
+        6964,
+        6965
+      ]
+    },
+    {
+      "table": "CellSpineApplied122",
+      "live_function_rows": 75,
+      "retained_origins": 75,
+      "inline_writers": 0,
+      "source_cells": [
+        2246,
+        2247,
+        2248,
+        2324,
+        2325,
+        2326,
+        2327,
+        2328,
+        2329,
+        2330,
+        2446,
+        2447,
+        2448,
+        2449,
+        2450,
+        2451,
+        2452,
+        2453,
+        2454,
+        2600,
+        2601,
+        2602,
+        2603,
+        2604,
+        2605,
+        2606,
+        2607,
+        2701,
+        2702,
+        2703,
+        2704,
+        2705,
+        2706,
+        2707,
+        2780,
+        2781,
+        2782,
+        2783,
+        2784,
+        2859,
+        2860,
+        2861,
+        2895,
+        2906,
+        4336,
+        4337,
+        4393,
+        4394,
+        4395,
+        4396,
+        4446,
+        4447,
+        4448,
+        4449,
+        4498,
+        4499,
+        4500,
+        4544,
+        4566,
+        6864,
+        6865,
+        6866,
+        6867,
+        6868,
+        6869,
+        6918,
+        6919,
+        6920,
+        6921,
+        6980,
+        6981,
+        7004,
+        7005,
+        7049,
+        7079
+      ]
+    },
+    {
+      "table": "CellSpineApplied123",
+      "live_function_rows": 3,
+      "retained_origins": 3,
+      "inline_writers": 0,
+      "source_cells": [
+        4343,
+        4406,
+        4508
+      ]
+    },
+    {
+      "table": "CellSpineApplied181",
+      "live_function_rows": 2,
+      "retained_origins": 2,
+      "inline_writers": 0,
+      "source_cells": [
+        877,
+        4993
+      ]
+    },
+    {
+      "table": "CellSpineApplied183",
+      "live_function_rows": 11,
+      "retained_origins": 11,
+      "inline_writers": 0,
+      "source_cells": [
+        554,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560,
+        4738,
+        4739,
+        4740,
+        4741
+      ]
+    },
+    {
+      "table": "CellSpineApplied23",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied24",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied25",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied30",
+      "live_function_rows": 5,
+      "retained_origins": 5,
+      "inline_writers": 0,
+      "source_cells": [
+        188,
+        189,
+        190,
+        191,
+        3842
+      ]
+    },
+    {
+      "table": "CellSpineApplied308",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied309",
+      "live_function_rows": 4,
+      "retained_origins": 4,
+      "inline_writers": 0,
+      "source_cells": [
+        3581,
+        3598,
+        3622,
+        3623
+      ]
+    },
+    {
+      "table": "CellSpineApplied31",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied336",
+      "live_function_rows": 5,
+      "retained_origins": 5,
+      "inline_writers": 0,
+      "source_cells": [
+        2937,
+        2938,
+        2939,
+        2940,
+        5575
+      ]
+    },
+    {
+      "table": "CellSpineApplied337",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied34",
+      "live_function_rows": 2,
+      "retained_origins": 2,
+      "inline_writers": 0,
+      "source_cells": [
+        324,
+        3939
+      ]
+    },
+    {
+      "table": "CellSpineApplied35",
+      "live_function_rows": 2,
+      "retained_origins": 2,
+      "inline_writers": 0,
+      "source_cells": [
+        192,
+        3843
+      ]
+    },
+    {
+      "table": "CellSpineApplied355",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied356",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied36",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied363",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied364",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied365",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied366",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied367",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied368",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied369",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied37",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied370",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied371",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied372",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied373",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied374",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied375",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied376",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied377",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied378",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied38",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied382",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied383",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied384",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied385",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied386",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied387",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied388",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied389",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied39",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied390",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied391",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied392",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied393",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied394",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied395",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied396",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied397",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied403",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied416",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied417",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied419",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied420",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied421",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied449",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied450",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied451",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied452",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied454",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied455",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied48",
+      "live_function_rows": 2,
+      "retained_origins": 2,
+      "inline_writers": 0,
+      "source_cells": [
+        5762,
+        5766
+      ]
+    },
+    {
+      "table": "CellSpineApplied49",
+      "live_function_rows": 8,
+      "retained_origins": 8,
+      "inline_writers": 8,
+      "source_cells": [
+        6719,
+        6720,
+        6721,
+        6722,
+        6723,
+        6724,
+        6725,
+        6726
+      ]
+    },
+    {
+      "table": "CellSpineApplied50",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied55",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied556",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied56",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied564",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied566",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied567",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied568",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied575",
+      "live_function_rows": 3,
+      "retained_origins": 3,
+      "inline_writers": 0,
+      "source_cells": [
+        3166,
+        3167,
+        3168
+      ]
+    },
+    {
+      "table": "CellSpineApplied579",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied589",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied590",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied591",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied592",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied597",
+      "live_function_rows": 2,
+      "retained_origins": 2,
+      "inline_writers": 2,
+      "source_cells": [
+        5610,
+        5611
+      ]
+    },
+    {
+      "table": "CellSpineApplied598",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied599",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied600",
+      "live_function_rows": 8,
+      "retained_origins": 8,
+      "inline_writers": 8,
+      "source_cells": [
+        3006,
+        3007,
+        5612,
+        5613,
+        5614,
+        5615,
+        5616,
+        5617
+      ]
+    },
+    {
+      "table": "CellSpineApplied601",
+      "live_function_rows": 2,
+      "retained_origins": 2,
+      "inline_writers": 0,
+      "source_cells": [
+        3012,
+        5620
+      ]
+    },
+    {
+      "table": "CellSpineApplied602",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied603",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied605",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied617",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied618",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied652",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied653",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied654",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied655",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied656",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied657",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied659",
+      "live_function_rows": 4,
+      "retained_origins": 4,
+      "inline_writers": 4,
+      "source_cells": [
+        7459,
+        7460,
+        7461,
+        7462
+      ]
+    },
+    {
+      "table": "CellSpineApplied661",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied662",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied70",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied71",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied72",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    },
+    {
+      "table": "CellSpineApplied73",
+      "live_function_rows": 0,
+      "retained_origins": 0,
+      "inline_writers": 0,
+      "source_cells": []
+    }
+  ],
+  "shared_view_handoffs": [
+    {
+      "table": "CellSpineView8",
+      "live_function_rows": 192,
+      "retained_origins": 192,
+      "writers": [
+        [
+          286,
+          "cell-spine-complete"
+        ],
+        [
+          502,
+          "terms"
+        ],
+        [
+          503,
+          "terms"
+        ],
+        [
+          504,
+          "terms"
+        ],
+        [
+          505,
+          "terms"
+        ],
+        [
+          507,
+          "terms-helpers"
+        ]
+      ],
+      "query_readers": [
+        [
+          507,
+          "terms-helpers"
+        ],
+        [
+          508,
+          "terms-helpers"
+        ]
+      ],
+      "other_reads": []
+    },
+    {
+      "table": "CellSpineView28",
+      "live_function_rows": 160,
+      "retained_origins": 160,
+      "writers": [
+        [
+          306,
+          "cell-spine-complete"
+        ],
+        [
+          502,
+          "terms"
+        ],
+        [
+          503,
+          "terms"
+        ],
+        [
+          504,
+          "terms"
+        ],
+        [
+          505,
+          "terms"
+        ],
+        [
+          506,
+          "terms-helpers"
+        ],
+        [
+          507,
+          "terms-helpers"
+        ],
+        [
+          509,
+          "terms-helpers-helpers"
+        ],
+        [
+          510,
+          "terms-helpers-helpers"
+        ],
+        [
+          511,
+          "terms-helpers-helpers"
+        ]
+      ],
+      "query_readers": [
+        [
+          11,
+          "cicm"
+        ],
+        [
+          12,
+          "cicm"
+        ]
+      ],
+      "other_reads": []
+    },
+    {
+      "table": "CellSpineView9",
+      "live_function_rows": 103,
+      "retained_origins": 103,
+      "writers": [
+        [
+          287,
+          "cell-spine-complete"
+        ],
+        [
+          509,
+          "terms-helpers-helpers"
+        ],
+        [
+          510,
+          "terms-helpers-helpers"
+        ],
+        [
+          511,
+          "terms-helpers-helpers"
+        ]
+      ],
+      "query_readers": [
+        [
+          509,
+          "terms-helpers-helpers"
+        ],
+        [
+          510,
+          "terms-helpers-helpers"
+        ],
+        [
+          511,
+          "terms-helpers-helpers"
+        ]
+      ],
+      "other_reads": []
+    },
+    {
+      "table": "CellSpineView16",
+      "live_function_rows": 77,
+      "retained_origins": 77,
+      "writers": [
+        [
+          8,
+          "switch_rewrite"
+        ],
+        [
+          9,
+          "switch_rewrite"
+        ],
+        [
+          10,
+          "loop-strength-reduction"
+        ],
+        [
+          15,
+          "hacker"
+        ],
+        [
+          16,
+          "hacker"
+        ],
+        [
+          294,
+          "cell-spine-complete"
+        ],
+        [
+          349,
+          "drop"
+        ],
+        [
+          350,
+          "drop"
+        ],
+        [
+          459,
+          "non-weakly-linear"
+        ],
+        [
+          460,
+          "passthrough"
+        ]
+      ],
+      "query_readers": [
+        [
+          2,
+          "switch_rewrite"
+        ],
+        [
+          2,
+          "switch_rewrite"
+        ],
+        [
+          3,
+          "switch_rewrite"
+        ],
+        [
+          3,
+          "switch_rewrite"
+        ],
+        [
+          4,
+          "switch_rewrite"
+        ],
+        [
+          4,
+          "switch_rewrite"
+        ],
+        [
+          6,
+          "switch_rewrite"
+        ],
+        [
+          7,
+          "switch_rewrite"
+        ],
+        [
+          14,
+          "hacker"
+        ],
+        [
+          14,
+          "hacker"
+        ],
+        [
+          457,
+          "non-weakly-linear"
+        ],
+        [
+          457,
+          "non-weakly-linear"
+        ],
+        [
+          458,
+          "non-weakly-linear"
+        ],
+        [
+          458,
+          "non-weakly-linear"
+        ],
+        [
+          461,
+          "passthrough"
+        ],
+        [
+          463,
+          "passthrough"
+        ],
+        [
+          463,
+          "passthrough"
+        ],
+        [
+          466,
+          "state-edge-passthrough"
+        ],
+        [
+          466,
+          "state-edge-passthrough"
+        ]
+      ],
+      "other_reads": []
+    },
+    {
+      "table": "CellSpineView11",
+      "live_function_rows": 14,
+      "retained_origins": 14,
+      "writers": [
+        [
+          8,
+          "switch_rewrite"
+        ],
+        [
+          9,
+          "switch_rewrite"
+        ],
+        [
+          10,
+          "loop-strength-reduction"
+        ],
+        [
+          15,
+          "hacker"
+        ],
+        [
+          16,
+          "hacker"
+        ],
+        [
+          289,
+          "cell-spine-complete"
+        ],
+        [
+          349,
+          "drop"
+        ],
+        [
+          350,
+          "drop"
+        ],
+        [
+          457,
+          "non-weakly-linear"
+        ],
+        [
+          458,
+          "non-weakly-linear"
+        ],
+        [
+          459,
+          "non-weakly-linear"
+        ],
+        [
+          460,
+          "passthrough"
+        ],
+        [
+          463,
+          "passthrough"
+        ],
+        [
+          466,
+          "state-edge-passthrough"
+        ]
+      ],
+      "query_readers": [
+        [
+          1,
+          "loop-unroll"
+        ],
+        [
+          10,
+          "loop-strength-reduction"
+        ],
+        [
+          14,
+          "hacker"
+        ],
+        [
+          15,
+          "hacker"
+        ],
+        [
+          16,
+          "hacker"
+        ],
+        [
+          251,
+          "always-run"
+        ],
+        [
+          264,
+          "always-run"
+        ],
+        [
+          294,
+          "cell-spine-complete"
+        ],
+        [
+          349,
+          "drop"
+        ],
+        [
+          350,
+          "drop"
+        ],
+        [
+          417,
+          "interval-analysis"
+        ],
+        [
+          418,
+          "interval-analysis"
+        ],
+        [
+          438,
+          "loop-iters-analysis"
+        ],
+        [
+          439,
+          "loop-iters-analysis"
+        ],
+        [
+          448,
+          "mem-simple"
+        ],
+        [
+          459,
+          "non-weakly-linear"
+        ],
+        [
+          460,
+          "passthrough"
+        ],
+        [
+          461,
+          "passthrough"
+        ]
+      ],
+      "other_reads": []
+    },
+    {
+      "table": "CellSpineView6",
+      "live_function_rows": 8,
+      "retained_origins": 8,
+      "writers": [
+        [
+          0,
+          "select_opt"
+        ],
+        [
+          284,
+          "cell-spine-complete"
+        ]
+      ],
+      "query_readers": [
+        [
+          373,
+          "error-checking"
+        ],
+        [
+          565,
+          "type-analysis"
+        ],
+        [
+          566,
+          "type-analysis"
+        ]
+      ],
+      "other_reads": []
+    },
+    {
+      "table": "CellSpineView18",
+      "live_function_rows": 7,
+      "retained_origins": 7,
+      "writers": [
+        [
+          16,
+          "hacker"
+        ],
+        [
+          296,
+          "cell-spine-complete"
+        ],
+        [
+          464,
+          "passthrough"
+        ],
+        [
+          465,
+          "passthrough"
+        ]
+      ],
+      "query_readers": [
+        [
+          5,
+          "switch_rewrite"
+        ],
+        [
+          5,
+          "switch_rewrite"
+        ],
+        [
+          16,
+          "hacker"
+        ],
+        [
+          438,
+          "loop-iters-analysis"
+        ],
+        [
+          464,
+          "passthrough"
+        ],
+        [
+          464,
+          "passthrough"
+        ]
+      ],
+      "other_reads": []
+    },
+    {
+      "table": "CellSpineView1",
+      "live_function_rows": 5,
+      "retained_origins": 5,
+      "writers": [
+        [
+          15,
+          "hacker"
+        ],
+        [
+          20,
+          "interval-rewrite"
+        ],
+        [
+          25,
+          "peepholes"
+        ],
+        [
+          26,
+          "peepholes"
+        ],
+        [
+          41,
+          "peepholes"
+        ],
+        [
+          42,
+          "peepholes"
+        ],
+        [
+          276,
+          "canon"
+        ],
+        [
+          277,
+          "canon"
+        ],
+        [
+          279,
+          "cell-spine-complete"
+        ],
+        [
+          375,
+          "initialization"
+        ],
+        [
+          405,
+          "interval-analysis"
+        ]
+      ],
+      "query_readers": [
+        [
+          1,
+          "loop-unroll"
+        ],
+        [
+          1,
+          "loop-unroll"
+        ],
+        [
+          31,
+          "peepholes"
+        ],
+        [
+          31,
+          "peepholes"
+        ],
+        [
+          32,
+          "peepholes"
+        ],
+        [
+          32,
+          "peepholes"
+        ],
+        [
+          43,
+          "peepholes"
+        ],
+        [
+          43,
+          "peepholes"
+        ],
+        [
+          403,
+          "interval-analysis"
+        ],
+        [
+          438,
+          "loop-iters-analysis"
+        ],
+        [
+          438,
+          "loop-iters-analysis"
+        ],
+        [
+          439,
+          "loop-iters-analysis"
+        ],
+        [
+          439,
+          "loop-iters-analysis"
+        ],
+        [
+          439,
+          "loop-iters-analysis"
+        ],
+        [
+          557,
+          "type-analysis"
+        ]
+      ],
+      "other_reads": []
+    },
+    {
+      "table": "CellSpineView29",
+      "live_function_rows": 4,
+      "retained_origins": 4,
+      "writers": [
+        [
+          307,
+          "cell-spine-complete"
+        ]
+      ],
+      "query_readers": [
+        [
+          13,
+          "hacker"
+        ],
+        [
+          14,
+          "hacker"
+        ],
+        [
+          16,
+          "hacker"
+        ]
+      ],
+      "other_reads": []
+    },
+    {
+      "table": "CellSpineView10",
+      "live_function_rows": 2,
+      "retained_origins": 2,
+      "writers": [
+        [
+          250,
+          "always-run"
+        ],
+        [
+          288,
+          "cell-spine-complete"
+        ]
+      ],
+      "query_readers": [
+        [
+          250,
+          "always-run"
+        ],
+        [
+          265,
+          "always-run"
+        ]
+      ],
+      "other_reads": []
+    },
+    {
+      "table": "CellSpineView3",
+      "live_function_rows": 2,
+      "retained_origins": 2,
+      "writers": [
+        [
+          281,
+          "cell-spine-complete"
+        ],
+        [
+          375,
+          "initialization"
+        ],
+        [
+          465,
+          "passthrough"
+        ]
+      ],
+      "query_readers": [
+        [
+          559,
+          "type-analysis"
+        ],
+        [
+          560,
+          "type-analysis"
+        ]
+      ],
+      "other_reads": []
+    },
+    {
+      "table": "CellSpineView19",
+      "live_function_rows": 1,
+      "retained_origins": 1,
+      "writers": [
+        [
+          15,
+          "hacker"
+        ],
+        [
+          20,
+          "interval-rewrite"
+        ],
+        [
+          25,
+          "peepholes"
+        ],
+        [
+          26,
+          "peepholes"
+        ],
+        [
+          41,
+          "peepholes"
+        ],
+        [
+          297,
+          "cell-spine-complete"
+        ],
+        [
+          375,
+          "initialization"
+        ]
+      ],
+      "query_readers": [
+        [
+          25,
+          "peepholes"
+        ],
+        [
+          26,
+          "peepholes"
+        ],
+        [
+          29,
+          "peepholes"
+        ],
+        [
+          30,
+          "peepholes"
+        ]
+      ],
+      "other_reads": []
+    }
+  ],
+  "totals": {
+    "live_function_rows": 264,
+    "retained_origins": 264,
+    "inline_writers": 22
+  },
+  "candidate_source_cells": 264,
+  "sources_also_retained_by_other_tables": 175,
+  "graph_owned_bytes": 2617317,
+  "obligations": [
+    "Keep rows, dedup, update counts and saturate change signals.",
+    "Other tables, child frames and external Graph callers can retain a source.",
+    "Read absence is source-program scoped, not a general Graph API guarantee.",
+    "Counts are not reclaimable byte estimates or a completed takeover."
+  ]
+}

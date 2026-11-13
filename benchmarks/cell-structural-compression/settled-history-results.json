@@ -1,0 +1,2808 @@
+{
+  "scope": "audited standalone Cell runtime history + compiler settled structures; not memory savings",
+  "program_sha256": "2e1a5e68cf2bebbe16fdaeb4fe019c9a3cc36773f30ce4c52e701375d9891a21",
+  "events": 4920,
+  "missing_parent_events": 117,
+  "counts": {
+    "saturated_events": 163,
+    "same_ordered_class": 1,
+    "same_settled_class": 154,
+    "same_state_exact_prefix": 154,
+    "same_state_same_prefix_ports": 154
+  },
+  "depth_before": {
+    "1": 3609,
+    "2": 975,
+    "3": 257,
+    "4": 70,
+    "5": 9
+  },
+  "depth_if_equal_settled_edges_folded": {
+    "1": 3683,
+    "2": 998,
+    "3": 169,
+    "4": 61,
+    "5": 9
+  },
+  "saturated_edges": [
+    {
+      "event": 398,
+      "parent": 305,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        98,
+        102
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 660,
+      "parent": 532,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        110
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 664,
+      "parent": 533,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        110
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 665,
+      "parent": 534,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        110
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 666,
+      "parent": 305,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        98,
+        110
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 669,
+      "parent": 537,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        110
+      ],
+      "same_settled_class": false,
+      "exact_prefix": false,
+      "same_prefix_ports": false,
+      "ordered_normalizations": [
+        "opaque-source-contract",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 670,
+      "parent": 539,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        110
+      ],
+      "same_settled_class": false,
+      "exact_prefix": false,
+      "same_prefix_ports": false,
+      "ordered_normalizations": [
+        "opaque-source-contract",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 671,
+      "parent": 542,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        110
+      ],
+      "same_settled_class": false,
+      "exact_prefix": false,
+      "same_prefix_ports": false,
+      "ordered_normalizations": [
+        "opaque-source-contract",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 672,
+      "parent": 543,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        110
+      ],
+      "same_settled_class": false,
+      "exact_prefix": false,
+      "same_prefix_ports": false,
+      "ordered_normalizations": [
+        "opaque-source-contract",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 673,
+      "parent": 544,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        110
+      ],
+      "same_settled_class": false,
+      "exact_prefix": false,
+      "same_prefix_ports": false,
+      "ordered_normalizations": [
+        "opaque-source-contract",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 674,
+      "parent": 545,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        110
+      ],
+      "same_settled_class": false,
+      "exact_prefix": false,
+      "same_prefix_ports": false,
+      "ordered_normalizations": [
+        "opaque-source-contract",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 740,
+      "parent": 616,
+      "rule": 103,
+      "source_rule": 103,
+      "runs": [
+        110,
+        114
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "flat"
+      ]
+    },
+    {
+      "event": 778,
+      "parent": 675,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        110,
+        114
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 781,
+      "parent": 678,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        110,
+        114
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 782,
+      "parent": 679,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        110,
+        114
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 783,
+      "parent": 680,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        110,
+        114
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 785,
+      "parent": 682,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        110,
+        114
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 786,
+      "parent": 683,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        110,
+        114
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 790,
+      "parent": 678,
+      "rule": 143,
+      "source_rule": 143,
+      "runs": [
+        110,
+        114
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 874,
+      "parent": 532,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        118
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 875,
+      "parent": 787,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        114,
+        118
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 876,
+      "parent": 533,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        118
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 877,
+      "parent": 792,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        114,
+        118
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 878,
+      "parent": 793,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        114,
+        118
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 879,
+      "parent": 682,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        110,
+        118
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 880,
+      "parent": 795,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        114,
+        118
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 881,
+      "parent": 796,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        114,
+        118
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 882,
+      "parent": 797,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        114,
+        118
+      ],
+      "same_settled_class": false,
+      "exact_prefix": false,
+      "same_prefix_ports": false,
+      "ordered_normalizations": [
+        "opaque-source-contract",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 883,
+      "parent": 800,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        114,
+        118
+      ],
+      "same_settled_class": false,
+      "exact_prefix": false,
+      "same_prefix_ports": false,
+      "ordered_normalizations": [
+        "opaque-source-contract",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 889,
+      "parent": 785,
+      "rule": 143,
+      "source_rule": 137,
+      "runs": [
+        114,
+        118
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 954,
+      "parent": 675,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        110,
+        122
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 955,
+      "parent": 885,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        118,
+        122
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 956,
+      "parent": 679,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        110,
+        122
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 957,
+      "parent": 887,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        118,
+        122
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 958,
+      "parent": 888,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        118,
+        122
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 960,
+      "parent": 795,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        114,
+        122
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 961,
+      "parent": 890,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        118,
+        122
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 962,
+      "parent": 891,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        118,
+        122
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 963,
+      "parent": 894,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        118,
+        122
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 969,
+      "parent": 880,
+      "rule": 143,
+      "source_rule": 137,
+      "runs": [
+        118,
+        122
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1028,
+      "parent": 787,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        114,
+        126
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1029,
+      "parent": 965,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        122,
+        126
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1030,
+      "parent": 792,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        114,
+        126
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1031,
+      "parent": 967,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        122,
+        126
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1032,
+      "parent": 890,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        118,
+        126
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1033,
+      "parent": 970,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        122,
+        126
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1034,
+      "parent": 971,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        122,
+        126
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1035,
+      "parent": 974,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        122,
+        126
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1038,
+      "parent": 961,
+      "rule": 143,
+      "source_rule": 137,
+      "runs": [
+        122,
+        126
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1071,
+      "parent": 885,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        118,
+        130
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1072,
+      "parent": 965,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        122,
+        130
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1073,
+      "parent": 887,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        118,
+        130
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1074,
+      "parent": 967,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        122,
+        130
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1075,
+      "parent": 970,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        122,
+        130
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1076,
+      "parent": 1039,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        126,
+        130
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1078,
+      "parent": 1029,
+      "rule": 143,
+      "source_rule": 137,
+      "runs": [
+        126,
+        130
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1080,
+      "parent": 1031,
+      "rule": 143,
+      "source_rule": 137,
+      "runs": [
+        126,
+        130
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1081,
+      "parent": 1033,
+      "rule": 143,
+      "source_rule": 137,
+      "runs": [
+        126,
+        130
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 1093,
+      "parent": 1082,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        130,
+        133
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2021,
+      "parent": 534,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        106,
+        471
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2022,
+      "parent": 888,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        118,
+        471
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2023,
+      "parent": 968,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        122,
+        471
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2024,
+      "parent": 794,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        114,
+        471
+      ],
+      "same_settled_class": false,
+      "exact_prefix": false,
+      "same_prefix_ports": false,
+      "ordered_normalizations": [
+        "opaque-source-contract",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2025,
+      "parent": 1038,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        126,
+        471
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2094,
+      "parent": 2073,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        483,
+        486
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2095,
+      "parent": 2074,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        483,
+        486
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2097,
+      "parent": 2074,
+      "rule": 143,
+      "source_rule": 143,
+      "runs": [
+        483,
+        486
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2124,
+      "parent": 2096,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        486,
+        489
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2125,
+      "parent": 2098,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        486,
+        489
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2127,
+      "parent": 2098,
+      "rule": 143,
+      "source_rule": 143,
+      "runs": [
+        486,
+        489
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2160,
+      "parent": 2073,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        483,
+        493
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2161,
+      "parent": 2126,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        489,
+        493
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2162,
+      "parent": 2128,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        489,
+        493
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2166,
+      "parent": 2128,
+      "rule": 143,
+      "source_rule": 143,
+      "runs": [
+        489,
+        493
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2190,
+      "parent": 2096,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        486,
+        497
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2191,
+      "parent": 2165,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        493,
+        497
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2192,
+      "parent": 2167,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        493,
+        497
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2194,
+      "parent": 2167,
+      "rule": 143,
+      "source_rule": 143,
+      "runs": [
+        493,
+        497
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2209,
+      "parent": 2126,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        489,
+        501
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2210,
+      "parent": 2165,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        493,
+        501
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 2212,
+      "parent": 2191,
+      "rule": 143,
+      "source_rule": 137,
+      "runs": [
+        497,
+        501
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3086,
+      "parent": 2979,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3087,
+      "parent": 2980,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3088,
+      "parent": 2981,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3089,
+      "parent": 2982,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3090,
+      "parent": 2983,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3091,
+      "parent": 2984,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3092,
+      "parent": 2985,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3093,
+      "parent": 2986,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3094,
+      "parent": 2987,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3095,
+      "parent": 2988,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3096,
+      "parent": 2989,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3097,
+      "parent": 2990,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3098,
+      "parent": 2991,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3099,
+      "parent": 2992,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3100,
+      "parent": 2993,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3101,
+      "parent": 2994,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3102,
+      "parent": 2995,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3103,
+      "parent": 2996,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3104,
+      "parent": 2997,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3105,
+      "parent": 2998,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3110,
+      "parent": 3003,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3111,
+      "parent": 3004,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3112,
+      "parent": 3005,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3113,
+      "parent": 3006,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3114,
+      "parent": 3007,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3115,
+      "parent": 3008,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3116,
+      "parent": 3009,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3117,
+      "parent": 3010,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3118,
+      "parent": 3011,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3119,
+      "parent": 3012,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3120,
+      "parent": 3013,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3121,
+      "parent": 3014,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3122,
+      "parent": 3015,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3123,
+      "parent": 3016,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3124,
+      "parent": 3017,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3125,
+      "parent": 3018,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3126,
+      "parent": 3019,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3127,
+      "parent": 3020,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3128,
+      "parent": 3021,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3129,
+      "parent": 3022,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3130,
+      "parent": 3023,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3131,
+      "parent": 3024,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3132,
+      "parent": 3025,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3133,
+      "parent": 3026,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3134,
+      "parent": 3027,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        810,
+        813
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3320,
+      "parent": 3221,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        816,
+        820
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3399,
+      "parent": 3321,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        820,
+        823
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3447,
+      "parent": 3221,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        816,
+        826
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3448,
+      "parent": 3400,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        823,
+        826
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3472,
+      "parent": 3321,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        820,
+        829
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3473,
+      "parent": 3450,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        826,
+        829
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3490,
+      "parent": 3400,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        823,
+        833
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3491,
+      "parent": 3450,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        826,
+        833
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3493,
+      "parent": 3473,
+      "rule": 143,
+      "source_rule": 137,
+      "runs": [
+        829,
+        833
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 3592,
+      "parent": 683,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        110,
+        886
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "flat",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4821,
+      "parent": 4762,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4822,
+      "parent": 4763,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4823,
+      "parent": 4764,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4824,
+      "parent": 4765,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4825,
+      "parent": 4766,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4826,
+      "parent": 4767,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4827,
+      "parent": 4768,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4828,
+      "parent": 4769,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4829,
+      "parent": 4770,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4830,
+      "parent": 4771,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4831,
+      "parent": 4772,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4832,
+      "parent": 4773,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4833,
+      "parent": 4774,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4834,
+      "parent": 4775,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4835,
+      "parent": 4776,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4836,
+      "parent": 4777,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4837,
+      "parent": 4778,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4838,
+      "parent": 4779,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4839,
+      "parent": 4780,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4840,
+      "parent": 4781,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4841,
+      "parent": 4782,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4842,
+      "parent": 4783,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4843,
+      "parent": 4784,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4844,
+      "parent": 4785,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4845,
+      "parent": 4786,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4846,
+      "parent": 4787,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    },
+    {
+      "event": 4847,
+      "parent": 4788,
+      "rule": 137,
+      "source_rule": 143,
+      "runs": [
+        1220,
+        1223
+      ],
+      "same_settled_class": true,
+      "exact_prefix": true,
+      "same_prefix_ports": true,
+      "ordered_normalizations": [
+        "staged-lazy-union/v1",
+        "staged-lazy-union/v1"
+      ]
+    }
+  ],
+  "remaining_obligations": [
+    "Actual result identities and liveness are not represented by symbolic equality.",
+    "Do not erase source Run publication, delta ownership or effect order.",
+    "Keep the consumer continuation interface even when its settled state is shared.",
+    "Potential depth folding is not an executable switch, instance retirement or heap measurement."
+  ],
+  "trace_file_sha256": "5c5799c56ac5a8b519c1a0f575b752c8f776bb8baadcc913452a27f8abf4697a",
+  "catalog_file_sha256": "e3d1cdf3ed94cdbf2f015db911c21d857668504c9573d66bace89eec3e14b0c9"
+}

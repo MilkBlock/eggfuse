@@ -30,6 +30,27 @@ impl FromIterator<(usize, Value)> for FrameSlots {
 }
 impl FrameSlots {
     #[cfg(feature="storage-metrics")]
+    pub(crate) fn is_unshared(&self)->bool {self.prefix.is_none() && self.removed.is_none()}
+    #[cfg(feature="storage-metrics")]
+    pub(crate) fn into_unshared(self)->Result<Slots,Self> {
+        if self.is_unshared() {Ok(self.current)} else {Err(self)}
+    }
+
+    #[cfg(feature="storage-metrics")]
+    pub(crate) fn owned_slots(&self) -> Vec<usize> {
+        if self.prefix.is_some() { return Vec::new(); }
+        self.current.keys().copied().collect()
+    }
+    /// A shared prefix is not ours to invalidate. The unique owned array can
+    /// hand equality slots to its composed instance without a copy or overlay.
+    pub(crate) fn retain_owned(&mut self, keep: impl FnMut(&usize, &Value) -> bool) -> usize {
+        if self.prefix.is_some() { return 0; }
+        let before = self.current.len();
+        self.current.retain(keep);
+        before - self.current.len()
+    }
+
+    #[cfg(feature="storage-metrics")]
     pub(crate) fn compact_capacity(&mut self) {
         self.current.compact_capacity();
         if let Some(prefix)=self.prefix.as_mut().and_then(Arc::get_mut) {
