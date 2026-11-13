@@ -27,12 +27,14 @@ def run(state,blocks,model,completion,controls,next_id,limit,quota,external_comp
     for _ in range(rounds):
         running=cursor<count;safe=xp.minimum(cursor,count-1)
         stage=xp.where(running,controls['schedule'][safe],-1)
-        queried,query=run_round(state,blocks,model,stage,xp)
+        key_context=None if eq_context is None else dict(eq_context,types=completion['key_types'],settled=eq_settled)
+        queried,query=run_round(state,blocks,model,stage,xp,key_context=key_context)
         candidate,new_id,effects=complete(queried,completion,next_id,limit,quota,external_complete,eq_settled,xp,eq_context,eq_rounds)
         after_eq=effects.get('eq_settled',eq_settled)
         failed=xp.array(False)
         for key in ('stale_source','nonfinite','unsettled_source','capacity','missing_witness','transfer_blocked'):
             failed=failed|xp.any(query[key])
+        failed=failed|xp.any(query['invalid_key'])|query['key_context_pending']
         quiet=(query['new_tokens']==0)&(effects['executed']==0)&(effects['refreshed']==0)
         covered=controls['query_covered'][safe]&external_complete
         advance=running&quiet&covered&after_eq&~effects['needs_attention']&~failed

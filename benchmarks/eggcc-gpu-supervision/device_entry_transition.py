@@ -57,7 +57,7 @@ def propose(state,plan,input_layout,coefficient_layout,model,stage,xp):
     return p,dict(encoding=encoding,numeric=numeric)
 
 
-def step(state,plan,input_layout,coefficient_layout,model,stage,xp):
+def step(state,plan,input_layout,coefficient_layout,model,stage,xp,key_context=None):
     p,marks=propose(state,plan,input_layout,coefficient_layout,model,stage,xp)
-    out,admission=commit(state,p,xp)
+    out,admission=commit(state,p,xp,key_context)
     return out,dict(marks,admission=admission)

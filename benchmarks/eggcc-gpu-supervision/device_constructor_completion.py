@@ -11,9 +11,11 @@ from device_copy_effects import compile_copies,execute_copy
 from device_input_features import compile_inputs
 from device_token_refresh import refresh
 from device_eq_completion import compile_unions,union_inputs,close,finish_unions
+from device_semantic_keys import compile_types
 
 
 def compile_completion(recipe,width,include_unions=False):
+    key_types,_=compile_types(recipe)
     compiled=compile_sites(recipe);sites=compiled['sites'];copies=compile_copies(recipe)
     operations=sorted([('construct',s) for s in sites]+[('copy',s) for s in copies['sites']],key=lambda pair:(pair[1]['rule'],pair[1]['operation']))
     views={(s['table'],len(s['args'])):compile_view(recipe,s['table'],len(s['args'])) for s in sites}
@@ -53,7 +55,7 @@ def compile_completion(recipe,width,include_unions=False):
         layout['roles'][:,:n]=base['roles'][:,:,:64]
         layouts.append((rid,layout))
     marks=[m for m in compiled['marks'] if m['reason']!='effect:copy' and not (include_unions and m['reason']=='effect:union')]+copies['marks']+union_marks
-    return dict(sites=sites,operations=operations,views=views,layouts=layouts,marks=marks,eq_types=eq_types,closure_views=closure_views,include_unions=include_unions,eq_sort_names=names)
+    return dict(sites=sites,operations=operations,views=views,layouts=layouts,marks=marks,eq_types=eq_types,closure_views=closure_views,include_unions=include_unions,eq_sort_names=names,key_types=key_types)
 
 
 def complete(state,plan,next_id,limit,quota,external_complete,eq_settled,xp,eq_context=None,eq_rounds=4):

@@ -6,7 +6,7 @@ or prove the supplied transfer coverage. Pairwise dedup is a bounded prototype.
 """
 
 
-def commit(state, proposals, xp):
+def commit(state, proposals, xp, key_context=None):
     """One snapshot-in/snapshot-out tensor operation, no host value reads.
 
     present rows retain semantic keys; active rows own continuation work.
@@ -46,9 +46,18 @@ def commit(state, proposals, xp):
     eligible = proposals['matched'] & valid_source & settled & finite
     # Completed/retired logical keys remain known: repeated derivations are not
     # new facts and may not reactivate work merely by producing another vector.
-    existing = xp.all(proposals['keys'][:,None,:] == state['keys'][None,:,:], axis=2)
+    candidate_keys=proposals['keys'];resident_keys=state['keys']
+    invalid_key=xp.zeros(count,xp.bool_);key_context_pending=xp.array(False)
+    if key_context is not None:
+        from device_semantic_keys import comparison_view
+        candidate_keys,valid_keys=comparison_view(candidate_keys,key_context,xp)
+        resident_keys,valid_resident=comparison_view(resident_keys,key_context,xp)
+        key_context_pending=~xp.array(key_context['settled'],dtype=xp.bool_)|xp.any(state['present']&~valid_resident)
+        invalid_key=proposals['matched']&~valid_keys
+        eligible=eligible&valid_keys&~key_context_pending
+    existing = xp.all(candidate_keys[:,None,:] == resident_keys[None,:,:], axis=2)
     known = xp.any(existing & state['present'][None,:], axis=1)
-    equal = xp.all(proposals['keys'][:,None,:] == proposals['keys'][None,:,:], axis=2)
+    equal = xp.all(candidate_keys[:,None,:] == candidate_keys[None,:,:], axis=2)
     earlier = xp.arange(count)[None,:] < xp.arange(count)[:,None]
     prior = xp.any(equal & earlier & eligible[None,:], axis=1)
     novel = eligible & ~known & ~prior
@@ -96,7 +105,7 @@ def commit(state, proposals, xp):
     output['settled'] = xp.where(written, proposals['completed'][pick], state['settled'])
     output['readers'] = xp.where(written, False, state['readers'])
     output['generation'] = xp.where(written, state['generation']+1, state['generation'])
-    marks = dict(accepted=accepted, transferred=transferable,
+    marks = dict(accepted=accepted, transferred=transferable,invalid_key=invalid_key,key_context_pending=key_context_pending,
         stale_source=proposals['matched'] & ~valid_source,
         stale_token=proposals['matched'] & stale_token,
         nonfinite=proposals['matched'] & ~finite,
@@ -108,7 +117,7 @@ def commit(state, proposals, xp):
     # "no new admission", never a complete egraph saturation certificate.
     marks['missing_witness']=proposals.get('missing_witness',xp.zeros_like(accepted))
     marks['no_new_admission'] = ~xp.any(accepted)
-    marks['needs_attention'] = xp.any(marks['stale_source'] | marks['nonfinite'] | marks['unsettled_source'] | marks['capacity'] | marks['missing_witness']) | xp.any(output['present'] & output['active'] & (~output['settled'] | output.get('token_dirty',xp.zeros_like(output['active']))))
+    marks['needs_attention'] = key_context_pending | xp.any(invalid_key) | xp.any(marks['stale_source'] | marks['nonfinite'] | marks['unsettled_source'] | marks['capacity'] | marks['missing_witness']) | xp.any(output['present'] & output['active'] & (~output['settled'] | output.get('token_dirty',xp.zeros_like(output['active']))))
     return output, marks
 
 

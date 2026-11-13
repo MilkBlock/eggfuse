@@ -69,13 +69,13 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp):
     return p,dict(query_complete=bindings['complete'],overflow=bindings['overflow'],candidate_lanes=bindings['candidate_lanes'],encoding=encoding,numerical=numerical)
 
 
-def step(state,plan,model,capacity,external_complete,eq_settled,xp):
+def step(state,plan,model,capacity,external_complete,eq_settled,xp,key_context=None):
     p,marks=proposals(state,plan,model,capacity,external_complete,eq_settled,xp)
-    out,admission=commit(state,p,xp)
+    out,admission=commit(state,p,xp,key_context)
     return out,dict(marks,admission=admission)
 
 
-def run_round(state,blocks,model,stage,xp,capacity=16,external_complete=False,eq_settled=False):
+def run_round(state,blocks,model,stage,xp,capacity=16,external_complete=False,eq_settled=False,key_context=None):
     if not blocks:raise ValueError('empty query catalog is not coverage')
     candidates=[];complete=xp.array(True)
     max_atoms=max(len(plan['query']['atoms']) for _,plan in blocks)
@@ -89,7 +89,7 @@ def run_round(state,blocks,model,stage,xp,capacity=16,external_complete=False,eq
             p[key]=xp.concatenate([value,xp.full((capacity,pad),False if key=='witness_valid' else -1,value.dtype)],axis=1)
         candidates.append(p)
     combined={k:xp.concatenate([p[k] for p in candidates],axis=0) for k in candidates[0]}
-    out,marks=commit(state,combined,xp)
+    out,marks=commit(state,combined,xp,key_context)
     marks['query_complete']=complete;marks['needs_attention']=marks['needs_attention']|~complete
     marks['new_tokens']=xp.sum(marks['accepted'].astype(xp.int32))
     marks['proposed_matches']=xp.sum(combined['matched'].astype(xp.int32))

@@ -22,14 +22,16 @@ def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_i
         stage,_=current(machine,schedule,xp);in_run=stage>=0;begin=in_run&~opened
         # Only the first tick of a Run takes a query snapshot. Waiting ticks
         # finish its effects without rematching against newly produced facts.
+        key_context=None if eq_context is None else dict(eq_context,types=completion['key_types'],settled=eq_settled)
         if query_kernel is None:
-            queried,q=run_round(state,blocks,model,xp.where(begin,stage,-1),xp)
+            queried,q=run_round(state,blocks,model,xp.where(begin,stage,-1),xp,key_context=key_context)
         else:
-            queried,q=query_kernel(state,blocks,model,xp.where(begin,stage,-1),xp,external_complete=external_complete,eq_settled=eq_settled)
+            queried,q=query_kernel(state,blocks,model,xp.where(begin,stage,-1),xp,external_complete=external_complete,eq_settled=eq_settled,key_context=key_context)
         candidate,new_id,e=complete(queried,completion,next_id,limit,quota,external_complete,eq_settled,xp,eq_context,eq_rounds)
         error=xp.array(False)
         for key in ('stale_source','nonfinite','unsettled_source','capacity','missing_witness','transfer_blocked'):
             error=error|xp.any(q[key])
+        error=error|xp.any(q['invalid_key'])|q['key_context_pending']
         failed=failed|(begin&error)
         changed=changed|(in_run&e['semantic_changed'])
         after_eq=e.get('eq_settled',eq_settled)

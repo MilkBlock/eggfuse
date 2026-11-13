@@ -48,11 +48,13 @@ class JoinTransition(unittest.TestCase):
         recipe['rules'][2]['effects']=[dict(kind='construct',call=dict(table='H'),args=[dict(slot=2)],dst=3)]
         for key in ('slots','slot_roots','slot_valid'):
             s[key]=np.concatenate([s[key],np.full((3,1),False if key=='slot_valid' else -1,s[key].dtype)],axis=1)
-        dp=device_plan(compile_transition(recipe,2));cp=completion_helper.device_plan(compile_completion(recipe,4))
+        dp=device_plan(compile_transition(recipe,2));cp=completion_helper.device_plan(compile_completion(recipe,4,include_unions=True))
         schedule,meta=compile_schedule(dict(saturate=dict(run='s')),['s'])
         dev=lambda d:{k:mx.array(v) for k,v in d.items()}
         ds,dm,dc=map(dev,(s,m,schedule))
-        out,n,marks=mx.compile(lambda state:run(state,[(0,dp)],dm,cp,dc,meta['repeat_slots'],mx.array([True]),mx.array(201),mx.array(256),mx.array(55),mx.array(True),mx.array(True),12,mx,query_kernel=run_round))(ds)
+        roots=np.arange(256,dtype=np.int32);roots[99]=10;roots[100]=10;roots[200]=20
+        eq_context=dict(roots=mx.array(roots),sorts=mx.zeros(256,mx.int32))
+        out,n,marks=mx.compile(lambda state:run(state,[(0,dp)],dm,cp,dc,meta['repeat_slots'],mx.array([True]),mx.array(201),mx.array(256),mx.array(55),mx.array(True),mx.array(True),12,mx,eq_context=eq_context,query_kernel=run_round))(ds)
         mx.eval(out,n,marks)
         self.assertTrue(bool(marks['finished']));self.assertEqual(int(n),202)
         self.assertEqual(np.array(marks['run_changed'])[np.array(marks['run_done'])].tolist(),[True,False])

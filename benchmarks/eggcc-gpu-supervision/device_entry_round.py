@@ -8,7 +8,7 @@ from device_entry_transition import propose
 from device_token_commit import commit
 
 
-def run_round(state,blocks,model,stage,xp):
+def run_round(state,blocks,model,stage,xp,key_context=None):
     if not blocks:raise ValueError('empty catalog is not proof of closure')
     candidates=[]
     for plan,inputs,coefficients in blocks:
@@ -19,7 +19,7 @@ def run_round(state,blocks,model,stage,xp):
     combined={key:xp.concatenate([p[key] for p in candidates],axis=0) for key in fields}
     # All sources belong to the original snapshot. Competition and duplicate
     # selection span every Entry, not just one local proposal block.
-    out,marks=commit(state,combined,xp)
+    out,marks=commit(state,combined,xp,key_context)
     marks['proposed_matches']=xp.sum(combined['matched'].astype(xp.int32))
     marks['new_tokens']=xp.sum(marks['accepted'].astype(xp.int32))
     return out,marks
