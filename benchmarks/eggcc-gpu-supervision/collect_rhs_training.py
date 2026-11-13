@@ -1,5 +1,6 @@
-"""Capture a reproducible train-only RHS corpus with per-Run reference audits.
+"""Capture a reproducible partition-preserving RHS corpus with per-Run reference audits.
 
+The default partition is train; --split selects another existing partition.
 Selection uses the existing split, binding count and saved CPU reference time,
 never target accuracy or observed link counts. Raw artifacts stay outside Git.
 """
@@ -18,8 +19,8 @@ from summarize_rhs_results import summarize
 def digest(raw):return hashlib.sha256(raw).hexdigest()
 
 
-def select(manifest, max_bindings, max_cases):
-    eligible=[e for e in manifest['cases'] if e['status']=='complete' and e['split']=='train'
+def select(manifest, max_bindings, max_cases, split="train"):
+    eligible=[e for e in manifest['cases'] if e['status']=='complete' and e['split']==split
               and e['summary']['observed_bindings']<=max_bindings]
     return sorted(eligible,key=lambda e:(e['summary']['observed_bindings'],e['case']))[:max_cases]
 
@@ -27,16 +28,16 @@ def select(manifest, max_bindings, max_cases):
 def main():
     p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('binary',type=Path)
     p.add_argument('output',type=Path);p.add_argument('--max-cases',type=int,default=3)
-    p.add_argument('--max-bindings',type=int,default=2000);p.add_argument('--timeout',type=float,default=120)
+    p.add_argument('--split',choices=('train','validation','test'),default='train');p.add_argument('--max-bindings',type=int,default=2000);p.add_argument('--timeout',type=float,default=120)
     a=p.parse_args()
     if a.max_cases<1 or a.max_bindings<1 or a.timeout<=0:raise ValueError('positive limits required')
     manifest_bytes=a.manifest.read_bytes();manifest=json.loads(manifest_bytes)
-    selected=select(manifest,a.max_bindings,a.max_cases)
+    selected=select(manifest,a.max_bindings,a.max_cases,a.split)
     a.output.mkdir(parents=True,exist_ok=False)
     report=dict(schema='actual-rhs-training-corpus/v1',manifest_sha256=digest(manifest_bytes),
-        binary_sha256=digest(a.binary.read_bytes()),partition='train',
+        binary_sha256=digest(a.binary.read_bytes()),partition=a.split,
         limits=dict(max_cases=a.max_cases,max_bindings=a.max_bindings,timeout=a.timeout,saved_reference_seconds=1),
-        selection='smallest observed binding counts among complete train cases under limit',cases=[])
+        selection='smallest observed binding counts among complete cases in the requested original partition under limit',cases=[])
     totals=Counter()
     for e in selected:
         record=dict(case=e['case'],split=e['split'],program_sha256=e['program_sha256'])
@@ -68,7 +69,7 @@ def main():
             raise ValueError('captured program mismatch')
         summary=summarize(trace);links=link(trace)
         links['trace_sha256']=digest(captured_raw)
-        links['corpus_partition']=dict(case=e['case'],split='train',manifest_sha256=report['manifest_sha256'])
+        links['corpus_partition']=dict(case=e['case'],split=e['split'],manifest_sha256=report['manifest_sha256'])
         links_path=out/'links.json';links_path.write_text(json.dumps(links)+'\n')
         record.update(status='complete',trace_sha256=digest(captured_raw),links_sha256=digest(links_path.read_bytes()),
             trace=str(trace_path.resolve()),links=str(links_path.resolve()),capture=summary,link_counts=links['counts'])
@@ -79,7 +80,7 @@ def main():
     report['aggregate_link_counts']=dict(totals)
     report['completed_cases']=sum(e['status']=='complete' for e in report['cases'])
     report['limitations']=['Observed connection evidence only; no causal proof, ownership transfer or GPU takeover',
-        'Only train partition; test and validation are never reassigned',
+        'Original partition preserved; no workloads reassigned',
         'No ridge fitting or GPU inference in this data collection',
         'Capture wall includes full per-Run graph comparison; not a performance campaign']
     (a.output/'manifest.json').write_text(json.dumps(report,indent=2)+'\n')

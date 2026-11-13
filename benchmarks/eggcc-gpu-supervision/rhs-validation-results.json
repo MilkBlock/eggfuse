@@ -1,0 +1,123 @@
+{
+  "schema": "actual-rhs-training-corpus/v1",
+  "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "binary_sha256": "faed357bf9e294ef31940822c6bf6c67f2e64b9c5e1cc78b49d1281486a9f757",
+  "partition": "validation",
+  "limits": {
+    "max_cases": 1,
+    "max_bindings": 5000,
+    "timeout": 120,
+    "saved_reference_seconds": 1
+  },
+  "selection": "smallest observed binding counts among complete cases in the requested original partition under limit",
+  "cases": [
+    {
+      "case": "040-euler",
+      "split": "validation",
+      "program_sha256": "a47edfa9a7364b201cb0a45f3deb1088de430efcd1412d8f1361d5da1eb5965e",
+      "wall_seconds": 19.4679291669745,
+      "status": "complete",
+      "trace_sha256": "b824812a4c74ad3cf380f0703558f3136db29e69fa985d9471d638b4cde0591a",
+      "links_sha256": "0a9b1c89c16d5ffb360fd396c498cb70230a54edd431fe0f6a2367ffd80e0fd4",
+      "trace": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/rhs-validation-20261114/040-euler/rhs.json",
+      "links": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/rhs-validation-20261114/040-euler/links.json",
+      "capture": {
+        "schema": "actual-rhs-capture-summary/v1",
+        "program_sha256": "a47edfa9a7364b201cb0a45f3deb1088de430efcd1412d8f1361d5da1eb5965e",
+        "runs": 435,
+        "counts": {
+          "applications": 3742,
+          "completed_applications": 3742,
+          "slot_reads": 26742,
+          "available_slots": 26160,
+          "rhs_only_slots": 8142,
+          "eq_slots": 21774,
+          "rhs_only_eq_slots": 7279,
+          "eq_slots_changed_during_completion": 578
+        },
+        "unavailable": {
+          "expired Cell reference": 582
+        },
+        "unavailable_slot_fraction": 0.02176351806147633,
+        "timing": {
+          "audited_execution_seconds": 0.388853702,
+          "capture_and_audit_wall_seconds": 17.265349708,
+          "observer_seconds": 0.08160463100000014,
+          "reference_execution_seconds": 0.11357216199999984,
+          "result_observer_seconds": 0.11508406000000002,
+          "run_graph_audit_seconds": 16.734469007999987
+        },
+        "strict_run_graphs_equal": true,
+        "strict_final_graph_equal": true,
+        "scope": "actual CPU execution observation, not GPU inference or native egglog acceptance",
+        "limitations": [
+          "Slot Eq identity is not a constructor ownership or retirement certificate",
+          "No proven producer-consumer causal links or GPU takeover",
+          "Callback timing excludes slot-read collection; observed execution includes it",
+          "Debug audit timing is not a performance benchmark"
+        ]
+      },
+      "link_counts": {
+        "eligible_windows": 167,
+        "constructor_results_requested": 5168,
+        "available_constructor_results": 5168,
+        "consumer_applications_examined": 3741,
+        "consumer_eq_slots_examined": 14693,
+        "linked_consumer_eq_slots": 5217,
+        "same_identity_slots": 5086,
+        "linked_consumer_applications": 2565,
+        "external_classes:2": 575,
+        "multi_entry_consumer_applications": 2033,
+        "linked_windows": 103,
+        "shared_provider_groups": 2028,
+        "stored_provider_references": 3004,
+        "external_classes:5": 63,
+        "external_classes:3": 377,
+        "external_classes:4": 181,
+        "cross_ruleset_consumer_applications": 178,
+        "requires_multiple_observed_providers": 1142,
+        "external_classes:7": 11,
+        "external_classes:1": 780,
+        "external_classes:8": 12,
+        "external_classes:6": 29,
+        "external_classes:9": 5,
+        "external_classes:0": 532,
+        "equivalent_identity_slots": 131
+      }
+    }
+  ],
+  "aggregate_link_counts": {
+    "eligible_windows": 167,
+    "constructor_results_requested": 5168,
+    "available_constructor_results": 5168,
+    "consumer_applications_examined": 3741,
+    "consumer_eq_slots_examined": 14693,
+    "linked_consumer_eq_slots": 5217,
+    "same_identity_slots": 5086,
+    "linked_consumer_applications": 2565,
+    "external_classes:2": 575,
+    "multi_entry_consumer_applications": 2033,
+    "linked_windows": 103,
+    "shared_provider_groups": 2028,
+    "stored_provider_references": 3004,
+    "external_classes:5": 63,
+    "external_classes:3": 377,
+    "external_classes:4": 181,
+    "cross_ruleset_consumer_applications": 178,
+    "requires_multiple_observed_providers": 1142,
+    "external_classes:7": 11,
+    "external_classes:1": 780,
+    "external_classes:8": 12,
+    "external_classes:6": 29,
+    "external_classes:9": 5,
+    "external_classes:0": 532,
+    "equivalent_identity_slots": 131
+  },
+  "completed_cases": 1,
+  "limitations": [
+    "Observed connection evidence only; no causal proof, ownership transfer or GPU takeover",
+    "Original partition preserved; no workloads reassigned",
+    "No ridge fitting or GPU inference in this data collection",
+    "Capture wall includes full per-Run graph comparison; not a performance campaign"
+  ]
+}

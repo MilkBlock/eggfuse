@@ -9,6 +9,7 @@ class TrainingSelection(unittest.TestCase):
             row('failed','train',1,'timeout'),row('large','train',9999),
             row('b','train',100),row('a','train',100),row('small','train',20)])
         self.assertEqual([e['case'] for e in select(manifest,200,2)],['small','a'])
+        self.assertEqual([e['case'] for e in select(manifest,200,2,'validation')],['validation'])
         self.assertTrue(all(e['split']=='train' for e in select(manifest,200,20)))
 
     def test_selection_does_not_depend_on_manifest_order(self):

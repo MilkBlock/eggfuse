@@ -1,0 +1,122 @@
+{
+  "scope": "observed-wiring multi-provider numeric Cell token replay, not autonomous egraph execution",
+  "provenance": {
+    "corpus_manifest": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "train": "da12c74fd33e248539e2e968d3a30f3471551f81050eed7c9c98c7103c35019e",
+    "validation": "1d0a3dbdf423b426cd7c68406f7a1807ba2c24e77c6e5583c4e7f84ae04bd1eb",
+    "test_trace": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38"
+  },
+  "fit": {
+    "alpha": 1.0,
+    "validation_target_mse": 0.0001979864464374259
+  },
+  "backpropagation": false,
+  "state_width": 128,
+  "train_valid": 3663,
+  "preparation_seconds": 2.0100907500018366,
+  "fitting_seconds": 0.06933524995110929,
+  "consumed_cpu_boundary_tokens": 0,
+  "test_cases": 5935,
+  "cpu_boundary_tokens": 382,
+  "depths": 31,
+  "reports": {
+    "all_valid": {
+      "gold_provider_inputs": {
+        "cases": 5553,
+        "rmse": 0.038901778738768274,
+        "max_abs": 0.8186920881271362
+      },
+      "predicted_provider_inputs": {
+        "cases": 5553,
+        "rmse": 0.03889487051941361,
+        "max_abs": 0.7829013466835022
+      },
+      "no_provider_refit": {
+        "cases": 5553,
+        "rmse": 0.03730622983174355,
+        "max_abs": 0.6723122596740723
+      },
+      "shuffled_providers": {
+        "cases": 5553,
+        "rmse": 0.04549836416118433,
+        "max_abs": 0.8233168125152588
+      }
+    },
+    "linked": {
+      "gold_provider_inputs": {
+        "cases": 2819,
+        "rmse": 0.04667468937608519,
+        "max_abs": 0.8186920881271362
+      },
+      "predicted_provider_inputs": {
+        "cases": 2819,
+        "rmse": 0.04666334708082884,
+        "max_abs": 0.7829013466835022
+      },
+      "no_provider_refit": {
+        "cases": 2819,
+        "rmse": 0.042684502617935216,
+        "max_abs": 0.6723122596740723
+      },
+      "shuffled_providers": {
+        "cases": 2819,
+        "rmse": 0.057229753493252725,
+        "max_abs": 0.8233168125152588
+      }
+    },
+    "multiple_providers": {
+      "gold_provider_inputs": {
+        "cases": 1677,
+        "rmse": 0.04295838523186254,
+        "max_abs": 0.8186920881271362
+      },
+      "predicted_provider_inputs": {
+        "cases": 1677,
+        "rmse": 0.04313153447343117,
+        "max_abs": 0.7829013466835022
+      },
+      "no_provider_refit": {
+        "cases": 1677,
+        "rmse": 0.03847914321694501,
+        "max_abs": 0.6723122596740723
+      },
+      "shuffled_providers": {
+        "cases": 1677,
+        "rmse": 0.054012035613886886,
+        "max_abs": 0.8233168125152588
+      }
+    }
+  },
+  "encoding_audit": {
+    "train_validation": {
+      "distinct_codes": 506,
+      "conflicting_codes": 0,
+      "instances_in_conflicting_codes": 0
+    },
+    "test": {
+      "distinct_codes": 1009,
+      "conflicting_codes": 0,
+      "instances_in_conflicting_codes": 0
+    }
+  },
+  "no_provider_fit": {
+    "alpha": 0.1,
+    "validation_target_mse": 0.0001803894992917776
+  },
+  "numerical_audit": {
+    "passed": true,
+    "rollout_outside": 0,
+    "gold_outside": 0
+  },
+  "gpu_replay_wall_seconds": 0.05172175000188872,
+  "cpu_replay_wall_seconds": 0.04697929200483486,
+  "intermediate_cpu_state_reads": 0,
+  "model_sha256": "a3f1484d04b506a7aec2dd9b90d327af6df7663b77434979f39245b05c2b1bc9",
+  "limitations": [
+    "Observed successful matches and routing are supplied by CPU traces",
+    "Incomplete captured states are supplied as explicit CPU boundary tokens",
+    "Dense code has no exact graph decoder, ownership certificate, novelty or saturation head",
+    "External input observations supplied per consumer; their autonomous production is not tested",
+    "Timing includes compilation and plan/upload work; no throughput or speedup claim"
+  ]
+}
