@@ -64,3 +64,65 @@ unfinished.
 
 Validation job 273: all 18 compiler library tests pass, including both omission
 fixtures in legacy/values modes and source schedule/iteration/match-count checks.
+
+## Original workload measurement
+
+Jobs 277 and 279 reconstructed the full original sum-bits source and training
+input from `workloads/pass3/suite.json`, following the marker-handoff reproduction
+instructions (no frozen suite catalog). The materialized regeneration has an
+exactly identical `source_core` and `recipe` to the original artifact. The
+receipt-only audit proves omission removes 107 declarations and 130 set sites;
+all other typed source fields, schedule, and marker-selection fields agree.
+It rejects residual references anywhere in the remaining core and computed or
+non-Unit receipt writes. This is an audit of generated artifacts, not a generic
+name-based dead-table optimizer. Three audit regression tests pass (job 280).
+
+Actual standalone Cell runtime measurements use completed owners, port domains,
+and Cell fields in all lanes. Job 280 runs original and omitted artifacts; job
+282 adds the regenerated materialized control using the same frozen binary.
+
+| Artifact | Runs | Graph bytes | Retained Program bytes | Receipt rows |
+| --- | ---: | ---: | ---: | ---: |
+| Original frozen | 1,428 | 2,038,485 | 115,168,530 | 264 |
+| Regenerated, materialized | 1,428 | 2,040,453 | 123,895,013 | 264 |
+| Regenerated, omitted | 1,428 | 1,925,591 | 120,103,556 | 0 |
+
+The isolated omission saves **114,862 Graph bytes (5.63%)** and **3,791,457
+retained Program bytes** against current compilation with receipts. It removes
+264 actual receipt rows. Against the original artifact, Graph saves 112,894
+bytes, but retained Program grows 4,935,026 bytes: this is not a total process
+memory improvement over the old artifact. Regeneration alone adds about 8.7 MB
+of Program data, mostly `context_cuts` and its JSON `artifact` copy. Those are
+resident compiler plans, not disposable offline Bake data. This duplication is
+a separate opportunity to investigate, not a saving credited to this change.
+
+The omitted Graph is **48.39%** of the original 3,979,373-byte historical
+denominator, still above the 30% target by **731,780 bytes**. The historical
+baseline qualification in `original-target.md` remains applicable. These are
+retained Graph bytes; process high-water includes Program and is not Graph peak.
+
+`runtime_storage_peak --state-output PATH` now saves the same measured
+execution's already-built final export after measurements, avoiding a second
+execution for semantic acceptance. Job 281 runs the unchanged
+`choice_diagnosis.py` and all four comparisons pass. Its existing `cpu_legacy`
+input is the original artifact's new execution; `cpu_values` is the new omitted
+legacy-handoff execution. Native references are the saved reviewed exports.
+These labels are validator input slots, not a claim to have run a new native
+omitted or values-handoff lane. No exclusions or proof rules were broadened.
+The regenerated materialized final-state digest exactly matches the original.
+Full-workload Run-by-Run graph comparison has not been repeated for omission;
+the unchanged 1,428 Run count is not such a proof. The earlier short fixtures
+cover individual Run boundaries and later union activation.
+
+Reproduce the generated artifacts using the earlier marker-handoff commands,
+adding `--marker-receipts materialized` or `--marker-receipts omit`. Then run:
+
+```sh
+python3 benchmarks/cell-bake-owner-merge/receipt_omission.py MATERIALIZED OMIT ORIGINAL_PROGRAM SOURCE_DELTA.json
+runtime_storage_peak PROGRAM MEMORY.json inherited-owners --port-domains-only --cell-fields --state-output STATE.json
+python3 benchmarks/marker-handoff/choice_diagnosis.py SEMANTIC_BUNDLE SEMANTIC.json
+```
+
+Build and run through the shared compute queue. Detailed hashes, field charges,
+source audit, semantic result and lane mapping are in `receipt-omission.json`.
+Default receipt materialization remains unchanged. No timing claim is made.

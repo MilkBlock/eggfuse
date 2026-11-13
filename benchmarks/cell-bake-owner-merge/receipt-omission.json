@@ -1,0 +1,1530 @@
+{
+  "scope": "actual standalone Cell runtime; final requested heap, not timing or Graph peak",
+  "runtime_commit": "51853f11 plus optional post-measurement state export",
+  "binary_sha256": "1b87c736791e8ec0bf2f21f313e4aacb922107fac3098e8b5f38c5d98c4ca76e",
+  "source_delta": {
+    "scope": "compiled-source delta; not runtime semantic acceptance or memory proof",
+    "original_core_exact": true,
+    "remaining_core_exact": true,
+    "receipt_tables": [
+      "CellSpineApplied119",
+      "CellSpineApplied120",
+      "CellSpineApplied121",
+      "CellSpineApplied122",
+      "CellSpineApplied123",
+      "CellSpineApplied181",
+      "CellSpineApplied183",
+      "CellSpineApplied23",
+      "CellSpineApplied24",
+      "CellSpineApplied25",
+      "CellSpineApplied30",
+      "CellSpineApplied308",
+      "CellSpineApplied309",
+      "CellSpineApplied31",
+      "CellSpineApplied336",
+      "CellSpineApplied337",
+      "CellSpineApplied34",
+      "CellSpineApplied35",
+      "CellSpineApplied355",
+      "CellSpineApplied356",
+      "CellSpineApplied36",
+      "CellSpineApplied363",
+      "CellSpineApplied364",
+      "CellSpineApplied365",
+      "CellSpineApplied366",
+      "CellSpineApplied367",
+      "CellSpineApplied368",
+      "CellSpineApplied369",
+      "CellSpineApplied37",
+      "CellSpineApplied370",
+      "CellSpineApplied371",
+      "CellSpineApplied372",
+      "CellSpineApplied373",
+      "CellSpineApplied374",
+      "CellSpineApplied375",
+      "CellSpineApplied376",
+      "CellSpineApplied377",
+      "CellSpineApplied378",
+      "CellSpineApplied38",
+      "CellSpineApplied382",
+      "CellSpineApplied383",
+      "CellSpineApplied384",
+      "CellSpineApplied385",
+      "CellSpineApplied386",
+      "CellSpineApplied387",
+      "CellSpineApplied388",
+      "CellSpineApplied389",
+      "CellSpineApplied39",
+      "CellSpineApplied390",
+      "CellSpineApplied391",
+      "CellSpineApplied392",
+      "CellSpineApplied393",
+      "CellSpineApplied394",
+      "CellSpineApplied395",
+      "CellSpineApplied396",
+      "CellSpineApplied397",
+      "CellSpineApplied403",
+      "CellSpineApplied416",
+      "CellSpineApplied417",
+      "CellSpineApplied419",
+      "CellSpineApplied420",
+      "CellSpineApplied421",
+      "CellSpineApplied449",
+      "CellSpineApplied450",
+      "CellSpineApplied451",
+      "CellSpineApplied452",
+      "CellSpineApplied454",
+      "CellSpineApplied455",
+      "CellSpineApplied48",
+      "CellSpineApplied49",
+      "CellSpineApplied50",
+      "CellSpineApplied55",
+      "CellSpineApplied556",
+      "CellSpineApplied56",
+      "CellSpineApplied564",
+      "CellSpineApplied566",
+      "CellSpineApplied567",
+      "CellSpineApplied568",
+      "CellSpineApplied575",
+      "CellSpineApplied579",
+      "CellSpineApplied589",
+      "CellSpineApplied590",
+      "CellSpineApplied591",
+      "CellSpineApplied592",
+      "CellSpineApplied597",
+      "CellSpineApplied598",
+      "CellSpineApplied599",
+      "CellSpineApplied600",
+      "CellSpineApplied601",
+      "CellSpineApplied602",
+      "CellSpineApplied603",
+      "CellSpineApplied605",
+      "CellSpineApplied617",
+      "CellSpineApplied618",
+      "CellSpineApplied652",
+      "CellSpineApplied653",
+      "CellSpineApplied654",
+      "CellSpineApplied655",
+      "CellSpineApplied656",
+      "CellSpineApplied657",
+      "CellSpineApplied659",
+      "CellSpineApplied661",
+      "CellSpineApplied662",
+      "CellSpineApplied70",
+      "CellSpineApplied71",
+      "CellSpineApplied72",
+      "CellSpineApplied73"
+    ],
+    "removed_write_sites": 130,
+    "original_sha256": "38a6f1bd1ccee4e6b117377edf0c35763a98c3080b8daf947c2b62124188924f",
+    "materialized_sha256": "ba721101a1f09577d55d2e0a7b384a6acb651c3c3f8f1b084c34ee7eb3ac2704",
+    "omitted_sha256": "873a4aea4c284dac27cd2c40a57a7dac0e350175448b61ded5a6821ddfbead20"
+  },
+  "semantic_acceptance": {
+    "schema": "eggfuse-choice-semantic-check/v1",
+    "scope": "documented sum-bits final-state contract; no workload rerun or timing",
+    "strict_graph_equality": "separate determinism diagnostic; not the semantic acceptance criterion",
+    "comparisons": {
+      "native_source_vs_native_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1819)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_cpu_legacy": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 10,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [
+            {
+              "left_expr": {
+                "eq": "Value(1817)",
+                "sort": "Expr"
+              },
+              "right_expr": {
+                "eq": "Cell(15393162788877)",
+                "sort": "Expr"
+              },
+              "left_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ],
+              "right_term_and_cost": [
+                "TCPair",
+                [
+                  "TermBop",
+                  [
+                    "Mul"
+                  ],
+                  [
+                    "TermBop",
+                    [
+                      "Div"
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      1
+                    ],
+                    [
+                      "TermGet",
+                      [
+                        "TermArg"
+                      ],
+                      2
+                    ]
+                  ],
+                  [
+                    "TermConst",
+                    [
+                      "Int",
+                      2
+                    ]
+                  ]
+                ],
+                5
+              ]
+            }
+          ],
+          "hoist_choices": 1,
+          "hoist_differences": [
+            {
+              "left": {
+                "expr": {
+                  "eq": "Value(163)",
+                  "sort": "Expr"
+                },
+                "size": 1,
+                "candidates": 4
+              },
+              "right": {
+                "expr": {
+                  "sort": "Expr",
+                  "eq": "Cell(554050781269)"
+                },
+                "size": 1,
+                "candidates": 4
+              }
+            }
+          ],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "native_legacy_vs_native_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      },
+      "cpu_legacy_vs_cpu_values": {
+        "status": "pass",
+        "proof": {
+          "core": {
+            "rows": 2374,
+            "eq_values": 1583,
+            "exact_bijection": true,
+            "tables": 239,
+            "includes_Expr_equality_and_visibility": true
+          },
+          "candidate_inventory_modulo_Add_Mul": {
+            "normalized_candidates": 185,
+            "normalization": "existing Add/Mul commutativity only; per Expr and cost",
+            "left_raw_candidates": 192,
+            "right_raw_candidates": 192,
+            "equal_sets": true
+          },
+          "selected_expressions": 98,
+          "all_selected_candidates_are_current_minima": true,
+          "selected_cost_differences": 0,
+          "selected_term_differences": 0,
+          "all_explained_by_existing_Add_Mul_commutativity": true,
+          "first_term_difference": [],
+          "hoist_choices": 1,
+          "hoist_differences": [],
+          "limits": "Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical."
+        }
+      }
+    },
+    "baseline_source_core_sha256": "17d851c513fa8f8cd3a64b007823b8364e6e65112a7816126aa1eb00024bddb5",
+    "input_sha256": {
+      "native_source": "11c4c3d97e34e7f20b2dafa8c315013993d5244313415c8fb9aa38ce7205b8e7",
+      "native_legacy": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "native_values": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+      "cpu_legacy": "17cdaeee381ddf7e18317a05be919aa52e18ce5e91b3c55c73dc4960bbb8abb0",
+      "cpu_values": "27138a8ecef2e2a99c893a73b20875664fbe053cfac6e2ebdf9ecfdb404dc16c"
+    },
+    "status": "pass"
+  },
+  "semantic_lane_mapping": {
+    "cpu_legacy": "original artifact, completed owners",
+    "cpu_values": "legacy marker handoff with receipts omitted, completed owners",
+    "native_states": "saved reviewed original/legacy/values exports"
+  },
+  "lanes": {
+    "control": {
+      "program_sha256": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
+      "runs": 1428,
+      "graph_owned_teardown_bytes": 2038485,
+      "retained_program_teardown_bytes": 115168530,
+      "execution_and_takeover_peak_bytes": 122484895,
+      "max_takeover_extra_bytes": 11376,
+      "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "graph_fields": [
+        [
+          "cells",
+          379982
+        ],
+        [
+          "functions",
+          334920
+        ],
+        [
+          "parents",
+          35848
+        ],
+        [
+          "writer_dir",
+          28912
+        ],
+        [
+          "local_unions",
+          0
+        ],
+        [
+          "ownership.components",
+          372256
+        ],
+        [
+          "ownership.live_facts",
+          32768
+        ],
+        [
+          "ownership.frames",
+          163584
+        ],
+        [
+          "ownership.shapes",
+          0
+        ],
+        [
+          "ownership.transitions",
+          0
+        ],
+        [
+          "ownership.training",
+          0
+        ],
+        [
+          "ownership.catalog_trace",
+          0
+        ],
+        [
+          "ownership.entry",
+          0
+        ],
+        [
+          "ownership.heap",
+          2048
+        ],
+        [
+          "ownership.columns",
+          32
+        ],
+        [
+          "ownership.boundaries",
+          242264
+        ],
+        [
+          "ownership.port_completion",
+          0
+        ],
+        [
+          "ownership.pending",
+          104
+        ],
+        [
+          "ownership.tables",
+          3208
+        ],
+        [
+          "ownership.stats",
+          0
+        ],
+        [
+          "ownership.barriers",
+          0
+        ],
+        [
+          "stable_ports",
+          0
+        ],
+        [
+          "repair_ports",
+          3208
+        ],
+        [
+          "union_digest",
+          0
+        ],
+        [
+          "members",
+          83640
+        ],
+        [
+          "intern",
+          1608
+        ],
+        [
+          "function_keys",
+          70716
+        ],
+        [
+          "uses",
+          119468
+        ],
+        [
+          "changes",
+          63212
+        ],
+        [
+          "anchors",
+          10247
+        ],
+        [
+          "dirty",
+          192
+        ],
+        [
+          "dirty_markers",
+          0
+        ],
+        [
+          "dirty_facts",
+          12744
+        ],
+        [
+          "parent_users",
+          17416
+        ],
+        [
+          "garbage",
+          56
+        ],
+        [
+          "receipt_forwards",
+          4232
+        ]
+      ],
+      "program_fields": [
+        [
+          "cached_key_nodes",
+          88
+        ],
+        [
+          "depth_plan",
+          72
+        ],
+        [
+          "view_blocks",
+          6858
+        ],
+        [
+          "neighbor_plans",
+          38624
+        ],
+        [
+          "context_cuts",
+          66240
+        ],
+        [
+          "local_contexts",
+          8248
+        ],
+        [
+          "writes",
+          17200
+        ],
+        [
+          "kernels",
+          770838
+        ],
+        [
+          "physical",
+          114657
+        ],
+        [
+          "repair_ports",
+          15848
+        ],
+        [
+          "local_union_cells",
+          93128
+        ],
+        [
+          "ownership.tables",
+          401
+        ],
+        [
+          "ownership.markers",
+          23592
+        ],
+        [
+          "ownership.programs",
+          2944
+        ],
+        [
+          "ownership.code_programs",
+          658600
+        ],
+        [
+          "ownership.code_operators",
+          44448
+        ],
+        [
+          "ownership.layout_operators",
+          25192
+        ],
+        [
+          "ownership.query_classes",
+          0
+        ],
+        [
+          "ownership.witnesses",
+          0
+        ],
+        [
+          "composition.sources",
+          146352
+        ],
+        [
+          "composition.active_rules",
+          1164
+        ],
+        [
+          "composition.shapes",
+          333504
+        ],
+        [
+          "composition.conditions",
+          151616
+        ],
+        [
+          "composition.effects",
+          0
+        ],
+        [
+          "composition.queries",
+          67456
+        ],
+        [
+          "composition.fragments",
+          11616
+        ],
+        [
+          "composition.transitions",
+          0
+        ],
+        [
+          "ownership.entries",
+          34192
+        ],
+        [
+          "ownership.routes",
+          43736
+        ],
+        [
+          "completion_plan",
+          0
+        ],
+        [
+          "repair_cells",
+          1620319
+        ],
+        [
+          "entry_join",
+          213130
+        ],
+        [
+          "known_results",
+          279831
+        ],
+        [
+          "merge_programs",
+          18750
+        ],
+        [
+          "spine_blocks",
+          15849
+        ],
+        [
+          "iterative",
+          24272
+        ],
+        [
+          "marker_tables",
+          720
+        ],
+        [
+          "cell_queries",
+          227866
+        ],
+        [
+          "executions",
+          547904
+        ],
+        [
+          "cell_links",
+          572880
+        ],
+        [
+          "multi_stage",
+          4133408
+        ],
+        [
+          "entry_schedule",
+          650928
+        ],
+        [
+          "tables",
+          717386
+        ],
+        [
+          "templates",
+          4360620
+        ],
+        [
+          "rules",
+          489941
+        ],
+        [
+          "sets",
+          9901
+        ],
+        [
+          "control",
+          316945
+        ],
+        [
+          "initial",
+          183198
+        ],
+        [
+          "table_templates",
+          4096
+        ],
+        [
+          "artifact",
+          98103972
+        ]
+      ],
+      "report_sha256": "1f91f43457be53c11f54de77f0d1588864dae3c68dab1883142bd567e42436bd",
+      "receipt_rows": 264
+    },
+    "materialized": {
+      "program_sha256": "fefc31cb16d95244f7994b87900f33f75db4570a4e6b94bd9503649c7fbe69b9",
+      "runs": 1428,
+      "graph_owned_teardown_bytes": 2040453,
+      "retained_program_teardown_bytes": 123895013,
+      "execution_and_takeover_peak_bytes": 131187897,
+      "max_takeover_extra_bytes": 11376,
+      "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+      "graph_fields": [
+        [
+          "cells",
+          381950
+        ],
+        [
+          "functions",
+          334920
+        ],
+        [
+          "parents",
+          35848
+        ],
+        [
+          "writer_dir",
+          28912
+        ],
+        [
+          "local_unions",
+          0
+        ],
+        [
+          "ownership.components",
+          372256
+        ],
+        [
+          "ownership.live_facts",
+          32768
+        ],
+        [
+          "ownership.frames",
+          163584
+        ],
+        [
+          "ownership.shapes",
+          0
+        ],
+        [
+          "ownership.transitions",
+          0
+        ],
+        [
+          "ownership.training",
+          0
+        ],
+        [
+          "ownership.catalog_trace",
+          0
+        ],
+        [
+          "ownership.entry",
+          0
+        ],
+        [
+          "ownership.heap",
+          2048
+        ],
+        [
+          "ownership.columns",
+          32
+        ],
+        [
+          "ownership.boundaries",
+          242264
+        ],
+        [
+          "ownership.port_completion",
+          0
+        ],
+        [
+          "ownership.pending",
+          104
+        ],
+        [
+          "ownership.tables",
+          3208
+        ],
+        [
+          "ownership.stats",
+          0
+        ],
+        [
+          "ownership.barriers",
+          0
+        ],
+        [
+          "stable_ports",
+          0
+        ],
+        [
+          "repair_ports",
+          3208
+        ],
+        [
+          "union_digest",
+          0
+        ],
+        [
+          "members",
+          83640
+        ],
+        [
+          "intern",
+          1608
+        ],
+        [
+          "function_keys",
+          70716
+        ],
+        [
+          "uses",
+          119468
+        ],
+        [
+          "changes",
+          63212
+        ],
+        [
+          "anchors",
+          10247
+        ],
+        [
+          "dirty",
+          192
+        ],
+        [
+          "dirty_markers",
+          0
+        ],
+        [
+          "dirty_facts",
+          12744
+        ],
+        [
+          "parent_users",
+          17416
+        ],
+        [
+          "garbage",
+          56
+        ],
+        [
+          "receipt_forwards",
+          4232
+        ]
+      ],
+      "program_fields": [
+        [
+          "cached_key_nodes",
+          88
+        ],
+        [
+          "depth_plan",
+          72
+        ],
+        [
+          "view_blocks",
+          6858
+        ],
+        [
+          "neighbor_plans",
+          38624
+        ],
+        [
+          "context_cuts",
+          4291217
+        ],
+        [
+          "local_contexts",
+          8248
+        ],
+        [
+          "writes",
+          17200
+        ],
+        [
+          "kernels",
+          770838
+        ],
+        [
+          "physical",
+          114657
+        ],
+        [
+          "repair_ports",
+          15848
+        ],
+        [
+          "local_union_cells",
+          93128
+        ],
+        [
+          "ownership.tables",
+          401
+        ],
+        [
+          "ownership.markers",
+          23592
+        ],
+        [
+          "ownership.programs",
+          2944
+        ],
+        [
+          "ownership.code_programs",
+          658600
+        ],
+        [
+          "ownership.code_operators",
+          44448
+        ],
+        [
+          "ownership.layout_operators",
+          25192
+        ],
+        [
+          "ownership.query_classes",
+          0
+        ],
+        [
+          "ownership.witnesses",
+          0
+        ],
+        [
+          "composition.sources",
+          146352
+        ],
+        [
+          "composition.active_rules",
+          1164
+        ],
+        [
+          "composition.shapes",
+          333504
+        ],
+        [
+          "composition.conditions",
+          151616
+        ],
+        [
+          "composition.effects",
+          0
+        ],
+        [
+          "composition.queries",
+          67456
+        ],
+        [
+          "composition.fragments",
+          11616
+        ],
+        [
+          "composition.transitions",
+          0
+        ],
+        [
+          "ownership.entries",
+          34192
+        ],
+        [
+          "ownership.routes",
+          43736
+        ],
+        [
+          "completion_plan",
+          0
+        ],
+        [
+          "repair_cells",
+          1620319
+        ],
+        [
+          "entry_join",
+          213130
+        ],
+        [
+          "known_results",
+          279831
+        ],
+        [
+          "merge_programs",
+          18750
+        ],
+        [
+          "spine_blocks",
+          0
+        ],
+        [
+          "iterative",
+          0
+        ],
+        [
+          "marker_tables",
+          720
+        ],
+        [
+          "cell_queries",
+          227866
+        ],
+        [
+          "executions",
+          547848
+        ],
+        [
+          "cell_links",
+          572880
+        ],
+        [
+          "multi_stage",
+          4417884
+        ],
+        [
+          "entry_schedule",
+          650928
+        ],
+        [
+          "tables",
+          717386
+        ],
+        [
+          "templates",
+          4360620
+        ],
+        [
+          "rules",
+          489941
+        ],
+        [
+          "sets",
+          9901
+        ],
+        [
+          "control",
+          316945
+        ],
+        [
+          "initial",
+          183198
+        ],
+        [
+          "table_templates",
+          4096
+        ],
+        [
+          "artifact",
+          102361179
+        ]
+      ],
+      "report_sha256": "2b1b384fde52fbc1a18dbf152bacfa6f00863136ebfe35180bb9145eaba0d36c",
+      "receipt_rows": 264
+    },
+    "omit": {
+      "program_sha256": "05712af76ad6ad2007030f021e3b9f2f01542998b1c0cafa87d9ddf470836661",
+      "runs": 1428,
+      "graph_owned_teardown_bytes": 1925591,
+      "retained_program_teardown_bytes": 120103556,
+      "execution_and_takeover_peak_bytes": 127223401,
+      "max_takeover_extra_bytes": 11376,
+      "final_state_sha256": "7cf334fb25d860f91eec68010d78faf0acc70a1fed983ab6d8e0d7aaf9137050",
+      "graph_fields": [
+        [
+          "cells",
+          315566
+        ],
+        [
+          "functions",
+          352768
+        ],
+        [
+          "parents",
+          35848
+        ],
+        [
+          "writer_dir",
+          28912
+        ],
+        [
+          "local_unions",
+          0
+        ],
+        [
+          "ownership.components",
+          372256
+        ],
+        [
+          "ownership.live_facts",
+          32768
+        ],
+        [
+          "ownership.frames",
+          163584
+        ],
+        [
+          "ownership.shapes",
+          0
+        ],
+        [
+          "ownership.transitions",
+          0
+        ],
+        [
+          "ownership.training",
+          0
+        ],
+        [
+          "ownership.catalog_trace",
+          0
+        ],
+        [
+          "ownership.entry",
+          0
+        ],
+        [
+          "ownership.heap",
+          2048
+        ],
+        [
+          "ownership.columns",
+          32
+        ],
+        [
+          "ownership.boundaries",
+          242264
+        ],
+        [
+          "ownership.port_completion",
+          0
+        ],
+        [
+          "ownership.pending",
+          104
+        ],
+        [
+          "ownership.tables",
+          2352
+        ],
+        [
+          "ownership.stats",
+          0
+        ],
+        [
+          "ownership.barriers",
+          0
+        ],
+        [
+          "stable_ports",
+          0
+        ],
+        [
+          "repair_ports",
+          2352
+        ],
+        [
+          "union_digest",
+          0
+        ],
+        [
+          "members",
+          74608
+        ],
+        [
+          "intern",
+          1608
+        ],
+        [
+          "function_keys",
+          52292
+        ],
+        [
+          "uses",
+          110180
+        ],
+        [
+          "changes",
+          56244
+        ],
+        [
+          "anchors",
+          10247
+        ],
+        [
+          "dirty",
+          192
+        ],
+        [
+          "dirty_markers",
+          0
+        ],
+        [
+          "dirty_facts",
+          10176
+        ],
+        [
+          "parent_users",
+          8712
+        ],
+        [
+          "garbage",
+          56
+        ],
+        [
+          "receipt_forwards",
+          4232
+        ]
+      ],
+      "program_fields": [
+        [
+          "cached_key_nodes",
+          88
+        ],
+        [
+          "depth_plan",
+          72
+        ],
+        [
+          "view_blocks",
+          6858
+        ],
+        [
+          "neighbor_plans",
+          38624
+        ],
+        [
+          "context_cuts",
+          4291217
+        ],
+        [
+          "local_contexts",
+          8248
+        ],
+        [
+          "writes",
+          17200
+        ],
+        [
+          "kernels",
+          770838
+        ],
+        [
+          "physical",
+          114550
+        ],
+        [
+          "repair_ports",
+          13280
+        ],
+        [
+          "local_union_cells",
+          93128
+        ],
+        [
+          "ownership.tables",
+          294
+        ],
+        [
+          "ownership.markers",
+          21024
+        ],
+        [
+          "ownership.programs",
+          2944
+        ],
+        [
+          "ownership.code_programs",
+          656856
+        ],
+        [
+          "ownership.code_operators",
+          43880
+        ],
+        [
+          "ownership.layout_operators",
+          24680
+        ],
+        [
+          "ownership.query_classes",
+          0
+        ],
+        [
+          "ownership.witnesses",
+          0
+        ],
+        [
+          "composition.sources",
+          146352
+        ],
+        [
+          "composition.active_rules",
+          1164
+        ],
+        [
+          "composition.shapes",
+          333504
+        ],
+        [
+          "composition.conditions",
+          151616
+        ],
+        [
+          "composition.effects",
+          0
+        ],
+        [
+          "composition.queries",
+          67456
+        ],
+        [
+          "composition.fragments",
+          11616
+        ],
+        [
+          "composition.transitions",
+          0
+        ],
+        [
+          "ownership.entries",
+          34192
+        ],
+        [
+          "ownership.routes",
+          41168
+        ],
+        [
+          "completion_plan",
+          0
+        ],
+        [
+          "repair_cells",
+          1618607
+        ],
+        [
+          "entry_join",
+          213130
+        ],
+        [
+          "known_results",
+          277596
+        ],
+        [
+          "merge_programs",
+          9014
+        ],
+        [
+          "spine_blocks",
+          0
+        ],
+        [
+          "iterative",
+          0
+        ],
+        [
+          "marker_tables",
+          720
+        ],
+        [
+          "cell_queries",
+          227866
+        ],
+        [
+          "executions",
+          539496
+        ],
+        [
+          "cell_links",
+          572880
+        ],
+        [
+          "multi_stage",
+          4417884
+        ],
+        [
+          "entry_schedule",
+          648360
+        ],
+        [
+          "tables",
+          513891
+        ],
+        [
+          "templates",
+          4138068
+        ],
+        [
+          "rules",
+          489941
+        ],
+        [
+          "sets",
+          9901
+        ],
+        [
+          "control",
+          316945
+        ],
+        [
+          "initial",
+          183198
+        ],
+        [
+          "table_templates",
+          4096
+        ],
+        [
+          "artifact",
+          99031114
+        ]
+      ],
+      "report_sha256": "2c8a2378efdf04f8ba9eb34b48ba90127fc6f63fdc40dd120d29d7087d3363ce",
+      "receipt_rows": 0
+    }
+  },
+  "limitations": [
+    "Final-state acceptance and compiled-source delta checked; no new full-workload per-Run graph comparison.",
+    "Historical original Graph denominator is a working-tree observation, not immutable binary.",
+    "New compilation increases retained Program relative to original artifact; omission reduces it relative to regenerated materialized control.",
+    "No claim of saturated-stage completion or 30% target achievement."
+  ]
+}
