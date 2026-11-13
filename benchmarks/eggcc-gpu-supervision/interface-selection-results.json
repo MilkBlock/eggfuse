@@ -1,0 +1,342 @@
+{
+  "scope": "validation-selected Eq boundary readout for frozen Cell model",
+  "provenance": {
+    "train": "e1e830c2d1beef561494bca8c53f3ee04f0c9d5360c3b538dff9a9f021395977",
+    "validation": "59164efc3eda87020a4e27a89112accd70c039df97e98e98c942c7324fd4ac87"
+  },
+  "model_sha256": "b3b5ea3d56a9bb7f11956e079b3860895853f8f743f0a9c2ae1ca529079ec60e",
+  "test_trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "weights_sha256": "9cc39d3487d71533712961e6224dde217a5c7e7256b993514a1e94bee1c46aa4",
+  "candidates": [
+    {
+      "alpha": 0.1,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 3009,
+          "false_merges": 71,
+          "missed_equalities": 871,
+          "nontransitive": 3,
+          "closure_false_merges": 84,
+          "pairs": 47684
+        },
+        "000-ackermann": {
+          "instances": 4481,
+          "query_instances": 4372,
+          "exact_partitions": 3740,
+          "false_merges": 39,
+          "missed_equalities": 978,
+          "nontransitive": 1,
+          "closure_false_merges": 99,
+          "pairs": 55741
+        },
+        "016-gcd": {
+          "instances": 5283,
+          "query_instances": 5189,
+          "exact_partitions": 4105,
+          "false_merges": 431,
+          "missed_equalities": 2120,
+          "nontransitive": 100,
+          "closure_false_merges": 778,
+          "pairs": 57946
+        },
+        "019-lcm": {
+          "instances": 5828,
+          "query_instances": 5742,
+          "exact_partitions": 4456,
+          "false_merges": 489,
+          "missed_equalities": 2335,
+          "nontransitive": 86,
+          "closure_false_merges": 742,
+          "pairs": 60252
+        },
+        "044-newton": {
+          "instances": 7396,
+          "query_instances": 7286,
+          "exact_partitions": 5434,
+          "false_merges": 1522,
+          "missed_equalities": 3400,
+          "nontransitive": 184,
+          "closure_false_merges": 2678,
+          "pairs": 83924
+        }
+      },
+      "oracle_mse": 0.033204993568175446,
+      "macro_exact_rate": 0.8030560698714059,
+      "macro_false_pair_rate": 0.007175592419787713
+    },
+    {
+      "alpha": 1.0,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 2966,
+          "false_merges": 60,
+          "missed_equalities": 931,
+          "nontransitive": 2,
+          "closure_false_merges": 77,
+          "pairs": 47684
+        },
+        "000-ackermann": {
+          "instances": 4481,
+          "query_instances": 4372,
+          "exact_partitions": 3695,
+          "false_merges": 21,
+          "missed_equalities": 1031,
+          "nontransitive": 1,
+          "closure_false_merges": 69,
+          "pairs": 55741
+        },
+        "016-gcd": {
+          "instances": 5283,
+          "query_instances": 5189,
+          "exact_partitions": 4056,
+          "false_merges": 415,
+          "missed_equalities": 2209,
+          "nontransitive": 96,
+          "closure_false_merges": 723,
+          "pairs": 57946
+        },
+        "019-lcm": {
+          "instances": 5828,
+          "query_instances": 5742,
+          "exact_partitions": 4430,
+          "false_merges": 475,
+          "missed_equalities": 2402,
+          "nontransitive": 78,
+          "closure_false_merges": 724,
+          "pairs": 60252
+        },
+        "044-newton": {
+          "instances": 7396,
+          "query_instances": 7286,
+          "exact_partitions": 5375,
+          "false_merges": 1403,
+          "missed_equalities": 3548,
+          "nontransitive": 176,
+          "closure_false_merges": 2509,
+          "pairs": 83924
+        }
+      },
+      "oracle_mse": 0.03335925816542763,
+      "macro_exact_rate": 0.794163263051073,
+      "macro_false_pair_rate": 0.006679585703343894
+    },
+    {
+      "alpha": 10.0,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 3010,
+          "false_merges": 50,
+          "missed_equalities": 857,
+          "nontransitive": 2,
+          "closure_false_merges": 74,
+          "pairs": 47684
+        },
+        "000-ackermann": {
+          "instances": 4481,
+          "query_instances": 4372,
+          "exact_partitions": 3724,
+          "false_merges": 22,
+          "missed_equalities": 968,
+          "nontransitive": 1,
+          "closure_false_merges": 23,
+          "pairs": 55741
+        },
+        "016-gcd": {
+          "instances": 5283,
+          "query_instances": 5189,
+          "exact_partitions": 4069,
+          "false_merges": 414,
+          "missed_equalities": 2179,
+          "nontransitive": 98,
+          "closure_false_merges": 713,
+          "pairs": 57946
+        },
+        "019-lcm": {
+          "instances": 5828,
+          "query_instances": 5742,
+          "exact_partitions": 4453,
+          "false_merges": 452,
+          "missed_equalities": 2427,
+          "nontransitive": 71,
+          "closure_false_merges": 671,
+          "pairs": 60252
+        },
+        "044-newton": {
+          "instances": 7396,
+          "query_instances": 7286,
+          "exact_partitions": 5391,
+          "false_merges": 1104,
+          "missed_equalities": 3658,
+          "nontransitive": 146,
+          "closure_false_merges": 2069,
+          "pairs": 83924
+        }
+      },
+      "oracle_mse": 0.02991948174425171,
+      "macro_exact_rate": 0.7997080401990546,
+      "macro_false_pair_rate": 0.005848883984258216
+    },
+    {
+      "alpha": 100.0,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 2868,
+          "false_merges": 35,
+          "missed_equalities": 1047,
+          "nontransitive": 2,
+          "closure_false_merges": 68,
+          "pairs": 47684
+        },
+        "000-ackermann": {
+          "instances": 4481,
+          "query_instances": 4372,
+          "exact_partitions": 3581,
+          "false_merges": 10,
+          "missed_equalities": 1160,
+          "nontransitive": 1,
+          "closure_false_merges": 54,
+          "pairs": 55741
+        },
+        "016-gcd": {
+          "instances": 5283,
+          "query_instances": 5189,
+          "exact_partitions": 3914,
+          "false_merges": 474,
+          "missed_equalities": 2407,
+          "nontransitive": 92,
+          "closure_false_merges": 785,
+          "pairs": 57946
+        },
+        "019-lcm": {
+          "instances": 5828,
+          "query_instances": 5742,
+          "exact_partitions": 4319,
+          "false_merges": 411,
+          "missed_equalities": 2702,
+          "nontransitive": 61,
+          "closure_false_merges": 634,
+          "pairs": 60252
+        },
+        "044-newton": {
+          "instances": 7396,
+          "query_instances": 7286,
+          "exact_partitions": 5273,
+          "false_merges": 616,
+          "missed_equalities": 4017,
+          "nontransitive": 105,
+          "closure_false_merges": 991,
+          "pairs": 83924
+        }
+      },
+      "oracle_mse": 0.02458265772979878,
+      "macro_exact_rate": 0.7712925384157373,
+      "macro_false_pair_rate": 0.004650950851677841
+    }
+  ],
+  "selected": {
+    "mse": 100.0,
+    "partition": 0.1,
+    "false_merge": 100.0
+  },
+  "test": {
+    "mse": {
+      "alpha": 100.0,
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4288,
+      "false_merges": 379,
+      "missed_equalities": 2038,
+      "nontransitive": 39,
+      "closure_false_merges": 596
+    },
+    "partition": {
+      "alpha": 0.1,
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4415,
+      "false_merges": 883,
+      "missed_equalities": 1828,
+      "nontransitive": 50,
+      "closure_false_merges": 976
+    },
+    "false_merge": {
+      "alpha": 100.0,
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4288,
+      "false_merges": 379,
+      "missed_equalities": 2038,
+      "nontransitive": 39,
+      "closure_false_merges": 596
+    }
+  },
+  "unique_train_states": 1153,
+  "unique_validation_states": 1361,
+  "fit_seconds": 0.1371943749836646,
+  "numerical_audits": {
+    "040-euler": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 9.91531778571364e-06,
+      "threshold_disagreements": 0
+    },
+    "000-ackermann": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 8.360244751648427e-06,
+      "threshold_disagreements": 0
+    },
+    "016-gcd": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 1.0499061156646339e-05,
+      "threshold_disagreements": 0
+    },
+    "019-lcm": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 8.65471085759184e-06,
+      "threshold_disagreements": 0
+    },
+    "044-newton": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 1.0231914057801106e-05,
+      "threshold_disagreements": 0
+    }
+  },
+  "test_numerical_audit": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 1.097316375187063e-05,
+    "threshold_disagreements": 0
+  },
+  "local_marks": 3371,
+  "marks_sha256": "1459f6789762cbf99b041abbd60156f4e9527ead7ae4cb6a110601e016960c6f",
+  "test_feature_encoding_seconds": 0.3205952089629136,
+  "test_gpu_readout_seconds": 0.09151612501591444,
+  "test_audit_and_marks_seconds": 0.36784800002351403,
+  "threshold": 0.5,
+  "backpropagation": false,
+  "union_authorized": false,
+  "limitations": [
+    "Static class Eq audit only, not native correctness or full token state",
+    "Oracle-state MSE and predicted-state partition criteria are distinct explicit policies",
+    "One fixed token model; validation expansion does not refit its weights",
+    "Test outputs do not select policy; all validation-selected policies are reported"
+  ]
+}

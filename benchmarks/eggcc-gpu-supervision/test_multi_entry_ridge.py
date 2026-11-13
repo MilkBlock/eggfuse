@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from multi_entry_ridge import encode,scalar,pooling,replay,WIDTH,state_key,encoding_audit
+from multi_entry_ridge import encode,scalar,pooling,replay,WIDTH,state_key,encoding_audit,input_seed
 
 class MultiEntryRidge(unittest.TestCase):
     def test_node_ids_not_float_features(self):
@@ -27,6 +27,7 @@ class MultiEntryRidge(unittest.TestCase):
         self.assertGreater(np.max(abs(encode(one,roles)-encode(duplicate,roles))),.01)
         distinct=[(0,{},('E',10)),(1,{},('E',30)),(2,{},('E',20))]
         self.assertGreater(np.max(abs(encode(duplicate,roles,'class-balanced')-encode(distinct,roles,'class-balanced'))),.01)
+        np.testing.assert_array_equal(encode(duplicate,roles,'class-balanced'),encode(duplicate,roles,'class-interface'))
         renamed=[(0,{},('E',99)),(1,{},('E',99)),(2,{},('E',33))]
         np.testing.assert_array_equal(encode(duplicate,roles,'class-balanced'),encode(renamed,roles,'class-balanced'))
 
@@ -38,6 +39,17 @@ class MultiEntryRidge(unittest.TestCase):
         self.assertFalse(np.array_equal(encode(a,roles,'class-balanced'),encode(b,roles,'class-balanced')))
         np.testing.assert_array_equal(encode([],roles,'class-balanced'),np.zeros(WIDTH))
         with self.assertRaises(ValueError):encode(a,roles,'unknown')
+
+    def test_connected_interface_retains_known_equality_without_future_values(self):
+        roles=np.random.default_rng(93).normal(size=(2,64)).astype(np.float32)
+        def binding(second):
+            return dict(values=[dict(slot=i,value={}) for i in (0,1)],
+                eq_ports=[dict(slot=0,sort='E',before=10),dict(slot=1,sort='E',before=second)])
+        a,b=binding(10),binding(20)
+        np.testing.assert_array_equal(input_seed(a,roles,{0,1},'class-balanced'),input_seed(b,roles,{0,1},'class-balanced'))
+        self.assertGreater(np.max(abs(input_seed(a,roles,{0,1},'class-interface')-input_seed(b,roles,{0,1},'class-interface'))),.01)
+        # No RHS results or post-Run fields exist in these inputs.
+        np.testing.assert_array_equal(input_seed(a,roles,set(),'class-balanced'),input_seed(a,roles,set(),'class-interface'))
 
     def test_dynamic_scalar_changes_code(self):
         self.assertFalse(np.array_equal(scalar(dict(sort='i64',value=2)),scalar(dict(sort='i64',value=3))))

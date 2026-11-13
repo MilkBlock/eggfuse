@@ -1,0 +1,4328 @@
+{
+  "scope": "within-case, within-template exact f32 decoder-feature ambiguity audit",
+  "model_sha256": "f3f28eb9beb4a7cccd003360d38ec331605de4b2d3ff87e10e790b962c348f80",
+  "provenance": {
+    "train": "e1e830c2d1beef561494bca8c53f3ee04f0c9d5360c3b538dff9a9f021395977",
+    "validation": "59164efc3eda87020a4e27a89112accd70c039df97e98e98c942c7324fd4ac87"
+  },
+  "encoding": "class-balanced",
+  "cases": [
+    {
+      "split": "train",
+      "case": "014-fitsinside",
+      "trace_sha256": "0c687720faa5ee2aa1210e798290c6853af121291957481677748abf824f9213",
+      "complete_instances": 1008,
+      "incomplete_instances": 23,
+      "modes": {
+        "oracle": {
+          "queries": 4985,
+          "positive_queries": 445,
+          "distinct_features": 1534,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 4985,
+          "positive_queries": 445,
+          "distinct_features": 2845,
+          "conflicting_features": 2,
+          "queries_in_conflicts": 9,
+          "unavoidable_query_errors": 4,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 18,
+                "binding": 11,
+                "rule": 511,
+                "slots": [
+                  4,
+                  10
+                ]
+              },
+              "positive": {
+                "run": 218,
+                "binding": 27,
+                "rule": 511,
+                "slots": [
+                  4,
+                  10
+                ]
+              },
+              "counts": [
+                4,
+                3
+              ]
+            },
+            {
+              "negative": {
+                "run": 28,
+                "binding": 0,
+                "rule": 539,
+                "slots": [
+                  3,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 65,
+                "binding": 0,
+                "rule": 539,
+                "slots": [
+                  3,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 18,
+              "binding": 11,
+              "rule": 511,
+              "slots": [
+                4,
+                10
+              ]
+            },
+            "positive": {
+              "run": 218,
+              "binding": 27,
+              "rule": 511,
+              "slots": [
+                4,
+                10
+              ]
+            },
+            "counts": [
+              4,
+              3
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (Bop pred e1 e2))\n       (bpred-of-type pred ty)\n       (HasType e1 ty)\n       (HasType e2 ty))\n      ((HasType lhs (Base (BoolT ))))\n        :ruleset type-analysis )"
+          },
+          {
+            "negative": {
+              "run": 28,
+              "binding": 0,
+              "rule": 539,
+              "slots": [
+                3,
+                6
+              ]
+            },
+            "positive": {
+              "run": 65,
+              "binding": 0,
+              "rule": 539,
+              "slots": [
+                3,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              2,
+              2
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TLConcat (TCons hd tl) r) (TCons hd (TLConcat tl r)) :ruleset type-helpers)"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.084672451019287e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "train",
+      "case": "020-loopfact",
+      "trace_sha256": "cd978ba4c9df1d38d9a82721f3816c68838c9eceea4ab0739836baa4b3a9e067",
+      "complete_instances": 1211,
+      "incomplete_instances": 28,
+      "modes": {
+        "oracle": {
+          "queries": 5085,
+          "positive_queries": 448,
+          "distinct_features": 1754,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 5085,
+          "positive_queries": 448,
+          "distinct_features": 3989,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "029-recfact",
+      "trace_sha256": "b45fddad0faa49d0ab4256a72a205561725e7557d0f5a11c8cfa87144f257dae",
+      "complete_instances": 1444,
+      "incomplete_instances": 43,
+      "modes": {
+        "oracle": {
+          "queries": 7139,
+          "positive_queries": 546,
+          "distinct_features": 2381,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 7139,
+          "positive_queries": 546,
+          "distinct_features": 5043,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "003-birthday",
+      "trace_sha256": "1f414b74fe68260ebe1f19c7ea4822ff809598e200ad49c0a5c0c86cfc0a4893",
+      "complete_instances": 1643,
+      "incomplete_instances": 35,
+      "modes": {
+        "oracle": {
+          "queries": 7714,
+          "positive_queries": 611,
+          "distinct_features": 2728,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 7714,
+          "positive_queries": 611,
+          "distinct_features": 6211,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "024-pascals-row",
+      "trace_sha256": "d29a4324ae3dc19ca5257cc98ccc2aa762626e775c34b02012ff2495012468ef",
+      "complete_instances": 2386,
+      "incomplete_instances": 53,
+      "modes": {
+        "oracle": {
+          "queries": 11966,
+          "positive_queries": 1198,
+          "distinct_features": 3792,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 11966,
+          "positive_queries": 1198,
+          "distinct_features": 9271,
+          "conflicting_features": 3,
+          "queries_in_conflicts": 6,
+          "unavoidable_query_errors": 3,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 457,
+                "binding": 1,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 481,
+                "binding": 3,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 466,
+                "binding": 13,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 466,
+                "binding": 8,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 467,
+                "binding": 11,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 467,
+                "binding": 10,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 457,
+              "binding": 1,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 481,
+              "binding": 3,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 466,
+              "binding": 13,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "positive": {
+              "run": 466,
+              "binding": 8,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (AddContext ctx (Get c1 index)) (Get (AddContext ctx c1) index) :ruleset context)"
+          },
+          {
+            "negative": {
+              "run": 467,
+              "binding": 11,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "positive": {
+              "run": 467,
+              "binding": 10,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              1,
+              1
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (AddContext ctx (Get c1 index)) (Get (AddContext ctx c1) index) :ruleset context)"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.4691224098205566e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "train",
+      "case": "011-euclid",
+      "trace_sha256": "9e4964b3956bc28a4ca436863def96d0641133475a794b6ae84045fc78b863de",
+      "complete_instances": 2711,
+      "incomplete_instances": 56,
+      "modes": {
+        "oracle": {
+          "queries": 14578,
+          "positive_queries": 1346,
+          "distinct_features": 5166,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 14578,
+          "positive_queries": 1346,
+          "distinct_features": 11435,
+          "conflicting_features": 4,
+          "queries_in_conflicts": 12,
+          "unavoidable_query_errors": 4,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 61,
+                "binding": 0,
+                "rule": 539,
+                "slots": [
+                  3,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 23,
+                "binding": 2,
+                "rule": 539,
+                "slots": [
+                  3,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                5
+              ]
+            },
+            {
+              "negative": {
+                "run": 498,
+                "binding": 1,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 522,
+                "binding": 3,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 507,
+                "binding": 12,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 507,
+                "binding": 9,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 508,
+                "binding": 11,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 508,
+                "binding": 9,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 61,
+              "binding": 0,
+              "rule": 539,
+              "slots": [
+                3,
+                6
+              ]
+            },
+            "positive": {
+              "run": 23,
+              "binding": 2,
+              "rule": 539,
+              "slots": [
+                3,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              5
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TLConcat (TCons hd tl) r) (TCons hd (TLConcat tl r)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 498,
+              "binding": 1,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 522,
+              "binding": 3,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 507,
+              "binding": 12,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "positive": {
+              "run": 507,
+              "binding": 9,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (AddContext ctx (Get c1 index)) (Get (AddContext ctx c1) index) :ruleset context)"
+          },
+          {
+            "negative": {
+              "run": 508,
+              "binding": 11,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "positive": {
+              "run": 508,
+              "binding": 9,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              1,
+              1
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (AddContext ctx (Get c1 index)) (Get (AddContext ctx c1) index) :ruleset context)"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.125278115272522e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "train",
+      "case": "002-binary-fmt",
+      "trace_sha256": "c98ae5984f76d5ed740227ed186966d765a2fc1c971bdd1c895fc2e65a6ef31f",
+      "complete_instances": 2776,
+      "incomplete_instances": 76,
+      "modes": {
+        "oracle": {
+          "queries": 17232,
+          "positive_queries": 1051,
+          "distinct_features": 7368,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 17232,
+          "positive_queries": 1051,
+          "distinct_features": 12440,
+          "conflicting_features": 1,
+          "queries_in_conflicts": 3,
+          "unavoidable_query_errors": 1,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 10,
+                "binding": 3,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 10,
+                "binding": 4,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 10,
+              "binding": 3,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 10,
+              "binding": 4,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              1,
+              1
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.9206275939941406e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "train",
+      "case": "049-dead-branch",
+      "trace_sha256": "ad1b0515f9827120261f82d4992a52e1d2f205e498a976160d81f69a70045b95",
+      "complete_instances": 2918,
+      "incomplete_instances": 94,
+      "modes": {
+        "oracle": {
+          "queries": 14525,
+          "positive_queries": 1611,
+          "distinct_features": 3947,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 14525,
+          "positive_queries": 1611,
+          "distinct_features": 11041,
+          "conflicting_features": 5,
+          "queries_in_conflicts": 19,
+          "unavoidable_query_errors": 9,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 56,
+                "binding": 69,
+                "rule": 145,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 528,
+                "binding": 61,
+                "rule": 145,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                6,
+                5
+              ]
+            },
+            {
+              "negative": {
+                "run": 400,
+                "binding": 2,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 448,
+                "binding": 4,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 400,
+                "binding": 3,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 448,
+                "binding": 5,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 416,
+                "binding": 3,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 416,
+                "binding": 2,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 417,
+                "binding": 9,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 417,
+                "binding": 8,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 56,
+              "binding": 69,
+              "rule": 145,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 528,
+              "binding": 61,
+              "rule": 145,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              6,
+              5
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )"
+          },
+          {
+            "negative": {
+              "run": 400,
+              "binding": 2,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 448,
+              "binding": 4,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 400,
+              "binding": 3,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 448,
+              "binding": 5,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 416,
+              "binding": 3,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "positive": {
+              "run": 416,
+              "binding": 2,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              1,
+              1
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (AddContext ctx (Get c1 index)) (Get (AddContext ctx c1) index) :ruleset context)"
+          },
+          {
+            "negative": {
+              "run": 417,
+              "binding": 9,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "positive": {
+              "run": 417,
+              "binding": 8,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              1,
+              1
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (AddContext ctx (Get c1 index)) (Get (AddContext ctx c1) index) :ruleset context)"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.3603439331054688e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "train",
+      "case": "033-sum-check",
+      "trace_sha256": "a868628b30585effce94d4ecc34780f5af563a3a745a54d576d91427b70ecbcc",
+      "complete_instances": 3237,
+      "incomplete_instances": 83,
+      "modes": {
+        "oracle": {
+          "queries": 18444,
+          "positive_queries": 1724,
+          "distinct_features": 6327,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 18444,
+          "positive_queries": 1724,
+          "distinct_features": 12996,
+          "conflicting_features": 8,
+          "queries_in_conflicts": 24,
+          "unavoidable_query_errors": 8,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 13,
+                "binding": 5,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 15,
+                "binding": 2,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                5,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 29,
+                "binding": 1,
+                "rule": 539,
+                "slots": [
+                  2,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 22,
+                "binding": 1,
+                "rule": 539,
+                "slots": [
+                  2,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 29,
+                "binding": 1,
+                "rule": 539,
+                "slots": [
+                  3,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 22,
+                "binding": 1,
+                "rule": 539,
+                "slots": [
+                  3,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 85,
+                "binding": 99,
+                "rule": 139,
+                "slots": [
+                  0,
+                  2
+                ]
+              },
+              "positive": {
+                "run": 85,
+                "binding": 109,
+                "rule": 139,
+                "slots": [
+                  0,
+                  2
+                ]
+              },
+              "counts": [
+                4,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 479,
+                "binding": 5,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 502,
+                "binding": 7,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 479,
+                "binding": 6,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 502,
+                "binding": 8,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 479,
+                "binding": 7,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 502,
+                "binding": 9,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 488,
+                "binding": 28,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 488,
+                "binding": 15,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                2
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 13,
+              "binding": 5,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 15,
+              "binding": 2,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              5,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 29,
+              "binding": 1,
+              "rule": 539,
+              "slots": [
+                2,
+                6
+              ]
+            },
+            "positive": {
+              "run": 22,
+              "binding": 1,
+              "rule": 539,
+              "slots": [
+                2,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TLConcat (TCons hd tl) r) (TCons hd (TLConcat tl r)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 29,
+              "binding": 1,
+              "rule": 539,
+              "slots": [
+                3,
+                6
+              ]
+            },
+            "positive": {
+              "run": 22,
+              "binding": 1,
+              "rule": 539,
+              "slots": [
+                3,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TLConcat (TCons hd tl) r) (TCons hd (TLConcat tl r)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 85,
+              "binding": 99,
+              "rule": 139,
+              "slots": [
+                0,
+                2
+              ]
+            },
+            "positive": {
+              "run": 85,
+              "binding": 109,
+              "rule": 139,
+              "slots": [
+                0,
+                2
+              ]
+            },
+            "counts": [
+              4,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              2,
+              2
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)"
+          },
+          {
+            "negative": {
+              "run": 479,
+              "binding": 5,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 502,
+              "binding": 7,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 479,
+              "binding": 6,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 502,
+              "binding": 8,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 479,
+              "binding": 7,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 502,
+              "binding": 9,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 488,
+              "binding": 28,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "positive": {
+              "run": 488,
+              "binding": 15,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              2
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              2,
+              2
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (AddContext ctx (Get c1 index)) (Get (AddContext ctx c1) index) :ruleset context)"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.8371810913085938e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "train",
+      "case": "035-sum-sq-diff",
+      "trace_sha256": "c46c9851141c972846f20a76c09dd585e9eff39dc1115ddbdd413f0fe4f4f632",
+      "complete_instances": 3722,
+      "incomplete_instances": 87,
+      "modes": {
+        "oracle": {
+          "queries": 21353,
+          "positive_queries": 1966,
+          "distinct_features": 6057,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 21353,
+          "positive_queries": 1966,
+          "distinct_features": 14069,
+          "conflicting_features": 5,
+          "queries_in_conflicts": 18,
+          "unavoidable_query_errors": 7,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 483,
+                "binding": 2,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 506,
+                "binding": 6,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                2,
+                2
+              ]
+            },
+            {
+              "negative": {
+                "run": 491,
+                "binding": 9,
+                "rule": 294,
+                "slots": [
+                  1,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 491,
+                "binding": 8,
+                "rule": 294,
+                "slots": [
+                  1,
+                  7
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 491,
+                "binding": 9,
+                "rule": 294,
+                "slots": [
+                  2,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 491,
+                "binding": 8,
+                "rule": 294,
+                "slots": [
+                  2,
+                  4
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 492,
+                "binding": 12,
+                "rule": 288,
+                "slots": [
+                  2,
+                  8
+                ]
+              },
+              "positive": {
+                "run": 492,
+                "binding": 13,
+                "rule": 288,
+                "slots": [
+                  2,
+                  8
+                ]
+              },
+              "counts": [
+                1,
+                2
+              ]
+            },
+            {
+              "negative": {
+                "run": 492,
+                "binding": 30,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 492,
+                "binding": 24,
+                "rule": 290,
+                "slots": [
+                  0,
+                  6
+                ]
+              },
+              "counts": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 483,
+              "binding": 2,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 506,
+              "binding": 6,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              2,
+              2
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 491,
+              "binding": 9,
+              "rule": 294,
+              "slots": [
+                1,
+                7
+              ]
+            },
+            "positive": {
+              "run": 491,
+              "binding": 8,
+              "rule": 294,
+              "slots": [
+                1,
+                7
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              1,
+              1
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (AddContext ctx (Concat c1 c2)) (Concat (AddContext ctx c1) (AddContext ctx c2)) :ruleset context)"
+          },
+          {
+            "negative": {
+              "run": 491,
+              "binding": 9,
+              "rule": 294,
+              "slots": [
+                2,
+                4
+              ]
+            },
+            "positive": {
+              "run": 491,
+              "binding": 8,
+              "rule": 294,
+              "slots": [
+                2,
+                4
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              1,
+              1
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (AddContext ctx (Concat c1 c2)) (Concat (AddContext ctx c1) (AddContext ctx c2)) :ruleset context)"
+          },
+          {
+            "negative": {
+              "run": 492,
+              "binding": 12,
+              "rule": 288,
+              "slots": [
+                2,
+                8
+              ]
+            },
+            "positive": {
+              "run": 492,
+              "binding": 13,
+              "rule": 288,
+              "slots": [
+                2,
+                8
+              ]
+            },
+            "counts": [
+              1,
+              2
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              1,
+              1
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (AddContext ctx (Bop op c1 c2)) (Bop op (AddContext ctx c1) (AddContext ctx c2)) :ruleset context)"
+          },
+          {
+            "negative": {
+              "run": 492,
+              "binding": 30,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "positive": {
+              "run": 492,
+              "binding": 24,
+              "rule": 290,
+              "slots": [
+                0,
+                6
+              ]
+            },
+            "counts": [
+              2,
+              3
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              1,
+              1
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (AddContext ctx (Get c1 index)) (Get (AddContext ctx c1) index) :ruleset context)"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.446770668029785e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "validation",
+      "case": "040-euler",
+      "trace_sha256": "b824812a4c74ad3cf380f0703558f3136db29e69fa985d9471d638b4cde0591a",
+      "complete_instances": 3649,
+      "incomplete_instances": 93,
+      "modes": {
+        "oracle": {
+          "queries": 21738,
+          "positive_queries": 1275,
+          "distinct_features": 8302,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 21738,
+          "positive_queries": 1275,
+          "distinct_features": 14863,
+          "conflicting_features": 3,
+          "queries_in_conflicts": 10,
+          "unavoidable_query_errors": 3,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 12,
+                "binding": 6,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 13,
+                "binding": 5,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                5,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 17,
+                "binding": 37,
+                "rule": 520,
+                "slots": [
+                  3,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 17,
+                "binding": 35,
+                "rule": 520,
+                "slots": [
+                  3,
+                  6
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 17,
+                "binding": 37,
+                "rule": 520,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 17,
+                "binding": 35,
+                "rule": 520,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 12,
+              "binding": 6,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 13,
+              "binding": 5,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              5,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 17,
+              "binding": 37,
+              "rule": 520,
+              "slots": [
+                3,
+                6
+              ]
+            },
+            "positive": {
+              "run": 17,
+              "binding": 35,
+              "rule": 520,
+              "slots": [
+                3,
+                6
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              13,
+              13
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": false,
+            "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasType e1 (TupleT tylist1))\n       (HasType e2 (TupleT tylist2)))\n      ((HasType lhs (TupleT (TLConcat tylist1 tylist2))))\n        :ruleset type-analysis )"
+          },
+          {
+            "negative": {
+              "run": 17,
+              "binding": 37,
+              "rule": 520,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 17,
+              "binding": 35,
+              "rule": 520,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              13,
+              13
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": false,
+            "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasType e1 (TupleT tylist1))\n       (HasType e2 (TupleT tylist2)))\n      ((HasType lhs (TupleT (TLConcat tylist1 tylist2))))\n        :ruleset type-analysis )"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.5019049644470215e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "validation",
+      "case": "000-ackermann",
+      "trace_sha256": "537b6ef8ed411a83288aee2fefbc208100a974c082cb89006962b438bcfb7b3d",
+      "complete_instances": 4481,
+      "incomplete_instances": 108,
+      "modes": {
+        "oracle": {
+          "queries": 26520,
+          "positive_queries": 1448,
+          "distinct_features": 8927,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 26520,
+          "positive_queries": 1448,
+          "distinct_features": 17832,
+          "conflicting_features": 1,
+          "queries_in_conflicts": 8,
+          "unavoidable_query_errors": 2,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 13,
+                "binding": 6,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 13,
+                "binding": 9,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                6,
+                2
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 13,
+              "binding": 6,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 13,
+              "binding": 9,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              6,
+              2
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.518296241760254e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "validation",
+      "case": "016-gcd",
+      "trace_sha256": "8e52cc2158e8a635984dabe0fe345238136f7e46b8799d0dc27f4f2046f1988f",
+      "complete_instances": 5283,
+      "incomplete_instances": 190,
+      "modes": {
+        "oracle": {
+          "queries": 29734,
+          "positive_queries": 3475,
+          "distinct_features": 9270,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 29734,
+          "positive_queries": 3475,
+          "distinct_features": 21139,
+          "conflicting_features": 24,
+          "queries_in_conflicts": 96,
+          "unavoidable_query_errors": 30,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 12,
+                "binding": 6,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 12,
+                "binding": 14,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                4,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 13,
+                "binding": 8,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 13,
+                "binding": 11,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                14,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 13,
+                "binding": 10,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 13,
+                "binding": 17,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                9,
+                2
+              ]
+            },
+            {
+              "negative": {
+                "run": 13,
+                "binding": 13,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 15,
+                "binding": 11,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                5,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 13,
+                "binding": 19,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 15,
+                "binding": 13,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 413,
+                "binding": 9,
+                "rule": 0,
+                "slots": [
+                  0,
+                  29
+                ]
+              },
+              "positive": {
+                "run": 413,
+                "binding": 3,
+                "rule": 0,
+                "slots": [
+                  0,
+                  29
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 431,
+                "binding": 15,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 455,
+                "binding": 15,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                2,
+                3
+              ]
+            },
+            {
+              "negative": {
+                "run": 431,
+                "binding": 17,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 455,
+                "binding": 17,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                2,
+                2
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 12,
+              "binding": 6,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 12,
+              "binding": 14,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              4,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              1,
+              1
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 13,
+              "binding": 8,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 13,
+              "binding": 11,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              14,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 13,
+              "binding": 10,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 13,
+              "binding": 17,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              9,
+              2
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 13,
+              "binding": 13,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 15,
+              "binding": 11,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              5,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 13,
+              "binding": 19,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 15,
+              "binding": 13,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 413,
+              "binding": 9,
+              "rule": 0,
+              "slots": [
+                0,
+                29
+              ]
+            },
+            "positive": {
+              "run": 413,
+              "binding": 3,
+              "rule": 0,
+              "slots": [
+                0,
+                29
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= if_e (If pred inputs thn els))\n       (ExprIsPure (Get thn i))\n       (ExprIsPure (Get els i))\n       (> 10 (Expr-size (Get thn i)))\n       (> 10 (Expr-size (Get els i)))\n       (= (TCPair t1 c1) (ExtractedExpr (Get thn i)))\n       (= (TCPair t2 c2) (ExtractedExpr (Get els i)))\n       (ContextOf if_e ctx))\n      ((union (Get if_e i) (Top (Select ) pred (TermSubst ctx inputs t1) (TermSubst ctx inputs t2))))\n        :ruleset select_opt )"
+          },
+          {
+            "negative": {
+              "run": 431,
+              "binding": 15,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 455,
+              "binding": 15,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              2,
+              3
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 431,
+              "binding": 17,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 455,
+              "binding": 17,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              2,
+              2
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.0638108253479004e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "validation",
+      "case": "019-lcm",
+      "trace_sha256": "1e613458ec03243c067488e8a96fcda6edacfa70d6d2e6a982451fd1deb98983",
+      "complete_instances": 5828,
+      "incomplete_instances": 182,
+      "modes": {
+        "oracle": {
+          "queries": 32729,
+          "positive_queries": 3696,
+          "distinct_features": 8036,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 32729,
+          "positive_queries": 3696,
+          "distinct_features": 21911,
+          "conflicting_features": 36,
+          "queries_in_conflicts": 180,
+          "unavoidable_query_errors": 63,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 15,
+                "binding": 21,
+                "rule": 511,
+                "slots": [
+                  4,
+                  10
+                ]
+              },
+              "positive": {
+                "run": 290,
+                "binding": 36,
+                "rule": 511,
+                "slots": [
+                  4,
+                  10
+                ]
+              },
+              "counts": [
+                5,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 86,
+                "binding": 132,
+                "rule": 145,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 633,
+                "binding": 112,
+                "rule": 145,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                15,
+                5
+              ]
+            },
+            {
+              "negative": {
+                "run": 502,
+                "binding": 8,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 546,
+                "binding": 10,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                3,
+                3
+              ]
+            },
+            {
+              "negative": {
+                "run": 502,
+                "binding": 10,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 546,
+                "binding": 12,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                3,
+                3
+              ]
+            },
+            {
+              "negative": {
+                "run": 502,
+                "binding": 12,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 546,
+                "binding": 14,
+                "rule": 459,
+                "slots": [
+                  4,
+                  7
+                ]
+              },
+              "counts": [
+                3,
+                3
+              ]
+            },
+            {
+              "negative": {
+                "run": 503,
+                "binding": 0,
+                "rule": 452,
+                "slots": [
+                  1,
+                  3
+                ]
+              },
+              "positive": {
+                "run": 720,
+                "binding": 1,
+                "rule": 452,
+                "slots": [
+                  1,
+                  3
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 503,
+                "binding": 0,
+                "rule": 452,
+                "slots": [
+                  5,
+                  7
+                ]
+              },
+              "positive": {
+                "run": 720,
+                "binding": 1,
+                "rule": 452,
+                "slots": [
+                  5,
+                  7
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 503,
+                "binding": 3,
+                "rule": 453,
+                "slots": [
+                  2,
+                  3
+                ]
+              },
+              "positive": {
+                "run": 720,
+                "binding": 2,
+                "rule": 453,
+                "slots": [
+                  2,
+                  3
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 15,
+              "binding": 21,
+              "rule": 511,
+              "slots": [
+                4,
+                10
+              ]
+            },
+            "positive": {
+              "run": 290,
+              "binding": 36,
+              "rule": 511,
+              "slots": [
+                4,
+                10
+              ]
+            },
+            "counts": [
+              5,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (Bop pred e1 e2))\n       (bpred-of-type pred ty)\n       (HasType e1 ty)\n       (HasType e2 ty))\n      ((HasType lhs (Base (BoolT ))))\n        :ruleset type-analysis )"
+          },
+          {
+            "negative": {
+              "run": 86,
+              "binding": 132,
+              "rule": 145,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 633,
+              "binding": 112,
+              "rule": 145,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              15,
+              5
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )"
+          },
+          {
+            "negative": {
+              "run": 502,
+              "binding": 8,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 546,
+              "binding": 10,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              3,
+              3
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 502,
+              "binding": 10,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 546,
+              "binding": 12,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              3,
+              3
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 502,
+              "binding": 12,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "positive": {
+              "run": 546,
+              "binding": 14,
+              "rule": 459,
+              "slots": [
+                4,
+                7
+              ]
+            },
+            "counts": [
+              3,
+              3
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermGet t idx))))\n      ((union lhs (Get (TermSubst ctx e t) idx)))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 503,
+              "binding": 0,
+              "rule": 452,
+              "slots": [
+                1,
+                3
+              ]
+            },
+            "positive": {
+              "run": 720,
+              "binding": 1,
+              "rule": 452,
+              "slots": [
+                1,
+                3
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              3,
+              3
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e1 term))\n       (HasArgType e1 ty))\n      ((HasArgType lhs ty))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 503,
+              "binding": 0,
+              "rule": 452,
+              "slots": [
+                5,
+                7
+              ]
+            },
+            "positive": {
+              "run": 720,
+              "binding": 1,
+              "rule": 452,
+              "slots": [
+                5,
+                7
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              3,
+              3
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e1 term))\n       (HasArgType e1 ty))\n      ((HasArgType lhs ty))\n        :ruleset term-subst )"
+          },
+          {
+            "negative": {
+              "run": 503,
+              "binding": 3,
+              "rule": 453,
+              "slots": [
+                2,
+                3
+              ]
+            },
+            "positive": {
+              "run": 720,
+              "binding": 2,
+              "rule": 453,
+              "slots": [
+                2,
+                3
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              3,
+              3
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((= lhs (TermSubst ctx e (TermArg ))))\n      ((union lhs (AddContext ctx e)))\n        :ruleset term-subst )"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.460367977619171e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "validation",
+      "case": "044-newton",
+      "trace_sha256": "406ed05c4c03508e47a9e6290e3c30318716fdec942ce28be98586448a5b1cbb",
+      "complete_instances": 7396,
+      "incomplete_instances": 176,
+      "modes": {
+        "oracle": {
+          "queries": 45444,
+          "positive_queries": 4763,
+          "distinct_features": 11475,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 45444,
+          "positive_queries": 4763,
+          "distinct_features": 31936,
+          "conflicting_features": 47,
+          "queries_in_conflicts": 211,
+          "unavoidable_query_errors": 68,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 12,
+                "binding": 4,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 12,
+                "binding": 5,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 13,
+                "binding": 8,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 14,
+                "binding": 8,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                5,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 13,
+                "binding": 9,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 14,
+                "binding": 7,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                4,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 71,
+                "binding": 167,
+                "rule": 145,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 474,
+                "binding": 135,
+                "rule": 145,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                31,
+                11
+              ]
+            },
+            {
+              "negative": {
+                "run": 283,
+                "binding": 77,
+                "rule": 148,
+                "slots": [
+                  2,
+                  10
+                ]
+              },
+              "positive": {
+                "run": 289,
+                "binding": 37,
+                "rule": 148,
+                "slots": [
+                  2,
+                  10
+                ]
+              },
+              "counts": [
+                5,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 285,
+                "binding": 6,
+                "rule": 126,
+                "slots": [
+                  1,
+                  2
+                ]
+              },
+              "positive": {
+                "run": 525,
+                "binding": 1,
+                "rule": 126,
+                "slots": [
+                  1,
+                  2
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 285,
+                "binding": 6,
+                "rule": 126,
+                "slots": [
+                  1,
+                  5
+                ]
+              },
+              "positive": {
+                "run": 525,
+                "binding": 1,
+                "rule": 126,
+                "slots": [
+                  1,
+                  5
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 285,
+                "binding": 6,
+                "rule": 126,
+                "slots": [
+                  4,
+                  6
+                ]
+              },
+              "positive": {
+                "run": 525,
+                "binding": 1,
+                "rule": 126,
+                "slots": [
+                  4,
+                  6
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 12,
+              "binding": 4,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 12,
+              "binding": 5,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              1,
+              1
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 13,
+              "binding": 8,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 14,
+              "binding": 8,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              5,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 13,
+              "binding": 9,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 14,
+              "binding": 7,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              4,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 71,
+              "binding": 167,
+              "rule": 145,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 474,
+              "binding": 135,
+              "rule": 145,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              31,
+              11
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )"
+          },
+          {
+            "negative": {
+              "run": 283,
+              "binding": 77,
+              "rule": 148,
+              "slots": [
+                2,
+                10
+              ]
+            },
+            "positive": {
+              "run": 289,
+              "binding": 37,
+              "rule": 148,
+              "slots": [
+                2,
+                10
+              ]
+            },
+            "counts": [
+              5,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TupleRemoveAt tuple idx) (Concat (SubTuple tuple 0 idx) (SubTuple tuple (+ idx 1) (- len (+ idx 1)))) :when ((= len (tuple-length tuple))) :ruleset always-run)"
+          },
+          {
+            "negative": {
+              "run": 285,
+              "binding": 6,
+              "rule": 126,
+              "slots": [
+                1,
+                2
+              ]
+            },
+            "positive": {
+              "run": 525,
+              "binding": 1,
+              "rule": 126,
+              "slots": [
+                1,
+                2
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              2,
+              2
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((Concat x y)\n       (ContextOf y ctx))\n      ((ContextOf (Concat x y) ctx))\n        :ruleset always-run )"
+          },
+          {
+            "negative": {
+              "run": 285,
+              "binding": 6,
+              "rule": 126,
+              "slots": [
+                1,
+                5
+              ]
+            },
+            "positive": {
+              "run": 525,
+              "binding": 1,
+              "rule": 126,
+              "slots": [
+                1,
+                5
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              2,
+              2
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((Concat x y)\n       (ContextOf y ctx))\n      ((ContextOf (Concat x y) ctx))\n        :ruleset always-run )"
+          },
+          {
+            "negative": {
+              "run": 285,
+              "binding": 6,
+              "rule": 126,
+              "slots": [
+                4,
+                6
+              ]
+            },
+            "positive": {
+              "run": 525,
+              "binding": 1,
+              "rule": 126,
+              "slots": [
+                4,
+                6
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              2,
+              2
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((Concat x y)\n       (ContextOf y ctx))\n      ((ContextOf (Concat x y) ctx))\n        :ruleset always-run )"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.3096799850463867e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "test",
+      "case": "dot-product",
+      "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+      "complete_instances": 5553,
+      "incomplete_instances": 382,
+      "modes": {
+        "oracle": {
+          "queries": 34240,
+          "positive_queries": 2557,
+          "distinct_features": 14567,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 34240,
+          "positive_queries": 2557,
+          "distinct_features": 22398,
+          "conflicting_features": 2,
+          "queries_in_conflicts": 41,
+          "unavoidable_query_errors": 7,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 98,
+                "binding": 212,
+                "rule": 145,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 570,
+                "binding": 141,
+                "rule": 145,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                12,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 495,
+                "binding": 0,
+                "rule": 43,
+                "slots": [
+                  4,
+                  10
+                ]
+              },
+              "positive": {
+                "run": 563,
+                "binding": 9,
+                "rule": 43,
+                "slots": [
+                  4,
+                  10
+                ]
+              },
+              "counts": [
+                22,
+                6
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 98,
+              "binding": 212,
+              "rule": 145,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 570,
+              "binding": 141,
+              "rule": 145,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              12,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )"
+          },
+          {
+            "negative": {
+              "run": 495,
+              "binding": 0,
+              "rule": 43,
+              "slots": [
+                4,
+                10
+              ]
+            },
+            "positive": {
+              "run": 563,
+              "binding": 9,
+              "rule": 43,
+              "slots": [
+                4,
+                10
+              ]
+            },
+            "counts": [
+              22,
+              6
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              0,
+              0
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": true,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (Bop (PtrAdd ) (Bop (PtrAdd ) p x) y) (Bop (PtrAdd ) p (Bop (Add ) x y)) :ruleset peepholes)"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 3.077089786529541e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    }
+  ],
+  "aggregate": {
+    "train": {
+      "oracle": {
+        "queries": 123021,
+        "positive_queries": 10946,
+        "distinct_features": 41054,
+        "conflicting_features": 0,
+        "queries_in_conflicts": 0,
+        "unavoidable_query_errors": 0
+      },
+      "predicted": {
+        "queries": 123021,
+        "positive_queries": 10946,
+        "distinct_features": 89340,
+        "conflicting_features": 28,
+        "queries_in_conflicts": 91,
+        "unavoidable_query_errors": 36
+      }
+    },
+    "validation": {
+      "oracle": {
+        "queries": 156165,
+        "positive_queries": 14657,
+        "distinct_features": 46010,
+        "conflicting_features": 0,
+        "queries_in_conflicts": 0,
+        "unavoidable_query_errors": 0
+      },
+      "predicted": {
+        "queries": 156165,
+        "positive_queries": 14657,
+        "distinct_features": 107681,
+        "conflicting_features": 111,
+        "queries_in_conflicts": 505,
+        "unavoidable_query_errors": 166
+      }
+    },
+    "test": {
+      "oracle": {
+        "queries": 34240,
+        "positive_queries": 2557,
+        "distinct_features": 14567,
+        "conflicting_features": 0,
+        "queries_in_conflicts": 0,
+        "unavoidable_query_errors": 0
+      },
+      "predicted": {
+        "queries": 34240,
+        "positive_queries": 2557,
+        "distinct_features": 22398,
+        "conflicting_features": 2,
+        "queries_in_conflicts": 41,
+        "unavoidable_query_errors": 7
+      }
+    }
+  },
+  "wall_seconds": 18.486572041001637,
+  "fitting": false,
+  "union_authorized": false,
+  "limitations": [
+    "No conflicts does not establish separability, robustness or decoder adequacy",
+    "Lower bounds count class queries, not expanded slot pairs or full partitions",
+    "Aggregation sums per-case audits and does not discover cross-case collisions",
+    "Actual CPU matches/routes and external observations still supplied to GPU replay",
+    "Only exact f32 feature equality is tested; near-collisions and hidden lifecycle facts remain untested"
+  ]
+}

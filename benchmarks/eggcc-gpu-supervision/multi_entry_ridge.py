@@ -49,17 +49,17 @@ def scalar(value):
 
 
 def encode(rows,roles,encoding="slot"):
-    if encoding not in ("slot","class-balanced"):raise ValueError("unknown token encoding")
+    if encoding not in ("slot","class-balanced","class-interface"):raise ValueError("unknown token encoding")
     groups=defaultdict(list)
     for slot,value,key in rows:
         if key is not None:groups[key].append(slot)
-    context={k:roles[slots].sum(0)/(len(slots) if encoding=="class-balanced" else np.sqrt(len(slots))) for k,slots in groups.items()}
+    context={k:roles[slots].sum(0)/(len(slots) if encoding!="slot" else np.sqrt(len(slots))) for k,slots in groups.items()}
     messages=[]
     for slot,value,key in rows:
         messages.append(np.tanh(roles[slot]+(context[key] if key is not None else scalar(value))))
     if not messages:return np.zeros(WIDTH,np.float32)
     m=np.array(messages,np.float32)
-    if encoding=="class-balanced":
+    if encoding!="slot":
         # Each observed Eq class has unit total weight; scalars remain individual.
         # Input groups use only input roots; output groups are training/audit labels.
         weights=np.array([1/len(groups[key]) if key is not None else 1 for _,_,key in rows],np.float32)
@@ -73,6 +73,12 @@ def encode(rows,roles,encoding="slot"):
 def input_rows(binding):
     ports={p['slot']:(p['sort'],p['before']) for p in binding['eq_ports']}
     return [(s['slot'],s['value'],ports.get(s['slot'])) for s in binding['values']]
+
+
+def input_seed(binding,roles,connected,encoding):
+    # Connected Eq slots still carry interface correlations between providers.
+    rows=input_rows(binding)
+    return encode([r for r in rows if encoding=='class-interface' or r[0] not in connected],roles,encoding)
 
 
 def output_rows(binding):
@@ -130,7 +136,7 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
                         route=np.concatenate([np.ones(1,np.float32),np.tanh(3*np.concatenate([roles[port['slot']],pr[p['slot']]])@routing)])
                         if zero_role_channels:route[1:]=0
                         incoming.append((source,edge/np.sqrt(len(g['providers']))));routes.append(route)
-            rows=input_rows(b);seed=encode([r for r in rows if r[0] not in connected],roles,encoding)
+            seed=input_seed(b,roles,connected,encoding)
             target=encode(output_rows(b),roles,encoding)
             valid=b['rhs']['completed'] and all('unavailable' not in s for s in b['rhs']['slots'])
             # A missing full local state is an explicit CPU boundary in this probe.
@@ -210,7 +216,7 @@ def metric(pred,target,mask):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('training',type=Path);p.add_argument('validation',type=Path)
-    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced'],default='slot');a=p.parse_args()
+    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface'],default='slot');a=p.parse_args()
     preparation_started=time.monotonic()
     corpus_raw=a.corpus_manifest.read_bytes();corpus=json.loads(corpus_raw);corpus_sha=hashlib.sha256(corpus_raw).hexdigest()
     all_nodes=[];partition=[];provenance=dict(corpus_manifest=corpus_sha)
