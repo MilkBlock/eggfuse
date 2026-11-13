@@ -419,3 +419,5 @@ tests pass. Saved counts and residual examples are in `proven-union-results.json
 [Calibrated structural ridge](CALIBRATED_RIDGE.md): template alias normalization and floating pair interactions reduce false Eq proposals; stage coverage and recall remain limiting.
 
 [Whole-workload ridge holdout](MULTITRACE_RIDGE.md): full sum-bits/loopfact training, gcd calibration and preselected dot-product testing, with native auditing of every GPU pair prediction.
+
+[Generated Cell continuation prerequisite](CELL_TOKEN_SUCCESSORS.md): compiler-derived complete consumer bindings from producer templates; no recorded matches used, GPU generation still pending.
