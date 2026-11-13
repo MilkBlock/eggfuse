@@ -1,0 +1,28 @@
+{
+  "scope": "local scheduler lifecycle and one real standalone Cell CPU timing trial",
+  "scheduler_tests": 11,
+  "quick_harness_tests": 5,
+  "installed_spawn_failure_and_recovery_exit_codes": [
+    127,
+    0
+  ],
+  "shared_queue": "/Users/mineralsteins/.local/state/eggfuse-jobs",
+  "managed_test_job": "7",
+  "real_timing_job": {
+    "id": "6",
+    "kind": "timing",
+    "guard": "known",
+    "status": "done",
+    "submitted": 1794563864.986597,
+    "started": 1794563868.341522,
+    "finished": 1794563951.943132,
+    "exit_code": 0
+  },
+  "timing_boundary_guards": 48,
+  "known_compiler_or_workload_conflicts": false,
+  "all_prior_managed_jobs_finished_before_timing": true,
+  "timing_result": "../benchmarks/cell-query-fragments/timing-results.json",
+  "timing_implementation_commit": "fd0c8ffc",
+  "installer_fix_commit": "026eadee",
+  "installed_source_sha256": "4dcc8c8d303a1ddd764be879a06b13c76f5c4409278105a81af0e6bc9c003b20"
+}

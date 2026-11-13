@@ -89,8 +89,34 @@ release features. Sequential timings follow with
 `benchmarks/raytrace-parallel/quick.py`; all control samples precede every
 candidate sample, without interleaving or concurrent compilation.
 
-Timing attempts were interrupted by concurrent compilers or Bake experiments;
-two stopped before any sample. No completed performance comparison is available
-yet. Samples are retained separately and never pooled. See
+The first five timing attempts were interrupted by concurrent compilers or Bake
+experiments; two stopped before any sample. Those samples are retained separately
+and never pooled. See
 `timing-attempts.json`. The guard now also recognizes Cargo test executables
 under debug/release `deps` directories, not only compilers and named benchmarks.
+
+## Completed timing through the local queue
+
+The sixth attempt acquired shared scheduler timing job 6 and completed all four
+groups. All 48 sample/group boundary checks found no known compiler or workload
+conflict. Every measured state, source Run summary and logical effect matches
+the frozen references, including the reviewed native sum contract. Sum has five
+measured runs and Raytrace three, each following one warmup per lane. No samples
+from the interrupted attempts are reused.
+
+| Inference median | Control `67d32b09` | Candidate `e5dba47b` | Change |
+|---|---:|---:|---:|
+| sum-bits | 26.235 ms | 26.116 ms | -0.45% |
+| Raytrace | 5.312 s | 5.314 s | +0.04% |
+
+**The pipeline is effectively unchanged in this checkpoint; speed acceptance is
+not established.** Removing 66.6% of coordinator answer routing is a transport
+metric, not evidence of whole-pipeline acceleration. Final winner sorting and
+233,351 fallback row moves remain. The scheduler prevents overlap between its
+managed jobs, but background OS services and grouped-order drift still exist.
+This experimental path remains a candidate for reducing actual result moves;
+it must not be credited as an observed runtime speedup.
+
+`timing-results.json` stores the compact result and the checksum of full retained
+observations in `out/cell-query-fragments`. Scheduler validation is recorded in
+`tools/local-jobs-validation.json`.

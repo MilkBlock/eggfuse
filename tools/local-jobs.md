@@ -87,3 +87,11 @@ Tests cover FIFO across working directories, command exit status and environment
 queued/running cancellation, nested leases, daemon crash recovery, descendant
 draining and fail-closed process inspection. Existing quick tests cover retained
 samples and rejection when unmanaged work appears at a sample boundary.
+
+The installed queue passed eleven scheduler tests and five quick-harness tests,
+including idempotent installation and protection of an unrelated launcher.
+It also completed the full sum-bits/Raytrace comparison as timing job 6 after
+five unmanaged attempts had been interrupted by other sessions. All 48 boundary
+guards and the trial's state/Run/effect checks passed. This validates scheduling
+and admission; it does not claim improved benchmark speed or isolation from OS
+background services. See `local-jobs-validation.json` for the recorded evidence.

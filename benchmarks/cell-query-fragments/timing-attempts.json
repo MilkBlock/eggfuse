@@ -71,6 +71,31 @@
         ]
       },
       "reused_samples": false
+    },
+    {
+      "artifact": "out/cell-query-fragments/timing-5",
+      "status": "interrupted-by-concurrent-work",
+      "completed_groups": 1,
+      "interruption": {
+        "utc": "2026-11-13T09:30:57.775823+00:00",
+        "phase": "after-sample",
+        "lane": "control",
+        "case": "ray",
+        "iteration": -1,
+        "compilers": [
+          "42596   0.0 /Users/mineralsteins/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+          "42605  99.0 /Users/mineralsteins/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc"
+        ],
+        "workloads": []
+      },
+      "reused_samples": false
+    },
+    {
+      "artifact": "out/cell-query-fragments/timing-6",
+      "status": "completed-with-boundary-guards",
+      "completed_groups": 4,
+      "scheduler_job": "6",
+      "reused_samples": false
     }
   ]
 }
