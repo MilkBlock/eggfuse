@@ -612,18 +612,27 @@ fn selected_cursors_continue_through_worker_writes_and_source_ordered_publicatio
         control.execute().unwrap();
         #[cfg(feature="iterative-bake")]
         let writes = eggfuse_cell_runtime::transfer_audit::take_write_digests();
-        for workers in [2, 4] {
+        for (workers, serial_cursors) in [(2, false), (4, false), (4, true)] {
             let mut candidate = executor(&source, workers);
+            assert!(candidate.use_serial_cursor_writes().is_err());
             candidate.use_cell_execution(1).unwrap();
+            if serial_cursors { candidate.use_serial_cursor_writes().unwrap(); }
             candidate.execute().unwrap();
+            assert!(candidate.use_serial_cursor_writes().is_err());
             same(&control, &candidate);
             #[cfg(feature="iterative-bake")]
             assert_eq!(writes, eggfuse_cell_runtime::transfer_audit::take_write_digests());
             let report = candidate.report();
             let counts = &report["cell_execution"]["runtime"]["stats"]["writes"];
-            assert!(counts["inherited_candidates"].as_u64().unwrap() >= 128, "{counts}");
-            assert!(counts["invalidated"].as_u64().unwrap() > 0);
-            assert!(counts["origin_token_bytes"].as_u64().unwrap() > 0);
+            assert_eq!(report["cell_execution"]["runtime"]["cursor_writes"], !serial_cursors);
+            if serial_cursors {
+                assert_eq!(counts["inherited_candidates"], 0);
+                assert_eq!(counts["origin_token_bytes"], 0);
+            } else {
+                assert!(counts["inherited_candidates"].as_u64().unwrap() >= 128, "{counts}");
+                assert!(counts["invalidated"].as_u64().unwrap() > 0);
+                assert!(counts["origin_token_bytes"].as_u64().unwrap() > 0);
+            }
             for key in ["steps_executed", "resumed_steps", "completed_steps", "max_chain"] {
                 assert_eq!(report["stage_spine"]["stats"][key], control.report()["stage_spine"]["stats"][key], "{key}");
             }

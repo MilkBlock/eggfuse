@@ -288,7 +288,7 @@ impl Executor {
             return Err("configure Cell execution once before the first Run".into());
         }
         self.cell_execution = Some(crate::cell::execution::runtime::State {
-            grain, counts: Default::default(), writes: Default::default(),
+            grain, cursor_writes: true, counts: Default::default(), writes: Default::default(),
         });
         for rule in 0..self.graph.program.rules.len() {
             self.graph.program.executions[rule].units = crate::cell::unit_prepare::Plan::derive(
@@ -302,6 +302,16 @@ impl Executor {
             self.graph.program.executions[rule].births = crate::graph::cell_births::Plan::derive(&self.graph.program,rule).map(std::sync::Arc::new);
         }
         self.refresh_cell_execution_layouts();
+        Ok(())
+    }
+    /// Compare selected-Cursor writes with their ordered source path while
+    /// retaining query workers, root writes and all other Cell execution.
+    pub fn use_serial_cursor_writes(&mut self) -> Result<()> {
+        if !self.steps.is_empty() {
+            return Err("configure cursor writes before the first Run".into());
+        }
+        let state = self.cell_execution.as_mut().ok_or("cursor write control requires Cell execution")?;
+        state.cursor_writes = false;
         Ok(())
     }
     /// All layout mutation is configuration, before the first Run. Refresh

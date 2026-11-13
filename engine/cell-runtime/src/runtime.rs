@@ -3396,6 +3396,7 @@ impl Executor {
                 "ready_limit":64,"independent_scheduling":true,
                 "global_shared_effects_parallel":false});
             report["cell_execution"]["runtime"] = json!({"enabled":true,"grain":execution.grain,
+                "cursor_writes":execution.cursor_writes,
                 "boundary_order":["Constructor","MutableRead","Write","Union","Visibility","Failure","Primitive"],
                 "scope":"workers own covered scalar row writes; other Cells resume between source-ordered boundaries",
                 "stats":execution.counts});

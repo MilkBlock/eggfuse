@@ -22,6 +22,8 @@ impl Executor {
             && !self.profile_queries
             && !cfg!(feature = "structural-depth")
             && !cfg!(feature = "family-survey")
+            && (self.cell_execution.as_ref().unwrap().cursor_writes
+                || rows.iter().all(|b| b.direct.is_none()))
             && rows.iter().all(|b| {
                 self.graph.worker_write_parent(b.parent)
                     && b.continuation.is_none()

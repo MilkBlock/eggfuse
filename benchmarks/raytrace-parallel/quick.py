@@ -84,13 +84,29 @@ def verify_frozen_references(result, control, candidate):
     result['native_sum_acceptance_sha256'] = timer['sha'](candidate / 'semantic-acceptance.json')
 
 
-def run(control, candidate, output, result_path, *, sum_repeats=5, ray_repeats=3):
+def validate_pair(configs, control_flag=None):
+    if control_flag is not None:
+        if not control_flag.startswith('--'):
+            raise ValueError('Control flag must be a complete boolean option')
+        assert configs['control']['runtime_sha256'] == configs['candidate']['runtime_sha256'], 'flag diagnosis requires identical binaries'
+    for case in ('sum', 'ray'):
+        a, b = (configs[label]['lanes'][case] for label in ('control', 'candidate'))
+        assert a['program'] == b['program']
+        assert a['args'] == b['args'] + ([control_flag] if control_flag else [])
+        if control_flag:
+            assert control_flag not in b['args']
+        assert a['args'][a['args'].index('--query-workers') + 1] == '4'
+
+
+def run(control, candidate, output, result_path, *, sum_repeats=5, ray_repeats=3,
+        same_runtime_control_flag=None):
     if sum_repeats < 1 or ray_repeats < 1:
         raise ValueError('Sample counts must be positive and fixed before the trial')
     lease = jobs.current_lease()
     if lease is None:
         code = jobs.run_command(jobs.DEFAULT_STATE, [sys.executable, str(Path(__file__).resolve()),
             '--sum-repeats', str(sum_repeats), '--ray-repeats', str(ray_repeats),
+            *([f'--same-runtime-control-flag={same_runtime_control_flag}'] if same_runtime_control_flag else []),
             *map(str, (control, candidate, output, result_path))], kind='timing')
         if code:
             raise RuntimeError(f'Scheduled timing job exited with status {code}')
@@ -110,10 +126,10 @@ def run(control, candidate, output, result_path, *, sum_repeats=5, ray_repeats=3
               'candidate_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
               'groups': [], 'workloads': {}, 'observations': []}
     result['scheduler'] = {k: lease[k] for k in ('id', 'kind', 'guard', 'submitted', 'started', 'quiet')}
-    for case in ('sum', 'ray'):
-        a, b = (configs[label]['lanes'][case] for label in ('control', 'candidate'))
-        assert a['program'] == b['program'] and a['args'] == b['args']
-        assert a['args'][a['args'].index('--query-workers') + 1] == '4'
+    validate_pair(configs, same_runtime_control_flag)
+    if same_runtime_control_flag:
+        result['scope'] = 'actual standalone Cell CPU; same-binary flag diagnostic, not ordinary build speed acceptance'
+        result['same_runtime_control_flag'] = same_runtime_control_flag
     for label, root in (('control', control), ('candidate', candidate)):
         runtime = root / 'candidate-runtime'
         assert timer['sha'](runtime) == configs[label]['runtime_sha256']
@@ -186,5 +202,6 @@ if __name__ == '__main__':
         parser.add_argument(name, type=Path)
     parser.add_argument('--sum-repeats', type=int, default=5)
     parser.add_argument('--ray-repeats', type=int, default=3)
+    parser.add_argument('--same-runtime-control-flag', help='diagnostic: identical binaries; control has exactly this extra boolean flag')
     args = parser.parse_args()
     run(**vars(args))

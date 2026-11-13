@@ -118,3 +118,29 @@ to discard the result. No repeats were added after seeing the outcome.
 Raytrace's greater worker coverage and lower inference time justify preserving
 the experiment. They do not establish full worker utilization or remove the
 remaining serial source completion, whose cost is still explicitly charged.
+
+## Same-binary control
+
+`--serial-cursor-writes` is a configuration-only diagnostic switch, requiring
+`--cell-execution-grain`. It leaves query workers, root writes and other Cell
+execution enabled. Only batches containing a selected Cursor return to the
+original source path. The report exposes the setting; configuration after the
+first Run is rejected. It adds no per-instance timers or runtime fact storage.
+
+The off/on comparison uses one frozen binary with `inference-cpu`, so executable
+layout is identical. It asks whether the new path changes coordinator CPU,
+process CPU, event residence and inference time. It cannot retroactively explain
+all differences between the earlier two ordinary binaries or replace that
+failed adoption gate. Before timing, both modes must reproduce the corresponding
+old/new path counts as well as the accepted states, Run boundaries and effects.
+
+Run the following from this clean, committed worktree, using absolute artifact
+paths. `ACCEPTED` is the previous `out/cell-cursor-writes` directory; `DIAG` must
+be new. The trial predeclares 15 sum-bits and 3 Raytrace samples per mode, plus
+one warmup, with all control groups completed before any candidate group.
+
+```sh
+eggfuse-job run --kind compute -- python3.14 benchmarks/cell-cursor-writes/same_binary.py ACCEPTED TARGET DIAG
+eggfuse-job run --kind timing -- python3.14 benchmarks/raytrace-parallel/quick.py --sum-repeats 15 --ray-repeats 3 --same-runtime-control-flag=--serial-cursor-writes DIAG/control DIAG/candidate DIAG/timing DIAG/timing.json
+python3.14 benchmarks/cell-inference-cpu/run.py summarize DIAG DIAG/timing SUMMARY.json
+```
