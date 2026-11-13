@@ -103,6 +103,7 @@ impl Work {
             Some(J::String(v)) if v == "cell-constructor-preparation/v4" => 4,
             Some(J::String(v)) if v == "cell-constructor-preparation/v5" => 5,
             Some(J::String(v)) if v == "cell-constructor-preparation/v6" => 6,
+            Some(J::String(v)) if v == "cell-constructor-preparation/v7" => 7,
             _ => return Err("unknown Cell constructor preparation accounting".into()),
         };
         for (group, fields) in [
@@ -184,11 +185,48 @@ impl Work {
                 .ok_or_else(||format!("missing constructor preparation work {key}"))?
         } else { 0 };
         work.insert(key.into(),value);
+        // Unit rows are real speculative construction, including candidates
+        // subsequently discarded. Prefix rows/instances are subsets of these
+        // totals; bytes and timings are not interchangeable with operations.
+        for field in ["instances", "rows", "probes"] {
+            let key=format!("query_workers/stats/execution/units/{field}");
+            let count=if constructor_preparation>=7 && report["query_workers"]["enabled"]==true {
+                report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                    .ok_or_else(||format!("missing Unit preparation work {key}"))?
+            } else {0};
+            work.insert(key,count);
+        }
+        if constructor_preparation>=7 {
+            let count=|field:&str|report["stats"][field].as_u64()
+                .ok_or_else(||format!("missing Unit admission work {field}"));
+            // These disjoint outcomes enumerate calls to accept_prepared_unit.
+            // No successful reuse or rejection earns an independent credit.
+            let stale=count("unit_prepared_stale")?;
+            let calls=count("unit_prepared_consumed")?.checked_add(count("unit_prepared_existing")?)
+                .and_then(|n|n.checked_add(stale))
+                .ok_or("invalid Unit admission total")?;
+            work.insert("stats/unit_prepared_admission_checks".into(),calls);
+            let reads=count("unit_prepared_existing")?.checked_add(count("unit_prepared_witness_rejected")?)
+                .ok_or("Unit witness count overflow")?;
+            work.insert("stats/unit_prepared_witness_checks".into(),reads);
+        } else {
+            work.insert("stats/unit_prepared_admission_checks".into(),0);
+            work.insert("stats/unit_prepared_witness_checks".into(),0);
+        }
+        for field in ["unit_prepared_prefix_discarded", "unit_prepared_prefix_witness_discarded",
+            "unit_registry_batches", "unit_registry_candidates", "unit_registry_pool_calls",
+            "unit_registry_identity_rows", "unit_registry_key_candidates", "unit_registry_key_handles",
+            "unit_registry_field_handles", "unit_registry_decision_fragments", "unit_registry_subscription_tasks"] {
+            let count=if constructor_preparation>=7 {report["stats"][field].as_u64()
+                .ok_or_else(||format!("missing Unit registration work {field}"))?} else {0};
+            work.insert(format!("stats/{field}"),count);
+        }
         let local_births=match report["cell_execution"].get("local_construction") {
             None=>0,
             Some(v) if v["schema"]=="cell-local-births/v1"=>1,
             Some(v) if v["schema"]=="cell-local-births/v2"=>2,
             Some(v) if v["schema"]=="cell-local-births/v3"=>3,
+            Some(v) if v["schema"]=="cell-local-births/v4"=>4,
             _=>return Err("unknown Cell local construction accounting".into()),
         };
         for field in ["plan_checks","resume_checks","window_checks","attempts","anchor_checks","source_operand_reads","operand_reads",
@@ -217,9 +255,16 @@ impl Work {
             } else {0};
             work.insert(key,value);
         }
+        for field in ["execution_groups", "root_bucket_probes", "root_jobs", "root_existing_key_fields",
+            "root_boundary_probes", "unit_candidates"] {
+            let key=format!("cell_execution/runtime/stats/births/{field}");
+            let count=if local_births>=4 {report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                .ok_or_else(||format!("missing current local construction work {key}"))?} else {0};
+            work.insert(key,count);
+        }
         let scheduler=match report["cell_execution"].get("scheduler") {
             None=>false,
-            Some(v) if v["schema"]=="cell-ready-batches/v1" || v["schema"]=="cell-ready-batches/v2"=>true,
+            Some(v) if matches!(v["schema"].as_str(),Some("cell-ready-batches/v1" | "cell-ready-batches/v2" | "cell-completion-events/v4"))=>true,
             _=>return Err("unknown Cell scheduler accounting".into()),
         };
         for key in ["stats/rhs_pending_probes", "stats/rhs_pending_key_spills", "cell_execution/runtime/stats/scheduler/rule_groups",
@@ -231,10 +276,18 @@ impl Work {
             work.insert(key.into(),value);
         }
         let budget="cell_execution/runtime/stats/scheduler/budget_checks";
-        work.insert(budget.into(),if report["cell_execution"]["scheduler"]["schema"]=="cell-ready-batches/v2" {
+        work.insert(budget.into(),if matches!(report["cell_execution"]["scheduler"]["schema"].as_str(),Some("cell-ready-batches/v2" | "cell-completion-events/v4")) {
             report.pointer(&format!("/{budget}")).and_then(J::as_u64)
                 .ok_or_else(||format!("missing Cell scheduler work {budget}"))?
         } else {0});
+        for field in ["event_waves", "admission_waves", "admission_jobs", "admission_polls", "admission_dependency_probes"] {
+            let key=format!("cell_execution/runtime/stats/scheduler/{field}");
+            let count=if report["cell_execution"]["scheduler"]["schema"]=="cell-completion-events/v4" {
+                report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                    .ok_or_else(||format!("missing completion-event work {key}"))?
+            } else {0};
+            work.insert(key,count);
+        }
         for field in ["ripsat_union_input_reads", "ripsat_union_result_reads"] {
             let value = match report["stage_spine"].get("union_completion") {
                 None => 0,
@@ -401,20 +454,29 @@ impl Work {
         }
         let cell_tasks = match report["query_workers"].get("organization") {
             None => false, // recorded 13cfd235 Entry-batch host
-            Some(J::String(version)) if matches!(version.as_str(), "cell-run/v1" | "cell-run/v2" | "cell-run/v3" | "cell-run/v4" | "cell-run/v5") => true,
+            Some(J::String(version)) if matches!(version.as_str(), "cell-run/v1" | "cell-run/v2" | "cell-run/v3" | "cell-run/v4" | "cell-run/v5" | "cell-run-events/v6") => true,
             _ => return Err("unknown query worker organization".into()),
         };
-        let indexed_tasks = matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v2" | "cell-run/v3" | "cell-run/v4" | "cell-run/v5"));
+        // Event dispatch and final winner comparisons are additional work.
+        // Final row counts describe the assembled output, not another copy.
+        for field in ["event_waves", "final_merge_comparisons"] {
+            let value = if report["query_workers"]["organization"] == "cell-run-events/v6" {
+                report["query_workers"]["stats"][field].as_u64()
+                    .ok_or_else(||format!("missing Cell event work {field}"))?
+            } else {0};
+            work.insert(format!("query_workers/stats/{field}"), value);
+        }
+        let indexed_tasks = matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v2" | "cell-run/v3" | "cell-run/v4" | "cell-run/v5" | "cell-run-events/v6"));
         for field in ["cell_task_probes", "cell_task_records", "cell_task_links", "cell_task_emissions",
             "cell_task_clears", "cell_task_growths", "cell_code_reads", "active_template_visits"] {
-            let value = if matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v4" | "cell-run/v5")) {
+            let value = if matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v4" | "cell-run/v5" | "cell-run-events/v6")) {
                 report["query_workers"]["stats"][field].as_u64()
                     .ok_or_else(|| format!("missing Cell activation task work {field}"))?
             } else { 0 };
             work.insert(format!("query_workers/stats/{field}"), value);
         }
         for field in ["frame_cache_borrows", "completion_headers", "completion_error_checks"] {
-            let value = if matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v3" | "cell-run/v4" | "cell-run/v5")) {
+            let value = if matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v3" | "cell-run/v4" | "cell-run/v5" | "cell-run-events/v6")) {
                 report["query_workers"]["stats"][field].as_u64()
                     .ok_or_else(|| format!("missing sparse completion work {field}"))?
             } else { 0 };
@@ -448,7 +510,7 @@ impl Work {
         ] {
             for field in fields {
                 let key = format!("query_workers/{group}/{field}");
-                let value = if report["query_workers"]["organization"] == "cell-run/v5" {
+                let value = if matches!(report["query_workers"]["organization"].as_str(), Some("cell-run/v5" | "cell-run-events/v6")) {
                     report.pointer(&format!("/{key}")).and_then(J::as_u64)
                         .ok_or_else(|| format!("missing Cell preparation work {key}"))?
                 } else { 0 };
@@ -675,7 +737,48 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     e.execute().unwrap();
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
-    assert_eq!(report["query_workers"]["organization"], "cell-run/v5");
+    assert_eq!(report["query_workers"]["organization"], "cell-run-events/v6");
+    // A current report must charge the new paths and reject missing evidence.
+    for (group, fields) in [
+        ("query_workers/stats", &["event_waves", "final_merge_comparisons"][..]),
+        ("query_workers/stats/execution/units", &["instances", "rows", "probes"]),
+        ("stats", &["unit_prepared_prefix_discarded", "unit_prepared_prefix_witness_discarded",
+            "unit_registry_batches", "unit_registry_candidates", "unit_registry_pool_calls",
+            "unit_registry_identity_rows", "unit_registry_key_candidates", "unit_registry_key_handles",
+            "unit_registry_field_handles", "unit_registry_decision_fragments", "unit_registry_subscription_tasks"]),
+        ("cell_execution/runtime/stats/births", &["execution_groups", "root_bucket_probes",
+            "root_jobs", "root_existing_key_fields", "root_boundary_probes", "unit_candidates"]),
+        ("cell_execution/runtime/stats/scheduler", &["event_waves", "admission_waves",
+            "admission_jobs", "admission_polls", "admission_dependency_probes"]),
+    ] {
+        for field in fields {
+            let path=format!("/{group}/{field}");
+            let mut changed=report.clone();
+            let value=changed.pointer_mut(&path).expect(&path);
+            *value=json!(value.as_u64().unwrap()+1);
+            assert_eq!(work.savings(&Work::read(&changed).unwrap()).0,-1,"{path}");
+            *changed.pointer_mut(&path).unwrap()=J::Null;
+            assert!(Work::read(&changed).is_err(),"{path}");
+        }
+    }
+    for (field,cost) in [("unit_prepared_consumed",1),("unit_prepared_stale",1),
+        ("unit_prepared_existing",2),("unit_prepared_witness_rejected",1)] {
+        let mut changed=report.clone();
+        changed["stats"][field]=json!(report["stats"][field].as_u64().unwrap()+1);
+        assert_eq!(work.savings(&Work::read(&changed).unwrap()).0,-cost,"{field}");
+        changed["stats"][field]=J::Null;
+        assert!(Work::read(&changed).is_err(),"{field}");
+    }
+    for path in ["/query_workers/stats/final_merge_worker_rows",
+        "/query_workers/stats/final_merge_inline_rows", "/query_workers/stats/event_wait_ns",
+        "/query_workers/stats/execution/units/prefix_rows",
+        "/query_workers/stats/execution/units/prefix_instances",
+        "/cell_execution/runtime/stats/births/unit_worker_rows"] {
+        let mut changed=report.clone();
+        let value=changed.pointer_mut(path).expect(path);
+        *value=json!(value.as_u64().unwrap()+1);
+        assert_eq!(work.savings(&Work::read(&changed).unwrap()).0,0,"{path}");
+    }
     for key in ["stats/constructor_prepared_checks", "stats/constructor_prepared_fields",
         "stats/constructor_prepared_certificates", "stats/constructor_prepared_liveness_checks", "stats/constructor_prepared_result_reads",
         "stage_spine/stats/preparation_handoff_checks", "stage_spine/stats/preparation_handoff_operations",

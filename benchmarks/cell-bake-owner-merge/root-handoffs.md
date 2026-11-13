@@ -34,20 +34,28 @@ pass3 performance or memory result.
 
 The compiler integration suite passed 19 tests, Entry publication passed 14,
 and matched handoffs passed five (including the no-useful-RHS negative case).
-Six runtime iterative library tests and the handoff example compile check also pass. Query receipts passed six tests and ripsat
-completion passed 22; one test in each suite stopped at the same existing
-measured-work schema mismatch. Current runtime emits
-`cell-constructor-preparation/v7` (`149f7ff9` introduced it), while
-`tools/cell-compiler/src/work_credit.rs` accepts only through v6. Neither of those
-schema paths changes in this patch. Those two tests invoke the compiler's
-measured-work CLI, so the full extended validation is **not green**. Do not
-advertise this change as enabling reliable current-runtime scoring yet.
+Six runtime iterative library tests and the handoff example compile check also pass.
+After the work-credit compatibility repair, query receipts pass 7/7 and ripsat
+completion passes 23/23 on the merged parallel-publication runtime. Matched
+handoffs pass 5/5 and parallel publication passes 2/2. These are standalone Cell
+CPU checks, not a new native egglog acceptance or performance measurement.
 
-The scoring fix must account for new Unit preparation and other newer work;
-simply accepting v7 while omitting its costs would make the credit misleading.
-This is the next prerequisite for installing and evaluating learned plans in the
-four real workloads. No four-workload catalog has been modified by this change,
-and no large Graph compression or stage-switch speedup is claimed.
+The scoring repair accepts the exact current constructor preparation v7, local
+births v4, completion-events v4 and query worker cell-run-events/v6 schemas.
+It charges Unit preparation, actual admission and witness checks, registry work,
+root preparation, scheduler admission/event work and final winner comparisons.
+Successful/failed admission outcomes enumerate actual checks; they earn no
+negative credit. Prefix subsets, final output rows, timing and bytes do not add
+another operation charge. Five work-credit tests pass, including counter
+perturbations that require each new operation to reduce savings, missing-field
+rejection, and checks that subsets do not count twice. The score remains an
+unweighted operation comparison, not a latency estimate or full heap account.
+
+No four-workload catalog has been modified by these changes, and no large Graph
+compression or stage-switch speedup is claimed. The next task is to install
+routes backed by the saved actual producer/result history and measure the
+removed runtime work and retained storage, rather than infer coverage from the
+number of compiled routes.
 
 ## Trace-to-plan boundary
 
