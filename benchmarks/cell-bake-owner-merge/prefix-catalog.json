@@ -1,0 +1,122 @@
+{
+  "scope": "Actual standalone Cell runtime; same binary, catalog-only ablation; no timing or memory claim",
+  "binary_sha256": "e1254216e471b42ba3b939bce1711c3616f281df48d481a0dd142e1e8524293f",
+  "cases": [
+    {
+      "case": "fact",
+      "runs": 418,
+      "all_saved_run_checks_equal": true,
+      "final_state": "d04728e6402e21992b9748a09ec99ace5f6639bc268ac5bcafbc24d0fd52f2f0",
+      "key_lookups_saved": 97,
+      "full_only": {
+        "program": "988aea3eb26346f22a4879ce958f7d77cfd11a65407389e6d60fa2c155dce056",
+        "recipes": 29,
+        "key_lookup_calls": 2794,
+        "route_probes": 258,
+        "route_accepted": 30,
+        "alternative_checks": 22,
+        "alternative_fields": 36,
+        "static_key_admissions": 1,
+        "compared_admissions": 12
+      },
+      "including_prefix": {
+        "program": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+        "recipes": 237,
+        "key_lookup_calls": 2697,
+        "route_probes": 472,
+        "route_accepted": 127,
+        "alternative_checks": 28,
+        "alternative_fields": 42,
+        "static_key_admissions": 16,
+        "compared_admissions": 16
+      }
+    },
+    {
+      "case": "loopfact",
+      "runs": 398,
+      "all_saved_run_checks_equal": true,
+      "final_state": "623c3b05d895a4200f8ea907ea4468a92a000c975f654483e54c42c96c90bf7a",
+      "key_lookups_saved": 65,
+      "full_only": {
+        "program": "d1ae9d2c8e82d7d1c0cadaf4718db81b0affde81794afe3318238156b47d8525",
+        "recipes": 24,
+        "key_lookup_calls": 2181,
+        "route_probes": 204,
+        "route_accepted": 17,
+        "alternative_checks": 13,
+        "alternative_fields": 20,
+        "static_key_admissions": 2,
+        "compared_admissions": 6
+      },
+      "including_prefix": {
+        "program": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+        "recipes": 224,
+        "key_lookup_calls": 2116,
+        "route_probes": 410,
+        "route_accepted": 82,
+        "alternative_checks": 19,
+        "alternative_fields": 34,
+        "static_key_admissions": 11,
+        "compared_admissions": 10
+      }
+    },
+    {
+      "case": "sum-bits",
+      "runs": 882,
+      "all_saved_run_checks_equal": true,
+      "final_state": "3bae7a5ad756595f8c454b27baabbf7e830cf06b61d6aa69c0f7437ee747ab2a",
+      "key_lookups_saved": 396,
+      "full_only": {
+        "program": "b460584e434a0b8eb73714a30e95a49339512730e0bb20e892a128350d39cf78",
+        "recipes": 90,
+        "key_lookup_calls": 12361,
+        "route_probes": 1649,
+        "route_accepted": 125,
+        "alternative_checks": 107,
+        "alternative_fields": 139,
+        "static_key_admissions": 15,
+        "compared_admissions": 21
+      },
+      "including_prefix": {
+        "program": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+        "recipes": 766,
+        "key_lookup_calls": 11965,
+        "route_probes": 4405,
+        "route_accepted": 521,
+        "alternative_checks": 414,
+        "alternative_fields": 539,
+        "static_key_admissions": 35,
+        "compared_admissions": 89
+      }
+    },
+    {
+      "case": "dot-product",
+      "runs": 954,
+      "all_saved_run_checks_equal": true,
+      "final_state": "191d2a4bd738e7afd0783d30b5d5c1f1219ac92887bb96b95239edfec27141d9",
+      "key_lookups_saved": 317,
+      "full_only": {
+        "program": "2ff2ca71c84dd350969f4d8a24cd5fc62b737ac02d3513e6512dd378085c960a",
+        "recipes": 79,
+        "key_lookup_calls": 9519,
+        "route_probes": 1988,
+        "route_accepted": 160,
+        "alternative_checks": 87,
+        "alternative_fields": 124,
+        "static_key_admissions": 47,
+        "compared_admissions": 19
+      },
+      "including_prefix": {
+        "program": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+        "recipes": 752,
+        "key_lookup_calls": 9202,
+        "route_probes": 3033,
+        "route_accepted": 477,
+        "alternative_checks": 366,
+        "alternative_fields": 463,
+        "static_key_admissions": 100,
+        "compared_admissions": 57
+      }
+    }
+  ]
+}

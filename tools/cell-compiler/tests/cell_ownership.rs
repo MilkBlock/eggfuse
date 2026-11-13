@@ -1893,3 +1893,37 @@ fn receipt_observer_distinguishes_constructor_results_from_site_addresses() {
     assert!(events.iter().any(|e|e["event"]["kind"]=="constructor" && e["event"]["created"]==false
         && e["event"]["site"]["cell"]!=e["event"]["witness"]["Fact"]["cell"]),"{trace}");
 }
+
+#[test]
+fn bake_retains_checked_constructor_prefix_before_an_uncovered_suffix() {
+    for suffix in ["(G x)", "(union x s)", "(delete (Pair s x))"] {
+    let source=format!("(datatype E (N i64) (Start E) (Pair E E) (G E))
+        (ruleset a) (ruleset b) (ruleset c)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((Pair s x)) ((Start x) {suffix}) :ruleset c)
+        (N 1) (N 2) (run a 1) (run b 1) (run c 1)");
+    let p=program(&source);
+    let mut g=Graph::new_with_local_congruence(p.clone()).unwrap();
+    g.trace_ownership_catalog(16).unwrap();
+    let mut control=Executor::new(g,true);control.execute().unwrap();
+    let trace=control.graph.ownership_catalog_trace().unwrap();
+    let recipes=trace["saturation"]["witness_recipes"].as_array().unwrap();
+    let partial=recipes.iter().filter(|r|r["coverage"]=="checked_prefix").cloned().collect::<Vec<_>>();
+    assert!(!partial.is_empty(),"{trace}");
+    for recipe in &partial {assert_eq!(recipe["rhs_sites"].as_array().unwrap().len(),1);}
+    let mut raw=p.artifact.clone();
+    raw["ownership_witnesses"]=json!({"source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),"recipes":partial});
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let mut candidate=Executor::new(Graph::new_with_local_congruence(Program::parse(raw).unwrap()).unwrap(),true);
+    candidate.execute().unwrap();
+    assert_eq!(candidate.graph.export().unwrap(),control.graph.export().unwrap());
+    assert_eq!(candidate.snapshots,control.snapshots);
+    assert_eq!(candidate.binding_audit,control.binding_audit);
+    assert!(candidate.graph.stats.constructor_cell_route_accepted>0);
+    assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
+    assert_eq!(candidate.graph.stats.logical_facts_created,control.graph.stats.logical_facts_created,
+        "uncovered effects must still execute: {suffix}");
+    }
+}

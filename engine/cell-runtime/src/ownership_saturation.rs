@@ -15,7 +15,7 @@ struct Counts {
 type Sites = Vec<(usize, usize, u32)>;
 #[derive(Default)]
 pub(super) struct Trace {
-    witnesses: BTreeMap<(usize, usize, Vec<usize>, Sites, Sites), u64>,
+    witnesses: BTreeMap<(usize, usize, Vec<usize>, Sites, Sites, bool), u64>,
     rows: BTreeMap<(usize, Option<usize>, bool, &'static str), Counts>,
     component_checks: u64,
     fact_checks: u64,
@@ -30,17 +30,17 @@ impl Trace {
                 "outcome":reason,"counts":counts})
             })
             .collect::<Vec<_>>();
-        let witnesses = self.witnesses.iter().map(|((rule,shape,codes,anchors,results),applications)|
+        let witnesses = self.witnesses.iter().map(|((rule,shape,codes,anchors,results,full),applications)|
             json!({"rule":rule,"shape":shape,"frame_codes":codes,"query_sites":anchors,"rhs_sites":results,
-                "applications":applications})).collect::<Vec<_>>();
+                "applications":applications,"coverage":if *full {"full_rhs"} else {"checked_prefix"}})).collect::<Vec<_>>();
         // Compatibility projection of the same recipes, not a second trace.
         let mut paths=BTreeMap::<(usize,usize,Sites,Sites),u64>::new();
-        for ((rule,shape,_,anchors,sites),applications) in &self.witnesses {
+        for ((rule,shape,_,anchors,sites,_),applications) in &self.witnesses {
             *paths.entry((*rule,*shape,sites.clone(),anchors.clone())).or_default()+=applications;
         }
         let paths=paths.into_iter().map(|((rule,shape,sites,anchors),applications)|json!({"rule":rule,"shape":shape,"constructor_positions":sites,"query_positions":anchors,"applications":applications})).collect::<Vec<_>>();
         json!({"rows":rows,"witness_recipes":witnesses,"witness_paths":paths,
-            "witness_path_scope":"projection of observed full RHS recipes; positions contain no instance IDs and do not alone prove executable replacement",
+            "witness_path_scope":"projection of observed full RHS and checked-prefix recipes; positions contain no instance IDs and do not alone prove executable replacement",
             "witness_contract":"positions are [query atom or RHS operation, component frame, fact operation]; only local matched receipts are listed; full query and dynamic key/visibility obligations remain authoritative; observations are not static proofs",
             "component_checks":self.component_checks,"fact_checks":self.fact_checks,
             "scope":"one observation per actual apply entry; rhs_covered means current matched RHS effects already witnessed inside one live Cell component",
@@ -81,7 +81,7 @@ impl Graph {
         let ops = &self.program.templates[rule.template].ops;
         let mut best = (None, false, "no_local_component", 0);
         let mut checks = 0;
-        let mut witness_recipe = None;
+        let mut witness_recipes = Vec::new();
         let mut fact_checks = 0;
         if pending_peers || !owner.pending.is_empty() {
             best.2 = "pending_completion";
@@ -124,19 +124,19 @@ impl Graph {
                 if best.0.is_none() || prefix > best.3 || reason == "rhs_covered" {
                     best = (Some(component.shape), cross, reason, prefix);
                 }
-                if reason == "rhs_covered" {
+                // The successfully checked prefix remains useful even when a
+                // later operation needs execution. Routes replace individual
+                // lookups; this never certifies the unobserved suffix.
+                if !results.is_empty() {
                     let anchors = (0..rule.query.len()).filter_map(|atom| {
                         let Dependency::Fact(f) = binding.known.receipt(atom)? else { return None; };
                         let frame = component.frames.iter().position(|id| *id == f.cell)?;
                         Some((atom, frame, f.op))
                     }).collect::<Sites>();
-                    // Input-only coverage has no constructor witness to compile.
-                    if !results.is_empty() {
-                        let codes = component.frames.iter().map(|id| owner.composition.frames[id].code).collect();
-                        witness_recipe = Some((rid, component.shape, codes, anchors, results));
-                    }
-                    break;
+                    let codes = component.frames.iter().map(|id| owner.composition.frames[id].code).collect();
+                    witness_recipes.push((rid, component.shape, codes, anchors, results, reason=="rhs_covered"));
                 }
+                if reason == "rhs_covered" { break; }
             }
         }
         let trace = &mut self
@@ -148,7 +148,7 @@ impl Graph {
             .as_mut()
             .unwrap()
             .saturation;
-        if let Some(recipe) = witness_recipe {
+        for recipe in witness_recipes {
             *trace.witnesses.entry(recipe).or_default() += 1;
         }
         trace.component_checks += checks;
