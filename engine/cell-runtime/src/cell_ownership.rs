@@ -276,6 +276,9 @@ struct Stats {
     composition_result_joins:u64,
     dual_route_probes:u64, dual_candidates:u64, dual_admissions:u64, dual_symbol_checks:u64, dual_source_moves:u64,
     dual_field_moves:u64, dual_temporary_bytes:u64, dual_bindings_retired:u64, dual_pending_skips:u64,
+    // Reasons overlap: a skipped apply may have several outstanding obligations.
+    dual_pending_fact_skips:u64, dual_pending_signal_skips:u64,
+    dual_frozen_skips:u64, dual_union_skips:u64, dual_dirty_skips:u64,
     composition_transition_probes: u64,
     composition_unbaked_fallbacks: u64,
     composition_cross_stage_joins: u64,

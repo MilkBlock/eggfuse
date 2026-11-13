@@ -17,6 +17,10 @@ def analyze(program, audit):
         raise ValueError('ambiguous completed Cell identity')
     routes = collections.defaultdict(list)
     for route in program['multi_stage']['routes']:
+        if 'residual' not in route:
+            covered = {route['anchor'], *(step['atom'] for step in route['steps'])}
+            width = len(program['recipe']['rules'][route['consumer']]['query'])
+            route = dict(route, residual=sorted(set(range(width)) - covered))
         routes[(route['producer'], route['effect'], route['consumer'])].append(route)
     counts = collections.Counter()
     pairs = collections.defaultdict(collections.Counter)

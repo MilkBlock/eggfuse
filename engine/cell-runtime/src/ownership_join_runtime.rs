@@ -10,6 +10,11 @@ impl Graph {
         let Some(m)=self.ownership.as_mut() else {return;};
         if !m.pending.is_empty() || !m.composition.heap.is_empty() || m.composition.components.is_frozen()
             || !self.pending_unions.is_empty() || !self.dirty.is_empty() {
+            m.stats.dual_pending_fact_skips+=u64::from(!m.pending.is_empty());
+            m.stats.dual_pending_signal_skips+=u64::from(!m.composition.heap.is_empty());
+            m.stats.dual_frozen_skips+=u64::from(m.composition.components.is_frozen());
+            m.stats.dual_union_skips+=u64::from(!self.pending_unions.is_empty());
+            m.stats.dual_dirty_skips+=u64::from(!self.dirty.is_empty());
             m.stats.dual_pending_skips+=1;return;
         }
         let mut candidates=smallvec::SmallVec::<[usize;4]>::new();

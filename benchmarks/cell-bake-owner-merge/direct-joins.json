@@ -1,0 +1,179 @@
+{
+  "scope": "actual standalone Cell runtime; rejected expansion of matched dual-source takeover; no timing claim",
+  "base_commit": "a628d566",
+  "source_program": "72b3d6cbdf65f124752f013a6cce043bda57d1e2ee48b781e37f5eea465e2dfe",
+  "trace_sha256": "5f967687fa427e68860bde0d0b08e48af27dc27f349cb767cf971c90aafc825d",
+  "trace_runs": 882,
+  "all_observer_run_checks_equal": true,
+  "baseline_graph_bytes": 1405919,
+  "baseline_program_bytes": 107446450,
+  "cases": {
+    "32": {
+      "selection": {
+        "source_program": "72b3d6cbdf65f124752f013a6cce043bda57d1e2ee48b781e37f5eea465e2dfe",
+        "candidate_program": "a2394b70482f67b3087d64e4971f59217cee8baa6673ea46afa574d418b2bc22",
+        "audited_runs": 882,
+        "trace_digest": "7cd7ae4ebd892665d7ac50ed99abc11b167355759d2ac6f94c79518c78593a30",
+        "typed_candidates": 1525,
+        "repeated_candidates": 593,
+        "budget": 32,
+        "existing_patterns": 0,
+        "added_patterns": 32,
+        "seed_transitions_preserved": true,
+        "scope": "typed matched-source takeover candidates; counts are not savings",
+        "obligations": "live anchors, current equalities, residual queries, pending work and source-local retirement remain runtime checks"
+      },
+      "memory_sha256": "b77d407986c3d7916805f44983ae27553a4319f88c5d761d8618300265c0d017",
+      "graph_bytes": 1403727,
+      "graph_saved": 2192,
+      "program_bytes": 107957791,
+      "program_added": 511341,
+      "process_peak": 113939884,
+      "components": 1540,
+      "signal_slots": 8229,
+      "frames_histogram": {
+        "1": 852,
+        "2": 644,
+        "4": 12,
+        "3": 32
+      },
+      "dual_work": {
+        "dual_route_probes": 373,
+        "dual_candidates": 48,
+        "dual_admissions": 48,
+        "dual_symbol_checks": 384,
+        "dual_source_moves": 63,
+        "dual_field_moves": 0,
+        "dual_temporary_bytes": 5376,
+        "dual_bindings_retired": 48,
+        "dual_pending_skips": 1218
+      },
+      "final_state_exact": true,
+      "candidate_full_run_checks": false
+    },
+    "128": {
+      "selection": {
+        "source_program": "72b3d6cbdf65f124752f013a6cce043bda57d1e2ee48b781e37f5eea465e2dfe",
+        "candidate_program": "93e419458fc747c39b89c761aee101eaebfb303a273c7c3a34f9ff3b5a6ec92a",
+        "audited_runs": 882,
+        "trace_digest": "7cd7ae4ebd892665d7ac50ed99abc11b167355759d2ac6f94c79518c78593a30",
+        "typed_candidates": 1525,
+        "repeated_candidates": 593,
+        "budget": 128,
+        "existing_patterns": 0,
+        "added_patterns": 128,
+        "seed_transitions_preserved": true,
+        "scope": "typed matched-source takeover candidates; counts are not savings",
+        "obligations": "live anchors, current equalities, residual queries, pending work and source-local retirement remain runtime checks"
+      },
+      "memory_sha256": "0e5f850faed1921c80a4e89aa5902e97385b91679dd4389548dd3b0f6b053e60",
+      "graph_bytes": 1403855,
+      "graph_saved": 2064,
+      "program_bytes": 109587999,
+      "program_added": 2141549,
+      "process_peak": 115569455,
+      "components": 1503,
+      "signal_slots": 8208,
+      "frames_histogram": {
+        "1": 845,
+        "2": 575,
+        "4": 44,
+        "3": 39
+      },
+      "dual_work": {
+        "dual_route_probes": 780,
+        "dual_candidates": 87,
+        "dual_admissions": 87,
+        "dual_symbol_checks": 955,
+        "dual_source_moves": 124,
+        "dual_field_moves": 0,
+        "dual_temporary_bytes": 13888,
+        "dual_bindings_retired": 87,
+        "dual_pending_skips": 1842
+      },
+      "final_state_exact": true,
+      "candidate_full_run_checks": false
+    },
+    "4096": {
+      "selection": {
+        "source_program": "72b3d6cbdf65f124752f013a6cce043bda57d1e2ee48b781e37f5eea465e2dfe",
+        "candidate_program": "c61a7cfae797a6aa7cf8eaa6df5df0cb4bee1694db0b33e6a43badd225cd27b0",
+        "audited_runs": 882,
+        "trace_digest": "7cd7ae4ebd892665d7ac50ed99abc11b167355759d2ac6f94c79518c78593a30",
+        "typed_candidates": 1525,
+        "repeated_candidates": 593,
+        "budget": 4096,
+        "existing_patterns": 0,
+        "added_patterns": 593,
+        "seed_transitions_preserved": true,
+        "scope": "typed matched-source takeover candidates; counts are not savings",
+        "obligations": "live anchors, current equalities, residual queries, pending work and source-local retirement remain runtime checks"
+      },
+      "memory_sha256": "ba0619f6ecb3b089807410de0e4db6576a65287bc6b874e65e09352b6ecf2f22",
+      "graph_bytes": 1399999,
+      "graph_saved": 5920,
+      "program_bytes": 116833504,
+      "program_added": 9387054,
+      "process_peak": 122811683,
+      "components": 1459,
+      "signal_slots": 8179,
+      "frames_histogram": {
+        "1": 826,
+        "3": 58,
+        "2": 502,
+        "4": 73
+      },
+      "dual_work": {
+        "dual_route_probes": 1386,
+        "dual_candidates": 135,
+        "dual_admissions": 135,
+        "dual_symbol_checks": 1537,
+        "dual_source_moves": 188,
+        "dual_field_moves": 0,
+        "dual_temporary_bytes": 22432,
+        "dual_bindings_retired": 135,
+        "dual_pending_skips": 1947
+      },
+      "final_state_exact": true,
+      "candidate_full_run_checks": false
+    }
+  },
+  "decision": "Do not replace the selected 256-path catalog: tiny Graph savings do not justify resident Program growth. Pending guards and one-binding takeovers need structural work before wider selection.",
+  "validation": {
+    "jobs": [
+      330,
+      332,
+      333,
+      336
+    ],
+    "selector_tests": 1,
+    "scope": "typed compilation plus exact final exports; only source observer, not expanded candidates, has fresh full Run audits",
+    "ownership_tests": 67
+  },
+  "remaining_obligations": [
+    "Do not remove global pending or frozen guards without proving address and epoch safety.",
+    "Do not treat observed match counts as committed writes or savings.",
+    "Source frames, fact identities, visibility, residual queries and effect order remain live."
+  ],
+  "guard_breakdown": {
+    "memory_sha256": "d15903860b52a1908356e5290d8da802a9093946c6d9da988389cd705635bbdc",
+    "counts": {
+      "dual_route_probes": 1386,
+      "dual_candidates": 135,
+      "dual_admissions": 135,
+      "dual_symbol_checks": 1537,
+      "dual_source_moves": 188,
+      "dual_field_moves": 0,
+      "dual_temporary_bytes": 22432,
+      "dual_bindings_retired": 135,
+      "dual_pending_skips": 1947,
+      "dual_pending_fact_skips": 0,
+      "dual_pending_signal_skips": 0,
+      "dual_frozen_skips": 0,
+      "dual_union_skips": 1947,
+      "dual_dirty_skips": 0
+    },
+    "logical_state_run_sequence_final_export_and_graph_fields_unchanged": true,
+    "reasons_may_overlap": true
+  }
+}

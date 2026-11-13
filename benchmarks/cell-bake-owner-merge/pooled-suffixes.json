@@ -1,0 +1,78 @@
+{
+  "scope": "actual standalone Cell runtime; physical suffix pooling, not timing or additional logical composition",
+  "base_commit": "6be77d9c",
+  "binary_sha256": "80cf39b6b6e94854213bf1070e09fc71fc349b807db3ef385d112f516bebd53e",
+  "cases": {
+    "seed": {
+      "program_sha256": "62911e0ab8e5fc31728b022c9adb23aee211839950f58ff743cf3be73edd89da",
+      "before_report_sha256": "27c4187685dfdb679b1bf8bf3044497dcb50d88e27e9f52d48cab2a0efcd00df",
+      "after_report_sha256": "a9cbe0a2f43bc1f0f84cbd054eac096b3df3b39b4bab6818c0ad8c5a56b54aa6",
+      "graph_before": 1545531,
+      "graph_after": 1545531,
+      "program_bytes": 105884383,
+      "owners_before": 306,
+      "owners_after": 306,
+      "takeover_peak_extra_before": 11376,
+      "takeover_peak_extra_after": 11376,
+      "execution_peak_before": 112008121,
+      "execution_peak_after": 112008115,
+      "logical_components_and_query_work_unchanged": true,
+      "run_sequence_and_final_export_unchanged": true
+    },
+    "budget128": {
+      "program_sha256": "93199f7f56ef4a9f2d3f82428b9cb34bc973d3e4f63251908b93327131bc0be4",
+      "before_report_sha256": "f12f7af42170ffefaeaa8411249e832b2bdf4c466199cf0252393ebb50700901",
+      "after_report_sha256": "c18cc766b3236191eeb3e16118625dd7d52eb0eae8b1a1483afd502db7861ab6",
+      "graph_before": 1448995,
+      "graph_after": 1408207,
+      "program_bytes": 106675058,
+      "owners_before": 768,
+      "owners_after": 305,
+      "takeover_peak_extra_before": 16244,
+      "takeover_peak_extra_after": 11376,
+      "execution_peak_before": 112702184,
+      "execution_peak_after": 112661390,
+      "logical_components_and_query_work_unchanged": true,
+      "run_sequence_and_final_export_unchanged": true
+    },
+    "budget256": {
+      "program_sha256": "72b3d6cbdf65f124752f013a6cce043bda57d1e2ee48b781e37f5eea465e2dfe",
+      "before_report_sha256": "8b85b989a17dc1755edea94cf8e6a46a828a3b2ac1069e9186f6e78fad54e421",
+      "after_report_sha256": "480631ce9f24da9da8982248fb415c37724d819e17b1ac0f2938c22b5befe968",
+      "graph_before": 1457431,
+      "graph_after": 1405919,
+      "program_bytes": 107446450,
+      "owners_before": 825,
+      "owners_after": 305,
+      "takeover_peak_extra_before": 11376,
+      "takeover_peak_extra_after": 11376,
+      "execution_peak_before": 113482268,
+      "execution_peak_after": 113430750,
+      "logical_components_and_query_work_unchanged": true,
+      "run_sequence_and_final_export_unchanged": true
+    }
+  },
+  "validation": {
+    "ownership_tests": 67,
+    "jobs": [
+      324,
+      325,
+      326,
+      328
+    ],
+    "full_workload_per_run_check": {
+      "runs": 882,
+      "status": "pass",
+      "report_sha256": "9aeaf6a8131a59716ea50bb3b73fdd16a185435289f21a284f5b2da1d9903b5a"
+    },
+    "native_final_state": {
+      "status": "pass",
+      "report_sha256": "107438ef63ad7bb3b8c544c6619575a23813f6ab4c78aff186e93bd99d145976"
+    }
+  },
+  "limitations": [
+    "The Cell fields reduction removes physical owner duplication, not additional facts or logical components.",
+    "No timing claim.",
+    "Best Graph remains above the 30% target; additional Bake Program memory remains resident."
+  ]
+}

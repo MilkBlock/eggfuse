@@ -82,11 +82,63 @@ fn aliased_route_still_rejects_forged_exported_source_slots() {
     let mut raw = p.artifact;
     let step = raw["multi_stage"]["routes"].as_array_mut().unwrap().iter_mut()
         .flat_map(|route| route["steps"].as_array_mut().unwrap())
-        .find(|step| step["assignments"].as_array().is_some_and(|a| !a.is_empty())).unwrap();
-    step["assignments"][0][1] = serde_json::json!({"Slot":999999});
+        .find(|step| step["source_kind"]=="effect").unwrap();
+    assert!(step.get("assignments").is_none(),"new artifacts derive assignments from Cell operands");
+    // Old artifacts may still carry explicit wiring. Such annotations remain
+    // checked even though new artifacts no longer duplicate them.
+    step["assignments"] = serde_json::json!([[0,{"Slot":999999}]]);
     raw.as_object_mut().unwrap().remove("sha256");
     raw["sha256"] = artifact_digest(&raw).into();
     assert!(matches!(Program::parse(raw), Err(e) if e.contains("invalid producer slot wiring")));
+}
+
+#[test]
+fn routes_share_the_same_producer_site_operands() {
+    let source=fixture::aliased_source(SOURCE).replace("(run-schedule",
+        "(rule ((B x n) (= a (A x)) (Edge x y)) ((Keep a)) :ruleset consume :name \"other-consumer\")\n(run-schedule");
+    let p = program(&source);
+    let mut sites = std::collections::BTreeMap::new();
+    let mut reused = 0;
+    for raw in p.artifact["multi_stage"]["routes"].as_array().unwrap() {
+        let n = |key:&str|raw[key].as_u64().unwrap() as usize;
+        let producer=n("producer");
+        let route=p.multi_stage.routes.get(&(p.rules[producer].template,n("effect"),n("consumer"),n("anchor"))).unwrap();
+        for (step,read) in raw["steps"].as_array().unwrap().iter().zip(&route.reads) {
+            let key=(producer,step["source_kind"].as_str().unwrap(),step["source_index"].as_u64().unwrap());
+            if let Some(previous)=sites.insert(key,read.columns.clone()) {
+                assert!(std::rc::Rc::ptr_eq(&previous,&read.columns));
+                reused+=1;
+            }
+        }
+    }
+    assert!(reused>0,"fixture must exercise operand definitions shared by multiple routes");
+}
+
+#[test]
+fn derived_residuals_accept_valid_old_annotations_and_reject_forged_ones() {
+    let p = program(&fixture::aliased_source(SOURCE));
+    let mut raw = p.artifact.clone();
+    let routes = raw["multi_stage"]["routes"].as_array_mut().unwrap();
+    assert!(!routes.is_empty());
+    for route in routes.iter_mut() {
+        assert!(route.get("residual").is_none());
+        let consumer = route["consumer"].as_u64().unwrap() as usize;
+        let mut covered = std::collections::BTreeSet::from([route["anchor"].as_u64().unwrap() as usize]);
+        covered.extend(route["steps"].as_array().unwrap().iter().map(|s|s["atom"].as_u64().unwrap() as usize));
+        route["residual"] = serde_json::json!((0..p.rules[consumer].query.len())
+            .filter(|i|!covered.contains(i)).collect::<Vec<_>>());
+    }
+    let digest = |raw:&mut serde_json::Value| {
+        raw.as_object_mut().unwrap().remove("sha256");
+        raw["sha256"] = artifact_digest(raw).into();
+    };
+    digest(&mut raw);
+    Program::parse(raw.clone()).unwrap();
+    let first = &mut raw["multi_stage"]["routes"][0];
+    let anchor = first["anchor"].clone();
+    first["residual"].as_array_mut().unwrap().push(anchor);
+    digest(&mut raw);
+    assert!(matches!(Program::parse(raw), Err(e) if e.contains("continuation residual domain differs")));
 }
 
 #[test]

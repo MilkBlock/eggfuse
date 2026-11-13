@@ -190,6 +190,17 @@ impl Cells {
         // surrounding composed Cell already has an admitted completed segment.
         self.transfer_segment(&added,1).then_some((added.len(),owners.len()))
     }
+    /// A shared physical prefix cannot be flattened without moving unrelated
+    /// sources. Its new suffix can instead join the ordinary bounded slab batch.
+    /// Read the existing directory only; retain no component/owner reverse map.
+    pub(crate) fn completed_owner_has_external_sources(&self,ids:&[u32])->bool {
+        ids.iter().filter_map(|&id|self.completed_index(id)).any(|index| {
+            let owner=self.completed.frames[index].owner;
+            let included=ids.iter().filter_map(|&id|self.completed_index(id))
+                .filter(|&i|self.completed.frames[i].owner==owner).count();
+            included<self.completed.owners[owner].frames
+        })
+    }
     /// Extend one proved component's storage with later completed stages. All
     /// members of any old owner must participate, so no omitted slice loses its
     /// backing allocation. Logical IDs and metadata are preserved verbatim.

@@ -1,0 +1,96 @@
+{
+  "scope": "actual standalone Cell runtime; derive redundant route annotations, share producer Site operands, remove unread assignments",
+  "base_commit": "d911ff49",
+  "candidate_binary_sha256": "e29f15851937dff277ab8c1ca2eb1a80286c0436f0fbc087ed65451b7508a7b5",
+  "artifact_delta_only_derived_route_annotations": true,
+  "plain_routes_preserved": 11113,
+  "lanes": {
+    "plain": {
+      "control_report_sha256": "45cb5673aa528e9f2e0701e449e354de00c833f2ebdeeb087360f33bd023cd92",
+      "candidate_report_sha256": "27c4187685dfdb679b1bf8bf3044497dcb50d88e27e9f52d48cab2a0efcd00df",
+      "graph_bytes": 1545531,
+      "runs": 882,
+      "run_sequence_and_final_export_exact": true,
+      "program_before": 150970020,
+      "program_after": 105884383,
+      "program_field_deltas": {
+        "multi_stage": -3991568,
+        "artifact": -41094069
+      },
+      "process_peak_before": 157093655,
+      "process_peak_after": 112008121
+    },
+    "old_marked": {
+      "control_report_sha256": "09e08a8ca83ecfc0e6f5f8da91aafadcd134e895526497e71adb4915feecc1d7",
+      "candidate_report_sha256": "b5355c3fb4498ccfb7f67fa4be939b5a90e46a118981491064ecfc8043bc66da",
+      "graph_bytes": 2038485,
+      "runs": 1428,
+      "run_sequence_and_final_export_exact": true,
+      "program_before": 115168530,
+      "program_after": 113576794,
+      "program_field_deltas": {
+        "multi_stage": -1591736
+      },
+      "process_peak_before": 122484796,
+      "process_peak_after": 120893159
+    }
+  },
+  "fair_compact_wire_comparison": {
+    "marked_route_audit": {
+      "preserved_compiler_components": [
+        "cell_execution",
+        "context_cuts",
+        "contract",
+        "entry_schedule",
+        "free_join_entry",
+        "initial",
+        "known_results",
+        "local_contexts",
+        "marker_tables",
+        "merge_contracts",
+        "merge_programs",
+        "neighbor_entries",
+        "physical_plan",
+        "recipe",
+        "repair_ports",
+        "requirements",
+        "row_kernels",
+        "schema",
+        "single_writes",
+        "source_core",
+        "templates",
+        "view_consumer_blocks"
+      ],
+      "program_sha256": "83941e9ce71be76fa23d200daf0f53d9234004186e1e730ca181500ec8722134",
+      "routes_after": 6825,
+      "routes_before": 6825,
+      "scope": "same source, recipe and Bake decisions; only route compilation changed; not a speed measurement",
+      "status": "pass"
+    },
+    "marked_report_sha256": "89daef84a9bcc54aefcf73adebb6222bba42e3655e1a39e1f4d5b8a627efc291",
+    "marked_program_bytes": 104176676,
+    "plain_program_bytes": 105884383,
+    "marked_graph_bytes": 2040453,
+    "plain_graph_bytes": 1545531,
+    "marked_process_peak": 111469561,
+    "plain_process_peak": 112008121
+  },
+  "validation": {
+    "library_tests": 18,
+    "compiler_integration_tests": 19,
+    "witness_tests": 13,
+    "route_analyzer_tests": 4,
+    "jobs": [
+      305,
+      309,
+      311,
+      312
+    ],
+    "limitations": [
+      "Full-workload per-Run graph equivalence was not rerun; sequence/counters and final exports unchanged.",
+      "Graph bytes are unchanged by route-plan compression.",
+      "Direct queries still retain more Program memory than equally compact marked queries; default marker policy unchanged.",
+      "30% Graph and saturated-stage RHS goals remain unfinished."
+    ]
+  }
+}

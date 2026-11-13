@@ -15,6 +15,16 @@ def fixture(effect=3, residual=()):
 
 
 class RouteTests(unittest.TestCase):
+    def test_compact_routes_derive_residual_from_consumer_query(self):
+        p, a = fixture()
+        route = p['multi_stage']['routes'][0]
+        del route['residual']
+        route.update(anchor=0, steps=[dict(atom=1)])
+        p['recipe'] = dict(rules=[dict(query=[])]*5+[dict(query=[{},{}])])
+        self.assertEqual(analyze(p,a)['counts']['exact_effect_entry_without_residual'],1)
+        p['recipe']['rules'][5]['query'].append({})
+        self.assertEqual(analyze(p,a)['counts']['exact_effect_entry_without_residual'],0)
+
     def test_physical_owner_not_last_reuser(self):
         r = analyze(*fixture())
         self.assertEqual(r['counts']['exact_effect_entry_without_residual'], 1)
