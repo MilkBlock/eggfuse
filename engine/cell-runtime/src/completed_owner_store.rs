@@ -3,6 +3,8 @@
 use super::*;
 use crate::{slots::ReadSlots,value::Value};
 use std::ops::Range;
+use std::sync::Arc;
+use std::collections::HashSet;
 #[path="completed_fact_storage.rs"]
 mod fact_storage;
 use fact_storage::Facts;
@@ -13,12 +15,19 @@ pub(super) struct Frame {
     pub id:u32,
     pub owner:usize,
     pub meta:Metadata,
-    pub slots:Range<usize>,
-    pub facts:Range<usize>,
+    layout:Arc<Layout>,
+    slot_start:usize,
+    fact_start:usize,
+}
+/// Sparse operation/slot positions only; no values, Eq proofs or lifecycle.
+#[derive(Hash,PartialEq,Eq)]
+struct Layout {slots:Box<[usize]>,ops:Box<[u32]>}
+impl Frame {
+    fn slots(&self)->Range<usize> {self.slot_start..self.slot_start+self.layout.slots.len()}
 }
 pub(super) struct Owner {
     pub frames:usize,
-    pub slots:Box<[(usize,Value)]>,
+    pub slots:Box<[Value]>,
     facts:Facts,
 }
 #[derive(Default,serde::Serialize)]
@@ -39,11 +48,35 @@ pub(super) struct Completed {
     pub owners:Vec<Owner>,
     pub representation_fallbacks:u64,
     restorations:[Restoration;3],
+    layouts:HashSet<Arc<Layout>>,
+    layout_checks:u64,
+    layout_reuses:u64,
 }
-pub(crate) struct Slots<'a>(pub &'a [(usize,Value)]);
+impl Completed {
+    fn layout(&mut self,slots:Vec<usize>,ops:Vec<u32>)->Arc<Layout> {
+        self.layout_checks+=1;
+        let layout=Layout{slots:slots.into_boxed_slice(),ops:ops.into_boxed_slice()};
+        if let Some(shared)=self.layouts.get(&layout) {self.layout_reuses+=1;return shared.clone();}
+        let layout=Arc::new(layout);self.layouts.insert(layout.clone());layout
+    }
+    fn release_layout(&mut self,layout:Arc<Layout>) {
+        if Arc::strong_count(&layout)==2 {self.layouts.remove(&layout);}
+    }
+    fn layout_bytes(&self)->usize {
+        self.layouts.capacity()*std::mem::size_of::<Arc<Layout>>()
+            +self.layouts.iter().map(|l|std::mem::size_of::<Layout>()+2*std::mem::size_of::<usize>()
+                +std::mem::size_of_val(l.slots.as_ref())+std::mem::size_of_val(l.ops.as_ref())).sum::<usize>()
+    }
+}
+pub(crate) struct Slots<'a> {positions:&'a [usize], values:&'a [Value]}
+impl Slots<'_> {
+    pub(crate) fn len(&self)->usize {self.values.len()}
+    #[cfg(test)]
+    pub(crate) fn as_ptr(&self)->*const Value {self.values.as_ptr()}
+}
 impl ReadSlots for Slots<'_> {
     fn get(&self, slot:&usize)->Option<&Value> {
-        Some(&self.0[self.0.binary_search_by_key(slot,|p|p.0).ok()?].1)
+        self.values.get(self.positions.binary_search(slot).ok()?)
     }
 }
 // Both directories survive many Runs. Bound unused capacity in either one:
@@ -67,15 +100,15 @@ impl Cells {
     }
     pub(crate) fn completed_slots(&self,id:u32)->Option<Slots<'_>> {
         let f=self.completed.frames.get(self.completed_index(id)?)?;
-        Some(Slots(&self.completed.owners[f.owner].slots[f.slots.clone()]))
+        Some(Slots{positions:&f.layout.slots,values:&self.completed.owners[f.owner].slots[f.slots()]})
     }
     pub(crate) fn completed_facts(&self,id:u32)->Option<fact_storage::View<'_>> {
         let f=self.completed.frames.get(self.completed_index(id)?)?;
-        Some(self.completed.owners[f.owner].facts.view(f.facts.clone(),f.meta.started_epoch))
+        Some(self.completed.owners[f.owner].facts.view(f.fact_start,&f.layout.ops,f.meta.started_epoch))
     }
     pub(crate) fn take_completed_fact(&mut self,f:super::super::FactRef)->Option<OwnedFact> {
         let frame=&self.completed.frames[self.completed_index(f.cell)?];
-        self.completed.owners[frame.owner].facts.take(frame.facts.clone(),frame.meta.started_epoch,f.op)
+        self.completed.owners[frame.owner].facts.take(frame.fact_start,&frame.layout.ops,frame.meta.started_epoch,f.op)
     }
     /// Called only for checked completed sources, at an idle Run boundary.
     /// Reject the whole group before moving any source frame.
@@ -106,12 +139,14 @@ impl Cells {
         for &id in ids {
             let c=self.remove(&id).unwrap();
             let meta=Metadata::from(&c);
-            let start=values.len();values.extend(c.values.into_unshared().unwrap());
-            let first=states.len();
-            for (op,s) in c.facts {states.push(op,Some(OwnedFact::checked(&s).expect("checked owner fact")),meta.started_epoch);}
+            let slot_start=values.len();let fact_start=states.len();
+            let mut slots=Vec::new();let mut ops=Vec::new();
+            for (slot,value) in c.values.into_unshared().unwrap() {slots.push(slot);values.push(value);}
+            for (op,state) in c.facts {ops.push(op);states.push(Some(OwnedFact::checked(&state).expect("checked owner fact")),meta.started_epoch);}
+            let layout=self.completed.layout(slots,ops);
             let position=u32::try_from(self.completed.frames.len()+1).unwrap();
             assert!(position<COMPLETED);
-            self.completed.frames.push(Frame{id,owner,meta,slots:start..values.len(),facts:first..states.len()});
+            self.completed.frames.push(Frame{id,owner,meta,layout,slot_start,fact_start});
             self.positions[id as usize]=COMPLETED|position;
         }
         let facts=states.finish();
@@ -164,33 +199,38 @@ impl Cells {
         for &id in ids {
             if let Some(i)=self.completed_index(id) {
                 let f=&self.completed.frames[i];let o=&self.completed.owners[f.owner];
-                slot_count+=f.slots.len();
-                fact_count+=o.facts.view(f.facts.clone(),f.meta.started_epoch).iter().count();
+                slot_count+=f.layout.slots.len();
+                fact_count+=o.facts.view(f.fact_start,&f.layout.ops,f.meta.started_epoch).iter().count();
             } else {let c=self.get(&id).unwrap();slot_count+=c.values.len();fact_count+=c.facts.len();}
         }
         let mut values=Vec::with_capacity(slot_count);let mut facts=Facts::builder(fact_count);
         let mut moved_slots=0;let mut moved_facts=0;
         for &id in ids {
-            let first_slot=values.len();let first_fact=facts.len();
+            let slot_start=values.len();let fact_start=facts.len();
+            let mut slots=Vec::new();let mut ops=Vec::new();
             if let Some(i)=self.completed_index(id) {
-                let frame=&mut self.completed.frames[i];
+                let frame=&self.completed.frames[i];
                 let owner=&mut self.completed.owners[frame.owner];
-                for (slot,value) in &mut owner.slots[frame.slots.clone()] {
-                    values.push((*slot,std::mem::replace(value,Value::Int(0))));moved_slots+=1;
+                for (slot,value) in frame.layout.slots.iter().zip(&mut owner.slots[frame.slots()]) {
+                    slots.push(*slot);values.push(std::mem::replace(value,Value::Int(0)));moved_slots+=1;
                 }
-                for i in frame.facts.clone() {
-                    if let Some(state)=owner.facts.take_at(i,frame.meta.started_epoch) {
-                        facts.push(owner.facts.op(i),Some(state),frame.meta.started_epoch);moved_facts+=1;
+                for (offset,op) in frame.layout.ops.iter().enumerate() {
+                    if let Some(state)=owner.facts.take_at(frame.fact_start+offset,frame.meta.started_epoch) {
+                        ops.push(*op);facts.push(Some(state),frame.meta.started_epoch);moved_facts+=1;
                     }
                 }
-                frame.owner=destination;frame.slots=first_slot..values.len();frame.facts=first_fact..facts.len();
+                let layout=self.completed.layout(slots,ops);
+                let frame=&mut self.completed.frames[i];
+                let old=std::mem::replace(&mut frame.layout,layout);
+                frame.owner=destination;frame.slot_start=slot_start;frame.fact_start=fact_start;
+                self.completed.release_layout(old);
             } else {
                 let c=self.remove(&id).unwrap();let meta=Metadata::from(&c);
-                values.extend(c.values.into_unshared().unwrap());
-                for (op,s) in c.facts {facts.push(op,Some(OwnedFact::checked(&s).expect("checked owner fact")),meta.started_epoch);}
+                for (slot,value) in c.values.into_unshared().unwrap() {slots.push(slot);values.push(value);}
+                for (op,state) in c.facts {ops.push(op);facts.push(Some(OwnedFact::checked(&state).expect("checked owner fact")),meta.started_epoch);}
+                let layout=self.completed.layout(slots,ops);
                 let index=self.completed.frames.len();
-                self.completed.frames.push(Frame{id,owner:destination,meta,
-                    slots:first_slot..values.len(),facts:first_fact..facts.len()});
+                self.completed.frames.push(Frame{id,owner:destination,meta,layout,slot_start,fact_start});
                 self.positions[id as usize]=COMPLETED|(index as u32+1);
             }
         }
@@ -208,10 +248,10 @@ impl Cells {
         let frame=&self.completed.frames[index];
         let meta=frame.meta;
         let owner=&mut self.completed.owners[frame.owner];
-        let values=owner.slots[frame.slots.clone()].iter_mut()
+        let values=frame.layout.slots.iter().zip(owner.slots[frame.slots()].iter_mut())
             .map(|(s,v)|(*s,std::mem::replace(v,Value::Int(0)))).collect();
-        let facts=frame.facts.clone().filter_map(|i| {
-            Some((owner.facts.op(i),owner.facts.take_at(i,meta.started_epoch)?.restore()))
+        let facts=frame.layout.ops.iter().enumerate().filter_map(|(offset,op)| {
+            Some((*op,owner.facts.take_at(frame.fact_start+offset,meta.started_epoch)?.restore()))
         }).collect();
         self.retire_completed(id);
         let cell=Cell{template:meta.template,started_epoch:meta.started_epoch,
@@ -236,7 +276,7 @@ impl Cells {
     pub(crate) fn write_completed_fact(&mut self,f:super::super::FactRef,state:super::super::FactState) {
         if let Some(compact)=OwnedFact::checked(&state) {
             let frame=&self.completed.frames[self.completed_index(f.cell).expect("live completed writer")];
-            self.completed.owners[frame.owner].facts.write(frame.facts.clone(),frame.meta.started_epoch,f.op,compact);
+            self.completed.owners[frame.owner].facts.write(frame.fact_start,&frame.layout.ops,frame.meta.started_epoch,f.op,compact);
         } else {
             let mut cell=self.unseal_completed(f.cell,RestoreCause::Representation).expect("exceptional completed writer");
             *cell.facts.get_mut(&f.op).expect("live completed fact")=state;
@@ -254,6 +294,7 @@ impl Cells {
         let owner=&mut self.completed.owners[removed.owner];
         owner.frames-=1;
         if owner.frames==0 {owner.slots=Box::default();owner.facts=Facts::default();}
+        self.completed.release_layout(removed.layout);
         true
     }
     pub(crate) fn completed_profile(&self)->serde_json::Value {
@@ -267,7 +308,7 @@ impl Cells {
         }
         for owner in self.completed.owners.iter().filter(|o|o.frames>0) {*widths.entry(owner.frames).or_default()+=1;}
         let slots=self.completed.owners.iter().map(|o|o.slots.len()).sum::<usize>();
-        let live_slots=self.completed.frames.iter().map(|f|f.slots.len()).sum::<usize>();
+        let live_slots=self.completed.frames.iter().map(|f|f.layout.slots.len()).sum::<usize>();
         serde_json::json!({"source_records":self.records.len(),"owned_fact_bytes":std::mem::size_of::<OwnedFact>(),
             "restoration":{"events":self.completed.restorations.iter().map(|s|s.events).sum::<u64>(),
                 "slots":self.completed.restorations.iter().map(|s|s.restored_slots).sum::<u64>(),
@@ -278,7 +319,9 @@ impl Cells {
                 "scalar_provider":self.completed.restorations[0],
                 "component_retirement":self.completed.restorations[1],"representation":self.completed.restorations[2],
                 "scope":"restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"},
-            "fact_storage_encoding":"stage-inherited rows with per-fact lifecycle exceptions",
+            "fact_storage_encoding":"shared sparse membership; instance hashes and lifecycle exceptions",
+            "shared_membership_layouts":self.completed.layouts.len(),"layout_checks":self.completed.layout_checks,
+            "layout_reuses":self.completed.layout_reuses,"layout_estimated_bytes":self.completed.layout_bytes(),
             "owner_grouping":"physical arrays may span logical components; source frames restore independently",
             "fact_storage_live_bytes":self.completed_live_fact_bytes(),
             "representation_fallbacks":self.completed.representation_fallbacks,"completed_frames":self.completed.frames.len(),
@@ -295,7 +338,7 @@ impl Cells {
     }
     pub(crate) fn completed_storage(&self)->(usize,usize,usize,usize) {
         (self.completed.frames.capacity()*std::mem::size_of::<Frame>()
-            +self.completed.owners.capacity()*std::mem::size_of::<Owner>(),
+            +self.completed.owners.capacity()*std::mem::size_of::<Owner>()+self.completed.layout_bytes(),
          self.completed.owners.iter().map(|o|std::mem::size_of_val(o.slots.as_ref())).sum(),
          self.completed.owners.iter().map(|o|o.facts.bytes()).sum(),
          self.completed.frames.len())

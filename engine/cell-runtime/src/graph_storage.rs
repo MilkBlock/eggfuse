@@ -183,7 +183,7 @@ impl Graph {
             "members_array_bytes":member_arrays,"members_tree_entries":member_tree_entries,
             "origin_tables":origin_tables,"union_find":self.parents.storage_payload(),"writer_bytes":writers,"writer_count":writer_count,
             "accounting_note":"HashMap capacities measure entry payload only, not buckets/control allocation; estimates are separate from counted array bytes",
-            "parent_links":self.cells.values().filter(|c|c.parent.is_some()).count(),"delegated_cell_frames":self.cells.values().filter(|c| c.symbolic_slots).count(),"explicit_cell_slots":self.cells.values().map(|c|c.values.len()).sum::<usize>()+self.cells.completed_ids().map(|id|self.cells.completed_slots(id).unwrap().0.len()).sum::<usize>(),
+            "parent_links":self.cells.values().filter(|c|c.parent.is_some()).count(),"delegated_cell_frames":self.cells.values().filter(|c| c.symbolic_slots).count(),"explicit_cell_slots":self.cells.values().map(|c|c.values.len()).sum::<usize>()+self.cells.completed_ids().map(|id|self.cells.completed_slots(id).unwrap().len()).sum::<usize>(),
             "fact_lifecycle":self.fact_lifecycle_trace(),"completed_owners":self.cells.completed_profile(),"cell_records_bytes":records,"completed_owner_records_bytes":completed_records,"completed_owner_frames":completed_frames,"cell_positions_bytes":positions,"id_outliers":outliers,
             "cell_slot_bytes":slots,"shared_slot_owners":frames.len(),"removal_entries":removals,
             "fact_record_capacity_bytes":facts,"fact_record_live_bytes":(fact_count-owned_fact_count)*std::mem::size_of::<(u32,FactState)>()
