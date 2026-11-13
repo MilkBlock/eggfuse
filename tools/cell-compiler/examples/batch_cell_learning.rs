@@ -155,10 +155,19 @@ fn main()->Result<()> {
                     "completion_batches":target.graph.completion_batch_report(),
                     "stable_ports":target.graph.stable_port_report(),
                     "final_state":artifact_digest(&target.graph.export()?)}));
+                if a.get(3).is_some_and(|a|a=="witness-trace") {
+                    let report=reports.last_mut().unwrap();
+                    let saturation=report["catalog_trace"]["saturation"].take();
+                    report["catalog_trace"]=json!({"saturation":saturation});
+                    for field in ["source_storage","stable_ports","completion_batches"] {report.as_object_mut().unwrap().remove(field);}
+                    let tmp=dir.join("witness-checked.json.tmp");
+                    write(&tmp,report)?;
+                    fs::rename(tmp,dir.join("witness-checked.json"))?;
+                }
                 eprintln!("checked {name}: {} Runs",checks.len());
             }
         }
-        write(variant.join(if a[0]=="apply-passive" {"compiled.json"} else {"checked.json"}),&json!({"cases":reports}))?;
+        write(variant.join(if a[0]=="apply-passive" {"compiled.json"} else if a.get(3).is_some_and(|a|a=="witness-trace") {"witness-checked.json"} else {"checked.json"}),&json!({"cases":reports}))?;
     } else if a[0]=="verify" || a[0]=="observe" {
         let observe=a[0]=="observe";
         let root=Path::new(&a[1]);let manifest=read(root.join("manifest.json"))?;

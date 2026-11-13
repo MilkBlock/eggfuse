@@ -1,0 +1,5149 @@
+{
+  "scope": "Observed shape-relative RHS constructor witnesses; not a static proof or saved-work claim",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "runs": 418,
+      "all_saved_run_checks_equal": true,
+      "paths": 29,
+      "rule_shape_groups": 20,
+      "multi_path_groups": 5,
+      "applications": 57,
+      "constructor_positions_weighted": 75,
+      "ranked_paths": [
+        {
+          "rule": 88,
+          "shape": 671,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Bop _op _x _y)))\n      ((BodyContainsExpr body _x)\n       (BodyContainsExpr body _y))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 88,
+          "shape": 759,
+          "constructor_positions": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              4,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Bop _op _x _y)))\n      ((BodyContainsExpr body _x)\n       (BodyContainsExpr body _y))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 647,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 5,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 484,
+          "shape": 765,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 4,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 58,
+          "shape": 350,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 671,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 758,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 758,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 759,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 759,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 759,
+          "constructor_positions": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 469,
+          "shape": 785,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 469,
+          "shape": 785,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              3,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 469,
+          "shape": 785,
+          "constructor_positions": [
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              2,
+              3
+            ],
+            [
+              4,
+              2,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 469,
+          "shape": 785,
+          "constructor_positions": [
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              2,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 777,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 484,
+          "shape": 763,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "constructor_positions": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              3,
+              3
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 510,
+          "shape": 637,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Bop op e1 e2))\n       (bop-of-type op ty)\n       (bop->string op op-str))\n      ((ExpectType e1 ty op-str)\n       (ExpectType e2 ty op-str))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 512,
+          "shape": 637,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Bop pred e1 e2))\n       (bpred-of-type pred ty)\n       (bop->string pred pred-str))\n      ((ExpectType e1 ty pred-str)\n       (ExpectType e2 ty pred-str))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "constructor_positions": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "constructor_positions": [
+            [
+              0,
+              6,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              4,
+              3
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 476,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              2,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 645,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 648,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 92,
+          "shape": 667,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Single _x)))\n      ((BodyContainsExpr body _x))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 278,
+          "shape": 627,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              6
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= (TCPair t1 c1) (ExtractedExpr e1))\n       (ContextOf e1 ctx1))\n      ((ExtractedExprCache t1 e1 ctx1))\n        :ruleset cicm-index )",
+          "ruleset": "cicm-index"
+        }
+      ]
+    },
+    {
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "runs": 398,
+      "all_saved_run_checks_equal": true,
+      "paths": 24,
+      "rule_shape_groups": 17,
+      "multi_path_groups": 5,
+      "applications": 30,
+      "constructor_positions_weighted": 39,
+      "ranked_paths": [
+        {
+          "rule": 469,
+          "shape": 786,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 469,
+          "shape": 786,
+          "constructor_positions": [
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              2,
+              3
+            ],
+            [
+              4,
+              2,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 777,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 840,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              6
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 484,
+          "shape": 765,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 751,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 752,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 510,
+          "shape": 637,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Bop op e1 e2))\n       (bop-of-type op ty)\n       (bop->string op op-str))\n      ((ExpectType e1 ty op-str)\n       (ExpectType e2 ty op-str))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 58,
+          "shape": 378,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 492,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              8,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 492,
+          "constructor_positions": [
+            [
+              0,
+              4,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              9,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 645,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 646,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 663,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 663,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "constructor_positions": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "constructor_positions": [
+            [
+              0,
+              5,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 671,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 92,
+          "shape": 665,
+          "constructor_positions": [
+            [
+              0,
+              4,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              5,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Single _x)))\n      ((BodyContainsExpr body _x))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 484,
+          "shape": 763,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        }
+      ]
+    },
+    {
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "runs": 882,
+      "all_saved_run_checks_equal": true,
+      "paths": 90,
+      "rule_shape_groups": 65,
+      "multi_path_groups": 20,
+      "applications": 179,
+      "constructor_positions_weighted": 217,
+      "ranked_paths": [
+        {
+          "rule": 90,
+          "shape": 654,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 10,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 10,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 64,
+          "shape": 466,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              11
+            ]
+          ],
+          "applications": 8,
+          "rule_name": "(rule ((= lhs (Top a b c d)))\n      ((Not-Just-Concat lhs))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 484,
+          "shape": 763,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 8,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 88,
+          "shape": 670,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Bop _op _x _y)))\n      ((BodyContainsExpr body _x)\n       (BodyContainsExpr body _y))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 751,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 6,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 391,
+          "shape": 139,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              2,
+              0,
+              1
+            ]
+          ],
+          "applications": 6,
+          "rule_name": "(rule ((= lhs (Concat _x _y))\n       (ExprIsResolved _x)\n       (ExprIsResolved _y))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )",
+          "ruleset": "is-resolved"
+        },
+        {
+          "rule": 470,
+          "shape": 847,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              8
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 848,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              8
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 510,
+          "shape": 637,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              1,
+              2
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((= lhs (Bop op e1 e2))\n       (bop-of-type op ty)\n       (bop->string op op-str))\n      ((ExpectType e1 ty op-str)\n       (ExpectType e2 ty op-str))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 90,
+          "shape": 647,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 5,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 752,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 4,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 91,
+          "shape": 755,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Concat _x _y)))\n      ((BodyContainsExpr body _x)\n       (BodyContainsExpr body _y))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 124,
+          "shape": 877,
+          "constructor_positions": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              7,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Get tup i)\n       (ContextOf tup ctx))\n      ((ContextOf (Get tup i) ctx))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 124,
+          "shape": 877,
+          "constructor_positions": [
+            [
+              0,
+              9,
+              1
+            ],
+            [
+              1,
+              6,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              9,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Get tup i)\n       (ContextOf tup ctx))\n      ((ContextOf (Get tup i) ctx))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 387,
+          "shape": 141,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              3,
+              0,
+              1
+            ]
+          ],
+          "applications": 4,
+          "rule_name": "(rule ((= lhs (Top _op _x _y _z))\n       (ExprIsResolved _x)\n       (ExprIsResolved _y)\n       (ExprIsResolved _z))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )",
+          "ruleset": "is-resolved"
+        },
+        {
+          "rule": 484,
+          "shape": 765,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 4,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 489,
+          "shape": 586,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              4
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 4,
+          "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e2 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 510,
+          "shape": 637,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop op e1 e2))\n       (bop-of-type op ty)\n       (bop->string op op-str))\n      ((ExpectType e1 ty op-str)\n       (ExpectType e2 ty op-str))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 87,
+          "shape": 671,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Top _op _x _y _z)))\n      ((BodyContainsExpr body _x)\n       (BodyContainsExpr body _y)\n       (BodyContainsExpr body _z))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 755,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 469,
+          "shape": 788,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 469,
+          "shape": 788,
+          "constructor_positions": [
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              2,
+              3
+            ],
+            [
+              4,
+              2,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 777,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 780,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 840,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              6
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 58,
+          "shape": 350,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "constructor_positions": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              4,
+              3
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "constructor_positions": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              14,
+              3
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "constructor_positions": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              3,
+              3
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 88,
+          "shape": 671,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Bop _op _x _y)))\n      ((BodyContainsExpr body _x)\n       (BodyContainsExpr body _y))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 88,
+          "shape": 753,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Bop _op _x _y)))\n      ((BodyContainsExpr body _x)\n       (BodyContainsExpr body _y))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 647,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 658,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              5,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 658,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              5,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 659,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 659,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              5,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 659,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 659,
+          "constructor_positions": [
+            [
+              0,
+              4,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 753,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 755,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 92,
+          "shape": 755,
+          "constructor_positions": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body (Single _x)))\n      ((BodyContainsExpr body _x))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 124,
+          "shape": 867,
+          "constructor_positions": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              6,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get tup i)\n       (ContextOf tup ctx))\n      ((ContextOf (Get tup i) ctx))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 278,
+          "shape": 714,
+          "constructor_positions": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= (TCPair t1 c1) (ExtractedExpr e1))\n       (ContextOf e1 ctx1))\n      ((ExtractedExprCache t1 e1 ctx1))\n        :ruleset cicm-index )",
+          "ruleset": "cicm-index"
+        },
+        {
+          "rule": 480,
+          "shape": 556,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              3
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop @_2 a b))\n       (HasArgType b ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 480,
+          "shape": 597,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              4
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop @_2 a b))\n       (HasArgType b ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 484,
+          "shape": 764,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 508,
+          "shape": 305,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              0,
+              3
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Top (Select ) pred v1 v2))\n       (HasType v1 ty)\n       (HasType v2 ty))\n      ((HasType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 512,
+          "shape": 637,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Bop pred e1 e2))\n       (bpred-of-type pred ty)\n       (bop->string pred pred-str))\n      ((ExpectType e1 ty pred-str)\n       (ExpectType e2 ty pred-str))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 58,
+          "shape": 378,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 393,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "constructor_positions": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "constructor_positions": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "constructor_positions": [
+            [
+              0,
+              6,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "constructor_positions": [
+            [
+              0,
+              6,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              4,
+              3
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 476,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              2,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 492,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              8,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 492,
+          "constructor_positions": [
+            [
+              0,
+              4,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              9,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 645,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 646,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 652,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 652,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 671,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 671,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 753,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 761,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 92,
+          "shape": 647,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Single _x)))\n      ((BodyContainsExpr body _x))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 92,
+          "shape": 753,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Single _x)))\n      ((BodyContainsExpr body _x))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 278,
+          "shape": 627,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              6
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= (TCPair t1 c1) (ExtractedExpr e1))\n       (ContextOf e1 ctx1))\n      ((ExtractedExprCache t1 e1 ctx1))\n        :ruleset cicm-index )",
+          "ruleset": "cicm-index"
+        },
+        {
+          "rule": 391,
+          "shape": 217,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              2,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Concat _x _y))\n       (ExprIsResolved _x)\n       (ExprIsResolved _y))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )",
+          "ruleset": "is-resolved"
+        },
+        {
+          "rule": 452,
+          "shape": 586,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (TermSubst ctx e1 term))\n       (HasArgType e1 ty))\n      ((HasArgType lhs ty))\n        :ruleset term-subst )",
+          "ruleset": "term-subst"
+        },
+        {
+          "rule": 452,
+          "shape": 676,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (TermSubst ctx e1 term))\n       (HasArgType e1 ty))\n      ((HasArgType lhs ty))\n        :ruleset term-subst )",
+          "ruleset": "term-subst"
+        },
+        {
+          "rule": 482,
+          "shape": 797,
+          "constructor_positions": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Top @_4 a b c))\n       (HasArgType b ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 482,
+          "shape": 797,
+          "constructor_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Top @_4 a b c))\n       (HasArgType b ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 482,
+          "shape": 798,
+          "constructor_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Top @_4 a b c))\n       (HasArgType b ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 482,
+          "shape": 798,
+          "constructor_positions": [
+            [
+              1,
+              5,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              5,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Top @_4 a b c))\n       (HasArgType b ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 483,
+          "shape": 797,
+          "constructor_positions": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Top @_5 a b c))\n       (HasArgType c ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 483,
+          "shape": 797,
+          "constructor_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Top @_5 a b c))\n       (HasArgType c ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 483,
+          "shape": 798,
+          "constructor_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Top @_5 a b c))\n       (HasArgType c ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 483,
+          "shape": 798,
+          "constructor_positions": [
+            [
+              1,
+              5,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              5,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Top @_5 a b c))\n       (HasArgType c ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 488,
+          "shape": 676,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e1 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 488,
+          "shape": 764,
+          "constructor_positions": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e1 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 489,
+          "shape": 548,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              3
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e2 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 489,
+          "shape": 586,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              4
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e2 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 489,
+          "shape": 676,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e2 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 489,
+          "shape": 678,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e2 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 489,
+          "shape": 678,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e2 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 489,
+          "shape": 764,
+          "constructor_positions": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e2 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 508,
+          "shape": 702,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              0,
+              3
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Top (Select ) pred v1 v2))\n       (HasType v1 ty)\n       (HasType v2 ty))\n      ((HasType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 508,
+          "shape": 703,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              0,
+              3
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Top (Select ) pred v1 v2))\n       (HasType v1 ty)\n       (HasType v2 ty))\n      ((HasType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        }
+      ]
+    },
+    {
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "runs": 954,
+      "all_saved_run_checks_equal": true,
+      "paths": 79,
+      "rule_shape_groups": 58,
+      "multi_path_groups": 16,
+      "applications": 165,
+      "constructor_positions_weighted": 207,
+      "ranked_paths": [
+        {
+          "rule": 413,
+          "shape": 829,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "applications": 13,
+          "rule_name": "(rule ((NoAlias x y))\n      ((NoAlias y x))\n        :ruleset mem-simple )",
+          "ruleset": "mem-simple"
+        },
+        {
+          "rule": 413,
+          "shape": 580,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 10,
+          "rule_name": "(rule ((NoAlias x y))\n      ((NoAlias y x))\n        :ruleset mem-simple )",
+          "ruleset": "mem-simple"
+        },
+        {
+          "rule": 470,
+          "shape": 424,
+          "constructor_positions": [
+            [
+              2,
+              9,
+              2
+            ],
+            [
+              3,
+              9,
+              3
+            ],
+            [
+              4,
+              9,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 484,
+          "shape": 763,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 9,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 122,
+          "shape": 594,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              4
+            ],
+            [
+              1,
+              6,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              4
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((Bop op x y)\n       (ContextOf y ctx))\n      ((ContextOf (Bop op x y) ctx))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 470,
+          "shape": 778,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 778,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              2,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 801,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 90,
+          "shape": 751,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 5,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 752,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 4,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 116,
+          "shape": 891,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              4
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              1,
+              4
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Const c ty ctx))\n      ((ContextOf (Const c ty ctx) ctx))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 124,
+          "shape": 880,
+          "constructor_positions": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              7,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Get tup i)\n       (ContextOf tup ctx))\n      ((ContextOf (Get tup i) ctx))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 124,
+          "shape": 883,
+          "constructor_positions": [
+            [
+              0,
+              9,
+              1
+            ],
+            [
+              1,
+              6,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              9,
+              1
+            ],
+            [
+              1,
+              13,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Get tup i)\n       (ContextOf tup ctx))\n      ((ContextOf (Get tup i) ctx))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 257,
+          "shape": 367,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 4,
+          "rule_name": "(rule ((BodyContainsExpr body expr)\n       (= loop (DoWhile in body))\n       (= expr (Get _tup _i))\n       (is-inv-Expr body _tup))\n      ((is-inv-Expr body expr))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 510,
+          "shape": 637,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop op e1 e2))\n       (bop-of-type op ty)\n       (bop->string op op-str))\n      ((ExpectType e1 ty op-str)\n       (ExpectType e2 ty op-str))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 258,
+          "shape": 403,
+          "constructor_positions": [
+            [
+              2,
+              5,
+              2
+            ]
+          ],
+          "query_positions": [
+            [
+              3,
+              4,
+              2
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body expr)\n       (= loop (DoWhile in body))\n       (= expr (Concat _x _y))\n       (is-inv-Expr body _x)\n       (is-inv-Expr body _y))\n      ((is-inv-Expr body expr))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 259,
+          "shape": 402,
+          "constructor_positions": [
+            [
+              2,
+              4,
+              2
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((BodyContainsExpr body expr)\n       (= loop (DoWhile in body))\n       (= expr (Single _x))\n       (is-inv-Expr body _x))\n      ((is-inv-Expr body expr))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 413,
+          "shape": 833,
+          "constructor_positions": [
+            [
+              0,
+              5,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              6,
+              0
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((NoAlias x y))\n      ((NoAlias y x))\n        :ruleset mem-simple )",
+          "ruleset": "mem-simple"
+        },
+        {
+          "rule": 469,
+          "shape": 788,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 469,
+          "shape": 788,
+          "constructor_positions": [
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              2,
+              3
+            ],
+            [
+              4,
+              2,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 469,
+          "shape": 788,
+          "constructor_positions": [
+            [
+              2,
+              3,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              3,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get tup i))\n       (= (TCPair t1 c1) (ExtractedExpr tup)))\n      ((PotentialExtractedExpr lhs (TCPair (TermGet t1 i) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 448,
+          "constructor_positions": [
+            [
+              2,
+              10,
+              2
+            ],
+            [
+              3,
+              10,
+              3
+            ],
+            [
+              4,
+              10,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 777,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 470,
+          "shape": 779,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Single e1))\n       (= (TCPair t1 c1) (ExtractedExpr e1)))\n      ((PotentialExtractedExpr lhs (TCPair (TermSingle t1) c1)))\n        :ruleset terms )",
+          "ruleset": "terms"
+        },
+        {
+          "rule": 480,
+          "shape": 589,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              4
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((= lhs (Bop @_2 a b))\n       (HasArgType b ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 484,
+          "shape": 765,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 489,
+          "shape": 677,
+          "constructor_positions": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 3,
+          "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e2 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "constructor_positions": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              4,
+              3
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "constructor_positions": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              14,
+              3
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 65,
+          "shape": 596,
+          "constructor_positions": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              4
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop a b c)))\n      ((Not-Just-Concat lhs))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 88,
+          "shape": 672,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Bop _op _x _y)))\n      ((BodyContainsExpr body _x)\n       (BodyContainsExpr body _y))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 252,
+          "shape": 367,
+          "constructor_positions": [
+            [
+              3,
+              1,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body expr)\n       (= loop (DoWhile in body))\n       (= expr (Get (Arg ty ctx) i))\n       (= expr (Get body (+ i 1))))\n      ((is-inv-Expr body expr))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 257,
+          "shape": 368,
+          "constructor_positions": [
+            [
+              2,
+              1,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((BodyContainsExpr body expr)\n       (= loop (DoWhile in body))\n       (= expr (Get _tup _i))\n       (is-inv-Expr body _tup))\n      ((is-inv-Expr body expr))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 388,
+          "shape": 49,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop _op _x _y))\n       (ExprIsResolved _x)\n       (ExprIsResolved _y))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )",
+          "ruleset": "is-resolved"
+        },
+        {
+          "rule": 388,
+          "shape": 49,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              2,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop _op _x _y))\n       (ExprIsResolved _x)\n       (ExprIsResolved _y))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )",
+          "ruleset": "is-resolved"
+        },
+        {
+          "rule": 388,
+          "shape": 215,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop _op _x _y))\n       (ExprIsResolved _x)\n       (ExprIsResolved _y))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )",
+          "ruleset": "is-resolved"
+        },
+        {
+          "rule": 388,
+          "shape": 215,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              2,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop _op _x _y))\n       (ExprIsResolved _x)\n       (ExprIsResolved _y))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )",
+          "ruleset": "is-resolved"
+        },
+        {
+          "rule": 409,
+          "shape": 832,
+          "constructor_positions": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              4,
+              3,
+              5
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= p1 (Bop (PtrAdd ) p i))\n       (= p2 (Bop (PtrAdd ) p (Bop (Add ) i diff)))\n       (= (lo-bound diff) (IntB lo))\n       (> lo 0))\n      ((NoAlias p1 p2))\n        :ruleset mem-simple )",
+          "ruleset": "mem-simple"
+        },
+        {
+          "rule": 413,
+          "shape": 836,
+          "constructor_positions": [
+            [
+              0,
+              4,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((NoAlias x y))\n      ((NoAlias y x))\n        :ruleset mem-simple )",
+          "ruleset": "mem-simple"
+        },
+        {
+          "rule": 479,
+          "shape": 245,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop @_1 a b))\n       (HasArgType a ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 479,
+          "shape": 290,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              4
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop @_1 a b))\n       (HasArgType a ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 480,
+          "shape": 245,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop @_2 a b))\n       (HasArgType b ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 480,
+          "shape": 290,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              4
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              4
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop @_2 a b))\n       (HasArgType b ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 484,
+          "shape": 684,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 509,
+          "shape": 290,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              2,
+              0,
+              3
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop op e1 e2))\n       (bop-of-type op ty)\n       (HasType e1 ty)\n       (HasType e2 ty))\n      ((HasType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 509,
+          "shape": 290,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              3,
+              0,
+              3
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop op e1 e2))\n       (bop-of-type op ty)\n       (HasType e1 ty)\n       (HasType e2 ty))\n      ((HasType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 509,
+          "shape": 299,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              2,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop op e1 e2))\n       (bop-of-type op ty)\n       (HasType e1 ty)\n       (HasType e2 ty))\n      ((HasType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 509,
+          "shape": 299,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              3,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "rule_name": "(rule ((= lhs (Bop op e1 e2))\n       (bop-of-type op ty)\n       (HasType e1 ty)\n       (HasType e2 ty))\n      ((HasType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 58,
+          "shape": 378,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 396,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "constructor_positions": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 645,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 647,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 652,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 652,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 663,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 663,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              4,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "constructor_positions": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 752,
+          "constructor_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 90,
+          "shape": 761,
+          "constructor_positions": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Get _tup _i)))\n      ((BodyContainsExpr body _tup))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 92,
+          "shape": 752,
+          "constructor_positions": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Single _x)))\n      ((BodyContainsExpr body _x))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 92,
+          "shape": 752,
+          "constructor_positions": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body (Single _x)))\n      ((BodyContainsExpr body _x))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 252,
+          "shape": 368,
+          "constructor_positions": [
+            [
+              3,
+              1,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((BodyContainsExpr body expr)\n       (= loop (DoWhile in body))\n       (= expr (Get (Arg ty ctx) i))\n       (= expr (Get body (+ i 1))))\n      ((is-inv-Expr body expr))\n        :ruleset always-run )",
+          "ruleset": "always-run"
+        },
+        {
+          "rule": 278,
+          "shape": 470,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              2
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= (TCPair t1 c1) (ExtractedExpr e1))\n       (ContextOf e1 ctx1))\n      ((ExtractedExprCache t1 e1 ctx1))\n        :ruleset cicm-index )",
+          "ruleset": "cicm-index"
+        },
+        {
+          "rule": 278,
+          "shape": 890,
+          "constructor_positions": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              6
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= (TCPair t1 c1) (ExtractedExpr e1))\n       (ContextOf e1 ctx1))\n      ((ExtractedExprCache t1 e1 ctx1))\n        :ruleset cicm-index )",
+          "ruleset": "cicm-index"
+        },
+        {
+          "rule": 409,
+          "shape": 832,
+          "constructor_positions": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              3,
+              3,
+              4
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= p1 (Bop (PtrAdd ) p i))\n       (= p2 (Bop (PtrAdd ) p (Bop (Add ) i diff)))\n       (= (lo-bound diff) (IntB lo))\n       (> lo 0))\n      ((NoAlias p1 p2))\n        :ruleset mem-simple )",
+          "ruleset": "mem-simple"
+        },
+        {
+          "rule": 409,
+          "shape": 832,
+          "constructor_positions": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              3,
+              3,
+              4
+            ],
+            [
+              4,
+              3,
+              5
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= p1 (Bop (PtrAdd ) p i))\n       (= p2 (Bop (PtrAdd ) p (Bop (Add ) i diff)))\n       (= (lo-bound diff) (IntB lo))\n       (> lo 0))\n      ((NoAlias p1 p2))\n        :ruleset mem-simple )",
+          "ruleset": "mem-simple"
+        },
+        {
+          "rule": 409,
+          "shape": 835,
+          "constructor_positions": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              3,
+              3,
+              4
+            ],
+            [
+              4,
+              3,
+              5
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= p1 (Bop (PtrAdd ) p i))\n       (= p2 (Bop (PtrAdd ) p (Bop (Add ) i diff)))\n       (= (lo-bound diff) (IntB lo))\n       (> lo 0))\n      ((NoAlias p1 p2))\n        :ruleset mem-simple )",
+          "ruleset": "mem-simple"
+        },
+        {
+          "rule": 409,
+          "shape": 835,
+          "constructor_positions": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              4,
+              3,
+              5
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= p1 (Bop (PtrAdd ) p i))\n       (= p2 (Bop (PtrAdd ) p (Bop (Add ) i diff)))\n       (= (lo-bound diff) (IntB lo))\n       (> lo 0))\n      ((NoAlias p1 p2))\n        :ruleset mem-simple )",
+          "ruleset": "mem-simple"
+        },
+        {
+          "rule": 409,
+          "shape": 836,
+          "constructor_positions": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "query_positions": [
+            [
+              3,
+              3,
+              4
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= p1 (Bop (PtrAdd ) p i))\n       (= p2 (Bop (PtrAdd ) p (Bop (Add ) i diff)))\n       (= (lo-bound diff) (IntB lo))\n       (> lo 0))\n      ((NoAlias p1 p2))\n        :ruleset mem-simple )",
+          "ruleset": "mem-simple"
+        },
+        {
+          "rule": 479,
+          "shape": 684,
+          "constructor_positions": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Bop @_1 a b))\n       (HasArgType a ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 484,
+          "shape": 764,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 484,
+          "shape": 764,
+          "constructor_positions": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Get e @_6))\n       (HasArgType e ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        },
+        {
+          "rule": 488,
+          "shape": 625,
+          "constructor_positions": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "query_positions": [
+            [
+              0,
+              0,
+              6
+            ]
+          ],
+          "applications": 1,
+          "rule_name": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e1 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+          "ruleset": "type-analysis"
+        }
+      ]
+    }
+  ]
+}

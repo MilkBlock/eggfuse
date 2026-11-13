@@ -376,3 +376,31 @@ no ranked-path results or successful end-to-end replay are claimed. Two complete
 local test executables were removed to reclaim build space; source files, saved
 traces and benchmark evidence were retained. A fresh replay/output validation is
 still required before using the new witness-path data for compilation.
+
+## Query anchors and durable observation output
+
+Witness paths now include query positions `(query atom, source frame ordinal,
+source operation)` in the same component. They are part of the aggregation key;
+no runtime instance IDs are pooled. These anchors identify how an existing query
+receipt can locate the component before selecting a constructor candidate.
+
+Witness mode saves only saturation evidence, atomically checkpoints each case to
+`CASE/witness-checked.json`, and writes the aggregate to `witness-checked.json`.
+Ordinary `checked.json` is no longer overwritten by this mode. The two observer
+regression tests pass, including relative query-anchor coordinates.
+
+A concrete ambiguity is already present in the sum-bits trace: rule 90,
+`BodyContainsExpr(body, Get(tup, i)) -> BodyContainsExpr(body, tup)`, shape 654,
+query anchor `(1,2,0)`, has witnessed targets `(0,0,0)` and `(0,1,0)`, each observed
+10 times. Thus even the same rule/shape/query-position tuple cannot select one
+fixed target. Different matched bindings can require different witnesses. Bake
+must retain a small typed candidate set and prove or check the remaining argument
+correspondence; it must not choose a target solely by historical frequency.
+
+Fresh replay completed successfully: 2,652 Run checks and all terminal checks
+pass, with a 711 KiB aggregate. Fact/loopfact/sum-bits/dot-product produced
+29/24/90/79 observed anchored paths, covering 57/30/179/165 applications.
+Their rule/shape groups include 5/5/20/16 groups with multiple paths (which may
+also have different query anchors). Full ranked evidence is saved in
+`witness-path-results.json`. Weighted constructor-position counts are
+75/39/217/207, including already static aliases; these are not saved operations.

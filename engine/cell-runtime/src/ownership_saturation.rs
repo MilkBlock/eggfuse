@@ -14,7 +14,7 @@ struct Counts {
 #[derive(Default)]
 pub(super) struct Trace {
     rows: BTreeMap<(usize, Option<usize>, bool, &'static str), Counts>,
-    witness_paths: BTreeMap<(usize, usize, Vec<(usize, usize, u32)>), u64>,
+    witness_paths: BTreeMap<(usize, usize, Vec<(usize, usize, u32)>, Vec<(usize, usize, u32)>), u64>,
     component_checks: u64,
     fact_checks: u64,
 }
@@ -28,7 +28,7 @@ impl Trace {
                 "outcome":reason,"counts":counts})
             })
             .collect::<Vec<_>>();
-        let paths=self.witness_paths.iter().map(|((rule,shape,path),applications)|json!({"rule":rule,"shape":shape,"constructor_positions":path,"applications":applications})).collect::<Vec<_>>();
+        let paths=self.witness_paths.iter().map(|((rule,shape,path,anchors),applications)|json!({"rule":rule,"shape":shape,"constructor_positions":path,"query_positions":anchors,"applications":applications})).collect::<Vec<_>>();
         json!({"rows":rows,"witness_paths":paths,"witness_path_scope":"observed full RHS coverage; tuples are RHS operation, shape frame ordinal, source operation; no instance IDs or executable proof","component_checks":self.component_checks,"fact_checks":self.fact_checks,
             "scope":"one observation per actual apply entry; rhs_covered means current matched RHS effects already witnessed inside one live Cell component",
             "limitations":"not a saturation certificate for all matches; query elimination, delta ownership, audit replacement and future invalidation still require compilation; unsupported effects are not skippable; no saved work claimed"})
@@ -68,6 +68,7 @@ impl Graph {
         let ops = &self.program.templates[rule.template].ops;
         let mut best = (None, false, "no_local_component", 0);
         let mut best_path=Vec::new();
+        let mut best_anchors=Vec::new();
         let mut checks = 0;
         let mut fact_checks = 0;
         if pending_peers || !owner.pending.is_empty() {
@@ -111,6 +112,11 @@ impl Graph {
                 if best.0.is_none() || prefix > best.3 || reason == "rhs_covered" {
                     best = (Some(component.shape), cross, reason, prefix);
                     best_path=path;
+                    best_anchors=(0..rule.query.len()).filter_map(|atom| {
+                        let Dependency::Fact(f)=binding.known.receipt(atom)? else {return None;};
+                        let frame=owner.composition.frames.get(&f.cell)?;
+                        (frame.component==id).then_some((atom,frame.ordinal,f.op))
+                    }).collect();
                 }
                 if reason == "rhs_covered" {
                     break;
@@ -127,7 +133,7 @@ impl Graph {
             .unwrap()
             .saturation;
         if best.2=="rhs_covered" && !best_path.is_empty() {
-            *trace.witness_paths.entry((rid,best.0.expect("covered component"),best_path)).or_default()+=1;
+            *trace.witness_paths.entry((rid,best.0.expect("covered component"),best_path,best_anchors)).or_default()+=1;
         }
         trace.component_checks += checks;
         trace.fact_checks += fact_checks;
