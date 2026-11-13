@@ -1,0 +1,379 @@
+{
+  "hints_fit": {
+    "scope": "head-only ridge fit with static Bake hints; state predictor unchanged",
+    "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "base_model_sha256": "9a5d9fecaef54033533042abcff2a18b21159d59545184eedea953bfcfe98ddf",
+    "model": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113/models/corpus-ridge-bake-stop.npz",
+    "model_sha256": "bf5bd7085c0866c9c7f362d03cc8b2a3c3e5cf7994433b0c8cbd49a4cdaac4c7",
+    "fit": {
+      "alpha": 1.0,
+      "validation_target_mse": 0.007830002345144749
+    },
+    "backpropagation": false,
+    "features": [
+      "has_output_ports",
+      "log_output_port_count",
+      "output_energy",
+      "output_rms",
+      "bounded_output_energy",
+      "has_direct_union",
+      "log_direct_union_count",
+      "direct_union_difference_energy"
+    ],
+    "reports": {
+      "train": {
+        "initial": {
+          "cases": 1880,
+          "positive": 1693,
+          "false_emissions": 0,
+          "missed_emissions": 19
+        },
+        "completed": {
+          "cases": 1880,
+          "positive": 0,
+          "false_emissions": 0,
+          "missed_emissions": 0
+        },
+        "identity": {
+          "cases": 1880,
+          "positive": 0,
+          "false_emissions": 0,
+          "missed_emissions": 0
+        }
+      },
+      "validation": {
+        "initial": {
+          "cases": 736,
+          "positive": 675,
+          "false_emissions": 0,
+          "missed_emissions": 8
+        },
+        "completed": {
+          "cases": 736,
+          "positive": 0,
+          "false_emissions": 2,
+          "missed_emissions": 0
+        },
+        "identity": {
+          "cases": 736,
+          "positive": 0,
+          "false_emissions": 0,
+          "missed_emissions": 0
+        }
+      },
+      "test": {
+        "initial": {
+          "cases": 850,
+          "positive": 779,
+          "false_emissions": 0,
+          "missed_emissions": 11
+        },
+        "completed": {
+          "cases": 850,
+          "positive": 0,
+          "false_emissions": 2,
+          "missed_emissions": 0
+        },
+        "identity": {
+          "cases": 850,
+          "positive": 0,
+          "false_emissions": 0,
+          "missed_emissions": 0
+        }
+      }
+    },
+    "limitations": [
+      "Output layout comes from the supported finite Bake catalog",
+      "Feature energy is not an equality or existence proof",
+      "Repeated free GPU inference must be evaluated separately",
+      "No full ruleset, source-stage or ownership guarantee"
+    ]
+  },
+  "control_fit": {
+    "scope": "head-only ridge fit with static Bake hints; state predictor unchanged",
+    "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "base_model_sha256": "9a5d9fecaef54033533042abcff2a18b21159d59545184eedea953bfcfe98ddf",
+    "model": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113/models/corpus-ridge-head-only.npz",
+    "model_sha256": "d996df84a5b66c28af566e45acc238458aa150eefdb4a0f53626c05dc18a08fa",
+    "fit": {
+      "alpha": 1.0,
+      "validation_target_mse": 0.043316710740327835
+    },
+    "stop_hints_active": false,
+    "backpropagation": false,
+    "features": [
+      "has_output_ports",
+      "log_output_port_count",
+      "output_energy",
+      "output_rms",
+      "bounded_output_energy",
+      "has_direct_union",
+      "log_direct_union_count",
+      "direct_union_difference_energy"
+    ],
+    "reports": {
+      "train": {
+        "initial": {
+          "cases": 1880,
+          "positive": 1693,
+          "false_emissions": 3,
+          "missed_emissions": 67
+        },
+        "completed": {
+          "cases": 1880,
+          "positive": 0,
+          "false_emissions": 35,
+          "missed_emissions": 0
+        },
+        "identity": {
+          "cases": 1880,
+          "positive": 0,
+          "false_emissions": 0,
+          "missed_emissions": 0
+        }
+      },
+      "validation": {
+        "initial": {
+          "cases": 736,
+          "positive": 675,
+          "false_emissions": 1,
+          "missed_emissions": 47
+        },
+        "completed": {
+          "cases": 736,
+          "positive": 0,
+          "false_emissions": 27,
+          "missed_emissions": 0
+        },
+        "identity": {
+          "cases": 736,
+          "positive": 0,
+          "false_emissions": 0,
+          "missed_emissions": 0
+        }
+      },
+      "test": {
+        "initial": {
+          "cases": 850,
+          "positive": 779,
+          "false_emissions": 10,
+          "missed_emissions": 56
+        },
+        "completed": {
+          "cases": 850,
+          "positive": 0,
+          "false_emissions": 42,
+          "missed_emissions": 0
+        },
+        "identity": {
+          "cases": 850,
+          "positive": 0,
+          "false_emissions": 0,
+          "missed_emissions": 0
+        }
+      }
+    },
+    "limitations": [
+      "Output layout comes from the supported finite Bake catalog",
+      "Feature energy is not an equality or existence proof",
+      "Repeated free GPU inference must be evaluated separately",
+      "No full ruleset, source-stage or ownership guarantee"
+    ]
+  },
+  "hints_probe": {
+    "scope": "necessary fixed-binding local stop probe, not ruleset saturation",
+    "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "model_sha256": "bf5bd7085c0866c9c7f362d03cc8b2a3c3e5cf7994433b0c8cbd49a4cdaac4c7",
+    "numerical_audit": {
+      "passed": true,
+      "state_elements_outside_tolerance": 0,
+      "emission_disagreements": 0,
+      "max_absolute_state_difference": 0.02294921875,
+      "absolute_tolerance": 0.002,
+      "relative_tolerance": 0.004
+    },
+    "decoder_f64_disagreements": 0,
+    "stop_feature_version": "output-energy-direct-union/v1",
+    "rounds": 4,
+    "cases": 850,
+    "teacher_idempotent_cases": 850,
+    "oracle_completed_state_false_reemissions": 2,
+    "free_rollout": {
+      "emissions_per_round": [
+        768,
+        7,
+        7,
+        7
+      ],
+      "final_exact_catalog_target": 818,
+      "final_ambiguous": 0,
+      "stopped_at_final_round": 843,
+      "exact_target_and_stopped": 815,
+      "never_emitted_but_initially_novel": 11,
+      "final_body_rmse": 86.195556640625
+    },
+    "intermediate_cpu_reads": 0,
+    "teacher_state_supplied_between_rounds": false,
+    "limitations": [
+      "Only repetition of the same fixed binding; not full successor or ruleset closure",
+      "Oracle-state test is separate and does not correct the free rollout",
+      "Request roles and port wiring are static for the original binding",
+      "Catalog includes held-out states and does not prove live identity or visibility",
+      "No lifetime, ownership-transfer or global novelty proof"
+    ],
+    "failure_diagnostics": [
+      {
+        "input_identity": "97429990af0bc0e1e5ebefdc6a54425d4899dbf8eef40bfbe545e4e6e0b4dbd3",
+        "family": "916e950adf695d2a03f67e09edb7d3e1c31abea8afa283299badae7b46dcab70",
+        "consumer": 341,
+        "observations": 1,
+        "emissions": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": true,
+        "body_rmse": 188.3211669921875
+      },
+      {
+        "input_identity": "ed07ab0f3deb7a1d501681cb11c5d2d65feae78218492287fd1d3486545ccbe2",
+        "family": "953ba4ab5a8bcb1db3fdb4a9533c39841a8245ce4fd1a19030e24eb6c8da7805",
+        "consumer": 542,
+        "observations": 320,
+        "emissions": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": true,
+        "body_rmse": 0.8460369110107422
+      },
+      {
+        "input_identity": "ee64435b8212285efa0f66ccc555a8634916fba68a4a9e08d362bb5243d31375",
+        "family": "104dfc668efa36133cf0c6d0a0f9dc502f738de8c118c102c1b2f93d628ec0cd",
+        "consumer": 341,
+        "observations": 1,
+        "emissions": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": true,
+        "body_rmse": 2505.857177734375
+      },
+      {
+        "input_identity": "ec9242cfbc541ca1a9dc93f31ec7297529fc49ca5babd00199ee2e1a42094bf8",
+        "family": "a40d49553da1dbee8c2a8fde1687ff8894f32f108151367848051eb6b537d085",
+        "consumer": 136,
+        "observations": 1,
+        "emissions": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": false,
+        "body_rmse": 1.9994868040084839
+      },
+      {
+        "input_identity": "54b625f6e4f3384ea4dd7e15291e90aa07b18158165d31753e3c3a36b00d7b3e",
+        "family": "e45b540fc1effa311131474037e6cca94852497501086d5716f6d0f54950cad3",
+        "consumer": 137,
+        "observations": 1,
+        "emissions": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": false,
+        "body_rmse": 1.9994868040084839
+      },
+      {
+        "input_identity": "a1e6c03d633d644ff69f9f3503fc483f18f0e87c48e84173128da1060e8b6f5e",
+        "family": "2fdc95ce425f7f8191a517baf488031f16953366ed4614b52f73b27b9ec1b0c0",
+        "consumer": 538,
+        "observations": 1,
+        "emissions": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": false,
+        "body_rmse": 5.99847936630249
+      },
+      {
+        "input_identity": "c7c2af1b24306dcb474068acfc2c0ef98f3bbe7d03bb7c034757a6e2dd5df85c",
+        "family": "2e3f6cefe492e935b1e42efa1a016f818056a1a0120ba84d3395c987249475c1",
+        "consumer": 294,
+        "observations": 9,
+        "emissions": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": false,
+        "body_rmse": 19.435338973999023
+      }
+    ],
+    "body_error_summary": {
+      "median_rmse": 0.06466419994831085,
+      "max_rmse": 2505.857177734375,
+      "active_requests_squared_error_fraction": 0.9999975562095642
+    }
+  },
+  "control_probe": {
+    "scope": "necessary fixed-binding local stop probe, not ruleset saturation",
+    "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "model_sha256": "d996df84a5b66c28af566e45acc238458aa150eefdb4a0f53626c05dc18a08fa",
+    "numerical_audit": {
+      "passed": true,
+      "state_elements_outside_tolerance": 0,
+      "emission_disagreements": 0,
+      "max_absolute_state_difference": 0.001617431640625,
+      "absolute_tolerance": 0.002,
+      "relative_tolerance": 0.004
+    },
+    "decoder_f64_disagreements": 0,
+    "stop_feature_version": "output-energy-direct-union/v1",
+    "rounds": 4,
+    "cases": 850,
+    "teacher_idempotent_cases": 850,
+    "oracle_completed_state_false_reemissions": 42,
+    "free_rollout": {
+      "emissions_per_round": [
+        733,
+        35,
+        5,
+        0
+      ],
+      "final_exact_catalog_target": 765,
+      "final_ambiguous": 0,
+      "stopped_at_final_round": 850,
+      "exact_target_and_stopped": 765,
+      "never_emitted_but_initially_novel": 56,
+      "final_body_rmse": 8.30501651763916
+    },
+    "intermediate_cpu_reads": 0,
+    "teacher_state_supplied_between_rounds": false,
+    "limitations": [
+      "Only repetition of the same fixed binding; not full successor or ruleset closure",
+      "Oracle-state test is separate and does not correct the free rollout",
+      "Request roles and port wiring are static for the original binding",
+      "Catalog includes held-out states and does not prove live identity or visibility",
+      "No lifetime, ownership-transfer or global novelty proof"
+    ]
+  },
+  "frozen_arrays_verified": {
+    "w": true,
+    "coef": true,
+    "prototypes": true,
+    "prototype_families": true
+  },
+  "scope": "Standalone finite-catalog GPU prototype, not native runtime or ruleset saturation"
+}
