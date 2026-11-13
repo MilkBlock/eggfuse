@@ -82,7 +82,7 @@ pub(crate) fn before(g:&Graph,rule:usize,cell:u32,operation:usize,known:&crate::
                 |donor|g.trace_rhs_owner_links(cell,rule,donor,known))},facts:g.stats.logical_facts_created})
     })
 }
-pub(crate) fn after(g:&Graph,probe:Option<Probe>,effects:&crate::cell::Effects,success:bool) {
+pub(crate) fn after(g:&Graph,probe:Option<Probe>,effects:&impl CompletedEffects,success:bool) {
     let Some(mut probe)=probe else{return};
     TRACE.with(|t| {
         let mut t=t.borrow_mut();let Some(t)=t.as_mut() else{return};

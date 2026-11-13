@@ -392,14 +392,18 @@ impl Executor {
                         self.graph.rhs_frame_mut(execution.cell).unwrap().completed_prefix = position + 1;
                         continue;
                     }
-                    let mut existing_root=false;
-                    if roots && execution.births.is_none() {
+                    let prepared_root=execution.constructor.is_some() && self.graph.program.executions[rid]
+                        .constructor.as_ref().is_some_and(|plan|plan.operation==position);
+                    if roots && execution.births.is_none() && !prepared_root {
                         let stop=execution.transfers[execution.transfer..].iter().find(|t|t.op>=position)
                             .map_or(execution.ops.len(),|t|t.op);
                         let (counts,job)=self.graph.take_root_job(rid,execution.cell,stop,&pending,queue.operations,
+                            &mut execution.effects.writer(),
+                            #[cfg(feature="storage-metrics")] &execution.known,
                             |hash|queue.flying.as_ref().is_some_and(|w|w.contains_root(hash)))?;
-                        existing_root=counts.root_bucket_fallbacks!=0;
+                        execution.work.constructors+=counts.root_existing_reuses;
                         self.cell_execution.as_mut().unwrap().counts.births.add(counts);
+                        if self.graph.rhs_frame(execution.cell).unwrap().completed_prefix!=position {continue;}
                         if let Some(job)=job {
                             let before=pending.capacity();pending.push(execution.cell);
                             let stats=&mut self.cell_execution.as_mut().unwrap().counts.scheduler;
@@ -416,12 +420,10 @@ impl Executor {
                         && !execution.aliases.as_ref().is_some_and(|a|a[position]) {
                         let conflict=match &execution.ops[position] {
                             Op::Let(_,Call::Table(table),args) if self.graph.program.tables[*table].virtual_fact => {
-                                if existing_root {false} else {
                                     let (hash,blocked,counts)=self.graph.root_boundary_key(execution.cell,*table,args,&pending)?;
                                     self.cell_execution.as_mut().unwrap().counts.births.add(counts);
                                     blocked || queue.flying.as_ref().is_some_and(|w|w.contains_root(hash))
                                         || queue.owners.iter().any(|p|p.job.as_ref().and_then(Job::root_hash)==Some(hash))
-                                }
                             }
                             Op::Let(_,Call::Primitive(..),_)=>false,
                             _=>true,

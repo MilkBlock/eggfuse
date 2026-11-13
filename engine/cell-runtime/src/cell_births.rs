@@ -218,6 +218,7 @@ impl Window {
 pub(crate) struct Counts {
     pub execution_groups:u64,
     pub root_bucket_probes:u64, pub root_bucket_fallbacks:u64, pub root_jobs:u64,
+    pub root_existing_reuses:u64, pub root_existing_key_fields:u64, pub root_collision_misses:u64,
     pub root_births:u64, pub root_reuses:u64, pub root_pending:u64, pub root_boundary_probes:u64,
     pub root_isolated:u64, pub root_hash_bytes:u64,
     pub plan_checks:u64, pub resume_checks:u64,
@@ -245,7 +246,7 @@ pub(crate) struct Counts {
 impl Counts {
     pub(crate) fn add(&mut self,b:Self) {
         macro_rules! add {($($f:ident),*)=>{$(self.$f+=b.$f;)*};}
-        add!(execution_groups,root_bucket_probes,root_bucket_fallbacks,root_jobs,root_births,root_reuses,root_pending,root_boundary_probes,root_isolated,root_hash_bytes,
+        add!(execution_groups,root_bucket_probes,root_bucket_fallbacks,root_jobs,root_existing_reuses,root_existing_key_fields,root_collision_misses,root_births,root_reuses,root_pending,root_boundary_probes,root_isolated,root_hash_bytes,
             plan_checks,resume_checks,window_checks,attempts,invalidated,anchor_checks,source_operand_reads,operand_reads,missing_operands,candidate_ranges,
             candidate_probes,field_checks,local_reuses,local_births,hashes,row_fields,identity_checks,
             pending_growths,pending_bytes,value_writes,slot_growths,slot_bytes,committed_rows,

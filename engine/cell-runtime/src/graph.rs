@@ -1546,9 +1546,16 @@ impl Graph {
         self.lookup_canonical(table, &key)
     }
     pub(crate) fn lookup_canonical(&self, table: usize, key: &[Value]) -> Result<Option<Row>> {
+        self.lookup_canonical_hashed(table, key, None)
+    }
+    /// A sealed Cell admission may already have hashed this exact canonical
+    /// key. Preserve ordinary candidate ordering and observers while consuming
+    /// that result instead of hashing the same inputs a second time.
+    #[inline]
+    fn lookup_canonical_hashed(&self, table: usize, key: &[Value], hash: Option<u64>) -> Result<Option<Row>> {
         #[cfg(feature = "family-overlap")]
         let clock = crate::family_overlap::clock();
-        let result = self.lookup_canonical_inner(table, key);
+        let result = self.lookup_canonical_inner(table, key, hash);
         #[cfg(feature = "rhs-work-audit")]
         if let Ok(Some(r)) = &result {
             self.rhs_births.read(r.witness);
@@ -1583,7 +1590,7 @@ impl Graph {
         Ok(self.lookup_canonical(table, key)?.as_ref().map(Point::from))
     }
     #[inline]
-    fn lookup_canonical_inner(&self, table: usize, key: &[Value]) -> Result<Option<Row>> {
+    fn lookup_canonical_inner(&self, table: usize, key: &[Value], hash: Option<u64>) -> Result<Option<Row>> {
         self.key_lookup_calls.set(self.key_lookup_calls.get() + 1);
         if self.port_keys_enabled(table) {
             return self.lookup_port_key(table, key, None);
@@ -1602,7 +1609,7 @@ impl Graph {
                 .function_index(table, key)
                 .and_then(|i| self.function(i)));
         }
-        let h = self.constructor_hash(table, key);
+        let h = hash.unwrap_or_else(|| self.constructor_hash(table, key));
         if self.dirty_facts[table].is_empty() {
             // Matching observes a repaired snapshot. Avoid allocating/copying
             // a set on every keyed read; retain the original FactRef order.

@@ -16,6 +16,8 @@ Recent checkpoints: [shared completion slots](benchmarks/cell-completion-slots/R
 
 It also integrates [cross-stage completion and structural compression](benchmarks/cell-structural-compression/README.md), with [merge validation and integration limits](benchmarks/cell-bake-merge/README.md). Shared-owner storage and selected Unit specialization remain opt-in; storage measurements do not establish a parallel speedup.
 
+The latest [root continuation checkpoint](benchmarks/cell-root-continuation/README.md) consumes existing constructor results during Cell admission, removing repeated parameter preparation while retaining exact lookup and source ordering.
+
 ## Quick start
 
 Requires Rust/Cargo and the vendored dependencies in this repository. From the repository root, use fresh output directories:

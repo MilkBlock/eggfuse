@@ -523,6 +523,8 @@ fn workers_choose_duplicate_root_witnesses_before_continuing_the_same_cell() {
         assert!(work["root_births"].as_u64().unwrap()>0,"worker must create the first constructor: {work}");
         assert!(work["root_reuses"].as_u64().unwrap()>0,"duplicate roots must return an actual peer result: {work}");
         assert!(work["root_bucket_fallbacks"].as_u64().unwrap()>0,"later groups see prior published roots: {work}");
+        assert!(work["root_existing_reuses"].as_u64().unwrap()>0,
+            "the admission key must complete existing roots without returning to ordinary RHS: {work}");
         for key in ["constructor_requests","constructor_reused","logical_facts_created","function_updates","unions"] {
             assert_eq!(report["stats"][key],control.report()["stats"][key],"{key}");
         }
