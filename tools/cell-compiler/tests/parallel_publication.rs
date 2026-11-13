@@ -68,10 +68,40 @@ fn repaired_publication_keeps_late_values_aliases_and_retirements() {
         }
         assert!(counts["column_rows"].as_u64().unwrap()>0,"{counts}");
         if workers>1 {
+            assert!(counts["split_entry_tasks"].as_u64().unwrap()>0,
+                "large table owners must independently update their Entries: {counts}");
             assert!(conditions["stats"]["worker_rows"].as_array().unwrap().iter().map(|n|n.as_u64().unwrap()).sum::<u64>()>0,
                 "condition publication executes on workers: {conditions}");
             assert!(counts["pool_calls"].as_u64().unwrap()>0,"{counts}");
             assert!(counts["worker_rows"].as_array().unwrap().iter().filter(|n|n.as_u64().unwrap()>0).count()>1);
         }
     }
+}
+
+#[test]
+fn a_single_large_changed_table_uses_independent_index_and_entry_owners() {
+    let mut source=String::from(r#"
+(datatype E (N i64) (Start E))
+(function score (E i64) i64 :merge new)
+(function result (E) i64 :merge new)
+(ruleset read) (ruleset change)
+(rule ((Start x) (= n (score x i))) ((set (result x) n)) :ruleset read)
+(rule ((Start x)) ((set (score x 0) 2)) :ruleset change)
+"#);
+    for i in 0..300 {source+=&format!("(Start (N {i})) (set (score (N {i}) 0) 1)\n");}
+    source+=r#"
+(run-schedule (seq (run read) (run change) (run read)))
+(check (= (result (N 12)) 2) (= (result (N 299)) 2))
+"#;
+    egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+    let before=run(&source,0,false);
+    let after=run(&source,4,true);
+    assert_eq!(before.snapshots,after.snapshots);
+    assert_eq!(before.binding_audit,after.binding_audit);
+    let report=after.report();
+    let counts=&report["publication"]["parallel"];
+    assert!(counts["single_table_split_batches"].as_u64().unwrap()>0,"{counts}");
+    assert!(counts["duplicate_current_row_reads"].as_u64().unwrap()>=300,"{counts}");
+    assert_eq!(counts["split_entry_worker_rows"].as_array().unwrap().iter()
+        .map(|n|n.as_u64().unwrap()).sum::<u64>(),counts["split_entry_rows"].as_u64().unwrap());
 }

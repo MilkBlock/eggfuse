@@ -211,7 +211,8 @@ impl<'a> Events<'a> {
     ) {
         let id = self.node_ids[p];
         assert!(self.finished[p].set(result).is_ok());
-        // Count actual unfinished table computation, not unprocessed callbacks.
+        // Count unfinished index owners. Independent Entry work is not a
+        // prerequisite for these conditions and is deliberately excluded.
         if self.unfinished_tables.load(Ordering::Acquire) != 0 {
             self.early.fetch_add(1, Ordering::Relaxed);
             if did_work {
@@ -623,7 +624,7 @@ mod tests {
                         &b,
                         &ids,
                         &mut tasks,
-                        Some(&pool),
+                        (stage != 5).then_some(&pool),
                         |t| {
                             let mut c = t.column.take().unwrap();
                             for (w, row) in &rows[&t.table] {
@@ -654,7 +655,45 @@ mod tests {
                 assert_eq!(ordinary.stats.added_keys, fused.stats.added_keys);
                 assert_eq!(ordinary.stats.update_rows, fused.stats.update_rows);
                 assert_eq!(ordinary.stats.column_checks, fused.stats.column_checks);
+                assert_eq!(fused.publication.work.worker_tasks.len(), workers,
+                    "a later inline publication must not truncate worker counters");
             }
+        }
+    }
+
+    #[test]
+    fn an_index_releases_conditions_before_its_entry_owner_finishes() {
+        let pool=rayon::ThreadPoolBuilder::new().num_threads(2).build().unwrap();
+        for late_failure in [false,true] {
+            let mut g=graph();
+            let mut index=crate::query::test_projection_indexes(64);
+            index.track_changes=true;
+            let mut s=fixture(&g,&mut index,false);
+            fill(&mut g,0,2000);
+            let mut tasks=tasks(&g,&mut index);
+            let ids:Vec<_>=tasks.iter().map(|t|(t.table,true)).collect();
+            let rows:Vec<_>=g.changes.tables().next().unwrap().1.iter()
+                .map(|(&w,c)|(w,c.row(&g,w).unwrap())).collect();
+            let (tx,rx)=mpsc::channel();
+            let rx=Mutex::new(rx);
+            let after=|id,_:&Summary| {if id==0 {tx.send(()).unwrap();}};
+            assert!(s.publish_table_events_early_inner(&index,&ids,&mut tasks,Some(&pool),
+                |t,ready| {
+                    let mut column=t.column.take().unwrap();
+                    for (w,row) in &rows {column.update(*w,row.as_ref());}
+                    ready(Some(column),true);
+                    // Model an independent Entry owner that cannot finish
+                    // until the condition uses the already completed index.
+                    rx.lock().unwrap().recv_timeout(Duration::from_secs(5)).unwrap();
+                    !late_failure
+                },&mut |t,c|t.column=c,Some(&after)));
+            assert!(s.publication.work.table_events.completed_nodes>0);
+            assert_eq!(s.publication.work.table_events.failed_batches,u64::from(late_failure));
+            if late_failure {
+                assert!(s.states.iter().all(|s|!s.built && s.keys.is_empty()));
+            } else {assert_eq!(s.states[0].keys.len(),128);}
+            restore(&mut index,tasks);
+            assert_eq!(index.changes.is_empty(),!late_failure);
         }
     }
 
@@ -751,6 +790,7 @@ impl Sieve {
     /// `run` moves only the completed original column owner out of its table
     /// task. `restore` puts that same owner back after all its readers finish.
     /// False means no task ran: use the ordinary publication path.
+    #[cfg(test)]
     pub(crate) fn publish_table_events<T: Send>(
         &mut self,
         index: &QueryIndexes,
@@ -771,6 +811,7 @@ impl Sieve {
             None,
         )
     }
+    #[cfg(test)]
     fn publish_table_events_inner<T: Send>(
         &mut self,
         index: &QueryIndexes,
@@ -778,6 +819,38 @@ impl Sieve {
         tasks: &mut [T],
         pool: Option<&rayon::ThreadPool>,
         run: impl Fn(&mut T) -> (Option<PublicationTask>, bool) + Sync,
+        restore: &mut impl FnMut(&mut T, Option<PublicationTask>),
+        #[cfg(test)] after: Option<&(dyn Fn(usize, &Summary) + Sync)>,
+    ) -> bool {
+        self.publish_table_events_early_inner(index, ids, tasks, pool,
+            |task, ready| {
+                let (column, ok) = run(task);
+                ready(column, ok);
+                ok
+            }, restore, after)
+    }
+    /// Index completion releases only its compiled condition readers. An
+    /// independent Entry owner may still be running; its eventual failure
+    /// invalidates speculative summaries before any consumer Run can observe.
+    pub(crate) fn publish_table_events_early<T: Send>(
+        &mut self,
+        index: &QueryIndexes,
+        ids: &[(usize, bool)],
+        tasks: &mut [T],
+        pool: Option<&rayon::ThreadPool>,
+        run: impl Fn(&mut T, &(dyn Fn(Option<PublicationTask>, bool) + Sync)) -> bool + Sync,
+        mut restore: impl FnMut(&mut T, Option<PublicationTask>),
+    ) -> bool {
+        self.publish_table_events_early_inner(index, ids, tasks, pool, run, &mut restore,
+            #[cfg(test)] None)
+    }
+    fn publish_table_events_early_inner<T: Send>(
+        &mut self,
+        index: &QueryIndexes,
+        ids: &[(usize, bool)],
+        tasks: &mut [T],
+        pool: Option<&rayon::ThreadPool>,
+        run: impl Fn(&mut T, &(dyn Fn(Option<PublicationTask>, bool) + Sync)) -> bool + Sync,
         restore: &mut impl FnMut(&mut T, Option<PublicationTask>),
         #[cfg(test)] after: Option<&(dyn Fn(usize, &Summary) + Sync)>,
     ) -> bool {
@@ -935,17 +1008,20 @@ impl Sieve {
                 * std::mem::size_of::<usize>();
         plan.work.prepare_seconds += clock.elapsed().as_secs_f64();
         let clock = Instant::now();
+        let failed_tasks = std::sync::atomic::AtomicBool::new(false);
         if let Some(pool) = pool {
             pool.scope(|scope| {
                 let events = &events;
                 let run = &run;
+                let failed_tasks = &failed_tasks;
                 for &p in &roots {
                     events.ready(p, Some(scope));
                 }
                 for (p, task) in tasks.iter_mut().enumerate() {
                     scope.spawn(move |scope| {
-                        let (column, ok) = run(task);
-                        events.table_complete(p, column, ok, Some(scope));
+                        if !run(task, &|column, ok| events.table_complete(p, column, ok, Some(scope))) {
+                            failed_tasks.store(true, Ordering::Relaxed);
+                        }
                     });
                 }
             });
@@ -954,13 +1030,14 @@ impl Sieve {
                 events.ready(p, None);
             }
             for (p, task) in tasks.iter_mut().enumerate() {
-                let (column, ok) = run(task);
-                events.table_complete(p, column, ok, None);
+                if !run(task, &|column, ok| events.table_complete(p, column, ok, None)) {
+                    failed_tasks.store(true, Ordering::Relaxed);
+                }
             }
         }
         plan.work.execute_seconds += clock.elapsed().as_secs_f64();
         let clock = Instant::now();
-        let success = events
+        let success = !failed_tasks.load(Ordering::Relaxed) && events
             .tables
             .iter()
             .all(|t| t.get().expect("finished table").ok);
@@ -982,7 +1059,7 @@ impl Sieve {
         work.batches += 1;
         work.event_nodes += affected.len() as u64;
         work.event_header_bytes += header_bytes as u64;
-        let workers = pool.map_or(1, rayon::ThreadPool::current_num_threads);
+        let workers = pool.map_or(1, rayon::ThreadPool::current_num_threads).max(work.worker_tasks.len());
         work.worker_tasks.resize(workers, 0);
         work.worker_rows.resize(workers, 0);
         work.worker_seconds.resize(workers, 0.0);
