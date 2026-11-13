@@ -61,7 +61,11 @@ fn worker_births_preserve_composed_entries_foreign_returns_and_run_lifetimes() {
         assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
         let report=candidate.report();
         let births=&report["cell_execution"]["runtime"]["stats"]["births"];
-        if workers>1 {assert!(births["worker_operations"].as_u64().unwrap()>0,"{births}");}
+        if workers>1 {
+            assert!(births["worker_operations"].as_u64().unwrap()>0,"{births}");
+            assert!(report["stats"]["constructor_registry_owned_rows"].as_u64().unwrap()>0,
+                "owned physical registration must leave the source executor");
+        }
         let ownership=candidate.graph.ownership_report();
         let previous=control.graph.ownership_report();
         for counter in ["owned_births","composition_result_writes","composition_baked_hits"] {

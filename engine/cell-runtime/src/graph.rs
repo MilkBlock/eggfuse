@@ -325,6 +325,8 @@ pub struct Stats {
     pub constructor_registry_rows:u64,
     #[serde(default)]
     pub constructor_registry_adopted:u64,
+    pub constructor_registry_owned_rows:u64,
+    pub constructor_registry_owned_fragments:u64,
     #[serde(default)]
     pub constructor_registry_discarded:u64,
     #[serde(default)]

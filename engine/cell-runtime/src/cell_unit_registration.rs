@@ -187,7 +187,8 @@ impl Graph {
                 c.parent.is_none_or(|parent|done.binary_search_by_key(&parent.cell,|d|d.done.cell).map_or(true,|p|p<i))
                 && d.done.piece.rows.iter().all(|r|
                 r.operation>=c.completed_prefix && !c.facts.contains_key(&(r.operation as u32))
-                && self.program.repair_ports.key_eq_columns[r.table].is_some()))
+                && self.program.repair_ports.key_eq_columns[r.table].is_some()
+                && (self.ownership.is_none() || self.program.cell_ownership.markers[c.template].program.covers(r.operation))))
         });
         if !units && !births {return None;}
         let mut tables=BTreeMap::<usize,Vec<Item>>::new();let mut source=0;
@@ -218,6 +219,7 @@ impl Graph {
         }).collect();
         let table_count=tasks.len();
         let mut constructor_registration=None;
+        let mut subscriptions_expected=false;
         let constructors=births.then(|| {
             let (rows,subscriptions,registration)=constructor_registration::Owned::take(self,done);
             constructor_registration=Some(registration);
@@ -228,7 +230,11 @@ impl Graph {
                 self.stats.constructor_registry_independent_batches+=1;
                 self.stats.constructor_registry_independent_rows+=birth_count as u64;
             }
-            tasks.insert(0,RegistrationTask::Subscriptions(Box::new(subscriptions)));rows
+            if let Some(subscriptions)=subscriptions {
+                subscriptions_expected=true;
+                tasks.insert(0,RegistrationTask::Subscriptions(Box::new(subscriptions)));
+            }
+            rows
         });
         if let Some(first_table)=first_table {
             tasks.push(RegistrationTask::Structure(Box::new(Structure {
@@ -257,7 +263,7 @@ impl Graph {
         self.stats.unit_registry_owner_tables+=table_count as u64;
         self.stats.unit_registry_reserved_slots+=count as u64;
         self.stats.unit_registry_reserved_bytes+=(count*(std::mem::size_of::<Function>())) as u64;
-        Some(PendingRegistration {tasks,registration:Registration {owners,start,end,constructors:constructor_registration},structure_ready:count==0,subscriptions_expected:births,accepted:0,subscriptions:None,waiting:Vec::new(),constructor_finished:!births})
+        Some(PendingRegistration {tasks,registration:Registration {owners,start,end,constructors:constructor_registration},structure_ready:count==0,subscriptions_expected,accepted:0,subscriptions:None,waiting:Vec::new(),constructor_finished:!births})
     }
 
     #[cfg(test)]

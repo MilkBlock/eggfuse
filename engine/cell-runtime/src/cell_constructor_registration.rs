@@ -10,11 +10,16 @@ pub(crate) mod fused;
 #[derive(Default)]
 pub(crate) struct Publication {
     tables: smallvec::SmallVec<[(usize, u64, bool); 2]>,
+    owned: bool,
+    // The registration input already owns these rows. Reuse that fragment for
+    // source-ordered port binding; fused producers keep their original Piece.
+    owner_rows: Option<(std::sync::Arc<Input>, std::ops::Range<usize>)>,
 }
 struct Installed {
     cell: u32,
     first: usize,
     end: usize,
+    owned: bool,
     publication: Publication,
 }
 #[derive(Default)]
@@ -38,29 +43,31 @@ pub(crate) struct Subscriptions {
     input:std::sync::Arc<Input>,
 }
 pub(crate) struct CellReady {facts:crate::slots::FrameMap<u32,FactState>,installed:Installed}
-struct Input {groups:Vec<OwnedGroup>,rows:Vec<Born>}
+struct Input {groups:Vec<OwnedGroup>,rows:Vec<Born>,owned:bool}
 struct OwnedGroup {cell:u32,rows:std::ops::Range<usize>}
 impl Owned {
-    pub(super) fn take(graph:&mut Graph,done:&mut [Completed])->(Self,Subscriptions,Registration) {
+    pub(super) fn take(graph:&mut Graph,done:&mut [Completed])->(Self,Option<Subscriptions>,Registration) {
+        let owned=graph.ownership.is_some();
+        let subscriptions=!owned || done.iter().any(|d|!d.done.piece.units.is_empty());
         let mut rows=Vec::with_capacity(done.iter().map(|d|d.done.piece.rows.len()).sum());
         let groups=done.iter_mut().map(|d| {
             let first=rows.len();rows.extend(d.done.piece.rows.drain(..));
             OwnedGroup {cell:d.done.cell,rows:first..rows.len()}
         }).collect();
-        let input=std::sync::Arc::new(Input {groups,rows});
+        let input=std::sync::Arc::new(Input {groups,rows,owned});
         let changes=input.rows.iter().map(|r|r.table).collect::<BTreeSet<_>>().into_iter()
             .map(|table|(table,graph.changes.take_new_row_table(table))).collect();
         // Lease only the slots this worker writes. The original arena layout
         // and all Cell input/continuation state stay in place.
         let frames=input.groups.chunks(16).enumerate().map(|(chunk,groups)|groups.iter().enumerate().map(|(i,g)| {
             let frame=graph.cells.get_mut(&g.cell).unwrap();
-            let installed=Installed {cell:g.cell,first:frame.completed_prefix,
+            let installed=Installed {cell:g.cell,first:frame.completed_prefix,owned,
                 end:done[chunk*16+i].done.piece.end,publication:Publication::default()};
             CellReady {facts:std::mem::take(&mut frame.facts),installed}
         }).collect()).collect();
-        let subscriptions=Subscriptions {uses:std::mem::take(&mut graph.uses),
+        let subscriptions=subscriptions.then(||Subscriptions {uses:std::mem::take(&mut graph.uses),
             metrics:std::mem::take(&mut graph.maintenance),
-            columns:graph.program.repair_ports.key_eq_columns.clone(),input:input.clone()};
+            columns:graph.program.repair_ports.key_eq_columns.clone(),input:input.clone()});
         let rows=Self {frames,intern:std::mem::take(&mut graph.intern),members:std::mem::take(&mut graph.members),
             changes,epoch:graph.epoch,input};
         graph.stats.constructor_registry_bytes+=rows.storage_bytes() as u64;
@@ -78,6 +85,10 @@ impl Owned {
                         let rows=changes.get_mut(&table).unwrap();let activate=rows.is_empty();
                         assert!(rows.insert(witness,crate::change_batch::Change::Wake).is_none());activate
                     });
+                if self.input.owned {
+                    cell.installed.publication.owned=true;
+                    cell.installed.publication.owner_rows=Some((self.input.clone(),group.rows.clone()));
+                }
             }
             emit(ready);
         }
@@ -96,6 +107,7 @@ impl Owned {
 }
 impl Subscriptions {
     pub fn install(&mut self) {
+        if self.input.owned {return;}
         for group in &self.input.groups {for row in &self.input.rows[group.rows.clone()] {
             maintenance::subscribe_fresh(&mut self.uses,&mut self.metrics,
                 Dependency::Fact(FactRef {cell:group.cell,op:row.operation as u32}),&row.fields,
@@ -182,15 +194,28 @@ impl Registration {
                 if bucket.is_empty() {graph.intern.remove(&hash);}
                 assert!(graph.members[table].remove(&f.ordered_id()));
                 graph.changes.discard_prepared_row(table,Dependency::Fact(f));
-                graph.replace_row_edges(Dependency::Fact(f),&fields,&[]);
+                if !installed.owned {graph.replace_row_edges(Dependency::Fact(f),&fields,&[]);}
                 graph.stats.constructor_registry_discarded+=1;
             }
         }
     }
 }
 impl Graph {
-    pub(super) fn publish_registered_births(&mut self, publication: Publication) -> usize {
+    pub(super) fn publish_registered_births(&mut self,cell:u32,publication:Publication,rows:&[Born]) -> usize {
         let count=publication.tables.iter().map(|(_,n,_)|*n as usize).sum::<usize>();
+        if publication.owned {
+            let rows=publication.owner_rows.as_ref().map_or(rows,|(input,range)|&input.rows[range.clone()]);
+            assert_eq!(rows.len(),count,"the original row fragment binds its owned ports");
+            for row in rows {
+                let f=FactRef {cell,op:row.operation as u32};
+                let mut state=self.cells.fact_state_mut(f).expect("worker installed original fact slots");
+                assert!(!state.owned && !state.local_union_owned);
+                state.owned=true;drop(state);
+                self.publish_owned_birth(f,row.table,&row.fields);
+            }
+            self.stats.constructor_registry_owned_rows+=count as u64;
+            self.stats.constructor_registry_owned_fragments+=1;
+        }
         self.stats.constructor_registry_fragments+=publication.tables.len() as u64;
         for (table,rows,activate) in publication.tables {
             if activate {self.changes.activate_registered_table(table);}
@@ -225,9 +250,10 @@ mod tests {
         changes.defer_unready(&[false,true,false],&mut deferred);
         assert_eq!((changes.events,deferred.events),(1,2));
     }
-    fn prepared() -> (Graph,Vec<Completed>) {
+    fn prepared(owned:bool) -> (Graph,Vec<Completed>) {
         let mut g=super::super::tests::graph();
         g.program.repair_ports=repair_ports::Plan::derive(&g.program);
+        if owned {g.use_cell_ownership().unwrap();}
         let mut done=Vec::new();
         for i in 0..8 {
             let cell=g.begin_transient(0,[(0,Value::Eq(100+i))].into_iter().collect(),None).unwrap();
@@ -243,20 +269,22 @@ mod tests {
     #[test]
     fn actual_indexes_and_subscriptions_keep_only_the_source_adopted_prefix() {
         let pool=rayon::ThreadPoolBuilder::new().num_threads(4).build().unwrap();
-        for stop in [0,1,3,8] {for fail_after_offer in [false,true] {
-            let (mut g,mut done)=prepared();let (mut expected,reference)=prepared();
+        for owned in [false,true] {for stop in [0,1,3,8] {for fail_after_offer in [false,true] {
+            let (mut g,mut done)=prepared(owned);let (mut expected,reference)=prepared(owned);
             let cells:Vec<_>=done.iter().map(|d|d.done.cell).collect();
             let pointers:Vec<_>=done.iter().flat_map(|d|d.done.piece.rows.iter().map(move |r|
                 (FactRef {cell:d.done.cell,op:r.operation as u32},r.fields.as_ptr()))).collect();
             let layout=|g:&Graph|g.cells.iter().map(|(id,c)|(*id,c as *const Cell as usize)).collect::<Vec<_>>();
             let before=layout(&g);
             let (mut owner,mut subscriptions,mut registration)=Owned::take(&mut g,&mut done);
+            assert_eq!(subscriptions.is_none(),owned,"owned constructors need no subscription owner");
             assert_eq!(layout(&g),before,"leasing fact slots must not relocate the arena");
             let returned=std::sync::Mutex::new(Vec::new());
             pool.install(||rayon::join(||owner.install(&|ready|returned.lock().unwrap().push(ready)),
-                ||subscriptions.install()));
+                ||{if let Some(s)=&mut subscriptions {s.install();}}));
             for ready in returned.into_inner().unwrap() {registration.receive(&mut g,ready);}
-            owner.restore(&mut g);subscriptions.restore(&mut g);
+            owner.restore(&mut g);
+            if let Some(s)=subscriptions {s.restore(&mut g);}
             assert_eq!(layout(&g),before,"fact return must preserve instance identity and position");
             for (f,pointer) in pointers {assert_eq!(g.cells[&f.cell].facts[&f.op].decoded.as_ref().unwrap().1.as_ptr(),pointer);}
             // Prepared rows do not count as source-applied mutations or open
@@ -282,10 +310,15 @@ mod tests {
             assert_eq!(uses(&g),uses(&expected));
             assert_eq!(g.stats.constructor_registry_adopted,2*stop as u64);
             assert_eq!(g.stats.constructor_registry_discarded,2*(8-stop) as u64);
+            if owned {
+                assert_eq!(g.stats.constructor_registry_owned_rows,2*stop as u64);
+                assert_eq!(g.ownership_report(),expected.ownership_report(),"discarded rows must not bind ports");
+                assert!(g.uses.is_empty());
+            }
             if stop==8 {assert_eq!(g.stats.constructor_registry_retirement_checks,1,"no successful-prefix rescan");}
             assert_eq!(g.maintenance_report()["stats"]["live_reverse_edges"],expected.maintenance_report()["stats"]["live_reverse_edges"]);
             for graph in [&mut g,&mut expected] {graph.union(100,101).unwrap();graph.repair().unwrap();}
             assert_eq!(g.export().unwrap(),expected.export().unwrap(),"later repair must not see invalidated rows");
-        }}
+        }}}
     }
 }

@@ -5,7 +5,7 @@ use super::*;
 use crate::completion_events::Continued;
 
 pub(crate) struct Owner {
-    directory:Owned,subscriptions:Subscriptions,
+    directory:Owned,subscriptions:Option<Subscriptions>,
     frames:std::vec::IntoIter<CellReady>,rows:u64,
 }
 pub(crate) struct Ready {pub completed:Completed,frame:CellReady}
@@ -20,6 +20,7 @@ impl Graph {
         // This preflight uses the already-admitted Cell plans. No effects,
         // missing fact slots or subscriptions may be invented by registration.
         let mut tables=BTreeSet::new();
+        let owned=self.ownership.is_some();
         for (i,(job,_)) in tasks.iter().enumerate() {
             let frame=self.cells.get(&job.cell)?;
             let end=self.program.templates[frame.template].ops.len();
@@ -27,24 +28,25 @@ impl Graph {
                 || frame.parent.is_some_and(|p|tasks.binary_search_by_key(&p.cell,|t|t.0.cell).is_ok_and(|p|p>=i))
                 || !job.plan.steps[job.from..job.limit].iter().all(|s|
                     s.operation>=frame.completed_prefix && !frame.facts.contains_key(&(s.operation as u32))
-                    && self.program.repair_ports.key_eq_columns[s.table].is_some()) {return None;}
+                    && self.program.repair_ports.key_eq_columns[s.table].is_some()
+                    && (!owned || self.program.cell_ownership.markers[frame.template].program.covers(s.operation))) {return None;}
             tables.extend(job.plan.steps[job.from..job.limit].iter().map(|s|s.table));
         }
         let frames:Vec<_>=tasks.iter().map(|(job,_)| {
             let frame=self.cells.get_mut(&job.cell).unwrap();
             CellReady {facts:std::mem::take(&mut frame.facts),installed:Installed {
-                cell:job.cell,first:frame.completed_prefix,end:job.plan.steps[job.limit-1].operation+1,
+                cell:job.cell,first:frame.completed_prefix,end:job.plan.steps[job.limit-1].operation+1,owned,
                 publication:Publication::default()}}
         }).collect();
         // The existing owners share this empty input header. Rows stay in each
         // producer's Piece; there is no flattened Input row buffer to refill.
-        let input=std::sync::Arc::new(Input {groups:Vec::new(),rows:Vec::new()});
+        let input=std::sync::Arc::new(Input {groups:Vec::new(),rows:Vec::new(),owned});
         let directory=Owned {frames:Vec::new(),intern:std::mem::take(&mut self.intern),
             members:std::mem::take(&mut self.members),changes:tables.into_iter()
                 .map(|t|(t,self.changes.take_new_row_table(t))).collect(),epoch:self.epoch,input:input.clone()};
-        let subscriptions=Subscriptions {uses:std::mem::take(&mut self.uses),
+        let subscriptions=(!owned).then(||Subscriptions {uses:std::mem::take(&mut self.uses),
             metrics:std::mem::take(&mut self.maintenance),
-            columns:self.program.repair_ports.key_eq_columns.clone(),input};
+            columns:self.program.repair_ports.key_eq_columns.clone(),input});
         self.stats.constructor_fused_regions+=1;self.stats.constructor_fused_cells+=tasks.len() as u64;
         self.stats.constructor_fused_planned_operations+=operations as u64;
         self.stats.constructor_registry_batches+=1;
@@ -69,16 +71,17 @@ impl Owner {
                 let changes=directory.changes.get_mut(&table).unwrap();let activate=changes.is_empty();
                 assert!(changes.insert(witness,crate::change_batch::Change::Wake).is_none());activate
             });
-        let subscriptions=&mut self.subscriptions;
-        for row in rows {
+        if let Some(subscriptions)=&mut self.subscriptions {for row in rows {
             maintenance::subscribe_fresh(&mut subscriptions.uses,&mut subscriptions.metrics,
                 Dependency::Fact(FactRef {cell,op:row.operation as u32}),&row.fields,
                 Some(subscriptions.columns[row.table].as_ref().unwrap()));
-        }
+        }}
+        frame.installed.publication.owned=directory.input.owned;
         self.rows+=rows.len() as u64;
         // Actual field allocations now belong to the original fact slots.
         // Source adoption reads its publication certificate, without replay.
-        completed.done.piece.rows.clear();Ready {completed,frame}
+        if !directory.input.owned {completed.done.piece.rows.clear();}
+        Ready {completed,frame}
     }
     pub(crate) fn start(self,tasks:Vec<(Job,crate::cell::Effects)>,parents:std::sync::Arc<crate::value::parent_epoch::Base>,pool:&rayon::ThreadPool)->Wave {
         Wave::start_continued(tasks.len(),pool,self,move |out| {
@@ -100,7 +103,8 @@ impl Owner {
         graph.stats.constructor_registry_independent_rows+=self.rows;
         graph.stats.constructor_registry_rows+=self.rows;
         graph.stats.constructor_registry_worker_rows+=self.rows;
-        self.directory.restore(graph);self.subscriptions.restore(graph);
+        self.directory.restore(graph);
+        if let Some(subscriptions)=self.subscriptions {subscriptions.restore(graph);}
     }
 }
 
@@ -129,8 +133,12 @@ impl Acceptance {
 mod tests {
     use super::*;
     fn fixture()->(Graph,Vec<(Job,crate::cell::Effects)>) {
+        fixture_with_ownership(false)
+    }
+    fn fixture_with_ownership(owned:bool)->(Graph,Vec<(Job,crate::cell::Effects)>) {
         let mut g=super::super::super::tests::graph();
         g.program.repair_ports=repair_ports::Plan::derive(&g.program);
+        if owned {g.use_cell_ownership().unwrap();}
         let mut tasks=Vec::new();
         for i in 0..64 {
             let cell=g.begin_transient(0,[(0,Value::Eq(100+i/2))].into_iter().collect(),None).unwrap();
@@ -141,8 +149,8 @@ mod tests {
     }
     #[test]
     fn producer_registration_keeps_actual_results_and_rolls_back_only_unaccepted_cells() {
-        for workers in [1,4] {for stop in [0,1,2,31,64] {for offered in [false,true] {
-            let (mut g,tasks)=fixture();let (mut expected,reference)=fixture();
+        for owned in [false,true] {for workers in [1,4] {for stop in [0,1,2,31,64] {for offered in [false,true] {
+            let (mut g,tasks)=fixture_with_ownership(owned);let (mut expected,reference)=fixture_with_ownership(owned);
             let pool=rayon::ThreadPoolBuilder::new().num_threads(workers).build().unwrap();
             let owner=g.prepare_fused_constructors(&tasks).unwrap();
             let parents=g.parents.freeze();let mut wave=owner.start(tasks,parents.clone(),&pool);
@@ -173,9 +181,14 @@ mod tests {
             assert_eq!((g.changes.events,g.changes.distinct_events),(expected.changes.events,expected.changes.distinct_events));
             assert_eq!(g.stats.constructor_registry_adopted,3*stop.div_ceil(2) as u64);
             assert_eq!(g.stats.constructor_registry_adopted+g.stats.constructor_registry_discarded,96);
+            if owned {
+                assert_eq!(g.stats.constructor_registry_owned_rows,g.stats.constructor_registry_adopted);
+                assert_eq!(g.ownership_report(),expected.ownership_report(),"unaccepted rows never bind owned ports");
+                assert!(g.uses.is_empty(),"owned constructors have no reverse subscriptions");
+            }
             for graph in [&mut g,&mut expected] {graph.union(100,101).unwrap();graph.repair().unwrap();}
             assert_eq!(g.export().unwrap(),expected.export().unwrap());
-        }}}
+        }}}}
     }
     #[test]
     fn unproved_or_small_regions_leave_the_existing_owners_attached() {

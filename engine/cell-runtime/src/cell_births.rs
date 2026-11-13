@@ -534,7 +534,7 @@ impl Graph {
             self.composition_result_entry(cell,operation,Dependency::Fact(witness),true);
         }
         if let Some(publication)=publication {
-            let rows=self.publish_registered_births(publication);
+            let rows=self.publish_registered_births(cell,publication,&piece.rows);
             debug_assert!(piece.rows.is_empty() || piece.rows.len()==rows);
             counts.committed_rows+=rows as u64;
         } else { for row in piece.rows {
@@ -741,10 +741,9 @@ impl Graph {
         self.stable_ports.is_none() && self.union_digest.is_none()
             && self.local_unions.is_none() && !cfg!(feature="keeper-proof")
     }
-    // The legacy registry owns canonical indexes and reverse subscriptions.
-    // Canonical ownership births instead use activate_fields at source adoption
-    // to bind their compiled component ports exactly once.
+    // Canonical ownership shares physical registration, but its compiled ports
+    // replace reverse subscriptions. Stable storage keeps its separate path.
     pub(crate) fn local_registration_supported(&self)->bool {
-        self.local_jobs_supported() && self.ownership.is_none()
+        self.local_jobs_supported()
     }
 }
