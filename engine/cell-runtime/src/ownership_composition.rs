@@ -150,7 +150,17 @@ pub fn checked_frame_limit(raw: Option<&J>) -> Result<usize> {
 /// Rank repeated, actually used local continuations within a static code budget.
 /// The score is a proposal heuristic. Whole-execution timing admits speedups.
 pub fn select_profile(profile: &J) -> Result<J> {
+    select_profile_with_budget(profile,256,16_384)
+}
+/// Resource bounds select code only; typed substitutions still prove every hop.
+pub fn select_profile_with_budget(profile:&J,max_fragments:usize,instruction_handles:u64)->Result<J> {
+    if !(1..=4096).contains(&max_fragments) || !(1..=1_048_576).contains(&instruction_handles) {
+        return Err("ownership selection budget outside finite bounds".into());
+    }
     let format = wire::Format::profile(profile)?;
+    let minimum_activations=profile.get("minimum_activations")
+        .map(|v|v.as_u64().ok_or("invalid minimum activations")).transpose()?.unwrap_or(2);
+    if minimum_activations==0 {return Err("selection requires actual activation evidence".into());}
     let max_frames = checked_frame_limit(profile.get("max_frames"))?;
     let records = profile["records"]
         .as_array()
@@ -176,7 +186,7 @@ pub fn select_profile(profile: &J) -> Result<J> {
             serde_json::from_value(row["fragment"].clone()).map_err(|e| e.to_string())?;
         if fragment.hops.len() >= max_frames { return Err("profile fragment exceeds max_frames".into()); }
         code_costs.insert(fragment.clone(), cost);
-        if uses >= 2 && net > 0 {
+        if uses >= minimum_activations && net > 0 {
             ranked.push((net as f64 / (1.0 + cost as f64), fragment, cost, net));
         }
     }
@@ -197,7 +207,7 @@ pub fn select_profile(profile: &J) -> Result<J> {
             .iter()
             .map(|p| code_costs.get(p).copied().unwrap_or(cost))
             .sum::<u64>();
-        if selected.len() < 256 && handles + added <= 16_384 {
+        if selected.len() < max_fragments && handles + added <= instruction_handles {
             prepared.extend(prefixes);
             selected.push(fragment);
             handles += added;
@@ -205,8 +215,8 @@ pub fn select_profile(profile: &J) -> Result<J> {
         }
     }
     Ok(
-        json!({"schema":format.fragment_schema(),"source":profile["source"],"max_frames":max_frames,"fragments":selected,
-        "ranking":{"minimum_activations":2,"max_fragments":256,"instruction_handle_budget":16384,
+        json!({"schema":format.fragment_schema(),"source":profile["source"],"max_frames":max_frames,"max_fragments":max_fragments,"fragments":selected,
+        "ranking":{"minimum_activations":minimum_activations,"max_fragments":max_fragments,"instruction_handle_budget":instruction_handles,
             "charged_static_handles":handles,"sum_of_candidate_scores_not_global_savings":net,"alternatives_overlap":true,
             "rule":"rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
             "performance_admission":"unvalidated ranking; requires whole-execution baseline comparison"}}),
@@ -306,7 +316,9 @@ impl Plan {
             }
             let selected: Vec<Fragment> = serde_json::from_value(raw["fragments"].clone())
                 .map_err(|e| format!("invalid ownership fragments: {e}"))?;
-            if selected.len() > 256 {
+            let budget=raw.get("max_fragments").map(|v|v.as_u64().ok_or("invalid fragment budget"))
+                .transpose()?.unwrap_or(256);
+            if !(1..=4096).contains(&budget) || selected.len() as u64 > budget {
                 return Err("ownership fragment budget exceeded".into());
             }
             for fragment in selected {

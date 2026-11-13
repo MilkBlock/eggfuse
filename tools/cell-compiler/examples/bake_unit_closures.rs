@@ -1,11 +1,11 @@
 //! Batch finite closure selections from one saved current-catalog execution.
 use eggfuse_cell_runtime::{program::{Program,Call},checksum::artifact_digest,
-    graph::cell_ownership::composition::{select_profile,source_digest}};
+    graph::cell_ownership::composition::{select_profile_with_budget,source_digest}};
 use serde_json::{Value,json};
 use std::{fs,error::Error};
 fn main()->Result<(),Box<dyn Error>> {
     let a=std::env::args().skip(1).collect::<Vec<_>>();
-    if a.len()!=3 {return Err("usage: bake_unit_closures PROGRAM PROFILE OUTPUT_DIRECTORY".into());}
+    if !(a.len()==3 || a.len()==4 && a[3]=="--expanded") {return Err("usage: bake_unit_closures PROGRAM PROFILE OUTPUT_DIRECTORY [--expanded]".into());}
     let mut p=Program::parse(serde_json::from_slice(&fs::read(&a[0])?)?)?;
     p.prepare_cell_ownership()?;
     let profile:Value=serde_json::from_slice(&fs::read(&a[1])?)?;
@@ -22,15 +22,18 @@ fn main()->Result<(),Box<dyn Error>> {
     for r in records {*lengths.entry(r["fragment"]["hops"].as_array().unwrap().len()).or_insert(0usize)+=1;}
     fs::create_dir_all(&a[2])?;
     let mut candidates=vec![];
+    let budgets=if a.len()==4 {vec![(256usize,16_384u64),(1024,65_536),(4096,262_144)]} else {vec![(256,16_384)]};
+    for (budget,handles) in budgets {
     for limit in [4usize,8,16] {
         let mut filtered=profile.clone();filtered["max_frames"]=json!(limit);
+        if budget==4096 {filtered["minimum_activations"]=json!(1);}
         filtered["records"]=records.iter().filter(|r|r["fragment"]["hops"].as_array().unwrap().len()<limit).cloned().collect::<Vec<_>>().into();
-        let selection=select_profile(&filtered)?;
+        let selection=select_profile_with_budget(&filtered,budget,handles)?;
         let mut raw=p.artifact.clone();raw["ownership_fragments"]=selection.clone();
         raw.as_object_mut().unwrap().remove("ownership_markers");raw.as_object_mut().unwrap().remove("sha256");
         raw["sha256"]=artifact_digest(&raw).into();
         let mut q=Program::parse(raw.clone())?;q.prepare_cell_ownership()?;
-        let dir=format!("{}/frames{}",a[2],limit);fs::create_dir_all(&dir)?;
+        let dir=if a.len()==4 {format!("{}/budget{}/frames{}",a[2],budget,limit)} else {format!("{}/frames{}",a[2],limit)};fs::create_dir_all(&dir)?;
         fs::write(format!("{}/program.json",dir),serde_json::to_vec_pretty(&raw)?)?;
         let mut unit_tables=std::collections::BTreeSet::new();
         for fragment in selection["fragments"].as_array().unwrap() {
@@ -44,9 +47,10 @@ fn main()->Result<(),Box<dyn Error>> {
             }
         }
         fs::write(format!("{}/unit-tables.json",dir),serde_json::to_vec_pretty(&unit_tables)?)?;
-        candidates.push(json!({"max_frames":limit,"program":raw["sha256"],"fragments":selection["fragments"].as_array().unwrap().len(),
+        candidates.push(json!({"max_fragments":budget,"max_frames":limit,"program":raw["sha256"],"fragments":selection["fragments"].as_array().unwrap().len(),
             "shapes":q.cell_ownership.composition.shapes.len(),"transitions":q.cell_ownership.composition.transitions.len(),
             "unit_entry_tables":unit_tables,"ranking":selection["ranking"]}));
+    }
     }
     let summary=json!({"source_program":p.artifact["sha256"],"records":records.len(),"records_with_unit_entry":unit_records,
         "hop_lengths":lengths,"candidates":candidates,"scope":"offline selections from one actual execution; candidates overlap; no runtime saving claimed"});

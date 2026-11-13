@@ -1,0 +1,255 @@
+{
+  "scope": "standalone Cell runtime; one training capture, offline batch; no timing",
+  "baseline_program": "f0417499d1850595eb10c4353fc251e802c9d4e075790384279049ac1614092f",
+  "baseline_graph_bytes": 2502270,
+  "selection": {
+    "source_program": "f0417499d1850595eb10c4353fc251e802c9d4e075790384279049ac1614092f",
+    "records": 1588,
+    "records_with_unit_entry": 16,
+    "hop_lengths": {
+      "1": 339,
+      "2": 110,
+      "3": 119,
+      "4": 127,
+      "5": 114,
+      "6": 104,
+      "7": 101,
+      "8": 93,
+      "9": 85,
+      "10": 78,
+      "11": 72,
+      "12": 67,
+      "13": 62,
+      "14": 59,
+      "15": 58
+    },
+    "candidates": [
+      {
+        "max_fragments": 256,
+        "max_frames": 4,
+        "program": "34d37cccced82b4238eef287ea035a0ee8eb9b4efa167c61380665a72516656e",
+        "fragments": 256,
+        "shapes": 624,
+        "transitions": 262,
+        "unit_entry_tables": [
+          139,
+          169
+        ],
+        "ranking": {
+          "minimum_activations": 2,
+          "max_fragments": 256,
+          "instruction_handle_budget": 16384,
+          "charged_static_handles": 4907,
+          "sum_of_candidate_scores_not_global_savings": 4236,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      },
+      {
+        "max_fragments": 256,
+        "max_frames": 8,
+        "program": "e69ff769f91ac2c08e6d52dce6fd8e33b396809c6a4e732a521625b40915ecdd",
+        "fragments": 256,
+        "shapes": 627,
+        "transitions": 265,
+        "unit_entry_tables": [
+          139,
+          169
+        ],
+        "ranking": {
+          "minimum_activations": 2,
+          "max_fragments": 256,
+          "instruction_handle_budget": 16384,
+          "charged_static_handles": 4903,
+          "sum_of_candidate_scores_not_global_savings": 4264,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      },
+      {
+        "max_fragments": 256,
+        "max_frames": 16,
+        "program": "4f2c66c52b279577fbdb7e16856615e11dadc40a86de912912267e1ea000b649",
+        "fragments": 256,
+        "shapes": 630,
+        "transitions": 268,
+        "unit_entry_tables": [
+          139,
+          169
+        ],
+        "ranking": {
+          "minimum_activations": 2,
+          "max_fragments": 256,
+          "instruction_handle_budget": 16384,
+          "charged_static_handles": 5339,
+          "sum_of_candidate_scores_not_global_savings": 4271,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      },
+      {
+        "max_fragments": 1024,
+        "max_frames": 4,
+        "program": "20d890b5fab5ead8ccf3b8ec249fa25a5b116c1778aeb2a9f3089b5e45fb2d2e",
+        "fragments": 273,
+        "shapes": 638,
+        "transitions": 276,
+        "unit_entry_tables": [
+          139,
+          169
+        ],
+        "ranking": {
+          "minimum_activations": 2,
+          "max_fragments": 1024,
+          "instruction_handle_budget": 65536,
+          "charged_static_handles": 6108,
+          "sum_of_candidate_scores_not_global_savings": 4295,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      },
+      {
+        "max_fragments": 1024,
+        "max_frames": 8,
+        "program": "7c25f224e9b699a7bc7ec3ed928ed9093df878aaddaebbb20e95831b3ab25c22",
+        "fragments": 316,
+        "shapes": 687,
+        "transitions": 325,
+        "unit_entry_tables": [
+          139,
+          169
+        ],
+        "ranking": {
+          "minimum_activations": 2,
+          "max_fragments": 1024,
+          "instruction_handle_budget": 65536,
+          "charged_static_handles": 8174,
+          "sum_of_candidate_scores_not_global_savings": 4425,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      },
+      {
+        "max_fragments": 1024,
+        "max_frames": 16,
+        "program": "5029e2df50b438b2c86bc26dd68cb036172ed1d6743f60f3d03d3ffe8d3b43ec",
+        "fragments": 326,
+        "shapes": 698,
+        "transitions": 336,
+        "unit_entry_tables": [
+          139,
+          169
+        ],
+        "ranking": {
+          "minimum_activations": 2,
+          "max_fragments": 1024,
+          "instruction_handle_budget": 65536,
+          "charged_static_handles": 8941,
+          "sum_of_candidate_scores_not_global_savings": 4458,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      },
+      {
+        "max_fragments": 4096,
+        "max_frames": 4,
+        "program": "8ccac399ed602b58a91781e2cb46022b4c6acedebe8d01216d1a5058437e4b7f",
+        "fragments": 479,
+        "shapes": 836,
+        "transitions": 486,
+        "unit_entry_tables": [
+          139,
+          169
+        ],
+        "ranking": {
+          "minimum_activations": 1,
+          "max_fragments": 4096,
+          "instruction_handle_budget": 262144,
+          "charged_static_handles": 12564,
+          "sum_of_candidate_scores_not_global_savings": 4639,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      },
+      {
+        "max_fragments": 4096,
+        "max_frames": 8,
+        "program": "886f31c6f18ae4e8e726ffa0fc77b5548233498c86cac333b40307541b303adc",
+        "fragments": 869,
+        "shapes": 1260,
+        "transitions": 911,
+        "unit_entry_tables": [
+          139,
+          169
+        ],
+        "ranking": {
+          "minimum_activations": 1,
+          "max_fragments": 4096,
+          "instruction_handle_budget": 262144,
+          "charged_static_handles": 33597,
+          "sum_of_candidate_scores_not_global_savings": 5350,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      },
+      {
+        "max_fragments": 4096,
+        "max_frames": 16,
+        "program": "8510e7f5854a4b144ed7e6c1d42aeb64ac551f9c9cf59e5395456b08af7c9aca",
+        "fragments": 1371,
+        "shapes": 1828,
+        "transitions": 1479,
+        "unit_entry_tables": [
+          139,
+          169
+        ],
+        "ranking": {
+          "minimum_activations": 1,
+          "max_fragments": 4096,
+          "instruction_handle_budget": 262144,
+          "charged_static_handles": 88218,
+          "sum_of_candidate_scores_not_global_savings": 6213,
+          "alternatives_overlap": true,
+          "rule": "rank actual avoided binding/boundary record operations minus transition probes per static instruction handle; include required prefixes",
+          "performance_admission": "unvalidated ranking; requires whole-execution baseline comparison"
+        }
+      }
+    ],
+    "scope": "offline selections from one actual execution; candidates overlap; no runtime saving claimed"
+  },
+  "measurements": [
+    {
+      "budget": 1024,
+      "depth": 16,
+      "program": "5029e2df50b438b2c86bc26dd68cb036172ed1d6743f60f3d03d3ffe8d3b43ec",
+      "graph_bytes": 2501902,
+      "delta": -368,
+      "validation": "final-state equality only; no Run admission"
+    },
+    {
+      "budget": 4096,
+      "depth": 4,
+      "program": "8ccac399ed602b58a91781e2cb46022b4c6acedebe8d01216d1a5058437e4b7f",
+      "graph_bytes": 2523142,
+      "delta": 20872,
+      "validation": "final-state equality only; no Run admission"
+    },
+    {
+      "budget": 4096,
+      "depth": 16,
+      "program": "8510e7f5854a4b144ed7e6c1d42aeb64ac551f9c9cf59e5395456b08af7c9aca",
+      "graph_bytes": 2646630,
+      "delta": 144360,
+      "validation": "final-state equality only; no Run admission"
+    }
+  ],
+  "admission": "keep accepted baseline; marginal best saving does not establish broad compression"
+}

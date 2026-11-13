@@ -1269,3 +1269,44 @@ fn completed_singleton_uses_existing_ports_without_physical_owner_transfer() {
         assert_eq!(actual.graph.retained_cell_storage()["completed_owner_frames"],0);
     }
 }
+
+#[test]
+fn expanded_fragment_budget_does_not_bypass_typed_wiring() {
+    let p=program(STAGES);
+    let mut raw=p.artifact.clone();
+    let fragment=raw["ownership_fragments"]["fragments"][0].clone();
+    raw["ownership_fragments"]["fragments"]=json!(vec![fragment;300]);
+    assert!(Program::parse(raw.clone()).is_err());
+    raw["ownership_fragments"]["max_fragments"]=json!(1024);
+    let q=Program::parse(raw.clone()).unwrap();
+    let mut before=Executor::new(Graph::new_with_cell_ownership(p).unwrap(),true);
+    let mut after=Executor::new(Graph::new_with_cell_ownership(q).unwrap(),true);
+    before.execute().unwrap();after.execute().unwrap();
+    assert_eq!(before.snapshots,after.snapshots);
+    raw["ownership_fragments"]["fragments"][0]["hops"][0]["source_frame"]=json!(999);
+    assert!(Program::parse(raw.clone()).is_err());
+    raw["ownership_fragments"]["max_fragments"]=json!(4097);
+    assert!(Program::parse(raw).is_err());
+}
+
+#[test]
+fn selection_budgets_are_explicit_and_bounded() {
+    use eggfuse_cell_runtime::graph::cell_ownership::composition::select_profile_with_budget;
+    let mut g=Graph::new_with_cell_ownership(raw_program(STAGES)).unwrap();
+    g.train_ownership_fragments().unwrap();
+    let mut e=Executor::new(g,false);e.execute().unwrap();
+    let profile=e.graph.ownership_fragment_profile().unwrap();
+    let selected=select_profile_with_budget(&profile,1024,65536).unwrap();
+    assert_eq!(selected["max_fragments"],1024);
+    assert_eq!(selected["ranking"]["instruction_handle_budget"],65536);
+    assert!(selected["ranking"]["charged_static_handles"].as_u64().unwrap()<=65536);
+    assert!(select_profile_with_budget(&profile,0,65536).is_err());
+    assert!(select_profile_with_budget(&profile,4097,65536).is_err());
+    assert!(select_profile_with_budget(&profile,1024,0).is_err());
+    assert!(select_profile_with_budget(&profile,1024,1048577).is_err());
+    let mut once=profile.clone();once["minimum_activations"]=json!(1);
+    for row in once["records"].as_array_mut().unwrap() {row["observed"]["activations"]=json!(1);}
+    assert!(!select_profile_with_budget(&once,4096,262144).unwrap()["fragments"].as_array().unwrap().is_empty());
+    once["minimum_activations"]=json!(0);
+    assert!(select_profile_with_budget(&once,4096,262144).is_err());
+}
