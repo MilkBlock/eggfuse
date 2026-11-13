@@ -179,3 +179,7 @@ Two added tests check initially absent output channels becoming addressable to a
 next request and constructor reuse avoiding an extra boundary slot. Ten boundary
 representation tests pass in total. `generated-boundary-results.json` records the
 Metal run. Reproduce with `--generated-boundaries` on the model command above.
+
+The [actual-input experiment](OBSERVED_CELL_TARGETS.md) now supplies observed
+pre-Run Eq partitions and scalars to the same recurrence, separately from the
+original symbolic catalog. Its teacher remains a conditional local completion.
