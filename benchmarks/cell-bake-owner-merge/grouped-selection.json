@@ -1,0 +1,71 @@
+{
+  "scope": "Same catalog and saved standalone Run checks; no timing or complete memory claim",
+  "candidate_binary_sha256": "a3735f1cc2ba37a0b454dbaec2121630dcdfd9b7d1dbb4f9ad1b1fb70330c918",
+  "baseline_report_sha256": "0eaef0876df6a03651930a2ed4e8f72d5d451a6ed2d0803ff170f71f8b513d06",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+      "runs": 418,
+      "all_saved_run_checks_equal": true,
+      "other_existing_runtime_counters_equal": true,
+      "final_state": "d04728e6402e21992b9748a09ec99ace5f6639bc268ac5bcafbc24d0fd52f2f0",
+      "key_lookup_calls": 2697,
+      "route_accepted": 127,
+      "anchor_reads": 472,
+      "old_dispatch_searches": 472,
+      "new_dispatch_searches": 241,
+      "dispatch_searches_saved": 231,
+      "operation_index_checks": 193,
+      "alternative_fields": 42
+    },
+    {
+      "case": "loopfact",
+      "program": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+      "runs": 398,
+      "all_saved_run_checks_equal": true,
+      "other_existing_runtime_counters_equal": true,
+      "final_state": "623c3b05d895a4200f8ea907ea4468a92a000c975f654483e54c42c96c90bf7a",
+      "key_lookup_calls": 2116,
+      "route_accepted": 82,
+      "anchor_reads": 410,
+      "old_dispatch_searches": 410,
+      "new_dispatch_searches": 230,
+      "dispatch_searches_saved": 180,
+      "operation_index_checks": 133,
+      "alternative_fields": 34
+    },
+    {
+      "case": "sum-bits",
+      "program": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+      "runs": 882,
+      "all_saved_run_checks_equal": true,
+      "other_existing_runtime_counters_equal": true,
+      "final_state": "3bae7a5ad756595f8c454b27baabbf7e830cf06b61d6aa69c0f7437ee747ab2a",
+      "key_lookup_calls": 11965,
+      "route_accepted": 521,
+      "anchor_reads": 4405,
+      "old_dispatch_searches": 4405,
+      "new_dispatch_searches": 3310,
+      "dispatch_searches_saved": 1095,
+      "operation_index_checks": 1376,
+      "alternative_fields": 539
+    },
+    {
+      "case": "dot-product",
+      "program": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+      "runs": 954,
+      "all_saved_run_checks_equal": true,
+      "other_existing_runtime_counters_equal": true,
+      "final_state": "191d2a4bd738e7afd0783d30b5d5c1f1219ac92887bb96b95239edfec27141d9",
+      "key_lookup_calls": 9202,
+      "route_accepted": 477,
+      "anchor_reads": 3033,
+      "old_dispatch_searches": 3033,
+      "new_dispatch_searches": 2118,
+      "dispatch_searches_saved": 915,
+      "operation_index_checks": 1230,
+      "alternative_fields": 463
+    }
+  ]
+}

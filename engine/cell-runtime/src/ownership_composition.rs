@@ -580,6 +580,7 @@ pub(super) struct Runtime {
     pub training: Option<Training>,
     pub catalog_trace: Option<Box<CatalogTrace>>,
     pub entry: Option<Entry>,
+    pub witness_selection:std::cell::Cell<Option<super::witnesses::Selection>>,
     pub heap: Vec<Cursor>,
     pub columns: Vec<usize>,
 }
@@ -610,6 +611,7 @@ impl Runtime {
             training: None,
             catalog_trace: None,
             entry: None,
+            witness_selection:Default::default(),
             heap: vec![],
             columns: vec![],
         }

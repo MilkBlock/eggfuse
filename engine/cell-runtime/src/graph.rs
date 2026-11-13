@@ -333,6 +333,9 @@ pub struct Stats {
     pub constructor_registry_fragments:u64,
     #[serde(default)]
     pub constructor_cell_route_probes: u64,
+    pub constructor_cell_route_anchor_reads:u64,
+    pub constructor_cell_route_selection_reuses:u64,
+    pub constructor_cell_route_operation_checks:u64,
     pub constructor_cell_route_alternative_checks: u64,
     pub constructor_cell_route_alternative_fields: u64,
     pub constructor_cell_route_static_candidate_checks_avoided:u64,

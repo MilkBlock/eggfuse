@@ -42,7 +42,42 @@ fn prove_key(query:&[Arg], source:&[Input], prefix:&[Op], args:&[Arg], target:&[
     })
 }
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
-pub(super) struct Routes(pub Vec<Vec<Option<Operation>>>);
+pub(super) struct Routes(pub Vec<Rule>, Vec<Group>);
+#[derive(Clone,Debug,Default,PartialEq,Eq)]
+pub(super) struct Rule {
+    operations:Vec<smallvec::SmallVec<[usize;1]>>,
+    entries:BTreeMap<usize,BTreeMap<Key,usize>>,
+}
+impl Rule {pub(super) fn is_empty(&self)->bool {self.entries.is_empty()}}
+#[derive(Clone,Debug,Default,PartialEq,Eq)]
+struct Group {operations:Vec<(usize,smallvec::SmallVec<[Target;1]>)>}
+/// Coordinator scratch for a pure lookup in the immutable compiled catalog.
+/// The full key includes rule/Entry and source layout, not an instance address.
+/// It may cross Runs: every use resolves current facts and rechecks admission.
+/// Never place equality, visibility or returned-value evidence here.
+#[derive(Clone,Copy)]
+pub(super) struct Selection {rule:usize,entry:usize,key:Key,group:Option<usize>}
+impl Routes {
+    fn group(operations:Vec<Vec<Option<Operation>>>)->Self {
+        let mut rules=Vec::with_capacity(operations.len());let mut groups=Vec::<Group>::new();
+        for operations in operations {
+            let mut rule=Rule{operations:vec![Default::default();operations.len()],..Default::default()};
+            for (op,operation) in operations.into_iter().enumerate() {
+                let Some(operation)=operation else {continue;};
+                for (entry,candidates) in operation.entries {
+                    rule.operations[op].push(entry);
+                    let routes=rule.entries.entry(entry).or_default();
+                    for (key,targets) in candidates {
+                        let group=*routes.entry(key).or_insert_with(||{let n=groups.len();groups.push(Group::default());n});
+                        groups[group].operations.push((op,targets));
+                    }
+                }
+            }
+            rules.push(rule);
+        }
+        Self(rules,groups)
+    }
+}
 #[derive(serde::Deserialize)]
 struct Recipe {
     rule: usize,
@@ -113,7 +148,7 @@ impl Routes {
                 }
             }
         }
-        Ok(Self(routes))
+        Ok(Self::group(routes))
     }
 }
 impl Graph {
@@ -123,13 +158,29 @@ impl Graph {
         let owner = self.ownership.as_ref()?;
         let entry = owner.composition.entry.as_ref()?;
         if self.rhs_frame(cell)?.template != entry.template { return None; }
-        let routes = self.program.cell_ownership.witnesses.0.get(entry.rule)?.get(operation)?.as_ref()?;
-        for (&index, candidates) in &routes.entries {
+        let plans=&self.program.cell_ownership.witnesses;
+        let routes = plans.0.get(entry.rule)?;
+        for &index in routes.operations.get(operation)? {
             let Some(Some(Dependency::Fact(anchor))) = entry.anchors.get(index) else { continue; };
             let Some(source) = owner.composition.frames.get(&anchor.cell) else { continue; };
             let Some(component) = owner.composition.components.get(source.component as usize).and_then(Option::as_ref) else { continue; };
-            self.stats.constructor_cell_route_probes += 1;
-            let Some(targets) = candidates.get(&(component.shape,source.ordinal,source.code,anchor.op)) else { continue; };
+            self.stats.constructor_cell_route_anchor_reads += 1;
+            let key=(component.shape,source.ordinal,source.code,anchor.op);
+            let group=if let Some(cached)=owner.composition.witness_selection.get()
+                .filter(|s|s.rule==entry.rule && s.entry==index && s.key==key) {
+                self.stats.constructor_cell_route_selection_reuses+=1;
+                cached.group
+            } else {
+                self.stats.constructor_cell_route_probes+=1;
+                let group=routes.entries[&index].get(&key).copied();
+                owner.composition.witness_selection.set(Some(Selection{rule:entry.rule,entry:index,key,group}));
+                group
+            };
+            let Some(group)=group else {continue;};
+            self.stats.constructor_cell_route_operation_checks+=1;
+            let operations=&plans.1[group].operations;
+            let Ok(position)=operations.binary_search_by_key(&operation,|p|p.0) else {continue;};
+            let targets=&operations[position].1;
             for &Target{frame:target,code,op,key_proved} in targets {
             let Some(&cell) = component.frames.get(target) else { continue; };
             if !owner.composition.frames.get(&cell).is_some_and(|f|f.code==code && f.component==source.component) { continue; }
