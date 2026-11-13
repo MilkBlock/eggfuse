@@ -1,0 +1,73 @@
+{
+  "scope": "learned fixed-request latent Cell recurrence, not full successor saturation",
+  "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "basis_sha256": "90d016665ea6ee7ad0a507311fbd7b0622f70235bc99c0d73b5ab2c58f6238c5",
+  "catalog_model_sha256": "d19a09dcb1fca392ebdc119e6652e8ab848c2b47bb95e34547017708eeac65ea",
+  "model_sha256": "18c14d968497a097e81471e23fe7d55449ffea4a3e6e93cf8133a63590fc273a",
+  "fit": {
+    "alpha": 0.1,
+    "validation_target_mse": 0.00010708790068747476
+  },
+  "bake_conditions": true,
+  "condition_matrix_floats": 27852800,
+  "rounds": 16,
+  "cases": 850,
+  "latent_width": 128,
+  "state_readout_shape": [
+    905,
+    129
+  ],
+  "per_test_projection_floats": 6963200,
+  "intermediate_full_state_decodes": 0,
+  "intermediate_cpu_reads": 0,
+  "backpropagation": false,
+  "oracle_completed_false_emissions": 12,
+  "latent_numerical_audit": {
+    "passed": true,
+    "state_elements_outside_tolerance": 0,
+    "nonfinite_state_elements": 0,
+    "emission_disagreements": 0,
+    "max_absolute_state_difference": 1.2487173080444336e-05,
+    "absolute_tolerance": 0.002,
+    "relative_tolerance": 0.004
+  },
+  "decoded_numerical_audit": {
+    "passed": true,
+    "state_elements_outside_tolerance": 0,
+    "nonfinite_state_elements": 0,
+    "emission_disagreements": 0,
+    "max_absolute_state_difference": 0.000823974609375,
+    "absolute_tolerance": 0.002,
+    "relative_tolerance": 0.004
+  },
+  "decoder_f64_disagreements": 0,
+  "emissions_per_round": [
+    767,
+    57,
+    17,
+    11,
+    9,
+    9,
+    8,
+    8,
+    7,
+    7,
+    6,
+    5,
+    5,
+    4,
+    4,
+    4
+  ],
+  "exact_target": 788,
+  "exact_target_and_stopped": 788,
+  "never_emitted_but_initially_novel": 12,
+  "final_active": 4,
+  "limitations": [
+    "Initial encoding and folded projection compilation still on CPU",
+    "Fixed same binding throughout recurrence, not changed successor requests",
+    "Catalog contains held-out targets; exact selection is not native semantic proof",
+    "Shared latent does not by itself enforce Eq or valid identity",
+    "No throughput, ownership or full ruleset support claim"
+  ]
+}
