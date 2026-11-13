@@ -120,3 +120,26 @@ it must not be credited as an observed runtime speedup.
 `timing-results.json` stores the compact result and the checksum of full retained
 observations in `out/cell-query-fragments`. Scheduler validation is recorded in
 `tools/local-jobs-validation.json`.
+
+## Remaining result routing on the unified Cell branch
+
+The `d0d8ee33` frontier audit and `b9fda4c1` source-slot projection reinforce the
+need to replace a runtime representation and its maintenance, not merely share
+more bindings. The current parallel path already transfers 1,035,111 Raytrace
+rows as owned fragments, while 519,436 rows still enter coordinator routing.
+Those counts alone cannot distinguish mixed-rule arrays from small batches or
+point expansions. Increasing fragment coverage without that distinction previously
+added inline packaging cost, as the experiment above records.
+
+The routing audit splits the existing fallback by point expansion, non-pooled
+inline range, pooled mixed-rule range, and pooled single-rule range below the
+finishing grain. These categories are exhaustive and disjoint. Admission, error
+and source ordering, delta ownership, binding allocations and Run visibility are
+unchanged; the counters do not claim a completed takeover or a speedup.
+
+`routing.py ACCEPTED TARGET OUTPUT --accepted-commit COMMIT` freezes this committed runtime under a compute
+lease, runs unchanged accepted sum-bits/Raytrace programs, compares exact states,
+source Runs and effects, and checks the reviewed sum-bits contract. It validates
+that the four categories add to coordinator rows. The changed-root publication
+experiment remains disabled. `ACCEPTED` can be the frozen borrowed-instance
+candidate. This is a work audit, not another timing campaign.

@@ -166,6 +166,10 @@ pub(super) struct Stats {
     pub result_fragment_rows: u64,
     pub result_fragment_spans: u64,
     pub result_coordinator_rows: u64,
+    pub result_point_rows: u64,
+    pub result_mixed_rule_rows: u64,
+    pub result_small_rule_rows: u64,
+    pub result_inline_rows: u64,
     pub coverage_range_rows:u64,
     pub coverage_admitted_entries:u64,
     pub coverage_supported_entries:u64,
@@ -1252,6 +1256,7 @@ impl Workers {
                                 if code.expansion {
                                     let position=plans.position(code.rule,code.pivot,q.ordinal);
                                     self.stats.result_coordinator_rows+=1;
+                                    self.stats.result_point_rows+=1;
                                     outputs[code.rule].rows.push(((position,q.order),answer));continue;
                                 }
                                 if code.inherits_entry && !g.has_visibility_changes(q.row.table)
@@ -1293,6 +1298,14 @@ impl Workers {
                                     std::mem::take(&mut done.origins));
                             } else {
                                 self.stats.result_coordinator_rows+=done.answers.len() as u64;
+                                // Diagnose the existing fallback without changing admission:
+                                // inline execution, mixed rule ownership, then a small rule.
+                                let rows=done.answers.len() as u64;
+                                if !pooled { self.stats.result_inline_rows+=rows; }
+                                else if done.origins.first().is_some_and(|(_,first)|
+                                    done.origins.iter().any(|(_,code)|codes[*code].rule!=codes[*first].rule)) {
+                                    self.stats.result_mixed_rule_rows+=rows;
+                                } else { self.stats.result_small_rule_rows+=rows; }
                                 let mut origins=done.origins.iter();
                                 let mut origin=origins.next();
                                 for (at,(source,answer)) in done.answers.drain(..).enumerate() {
