@@ -1,0 +1,243 @@
+{
+  "scope": "Saved standalone Cell CPU snapshots; no new execution or timing measurement",
+  "limitations": [
+    "Restoration causes do not identify the triggering union.",
+    "Retired entry counts do not measure retained bytes or peak lifetime.",
+    "Routing bytes are not all redundant; old-prefix moves are cumulative work.",
+    "Owner record bytes include capacities; not all are removable."
+  ],
+  "cases": [
+    {
+      "case": "fact",
+      "input_sha256": "ea2d15577e6c977f56b60d420d3ed2f723c737c147f27417ae0f9f2d14871140",
+      "program_sha256": "c94fa2da6d160a837efa1ac0b6d1332f1f23c63e3c31112f1984b0f7cab08676",
+      "graph_owned_bytes": 705175,
+      "restoration": {
+        "events": 2,
+        "slots": 4,
+        "facts": 2,
+        "capacity_bytes": 672,
+        "max_capacity_bytes": 336,
+        "max_template": 145,
+        "scalar_provider": {
+          "events": 2,
+          "requested_scalar_slots": 2,
+          "restored_slots": 4,
+          "restored_facts": 2,
+          "restored_array_capacity_bytes": 672,
+          "max_array_capacity_bytes": 336,
+          "max_source_template": 145,
+          "max_source_slots": 2,
+          "max_source_facts": 1
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "max_owner_frames": 9,
+      "retired_slot_entries": 0,
+      "retired_fact_entries": 14,
+      "old_slots_moved": 339,
+      "old_facts_moved": 341,
+      "segment_extensions": 0,
+      "routing_bytes": 292510,
+      "routing_fraction": 0.41480483567908677,
+      "completed_owner_records_bytes": 57344,
+      "cell_records_bytes": 43440
+    },
+    {
+      "case": "loopfact",
+      "input_sha256": "5ff59d6b10c602606f4acbaf022313dd862da2cc3a34a8a8c3cd7cb7394228bb",
+      "program_sha256": "fb56d5498f2f1b6b6a3f430af90df9008e4b3770758da0345463790c343feb8b",
+      "graph_owned_bytes": 616289,
+      "restoration": {
+        "events": 0,
+        "slots": 0,
+        "facts": 0,
+        "capacity_bytes": 0,
+        "max_capacity_bytes": 0,
+        "max_template": null,
+        "scalar_provider": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "max_owner_frames": 10,
+      "retired_slot_entries": 7,
+      "retired_fact_entries": 13,
+      "old_slots_moved": 257,
+      "old_facts_moved": 286,
+      "segment_extensions": 0,
+      "routing_bytes": 235422,
+      "routing_fraction": 0.38199935419908515,
+      "completed_owner_records_bytes": 38912,
+      "cell_records_bytes": 42960
+    },
+    {
+      "case": "sum-bits",
+      "input_sha256": "d18a85726735635c67caf294245933d54ff981833a7170b90a62a0aaa9d1cb0e",
+      "program_sha256": "4c29b9f5d8d09d999cd1e64883170574a456d17788216868dede4f438f39feb3",
+      "graph_owned_bytes": 1830387,
+      "restoration": {
+        "events": 13,
+        "slots": 24,
+        "facts": 16,
+        "capacity_bytes": 4320,
+        "max_capacity_bytes": 360,
+        "max_template": 59,
+        "scalar_provider": {
+          "events": 13,
+          "requested_scalar_slots": 13,
+          "restored_slots": 24,
+          "restored_facts": 16,
+          "restored_array_capacity_bytes": 4320,
+          "max_array_capacity_bytes": 360,
+          "max_source_template": 59,
+          "max_source_slots": 3,
+          "max_source_facts": 1
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "max_owner_frames": 14,
+      "retired_slot_entries": 121,
+      "retired_fact_entries": 195,
+      "old_slots_moved": 1098,
+      "old_facts_moved": 1264,
+      "segment_extensions": 0,
+      "routing_bytes": 883038,
+      "routing_fraction": 0.4824324036392304,
+      "completed_owner_records_bytes": 145408,
+      "cell_records_bytes": 105720
+    },
+    {
+      "case": "dot-product",
+      "input_sha256": "b9d814cb01122017232286a36588a9e7bb21c52d6d6741d15cb6eadfa7664dec",
+      "program_sha256": "821f999d16c0b17eabbdbf8c90a56bbe6a0fdc29d5cd754c70040ccf3c483fc9",
+      "graph_owned_bytes": 1798019,
+      "restoration": {
+        "events": 10,
+        "slots": 20,
+        "facts": 10,
+        "capacity_bytes": 3360,
+        "max_capacity_bytes": 336,
+        "max_template": 145,
+        "scalar_provider": {
+          "events": 10,
+          "requested_scalar_slots": 10,
+          "restored_slots": 20,
+          "restored_facts": 10,
+          "restored_array_capacity_bytes": 3360,
+          "max_array_capacity_bytes": 336,
+          "max_source_template": 145,
+          "max_source_slots": 2,
+          "max_source_facts": 1
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "max_owner_frames": 14,
+      "retired_slot_entries": 139,
+      "retired_fact_entries": 121,
+      "old_slots_moved": 2675,
+      "old_facts_moved": 1847,
+      "segment_extensions": 0,
+      "routing_bytes": 846518,
+      "routing_fraction": 0.47080592585506603,
+      "completed_owner_records_bytes": 126976,
+      "cell_records_bytes": 117000
+    }
+  ]
+}

@@ -532,3 +532,50 @@ CASE-multi.json into out/cell-witness-multi, then:
 ```sh
 python3 benchmarks/cell-bake-owner-merge/multi_witness_results.py out/cell-witness-multi out/cell-bake-owner-merge/batch benchmarks/cell-bake-owner-merge/multi-witness-results.json
 ```
+
+## Post-merge owner cost audit
+
+`owner_costs.py` analyzes the four saved `out/cell-witness-multi/*-multi.json`
+executions together. It does not run a new benchmark. `owner-costs.json` retains
+input hashes, program identities and accounting checks. These are the newer
+installed-catalog observations, not the earlier `09fe0691` restoration numbers.
+
+| case | reconstructed container bytes (cumulative) | old slot/fact entries moved | routing/stable fraction of Graph heap |
+| --- | ---: | ---: | ---: |
+| fact | 672 | 680 | 41.5% |
+| loopfact | 0 | 543 | 38.2% |
+| sum-bits | 4,320 | 2,362 | 48.2% |
+| dot-product | 3,360 | 4,522 | 47.1% |
+
+All recorded restorations in this batch are scalar-provider loss, not component
+retirement or representation fallback. This does not attribute their cause to
+union. Maximum restored source arrays are 360 bytes in sum-bits and 336 bytes in
+fact/dot-product; maximum live owner widths are 14 frames in sum-bits/dot-product.
+The source-frame boundary currently prevents those owners from becoming a
+single restoration unit.
+
+Three distinct costs must not be conflated:
+
+1. `preserve_completed_scalars` can reconstruct all remaining fields/facts of
+   one source frame when just one scalar loses its last provider.
+2. `retire_completed` releases backing arrays only when the owner's last frame
+   disappears. Earlier retired ranges therefore remain allocated. Final retired
+   counts are not peak pinned bytes, and the current observations cannot recover
+   how long those bytes overlap newly restored arrays.
+3. `extend_completed` allocates a replacement owner and moves the old prefix;
+   this is independent of union. Every replay here has zero segment extensions,
+   so the existing suffix-only alternative was not exercised by these inputs.
+
+The next structural target is duplicated component/frame/port addressing,
+while keeping independently restorable source slices. Routing fractions are a
+search budget, not a claim that these bytes can all be deleted. A future larger
+Cell must retain live external readers, mutable-read invalidation, residual
+matches and original Run/effect order. Template reuse alone does not authorize
+retiring these obligations. Do not flatten nested templates into a giant frame
+or add a second instance graph to express their sharing.
+
+Reproduce without execution:
+
+```sh
+python3 benchmarks/cell-bake-owner-merge/owner_costs.py out/cell-witness-multi benchmarks/cell-bake-owner-merge/owner-costs.json
+```
