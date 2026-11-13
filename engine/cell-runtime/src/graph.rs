@@ -2140,6 +2140,8 @@ impl Graph {
         #[cfg(feature = "sparse-cells")]
         if let Some(ConstructorWitness::Snapshot(witness)) = witness
             && let Some(point) = self.sealed_constructor_result(cell, t, witness)? {
+            #[cfg(feature="storage-metrics")]
+            crate::receipt_trace::constructor(FactRef{cell,op:op as u32},t,point.witness,false,true);
             if let Some(receipt) = receipt { *receipt = Some(point.witness); }
             if let Some(visible) = visible { *visible = true; }
             self.stats.constructor_reused += 1;
@@ -2151,6 +2153,8 @@ impl Graph {
         #[cfg(feature = "sparse-cells")]
         if let Some((target,evidence))=route && evidence.checked()
             && let Some(point)=self.cell_witness_result(t,target)? {
+            #[cfg(feature="storage-metrics")]
+            crate::receipt_trace::constructor(FactRef{cell,op:op as u32},t,point.witness,false,true);
             if let Some(receipt)=receipt {*receipt=Some(point.witness);}
             if let Some(visible)=visible {*visible=true;}
             self.stats.constructor_reused+=1;
@@ -2174,6 +2178,8 @@ impl Graph {
         let row = self.lookup_prepared_constructor(t, &key, witness.map(ConstructorWitness::fact).or(direct))?;
         if direct.is_some() { self.stats.constructor_cell_route_accepted += self.stats.constructor_prepared_accepted - accepted; }
         if let Some(row) = row {
+            #[cfg(feature="storage-metrics")]
+            crate::receipt_trace::constructor(FactRef{cell,op:op as u32},t,row.witness,false,!row.hidden);
             if let Some(receipt) = receipt {
                 *receipt = Some(row.witness);
             }
@@ -2221,6 +2227,11 @@ impl Graph {
             value.clone(),
             false,
         )?;
+        #[cfg(feature="storage-metrics")]
+        {
+            let site=FactRef{cell,op:op as u32};
+            crate::receipt_trace::constructor(site,t,Dependency::Fact(site),true,true);
+        }
         Ok(value)
     }
 

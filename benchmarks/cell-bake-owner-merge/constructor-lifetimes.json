@@ -1,0 +1,144 @@
+{
+  "scope": "Actual standalone Cell runtime with diagnostic trace; no speed/native acceptance claim",
+  "cases": [
+    {
+      "scope": "Observed constructor outcomes only; missing fast paths and aliases remain unknown",
+      "coverage": "generic RHS constructor paths and insert_constructor births; fast publication paths are not covered; missing events are unknown",
+      "counts": {
+        "observed_reuses": 869,
+        "visible_reuses": 869,
+        "foreign_source_reuses": 869,
+        "reused_target_birth_unobserved": 98,
+        "observed_births": 824,
+        "reuse_of_observed_prior_run_birth": 714,
+        "reuse_of_observed_same_run_birth": 57,
+        "observed_births_later_retired": 51,
+        "retired_across_runs": 33,
+        "retirements_without_observed_birth": 16,
+        "retired_same_run": 18,
+        "observed_births_without_later_retirement_event": 773
+      },
+      "limitations": [
+        "No retirement event does not prove final liveness or visibility.",
+        "Foreign reuse is an actual result address, not permission to reuse it in a later stage.",
+        "Unobserved nominal operations cannot be classified from this archive."
+      ],
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "runs": 418,
+      "all_saved_run_checks_equal": true,
+      "terminal_check_equal": true,
+      "missing_membership": {
+        "absent_owned_positions": 413,
+        "last_result_was_another_fact_or_function": 213,
+        "created_locally_then_retired": 19,
+        "no_constructor_outcome_observed": 181
+      }
+    },
+    {
+      "scope": "Observed constructor outcomes only; missing fast paths and aliases remain unknown",
+      "coverage": "generic RHS constructor paths and insert_constructor births; fast publication paths are not covered; missing events are unknown",
+      "counts": {
+        "observed_reuses": 632,
+        "visible_reuses": 632,
+        "foreign_source_reuses": 632,
+        "reused_target_birth_unobserved": 74,
+        "observed_births": 763,
+        "reuse_of_observed_prior_run_birth": 508,
+        "observed_births_later_retired": 38,
+        "retired_across_runs": 26,
+        "reuse_of_observed_same_run_birth": 50,
+        "retirements_without_observed_birth": 9,
+        "retired_same_run": 12,
+        "observed_births_without_later_retirement_event": 725
+      },
+      "limitations": [
+        "No retirement event does not prove final liveness or visibility.",
+        "Foreign reuse is an actual result address, not permission to reuse it in a later stage.",
+        "Unobserved nominal operations cannot be classified from this archive."
+      ],
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "runs": 398,
+      "all_saved_run_checks_equal": true,
+      "terminal_check_equal": true,
+      "missing_membership": {
+        "absent_owned_positions": 352,
+        "last_result_was_another_fact_or_function": 175,
+        "no_constructor_outcome_observed": 153,
+        "created_locally_then_retired": 24
+      }
+    },
+    {
+      "scope": "Observed constructor outcomes only; missing fast paths and aliases remain unknown",
+      "coverage": "generic RHS constructor paths and insert_constructor births; fast publication paths are not covered; missing events are unknown",
+      "counts": {
+        "observed_reuses": 4469,
+        "visible_reuses": 4377,
+        "foreign_source_reuses": 4451,
+        "reused_target_birth_unobserved": 453,
+        "observed_births": 3104,
+        "reuse_of_observed_prior_run_birth": 3714,
+        "reuse_of_observed_same_run_birth": 302,
+        "observed_births_later_retired": 508,
+        "retired_across_runs": 367,
+        "retirements_without_observed_birth": 336,
+        "same_source_other_operation_reuses": 18,
+        "retired_same_run": 141,
+        "hidden_reuses": 92,
+        "observed_births_without_later_retirement_event": 2596
+      },
+      "limitations": [
+        "No retirement event does not prove final liveness or visibility.",
+        "Foreign reuse is an actual result address, not permission to reuse it in a later stage.",
+        "Unobserved nominal operations cannot be classified from this archive."
+      ],
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "runs": 882,
+      "all_saved_run_checks_equal": true,
+      "terminal_check_equal": true,
+      "missing_membership": {
+        "absent_owned_positions": 1466,
+        "last_result_was_another_fact_or_function": 788,
+        "created_locally_then_retired": 123,
+        "no_constructor_outcome_observed": 555
+      }
+    },
+    {
+      "scope": "Observed constructor outcomes only; missing fast paths and aliases remain unknown",
+      "coverage": "generic RHS constructor paths and insert_constructor births; fast publication paths are not covered; missing events are unknown",
+      "counts": {
+        "observed_reuses": 3239,
+        "visible_reuses": 3239,
+        "foreign_source_reuses": 3239,
+        "reused_target_birth_unobserved": 291,
+        "observed_births": 2830,
+        "reuse_of_observed_prior_run_birth": 2652,
+        "reuse_of_observed_same_run_birth": 296,
+        "observed_births_later_retired": 286,
+        "retired_across_runs": 244,
+        "retirements_without_observed_birth": 50,
+        "retired_same_run": 42,
+        "observed_births_without_later_retirement_event": 2544
+      },
+      "limitations": [
+        "No retirement event does not prove final liveness or visibility.",
+        "Foreign reuse is an actual result address, not permission to reuse it in a later stage.",
+        "Unobserved nominal operations cannot be classified from this archive."
+      ],
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "runs": 954,
+      "all_saved_run_checks_equal": true,
+      "terminal_check_equal": true,
+      "missing_membership": {
+        "absent_owned_positions": 1331,
+        "last_result_was_another_fact_or_function": 666,
+        "created_locally_then_retired": 79,
+        "no_constructor_outcome_observed": 586
+      }
+    }
+  ],
+  "input_sha256": "831f190d4224ae78f985b9c6197d8a42e538a945a4627ebbd1ac008a32d3d2a7"
+}

@@ -1860,3 +1860,36 @@ fn check_later_constructor_witness(compared:bool) {
     assert_eq!(first.graph.export().unwrap(),candidate.graph.export().unwrap());
     assert!(candidate.graph.key_lookup_calls.get()<first.graph.key_lookup_calls.get());
 }
+
+#[cfg(feature="storage-metrics")]
+#[test]
+fn receipt_observer_distinguishes_constructor_results_from_site_addresses() {
+    let p=program("(datatype E (N i64) (F E)) (N 0) (ruleset a) (ruleset b)
+        (rule ((= x (N n))) ((F x) (N (+ n 0))) :ruleset a)
+        (rule ((= x (N n)) (F x)) ((delete (F x))) :ruleset b)
+        (run a 1) (run b 1)");
+    let mut control=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+    control.execute().unwrap();
+    eggfuse_cell_runtime::receipt_trace::start(4096);
+    let mut candidate=Executor::new(Graph::new_with_local_congruence(p).unwrap(),true);
+    eggfuse_cell_runtime::receipt_trace::set_run(1);
+    let result=candidate.execute_until(Some(1)).and_then(|_| {
+        eggfuse_cell_runtime::receipt_trace::set_run(2);
+        candidate.execute()
+    });
+    let trace=eggfuse_cell_runtime::receipt_trace::finish();
+    result.unwrap();
+    assert_eq!(control.graph.export().unwrap(),candidate.graph.export().unwrap());
+    assert_eq!(control.snapshots,candidate.snapshots);
+    assert_eq!(control.binding_audit,candidate.binding_audit);
+    assert_eq!(trace["complete_archive"],true);
+    let events=trace["trace"]["events"].as_array().unwrap();
+    assert!(events.iter().any(|e|e["event"]["kind"]=="constructor" && e["event"]["created"]==true),"{trace}");
+    assert!(events.iter().any(|e|e["event"]["kind"]=="constructor" && e["event"]["created"]==false),"{trace}");
+    let birth=events.iter().find(|e|e["event"]["kind"]=="constructor" && e["event"]["created"]==true).unwrap();
+    assert_eq!(birth["run"],1);
+    assert!(events.iter().any(|e|e["run"]==2 && e["event"]["kind"]=="retire"
+        && e["event"]["fact"]==birth["event"]["witness"]),"{trace}");
+    assert!(events.iter().any(|e|e["event"]["kind"]=="constructor" && e["event"]["created"]==false
+        && e["event"]["site"]["cell"]!=e["event"]["witness"]["Fact"]["cell"]),"{trace}");
+}

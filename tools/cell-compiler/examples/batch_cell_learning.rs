@@ -114,7 +114,7 @@ fn main()->Result<()> {
             eprintln!("compiled witnesses {name}");
         }
     } else if a[0]=="apply-passive" || a[0]=="check-passive" || a[0]=="check-nested" {
-        if a.len()!=3 && !(a[0]=="check-passive" && a.len()==4 && matches!(a[3].as_str(),"witnesses"|"witness-trace"|"template-fields"|"template-overlap")) {return Err("apply-passive/check-passive/check-nested ROOT VARIANT [witnesses|witness-trace|template-fields|template-overlap for check-passive]".into());}
+        if a.len()!=3 && !(a[0]=="check-passive" && a.len()==4 && matches!(a[3].as_str(),"witnesses"|"witness-trace"|"receipt-trace"|"template-fields"|"template-overlap")) {return Err("apply-passive/check-passive/check-nested ROOT VARIANT [witnesses|witness-trace|receipt-trace|template-fields|template-overlap for check-passive]".into());}
         let root=Path::new(&a[1]);let variant=root.join(&a[2]);
         let manifest=read(root.join("manifest.json"))?;
         let mut reports=vec![];
@@ -164,6 +164,8 @@ fn main()->Result<()> {
                 let raw=read(dir.join("candidate.json"))?;
                 if raw["ownership_fragments"]!=proposal["selection"] {return Err("candidate differs from selection".into());}
                 let mut target=executor(raw)?;
+                let receipt_trace=a.get(3).is_some_and(|s|s=="receipt-trace");
+                if receipt_trace {eggfuse_cell_runtime::receipt_trace::start(65536);}
                 if a.get(3).is_some_and(|a|a=="witness-trace") {target.graph.trace_ownership_catalog(16)?;}
                 if a.get(3).is_some_and(|a|matches!(a.as_str(),"template-fields"|"template-overlap")) {target.graph.use_template_stable_fields()?;}
                 if a.get(3).is_some_and(|a|a=="template-overlap") {
@@ -174,12 +176,14 @@ fn main()->Result<()> {
                 let observe_witnesses=a.get(3).is_some_and(|s|s=="witnesses");
                 if observe_witnesses {target.graph.trace_ownership_catalog(16)?;}
                 for (i,expected) in checks.iter().enumerate() {
+                    if receipt_trace {eggfuse_cell_runtime::receipt_trace::set_run(i+1);}
                     let observed=step_storage(&mut target,i+1,a[0]=="check-nested")?;
                     if target.steps.len()!=i+1 || observed!=*expected {
                         write(dir.join("failure.json"),&json!({"run":i+1,"expected":expected,"observed":observed}))?;
                         return Err(format!("{name}: differs at Run {}",i+1).into());
                     }
                 }
+                if receipt_trace {eggfuse_cell_runtime::receipt_trace::set_run(checks.len()+1);}
                 if step_storage(&mut target,checks.len()+1,a[0]=="check-nested")?!=terminal || target.steps.len()!=checks.len() {return Err("terminal check differs".into());}
                 if observe_witnesses {
                     write(dir.join("witness-observation.json"),&json!({
@@ -195,6 +199,12 @@ fn main()->Result<()> {
                     "stable_ports":target.graph.stable_port_report(),
                     "key_lookup_calls":target.graph.key_lookup_calls.get(),"runtime_stats":target.graph.stats,
                     "final_state":artifact_digest(&target.graph.export()?)}));
+                if receipt_trace {
+                    let report=reports.last_mut().unwrap();
+                    report["receipt_trace"]=eggfuse_cell_runtime::receipt_trace::finish();
+                    report["ownership_storage"]=target.graph.ownership_storage_trace();
+                    report["terminal_check_equal"]=json!(true);
+                }
                 if a.get(3).is_some_and(|a|a=="witness-trace") {
                     let report=reports.last_mut().unwrap();
                     let saturation=report["catalog_trace"]["saturation"].take();
