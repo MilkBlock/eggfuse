@@ -1,0 +1,12 @@
+{
+  "source_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "table_arity_layouts": 138,
+  "static_records": 2732,
+  "supported_records": 2565,
+  "unknown_records": 167,
+  "static_array_bytes": 78540,
+  "scope": "Static recipe projection layouts; no runtime witness-completeness or speed result",
+  "persistent_fact_registry_added": false,
+  "external_coverage_required": true,
+  "settled_eq_required": true
+}

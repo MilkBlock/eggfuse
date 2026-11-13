@@ -46,7 +46,8 @@ def resolve(keys,active,witness_keys,witness_ids,witness_roots,witness_live,
     result=xp.where(found,witness_ids[choice],allocated_ids[leader])
     result=xp.where(ready,result,-1)
     count=xp.sum(allocate.astype(xp.int32))
-    return dict(result=result,ready=ready,new_owner=allocate,
+    result_root=xp.where(ready,xp.where(found,chosen_roots,allocated_ids[leader]),-1)
+    return dict(result=result,result_root=result_root,ready=ready,new_owner=allocate,
         reused=eligible&found,shared_new=ready&~found&~allocate,
         conflict=active&conflict,capacity=fresh&~group_accepted,
         invalid_namespace=xp.any(active)&~namespace,next_id=next_id+count,
@@ -65,16 +66,20 @@ def execute_site(state,site,witness,next_id,limit,quota,xp):
         raise ValueError('compiled constructor slot out of bounds')
     selected=(state['present'] & state['active'] & state['visible'] & ~state['settled']
               & (state['keys'][:,0]==site['rule']) & (state['effect_pc']==site['operation']))
-    args=state['slots'][:,site['args']]
+    args=state.get('slot_roots',state['slots'])[:,site['args']]
     available=xp.all(state['slot_valid'][:,site['args']],axis=1)
     keys=xp.concatenate([xp.full((rows,1),site['table'],dtype=state['slots'].dtype),args],axis=1)
-    outcome=resolve(keys,selected&available,witness['keys'],witness['ids'],witness['roots'],witness['live'],next_id,limit,quota,xp)
+    view_complete=witness.get('complete',xp.array(True))
+    outcome=resolve(keys,selected&available&view_complete,witness['keys'],witness['ids'],witness['roots'],witness['live'],next_id,limit,quota,xp)
     write=outcome['ready'][:,None] & (xp.arange(width)[None,:]==site['dst'])
     output=dict(state)
     output['slots']=xp.where(write,outcome['result'][:,None],state['slots'])
     output['slot_valid']=state['slot_valid'] | write
+    if 'slot_roots' in state:
+        output['slot_roots']=xp.where(write,outcome['result_root'][:,None],state['slot_roots'])
     output['effect_pc']=state['effect_pc']+outcome['ready'].astype(xp.int32)
     output['settled']=state['settled'] | (outcome['ready'] & site['last_effect'])
+    outcome['incomplete_witness_view']=selected&~view_complete
     outcome['missing_argument']=selected&~available
-    outcome['needs_attention']=outcome['needs_attention'] | xp.any(outcome['missing_argument'])
+    outcome['needs_attention']=outcome['needs_attention'] | xp.any(outcome['missing_argument'] | outcome['incomplete_witness_view'])
     return output,outcome

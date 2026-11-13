@@ -76,6 +76,9 @@ def complete(state,plan,xp):
     output=dict(state)
     output['slots']=xp.where(apply[:,None]&valid,values,state['slots'])
     output['slot_valid']=state['slot_valid'] | (apply[:,None]&valid)
+    if 'slot_roots' in state:
+        roots=xp.take_along_axis(state['slot_roots'],projection,axis=1)
+        output['slot_roots']=xp.where(apply[:,None]&valid,roots,state['slot_roots'])
     output['settled']=state['settled'] | apply
     return output,dict(completed=apply,unsupported=pending & ~plan['covered'][rid],
         unavailable=allowed & ~ready,invisible=pending & ~state['visible'],invalid_rule=pending & ~in_range,

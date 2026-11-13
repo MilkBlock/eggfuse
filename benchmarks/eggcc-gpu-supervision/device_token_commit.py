@@ -63,6 +63,9 @@ def commit(state, proposals, xp):
         output['slot_valid']=xp.where(written[:,None],proposals['slot_valid'][pick],state['slot_valid'])
     if 'effect_pc' in state:
         output['effect_pc']=xp.where(written,0,state['effect_pc'])
+    if 'slot_roots' in state:
+        if 'slot_roots' not in proposals:raise ValueError('proposal lost authoritative root slots')
+        output['slot_roots']=xp.where(written[:,None],proposals['slot_roots'][pick],state['slot_roots'])
     output['present'] = state['present'] | written
     output['active'] = (state['active'] & ~retired) | written
     output['visible'] = state['visible'] | written
@@ -135,4 +138,10 @@ def closed_entry_proposals(state, plan, stage, xp):
             valid=valid | cv
         proposals['slots']=xp.where(valid,values,-1).reshape(capacity*entries,-1)
         proposals['slot_valid']=valid.reshape(capacity*entries,-1)
+        if 'slot_roots' in state:
+            root_inputs=state['slot_roots'][:,projection]
+            root_values=xp.take_along_axis(root_inputs,indices,axis=2)
+            if 'completion_projection' in plan:
+                root_values=xp.where(plan['completion_valid'][None,:,:],state['slot_roots'][:,plan['completion_projection']],root_values)
+            proposals['slot_roots']=xp.where(valid,root_values,-1).reshape(capacity*entries,-1)
     return proposals

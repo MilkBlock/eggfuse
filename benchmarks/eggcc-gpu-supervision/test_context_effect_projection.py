@@ -45,13 +45,14 @@ class ContextEffects(unittest.TestCase):
         p=tensors(layout,np.array([np.eye(3)],np.float32),np.zeros((1,3),np.float32));plan={k:mx.array(v) for k,v in p.items()}
         def run(available):
             state=dict(keys=mx.array([[0,41,72],[-1,-1,-1]],mx.int32),tokens=mx.array([[.2,.3,.4],[0.,0.,0.]]),
-                slots=mx.array([[41,72,72,999],[-1,-1,-1,-1]],mx.int32),slot_valid=mx.array([[True,True,True,available],[False]*4]),
+                slots=mx.array([[41,72,72,999],[-1,-1,-1,-1]],mx.int32),slot_roots=mx.array([[41,72,72,11],[-1,-1,-1,-1]],mx.int32),slot_valid=mx.array([[True,True,True,available],[False]*4]),
                 present=mx.array([True,False]),active=mx.array([True,False]),visible=mx.array([True,False]),
                 settled=mx.array([True,False]),readers=mx.array([False,False]),generation=mx.array([1,0],mx.int32))
             out,m=mx.compile(lambda s:commit(s,closed_entry_proposals(s,plan,mx.array(0),mx),mx))(state)
             mx.eval(out,m);return out,m
         out,m=run(True)
         np.testing.assert_array_equal(np.array(out['slots'])[1],[41,72,999,-1])
+        np.testing.assert_array_equal(np.array(out['slot_roots'])[1],[41,72,11,-1])
         self.assertTrue(np.array(out['settled'])[1]);self.assertFalse(np.array(m['transferred']).any())
         out,m=run(False)
         self.assertEqual(np.array(out['present']).sum(),1)
