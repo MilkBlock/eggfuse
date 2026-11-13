@@ -112,6 +112,24 @@ pub struct CellBindingObserver {
     pub observe: Box<dyn FnMut(usize, usize, usize, &crate::slots::Slots, &Graph)>,
 }
 
+/// Diagnostic capture of actual RHS slot reads, before repair/publication.
+/// Missing slots and unsupported optimized paths remain explicit errors.
+/// No captured value supplies execution facts or authorizes a takeover.
+pub struct CellResultObserver {
+    pub slots: Vec<Vec<usize>>,
+    pub observe: Box<dyn FnMut(usize, usize, bool, Vec<(usize, Result<Value>)>, &Graph)>,
+}
+impl CellResultObserver {
+    fn capture(&mut self, run: usize, rid: usize, completed: bool, graph: &Graph,
+        read: impl Fn(usize) -> Result<Value>) {
+        let values = self.slots.get(rid).into_iter().flatten()
+            .map(|&slot| (slot, if completed { read(slot) } else {
+                Err("incomplete RHS: result not certified".into())
+            })).collect();
+        (self.observe)(run, rid, completed, values, graph);
+    }
+}
+
 pub struct Executor {
     #[cfg(feature = "sparse-cells")]
     query_workers: Option<query_workers::Workers>,
@@ -165,6 +183,7 @@ pub struct Executor {
     pub snapshots: Vec<J>,
     pub binding_audit: Vec<J>,
     pub binding_observer: Option<CellBindingObserver>,
+    pub result_observer: Option<CellResultObserver>,
     pub initial_audit: Option<J>,
     pub tasks: Vec<Task>,
 
@@ -373,6 +392,7 @@ impl Executor {
             snapshots: vec![],
             binding_audit: vec![],
             binding_observer: None,
+            result_observer: None,
             initial_audit,
             tasks,
 
@@ -2065,6 +2085,10 @@ impl Executor {
             let (cell, index, mut key, changed) = self
                 .graph
                 .apply_write(template, b.values, b.parent, &write, keep_key)?;
+            if let Some(observer) = self.result_observer.as_mut() {
+                observer.capture(self.steps.len()+1, rid, true, &self.graph,
+                    |slot| self.graph.slot(cell, slot));
+            }
             let receipts = crate::cell::SingleEffect(write.op, Dependency::Function(index));
             #[cfg(feature = "structural-depth")]
             if self.stage_spine.structural.capture_rule(rid) {
@@ -2096,6 +2120,10 @@ impl Executor {
         if !full_effects && let Some(step)=stage_cursor.as_ref()
             && let Some(results)=self.stage_spine.prepare_direct_completion(&self.graph,rid,step) {
             let cell=self.graph.reserve_completed_cell()?;
+            if let Some(observer) = self.result_observer.as_mut() {
+                observer.capture(self.steps.len()+1, rid, true, &self.graph,
+                    |_| Err("direct completion result capture unsupported".into()));
+            }
             return self.stage_spine.complete_direct(&self.graph,rid,cell,stage_cursor.unwrap(),results,
                 |i| b.known.receipt(i));
         }
@@ -2142,6 +2170,10 @@ impl Executor {
                 let (start, unions) = self.graph.start_completion(rid, &mut b.values, b.parent, selected, &mut receipts)?;
                 match start {
                     Start::Complete { cell, frame } => {
+                        if let Some(observer) = self.result_observer.as_mut() {
+                            observer.capture(self.steps.len()+1, rid, true, &self.graph,
+                                |slot| self.graph.argument_in(cell, &frame, Some(&b.values), &crate::program::Arg::Slot(slot)));
+                        }
                         if matched { self.graph.stats.matched_cells_completed += 1; }
                         else { self.graph.stats.handoff_closed += 1; }
                         #[cfg(feature = "structural-depth")]
@@ -2264,6 +2296,10 @@ impl Executor {
         let (cell, first_op) = match start {
             Start::Resume { cell, next_op } => (cell, next_op),
             Start::Complete { cell, frame } => {
+                if let Some(observer) = self.result_observer.as_mut() {
+                    observer.capture(self.steps.len()+1, rid, true, &self.graph,
+                        |slot| self.graph.argument_in(cell, &frame, None, &crate::program::Arg::Slot(slot)));
+                }
                 #[cfg(feature = "structural-depth")]
                 self.stage_spine.structural.capture(&self.graph, rid, &b.known, &effect_receipts);
                 if let Some(cursor) = stage_cursor {
@@ -2394,6 +2430,10 @@ impl Executor {
                     );
                 }
             }
+        }
+        if let Some(observer) = self.result_observer.as_mut() {
+            observer.capture(self.steps.len()+1, rid, completed, &self.graph,
+                |slot| self.graph.slot(cell, slot));
         }
         self.graph.release_empty(cell);
         Ok(())

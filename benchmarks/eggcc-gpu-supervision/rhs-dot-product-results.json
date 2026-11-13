@@ -1,0 +1,37 @@
+{
+  "schema": "actual-rhs-capture-summary/v1",
+  "program_sha256": "d18c6a7303eea4bb9193dac5907f5368332b9823be2788b2bf5c4442d8310d8d",
+  "runs": 954,
+  "counts": {
+    "applications": 5935,
+    "completed_applications": 5935,
+    "slot_reads": 47173,
+    "available_slots": 44510,
+    "rhs_only_slots": 13723,
+    "eq_slots": 37009,
+    "rhs_only_eq_slots": 12107,
+    "eq_slots_changed_during_completion": 774
+  },
+  "unavailable": {
+    "expired Cell reference": 2663
+  },
+  "unavailable_slot_fraction": 0.0564517838594111,
+  "timing": {
+    "audited_execution_seconds": 0.716299383,
+    "capture_and_audit_wall_seconds": 49.791287208,
+    "observer_seconds": 0.1517718060000003,
+    "reference_execution_seconds": 0.20613675400000017,
+    "result_observer_seconds": 0.19978306199999957,
+    "run_graph_audit_seconds": 48.81779413200003
+  },
+  "strict_run_graphs_equal": true,
+  "strict_final_graph_equal": true,
+  "scope": "actual CPU execution observation, not GPU inference or native egglog acceptance",
+  "limitations": [
+    "Slot Eq identity is not a constructor ownership or retirement certificate",
+    "No proven producer-consumer causal links or GPU takeover",
+    "Callback timing excludes slot-read collection; observed execution includes it",
+    "Debug audit timing is not a performance benchmark"
+  ],
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38"
+}
