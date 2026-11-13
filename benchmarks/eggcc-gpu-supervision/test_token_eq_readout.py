@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from token_eq_readout import pair_layout,check_partition,features,static_equalities,materialize
+from token_eq_readout import pair_layout,check_partition,features,static_equalities,materialize,quotient_layout,readout_rows,expand_scores
 
 class TokenEqReadout(unittest.TestCase):
     def test_pairs_are_typed_and_do_not_include_reflexive_labels(self):
@@ -31,6 +31,32 @@ class TokenEqReadout(unittest.TestCase):
             q=np.zeros(64),s=np.zeros((2,64)),d=np.zeros((2,64)),p=np.zeros((2,64)))
         x,y=materialize([r],np.zeros((1,128)),np.zeros((512,2)),True)
         self.assertEqual(x.shape,(1,515));np.testing.assert_array_equal(y,[False])
+
+    def test_quotient_shares_queries_and_restores_every_original_pair(self):
+        rule=dict(query=[],slots=[dict(sort=dict(kind='eq',name='E')) for _ in range(4)],
+            effects=[dict(kind='copy',dst=1,arg=dict(slot=0)),dict(kind='copy',dst=3,arg=dict(slot=2))])
+        pairs,q,s,d,p=pair_layout(rule);proof=static_equalities(rule,pairs)
+        plan=quotient_layout(rule,pairs,proof)
+        self.assertEqual(len(plan['representatives']),1)
+        r=dict(index=0,pairs=pairs,q=q,s=s,d=d,p=p,static=proof,quotient=plan,y=proof.copy())
+        query=readout_rows([r],True)[0]
+        self.assertEqual(len(query['y']),1)
+        np.testing.assert_array_equal(expand_scores(r,np.array([.1]),True,True)>=.5,proof)
+        np.testing.assert_array_equal(expand_scores(r,np.array([.9]),True,True)>=.5,np.ones(6,bool))
+        # A dynamic equality disagreement inside one class pair must not be hidden.
+        r['y'][1]=True
+        with self.assertRaisesRegex(ValueError,'inconsistent'):readout_rows([r],True)
+
+    def test_quotient_keeps_sorts_separate_and_empty_queries_valid(self):
+        rule=dict(query=[],slots=[dict(sort=dict(kind='eq',name=n)) for n in ['E','E','F','F']],
+            effects=[dict(kind='union',args=[dict(slot=0),dict(slot=1)])])
+        pairs,*_=pair_layout(rule);proof=static_equalities(rule,pairs);plan=quotient_layout(rule,pairs,proof)
+        self.assertEqual(pairs,[(0,1),(2,3)])
+        np.testing.assert_array_equal(plan['expansion'],[-1,0])
+        rule['effects'].append(dict(kind='union',args=[dict(slot=2),dict(slot=3)]))
+        plan=quotient_layout(rule,pairs,static_equalities(rule,pairs))
+        self.assertEqual(plan['s'].shape,(0,64))
+        np.testing.assert_array_equal(expand_scores(dict(quotient=plan),np.array([]),True,True),[1,1])
 
     def test_pair_features_are_symmetric_and_use_static_slots(self):
         rule=dict(query=[],effects=[],slots=[dict(sort=dict(kind='eq',name='E')) for _ in range(3)])

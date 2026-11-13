@@ -106,3 +106,69 @@ Models, raw captures and marks remain on the external SSD; reports contain their
 fingerprints. Six tests cover typed pairs, false-merge/closure accounting,
 non-vacuous success, completed copy/union proofs, static-query elimination and
 slot feature distinction. The related suite passes 94 tests.
+
+## Static-class queries (`--quotient`)
+
+This optional experiment requires `--static-equalities`. Bake-like template
+preparation contracts the proved copy/union components and creates one learned
+query per same-sort pair of components. Its descriptor is the mean of the
+members' positioned role vectors; the ridge features otherwise stay unchanged.
+Training counts a component pair once, instead of weighting it by its number of
+slot-pair aliases. No captured dynamic equality determines the components.
+An explicit expansion map restores **all original slot-pair scores** for audit;
+within-component scores are statically true. Captured labels must agree within
+each component pair or the experiment aborts. The map is shared by template.
+
+The frozen whole-Cell model, observed provider routing, train/validation/test
+split, 0.5 threshold and complete-capture eligibility remain unchanged. This
+changes both descriptors and example weighting, so it does not isolate which
+one causes the accuracy change. It is a standalone boundary probe, not an
+integrated GPU runtime improvement or a newly authorized union path.
+
+| Predicted-token diagnostic | Static slot-pair decoder | Static-class decoder |
+|---|---:|---:|
+| Learned queries | 72,620 | 34,240 |
+| Original audited pairs | 77,684 | 77,684 |
+| Exact partitions / 5,454 | 3,630 | 4,287 |
+| New state, known template / 1,177 | 877 | 966 |
+| New template / 508 | 220 | 200 |
+| Recall beyond static proofs | 11.28% | 37.68% |
+| False Eq pairs | 336 | 789 |
+| Missed Eq pairs | 2,901 | 2,038 |
+| Nontransitive instances | 260 | 49 |
+| False Eq pairs after closure | 547 | 2,052 |
+| CPU-marked fraction | 33.44% | 21.40% |
+
+Oracle-token exact partitions increase from 3,678 to 4,267, but oracle false
+Eq pairs also increase from 162 to 453. This is a recall/precision tradeoff,
+**not** an unqualified correctness improvement. Predicted new-template cases
+have 583 false pairs and no complete-partition wins over static facts alone;
+71 previously correct partitions become wrong. Do not enable this decoder as
+union authority. Alias expansion can amplify a single wrong class prediction;
+retaining full slot-pair accounting exposes that cost.
+
+Training queries fall from 12,465 to 4,568, validation queries from 28,545 to
+8,302. Counts of unique training/validation states remain 416/364. Alpha remains
+100, selected on validation. The two validation MSEs average different query
+populations and are not directly comparable.
+
+The measured preparation of test nodes, layouts and audit labels costs 0.975 s.
+Retained quotient-plan arrays for templates represented in the audit occupy
+8,929,680 bytes, additional to the existing slot-pair layouts; Python object
+and allocator overhead are excluded. The CPU boundary feature matrix occupies
+210,644,480 bytes. This prototype still materializes it before GPU readout.
+Predicted-token feature encoding takes 0.305 s, GPU readout plus transfers
+0.0137 s, and CPU audit including mark writing 0.177 s. These are single-run
+diagnostics, not an end-to-end speed claim. CPU/GPU scores pass tolerance checks
+with zero threshold disagreements. There are 2,354 JSONL marks across oracle
+and predicted audits; 1,167 are for predicted tokens.
+
+Reproduce with the command above, adding `--quotient` and changing all three
+output paths from `token-eq-readout-static` to `token-eq-readout-quotient`.
+`token-eq-readout-quotient-results.json` records hashes and measurements. Eight
+local tests (96 in the related suite) include typed class separation, complete
+expansion, rejection of inconsistent labels and fully static/empty queries.
+The option remains off by default. The main next representation question is
+how much alias multiplicity should also be removed from the **whole-Cell token
+encoder**, rather than only its boundary decoder, while preserving the dynamic
+relations that subsequent Cells need.
