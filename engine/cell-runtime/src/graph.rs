@@ -3202,6 +3202,7 @@ impl Graph {
             #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
             self.cells.retire_completed(cell);
             self.parent_users.remove(&cell);
+            self.record_retired_prefix_source(cell);
             self.stats.empty_frames_released += 1;
         }
     }

@@ -1,0 +1,106 @@
+{
+  "scope": "actual standalone Cell runtime; one audited trace, batched catalog growth; not timing",
+  "runtime_commit": "6a9c1434",
+  "source_program_sha256": "72b3d6cbdf65f124752f013a6cce043bda57d1e2ee48b781e37f5eea465e2dfe",
+  "trace_sha256": "5f967687fa427e68860bde0d0b08e48af27dc27f349cb767cf971c90aafc825d",
+  "runtime_binary_sha256": "358f98197a63c21170e36901239be6c543252f7dfeca09bd3b6278b82318e769",
+  "compiler_binary_sha256": "5ecbbe4c45b45950464b81a34b73c2eb88ae992cec739eacea5bf114c449d64e",
+  "baseline_graph_bytes": 1392459,
+  "baseline_program_bytes": 107450586,
+  "repeated_extension_records": 457,
+  "distinct_extendable_prefixes": 108,
+  "cases": {
+    "32": {
+      "program_sha256": "8016a6a0383a6a8224d25f6ef2b548f06c950e201c30c6c2b6351deb83d748f1",
+      "memory_report_sha256": "ae08c14292596cab7f3d9b3c449aede233228e478b67649c436f077c20bee57f",
+      "selection_sha256": "3c6396e9aba1998830d8cab48e0bd461939c8691e3d610a88071d2698fe6e1c8",
+      "selected_extensions": 32,
+      "replaced_prefixes": 32,
+      "capacity_rejections": 28,
+      "all_seed_transitions_preserved": true,
+      "graph_bytes": 1390243,
+      "graph_saved": 2216,
+      "resident_program_bytes": 107045958,
+      "resident_program_delta": -404628,
+      "components": 1454,
+      "frame_widths": {
+        "1": 876,
+        "3": 151,
+        "2": 427
+      },
+      "symbol_slots": 7800,
+      "source_frames": 2183,
+      "compiled_appends": 980,
+      "suffix_retirements": 178,
+      "run_sequence_equal": true,
+      "final_export_equal": true,
+      "per_run_validation": "not run"
+    },
+    "128": {
+      "program_sha256": "015a4363cf3da4fe354c25efe4032a5136529c67f9e8d96b7ecb0d0148d0e77c",
+      "memory_report_sha256": "b5736da5d2aa0618c9400bed4a048ce9154b2803e68e3dedb496b94ff1030798",
+      "selection_sha256": "f7ed03f986ba992e39a0250fff8bd5f9c07e878c9115d538c725b46eaa484264",
+      "selected_extensions": 108,
+      "replaced_prefixes": 108,
+      "capacity_rejections": 433,
+      "all_seed_transitions_preserved": true,
+      "graph_bytes": 1386283,
+      "graph_saved": 6176,
+      "resident_program_bytes": 107599014,
+      "resident_program_delta": 148428,
+      "components": 1364,
+      "frame_widths": {
+        "1": 824,
+        "3": 283,
+        "2": 257
+      },
+      "symbol_slots": 7685,
+      "source_frames": 2187,
+      "compiled_appends": 1084,
+      "suffix_retirements": 190,
+      "run_sequence_equal": true,
+      "final_export_equal": true,
+      "per_run_validation": {
+        "status": "pass",
+        "runs": 882,
+        "report_sha256": "8a1bfcbdf5d03c08fde1f75fd51e2ef021fb8fa2a2d318b794b35726ec778b04",
+        "same_as_saved_control_checks": true
+      },
+      "native_final_state": {
+        "status": "pass",
+        "report_sha256": "107438ef63ad7bb3b8c544c6619575a23813f6ab4c78aff186e93bd99d145976"
+      }
+    },
+    "256": {
+      "program_sha256": "015a4363cf3da4fe354c25efe4032a5136529c67f9e8d96b7ecb0d0148d0e77c",
+      "memory_report_sha256": "a69738efbbddac1627af1c1d528c641853eb690627a24026c2db233c93a2d3d1",
+      "selection_sha256": "f7ed03f986ba992e39a0250fff8bd5f9c07e878c9115d538c725b46eaa484264",
+      "selected_extensions": 108,
+      "replaced_prefixes": 108,
+      "capacity_rejections": 433,
+      "all_seed_transitions_preserved": true,
+      "graph_bytes": 1386283,
+      "graph_saved": 6176,
+      "resident_program_bytes": 107599014,
+      "resident_program_delta": 148428,
+      "components": 1364,
+      "frame_widths": {
+        "1": 824,
+        "3": 283,
+        "2": 257
+      },
+      "symbol_slots": 7685,
+      "source_frames": 2187,
+      "compiled_appends": 1084,
+      "suffix_retirements": 190,
+      "run_sequence_equal": true,
+      "final_export_equal": true,
+      "per_run_validation": "not run"
+    }
+  },
+  "validation_jobs": [
+    356,
+    360
+  ],
+  "remaining_to_historical_30_percent_bytes": 192472
+}

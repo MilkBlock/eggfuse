@@ -66,10 +66,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         if path == args[1] { return Err("state output must differ from memory report".into()); }
         Some(path)
     } else { None };
-    if !(args.len()>=3 && args[3..].iter().all(|a| matches!(a.as_str(),"--port-domains-only"|"--template-fields"|"--cell-fields"))) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners" | "nested-owners" | "multi-owner-control" | "unpooled-owner-control") {
-        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners|nested-owners|multi-owner-control|unpooled-owner-control [--port-domains-only] [--template-fields|--cell-fields] [--state-output PATH]".into());
+    if !(args.len()>=3 && args[3..].iter().all(|a| matches!(a.as_str(),"--port-domains-only"|"--template-fields"|"--cell-fields"|"--retired-prefixes"))) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners" | "nested-owners" | "multi-owner-control" | "unpooled-owner-control") {
+        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners|nested-owners|multi-owner-control|unpooled-owner-control [--port-domains-only] [--template-fields|--cell-fields] [--retired-prefixes] [--state-output PATH]".into());
     }
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
+    let retired_prefixes=args[3..].iter().any(|a|a=="--retired-prefixes");
     let program = p.artifact["sha256"].clone();
     // Fixed trace buffer is allocated before observation. It never grows while
     // runtime peaks are sampled; its capacity is reported separately.
@@ -108,6 +109,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         if matches!(args[2].as_str(), "record-control" | "inherited-owners" | "nested-owners" | "multi-owner-control" | "unpooled-owner-control") {
             e.graph.compact_source_record_capacity();
         }
+        if retired_prefixes {e.graph.compact_retired_prefixes()?;}
         let takeover_peak = PEAK.load(Relaxed);
         let after = LIVE.load(Relaxed);
         samples.push(Sample {
@@ -139,7 +141,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             );
         }
     }
-    let mut result = json!({"program_sha256":program,"mode":args[2],"runs":samples.len(),
+    let mut result = json!({"program_sha256":program,"mode":args[2],"retired_prefixes":retired_prefixes,"runs":samples.len(),
         // Retain the actual scheduling evidence after measurement, so an
         // omitted compiler-materialization Run is distinguishable from a lost
         // source Run. Matching names/counts alone are not a graph-state proof.

@@ -1,0 +1,248 @@
+{
+  "scope": "actual standalone Cell runtime; explicit Run-boundary prefix retirement; not timing",
+  "base_commit": "89714c74",
+  "program_sha256": "72b3d6cbdf65f124752f013a6cce043bda57d1e2ee48b781e37f5eea465e2dfe",
+  "binary_sha256": "5e754cb97d48299a9fd107a2ac39e1dceda5a4957c77f932ffea44b9ae7a1979",
+  "before_report_sha256": "5861583f75a89362b4a5c1962931cbd27370897257d27d54b12f4389c0bc3e2b",
+  "after_report_sha256": "f467df7e5587271ac8e1a790c87ef5a0c6f86727edb76211f3b38183c471c330",
+  "bytes": {
+    "graph_owned_teardown_bytes": {
+      "before": 1405919,
+      "after": 1392459
+    },
+    "retained_program_teardown_bytes": {
+      "before": 107450586,
+      "after": 107450586
+    },
+    "execution_and_takeover_peak_bytes": {
+      "before": 113434884,
+      "after": 113421646
+    },
+    "max_takeover_extra_bytes": {
+      "before": 11580,
+      "after": 11376
+    }
+  },
+  "field_changes": {
+    "cells": {
+      "before": 318306,
+      "after": 318350
+    },
+    "ownership.components": {
+      "before": 269504,
+      "after": 261760
+    },
+    "ownership.boundaries": {
+      "before": 221312,
+      "after": 215552
+    }
+  },
+  "work_changes": {
+    "internal_ports_seen": {
+      "before": 4184,
+      "after": 4182
+    },
+    "boundary_ports_seen": {
+      "before": 5938,
+      "after": 5940
+    },
+    "boundary_insert_attempts": {
+      "before": 6810,
+      "after": 6752
+    },
+    "boundary_edges_created": {
+      "before": 6810,
+      "after": 6752
+    },
+    "boundary_edges_removed": {
+      "before": 1983,
+      "after": 2167
+    },
+    "boundary_live": {
+      "before": 4827,
+      "after": 4585
+    },
+    "carried_components": {
+      "before": 526007,
+      "after": 518508
+    },
+    "domain_results": {
+      "before": 22973,
+      "after": 22203
+    },
+    "components_created": {
+      "before": 1899,
+      "after": 1865
+    },
+    "components_retired": {
+      "before": 315,
+      "after": 307
+    },
+    "components_live": {
+      "before": 1584,
+      "after": 1558
+    },
+    "composition_entry_reads": {
+      "before": 8597,
+      "after": 8558
+    },
+    "composition_result_joins": {
+      "before": 68,
+      "after": 67
+    },
+    "retired_prefix_scans": {
+      "before": 0,
+      "after": 1074658
+    },
+    "retired_prefix_takeovers": {
+      "before": 0,
+      "after": 129
+    },
+    "retired_prefix_frames": {
+      "before": 0,
+      "after": 129
+    },
+    "retired_prefix_symbols": {
+      "before": 0,
+      "after": 336
+    },
+    "composition_transition_probes": {
+      "before": 4932,
+      "after": 4893
+    },
+    "composition_unbaked_fallbacks": {
+      "before": 4146,
+      "after": 4073
+    },
+    "composition_cross_stage_joins": {
+      "before": 731,
+      "after": 765
+    },
+    "composition_requests": {
+      "before": 786,
+      "after": 820
+    },
+    "composition_substituted_ports": {
+      "before": 1189,
+      "after": 1239
+    },
+    "composition_cache_hits": {
+      "before": 786,
+      "after": 820
+    },
+    "composition_baked_hits": {
+      "before": 786,
+      "after": 820
+    },
+    "dispatch_comparisons": {
+      "before": 3672,
+      "after": 3683
+    },
+    "signal_root_queries": {
+      "before": 1181,
+      "after": 1393
+    },
+    "signal_parent_probes": {
+      "before": 1959,
+      "after": 2356
+    },
+    "signal_bindings_created": {
+      "before": 8035,
+      "after": 7991
+    },
+    "signal_bindings_retired": {
+      "before": 1148,
+      "after": 1348
+    },
+    "component_signal_retire_visits": {
+      "before": 1572,
+      "after": 1481
+    },
+    "signal_bindings_live": {
+      "before": 6887,
+      "after": 6643
+    },
+    "signal_activations": {
+      "before": 1879,
+      "after": 1865
+    },
+    "slice_steps": {
+      "before": 2968,
+      "after": 2905
+    },
+    "inactive_slice_steps": {
+      "before": 899,
+      "after": 836
+    },
+    "native_signal_routes": {
+      "before": 887,
+      "after": 890
+    },
+    "boundary_signal_routes": {
+      "before": 992,
+      "after": 975
+    },
+    "domain_signal_visits": {
+      "before": 162335,
+      "after": 157705
+    },
+    "domain_slice_steps": {
+      "before": 151922,
+      "after": 146002
+    },
+    "domain_route_probes": {
+      "before": 162335,
+      "after": 157705
+    },
+    "domain_type_guards": {
+      "before": 151922,
+      "after": 146002
+    },
+    "domain_static_type_guards": {
+      "before": 142121,
+      "after": 136597
+    },
+    "domain_type_rejections": {
+      "before": 113053,
+      "after": 109524
+    }
+  },
+  "run_sequence_equal": true,
+  "final_exports_equal": true,
+  "historical_graph_denominator_bytes": 3979373,
+  "historical_denominator_scope": "working-tree observation, not an isolated immutable baseline binary",
+  "remaining_to_30_percent_bytes": 198648,
+  "resident_program_added_vs_prior_binary_bytes": 4136,
+  "before": {
+    "components": 1584,
+    "frame_descriptors": 2284,
+    "symbol_slots": 8273,
+    "bound_symbols": 6887
+  },
+  "after": {
+    "components": 1558,
+    "frame_descriptors": 2182,
+    "symbol_slots": 7978,
+    "bound_symbols": 6643
+  },
+  "validation": {
+    "ownership_tests": 68,
+    "compiler_prefix_language_test": "pass",
+    "jobs": [
+      342,
+      345,
+      349,
+      351
+    ],
+    "per_run": {
+      "runs": 882,
+      "status": "pass",
+      "report_sha256": "3631af9ae87f5e79ae1d0f7289614a268b4367a069d7fdb5f30be2997cb2b96b",
+      "matches_prior_saved_run_checks": true
+    },
+    "native_final_state": {
+      "status": "pass",
+      "report_sha256": "107438ef63ad7bb3b8c544c6619575a23813f6ab4c78aff186e93bd99d145976"
+    }
+  }
+}

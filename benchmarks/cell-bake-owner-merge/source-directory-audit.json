@@ -1,0 +1,50 @@
+{
+  "scope": "post-execution saved inventory join; not a static proof or memory saving",
+  "input_sha256": "b5736da5d2aa0618c9400bed4a048ce9154b2803e68e3dedb496b94ff1030798",
+  "program_sha256": "015a4363cf3da4fe354c25efe4032a5136529c67f9e8d96b7ecb0d0148d0e77c",
+  "completed_sources": 2177,
+  "routed_sources": 2187,
+  "sources_in_both_directories": 2177,
+  "completed_without_routing": 0,
+  "ordinary_sources_with_routing": 0,
+  "routing_only_source_ids": [
+    235,
+    303,
+    736,
+    746,
+    1361,
+    3449,
+    4090,
+    4155,
+    5292,
+    5336
+  ],
+  "source_record_bytes": 48,
+  "source_record_payload": 104496,
+  "source_record_capacity_bytes": 110592,
+  "ownership_directory_heap": 163584,
+  "components": 1364,
+  "component_obligations": {
+    "spans_multiple_physical_owners": 529,
+    "physical_owner_has_outside_sources": 1320,
+    "cross_epoch": 531,
+    "cross_recipe_depth": 79,
+    "has_routing_only_sources": 10
+  },
+  "epochs_per_component": {
+    "1": 833,
+    "3": 187,
+    "2": 344
+  },
+  "fully_present_shape_and_code_groups": 304,
+  "observed_storage_layout_combinations": 372,
+  "groups_with_multiple_storage_layouts": 51,
+  "ambiguous_layout_components": 420,
+  "obligations": [
+    "Logical source IDs and FactRef identities remain externally addressable.",
+    "Source lifecycle/slice metadata and component routing metadata have distinct responsibilities.",
+    "Routing-only sources may still be needed for native Eq addressing.",
+    "A logical component is not generally an exclusive physical owner.",
+    "Observed equal epochs/layouts do not prove they are invariant for a template."
+  ]
+}
