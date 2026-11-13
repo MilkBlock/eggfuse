@@ -470,6 +470,18 @@ pub struct Stats {
     #[serde(default)]
     pub shared_owner_inherited_frames:u64,
     #[serde(default)]
+    pub shared_owner_extensions:u64,
+    #[serde(default)]
+    pub shared_owner_referenced_frames:u64,
+    #[serde(default)]
+    pub shared_owner_extension_frames:u64,
+    #[serde(default)]
+    pub shared_owner_merged_owners:u64,
+    #[serde(default)]
+    pub shared_owner_slot_entries_moved:u64,
+    #[serde(default)]
+    pub shared_owner_fact_entries_moved:u64,
+    #[serde(default)]
     pub shared_owner_dead_slots_elided:u64,
     #[serde(default)]
     pub completed_dead_slots_elided:u64,
@@ -1308,7 +1320,7 @@ impl Graph {
     }
 
     #[inline(never)]
-    fn decode_fact(&self, f: FactRef, template:usize, s: &FactState) -> Result<Row> {
+    fn decode_fact(&self, f: FactRef, template:usize, s: fact_states::FactRead<'_>) -> Result<Row> {
         self.fact_decode_calls.set(self.fact_decode_calls.get() + 1);
         let op = self.program.templates[template]
             .ops
@@ -2260,7 +2272,7 @@ impl Graph {
                 self.functions[*i].canonical = false;
             }
             if !retained && let Dependency::Fact(f) = d
-                && let Some(state) = self
+                && let Some(mut state) = self
                     .cells.fact_state_mut(*f)
             {
                 state.decoded = None;
@@ -2711,9 +2723,10 @@ impl Graph {
                     self.retire(f)?;
                     self.changed = true;
                 } else {
-                    let s = self
+                    let mut s_guard = self
                         .cells.fact_state_mut(f)
                         .unwrap();
+                    let s = &mut *s_guard;
                     if !s.hidden {
                         self.query_versions[t] += 1;
                         #[cfg(feature = "receipt-slots")]
@@ -2823,9 +2836,10 @@ impl Graph {
             self.stats.repair_collisions += 1;
             if let Dependency::Fact(keep) = other.witness {
                 self.query_versions[r.table] += 1;
-                let target = self
+                let mut target_guard = self
                     .cells.fact_state_mut(keep)
                     .unwrap();
+                let target = &mut *target_guard;
                 #[cfg(feature = "receipt-slots")]
                 if r.hidden && target.port_slot != 0 {
                     self.retired_port_slots
@@ -2849,13 +2863,15 @@ impl Graph {
             let was_local = self.cells.fact_state(f).unwrap().local_union_owned;
             self.end_local_ownership(f, r.table, false);
             if let Some(h) = h { self.intern.entry(h).or_default().insert(f); }
-            let s = self
+            let mut s_guard = self
                 .cells.fact_state_mut(f)
                 .unwrap();
+            let s = &mut *s_guard;
 
             s.decoded = if self.stable_ports.is_none() || !s.owned { Some((r.table, r.values.clone())) } else { None };
             if let Some(h) = h { s.hash = h; }
             s.epoch = self.epoch;
+            drop(s_guard);
             if self.cells.fact_state(f).unwrap().owned {
                 self.query_versions[r.table]+=1;
             } else { self.subscribe_rows(r.table, d, if was_local { &[] } else { &r.values }, &r.values); }

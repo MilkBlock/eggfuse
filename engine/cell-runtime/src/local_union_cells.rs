@@ -256,7 +256,7 @@ impl Graph {
         let mut rows = Vec::with_capacity(m.pending.len());
         for f in m.pending.drain(..) {
             m.counts.prepare_reads += 1;
-            if let Some(s) = self
+            if let Some(mut s) = self
                 .cells.fact_state_mut(f)
             {
                 if let Some((t, fields)) = s.decoded.take() {
@@ -356,9 +356,10 @@ impl Graph {
                 }
                 self.end_local_ownership(f, table, false);
                 self.replace_row_edges(Dependency::Fact(f), &[], fields);
-                let s = self
+                let mut s_guard = self
                     .cells.fact_state_mut(f)
                     .unwrap();
+                let s = &mut *s_guard;
                 s.decoded = Some((table, fields.clone()));
                 if changed {
                     s.epoch = self.epoch;
@@ -381,7 +382,8 @@ impl Graph {
     }
     pub(super) fn end_local_ownership(&mut self, f: FactRef, table: usize, retired: bool) {
         let template = self.cells.cell_metadata(f.cell).unwrap().template;
-        let state = self.cells.fact_state_mut(f).unwrap();
+        let mut state_guard = self.cells.fact_state_mut(f).unwrap();
+        let state = &mut *state_guard;
         if !std::mem::take(&mut state.local_union_owned) {
             return;
         }

@@ -22,7 +22,7 @@ fn step(e:&mut Executor,n:usize)->Result<Value> {
 }
 fn main()->Result<()> {
     let a=std::env::args().skip(1).collect::<Vec<_>>();
-    if a.len()<2 {return Err("batch_cell_learning prepare SUITE OUTPUT CASE... | apply OUTPUT | verify OUTPUT".into());}
+    if a.len()<2 {return Err("batch_cell_learning prepare SUITE OUTPUT CASE... | apply OUTPUT | verify OUTPUT | observe OUTPUT | apply-passive ROOT VARIANT | check-passive ROOT VARIANT".into());}
     if a[0]=="prepare" {
         if a.len()<4 {return Err("prepare needs suite, output and cases".into());}
         let suite=read(&a[1])?;let base=Path::new(&a[1]).parent().unwrap();let out=Path::new(&a[2]);
@@ -83,13 +83,82 @@ fn main()->Result<()> {
             write(dir.join("candidate.json"),&raw)?;
             eprintln!("compiled pooled catalog for {name}");
         }
-    } else if a[0]=="verify" {
+    } else if a[0]=="apply-passive" || a[0]=="check-passive" {
+        if a.len()!=3 {return Err("apply-passive/check-passive ROOT VARIANT".into());}
+        let root=Path::new(&a[1]);let variant=root.join(&a[2]);
+        let manifest=read(root.join("manifest.json"))?;
+        let mut reports=vec![];
+        for case in manifest["cases"].as_array().unwrap() {
+            let name=case["case"].as_str().unwrap();let source=root.join(name);let dir=variant.join(name);
+            let seed=read(source.join("candidate.json"))?;
+            let proposal=read(dir.join("selection.json"))?;
+            if proposal["source_program"]!=seed["sha256"] || proposal["selection"]["source"]!=source_digest(&seed) {
+                return Err("passive selection seed mismatch".into());
+            }
+            if a[0]=="apply-passive" {
+                let mut old=Program::parse(seed.clone())?;old.prepare_cell_ownership()?;
+                let mut raw=seed;raw["ownership_fragments"]=proposal["selection"].clone();
+                raw.as_object_mut().unwrap().remove("ownership_markers");
+                raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=artifact_digest(&raw).into();
+                let mut checked=Program::parse(raw.clone())?;checked.prepare_cell_ownership()?;
+                let edges=|p:&Program| {
+                    let plan=&p.cell_ownership.composition;
+                    plan.transitions.iter().map(|(key,target)|artifact_digest(&json!({
+                        "source":plan.shapes[key.shape],"hop":key.hop,"target":plan.shapes[*target]
+                    }))).collect::<std::collections::BTreeSet<_>>()
+                };
+                if !edges(&old).is_subset(&edges(&checked)) {return Err("lost a seed transition".into());}
+                write(dir.join("candidate.json"),&raw)?;
+                reports.push(json!({"case":name,"program":raw["sha256"],"all_seed_transitions_preserved":true,
+                    "shapes":checked.cell_ownership.composition.shapes.len(),"transitions":checked.cell_ownership.composition.transitions.len()}));
+                eprintln!("compiled {name}");
+            } else {
+                let observation=read(source.join("catalog-observation.json"))?;
+                if observation["source_program"]!=seed["sha256"] || observation["all_saved_run_checks_equal"]!=true {
+                    return Err("audited seed observation required".into());
+                }
+                let checks=observation["run_checks"].as_array().ok_or("missing Run checks")?;
+                // Earlier observations did not save the terminal non-Run effects.
+                // Reconstruct that one check without repeating all baseline exports.
+                let terminal_path=source.join("terminal-check.json");
+                let terminal=if terminal_path.exists() {
+                    let cached=read(&terminal_path)?;
+                    if cached["source_program"]!=seed["sha256"] {return Err("terminal cache seed mismatch".into());}
+                    cached["check"].clone()
+                } else {
+                    let mut base=executor(seed.clone())?;base.execute_until(Some(checks.len()))?;
+                    let check=step(&mut base,checks.len()+1)?;
+                    if base.steps.len()!=checks.len() || check["graph"]!=observation["final_state"] {return Err("terminal control differs".into());}
+                    write(&terminal_path,&json!({"source_program":seed["sha256"],"check":check}))?;check
+                };
+                let raw=read(dir.join("candidate.json"))?;
+                if raw["ownership_fragments"]!=proposal["selection"] {return Err("candidate differs from selection".into());}
+                let mut target=executor(raw)?;
+                for (i,expected) in checks.iter().enumerate() {
+                    let observed=step(&mut target,i+1)?;
+                    if target.steps.len()!=i+1 || observed!=*expected {
+                        write(dir.join("failure.json"),&json!({"run":i+1,"expected":expected,"observed":observed}))?;
+                        return Err(format!("{name}: differs at Run {}",i+1).into());
+                    }
+                }
+                if step(&mut target,checks.len()+1)?!=terminal || target.steps.len()!=checks.len() {return Err("terminal check differs".into());}
+                reports.push(json!({"case":name,"runs":checks.len(),"all_saved_run_checks_equal":true,
+                    "program":target.graph.program.artifact["sha256"],"source_storage":target.graph.retained_cell_storage(),
+                    "final_state":artifact_digest(&target.graph.export()?)}));
+                eprintln!("checked {name}: {} Runs",checks.len());
+            }
+        }
+        write(variant.join(if a[0]=="apply-passive" {"compiled.json"} else {"checked.json"}),&json!({"cases":reports}))?;
+    } else if a[0]=="verify" || a[0]=="observe" {
+        let observe=a[0]=="observe";
         let root=Path::new(&a[1]);let manifest=read(root.join("manifest.json"))?;
         let mut reports=vec![];
         for case in manifest["cases"].as_array().unwrap() {
             let name=case["case"].as_str().unwrap();let dir=root.join(name);
             let mut base=executor_control(read(dir.join("baseline.json"))?,false)?;
             let mut target=executor(read(dir.join("candidate.json"))?)?;
+            if observe {target.graph.trace_ownership_catalog(16)?;}
+            let mut checks=vec![];
             let mut runs=0;
             loop {
                 let b=step(&mut base,runs+1)?;let t=step(&mut target,runs+1)?;
@@ -97,12 +166,23 @@ fn main()->Result<()> {
                     write(dir.join("failure.json"),&json!({"run":runs+1,"before":b,"after":t}))?;
                     return Err(format!("{name} differs at Run {}",runs+1).into());
                 }
-                if base.steps.len()==runs {break;}runs+=1;
+                if base.steps.len()==runs {break;}
+                if observe {checks.push(t);}
+                runs+=1;
             }
             let report=json!({"case":name,"runs":runs,"run_graph_rhs_writes_equal":true,
                 "baseline":base.graph.program.artifact["sha256"],"candidate":target.graph.program.artifact["sha256"],
                 "final_state":artifact_digest(&target.graph.export()?),
                 "scope":"same-source runtime regression check; not native egglog semantic admission"});
+            if observe {
+                write(dir.join("catalog-observation.json"),&json!({
+                    "source_program":target.graph.program.artifact["sha256"],
+                    "all_saved_run_checks_equal":true,"runs":runs,"run_checks":checks,
+                    "catalog_trace":target.graph.ownership_catalog_trace()?,
+                    "source_storage":target.graph.retained_cell_storage(),
+                    "ownership_storage":target.graph.ownership_storage_trace(),
+                    "final_state":report["final_state"]}))?;
+            }
             write(dir.join("verification.json"),&report)?;reports.push(report);eprintln!("verified {name}: {runs} Runs");
         }
         write(root.join("verification.json"),&json!({"cases":reports}))?;

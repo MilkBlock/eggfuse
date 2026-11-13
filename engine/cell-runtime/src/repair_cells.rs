@@ -268,12 +268,13 @@ impl Graph {
     pub(super) fn match_repair_delta(&mut self, f: FactRef, from: u64, to: u64) -> Delta {
         let stats = self.repair_cells.as_mut().unwrap();
         stats.attempts += 1;
-        let Some(state) = self
+        let Some(mut state_guard) = self
             .cells.fact_state_mut(f)
         else {
             stats.unmatched += 1;
             return Delta::Uncovered;
         };
+        let state = &mut *state_guard;
         let Some((table, fields)) = &mut state.decoded else {
             stats.unmatched += 1;
             return Delta::Uncovered;

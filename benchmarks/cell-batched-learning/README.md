@@ -145,3 +145,238 @@ Reproduce by rebuilding the two examples above, running `verify`, and measuring
 the unchanged candidate artifacts with `runtime_storage_peak ... inherited-owners
 --port-domains-only`. Results are in `scalar-results.json`; the earlier directory
 and batch measurements are intentionally retained as their own controls.
+
+## Physical owner completion across Runs
+
+The previous physical transfer collected only ordinary Cells, requiring two or
+more eligible sources. Once two earlier frames had transferred, a single later
+stage could not join their backing owner. The composed port shape grew, while
+storage completion stopped at the earlier stage.
+
+Transfer now includes the component's existing completed frames. A later Run
+can absorb one new frame into the existing owner, preserving each original
+logical ID, metadata, scalar binding, and live fact state. The old owner is not
+unsealed into ordinary Cells just to assemble the new one. Complete coverage of
+all participating owner slices is checked before mutation. Dead fact holes are
+omitted when moving the backing arrays; missing facts stay missing. External
+readers no longer disqualify an otherwise complete, parent-free source: their
+stable logical references already support completed storage and retirement
+fallback. Sources that themselves still require a parent remain ineligible.
+
+The new work is charged explicitly: extension events, newly absorbed frames,
+referenced frames, merged owners, and old slot/fact entries moved. This is a
+storage takeover at a settled source Run boundary, not an earlier publication or
+permission to skip a rule. Repeated transfer of an unchanged owner is a no-op.
+
+Testing caught allocation cliffs in **both** completed-frame and owner-header
+Vecs. Enlarging the eligible population could double either directory and lose
+the memory benefit. Both now grow normally at small sizes and in increments of
+128 records thereafter; IDs and record formats are unchanged. Temporary arrays
+still exist during extension and are included in the heap high-water sampling.
+
+`owner-takeover-results.json` compares the fixed catalog against scalar delegation
+alone, including independent source-record counts, actual Graph bytes, temporary
+takeover peaks and work. Program storage is unchanged. The earlier native scope
+limitations still apply. All 2,652 source Run graph/RHS/write checks pass for the
+new takeover and live-reader eligibility, alongside 46 ownership tests, 8 Unit
+tests and the low-level owner-extension lifecycle test. Directory growth is an
+allocation-only change; the final measured exports match the saved controls.
+
+Reproduce the report after the saved before/after heap runs:
+
+```
+python3 benchmarks/cell-batched-learning/takeover_audit.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/owner-takeover-results.json
+```
+
+This still retains logical source metadata and fact records inside the shared
+owner. It has not contracted internal parent lifetimes or achieved the 30% runtime
+egraph target. The saved final trace now includes parent references, retainer
+counts and physical-storage kind. Most remaining parent-free sources are in
+single-frame components (195, 186, 589, 669); improving their composition coverage
+is a larger opportunity than further header packing. There are also 37, 29, 80,
+104 observed within-component cross-stage parent links. Those observations alone
+do not prove that the parent states can be retired: typed Entry projections,
+actual result ownership, external readers and lifecycle preservation remain live
+obligations for a future internal-parent contraction.
+
+Final Graph bytes for the four fixed candidates are respectively 759,727;
+674,105; 2,043,955; 2,009,467: 60,176 fewer bytes in the sum of separate final
+heaps. Ordinary source records fall 495→461, 469→438, 1,251→1,116 and 1,338→1,211
+(327 fewer), while logical source and fact counts remain unchanged. The marked
+accepted sum-bits artifact separately falls 2,460,662→2,447,294 bytes and
+1,580→1,397 ordinary records. Its final digest still equals the reviewed saved
+export, and the saved-export semantic gate passes. These are incremental gains,
+not a claim of large egraph compression or faster RHS execution.
+
+## Iterating the shared catalog from installed executions
+
+`observe` now records the four inputs **with the installed shared catalog**,
+checking every source Run against the unbaked control and saving the graph,
+ordered RHS and physical-write checks. Passive unmatched-birth proposals retain
+actual source history. They are pooled with the same typed definition and Entry
+mapping as the first batch, but keep `matched_births` and
+`available_shared_inputs` distinct from actual saved bindings.
+
+The batch contains 3,017 proposal paths. Of these, 1,368 map to all four inputs;
+289 were observed on more than one input. The seed catalog is common to all four
+and must agree exactly before shared extension. Per-input unmatched proposal
+counts are 433, 433, 1,378, 1,177. Respectively 110, 165, 576, 322 already have an
+installed local producer/consumer path, but lack the corresponding full source
+history transition. These are candidate counts, not disjoint rule applications.
+
+Two selections add 64 or 256 proposals from this **one captured batch**. Both
+retain every seed path through maximal-prefix coverage. Alternative Entries for
+the same source history and receiver compete rather than accumulating credit.
+The compiler rechecks each target and compares the complete seed transition
+language before writing a candidate artifact. No foreign instance bindings or
+runtime fact graph are introduced.
+
+| Input | Installed seed Graph | +64 proposals | +256 proposals |
+|---|---:|---:|---:|
+| fact | 759,727 | 757,303 | 757,743 |
+| loopfact | 674,105 | 681,329 | 680,689 |
+| sum-bits | 2,043,955 | 2,042,715 | 2,033,691 |
+| dot-product | 2,009,467 | 1,998,507 | 1,996,955 |
+
+**Neither selection replaces the shared seed.** Both regress loopfact, and the
+other gains are small. With 256 proposals, sum-bits ordinary source records fall
+1,116→971, yet only 10,264 Graph bytes disappear. For loopfact, crossing a completed
+frame-directory capacity boundary adds 10,240 bytes, more than the removed source
+storage. More combined shapes also add component/signal storage. Counting newly
+covered paths or physical transfers is therefore not a sufficient credit metric.
+The next structural step must eliminate redundant retained source state, not only
+collect more source frames under the same physical owner.
+
+All eight candidate final exports equal their saved seed controls. The 256-path
+candidate additionally passes all 2,652 saved source Run graph/RHS/write checks
+and terminal non-Run effect checks. The 64-path candidate is **not** admitted by
+that full gate. Program memory is reported separately; no speed or held-out
+result is claimed. The larger egraph compression target remains unmet.
+
+The saved checks avoid re-executing and exporting the entire baseline for every
+candidate. A source-bound terminal check is cached separately; older captures
+reconstruct that check from the admitted seed once, without repeating every
+baseline graph export. Source and artifact hashes must match before replay.
+
+Observation review also found a lifecycle bug: the saturation observer read
+cross-stage age only from ordinary Cells. After shared-storage transfer it could
+mislabel an old component as same-stage. It now reads the common metadata access
+path; a regression test first failed with `rhs_covered / cross_epoch=false` and
+then passes with the transferred predecessor correctly recognized. The saved
+batch's saturation totals are aggregated **across** age buckets. Its old raw age
+flags must not be used to infer cross-stage coverage; future captures use the
+corrected observer. The selection above does not use these age flags.
+
+```
+CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo build \
+  -p eggfuse-cell-compiler --features iterative-bake,sparse-cells,storage-metrics \
+  --example batch_cell_learning --example runtime_storage_peak
+target/debug/examples/batch_cell_learning observe out/cell-batched-learning
+python3 benchmarks/cell-batched-learning/passive.py out/cell-batched-learning
+# Apply each of passive/budget64 and passive/budget256:
+target/debug/examples/batch_cell_learning apply-passive out/cell-batched-learning passive/budget256
+# Measure candidate.json in each variant/case directory with runtime_storage_peak,
+# storing heap.json, in inherited-owners --port-domains-only mode.
+target/debug/examples/batch_cell_learning check-passive out/cell-batched-learning passive/budget256
+python3 benchmarks/cell-batched-learning/analyze_passive.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/passive-results.json
+python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
+```
+
+The report preserves saturation outcomes and storage-field deltas as well as
+net Graph bytes. Nine Python tests cover pooling and passive selection; 47
+ownership tests pass, including transferred-frame saturation observation.
+
+### Completed-owner fact representation
+
+The pooled traces expose a repeated invariant: completed-owner facts are owned,
+not local-union owned, have no decoded copy or Entry alias, and no receipt slot.
+Transfer now checks this contract atomically. The owner supplies those invariant
+fields; each fact retains only its mutable epoch, birth epoch, hash and visibility.
+This removes redundant representation state without bit packing or another index.
+Ordinary facts remain unchanged. Reads use a borrowed/value view; mutation uses a
+stack guard, keeping ordinary lifecycle changes compact. An exceptional alias or
+representation change restores the original source Cell before committing it.
+This does not remove logical fact identities, source frames, or their lifecycle
+obligations. It does not skip additional rule applications or RHS operations.
+
+Same seed artifacts, before/after requested Graph bytes:
+
+| pass3 | before | after | saved |
+|---|---:|---:|---:|
+| fact | 759,727 | 747,247 | 12,480 |
+| loopfact | 674,105 | 662,041 | 12,064 |
+| sum-bits | 2,043,955 | 1,989,427 | 54,528 |
+| dot-product | 2,009,467 | 1,965,147 | 44,320 |
+
+Owned fact state falls 64→32 bytes; all four runs have zero representation
+fallbacks. Allocated fact slices include retired entries, so savings are not
+simply 32 times the live fact count. `owned-state-results.json` also records
+execution peaks and takeover temporary bytes; these peaks include Program and
+executor allocations, unlike the separately measured final Graph. No speed or
+major compression claim follows from these modest reductions.
+
+Validation: 2,652 cached Run graph/RHS/write checks plus terminal non-Run effects
+pass, with identical final exports. The separate reviewed marked sum-bits artifact
+has Graph 2,447,294→2,392,254 bytes and unchanged final digest
+`1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82`;
+`choice_diagnosis.py` on its saved exports returns pass. This does not extend the
+native semantic contract to the four unmarked inputs.
+
+47 ownership, eight Unit, five fact-state lifecycle, five local-union, eight
+port-completion, five repair-cell and 14 stable-port tests pass. Default and
+receipt-slot configurations compile. Three maintenance assertions fail both here
+and at unchanged `eae8acf6`: repair-ports subscription count, and two union-digest
+binding-audit comparisons (their left/right payload hashes are identical between
+control and candidate). These remain known baseline failures, not passing tests.
+
+Reproduce by measuring each seed candidate with `runtime_storage_peak` into
+`candidate-owned-fact-heap.json` using `inherited-owners --port-domains-only`.
+For the cached gate, copy each unchanged candidate into `owned-state/CASE` with
+its source-bound selection, then run `check-passive` as above. Summarize with:
+
+```
+python3 benchmarks/cell-batched-learning/owned_state.py out/cell-batched-learning \
+  benchmarks/cell-batched-learning/owned-state-results.json
+```
+
+### Batch saturation credit audit
+
+`saturation_credit.py` joins the saved catalog observations to the exact source
+artifact and the current heap census. It pools rules by their complete static
+definition (including stage metadata), never their sample-local rule number.
+Full RHS coverage is counted separately from partial prefixes. Copies and already
+compiled static aliases receive no additional effect credit. Counts are checked
+against the observation's instruction totals before use.
+
+Across the four cases there are 15,231 observed applies, of which 821 (5.39%) have
+fully witnessed RHS effects: 524 remaining constructor operations and 390
+already-equal union operations, alongside 969 copies and 14 static aliases.
+These are potential redundant operations, not saved mutations. The largest
+constructor group is `BodyContainsExpr(body, Get(tup, i)) ->
+BodyContainsExpr(body, tup)`: 141 observed repeats across all four inputs.
+The largest union group is `SubTuple(expr, 0, len) -> expr` under a mutable
+`tuple-length` read: 180 already-equal unions. Its history cannot justify dropping
+that mutable read or future union-enabled matches.
+
+Only 20 of 5,760 retained logical frames have no facts, and all 20 have retainers.
+There are 7,560 live facts, 250 parent edges internal to a component and 362
+boundary parent edges. Empty-frame cleanup therefore cannot explain a large
+compression opportunity. Internal edges are observed co-location, not proof of
+safe inheritance contraction. All old cross-epoch trace buckets are aggregated;
+the known observer age issue must not inflate a cross-stage claim.
+
+This changes the next experiment: prioritize a compiled constructor witness
+projection for recurring relation closure, with shape-relative frame/op positions,
+then use that same proof to remove intermediate state. A generic runtime scan of
+all facts would duplicate the expensive passive observer. The proof must retain
+actual returned references, visibility, mutable-read freshness and delta ownership;
+final live fact identities cannot be erased merely because an apply was redundant.
+No new runtime takeover or speedup is claimed by this analysis.
+
+```
+python3 benchmarks/cell-batched-learning/saturation_credit.py out/cell-batched-learning \
+  benchmarks/cell-batched-learning/saturation-credit-results.json
+python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
+```

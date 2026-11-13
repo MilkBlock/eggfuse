@@ -1,0 +1,602 @@
+{
+  "scope": "saved actual standalone Cell executions; opportunity only, no saved mutations or speed claim",
+  "limitations": "Older trace age flags are not reliable; age buckets are aggregated. Full RHS coverage does not prove all matches saturated, removable queries, delta ownership, or absence of future invalidation.",
+  "cases": [
+    {
+      "case": "fact",
+      "source_program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "applications": 1525,
+      "fully_covered_applications": 98,
+      "fully_covered_work": {
+        "remaining_construct": 75,
+        "copies": 96,
+        "remaining_union": 41
+      },
+      "retained_state": {
+        "frames": 753,
+        "facts": 948,
+        "boundary_parent_edges": 52,
+        "internal_parent_edges": 37,
+        "empty_frames": 1,
+        "empty_retained_frames": 1
+      }
+    },
+    {
+      "case": "loopfact",
+      "source_program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "applications": 1239,
+      "fully_covered_applications": 63,
+      "fully_covered_work": {
+        "remaining_construct": 39,
+        "copies": 68,
+        "remaining_union": 33
+      },
+      "retained_state": {
+        "frames": 691,
+        "facts": 892,
+        "boundary_parent_edges": 47,
+        "internal_parent_edges": 29,
+        "empty_frames": 2,
+        "empty_retained_frames": 2
+      }
+    },
+    {
+      "case": "sum-bits",
+      "source_program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "applications": 6532,
+      "fully_covered_applications": 401,
+      "fully_covered_work": {
+        "copies": 506,
+        "remaining_union": 222,
+        "remaining_construct": 212,
+        "static_aliases": 5
+      },
+      "retained_state": {
+        "frames": 2180,
+        "facts": 2895,
+        "boundary_parent_edges": 136,
+        "internal_parent_edges": 80,
+        "empty_frames": 3,
+        "empty_retained_frames": 3
+      }
+    },
+    {
+      "case": "dot-product",
+      "source_program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "applications": 5935,
+      "fully_covered_applications": 259,
+      "fully_covered_work": {
+        "copies": 299,
+        "remaining_union": 94,
+        "remaining_construct": 198,
+        "static_aliases": 9
+      },
+      "retained_state": {
+        "frames": 2136,
+        "facts": 2825,
+        "boundary_parent_edges": 127,
+        "internal_parent_edges": 104,
+        "empty_frames": 14,
+        "empty_retained_frames": 14
+      }
+    }
+  ],
+  "pooled_fully_covered_rules": [
+    {
+      "rule_key": "285b0b5e8ac27a24c6dedf5b657dd859e22dee964d17ef6443810cdc0dec25c7",
+      "ruleset": "always-run",
+      "cases": {
+        "fact": 35,
+        "loopfact": 22,
+        "sum-bits": 63,
+        "dot-product": 60
+      },
+      "work": {
+        "copies": 360,
+        "remaining_union": 180
+      }
+    },
+    {
+      "rule_key": "3647321353f824a28b3a15d127e3648694737bb750a80d93dae812e11b8d3c84",
+      "ruleset": "always-run",
+      "cases": {
+        "fact": 28,
+        "loopfact": 19,
+        "sum-bits": 67,
+        "dot-product": 27
+      },
+      "work": {
+        "remaining_construct": 141
+      }
+    },
+    {
+      "rule_key": "ffbb0f47f1b80b6dd72cd23be6403955192fa07ce25656a6c13568b247019178",
+      "ruleset": "context",
+      "cases": {
+        "sum-bits": 131
+      },
+      "work": {
+        "copies": 262,
+        "remaining_union": 131
+      }
+    },
+    {
+      "rule_key": "2a4eba77b064c513036fc8e46f37f4ca2b8def2752af159fe6fd3b5ce3d01aa3",
+      "ruleset": "terms",
+      "cases": {
+        "fact": 1,
+        "loopfact": 2,
+        "sum-bits": 7,
+        "dot-product": 12
+      },
+      "work": {
+        "copies": 44,
+        "remaining_construct": 66
+      }
+    },
+    {
+      "rule_key": "593c538c4df8bbc3a6496a3fc14f4028cf30bb6f88ceee837fcf60ad0ac28b5c",
+      "ruleset": "type-analysis",
+      "cases": {
+        "fact": 7,
+        "loopfact": 4,
+        "sum-bits": 14,
+        "dot-product": 16
+      },
+      "work": {
+        "copies": 41,
+        "remaining_construct": 41
+      }
+    },
+    {
+      "rule_key": "9ba12113b353906f3152c58a2c77588418d77c2c8906de57e24a24c10e7eb374",
+      "ruleset": "type-helpers",
+      "cases": {
+        "fact": 4,
+        "loopfact": 7,
+        "sum-bits": 10,
+        "dot-product": 16
+      },
+      "work": {
+        "copies": 37,
+        "remaining_union": 37
+      }
+    },
+    {
+      "rule_key": "325345821cfa44f98971900d78a812554467d75fce1264dd8c32f532b552887e",
+      "ruleset": "terms",
+      "cases": {
+        "fact": 4,
+        "loopfact": 2,
+        "sum-bits": 2,
+        "dot-product": 3
+      },
+      "work": {
+        "copies": 22,
+        "remaining_construct": 33
+      }
+    },
+    {
+      "rule_key": "5dac6e412238df93058aeb969b25c59e5e9518ee5f3532ff56ccda47ea89628e",
+      "ruleset": "always-run",
+      "cases": {
+        "fact": 7,
+        "loopfact": 1,
+        "sum-bits": 14,
+        "dot-product": 7
+      },
+      "work": {
+        "remaining_construct": 29
+      }
+    },
+    {
+      "rule_key": "ff81efca00948e7de8d6d8fd4b7d0baf62830ed24160af4415b5d7940280b220",
+      "ruleset": "mem-simple",
+      "cases": {
+        "dot-product": 28
+      },
+      "work": {
+        "remaining_construct": 28
+      }
+    },
+    {
+      "rule_key": "0e47757d4cdb155b6ce7a7b22e9e110b3cfb8fe624d83c9b9ae10948971e9312",
+      "ruleset": "always-run",
+      "cases": {
+        "fact": 6,
+        "sum-bits": 5,
+        "dot-product": 1
+      },
+      "work": {
+        "remaining_construct": 24
+      }
+    },
+    {
+      "rule_key": "0a2ec72f5e4d7bec96b9bc3a361a4458fafee07f5d632e564524c7f3024da67a",
+      "ruleset": "type-helpers",
+      "cases": {
+        "fact": 2,
+        "loopfact": 4,
+        "sum-bits": 7,
+        "dot-product": 10
+      },
+      "work": {
+        "copies": 23,
+        "remaining_union": 23
+      }
+    },
+    {
+      "rule_key": "d1a1855750cf5c47090d0da592a9118ad18eb66271defac720c5ec17428ed835",
+      "ruleset": "type-analysis",
+      "cases": {
+        "fact": 1,
+        "loopfact": 1,
+        "sum-bits": 5,
+        "dot-product": 2
+      },
+      "work": {
+        "copies": 9,
+        "remaining_construct": 18
+      }
+    },
+    {
+      "rule_key": "2c552fe1890bc537d02fe911f080ed59d4d018437e33130d9567d40525cc102c",
+      "ruleset": "type-analysis",
+      "cases": {
+        "sum-bits": 10,
+        "dot-product": 3
+      },
+      "work": {
+        "copies": 13,
+        "remaining_construct": 13
+      }
+    },
+    {
+      "rule_key": "cbcbcd9b37d8edf96593ae358c03da2b155babaec55805f5293b42a07a43d522",
+      "ruleset": "type-analysis",
+      "cases": {
+        "sum-bits": 4,
+        "dot-product": 7
+      },
+      "work": {
+        "copies": 11,
+        "remaining_construct": 11
+      }
+    },
+    {
+      "rule_key": "8f35e308b09993d282db634680879072346661504887adf7bc30bb900f372474",
+      "ruleset": "always-run",
+      "cases": {
+        "sum-bits": 5,
+        "dot-product": 4
+      },
+      "work": {
+        "static_aliases": 9,
+        "remaining_construct": 9
+      }
+    },
+    {
+      "rule_key": "106cfa9812052d2d9c2f47f2b517c7af68aa0f96c134947b1fc80ae17eca4465",
+      "ruleset": "type-analysis",
+      "cases": {
+        "dot-product": 8
+      },
+      "work": {
+        "copies": 8,
+        "remaining_construct": 8
+      }
+    },
+    {
+      "rule_key": "1c166393d9f83782a2913f24cbf278329732ddc0f028068d8e84de3e6800d0c8",
+      "ruleset": "always-run",
+      "cases": {
+        "sum-bits": 8
+      },
+      "work": {
+        "copies": 8,
+        "remaining_construct": 8
+      }
+    },
+    {
+      "rule_key": "43232f7100a9d753e7b42662962a390453105180e3fd9449cf7406738bba33d6",
+      "ruleset": "is-resolved",
+      "cases": {
+        "dot-product": 8
+      },
+      "work": {
+        "copies": 8,
+        "remaining_construct": 8
+      }
+    },
+    {
+      "rule_key": "5a45133b8a0e20a56a9a90fa09273bda82353a392a1efeb040dfb8bbd23fa613",
+      "ruleset": "always-run",
+      "cases": {
+        "fact": 1,
+        "loopfact": 1,
+        "sum-bits": 4,
+        "dot-product": 2
+      },
+      "work": {
+        "remaining_construct": 8
+      }
+    },
+    {
+      "rule_key": "36cc179c4babda065ebbbbc7983d1d34ff64b99ef445e4f880a09ff86634d191",
+      "ruleset": "mem-simple",
+      "cases": {
+        "dot-product": 7
+      },
+      "work": {
+        "copies": 28,
+        "remaining_construct": 7
+      }
+    },
+    {
+      "rule_key": "668f5ac1f42167df0eb334154b8f18e65d7bee998c3469a752663fecad12babb",
+      "ruleset": "is-resolved",
+      "cases": {
+        "sum-bits": 7
+      },
+      "work": {
+        "copies": 7,
+        "remaining_construct": 7
+      }
+    },
+    {
+      "rule_key": "1fce864edcf65251d05941b67edbe7bfb4012762dca3e562f85dca9138d0828c",
+      "ruleset": "always-run",
+      "cases": {
+        "dot-product": 6
+      },
+      "work": {
+        "copies": 12,
+        "remaining_construct": 6
+      }
+    },
+    {
+      "rule_key": "23b4a798fcf8eadb068e02110f37758262077c75838f4693aa0b1568d62fbade",
+      "ruleset": "cicm-index",
+      "cases": {
+        "fact": 1,
+        "sum-bits": 3,
+        "dot-product": 2
+      },
+      "work": {
+        "copies": 6,
+        "remaining_construct": 6
+      }
+    },
+    {
+      "rule_key": "3a7ea4290203c783304a3c1a5b4b373e1a958820c0a4e9c041e0b638bed03bd7",
+      "ruleset": "always-run",
+      "cases": {
+        "sum-bits": 6
+      },
+      "work": {
+        "copies": 6,
+        "remaining_union": 6
+      }
+    },
+    {
+      "rule_key": "c632f458e5824ddc292cab70cb78993efd1b6e9ed82be0cd2520be5470703096",
+      "ruleset": "type-analysis",
+      "cases": {
+        "dot-product": 5
+      },
+      "work": {
+        "copies": 5,
+        "remaining_construct": 5
+      }
+    },
+    {
+      "rule_key": "064f7e613a1503bba8d6f3e570e34f7747cbe84bc5baff4757786a434a53d848",
+      "ruleset": "peepholes",
+      "cases": {
+        "dot-product": 4
+      },
+      "work": {
+        "copies": 4,
+        "remaining_union": 4
+      }
+    },
+    {
+      "rule_key": "3e8250ccedd3bde734a3c0545cb14761eefea223253315c60e5716534e1c8a75",
+      "ruleset": "peepholes",
+      "cases": {
+        "sum-bits": 4
+      },
+      "work": {
+        "copies": 4,
+        "remaining_union": 4
+      }
+    },
+    {
+      "rule_key": "54cfdcfd2c1e20d05a19c0679987402ae052f4ac6e6d411ab90b4a1621ecd3da",
+      "ruleset": "type-analysis",
+      "cases": {
+        "sum-bits": 4
+      },
+      "work": {
+        "copies": 4,
+        "remaining_construct": 4
+      }
+    },
+    {
+      "rule_key": "71d9ece748b79c005c31500b7b622d22cdebcd3189ceff0449e531c34fa81f1d",
+      "ruleset": "type-analysis",
+      "cases": {
+        "sum-bits": 4
+      },
+      "work": {
+        "copies": 4,
+        "remaining_construct": 4
+      }
+    },
+    {
+      "rule_key": "76229f19d4560823556cffa962a0b96f10965b06c71a75829546b20f6cc5184a",
+      "ruleset": "always-run",
+      "cases": {
+        "sum-bits": 2
+      },
+      "work": {
+        "remaining_construct": 4
+      }
+    },
+    {
+      "rule_key": "8789d2c94a112dfbc124b0c4681574cf6e56dc8db35a62c36f64cc3d1e705eef",
+      "ruleset": "is-resolved",
+      "cases": {
+        "sum-bits": 4
+      },
+      "work": {
+        "copies": 4,
+        "remaining_construct": 4
+      }
+    },
+    {
+      "rule_key": "cf799982ad38e0e43f9f8e861a5d2bc722a2bcdad07e05d54afa963f0231c6cc",
+      "ruleset": "peepholes",
+      "cases": {
+        "dot-product": 4
+      },
+      "work": {
+        "copies": 4,
+        "remaining_union": 4
+      }
+    },
+    {
+      "rule_key": "e8b759e508a8e78d2f7a41a3bd13b3971938294ef561b1062e10d119b205a00c",
+      "ruleset": "type-analysis",
+      "cases": {
+        "sum-bits": 4
+      },
+      "work": {
+        "copies": 4,
+        "remaining_construct": 4
+      }
+    },
+    {
+      "rule_key": "f7923d24383da498c1d03d0b2de761e1bdf1eb45424da046687c77e00767cd50",
+      "ruleset": "type-analysis",
+      "cases": {
+        "fact": 1,
+        "sum-bits": 1
+      },
+      "work": {
+        "copies": 2,
+        "remaining_construct": 4
+      }
+    },
+    {
+      "rule_key": "07c7a458bc874c0d33d87de735504456339e2d010daa3f9e263f90e18829842a",
+      "ruleset": "always-run",
+      "cases": {
+        "sum-bits": 1
+      },
+      "work": {
+        "remaining_construct": 3
+      }
+    },
+    {
+      "rule_key": "0d0bef8dcb0c902db85ddcd4c4eccb6421feac71acbd42751bad259b211d8afb",
+      "ruleset": "always-run",
+      "cases": {
+        "dot-product": 3
+      },
+      "work": {
+        "copies": 9,
+        "remaining_construct": 3
+      }
+    },
+    {
+      "rule_key": "0f3259c5c3a6966a43ca626834ead1f627af594487b35a93af3cd39c45ae3a10",
+      "ruleset": "always-run",
+      "cases": {
+        "dot-product": 3
+      },
+      "work": {
+        "static_aliases": 3,
+        "remaining_construct": 3
+      }
+    },
+    {
+      "rule_key": "8892a8d461df3d64493d3fbf6a811ece347a69cf34b5e34fc296f93cd989d345",
+      "ruleset": "type-analysis",
+      "cases": {
+        "sum-bits": 2,
+        "dot-product": 1
+      },
+      "work": {
+        "copies": 3,
+        "remaining_construct": 3
+      }
+    },
+    {
+      "rule_key": "8d4b2215a54c329a8371a8322063f0f151d8593bed5c4b733c6bebcb88e8a4bd",
+      "ruleset": "always-run",
+      "cases": {
+        "dot-product": 3
+      },
+      "work": {
+        "copies": 6,
+        "remaining_construct": 3
+      }
+    },
+    {
+      "rule_key": "c2d66f7b321124babe10b6d9267d85de1a8a9780b72b8e6a175cab847c7be280",
+      "ruleset": "always-run",
+      "cases": {
+        "dot-product": 3
+      },
+      "work": {
+        "copies": 6,
+        "remaining_construct": 3
+      }
+    },
+    {
+      "rule_key": "6e0ae82ee5e49e8da6c7391699df9c215b4ed5fe4ca54006b8a6ffa694a93dc6",
+      "ruleset": "always-run",
+      "cases": {
+        "dot-product": 2
+      },
+      "work": {
+        "static_aliases": 2,
+        "remaining_construct": 2
+      }
+    },
+    {
+      "rule_key": "b1a44a32b449a8ff9cad22390988e3eabe7162cc80ea4fdff412cea76f2c01c2",
+      "ruleset": "term-subst",
+      "cases": {
+        "sum-bits": 2
+      },
+      "work": {
+        "copies": 2,
+        "remaining_construct": 2
+      }
+    },
+    {
+      "rule_key": "d23ea20d2c4b095241b10aa6fc68df8523959d96a3c0950d2d496be7bbd0534a",
+      "ruleset": "always-run",
+      "cases": {
+        "dot-product": 2
+      },
+      "work": {
+        "copies": 2,
+        "remaining_construct": 2
+      }
+    },
+    {
+      "rule_key": "83f1302556b79302f9bb12fddfb1510a138f1d61c905de5ce6ad5f3c2be67ac0",
+      "ruleset": "type-helpers",
+      "cases": {
+        "sum-bits": 1
+      },
+      "work": {
+        "copies": 1,
+        "remaining_union": 1
+      }
+    }
+  ]
+}

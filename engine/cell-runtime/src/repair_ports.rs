@@ -69,11 +69,12 @@ impl Graph {
     pub(super) fn finish_result_port(&mut self, f: FactRef, from: u64, to: u64) -> bool {
         let stats = self.repair_ports.as_mut().unwrap();
         stats.attempts += 1;
-        let Some(state) = self
+        let Some(mut state_guard) = self
             .cells.fact_state_mut(f)
         else {
             return false;
         };
+        let state = &mut *state_guard;
         let Some((table, fields)) = &mut state.decoded else {
             stats.uncached += 1;
             return false;

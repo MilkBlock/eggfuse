@@ -10,7 +10,7 @@ def canonical(value):
     return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
 
 
-def pool(samples):
+def pool(samples, observation_fields=("activations", "binding_records_saved", "transition_probes")):
     if len({name for name, _, _ in samples}) != len(samples):
         raise ValueError('duplicate sample name')
     if not samples:
@@ -40,7 +40,7 @@ def pool(samples):
             key = canonical(portable)
             if key not in combined:
                 combined[key] = dict(fragment=portable, static_instruction_handles=record['static_instruction_handles'],
-                                     observed=dict(activations=0, binding_records_saved=0, transition_probes=0), samples={})
+                                     observed={field: 0 for field in observation_fields}, samples={})
             row = combined[key]
             if row['static_instruction_handles'] != record['static_instruction_handles']:
                 raise ValueError('same static fragment has inconsistent cost')

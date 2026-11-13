@@ -18,6 +18,8 @@ It also integrates [cross-stage completion and structural compression](benchmark
 
 The [structural Bake refresh](benchmarks/cell-bake-refresh/README.md) adds pooled catalogs, a shared compiled transition directory and completed scalar projections, while retaining the parallel scheduler.
 
+The [cross-stage owner merge](benchmarks/cell-bake-owner-merge/README.md) adds owner extension across Runs, compact completed facts and audited shared-catalog iteration. Compression remains opt-in; this merge does not establish a parallel speedup.
+
 The latest [root continuation checkpoint](benchmarks/cell-root-continuation/README.md) consumes existing constructor results during Cell admission, removing repeated parameter preparation while retaining exact lookup and source ordering.
 
 [Prepared Cell continuation](benchmarks/cell-prepared-continuation/README.md) consumes valid worker witnesses before conflict/key preparation and releases completed instances that have no publication responsibility.

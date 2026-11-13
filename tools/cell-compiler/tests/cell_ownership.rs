@@ -1398,3 +1398,90 @@ fn scalar_binding_uses_another_provider_until_the_last_one_retires() {
         else {assert_eq!(e.graph.stats.completed_scalar_slots_restored,restored);}
     }
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn later_single_stage_joins_the_existing_physical_owner() {
+    let p=program("(datatype E (N i64) (Start E) (Pair E E) (Seen E))
+        (ruleset a) (ruleset b) (ruleset c)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((= p (Pair s x))) ((Seen p)) :ruleset c)
+        (N 1) (run a 1) (run b 1) (run c 1)");
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        let mut moved=Vec::new();
+        for run in 1..=3 {
+            reference.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
+            moved.push(actual.graph.transfer_completed_owners().unwrap());
+            assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+        }
+        assert_eq!(moved,vec![0,2,1],"the third Run must absorb its single new frame");
+        assert_eq!(actual.graph.stats.shared_owner_extensions,1);
+        assert_eq!(actual.graph.stats.shared_owner_extension_frames,1);
+        for name in ["Start","Pair","Seen"] {
+            let table=actual.graph.program.tables.iter().position(|t|t.name==name).unwrap();
+            let eggfuse_cell_runtime::graph::Dependency::Fact(f)=actual.graph.witnesses(table)[0] else {panic!("constructor")};
+            assert!(actual.graph.cells.get(&f.cell).is_none(),"{name} no longer needs an ordinary source frame");
+        }
+        let storage=actual.graph.retained_cell_storage();
+        assert_eq!(storage["completed_owners"]["owners"],1);
+        assert_eq!(storage["completed_owners"]["completed_frames"],3);
+        assert_eq!(actual.graph.transfer_completed_owners().unwrap(),0,"idle boundary is a no-op");
+    }
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn referenced_parent_can_transfer_before_the_child_finishes() {
+    let p=program("(datatype E (N i64) (Start E i64) (Pair E E) (Seen i64))
+        (ruleset a) (ruleset b) (ruleset c)
+        (rule ((= x (N n))) ((Start x (+ n 7))) :ruleset a)
+        (rule ((= s (Start x i))) ((Pair s x)) :ruleset b)
+        (rule ((Start x i)) ((Seen i)) :ruleset c)
+        (N 1) (run a 1) (run b 1) (run c 1)");
+    let mut e=Executor::new(Graph::new_with_local_congruence(p).unwrap(),false);
+    e.use_completed_parent_takeover().unwrap();e.execute_until(Some(2)).unwrap();
+    let table=e.graph.program.tables.iter().position(|t|t.name=="Start").unwrap();
+    let witness=e.graph.witnesses(table)[0];
+    let eggfuse_cell_runtime::graph::Dependency::Fact(parent)=witness else {panic!("constructor")};
+    let (template,slot)=e.graph.program.templates.iter().enumerate().find_map(|(i,t)| {
+        if !t.name.contains("Seen") {return None;}
+        t.parent_columns.keys().find(|&&s|t.sorts[s]["kind"]=="i64").map(|&s|(i,s))
+    }).unwrap();
+    let child=e.graph.linked_frame(template,Default::default(),Some(parent)).unwrap();
+    let expected=e.graph.slot(child,slot).unwrap();
+    assert_eq!(e.graph.transfer_completed_owners().unwrap(),2);
+    assert!(e.graph.cells.get(&parent.cell).is_none());
+    assert!(e.graph.stats.shared_owner_referenced_frames>0);
+    assert_eq!(e.graph.slot(child,slot).unwrap(),expected);
+    let row=e.graph.row(witness).unwrap().unwrap();
+    e.graph.hide(table,&row.values[..row.values.len()-1],true).unwrap();
+    e.graph.collect_garbage();
+    assert_eq!(e.graph.slot(child,slot).unwrap(),expected,"retired scalar still belongs to the retained parent");
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn saturated_observer_reads_cross_stage_age_from_transferred_frames() {
+    let p=program("(datatype E (N i64) (Start E) (Pair E E))
+        (ruleset a) (ruleset b) (ruleset c)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((Pair s x)) ((Start x)) :ruleset c)
+        (N 1) (run a 1) (run b 1) (run c 1)");
+    let mut g=Graph::new_with_local_congruence(p).unwrap();g.trace_ownership_catalog(16).unwrap();
+    let mut e=Executor::new(g,false);e.use_completed_parent_takeover().unwrap();
+    e.execute_until(Some(2)).unwrap();
+    assert_eq!(e.graph.transfer_completed_owners().unwrap(),2);
+    let n=e.graph.program.tables.iter().position(|t|t.name=="N").unwrap();
+    e.graph.hide(n,&[eggfuse_cell_runtime::value::Value::Int(1)],true).unwrap();
+    e.graph.collect_garbage();
+    e.execute_until(Some(3)).unwrap();
+    let trace=e.graph.ownership_catalog_trace().unwrap();
+    assert!(trace["saturation"]["rows"].as_array().unwrap().iter().any(|r|
+        r["outcome"]=="rhs_covered" && r["cross_epoch"]==true),"{trace}");
+}
