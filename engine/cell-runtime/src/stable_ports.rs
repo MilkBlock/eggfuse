@@ -220,6 +220,21 @@ impl Graph {
     pub(crate) fn cell_stable_fields_enabled(&self)->bool {
         self.stable_ports.as_ref().is_some_and(|p|p.cell_fields)
     }
+    /// Diagnostic compaction must preserve direct scalar operands, even when
+    /// the ordinary query recipe could recompute them. Projected fields do not
+    /// execute that recipe. Derive readers from live facts, without an index.
+    #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+    pub(crate) fn cell_field_reads_slot(&self,cell:u32,slot:usize)->bool {
+        if !self.cell_stable_fields_enabled() {return false;}
+        let Some(frame)=self.ownership.as_ref().unwrap().composition.frames.get(&cell) else {return false;};
+        let program=&self.program.cell_ownership.code_programs[frame.code];
+        let template=&self.program.templates[self.cells.cell_metadata(cell).unwrap().template];
+        self.cells.fact_states(cell).any(|(fact,state)| {
+            state.owned && program.fields[fact.op as usize].iter().enumerate().any(|(column,symbol)| {
+                symbol.is_none() && matches!(scalar_argument(template,fact.op,column),Some(Arg::Slot(source)) if *source==slot)
+            })
+        })
+    }
     fn capture_cell_scalars(&mut self,f:FactRef,values:&[Value],symbols:&[Option<usize>]) {
         let c=self.cells.get_mut(&f.cell).expect("new scalar provider source");
         let template=&self.program.templates[c.template];

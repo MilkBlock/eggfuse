@@ -46,6 +46,7 @@ impl Graph {
         for id in ids {
             let slots = self.cells[&id].values.owned_slots();
             for slot in slots {
+                if self.cell_field_reads_slot(id, slot) {continue;}
                 let c = &self.cells[&id];
                 let old = canon(c.values.get(&slot).unwrap(), &self.parents);
                 let values = Without {

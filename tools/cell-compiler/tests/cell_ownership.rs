@@ -2191,7 +2191,7 @@ fn cell_fields_keep_scalar_sources_through_completed_storage_and_union() {
     let p=program(r#"
         (datatype E (N i64) (F E i64 String) (G E i64) (Seen E i64))
         (ruleset make) (ruleset merge) (ruleset read) (ruleset remove)
-        (rule ((= x (N n))) ((F x 7 "fixed") (G x n)) :ruleset make)
+        (rule ((= x (N n))) ((let k (+ n 1)) (F x k "fixed") (G x n)) :ruleset make)
         (rule ((= a (N 1)) (= b (N 2))) ((union a b)) :ruleset merge)
         (rule ((= g (G x n))) ((Seen g n)) :ruleset read)
         (rule ((F x n s)) ((delete (F x n s))) :ruleset remove)
@@ -2212,6 +2212,7 @@ fn cell_fields_keep_scalar_sources_through_completed_storage_and_union() {
         }
         for run in 1..=5 {
             control.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
+            actual.graph.compact_retained_capacity().unwrap();
             control.graph.transfer_completed_owners().unwrap();actual.graph.transfer_completed_owners().unwrap();
             assert_eq!(control.graph.export().unwrap(),actual.graph.export().unwrap(),"Run {run}, workers {workers}");
             assert_eq!(actual.graph.stable_port_report()["materialized_stable_nodes"],0);
