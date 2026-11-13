@@ -1,0 +1,54 @@
+{
+  "counterfactual_critical_chain_tables": {
+    "TCPair": 26,
+    "PotentialExtractedExpr": 12,
+    "NoTerm": 4,
+    "TupleT": 5,
+    "HasType": 24,
+    "Base": 4,
+    "Get": 5,
+    "Const": 1,
+    "ContextOf": 1,
+    "Single": 1,
+    "ExprIsPure": 3,
+    "TypeList-ith": 1,
+    "Arg": 1
+  },
+  "counts": {
+    "all_edges": 50424,
+    "historical_edges": 36315,
+    "historical_nullary_edges": 12388,
+    "consumers_losing_edges": 1122,
+    "consumers_losing_all_sources": 2
+  },
+  "nullary_tables": {
+    "IntT": 1561,
+    "StateT": 66,
+    "Add": 4493,
+    "Mul": 25,
+    "LessThan": 8,
+    "TNil": 86,
+    "PtrAdd": 3766,
+    "Load": 25,
+    "Write": 68,
+    "Print": 15,
+    "Free": 29,
+    "BoolT": 6,
+    "NoTerm": 2174,
+    "TermArg": 66
+  },
+  "original_layers": 91,
+  "counterfactual_layers": 89,
+  "original_base_coefficient_floats": 6454272,
+  "counterfactual_base_coefficient_floats": 4868608,
+  "nodes_with_reduced_depth": 3362,
+  "semantic_equivalence_proven": false,
+  "takeover_authorized": false,
+  "scope": "CPU graph-shape counterfactual, no inference or graph mutation",
+  "limitations": [
+    "Nullary constructors can belong to dynamic Eq classes; removing their full Cell context is not proved safe",
+    "Depth changes are not a GPU timing or accuracy result",
+    "Adjacent sources are preserved; only historical nullary edges are omitted in the counterfactual"
+  ],
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38"
+}
