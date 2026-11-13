@@ -44,3 +44,44 @@ remains unachieved.
 
 Validation: jobs 249–250 pass seven arena/storage unit tests, all 66 ownership
 integration tests, and the runtime no-default-features compile check.
+
+## Four-workload retained-memory check
+
+Job 252 runs the current binary once per previously frozen artifact, comparing
+with the saved `b3322f9f` memory observations. This is a cumulative branch check,
+not a same-binary isolated ablation. The new binary and both result files are
+hashed in `hash-memory.json`.
+
+| case | Graph before | Graph after | saved bytes | reduction | hash arrays after |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| fact | 535,367 | 528,711 | 6,656 | 1.24% | 1,176 |
+| loopfact | 512,765 | 506,437 | 6,328 | 1.23% | 1,024 |
+| sum-bits | 1,486,983 | 1,461,607 | 25,376 | 1.71% | 1,352 |
+| dot-product | 1,434,643 | 1,412,907 | 21,736 | 1.52% | 2,416 |
+
+Only the `cells` field changes in the Graph teardown; its exact reduction equals
+the hash-array reduction in every case. Retained Program bytes are identical.
+Maximum takeover extra bytes change 11,648→11,136; 11,152→10,876;
+15,908→15,820; 15,848→15,376, respectively. Process high-water also decreases,
+but includes the roughly 158–162 MB retained Program and cannot establish the
+Graph-only execution peak.
+
+Program digest, Run count, final export digest, owned fact lifecycle inventory,
+component identities/bindings and static shapes match exactly. This does not
+provide per-Run acceptance or a new native semantic proof. The 2,652 source Runs
+are workload coverage, not committed-mutation counts.
+
+The small complete-Graph benefit is real but closes this optimization direction:
+only 1–2.4 KB of hash arrays remain per workload. No further hash packing can
+make a meaningful contribution to the requested 70% overall reduction. The next
+structural work must remove other fact/index or per-instance maintenance, rather
+than making this format more elaborate.
+
+Reproduce under the shared compute queue (use a fresh output directory):
+
+```sh
+~/.local/bin/eggfuse-job run --kind compute -- python3 benchmarks/cell-bake-owner-merge/hash_memory.py /private/tmp/eggfuse-dual-local-target/debug/examples/runtime_storage_peak out/cell-physical-regions out/cell-bake-owner-merge/batch/prefix-all out/cell-hash-memory-new benchmarks/cell-bake-owner-merge/hash-memory.json
+```
+
+Three comparator tests reject changed final state, lifecycle or wiring and check
+actual array-byte accounting. There was no timing campaign.

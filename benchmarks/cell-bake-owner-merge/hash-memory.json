@@ -1,0 +1,105 @@
+{
+  "scope": "standalone Cell CPU; frozen b3322f9f observations versus current branch, cumulative changes, not an isolated hash ablation",
+  "candidate_commit": "9d61be39a8289cd1ebe70ca5d860a9b7f88aa146",
+  "candidate_binary_sha256": "ae02e0984f063ad3ca02ecfd782c27055993ffeea6bf6cad29a802954aaca6f8",
+  "limitations": [
+    "Final state and retained inventories match; not per-Run semantic acceptance.",
+    "Process high-water includes retained Program and is not a Graph-only peak.",
+    "Historical control has dense eight-byte hashes per stored fact position.",
+    "No native egglog acceptance or latency measurement."
+  ],
+  "cases": [
+    {
+      "case": "fact",
+      "control_sha256": "8abab58e7d849398190d6b960bc6b7c4ff968006b3aff4a8727a7907536241aa",
+      "candidate_sha256": "63f081d7fa13e625f338ea031801b13b44249aded30ee2e12ca3fb6cd2e11dd8",
+      "runs": 418,
+      "final_state_sha256": "d04728e6402e21992b9748a09ec99ace5f6639bc268ac5bcafbc24d0fd52f2f0",
+      "graph_before": 535367,
+      "graph_after": 528711,
+      "graph_saved": 6656,
+      "hash_before": 7832,
+      "hash_after": 1176,
+      "hash_saved": 6656,
+      "takeover_extra_before": 11648,
+      "takeover_extra_after": 11136,
+      "process_peak_before": 162250429,
+      "process_peak_after": 162243768,
+      "retained_program_before": 158774117,
+      "retained_program_after": 158774117,
+      "matched_inventories": true,
+      "graph_field_deltas": {
+        "cells": -6656
+      }
+    },
+    {
+      "case": "loopfact",
+      "control_sha256": "ae91829aec16d34a64b8118e1f53606eb47b510e8012c0d3904041d94b9fd039",
+      "candidate_sha256": "e21aedc0d2c5996def37cc1f8e12d28c51af450c938a42d48cded873f9bdfba8",
+      "runs": 398,
+      "final_state_sha256": "623c3b05d895a4200f8ea907ea4468a92a000c975f654483e54c42c96c90bf7a",
+      "graph_before": 512765,
+      "graph_after": 506437,
+      "graph_saved": 6328,
+      "hash_before": 7352,
+      "hash_after": 1024,
+      "hash_saved": 6328,
+      "takeover_extra_before": 11152,
+      "takeover_extra_after": 10876,
+      "process_peak_before": 161580675,
+      "process_peak_after": 161574342,
+      "retained_program_before": 158269323,
+      "retained_program_after": 158269323,
+      "matched_inventories": true,
+      "graph_field_deltas": {
+        "cells": -6328
+      }
+    },
+    {
+      "case": "sum-bits",
+      "control_sha256": "2407ae0c5e3f8558190cbc80ae76dcc07da12d96904b080660d385c342de890f",
+      "candidate_sha256": "8af7c907ca7f98f5c3862cdb8c714d202cbff34ed8c702fe5bb79866abcdfe8f",
+      "runs": 882,
+      "final_state_sha256": "3bae7a5ad756595f8c454b27baabbf7e830cf06b61d6aa69c0f7437ee747ab2a",
+      "graph_before": 1486983,
+      "graph_after": 1461607,
+      "graph_saved": 25376,
+      "hash_before": 26728,
+      "hash_after": 1352,
+      "hash_saved": 25376,
+      "takeover_extra_before": 15908,
+      "takeover_extra_after": 15820,
+      "process_peak_before": 166710116,
+      "process_peak_after": 166684788,
+      "retained_program_before": 160644703,
+      "retained_program_after": 160644703,
+      "matched_inventories": true,
+      "graph_field_deltas": {
+        "cells": -25376
+      }
+    },
+    {
+      "case": "dot-product",
+      "control_sha256": "2c6d522b54100dd851dbbe2b8d17d7e4f4d05156854579a09c6c2b95e9e0a671",
+      "candidate_sha256": "1bc32331a363443f93938b8755e25bcab60eb7dfb46c0a7faccbfabaf113e3a9",
+      "runs": 954,
+      "final_state_sha256": "191d2a4bd738e7afd0783d30b5d5c1f1219ac92887bb96b95239edfec27141d9",
+      "graph_before": 1434643,
+      "graph_after": 1412907,
+      "graph_saved": 21736,
+      "hash_before": 24152,
+      "hash_after": 2416,
+      "hash_saved": 21736,
+      "takeover_extra_before": 15848,
+      "takeover_extra_after": 15376,
+      "process_peak_before": 167879359,
+      "process_peak_after": 167857674,
+      "retained_program_before": 162122611,
+      "retained_program_after": 162122611,
+      "matched_inventories": true,
+      "graph_field_deltas": {
+        "cells": -21736
+      }
+    }
+  ]
+}
