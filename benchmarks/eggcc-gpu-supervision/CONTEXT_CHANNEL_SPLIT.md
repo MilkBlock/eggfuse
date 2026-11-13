@@ -38,3 +38,24 @@ The route test verifies disjoint channels, preservation of role vectors and
 matched norms. Focused route, history, replay and boundary tests pass (26 tests).
 The generic readout error now includes numeric metrics so future failures can
 be diagnosed without weakening acceptance.
+
+## Threshold disagreement located
+
+The diagnostic now retains exact query locations and compares original CPU
+scores, GPU scores, and CPU float64 accumulation after rounding both operands
+to float32. Both disagreements occur in validation case `000-ackermann`, Run 71,
+rule 51, slots (0,2), bindings 81 and 82, candidate alpha 1.0:
+
+- GPU: 0.500000536441803
+- Original CPU: 0.49999964696746546
+- CPU with f32-rounded operands and f64 accumulation: 0.4999995699495261
+
+Rounding inputs alone does not reproduce the flip; accumulation differences
+also matter at this margin. These scores are model outputs, not certificates of
+true equality. No test evaluation or acceptance bypass was added. The gate still
+rejects the run. A future uncertainty path must count these queries as requiring
+CPU semantic audit, or a selection policy must explicitly disqualify numerically
+inconsistent candidates using validation only. Neither is implemented here.
+`context-threshold-diagnosis.txt` records the failure and source locations.
+Thirteen focused tests pass, including mapping learned quotient-query indices
+back to the original Run/rule/slot pair without confusing static pairs.

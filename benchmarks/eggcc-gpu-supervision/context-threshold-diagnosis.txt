@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/select_eq_readout.py", line 103, in main
+    try:scores,numeric[case]=gpu_read(x,coef)
+                             ~~~~~~~~^^^^^^^^
+  File "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/select_eq_readout.py", line 57, in gpu_read
+    raise NumericReadoutError(check)
+NumericReadoutError: numeric readout disagreement: {"passed": true, "finite": true, "outside": 0, "max_abs": 8.682697781647875e-06, "threshold_disagreements": 2, "examples": [{"query": 9382, "candidate": 1, "gpu": 0.500000536441803, "cpu": 0.49999964696746546, "cpu_f32_operands": 0.4999995699495261}, {"query": 9398, "candidate": 1, "gpu": 0.500000536441803, "cpu": 0.49999964696746546, "cpu_f32_operands": 0.4999995699495261}]}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/select_eq_readout.py", line 148, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/select_eq_readout.py", line 108, in main
+    raise NumericReadoutError(error.check) from error
+NumericReadoutError: numeric readout disagreement: {"passed": true, "finite": true, "outside": 0, "max_abs": 8.682697781647875e-06, "threshold_disagreements": 2, "examples": [{"query": 9382, "candidate": 1, "gpu": 0.500000536441803, "cpu": 0.49999964696746546, "cpu_f32_operands": 0.4999995699495261, "run": 71, "binding": 81, "rule": 51, "slots": [0, 2], "alpha": 1.0}, {"query": 9398, "candidate": 1, "gpu": 0.500000536441803, "cpu": 0.49999964696746546, "cpu_f32_operands": 0.4999995699495261, "run": 71, "binding": 82, "rule": 51, "slots": [0, 2], "alpha": 1.0}], "case": "000-ackermann"}

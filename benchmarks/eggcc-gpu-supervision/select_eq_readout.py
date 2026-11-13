@@ -30,13 +30,31 @@ def select(candidates):
         false_merge=min(range(len(candidates)),key=lambda i:(candidates[i]['macro_false_pair_rate'],-candidates[i]['macro_exact_rate'],i)))
 
 
+class NumericReadoutError(ValueError):
+    def __init__(self,check):
+        self.check=check
+        super().__init__('numeric readout disagreement: '+json.dumps(check))
+
+
+def query_location(rows,index):
+    for row in rows:
+        ids=row['quotient']['representatives']
+        if index<len(ids):return dict(run=row['run'],binding=row['ordinal'],rule=row['rule'],slots=list(row['pairs'][ids[index]]))
+        index-=len(ids)
+    raise ValueError('query index outside layout')
+
+
 def gpu_read(matrix,coef):
     weight=mx.array(coef);chunks=[]
     for start in range(0,len(matrix),4096):
         out=mx.array(matrix[start:start+4096])@weight;mx.eval(out);chunks.append(np.array(out))
     scores=np.concatenate(chunks);reference=matrix@coef;check=audit(scores,reference)
     check['threshold_disagreements']=int(((scores>=.5)!=(reference>=.5)).sum())
-    if not check['passed'] or check['threshold_disagreements']:raise ValueError('numeric readout disagreement: '+json.dumps(check))
+    if not check['passed'] or check['threshold_disagreements']:
+        disagreements=np.argwhere((scores>=.5)!=(reference>=.5))
+        check['examples']=[dict(query=int(i),candidate=int(j),gpu=float(scores[i,j]),cpu=float(reference[i,j]),
+            cpu_f32_operands=float(matrix[i].astype(np.float32).astype(np.float64)@coef[:,j].astype(np.float32).astype(np.float64))) for i,j in disagreements[:8]]
+        raise NumericReadoutError(check)
     return scores,check
 
 
@@ -81,7 +99,13 @@ def main():
         x,y=materialize(readout_rows(chosen,True),target,w,True)
         mse_sum+=np.square(x@coef-y[:,None]).sum(0);mse_count+=len(y)
         predicted=np.array(executor(nodes,model['w'],model['coef'],prepare(nodes,'two'),True)())
-        x,_=materialize(readout_rows(rows,True),predicted,w,True);scores,numeric[case]=gpu_read(x,coef)
+        x,_=materialize(readout_rows(rows,True),predicted,w,True)
+        try:scores,numeric[case]=gpu_read(x,coef)
+        except NumericReadoutError as error:
+            error.check['case']=case
+            for example in error.check.get('examples',[]):
+                example.update(query_location(rows,example['query']),alpha=ALPHAS[example['candidate']])
+            raise NumericReadoutError(error.check) from error
         for i,candidate in enumerate(candidates):
             result=summarize(rows,scores[:,i]);result['pairs']=sum(len(r['pairs']) for r in rows)
             candidate['workloads'][case]=result

@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from select_eq_readout import fit_candidates,select,ALPHAS
+from select_eq_readout import fit_candidates,select,ALPHAS,query_location
 from whole_cell_ridge import train
 
 class ReadoutSelection(unittest.TestCase):
@@ -10,6 +10,13 @@ class ReadoutSelection(unittest.TestCase):
               dict(oracle_mse=.3,macro_exact_rate=.5,macro_false_pair_rate=.01)]
         self.assertEqual(select(rows),dict(mse=0,partition=1,false_merge=2))
         self.assertEqual(select([rows[0],rows[0]]),dict(mse=0,partition=0,false_merge=0))
+
+    def test_diagnostic_query_maps_through_quotient_layout(self):
+        rows=[dict(run=2,ordinal=3,rule=4,pairs=[(0,1),(0,2),(1,2)],quotient=dict(representatives=np.array([1]))),
+              dict(run=5,ordinal=6,rule=7,pairs=[(3,4)],quotient=dict(representatives=np.array([0])))]
+        self.assertEqual(query_location(rows,0),dict(run=2,binding=3,rule=4,slots=[0,2]))
+        self.assertEqual(query_location(rows,1),dict(run=5,binding=6,rule=7,slots=[3,4]))
+        with self.assertRaises(ValueError):query_location(rows,2)
 
     def test_candidate_fit_matches_existing_ridge_without_validation_leakage(self):
         rng=np.random.default_rng(41);x=np.column_stack([np.ones(50),rng.normal(size=(50,7))]);y=rng.integers(0,2,50).astype(np.float32)
