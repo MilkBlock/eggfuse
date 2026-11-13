@@ -4,26 +4,30 @@ No saved successful bindings are consumed. Existing catalog coverage remains the
 limit: this does not implement multi-source joins or prove stage saturation.
 """
 import numpy as np
-from multi_entry_ridge import template
+from multi_entry_ridge import template,neighborhood_template
 from device_input_features import compile_inputs,encode_inputs
 from device_ridge_transition import infer
 from device_token_commit import closed_entry_proposals,commit
 
 
-def compile_features(recipe,entry,channels=4):
+def compile_features(recipe,entry,channels=4,source_relations=False):
     if not 1<=channels<=8:raise ValueError('unsupported channel count')
     source=recipe['rules'][entry['producer']];consumer=recipe['rules'][entry['consumer']]
     inputs=[i for i,s in enumerate(consumer['slots']) if s['definition']=='query']
     pr,_=template(source);cr,_=template(consumer)
     routing=np.random.default_rng(777).normal(0,1/np.sqrt(128),(128,channels-1)).astype(np.float32)
-    edges=[];routes=[]
+    edges=[];routes=[];relations=[]
+    if source_relations:pn,_=neighborhood_template(source);cn,_=neighborhood_template(consumer)
     for slot,origin in zip(inputs,entry['projection']):
         if consumer['slots'][slot]['sort']['kind']!='eq':continue
+        if source_relations:relations.append(np.concatenate([np.tanh(cn[slot]+pn[origin]),np.tanh(cn[slot]-pn[origin])]))
         edges.append(np.concatenate([np.tanh(cr[slot]+pr[origin]),np.tanh(cr[slot]-pr[origin])]))
         routes.append(np.concatenate([np.ones(1,np.float32),np.tanh(3*np.concatenate([cr[slot],pr[origin]])@routing)]))
     count=len(edges)
-    return compile_inputs(consumer),dict(edge=np.array([edges or [np.zeros(128)]],np.float32),
+    coefficients=dict(edge=np.array([edges or [np.zeros(128)]],np.float32),
         route=np.array([routes or [np.zeros(channels)]],np.float32),edge_valid=np.array([[True]*count or [False]]))
+    if source_relations:coefficients['source_relation']=np.array([relations or [np.zeros(128)]],np.float32)
+    return compile_inputs(consumer),coefficients
 
 
 def propose(state,plan,input_layout,coefficient_layout,model,stage,xp):

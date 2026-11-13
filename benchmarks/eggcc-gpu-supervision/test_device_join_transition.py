@@ -19,7 +19,7 @@ def fixture():
 def device_plan(p):
     dev=lambda d:{k:mx.array(v) for k,v in d.items()}
     return dict(p,query=query_fixture.device_plan(p['query']),inputs=dev(p['inputs']),
-                ports=[dict(port,edge=mx.array(port['edge']),route=mx.array(port['route'])) for port in p['ports']])
+                ports=[{k:(mx.array(v) if isinstance(v,np.ndarray) else v) for k,v in port.items()} for port in p['ports']])
 
 
 class JoinTransition(unittest.TestCase):

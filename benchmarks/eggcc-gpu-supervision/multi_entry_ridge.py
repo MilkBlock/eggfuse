@@ -140,7 +140,8 @@ def context_route(route,historical,encoding):
     return route
 
 
-def dataset(trace,channels=1,zero_role_channels=False,encoding="slot",source_neighborhood=False):
+def dataset(trace,channels=1,zero_role_channels=False,encoding="slot",source_neighborhood=False,source_relations=False):
+    if source_neighborhood and source_relations:raise ValueError("choose one source context")
     if not 1<=channels<=8:raise ValueError("channel count outside experiment limits")
     separated=encoding in ('class-history-split','class-history-repeat')
     if separated and channels!=8:raise ValueError('context comparison requires eight channels')
@@ -151,7 +152,7 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot",source_nei
         links=link_history(trace,fallback_only=encoding in ('class-history-fallback','class-history-earliest','class-history-neighborhood','class-history-neighborhood-input'),earliest=encoding in ('class-history-earliest','class-history-neighborhood','class-history-neighborhood-input'))
     else:links=link(trace)
     targets=[template(r) for r in trace['recipe']['rules']]
-    neighborhoods=[neighborhood_template(r) for r in trace['recipe']['rules']] if source_neighborhood or encoding in ('class-history-neighborhood','class-history-neighborhood-input') else None
+    neighborhoods=[neighborhood_template(r) for r in trace['recipe']['rules']] if source_neighborhood or source_relations or encoding in ('class-history-neighborhood','class-history-neighborhood-input') else None
     compiled=neighborhoods if encoding=='class-history-neighborhood' else targets
     families=[template_identity(r) for r in trace['recipe']['rules']]
     nodes=[];addresses={};by_consumer={}
@@ -176,7 +177,7 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot",source_nei
                         if zero_role_channels:route[1:]=0
                         route=context_route(route,port.get('relation')=='historical_observed_identity',encoding)
                         incoming.append((source,edge/np.sqrt(len(g['providers']))));routes.append(route)
-                        if source_neighborhood:
+                        if source_neighborhood or source_relations:
                             cr=neighborhoods[b['rule']][0][port['slot']]
                             sr=neighborhoods[p['rule']][0][p['slot']]
                             source_context.append(np.concatenate([np.tanh(cr+sr),np.tanh(cr-sr)])/np.sqrt(len(g['providers'])))
@@ -187,6 +188,13 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot",source_nei
             if source_neighborhood:
                 context=sum(source_context,np.zeros(WIDTH,np.float32))/np.sqrt(max(1,len(source_context)))
                 q=np.concatenate([q,np.tanh(context)])
+            if source_relations:
+                from device_source_relations import encode as relation_encode
+                if incoming:
+                    sources=np.array([i for i,_ in incoming],np.int32)
+                    context=relation_encode(sources,np.array(source_context,np.float32),np.ones(len(sources),bool),np)
+                else:context=np.zeros(WIDTH,np.float32)
+                q=np.concatenate([q,context])
             target=encode(output_rows(b),targets[b['rule']][0],encoding)
             valid=b['rhs']['completed'] and all('unavailable' not in s for s in b['rhs']['slots'])
             # A missing full local state is an explicit CPU boundary in this probe.
@@ -277,8 +285,8 @@ def metric(pred,target,mask):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('training',type=Path);p.add_argument('validation',type=Path)
-    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface','class-history','class-history-split','class-history-repeat','class-history-fallback','class-history-earliest','class-history-neighborhood','class-history-neighborhood-input'],default='slot');p.add_argument('--source-neighborhood',action='store_true');a=p.parse_args()
-    if a.source_neighborhood and a.encoding!='class-history-neighborhood-input':raise ValueError('source neighborhood requires neighborhood-input baseline')
+    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface','class-history','class-history-split','class-history-repeat','class-history-fallback','class-history-earliest','class-history-neighborhood','class-history-neighborhood-input'],default='slot');p.add_argument('--source-neighborhood',action='store_true');p.add_argument('--source-relations',action='store_true');a=p.parse_args()
+    if (a.source_neighborhood or a.source_relations) and a.encoding!='class-history-neighborhood-input':raise ValueError('source neighborhood requires neighborhood-input baseline')
     preparation_started=time.monotonic()
     corpus_raw=a.corpus_manifest.read_bytes();corpus=json.loads(corpus_raw);corpus_sha=hashlib.sha256(corpus_raw).hexdigest()
     all_nodes=[];partition=[];provenance=dict(corpus_manifest=corpus_sha)
@@ -290,7 +298,7 @@ def main():
             if entry['split']!=name:raise ValueError('case partition mismatch')
             raw=read_bytes(Path(entry['trace']))
             if hashlib.sha256(raw).hexdigest()!=entry['trace_sha256']:raise ValueError('trace hash mismatch')
-            nodes=dataset(json.loads(raw),a.channels,a.zero_role_channels,a.encoding,a.source_neighborhood);offset=len(all_nodes)
+            nodes=dataset(json.loads(raw),a.channels,a.zero_role_channels,a.encoding,a.source_neighborhood,a.source_relations);offset=len(all_nodes)
             for n in nodes:n['edges']=[(i+offset,v) for i,v in n['edges']]
             all_nodes.extend(nodes);partition.extend([name]*len(nodes))
     raw=read_bytes(a.test_trace);test_trace=json.loads(raw)
@@ -298,10 +306,10 @@ def main():
     if len(cases)!=1 or cases[0]['split']!='test':raise ValueError('test partition mismatch')
     original=json.loads(read_bytes(Path(cases[0]['program'])))
     if original['recipe']!=test_trace['recipe']:raise ValueError('test recipe mismatch')
-    test=dataset(test_trace,a.channels,a.zero_role_channels,a.encoding,a.source_neighborhood);provenance['test_trace']=hashlib.sha256(raw).hexdigest()
+    test=dataset(test_trace,a.channels,a.zero_role_channels,a.encoding,a.source_neighborhood,a.source_relations);provenance['test_trace']=hashlib.sha256(raw).hexdigest()
     seed,q,target=arrays(all_nodes);pool=pooling(all_nodes,target)
     raw_width=seed.shape[1]+q.shape[1]+256*a.channels
-    w=projection(raw_width,a.source_neighborhood)
+    w=projection(raw_width,a.source_neighborhood or a.source_relations)
     x=features(seed,q,pool,w,np);parts=np.array(partition);valid=np.array([n['valid'] for n in all_nodes])
     preparation_seconds=time.monotonic()-preparation_started
     fitting_started=time.monotonic()
@@ -309,7 +317,7 @@ def main():
     zero_coef,zero_fit=train(features(seed,q,np.zeros_like(pool),w,np),np.arctanh(np.clip(target,-.999,.999)),
         (parts=='train')&valid,(parts=='validation')&valid)
     fitting_seconds=time.monotonic()-fitting_started
-    with a.model.open('wb') as f:np.savez_compressed(f,w=w,coef=coef,zero_provider_coef=zero_coef,channels=a.channels,zero_role_channels=a.zero_role_channels,encoding=a.encoding,source_neighborhood=a.source_neighborhood)
+    with a.model.open('wb') as f:np.savez_compressed(f,w=w,coef=coef,zero_provider_coef=zero_coef,channels=a.channels,zero_role_channels=a.zero_role_channels,encoding=a.encoding,source_neighborhood=a.source_neighborhood,source_relations=a.source_relations)
     if not mx.metal.is_available():raise RuntimeError('Metal required')
     mx.set_default_device(mx.gpu);seed,q,target=arrays(test);pool=pooling(test,target)
     oracle=mx.tanh(features(mx.array(seed),mx.array(q),mx.array(pool),mx.array(w),mx)@mx.array(coef));mx.eval(oracle)
@@ -324,7 +332,7 @@ def main():
     oracle_outside=int(np.count_nonzero(abs(np.array(oracle)-gold)>.002+.004*abs(gold)))
     result=dict(scope='observed-wiring multi-provider numeric Cell token replay, not autonomous egraph execution',
         provenance=provenance,fit=fit,backpropagation=False,state_width=WIDTH,train_valid=int(sum(n['valid'] and p=='train' for n,p in zip(all_nodes,partition))),
-        encoding=a.encoding,source_neighborhood=a.source_neighborhood,channels=a.channels,zero_role_channels=a.zero_role_channels,raw_feature_width=raw_width,
+        encoding=a.encoding,source_neighborhood=a.source_neighborhood,source_relations=a.source_relations,channels=a.channels,zero_role_channels=a.zero_role_channels,raw_feature_width=raw_width,
         edge_coefficient_floats=sum(v.size for n in test for _,v in n['edges']),
         route_coefficient_floats=sum(v.size for n in test for v in n['edge_routes']),
         expanded_edge_equivalent_floats=sum(v.size*a.channels for n in test for _,v in n['edges']),

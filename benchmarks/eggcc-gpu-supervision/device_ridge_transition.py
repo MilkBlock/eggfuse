@@ -34,6 +34,12 @@ def infer(state, request, model, xp, layout=None):
     pool=(xp.swapaxes(route,1,2)@(values*edge))/xp.sqrt(count[:,None,None])
     pool=pool.reshape(sources.shape[0],-1)
     seed=request['seed'];q=request['q']
+    if 'source_relation' in coefficients:
+        from device_source_relations import encode as encode_relations
+        relation=coefficients['source_relation']
+        if 'layout_index' in request:relation=relation[index]
+        relation=xp.broadcast_to(relation,(*sources.shape,relation.shape[-1]))
+        q=xp.concatenate([q,encode_relations(sources,relation,usable,xp)],axis=1)
     repeated=xp.concatenate([seed]*coefficients['route'].shape[2],axis=1)
     raw=xp.concatenate([seed,q,pool,repeated*pool],axis=1)
     features=xp.concatenate([xp.ones((seed.shape[0],1),dtype=xp.float32),raw,xp.tanh(raw@model['w'])],axis=1)

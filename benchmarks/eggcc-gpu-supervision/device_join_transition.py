@@ -5,12 +5,12 @@ Witnesses remain shared readers. A joint match is not an ownership proof.
 import numpy as np
 from device_query_join import compile_query,match_inputs
 from device_input_features import compile_inputs
-from multi_entry_ridge import template
+from multi_entry_ridge import template,neighborhood_template
 from device_ridge_transition import infer
 from device_token_commit import commit
 
 
-def compile_transition(recipe,rid,channels=4,views=None):
+def compile_transition(recipe,rid,channels=4,views=None,source_relations=False):
     if not 1<=channels<=8:raise ValueError('unsupported channel count')
     query=compile_query(recipe,rid,views)
     if not query['covered'] or not query['atoms']:raise ValueError('nonempty supported constructor query required')
@@ -18,29 +18,37 @@ def compile_transition(recipe,rid,channels=4,views=None):
     for ai,atom in enumerate(query['atoms']):
         for field,slot in enumerate(atom['slots']):origins.setdefault(slot,(ai,field))
     routing=np.random.default_rng(777).normal(0,1/np.sqrt(128),(128,channels-1)).astype(np.float32)
-    source_roles={};ports=[]
+    source_roles={};source_near={};ports=[]
+    if source_relations:cn,_=neighborhood_template(recipe['rules'][rid])
     for slot in query['required']:
         if recipe['rules'][rid]['slots'][slot]['sort']['kind']!='eq':continue
-        ai,field=origins[slot];view=query['atoms'][ai]['view'];edges=[];routes=[]
+        ai,field=origins[slot];view=query['atoms'][ai]['view'];edges=[];routes=[];relations=[]
         for record,source_rule in enumerate(view['rule']):
-            if source_rule<0 or not view['supported'][record]:edges.append(np.zeros(128));routes.append(np.zeros(channels));continue
+            if source_rule<0 or not view['supported'][record]:edges.append(np.zeros(128));routes.append(np.zeros(channels));relations.append(np.zeros(128));continue
             if int(source_rule) not in source_roles:source_roles[int(source_rule)]=template(recipe['rules'][source_rule])[0]
+            if source_relations:
+                if int(source_rule) not in source_near:source_near[int(source_rule)]=neighborhood_template(recipe['rules'][source_rule])[0]
+                sr=source_near[int(source_rule)][view['slots'][record,field]]
+                relations.append(np.concatenate([np.tanh(cn[slot]+sr),np.tanh(cn[slot]-sr)]))
             role=source_roles[int(source_rule)][view['slots'][record,field]]
             edges.append(np.concatenate([np.tanh(cr[slot]+role),np.tanh(cr[slot]-role)]))
             routes.append(np.concatenate([np.ones(1),np.tanh(3*np.concatenate([cr[slot],role])@routing)]))
-        ports.append(dict(slot=slot,atom=ai,edge=np.array(edges,np.float32),route=np.array(routes,np.float32)))
+        port=dict(slot=slot,atom=ai,edge=np.array(edges,np.float32),route=np.array(routes,np.float32))
+        if source_relations:port['source_relation']=np.array(relations,np.float32)
+        ports.append(port)
     return dict(query=query,inputs=compile_inputs(recipe['rules'][rid]),ports=ports,channels=channels,
-                completed=not recipe['rules'][rid]['effects'])
+                completed=not recipe['rules'][rid]['effects'],source_relations=source_relations)
 
 
 def proposals(state,plan,model,capacity,external_complete,eq_settled,xp):
     bindings,features,encoding=match_inputs(state,plan['query'],plan['inputs'],capacity,external_complete,eq_settled,xp)
-    sources=[];edges=[];routes=[];generations=[]
+    sources=[];edges=[];routes=[];generations=[];relations=[]
     for port in plan['ports']:
         slot=port['slot'];record=bindings['witness_records'][:,port['atom']]
         safe=xp.clip(record,0,port['edge'].shape[0]-1)
         sources.append(bindings['source_rows'][:,slot]);generations.append(bindings['source_generations'][:,slot])
         edges.append(port['edge'][safe]);routes.append(port['route'][safe])
+        if plan.get('source_relations',False):relations.append(port['source_relation'][safe])
     if sources:
         request=dict(features,sources=xp.stack(sources,axis=1),generations=xp.stack(generations,axis=1),
                      edge=xp.stack(edges,axis=1),route=xp.stack(routes,axis=1),
@@ -48,6 +56,8 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp):
     else:
         request=dict(features,sources=xp.zeros((capacity,1),xp.int32),generations=xp.zeros((capacity,1),xp.int32),
                      edge=xp.zeros((capacity,1,128),xp.float32),route=xp.zeros((capacity,1,plan['channels']),xp.float32),edge_valid=xp.zeros((capacity,1),xp.bool_))
+    if plan.get('source_relations',False):
+        request['source_relation']=xp.stack(relations,axis=1) if relations else xp.zeros((capacity,1,128),xp.float32)
     tokens,numerical=infer(state,request,model,xp)
     width=state['slots'].shape[1];local=bindings['slots'].shape[1];key_width=state['keys'].shape[1]
     required=plan['query']['required']

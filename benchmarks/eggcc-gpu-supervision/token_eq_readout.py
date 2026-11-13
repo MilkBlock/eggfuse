@@ -90,8 +90,8 @@ def expand_scores(row,scores,skip_static,quotient):
     return result
 
 
-def examples(trace,channels,zero,quotient=False,encoding="slot",source_neighborhood=False):
-    nodes=dataset(trace,channels,zero,encoding,source_neighborhood);layouts=[pair_layout(r) for r in trace['recipe']['rules']]
+def examples(trace,channels,zero,quotient=False,encoding="slot",source_neighborhood=False,source_relations=False):
+    nodes=dataset(trace,channels,zero,encoding,source_neighborhood,source_relations);layouts=[pair_layout(r) for r in trace['recipe']['rules']]
     proofs=[static_equalities(r,layout[0]) for r,layout in zip(trace['recipe']['rules'],layouts)]
     plans=[quotient_layout(r,layout[0],proof) for r,layout,proof in zip(trace['recipe']['rules'],layouts,proofs)] if quotient else None
     out=[];index=0
@@ -155,6 +155,7 @@ def main():
         mw=saved['w'];mc=saved['coef'];channels=int(saved['channels']);zero=bool(saved['zero_role_channels'])
         encoding=str(saved['encoding']) if 'encoding' in saved else 'slot'
         source_neighborhood=bool(saved.get('source_neighborhood',False))
+        source_relations=bool(saved.get('source_relations',False))
     w=np.random.default_rng(208).normal(0,1/np.sqrt(512),(512,256)).astype(np.float32)
     xs=[];ys=[];parts=[];seen=set();families=set();unique_counts={}
     preparation_started=time.monotonic()
@@ -167,7 +168,7 @@ def main():
             if entry['split']!=name:raise ValueError('case partition mismatch')
             data=read_bytes(Path(entry['trace']))
             if hashlib.sha256(data).hexdigest()!=entry['trace_sha256']:raise ValueError('trace mismatch')
-            nodes,rows=examples(json.loads(data),channels,zero,a.quotient,encoding,source_neighborhood);selected=[]
+            nodes,rows=examples(json.loads(data),channels,zero,a.quotient,encoding,source_neighborhood,source_relations);selected=[]
             for r in rows:
                 n=r['node'];key=(n['family'],n['state_key'])
                 if name=='train':seen.add(key);families.add(n['family'])
@@ -184,7 +185,7 @@ def main():
     with a.decoder.open('wb') as f:np.savez_compressed(f,w=w,coef=coef,static_equalities=a.static_equalities,quotient=a.quotient)
     raw=read_bytes(a.test_trace)
     if hashlib.sha256(raw).hexdigest()!=report['provenance']['test_trace']:raise ValueError('test mismatch')
-    clock=time.monotonic();nodes,rows=examples(json.loads(raw),channels,zero,a.quotient,encoding,source_neighborhood)
+    clock=time.monotonic();nodes,rows=examples(json.loads(raw),channels,zero,a.quotient,encoding,source_neighborhood,source_relations)
     test_preparation_seconds=time.monotonic()-clock
     plans={id(r['quotient']):r['quotient'] for r in rows if r['quotient'] is not None}
     quotient_layout_bytes=sum(v.nbytes for plan in plans.values() for v in plan.values())
