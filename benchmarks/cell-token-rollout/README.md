@@ -356,3 +356,48 @@ python residual.py --runtime ../../out/cell-token-rollout/fresh-grid/runtime.jso
 Raw snapshots/proposals stay under ignored output paths. Committed collection,
 numeric and residual summaries retain provenance. Full cost accounting and a
 semantic state representation beyond known tuple parameters remain open.
+
+## Device-controlled stage completion
+
+`growing.py --device-stages` adds a Metal stage-control experiment, using the
+same learned floating-point completion and downstream ridge readout. It is a
+standalone bounded SubTuple-family experiment, not the complete eggcc runtime.
+`device_stages.py` maintains stage, immutable slot occupancy, token state and
+consumer output on device. Six statically compiled ticks use masks and reductions;
+there is no host read to choose a stage. Empty delta advances the device stage.
+The first stage proposes its entire bounded completion; this is **not** an
+iterative model of arbitrary rule application. Duplicate proposals to the same
+compiler-assigned slot are idempotent. Cross-entrance aliases are still separate;
+changing Eq or mutable slot values is not supported by this occupancy protocol.
+Both stage expressions remain in the fixed dataflow; masked work need not be
+skipped physically. No throughput benefit is claimed.
+
+Reproduce with the training/fresh runtime files generated above:
+
+```
+python growing.py --training out/cell-token-rollout/train-grid/runtime.json \
+  --heldout out/cell-token-rollout/fresh-grid/runtime.json \
+  --reference-dir REFERENCE_DIR --device-stages \
+  --output out/cell-token-rollout/device-stages.json
+```
+
+The 36 fresh cases produced 822 correctly rounded parameter triples. The CPU
+checker derives expected occupancy independently from input lengths and checks
+both missing and incorrect outputs. Normal device traces establish completion
+in four ticks (produce, quiesce, consume, quiesce). Truncation at one tick is
+explicitly exhausted, never complete. Silently suppressing the last slot of
+each entrance removes 204 tokens: all 36 device executions still report finished,
+but all 36 CPU checks reject. Checking only emitted values would miss every one
+of these omissions. These are injected controls, not observed natural failures.
+
+`device-stages-results.json` records summaries. Normal CPU array comparison took
+0.735 ms total in this run; expected-value construction, native graph validation,
+GPU execution, compilation and transfer are outside that comparison timer. It
+must not be reported as full semantic-check speed. Timing is a diagnostic sample.
+
+The three variant computations are asynchronously submitted before exit checks.
+This does **not** yet implement CPU supervision concurrent with subsequent
+stages of the same execution, correction injection, checkpoint invalidation or
+replay. Nor does the device's finished flag prove complete ruleset saturation.
+Those remain necessary for the intended GPU-driven runtime. No engine operation
+has been removed by this experiment, and no gradient descent is used.

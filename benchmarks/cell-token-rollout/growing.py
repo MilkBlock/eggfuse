@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 import mlx.core as mx
 from run import module
+from device_stages import complete
 
 
 def entries(case):
@@ -15,7 +16,7 @@ def entries(case):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--training',type=Path,required=True);p.add_argument('--heldout',type=Path,required=True)
     p.add_argument('--reference-dir',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--proposals',type=Path);a=p.parse_args()
+    p.add_argument('--proposals',type=Path);p.add_argument('--device-stages',action='store_true');a=p.parse_args()
     module('dataset',a.reference_dir/'dataset.py');tr=module('train',a.reference_dir/'train.py')
     train=json.loads(a.training.read_text())['cases'];held=json.loads(a.heldout.read_text())['cases']
     # Distinct observed scalar entrances; no heldout target states or capacities.
@@ -44,7 +45,7 @@ def main():
             raise ValueError('outside declared bounded family')
         # Known input lengths control capacity BEFORE any final-state access.
         cap=int(values[:,1].max());n=len(values);offset=mx.arange(cap,dtype=mx.float32)[None,:,None]
-        def program(inputs,certified,exact_consumer=False):
+        def program(inputs,certified,exact_consumer=False,device=False,suppress=False,ticks=6):
             z=inputs/16;token=mx.concatenate([z,mx.tanh(z@ge+geb)],axis=-1)
             broad=mx.broadcast_to(token[:,None,:],(n,cap,32))
             off=mx.broadcast_to(offset,(n,cap,1));features=mx.concatenate([broad,off/16],axis=-1)
@@ -60,6 +61,8 @@ def main():
                 raw=predicted[:,:,:2]*16
                 downstream=mx.concatenate([raw,mx.sum(raw,axis=-1,keepdims=True)],axis=-1)
             active=off[:,:,0]<inputs[:,1,None]
+            if device:
+                return complete(predicted,active,grw,grb,ticks=ticks,suppress=suppress)
             return downstream,active
         # Bind dimensions/constants into each fixed compiled graph before call.
         learned=mx.compile(lambda v:program(v,False));cert=mx.compile(lambda v:program(v,True))
@@ -71,6 +74,38 @@ def main():
         expected=np.zeros((n,cap,3),np.float32)
         for row,(av,bv) in enumerate(values):
             for k in range(cap):expected[row,k]=[av+k,bv-k,av+bv]
+        device_metrics=None
+        if a.device_stages:
+            variants={}
+            # Submit the three independent device graphs before inspecting any
+            # result. These are exit checks, not yet concurrent CPU supervision.
+            pending=[]
+            for name,suppress,ticks in [('normal',False,6),('silent_omission',True,6),('budget_exhaustion',False,1)]:
+                fn=mx.compile(lambda v,s=suppress,t=ticks:program(v,False,device=True,suppress=s,ticks=t))
+                ticket=fn(mx.array(values));mx.async_eval(ticket)
+                pending.append((name,ticket))
+            for name,ticket in pending:
+                started=time.perf_counter()
+                actual,mask,stage,trace,exhausted=map(np.array,ticket)
+                wait_and_copy=time.perf_counter()-started
+                started=time.perf_counter()
+                expected_mask=np.arange(cap)[None,:]<values[:,1,None]
+                missing=int((expected_mask&~mask).sum())
+                unexpected=int((mask&~expected_mask).sum())
+                wrong=int((np.any(np.rint(actual)!=expected,axis=-1)&mask).sum())
+                variants[name]=dict(stage=int(stage),budget_exhausted=bool(exhausted),
+                    missing_tokens=missing,unexpected_tokens=unexpected,wrong_tokens=wrong,
+                    cpu_confirmed=not(missing or unexpected or wrong or bool(exhausted)),
+                    cpu_check_seconds=time.perf_counter()-started,
+                    wait_and_copy_seconds=wait_and_copy,device_trace=trace.tolist())
+                if name=='normal':
+                    np.testing.assert_allclose(actual[mask],outputs[0][0][mask],rtol=1e-4,atol=1e-4)
+                    assert np.array_equal(mask,outputs[0][1]) and int(stage)==2 and not exhausted
+                elif name=='silent_omission':
+                    assert missing==n and int(stage)==2 and not variants[name]['cpu_confirmed']
+                else:
+                    assert exhausted and not variants[name]['cpu_confirmed']
+            device_metrics=variants
         # Actual final graph is read only AFTER both GPU variants finish.
         final_keys={(r['values'][1]['value'],r['values'][2]['value']) for r in case['final']['rows'] if r['table']=='SubTuple'}
         valid=outputs[0][1];assert np.array_equal(valid,outputs[1][1])
@@ -91,7 +126,7 @@ def main():
                 tokens=len(truth),rejected_output_tokens=int(np.any(rounded!=truth,axis=1).sum()),
                 unseen_entrance_tokens=int(novel.sum()),unseen_entrance_correct=int(np.all(np.rint(output[novel])==expected[novel],axis=1).sum()),
                 max_abs_error=float(np.abs(output[mask]-truth).max())))
-        records.append(dict(id=case['id'],entrance_cells=n,token_width=32,allocated_output_tokens=n*cap,
+        records.append(dict(id=case['id'],device_stages=device_metrics,entrance_cells=n,token_width=32,allocated_output_tokens=n*cap,
             active_output_tokens=int(valid.sum()),padding_tokens=int((~valid).sum()),
             token_buffer_bytes=n*cap*32*4,learned=metrics[0],certified_parameter_channels=metrics[1],compiled_parameter_continuation=metrics[2]))
     result=dict(scope='Standalone fixed GPU fanout and token continuation for bounded SubTuple Cells; not full saturation or runtime takeover',

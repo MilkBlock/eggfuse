@@ -1,0 +1,107 @@
+{
+  "scope": "Standalone GPU stage-control test on bounded real-rule SubTuple Cell entrances; not full eggcc saturation or asynchronous CPU correction",
+  "cases": 36,
+  "tokens": 822,
+  "backpropagation": false,
+  "intermediate_host_reads": 0,
+  "source_provenance": {
+    "out/cell-token-rollout/train-grid/runtime.json": "6d17c93c8280da0c040347db57f72b0026c39c20c69b5ecb949aeadd291c1d13",
+    "out/cell-token-rollout/fresh-grid/runtime.json": "458165233d3a09db7b5f29cddbf992257dffe87955c5d1d239383be39f2f7d2d",
+    "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/benchmarks/cell-multi-entry-ridge/train.py": "870cd70b4db3fb0b015f788174bea172d535ce8130d5fd1cb872e67ca8533bbf"
+  },
+  "normal": {
+    "cpu_confirmed_cases": 36,
+    "device_finished_cases": 36,
+    "missing_tokens": 0,
+    "wrong_tokens": 0,
+    "cpu_check_seconds": 0.0007352042593993247,
+    "wait_and_copy_seconds": 0.0006675849435850978,
+    "example_device_trace": [
+      [
+        0,
+        13,
+        0
+      ],
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        13
+      ],
+      [
+        2,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0
+      ]
+    ]
+  },
+  "silent_omission": {
+    "cpu_confirmed_cases": 0,
+    "device_finished_cases": 36,
+    "missing_tokens": 204,
+    "wrong_tokens": 0,
+    "cpu_check_seconds": 0.00036691606510430574,
+    "wait_and_copy_seconds": 0.0019928779220208526,
+    "example_device_trace": [
+      [
+        0,
+        7,
+        0
+      ],
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        7
+      ],
+      [
+        2,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0
+      ]
+    ]
+  },
+  "budget_exhaustion": {
+    "cpu_confirmed_cases": 0,
+    "device_finished_cases": 0,
+    "missing_tokens": 822,
+    "wrong_tokens": 0,
+    "cpu_check_seconds": 0.00038020708598196507,
+    "wait_and_copy_seconds": 0.007979458780027926,
+    "example_device_trace": [
+      [
+        0,
+        13,
+        0
+      ]
+    ]
+  }
+}
