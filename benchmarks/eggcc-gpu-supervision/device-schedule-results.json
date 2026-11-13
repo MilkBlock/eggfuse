@@ -1,0 +1,35 @@
+{
+  "scope": "Actual Eggcc control tree with synthetic completed-Run change inputs; no graph execution",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "instructions": 380,
+  "saturation_slots": 108,
+  "repeat_slots": 9,
+  "rulesets": 30,
+  "static_table_bytes": 48640,
+  "policies": [
+    {
+      "policy": "no_run_changes",
+      "runs": 909,
+      "reference_runs": 909,
+      "control_ticks": 2320,
+      "run_order_equal": true,
+      "finished": true,
+      "passed": true
+    },
+    {
+      "policy": "first_run_per_ruleset_changes",
+      "runs": 934,
+      "reference_runs": 934,
+      "control_ticks": 2395,
+      "run_order_equal": true,
+      "finished": true,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "limitations": [
+    "Run completion/change signals are synthetic audit policies, not runtime semantic evidence",
+    "Fixed audit budget comes from reference control traversal, not a saturation certificate",
+    "Controller is not yet connected to real Eggcc matching and effects"
+  ]
+}

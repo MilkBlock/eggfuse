@@ -46,3 +46,49 @@ covered control/execution blocks without falsely discarding uncovered work.
 This commit adds no new instance binding graph or apply log, but it does not yet
 remove the CPU runtime's full matching/scheduling path. No actual Eggcc runtime,
 speedup, prediction-accuracy or ownership-completion claim is made.
+
+## Nested source control table
+
+`device_schedule` compiles the actual `sequence`, `repeat`, `saturate` and `run`
+forms into a fixed table. Runtime control state consists of a program counter,
+repeat counters and one accumulated-change flag per saturation region. Static
+Run-to-region membership propagates a completed Run's change to every enclosing
+saturation. Resetting an inner loop does not reset its parent's accumulated flag.
+An outer saturation therefore repeats even when the last inner iteration was
+unchanged but an earlier inner iteration changed state.
+
+Repeat counts are not expanded into duplicate code. Zero repetitions skip the
+body. A RUN holds its program counter until its caller supplies a completed Run;
+change signals while waiting are ignored. Invalid control syntax, unknown
+rulesets and invalid counters fail compilation; an invalid runtime PC is marked
+and cannot report HALT. Bookkeeping uses bounded tensor masks/counters, not a
+recursive GPU stack. This is a small control plane, not an attempt to express
+counter state as learned floating semantics.
+
+81 mechanism tests pass. In addition to nested saturation, tests cover repeat
+zero, nested repeat, wait-state immutability and malformed controls. The real
+dot-product `recipe.control` compiles to 380 instructions, 108 saturation flags,
+9 repeat counters and 30 rulesets. Static arrays occupy 48,640 bytes. The audit
+executes chunks of 16 controller ticks on GPU without inspecting intermediate
+PC values on CPU.
+
+Two deterministic synthetic Run policies agree exactly with an independent
+recursive source-tree interpreter: always unchanged produces 909 Runs; changing
+only the first Run of each ruleset produces 934 Runs. Both reach HALT. This is
+control-tree evidence only: no graph or model completion is executed, and the
+audit budget is derived from the reference traversal. It is not an observed
+Eggcc Run-count reproduction or a saturation certificate.
+
+Reproduce with `audit_device_schedule.py TRACE OUTPUT`; hashes and results are in
+`device-schedule-results.json`. The controller's stage IDs follow the explicitly
+supplied name list; an integrated runtime must align Entry plan IDs to that same
+mapping. Empty rulesets cannot be dropped merely because they have no compiled
+Cell entries.
+
+The next integration must supply real completed-Run change evidence, freeze the
+query snapshot while effects finish, and preserve ordered original effects and
+visibility. Logical matches, numerical token changes, and a token novelty count
+alone are not committed semantic changes. Thus this nested controller does not
+yet replace the runtime schedule or discharge uncovered query/ownership work.
+Reference Bake tip remains `9ee7070d`; executable control tables are retained
+runtime memory and are counted as such, not treated as free offline metadata.
