@@ -1,0 +1,890 @@
+{
+  "scope": "within-case, within-template exact f32 decoder-feature ambiguity audit",
+  "model_sha256": "55e7dfd5fa6bd82adf28091e464e5d792c0f4ff7f35e788282d81bfb6e9ff110",
+  "provenance": {
+    "train": "e1e830c2d1beef561494bca8c53f3ee04f0c9d5360c3b538dff9a9f021395977",
+    "validation": "59164efc3eda87020a4e27a89112accd70c039df97e98e98c942c7324fd4ac87"
+  },
+  "encoding": "class-history",
+  "cases": [
+    {
+      "split": "train",
+      "case": "014-fitsinside",
+      "trace_sha256": "0c687720faa5ee2aa1210e798290c6853af121291957481677748abf824f9213",
+      "complete_instances": 1008,
+      "incomplete_instances": 23,
+      "modes": {
+        "oracle": {
+          "queries": 4985,
+          "positive_queries": 445,
+          "distinct_features": 1534,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 4985,
+          "positive_queries": 445,
+          "distinct_features": 4805,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "020-loopfact",
+      "trace_sha256": "cd978ba4c9df1d38d9a82721f3816c68838c9eceea4ab0739836baa4b3a9e067",
+      "complete_instances": 1211,
+      "incomplete_instances": 28,
+      "modes": {
+        "oracle": {
+          "queries": 5085,
+          "positive_queries": 448,
+          "distinct_features": 1754,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 5085,
+          "positive_queries": 448,
+          "distinct_features": 4972,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "029-recfact",
+      "trace_sha256": "b45fddad0faa49d0ab4256a72a205561725e7557d0f5a11c8cfa87144f257dae",
+      "complete_instances": 1444,
+      "incomplete_instances": 43,
+      "modes": {
+        "oracle": {
+          "queries": 7139,
+          "positive_queries": 546,
+          "distinct_features": 2381,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 7139,
+          "positive_queries": 546,
+          "distinct_features": 6386,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "003-birthday",
+      "trace_sha256": "1f414b74fe68260ebe1f19c7ea4822ff809598e200ad49c0a5c0c86cfc0a4893",
+      "complete_instances": 1643,
+      "incomplete_instances": 35,
+      "modes": {
+        "oracle": {
+          "queries": 7714,
+          "positive_queries": 611,
+          "distinct_features": 2728,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 7714,
+          "positive_queries": 611,
+          "distinct_features": 7544,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "024-pascals-row",
+      "trace_sha256": "d29a4324ae3dc19ca5257cc98ccc2aa762626e775c34b02012ff2495012468ef",
+      "complete_instances": 2386,
+      "incomplete_instances": 53,
+      "modes": {
+        "oracle": {
+          "queries": 11966,
+          "positive_queries": 1198,
+          "distinct_features": 3792,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 11966,
+          "positive_queries": 1198,
+          "distinct_features": 11731,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "011-euclid",
+      "trace_sha256": "9e4964b3956bc28a4ca436863def96d0641133475a794b6ae84045fc78b863de",
+      "complete_instances": 2711,
+      "incomplete_instances": 56,
+      "modes": {
+        "oracle": {
+          "queries": 14578,
+          "positive_queries": 1346,
+          "distinct_features": 5166,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 14578,
+          "positive_queries": 1346,
+          "distinct_features": 14285,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "002-binary-fmt",
+      "trace_sha256": "c98ae5984f76d5ed740227ed186966d765a2fc1c971bdd1c895fc2e65a6ef31f",
+      "complete_instances": 2776,
+      "incomplete_instances": 76,
+      "modes": {
+        "oracle": {
+          "queries": 17232,
+          "positive_queries": 1051,
+          "distinct_features": 7368,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 17232,
+          "positive_queries": 1051,
+          "distinct_features": 16175,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "049-dead-branch",
+      "trace_sha256": "ad1b0515f9827120261f82d4992a52e1d2f205e498a976160d81f69a70045b95",
+      "complete_instances": 2918,
+      "incomplete_instances": 94,
+      "modes": {
+        "oracle": {
+          "queries": 14525,
+          "positive_queries": 1611,
+          "distinct_features": 3947,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 14525,
+          "positive_queries": 1611,
+          "distinct_features": 14365,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "033-sum-check",
+      "trace_sha256": "a868628b30585effce94d4ecc34780f5af563a3a745a54d576d91427b70ecbcc",
+      "complete_instances": 3237,
+      "incomplete_instances": 83,
+      "modes": {
+        "oracle": {
+          "queries": 18444,
+          "positive_queries": 1724,
+          "distinct_features": 6327,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 18444,
+          "positive_queries": 1724,
+          "distinct_features": 17990,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "train",
+      "case": "035-sum-sq-diff",
+      "trace_sha256": "c46c9851141c972846f20a76c09dd585e9eff39dc1115ddbdd413f0fe4f4f632",
+      "complete_instances": 3722,
+      "incomplete_instances": 87,
+      "modes": {
+        "oracle": {
+          "queries": 21353,
+          "positive_queries": 1966,
+          "distinct_features": 6057,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 21353,
+          "positive_queries": 1966,
+          "distinct_features": 19935,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "validation",
+      "case": "040-euler",
+      "trace_sha256": "b824812a4c74ad3cf380f0703558f3136db29e69fa985d9471d638b4cde0591a",
+      "complete_instances": 3649,
+      "incomplete_instances": 93,
+      "modes": {
+        "oracle": {
+          "queries": 21738,
+          "positive_queries": 1275,
+          "distinct_features": 8302,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 21738,
+          "positive_queries": 1275,
+          "distinct_features": 18095,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "validation",
+      "case": "000-ackermann",
+      "trace_sha256": "537b6ef8ed411a83288aee2fefbc208100a974c082cb89006962b438bcfb7b3d",
+      "complete_instances": 4481,
+      "incomplete_instances": 108,
+      "modes": {
+        "oracle": {
+          "queries": 26520,
+          "positive_queries": 1448,
+          "distinct_features": 8927,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 26520,
+          "positive_queries": 1448,
+          "distinct_features": 22726,
+          "conflicting_features": 1,
+          "queries_in_conflicts": 2,
+          "unavoidable_query_errors": 1,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 13,
+                "binding": 7,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 13,
+                "binding": 9,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 13,
+              "binding": 7,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 13,
+              "binding": 9,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              7,
+              7
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 9.119510650634766e-06
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "validation",
+      "case": "016-gcd",
+      "trace_sha256": "8e52cc2158e8a635984dabe0fe345238136f7e46b8799d0dc27f4f2046f1988f",
+      "complete_instances": 5283,
+      "incomplete_instances": 190,
+      "modes": {
+        "oracle": {
+          "queries": 29734,
+          "positive_queries": 3475,
+          "distinct_features": 9270,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 29734,
+          "positive_queries": 3475,
+          "distinct_features": 28738,
+          "conflicting_features": 4,
+          "queries_in_conflicts": 10,
+          "unavoidable_query_errors": 4,
+          "witnesses": [
+            {
+              "negative": {
+                "run": 12,
+                "binding": 8,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 12,
+                "binding": 14,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 13,
+                "binding": 10,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 15,
+                "binding": 9,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                2,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 13,
+                "binding": 13,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 15,
+                "binding": 11,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            },
+            {
+              "negative": {
+                "run": 13,
+                "binding": 19,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "positive": {
+                "run": 15,
+                "binding": 13,
+                "rule": 543,
+                "slots": [
+                  0,
+                  4
+                ]
+              },
+              "counts": [
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "attribution": {
+        "witnesses": [
+          {
+            "negative": {
+              "run": 12,
+              "binding": 8,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 12,
+              "binding": 14,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              4,
+              4
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 13,
+              "binding": 10,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 15,
+              "binding": 9,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              2,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              4,
+              4
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 13,
+              "binding": 13,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 15,
+              "binding": 11,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              4,
+              4
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          },
+          {
+            "negative": {
+              "run": 13,
+              "binding": 19,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "positive": {
+              "run": 15,
+              "binding": 13,
+              "rule": 543,
+              "slots": [
+                0,
+                4
+              ]
+            },
+            "counts": [
+              1,
+              1
+            ],
+            "identical_predicted_tokens": true,
+            "identical_reconstructed_inputs": true,
+            "identical_oracle_provider_inputs": true,
+            "input_max_abs_difference": 0.0,
+            "oracle_input_max_abs_difference": 0.0,
+            "provider_edges": [
+              4,
+              4
+            ],
+            "negative_at_rhs_equal": false,
+            "negative_after_run_equal": false,
+            "positive_at_rhs_equal": false,
+            "positive_after_run_equal": true,
+            "identical_normalized_input_bindings": true,
+            "rule_name": "(rewrite (TypeList-ith (TCons hd tl) i) (TypeList-ith tl (- i 1)) :when ((> i 0)) :ruleset type-helpers)"
+          }
+        ],
+        "reconstruction_numeric_audit": {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 1.2278556823730469e-05
+        },
+        "scope": "bounded collision witnesses; reconstructed GPU aggregation, not an instrumented intermediate execution trace"
+      }
+    },
+    {
+      "split": "validation",
+      "case": "019-lcm",
+      "trace_sha256": "1e613458ec03243c067488e8a96fcda6edacfa70d6d2e6a982451fd1deb98983",
+      "complete_instances": 5828,
+      "incomplete_instances": 182,
+      "modes": {
+        "oracle": {
+          "queries": 32729,
+          "positive_queries": 3696,
+          "distinct_features": 8036,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 32729,
+          "positive_queries": 3696,
+          "distinct_features": 31803,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "validation",
+      "case": "044-newton",
+      "trace_sha256": "406ed05c4c03508e47a9e6290e3c30318716fdec942ce28be98586448a5b1cbb",
+      "complete_instances": 7396,
+      "incomplete_instances": 176,
+      "modes": {
+        "oracle": {
+          "queries": 45444,
+          "positive_queries": 4763,
+          "distinct_features": 11475,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 45444,
+          "positive_queries": 4763,
+          "distinct_features": 44723,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    },
+    {
+      "split": "test",
+      "case": "dot-product",
+      "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+      "complete_instances": 5553,
+      "incomplete_instances": 382,
+      "modes": {
+        "oracle": {
+          "queries": 34240,
+          "positive_queries": 2557,
+          "distinct_features": 14567,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        },
+        "predicted": {
+          "queries": 34240,
+          "positive_queries": 2557,
+          "distinct_features": 32109,
+          "conflicting_features": 0,
+          "queries_in_conflicts": 0,
+          "unavoidable_query_errors": 0,
+          "witnesses": []
+        }
+      },
+      "attribution": {
+        "witnesses": []
+      }
+    }
+  ],
+  "aggregate": {
+    "train": {
+      "oracle": {
+        "queries": 123021,
+        "positive_queries": 10946,
+        "distinct_features": 41054,
+        "conflicting_features": 0,
+        "queries_in_conflicts": 0,
+        "unavoidable_query_errors": 0
+      },
+      "predicted": {
+        "queries": 123021,
+        "positive_queries": 10946,
+        "distinct_features": 118188,
+        "conflicting_features": 0,
+        "queries_in_conflicts": 0,
+        "unavoidable_query_errors": 0
+      }
+    },
+    "validation": {
+      "oracle": {
+        "queries": 156165,
+        "positive_queries": 14657,
+        "distinct_features": 46010,
+        "conflicting_features": 0,
+        "queries_in_conflicts": 0,
+        "unavoidable_query_errors": 0
+      },
+      "predicted": {
+        "queries": 156165,
+        "positive_queries": 14657,
+        "distinct_features": 146085,
+        "conflicting_features": 5,
+        "queries_in_conflicts": 12,
+        "unavoidable_query_errors": 5
+      }
+    },
+    "test": {
+      "oracle": {
+        "queries": 34240,
+        "positive_queries": 2557,
+        "distinct_features": 14567,
+        "conflicting_features": 0,
+        "queries_in_conflicts": 0,
+        "unavoidable_query_errors": 0
+      },
+      "predicted": {
+        "queries": 34240,
+        "positive_queries": 2557,
+        "distinct_features": 32109,
+        "conflicting_features": 0,
+        "queries_in_conflicts": 0,
+        "unavoidable_query_errors": 0
+      }
+    }
+  },
+  "wall_seconds": 21.55709029204445,
+  "fitting": false,
+  "union_authorized": false,
+  "limitations": [
+    "No conflicts does not establish separability, robustness or decoder adequacy",
+    "Lower bounds count class queries, not expanded slot pairs or full partitions",
+    "Aggregation sums per-case audits and does not discover cross-case collisions",
+    "Actual CPU matches/routes and external observations still supplied to GPU replay",
+    "Only exact f32 feature equality is tested; near-collisions and hidden lifecycle facts remain untested"
+  ]
+}

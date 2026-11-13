@@ -49,7 +49,7 @@ def scalar(value):
 
 
 def encode(rows,roles,encoding="slot"):
-    if encoding not in ("slot","class-balanced","class-interface"):raise ValueError("unknown token encoding")
+    if encoding not in ("slot","class-balanced","class-interface","class-history"):raise ValueError("unknown token encoding")
     groups=defaultdict(list)
     for slot,value,key in rows:
         if key is not None:groups[key].append(slot)
@@ -78,7 +78,7 @@ def input_rows(binding):
 def input_seed(binding,roles,connected,encoding):
     # Connected Eq slots still carry interface correlations between providers.
     rows=input_rows(binding)
-    return encode([r for r in rows if encoding=='class-interface' or r[0] not in connected],roles,encoding)
+    return encode([r for r in rows if encoding in ('class-interface','class-history') or r[0] not in connected],roles,encoding)
 
 
 def output_rows(binding):
@@ -113,7 +113,11 @@ def template_identity(rule):
 def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
     if not 1<=channels<=8:raise ValueError("channel count outside experiment limits")
     routing=np.random.default_rng(777).normal(0,1/np.sqrt(128),(128,channels-1)).astype(np.float32)
-    links=link(trace);compiled=[template(r) for r in trace['recipe']['rules']]
+    if encoding=='class-history':
+        from historical_cell_sources import link_history
+        links=link_history(trace)
+    else:links=link(trace)
+    compiled=[template(r) for r in trace['recipe']['rules']]
     families=[template_identity(r) for r in trace['recipe']['rules']]
     nodes=[];addresses={};by_consumer={}
     for w in links['windows']:
@@ -129,7 +133,7 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
                     connected.add(port['slot']);g=w['groups'][port['group']]
                     # Preserve alternatives; no unique producer or owner is inferred.
                     for p in g['providers']:
-                        source=addresses[(w['producer_run'],p['binding'])]
+                        source=addresses[(p.get('run',w['producer_run']),p['binding'])]
                         pr,_=compiled[p['rule']]
                         edge=np.concatenate([np.tanh(roles[port['slot']]+pr[p['slot']]),
                                              np.tanh(roles[port['slot']]-pr[p['slot']])])
@@ -216,7 +220,7 @@ def metric(pred,target,mask):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('training',type=Path);p.add_argument('validation',type=Path)
-    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface'],default='slot');a=p.parse_args()
+    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface','class-history'],default='slot');a=p.parse_args()
     preparation_started=time.monotonic()
     corpus_raw=a.corpus_manifest.read_bytes();corpus=json.loads(corpus_raw);corpus_sha=hashlib.sha256(corpus_raw).hexdigest()
     all_nodes=[];partition=[];provenance=dict(corpus_manifest=corpus_sha)
@@ -273,6 +277,7 @@ def main():
         test_cases=len(test),cpu_boundary_tokens=int((~valid).sum()),depths=max(n['depth'] for n in test)+1,
         reports={label:dict(gold_provider_inputs=metric(np.array(oracle),target,m),predicted_provider_inputs=metric(pred,target,m),no_provider_refit=metric(no_provider,target,m),shuffled_providers=metric(shuffled_pred,target,m))
                  for label,m in [('all_valid',valid),('linked',valid&linked),('multiple_providers',valid&multiple)]},
+        history_context='latest observed constructor Run per typed identity; unproved lifetime' if a.encoding=='class-history' else None,
         encoding_audit=dict(train_validation=encoding_audit(all_nodes),test=encoding_audit(test)),no_provider_fit=zero_fit,
         numerical_audit=dict(passed=bool(audit and outside==0 and oracle_outside==0),rollout_outside=outside,gold_outside=oracle_outside),
         gpu_replay_wall_seconds=gpu_wall,cpu_replay_wall_seconds=cpu_wall,
