@@ -31,6 +31,19 @@ class HistoricalSources(unittest.TestCase):
         t['steps'].append(dict(ordinal=5,ruleset='c',executed_bindings=2,changed=True))
         self.assertEqual({p['run'] for p in candidates(t)[1][(5,0,0)]},{3})
 
+    def test_fallback_leaves_partly_connected_cell_unchanged(self):
+        t=fixture();port=t['runs'][0]['audit']['bindings'][0]['rhs']['slots'][0]['eq_port']
+        port.update(identity=99,at_rhs=99,after_run=99)
+        last=copy.deepcopy(t['runs'][1]);last['ordinal']=4;t['runs'].append(last)
+        t['steps'].append(dict(ordinal=4,ruleset='c',executed_bindings=2,changed=True))
+        producer=copy.deepcopy(t['runs'][0]['audit']['bindings'][1]);producer['eq_ports']=[]
+        t['runs'][1]['audit']['bindings'].append(producer)
+        def ports(fallback):
+            window=next(w for w in link_history(t,fallback_only=fallback)['windows'] if w['consumer_run']==4)
+            return next(c for c in window['consumers'] if c['binding']==0)['ports']
+        self.assertEqual({p['slot'] for p in ports(False) if 'group' in p},{0,1})
+        self.assertEqual({p['slot'] for p in ports(True) if 'group' in p},{0})
+
     def test_same_run_results_are_not_input_sources(self):
         t=fixture();b=t['runs'][0]['audit']['bindings'][0]
         b['eq_ports']=[dict(slot=0,sort='E',identity=20,before=10)]

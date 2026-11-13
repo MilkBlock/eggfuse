@@ -49,7 +49,7 @@ def scalar(value):
 
 
 def encode(rows,roles,encoding="slot"):
-    if encoding not in ("slot","class-balanced","class-interface","class-history","class-history-split","class-history-repeat"):raise ValueError("unknown token encoding")
+    if encoding not in ("slot","class-balanced","class-interface","class-history","class-history-split","class-history-repeat","class-history-fallback"):raise ValueError("unknown token encoding")
     groups=defaultdict(list)
     for slot,value,key in rows:
         if key is not None:groups[key].append(slot)
@@ -78,7 +78,7 @@ def input_rows(binding):
 def input_seed(binding,roles,connected,encoding):
     # Connected Eq slots still carry interface correlations between providers.
     rows=input_rows(binding)
-    return encode([r for r in rows if encoding in ('class-interface','class-history','class-history-split','class-history-repeat') or r[0] not in connected],roles,encoding)
+    return encode([r for r in rows if encoding in ('class-interface','class-history','class-history-split','class-history-repeat','class-history-fallback') or r[0] not in connected],roles,encoding)
 
 
 def output_rows(binding):
@@ -126,7 +126,7 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
     routing=np.random.default_rng(777).normal(0,1/np.sqrt(128),(128,role_channels-1)).astype(np.float32)
     if encoding.startswith('class-history'):
         from historical_cell_sources import link_history
-        links=link_history(trace)
+        links=link_history(trace,fallback_only=encoding=='class-history-fallback')
     else:links=link(trace)
     compiled=[template(r) for r in trace['recipe']['rules']]
     families=[template_identity(r) for r in trace['recipe']['rules']]
@@ -232,7 +232,7 @@ def metric(pred,target,mask):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('training',type=Path);p.add_argument('validation',type=Path)
-    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface','class-history','class-history-split','class-history-repeat'],default='slot');a=p.parse_args()
+    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface','class-history','class-history-split','class-history-repeat','class-history-fallback'],default='slot');a=p.parse_args()
     preparation_started=time.monotonic()
     corpus_raw=a.corpus_manifest.read_bytes();corpus=json.loads(corpus_raw);corpus_sha=hashlib.sha256(corpus_raw).hexdigest()
     all_nodes=[];partition=[];provenance=dict(corpus_manifest=corpus_sha)

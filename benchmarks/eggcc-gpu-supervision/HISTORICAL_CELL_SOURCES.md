@@ -94,3 +94,39 @@ Committed text reports are `class-history-results.json`,
 remain on the external SSD. Four source tests check chronology, typed identity,
 alternatives, exclusion of incomplete states, and avoiding duplicate adjacent
 links. No native executor changes belong to this experiment.
+
+## Fallback only for Cells with no adjacent source
+
+The opt-in `class-history-fallback` mode retains the same full input-interface
+encoding and four-channel model, but admits historical context only for consumers
+having **no adjacent-Run provider at all**. Partly connected consumers keep their
+original route, including uncovered ports. The choice depends on observed routing,
+not Eq targets, confidence or test errors. Current candidate preparation still
+builds the full historical dictionary before filtering; its CPU cost is not
+claimed to disappear. Lifecycle and ownership remain unproved.
+
+The model is refit on the same training/original validation manifests; boundary
+selection uses the five-workload validation set and rejects numerically unstable
+candidates. Selected alphas remain 100 for MSE/false-merge and 0.1 for partition.
+Test numerical checks pass, with no CPU boundary token consumption:
+
+| Policy | Exact / 5,454 | False Eq pairs | Missed Eq pairs |
+|---|---:|---:|---:|
+| MSE / false merge | 4,242 | 423 | 2,019 |
+| Partition | 4,427 | 836 | 1,824 |
+
+Base edge coefficients decrease from broad history's 8,289,280 to 6,454,272
+floats (22.1% fewer), but dependency depth remains 91. The simpler interface-only
+MSE result remains better at 4,288 exact / 379 false / 2,038 missed. The partition
+policy improves some metrics over interface-only, but does not establish safe
+union authority and still carries more history cost. Do not enable this as a
+runtime default. Next inspect whether fixed constructor observations create
+unnecessary dependence on a producer's entire dynamic Cell state.
+
+Reproduce with the historical commands, `--channels 4 --encoding class-history-fallback`,
+fresh matching model/output stems, and `--reject-unstable-candidates` for boundary
+selection. Reports are `class-history-fallback-results.json` and
+`class-history-fallback-selection-results.json`. Twenty-eight focused tests pass,
+including a mixed connected/uncovered input case proving that fallback leaves
+partly connected Cell routes unchanged. These are standalone GPU diagnostics;
+no native executor or semantic acceptance contract changed.

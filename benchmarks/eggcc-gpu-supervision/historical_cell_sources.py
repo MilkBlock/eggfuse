@@ -40,9 +40,14 @@ def candidates(trace):
     return adjacent,out,dict(counts)
 
 
-def link_history(trace):
+def link_history(trace,fallback_only=False):
     adjacent,extra,counts=candidates(trace)
     windows={w['consumer_run']:w for w in adjacent['windows']}
+    if fallback_only:
+        connected={(w['consumer_run'],c['binding']) for w in adjacent['windows'] for c in w['consumers']}
+        extra={a:p for a,p in extra.items() if a[:2] not in connected}
+        counts['fallback_candidate_ports']=len(extra)
+        counts['fallback_candidate_edges']=sum(len(p) for p in extra.values())
     grouped=defaultdict(list)
     for (run,binding,slot),providers in extra.items():grouped[run].append((binding,slot,providers))
     bindings={r['ordinal']:r['audit']['bindings'] for r in trace['runs']}
