@@ -1,0 +1,154 @@
+{
+  "scope": "validation-selected Eq boundary readout for frozen Cell model",
+  "provenance": {
+    "train": "e1e830c2d1beef561494bca8c53f3ee04f0c9d5360c3b538dff9a9f021395977",
+    "validation": "1d0a3dbdf423b426cd7c68406f7a1807ba2c24e77c6e5583c4e7f84ae04bd1eb"
+  },
+  "model_sha256": "f3f28eb9beb4a7cccd003360d38ec331605de4b2d3ff87e10e790b962c348f80",
+  "test_trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "weights_sha256": "9cc39d3487d71533712961e6224dde217a5c7e7256b993514a1e94bee1c46aa4",
+  "candidates": [
+    {
+      "alpha": 0.1,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 2987,
+          "false_merges": 88,
+          "missed_equalities": 876,
+          "nontransitive": 4,
+          "closure_false_merges": 119,
+          "pairs": 47684
+        }
+      },
+      "oracle_mse": 0.015690785834797976,
+      "macro_exact_rate": 0.8406980016887138,
+      "macro_false_pair_rate": 0.0018454827615132958
+    },
+    {
+      "alpha": 1.0,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 2962,
+          "false_merges": 73,
+          "missed_equalities": 916,
+          "nontransitive": 2,
+          "closure_false_merges": 86,
+          "pairs": 47684
+        }
+      },
+      "oracle_mse": 0.014899604540233003,
+      "macro_exact_rate": 0.8336616943428089,
+      "macro_false_pair_rate": 0.0015309118362553478
+    },
+    {
+      "alpha": 10.0,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 2989,
+          "false_merges": 54,
+          "missed_equalities": 876,
+          "nontransitive": 2,
+          "closure_false_merges": 77,
+          "pairs": 47684
+        }
+      },
+      "oracle_mse": 0.01582728110943884,
+      "macro_exact_rate": 0.8412609062763862,
+      "macro_false_pair_rate": 0.0011324553309286134
+    },
+    {
+      "alpha": 100.0,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 2875,
+          "false_merges": 43,
+          "missed_equalities": 1024,
+          "nontransitive": 1,
+          "closure_false_merges": 86,
+          "pairs": 47684
+        }
+      },
+      "oracle_mse": 0.015282276493994936,
+      "macro_exact_rate": 0.80917534477906,
+      "macro_false_pair_rate": 0.0009017699857394514
+    }
+  ],
+  "selected": {
+    "mse": 1.0,
+    "partition": 10.0,
+    "false_merge": 100.0
+  },
+  "test": {
+    "mse": {
+      "alpha": 1.0,
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4368,
+      "false_merges": 888,
+      "missed_equalities": 1874,
+      "nontransitive": 67,
+      "closure_false_merges": 1055
+    },
+    "partition": {
+      "alpha": 10.0,
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4370,
+      "false_merges": 935,
+      "missed_equalities": 1816,
+      "nontransitive": 77,
+      "closure_false_merges": 1228
+    },
+    "false_merge": {
+      "alpha": 100.0,
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4265,
+      "false_merges": 735,
+      "missed_equalities": 1989,
+      "nontransitive": 81,
+      "closure_false_merges": 1175
+    }
+  },
+  "unique_train_states": 1153,
+  "unique_validation_states": 364,
+  "fit_seconds": 0.14537283399840817,
+  "numerical_audits": {
+    "040-euler": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 1.0283415445205835e-05,
+      "threshold_disagreements": 0
+    }
+  },
+  "test_numerical_audit": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 9.547366895790166e-06,
+    "threshold_disagreements": 0
+  },
+  "local_marks": 3359,
+  "marks_sha256": "2a9e7fd49109acb9116b6321581a15f023c1836ad8151719c511dbfb61500865",
+  "test_feature_encoding_seconds": 0.32044774998212233,
+  "test_gpu_readout_seconds": 0.03624233300797641,
+  "test_audit_and_marks_seconds": 0.39889608300291,
+  "threshold": 0.5,
+  "backpropagation": false,
+  "union_authorized": false,
+  "limitations": [
+    "Static class Eq audit only, not native correctness or full token state",
+    "Oracle-state MSE and predicted-state partition criteria are distinct explicit policies",
+    "One fixed token model; validation expansion does not refit its weights",
+    "Test outputs do not select policy; all validation-selected policies are reported"
+  ]
+}
