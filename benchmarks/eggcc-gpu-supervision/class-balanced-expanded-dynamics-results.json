@@ -1,0 +1,201 @@
+{
+  "subsets": {
+    "known_templates": {
+      "gold_providers": {
+        "cases": 5235,
+        "rmse": 0.023705183670339056,
+        "max_abs": 1.0868306159973145
+      },
+      "predicted_providers": {
+        "cases": 5235,
+        "rmse": 0.025382115003723053,
+        "max_abs": 1.0817747116088867
+      },
+      "no_provider_refit": {
+        "cases": 5235,
+        "rmse": 0.020001462987822394,
+        "max_abs": 0.3702910542488098
+      },
+      "template_mean": {
+        "cases": 5235,
+        "rmse": 0.045106844890192406,
+        "max_abs": 0.6113322377204895
+      }
+    },
+    "variable_training_templates": {
+      "gold_providers": {
+        "cases": 4166,
+        "rmse": 0.025785561602094168,
+        "max_abs": 1.0868306159973145
+      },
+      "predicted_providers": {
+        "cases": 4166,
+        "rmse": 0.02723624475785624,
+        "max_abs": 1.0817747116088867
+      },
+      "no_provider_refit": {
+        "cases": 4166,
+        "rmse": 0.021777945640311634,
+        "max_abs": 0.3702910542488098
+      },
+      "template_mean": {
+        "cases": 4166,
+        "rmse": 0.050563969483820616,
+        "max_abs": 0.6113322377204895
+      }
+    },
+    "unseen_state_known_template": {
+      "gold_providers": {
+        "cases": 878,
+        "rmse": 0.02905134873135774,
+        "max_abs": 1.0868306159973145
+      },
+      "predicted_providers": {
+        "cases": 878,
+        "rmse": 0.03051294289166329,
+        "max_abs": 1.0817747116088867
+      },
+      "no_provider_refit": {
+        "cases": 878,
+        "rmse": 0.026595109159547232,
+        "max_abs": 0.36714640259742737
+      },
+      "template_mean": {
+        "cases": 878,
+        "rmse": 0.08619883878406964,
+        "max_abs": 0.6113322377204895
+      }
+    },
+    "seen_state": {
+      "gold_providers": {
+        "cases": 4357,
+        "rmse": 0.022474417985039286,
+        "max_abs": 0.6085768938064575
+      },
+      "predicted_providers": {
+        "cases": 4357,
+        "rmse": 0.024216931066284707,
+        "max_abs": 0.6261618137359619
+      },
+      "no_provider_refit": {
+        "cases": 4357,
+        "rmse": 0.01838871527459274,
+        "max_abs": 0.3702910542488098
+      },
+      "template_mean": {
+        "cases": 4357,
+        "rmse": 0.03077875390091649,
+        "max_abs": 0.4211692810058594
+      }
+    },
+    "unknown_template": {
+      "gold_providers": {
+        "cases": 318,
+        "rmse": 0.15897773426699674,
+        "max_abs": 1.0147367715835571
+      },
+      "predicted_providers": {
+        "cases": 318,
+        "rmse": 0.17812257819089758,
+        "max_abs": 1.1122560501098633
+      },
+      "no_provider_refit": {
+        "cases": 318,
+        "rmse": 0.10928480146600435,
+        "max_abs": 0.6934101581573486
+      }
+    }
+  },
+  "train_dictionary_decode": {
+    "gold_providers": {
+      "covered_cases": 4357,
+      "correct": 4009,
+      "ambiguous": 0,
+      "unseen_target": 878,
+      "unknown_template": 318,
+      "distinct_covered_states": 419,
+      "mean_accuracy_per_distinct_state": 0.7458240937798348
+    },
+    "predicted_providers": {
+      "covered_cases": 4357,
+      "correct": 3995,
+      "ambiguous": 0,
+      "unseen_target": 878,
+      "unknown_template": 318,
+      "distinct_covered_states": 419,
+      "mean_accuracy_per_distinct_state": 0.7380509702256247
+    },
+    "no_provider_refit": {
+      "covered_cases": 4357,
+      "correct": 3779,
+      "ambiguous": 0,
+      "unseen_target": 878,
+      "unknown_template": 318,
+      "distinct_covered_states": 419,
+      "mean_accuracy_per_distinct_state": 0.601625750135019
+    },
+    "template_mean": {
+      "covered_cases": 4357,
+      "correct": 2230,
+      "ambiguous": 0,
+      "unseen_target": 878,
+      "unknown_template": 318,
+      "distinct_covered_states": 419,
+      "mean_accuracy_per_distinct_state": 0.26014319809069214
+    },
+    "template_mode": {
+      "covered_cases": 4357,
+      "correct": 2905,
+      "ambiguous": 0,
+      "unseen_target": 878,
+      "unknown_template": 318,
+      "distinct_covered_states": 419,
+      "mean_accuracy_per_distinct_state": 0.26730310262529833
+    }
+  },
+  "paired_against_no_provider": {
+    "gold_providers": {
+      "wins": 321,
+      "losses": 91,
+      "both_correct": 3688,
+      "both_wrong": 257
+    },
+    "predicted_providers": {
+      "wins": 319,
+      "losses": 103,
+      "both_correct": 3676,
+      "both_wrong": 259
+    },
+    "no_provider_refit": {
+      "wins": 0,
+      "losses": 0,
+      "both_correct": 3779,
+      "both_wrong": 578
+    },
+    "template_mean": {
+      "wins": 24,
+      "losses": 1573,
+      "both_correct": 2206,
+      "both_wrong": 554
+    },
+    "template_mode": {
+      "wins": 27,
+      "losses": 901,
+      "both_correct": 2878,
+      "both_wrong": 551
+    }
+  },
+  "distinct_test_templates": 154,
+  "known_test_templates": 130,
+  "variable_training_templates": 114,
+  "scope": "frozen-model CPU diagnostic, no new fit or GPU timing",
+  "model_sha256": "f3f28eb9beb4a7cccd003360d38ec331605de4b2d3ff87e10e790b962c348f80",
+  "training_manifest_sha256": "e1e830c2d1beef561494bca8c53f3ee04f0c9d5360c3b538dff9a9f021395977",
+  "test_trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "limitations": [
+    "Exact means normalized captured slot state in a known template, not native graph semantics",
+    "Train-only dictionary cannot decode unknown states; those remain explicit",
+    "No held-out target enters a template mean or state dictionary",
+    "CPU re-evaluation of the previously GPU-audited frozen coefficients"
+  ]
+}

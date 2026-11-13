@@ -1,0 +1,109 @@
+{
+  "scope": "frozen model/decoder cross audit on fixed full test population",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "provenance": {
+    "original": {
+      "model_sha256": "4c3ee6507d9a8fc0b28775d7f1cd8477e68f207e9676aa6536dc370a276e7c62",
+      "decoder_sha256": "957e5f7b1e100003e3f8dd238aa5e6cce2ada5f796cabe97c0ed13cf8496bbb1",
+      "train": "da12c74fd33e248539e2e968d3a30f3471551f81050eed7c9c98c7103c35019e"
+    },
+    "expanded": {
+      "model_sha256": "f3f28eb9beb4a7cccd003360d38ec331605de4b2d3ff87e10e790b962c348f80",
+      "decoder_sha256": "cd73132802793adb9e44ef84c454b1c3809c5eaed624af1560ca2fbb04e5b4c2",
+      "train": "e1e830c2d1beef561494bca8c53f3ee04f0c9d5360c3b538dff9a9f021395977"
+    }
+  },
+  "encoding": "class-balanced",
+  "results": {
+    "oracle": {
+      "original": {
+        "instances": 5553,
+        "query_instances": 5454,
+        "exact_partitions": 4512,
+        "false_merges": 1602,
+        "missed_equalities": 1712,
+        "nontransitive": 51,
+        "closure_false_merges": 12718
+      },
+      "expanded": {
+        "instances": 5553,
+        "query_instances": 5454,
+        "exact_partitions": 4360,
+        "false_merges": 854,
+        "missed_equalities": 1845,
+        "nontransitive": 41,
+        "closure_false_merges": 1049
+      }
+    },
+    "original": {
+      "original": {
+        "instances": 5553,
+        "query_instances": 5454,
+        "exact_partitions": 4438,
+        "false_merges": 962,
+        "missed_equalities": 1727,
+        "nontransitive": 68,
+        "closure_false_merges": 2150
+      },
+      "expanded": {
+        "instances": 5553,
+        "query_instances": 5454,
+        "exact_partitions": 4335,
+        "false_merges": 766,
+        "missed_equalities": 1985,
+        "nontransitive": 75,
+        "closure_false_merges": 905
+      }
+    },
+    "expanded": {
+      "original": {
+        "instances": 5553,
+        "query_instances": 5454,
+        "exact_partitions": 4510,
+        "false_merges": 887,
+        "missed_equalities": 1706,
+        "nontransitive": 72,
+        "closure_false_merges": 2485
+      },
+      "expanded": {
+        "instances": 5553,
+        "query_instances": 5454,
+        "exact_partitions": 4368,
+        "false_merges": 888,
+        "missed_equalities": 1874,
+        "nontransitive": 67,
+        "closure_false_merges": 1055
+      }
+    }
+  },
+  "numerical_audits": {
+    "oracle": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 7.1607049935834555e-06,
+      "threshold_disagreements": 0
+    },
+    "original": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 7.572909524841687e-06,
+      "threshold_disagreements": 0
+    },
+    "expanded": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 9.547366895790166e-06,
+      "threshold_disagreements": 0
+    }
+  },
+  "refitting": false,
+  "union_authorized": false,
+  "limitations": [
+    "Eq partition only; no scalar, ownership or native semantic certification",
+    "Observed CPU matches and routes supplied; no autonomous token generation",
+    "Cross comparisons diagnose this held-out workload, not a validation-selected deployment"
+  ]
+}

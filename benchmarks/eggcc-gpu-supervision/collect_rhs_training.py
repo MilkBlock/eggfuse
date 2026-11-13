@@ -25,9 +25,23 @@ def select(manifest, max_bindings, max_cases, split="train"):
     return sorted(eligible,key=lambda e:(e['summary']['observed_bindings'],e['case']))[:max_cases]
 
 
+def reusable_records(previous,source_hash,binary_hash,split):
+    if (previous['manifest_sha256'],previous['binary_sha256'],previous['partition'])!=(source_hash,binary_hash,split):
+        raise ValueError('reuse provenance mismatch')
+    result={}
+    for e in previous['cases']:
+        if e['status']!='complete':continue
+        if e['split']!=split or e['case'] in result:raise ValueError('reuse case mismatch')
+        for field in ('trace','links'):
+            if digest(read_bytes(Path(e[field])))!=e[field+'_sha256']:raise ValueError('reuse artifact hash mismatch')
+        result[e['case']]=e
+    return result
+
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('binary',type=Path)
     p.add_argument('output',type=Path);p.add_argument('--max-cases',type=int,default=3)
+    p.add_argument('--reuse',type=Path)
     p.add_argument('--split',choices=('train','validation','test'),default='train');p.add_argument('--max-bindings',type=int,default=2000);p.add_argument('--timeout',type=float,default=120)
     a=p.parse_args()
     if a.max_cases<1 or a.max_bindings<1 or a.timeout<=0:raise ValueError('positive limits required')
@@ -38,10 +52,19 @@ def main():
         binary_sha256=digest(a.binary.read_bytes()),partition=a.split,
         limits=dict(max_cases=a.max_cases,max_bindings=a.max_bindings,timeout=a.timeout,saved_reference_seconds=1),
         selection='smallest observed binding counts among complete cases in the requested original partition under limit',cases=[])
+    reused=reusable_records(json.loads(a.reuse.read_bytes()),report['manifest_sha256'],report['binary_sha256'],a.split) if a.reuse else {}
+    report['reuse_manifest_sha256']=digest(a.reuse.read_bytes()) if a.reuse else None
     totals=Counter()
     for e in selected:
         record=dict(case=e['case'],split=e['split'],program_sha256=e['program_sha256'])
-        report['cases'].append(record);out=a.output/e['case'];out.mkdir()
+        report['cases'].append(record)
+        if e['case'] in reused:
+            old=reused[e['case']]
+            if old['program_sha256']!=e['program_sha256']:raise ValueError('reuse program mismatch')
+            record.update(old,reused=True);totals.update(record['link_counts'])
+            print(json.dumps(dict(case=e['case'],status='reused')),flush=True)
+            continue
+        out=a.output/e['case'];out.mkdir()
         raw=read_bytes(Path(e['trace']))
         if digest(raw)!=e['trace_sha256']:raise ValueError('original trace hash mismatch')
         old=json.loads(raw);reference=old['reference_execution_seconds']
