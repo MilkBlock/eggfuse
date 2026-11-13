@@ -1,7 +1,8 @@
 """Physical slot owners distinct from logical Cell identities.
 
 Opt-in sealed-payload prototype. Logical keys/tokens/lifetimes remain authoritative;
-no second dense copy of logical slots is retained. Effect writers are not enabled.
+no second dense copy of logical slots is retained. Constructor/copy writes detach
+shared payloads; general completion and stage control still require integration.
 """
 import numpy as np
 
@@ -71,6 +72,67 @@ def allocate(state,proposals,accepted,rank,logical_write,pick,xp):
     width=state['owner_projection'].shape[1]
     projection=xp.where(proposals['slot_valid'][pick],xp.arange(width)[None,:],-1)
     out['owner_projection']=xp.where(logical_write[:,None],projection,state['owner_projection'])
+    return out
+
+
+def prepare_write(state,selected,xp):
+    """Reserve possible detachments; do not mutate or consume capacity yet."""
+    if 'slot_owner' not in state:return dict(ready=selected,blocked=xp.zeros_like(selected))
+    n,width=shape(state);owners=len(state['owner_live']);rows=xp.arange(n)
+    safe=xp.clip(state['slot_owner'],0,owners-1)
+    references=xp.sum((state['present'][:,None]&(state['slot_owner'][:,None]==xp.arange(owners)[None,:])).astype(xp.int32),axis=0)
+    identity=xp.all((state['owner_projection']<0)|(state['owner_projection']==xp.arange(width)[None,:]),axis=1)
+    alive=live(state,rows,xp)
+    private=alive&(references[safe]==1)&identity
+    borrowed=state.get('readers',xp.zeros(n,xp.bool_))
+    needs=selected&alive&~private&~borrowed&(state['owner_generation'][safe]<2147483647)
+    rank=xp.cumsum(needs.astype(xp.int32))-1;free=free_rows(state,xp)
+    free_rank=xp.cumsum(free.astype(xp.int32))-1
+    place=needs[:,None]&free[None,:]&(rank[:,None]==free_rank[None,:])
+    copy=needs&xp.any(place,axis=1)
+    destination=xp.where(copy,xp.argmax(place.astype(xp.int32),axis=1),safe)
+    ready=selected&alive&~borrowed&(private|copy)
+    return dict(ready=ready,blocked=selected&~ready,copy=copy,destination=destination)
+
+
+def write_slot(state,dst,values,commit,xp,plan):
+    """One effect's authoritative writes, detaching shared payloads atomically."""
+    n,width=shape(state);out=dict(state)
+    if 'slot_owner' not in state:
+        mask=commit[:,None]&(xp.arange(width)[None,:]==dst)
+        for column,value in values.items():
+            if column not in state:continue
+            out[column]=xp.where(mask[...,None] if value.ndim>1 else mask,value[:,None,...],state[column])
+        return out
+    owners=len(state['owner_live']);commit=commit&plan['ready'];destination=plan['destination']
+    assignment=commit[:,None]&(destination[:,None]==xp.arange(owners)[None,:])
+    written=xp.any(assignment,axis=0);pick=xp.argmax(assignment.astype(xp.int32),axis=0)
+    rows=xp.arange(n)[:,None];slots=xp.arange(width)[None,:]
+    old=xp.clip(state['slot_owner'],0,owners-1)
+    for column in COLUMNS:
+        if not has(state,column):continue
+        original=state['owner_'+column][old]
+        logical=read(state,column,rows,slots,xp)
+        cm=plan['copy'][:,None,None] if logical.ndim==3 else plan['copy'][:,None]
+        data=xp.where(cm,logical,original)
+        if column in values:
+            m=slots==dst
+            if data.ndim==3:m=m[...,None]
+            data=xp.where(m,values[column][:,None,...],data)
+        m=written[:,None,None] if data.ndim==3 else written[:,None]
+        out['owner_'+column]=xp.where(m,data[pick],state['owner_'+column])
+    copied=commit&plan['copy']
+    allocated=xp.any(assignment&copied[:,None],axis=0)
+    out['slot_owner']=xp.where(commit,destination,state['slot_owner'])
+    retained=xp.any(state['present'][:,None]&(out['slot_owner'][:,None]==xp.arange(owners)[None,:]),axis=0)
+    detached=xp.any(copied[:,None]&(state['slot_owner'][:,None]==xp.arange(owners)[None,:]),axis=0)
+    freed=detached&~retained
+    out['owner_live']=(state['owner_live']|allocated)&~freed
+    out['owner_generation']=state['owner_generation']+(allocated|freed).astype(xp.int32)
+    out['owner_epoch']=xp.where(commit,out['owner_generation'][destination],state['owner_epoch'])
+    valid=read(state,'slot_valid',rows,slots,xp)|(slots==dst)
+    projection=xp.where(valid,slots,-1)
+    out['owner_projection']=xp.where(commit[:,None],projection,state['owner_projection'])
     return out
 
 

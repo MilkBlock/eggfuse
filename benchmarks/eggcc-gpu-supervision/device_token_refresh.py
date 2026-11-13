@@ -23,11 +23,14 @@ def encode_batch(roots,sorts,eq_slots,valid,roles,scalar_codes,xp):
 def refresh(state,sorts,eq_slots,required,roles,scalar_codes,scalar_valid,eq_settled,xp):
     dirty=state.get('token_dirty',xp.zeros_like(state['present']))
     wanted=state['present']&state['visible']&dirty
-    roots=state.get('slot_roots',state['slots'])
-    missing=xp.any(required & ~state['slot_valid'],axis=1)
+    from device_slot_owners import shape,read,has
+    n,width=shape(state);rows=xp.arange(n)[:,None];slots=xp.arange(width)[None,:]
+    roots=read(state,'slot_roots' if has(state,'slot_roots') else 'slots',rows,slots,xp)
+    available=read(state,'slot_valid',rows,slots,xp)
+    missing=xp.any(required & ~available,axis=1)
     bad_scalar=required&~eq_slots&(~scalar_valid|~xp.all(xp.isfinite(scalar_codes),axis=2))
     invalid_eq=required&eq_slots&((roots<0)|(sorts<0))
-    valid=state['slot_valid']&required
+    valid=available&required
     token=encode_batch(roots,sorts,eq_slots,valid,roles,scalar_codes,xp)
     finite=xp.all(xp.isfinite(token),axis=1)
     ready=(wanted & state['settled'] & eq_settled & ~missing & ~xp.any(bad_scalar|invalid_eq,axis=1) & finite)

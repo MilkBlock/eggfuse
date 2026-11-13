@@ -61,31 +61,28 @@ def execute_site(state,site,witness,next_id,limit,quota,xp):
     witnesses and argument identities must share the same settled Eq snapshot.
     This executes a constructor, not surrounding union/mutable/scalar operations.
     """
-    rows=state['slots'].shape[0];width=state['slots'].shape[1]
+    from device_slot_owners import shape,read,has,dtype,prepare_write,write_slot
+    rows,width=shape(state);row=xp.arange(rows)
     if not 0<=site['dst']<width or any(not 0<=a<width for a in site['args']):
         raise ValueError('compiled constructor slot out of bounds')
     selected=(state['present'] & state['active'] & state['visible'] & ~state['settled']
               & (state['keys'][:,0]==site['rule']) & (state['effect_pc']==site['operation']))
-    args=state.get('slot_roots',state['slots'])[:,site['args']]
-    available=xp.all(state['slot_valid'][:,site['args']],axis=1)
-    keys=xp.concatenate([xp.full((rows,1),site['table'],dtype=state['slots'].dtype),args],axis=1)
-    view_complete=witness.get('complete',xp.array(True))
-    outcome=resolve(keys,selected&available&view_complete,witness['keys'],witness['ids'],witness['roots'],witness['live'],next_id,limit,quota,xp)
-    write=outcome['ready'][:,None] & (xp.arange(width)[None,:]==site['dst'])
-    output=dict(state)
-    output['slots']=xp.where(write,outcome['result'][:,None],state['slots'])
-    output['slot_valid']=state['slot_valid'] | write
-    if 'slot_roots' in state:
-        output['slot_roots']=xp.where(write,outcome['result_root'][:,None],state['slot_roots'])
+    args=read(state,'slot_roots' if has(state,'slot_roots') else 'slots',row[:,None],xp.array(site['args'],dtype=xp.int32)[None,:],xp)
+    available=xp.all(read(state,'slot_valid',row[:,None],xp.array(site['args'],dtype=xp.int32)[None,:],xp),axis=1)
+    keys=xp.concatenate([xp.full((rows,1),site['table'],dtype=dtype(state)),args],axis=1)
+    view_complete=xp.array(witness.get('complete',True),dtype=xp.bool_)
+    storage=prepare_write(state,selected&available&view_complete,xp)
+    outcome=resolve(keys,storage['ready'],witness['keys'],witness['ids'],witness['roots'],witness['live'],next_id,limit,quota,xp)
+    values=dict(slots=outcome['result'],slot_roots=outcome['result_root'],slot_valid=xp.ones(rows,xp.bool_))
+    for column in ('scalar_numbers','scalar_numeric','scalar_valid','scalar_codes'):
+        if has(state,column):values[column]=xp.zeros_like(read(state,column,row,xp.full(rows,site['dst'],xp.int32),xp))
+    output=write_slot(state,site['dst'],values,outcome['ready'],xp,storage)
     if 'tokens' in state or 'token_dirty' in state:
         output['token_dirty']=state.get('token_dirty',xp.zeros_like(state['present'])) | outcome['ready']
-    for column in ('scalar_numbers','scalar_numeric','scalar_valid','scalar_codes'):
-        if column in state:
-            mask=write[:,:,None] if state[column].ndim==3 else write
-            output[column]=xp.where(mask,0,state[column])
+    outcome['storage_blocked']=storage['blocked']
     output['effect_pc']=state['effect_pc']+outcome['ready'].astype(xp.int32)
     output['settled']=state['settled'] | (outcome['ready'] & site['last_effect'])
     outcome['incomplete_witness_view']=selected&~view_complete
     outcome['missing_argument']=selected&~available
-    outcome['needs_attention']=outcome['needs_attention'] | xp.any(outcome['missing_argument'] | outcome['incomplete_witness_view'])
+    outcome['needs_attention']=outcome['needs_attention'] | xp.any(outcome['missing_argument'] | outcome['incomplete_witness_view'] | outcome['storage_blocked'])
     return output,outcome

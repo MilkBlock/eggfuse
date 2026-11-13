@@ -48,8 +48,9 @@ Fixed arena allocation does not shrink allocated memory. Free-owner discovery
 currently compares logical owner references with physical rows; placement uses
 dense candidate/row masks and functional array updates. These are extra costs,
 not a speed improvement. The prior directory and template costs still apply.
-New pending instances cannot yet execute general RHS operations in owner storage.
-Owner-aware writes, Eq refresh, lifecycle-aware reclamation and stage-loop wiring
+Constructor/copy operations and token refresh now support new pending instances
+(DEVICE_OWNER_EFFECTS.md); general RHS operations remain incomplete.
+Eq refresh, lifecycle-aware reclamation and stage-loop wiring
 remain required before whole-run takeover or native semantic acceptance.
 
 The Bake reference advanced to 6dcbd782. It measured only 135 admitted joins out

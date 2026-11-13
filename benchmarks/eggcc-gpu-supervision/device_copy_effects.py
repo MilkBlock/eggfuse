@@ -16,22 +16,20 @@ def compile_copies(recipe):
 
 
 def execute_copy(state,site,xp):
-    width=state['slots'].shape[1];src,dst=site['src'],site['dst']
+    from device_slot_owners import shape,read,has,prepare_write,write_slot
+    rows,width=shape(state);src,dst=site['src'],site['dst'];row=xp.arange(rows)
     if not all(0<=s<width for s in (src,dst)):raise ValueError('copy slot outside instance')
     selected=state['present']&state['active']&state['visible']&~state['settled']&(state['keys'][:,0]==site['rule'])&(state['effect_pc']==site['operation'])
-    ready=selected&state['slot_valid'][:,src]
-    write=ready[:,None]&(xp.arange(width)[None,:]==dst)
-    out=dict(state)
-    for column in ('slots','slot_roots','scalar_numbers','scalar_numeric','scalar_codes','scalar_valid'):
-        if column in state:
-            value=state[column];mask=write[:,:,None] if value.ndim==3 else write
-            out[column]=xp.where(mask,value[:,src:src+1],value)
-    out['slot_valid']=state['slot_valid']|write
+    available=read(state,'slot_valid',row,xp.full(rows,src,xp.int32),xp)
+    storage=prepare_write(state,selected&available,xp);ready=storage['ready']
+    values={column:read(state,column,row,xp.full(rows,src,xp.int32),xp) for column in ('slots','slot_roots','scalar_numbers','scalar_numeric','scalar_codes','scalar_valid') if has(state,column)}
+    values['slot_valid']=xp.ones(rows,xp.bool_)
+    out=write_slot(state,dst,values,ready,xp,storage)
     out['effect_pc']=state['effect_pc']+ready.astype(xp.int32)
     out['settled']=state['settled']|(ready&site['last_effect'])
     if 'tokens' in state or 'token_dirty' in state:
         out['token_dirty']=state.get('token_dirty',xp.zeros_like(ready))|ready
-    return out,dict(ready=ready,missing_source=selected&~state['slot_valid'][:,src],needs_attention=xp.any(selected&~ready))
+    return out,dict(ready=ready,missing_source=selected&~available,storage_blocked=storage['blocked'],needs_attention=xp.any(selected&~ready))
 
 
 def main():
