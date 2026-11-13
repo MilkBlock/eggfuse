@@ -164,3 +164,55 @@ Replay this output with the existing run.py command. The next required step is
 batch device exchange plus validated RHS result consumption, with local CPU
 fallback before any dependent effect. A live read-only observer alone does not
 complete that takeover and does not establish an engine speedup.
+
+## Full-program multistage contract (current main direction)
+
+The benchmark entry point now accepts the complete compiled eggcc recipe. Do
+not select the SubTuple family as the runtime's supported-program definition.
+`gpu_supervision_live_trace PROGRAM OUTPUT --all-slots` executes the unchanged
+whole program and captures all typed inputs for every finalized Cell binding,
+plus every Run (including Runs with zero bindings), source paths, iteration
+indices and actual change flags. It compares final state and Run controls with
+an ordinary execution. Equality references retain their typed identities; this
+export does not silently convert them to float embeddings.
+
+`full_program.py TRACE OUTPUT_DIR` retains all rule queries, effects, layouts,
+tables and ruleset membership in a plan, and lowers the entire nested control
+into Run/epoch/counter instructions. Saturation tests changes across the entire
+body, including nested sequences. Repeat is bounded but also stops on an
+unchanged body, matching the current runtime. Unknown control extensions fail
+explicitly. Replaying actual CPU change flags checks the plan against every
+Run; those flags are reference evidence, not a GPU prediction or completion.
+
+```
+CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_DEV_INCREMENTAL=false \
+  cargo build --locked -p eggfuse-cell-compiler --example gpu_supervision_live_trace
+
+target/debug/examples/gpu_supervision_live_trace PROGRAM.json \
+  out/eggcc-gpu-multistage/sum-bits.json --all-slots
+python3 benchmarks/eggcc-gpu-supervision/full_program.py \
+  out/eggcc-gpu-multistage/sum-bits.json out/eggcc-gpu-multistage/plan
+python3 -m unittest discover -s benchmarks/eggcc-gpu-supervision -p test_full_program.py
+```
+
+The full sum-bits artifact has 582 rules and 31 rulesets. Actual execution gives
+1,428 Runs, 7,265 finalized bindings across 214 active rules, and 38,709 captured
+slot values. The lowered plan has 577 control instructions and 189 registers;
+4,169 control steps reproduce the entire Run sequence. Seven focused tests
+cover nested saturation, body-wide change, bounded/early-stopping Repeat, empty
+bodies and rejected traces/extensions. These are matches/bindings, not counts
+of committed mutations. `full-program-results.json` includes every ruleset,
+including inactive ones. Biggest observed binding counts are always-run 3,250,
+type-analysis 820, context 774 and cell-spine-complete 733.
+
+GPU-completed bindings are explicitly **zero** at this integration layer. All
+current execution is CPU reference; preserving 582 rule definitions is not
+implementing them on GPU. Subsequent lowering must use these shared typed Cell
+layouts and the complete source schedule, report actual GPU work and CPU marks
+per ruleset, and preserve nested saturation and generation boundaries. Subsume
+is excluded from intended GPU support, but remains executed by the reference;
+its rules are marked, never silently deleted from correctness comparisons.
+The next semantic work includes query joins, constructors, Eq/union and mutable
+function merge, rather than further tuning the scalar-family demonstration.
+No new native sum-bits semantic acceptance is claimed by a same-runtime trace
+comparison, and no end-to-end speedup is claimed.

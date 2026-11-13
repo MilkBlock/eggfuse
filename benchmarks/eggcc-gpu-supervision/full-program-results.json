@@ -1,0 +1,432 @@
+{
+  "scope": "Full eggcc control lowering and typed input capture; CPU reference, not GPU takeover",
+  "trace_sha256": "82da0af6e4bd2409da98b6d72964489a2bfd6a56f5124b90e57a4318a75c4aeb",
+  "program_sha256": "c9ce3a6fe289a86fe681592664e3148eec55b06b3c4d53bd8725de7ced3b949a",
+  "rules": 582,
+  "rulesets": 31,
+  "runs": 1428,
+  "finalized_bindings": 7265,
+  "captured_slot_values": 38709,
+  "active_rules": 214,
+  "control_instructions": 577,
+  "control_registers": 189,
+  "replay_instructions": 4169,
+  "control_replay_exact": true,
+  "strict_reference_equal": true,
+  "gpu_completed_bindings": 0,
+  "per_ruleset": [
+    {
+      "ruleset": "add-to-debug-expr",
+      "rules": 0,
+      "runs": 1,
+      "changed_runs": 0,
+      "finalized_bindings": 0,
+      "effect_kinds": {},
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "all-optimizations",
+      "rules": 44,
+      "runs": 2,
+      "changed_runs": 1,
+      "finalized_bindings": 16,
+      "effect_kinds": {
+        "copy": 229,
+        "construct": 165,
+        "union": 15,
+        "set": 95,
+        "compute": 4,
+        "panic": 8,
+        "subsume": 1
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "always-run",
+      "rules": 222,
+      "runs": 82,
+      "changed_runs": 58,
+      "finalized_bindings": 3250,
+      "effect_kinds": {
+        "set": 106,
+        "copy": 203,
+        "compute": 28,
+        "construct": 238,
+        "union": 17,
+        "panic": 1
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "apply-drop-unions",
+      "rules": 1,
+      "runs": 13,
+      "changed_runs": 1,
+      "finalized_bindings": 90,
+      "effect_kinds": {
+        "union": 1
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "apply-subst-unions",
+      "rules": 1,
+      "runs": 13,
+      "changed_runs": 0,
+      "finalized_bindings": 0,
+      "effect_kinds": {
+        "union": 1
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "boundary-analysis",
+      "rules": 1,
+      "runs": 8,
+      "changed_runs": 2,
+      "finalized_bindings": 4,
+      "effect_kinds": {
+        "copy": 2,
+        "set": 1
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "boundary-analysis-prep",
+      "rules": 1,
+      "runs": 8,
+      "changed_runs": 1,
+      "finalized_bindings": 4,
+      "effect_kinds": {
+        "copy": 2,
+        "set": 1
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "canon",
+      "rules": 8,
+      "runs": 10,
+      "changed_runs": 2,
+      "finalized_bindings": 18,
+      "effect_kinds": {
+        "copy": 8,
+        "construct": 38,
+        "set": 14
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "cell-spine-complete",
+      "rules": 34,
+      "runs": 543,
+      "changed_runs": 82,
+      "finalized_bindings": 733,
+      "effect_kinds": {
+        "copy": 63,
+        "set": 34
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "cheap-optimizations",
+      "rules": 31,
+      "runs": 2,
+      "changed_runs": 0,
+      "finalized_bindings": 8,
+      "effect_kinds": {
+        "copy": 98,
+        "construct": 75,
+        "set": 70,
+        "union": 12,
+        "compute": 3
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "cicm-index",
+      "rules": 2,
+      "runs": 12,
+      "changed_runs": 4,
+      "finalized_bindings": 101,
+      "effect_kinds": {
+        "copy": 1,
+        "construct": 1,
+        "panic": 1
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "cleanup-drop",
+      "rules": 3,
+      "runs": 13,
+      "changed_runs": 2,
+      "finalized_bindings": 73,
+      "effect_kinds": {
+        "subsume": 3
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "context",
+      "rules": 17,
+      "runs": 24,
+      "changed_runs": 11,
+      "finalized_bindings": 774,
+      "effect_kinds": {
+        "copy": 18,
+        "union": 1,
+        "set": 16,
+        "construct": 20
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "drop",
+      "rules": 17,
+      "runs": 24,
+      "changed_runs": 10,
+      "finalized_bindings": 182,
+      "effect_kinds": {
+        "copy": 29,
+        "construct": 60,
+        "set": 10,
+        "compute": 1
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "error-checking",
+      "rules": 24,
+      "runs": 24,
+      "changed_runs": 0,
+      "finalized_bindings": 0,
+      "effect_kinds": {
+        "panic": 24,
+        "copy": 31,
+        "set": 3
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "initialization",
+      "rules": 1,
+      "runs": 1,
+      "changed_runs": 1,
+      "finalized_bindings": 1,
+      "effect_kinds": {
+        "construct": 120,
+        "copy": 94,
+        "set": 6
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "interval-analysis",
+      "rules": 43,
+      "runs": 10,
+      "changed_runs": 2,
+      "finalized_bindings": 10,
+      "effect_kinds": {
+        "copy": 129,
+        "construct": 38,
+        "set": 56,
+        "compute": 12,
+        "panic": 10
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "is-resolved",
+      "rules": 17,
+      "runs": 52,
+      "changed_runs": 31,
+      "finalized_bindings": 254,
+      "effect_kinds": {
+        "copy": 17,
+        "construct": 17
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "loop-iters-analysis",
+      "rules": 4,
+      "runs": 8,
+      "changed_runs": 1,
+      "finalized_bindings": 1,
+      "effect_kinds": {
+        "set": 7,
+        "copy": 18,
+        "construct": 3,
+        "compute": 5
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "mem-simple",
+      "rules": 13,
+      "runs": 8,
+      "changed_runs": 0,
+      "finalized_bindings": 0,
+      "effect_kinds": {
+        "copy": 33,
+        "construct": 29,
+        "union": 5,
+        "panic": 1,
+        "set": 8
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "non-weakly-linear",
+      "rules": 7,
+      "runs": 1,
+      "changed_runs": 1,
+      "finalized_bindings": 4,
+      "effect_kinds": {
+        "copy": 26,
+        "set": 16,
+        "construct": 16,
+        "compute": 2,
+        "union": 4
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "passthrough",
+      "rules": 6,
+      "runs": 4,
+      "changed_runs": 2,
+      "finalized_bindings": 12,
+      "effect_kinds": {
+        "copy": 28,
+        "set": 19,
+        "union": 4,
+        "construct": 16
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "state-edge-passthrough",
+      "rules": 1,
+      "runs": 4,
+      "changed_runs": 2,
+      "finalized_bindings": 2,
+      "effect_kinds": {
+        "copy": 15,
+        "construct": 9,
+        "union": 1,
+        "set": 4
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "subst",
+      "rules": 18,
+      "runs": 13,
+      "changed_runs": 0,
+      "finalized_bindings": 0,
+      "effect_kinds": {
+        "copy": 32,
+        "construct": 56,
+        "panic": 1,
+        "subsume": 14,
+        "set": 4
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "subsume-after-helpers",
+      "rules": 1,
+      "runs": 8,
+      "changed_runs": 2,
+      "finalized_bindings": 2,
+      "effect_kinds": {
+        "subsume": 1
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "term-subst",
+      "rules": 12,
+      "runs": 17,
+      "changed_runs": 4,
+      "finalized_bindings": 80,
+      "effect_kinds": {
+        "copy": 12,
+        "construct": 14,
+        "set": 11
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "terms",
+      "rules": 8,
+      "runs": 35,
+      "changed_runs": 27,
+      "finalized_bindings": 236,
+      "effect_kinds": {
+        "copy": 18,
+        "construct": 72,
+        "compute": 7,
+        "set": 10
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "terms-helpers",
+      "rules": 3,
+      "runs": 83,
+      "changed_runs": 47,
+      "finalized_bindings": 295,
+      "effect_kinds": {
+        "construct": 8,
+        "set": 8,
+        "copy": 2,
+        "panic": 1
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "terms-helpers-helpers",
+      "rules": 3,
+      "runs": 120,
+      "changed_runs": 37,
+      "finalized_bindings": 206,
+      "effect_kinds": {
+        "copy": 3,
+        "set": 15
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "type-analysis",
+      "rules": 60,
+      "runs": 89,
+      "changed_runs": 44,
+      "finalized_bindings": 820,
+      "effect_kinds": {
+        "copy": 69,
+        "construct": 135,
+        "set": 19
+      },
+      "gpu_completed_bindings": 0
+    },
+    {
+      "ruleset": "type-helpers",
+      "rules": 10,
+      "runs": 196,
+      "changed_runs": 25,
+      "finalized_bindings": 97,
+      "effect_kinds": {
+        "copy": 9,
+        "union": 3,
+        "construct": 3,
+        "set": 5,
+        "compute": 3,
+        "panic": 2
+      },
+      "gpu_completed_bindings": 0
+    }
+  ]
+}

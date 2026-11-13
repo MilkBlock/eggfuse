@@ -4,10 +4,10 @@ use serde_json::{Value,json};
 use std::{cell::RefCell,collections::BTreeMap,env,fs,io,rc::Rc,time::Instant};
 fn err(e:impl ToString)->io::Error{io::Error::other(e.to_string())}
 fn main()->Result<(),Box<dyn std::error::Error>>{
- let args:Vec<_>=env::args().skip(1).collect();let [input,output]=args.as_slice() else{return Err(err("PROGRAM OUTPUT").into())};
+ let args:Vec<_>=env::args().skip(1).collect();let (input,output,all_slots)=match args.as_slice(){[i,o]=>(i,o,false),[i,o,flag] if flag=="--all-slots"=>(i,o,true),_=>return Err(err("PROGRAM OUTPUT [--all-slots]").into())};
  let artifact:Value=serde_json::from_slice(&fs::read(input)?)?;
  let rules=artifact["recipe"]["rules"].as_array().ok_or_else(||err("rules"))?;
- let selected:Vec<bool>=rules.iter().map(|r|r["effects"].as_array().unwrap().iter().any(|o|o["kind"]=="compute")).collect();
+ let selected:Vec<bool>=rules.iter().map(|r|all_slots || r["effects"].as_array().unwrap().iter().any(|o|o["kind"]=="compute")).collect();
  let sorts:Vec<Vec<Value>>=rules.iter().map(|r|r["slots"].as_array().unwrap().iter().map(|s|s["sort"].clone()).collect()).collect();
  let records=Rc::new(RefCell::new(BTreeMap::<usize,Vec<Value>>::new()));let captured=records.clone();
  let observer_seconds=Rc::new(RefCell::new(0.));let timer=observer_seconds.clone();
@@ -29,8 +29,8 @@ fn main()->Result<(),Box<dyn std::error::Error>>{
   assert_eq!((a.ordinal,a.ruleset.as_str(),a.changed,a.executed_bindings),(b.ordinal,b.ruleset.as_str(),b.changed,b.executed_bindings));
  }
  let runs=records.borrow().iter().map(|(ordinal,bindings)|json!({"ordinal":ordinal,"audit":{"bindings":bindings}})).collect::<Vec<_>>();
- fs::write(output,serde_json::to_vec(&json!({"schema":"eggcc-gpu-supervision-trace/v1","recipe":artifact["recipe"],"program_sha256":artifact["sha256"],"runs":runs,
+ fs::write(output,serde_json::to_vec(&json!({"schema":"eggcc-gpu-supervision-trace/v1","recipe":artifact["recipe"],"steps":executor.steps,"all_slots":all_slots,"program_sha256":artifact["sha256"],"runs":runs,
   "audited_execution_seconds":execution_seconds,"reference_execution_seconds":reference_seconds,"observer_seconds":*observer_seconds.borrow(),
   "strict_audit_reference_equal":true,"run_control_counts_equal":true,"full_snapshots":0,"final":final_graph,
-  "scope":"live read-only Cell observer; scalar slots only; no GPU writeback"}))?)?;Ok(())
+  "scope":if all_slots{"full multistage CPU execution and all typed Cell inputs; no GPU takeover"}else{"live read-only Cell observer; scalar slots only; no GPU writeback"}}))?)?;Ok(())
 }
