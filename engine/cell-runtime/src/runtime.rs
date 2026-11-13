@@ -105,6 +105,13 @@ impl StagePatch {
         self.groups.iter().flat_map(|(rid, rows)| rows.iter().map(move |row| (rid, row)))
     }
 }
+/// Optional read-only observation at the finalized Cell query/RHS boundary.
+/// Slots are borrowed only for this call; this cannot authorize graph effects.
+pub struct CellBindingObserver {
+    pub rules: Vec<bool>,
+    pub observe: Box<dyn FnMut(usize, usize, usize, &crate::slots::Slots)>,
+}
+
 pub struct Executor {
     #[cfg(feature = "sparse-cells")]
     query_workers: Option<query_workers::Workers>,
@@ -157,6 +164,7 @@ pub struct Executor {
     pub audit: bool,
     pub snapshots: Vec<J>,
     pub binding_audit: Vec<J>,
+    pub binding_observer: Option<CellBindingObserver>,
     pub initial_audit: Option<J>,
     pub tasks: Vec<Task>,
 
@@ -364,6 +372,7 @@ impl Executor {
             audit,
             snapshots: vec![],
             binding_audit: vec![],
+            binding_observer: None,
             initial_audit,
             tasks,
 
@@ -2615,6 +2624,14 @@ impl Executor {
         #[cfg(feature = "family-replay")]
         self.replay
             .run(&self.graph, set, &patch, &self.survey.samples[run_start..])?;
+        if let Some(observer) = self.binding_observer.as_mut() {
+            let ordinal = self.steps.len() + 1;
+            for (index, (rid, binding)) in patch.iter().enumerate() {
+                if observer.rules.get(*rid).copied().unwrap_or(false) {
+                    (observer.observe)(ordinal, index, *rid, &binding.values);
+                }
+            }
+        }
         if self.audit {
             self.binding_audit.push(json!({"ruleset":set,"bindings":patch.iter().map(|(rid,b)|{let template=&self.graph.program.templates[self.graph.program.rules[*rid].template];json!({"rule":rid,"values":b.values.iter().map(|(i,v)|json!({"slot":i,"value":crate::value::exported(v,&template.sorts[*i])})).collect::<Vec<_>>()})}).collect::<Vec<_>>()}));
         }

@@ -114,3 +114,53 @@ correction before dependent effects are visible; real learned Cell-region
 coverage; optimized CPU-only checking baselines; complete live semantic and
 end-to-end performance gates. This benchmark establishes the supervision and
 reporting contract, not completion of those runtime requirements.
+
+## Lightweight live Cell observation
+
+`Executor::binding_observer` is an optional read-only callback on the finalized
+source-Run patch, after matching/ownership selection and before RHS execution.
+It receives `(Run, binding ordinal, rule, borrowed Slots)` with a rule filter.
+No callback can mutate the borrowed bindings through this API, and no result is
+accepted as a graph effect. The normal executor leaves the observer unset.
+The instance remains the sole runtime binding representation; this observer
+creates no maintained reverse graph or alternate fact store.
+
+`gpu_supervision_live_trace` disables full audit and copies only scalar-rule
+slot values into the diagnostic output. Other bindings retain their local IDs
+for CPU-only marks. This avoids every Run graph export and the full all-rule
+binding serialization. It still creates JSON records in its callback; those
+costs are measured and are not the intended final device ABI.
+
+One debug-build diagnostic pair on the frozen sum-bits program:
+
+- Observed execution: 223.577 ms; ordinary execution: 188.674 ms.
+- Callback time: 31.246 ms; no full snapshots or ordinary binding-audit records.
+- All 634 scalar bindings exactly match the earlier full-audit trace, including
+  Run, local ordinal, rule and typed values. All 7,265 locations are retained.
+- Final graph, Run counts, ruleset order, change flags and executed-binding counts
+  match the ordinary reference. This is not a multi-repeat performance estimate.
+- GPU replay on this new trace again checks 634 bindings and passes the separate
+  fault controls; its timings are recorded independently in sum-bits-live-results.
+
+The focused Cargo test exercises finite Run boundaries, union-enabled matching
+and enabled/empty observer filters, comparing every graph snapshot and complete
+binding audit against the observer-free execution. It passes. No GPU result
+writeback, scheduling change or semantic substitution has been introduced.
+The historical native choice-diagnosis inputs were not present in the available
+worktree output directories, so no new choice-diagnosis pass is claimed. The
+observer's exact reference comparisons and Run-boundary test establish its
+read-only invariance, not independent native correctness of the entire program.
+
+```
+CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_DEV_INCREMENTAL=false \
+  cargo build --locked -p eggfuse-cell-compiler --example gpu_supervision_live_trace
+CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_DEV_INCREMENTAL=false \
+  cargo test --locked -p eggfuse-cell-compiler --test cell_binding_observer
+target/debug/examples/gpu_supervision_live_trace PROGRAM.json \
+  out/eggcc-gpu-supervision/sum-bits-live.json
+```
+
+Replay this output with the existing run.py command. The next required step is
+batch device exchange plus validated RHS result consumption, with local CPU
+fallback before any dependent effect. A live read-only observer alone does not
+complete that takeover and does not establish an engine speedup.

@@ -1,0 +1,15 @@
+{
+  "schema": "eggcc-gpu-supervision-trace/v1",
+  "program_sha256": "c9ce3a6fe289a86fe681592664e3148eec55b06b3c4d53bd8725de7ced3b949a",
+  "audited_execution_seconds": 0.22357675,
+  "reference_execution_seconds": 0.188673875,
+  "observer_seconds": 0.031246179999999454,
+  "strict_audit_reference_equal": true,
+  "run_control_counts_equal": true,
+  "full_snapshots": 0,
+  "scope": "live read-only Cell observer; scalar slots only; no GPU writeback",
+  "scalar_bindings_equal_to_full_audit": true,
+  "scalar_bindings": 634,
+  "all_bindings": 7265,
+  "trace_sha256": "fc7101c521e235e63133926b79433bfcfbd570eee3c96392ff9427c9392c9c29"
+}
