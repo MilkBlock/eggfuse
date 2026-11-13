@@ -3,6 +3,14 @@
 //! Other routes retain exact-key checks. Every route retains runtime lifetime checks.
 use super::*;
 use std::collections::BTreeMap;
+/// Ephemeral evidence for the immediately following constructor admission.
+/// Compared keys must never survive a mutation, suspension or worker handoff.
+#[derive(Clone,Copy)]
+pub(crate) enum KeyEvidence { Unchecked, Compiled, Compared }
+impl KeyEvidence {
+    pub(crate) fn checked(self)->bool { !matches!(self,Self::Unchecked) }
+    pub(crate) fn compiled(self)->bool { matches!(self,Self::Compiled) }
+}
 // Shape, source frame ordinal/code/operation.
 type Key = (usize, usize, usize, u32);
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -109,7 +117,7 @@ impl Routes {
     }
 }
 impl Graph {
-    pub(crate) fn cell_constructor_witness(&mut self, cell: u32, operation: usize) -> Option<(FactRef,bool)> {
+    pub(crate) fn cell_constructor_witness(&mut self, cell: u32, operation: usize) -> Option<(FactRef,KeyEvidence)> {
         let rhs_cell=cell;
         if self.program.cell_ownership.witnesses.0.is_empty() { return None; }
         let owner = self.ownership.as_ref()?;
@@ -142,7 +150,9 @@ impl Graph {
             self.stats.constructor_cell_route_witnesses += 1;
             if key_proved {self.stats.constructor_cell_route_source_checks+=1;}
             let key_proved=key_proved && self.cells.fact_state(*anchor).is_some_and(|s|s.owned && !s.hidden);
-            return Some((FactRef { cell, op },key_proved));
+            let evidence=if key_proved {KeyEvidence::Compiled}
+                else if targets.len()>1 {KeyEvidence::Compared} else {KeyEvidence::Unchecked};
+            return Some((FactRef { cell, op },evidence));
             }
         }
         None

@@ -1781,12 +1781,28 @@ fn template_fields_replace_records_through_union_retirement_and_stages() {
 #[test]
 #[cfg(feature="sparse-cells")]
 fn compiled_constructor_witness_tries_later_target_without_generic_lookup() {
-    let p=program("(datatype E (N i64) (Start E) (Pair E E))
+    check_later_constructor_witness(false);
+}
+#[test]
+#[cfg(feature="sparse-cells")]
+fn compared_constructor_witness_admits_without_rechecking_its_key() {
+    check_later_constructor_witness(true);
+}
+#[cfg(feature="sparse-cells")]
+fn check_later_constructor_witness(compared:bool) {
+    let p=program(if compared {
+        "(datatype E (N i64) (Start E i64) (Pair E E i64))
+        (ruleset a) (ruleset b) (ruleset c)
+        (rule ((= x (N n))) ((Start x n) (Start x (+ n 10))) :ruleset a)
+        (rule ((= s (Start x i))) ((Pair s x i)) :ruleset b)
+        (rule ((Pair s x i)) ((Start x i)) :ruleset c)
+        (N 1) (N 2) (run a 1) (run b 1) (run c 1)"
+    } else {"(datatype E (N i64) (Start E) (Pair E E))
         (ruleset a) (ruleset b) (ruleset c)
         (rule ((= x (N n))) ((Start x) (Start (N (+ n 10)))) :ruleset a)
         (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
         (rule ((Pair s x)) ((Start x)) :ruleset c)
-        (N 1) (N 2) (run a 1) (run b 1) (run c 1)");
+        (N 1) (N 2) (run a 1) (run b 1) (run c 1)"});
     let mut g=Graph::new_with_local_congruence(p.clone()).unwrap();
     g.trace_ownership_catalog(16).unwrap();
     let mut control=Executor::new(g,true);control.execute().unwrap();
@@ -1816,9 +1832,24 @@ fn compiled_constructor_witness_tries_later_target_without_generic_lookup() {
         "compiled routes must remove a lookup, not only populate a catalog: {} probes, {} witnesses",
         candidate.graph.stats.constructor_cell_route_probes,candidate.graph.stats.constructor_cell_route_witnesses);
     assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
-    assert!(candidate.graph.stats.constructor_cell_route_key_proved>0);
-    assert!(candidate.graph.stats.constructor_cell_route_key_fields_avoided>0);
+    if !compared {
+        assert!(candidate.graph.stats.constructor_cell_route_key_proved>0);
+        assert!(candidate.graph.stats.constructor_cell_route_key_fields_avoided>0);
+    }
     assert!(candidate.graph.stats.constructor_cell_route_alternative_checks>=2);
+    if compared {
+        assert!(candidate.graph.stats.constructor_cell_route_compared_admissions>0);
+        assert!(candidate.graph.stats.constructor_cell_route_recheck_fields_avoided>0);
+        let mut single=raw.clone();
+        single["ownership_witnesses"]["recipes"].as_array_mut().unwrap().remove(0);
+        single.as_object_mut().unwrap().remove("sha256");
+        single["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&single).into();
+        let mut single=Executor::new(Graph::new_with_local_congruence(Program::parse(single).unwrap()).unwrap(),true);
+        single.execute().unwrap();
+        assert_eq!(single.graph.export().unwrap(),candidate.graph.export().unwrap());
+        assert!(candidate.graph.stats.constructor_prepared_fields<single.graph.stats.constructor_prepared_fields,
+            "a compared witness must bypass subsequent prepared-key comparisons");
+    }
     let mut first_only=raw.clone();
     first_only["ownership_witnesses"]["recipes"]=json!([wrong]);
     first_only.as_object_mut().unwrap().remove("sha256");
