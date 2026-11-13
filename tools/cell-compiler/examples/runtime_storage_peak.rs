@@ -140,6 +140,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
     let mut result = json!({"program_sha256":program,"mode":args[2],"runs":samples.len(),
+        // Retain the actual scheduling evidence after measurement, so an
+        // omitted compiler-materialization Run is distinguishable from a lost
+        // source Run. Matching names/counts alone are not a graph-state proof.
+        "run_sequence":e.steps.iter().map(|s|json!({"ruleset":s.ruleset,
+            "iterations":s.iterations,"logical_matches":s.logical_matches,
+            "executed_bindings":s.executed_bindings,"changed":s.changed})).collect::<Vec<_>>(),
         "port_index":e.graph.stable_port_report(),
         "ownership_storage":e.graph.ownership_storage_trace(),
         "source_storage":e.graph.retained_cell_storage(),
