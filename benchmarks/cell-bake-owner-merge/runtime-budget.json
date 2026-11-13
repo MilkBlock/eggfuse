@@ -20,6 +20,17 @@
         "functions_and_writers": 73388,
         "other_graph_state": 153749
       },
+      "source_lifetimes": {
+        "storage_and_wiring": 752,
+        "wiring_without_source_storage": 26,
+        "storage_without_wiring": 1,
+        "storage_without_wiring_with_external_retainers": 1,
+        "storage_and_wiring_completed": 752,
+        "storage_and_wiring_with_external_retainers": 13,
+        "completed_storage_and_wiring": 752,
+        "source_position_array_bytes": 8192,
+        "source_position_array_fraction_of_graph": 0.012432182233452466
+      },
       "group_fraction": {
         "instances": 0.20516742926085274,
         "composition_addressing": 0.18065514807985614,
@@ -45,6 +56,17 @@
         "stable_fields": 56438,
         "functions_and_writers": 70528,
         "other_graph_state": 150507
+      },
+      "source_lifetimes": {
+        "storage_and_wiring": 689,
+        "wiring_without_source_storage": 18,
+        "storage_without_wiring": 2,
+        "storage_without_wiring_with_external_retainers": 2,
+        "storage_and_wiring_completed": 689,
+        "storage_and_wiring_with_external_retainers": 13,
+        "completed_storage_and_wiring": 689,
+        "source_position_array_bytes": 8192,
+        "source_position_array_fraction_of_graph": 0.014000905820322849
       },
       "group_fraction": {
         "instances": 0.21287119405918595,
@@ -72,6 +94,17 @@
         "functions_and_writers": 155600,
         "other_graph_state": 268413
       },
+      "source_lifetimes": {
+        "storage_and_wiring": 2177,
+        "wiring_without_source_storage": 194,
+        "storage_without_wiring": 3,
+        "storage_without_wiring_with_external_retainers": 3,
+        "storage_and_wiring_completed": 2177,
+        "storage_and_wiring_with_external_retainers": 37,
+        "completed_storage_and_wiring": 2177,
+        "source_position_array_bytes": 32768,
+        "source_position_array_fraction_of_graph": 0.01848030404972898
+      },
       "group_fraction": {
         "instances": 0.2536169070418373,
         "composition_addressing": 0.25951833226084253,
@@ -97,6 +130,17 @@
         "stable_fields": 217702,
         "functions_and_writers": 178328,
         "other_graph_state": 254221
+      },
+      "source_lifetimes": {
+        "storage_and_wiring": 2122,
+        "wiring_without_source_storage": 146,
+        "storage_without_wiring": 14,
+        "storage_without_wiring_with_external_retainers": 14,
+        "storage_and_wiring_completed": 2122,
+        "storage_and_wiring_with_external_retainers": 58,
+        "completed_storage_and_wiring": 2122,
+        "source_position_array_bytes": 32768,
+        "source_position_array_fraction_of_graph": 0.019043069486166055
       },
       "group_fraction": {
         "instances": 0.24715077487416684,

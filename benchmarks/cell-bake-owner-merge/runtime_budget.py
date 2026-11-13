@@ -14,6 +14,41 @@ GROUPS = {
     'functions_and_writers': {'functions', 'writer_dir', 'function_keys'},
 }
 
+def source_lifetimes(data):
+    """Separate source-storage lifetime from the shared wiring's lifetime."""
+    frames = data['source_storage']['fact_lifecycle']['frames']
+    sources = {frame['cell']: frame for frame in frames}
+    assert len(sources) == len(frames), 'duplicate source identity'
+    owner = data['source_storage']['completed_owners']
+    completed = sum(frame['completed_storage'] for frame in frames)
+    assert completed == owner['completed_frames'], 'incomplete completed source inventory'
+    assert len(frames) - completed == owner['source_records'], 'incomplete ordinary source inventory'
+    composition = {}
+    for component in data['ownership_storage']['components']:
+        for ordinal, cell in enumerate(component['frames']):
+            assert cell not in composition, 'duplicate composition identity'
+            composition[cell] = (component['id'], ordinal)
+    both = sources.keys() & composition.keys()
+    wiring_only = composition.keys() - sources.keys()
+    storage_only = sources.keys() - composition.keys()
+    # These are distinct state obligations, not removable duplicate records.
+    return {
+        'storage_and_wiring': len(both),
+        'wiring_without_source_storage': len(wiring_only),
+        'storage_without_wiring': len(storage_only),
+        'storage_without_wiring_with_external_retainers': sum(
+            sources[cell]['retainers'] > 0 for cell in storage_only),
+        'storage_and_wiring_completed': sum(sources[cell]['completed'] for cell in both),
+        'storage_and_wiring_with_external_retainers': sum(
+            sources[cell]['retainers'] > 0 for cell in both),
+        'completed_storage_and_wiring': sum(
+            sources[cell]['completed_storage'] for cell in both),
+        'source_position_array_bytes': data['source_storage']['cell_positions_bytes'],
+        'source_position_array_fraction_of_graph': (
+            data['source_storage']['cell_positions_bytes'] / data['graph_owned_teardown_bytes']),
+    }
+
+
 def analyze(path):
     raw = path.read_bytes()
     data = json.loads(raw)
@@ -36,6 +71,7 @@ def analyze(path):
         'final_state_sha256': data['final_state_sha256'],
         'graph_bytes': total,
         'groups': groups,
+        'source_lifetimes': source_lifetimes(data),
         'group_fraction': {k: v / total for k, v in groups.items()},
         'thirty_percent_of_this_snapshot_bytes': target,
         'hypothetical_zero_instance_remainder_bytes': remainder,

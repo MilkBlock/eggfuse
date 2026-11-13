@@ -64,3 +64,43 @@ Reproduce (saved snapshots only):
 ```sh
 python3 benchmarks/cell-bake-owner-merge/runtime_budget.py out/cell-pooled-owners-final benchmarks/cell-bake-owner-merge/runtime-budget.json
 ```
+
+## Lifetime join: directory fusion alone is not the next compression experiment
+
+The initial recommendation above is now constrained by a join of the actual
+source lifecycle inventory and composition frame identities in the same frozen
+snapshots. The analyzer rejects duplicate identities in either inventory.
+
+| case | both storage and wiring | wiring only | storage only | both, externally retained |
+| --- | ---: | ---: | ---: | ---: |
+| fact | 752 | 26 | 1 | 13 |
+| loopfact | 689 | 18 | 2 | 13 |
+| sum-bits | 2,177 | 194 | 3 | 37 |
+| dot-product | 2,122 | 146 | 14 | 58 |
+
+All records in the intersection are already completed and in completed storage.
+Every storage-only source has an external retainer. The wiring-only records are
+not a leak proven by this inventory: signal origins and shared operations still
+use their ordinal/operator code after source storage disappears. Conversely,
+component retirement must restore source slots for remaining external readers.
+These are independently live obligations; a unified source record needs both
+states and cannot simply reuse one lifetime bit for the other.
+
+The existing source-position array itself is only 8,192/8,192/32,768/32,768 bytes,
+**1.24–1.90% of Graph heap**. This is not a bound on every possible arena redesign;
+it bounds deleting this specific array even if its replacement cost were zero.
+An intrusive redesign that merely merges address arrays while keeping all
+per-application metadata would therefore optimize the wrong unit. Do not equate
+the previous 38% sum-bits addressing/routing group with removable duplicate maps.
+
+The more consequential next proof is whether a completed source's *facts and
+necessary results* can be represented by a shared template region plus actual
+exceptions, while old fact handles still resolve and local retirement remains
+possible. The 13/13/37/58 retained intersections need explicit external-reader
+handling. The other sources are not automatically disposable: constructor
+indexes, queries and publication may still refer to their facts. Parent-retainer
+count alone is never permission to delete an instance or skip an RHS.
+
+This rejects directory-only fusion as the next invasive implementation, rather
+than adding shared mutable directories and synchronization to the worker path.
+No runtime representation changed and no new compression is claimed.
