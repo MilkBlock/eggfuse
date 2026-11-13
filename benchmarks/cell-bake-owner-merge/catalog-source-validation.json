@@ -1,0 +1,192 @@
+{
+  "scope": "Actual standalone four-worker Cell runtime; source-digest sharing during catalog loading, not a parallel inference speedup",
+  "commits": {
+    "control": "2ef47a8242b478c4b4a4c3d172485ed6356b7cf4",
+    "candidate": "cf439fae4127caaf244fccfd985300c0a7a5fc38"
+  },
+  "jobs": {
+    "tests": "355",
+    "frozen_work_validation": "358",
+    "timing": "359"
+  },
+  "artifacts": "/Volumes/Extreme SSD/eggfuse-experiments/3063/cell-bake-refresh/catalog-source-validation",
+  "source_digests_per_ownership_plan": {
+    "catalog_free": {
+      "before": 0,
+      "after": 0
+    },
+    "fragments_and_witnesses": {
+      "before": 2,
+      "after": 1
+    },
+    "all_three_catalogs": {
+      "before": 3,
+      "after": 1
+    }
+  },
+  "workloads": {
+    "sum": {
+      "control": {
+        "medians": {
+          "inference_seconds": 0.021136833,
+          "process_wall_seconds": 0.14247420901665464,
+          "load_seconds": 0.067247792,
+          "setup_seconds": 0.013770666,
+          "export_seconds": 0.005362166,
+          "report_seconds": 0.008374,
+          "process_unattributed_seconds": 0.035264042045413876,
+          "process_after_report_residual_seconds": 0.02674554102418459
+        },
+        "inference_samples": [
+          0.020604333,
+          0.021633917,
+          0.023544042,
+          0.021136833,
+          0.020472583
+        ],
+        "runtime_sha256": "504b96a9f3986e637e44ec1fcf224ab734d7e97495660c874baf107c11248ced",
+        "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574"
+      },
+      "candidate": {
+        "medians": {
+          "inference_seconds": 0.021113625,
+          "process_wall_seconds": 0.1456072079599835,
+          "load_seconds": 0.067100875,
+          "setup_seconds": 0.013928916,
+          "export_seconds": 0.005329541,
+          "report_seconds": 0.008356,
+          "process_unattributed_seconds": 0.03585550102352521,
+          "process_after_report_residual_seconds": 0.027270126023525208
+        },
+        "inference_samples": [
+          0.021839292,
+          0.021005292,
+          0.021113625,
+          0.021111791,
+          0.0227995
+        ],
+        "runtime_sha256": "d82bfca5d01c46981cd73984da21e5c78888bc02d1191c491d5a1a8ff7ea2a43",
+        "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574"
+      },
+      "inference_change_percent": -0.10979885207968998
+    },
+    "ray": {
+      "control": {
+        "medians": {
+          "inference_seconds": 4.72492225,
+          "process_wall_seconds": 7.2017899170168675,
+          "load_seconds": 0.364245083,
+          "setup_seconds": 0.046874334,
+          "export_seconds": 1.196750166,
+          "report_seconds": 0.373156917,
+          "process_unattributed_seconds": 0.8531322930168681,
+          "process_after_report_residual_seconds": 0.4799753760168681
+        },
+        "inference_samples": [
+          4.72492225,
+          4.7966155,
+          4.677948458
+        ],
+        "runtime_sha256": "504b96a9f3986e637e44ec1fcf224ab734d7e97495660c874baf107c11248ced",
+        "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1"
+      },
+      "candidate": {
+        "medians": {
+          "inference_seconds": 4.808893584,
+          "process_wall_seconds": 7.243869540980086,
+          "load_seconds": 0.362996417,
+          "setup_seconds": 0.046667875,
+          "export_seconds": 1.18402225,
+          "report_seconds": 0.389816625,
+          "process_unattributed_seconds": 0.8453750399800857,
+          "process_after_report_residual_seconds": 0.46568495698008566
+        },
+        "inference_samples": [
+          4.816062083,
+          4.808893584,
+          4.7137600840000005
+        ],
+        "runtime_sha256": "d82bfca5d01c46981cd73984da21e5c78888bc02d1191c491d5a1a8ff7ea2a43",
+        "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1"
+      },
+      "inference_change_percent": 1.7772003338256015
+    },
+    "learned": {
+      "control": {
+        "medians": {
+          "inference_seconds": 0.022923709,
+          "process_wall_seconds": 0.20585770899197087,
+          "load_seconds": 0.122718416,
+          "setup_seconds": 0.012763834,
+          "export_seconds": 0.005304875,
+          "report_seconds": 0.008251708,
+          "process_unattributed_seconds": 0.03620212599197087,
+          "process_after_report_residual_seconds": 0.027265166986513305
+        },
+        "inference_samples": [
+          0.022724584,
+          0.025662625,
+          0.024047125,
+          0.023325875,
+          0.021610958,
+          0.022923709,
+          0.022506041,
+          0.023408917,
+          0.022343292
+        ],
+        "runtime_sha256": "504b96a9f3986e637e44ec1fcf224ab734d7e97495660c874baf107c11248ced",
+        "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf"
+      },
+      "candidate": {
+        "medians": {
+          "inference_seconds": 0.021956417,
+          "process_wall_seconds": 0.17316391604254022,
+          "load_seconds": 0.098195458,
+          "setup_seconds": 0.012439292,
+          "export_seconds": 0.005153208,
+          "report_seconds": 0.008332833,
+          "process_unattributed_seconds": 0.035330249008174414,
+          "process_after_report_residual_seconds": 0.027101665042540236
+        },
+        "inference_samples": [
+          0.023112417,
+          0.021386792,
+          0.021816083,
+          0.021956417,
+          0.02211775,
+          0.021858458,
+          0.021229333,
+          0.022278792,
+          0.02264525
+        ],
+        "runtime_sha256": "d82bfca5d01c46981cd73984da21e5c78888bc02d1191c491d5a1a8ff7ea2a43",
+        "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf"
+      },
+      "inference_change_percent": -4.2196138504462795
+    }
+  },
+  "boundary_guards": 92,
+  "order_policy": "whole control, optional previous experiment, then whole candidate; never interleaved",
+  "measurement_status": "completed-with-boundary-guards",
+  "ordinary_work_equal": true,
+  "witness_work_equal": true,
+  "catalog_contract": {
+    "scope": "unchanged saved Bake catalog; differential final state, Run summaries and effects; not native acceptance or timing",
+    "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+    "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "exact_state_runs_effects": true,
+    "runs": 1428
+  },
+  "native_sum_status": "pass",
+  "evidence_sha256": {
+    "work.json": "88873081cc1ad1cedfaef6ae1653e8f609f1266558ea41b86209b9c0a0122666",
+    "timing/result.json": "5edf6261623838b30f2039ae64bf2a865b24c1fe34d7228448cb6f35e3d8b004",
+    "candidate/checked/validation.json": "39b770fa5ce0e713a274ea016e0cd20d76bb5f00ac72806cf511d04de54a222b",
+    "candidate/checked/semantic-acceptance.json": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505"
+  },
+  "runtime_sha256": {
+    "control": "504b96a9f3986e637e44ec1fcf224ab734d7e97495660c874baf107c11248ced",
+    "candidate": "d82bfca5d01c46981cd73984da21e5c78888bc02d1191c491d5a1a8ff7ea2a43"
+  },
+  "interpretation": "Keep as a catalog-load work reduction. The short trial does not pass the two-workload inference speed gate: Raytrace is 1.78% slower. No synchronization or worker-utilization improvement is claimed."
+}
