@@ -1,0 +1,158 @@
+{
+  "scope": "actual standalone Cell runtime; catalogs learned from audited original-source executions; not timing",
+  "base_commit": "9ee7070d",
+  "baseline_report_sha256": "4a6394791633e9c61fc5f2710ce2615337d62fcee17f7ab3a5f8dc2d7e9a94fa",
+  "original_program": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
+  "baseline_graph_bytes": 2038485,
+  "memory_binary_sha256": "b600e48e916c84459128494bd239ebfbe498511780b842fd4d3a1c864fb2bfd7",
+  "observer_binary_sha256": "ac0196296e1be00ed28356b2a3900d0be0937ca1939d70f713e184aca6ed9010",
+  "selector_binary_sha256": "c320d489f8fb083e8d4ed233ca350f66c6d22d66412371ae2b22b517ae163ece",
+  "observations": {
+    "seed": {
+      "trace_sha256": "cc27b5806a61a6af41c5ab31881eafd12cf02446d3acbc2ee304337b0197b067",
+      "runs": 1428,
+      "all_saved_run_checks_equal": true,
+      "proposals": 1159,
+      "repeated_shared_proposals": 449,
+      "hop_histogram": {
+        "1": 1159
+      },
+      "admissions": {
+        "anchor_attempt": 5606,
+        "birth": 2557,
+        "entry_template_mismatch": 103,
+        "fallback": 2557,
+        "no_entry": 1,
+        "transition_not_baked": 5606
+      }
+    },
+    "round1": {
+      "trace_sha256": "f7011096c467a004e6c38688e196f4ff715ad54af9714edb04660a31df9d9ef3",
+      "runs": 1428,
+      "all_saved_run_checks_equal": true,
+      "proposals": 1291,
+      "repeated_shared_proposals": 512,
+      "hop_histogram": {
+        "1": 750,
+        "2": 541
+      },
+      "admissions": {
+        "anchor_attempt": 5315,
+        "birth": 2557,
+        "entry_template_mismatch": 103,
+        "fallback": 1848,
+        "joined": 709,
+        "joined_cross_stage": 671,
+        "no_entry": 1,
+        "transition_not_baked": 4606
+      }
+    }
+  },
+  "candidates": {
+    "budget32": {
+      "memory_report_sha256": "e6a6ee4a2c060a6e59dd941ec9b5015aaafdde536c4c1fd1dadc1ed044607aa7",
+      "selection_sha256": "c9132219a681145dee921b63e9c095618471b61bf11354448d361d0c6b761e87",
+      "program_sha256": "912f240eba12d2e1d04ac8a9ce6d911ed90459493e284eb93d2d54c92dc990ee",
+      "source_core_exact": true,
+      "final_state_exact": true,
+      "runs": 1428,
+      "graph_bytes": 2061377,
+      "graph_saved": -22892,
+      "retained_program_bytes": 115378669,
+      "components": 1830,
+      "frames_histogram": {
+        "1": 1449,
+        "2": 381
+      },
+      "signal_slots": 8495,
+      "bound_slots": 6960,
+      "graph_field_deltas": {
+        "cells": 31300,
+        "ownership.components": 5776,
+        "ownership.boundaries": -14184
+      }
+    },
+    "round1": {
+      "memory_report_sha256": "69bbc6490dd7e9dd7921ada902ca0b164f81aebfdd99efc5eeb0a97fd5477539",
+      "selection_sha256": "c01beecde8d3c6c1a5768eb1407a2056b71c8f7d6982e94350075d70fb8fe0b8",
+      "program_sha256": "74108f0f57b35e512827080560876ff19e0633252d5fe0e05957f8fe5fa138ae",
+      "source_core_exact": true,
+      "final_state_exact": true,
+      "runs": 1428,
+      "graph_bytes": 1952405,
+      "graph_saved": 86080,
+      "retained_program_bytes": 115956109,
+      "components": 1650,
+      "frames_histogram": {
+        "1": 1026,
+        "2": 624
+      },
+      "signal_slots": 8462,
+      "bound_slots": 6934,
+      "graph_field_deltas": {
+        "cells": 51032,
+        "ownership.components": -101728,
+        "ownership.live_facts": -16384,
+        "ownership.heap": -1024,
+        "ownership.boundaries": -17976
+      }
+    },
+    "budget256": {
+      "memory_report_sha256": "b8c836118bd4f2dcd6f5d6dab4fe6e9af525746ccca95a39a063c7a43ecba2e3",
+      "selection_sha256": "e7c89d9c346fcc3dac8d0085f1f850bcba2f4c87f8c277dbda67d86eaa0643cc",
+      "program_sha256": "70b8c6051a780550f268d72f8366513ea934abcb7fc3a5ea0327d542d5803b07",
+      "source_core_exact": true,
+      "final_state_exact": true,
+      "runs": 1428,
+      "graph_bytes": 1958325,
+      "graph_saved": 80160,
+      "retained_program_bytes": 116739021,
+      "components": 1596,
+      "frames_histogram": {
+        "1": 906,
+        "2": 690
+      },
+      "signal_slots": 8408,
+      "bound_slots": 6903,
+      "graph_field_deltas": {
+        "cells": 55664,
+        "ownership.components": -100752,
+        "ownership.live_facts": -16384,
+        "ownership.heap": -1024,
+        "ownership.boundaries": -17664
+      }
+    },
+    "round2": {
+      "memory_report_sha256": "5f1ce5b3a9080f8912c0f34175de40ed67cac336c87cddcaffd3cc115a4a0afd",
+      "selection_sha256": "c057fff9f0c47b17597129d88d4efa7d62b96bda5090e051dfd7d4d85ed15c5d",
+      "program_sha256": "4c23535fcef1a6a9cbb3d740ae7f6279115c08dd71f011cd4e8dbf5f70fd6cd1",
+      "source_core_exact": true,
+      "final_state_exact": true,
+      "runs": 1428,
+      "graph_bytes": 1949501,
+      "graph_saved": 88984,
+      "retained_program_bytes": 116641961,
+      "components": 1453,
+      "frames_histogram": {
+        "1": 857,
+        "3": 290,
+        "2": 306
+      },
+      "signal_slots": 8344,
+      "bound_slots": 6882,
+      "graph_field_deltas": {
+        "cells": 48264,
+        "ownership.components": -98480,
+        "ownership.live_facts": -16384,
+        "ownership.heap": -1024,
+        "ownership.boundaries": -21360
+      }
+    }
+  },
+  "limitations": [
+    "Candidate scores count overlapping proposals, not saved effects.",
+    "Full per-Run graph/effect checks cover seed and round1; other candidates have final-state equality only.",
+    "These Programs retain diagnostic apply receipts. Do not add these savings to receipt omission without a combined execution.",
+    "Three-frame composition reduces components much more than Graph bytes. 30% Graph and saturated-stage RHS goals remain unfinished."
+  ]
+}
