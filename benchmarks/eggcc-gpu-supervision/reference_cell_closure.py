@@ -32,23 +32,58 @@ def matches(rule,facts):
     return bindings
 
 
+def apply_run(rules,facts):
+    # All matching precedes every effect in the source Run.
+    matched=[matches(rule,facts) for rule in rules];before=len(facts)
+    for rule,bindings in zip(rules,matched):
+        for binding in bindings:
+            slots=dict(binding)
+            for op in rule['effects']:
+                if op['kind']=='copy' and 'slot' in op['arg']:slots[op['dst']]=slots[op['arg']['slot']]
+                elif op['kind']=='construct' and all('slot' in a for a in op['args']):
+                    key=(op['call']['table'],tuple(slots[a['slot']] for a in op['args']))
+                    slots[op['dst']]=facts.setdefault(key,('construct',*key))
+                else:raise ValueError('unsupported reference effect')
+    return len(facts)-before,sum(map(len,matched))
+
+
 def saturate(rules,rows,ids,max_runs=64):
     facts=seeds(rows,ids);changes=[];applications=[]
     for _ in range(max_runs):
-        # Every rule queries the same immutable source Run snapshot.
-        matched=[matches(rule,facts) for rule in rules];before=len(facts)
-        for rule,bindings in zip(rules,matched):
-            for binding in bindings:
-                slots=dict(binding)
-                for op in rule['effects']:
-                    if op['kind']=='copy' and 'slot' in op['arg']:slots[op['dst']]=slots[op['arg']['slot']]
-                    elif op['kind']=='construct' and all('slot' in a for a in op['args']):
-                        key=(op['call']['table'],tuple(slots[a['slot']] for a in op['args']))
-                        slots[op['dst']]=facts.setdefault(key,('construct',*key))
-                    else:raise ValueError('unsupported reference effect')
-        changes.append(len(facts)-before);applications.append(sum(map(len,matched)))
-        if len(facts)==before:return facts,changes,applications
+        change,count=apply_run(rules,facts);changes.append(change);applications.append(count)
+        if not change:return facts,changes,applications
     raise ValueError('reference saturation budget exhausted')
+
+
+def scheduled(rules,rows,ids,control,max_runs=128):
+    facts=seeds(rows,ids);logs=[]
+    def visit(node):
+        if isinstance(node,list):
+            before=len(facts)
+            for child in node:visit(child)
+            return len(facts)>before
+        if set(node)=={'sequence'}:return visit(node['sequence'])
+        if set(node)=={'run'}:
+            if len(logs)>=max_runs:raise ValueError('reference Run budget exhausted')
+            selected=[r for r in rules if r['metadata']['source_set']==node['run']]
+            if not selected:raise ValueError('uncovered reference stage')
+            changed,apps=apply_run(selected,facts)
+            logs.append(dict(stage=node['run'],new_facts=changed,applications=apps))
+            return changed>0
+        if set(node)=={'saturate'}:
+            changed=False
+            for _ in range(max_runs):
+                more=visit(node['saturate']);changed |= more
+                if not more:return changed
+            raise ValueError('reference saturation budget exhausted')
+        if set(node)=={'repeat','body'}:
+            if type(node['repeat']) is not int or node['repeat']<0:raise ValueError('invalid repeat')
+            changed=False
+            for _ in range(node['repeat']):changed=visit(node['body']) or changed
+            return changed
+        raise ValueError('unsupported reference control')
+    visit(control)
+    return facts,logs
 
 
 def facts_from_cells(recipe,state):

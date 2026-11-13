@@ -1,0 +1,42 @@
+{
+  "scope": "actual selected-family GPU token Eq readout; no fitting or union authorization",
+  "case": "024-pascals-row",
+  "partition": "train",
+  "capture_sha256": "d5d16c40a2e317b65abea392c7e0f25cd241365d2c1f58740281a4e1070e2b19",
+  "decoder_sha256": "3a3c00b256092a4d227bc55f3e64d024b460f3c7af203d9c81cba723c9d366e5",
+  "label_statistics": {
+    "full_pair_queries": 179,
+    "static_equalities": 26,
+    "dynamic_quotient_queries": 102,
+    "dynamic_true_equalities": 0,
+    "distinct_rule_partitions": 2
+  },
+  "results": {
+    "cpu_target_token": {
+      "instances": 26,
+      "query_instances": 26,
+      "exact_partitions": 26,
+      "false_merges": 0,
+      "missed_equalities": 0,
+      "nontransitive": 0,
+      "closure_false_merges": 0
+    },
+    "gpu_predicted_token": {
+      "instances": 26,
+      "query_instances": 26,
+      "exact_partitions": 26,
+      "false_merges": 0,
+      "missed_equalities": 0,
+      "nontransitive": 0,
+      "closure_false_merges": 0
+    }
+  },
+  "cpu_readout_audit_seconds": 0.029001958027947694,
+  "backpropagation": false,
+  "union_authorized": false,
+  "limitations": [
+    "Small selected immutable Cell family, not full Eggcc",
+    "Exact execution establishes completion; ridge is audited separately",
+    "Test samples must not be used for fitting"
+  ]
+}

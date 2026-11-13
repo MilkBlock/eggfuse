@@ -1,0 +1,31 @@
+{
+  "rules": [
+    488,
+    452
+  ],
+  "stages": [
+    "type-analysis",
+    "term-subst"
+  ],
+  "control_path": [
+    1,
+    "sequence",
+    1,
+    "body",
+    "sequence",
+    1,
+    "body"
+  ],
+  "snapshot_run": 438,
+  "remove_rows": [
+    {
+      "table": "HasArgType",
+      "column": 0,
+      "from_table": "TermSubst",
+      "from_columns": [
+        1,
+        3
+      ]
+    }
+  ]
+}

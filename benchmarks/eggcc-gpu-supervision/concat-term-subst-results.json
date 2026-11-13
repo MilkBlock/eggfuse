@@ -1,0 +1,133 @@
+{
+  "scope": "real selected immutable Cell family on incomplete snapshot seeds; not full Eggcc runtime",
+  "trace_sha256": "d3d74e8d5f196d561aadd021efdfdca48a592f08df93e01f61fb9980104acf94",
+  "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+  "rules": [
+    488,
+    452
+  ],
+  "stages": [
+    "type-analysis",
+    "term-subst"
+  ],
+  "control": {
+    "sequence": [
+      {
+        "saturate": {
+          "sequence": [
+            {
+              "run": "type-analysis"
+            }
+          ]
+        }
+      },
+      {
+        "saturate": {
+          "sequence": [
+            {
+              "run": "term-subst"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "snapshot_run": 438,
+  "source_control_path": [
+    1,
+    "sequence",
+    1,
+    "body",
+    "sequence",
+    1,
+    "body"
+  ],
+  "family_config_sha256": "62d9364b79f97f99eefe9ada7024cdb9561a8893589a3fa7a8ac6c6a1e84ea35",
+  "removed_rows": 1,
+  "gpu_run_stages": [
+    "type-analysis",
+    "type-analysis",
+    "term-subst",
+    "term-subst"
+  ],
+  "cpu_run_stages": [
+    "type-analysis",
+    "type-analysis",
+    "term-subst",
+    "term-subst"
+  ],
+  "seed_rows": 98,
+  "capacity": 32,
+  "ticks": 48,
+  "finished": true,
+  "failed_run": false,
+  "generated_cells": 26,
+  "fresh_constructor_ids": 2,
+  "released_rows": 47,
+  "blocked_takeovers": 4,
+  "gpu_run_new_facts": [
+    1,
+    0,
+    1,
+    0
+  ],
+  "gpu_run_new_cells": [
+    25,
+    0,
+    1,
+    0
+  ],
+  "pending_cells": 0,
+  "live_owners": 77,
+  "logical_cells": 124,
+  "cpu_run_new_facts": [
+    1,
+    0,
+    1,
+    0
+  ],
+  "cpu_applications_per_run": [
+    25,
+    25,
+    1,
+    1
+  ],
+  "expected_facts": 100,
+  "actual_facts": 100,
+  "exact_closure": true,
+  "views_complete": true,
+  "unresolved_facts": 0,
+  "explained_allocations": true,
+  "unique_fresh_terms": true,
+  "problems": [],
+  "gpu_compile_upload_execute_seconds": 1.015796457999386,
+  "cpu_closure_and_check_seconds": 0.012153875024523586,
+  "passed": true,
+  "limitations": [
+    "Original rule bodies and selected source control projection; omitted rules/stages are not covered",
+    "No captured future matches or intermediate device readbacks; fixed host launch budget with device control",
+    "Exact GPU query/effect kernels establish completion; ridge accuracy and neural-like throughput remain unproved",
+    "Withheld facts in an exported snapshot; not original initialization or native Run equivalence"
+  ],
+  "capture": {
+    "schema": "device-joint-witness/v2",
+    "case": "024-pascals-row",
+    "partition": "train",
+    "corpus_manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "program_file_sha256": "e62834ff6592b2dd555f974b7da2802e9bd5ec902ba583427bbb598ec26bf0e1",
+    "samples": 26,
+    "continued_samples": 1,
+    "relocated_witness_observations": 18,
+    "matched_snapshots": 52,
+    "query_calls": 4,
+    "errors": [],
+    "passed": true,
+    "feature_reconstruction_max_abs": 1.4901161193847656e-06,
+    "target_reconstruction_max_abs": 1.7881393432617188e-07,
+    "logical_array_bytes": 1258060,
+    "padded_capture_array_bytes": 25375648,
+    "cpu_audit_and_prepare_seconds": 0.01782187499338761,
+    "scope": "actual GPU-selected joint witnesses and independent CPU completion targets; selected immutable family only",
+    "artifact_sha256": "d5d16c40a2e317b65abea392c7e0f25cd241365d2c1f58740281a4e1070e2b19"
+  }
+}

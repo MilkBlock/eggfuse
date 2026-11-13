@@ -6,7 +6,13 @@ use eggfuse_cell_runtime::{
     value,
 };
 use serde_json::{Value, json};
-use std::{cell::RefCell, collections::BTreeMap, env, fs, io, rc::Rc, time::Instant};
+use std::{
+    cell::RefCell,
+    collections::{BTreeMap, BTreeSet},
+    env, fs, io,
+    rc::Rc,
+    time::Instant,
+};
 fn err(e: impl ToString) -> io::Error {
     io::Error::other(e.to_string())
 }
@@ -15,10 +21,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if args.len() < 2
         || args[2..]
             .iter()
-            .any(|s| s != "--all-slots" && s != "--relations")
+            .any(|s| s != "--all-slots" && s != "--relations" && !s.starts_with("--snapshot-runs="))
     {
-        return Err(err("PROGRAM OUTPUT [--all-slots] [--relations]").into());
+        return Err(
+            err("PROGRAM OUTPUT [--all-slots] [--relations] [--snapshot-runs=0,1,...]").into(),
+        );
     }
+    let snapshot_runs = snapshot_runs(&args[2..])?;
+    let mut boundaries = Vec::new();
     let input = &args[0];
     let output = &args[1];
     let relations = true;
@@ -116,6 +126,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Graph::new(Program::parse(artifact.clone()).map_err(err)?).map_err(err)?,
         false,
     );
+    if snapshot_runs.contains(&0) {
+        let graph = executor.graph.export().map_err(err)?;
+        assert_eq!(graph, reference.graph.export().map_err(err)?);
+        boundaries.push(json!({"ordinal":0,"graph":graph}));
+    }
     let mut reference_seconds = 0.;
     let mut run_graph_audit_seconds = 0.;
     let mut observed_execution_seconds = 0.;
@@ -130,10 +145,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             reference.execute_until(Some(next)).map_err(err)?;
             reference_seconds += clock.elapsed().as_secs_f64();
             let clock = Instant::now();
-            assert_eq!(
-                executor.graph.export().map_err(err)?,
-                reference.graph.export().map_err(err)?
-            );
+            let graph = executor.graph.export().map_err(err)?;
+            assert_eq!(graph, reference.graph.export().map_err(err)?);
+            if executor.steps.last().is_some_and(|s| s.ordinal == next)
+                && snapshot_runs.contains(&next)
+            {
+                boundaries.push(json!({"ordinal":next,"graph":graph}));
+            }
             run_graph_audit_seconds += clock.elapsed().as_secs_f64();
             if let Some(rows) = records.borrow_mut().get_mut(&next) {
                 assert_eq!(
@@ -181,6 +199,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
         );
     }
+    if boundaries.len() != snapshot_runs.len() {
+        return Err(err("requested snapshot Run was not executed").into());
+    }
     let runs = records
         .borrow()
         .iter()
@@ -191,7 +212,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         serde_json::to_vec(
             &json!({"schema":"eggcc-gpu-supervision-rhs-trace/v1","recipe":artifact["recipe"],"steps":executor.steps,"all_slots":all_slots,"relations":relations,"program_sha256":artifact["sha256"],"runs":runs,
   "capture_and_audit_wall_seconds":execution_seconds,"audited_execution_seconds":observed_execution_seconds,"reference_execution_seconds":reference_seconds,"observer_seconds":*observer_seconds.borrow(),"result_observer_seconds":*result_time.borrow(),"run_graph_audit_seconds":run_graph_audit_seconds,"strict_run_graphs_equal":true,
-  "strict_audit_reference_equal":true,"run_control_counts_equal":true,"full_snapshots":0,"final":final_graph,
+  "strict_audit_reference_equal":true,"run_control_counts_equal":true,"full_snapshots":boundaries.len(),"boundaries":boundaries,"final":final_graph,
   "scope":if all_slots{"actual CPU inputs and RHS slot reads before repair; missing results explicit; no GPU takeover"}else{"live read-only Cell observer; scalar slots only; no GPU writeback"}}),
         )?,
     )?;
@@ -212,4 +233,37 @@ fn sorts_for(artifact: &Value) -> Vec<Vec<Value>> {
                 .collect()
         })
         .collect()
+}
+
+fn snapshot_runs(args: &[String]) -> Result<BTreeSet<usize>, io::Error> {
+    let mut result = BTreeSet::new();
+    for arg in args {
+        if let Some(list) = arg.strip_prefix("--snapshot-runs=") {
+            for value in list.split(',') {
+                let ordinal = value
+                    .parse::<usize>()
+                    .map_err(|_| err("snapshot Run must be a nonnegative integer"))?;
+                if !result.insert(ordinal) {
+                    return Err(err("duplicate snapshot Run"));
+                }
+            }
+        }
+    }
+    Ok(result)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn bounded_explicit_snapshot_selection() {
+        assert!(snapshot_runs(&[]).unwrap().is_empty());
+        assert_eq!(
+            snapshot_runs(&["--snapshot-runs=0,3,9".into()]).unwrap(),
+            BTreeSet::from([0, 3, 9])
+        );
+        for value in ["", "-1", "1,1", "2,x"] {
+            assert!(snapshot_runs(&[format!("--snapshot-runs={value}")]).is_err());
+        }
+    }
 }

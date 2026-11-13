@@ -1,0 +1,24 @@
+{
+  "scope": "bounded real Run snapshots from standalone CPU Cell runtime; observer audit, not GPU execution or timing comparison",
+  "original_trace_sha256": "d29a4324ae3dc19ca5257cc98ccc2aa762626e775c34b02012ff2495012468ef",
+  "snapshot_trace_sha256": "d3d74e8d5f196d561aadd021efdfdca48a592f08df93e01f61fb9980104acf94",
+  "binary_sha256": "fb2a17992738db5850a902f3593fa21978eba3b40a8a7a67b6124bcc6d15c283",
+  "program_sha256": "992a628904c36b6a0a01ffa77d05aff2c2b974cdf0dfd73d9ce2074d759edb46",
+  "recipe_equal": true,
+  "original_final_equal": true,
+  "original_run_control_equal": true,
+  "strict_run_graphs_equal": true,
+  "runs": 631,
+  "reference_execution_seconds": 0.08470650299999992,
+  "snapshots": [
+    {
+      "ordinal": 438,
+      "rows": 1568
+    },
+    {
+      "ordinal": 456,
+      "rows": 1585
+    }
+  ],
+  "passed": true
+}
