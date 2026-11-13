@@ -33,7 +33,7 @@ def expected_slots(rule,key,rows,ids):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--max-source-rows',type=int,default=32);p.add_argument('--capacity',type=int,default=32);a=p.parse_args()
+    p.add_argument('--max-source-rows',type=int,default=32);p.add_argument('--capacity',type=int,default=32);p.add_argument('--regenerate',action='store_true');a=p.parse_args()
     raw=read_bytes(a.trace);trace=json.loads(raw);recipe=trace['recipe'];snapshot=trace['final']
     if not all(trace.get(k) is True for k in ('strict_run_graphs_equal','strict_audit_reference_equal','run_control_counts_equal')):raise ValueError('capture audit missing')
     with np.load(a.model) as saved:
@@ -48,6 +48,11 @@ def main():
         if len(rows)>a.max_source_rows:skips['source_row_budget']+=1;continue
         # Empty queried tables are a legitimate zero result, but not an execution test.
         if any(not any(row['table']==q['call']['table'] for row in rows) for q in rule['query']):skips['empty_query_table']+=1;continue
+        removed_tables=[];removed_rows=0
+        if a.regenerate:
+            from audit_generated_constructors import without_rhs_tables
+            incomplete,removed_tables,removed_rows=without_rhs_tables(rule,snapshot)
+            local,state,ids,rows=prepare(recipe,incomplete,rid,a.capacity,include_effects=True)
         blocks,catalog,atoms=compile_catalog(local,[(0,compile_transition(local,0))],state['slots'].shape[1])
         packed=initialize(pack(state),atoms);dp=device(blocks[0][1]);cp=device(compile_completion(local,state['slots'].shape[1]));ds=device(packed)
         top=len(ids)
@@ -63,12 +68,18 @@ def main():
         start=time.monotonic();final={k:np.array(v) for k,v in out.items()};live=final['present']&(final['keys'][:,0]==0)
         expected=reference_keys(rule,rows,ids,state['keys'].shape[1]);actual={tuple(k) for k in final['keys'][live]};covered=bool(q['query_complete'])
         wrong=0;unknown=0;checked=0
-        for index in np.flatnonzero(live&final['settled']):
-            values=expected_slots(rule,final['keys'][index],rows,ids)
-            if values is None:unknown+=1;continue
-            checked+=1;slots=np.array(list(values),np.int32)
-            got=read(final,'slots',np.array(index),slots,np);valid=read(final,'slot_valid',np.array(index),slots,np)
-            wrong+=int(not (valid.all() and np.array_equal(got,list(values.values()))))
+        structural=None
+        if a.regenerate:
+            from audit_generated_constructors import audit as audit_generated
+            structural=audit_generated(rule,rows,ids,final,np.flatnonzero(live&final['settled']),int(next_id))
+            checked=structural['checked'];wrong=structural['wrong'];unknown=structural['unexplained_allocations']
+        else:
+            for index in np.flatnonzero(live&final['settled']):
+                values=expected_slots(rule,final['keys'][index],rows,ids)
+                if values is None:unknown+=1;continue
+                checked+=1;slots=np.array(list(values),np.int32)
+                got=read(final,'slots',np.array(index),slots,np);valid=read(final,'slot_valid',np.array(index),slots,np)
+                wrong+=int(not (valid.all() and np.array_equal(got,list(values.values()))))
         # Every imported source remains readable after relocation.
         source_corrupt=0
         for index in range(len(rows)):
@@ -79,7 +90,7 @@ def main():
                 intact=bool(intact) and np.array_equal(got[valid],state[column][index,valid])
             source_corrupt+=int(not intact)
         passed=actual<=expected and (actual==expected if covered else True) and wrong==0 and unknown==0 and source_corrupt==0
-        records.append(dict(rule=rid,source_rows=len(rows),generated=len(actual),expected=len(expected),cpu_missing=len(expected-actual),cpu_extra=len(actual-expected),query_complete=covered,query_overflow=bool(q['overflow']),
+        records.append(dict(rule=rid,removed_tables=removed_tables,removed_rows=removed_rows,structural_audit=structural,source_rows=len(rows),generated=len(actual),expected=len(expected),cpu_missing=len(expected-actual),cpu_extra=len(actual-expected),query_complete=covered,query_overflow=bool(q['overflow']),
             completed=int(np.count_nonzero(live&final['settled'])),pending=int(np.count_nonzero(live&~final['settled'])),cpu_checked=checked,cpu_wrong=wrong,cpu_unknown=unknown,source_corrupt=source_corrupt,
             released=int(t['released']),takeover_attempted=int(t['attempted']),takeover_blocked=int(t['blocked']),copied_fields=int(t['copied_fields']),
             blocked_reasons={k:int(v) for k,v in t['blocked_reasons'].items()},
@@ -87,12 +98,13 @@ def main():
             fresh_constructor_ids=int(next_id)-top,effects_executed=int(e['executed']) if covered else 0,needs_attention=not covered or bool(e['needs_attention']),
             gpu_compile_upload_seconds=gpu,cpu_check_seconds=time.monotonic()-start,passed=passed))
         print(json.dumps(records[-1]),flush=True)
-    result=dict(scope='real final-snapshot local supported RHS plus matched-owner transfer; not full Eggcc execution',trace_sha256=hashlib.sha256(raw).hexdigest(),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),
+    result=dict(regenerate=a.regenerate,scope='real snapshot-derived local supported RHS plus matched-owner transfer; not full Eggcc execution',trace_sha256=hashlib.sha256(raw).hexdigest(),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),
         max_source_rows=a.max_source_rows,capacity=a.capacity,skipped=dict(skips),tested=len(records),passed=bool(records) and all(r['passed'] for r in records),
         totals={k:sum(r[k] for r in records) for k in ('generated','expected','cpu_missing','cpu_extra','completed','pending','cpu_checked','cpu_wrong','cpu_unknown','source_corrupt','released','takeover_attempted','takeover_blocked','effects_executed','fresh_constructor_ids')},records=records,
         limitations=['Canonical final snapshot is the input, not program initialization', 'Query/RHS constructor tables are fully imported; hidden reuse, other effects and global repair are rejected',
             'Closed-world seeded lookup plus GPU exact effects, not a trained proof of completion', 'Token inference accuracy and whole multi-stage lifetime semantics remain unproved',
-            'CPU check compares actual returned identities against raw snapshot facts; no native proof replay or speedup claim'])
+            'Reuse mode compares raw snapshot results; regeneration mode checks structural terms and identity sharing, not native proof replay',
+            'Regeneration removes RHS-only tables to create a controlled incomplete graph; this is not original program initialization'])
     a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:v for k,v in result.items() if k!='records'},indent=2))
     if not result['passed']:raise SystemExit(1)
 
