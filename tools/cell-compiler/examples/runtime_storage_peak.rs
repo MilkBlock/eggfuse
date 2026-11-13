@@ -55,8 +55,8 @@ fn detach(exec: Executor) -> Graph {
 }
 fn main() -> Result<(), Box<dyn Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    if !(args.len()==3 || (args.len()==4 && args[3]=="--port-domains-only")) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners") {
-        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners [--port-domains-only]".into());
+    if (args.len()<3 || args.iter().skip(3).any(|a| !matches!(a.as_str(),"--port-domains-only"|"--template-fields"))) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners") {
+        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners [--port-domains-only] [--template-fields]".into());
     }
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
     let program = p.artifact["sha256"].clone();
@@ -68,7 +68,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     reset_peak();
     let mut e = Executor::new(Graph::new_with_local_congruence(p)?, false);
     if args[2] == "inherited-owners" {e.use_completed_parent_takeover()?;}
-    if args.len()==4 {e.graph.use_port_domains_only()?;}
+    if args.iter().any(|a|a=="--port-domains-only") {e.graph.use_port_domains_only()?;}
+    if args.iter().any(|a|a=="--template-fields") {e.graph.use_template_stable_fields()?;}
     let setup_peak = PEAK.load(Relaxed);
     let setup_live = LIVE.load(Relaxed);
     loop {

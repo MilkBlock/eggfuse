@@ -84,7 +84,7 @@ fn main()->Result<()> {
             eprintln!("compiled pooled catalog for {name}");
         }
     } else if a[0]=="apply-passive" || a[0]=="check-passive" {
-        if a.len()!=3 {return Err("apply-passive/check-passive ROOT VARIANT".into());}
+        if !(a.len()==3 || (a.len()==4 && a[0]=="check-passive" && a[3]=="template-fields")) {return Err("apply-passive/check-passive ROOT VARIANT [template-fields]".into());}
         let root=Path::new(&a[1]);let variant=root.join(&a[2]);
         let manifest=read(root.join("manifest.json"))?;
         let mut reports=vec![];
@@ -134,6 +134,7 @@ fn main()->Result<()> {
                 let raw=read(dir.join("candidate.json"))?;
                 if raw["ownership_fragments"]!=proposal["selection"] {return Err("candidate differs from selection".into());}
                 let mut target=executor(raw)?;
+                if a.get(3).is_some_and(|a|a=="template-fields") {target.graph.use_template_stable_fields()?;}
                 for (i,expected) in checks.iter().enumerate() {
                     let observed=step(&mut target,i+1)?;
                     if target.steps.len()!=i+1 || observed!=*expected {

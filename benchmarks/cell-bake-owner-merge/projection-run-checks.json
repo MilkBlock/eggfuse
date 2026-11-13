@@ -1,0 +1,33 @@
+{
+  "scope": "template-fields check-passive; per-Run graph/RHS/write checks and terminal effects",
+  "cases": [
+    {
+      "case": "fact",
+      "runs": 418,
+      "all_saved_run_checks_equal": true,
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "final_state": "d04728e6402e21992b9748a09ec99ace5f6639bc268ac5bcafbc24d0fd52f2f0"
+    },
+    {
+      "case": "loopfact",
+      "runs": 398,
+      "all_saved_run_checks_equal": true,
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "final_state": "623c3b05d895a4200f8ea907ea4468a92a000c975f654483e54c42c96c90bf7a"
+    },
+    {
+      "case": "sum-bits",
+      "runs": 882,
+      "all_saved_run_checks_equal": true,
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "final_state": "3bae7a5ad756595f8c454b27baabbf7e830cf06b61d6aa69c0f7437ee747ab2a"
+    },
+    {
+      "case": "dot-product",
+      "runs": 954,
+      "all_saved_run_checks_equal": true,
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "final_state": "191d2a4bd738e7afd0783d30b5d5c1f1219ac92887bb96b95239edfec27141d9"
+    }
+  ]
+}

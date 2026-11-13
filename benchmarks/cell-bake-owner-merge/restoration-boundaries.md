@@ -207,3 +207,43 @@ These tests establish the covered execution behavior; fresh full-workload memory
 and per-Run comparisons remain required before claiming a branch-level reduction.
 The previously measured structural-branch savings are not reused as this branch's
 results. This removes duplicate stable metadata, not logical egraph facts.
+
+## Paired projection memory results
+
+Fresh same-binary executions compare materialized and projected modes after
+`48152cc2` (with the parallel branch's integrated domain completion). Both modes
+already use shared layout descriptors. Thus these deltas isolate removal of
+scalar-free stable records, not the earlier Arc-handle/layout change.
+
+| case | materialized Graph | projected Graph | saved | fraction |
+| --- | ---: | ---: | ---: | ---: |
+| fact | 722,671 | 647,407 | 75,264 | 10.41% |
+| loopfact | 637,465 | 612,377 | 25,088 | 3.94% |
+| sum-bits | 1,891,123 | 1,790,771 | 100,352 | 5.31% |
+| dot-product | 1,866,843 | 1,716,315 | 150,528 | 8.06% |
+
+Every completion-work and source-storage field (including lifecycle and restoration)
+is equal within each pair, as are final hashes and Run counts. Only stable_ports
+changes in field-by-field Graph teardown. Records removed are 653/633/1825/2023.
+Projection executes 87,871/79,294/450,205/681,454 times respectively; these are
+real extra descriptor-reconstruction paths, not free reads. Layout-read counters
+are also recorded. No speedup is inferred from memory savings.
+
+Reproduce with the same memory command in both modes, adding `--template-fields`
+only for projected output, into `out/cell-template-paired/CASE-MODE.json` where MODE
+is materialized/projected. Build examples with
+`iterative-bake,sparse-cells,storage-metrics,eggfuse-cell-runtime/slot-transfer-audit`.
+
+```sh
+python3 benchmarks/cell-bake-owner-merge/projection_results.py out/cell-template-paired benchmarks/cell-bake-owner-merge/projection-results.json
+target/debug/examples/batch_cell_learning check-passive out/cell-bake-owner-merge/batch owned-state template-fields
+```
+
+The second command checks saved per-Run graph, ordered RHS and physical-write
+digests plus terminal non-Run effects on the installed owned-state variant. It
+is a standalone-runtime differential check, not a new native egglog acceptance
+contract. Large logical-fact compression, overlap-mode support and stage-switch
+RHS takeover remain incomplete.
+
+Validation completed: all 2,652 saved Run checks and all four terminal checks pass;
+compact evidence is saved in `projection-run-checks.json`.

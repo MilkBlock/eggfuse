@@ -1,0 +1,89 @@
+{
+  "scope": "Standalone Cell CPU, opt-in template projection, no latency claim",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "runs": 418,
+      "before_bytes": 722671,
+      "after_bytes": 647407,
+      "saved_bytes": 75264,
+      "saved_fraction": 0.10414697697845908,
+      "projected_records": 653,
+      "materialized_records": 295,
+      "template_node_projections": 87871,
+      "field_layout_reads_before": 10859,
+      "field_layout_reads_after": 10859,
+      "changed_fields": {
+        "stable_ports": [
+          107526,
+          32262
+        ]
+      },
+      "exact_final_state_source_storage_and_completion_work": true
+    },
+    {
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "runs": 398,
+      "before_bytes": 637465,
+      "after_bytes": 612377,
+      "saved_bytes": 25088,
+      "saved_fraction": 0.039355886205517165,
+      "projected_records": 633,
+      "materialized_records": 259,
+      "template_node_projections": 79294,
+      "field_layout_reads_before": 8700,
+      "field_layout_reads_after": 8700,
+      "changed_fields": {
+        "stable_ports": [
+          56438,
+          31350
+        ]
+      },
+      "exact_final_state_source_storage_and_completion_work": true
+    },
+    {
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "runs": 882,
+      "before_bytes": 1891123,
+      "after_bytes": 1790771,
+      "saved_bytes": 100352,
+      "saved_fraction": 0.05306476627908391,
+      "projected_records": 1825,
+      "materialized_records": 1070,
+      "template_node_projections": 450205,
+      "field_layout_reads_before": 55501,
+      "field_layout_reads_after": 55501,
+      "changed_fields": {
+        "stable_ports": [
+          224118,
+          123766
+        ]
+      },
+      "exact_final_state_source_storage_and_completion_work": true
+    },
+    {
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "runs": 954,
+      "before_bytes": 1866843,
+      "after_bytes": 1716315,
+      "saved_bytes": 150528,
+      "saved_fraction": 0.08063238311952317,
+      "projected_records": 2023,
+      "materialized_records": 802,
+      "template_node_projections": 681454,
+      "field_layout_reads_before": 40346,
+      "field_layout_reads_after": 40346,
+      "changed_fields": {
+        "stable_ports": [
+          217702,
+          67174
+        ]
+      },
+      "exact_final_state_source_storage_and_completion_work": true
+    }
+  ]
+}
