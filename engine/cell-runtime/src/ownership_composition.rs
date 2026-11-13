@@ -642,6 +642,7 @@ impl Graph {
             return Err("start catalog tracing once, before execution and without exploratory training".into());
         }
         m.composition.catalog_trace = Some(Box::new(CatalogTrace { max_frames, ..Default::default() }));
+        m.trace_barriers();
         Ok(())
     }
     pub fn ownership_catalog_trace(&self) -> Result<J> {
@@ -691,6 +692,7 @@ impl Graph {
             fragments: self.program.cell_ownership.composition.fragments.clone(),
             ..Training::default()
         });
+        m.trace_barriers();
         Ok(())
     }
     pub fn ownership_fragment_profile(&self) -> Result<J> {

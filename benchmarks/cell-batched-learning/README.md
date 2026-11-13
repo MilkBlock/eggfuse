@@ -832,3 +832,46 @@ target/debug/examples/batch_cell_learning check-passive out/cell-batched-learnin
 python3 benchmarks/cell-batched-learning/key_proof_results.py out/cell-batched-learning \
   benchmarks/cell-batched-learning/key-proof-results.json
 ```
+
+### Observation history is explicit, not default execution state
+
+The production ownership path previously appended a 96-byte barrier record at
+every source barrier and retained the vector for the whole execution. Searches of
+the runtime show that this array is consumed only by the diagnostic ownership
+report; matching, pending completion, stage switching and iterative catalog
+selection do not read it. Cumulative counters remain authoritative and unchanged.
+
+Ordinary execution now leaves this history empty. `Executor::new(graph, true)`,
+explicit catalog observation and exploratory fragment training retain it, as does
+`Graph::trace_ownership_barriers()`. Explicit late activation is supported and
+idempotent: `barrier_history.start_after_barriers` exposes the missing prefix rather
+than presenting a partial trace as complete. Reports include whether retention is
+enabled and its actual capacity bytes. Existing audit/learning paths still receive
+all requested observations; their memory cost must remain charged to those modes.
+
+| pass3 | ordinary Graph before | ordinary Graph after | history allocation removed |
+|---|---:|---:|---:|
+| fact | 728,679 | 704,103 | 24,576 |
+| loopfact | 650,241 | 625,665 | 24,576 |
+| sum-bits | 1,942,435 | 1,844,131 | 98,304 |
+| dot-product | 1,910,595 | 1,812,291 | 98,304 |
+
+Every other measured Graph field is byte-for-byte equal in teardown accounting;
+all final-state hashes and exact fact-lifecycle snapshots are unchanged. This
+removes an unnecessary default maintenance path, but is not structural fact
+compression and does not meet the 30%-of-original target. It should not be credited
+as a gain from a larger baked Cell or a new RHS skip. No timing campaign was run.
+
+Validation: 51 Cell integration tests, including ordinary/audit/catalog-trace/late
+activation behavior, and default runtime compilation. The marked sum-bits final
+digest matches the reviewed saved exports and `choice_diagnosis.py` passes.
+The change does not alter source Run boundaries or effect scheduling.
+
+Reproduce with the existing example build and `runtime_storage_peak` on each
+unchanged seed, recording `candidate-explicit-history-heap.json` with
+`inherited-owners --port-domains-only`, then:
+
+```
+python3 benchmarks/cell-batched-learning/explicit_history_results.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/explicit-history-results.json
+```

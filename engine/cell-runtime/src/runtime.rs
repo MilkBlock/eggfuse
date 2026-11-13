@@ -279,6 +279,7 @@ impl Executor {
     }
 
     pub fn new(mut graph: Graph, audit: bool) -> Self {
+        if audit && graph.ownership_enabled() {graph.trace_ownership_barriers().expect("enabled ownership");}
         let mut readers = vec![vec![]; graph.program.tables.len()];
         let mut required_tables = Vec::with_capacity(graph.program.rules.len());
         for (rid, rule) in graph.program.rules.iter().enumerate() {

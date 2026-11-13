@@ -1614,3 +1614,35 @@ fn compiled_constructor_witness_preserves_existing_scalar_query_alias_elision() 
     assert_eq!(actual.graph.stats.constructor_requests,0);
     assert_eq!(actual.graph.stats.constructor_cell_route_key_proved,0);
 }
+
+#[test]
+fn production_does_not_retain_barrier_history_and_explicit_observation_preserves_semantics() {
+    let p=program("(datatype E (N i64) (F E) (G E)) (N 1) (ruleset r) (ruleset s)
+        (rule ((= x (N n))) ((F x)) :ruleset r)
+        (rule ((= x (F y))) ((G x)) :ruleset s) (run r 1) (run s 1)");
+    let mut plain=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),false);
+    let mut audited=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),true);
+    let mut late=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),false);
+    let mut g=Graph::new_with_cell_ownership(p).unwrap();g.trace_ownership_catalog(16).unwrap();
+    let mut traced=Executor::new(g,false);
+    late.execute_until(Some(1)).unwrap();
+    let prefix=late.graph.ownership_report()["stats"]["stage_barriers"].as_u64().unwrap();
+    late.graph.trace_ownership_barriers().unwrap();
+    late.graph.trace_ownership_barriers().unwrap(); // Idempotent; do not reset start.
+    for e in [&mut plain,&mut audited,&mut late,&mut traced] {e.execute().unwrap();}
+    let expected=plain.graph.export().unwrap();
+    for e in [&audited,&late,&traced] {assert_eq!(expected,e.graph.export().unwrap());}
+    let report=plain.graph.ownership_report();
+    assert_eq!(report["barriers"].as_array().unwrap().len(),0);
+    assert_eq!(report["barrier_history"]["retained_capacity_bytes"],0);
+    assert_eq!(report["barrier_history"]["enabled"],false);
+    let count=report["stats"]["stage_barriers"].as_u64().unwrap();assert!(count>prefix && prefix>0);
+    for e in [&audited,&traced] {
+        let report=e.graph.ownership_report();
+        assert_eq!(report["barriers"].as_array().unwrap().len() as u64,count);
+        assert_eq!(report["barrier_history"]["start_after_barriers"],0);
+    }
+    let report=late.graph.ownership_report();
+    assert_eq!(report["barrier_history"]["start_after_barriers"],prefix);
+    assert_eq!(report["barriers"].as_array().unwrap().len() as u64,count-prefix);
+}

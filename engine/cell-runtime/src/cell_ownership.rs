@@ -325,8 +325,24 @@ pub(super) struct Runtime {
     pub(super) tables: Vec<usize>,
     stats: Stats,
     barriers: Vec<Barrier>,
+    keep_barrier_history:bool,
+    barrier_history_start:u64,
+}
+impl Runtime {
+    fn trace_barriers(&mut self) {
+        if !self.keep_barrier_history {
+            self.keep_barrier_history=true;
+            self.barrier_history_start=self.stats.stage_barriers;
+        }
+    }
 }
 impl Graph {
+    /// Retain future source-boundary observations explicitly. Ordinary execution
+    /// keeps cumulative counters only; a late request reports its missing prefix.
+    pub fn trace_ownership_barriers(&mut self)->Result<()> {
+        self.ownership.as_mut().ok_or("enable ownership before barrier tracing")?.trace_barriers();
+        Ok(())
+    }
     /// Saved after execution for offline storage analysis. These are the
     /// existing owners, not an additional maintained fact/history graph.
     #[cfg(feature = "storage-metrics")]
@@ -398,6 +414,8 @@ impl Graph {
             tables: vec![0; self.program.tables.len()],
             stats: Stats::default(),
             barriers: vec![],
+            keep_barrier_history:false,
+            barrier_history_start:0,
         });
         // Import is already settled. Adopt existing covered bodies, rather than
         // limiting ownership to rows born after activation.
@@ -752,7 +770,7 @@ impl Graph {
             m.stats.stage_barriers += 1;
             m.stats.carried_facts += m.stats.owned_live;
             m.stats.carried_components += m.stats.components_live;
-            m.barriers.push(Barrier {
+            if m.keep_barrier_history {m.barriers.push(Barrier {
                 epoch: self.epoch,
                 live_facts: m.stats.owned_live,
                 live_components: m.stats.components_live,
@@ -765,7 +783,7 @@ impl Graph {
                 changed_ports: m.stats.changed_ports,
                 slice_steps: m.stats.slice_steps,
                 signal_bindings: m.stats.signal_bindings_live,
-            });
+            });}
         }
     }
     fn smallest_signal_domain(&self, table:usize, bound: &[Option<Value>]) -> Option<(usize, u64)> {
@@ -982,6 +1000,8 @@ impl Graph {
             .len();
         json!({"routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":self.program.cell_ownership.format.marker_schema(),"port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
+            "barrier_history":self.ownership.as_ref().map(|m|json!({"enabled":m.keep_barrier_history,
+                "start_after_barriers":m.barrier_history_start,"retained_capacity_bytes":m.barriers.capacity()*std::mem::size_of::<Barrier>()})),
             "inventory":{"shared_field_layout_bytes":0,"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
                 "eligible_live_facts":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>(),
                 "unsupported_live_rows":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|!**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>()},
