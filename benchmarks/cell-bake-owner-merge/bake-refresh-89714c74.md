@@ -50,7 +50,43 @@ the optional compression experiments.
 
 ## Merge checks
 
-Compute job 343 passes the ownership, compiler and witness integration suites,
-the runtime library suite, the no-default runtime compile, and all four offline
-route-analyzer tests. Frozen workload validation and a whole-control-then-
-candidate timing trial follow; no speed improvement is inferred from these tests.
+Compute jobs 343/344 pass 70 ownership, 19 compiler and 13 witness integration
+tests, 215 runtime library tests, the no-default runtime compile, and all four
+offline route-analyzer tests. The ownership suite includes the storage-metrics
+configuration needed to exercise shared prefix/suffix storage.
+Job 350 also passes both Bake tools' audited-run/exact-catalog rejection tests.
+
+Job 346 freezes merge `2ef47a82` and reuses the hash-checked `437d1e7c` control.
+Sum-bits and Raytrace final states, Run summaries and logical effects agree;
+the reviewed native sum-bits entrypoint returns `pass`. The unchanged older
+learned catalog also agrees at its differential final-state/Run/effect contract.
+Recorded work dictionaries are identical for all three inputs.
+
+Job 348 runs both the original source and its 408-recipe witness catalog on the
+fresh four-worker binary. All 1,428 Run snapshots and ordered binding sequences
+agree. Their hashes also equal the saved pre-refresh binary's corresponding
+audits, not merely each other. No semantic exclusions are changed.
+
+## Sequential timing
+
+Job 347 uses five measured samples and one warmup per workload/lane, completing
+all control workloads before any candidate. All 56 boundary guards are clear.
+
+| Workload | `437d1e7c` | `2ef47a82` | Change |
+| --- | ---: | ---: | ---: |
+| sum-bits inference | 21.225 ms | 21.382 ms | +0.74% |
+| Raytrace inference | 4.736604 s | 4.724004 s | -0.27% |
+| sum-bits load | 65.565 ms | 66.058 ms | +0.75% |
+| Raytrace load | 348.177 ms | 347.970 ms | -0.06% |
+
+There is no large regression in this short trial and no demonstrated speedup.
+This does not resolve the earlier `364d9a91`→`437d1e7c` slowdown. Inputs remain
+the same frozen artifacts, including their legacy route annotations; the new
+wire-emission compaction is covered by compiler tests and incoming memory
+experiments, not by an invented reduction in these timing inputs. The optional
+owner transfer API is not enabled by this ordinary runtime configuration.
+
+The complete timing summary, binary/input evidence, work agreement and audit
+hashes are recorded in `bake-refresh-89714c74.json`. Large artifacts are stored
+on the external disk, reached through `out/cell-bake-routing-refresh` in worktree
+3063; the shared build cache remains in its existing external target directory.
