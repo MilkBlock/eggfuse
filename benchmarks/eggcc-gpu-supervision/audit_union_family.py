@@ -20,9 +20,20 @@ from device_match_capture import host,audit,flatten,floating_inputs,partition
 from multi_entry_ridge import template,encode
 
 
+def fold_adapter(weights,rule,parent_sha,adapter):
+    if str(adapter['parent_model_sha256'])!=parent_sha or json.loads(str(adapter['rule_json']))!=rule:raise ValueError('adapter parent or Cell definition mismatch')
+    correction=adapter['base_inputs_1.0_coef'];bias=adapter['base_inputs_1.0_bias']
+    if correction.shape!=weights['coef'].shape or bias.shape!=weights['coef'].shape[1:]:raise ValueError('adapter layout')
+    coef=weights['coef']+correction
+    coef[0]+=bias # features() has an explicit constant first column.
+    if not np.isfinite(coef).all():raise ValueError('nonfinite adapter')
+    return dict(weights,coef=coef)
+
+
 def main():
     p=argparse.ArgumentParser()
     for key in ('trace','model','output'):p.add_argument(key,type=Path)
+    p.add_argument('--adapter',type=Path)
     p.add_argument('--rule',type=int,required=True);p.add_argument('--snapshot-run',type=int,required=True)
     p.add_argument('--capacity',type=int,default=32);p.add_argument('--ticks',type=int,default=12)
     p.add_argument('--capture',type=Path);p.add_argument('--corpus-manifest',type=Path);a=p.parse_args()
@@ -42,7 +53,11 @@ def main():
     current=device(initialize(pack(state),atoms));cp=device(completion);dp=device(plans);ctx=device(registry)
     with np.load(a.model) as f:
         if str(f['encoding'])!='class-history-neighborhood-input' or int(f['channels'])!=4 or bool(f.get('source_neighborhood',False)) or bool(f.get('source_relations',False)):raise ValueError('model interface')
-        model=device({k:f[k] for k in ('w','coef')})
+        cpu_weights={k:f[k] for k in ('w','coef')}
+    if a.adapter:
+        with np.load(a.adapter) as adapter:
+            cpu_weights=fold_adapter(cpu_weights,rule,hashlib.sha256(a.model.read_bytes()).hexdigest(),adapter)
+    model=device(cpu_weights)
     schedule,meta=compile_schedule(control_plan,[stage]);ds=device(schedule)
     control=dict(control=initial(ds,meta['repeat_slots'],mx),open_run=mx.array(False),unreported_change=mx.array(False),failed_run=mx.array(False))
     settled=mx.array(True);next_id=mx.array(len(ids));logs=[];captures=[]
@@ -67,8 +82,8 @@ def main():
     for done,unions in zip(log['run_done'],log['new_equivalences']):
         pending+=int(unions)
         if done:per_run.append(pending);pending=0
-    result=dict(scope='standalone real snapshot selected copy/union Cell family; not full Eggcc',rule=a.rule,snapshot_run=a.snapshot_run,
-        trace_sha256=hashlib.sha256(raw).hexdigest(),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),seed_rows=len(rows),
+    result=dict(scope='standalone real snapshot selected copy/union Cell family; not full Eggcc',rule=a.rule,snapshot_run=a.snapshot_run,query_capacity=a.capacity,
+        adapter_sha256=hashlib.sha256(a.adapter.read_bytes()).hexdigest() if a.adapter else None,inference_coefficients_sha256=hashlib.sha256(cpu_weights['coef'].tobytes()).hexdigest(),trace_sha256=hashlib.sha256(raw).hexdigest(),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),seed_rows=len(rows),
         generated_cells=int(log['new_tokens'].sum()),released_owner_rows=int(log['takeover_released'].sum()),
         gpu_run_new_equivalences=per_run,cpu_runs=cpu_runs,exact_partition=bool(np.array_equal(roots,expected)),
         exact_facts=actual==ref.normalized_facts(),views_complete=complete,finished=bool(marks['finished']),failed_run=bool(marks['failed_run']),
@@ -106,13 +121,14 @@ def main():
     if target_max>5e-6:errors.append('cpu_target_mismatch')
     if len(xs)!=result['generated_cells']:errors.append('sample_count_mismatch')
     result.update(feature_reconstruction_max_abs=numerical_max,target_reconstruction_max_abs=target_max,continued_samples=continued)
+    result['query_capture_checks']=checks
     result['capture_errors']=errors;result['passed'] &= not errors
     result['limitations']=['Projected single source ruleset, not full original schedule','Exact union/congruence kernels authorize effects; ridge predictions remain proposals','Final CPU labels include all selected-family unions; no claim of per-application targets']
     if a.capture and result['passed']:
         payload=dict(features=np.array(xs,np.float32),targets=np.array(targets,np.float32),predicted_tokens=np.array(predictions,np.float32),target_eq_classes=np.array(classes,np.int32),rules=np.full(len(xs),a.rule,np.int32),**{'capture/'+k:v for k,v in saved.items()})
         np.savez_compressed(a.capture,**payload)
         result['capture']=dict(schema='device-joint-witness/v2',**provenance,samples=len(xs),passed=True,artifact_sha256=hashlib.sha256(a.capture.read_bytes()).hexdigest(),target_scope='selected-family saturation')
-        a.capture.with_suffix('.json').write_text(json.dumps(dict(recipe=local,source_rules=[a.rule],model_sha256=result['model_sha256'],capture=result['capture']),indent=2)+'\n')
+        a.capture.with_suffix('.json').write_text(json.dumps(dict(recipe=local,source_rules=[a.rule],model_sha256=result['model_sha256'],adapter_sha256=result['adapter_sha256'],inference_coefficients_sha256=result['inference_coefficients_sha256'],capture=result['capture']),indent=2)+'\n')
     a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
     if not result['passed']:raise SystemExit(1)
 

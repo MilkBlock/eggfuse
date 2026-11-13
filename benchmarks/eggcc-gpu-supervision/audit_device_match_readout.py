@@ -42,7 +42,7 @@ def main():
         features,_=materialize(readout_rows(rows,True),tokens,weights['w'],True)
         result[name]=summarize(rows,(features@coef).reshape(-1))
     out=dict(scope='actual selected-family GPU token Eq readout; no fitting or union authorization',case=meta['capture']['case'],partition=meta['capture']['partition'],
-        capture_sha256=meta['capture']['artifact_sha256'],decoder_sha256=report['weights_sha256'],label_statistics=label_stats,results=result,
+        capture_sha256=meta['capture']['artifact_sha256'],adapter_sha256=meta.get('adapter_sha256'),inference_coefficients_sha256=meta.get('inference_coefficients_sha256'),decoder_sha256=report['weights_sha256'],label_statistics=label_stats,results=result,
         cpu_readout_audit_seconds=time.monotonic()-started,backpropagation=False,union_authorized=False,
         limitations=['Small selected immutable Cell family, not full Eggcc','Exact execution establishes completion; ridge is audited separately','Test samples must not be used for fitting'])
     a.output.write_text(json.dumps(out,indent=2)+'\n');print(json.dumps(out,indent=2))

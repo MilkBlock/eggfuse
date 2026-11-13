@@ -1,0 +1,480 @@
+{
+  "scope": "actual GPU union corpus, closed-form residual training and selected-family device replay",
+  "corpus": {
+    "scope": "program-separated actual union snapshot corpus, not full Eggcc",
+    "records": [
+      {
+        "case": "024-pascals-row",
+        "partition": "train",
+        "snapshot_run": 466,
+        "rule": 283,
+        "capacity": 128,
+        "status": "verified",
+        "source_trace_sha256": "d29a4324ae3dc19ca5257cc98ccc2aa762626e775c34b02012ff2495012468ef",
+        "capture": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/union-corpus/train-024-pascals-row.npz",
+        "result": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/union-corpus/train-024-pascals-row.result.json",
+        "samples": 11,
+        "artifact_sha256": "dbc1e9a198b8f94b7b3b00564a863500039750d75d69d7af2163a37ea0650b77"
+      },
+      {
+        "case": "011-euclid",
+        "partition": "train",
+        "snapshot_run": 507,
+        "rule": 283,
+        "capacity": 128,
+        "status": "verified",
+        "source_trace_sha256": "9e4964b3956bc28a4ca436863def96d0641133475a794b6ae84045fc78b863de",
+        "capture": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/union-corpus/train-011-euclid.npz",
+        "result": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/union-corpus/train-011-euclid.result.json",
+        "samples": 9,
+        "artifact_sha256": "84853fa5feaea73c78d680eb5faab30bea1a5995d6cdc9267ed350143b83a360"
+      },
+      {
+        "case": "016-gcd",
+        "partition": "validation",
+        "snapshot_run": 437,
+        "rule": 283,
+        "capacity": 128,
+        "status": "verified",
+        "source_trace_sha256": "8e52cc2158e8a635984dabe0fe345238136f7e46b8799d0dc27f4f2046f1988f",
+        "capture": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/union-corpus/validation-016-gcd.npz",
+        "result": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/union-corpus/validation-016-gcd.result.json",
+        "samples": 2,
+        "artifact_sha256": "ef187cfeb8ff1f1fa3e097ecb1aa82e6e3783d89111924a49841870629eb9954"
+      },
+      {
+        "case": "019-lcm",
+        "partition": "validation",
+        "snapshot_run": 514,
+        "rule": 283,
+        "capacity": 128,
+        "status": "verified",
+        "source_trace_sha256": "1e613458ec03243c067488e8a96fcda6edacfa70d6d2e6a982451fd1deb98983",
+        "capture": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/union-corpus/validation-019-lcm.npz",
+        "result": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/union-corpus/validation-019-lcm.result.json",
+        "samples": 2,
+        "artifact_sha256": "4805caf0176e272e233dfe127e85614816e7e0959539dde44d691b5aa3138750"
+      }
+    ],
+    "corpus_manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+    "capture_binary_sha256": "fb2a17992738db5850a902f3593fa21978eba3b40a8a7a67b6124bcc6d15c283",
+    "passed": true
+  },
+  "capacity32_failure": {
+    "scope": "standalone real snapshot selected copy/union Cell family; not full Eggcc",
+    "rule": 283,
+    "snapshot_run": 514,
+    "query_capacity": 32,
+    "trace_sha256": "bbb6d2e50059c6e74a39115f4a917de85c933b97c644db65469ba734437f8370",
+    "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+    "seed_rows": 44,
+    "generated_cells": 1,
+    "released_owner_rows": 0,
+    "gpu_run_new_equivalences": [],
+    "cpu_runs": [
+      {
+        "new_equivalences": 1,
+        "applications": 1
+      },
+      {
+        "new_equivalences": 0,
+        "applications": 2
+      }
+    ],
+    "exact_partition": false,
+    "exact_facts": false,
+    "views_complete": true,
+    "finished": false,
+    "failed_run": true,
+    "gpu_compile_upload_execute_seconds": 11.978257165988907,
+    "cpu_reference_seconds": 0.010018208005931228,
+    "passed": false,
+    "feature_reconstruction_max_abs": 1.4603137969970703e-06,
+    "target_reconstruction_max_abs": 0.0,
+    "continued_samples": 0,
+    "query_capture_checks": [
+      {
+        "checked": 1,
+        "errors": {},
+        "passed": true,
+        "enumeration_complete": false,
+        "overflow": true,
+        "accepted": 1,
+        "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+      }
+    ],
+    "capture_errors": [
+      "invalid_witness",
+      "missing_completed_cell"
+    ],
+    "limitations": [
+      "Projected single source ruleset, not full original schedule",
+      "Exact union/congruence kernels authorize effects; ridge predictions remain proposals",
+      "Final CPU labels include all selected-family unions; no claim of per-application targets"
+    ]
+  },
+  "ablation": {
+    "scope": "small real union-family program-separated residual ridge ablation; not autonomous learned execution",
+    "backpropagation": false,
+    "installed": false,
+    "corpus_sha256": "fc21c9faca757348bca26aa1bfd7611dd1fd2210023dbb7095137aaee321a91e",
+    "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+    "decoder_sha256": "3a3c00b256092a4d227bc55f3e64d024b460f3c7af203d9c81cba723c9d366e5",
+    "training_samples": 20,
+    "distinct_training_inputs": 3,
+    "validation_samples": 4,
+    "same_input_target_max_abs": 0.0,
+    "validation_near_training_inputs": 4,
+    "validation_nearest_input_max_abs": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "extra_f32_columns": 128,
+    "reports": {
+      "resident": {
+        "eq": {
+          "instances": 4,
+          "query_instances": 4,
+          "exact_partitions": 2,
+          "false_merges": 8,
+          "missed_equalities": 0,
+          "nontransitive": 0,
+          "closure_false_merges": 8
+        },
+        "rmse": 0.05139220133423805
+      },
+      "base_inputs": {
+        "1.0": {
+          "eq": {
+            "instances": 4,
+            "query_instances": 4,
+            "exact_partitions": 4,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0
+          },
+          "rmse": 5.333989065547939e-06,
+          "gpu_max_abs": 1.1324882507324219e-06
+        },
+        "10.0": {
+          "eq": {
+            "instances": 4,
+            "query_instances": 4,
+            "exact_partitions": 4,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0
+          },
+          "rmse": 5.36271691089496e-05,
+          "gpu_max_abs": 1.1324882507324219e-06
+        },
+        "100.0": {
+          "eq": {
+            "instances": 4,
+            "query_instances": 4,
+            "exact_partitions": 4,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0
+          },
+          "rmse": 0.0005312114953994751,
+          "gpu_max_abs": 1.0728836059570312e-06
+        }
+      },
+      "with_relations": {
+        "1.0": {
+          "eq": {
+            "instances": 4,
+            "query_instances": 4,
+            "exact_partitions": 4,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0
+          },
+          "rmse": 5.30271745446953e-06,
+          "gpu_max_abs": 1.2218952178955078e-06
+        },
+        "10.0": {
+          "eq": {
+            "instances": 4,
+            "query_instances": 4,
+            "exact_partitions": 4,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0
+          },
+          "rmse": 5.309470361680724e-05,
+          "gpu_max_abs": 1.1622905731201172e-06
+        },
+        "100.0": {
+          "eq": {
+            "instances": 4,
+            "query_instances": 4,
+            "exact_partitions": 4,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0
+          },
+          "rmse": 0.0005256191943772137,
+          "gpu_max_abs": 1.1324882507324219e-06
+        }
+      }
+    },
+    "weights_sha256": "368056e56c5fad13c961356e21aab8c29ad75a94fad568178ccecf634d6f0628",
+    "limitations": [
+      "Only context rule 283 and short programs",
+      "Validation is model selection, not held-out test",
+      "Frozen resident source tokens; no generated-token rollout measured",
+      "Corrected inference costs extra dense readout; no runtime speedup claim"
+    ]
+  },
+  "adapted": {
+    "016-gcd": {
+      "execution": {
+        "scope": "standalone real snapshot selected copy/union Cell family; not full Eggcc",
+        "rule": 283,
+        "snapshot_run": 437,
+        "query_capacity": 128,
+        "adapter_sha256": "368056e56c5fad13c961356e21aab8c29ad75a94fad568178ccecf634d6f0628",
+        "inference_coefficients_sha256": "5e8f1f4414019b46703da2cbfe66fea2015ac859a1b6f6960f2d70a20f24ce13",
+        "trace_sha256": "a2905bb27cc55472573437ff872f35eb12adce8cd60e50758f93e097a043d3a8",
+        "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+        "seed_rows": 19,
+        "generated_cells": 2,
+        "released_owner_rows": 1,
+        "gpu_run_new_equivalences": [
+          1,
+          0
+        ],
+        "cpu_runs": [
+          {
+            "new_equivalences": 1,
+            "applications": 1
+          },
+          {
+            "new_equivalences": 0,
+            "applications": 2
+          }
+        ],
+        "exact_partition": true,
+        "exact_facts": true,
+        "views_complete": true,
+        "finished": true,
+        "failed_run": false,
+        "gpu_compile_upload_execute_seconds": 0.5622845839825459,
+        "cpu_reference_seconds": 0.009503999957814813,
+        "passed": true,
+        "feature_reconstruction_max_abs": 1.2814998626708984e-06,
+        "target_reconstruction_max_abs": 1.1920928955078125e-07,
+        "continued_samples": 0,
+        "query_capture_checks": [
+          {
+            "checked": 1,
+            "errors": {},
+            "passed": true,
+            "enumeration_complete": true,
+            "overflow": false,
+            "accepted": 1,
+            "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+          },
+          {
+            "checked": 2,
+            "errors": {},
+            "passed": true,
+            "enumeration_complete": true,
+            "overflow": false,
+            "accepted": 1,
+            "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+          }
+        ],
+        "capture_errors": [],
+        "limitations": [
+          "Projected single source ruleset, not full original schedule",
+          "Exact union/congruence kernels authorize effects; ridge predictions remain proposals",
+          "Final CPU labels include all selected-family unions; no claim of per-application targets"
+        ],
+        "capture": {
+          "schema": "device-joint-witness/v2",
+          "case": "016-gcd",
+          "partition": "validation",
+          "corpus_manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+          "program_file_sha256": "3f9c59a3c980faef81e84c28732d5964b75a9d3ecb19b0696f38c2b1b8a579f7",
+          "samples": 2,
+          "passed": true,
+          "artifact_sha256": "9bc6748fa56533ef9a80c1102d28dea58b6d65e0671fe10cdb14902e8daa1f91",
+          "target_scope": "selected-family saturation"
+        }
+      },
+      "readout": {
+        "scope": "actual selected-family GPU token Eq readout; no fitting or union authorization",
+        "case": "016-gcd",
+        "partition": "validation",
+        "capture_sha256": "9bc6748fa56533ef9a80c1102d28dea58b6d65e0671fe10cdb14902e8daa1f91",
+        "decoder_sha256": "3a3c00b256092a4d227bc55f3e64d024b460f3c7af203d9c81cba723c9d366e5",
+        "label_statistics": {
+          "full_pair_queries": 20,
+          "static_equalities": 12,
+          "dynamic_quotient_queries": 2,
+          "dynamic_true_equalities": 1,
+          "distinct_rule_partitions": 2
+        },
+        "results": {
+          "cpu_target_token": {
+            "instances": 2,
+            "query_instances": 2,
+            "exact_partitions": 2,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0
+          },
+          "gpu_predicted_token": {
+            "instances": 2,
+            "query_instances": 2,
+            "exact_partitions": 2,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0
+          }
+        },
+        "cpu_readout_audit_seconds": 0.021356542012654245,
+        "backpropagation": false,
+        "union_authorized": false,
+        "limitations": [
+          "Small selected immutable Cell family, not full Eggcc",
+          "Exact execution establishes completion; ridge is audited separately",
+          "Test samples must not be used for fitting"
+        ]
+      }
+    },
+    "019-lcm": {
+      "execution": {
+        "scope": "standalone real snapshot selected copy/union Cell family; not full Eggcc",
+        "rule": 283,
+        "snapshot_run": 514,
+        "query_capacity": 128,
+        "adapter_sha256": "368056e56c5fad13c961356e21aab8c29ad75a94fad568178ccecf634d6f0628",
+        "inference_coefficients_sha256": "5e8f1f4414019b46703da2cbfe66fea2015ac859a1b6f6960f2d70a20f24ce13",
+        "trace_sha256": "bbb6d2e50059c6e74a39115f4a917de85c933b97c644db65469ba734437f8370",
+        "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+        "seed_rows": 44,
+        "generated_cells": 2,
+        "released_owner_rows": 1,
+        "gpu_run_new_equivalences": [
+          1,
+          0
+        ],
+        "cpu_runs": [
+          {
+            "new_equivalences": 1,
+            "applications": 1
+          },
+          {
+            "new_equivalences": 0,
+            "applications": 2
+          }
+        ],
+        "exact_partition": true,
+        "exact_facts": true,
+        "views_complete": true,
+        "finished": true,
+        "failed_run": false,
+        "gpu_compile_upload_execute_seconds": 0.4967601249809377,
+        "cpu_reference_seconds": 0.011860333965159953,
+        "passed": true,
+        "feature_reconstruction_max_abs": 1.2814998626708984e-06,
+        "target_reconstruction_max_abs": 1.1920928955078125e-07,
+        "continued_samples": 0,
+        "query_capture_checks": [
+          {
+            "checked": 1,
+            "errors": {},
+            "passed": true,
+            "enumeration_complete": true,
+            "overflow": false,
+            "accepted": 1,
+            "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+          },
+          {
+            "checked": 2,
+            "errors": {},
+            "passed": true,
+            "enumeration_complete": true,
+            "overflow": false,
+            "accepted": 1,
+            "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+          }
+        ],
+        "capture_errors": [],
+        "limitations": [
+          "Projected single source ruleset, not full original schedule",
+          "Exact union/congruence kernels authorize effects; ridge predictions remain proposals",
+          "Final CPU labels include all selected-family unions; no claim of per-application targets"
+        ],
+        "capture": {
+          "schema": "device-joint-witness/v2",
+          "case": "019-lcm",
+          "partition": "validation",
+          "corpus_manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+          "program_file_sha256": "29491d56a3ffde6de51ff1a335048116a7605d4be7b040be834e51ba23065b6b",
+          "samples": 2,
+          "passed": true,
+          "artifact_sha256": "e16811e92694d6800298d6684c3f76f3d4b9f2dd0d3418e86edff295c2b20b1d",
+          "target_scope": "selected-family saturation"
+        }
+      },
+      "readout": {
+        "scope": "actual selected-family GPU token Eq readout; no fitting or union authorization",
+        "case": "019-lcm",
+        "partition": "validation",
+        "capture_sha256": "e16811e92694d6800298d6684c3f76f3d4b9f2dd0d3418e86edff295c2b20b1d",
+        "decoder_sha256": "3a3c00b256092a4d227bc55f3e64d024b460f3c7af203d9c81cba723c9d366e5",
+        "label_statistics": {
+          "full_pair_queries": 20,
+          "static_equalities": 12,
+          "dynamic_quotient_queries": 2,
+          "dynamic_true_equalities": 1,
+          "distinct_rule_partitions": 2
+        },
+        "results": {
+          "cpu_target_token": {
+            "instances": 2,
+            "query_instances": 2,
+            "exact_partitions": 2,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0
+          },
+          "gpu_predicted_token": {
+            "instances": 2,
+            "query_instances": 2,
+            "exact_partitions": 2,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0
+          }
+        },
+        "cpu_readout_audit_seconds": 0.01868987502530217,
+        "backpropagation": false,
+        "union_authorized": false,
+        "limitations": [
+          "Small selected immutable Cell family, not full Eggcc",
+          "Exact execution establishes completion; ridge is audited separately",
+          "Test samples must not be used for fitting"
+        ]
+      }
+    }
+  }
+}
