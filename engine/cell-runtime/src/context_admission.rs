@@ -125,13 +125,16 @@ pub fn bake(p: &Program, base: &J, wide: &J) -> Result<J> {
     if before.keys().ne(after.keys()) || schedule(base)? != schedule(wide)? {
         return Err("unpaired query schedules".into());
     }
+    // Discovery uses the source candidates, independently of which executable
+    // queries were admitted into this Program.
+    let cuts = crate::local_context::select_cuts(p);
     let mut evidence = BTreeMap::<String, (u64, u64, u64)>::new();
     for (i, (original, bindings, calls)) in before {
         let (visited, new_bindings, new_calls) = after[&i];
         if i >= p.rules.len() || (bindings, calls) != (new_bindings, new_calls) {
             return Err("unpaired rule answers".into());
         }
-        if p.context_cuts[i].is_empty() {
+        if cuts[i].is_empty() {
             continue;
         }
         let stats = &wide["local_context"]["rules"][i.to_string()];
@@ -167,16 +170,12 @@ pub fn install(p: &Program, mut policy: J) -> Result<J> {
         })
         .collect::<std::result::Result<BTreeSet<_>, _>>()?;
     // A second fit may widen a previously filtered target.
-    let all_cuts = p
-        .artifact
-        .get("context_admission")
-        .map(|_| crate::local_context::select_cuts(p));
+    let all_cuts = crate::local_context::select_cuts(p);
     let ids = p
         .rules
         .iter()
         .enumerate()
-        .filter(|(i, _)| all_cuts.as_ref().map_or_else(
-            || !p.context_cuts[*i].is_empty(), |cuts| !cuts[*i].is_empty()))
+        .filter(|(i, _)| !all_cuts[*i].is_empty())
         .filter_map(|(i, r)| winners.contains(family(p, r).as_str()).then_some(i))
         .collect::<Vec<_>>();
     policy["recipe"] = p.artifact["recipe"]["sha256"].clone();

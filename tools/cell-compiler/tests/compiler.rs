@@ -1159,6 +1159,9 @@ fn connected_cuts_span_chains_and_transfer_evidence_to_renamed_relations() {
     deferred["sha256"] = artifact_digest(&deferred).into();
     assert_eq!(Program::parse(deferred).unwrap_err(), "invalid connected context cuts");
     let p = Program::parse(raw).unwrap();
+    // An unfiltered source retains no general execution plans. Bake must still
+    // discover its candidates and install a policy that actually executes them.
+    assert_eq!(p.context_cut_counts(), (0, 0));
     let profile = |on: bool, visits: u64| {
         json!({"status":"complete","program_sha256":p.artifact["sha256"],
         "steps":[],"local_context":{"general":on,"enabled":on,"rules":{rid.to_string():{"calls":2,"port_probes":1}}},

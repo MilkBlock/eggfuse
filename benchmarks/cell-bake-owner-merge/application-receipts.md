@@ -126,3 +126,9 @@ python3 benchmarks/marker-handoff/choice_diagnosis.py SEMANTIC_BUNDLE SEMANTIC.j
 Build and run through the shared compute queue. Detailed hashes, field charges,
 source audit, semantic result and lane mapping are in `receipt-omission.json`.
 Default receipt materialization remains unchanged. No timing claim is made.
+
+Follow-up: `admitted-cuts.md` identifies the major plan-growth cause. The
+regenerated artifact lacks the historical admission policy, so it formerly
+retained executable cut candidates that its runtime could never dispatch.
+The follow-up removes those unused instructions without changing this artifact
+or the accepted final state; it does not credit Program bytes to Graph savings.
