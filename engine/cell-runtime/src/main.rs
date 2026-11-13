@@ -39,6 +39,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --local-unions (experimental Cell-internal union completion without birth subscriptions)");
         println!("  --cell-ownership (persistent cross-stage scalar Cell completion)");
         println!("  --stable-ports (Cell ownership with stable stored equality fields)");
+        #[cfg(feature = "sparse-cells")]
+        println!("  --cell-fields (stable fields read source Cell slots; experimental)");
         println!("  --port-keys (stable fields and exact constructor matching through port domains)");
         println!("  --local-congruence (shared local conditions with checked boundary coverage)");
         println!("  --guard-workers N [--guard-grain N] (experimental parallel candidate reads; default grain 32)");
@@ -125,7 +127,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "--repair-cells" => {}
             "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--port-keys" | "--local-congruence" | "--scoped-queues" | "--scoped-execution" | "--port-scopes" | "--pure-epochs" | "--unique-port-publication" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" | "--overlap-completion" => {}
             #[cfg(feature = "sparse-cells")]
-            "--entry-publications" => {}
+            "--entry-publications" | "--cell-fields" => {}
             #[cfg(feature = "sparse-cells")]
             "--serial-cursor-writes" | "--direct-changed-roots" | "--defer-changed-roots" => {}
             #[cfg(feature = "cell-absorption")]
@@ -178,7 +180,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let local_conditions = guard_workers.is_some() || scoped_queues || args.iter().any(|x| x == "--local-congruence");
     let port_keys = local_conditions || args.iter().any(|x| x == "--port-keys");
-    let stable_ports = port_keys || args.iter().any(|x| x == "--stable-ports");
+    let cell_fields = args.iter().any(|x| x == "--cell-fields");
+    let stable_ports = cell_fields || port_keys || args.iter().any(|x| x == "--stable-ports");
     let ownership = stable_ports || args.iter().any(|x| x == "--cell-ownership");
     if ownership && (local || cells || digest || expressions) {
         return Err("--cell-ownership requires its own completion backend".into());
@@ -219,6 +222,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if local { graph.use_local_union_cells()?; }
     if ownership { graph.use_cell_ownership()?; }
     if stable_ports { graph.use_stable_port_fields()?; }
+    #[cfg(feature = "sparse-cells")]
+    if cell_fields { graph.use_cell_stable_fields()?; }
     if port_keys { graph.use_port_constructor_matching()?; }
     if local_conditions { graph.use_local_port_conditions()?; }
     if scoped_queues { graph.use_scoped_completion()?; }

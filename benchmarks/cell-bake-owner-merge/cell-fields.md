@@ -148,3 +148,38 @@ union and completed storage remain in the same fixture, with serial execution
 and two-worker overlapping execution compared to materialized-field control at
 every Run boundary. This is a standalone Cell CPU correctness repair, not an
 additional compression result or native egglog acceptance.
+
+## Ordinary runtime CLI and parallel branch integration
+
+`--cell-fields` now exposes the same representation through the runtime CLI when
+built with `sparse-cells` (including the ordinary parallel feature set). It implies
+stable fields and Cell ownership. Port-key matching/local congruence remain
+separate existing choices; use `--local-congruence --cell-fields` for the
+configuration checked here. Activation precedes execution and completed-parent
+configuration. Default runs retain their existing representation.
+
+After merging the restored parallel result-transport branch, all 14 query-worker
+integration tests pass. The rejected rule-owned buffer experiment remains
+reverted. Its routing audit and bounded stack observations are retained as
+separate evidence, not credited to this field representation.
+
+A short CLI check compiles the existing `cell-point-queries.egg` fixture and runs
+serial, two-worker, and two-worker plus Cell fields on the same artifact. All
+nine Run snapshots, ordered binding audits and final states are exactly equal.
+Both worker configurations execute 17 batches, and both workers perform work.
+The candidate retains zero materialized stable nodes versus 255 in either control,
+and charges 1,808 source scalar reads. This removes field records, not logical
+facts. No new total-memory or timing measurement is implied. The ordinary-feature
+build and no-default-features compilation both pass; this path needs no
+`storage-metrics` feature.
+
+With binaries built using `cell-absorption,view-ports,parallel-publication`, run
+against a fresh output directory:
+
+```sh
+~/.local/bin/eggfuse-job run --kind compute -- python3 benchmarks/cell-bake-owner-merge/source_fields_cli.py TARGET/debug/eggfuse-cell-compiler TARGET/debug/eggfuse-cell-runtime out/cell-fields-cli-check
+```
+
+`source-fields-cli-results.json` records the source and runtime hashes and the
+reviewed comparison. This is standalone differential validation of the short
+fixture, not the native sum-bits contract or evidence of Raytrace acceleration.

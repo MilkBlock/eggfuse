@@ -1,0 +1,28 @@
+{
+  "scope": "standalone Cell CPU short CLI differential check, not native acceptance or timing",
+  "runtime_sha256": "24fd5836739f31e7549ea12ed2a3c194860d7b41113f746456cf6a57d4ec4e51",
+  "source_sha256": "37a376d23745ee6d46e9cfb7fec79e6a4be183ef2bd7670bd761361a8cd57f7a",
+  "runs": 9,
+  "checks": [
+    "state.json",
+    "stages.json",
+    "binding-audit.json"
+  ],
+  "lanes": {
+    "serial": {
+      "batches": 0,
+      "materialized_stable_nodes": 255,
+      "cell_scalar_reads": 0
+    },
+    "workers": {
+      "batches": 17,
+      "materialized_stable_nodes": 255,
+      "cell_scalar_reads": 0
+    },
+    "cell-workers": {
+      "batches": 17,
+      "materialized_stable_nodes": 0,
+      "cell_scalar_reads": 1808
+    }
+  }
+}
