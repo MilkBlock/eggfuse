@@ -1,0 +1,104 @@
+{
+  "validation_attempts": [
+    {
+      "name": "integration-cell_ownership",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication,storage-metrics",
+        "--test",
+        "cell_ownership"
+      ],
+      "cwd": "/private/tmp/eggfuse-bake-merge-7936e334",
+      "exit_code": 101,
+      "log": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-full-merge/initial-integration-cell_ownership.log",
+      "resolution": "Remove incoming completion-batch rejection: frozen projected membership already supports this combination on the parallel branch."
+    }
+  ],
+  "workload_attempts": [
+    {
+      "scope": "work/semantic run, not timing",
+      "case": "ray",
+      "status": "interrupted before report or terminal exit recorded",
+      "environment": "disk full immediately afterward",
+      "partial_export": "out/cell-bake-full-merge/control/candidate-ray/state.partial.json.gz",
+      "control_runtime_preserved": true
+    },
+    {
+      "scope": "work/semantic run, not timing",
+      "status": "failed",
+      "failure": "ENOSPC while writing Raytrace export and manifest",
+      "report_complete": false,
+      "partial_export_retained": true
+    }
+  ],
+  "preserved_local_edits": {
+    "original_head": "4d3055b5db15d52b2e5ee1760e98edbf16188076",
+    "stash": "cb541085784128e15e5e7427e6447cc429fea656",
+    "paths": [
+      "engine/cell-runtime/src/cell_ownership.rs",
+      "engine/cell-runtime/src/ownership_composition.rs",
+      "engine/cell-runtime/src/ownership_witness_plan.rs",
+      "engine/cell-runtime/src/runtime.rs",
+      "tools/cell-compiler/tests/cell_ownership.rs"
+    ],
+    "merge_exit_code": 0,
+    "restore_exit_code": 0,
+    "exact_added_removed_lines_preserved": true
+  },
+  "cleanup": [
+    {
+      "target": "/private/tmp/eggfuse-cell-structural-compression/target",
+      "command": [
+        "cargo",
+        "clean",
+        "--manifest-path",
+        "/private/tmp/eggfuse-cell-structural-compression/Cargo.toml",
+        "--target-dir",
+        "/private/tmp/eggfuse-cell-structural-compression/target"
+      ],
+      "exit_code": 0,
+      "output": "     Removed 3128 files, 4.8GiB total\n"
+    },
+    {
+      "target": "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/target",
+      "command": [
+        "cargo",
+        "clean",
+        "--manifest-path",
+        "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/Cargo.toml",
+        "--target-dir",
+        "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/target"
+      ],
+      "exit_code": 0,
+      "output": "     Removed 1631 files, 894.6MiB total\n"
+    },
+    {
+      "target": "/private/tmp/eggfuse-state-target",
+      "command": [
+        "cargo",
+        "clean",
+        "--target-dir",
+        "/private/tmp/eggfuse-state-target"
+      ],
+      "exit_code": 0,
+      "output": "     Removed 1134 files, 89.5MiB total\n"
+    },
+    {
+      "target": "/private/tmp/eggfuse-3063-peer-target",
+      "command": [
+        "cargo",
+        "clean",
+        "--target-dir",
+        "/private/tmp/eggfuse-3063-peer-target"
+      ],
+      "exit_code": 0,
+      "output": "     Removed 2228 files, 838.2MiB total\n"
+    }
+  ],
+  "disk_free_after_cleanup_gib": 7.65
+}
