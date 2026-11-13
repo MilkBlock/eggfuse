@@ -1,0 +1,162 @@
+{
+  "scope": "CPU observed multi-entry inputs and conditional local labels; not GPU execution or timing study",
+  "artifact_root": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113",
+  "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "collection": {
+    "workloads": 96,
+    "complete": 85,
+    "failed": 11,
+    "observed_bindings": 3159604,
+    "supported_bindings": 1932864,
+    "unique_states_per_workload_sum": 29827,
+    "multi_state_rules_per_workload_sum": 5299
+  },
+  "native_derived_input_equality_checks": 44022,
+  "native_derived_input_equality_violations": 0,
+  "coverage": {
+    "scope": "real observed input coverage, not learned accuracy or exact saturation states",
+    "recorded_role_mismatches": 0,
+    "completed_workloads": 85,
+    "pending": [],
+    "failures": [
+      {
+        "case": "039-cordic",
+        "error": "Command '['target/debug/examples/gpu_supervision_live_trace', 'out/eggcc-observed-corpus/039-cordic/program.json', 'out/eggcc-observed-corpus/039-cordic/relations.json', '--relations']' timed out after 30 seconds"
+      },
+      {
+        "case": "065-correlation",
+        "error": "Command '['target/debug/examples/gpu_supervision_live_trace', 'out/eggcc-observed-corpus/065-correlation/program.json', 'out/eggcc-observed-corpus/065-correlation/relations.json', '--relations']' timed out after 30 seconds"
+      },
+      {
+        "case": "066-covariance",
+        "error": "Command '['target/debug/examples/gpu_supervision_live_trace', 'out/eggcc-observed-corpus/066-covariance/program.json', 'out/eggcc-observed-corpus/066-covariance/relations.json', '--relations']' timed out after 30 seconds"
+      },
+      {
+        "case": "074-2mm",
+        "error": "Command '['target/debug/examples/gpu_supervision_live_trace', 'out/eggcc-observed-corpus/074-2mm/program.json', 'out/eggcc-observed-corpus/074-2mm/relations.json', '--relations']' timed out after 30 seconds"
+      },
+      {
+        "case": "075-3mm",
+        "error": "Command '['target/debug/examples/gpu_supervision_live_trace', 'out/eggcc-observed-corpus/075-3mm/program.json', 'out/eggcc-observed-corpus/075-3mm/relations.json', '--relations']' timed out after 30 seconds"
+      },
+      {
+        "case": "084-ludcmp",
+        "error": "Command '['target/debug/examples/gpu_supervision_live_trace', 'out/eggcc-observed-corpus/084-ludcmp/program.json', 'out/eggcc-observed-corpus/084-ludcmp/relations.json', '--relations']' timed out after 30 seconds"
+      },
+      {
+        "case": "086-deriche",
+        "error": "Command '['target/debug/examples/gpu_supervision_live_trace', 'out/eggcc-observed-corpus/086-deriche/program.json', 'out/eggcc-observed-corpus/086-deriche/relations.json', '--relations']' timed out after 30 seconds"
+      },
+      {
+        "case": "089-adi",
+        "error": "Command '['target/debug/examples/gpu_supervision_live_trace', 'out/eggcc-observed-corpus/089-adi/program.json', 'out/eggcc-observed-corpus/089-adi/relations.json', '--relations']' timed out after 30 seconds"
+      },
+      {
+        "case": "090-fdtd-2d",
+        "error": "Command '['target/debug/examples/gpu_supervision_live_trace', 'out/eggcc-observed-corpus/090-fdtd-2d/program.json', 'out/eggcc-observed-corpus/090-fdtd-2d/relations.json', '--relations']' timed out after 30 seconds"
+      },
+      {
+        "case": "091-heat-3d",
+        "error": "Command '['target/debug/examples/gpu_supervision_live_trace', 'out/eggcc-observed-corpus/091-heat-3d/program.json', 'out/eggcc-observed-corpus/091-heat-3d/relations.json', '--relations']' timed out after 30 seconds"
+      },
+      {
+        "case": "095-raytrace",
+        "error": "Command '['target/debug/examples/gpu_supervision_live_trace', 'out/eggcc-observed-corpus/095-raytrace/program.json', 'out/eggcc-observed-corpus/095-raytrace/relations.json', '--relations']' timed out after 30 seconds"
+      }
+    ],
+    "reports": {
+      "train": {
+        "observations": 1604320,
+        "unique_families": 274,
+        "unique_input_states": 1880,
+        "unique_role_patterns": 1877,
+        "observations_in_training_family": 1604320,
+        "observations_with_exact_training_input": 1604320,
+        "observations_with_training_role_pattern": 1604320
+      },
+      "validation": {
+        "observations": 170466,
+        "unique_families": 195,
+        "unique_input_states": 736,
+        "unique_role_patterns": 736,
+        "observations_in_training_family": 170458,
+        "observations_with_exact_training_input": 170394,
+        "observations_with_training_role_pattern": 170394
+      },
+      "test": {
+        "observations": 158078,
+        "unique_families": 207,
+        "unique_input_states": 850,
+        "unique_role_patterns": 850,
+        "observations_in_training_family": 158030,
+        "observations_with_exact_training_input": 157588,
+        "observations_with_training_role_pattern": 157588
+      }
+    },
+    "total_unique_families": 296,
+    "families_with_multiple_input_states": 133,
+    "largest_family_input_states": 198,
+    "role_patterns_with_multiple_exact_targets": 3,
+    "observations_in_ambiguous_role_patterns": 24,
+    "positioned_role_patterns_with_multiple_exact_targets": 0,
+    "marks": {
+      "unsupported effect: set": 78796,
+      "non-constructor premise": 893363,
+      "unsupported observed scalar: Unit": 232547,
+      "unsupported effect: subsume": 14006,
+      "unsupported observed scalar: f64": 1650,
+      "unsupported effect: compute": 6378
+    },
+    "limitations": [
+      "Template identity is conservative compiler layout, not semantic alpha-equivalence",
+      "Exact input overlap is measured and reported, not treated as unseen-state success",
+      "Local roles include matched query and direct effect positions with copy aliases; no target facts",
+      "Full successor-state enumeration and off-manifold recovery are not measured here"
+    ]
+  },
+  "collision_sources": [
+    {
+      "signature": "f58cd0858b4566636ef3127339c0927d388edc710a295159087000f2bd7fa3a4",
+      "examples": [
+        {
+          "case": "007-check-primes",
+          "rule": 422
+        },
+        {
+          "case": "015-fizz-buzz",
+          "rule": 422
+        }
+      ]
+    },
+    {
+      "signature": "f841d555e87a6d87f76d3c82d05bc2d531ede434f78f12b2bba5012ac294ab51",
+      "examples": [
+        {
+          "case": "013-factors",
+          "rule": 422
+        },
+        {
+          "case": "041-leibniz",
+          "rule": 422
+        }
+      ]
+    },
+    {
+      "signature": "bec1a73045c15d6c6dd98b74c80347be6140dd177d5aa5b754d68eeb10819256",
+      "examples": [
+        {
+          "case": "050-adj2csr",
+          "rule": 422
+        },
+        {
+          "case": "056-major-elm",
+          "rule": 422
+        }
+      ]
+    }
+  ],
+  "capture_tools": {
+    "emit_cell_source": "c6f9ae4b03944d2f188dd92291b3bf8fd23190c66eef7710f1802f4a1a2b5e2e",
+    "gpu_supervision_live_trace": "53ccbcbfec1b9f4a40c7bfce8c6ebf9162442195a27c5e05d9b2a4dd192574c6"
+  }
+}

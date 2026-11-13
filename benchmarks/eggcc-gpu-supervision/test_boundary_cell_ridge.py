@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from boundary_cell_ridge import B,D,state,symbols,projection,features,step,fit_boundary_basis,compress_state,compress_projection,audit_boundary,output_layout
+from boundary_cell_ridge import B,D,state,symbols,projection,features,step,fit_boundary_basis,compress_state,compress_projection,audit_boundary,output_layout,request_with_roles
 from whole_cell_ridge import request
 from test_cell_token_successors import rule,atom,make,TABLES
 from dominator_completion import compose
@@ -99,6 +99,15 @@ class Boundary(unittest.TestCase):
         self.assertIsNone(reason)
         ports,_,added=output_layout(source,completion)
         self.assertEqual(ports,symbols(source));self.assertEqual(added,[])
+
+    def test_positioned_request_uses_roles_not_physical_ids(self):
+        r=rule([atom('F',0,1),atom('F',2,3)],[make('G',4,1),make('G',5,3)])
+        left=[(0,('input',0)),(1,('literal','2')),(2,('input',1)),(3,('literal','3'))]
+        right=[(0,('input',0)),(1,('literal','3')),(2,('input',1)),(3,('literal','2'))]
+        self.assertFalse(np.allclose(request_with_roles(r,left,True),request_with_roles(r,right,True)))
+        renamed=[(s,('opaque',500+s) if v[0]=='input' else v) for s,v in left]
+        np.testing.assert_allclose(request_with_roles(r,left,True),request_with_roles(r,renamed,True),atol=1e-6)
+        np.testing.assert_array_equal(request_with_roles(r,left,False),request(r,left))
 
     def test_unrepresented_boundary_is_explicit(self):
         with self.assertRaisesRegex(ValueError,'unrepresented'):
