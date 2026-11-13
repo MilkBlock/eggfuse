@@ -52,8 +52,18 @@ def scale_report(scales):
 
 
 
+def state_bound(source,rule):
+    # encode sums at most one tanh vector per fact, divided by sqrt(fact count).
+    # In this conditional teacher each effect introduces at most one fact.
+    return np.float32(np.sqrt(max(1,len(source)+len(rule['effects']))))
+
+
+def bound_state(values,body_bound,xp):
+    return xp.concatenate([xp.minimum(xp.maximum(values[:,:D],-body_bound[:,None]),body_bound[:,None]),xp.clip(values[:,D:],-1,1)],axis=1)
+
+
 def main():
-    p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--rounds',type=int,default=4);args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--rounds',type=int,default=4);p.add_argument('--bounded-state',action='store_true');args=p.parse_args()
     if not 1<=args.rounds<=16:raise ValueError('rounds must be between 1 and 16')
     metadata=json.loads(gzip.decompress(args.model.with_suffix('.json.gz').read_bytes()))
     if metadata['manifest_sha256']!=hashlib.sha256(args.manifest.read_bytes()).hexdigest():raise ValueError('model manifest mismatch')
@@ -86,11 +96,14 @@ def main():
         w=saved['w'];coef=saved['coef'];prototypes=saved['prototypes'];pf=saved['prototype_families'];stop_coef=saved['stop_coef'] if 'stop_coef' in saved.files else None
         correction=saved['correction_coef'] if 'correction_coef' in saved.files else None
     if correction is not None and stop_coef is None:raise ValueError('correction requires Bake stop head')
+    body_bounds=np.array([state_bound(r['sample']['source'],r['rule']) for r in records],np.float32)
+    if np.any(np.abs(completed[:,:D])>body_bounds[:,None]+1e-5) or np.any(np.abs(completed[:,D:])>1.00001):raise ValueError('teacher violates declared bounds')
     stop_wiring=pack_stop(stop_plans)
     if not mx.metal.is_available():raise RuntimeError('Metal required')
     mx.set_default_device(mx.gpu);gw,gc,gidx,gm,gq,gr=[mx.array(v) for v in (w,coef,indices,mix,q,role)]
     if stop_coef is not None:
         gs=mx.array(stop_coef);gstop=[mx.array(v) for v in stop_wiring]
+    gbounds=mx.array(body_bounds)
     if correction is not None:grc=mx.array(correction)
     def one(s):
         a=attachment(s,gidx,gm,mx);x=features(s,gq,a,gw,mx,gr);out=x@gc
@@ -100,6 +113,7 @@ def main():
         if correction is not None:
             ca=attachment(candidate,gidx,gm,mx);cx=features(candidate,gq,ca,gw,mx,gr)
             candidate=candidate+mx.concatenate([cx,stop_features(candidate,*gstop,mx)],axis=1)@grc
+        if args.bounded_state:candidate=bound_state(candidate,gbounds,mx)
         return mx.where(emit[:,None],candidate,s),emit
     # Separate oracle diagnostic: the same request on its true completed state.
     oracle,oracle_emit=mx.compile(one)(mx.array(completed));mx.eval(oracle,oracle_emit)
@@ -123,6 +137,7 @@ def main():
         if correction is not None:
             ca=attachment(candidate,indices,mix,np);cx=features(candidate,q,ca,w,np,role)
             candidate=candidate+np.concatenate([cx,stop_features(candidate,*stop_wiring,np)],axis=1)@correction
+        if args.bounded_state:candidate=bound_state(candidate,body_bounds,np)
         reference=np.where(emit[:,None],candidate,reference);reference_emissions.append(emit)
     numeric=numerical_audit(final,reference,emissions,np.array(reference_emissions))
     if not np.isfinite(final).all() or not np.isfinite(reference).all():
@@ -138,6 +153,7 @@ def main():
     stopped=~emissions[-1]
     result=dict(scope='necessary fixed-binding local stop probe, not ruleset saturation',manifest_sha256=metadata['manifest_sha256'],model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),numerical_audit=numeric,decoder_f64_disagreements=int(invalid_decode.sum()),stop_feature_version=metadata.get('stop_feature_version'),rounds=args.rounds,cases=len(records),teacher_idempotent_cases=sum(idempotent),oracle_completed_state_false_reemissions=int(np.array(oracle_emit).sum()),free_rollout=dict(emissions_per_round=emissions.sum(1).tolist(),final_exact_catalog_target=int(correct.sum()),final_ambiguous=int(ambiguous.sum()),stopped_at_final_round=int(stopped.sum()),exact_target_and_stopped=int((correct&stopped).sum()),never_emitted_but_initially_novel=int((~emissions.any(0)&novels).sum()),final_body_rmse=float(np.sqrt(np.mean((final[:,:D]-completed[:,:D])**2)))),intermediate_cpu_reads=0,teacher_state_supplied_between_rounds=False,limitations=['Only repetition of the same fixed binding; not full successor or ruleset closure','Oracle-state test is separate and does not correct the free rollout','Request roles and port wiring are static for the original binding','Catalog includes held-out states and does not prove live identity or visibility','No lifetime, ownership-transfer or global novelty proof'])
     result['state_scales_per_round']=scale_report(np.array(state_scales))
+    result['bounded_state_ablation']=args.bounded_state
     result['correction']=metadata.get('correction')
     body_mse=np.mean((final[:,:D]-completed[:,:D])**2,axis=1)
     result['failure_diagnostics']=[dict(input_identity=r['identity'],family=r['family'],consumer=r['sample']['consumer'],observations=r['observations'],emissions=emissions[:,i].tolist(),exact_catalog_target=bool(correct[i]),body_rmse=float(np.sqrt(body_mse[i]))) for i,r in enumerate(records) if not stopped[i]]

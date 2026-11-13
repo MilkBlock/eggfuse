@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from corpus_repeat_probe import wiring,attachment,numerical_audit,scale_report
+from corpus_repeat_probe import wiring,attachment,numerical_audit,scale_report,state_bound,bound_state
 from corpus_cell_ridge import initial_attachment
 from boundary_cell_ridge import D,B
 from dominator_completion import compose
@@ -41,5 +41,15 @@ class Repeat(unittest.TestCase):
         result=scale_report([[np.inf,np.nan,3]])
         self.assertEqual(result,[dict(body_max_abs=None,boundary_max_abs=None,boundary_coordinates_outside_teacher_range=3)])
         json.dumps(result,allow_nan=False)
+
+    def test_state_bounds_preserve_legal_values_and_limit_both_groups(self):
+        import mlx.core as mx
+        values=np.zeros((2,D+B),np.float32);values[0,0]=100;values[0,D]=-3;values[1,0]=.5;values[1,D]=.75
+        limits=np.array([2,1],np.float32)
+        expected=bound_state(values,limits,np)
+        self.assertEqual(expected[0,0],2);self.assertEqual(expected[0,D],-1)
+        np.testing.assert_array_equal(expected[1],values[1])
+        np.testing.assert_array_equal(np.array(bound_state(mx.array(values),mx.array(limits),mx)),expected)
+        self.assertEqual(state_bound([1,2],dict(effects=[{},{}])),2)
 
 if __name__=='__main__':unittest.main()
