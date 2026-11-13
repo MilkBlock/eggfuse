@@ -1,6 +1,6 @@
 import copy
 import unittest
-from closure_frontier import census
+from closure_frontier import census, port_incidence
 
 
 def fixture(bindings):
@@ -65,3 +65,52 @@ class FrontierTests(unittest.TestCase):
         bad=copy.deepcopy(x)
         bad['ownership_storage']['components'][1]['frames']=[1]
         with self.assertRaises(ValueError): census(bad)
+
+
+class IncidenceTests(unittest.TestCase):
+    def snapshot(self):
+        x=fixture([None, (1<<32)+1])
+        storage=x['ownership_storage']
+        storage['programs'][0]['fields']=[[1,0],[0,1]]
+        storage['shapes'][0]['ports']=[[0,1]]
+        storage['shapes'][0]['signals']=[[{'frame':0,'op':0},{'frame':0,'op':1}],[]]
+        x['source_storage']={'fact_lifecycle':{'frames':[
+            dict(cell=1,started_epoch=3,retainers=1,facts=[
+                dict(op=0,owned=True,hidden=False,epoch=3,born=3),
+                dict(op=1,owned=True,hidden=True,epoch=4,born=3)])]}}
+        return x
+
+    def test_internal_users_and_lifecycle_remain_obligations(self):
+        x=self.snapshot()
+        c={c['id']:c for c in x['ownership_storage']['components']}
+        result=port_incidence(x,c,{(0,0):{1}})['counts']
+        self.assertEqual(result['candidate_ports'],1)
+        self.assertEqual(result['ports_with_local_input_uses'],1)
+        self.assertEqual(result['ports_touching_retained_sources'],1)
+        self.assertEqual(result['ports_touching_hidden_facts'],1)
+        self.assertEqual(result['ports_touching_lifecycle_exceptions'],1)
+        self.assertEqual(result['distinct_live_fact_sites'],2)
+
+    def test_retired_result_is_not_recreated_from_template(self):
+        x=self.snapshot()
+        x['source_storage']['fact_lifecycle']['frames'][0]['facts'].pop(0)
+        c={c['id']:c for c in x['ownership_storage']['components']}
+        result=port_incidence(x,c,{(0,0):{1}})['counts']
+        self.assertEqual(result['ports_without_owned_result_site'],1)
+        self.assertEqual(result['non_owned_static_sites'],1)
+        self.assertEqual(result['distinct_live_fact_sites'],1)
+
+    def test_inconsistent_static_wiring_is_rejected(self):
+        x=self.snapshot()
+        x['ownership_storage']['programs'][0]['fields'][0]=[1,1]
+        c={c['id']:c for c in x['ownership_storage']['components']}
+        with self.assertRaises(ValueError): port_incidence(x,c,{(0,0):{1}})
+
+    def test_input_output_alias_still_counts_as_internal_use(self):
+        x=self.snapshot()
+        x['ownership_storage']['programs'][0]['fields'][0]=[0,0]
+        x['source_storage']['fact_lifecycle']['frames'][0]['facts'].pop()
+        c={c['id']:c for c in x['ownership_storage']['components']}
+        result=port_incidence(x,c,{(0,0):{1}})['counts']
+        self.assertEqual(result['ports_with_local_input_uses'],1)
+        self.assertEqual(result['ports_without_owned_result_site'],0)

@@ -11,6 +11,28 @@
       "case": "fact",
       "input_sha256": "8abab58e7d849398190d6b960bc6b7c4ff968006b3aff4a8727a7907536241aa",
       "program_sha256": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+      "port_incidence": {
+        "counts": {
+          "non_owned_static_sites": 10,
+          "candidate_ports": 27,
+          "ports_without_owned_result_site": 1,
+          "ports_with_multiple_owned_result_sites": 0,
+          "ports_with_local_input_uses": 18,
+          "ports_touching_hidden_facts": 0,
+          "ports_touching_retained_sources": 10,
+          "ports_touching_lifecycle_exceptions": 8,
+          "live_site_visits": 54,
+          "distinct_live_fact_sites": 54,
+          "static_port_plans": 21
+        },
+        "live_sites_per_port": {
+          "1": 10,
+          "2": 11,
+          "3": 2,
+          "4": 4
+        },
+        "scope": "existing static incidences and current owned facts; no fact retirement or saturation proof"
+      },
       "counts": {
         "signal_slots": 2298,
         "root_changed": 157,
@@ -166,6 +188,28 @@
       "case": "loopfact",
       "input_sha256": "ae91829aec16d34a64b8118e1f53606eb47b510e8012c0d3904041d94b9fd039",
       "program_sha256": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+      "port_incidence": {
+        "counts": {
+          "non_owned_static_sites": 5,
+          "candidate_ports": 29,
+          "ports_without_owned_result_site": 0,
+          "ports_with_multiple_owned_result_sites": 0,
+          "ports_with_local_input_uses": 23,
+          "ports_touching_hidden_facts": 0,
+          "ports_touching_retained_sources": 6,
+          "ports_touching_lifecycle_exceptions": 5,
+          "live_site_visits": 63,
+          "distinct_live_fact_sites": 60,
+          "static_port_plans": 28
+        },
+        "live_sites_per_port": {
+          "1": 6,
+          "2": 15,
+          "3": 5,
+          "4": 3
+        },
+        "scope": "existing static incidences and current owned facts; no fact retirement or saturation proof"
+      },
       "counts": {
         "signal_slots": 2160,
         "root_changed": 144,
@@ -321,6 +365,29 @@
       "case": "sum-bits",
       "input_sha256": "2407ae0c5e3f8558190cbc80ae76dcc07da12d96904b080660d385c342de890f",
       "program_sha256": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+      "port_incidence": {
+        "counts": {
+          "candidate_ports": 152,
+          "ports_without_owned_result_site": 7,
+          "ports_with_multiple_owned_result_sites": 1,
+          "ports_with_local_input_uses": 87,
+          "ports_touching_hidden_facts": 0,
+          "ports_touching_retained_sources": 12,
+          "ports_touching_lifecycle_exceptions": 64,
+          "live_site_visits": 271,
+          "non_owned_static_sites": 89,
+          "distinct_live_fact_sites": 243,
+          "static_port_plans": 88
+        },
+        "live_sites_per_port": {
+          "0": 6,
+          "1": 59,
+          "2": 61,
+          "3": 14,
+          "4": 12
+        },
+        "scope": "existing static incidences and current owned facts; no fact retirement or saturation proof"
+      },
       "counts": {
         "signal_slots": 8232,
         "root_changed": 1126,
@@ -518,6 +585,30 @@
       "case": "dot-product",
       "input_sha256": "2c6d522b54100dd851dbbe2b8d17d7e4f4d05156854579a09c6c2b95e9e0a671",
       "program_sha256": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+      "port_incidence": {
+        "counts": {
+          "non_owned_static_sites": 19,
+          "candidate_ports": 114,
+          "ports_without_owned_result_site": 4,
+          "ports_with_multiple_owned_result_sites": 1,
+          "ports_with_local_input_uses": 79,
+          "ports_touching_hidden_facts": 0,
+          "ports_touching_retained_sources": 27,
+          "ports_touching_lifecycle_exceptions": 40,
+          "live_site_visits": 290,
+          "distinct_live_fact_sites": 279,
+          "static_port_plans": 58
+        },
+        "live_sites_per_port": {
+          "1": 38,
+          "2": 43,
+          "3": 16,
+          "4": 4,
+          "6": 1,
+          "8": 12
+        },
+        "scope": "existing static incidences and current owned facts; no fact retirement or saturation proof"
+      },
       "counts": {
         "signal_slots": 7494,
         "root_changed": 695,

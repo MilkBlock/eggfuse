@@ -6,6 +6,70 @@ from pathlib import Path
 import sys
 
 
+def port_incidence(snapshot, components, consumers):
+    """Join exclusive port candidates to authoritative fact lifecycle records."""
+    if 'source_storage' not in snapshot:
+        return None
+    storage = snapshot['ownership_storage']
+    states = snapshot['source_storage']['fact_lifecycle']['frames']
+    sources = {f['cell']: f for f in states}
+    if len(sources) != len(states):
+        raise ValueError('duplicate lifecycle source')
+    facts = {}
+    for source in states:
+        for fact in source['facts']:
+            identity = source['cell'], fact['op']
+            if identity in facts or not fact['owned']:
+                raise ValueError('invalid owned fact inventory')
+            facts[identity] = fact
+    counts = collections.Counter()
+    touched = set()
+    plans = collections.Counter()
+    widths = collections.Counter()
+    for (cid, symbol), receivers in consumers.items():
+        if len(receivers) != 1:
+            continue
+        c = components[cid]
+        shape = storage['shapes'][c['shape']]
+        plans[c['shape'], symbol] += 1
+        live = set()
+        produced = set()
+        input_uses = set()
+        for step in shape['signals'][symbol]:
+            ordinal, op = step['frame'], step['op']
+            identity = c['frames'][ordinal], op
+            program = storage['programs'][shape['programs'][ordinal]]
+            fields = program['fields'][op]
+            ports = shape['ports'][ordinal]
+            if not any(local is not None and ports[local] == symbol for local in fields):
+                raise ValueError('static incidence lacks claimed port')
+            fact = facts.get(identity)
+            if fact is None:
+                counts['non_owned_static_sites'] += 1
+                continue
+            live.add(identity)
+            touched.add(identity)
+            if any(local is not None and ports[local] == symbol for local in fields[:-1]):
+                input_uses.add(identity)
+            if fields[-1] is not None and ports[fields[-1]] == symbol:
+                produced.add(identity)
+        counts['candidate_ports'] += 1
+        counts['ports_without_owned_result_site'] += not produced
+        counts['ports_with_multiple_owned_result_sites'] += len(produced) > 1
+        counts['ports_with_local_input_uses'] += bool(input_uses)
+        counts['ports_touching_hidden_facts'] += any(facts[f]['hidden'] for f in live)
+        counts['ports_touching_retained_sources'] += any(sources[f[0]]['retainers'] for f in live)
+        counts['ports_touching_lifecycle_exceptions'] += any(
+            facts[f]['epoch'] != sources[f[0]]['started_epoch'] or
+            facts[f]['born'] != sources[f[0]]['started_epoch'] for f in live)
+        counts['live_site_visits'] += len(live)
+        widths[len(live)] += 1
+    counts['distinct_live_fact_sites'] = len(touched)
+    counts['static_port_plans'] = len(plans)
+    return dict(counts=dict(counts), live_sites_per_port=dict(sorted(widths.items())),
+                scope='existing static incidences and current owned facts; no fact retirement or saturation proof')
+
+
 def census(snapshot):
     storage = snapshot['ownership_storage']
     components = {c['id']: c for c in storage['components']}
@@ -99,7 +163,7 @@ def census(snapshot):
                   shared_native_ports=sum(len(cs)>1 for cs in port_consumers.values()),
                   exclusive_producers=len(successor), exclusive_cycle_nodes=len(cyclic),
                   candidate_regions=len(regions), largest_candidate_region=max(regions.values(), default=0))
-    return dict(counts=dict(counts), port_consumer_degree_histogram=dict(sorted(port_degree.items())), consumer_degree_histogram=dict(sorted(degree.items())),
+    return dict(port_incidence=port_incidence(snapshot, components, port_consumers), counts=dict(counts), port_consumer_degree_histogram=dict(sorted(port_degree.items())), consumer_degree_histogram=dict(sorted(degree.items())),
                 candidate_region_widths=dict(sorted(collections.Counter(regions.values()).items())),
                 largest_shared_producers=[dict(component=p, consumers=len(cs),
                     source_frames=len(components[p]['frames']),

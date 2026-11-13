@@ -64,3 +64,41 @@ exclusive chains, cycles, union-root versus
 raw-address identity, foreign results and malformed inventories. Input hashes and
 Program identities are in the JSON. These are standalone Cell CPU observations,
 not native egglog acceptance. The large runtime compression goal remains open.
+
+## Join to actual fact ownership before choosing a takeover
+
+The follow-up joins each single-receiver native port to its existing static
+operation incidences and the exported live owned-fact inventory. It never creates
+a fact from a template site. Input and result incidences are checked separately;
+an operation whose input and output alias still counts as an internal user.
+
+| case | candidate ports | ports with local input uses | ports touching externally retained sources | ports touching lifecycle exceptions | ports without an owned result site | distinct live facts touched |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| fact | 27 | 18 | 10 | 8 | 1 | 54 |
+| loopfact | 29 | 23 | 6 | 5 | 0 | 60 |
+| sum-bits | 152 | 87 | 12 | 64 | 7 | 243 |
+| dot-product | 114 | 79 | 27 | 40 | 4 | 279 |
+
+Columns overlap and must not be subtracted independently. An externally retained
+source is a conservative obligation, not evidence that every slot is read. The
+current snapshot has no hidden facts in these candidate incidences; the analyzer
+and tests still account for them. A missing result site can have retired or been
+returned from elsewhere; neither case permits fabricating a new local result.
+All static sites are checked against the authoritative port fields before joining
+facts. There are 21/28/88/58 distinct artifact-local `(shape, port)` plans among
+these candidates, but these are not compiled takeover permissions.
+
+Even this entire sum-bits frontier touches only 243 of 2,895 live owned facts.
+Removing all of them would be illegal, and cannot serve as the main explanation
+for a 70% overall memory reduction. This constrains the previous recommendation:
+port-sized proof/restoration is necessary for correctness, but expanding only
+single-consumer takeover is too narrow. Large compression must also cover the
+shared-producer majority, keeping one authoritative fact identity and projecting
+its internal relations from a template rather than copying it into receivers.
+
+The next runtime design must combine static operation coverage with dynamic
+membership and lifecycle exceptions. It must keep shared boundary references,
+not equate "one receiver" with "one owner", and remove a current storage or index
+path within proven coverage. Adding the candidate plan alone would not do that.
+Ten analyzer tests now cover these obligations. This remains saved-trace evidence;
+there is no new runtime-memory or performance claim.
