@@ -69,6 +69,16 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp):
            matched=bindings['live']&numerical['ready'],completed=xp.full(capacity,plan['completed'],xp.bool_),transfer_covered=xp.zeros(capacity,xp.bool_),
            witness_sources=witness,witness_generations=bindings['witness_generations'],witness_valid=xp.broadcast_to(bindings['live'][:,None],witness.shape),
            missing_witness=(bindings['live']&~numerical['ready'])|~bindings['complete'])
+    if 'takeover_plan' in state:
+        indices=[]
+        for ai,index in enumerate(plan.get('takeover_indices',[])):
+            record=bindings['witness_records'][:,ai]
+            indices.append(xp.where((record>=0)&(record<len(index)),xp.array(index)[xp.clip(record,0,len(index)-1)],-1))
+        atoms=state['takeover_plan'].shape[1]
+        if witness.shape[1]>atoms:raise ValueError('takeover evidence capacity')
+        selected=xp.stack(indices,axis=1) if indices else xp.full(witness.shape,-1,xp.int32)
+        for name,value in [('plan',selected),('source',witness),('generation',bindings['witness_generations'])]:
+            p['takeover_'+name]=xp.concatenate([value,xp.full((capacity,atoms-value.shape[1]),-1,xp.int32)],axis=1)
     for key in ('slots','slot_roots','slot_valid'):
         p[key]=xp.concatenate([bindings[key],xp.full((capacity,width-local),False if key=='slot_valid' else -1,bindings[key].dtype)],axis=1)
     rows=xp.clip(bindings['source_rows'],0,slot_shape(state)[0]-1);slots=xp.clip(bindings['source_slots'],0,width-1)

@@ -87,6 +87,10 @@ def commit(state, proposals, xp, key_context=None):
     output = dict(state)
     output['keys'] = xp.where(written[:,None], proposals['keys'][pick], state['keys'])
     output['tokens'] = xp.where(written[:,None], proposals['tokens'][pick], state['tokens'])
+    for column in ('takeover_plan','takeover_source','takeover_generation'):
+        if column in state:
+            values=proposals.get(column,xp.full((count,state[column].shape[1]),-1,xp.int32))
+            output[column]=xp.where(written[:,None],values[pick],state[column])
     if 'slot_owner' in state:
         owned=allocate(state,proposals,accepted,rank,written,pick,xp)
         for key in owned:
@@ -113,6 +117,8 @@ def commit(state, proposals, xp, key_context=None):
     output['settled'] = xp.where(written, proposals['completed'][pick], state['settled'])
     output['readers'] = xp.where(written, False, state['readers'])
     output['generation'] = xp.where(written, state['generation']+1, state['generation'])
+    if 'takeover_target_generation' in state:
+        output['takeover_target_generation']=xp.where(written,output['generation'],state['takeover_target_generation'])
     marks = dict(accepted=accepted, transferred=transferable,invalid_key=invalid_key,key_context_pending=key_context_pending,
         stale_source=proposals['matched'] & ~valid_source,
         stale_token=proposals['matched'] & stale_token,

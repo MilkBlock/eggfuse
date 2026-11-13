@@ -2,7 +2,7 @@
 
 Opt-in sealed-payload prototype. Logical keys/tokens/lifetimes remain authoritative;
 no second dense copy of logical slots is retained. Constructor/copy writes detach
-shared payloads; general completion and stage control still require integration.
+shared payloads; supported Eq completion and stage control use these same reads.
 """
 import numpy as np
 

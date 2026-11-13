@@ -64,10 +64,11 @@ congruence comparisons. Fixed arenas and owner directories have not demonstrated
 whole-workload memory or speed gains. Freeing payload capacity does not retire
 logical source records or native routes.
 
-The test installs a proved takeover before the schedule. Automatically compiling
-and invoking further takeovers from actual successful matches inside Runs still
-requires retaining the necessary source/generation evidence and discharging live
-readers. Full initial-graph import, broader scalar/mutable rules, deletion and
+The test here installs a proved takeover before the schedule. The subsequent
+DEVICE_MATCHED_TAKEOVER.md experiment adds automatic matching-derived takeover
+at completed Run boundaries, with source/target generation evidence and a reader
+gate. It remains bounded and opt-in. Full initial-graph import, broader
+scalar/mutable rules, deletion and
 retirement, CPU audit/correction integration, real multi-ruleset coverage proofs
 and actual Eggcc end-to-end benchmarks remain unfinished.
 

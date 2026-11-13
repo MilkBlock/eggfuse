@@ -10,7 +10,7 @@ from device_entry_round import run_round
 from device_constructor_completion import complete
 
 
-def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_id,limit,quota,external_complete,eq_settled,ticks,xp,eq_context=None,eq_rounds=4,continuation=None,query_kernel=None):
+def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_id,limit,quota,external_complete,eq_settled,ticks,xp,eq_context=None,eq_rounds=4,continuation=None,query_kernel=None,takeover_catalog=None):
     if ticks<1:raise ValueError('positive tick budget required')
     if query_covered.shape[0]<1:raise ValueError('stage coverage array required')
     state=ensure_roots(state,xp)
@@ -19,6 +19,8 @@ def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_i
     else:
         machine=continuation['control'];opened=continuation['open_run'];changed=continuation['unreported_change'];failed=continuation['failed_run']
     logs={k:[] for k in ('stage','query_started','run_done','run_changed','new_tokens','new_constructors','new_equivalences')}
+    if takeover_catalog is not None:
+        for key in ('takeover_attempted','takeover_released','takeover_copied_fields','takeover_blocked'):logs[key]=[]
     for _ in range(ticks):
         stage,_=current(machine,schedule,xp);in_run=stage>=0;begin=in_run&~opened
         # Only the first tick of a Run takes a query snapshot. Waiting ticks
@@ -39,6 +41,10 @@ def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_i
         safe=xp.clip(stage,0,query_covered.shape[0]-1)
         covered=(stage<query_covered.shape[0])&query_covered[safe]
         done=in_run&(opened|begin)&covered&external_complete&after_eq&~e['needs_attention']&~failed
+        if takeover_catalog is not None:
+            from device_matched_takeover import finish
+            candidate,tm=finish(candidate,takeover_catalog,done,xp)
+            for key,value in tm.items():logs['takeover_'+key].append(value)
         machine,control=tick(machine,schedule,done,changed,xp)
         for key,value in dict(stage=stage,query_started=begin,run_done=done,run_changed=done&changed,
                               new_tokens=xp.where(begin,q['new_tokens'],0),new_constructors=xp.where(in_run,e['new_constructors'],0),
