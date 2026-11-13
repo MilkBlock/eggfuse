@@ -1,0 +1,96 @@
+{
+  "scope": "standalone selected-witness feature replay; not full egglog or a trained accuracy result",
+  "capture_sha256": "d5d16c40a2e317b65abea392c7e0f25cd241365d2c1f58740281a4e1070e2b19",
+  "partition": "train",
+  "case": "024-pascals-row",
+  "backpropagation": false,
+  "installed": false,
+  "channels": [
+    "same logical source and generation",
+    "same source port",
+    "same typed current Eq root",
+    "same typed Eq root across sources"
+  ],
+  "floating_columns": 128,
+  "projection_bytes": 16384,
+  "blocks": [
+    {
+      "rule": 0,
+      "accepted": 25,
+      "matched": 25,
+      "accepted_pairs": [
+        100,
+        0,
+        0,
+        0
+      ],
+      "accepted_nonzero_features": 800,
+      "feature_bytes": 12800,
+      "padded_feature_bytes": 16384,
+      "input_ports": 5,
+      "gpu_cpu_max_abs": 7.450580596923828e-09,
+      "cpu_feature_seconds": 0.00022970797726884484,
+      "gpu_warm_feature_seconds": 0.0013006669469177723
+    },
+    {
+      "rule": 1,
+      "accepted": 0,
+      "matched": 1,
+      "accepted_pairs": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "accepted_nonzero_features": 0,
+      "feature_bytes": 0,
+      "padded_feature_bytes": 16384,
+      "input_ports": 6,
+      "gpu_cpu_max_abs": 3.725290298461914e-09,
+      "cpu_feature_seconds": 0.00025104201631620526,
+      "gpu_warm_feature_seconds": 0.0007801659521646798
+    },
+    {
+      "rule": 0,
+      "accepted": 0,
+      "matched": 25,
+      "accepted_pairs": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "accepted_nonzero_features": 0,
+      "feature_bytes": 0,
+      "padded_feature_bytes": 16384,
+      "input_ports": 5,
+      "gpu_cpu_max_abs": 7.450580596923828e-09,
+      "cpu_feature_seconds": 0.0001765830093063414,
+      "gpu_warm_feature_seconds": 0.0007360419840551913
+    },
+    {
+      "rule": 1,
+      "accepted": 1,
+      "matched": 1,
+      "accepted_pairs": [
+        7,
+        0,
+        0,
+        0
+      ],
+      "accepted_nonzero_features": 32,
+      "feature_bytes": 512,
+      "padded_feature_bytes": 16384,
+      "input_ports": 6,
+      "gpu_cpu_max_abs": 3.725290298461914e-09,
+      "cpu_feature_seconds": 0.00022737501421943307,
+      "gpu_warm_feature_seconds": 0.0008367080008611083
+    }
+  ],
+  "limitations": [
+    "No fitting or test-set selection",
+    "Pair mask costs O(input ports squared); projection uses real source floating tokens",
+    "One warm launch excludes upload and compilation; not end-to-end acceleration",
+    "Requires broader positive Eq samples before semantic accuracy comparison"
+  ]
+}
