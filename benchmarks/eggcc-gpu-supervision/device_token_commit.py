@@ -92,7 +92,7 @@ def commit(state, proposals, xp):
     return output, marks
 
 
-def closed_entry_proposals(state, plan, stage, xp):
+def closed_entry_proposals(state, plan, stage, xp, token_values=None):
     """Generate all source-slot x compiled-entry candidates on device.
 
     plan is a dense lowering for input-only projections. Compiler coverage of
@@ -122,7 +122,12 @@ def closed_entry_proposals(state, plan, stage, xp):
         payload_keys=xp.where(plan['projection_valid'][None,:,:],payload_keys,-1)
     target = xp.broadcast_to(plan['consumer'][None,:,None],(capacity,entries,1))
     keys = xp.concatenate([target,payload_keys],axis=2)
-    values = xp.tanh(xp.matmul(state['tokens'][:,None,None,:],plan['weights'][None,:,:,:]).squeeze(axis=2)+plan['bias'][None,:,:])
+    if token_values is None:
+        values = xp.tanh(xp.matmul(state['tokens'][:,None,None,:],plan['weights'][None,:,:,:]).squeeze(axis=2)+plan['bias'][None,:,:])
+    else:
+        if token_values.shape != (capacity*entries,state['tokens'].shape[1]):
+            raise ValueError('ridge candidate layout mismatch')
+        values=token_values
     proposals=dict(keys=keys.reshape(capacity*entries,-1),tokens=values.reshape(capacity*entries,-1),
         source=xp.broadcast_to(xp.arange(capacity)[:,None],(capacity,entries)).reshape(-1),
         generation=xp.broadcast_to(state['generation'][:,None],(capacity,entries)).reshape(-1),

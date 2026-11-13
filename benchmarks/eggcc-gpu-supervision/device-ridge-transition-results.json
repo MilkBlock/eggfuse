@@ -1,0 +1,27 @@
+{
+  "scope": "Saved-route, oracle-source audit of live-source ridge adapter; not autonomous execution",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+  "encoding": "class-history-neighborhood-input",
+  "cases": 5935,
+  "complete_cases": 5553,
+  "linked_complete_cases": 5550,
+  "max_batch_edges": 63,
+  "request_bytes": 80748229,
+  "preparation_seconds": 1.4495483330101706,
+  "cpu_reference_seconds": 0.0986432500067167,
+  "gpu_seconds_including_compilation": 0.8883027893025428,
+  "max_absolute_difference": 4.112720489501953e-06,
+  "outside_tolerance": 0,
+  "all_ready": true,
+  "direct_linked_token_mse": 0.0017061010003089905,
+  "backpropagation": false,
+  "accuracy_gain_claimed": false,
+  "limitations": [
+    "Observed successful bindings and routes are oracle audit inputs",
+    "Source states include CPU boundary tokens for incomplete captures",
+    "No ownership transfer, saturation or committed mutation claim",
+    "Preparation excludes batch packing; timings are not end-to-end throughput"
+  ],
+  "passed": true
+}
