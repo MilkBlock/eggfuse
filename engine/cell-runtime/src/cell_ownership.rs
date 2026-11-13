@@ -84,7 +84,9 @@ fn validate_catalog_sources(artifact: &J) -> Result<()> {
     Ok(())
 }
 impl Plan {
-    pub(crate) fn has_witness_routes(&self, rule:usize)->bool {
+    /// Whether typed witness routes exist for this rule.
+    /// Raw recipe presence alone is insufficient: a recipe may have no usable anchor.
+    pub fn has_witness_routes(&self, rule:usize)->bool {
         self.witnesses.0.get(rule).is_some_and(|r|!r.is_empty())
     }
     #[cfg(feature = "storage-metrics")]
