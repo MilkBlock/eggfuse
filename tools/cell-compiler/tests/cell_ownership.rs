@@ -1758,3 +1758,54 @@ fn template_fields_replace_records_through_union_retirement_and_stages() {
         actual.graph.use_overlapped_completion().unwrap();
     }
 }
+
+#[test]
+#[cfg(feature="sparse-cells")]
+fn compiled_constructor_witness_tries_later_target_without_generic_lookup() {
+    let p=program("(datatype E (N i64) (Start E) (Pair E E))
+        (ruleset a) (ruleset b) (ruleset c)
+        (rule ((= x (N n))) ((Start x) (Start (N (+ n 10)))) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((Pair s x)) ((Start x)) :ruleset c)
+        (N 1) (N 2) (run a 1) (run b 1) (run c 1)");
+    let mut g=Graph::new_with_local_congruence(p.clone()).unwrap();
+    g.trace_ownership_catalog(16).unwrap();
+    let mut control=Executor::new(g,true);control.execute().unwrap();
+    let trace=control.graph.ownership_catalog_trace().unwrap();
+    let mut raw=p.artifact.clone();
+    raw["ownership_witnesses"]=json!({"source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),
+        "recipes":trace["saturation"]["witness_recipes"]});
+    let recipes=raw["ownership_witnesses"]["recipes"].as_array_mut().unwrap();
+    let mut wrong=recipes[0].clone();
+    let site=wrong["rhs_sites"][0].as_array().unwrap();
+    let frame=site[1].as_u64().unwrap() as usize;
+    let original=site[2].as_u64().unwrap() as usize;
+    let code=wrong["frame_codes"][frame].as_u64().unwrap() as usize;
+    let operators=&control.graph.program.cell_ownership.code_operators[code];
+    let other=operators.iter().enumerate().find(|(op,table)|*op!=original && **table==operators[original]).unwrap().0;
+    wrong["rhs_sites"][0][2]=json!(other);
+    recipes.insert(0,wrong.clone());
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let p=Program::parse(raw.clone()).unwrap();
+    let mut candidate=Executor::new(Graph::new_with_local_congruence(p).unwrap(),true);
+    candidate.execute().unwrap();
+    assert_eq!(control.graph.export().unwrap(),candidate.graph.export().unwrap());
+    assert_eq!(control.snapshots,candidate.snapshots);
+    assert_eq!(control.binding_audit,candidate.binding_audit);
+    assert!(candidate.graph.stats.constructor_cell_route_accepted>0,
+        "compiled routes must remove a lookup, not only populate a catalog: {} probes, {} witnesses",
+        candidate.graph.stats.constructor_cell_route_probes,candidate.graph.stats.constructor_cell_route_witnesses);
+    assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
+    assert!(candidate.graph.stats.constructor_cell_route_key_proved>0);
+    assert!(candidate.graph.stats.constructor_cell_route_key_fields_avoided>0);
+    assert!(candidate.graph.stats.constructor_cell_route_alternative_checks>=2);
+    let mut first_only=raw.clone();
+    first_only["ownership_witnesses"]["recipes"]=json!([wrong]);
+    first_only.as_object_mut().unwrap().remove("sha256");
+    first_only["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&first_only).into();
+    let mut first=Executor::new(Graph::new_with_local_congruence(Program::parse(first_only).unwrap()).unwrap(),true);
+    first.execute().unwrap();
+    assert_eq!(first.graph.export().unwrap(),candidate.graph.export().unwrap());
+    assert!(candidate.graph.key_lookup_calls.get()<first.graph.key_lookup_calls.get());
+}

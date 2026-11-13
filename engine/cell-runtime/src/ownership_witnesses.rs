@@ -6,7 +6,7 @@ use std::collections::BTreeMap;
 // Shape, source frame ordinal/code/operation.
 type Key = (usize, usize, usize, u32);
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
-pub(super) struct Operation { entries: BTreeMap<usize, BTreeMap<Key, Target>> }
+pub(super) struct Operation { entries: BTreeMap<usize, BTreeMap<Key, smallvec::SmallVec<[Target;1]>>> }
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
 struct Target {frame:usize,code:usize,op:u32,key_proved:bool}
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
@@ -97,9 +97,11 @@ impl Routes {
                         && !target_fields.is_empty()
                         && prove_key(&rule.query[atom].args,&source_fields,&p.templates[rule.template].ops[..operation],
                             args,&target_fields[..target_fields.len()-1]);
-                    rule_routes[operation].get_or_insert_with(Operation::default).entries
+                    let targets=rule_routes[operation].get_or_insert_with(Operation::default).entries
                         .entry(entry).or_default().entry((recipe.shape,source,recipe.frame_codes[source],source_op))
-                        .or_insert(Target{frame:target,code:recipe.frame_codes[target],op:target_op,key_proved});
+                        .or_default();
+                    let target=Target{frame:target,code:recipe.frame_codes[target],op:target_op,key_proved};
+                    if !targets.contains(&target) {targets.push(target);}
                 }
             }
         }
@@ -108,6 +110,7 @@ impl Routes {
 }
 impl Graph {
     pub(crate) fn cell_constructor_witness(&mut self, cell: u32, operation: usize) -> Option<(FactRef,bool)> {
+        let rhs_cell=cell;
         if self.program.cell_ownership.witnesses.0.is_empty() { return None; }
         let owner = self.ownership.as_ref()?;
         let entry = owner.composition.entry.as_ref()?;
@@ -118,13 +121,29 @@ impl Graph {
             let Some(source) = owner.composition.frames.get(&anchor.cell) else { continue; };
             let Some(component) = owner.composition.components.get(source.component as usize).and_then(Option::as_ref) else { continue; };
             self.stats.constructor_cell_route_probes += 1;
-            let Some(&Target{frame:target,code,op,key_proved}) = candidates.get(&(component.shape,source.ordinal,source.code,anchor.op)) else { continue; };
+            let Some(targets) = candidates.get(&(component.shape,source.ordinal,source.code,anchor.op)) else { continue; };
+            for &Target{frame:target,code,op,key_proved} in targets {
             let Some(&cell) = component.frames.get(target) else { continue; };
             if !owner.composition.frames.get(&cell).is_some_and(|f|f.code==code && f.component==source.component) { continue; }
+            if targets.len()>1 {
+                self.stats.constructor_cell_route_alternative_checks+=1;
+                let fact=FactRef{cell,op};
+                let Ok(Some(row))=self.fact(fact) else {continue;};
+                if row.hidden {continue;}
+                let Op::Let(_,Call::Table(table),args)=&self.program.templates[entry.template].ops[operation] else {continue;};
+                if row.table!=*table || row.values.len()!=args.len()+1 {continue;}
+                let mut equal=true;
+                for (field,arg) in row.values.iter().zip(args) {
+                    self.stats.constructor_cell_route_alternative_fields+=1;
+                    if self.argument(rhs_cell,arg).ok().as_ref()!=Some(field) {equal=false;break;}
+                }
+                if !equal {continue;}
+            }
             self.stats.constructor_cell_route_witnesses += 1;
             if key_proved {self.stats.constructor_cell_route_source_checks+=1;}
             let key_proved=key_proved && self.cells.fact_state(*anchor).is_some_and(|s|s.owned && !s.hidden);
             return Some((FactRef { cell, op },key_proved));
+            }
         }
         None
     }

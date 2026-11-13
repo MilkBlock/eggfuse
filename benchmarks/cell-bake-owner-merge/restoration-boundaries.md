@@ -458,3 +458,34 @@ candidate catalog. It must distinguish identical targets from genuinely differen
 alternatives, charge key comparisons, and demonstrate fewer generic lookups when
 only a later alternative matches. Key-proved and dynamic-key routes must retain
 liveness, operator/code and original effect-order checks.
+
+## Multiple witnesses in the existing route
+
+The shared `ownership_witnesses` route now retains deduplicated targets per
+entry key using an inline single-element list. Single-target execution keeps its
+previous path. With alternatives, execution visits only the compiled targets,
+rejects missing/hidden/wrong-code targets and compares the current constructor
+arguments before selecting one. It then uses the existing proven-key or exact-key
+publication path. No second runtime catalog or per-instance binding copy is added.
+
+`constructor_cell_route_alternative_checks` and
+`constructor_cell_route_alternative_fields` charge the new selection work.
+An unproved selected target still undergoes the ordinary exact-key validation;
+those comparisons are not claimed as eliminated. Existing key-proof avoided-field
+counters describe the publication path, not net avoidance across selection.
+
+The new cross-stage test puts a type-correct but wrong-key target first, then the
+correct target. All graph exports, source snapshots and binding audits match the
+control, and generic constructor lookups are strictly fewer than both the no-route
+control and the wrong-target-only configuration. This establishes a concrete
+lookup takeover in the regression fixture, not a whole-workload speedup or a
+large memory reduction. All 55 ownership tests pass, including existing union,
+hide/delete, alias and code-tampering checks.
+
+```sh
+CARGO_INCREMENTAL=0 cargo test --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-cells,storage-metrics,eggfuse-cell-runtime/slot-transfer-audit --test cell_ownership
+```
+
+Next measure installed-catalog coverage with the multi-target route, including
+selection comparisons and additional static target storage. The large logical
+compression and stage-switch RHS objective is still open.
