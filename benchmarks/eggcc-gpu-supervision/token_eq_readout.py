@@ -114,9 +114,12 @@ def examples(trace,channels,zero,quotient=False,encoding="slot",source_neighborh
 
 def features(z,q,s,d,p,w,xp):
     raw=xp.concatenate([z,q,s,d,p,z[:,:64]*s,z[:,64:]*d],axis=1)
-    if w.shape[0]==768:
+    if w.shape[0] in (768,1024):
         raw=xp.concatenate([raw,z[:,:64]*p,z[:,64:]*p,z[:,:64]*q,z[:,64:]*q],axis=1)
     elif w.shape[0]!=512:raise ValueError('unsupported Eq feature layout')
+    if w.shape[0]==1024:
+        left=z[:,:64];right=z[:,64:]
+        raw=xp.concatenate([raw,left*left*s,right*right*d,left*right*p,(left-right)*(left-right)*q],axis=1)
     return xp.concatenate([xp.ones((len(z),1),dtype=xp.float32),raw,xp.tanh(raw@w)],axis=1)
 
 

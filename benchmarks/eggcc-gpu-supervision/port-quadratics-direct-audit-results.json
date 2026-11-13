@@ -1,0 +1,98 @@
+{
+  "scope": "held-out observed-wiring diagnostic; frozen token model and decoder; not runtime correctness",
+  "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "weights_sha256": "df9e3ff962ffdfab4b3f8aaa1934c2073e860b3b62debc131c6ec6d602a72cbe",
+  "alpha": 1.0,
+  "reports": {
+    "oracle_state": {
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4781,
+      "false_merges": 891,
+      "missed_equalities": 1116,
+      "nontransitive": 144,
+      "closure_false_merges": 1025,
+      "numerical_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 3.811667298236898e-06,
+        "threshold_disagreements": 0,
+        "candidates": [
+          {
+            "passed": true,
+            "finite": true,
+            "outside": 0,
+            "max_abs": 3.811667298236898e-06,
+            "threshold_disagreements": 0
+          }
+        ]
+      }
+    },
+    "direct_gold_sources": {
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4700,
+      "false_merges": 1198,
+      "missed_equalities": 1102,
+      "nontransitive": 245,
+      "closure_false_merges": 1666,
+      "numerical_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 3.2496008106619456e-06,
+        "threshold_disagreements": 0,
+        "candidates": [
+          {
+            "passed": true,
+            "finite": true,
+            "outside": 0,
+            "max_abs": 3.2496008106619456e-06,
+            "threshold_disagreements": 0
+          }
+        ]
+      }
+    },
+    "rollout": {
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4712,
+      "false_merges": 1131,
+      "missed_equalities": 1091,
+      "nontransitive": 245,
+      "closure_false_merges": 1552,
+      "numerical_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 4.234814145354093e-06,
+        "threshold_disagreements": 0,
+        "candidates": [
+          {
+            "passed": true,
+            "finite": true,
+            "outside": 0,
+            "max_abs": 4.234814145354093e-06,
+            "threshold_disagreements": 0
+          }
+        ]
+      }
+    }
+  },
+  "error_overlap": {
+    "oracle_wrong": 673,
+    "direct_wrong": 754,
+    "rollout_wrong": 742,
+    "direct_wrong_with_oracle_correct": 111,
+    "rollout_wrong_with_direct_correct": 7,
+    "direct_wrong_but_rollout_correct": 19
+  },
+  "backpropagation": false,
+  "limitations": [
+    "Correct source tokens and completed states are audit-only labels",
+    "Overlap is not a causal decomposition: prediction errors may cancel decoder errors",
+    "No token model or readout policy is selected using this test diagnostic"
+  ]
+}

@@ -3,6 +3,25 @@ import numpy as np
 from token_eq_readout import pair_layout,check_partition,features,static_equalities,materialize,quotient_layout,readout_rows,expand_scores
 
 class TokenEqReadout(unittest.TestCase):
+    def test_quadratic_features_run_on_gpu_and_preserve_linear_features(self):
+        import mlx.core as mx
+        rng=np.random.default_rng(902)
+        z=rng.normal(size=(7,128)).astype(np.float32)
+        q,s,d,p=[rng.normal(size=(7,64)).astype(np.float32) for _ in range(4)]
+        w=rng.normal(0,.01,(768,16)).astype(np.float32)
+        wide=np.concatenate([w,np.zeros((256,16),np.float32)])
+        before=features(z,q,s,d,p,w,np);after=features(z,q,s,d,p,wide,np)
+        np.testing.assert_array_equal(before[:,:769],after[:,:769])
+        np.testing.assert_allclose(before[:,769:],after[:,1025:],atol=2e-6)
+        # The new even-order features survive a simultaneous token sign flip;
+        # the old token-port interaction columns do not.
+        flipped=features(-z,q,s,d,p,wide,np)
+        np.testing.assert_array_equal(after[:,769:1025],flipped[:,769:1025])
+        self.assertFalse(np.array_equal(after[:,513:769],flipped[:,513:769]))
+        dw=mx.array(wide)
+        out=mx.compile(lambda z,q,s,d,p:features(z,q,s,d,p,dw,mx))(*map(mx.array,(z,q,s,d,p)))
+        mx.eval(out);np.testing.assert_allclose(np.array(out),after,atol=3e-6)
+
     def test_port_interactions_preserve_original_columns_and_execute_on_gpu(self):
         import mlx.core as mx
         rng=np.random.default_rng(71)

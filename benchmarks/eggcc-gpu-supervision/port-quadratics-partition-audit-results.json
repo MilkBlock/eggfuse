@@ -1,0 +1,72 @@
+{
+  "scope": "frozen held-out Cell Eq partition projection, not full GPU runtime",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+  "weights_sha256": "df9e3ff962ffdfab4b3f8aaa1934c2073e860b3b62debc131c6ec6d602a72cbe",
+  "alpha": 1.0,
+  "max_classes_per_sort": 5,
+  "max_states": 256,
+  "baseline": {
+    "instances": 5553,
+    "query_instances": 5454,
+    "exact_partitions": 4712,
+    "false_merges": 1131,
+    "missed_equalities": 1091,
+    "nontransitive": 245,
+    "closure_false_merges": 1552
+  },
+  "projected": {
+    "instances": 5553,
+    "query_instances": 5454,
+    "exact_partitions": 4796,
+    "false_merges": 973,
+    "missed_equalities": 1102,
+    "nontransitive": 135,
+    "closure_false_merges": 1294
+  },
+  "total_instances": 5553,
+  "covered_instances": 5247,
+  "explicit_cpu_marks": 306,
+  "ambiguous_instances": 0,
+  "catalog_bytes": 105964,
+  "catalog_states": 3237,
+  "projection_multiply_adds": 574285,
+  "gpu_projection_compile_upload_seconds": 0.062333208159543574,
+  "cpu_supervision": {
+    "checked": 5454,
+    "wrong": 658,
+    "error_fraction": 0.12064539787312065,
+    "unmarked_checked": 5148,
+    "wrong_among_unmarked": 439,
+    "unmarked_error_fraction": 0.08527583527583528,
+    "covered_nontransitive": 0,
+    "seconds": 0.07110574998660013,
+    "instances_per_second": 76702.65767575485,
+    "scope": "saved-label Eq comparison only; not native proof replay"
+  },
+  "numerical_mismatches": 0,
+  "readout_numeric": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 4.234814145354093e-06,
+    "threshold_disagreements": 0,
+    "candidates": [
+      {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 4.234814145354093e-06,
+        "threshold_disagreements": 0
+      }
+    ]
+  },
+  "union_authorized": false,
+  "backpropagation": false,
+  "limitations": [
+    "Legal equivalence partitions can still be false; zero marks never proves correctness",
+    "Unsupported class/state budgets remain explicit CPU boundaries with original predictions",
+    "All model and partition-policy choices frozen before test; no fitting or threshold tuning",
+    "Observed successful matches and routes supplied; no ownership transfer or whole Eggcc claim"
+  ]
+}
