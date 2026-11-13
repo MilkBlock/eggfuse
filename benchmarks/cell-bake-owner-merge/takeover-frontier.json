@@ -1,0 +1,1652 @@
+{
+  "scope": "saved standalone Cell CPU final states; structural opportunities and impossible bounds, not proven savings",
+  "limitations": [
+    "Root equality does not prove whole-Cell equivalence or deletion safety.",
+    "Hidden facts and sources without local facts may still serve congruence and external Entries.",
+    "Matching source epochs does not prove a future immutable lifecycle.",
+    "Final state counts are not execution peaks or RHS work counts.",
+    "Template projection already removes some scalar-free records when enabled; do not count it again."
+  ],
+  "cases": [
+    {
+      "case": "fact",
+      "lanes": [
+        {
+          "variant": "prefix-all",
+          "snapshot_sha256": "fd2b8059cc078582d87af9d48c425b3cd64bccd01cdce0f1383d53fa68d56f19",
+          "program": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+          "runs": 418,
+          "final": "d04728e6402e21992b9748a09ec99ace5f6639bc268ac5bcafbc24d0fd52f2f0",
+          "counts": {
+            "bound_symbols": 1963,
+            "same_component_repeated_roots": 133,
+            "positioned_sources": 778,
+            "stored_positioned_sources": 752,
+            "single_source_component_records": 359,
+            "completed_source_records": 752,
+            "externally_retained_sources": 13,
+            "parented_sources": 0,
+            "facts": 948,
+            "owned_facts": 948,
+            "hidden_owned_facts": 0,
+            "scalar_free_owned_facts": 653,
+            "scalar_bearing_owned_facts": 295,
+            "facts_with_source_lifecycle": 878,
+            "scalar_free_facts_with_source_lifecycle": 618,
+            "positions_without_source_storage": 26,
+            "distinct_roots": 809,
+            "all_repeated_roots": 1154,
+            "cross_component_repeated_roots": 1021,
+            "source_records_outside_components": 1
+          },
+          "distributions": {
+            "component_width": {
+              "1": 359,
+              "2": 75,
+              "3": 22,
+              "4": 14,
+              "5": 8,
+              "6": 3,
+              "7": 4,
+              "8": 2,
+              "9": 5
+            },
+            "facts_per_source": {
+              "1": 656,
+              "2": 60,
+              "3": 34,
+              "4": 1,
+              "66": 1
+            }
+          },
+          "graph_bytes": 638751,
+          "retained_program_bytes": 158777909,
+          "graph_fields": [
+            [
+              "cells",
+              122192
+            ],
+            [
+              "stable_ports",
+              107526
+            ],
+            [
+              "ownership.components",
+              74048
+            ],
+            [
+              "ownership.boundaries",
+              70040
+            ],
+            [
+              "functions",
+              42176
+            ],
+            [
+              "ownership.frames",
+              40896
+            ],
+            [
+              "changes",
+              30516
+            ],
+            [
+              "members",
+              28544
+            ],
+            [
+              "function_keys",
+              22956
+            ],
+            [
+              "uses",
+              12296
+            ],
+            [
+              "anchors",
+              10247
+            ],
+            [
+              "writer_dir",
+              8256
+            ],
+            [
+              "dirty_facts",
+              7592
+            ],
+            [
+              "parents",
+              4616
+            ],
+            [
+              "ownership.live_facts",
+              4096
+            ],
+            [
+              "parent_users",
+              2184
+            ],
+            [
+              "receipt_forwards",
+              2120
+            ],
+            [
+              "ownership.tables",
+              2080
+            ],
+            [
+              "repair_ports",
+              2080
+            ],
+            [
+              "intern",
+              1608
+            ],
+            [
+              "ownership.heap",
+              256
+            ],
+            [
+              "dirty",
+              192
+            ],
+            [
+              "ownership.pending",
+              104
+            ],
+            [
+              "garbage",
+              56
+            ],
+            [
+              "ownership.columns",
+              32
+            ],
+            [
+              "local_unions",
+              0
+            ],
+            [
+              "ownership.shapes",
+              0
+            ],
+            [
+              "ownership.transitions",
+              0
+            ],
+            [
+              "ownership.training",
+              0
+            ],
+            [
+              "ownership.catalog_trace",
+              0
+            ],
+            [
+              "ownership.entry",
+              0
+            ],
+            [
+              "ownership.port_completion",
+              0
+            ],
+            [
+              "ownership.stats",
+              0
+            ],
+            [
+              "ownership.barriers",
+              0
+            ],
+            [
+              "union_digest",
+              0
+            ],
+            [
+              "dirty_markers",
+              0
+            ]
+          ],
+          "graph_remaining_even_without_all_cells": 516559,
+          "oracle_duplicate_binding_payload_bytes": 18464,
+          "oracle_payload_scope": "64-bit Option<u64> values only; excludes boundary records, capacity and replacement addressing costs"
+        },
+        {
+          "variant": "dual-source-inherited",
+          "snapshot_sha256": "db44d94415627de8ecd7574141cbda3cdb9f47230723de25452fbc7f529f9597",
+          "program": "bc29dbd06e072b42b83fe755f28540abb14ceea8d2181e3e94a2c5cdc2384050",
+          "runs": 418,
+          "final": "d04728e6402e21992b9748a09ec99ace5f6639bc268ac5bcafbc24d0fd52f2f0",
+          "counts": {
+            "bound_symbols": 1927,
+            "same_component_repeated_roots": 148,
+            "positioned_sources": 778,
+            "stored_positioned_sources": 752,
+            "single_source_component_records": 335,
+            "completed_source_records": 752,
+            "externally_retained_sources": 13,
+            "parented_sources": 0,
+            "facts": 948,
+            "owned_facts": 948,
+            "hidden_owned_facts": 0,
+            "scalar_free_owned_facts": 653,
+            "scalar_bearing_owned_facts": 295,
+            "facts_with_source_lifecycle": 878,
+            "scalar_free_facts_with_source_lifecycle": 618,
+            "positions_without_source_storage": 26,
+            "distinct_roots": 809,
+            "all_repeated_roots": 1118,
+            "cross_component_repeated_roots": 970,
+            "source_records_outside_components": 1
+          },
+          "distributions": {
+            "component_width": {
+              "1": 335,
+              "2": 56,
+              "3": 15,
+              "4": 14,
+              "5": 21,
+              "6": 4,
+              "7": 3,
+              "8": 3,
+              "10": 2,
+              "12": 3
+            },
+            "facts_per_source": {
+              "1": 656,
+              "2": 60,
+              "3": 34,
+              "4": 1,
+              "66": 1
+            }
+          },
+          "graph_bytes": 633087,
+          "retained_program_bytes": 162657461,
+          "graph_fields": [
+            [
+              "cells",
+              122192
+            ],
+            [
+              "stable_ports",
+              107526
+            ],
+            [
+              "ownership.components",
+              73376
+            ],
+            [
+              "ownership.boundaries",
+              65048
+            ],
+            [
+              "functions",
+              42176
+            ],
+            [
+              "ownership.frames",
+              40896
+            ],
+            [
+              "changes",
+              30516
+            ],
+            [
+              "members",
+              28544
+            ],
+            [
+              "function_keys",
+              22956
+            ],
+            [
+              "uses",
+              12296
+            ],
+            [
+              "anchors",
+              10247
+            ],
+            [
+              "writer_dir",
+              8256
+            ],
+            [
+              "dirty_facts",
+              7592
+            ],
+            [
+              "parents",
+              4616
+            ],
+            [
+              "ownership.live_facts",
+              4096
+            ],
+            [
+              "parent_users",
+              2184
+            ],
+            [
+              "receipt_forwards",
+              2120
+            ],
+            [
+              "ownership.tables",
+              2080
+            ],
+            [
+              "repair_ports",
+              2080
+            ],
+            [
+              "intern",
+              1608
+            ],
+            [
+              "ownership.heap",
+              256
+            ],
+            [
+              "dirty",
+              192
+            ],
+            [
+              "ownership.pending",
+              104
+            ],
+            [
+              "garbage",
+              56
+            ],
+            [
+              "ownership.columns",
+              32
+            ],
+            [
+              "local_unions",
+              0
+            ],
+            [
+              "ownership.shapes",
+              0
+            ],
+            [
+              "ownership.transitions",
+              0
+            ],
+            [
+              "ownership.training",
+              0
+            ],
+            [
+              "ownership.catalog_trace",
+              0
+            ],
+            [
+              "ownership.entry",
+              0
+            ],
+            [
+              "ownership.port_completion",
+              0
+            ],
+            [
+              "ownership.stats",
+              0
+            ],
+            [
+              "ownership.barriers",
+              0
+            ],
+            [
+              "union_digest",
+              0
+            ],
+            [
+              "dirty_markers",
+              0
+            ]
+          ],
+          "graph_remaining_even_without_all_cells": 510895,
+          "oracle_duplicate_binding_payload_bytes": 17888,
+          "oracle_payload_scope": "64-bit Option<u64> values only; excludes boundary records, capacity and replacement addressing costs"
+        }
+      ]
+    },
+    {
+      "case": "loopfact",
+      "lanes": [
+        {
+          "variant": "prefix-all",
+          "snapshot_sha256": "b107221901be9f51989efeca37eb459abb8c93447e24ffe25c32fecdf3b4cdb9",
+          "program": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+          "runs": 398,
+          "final": "623c3b05d895a4200f8ea907ea4468a92a000c975f654483e54c42c96c90bf7a",
+          "counts": {
+            "bound_symbols": 1868,
+            "same_component_repeated_roots": 125,
+            "positioned_sources": 707,
+            "stored_positioned_sources": 689,
+            "single_source_component_records": 355,
+            "completed_source_records": 689,
+            "externally_retained_sources": 13,
+            "parented_sources": 0,
+            "facts": 892,
+            "owned_facts": 892,
+            "hidden_owned_facts": 0,
+            "scalar_free_owned_facts": 633,
+            "scalar_bearing_owned_facts": 259,
+            "facts_with_source_lifecycle": 818,
+            "scalar_free_facts_with_source_lifecycle": 587,
+            "positions_without_source_storage": 18,
+            "distinct_roots": 765,
+            "all_repeated_roots": 1103,
+            "cross_component_repeated_roots": 978,
+            "source_records_outside_components": 2
+          },
+          "distributions": {
+            "component_width": {
+              "1": 355,
+              "2": 53,
+              "3": 23,
+              "4": 17,
+              "5": 6,
+              "6": 2,
+              "7": 2,
+              "8": 2,
+              "9": 3,
+              "10": 1
+            },
+            "facts_per_source": {
+              "1": 579,
+              "2": 62,
+              "3": 47,
+              "48": 1
+            }
+          },
+          "graph_bytes": 565101,
+          "retained_program_bytes": 158273115,
+          "graph_fields": [
+            [
+              "cells",
+              111732
+            ],
+            [
+              "ownership.components",
+              69824
+            ],
+            [
+              "ownership.boundaries",
+              68264
+            ],
+            [
+              "stable_ports",
+              56438
+            ],
+            [
+              "functions",
+              41864
+            ],
+            [
+              "ownership.frames",
+              40896
+            ],
+            [
+              "changes",
+              30456
+            ],
+            [
+              "members",
+              27232
+            ],
+            [
+              "function_keys",
+              22464
+            ],
+            [
+              "uses",
+              12352
+            ],
+            [
+              "anchors",
+              10247
+            ],
+            [
+              "dirty_facts",
+              7384
+            ],
+            [
+              "writer_dir",
+              6200
+            ],
+            [
+              "parents",
+              4616
+            ],
+            [
+              "ownership.live_facts",
+              4096
+            ],
+            [
+              "parent_users",
+              2184
+            ],
+            [
+              "ownership.tables",
+              2080
+            ],
+            [
+              "repair_ports",
+              2080
+            ],
+            [
+              "intern",
+              1608
+            ],
+            [
+              "receipt_forwards",
+              536
+            ],
+            [
+              "dirty",
+              192
+            ],
+            [
+              "ownership.heap",
+              128
+            ],
+            [
+              "ownership.pending",
+              104
+            ],
+            [
+              "garbage",
+              56
+            ],
+            [
+              "ownership.columns",
+              32
+            ],
+            [
+              "local_unions",
+              0
+            ],
+            [
+              "ownership.shapes",
+              0
+            ],
+            [
+              "ownership.transitions",
+              0
+            ],
+            [
+              "ownership.training",
+              0
+            ],
+            [
+              "ownership.catalog_trace",
+              0
+            ],
+            [
+              "ownership.entry",
+              0
+            ],
+            [
+              "ownership.port_completion",
+              0
+            ],
+            [
+              "ownership.stats",
+              0
+            ],
+            [
+              "ownership.barriers",
+              0
+            ],
+            [
+              "union_digest",
+              0
+            ],
+            [
+              "dirty_markers",
+              0
+            ]
+          ],
+          "graph_remaining_even_without_all_cells": 453369,
+          "oracle_duplicate_binding_payload_bytes": 17648,
+          "oracle_payload_scope": "64-bit Option<u64> values only; excludes boundary records, capacity and replacement addressing costs"
+        },
+        {
+          "variant": "dual-source-inherited",
+          "snapshot_sha256": "21022b5ea93bde43d31f52b51c87a4fc9584e676fa6708a1929a343799300552",
+          "program": "6c042fce49163bb698dfbd082c75dd97d19a8608e2ffb36a1ebc5793cbee88af",
+          "runs": 398,
+          "final": "623c3b05d895a4200f8ea907ea4468a92a000c975f654483e54c42c96c90bf7a",
+          "counts": {
+            "bound_symbols": 1847,
+            "same_component_repeated_roots": 139,
+            "positioned_sources": 707,
+            "stored_positioned_sources": 689,
+            "single_source_component_records": 342,
+            "completed_source_records": 689,
+            "externally_retained_sources": 13,
+            "parented_sources": 0,
+            "facts": 892,
+            "owned_facts": 892,
+            "hidden_owned_facts": 0,
+            "scalar_free_owned_facts": 633,
+            "scalar_bearing_owned_facts": 259,
+            "facts_with_source_lifecycle": 818,
+            "scalar_free_facts_with_source_lifecycle": 587,
+            "positions_without_source_storage": 18,
+            "distinct_roots": 765,
+            "all_repeated_roots": 1082,
+            "cross_component_repeated_roots": 943,
+            "source_records_outside_components": 2
+          },
+          "distributions": {
+            "component_width": {
+              "1": 342,
+              "2": 47,
+              "3": 15,
+              "4": 16,
+              "5": 6,
+              "6": 7,
+              "7": 1,
+              "8": 4,
+              "10": 4,
+              "11": 1
+            },
+            "facts_per_source": {
+              "1": 579,
+              "2": 62,
+              "3": 47,
+              "48": 1
+            }
+          },
+          "graph_bytes": 565053,
+          "retained_program_bytes": 160402806,
+          "graph_fields": [
+            [
+              "cells",
+              111732
+            ],
+            [
+              "ownership.components",
+              70160
+            ],
+            [
+              "ownership.boundaries",
+              67880
+            ],
+            [
+              "stable_ports",
+              56438
+            ],
+            [
+              "functions",
+              41864
+            ],
+            [
+              "ownership.frames",
+              40896
+            ],
+            [
+              "changes",
+              30456
+            ],
+            [
+              "members",
+              27232
+            ],
+            [
+              "function_keys",
+              22464
+            ],
+            [
+              "uses",
+              12352
+            ],
+            [
+              "anchors",
+              10247
+            ],
+            [
+              "dirty_facts",
+              7384
+            ],
+            [
+              "writer_dir",
+              6200
+            ],
+            [
+              "parents",
+              4616
+            ],
+            [
+              "ownership.live_facts",
+              4096
+            ],
+            [
+              "parent_users",
+              2184
+            ],
+            [
+              "ownership.tables",
+              2080
+            ],
+            [
+              "repair_ports",
+              2080
+            ],
+            [
+              "intern",
+              1608
+            ],
+            [
+              "receipt_forwards",
+              536
+            ],
+            [
+              "dirty",
+              192
+            ],
+            [
+              "ownership.heap",
+              128
+            ],
+            [
+              "ownership.pending",
+              104
+            ],
+            [
+              "garbage",
+              56
+            ],
+            [
+              "ownership.columns",
+              32
+            ],
+            [
+              "local_unions",
+              0
+            ],
+            [
+              "ownership.shapes",
+              0
+            ],
+            [
+              "ownership.transitions",
+              0
+            ],
+            [
+              "ownership.training",
+              0
+            ],
+            [
+              "ownership.catalog_trace",
+              0
+            ],
+            [
+              "ownership.entry",
+              0
+            ],
+            [
+              "ownership.port_completion",
+              0
+            ],
+            [
+              "ownership.stats",
+              0
+            ],
+            [
+              "ownership.barriers",
+              0
+            ],
+            [
+              "union_digest",
+              0
+            ],
+            [
+              "dirty_markers",
+              0
+            ]
+          ],
+          "graph_remaining_even_without_all_cells": 453321,
+          "oracle_duplicate_binding_payload_bytes": 17312,
+          "oracle_payload_scope": "64-bit Option<u64> values only; excludes boundary records, capacity and replacement addressing costs"
+        }
+      ]
+    },
+    {
+      "case": "sum-bits",
+      "lanes": [
+        {
+          "variant": "prefix-all",
+          "snapshot_sha256": "b63793abb0d2d93828c8e0d4d1c59813b2294430e752cd65bad36d43c45cb884",
+          "program": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+          "runs": 882,
+          "final": "3bae7a5ad756595f8c454b27baabbf7e830cf06b61d6aa69c0f7437ee747ab2a",
+          "counts": {
+            "bound_symbols": 6761,
+            "same_component_repeated_roots": 784,
+            "positioned_sources": 2371,
+            "stored_positioned_sources": 2177,
+            "single_source_component_records": 860,
+            "completed_source_records": 2177,
+            "externally_retained_sources": 37,
+            "parented_sources": 0,
+            "facts": 2895,
+            "owned_facts": 2895,
+            "hidden_owned_facts": 75,
+            "scalar_free_owned_facts": 1825,
+            "scalar_bearing_owned_facts": 1070,
+            "facts_with_source_lifecycle": 2311,
+            "scalar_free_facts_with_source_lifecycle": 1465,
+            "positions_without_source_storage": 194,
+            "distinct_roots": 2193,
+            "all_repeated_roots": 4568,
+            "cross_component_repeated_roots": 3784,
+            "source_records_outside_components": 3
+          },
+          "distributions": {
+            "component_width": {
+              "1": 860,
+              "2": 266,
+              "3": 89,
+              "4": 59,
+              "5": 29,
+              "6": 11,
+              "7": 9,
+              "8": 9,
+              "9": 4,
+              "10": 5,
+              "13": 1,
+              "15": 1,
+              "16": 1
+            },
+            "facts_per_source": {
+              "1": 1752,
+              "2": 224,
+              "3": 193,
+              "4": 6,
+              "7": 1,
+              "85": 1
+            }
+          },
+          "graph_bytes": 1695443,
+          "retained_program_bytes": 160648495,
+          "graph_fields": [
+            [
+              "cells",
+              379192
+            ],
+            [
+              "ownership.components",
+              280192
+            ],
+            [
+              "stable_ports",
+              224118
+            ],
+            [
+              "ownership.boundaries",
+              215144
+            ],
+            [
+              "ownership.frames",
+              163584
+            ],
+            [
+              "functions",
+              100296
+            ],
+            [
+              "members",
+              65024
+            ],
+            [
+              "changes",
+              51160
+            ],
+            [
+              "parents",
+              35848
+            ],
+            [
+              "function_keys",
+              28448
+            ],
+            [
+              "uses",
+              27428
+            ],
+            [
+              "writer_dir",
+              26856
+            ],
+            [
+              "ownership.live_facts",
+              16384
+            ],
+            [
+              "anchors",
+              10247
+            ],
+            [
+              "dirty_facts",
+              9360
+            ],
+            [
+              "parent_users",
+              8712
+            ],
+            [
+              "receipt_forwards",
+              4232
+            ],
+            [
+              "ownership.tables",
+              2080
+            ],
+            [
+              "repair_ports",
+              2080
+            ],
+            [
+              "intern",
+              1608
+            ],
+            [
+              "ownership.heap",
+              1024
+            ],
+            [
+              "dirty",
+              192
+            ],
+            [
+              "ownership.pending",
+              104
+            ],
+            [
+              "garbage",
+              56
+            ],
+            [
+              "ownership.columns",
+              32
+            ],
+            [
+              "local_unions",
+              0
+            ],
+            [
+              "ownership.shapes",
+              0
+            ],
+            [
+              "ownership.transitions",
+              0
+            ],
+            [
+              "ownership.training",
+              0
+            ],
+            [
+              "ownership.catalog_trace",
+              0
+            ],
+            [
+              "ownership.entry",
+              0
+            ],
+            [
+              "ownership.port_completion",
+              0
+            ],
+            [
+              "ownership.stats",
+              0
+            ],
+            [
+              "ownership.barriers",
+              0
+            ],
+            [
+              "union_digest",
+              0
+            ],
+            [
+              "dirty_markers",
+              0
+            ]
+          ],
+          "graph_remaining_even_without_all_cells": 1316251,
+          "oracle_duplicate_binding_payload_bytes": 73088,
+          "oracle_payload_scope": "64-bit Option<u64> values only; excludes boundary records, capacity and replacement addressing costs"
+        },
+        {
+          "variant": "dual-source-inherited",
+          "snapshot_sha256": "66b92f094a2bdd4405f51c64d5f6ef43a2feab2bd7418d092002094dcd617e53",
+          "program": "2bdd87204fb1d3473bff51d2f4b5981680aa1ae002c83d513626a56ad57bea43",
+          "runs": 882,
+          "final": "3bae7a5ad756595f8c454b27baabbf7e830cf06b61d6aa69c0f7437ee747ab2a",
+          "counts": {
+            "bound_symbols": 6675,
+            "same_component_repeated_roots": 844,
+            "positioned_sources": 2379,
+            "stored_positioned_sources": 2177,
+            "single_source_component_records": 810,
+            "completed_source_records": 2177,
+            "externally_retained_sources": 37,
+            "parented_sources": 0,
+            "facts": 2895,
+            "owned_facts": 2895,
+            "hidden_owned_facts": 75,
+            "scalar_free_owned_facts": 1825,
+            "scalar_bearing_owned_facts": 1070,
+            "facts_with_source_lifecycle": 2311,
+            "scalar_free_facts_with_source_lifecycle": 1465,
+            "positions_without_source_storage": 202,
+            "distinct_roots": 2193,
+            "all_repeated_roots": 4482,
+            "cross_component_repeated_roots": 3638,
+            "source_records_outside_components": 3
+          },
+          "distributions": {
+            "component_width": {
+              "1": 810,
+              "2": 189,
+              "3": 90,
+              "4": 62,
+              "5": 36,
+              "6": 21,
+              "7": 9,
+              "8": 4,
+              "9": 4,
+              "10": 9,
+              "11": 2,
+              "12": 4,
+              "14": 1,
+              "15": 2,
+              "16": 2
+            },
+            "facts_per_source": {
+              "1": 1752,
+              "2": 224,
+              "3": 193,
+              "4": 6,
+              "7": 1,
+              "85": 1
+            }
+          },
+          "graph_bytes": 1690723,
+          "retained_program_bytes": 183034491,
+          "graph_fields": [
+            [
+              "cells",
+              379400
+            ],
+            [
+              "ownership.components",
+              278432
+            ],
+            [
+              "stable_ports",
+              224118
+            ],
+            [
+              "ownership.boundaries",
+              211976
+            ],
+            [
+              "ownership.frames",
+              163584
+            ],
+            [
+              "functions",
+              100296
+            ],
+            [
+              "members",
+              65024
+            ],
+            [
+              "changes",
+              51160
+            ],
+            [
+              "parents",
+              35848
+            ],
+            [
+              "function_keys",
+              28448
+            ],
+            [
+              "uses",
+              27428
+            ],
+            [
+              "writer_dir",
+              26856
+            ],
+            [
+              "ownership.live_facts",
+              16384
+            ],
+            [
+              "anchors",
+              10247
+            ],
+            [
+              "dirty_facts",
+              9360
+            ],
+            [
+              "parent_users",
+              8712
+            ],
+            [
+              "receipt_forwards",
+              4232
+            ],
+            [
+              "ownership.tables",
+              2080
+            ],
+            [
+              "repair_ports",
+              2080
+            ],
+            [
+              "intern",
+              1608
+            ],
+            [
+              "ownership.heap",
+              1024
+            ],
+            [
+              "dirty",
+              192
+            ],
+            [
+              "ownership.pending",
+              104
+            ],
+            [
+              "garbage",
+              56
+            ],
+            [
+              "ownership.columns",
+              32
+            ],
+            [
+              "local_unions",
+              0
+            ],
+            [
+              "ownership.shapes",
+              0
+            ],
+            [
+              "ownership.transitions",
+              0
+            ],
+            [
+              "ownership.training",
+              0
+            ],
+            [
+              "ownership.catalog_trace",
+              0
+            ],
+            [
+              "ownership.entry",
+              0
+            ],
+            [
+              "ownership.port_completion",
+              0
+            ],
+            [
+              "ownership.stats",
+              0
+            ],
+            [
+              "ownership.barriers",
+              0
+            ],
+            [
+              "union_digest",
+              0
+            ],
+            [
+              "dirty_markers",
+              0
+            ]
+          ],
+          "graph_remaining_even_without_all_cells": 1311323,
+          "oracle_duplicate_binding_payload_bytes": 71712,
+          "oracle_payload_scope": "64-bit Option<u64> values only; excludes boundary records, capacity and replacement addressing costs"
+        }
+      ]
+    },
+    {
+      "case": "dot-product",
+      "lanes": [
+        {
+          "variant": "prefix-all",
+          "snapshot_sha256": "0480ff0c6fdd82c6d74dead04f8b773176db7f9850d91b7e6ec50017bd3a72c2",
+          "program": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+          "runs": 954,
+          "final": "191d2a4bd738e7afd0783d30b5d5c1f1219ac92887bb96b95239edfec27141d9",
+          "counts": {
+            "bound_symbols": 6254,
+            "same_component_repeated_roots": 581,
+            "positioned_sources": 2268,
+            "stored_positioned_sources": 2122,
+            "single_source_component_records": 960,
+            "completed_source_records": 2122,
+            "externally_retained_sources": 58,
+            "parented_sources": 0,
+            "facts": 2825,
+            "owned_facts": 2825,
+            "hidden_owned_facts": 0,
+            "scalar_free_owned_facts": 2023,
+            "scalar_bearing_owned_facts": 802,
+            "facts_with_source_lifecycle": 2466,
+            "scalar_free_facts_with_source_lifecycle": 1793,
+            "positions_without_source_storage": 146,
+            "distinct_roots": 2351,
+            "all_repeated_roots": 3903,
+            "cross_component_repeated_roots": 3322,
+            "source_records_outside_components": 14
+          },
+          "distributions": {
+            "component_width": {
+              "1": 960,
+              "2": 155,
+              "3": 71,
+              "4": 33,
+              "5": 27,
+              "6": 17,
+              "7": 6,
+              "8": 21,
+              "9": 8,
+              "11": 1,
+              "12": 3,
+              "13": 3,
+              "16": 3
+            },
+            "facts_per_source": {
+              "1": 1764,
+              "2": 181,
+              "3": 176,
+              "171": 1
+            }
+          },
+          "graph_bytes": 1641667,
+          "retained_program_bytes": 162126403,
+          "graph_fields": [
+            [
+              "cells",
+              353400
+            ],
+            [
+              "ownership.components",
+              267440
+            ],
+            [
+              "stable_ports",
+              217702
+            ],
+            [
+              "ownership.boundaries",
+              197792
+            ],
+            [
+              "ownership.frames",
+              163584
+            ],
+            [
+              "functions",
+              121936
+            ],
+            [
+              "members",
+              56256
+            ],
+            [
+              "changes",
+              53804
+            ],
+            [
+              "uses",
+              36208
+            ],
+            [
+              "function_keys",
+              29536
+            ],
+            [
+              "writer_dir",
+              26856
+            ],
+            [
+              "parents",
+              18440
+            ],
+            [
+              "ownership.live_facts",
+              16384
+            ],
+            [
+              "anchors",
+              10247
+            ],
+            [
+              "parent_users",
+              8712
+            ],
+            [
+              "dirty_facts",
+              8320
+            ],
+            [
+              "receipt_forwards",
+              4232
+            ],
+            [
+              "intern",
+              3208
+            ],
+            [
+              "ownership.tables",
+              2080
+            ],
+            [
+              "repair_ports",
+              2080
+            ],
+            [
+              "ownership.heap",
+              1024
+            ],
+            [
+              "dirty",
+              192
+            ],
+            [
+              "ownership.pending",
+              104
+            ],
+            [
+              "garbage",
+              56
+            ],
+            [
+              "ownership.columns",
+              32
+            ],
+            [
+              "local_unions",
+              0
+            ],
+            [
+              "ownership.shapes",
+              0
+            ],
+            [
+              "ownership.transitions",
+              0
+            ],
+            [
+              "ownership.training",
+              0
+            ],
+            [
+              "ownership.catalog_trace",
+              0
+            ],
+            [
+              "ownership.entry",
+              0
+            ],
+            [
+              "ownership.port_completion",
+              0
+            ],
+            [
+              "ownership.stats",
+              0
+            ],
+            [
+              "ownership.barriers",
+              0
+            ],
+            [
+              "union_digest",
+              0
+            ],
+            [
+              "dirty_markers",
+              0
+            ]
+          ],
+          "graph_remaining_even_without_all_cells": 1288267,
+          "oracle_duplicate_binding_payload_bytes": 62448,
+          "oracle_payload_scope": "64-bit Option<u64> values only; excludes boundary records, capacity and replacement addressing costs"
+        },
+        {
+          "variant": "dual-source-inherited",
+          "snapshot_sha256": "f54f1891dd752391b99200c1acf7b13e658f73e26dcf192fd2d4d14b9490bc35",
+          "program": "675d73a72e7b6228b2984336f2c155688619546c9eac537721417a551f3c6b69",
+          "runs": 954,
+          "final": "191d2a4bd738e7afd0783d30b5d5c1f1219ac92887bb96b95239edfec27141d9",
+          "counts": {
+            "bound_symbols": 6178,
+            "same_component_repeated_roots": 631,
+            "positioned_sources": 2272,
+            "stored_positioned_sources": 2122,
+            "single_source_component_records": 917,
+            "completed_source_records": 2122,
+            "externally_retained_sources": 58,
+            "parented_sources": 0,
+            "facts": 2825,
+            "owned_facts": 2825,
+            "hidden_owned_facts": 0,
+            "scalar_free_owned_facts": 2023,
+            "scalar_bearing_owned_facts": 802,
+            "facts_with_source_lifecycle": 2466,
+            "scalar_free_facts_with_source_lifecycle": 1793,
+            "positions_without_source_storage": 150,
+            "distinct_roots": 2351,
+            "all_repeated_roots": 3827,
+            "cross_component_repeated_roots": 3196,
+            "source_records_outside_components": 14
+          },
+          "distributions": {
+            "component_width": {
+              "1": 917,
+              "2": 127,
+              "3": 48,
+              "4": 24,
+              "5": 24,
+              "6": 17,
+              "7": 12,
+              "8": 19,
+              "9": 10,
+              "10": 16,
+              "11": 2,
+              "13": 1,
+              "14": 5,
+              "16": 3
+            },
+            "facts_per_source": {
+              "1": 1764,
+              "2": 181,
+              "3": 176,
+              "171": 1
+            }
+          },
+          "graph_bytes": 1635971,
+          "retained_program_bytes": 176992132,
+          "graph_fields": [
+            [
+              "cells",
+              353400
+            ],
+            [
+              "ownership.components",
+              265776
+            ],
+            [
+              "stable_ports",
+              217702
+            ],
+            [
+              "ownership.boundaries",
+              193760
+            ],
+            [
+              "ownership.frames",
+              163584
+            ],
+            [
+              "functions",
+              121936
+            ],
+            [
+              "members",
+              56256
+            ],
+            [
+              "changes",
+              53804
+            ],
+            [
+              "uses",
+              36208
+            ],
+            [
+              "function_keys",
+              29536
+            ],
+            [
+              "writer_dir",
+              26856
+            ],
+            [
+              "parents",
+              18440
+            ],
+            [
+              "ownership.live_facts",
+              16384
+            ],
+            [
+              "anchors",
+              10247
+            ],
+            [
+              "parent_users",
+              8712
+            ],
+            [
+              "dirty_facts",
+              8320
+            ],
+            [
+              "receipt_forwards",
+              4232
+            ],
+            [
+              "intern",
+              3208
+            ],
+            [
+              "ownership.tables",
+              2080
+            ],
+            [
+              "repair_ports",
+              2080
+            ],
+            [
+              "ownership.heap",
+              1024
+            ],
+            [
+              "dirty",
+              192
+            ],
+            [
+              "ownership.pending",
+              104
+            ],
+            [
+              "garbage",
+              56
+            ],
+            [
+              "ownership.columns",
+              32
+            ],
+            [
+              "local_unions",
+              0
+            ],
+            [
+              "ownership.shapes",
+              0
+            ],
+            [
+              "ownership.transitions",
+              0
+            ],
+            [
+              "ownership.training",
+              0
+            ],
+            [
+              "ownership.catalog_trace",
+              0
+            ],
+            [
+              "ownership.entry",
+              0
+            ],
+            [
+              "ownership.port_completion",
+              0
+            ],
+            [
+              "ownership.stats",
+              0
+            ],
+            [
+              "ownership.barriers",
+              0
+            ],
+            [
+              "union_digest",
+              0
+            ],
+            [
+              "dirty_markers",
+              0
+            ]
+          ],
+          "graph_remaining_even_without_all_cells": 1282571,
+          "oracle_duplicate_binding_payload_bytes": 61232,
+          "oracle_payload_scope": "64-bit Option<u64> values only; excludes boundary records, capacity and replacement addressing costs"
+        }
+      ]
+    }
+  ]
+}
