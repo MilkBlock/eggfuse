@@ -8,6 +8,18 @@ fn select(raw:&mut Value, trace:&Value, budget:usize)->Result<Value,Box<dyn std:
         || observed["source"]!=composition::source_digest(raw) {
         return Err("source-bound audited passive catalog trace required".into());
     }
+    // A source without a selected catalog still has the implicit singleton
+    // shapes. Start from that empty transition language rather than requiring
+    // an unrelated workload's catalog just to bootstrap learning.
+    if raw.get("ownership_fragments").is_none() {
+        let schema = match raw.get("ownership_markers").map(|m|m["schema"].as_str()) {
+            None | Some(Some("eggfuse-ownership-markers/v5")) => "eggfuse-ownership-fragments/v2",
+            Some(Some("eggfuse-ownership-markers/v4")) => "eggfuse-ownership-fragments/v1",
+            _ => return Err("unknown ownership marker address version".into()),
+        };
+        raw["ownership_fragments"]=json!({"schema":schema,"source":observed["source"],
+            "max_frames":8,"fragments":[]});
+    }
     let fragments=raw["ownership_fragments"]["fragments"].as_array_mut().ok_or("installed fragments required")?;
     let before=fragments.len();
     // Loading a selected path installs all its prefixes. Keep maximal paths,
@@ -79,6 +91,28 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn singleton_catalog_bootstraps_only_from_matching_audited_source() {
+        for (marker,version) in [(None,"v2"),(Some("eggfuse-ownership-markers/v4"),"v1"),
+            (Some("eggfuse-ownership-markers/v5"),"v2")] {
+            let mut raw=json!({"recipe":{}});
+            if let Some(schema)=marker {raw["ownership_markers"]=json!({"schema":schema});}
+            let mut trace=json!({"all_saved_run_checks_equal":true,"catalog_trace":{
+                "schema":"eggfuse-ownership-catalog-trace/v1","source":composition::source_digest(&raw),
+                "records":[{"source_shape":0,"fragment":{"root":0,"hops":[{"source_frame":0,"rule":1,"entry":0,"op":0}]},
+                    "matched_births":4,"available_shared_inputs":4,"static_instruction_handles":2}]}});
+            let before=raw.clone();
+            trace["all_saved_run_checks_equal"]=json!(false);
+            assert!(select(&mut raw,&trace,32).is_err());assert_eq!(raw,before);
+            trace["all_saved_run_checks_equal"]=json!(true);
+            trace["catalog_trace"]["source"]=json!("different");
+            assert!(select(&mut raw,&trace,32).is_err());assert_eq!(raw,before);
+            trace["catalog_trace"]["source"]=composition::source_digest(&raw).into();
+            let report=select(&mut raw,&trace,32).unwrap();
+            assert_eq!(report["seed_fragments"],0);assert_eq!(report["added_fragments"],1);
+            assert_eq!(raw["ownership_fragments"]["schema"],format!("eggfuse-ownership-fragments/{version}"));
+        }
+    }
     #[test]
     fn maximal_seed_retains_prefixes_and_does_not_sum_alternative_anchors() {
         let hop=|rule,op|json!({"source_frame":0,"rule":rule,"entry":0,"op":op});

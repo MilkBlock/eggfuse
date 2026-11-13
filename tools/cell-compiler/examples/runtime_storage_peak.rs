@@ -54,9 +54,20 @@ fn detach(exec: Executor) -> Graph {
     exec.graph
 }
 fn main() -> Result<(), Box<dyn Error>> {
-    let args = std::env::args().skip(1).collect::<Vec<_>>();
+    let mut args = std::env::args().skip(1).collect::<Vec<_>>();
+    // Export the same observed execution for semantic acceptance, after all
+    // allocation measurements. Do not require a separate runtime rerun.
+    let state_output = if let Some(i) = args.iter().position(|a| a == "--state-output") {
+        if i < 3 || i + 1 >= args.len() {
+            return Err("--state-output requires a path after PROGRAM OUTPUT MODE".into());
+        }
+        let path = args.remove(i + 1);
+        args.remove(i);
+        if path == args[1] { return Err("state output must differ from memory report".into()); }
+        Some(path)
+    } else { None };
     if !(args.len()>=3 && args[3..].iter().all(|a| matches!(a.as_str(),"--port-domains-only"|"--template-fields"|"--cell-fields"))) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners" | "nested-owners" | "multi-owner-control" | "unpooled-owner-control") {
-        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners|nested-owners|multi-owner-control|unpooled-owner-control [--port-domains-only] [--template-fields|--cell-fields]".into());
+        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners|nested-owners|multi-owner-control|unpooled-owner-control [--port-domains-only] [--template-fields|--cell-fields] [--state-output PATH]".into());
     }
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
     let program = p.artifact["sha256"].clone();
@@ -129,6 +140,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
     let mut result = json!({"program_sha256":program,"mode":args[2],"runs":samples.len(),
+        // Retain the actual scheduling evidence after measurement, so an
+        // omitted compiler-materialization Run is distinguishable from a lost
+        // source Run. Matching names/counts alone are not a graph-state proof.
+        "run_sequence":e.steps.iter().map(|s|json!({"ruleset":s.ruleset,
+            "iterations":s.iterations,"logical_matches":s.logical_matches,
+            "executed_bindings":s.executed_bindings,"changed":s.changed})).collect::<Vec<_>>(),
         "port_index":e.graph.stable_port_report(),
         "ownership_storage":e.graph.ownership_storage_trace(),
         "source_storage":e.graph.retained_cell_storage(),
@@ -170,6 +187,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "single-lane Graph then retained Program requested bytes; no Executor caches; shared allocations charged to their last owner"
     );
     fs::write(&args[1], serde_json::to_vec_pretty(&result)?)?;
+    if let Some(path) = state_output { fs::write(path, serde_json::to_vec(&state)?)?; }
     println!(
         "{}",
         json!({"runs":result["runs"],"process_peak":high_water,

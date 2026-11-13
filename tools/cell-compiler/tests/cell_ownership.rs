@@ -1450,6 +1450,43 @@ fn scalar_binding_uses_another_provider_until_the_last_one_retires() {
 
 #[test]
 #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_short_components_share_slabs_across_union_and_delete() {
+    let seeds=(0..12).map(|i|format!("(N {i})")).collect::<Vec<_>>().join(" ");
+    let p=program(&format!("(datatype E (N i64) (Start E) (Pair E E))
+        (ruleset a) (ruleset b) (ruleset join) (ruleset remove)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((= x (N 1)) (= y (N 2))) ((union x y)) :ruleset join)
+        (rule ((= x (N 3)) (= s (Start x))) ((delete (Pair s x))) :ruleset remove)
+        {seeds} (run a 1) (run b 1) (run join 1) (run remove 1) (run b 1)"));
+    let mut control=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+    let mut actual=Executor::new(Graph::new_with_local_congruence(p).unwrap(),true);
+    control.use_completed_parent_takeover().unwrap();actual.use_completed_parent_takeover().unwrap();
+    for run in 1..=5 {
+        control.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
+        // Let the first two stages finish before admitting new multi-frame
+        // components; later stages exercise mutation of shared physical slabs.
+        if run>=2 {
+            control.graph.transfer_completed_unpooled_owners().unwrap();
+            actual.graph.transfer_completed_owners().unwrap();
+        }
+        assert_eq!(control.graph.export().unwrap(),actual.graph.export().unwrap());
+        assert_eq!(control.snapshots,actual.snapshots);
+        assert_eq!(control.binding_audit,actual.binding_audit);
+        if run==2 {
+            let trace=actual.graph.ownership_storage_trace();
+            let multi=trace["components"].as_array().unwrap().iter()
+                .filter(|c|c["frames"].as_array().unwrap().len()>1).count();
+            let storage=actual.graph.retained_cell_storage();
+            let owners=storage["completed_owners"]["owners"].as_u64().unwrap() as usize;
+            assert!(multi>=4,"exercise multiple composed components");
+            assert!(owners<multi,"short components must share physical slabs: {owners} owners, {multi} components");
+        }
+    }
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
 fn later_single_stage_joins_the_existing_physical_owner() {
     let p=program("(datatype E (N i64) (Start E) (Pair E E) (Seen E))
         (ruleset a) (ruleset b) (ruleset c)

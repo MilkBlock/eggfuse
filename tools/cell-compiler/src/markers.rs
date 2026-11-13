@@ -443,14 +443,12 @@ fn select(views: &[View], rules: &[J], profile: Option<&J>) -> Result<Vec<View>>
 fn marker_fact(v: &View) -> J {
     json!({"kind":"fact","expr":call(&v.name,(0..v.sorts.len()).map(|i|var(&format!("{SLOT}{i}"))).collect())})
 }
-pub fn rewrite(
-    name: &str,
-    source: &str,
-    cells: &[crate::witness::Cell],
-    profile: Option<&J>,
-    identity: bool,
-    handoff: bool,
-) -> Result<(String, J, BTreeSet<String>)> {
+/// Application receipts are optional diagnostic materialization. Their namespace
+/// is reserved before rewriting, and the generator never emits a read of them.
+pub fn rewrite_with_receipts(
+    name: &str, source: &str, cells: &[crate::witness::Cell], profile: Option<&J>,
+    identity: bool, handoff: bool, materialize_receipts: bool,
+) -> Result<(String,J,BTreeSet<String>)> {
     if let Some(p) = profile
         && (p["schema"] != "marker-cost-profile/v1"
             || p["source_sha256"] != crate::sha(source.as_bytes()))
@@ -581,7 +579,7 @@ pub fn rewrite(
             let inputs = names(&json!(head));
             let bound = names(&json!(f.body));
             let vars = inputs.intersection(&bound).collect::<Vec<_>>();
-            if vars.iter().all(|v| types.contains_key(*v)) {
+            if materialize_receipts && vars.iter().all(|v| types.contains_key(*v)) {
                 let n = format!("CellSpineApplied{rid}");
                 applied.push((
                     n.clone(),
@@ -727,7 +725,7 @@ pub fn rewrite(
             lines.push(s(&c["text"]).into())
         }
     }
-    let report = json!({"offered":offered,"offered_fragments":offers,"locality":if identity{"identity"}else{"all"},"selection_scope":"exact positive source views; training observations provide witnesses","cost_model":if profile.is_some(){"profile-supplied lifecycle nanoseconds"}else{"structural baseline; not a runtime performance estimate"},"receipt_tables":applied.iter().map(|v|&v.0).collect::<Vec<_>>(),"selected":selected,"publish_actions":pubs,"markers":views.iter().map(|v|json!({"name":v.name,"body":v.body,"completion_body":v.completion,"sorts":v.sorts,"cells":crate::witness::matches(cells,&v.body,&v.sorts),"consumers":v.uses.iter().map(|o|o.rid).collect::<Vec<_>>() })).collect::<Vec<_>>()});
+    let report = json!({"application_receipts_materialized":materialize_receipts,"offered":offered,"offered_fragments":offers,"locality":if identity{"identity"}else{"all"},"selection_scope":"exact positive source views; training observations provide witnesses","cost_model":if profile.is_some(){"profile-supplied lifecycle nanoseconds"}else{"structural baseline; not a runtime performance estimate"},"receipt_tables":applied.iter().map(|v|&v.0).collect::<Vec<_>>(),"selected":selected,"publish_actions":pubs,"markers":views.iter().map(|v|json!({"name":v.name,"body":v.body,"completion_body":v.completion,"sorts":v.sorts,"cells":crate::witness::matches(cells,&v.body,&v.sorts),"consumers":v.uses.iter().map(|o|o.rid).collect::<Vec<_>>() })).collect::<Vec<_>>()});
     let mut report = report;
     if handoff {
         report["result_handoff"] = json!({"mode":"values","rules":handoffs,"new_marker_fields":0,

@@ -1,0 +1,66 @@
+{
+  "scope": "actual standalone Cell runtime, unchanged Program artifacts; resident plan omission, not Graph compression or timing",
+  "base_commit": "3ae40414",
+  "candidate_binary_sha256": "b600e48e916c84459128494bd239ebfbe498511780b842fd4d3a1c864fb2bfd7",
+  "lanes": {
+    "omit": {
+      "control_report_sha256": "2c8a2378efdf04f8ba9eb34b48ba90127fc6f63fdc40dd120d29d7087d3363ce",
+      "candidate_report_sha256": "de2382caeea4ee03775f4811a6f8b0d2d2ea730d19a43fba37485445529b9240",
+      "exact_final_export_bytes": true,
+      "unchanged_fields": [
+        "program_sha256",
+        "runs",
+        "final_state_sha256",
+        "graph_owned_teardown_bytes",
+        "graph_fields",
+        "ownership_storage",
+        "completion_work",
+        "ownership_query_work"
+      ],
+      "program_sha256": "05712af76ad6ad2007030f021e3b9f2f01542998b1c0cafa87d9ddf470836661",
+      "runs": 1428,
+      "graph_bytes": 1925591,
+      "program_before": 120103556,
+      "program_after": 115826307,
+      "program_field_deltas": {
+        "context_cuts": -4277249
+      },
+      "process_peak_before": 127223401,
+      "process_peak_after": 122946146
+    },
+    "original": {
+      "control_report_sha256": "1f91f43457be53c11f54de77f0d1588864dae3c68dab1883142bd567e42436bd",
+      "candidate_report_sha256": "4a6394791633e9c61fc5f2710ce2615337d62fcee17f7ab3a5f8dc2d7e9a94fa",
+      "exact_final_export_bytes": true,
+      "unchanged_fields": [
+        "program_sha256",
+        "runs",
+        "final_state_sha256",
+        "graph_owned_teardown_bytes",
+        "graph_fields",
+        "ownership_storage",
+        "completion_work",
+        "ownership_query_work"
+      ],
+      "program_sha256": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
+      "runs": 1428,
+      "graph_bytes": 2038485,
+      "program_before": 115168530,
+      "program_after": 115168530,
+      "program_field_deltas": {},
+      "process_peak_before": 122484895,
+      "process_peak_after": 122484891
+    }
+  },
+  "validation": {
+    "targeted_integration_job": 283,
+    "compiler_library_and_measurement_job": 284,
+    "semantic": "Both final exports byte-identical to job 281 accepted inputs; validator rules unchanged.",
+    "source_storage_estimates": "Original lane has an 8-byte difference in completed-owner layout estimates; actual Graph teardown and all compared execution counters unchanged.",
+    "limitations": [
+      "No new full-workload per-Run snapshot comparison.",
+      "Program savings are not credited toward 30% Graph target.",
+      "Saturated-stage RHS completion remains unfinished."
+    ]
+  }
+}

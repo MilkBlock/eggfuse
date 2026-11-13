@@ -70,16 +70,21 @@ impl Graph {
                         && c.facts.iter().all(|(&op,s)|s.owned && self.stable_node(FactRef{cell:*id,op}).is_some()))
             }).collect::<Vec<_>>();
             if ids.is_empty() || (!singletons && ids.len()==1) {continue;}
-            if POOL && ids.len()==1 && self.cells.completed_meta(ids[0]).is_none() {
+            if POOL && ids.len()<=16 && ids.iter().all(|id|self.cells.completed_meta(*id).is_none()) {
                 // Bound source count and estimated array payload while collecting
                 // groups once. Sources retain independent restoration slices.
-                let c=self.cells.get(&ids[0]).unwrap();
-                let size=c.values.len()*std::mem::size_of::<(usize,Value)>()
-                    +c.facts.len()*std::mem::size_of::<crate::graph::fact_states::OwnedFact>();
-                if !pending.is_empty() && (pending.len()==16 || bytes+size>4096) {
+                // Logical composition is not a reason to allocate a separate
+                // physical slab. Pool newly completed short components too;
+                // already transferred prefixes keep the extension path below.
+                let size=ids.iter().map(|id| {
+                    let c=self.cells.get(id).unwrap();
+                    c.values.len()*std::mem::size_of::<(usize,Value)>()
+                        +c.facts.len()*std::mem::size_of::<crate::graph::fact_states::OwnedFact>()
+                }).sum::<usize>();
+                if !pending.is_empty() && (pending.len()+ids.len()>16 || bytes+size>4096) {
                     groups.push(std::mem::take(&mut pending));bytes=0;
                 }
-                pending.push(ids[0]);bytes+=size;
+                pending.extend(ids);bytes+=size;
             } else {groups.push(ids);}
         }
         if !pending.is_empty() {groups.push(pending);}

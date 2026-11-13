@@ -12,6 +12,14 @@ the frozen suite recipes; a values-mode artifact requires its own matching
 catalog. Static substitution counts in `marker-selection.json/result_handoff`
 are compiler diagnostics, not measured runtime savings.
 
+`--marker-receipts omit` suppresses the generator's diagnostic `CellSpineApplied`
+tables and writes. Query markers and ordinary Cell definitions remain. The default
+is `materialized`, which preserves apply-history exports and the old receipt-based
+continuation report. Omission changes the compiled recipe, so an old catalog must
+not be reused unless its recipe check succeeds. This is generation-time selection,
+not deletion of tables from an existing runtime. See
+[the proof boundary and validation](../../benchmarks/cell-bake-owner-merge/application-receipts.md).
+
 `cargo cell-run --program FILE --output DIR` executes the complete source schedule and writes `state.json` and `report.json`. The report separates inference from setup and export. For small inputs, `--audit-stages` saves every logical graph and binding snapshot. `--inspect-program` validates an artifact and reports its admitted context plans.
 
 `cargo cell-bench --program FILE --repeat N` starts a fresh graph for each repetition, checks the final graph digest and reports inference samples and their median. It can also compile `--source FILE` or `--case NAME` before the timed runs. `--reference-program FILE` adds per-Run comparison before timing. `--lane` and `--modules` belong to the research CLI.

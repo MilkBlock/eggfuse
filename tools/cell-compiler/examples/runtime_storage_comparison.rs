@@ -51,9 +51,11 @@ fn step(exec: &mut Executor, next: usize) -> Result<Value, Box<dyn std::error::E
     )
 }
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let args = std::env::args().skip(1).collect::<Vec<_>>();
+    let mut args = std::env::args().skip(1).collect::<Vec<_>>();
+    let completed=args.last().is_some_and(|arg|arg=="--completed-owners");
+    if completed {args.pop();}
     if !(2..=3).contains(&args.len()) {
-        return Err("usage: runtime_storage_comparison PROGRAM OUTPUT [OPTIMIZED_PROGRAM]".into());
+        return Err("usage: runtime_storage_comparison PROGRAM OUTPUT [OPTIMIZED_PROGRAM] [--completed-owners]".into());
     }
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
     let program = p.artifact["sha256"].clone();
@@ -64,6 +66,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         p
     };
     let mut compact = Executor::new(Graph::new_with_local_congruence(optimized)?, false);
+    if completed {
+        compact.use_completed_parent_takeover()?;
+        compact.graph.use_port_domains_only()?;
+        compact.graph.use_cell_stable_fields()?;
+    }
     let mut run_checks = Vec::new();
     let mut runs = 0;
     let mut peak_before = 0;
@@ -80,7 +87,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         runs += 1;
         let start = Instant::now();
-        compact.graph.compact_retained_capacity()?;
+        if completed {
+            compact.graph.transfer_completed_owners()?;
+            compact.graph.compact_source_record_capacity();
+        } else {compact.graph.compact_retained_capacity()?;}
         compaction_seconds += start.elapsed().as_secs_f64();
         let graph = baseline.graph.export()?;
         if graph != compact.graph.export()? {
@@ -92,7 +102,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         peak_before = peak_before.max(a["counted_bytes"].as_u64().unwrap());
         peak_after = peak_after.max(b["counted_bytes"].as_u64().unwrap());
     }
-    let mut result = json!({"program_sha256":program,"runs":runs,"every_run_graph_and_ordered_audits_equal":true,
+    let mut result = json!({"completed_owners":completed,"program_sha256":program,"runs":runs,"every_run_graph_and_ordered_audits_equal":true,
         "run_checks":run_checks,"baseline":baseline.graph.retained_cell_storage(),"compacted":compact.graph.retained_cell_storage(),
         "boundary_peak_before":peak_before,"boundary_peak_after":peak_after,"compaction_seconds":compaction_seconds,
         "scope":"actual Cell runtime state takeover and capacity reclamation; boundary array peaks exclude within-Run peaks; not a speed benchmark"});

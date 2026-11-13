@@ -140,14 +140,19 @@ fn compile(
     if !matches!(handoff, "legacy" | "values") {
         return Err("unknown marker handoff mode; use legacy or values".into());
     }
+    let receipts=opts.get("--marker-receipts").map(String::as_str).unwrap_or("materialized");
+    if !matches!(receipts,"materialized"|"omit") {
+        return Err("unknown marker receipt mode; use materialized or omit".into());
+    }
     let cells = witness::load(&analysis)?;
-    let (marked, report, names) = markers::rewrite(
+    let (marked, report, names) = markers::rewrite_with_receipts(
         "source_sk.egg",
         &keyed,
         &cells,
         profile.as_ref(),
         locality == "identity",
         handoff == "values",
+        receipts == "materialized",
     )?;
     let core = eggfuse_bake::device_frontend::core("source_sk_mk.egg", &marked)?;
     eprintln!("Cell compiler: lower and validate standalone CPU plans");
@@ -321,7 +326,7 @@ pub fn cli(default_bench: bool) -> Result<()> {
     }
     if cmd == "help" || args.iter().any(|a| a == "--help") {
         println!(
-            "cargo cell-compile (--case NAME | --source FILE [--bake-source FILE]) --output DIR [--catalog FILE] [--profile FILE] [--marker-locality identity|all] [--marker-handoff legacy|values]\ncargo cell-bench (--case NAME | --source FILE | --program FILE) [--repeat N] [--reference-program FILE]\ncargo cell-iterate --program SEED --output DIR --rounds N"
+            "cargo cell-compile (--case NAME | --source FILE [--bake-source FILE]) --output DIR [--catalog FILE] [--profile FILE] [--marker-locality identity|all] [--marker-handoff legacy|values] [--marker-receipts materialized|omit]\ncargo cell-bench (--case NAME | --source FILE | --program FILE) [--repeat N] [--reference-program FILE]\ncargo cell-iterate --program SEED --output DIR --rounds N"
         );
         return Ok(());
     }
@@ -350,6 +355,7 @@ pub fn cli(default_bench: bool) -> Result<()> {
                     "--profile",
                     "--marker-locality",
                     "--marker-handoff",
+                    "--marker-receipts",
                 ],
             )?;
             let input = inputs(&opts)?;

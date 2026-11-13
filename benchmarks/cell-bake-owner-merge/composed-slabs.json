@@ -1,0 +1,54 @@
+{
+  "scope": "actual standalone Cell runtime, newly completed short-component slab sharing; not timing",
+  "base_commit": "4c38c51c",
+  "candidate_binary_sha256": "030d79a40f64d8132ad8c303f53e42589f209fab9c7c571668262714f047e5f5",
+  "lanes": {
+    "round1": {
+      "program_sha256": "74108f0f57b35e512827080560876ff19e0633252d5fe0e05957f8fe5fa138ae",
+      "control_report_sha256": "69bbc6490dd7e9dd7921ada902ca0b164f81aebfdd99efc5eeb0a97fd5477539",
+      "candidate_report_sha256": "f2e01ffa09a785fe86af2cd7a6fb85c937ecb885bc1cada3f5de5bacf75dbabf",
+      "runs": 1428,
+      "exact_final_export": true,
+      "logical_ownership_and_query_work_unchanged": true,
+      "graph_before": 1952405,
+      "graph_after": 1941209,
+      "graph_field_deltas": {
+        "cells": -11196
+      },
+      "owners_before": 788,
+      "owners_after": 765,
+      "process_peak_before": 123183633,
+      "process_peak_after": 123175612,
+      "takeover_extra_before": 16108,
+      "takeover_extra_after": 16108
+    },
+    "round2": {
+      "program_sha256": "4c23535fcef1a6a9cbb3d740ae7f6279115c08dd71f011cd4e8dbf5f70fd6cd1",
+      "control_report_sha256": "5f1ce5b3a9080f8912c0f34175de40ed67cac336c87cddcaffd3cc115a4a0afd",
+      "candidate_report_sha256": "0eb4d2e50ca7e620fd861917520320d69d3791cd664a1eac9083e5e07403f54f",
+      "runs": 1428,
+      "exact_final_export": true,
+      "logical_ownership_and_query_work_unchanged": true,
+      "graph_before": 1949501,
+      "graph_after": 1949485,
+      "graph_field_deltas": {
+        "cells": -16
+      },
+      "owners_before": 889,
+      "owners_after": 875,
+      "process_peak_before": 123869623,
+      "process_peak_after": 123869588,
+      "takeover_extra_before": 15732,
+      "takeover_extra_after": 16580
+    }
+  },
+  "validation": {
+    "targeted_test_job": 295,
+    "ownership_suite_and_measurement_job": 296,
+    "limitations": [
+      "No new full-workload per-Run graph audit; final exports exactly match prior candidates.",
+      "Sharing changes physical storage only, not logical component/fact count.",
+      "Round two saving is negligible; this cannot establish the 30% Graph target."
+    ]
+  }
+}

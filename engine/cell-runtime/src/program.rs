@@ -624,7 +624,14 @@ impl Program {
         }
         let allowed = p.artifact.get("context_admission")
             .map(|raw| crate::context_admission::admitted(&p, raw, &cuts)).transpose()?;
-        p.context_cuts = crate::local_context::compile_cuts(&p, cuts, allowed.as_deref())?;
+        // General context execution requires admission. Unfiltered candidates
+        // remain source selection certificates for Bake, not resident queries
+        // that this runtime can never dispatch.
+        p.context_cuts = if let Some(allowed) = allowed {
+            crate::local_context::compile_cuts(&p, cuts, Some(&allowed))?
+        } else {
+            vec![vec![]; p.rules.len()]
+        };
 
         p.local_contexts =
             crate::local_context::derive(&p, &p.artifact["multi_stage"]["stage_entries"]);

@@ -157,8 +157,11 @@ mod tests {
 
     const SOURCE: &str = include_str!("../tests/fixtures/marker-construction.egg");
     fn execute(source: &str, on: bool) -> (Executor, J, String) {
+        execute_receipts(source,on,true)
+    }
+    fn execute_receipts(source:&str,on:bool,receipts:bool)->(Executor,J,String) {
         let (source, report, names) =
-            crate::markers::rewrite("handoff.egg", source, &[], None, true, on).unwrap();
+            crate::markers::rewrite_with_receipts("handoff.egg", source, &[], None, true, on,receipts).unwrap();
         let mut native = egglog::EGraph::default();
         native.parse_and_run_program(None, &source).unwrap();
         let core = eggfuse_bake::device_frontend::core("marked.egg", &source).unwrap();
@@ -173,6 +176,40 @@ mod tests {
             &state,
         );
         (e, report, source)
+    }
+    #[test]
+    fn optional_apply_receipts_preserve_marker_queries_and_source_runs() {
+        let joined=SOURCE.replace("(run-schedule", "(ruleset join)\n(rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset join)\n(run-schedule")
+            +"\n(run join 1) (run-schedule (seq (run make) (run read) (run keep)))";
+        for input in [SOURCE,joined.as_str()] {for handoff in [false,true] {
+            let (old,report,_)=execute_receipts(input,handoff,true);
+            let (new,omitted,source)=execute_receipts(input,handoff,false);
+            let names=report["receipt_tables"].as_array().unwrap();
+            assert!(!names.is_empty(),"exercise actual receipt elimination");
+            assert!(omitted["receipt_tables"].as_array().unwrap().is_empty());
+            assert_eq!(report["markers"],omitted["markers"]);
+            assert!(!source.contains("CellSpineApplied"));
+            let project=|mut state:J| {
+                state["rows"].as_array_mut().unwrap().retain(|r|!names.contains(&r["table"]));
+                state
+            };
+            let old_state=old.graph.export().unwrap();
+            assert!(old_state["rows"].as_array().unwrap().iter().any(|r|names.contains(&r["table"])));
+            equivalent(&project(old_state),&new.graph.export().unwrap());
+            assert_eq!(old.snapshots.len(),new.snapshots.len());
+            for (a,b) in old.snapshots.iter().zip(&new.snapshots) {equivalent(&project(a.clone()),b);}
+            assert_eq!(old.steps.len(),new.steps.len());
+            for (a,b) in old.steps.iter().zip(&new.steps) {
+                for key in ["ordinal","ruleset","path","iterations","logical_matches","executed_bindings"] {
+                    assert_eq!(a[key],b[key],"source schedule changed: {key}");
+                }
+            }
+        }}
+    }
+    #[test]
+    fn receipt_omission_does_not_accept_user_defined_reserved_tables() {
+        let source="(relation CellSpineApplied0 (i64)) (CellSpineApplied0 1)";
+        assert!(crate::markers::rewrite_with_receipts("reserved.egg",source,&[],None,true,false,false).is_err());
     }
     fn compare(source: &str) -> (Executor, Executor, J, String) {
         let mut native = egglog::EGraph::default();
