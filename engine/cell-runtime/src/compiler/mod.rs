@@ -117,15 +117,9 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
                             |a, b| a.0.1 == b.0.1) {
                             let (kind, idx) = site.coordinates();
                             mapping = m;
-                            let mut step = json!({"atom":i,"source_kind":kind,"source_index":idx});
-                            if kind == "effect" {
-                                // Wire coordinates remain the original source
-                                // projection, even when value proofs use aliases.
-                                let (_, columns) = cell.local_columns(*site).expect("local Cell source");
-                                step["assignments"] =
-                                    json!(crate::multistage::assignments(&q[anchor], a, &columns));
-                            }
-                            steps.push(step);
+                            // Slot assignments follow from these checked Cell
+                            // coordinates; do not materialize another copy.
+                            steps.push(json!({"atom":i,"source_kind":kind,"source_index":idx}));
                             remaining.remove(&i);
                         }
                     }
@@ -139,7 +133,9 @@ fn multistage(p: &Program, known: &crate::known_results::Plans) -> J {
                         .count()
                         == 1
                 {
-                    routes.push(json!({"producer":producer,"effect":effect,"consumer":consumer,"anchor":anchor,"steps":steps,"residual":remaining}));
+                    // The residual is exactly the consumer atoms not covered
+                    // by anchor/steps. Loading derives it from that same query.
+                    routes.push(json!({"producer":producer,"effect":effect,"consumer":consumer,"anchor":anchor,"steps":steps}));
                 }
             }
         }

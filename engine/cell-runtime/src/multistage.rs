@@ -26,13 +26,11 @@ impl WitnessSource {
 pub struct LocalRead {
     pub atom: usize,
     pub table: usize,
-    pub columns: Vec<Arg>,
+    pub columns: Rc<Vec<Arg>>,
     pub effect: Option<usize>,
     /// Normalize elided operations to their actual query/effect donor once.
     #[serde(skip)]
     pub(crate) witness: Option<WitnessSource>,
-    #[serde(default)]
-    pub(crate) assignments: Vec<(usize, Arg)>,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Continuation {
@@ -206,6 +204,9 @@ impl MultiStage {
             result.finishes.push(verify_points(rid, None, finish)?);
         }
         let mut routes = HashMap::new();
+        // A producer Site has one immutable operand definition even when many
+        // consumer Entries project it. This directory is loading-only.
+        let mut source_columns = BTreeMap::new();
         for route in array(&raw["routes"])? {
             let number = |name: &str| {
                 route[name]
@@ -242,12 +243,12 @@ impl MultiStage {
                 let site = Site::parse(kind, index)?;
                 let (table, mut columns) = cell.local_columns(site)?;
                 target.query.get(atom).ok_or("continuation atom index")?;
-                let assignments = if kind == "effect" {
-                    assignments(&target.query[anchor], &target.query[atom], &columns)
-                } else {
-                    vec![]
-                };
                 if let Some(raw) = step.get("assignments") {
+                    let assignments = if kind == "effect" {
+                        assignments(&target.query[anchor], &target.query[atom], &columns)
+                    } else {
+                        vec![]
+                    };
                     if *raw != serde_json::json!(assignments) {
                         return Err("invalid producer slot wiring".into());
                     }
@@ -256,8 +257,9 @@ impl MultiStage {
                 // the existing Cell aliases for proof and runtime operand use.
                 for value in &mut columns { *value = cell.value(value); }
                 bind_relation(&target.query[atom], table, &columns, &mut mapping)?;
+                let columns = source_columns.entry((producer, site))
+                    .or_insert_with(|| Rc::new(columns)).clone();
                 reads.push(LocalRead {
-                    assignments,
                     atom,
                     table,
                     effect: (kind == "effect").then_some(index),
@@ -274,12 +276,14 @@ impl MultiStage {
                     columns,
                 });
             }
-            let residual = (0..target.query.len())
-                .filter(|i| !covered.contains(i))
-                .map(J::from)
-                .collect::<Vec<_>>();
-            if route["residual"] != J::Array(residual) {
-                return Err("continuation residual domain differs".into());
+            if let Some(raw) = route.get("residual") {
+                let residual = (0..target.query.len())
+                    .filter(|i| !covered.contains(i))
+                    .map(J::from)
+                    .collect::<Vec<_>>();
+                if *raw != J::Array(residual) {
+                    return Err("continuation residual domain differs".into());
+                }
             }
             if routes
                 .insert(
