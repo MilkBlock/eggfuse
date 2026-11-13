@@ -1,0 +1,48 @@
+{
+  "scope": "oracle joint-state compression viability, not ridge completion or a runtime",
+  "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "model_sha256": "d19a09dcb1fca392ebdc119e6652e8ab848c2b47bb95e34547017708eeac65ea",
+  "basis_sha256": "90d016665ea6ee7ad0a507311fbd7b0622f70235bc99c0d73b5ab2c58f6238c5",
+  "training_rows": 3760,
+  "rank": 128,
+  "active_boundary_weighting": true,
+  "state_width": 34080,
+  "basis_source": "train source and completed states only, randomized uncentered SVD with one power iteration",
+  "numerical_audit": {
+    "passed": true,
+    "nonfinite": false,
+    "coordinates_outside_tolerance": 0
+  },
+  "reports": {
+    "validation": {
+      "cases": 736,
+      "oracle_uncompressed_exact_target": 736,
+      "lost_original_targets": 0,
+      "oracle_compressed_exact_target": 736,
+      "ambiguous": 0,
+      "body_rmse": 0.06542841345071793,
+      "boundary_rmse": 0.01349110621958971,
+      "active_boundary_rmse": 0.17217300997024237,
+      "query_attachment_rmse": 0.014569969410582164,
+      "boundary_max_abs": 1.5364997386932373
+    },
+    "test": {
+      "cases": 850,
+      "oracle_uncompressed_exact_target": 850,
+      "lost_original_targets": 0,
+      "oracle_compressed_exact_target": 850,
+      "ambiguous": 0,
+      "body_rmse": 0.06347483396530151,
+      "boundary_rmse": 0.012379541993141174,
+      "active_boundary_rmse": 0.16464313256107363,
+      "query_attachment_rmse": 0.014868211536784033,
+      "boundary_max_abs": 1.2348670959472656
+    }
+  },
+  "limitations": [
+    "True completed state supplied for compression; no prediction or stopping evaluated",
+    "Known candidate dictionary includes held-out states",
+    "One basis does not prove an information-theoretic bound",
+    "No exact identity, visibility, successor or ownership proof"
+  ]
+}
