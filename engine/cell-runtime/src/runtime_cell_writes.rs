@@ -84,10 +84,11 @@ impl Executor {
         counts.direct_batches += u64::from(direct);
         counts.candidates += rows.len() as u64;
         let clock = Instant::now();
+        counts.retained_source_bytes += (rows.capacity() * std::mem::size_of::<Binding>()) as u64;
         let mut tasks = Vec::with_capacity(rows.len());
-        // Keep the incoming instances as their source owners. Only the original
-        // value storage moves to the write owner; Cursor tokens and query
-        // receipts stay in place instead of being repacked into side arrays.
+        // Each write task exclusively borrows the original Cell instance.
+        // Values, Cursor tokens and query receipts never need an intermediate
+        // owner; successful value storage moves only into its final graph row.
         let mut inherited = 0;
         let mut projections = prepared.into_iter();
         let template = self.graph.program.rules[rid].template;
@@ -110,8 +111,7 @@ impl Executor {
                 projections.next().unwrap().unwrap()
             };
             #[allow(unused_mut)]
-            let mut task = WriteTask::new(std::mem::take(&mut b.values), key, value, destination, ordinal);
-            task.parent = b.parent.take();
+            let mut task = WriteTask::new(b, key, value, destination, ordinal);
             #[cfg(feature = "slot-transfer-audit")]
             {
                 task.source = crate::transfer_audit::suspend_source();
@@ -120,9 +120,8 @@ impl Executor {
         }
         let counts = &mut self.cell_execution.as_mut().unwrap().writes;
         counts.source_completion_ns += clock.elapsed().as_nanos() as u64;
-        counts.temporary_bytes += (tasks.capacity() * std::mem::size_of::<WriteTask>()) as u64;
+        counts.temporary_bytes += (tasks.capacity() * std::mem::size_of::<WriteTask<'_>>()) as u64;
         counts.inherited_candidates += inherited;
-        counts.retained_source_bytes += (rows.capacity() * std::mem::size_of::<Binding>()) as u64;
         self.graph.write_cells(
             rid,
             &mut tasks,
@@ -133,11 +132,9 @@ impl Executor {
         let clock = Instant::now();
         // Only source completion/publication remains here. The actual values,
         // decoded rows and final writer slots have already been installed.
-        debug_assert_eq!(tasks.len(), rows.len());
-        for (ordinal, (task, b)) in tasks.into_iter().zip(rows).enumerate() {
+        for (ordinal, task) in tasks.into_iter().enumerate() {
             debug_assert_eq!(task.ordinal, ordinal, "write owners restore source order");
-            let known = b.known;
-            let step = if let Some(origin) = b.direct {
+            let step = if let Some(origin) = task.instance.direct.take() {
                 // Same selected cursor as start_cell_execution, consumed once
                 // at source completion. No input-key search or binding rebuild.
                 self.stage_spine.begin_step(&self.graph.program, rid, &Default::default(),
@@ -171,7 +168,7 @@ impl Executor {
                     rid,
                     task.cell,
                     step,
-                    |i| known.receipt(i),
+                    |i| task.instance.known.receipt(i),
                     crate::cell::SingleEffect(write.op, Dependency::Function(task.index)),
                     |_| Ok(vec![task.key.clone()]),
                 )?;

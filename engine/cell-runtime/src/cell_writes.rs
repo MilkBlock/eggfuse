@@ -4,7 +4,7 @@
 //! Only the final writer is observable before the next Run. Source-position
 //! receipts and logical improvements remain available for ordered publication.
 use super::*;
-use crate::{physical_plan::ScalarMerge, slots::Slots};
+use crate::{cell::Instance, physical_plan::ScalarMerge};
 use rayon::prelude::*;
 
 #[derive(Default, Serialize)]
@@ -91,27 +91,27 @@ mod tests {
                 .num_threads(workers)
                 .build()
                 .unwrap();
-            let tasks = |base: i64| {
+            let instances = |base: i64| {
                 (0..128)
                     .map(|i| {
-                        Task::new(
+                        Instance::matched(
                             [(0, Value::Eq(i as u64)), (1, Value::Int(base + i as i64))]
                                 .into_iter()
                                 .collect(),
-                            Value::Int(0),
+                            Default::default(),
                             0,
-                            None,
-                            i,
                         )
                     })
                     .collect::<Vec<_>>()
             };
             let mut counts = Counts::default();
-            g.write_cells(0, &mut tasks(0), &pool, &mut counts, Some(false))
+            let mut first = instances(0);
+            g.write_cells(0, &mut tasks(&mut first), &pool, &mut counts, Some(false))
                 .unwrap();
             let old = g.functions[17].origin.unwrap();
             g.retain_reference(old);
-            g.write_cells(0, &mut tasks(1000), &pool, &mut counts, Some(false))
+            let mut next = instances(1000);
+            g.write_cells(0, &mut tasks(&mut next), &pool, &mut counts, Some(false))
                 .unwrap();
             assert_eq!(g.slot(old.cell, 1).unwrap(), Value::Int(17));
             assert_eq!(g.functions[17].value(), &Value::Int(1017));
@@ -137,7 +137,7 @@ mod tests {
                 .num_threads(workers)
                 .build()
                 .unwrap();
-            let mut tasks: Vec<_> = (0..128)
+            let mut instances: Vec<_> = (0..128)
                 .map(|i| {
                     let values = [
                         (
@@ -152,9 +152,11 @@ mod tests {
                     ]
                     .into_iter()
                     .collect();
-                    Task::new(values, Value::Int(0), 0, None, i)
+                    Instance::matched(values, Default::default(), 0)
                 })
                 .collect();
+            let inputs = instances.iter().map(|i| i.values.clone()).collect::<Vec<_>>();
+            let mut tasks = tasks(&mut instances);
             let mut counts = Counts::default();
             assert_eq!(
                 g.write_cells(0, &mut tasks, &pool, &mut counts, Some(false))
@@ -175,12 +177,18 @@ mod tests {
             for task in tasks {
                 assert!(g.function_index(0, &[task.key]).is_none());
             }
+            assert!(instances.iter().zip(&inputs).all(|(i, v)| &i.values == v));
         }
     }
+    fn tasks(instances: &mut [Instance]) -> Vec<Task<'_>> {
+        instances.iter_mut().enumerate()
+            .map(|(i, instance)| Task::new(instance, Value::Int(0), 0, None, i)).collect()
+    }
 }
-pub(crate) struct Task {
-    pub values: Slots,
-    pub parent: Option<FactRef>,
+pub(crate) struct Task<'a> {
+    /// Exclusive access to the successful query's original execution state.
+    /// The source array stays fixed; sorting moves only task descriptors.
+    pub instance: &'a mut Instance,
     pub key: Value,
     pub value: i64,
     pub destination: Option<usize>,
@@ -192,17 +200,16 @@ pub(crate) struct Task {
     #[cfg(feature = "slot-transfer-audit")]
     pub source: Option<(u64, usize)>,
 }
-impl Task {
+impl<'a> Task<'a> {
     pub(crate) fn new(
-        values: Slots,
+        instance: &'a mut Instance,
         key: Value,
         value: i64,
         destination: Option<usize>,
         ordinal: usize,
     ) -> Self {
         Self {
-            values,
-            parent: None,
+            instance,
             key,
             value,
             destination,
@@ -245,9 +252,9 @@ enum Previous {
     Reused(FactRef, Option<FactRef>),
 }
 
-struct Target<'a> {
+struct Target<'a, 'instance> {
     function: &'a mut Function,
-    group: &'a mut [Task],
+    group: &'a mut [Task<'instance>],
     retained: bool,
     finished: Option<Finished>,
 }
@@ -266,7 +273,7 @@ struct Completion<'a> {
     row_writes: u64,
 }
 impl Completion<'_> {
-    fn accept(&mut self, target: &mut Target<'_>) {
+    fn accept(&mut self, target: &mut Target<'_, '_>) {
         let result = target.finished.take().unwrap();
         let index = target.group[0].index;
         self.merges += result.merges;
@@ -370,7 +377,7 @@ impl Graph {
     pub(crate) fn write_cells(
         &mut self,
         rid: usize,
-        tasks: &mut [Task],
+        tasks: &mut [Task<'_>],
         pool: &rayon::ThreadPool,
         counts: &mut Counts,
         evaluate: Option<bool>,
@@ -418,7 +425,7 @@ impl Graph {
                 .map(|task| {
                     task.cell = first + task.ordinal as u32;
                     if evaluate.is_some() {
-                        match ports.project_key(&task.values, parents) {
+                        match ports.project_key(&task.instance.values, parents) {
                             Ok(key) => task.key = key,
                             Err(error) => return (Some((task.ordinal, error)), 0),
                         }
@@ -499,7 +506,7 @@ impl Graph {
             counts.rows += targets.len() as u64;
             counts.duplicate_targets += (length as usize - targets.len()) as u64;
             counts.temporary_bytes +=
-                (targets.capacity() * std::mem::size_of::<Target<'_>>()) as u64;
+                (targets.capacity() * std::mem::size_of::<Target<'_, '_>>()) as u64;
             let chunks: Vec<_> = targets.chunks_mut(64).collect();
             let completion = Completion {
                 lifecycle: writer_frames::Owner {
@@ -562,7 +569,7 @@ impl Graph {
     }
 }
 
-impl Target<'_> {
+impl Target<'_, '_> {
     fn write(
         &mut self,
         ports: &crate::row_kernel::PortWrite,
@@ -598,7 +605,7 @@ impl Target<'_> {
                 // Either no arithmetic exists, or the query already
                 // established its result. The typed input read is total.
                 let (value, dst) = ports
-                    .project_value(&task.values, prepared)
+                    .project_value(&task.instance.values, prepared)
                     .expect("validated total scalar Cell input");
                 task.value = value;
                 task.destination = dst;
@@ -638,18 +645,18 @@ impl Target<'_> {
             });
             let task = &mut group[winner];
             if let Some(dst) = task.destination {
-                task.values.insert(dst, Value::Int(task.value));
+                task.instance.values.insert(dst, Value::Int(task.value));
             }
-            let parent = task.parent.filter(|_| !parent_columns.is_empty());
+            let parent = task.instance.parent.filter(|_| !parent_columns.is_empty());
             if parent.is_some() {
                 for slot in parent_columns.keys() {
-                    task.values.remove(slot);
+                    task.instance.values.remove(slot);
                 }
             }
             // Adopt the actual successful query's slot allocation directly.
             let state = writer_frames::Writer::completed(
                 template,
-                std::mem::take(&mut task.values),
+                std::mem::take(&mut task.instance.values),
                 parent,
                 epoch,
                 operation + 1,
@@ -673,7 +680,7 @@ impl Target<'_> {
             None
         };
         for task in group.iter_mut() {
-            drop(std::mem::take(&mut task.values));
+            drop(std::mem::take(&mut task.instance.values));
         }
         self.finished = Some(Finished {
             new,

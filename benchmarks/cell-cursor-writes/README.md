@@ -235,3 +235,34 @@ compiler layouts). These are actual Git integrations, not speed-gate approvals.
 The measurements above use immutable frozen binaries: job 142 identifies
 `da4737c0` explicitly, not the later merged branch. They must not be presented as
 validation or timing of `c1d99e67` or subsequent uncommitted ownership work.
+
+## Borrowed instances
+
+The next step replaces `WriteTask`'s owned values and copied parent with an
+exclusive borrow of the original `Instance`. Key projection and scalar work
+read that instance; a successful writer takes its actual value allocation only
+when adopting the final graph row. Redundant values are invalidated in that same
+instance. Source completion reads its Cursor and query receipts directly, so the
+extra value move and the task/source-array zip disappear.
+
+The input array stays fixed while descriptors exist. Target grouping and source
+order restoration move descriptors, not instances. Rust checks disjoint mutable
+borrows across workers; no unsafe `Send` implementation or new runtime dependency
+graph is introduced. Existing typed write, capacity, parent, continuation and
+Run visibility gates remain authoritative. An invalid key must leave the source
+values unchanged as well as leaving graph identities and directories unchanged;
+the existing invalid-input regression now checks both.
+
+The prior catalog's 302,679 inherited writes already supply the needed matched
+source proof. No new Bake evidence is needed for this representation change;
+scheduled effects and cross-Run boundaries still execute at their original
+positions. The benefit sought is smaller descriptors and less source packaging,
+not more claimed matches. The retained source capacity and final graph-row move
+remain charged. Pointer access may change locality, so timing remains required.
+
+For this experiment, use `source_batch.py ... --control-checkout CHECKOUT` with
+the control at `0025734e`. This freezes both ordinary binaries with the same
+merged compiler baseline (`c1d99e67` plus experiment documentation), instead of
+comparing the new change with the old `23d55e65` binary. The script requires the
+engine delta to contain only the two write implementation files, checks complete
+state/Run/effect equality, native sum-bits acceptance and unchanged write coverage.
