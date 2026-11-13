@@ -1,0 +1,59 @@
+{
+  "scope": "separate diagnostic of control standalone Cell CPU; 3-second partial inference window; per-Run logging enabled",
+  "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Sampling perturbs this diagnostic; see progress_logging for whether per-Run logging is enabled. Worker condition-wait residence is not full-run CPU utilization. Source logging also adds work.",
+  "runtime_sha256": "15b92e89725b2cc84c7a26edcefddb3fe4149460167a8460416b3e12bda2e295",
+  "program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+  "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+  "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+  "sample": {
+    "command": [
+      "/usr/bin/sample",
+      "95192",
+      "3",
+      "2",
+      "-mayDie",
+      "-file",
+      "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-owner-work/profile/stacks.txt"
+    ],
+    "trigger": "first source Run in progress log",
+    "start_delay_seconds": null,
+    "progress_logging": true,
+    "trigger_seconds_since_launch": 0.4576712080161087,
+    "command_end_seconds_since_launch": 3.6760861660004593,
+    "stacks_sha256": "47c976b62cd5d4a332eede13b8308858687f097ed85fe656d411da9b95d5f51a",
+    "limits": "Sampling includes wall-time residence on parked threads; stack counts are not CPU percentages. Symbolication time is included in command end. Sampling perturbs this diagnostic; see progress_logging for whether per-Run logging is enabled."
+  },
+  "threads": [
+    {
+      "samples": 931,
+      "condition_wait_samples": 124
+    },
+    {
+      "samples": 931,
+      "condition_wait_samples": 770
+    },
+    {
+      "samples": 931,
+      "condition_wait_samples": 779
+    },
+    {
+      "samples": 931,
+      "condition_wait_samples": 791
+    },
+    {
+      "samples": 931,
+      "condition_wait_samples": 800
+    }
+  ],
+  "source_selected_inclusive": {
+    "eggfuse_cell_runtime::executor::Executor::matches": 172,
+    "eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables": 158,
+    "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::resolve_cell_boundary": 112,
+    "eggfuse_cell_runtime::entry_schedule::Scheduler::batches": 81,
+    "eggfuse_cell_runtime::graph::Graph::replace_row_edges": 58,
+    "eggfuse_cell_runtime::executor::Executor::start_cell_execution": 56,
+    "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$": 53,
+    "eggfuse_cell_runtime::stage_spine::Programs::publish_impl": 52,
+    "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$": 38
+  }
+}

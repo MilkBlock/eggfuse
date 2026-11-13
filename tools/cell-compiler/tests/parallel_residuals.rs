@@ -10,6 +10,45 @@ fn run(source:&str, workers:usize, enabled:bool)->Executor {
     e.execute().unwrap();e
 }
 #[test]
+fn residual_point_cells_keep_run_visibility_and_late_input_ownership() {
+    let mut source=String::from(r#"
+(datatype E (N i64) (Start E))
+(function Cost (E) i64 :merge new)
+(function Out (E) i64 :merge new)
+(ruleset read) (ruleset change) (ruleset remove) (ruleset again) (ruleset join)
+(rule ((Start x) (= c (Cost x)))
+      ((set (Out x) c) (set (Cost x) (+ c 1))) :ruleset read)
+(rule ((Start x)) ((set (Cost x) 7)) :ruleset change)
+(rule () ((delete (Cost (N 3)))) :ruleset remove)
+(rule () ((set (Cost (N 3)) 11)) :ruleset again)
+(rule () ((union (N 0) (N 128))) :ruleset join)
+"#);
+    for i in 0..129 {
+        source+=&format!("(Start (N {i}))\n");
+        if i<128 {source+=&format!("(set (Cost (N {i})) 1)\n");}
+    }
+    source+=r#"
+(run-schedule (run read))
+(check (= (Out (N 3)) 1) (= (Cost (N 3)) 2))
+(run-schedule (seq (run change) (run read)))
+(check (= (Out (N 128)) 7))
+(run-schedule (seq (run remove) (run read) (run again) (run read)))
+(check (= (Out (N 3)) 11))
+(run-schedule (seq (run join) (run read)))
+"#;
+    egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+    let before=run(&source,0,false);
+    for workers in [1,2,4] {
+        let after=run(&source,workers,true);
+        assert_eq!(before.snapshots,after.snapshots,"every Run, retirement and union visibility");
+        assert_eq!(before.binding_audit,after.binding_audit,"same delta owner and ordered winners");
+        let report=after.report();let work=&report["query_workers"]["residual_expansion"]["stats"];
+        assert!(work["point_entries"].as_u64().unwrap()>0,"point-only residuals must enter workers: {work}");
+        assert!(work["point_answers"].as_u64().unwrap()>0,"successful Instances must bypass serial query execution");
+        assert_eq!(work["expansion_rows"],0,"this workload needs no enumerating query step");
+    }
+}
+#[test]
 fn complete_expansions_preserve_order_late_inputs_mutation_and_visibility() {
     let mut s=String::from(r#"
 (datatype E (N i64) (Start E) (Wrap i64 E))
