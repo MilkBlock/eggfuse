@@ -71,6 +71,17 @@ path coverage as well: two identical executables can pass a semantic comparison
 while failing to test the proposed change. The publication integration caught
 and rejected exactly that case before timing.
 
+For CPU diagnosis, build both frozen versions with the optional `inference-cpu`
+feature (macOS/Linux). It samples process user/system CPU, coordinator thread CPU
+and context switches immediately around `runtime.execute()`. It is independent
+of `storage-metrics` and adds no per-Cell or periodic sampling. The quick harness
+retains the `inference_cpu` record plus existing completion/wait statistics before
+removing temporary reports. Keep diagnostic builds separate from ordinary speed
+acceptance. CPU divided by wall time is average cores consumed by the whole
+process, not worker utilization; wall minus coordinator CPU also includes OS
+preemption and is not pure synchronization time. The report records boundary
+sampling overhead; CPU samples have that small boundary skew.
+
 Cancellation terminates only the owned process group, escalating after five
 seconds if necessary. It cannot cancel an unrelated external blocker. The
 guardian keeps the reservation while background descendants remain. If the

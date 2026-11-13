@@ -138,7 +138,8 @@ def run(control, candidate, output, result_path, *, sum_repeats=5, ray_repeats=3
                 assert workload['control']['program_file_sha256'] == data['program_file_sha256']
             keep = ('iteration', 'process_wall_seconds', 'inference_seconds', 'load_seconds',
                     'setup_seconds', 'export_seconds', 'report_seconds',
-                    'process_user_seconds', 'process_system_seconds', 'peak_rss_through_inference_bytes')
+                    'process_user_seconds', 'process_system_seconds', 'peak_rss_through_inference_bytes',
+                    'inference_cpu')
             workload[label] = {
                 'runtime_sha256': data['runtime_sha256'], 'program_file_sha256': data['program_file_sha256'],
                 'args': config['args'], 'repeat': repeat, 'warmups': 1,

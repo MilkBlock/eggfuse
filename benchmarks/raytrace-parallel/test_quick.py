@@ -75,7 +75,7 @@ from pathlib import Path
 p=Path(sys.argv[sys.argv.index('--output')+1]);p.mkdir()
 step={k:0 for k in ('ordinal','ruleset','path','iterations','epoch','logical_matches','executed_bindings','changed')}
 step['phases']={}
-(p/'report.json').write_text(json.dumps({'status':'complete','steps':[step],'stats':{},'inference_seconds':0}))
+(p/'report.json').write_text(json.dumps({'status':'complete','steps':[step],'stats':{},'inference_seconds':0,'inference_cpu':{'wall_seconds':0.25,'coordinator_cpu_seconds':0.1}}))
 (p/'state.json').write_text('{}')
 ''')
             runtime.chmod(0o755)
@@ -94,6 +94,8 @@ step['phases']={}
                     output, 2, 1, 10, sample_boundary=boundary)
             stored = json.loads((output / 'samples.json').read_text())
             self.assertEqual(len(stored['lanes']['control']['warmup_samples']), 1)
+            self.assertEqual(stored['lanes']['control']['warmup_samples'][0]['inference_cpu'],
+                             {'wall_seconds':0.25,'coordinator_cpu_seconds':0.1})
             self.assertEqual(stored['lanes']['control']['samples'], [])
             self.assertEqual(phases, [('before-sample', 'control', -1), ('after-sample', 'control', -1)])
 

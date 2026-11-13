@@ -154,8 +154,10 @@ def measure(spec, output, repeat, warmups, timeout, sample_boundary=None):
             row['phases'] = {key: sum(step['phases'][key] for step in report['steps'])
                              for key in report['steps'][0]['phases']}
             row['stats'] = report['stats']
+            if 'inference_cpu' in report:
+                row['inference_cpu'] = report['inference_cpu']
             row['key_lookup_calls'] = report.get('key_lookup_calls')
-            for key in ('scoped_executor', 'port_completion'):
+            for key in ('scoped_executor', 'port_completion', 'cell_execution', 'query_workers', 'publication'):
                 row[key] = report.get(key)
             stable = report.get('stable_ports', {})
             row['birth_absence_directory'] = stable.get('birth_absence_directory')

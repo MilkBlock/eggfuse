@@ -1,5 +1,7 @@
 #[cfg(feature = "allocation-metrics")]
 mod allocation_metrics;
+#[cfg(feature = "inference-cpu")]
+mod inference_cpu;
 #[cfg(feature = "allocation-metrics")]
 #[global_allocator]
 static ALLOCATOR: allocation_metrics::Meter = allocation_metrics::Meter;
@@ -303,6 +305,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     #[cfg(feature = "allocation-metrics")]
     let allocation_start = allocation_metrics::begin();
+    #[cfg(feature = "inference-cpu")]
+    let inference_cpu_start = inference_cpu::Measurement::begin()?;
     if let Err(error) = runtime.execute() {
         std::fs::write(
             out.join("failure.json"),
@@ -312,6 +316,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         )?;
         return Err(error.into());
     }
+    #[cfg(feature = "inference-cpu")]
+    let inference_cpu = inference_cpu_start.finish()?;
     #[cfg(feature = "allocation-metrics")]
     let allocation_delta = allocation_metrics::end(allocation_start);
     #[cfg(feature = "slot-transfer-audit")]
@@ -363,6 +369,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     runtime.write_keepers(&out)?;
     let report_start = Instant::now();
     let mut report = runtime.report();
+    #[cfg(feature = "inference-cpu")]
+    {
+        report["inference_cpu"] = serde_json::to_value(inference_cpu)?;
+    }
     #[cfg(feature = "allocation-metrics")]
     {
         report["setup_allocations"] = setup_allocation_delta.report();
