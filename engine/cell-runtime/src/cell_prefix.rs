@@ -123,6 +123,7 @@ impl Graph {
                 self.stats.constructor_requests += 1;
                 frame.values.insert(*dst, point.value);
                 self.stats.constructor_reused += 1;
+                self.composition_result_entry_with_template(cell,Some(template),op,point.witness,true);
                 prefix.reused();
                 if P::RECORD_RECEIPTS { receipts.record(op, point.witness); }
                 continue;
@@ -153,6 +154,8 @@ impl Graph {
                     Op::Let(dst, ..) => {
                         frame.values.insert(*dst, value.clone());
                         self.stats.constructor_reused += 1;
+                        #[cfg(feature="sparse-cells")]
+                        self.composition_result_entry_with_template(cell,Some(template),op,row.witness,!row.hidden);
                         prefix.reused();
                     }
                     Op::Set(..) => {

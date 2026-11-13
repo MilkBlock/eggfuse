@@ -822,6 +822,12 @@ impl Graph {
     /// No bindings, consumer lists or retained result history are added.
     #[cfg(feature="sparse-cells")]
     pub(crate) fn composition_result_entry(&mut self,cell:u32,op:usize,witness:Dependency,visible:bool) {
+        self.composition_result_entry_with_template(cell,None,op,witness,visible);
+    }
+    /// A not-yet-promoted source prefix owns its reserved ID and typed template.
+    /// Its actual witness must reach the same Entry before first-miss promotion.
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn composition_result_entry_with_template(&mut self,cell:u32,template:Option<usize>,op:usize,witness:Dependency,visible:bool) {
         if !visible {return;}
         let Some(m)=&mut self.ownership else {return;};
         let Some(entry)=m.composition.entry.as_mut() else {return;};
@@ -831,8 +837,8 @@ impl Graph {
         let Dependency::Fact(f)=witness else {return;};
         if f.cell==cell || m.composition.frames.contains_key(&cell)
             || !m.composition.frames.contains_key(&f.cell) {return;}
-        let template=self.active_rhs.as_ref().filter(|(id,_)|*id==cell).map(|(_,c)|c.template)
-            .or_else(||self.cells.cell_metadata(cell).map(|c|c.template));
+        let template=template.or_else(||self.active_rhs.as_ref().filter(|(id,_)|*id==cell).map(|(_,c)|c.template)
+            .or_else(||self.cells.cell_metadata(cell).map(|c|c.template)));
         if template!=Some(entry.template) {return;}
         let slot=self.program.cell_ownership.entries[entry.rule].len()+op;
         let program=&self.program.cell_ownership.markers[entry.template].program;
