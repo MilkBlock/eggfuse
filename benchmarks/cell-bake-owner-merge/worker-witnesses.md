@@ -121,3 +121,39 @@ boundary rather than retry its route map at each constructor, and to retain the
 catalog-free preparation path without unnecessary common dispatch. Expanding
 this catalog or counting the 558 successes again would not discharge either
 cost. Large parallel speedup and saturated-Cell replacement remain unfinished.
+
+## Next experiment: reuse selection across a worker chunk
+
+The prior actual learned execution paid 4,676 route-map probes for 558 accepted
+witnesses. Relearning that catalog cannot remove repeated lookup of an identical
+compiled `(rule, Entry, shape, position, code, operation)` selection. Adjacent
+instances in the existing worker chunk may reuse that selection, including an
+absent route. This eliminates only the repeated static map search. It does not
+cache a returned value or a component address; each instance resolves its own
+anchor/component and validates the actual target as before. Exact comparisons,
+forwarding/liveness checks and source union-generation admission remain live.
+
+Selection scratch is now created at chunk entry and destroyed with that chunk,
+including on error. Point queries, owned Entry ranges, residual expansions and
+already matched groups all use the same rule. No selection survives in a
+thread-local frame across Runs or programs. Memory is a single inline selection
+per active chunk, with no heap allocation, new Instance field or dependency list.
+The prefix also chooses its catalog/ordinary variant once before execution;
+the ordinary variant has no per-operation witness branch or lazy-key cache.
+These changes do not extend the saturation proof or alter Run visibility.
+
+The prior performance gate failed, so fewer probes alone will not establish
+acceptance. Validation must retain actual hits, final exports, source ordering
+and native ordinary sum-bits acceptance, then measure complete sequential lanes
+against both the failed experiment and the prior performance baseline. Results
+are pending; broad saturated Cell completion and parallel ownership are still
+unfinished.
+
+Job 310 passes 113 compiler integration tests, 215 runtime unit tests and the
+no-default runtime compile. The witness fixture now compares grains 1 and 16,
+one/four workers and both canonical/stable storage. With the changed-key hint,
+route probes fall 48→3 while the 97 actual witness hits and 481 generic lookups
+are unchanged. Exact Run snapshots, ordered bindings and exports agree with the
+ordinary-query control. This tests template sharing across distinct instances,
+including targets which must fail exact key comparison. It is not workload
+speed evidence.

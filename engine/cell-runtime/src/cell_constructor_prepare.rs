@@ -220,8 +220,8 @@ impl Counts {
 impl Plan {
     pub fn complete(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
-        counts: &mut super::execution::Counts) {
-        self.prepare(instance, reads, scratch, work, &mut counts.constructor);
+        counts: &mut super::execution::Counts, selection: &mut crate::graph::query_reads::PreparedSelection) {
+        self.prepare_selected(instance, reads, scratch, work, &mut counts.constructor, selection);
         self.prepare_units(instance, reads, &mut counts.units);
     }
     pub fn has_unit_tail(&self) -> bool { self.units.is_some() }
@@ -256,20 +256,34 @@ impl Plan {
         + self.scalar_ready.capacity() * std::mem::size_of::<usize>()
         + self.prefix.iter().map(|s|s.keys.capacity()*std::mem::size_of::<Arg>()).sum::<usize>()
         + self.units.as_ref().map_or(0, |p|std::mem::size_of::<super::unit_prepare::Plan>()+p.storage_bytes()) }
+    #[cfg(test)]
     pub fn prepare(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
         counts: &mut Counts) {
+        self.prepare_selected(instance,reads,scratch,work,counts,&mut Default::default());
+    }
+    fn prepare_selected(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
+        scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
+        counts: &mut Counts, selection: &mut crate::graph::query_reads::PreparedSelection) {
+        // Select the execution variant once per Cell prefix. Catalog-free
+        // operations contain no witness routing or lazy-key state.
+        if self.witness_rule.is_some() { self.prepare_in::<true>(instance,reads,scratch,work,counts,selection); }
+        else { self.prepare_in::<false>(instance,reads,scratch,work,counts,selection); }
+    }
+    fn prepare_in<const ROUTES: bool>(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
+        scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
+        counts: &mut Counts, selection: &mut crate::graph::query_reads::PreparedSelection) {
         if !instance.constructor.pending() { return; }
         instance.constructor = Prepared::Absent;
         counts.attempts += 1;
         if !self.prefix.is_empty() {
-            self.prepare_prefix(instance, reads, scratch, work, counts);
+            self.prepare_prefix::<ROUTES>(instance, reads, scratch, work, counts, selection);
             return;
         }
         let Some(reads) = reads else {
             counts.unavailable += 1; return;
         };
-        match self.probe(self.operation,self.table,&self.keys,instance,reads,scratch,work,counts,&mut Default::default()) {
+        match self.probe::<ROUTES>(self.operation,self.table,&self.keys,instance,reads,scratch,work,counts,selection) {
             Ok(Some((_, _, Dependency::Fact(fact)))) => {
                 instance.constructor = Prepared::Found(fact);
                 counts.hits += 1;
@@ -281,7 +295,8 @@ impl Plan {
             _ => counts.unavailable += 1,
         }
     }
-    pub(super) fn probe(&self,operation:usize,table:usize,args:&[Arg],instance:&Instance,
+    #[inline]
+    pub(super) fn probe<const ROUTES: bool>(&self,operation:usize,table:usize,args:&[Arg],instance:&Instance,
         reads:&crate::graph::query_reads::QueryReads<'_>,scratch:&mut crate::graph::query_reads::Scratch,
         work:&mut crate::graph::query_reads::Work,counts:&mut Counts,
         selection:&mut crate::graph::query_reads::PreparedSelection)
@@ -300,12 +315,13 @@ impl Plan {
             }
             *key_spills+=u64::from(values.spilled());Ok(values)
         };
-        let Some(rule)=self.witness_rule else {
+        if !ROUTES {
             if !reads.constructor_available(table) {return Err(());}
             let key=make_key()?;
             counts.lookups+=1;
             return reads.point(table,&key,scratch,work).map_err(|_|());
-        };
+        }
+        let rule=self.witness_rule.expect("compiled witness variant");
         let mut key=None;
         if let Some(result)=reads.prepared_witness(rule.get()-1,operation,table,&instance.known,
                 selection,witnesses,work,&mut key,&mut make_key) {return Ok(Some(result));}

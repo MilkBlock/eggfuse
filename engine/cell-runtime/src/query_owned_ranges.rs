@@ -156,6 +156,7 @@ pub(super) fn run(
             worker: pooled.then(rayon::current_thread_index).flatten(),
         };
         frame.prepare(code.slots, code.reads, &mut done.counts);
+        let mut selection=Default::default();
         let mut visit = |w| {
             done.counts.owned_range_rows += 1;
             if !task
@@ -235,6 +236,7 @@ pub(super) fn run(
                             &mut frame.constructors,
                             &mut done.counts.constructors,
                             &mut done.counts.execution,
+                            &mut selection,
                         );
                     }
                     done.counts.answers += 1;

@@ -380,7 +380,7 @@ impl Workers {
         #[cfg(feature="cell-absorption")]
         {self.expansion.work.absorption_capacity_bytes+=(chunk.absorption.capacity()
             *std::mem::size_of::<(usize,crate::neighbor::WorkerAbsorption)>()) as u64;}
-        let ChunkWork {counts:c,work:w,filters,
+        let ChunkWork {counts:c,work:w,filters,selection:_,
             #[cfg(feature="cell-absorption")] absorption:_,}=chunk;
         if w.input_rows==0 {return;}
         let t=&mut self.expansion.work;
@@ -440,6 +440,7 @@ struct InputWork {
 }
 #[derive(Default)]
 pub(super) struct ChunkWork {
+    selection:crate::graph::query_reads::PreparedSelection,
     pub counts:Counts,work:InputWork,
     filters:SmallVec<[(usize,u64,u64,u64,u64);4]>,
     // Metrics only: no rejected bindings, result slots or row log cross back.
@@ -497,7 +498,7 @@ impl Prepared<'_> {
                 absorption:self.absorption.as_ref().and_then(|p|p.activate_sealed(q.row,known.watermark)),
                 #[cfg(feature="cell-absorption")]
                 absorption_work:&mut absorption_work,
-                inputs:&q.code.inputs,known:&known.facts,frame,counts:c,work:w,answers,
+                inputs:&q.code.inputs,known:&known.facts,frame,counts:c,work:w,answers,selection:&mut chunk.selection,
                 source:q.source,watermark:known.watermark}.step(0,None,entry.epoch,domain.as_ref())
         })();
         #[cfg(feature="cell-absorption")]
@@ -525,6 +526,7 @@ struct Host<'a,'g,'i> {
     query:&'a crate::cell::Query, entry:&'a Entry<'a>, pivot:usize,
     reads:&'a crate::graph::query_reads::QueryReads<'g>, index:&'a Read<'i>, key_nodes:&'a J,
     inputs:&'a [usize], known:&'a QueryFacts, frame:&'a mut Frame,
+    selection:&'a mut crate::graph::query_reads::PreparedSelection,
     counts:&'a mut Counts, work:&'a mut InputWork, answers:&'a mut Vec<(usize,Binding)>, source:usize, watermark:u64,
     #[cfg(feature="cell-absorption")]
     absorption:Option<crate::neighbor::Activated<'a>>,
@@ -592,7 +594,7 @@ impl Host<'_, '_, '_> {
         self.local.prepare_with_reads(self.template,&mut answer,Some(self.reads),&mut self.counts.execution);
         if let Some(plan) = &self.local.constructor {
             plan.complete(&mut answer,Some(self.reads),&mut self.frame.constructors,
-                &mut self.counts.constructors,&mut self.counts.execution);
+                &mut self.counts.constructors,&mut self.counts.execution,self.selection);
         }
         self.answers.push((self.source,answer));
         self.counts.answers+=1;

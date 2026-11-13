@@ -11,24 +11,33 @@ quick = runpy.run_path(str(ROOT / 'benchmarks/raytrace-parallel/quick.py'))
 timer = quick['timer']
 
 
-def run(artifacts, program, output, repeats=7, include_ordinary=False):
+def run(artifacts, program, output, repeats=7, include_ordinary=False, previous_experiment=None):
     lease = quick['jobs'].current_lease()
     assert __debug__ and lease and lease['kind'] == 'timing' and lease['guard'] == 'known'
     assert repeats > 0
     work = json.loads((artifacts / 'work.json').read_text())
     proof = work['learned_validation']
     assert proof['exact_state_runs_effects'] and timer['sha'](program) == proof['program_sha256']
+    lanes = [('control', artifacts / 'control', work['lanes']['control'])]
+    commits = dict(work['commits'])
+    if previous_experiment is not None:
+        prior = json.loads((previous_experiment / 'work.json').read_text())
+        assert prior['learned_validation']['exact_state_runs_effects']
+        for key in ('program_sha256', 'state_sha256', 'runs'):
+            assert prior['learned_validation'][key] == proof[key]
+        lanes.append(('previous', previous_experiment / 'candidate', prior['lanes']['candidate']))
+        commits['previous'] = prior['commits']['candidate']
+    lanes.append(('candidate', artifacts / 'candidate', work['lanes']['candidate']))
     output.mkdir(exist_ok=False)
     result = dict(scope='actual standalone Cell CPU; native acceptance only for ordinary sum-bits, learned catalog is differential',
-                  order_policy='all control samples, then all candidate samples; never interleaved',
-                  commits=work['commits'], scheduler=lease, observations=[], workloads={}, groups=[])
+                  order_policy='whole control, optional previous experiment, then whole candidate; never interleaved',
+                  commits=commits, scheduler=lease, observations=[], workloads={}, groups=[])
     cases = [('sum',5),('ray',3),('learned',repeats)] if include_ordinary else [('learned',repeats)]
     references = {}
-    for name in ('control', 'candidate'):
-        root = artifacts / name
+    for name, root, evidence in lanes:
         config = json.loads((root / 'checked/manifest.json').read_text())
         binary = root / 'checked/candidate-runtime'
-        assert timer['sha'](binary) == config['runtime_sha256'] == work['lanes'][name]['build']['runtime_sha256']
+        assert timer['sha'](binary) == config['runtime_sha256'] == evidence['build']['runtime_sha256']
         for case, count in cases:
             lane = config['lanes']['sum' if case == 'learned' else case]
             args = lane['args']
@@ -71,10 +80,13 @@ def run(artifacts, program, output, repeats=7, include_ordinary=False):
                 raw_samples_sha256=timer['sha'](group / 'samples.json'))
             result['groups'].append((name,case))
             quick['guard'](result, output, 'after-group', name, case)
-    assert result['groups'] == [(name,case) for name in ('control','candidate') for case,_ in cases]
+    assert result['groups'] == [(name,case) for name,_,_ in lanes for case,_ in cases]
     for case, data in result['workloads'].items():
         a,b = [data[name]['medians']['inference_seconds'] for name in ('control','candidate')]
         data['inference_change_percent'] = (b / a - 1) * 100
+        if previous_experiment is not None:
+            previous = data['previous']['medians']['inference_seconds']
+            data['change_from_previous_percent'] = (b / previous - 1) * 100
         print(f'{case}: {a:.6f} -> {b:.6f} ({data["inference_change_percent"]:+.2f}%)', flush=True)
     if not include_ordinary:
         learned = result.pop('workloads')['learned']
@@ -89,6 +101,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('artifacts', 'program', 'output'):
         parser.add_argument(name, type=Path)
+    parser.add_argument('--previous-experiment', type=Path,
+                        help='also measure a prior frozen candidate as a whole middle lane')
     parser.add_argument('--repeats', type=int, default=7)
     parser.add_argument('--include-ordinary', action='store_true',
                         help='also time sum-bits (5 samples) and Raytrace (3), still whole control before candidate')

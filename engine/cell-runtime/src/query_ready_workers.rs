@@ -149,11 +149,12 @@ impl Work {
         let mut work = Self { instances: rows.len() as u64, chunks: 1, ..Default::default() };
         if let Some(plan) = &code.constructor {
             super::with_worker_frame(|frame| {
+                let mut selection=Default::default();
                 for row in rows {
                     let row = row.frame_mut();
                     code.prepare_with_reads(template, row, reads, &mut work.execution);
                     plan.complete(row, reads, &mut frame.constructors, &mut work.constructors,
-                        &mut work.execution);
+                        &mut work.execution,&mut selection);
                 }
             });
         } else {

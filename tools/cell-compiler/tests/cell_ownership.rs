@@ -2044,10 +2044,12 @@ fn prepared_workers_use_baked_witnesses_and_check_unproved_keys() {
     raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
     let baked=Program::parse(raw).unwrap();
     for stable in [false,true] {for workers in [1,4] {
+    let mut unbatched=None;
+    for grain in [1,16] {
         let execute=|program| {
             let g=if stable {Graph::new_with_local_congruence(program)}else{Graph::new_with_cell_ownership(program)}.unwrap();
             let mut e=Executor::new(g,true);
-            e.use_query_workers(workers,1).unwrap();e.use_cell_execution(1).unwrap();e.execute().unwrap();e
+            e.use_query_workers(workers,grain).unwrap();e.use_cell_execution(grain).unwrap();e.execute().unwrap();e
         };
         let control=execute(p.clone());let candidate=execute(baked.clone());
         assert_eq!(control.snapshots,candidate.snapshots);
@@ -2060,10 +2062,16 @@ fn prepared_workers_use_baked_witnesses_and_check_unproved_keys() {
         assert!(w["hits"].as_u64().unwrap()>w["proved_hits"].as_u64().unwrap(),"unproved keys must be compared: {w}");
         assert!(w["selection_reuses"].as_u64().unwrap()>0,"{w}");
         assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
+        let probes=w["probes"].as_u64().unwrap();
+        let result=(w["hits"].as_u64().unwrap(),candidate.graph.key_lookup_calls.get());
+        if let Some((previous,expected))=unbatched {
+            assert!(probes<previous,"neighbor instances should share static selection: {w}");
+            assert_eq!(result,expected,"batching cannot change actual witness acceptance");
+        } else {unbatched=Some((probes,result));}
         if delta==1 {assert!(w["candidates"].as_u64().unwrap()>w["hits"].as_u64().unwrap(),"mismatched hinted keys must fall back: {w}");}
-        eprintln!("prepared witnesses delta={delta} stable={stable} workers={workers}: {w}; lookups {} -> {}",
+        eprintln!("prepared witnesses delta={delta} stable={stable} workers={workers} grain={grain}: {w}; lookups {} -> {}",
             control.graph.key_lookup_calls.get(),candidate.graph.key_lookup_calls.get());
-    }}
+    }}}
     }
 }
 

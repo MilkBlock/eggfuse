@@ -105,8 +105,10 @@ impl Routes {
     }
 }
 
-/// Stack scratch scoped to one prepared instance. It owns no values or graph
-/// evidence and never survives the borrowed Run view or crosses Graphs.
+/// Stack scratch scoped to one worker chunk in a single borrowed Run view.
+/// Adjacent Cell instances can share a compiled selection (including misses);
+/// actual instance addresses, values and lifecycle evidence are never cached.
+/// Callers create it at chunk entry, never in the persistent worker frame.
 #[derive(Default)]
 pub(crate) struct PreparedSelection(Option<Selection>);
 #[derive(Default,serde::Serialize)]

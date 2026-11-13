@@ -89,16 +89,16 @@ impl Plan {
         counts.continuation_bytes += std::mem::size_of::<PrefixUnits>() as u64;
         instance.constructor = Prepared::PrefixUnits(Box::new(PrefixUnits { results, units }));
     }
-    pub(super) fn prepare_prefix(&self, instance: &mut Instance,
+    pub(super) fn prepare_prefix<const ROUTES: bool>(&self, instance: &mut Instance,
         reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         scratch: &mut crate::graph::query_reads::Scratch,
-        work: &mut crate::graph::query_reads::Work, counts: &mut Counts) {
+        work: &mut crate::graph::query_reads::Work, counts: &mut Counts,
+        selection: &mut crate::graph::query_reads::PreparedSelection) {
         let Some(reads) = reads else { counts.unavailable += 1; return; };
         let capacity = instance.values.capacity_bytes();
         let mut results = Vec::new();
         let mut completed = 0;
         let mut ready = 0;
-        let mut selection=Default::default();
         for step in &self.prefix {
             let mut missing = false;
             for slot in &self.scalar_ready[ready..step.ready] {
@@ -107,7 +107,7 @@ impl Plan {
             }
             if missing { counts.prefix_scalar_stops += 1; break; }
             ready = step.ready;
-            match self.probe(step.operation,step.table,&step.keys,instance,reads,scratch,work,counts,&mut selection) {
+            match self.probe::<ROUTES>(step.operation,step.table,&step.keys,instance,reads,scratch,work,counts,selection) {
                 Ok(Some((value,_,Dependency::Fact(witness)))) => {
                     if completed == 0 {
                         instance.values.reserve_exact(self.prefix.len());

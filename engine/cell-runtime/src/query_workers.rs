@@ -427,6 +427,7 @@ impl Executor {
             let mut counts = Counts { entries: chunk.len() as u64, chunks: 1,
                 ..Default::default() };
             frame.prepare(query.result_slots(), query_width, &mut counts);
+            let mut selection=Default::default();
             let mut answers = Vec::new();
             for entry in chunk {
                 let Some(epoch) = evaluate(query, entry, pivot, &reads, key_nodes, false, None,
@@ -452,7 +453,7 @@ impl Executor {
                 local.prepare_with_reads(template,&mut answer,Some(&reads),&mut counts.execution);
                 if let Some(plan) = &local.constructor {
                     plan.complete(&mut answer,Some(&reads),&mut frame.constructors,
-                        &mut counts.constructors,&mut counts.execution);
+                        &mut counts.constructors,&mut counts.execution,&mut selection);
                 }
                 answers.push(answer);
             }
@@ -1068,6 +1069,7 @@ impl Workers {
             let chunk = &headers[range.entries.clone()];
             let mut counts = Counts { chunks: 1, ..Default::default() };
             frame.prepare(range.slots, range.reads, &mut counts);
+            let mut selection=Default::default();
             let clock=residual_active.then(Instant::now);
             #[cfg(feature="parallel-residuals")]
             let mut residual=expansion::ChunkWork::default();
@@ -1109,7 +1111,7 @@ impl Workers {
                         local[code.rule].prepare_with_reads(&templates[code.template],&mut answer,Some(&reads),&mut counts.execution);
                         if let Some(plan) = &local[code.rule].constructor {
                             plan.complete(&mut answer,Some(&reads),&mut frame.constructors,
-                                &mut counts.constructors,&mut counts.execution);
+                                &mut counts.constructors,&mut counts.execution,&mut selection);
                         }
                         // Point-only tasks reserve once. Mixed expansions may
                         // return more rows, so also charge subsequent growth.
