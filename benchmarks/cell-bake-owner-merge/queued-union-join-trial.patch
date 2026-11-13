@@ -1,0 +1,81 @@
+diff --git a/engine/cell-runtime/src/cell_ownership.rs b/engine/cell-runtime/src/cell_ownership.rs
+index 150bdf55..baff3c78 100644
+--- a/engine/cell-runtime/src/cell_ownership.rs
++++ b/engine/cell-runtime/src/cell_ownership.rs
+@@ -275,7 +275,7 @@ struct Stats {
+     dual_field_moves:u64, dual_temporary_bytes:u64, dual_bindings_retired:u64, dual_pending_skips:u64,
+     // Reasons overlap: a skipped apply may have several outstanding obligations.
+     dual_pending_fact_skips:u64, dual_pending_signal_skips:u64,
+-    dual_frozen_skips:u64, dual_union_skips:u64, dual_dirty_skips:u64,
++    dual_frozen_skips:u64, dual_dirty_skips:u64, dual_admissions_with_queued_unions:u64,
+     composition_transition_probes: u64,
+     composition_unbaked_fallbacks: u64,
+     composition_cross_stage_joins: u64,
+diff --git a/engine/cell-runtime/src/ownership_join_runtime.rs b/engine/cell-runtime/src/ownership_join_runtime.rs
+index 71b2033a..8182d963 100644
+--- a/engine/cell-runtime/src/ownership_join_runtime.rs
++++ b/engine/cell-runtime/src/ownership_join_runtime.rs
+@@ -8,12 +8,16 @@ impl Graph {
+         let Some(indices)=plans.join_rules.get(rid).filter(|v|!v.is_empty()) else {return;};
+ 
+         let Some(m)=self.ownership.as_mut() else {return;};
++        // Queued unions contain only stable Eq IDs. They are not equality
++        // evidence here and keep their original publication boundary. Their
++        // eventual commit resolves the current native/boundary wiring, which
++        // this takeover replaces below. Pending component-address work and
++        // frozen readers still prohibit relocation.
+         if !m.pending.is_empty() || !m.composition.heap.is_empty() || m.composition.components.is_frozen()
+-            || !self.pending_unions.is_empty() || !self.dirty.is_empty() {
++            || !self.dirty.is_empty() {
+             m.stats.dual_pending_fact_skips+=u64::from(!m.pending.is_empty());
+             m.stats.dual_pending_signal_skips+=u64::from(!m.composition.heap.is_empty());
+             m.stats.dual_frozen_skips+=u64::from(m.composition.components.is_frozen());
+-            m.stats.dual_union_skips+=u64::from(!self.pending_unions.is_empty());
+             m.stats.dual_dirty_skips+=u64::from(!self.dirty.is_empty());
+             m.stats.dual_pending_skips+=1;return;
+         }
+@@ -120,6 +124,7 @@ impl Graph {
+             m.stats.signal_bindings_retired+=(old_bound-new_bound) as u64;
+             m.stats.dual_bindings_retired+=(old_bound-new_bound) as u64;
+             m.stats.dual_admissions+=1;
++            m.stats.dual_admissions_with_queued_unions+=u64::from(!self.pending_unions.is_empty());
+             // Move only cached field locations; actual scalar arrays and fact
+             // identities stay in place. No full-row reconstruction or copy.
+             for ordinal in retained_prefix..frame_count {
+diff --git a/tools/cell-compiler/tests/cell_ownership.rs b/tools/cell-compiler/tests/cell_ownership.rs
+index 1e5a8829..575f48fd 100644
+--- a/tools/cell-compiler/tests/cell_ownership.rs
++++ b/tools/cell-compiler/tests/cell_ownership.rs
+@@ -2201,7 +2201,12 @@ fn dual_source_takeover_retires_bindings_and_keeps_ports_through_later_union() {
+         (run f 1) (run g 1) (run h 1) (run d 1) (run u 1) (run h 1)
+     "#;
+     use eggfuse_cell_runtime::program::{Op,Call};
+-    let learned=program(src);
++    for queue_in_rhs in [false,true] {
++    // The first H application queues a nontrivial F/G equality. The next
++    // application must relocate sources before that batch publishes, without
++    // using its not-yet-established equality as a match or alias proof.
++    let source=if queue_in_rhs {src.replace("((H x))", "((H x) (union a b))")} else {src.to_owned()};
++    let learned=program(&source);
+     let h=learned.rules.iter().position(|r|learned.templates[r.template].ops.iter().any(|op|
+         matches!(op,Op::Let(_,Call::Table(t),_) if learned.tables[*t].name=="H"))).unwrap();
+     let mut raw=learned.artifact.clone();
+@@ -2250,6 +2255,10 @@ fn dual_source_takeover_retires_bindings_and_keeps_ports_through_later_union() {
+     let a=control.graph.ownership_report();let b=target.graph.ownership_report();
+     if projected==2 {assert_eq!(b["stats"]["dual_field_moves"],0);}
+     assert!(b["stats"]["dual_admissions"].as_u64().unwrap()>0,"{b}");
++    if queue_in_rhs {
++        assert!(b["stats"]["dual_admissions_with_queued_unions"].as_u64().unwrap()>0,
++            "fixture must actually join while a nontrivial union is queued: {b}");
++    }
+     assert!(b["stats"]["dual_bindings_retired"].as_u64().unwrap()>0);
+     assert!(a["stats"]["composition_requests"].as_u64().unwrap()>0);
+     assert_eq!(b["stats"]["composition_requests"],a["stats"]["composition_requests"],"joining must retain the old H suffix instead of allocating it independently");
+@@ -2260,6 +2269,7 @@ fn dual_source_takeover_retires_bindings_and_keeps_ports_through_later_union() {
+     assert_eq!(control.binding_audit,target.binding_audit);
+     assert_eq!(control.graph.export().unwrap(),target.graph.export().unwrap());
+     }
++    }
+ }
+ 
+ #[test]

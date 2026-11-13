@@ -1,0 +1,158 @@
+{
+  "scope": "actual standalone Cell runtime; rejected queued-union admission trial",
+  "base_commit": "6dcbd782",
+  "runtime_patch": "queued-union-join-trial.patch",
+  "binary_sha256": "6788e5702b7db5fe1b72d660b553a587dce1ad2a86d4b4b7a07fdb1bd0b72244",
+  "cases": {
+    "32": {
+      "program_sha256": "a2394b70482f67b3087d64e4971f59217cee8baa6673ea46afa574d418b2bc22",
+      "candidate_report_sha256": "24ec2064b8b2bcc98b74aac8e203850db885edde0067b0c52b9d34ebda3d5000",
+      "graph_before": 1403727,
+      "graph_after": 1408159,
+      "program_bytes": 107957791,
+      "before": {
+        "components": 1540,
+        "source_frames": 2284,
+        "retained_sources": 2180,
+        "absent_source_frames": 107,
+        "signal_slots": 8229,
+        "bound_signals": 6843,
+        "slots_only_absent_sources": 273,
+        "bound_only_absent_sources": 223
+      },
+      "after": {
+        "components": 1514,
+        "source_frames": 2335,
+        "retained_sources": 2180,
+        "absent_source_frames": 158,
+        "signal_slots": 8340,
+        "bound_signals": 6936,
+        "slots_only_absent_sources": 408,
+        "bound_only_absent_sources": 340
+      },
+      "dual_work": {
+        "dual_route_probes": 1591,
+        "dual_candidates": 100,
+        "dual_admissions": 100,
+        "dual_symbol_checks": 1050,
+        "dual_source_moves": 133,
+        "dual_field_moves": 0,
+        "dual_temporary_bytes": 15200,
+        "dual_bindings_retired": 100,
+        "dual_pending_skips": 0,
+        "dual_pending_fact_skips": 0,
+        "dual_pending_signal_skips": 0,
+        "dual_frozen_skips": 0,
+        "dual_dirty_skips": 0,
+        "dual_admissions_with_queued_unions": 74
+      },
+      "run_sequence_and_final_state_unchanged": true,
+      "full_workload_per_run_audit": false
+    },
+    "128": {
+      "program_sha256": "93e419458fc747c39b89c761aee101eaebfb303a273c7c3a34f9ff3b5a6ec92a",
+      "candidate_report_sha256": "dbeebdf66a906e164e9bfdffa22c95e15ac0257473399ebdb201d18f0d0a99f2",
+      "graph_before": 1403855,
+      "graph_after": 1406319,
+      "program_bytes": 109587999,
+      "before": {
+        "components": 1503,
+        "source_frames": 2288,
+        "retained_sources": 2180,
+        "absent_source_frames": 111,
+        "signal_slots": 8208,
+        "bound_signals": 6814,
+        "slots_only_absent_sources": 289,
+        "bound_only_absent_sources": 231
+      },
+      "after": {
+        "components": 1465,
+        "source_frames": 2353,
+        "retained_sources": 2180,
+        "absent_source_frames": 176,
+        "signal_slots": 8344,
+        "bound_signals": 6922,
+        "slots_only_absent_sources": 465,
+        "bound_only_absent_sources": 379
+      },
+      "dual_work": {
+        "dual_route_probes": 2622,
+        "dual_candidates": 164,
+        "dual_admissions": 163,
+        "dual_symbol_checks": 1875,
+        "dual_source_moves": 237,
+        "dual_field_moves": 0,
+        "dual_temporary_bytes": 27344,
+        "dual_bindings_retired": 166,
+        "dual_pending_skips": 0,
+        "dual_pending_fact_skips": 0,
+        "dual_pending_signal_skips": 0,
+        "dual_frozen_skips": 0,
+        "dual_dirty_skips": 0,
+        "dual_admissions_with_queued_unions": 118
+      },
+      "run_sequence_and_final_state_unchanged": true,
+      "full_workload_per_run_audit": false
+    },
+    "4096": {
+      "program_sha256": "c61a7cfae797a6aa7cf8eaa6df5df0cb4bee1694db0b33e6a43badd225cd27b0",
+      "candidate_report_sha256": "f1175df3ddb8e02463e5095c9c365a4dcfdec7198b52082dc05ea2e72ebbce26",
+      "graph_before": 1399999,
+      "graph_after": 1403671,
+      "program_bytes": 116833504,
+      "before": {
+        "components": 1459,
+        "source_frames": 2296,
+        "retained_sources": 2180,
+        "absent_source_frames": 119,
+        "signal_slots": 8179,
+        "bound_signals": 6783,
+        "slots_only_absent_sources": 303,
+        "bound_only_absent_sources": 243
+      },
+      "after": {
+        "components": 1409,
+        "source_frames": 2359,
+        "retained_sources": 2180,
+        "absent_source_frames": 182,
+        "signal_slots": 8300,
+        "bound_signals": 6878,
+        "slots_only_absent_sources": 471,
+        "bound_only_absent_sources": 385
+      },
+      "dual_work": {
+        "dual_route_probes": 3434,
+        "dual_candidates": 224,
+        "dual_admissions": 222,
+        "dual_symbol_checks": 2659,
+        "dual_source_moves": 318,
+        "dual_field_moves": 0,
+        "dual_temporary_bytes": 38960,
+        "dual_bindings_retired": 224,
+        "dual_pending_skips": 0,
+        "dual_pending_fact_skips": 0,
+        "dual_pending_signal_skips": 0,
+        "dual_frozen_skips": 0,
+        "dual_dirty_skips": 0,
+        "dual_admissions_with_queued_unions": 144
+      },
+      "run_sequence_and_final_state_unchanged": true,
+      "full_workload_per_run_audit": false
+    }
+  },
+  "decision": "Revert production admission change: more joins retain more source-frame/signal state and regress Graph memory in every tested catalog.",
+  "validation": {
+    "jobs": [
+      337,
+      338
+    ],
+    "ownership_tests": 67,
+    "short_fixture": "nontrivial union queued during later joins; stable port, union, deletion, snapshots and binding audit checked across field modes/workers"
+  },
+  "limitations": [
+    "Final state and work sequence do not establish full workload per-Run equality.",
+    "Absent source frames can still anchor native Eq addresses; census is not permission to delete them.",
+    "Signals with only absent-source static instructions may still serve live external users or native addressing.",
+    "No speed improvement, adopted runtime change or progress to the 30% memory threshold is claimed."
+  ]
+}
