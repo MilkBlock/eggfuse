@@ -1,0 +1,289 @@
+{
+  "scope": "frozen-model packed GPU Cell replay; observed routing, no autonomous matching",
+  "model_sha256": "40cc75ee385280ae931012aa6521239276ddb1868a7a36c00291eb3b6d30e454",
+  "test_trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "runs": {
+    "flat": {
+      "costs": {
+        "unique_coefficient_bytes": 48055392,
+        "shared_groups": 0,
+        "shared_rows": 0,
+        "layers": 31,
+        "readouts": 31,
+        "aggregation_groups": 30,
+        "zero_input_groups": 1,
+        "padded_edges": 91014,
+        "coefficient_bytes": 48055392,
+        "source_index_bytes": 364056,
+        "destination_index_bytes": 22212,
+        "peak_layer_coefficient_bytes": 25990800
+      },
+      "plan_seconds": 0.02086116699501872,
+      "gpu_setup_seconds": 0.011181541020050645,
+      "gpu_cold_seconds": 0.0309877090039663,
+      "gpu_second_call_seconds": 0.008236832974944264,
+      "cpu_setup_seconds": 0.008146249980200082,
+      "cpu_execute_seconds": 0.021974084025714546,
+      "numeric_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 1.6093254089355469e-06
+      },
+      "reused_plan_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 0.0
+      }
+    },
+    "packed": {
+      "costs": {
+        "unique_coefficient_bytes": 8629104,
+        "shared_groups": 0,
+        "shared_rows": 0,
+        "layers": 31,
+        "readouts": 31,
+        "aggregation_groups": 114,
+        "zero_input_groups": 1,
+        "padded_edges": 16343,
+        "coefficient_bytes": 8629104,
+        "source_index_bytes": 65372,
+        "destination_index_bytes": 22212,
+        "peak_layer_coefficient_bytes": 3192288
+      },
+      "plan_seconds": 0.018589083978440613,
+      "gpu_setup_seconds": 0.007189625001046807,
+      "gpu_cold_seconds": 0.012790334003511816,
+      "gpu_second_call_seconds": 0.006238166999537498,
+      "cpu_setup_seconds": 0.004959291953127831,
+      "cpu_execute_seconds": 0.01471566699910909,
+      "numeric_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 1.6093254089355469e-06
+      },
+      "reused_plan_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 0.0
+      }
+    },
+    "two_groups": {
+      "costs": {
+        "unique_coefficient_bytes": 14694768,
+        "shared_groups": 0,
+        "shared_rows": 0,
+        "layers": 31,
+        "readouts": 31,
+        "aggregation_groups": 59,
+        "zero_input_groups": 1,
+        "padded_edges": 27831,
+        "coefficient_bytes": 14694768,
+        "source_index_bytes": 111324,
+        "destination_index_bytes": 22212,
+        "peak_layer_coefficient_bytes": 6534000
+      },
+      "plan_seconds": 0.019604792003519833,
+      "gpu_setup_seconds": 0.006309167016297579,
+      "gpu_cold_seconds": 0.007970916980411857,
+      "gpu_second_call_seconds": 0.005110915983095765,
+      "cpu_setup_seconds": 0.004903582972474396,
+      "cpu_execute_seconds": 0.01442270795814693,
+      "numeric_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 1.6093254089355469e-06
+      },
+      "reused_plan_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 0.0
+      }
+    },
+    "shared": {
+      "costs": {
+        "unique_coefficient_bytes": 13045824,
+        "shared_groups": 16,
+        "shared_rows": 316,
+        "layers": 31,
+        "readouts": 31,
+        "aggregation_groups": 75,
+        "zero_input_groups": 1,
+        "padded_edges": 26646,
+        "coefficient_bytes": 13050048,
+        "source_index_bytes": 106584,
+        "destination_index_bytes": 22212,
+        "peak_layer_coefficient_bytes": 6197136
+      },
+      "plan_seconds": 0.05722195899579674,
+      "gpu_setup_seconds": 0.005659665970597416,
+      "gpu_cold_seconds": 0.008615916012786329,
+      "gpu_second_call_seconds": 0.004934333963319659,
+      "cpu_setup_seconds": 0.004689207999035716,
+      "cpu_execute_seconds": 0.013861500017810613,
+      "numeric_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 1.6093254089355469e-06
+      },
+      "reused_plan_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 0.0
+      }
+    },
+    "broadcast": {
+      "costs": {
+        "unique_coefficient_bytes": 14671008,
+        "shared_groups": 6,
+        "shared_rows": 35,
+        "layers": 31,
+        "readouts": 31,
+        "aggregation_groups": 59,
+        "zero_input_groups": 1,
+        "padded_edges": 27831,
+        "coefficient_bytes": 14679456,
+        "source_index_bytes": 111324,
+        "destination_index_bytes": 22212,
+        "peak_layer_coefficient_bytes": 6534000
+      },
+      "plan_seconds": 0.024680875008925796,
+      "gpu_setup_seconds": 0.0055346249719150364,
+      "gpu_cold_seconds": 0.006479542003944516,
+      "gpu_second_call_seconds": 0.005322458047885448,
+      "cpu_setup_seconds": 0.004599749983754009,
+      "cpu_execute_seconds": 0.013432417006697506,
+      "numeric_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 1.6093254089355469e-06
+      },
+      "reused_plan_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 0.0
+      }
+    }
+  },
+  "broadcast_vs_original": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 1.6093254089355469e-06
+  },
+  "shared_vs_original": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 1.6093254089355469e-06
+  },
+  "two_groups_vs_original": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 1.6093254089355469e-06
+  },
+  "packed_vs_original": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 1.6093254089355469e-06
+  },
+  "flat_vs_original": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 1.6093254089355469e-06
+  },
+  "recovery": {
+    "flat": {
+      "covered_cases": 3855,
+      "correct": 3647,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.826005457556435
+    },
+    "packed": {
+      "covered_cases": 3855,
+      "correct": 3647,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.826005457556435
+    },
+    "two_groups": {
+      "covered_cases": 3855,
+      "correct": 3647,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.826005457556435
+    },
+    "shared": {
+      "covered_cases": 3855,
+      "correct": 3647,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.826005457556435
+    },
+    "broadcast": {
+      "covered_cases": 3855,
+      "correct": 3647,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.826005457556435
+    },
+    "original": {
+      "covered_cases": 3855,
+      "correct": 3647,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.826005457556435
+    },
+    "template_mean": {
+      "covered_cases": 3855,
+      "correct": 2457,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.39097744360902253
+    },
+    "template_mode": {
+      "covered_cases": 3855,
+      "correct": 2873,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.39473684210526316
+    }
+  },
+  "intermediate_cpu_state_reads": 0,
+  "backpropagation": false,
+  "limitations": [
+    "Two diagnostic calls per plan, not a throughput campaign",
+    "Flat control also eliminates zero-edge gather; original comparison is reported separately",
+    "Only admitted exact coefficient rows are shared; other rows remain duplicated",
+    "No coverage, ownership, matching or saturation improvement"
+  ]
+}
