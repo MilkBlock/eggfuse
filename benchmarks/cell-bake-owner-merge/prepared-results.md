@@ -78,4 +78,38 @@ acceptance or significance claim. These figures do not establish that retaining
 the extra buffers always pays off. Actual result-Entry retention remains covered
 by the short multi-result tests; its workload coverage must not be invented.
 
-The final configuration-only adjustment and its fresh trial are recorded below.
+## Final adjustment and sequential checkpoint
+
+`aef89181` removes that per-instance demand check; job 275 passes 68 ownership
+integration tests (including storage-enabled paths), 215 runtime tests and
+no-default compilation. Job 276 reuses the exact frozen control executable at
+`022a5e20`, rebuilds only the candidate, and passes fresh state/Run/effect checks
+and native sum-bits acceptance. The learned catalog's 882 Run summaries, final
+state and effects also match. Ordinary sum-bits has 1,428 Runs and Raytrace 16,883.
+These workload checks are supplemented by the small exact Run-snapshot tests;
+the large workload comparison does not claim full per-Run graph equality.
+
+Job 278 measures all baseline groups before all candidate groups, with no
+interleaving: five sum-bits samples, three Raytrace samples and one warmup each.
+All 48 process-boundary guards are clear.
+
+| workload | control | final candidate | change |
+|---|---:|---:|---:|
+| sum-bits | 21.384 ms | 21.315 ms | -0.32% |
+| Raytrace | 4.797831 s | 4.824954 s | +0.57% |
+
+This does **not** meet a both-workloads-faster gate and establishes no overall
+speedup. It also does not show the first trial's larger ordinary regression.
+Small, grouped samples cannot separate code effects from order/thermal drift.
+Do not average these trials or present the first learned diagnostic as a final
+candidate timing. `prepared-results.json` preserves both trials, sample values,
+executable/input hashes, work and validation provenance.
+
+Ordinary key lookups remain 14,653 and 4,332,972; both ordinary workloads have zero
+composition result joins and zero new prefix Entry reads. The learned workload
+also has zero result joins; its changed preparation/capacity counts remain those
+shown above. Therefore the new result-Entry takeover is proven by targeted tests,
+not by a claimed workload-scale hit count. The candidate stays on the experiment
+branch; merging the Bake line is complete, while general parallel acceleration
+is not. The next structural opportunity is to let workers consume the existing
+compiled witness routes, avoiding generic queries when extending their prefix.
