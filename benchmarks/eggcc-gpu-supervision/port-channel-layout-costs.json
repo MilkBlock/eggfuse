@@ -1,0 +1,11 @@
+{
+  "channels": 4,
+  "padded_edge_slots": 93748,
+  "peak_layer_edge_slots": 49225,
+  "padded_base_coefficient_bytes": 47998976,
+  "padded_route_coefficient_bytes": 1499968,
+  "expanded_padded_coefficient_bytes": 191995904,
+  "padded_source_index_bytes": 374992,
+  "instance_state_bytes": 3038720,
+  "scope": "cumulative arrays prepared across layers; excludes model, Python objects and allocator temporaries"
+}

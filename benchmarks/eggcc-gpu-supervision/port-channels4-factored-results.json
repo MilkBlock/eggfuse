@@ -1,0 +1,130 @@
+{
+  "scope": "observed-wiring multi-provider numeric Cell token replay, not autonomous egraph execution",
+  "provenance": {
+    "corpus_manifest": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "train": "da12c74fd33e248539e2e968d3a30f3471551f81050eed7c9c98c7103c35019e",
+    "validation": "1d0a3dbdf423b426cd7c68406f7a1807ba2c24e77c6e5583c4e7f84ae04bd1eb",
+    "test_trace": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38"
+  },
+  "fit": {
+    "alpha": 10.0,
+    "validation_target_mse": 0.00020213660900481045
+  },
+  "backpropagation": false,
+  "state_width": 128,
+  "train_valid": 3663,
+  "channels": 4,
+  "zero_role_channels": false,
+  "raw_feature_width": 1216,
+  "edge_coefficient_floats": 1805952,
+  "route_coefficient_floats": 56436,
+  "expanded_edge_equivalent_floats": 7223808,
+  "inference_weight_floats": 499840,
+  "model_coefficient_floats": 688384,
+  "preparation_seconds": 2.1257056249887682,
+  "fitting_seconds": 0.20926541602239013,
+  "consumed_cpu_boundary_tokens": 0,
+  "test_cases": 5935,
+  "cpu_boundary_tokens": 382,
+  "depths": 31,
+  "reports": {
+    "all_valid": {
+      "gold_provider_inputs": {
+        "cases": 5553,
+        "rmse": 0.038596286280377826,
+        "max_abs": 0.7654953002929688
+      },
+      "predicted_provider_inputs": {
+        "cases": 5553,
+        "rmse": 0.03861005993276461,
+        "max_abs": 0.7098027467727661
+      },
+      "no_provider_refit": {
+        "cases": 5553,
+        "rmse": 0.03766212685398702,
+        "max_abs": 0.7704800367355347
+      },
+      "shuffled_providers": {
+        "cases": 5553,
+        "rmse": 0.050281562721498065,
+        "max_abs": 0.8676320314407349
+      }
+    },
+    "linked": {
+      "gold_provider_inputs": {
+        "cases": 2819,
+        "rmse": 0.04560166063318044,
+        "max_abs": 0.7654953002929688
+      },
+      "predicted_provider_inputs": {
+        "cases": 2819,
+        "rmse": 0.04562462289863771,
+        "max_abs": 0.7098027467727661
+      },
+      "no_provider_refit": {
+        "cases": 2819,
+        "rmse": 0.04259483611483301,
+        "max_abs": 0.7704800367355347
+      },
+      "shuffled_providers": {
+        "cases": 2819,
+        "rmse": 0.06422865934089564,
+        "max_abs": 0.8676320314407349
+      }
+    },
+    "multiple_providers": {
+      "gold_provider_inputs": {
+        "cases": 1677,
+        "rmse": 0.043172723571048385,
+        "max_abs": 0.7654953002929688
+      },
+      "predicted_provider_inputs": {
+        "cases": 1677,
+        "rmse": 0.042923664591589646,
+        "max_abs": 0.7035449743270874
+      },
+      "no_provider_refit": {
+        "cases": 1677,
+        "rmse": 0.03856155522091394,
+        "max_abs": 0.7704800367355347
+      },
+      "shuffled_providers": {
+        "cases": 1677,
+        "rmse": 0.06088023695832843,
+        "max_abs": 0.8676320314407349
+      }
+    }
+  },
+  "encoding_audit": {
+    "train_validation": {
+      "distinct_codes": 506,
+      "conflicting_codes": 0,
+      "instances_in_conflicting_codes": 0
+    },
+    "test": {
+      "distinct_codes": 1009,
+      "conflicting_codes": 0,
+      "instances_in_conflicting_codes": 0
+    }
+  },
+  "no_provider_fit": {
+    "alpha": 0.1,
+    "validation_target_mse": 0.0002206292119808495
+  },
+  "numerical_audit": {
+    "passed": true,
+    "rollout_outside": 0,
+    "gold_outside": 0
+  },
+  "gpu_replay_wall_seconds": 0.29122937499778345,
+  "cpu_replay_wall_seconds": 0.1889145000022836,
+  "intermediate_cpu_state_reads": 0,
+  "model_sha256": "40cc75ee385280ae931012aa6521239276ddb1868a7a36c00291eb3b6d30e454",
+  "limitations": [
+    "Observed successful matches and routing are supplied by CPU traces",
+    "Incomplete captured states are supplied as explicit CPU boundary tokens",
+    "Dense code has no exact graph decoder, ownership certificate, novelty or saturation head",
+    "External input observations supplied per consumer; their autonomous production is not tested",
+    "Timing includes compilation and plan/upload work; no throughput or speedup claim"
+  ]
+}

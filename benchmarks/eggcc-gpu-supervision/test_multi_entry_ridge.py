@@ -26,6 +26,27 @@ class MultiEntryRidge(unittest.TestCase):
         states=np.array([np.ones(WIDTH),np.full(WIDTH,3),np.zeros(WIDTH)],np.float32)
         np.testing.assert_allclose(pooling(nodes,states)[2],4/np.sqrt(2),rtol=1e-6)
 
+    def test_role_channels_distinguish_swapped_provider_connections(self):
+        one=np.ones(WIDTH,np.float32)
+        a=one;b=one
+        nodes=[dict(edge_width=2*WIDTH,edges=[]),dict(edge_width=2*WIDTH,edges=[]),
+               dict(edge_width=2*WIDTH,edges=[(0,a),(1,b)],edge_routes=[np.array([1,1]),np.array([1,-1])])]
+        states=np.array([one,3*one,0*one])
+        first=pooling(nodes,states)[2]
+        nodes[2]['edges']=[(1,a),(0,b)]
+        swapped=pooling(nodes,states)[2]
+        np.testing.assert_array_equal(first[:WIDTH],swapped[:WIDTH])
+        self.assertGreater(np.max(abs(first[WIDTH:]-swapped[WIDTH:])),1)
+
+    def test_factored_channel_gemm_equals_expanded_edges(self):
+        rng=np.random.default_rng(5);states=rng.normal(size=(3,WIDTH)).astype(np.float32)
+        edges=[(0,rng.normal(size=WIDTH).astype(np.float32)),(1,rng.normal(size=WIDTH).astype(np.float32))]
+        routes=rng.normal(size=(2,4)).astype(np.float32)
+        nodes=[dict(edge_width=4*WIDTH,edges=[]),dict(edge_width=4*WIDTH,edges=[]),
+               dict(edge_width=4*WIDTH,edges=edges,edge_routes=routes)]
+        expected=sum((np.outer(r,states[i]*v).reshape(-1) for (i,v),r in zip(edges,routes)))/np.sqrt(2)
+        np.testing.assert_allclose(pooling(nodes,states)[2],expected,atol=1e-6,rtol=1e-6)
+
     def test_predicted_states_feed_later_layers(self):
         zero=np.zeros(WIDTH,np.float32)
         nodes=[dict(seed=zero,q=np.zeros(64),target=np.ones(WIDTH),edges=[],valid=True,depth=0),
