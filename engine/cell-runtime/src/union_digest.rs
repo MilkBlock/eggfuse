@@ -270,11 +270,12 @@ impl Graph {
                     continue;
                 }
             };
-            let Some(state) = self
+            let Some(mut state_guard) = self
                 .cells.fact_state_mut(f)
             else {
                 continue;
             };
+            let state = &mut *state_guard;
             let (table, fields) = state
                 .decoded
                 .as_mut()
@@ -361,10 +362,12 @@ impl Graph {
                 .unwrap()
                 .stats
                 .duplicate_rows_retired += 1;
-            let target = self
+            let mut target_guard = self
                 .cells.fact_state_mut(keep)
                 .unwrap();
+            let target = &mut *target_guard;
             target.epoch = self.epoch;
+            drop(target_guard);
             self.query_versions[table] += 1;
             self.changes.touch(table, Dependency::Fact(keep));
             if self.receipt_tracking {
@@ -421,9 +424,10 @@ impl Graph {
         // forbidden from inferring any new equality. Detach ALL old keys first.
         let pending = std::mem::take(&mut self.union_digest.as_mut().unwrap().publication);
         for &f in &pending {
-            let state = self
+            let mut state_guard = self
                 .cells.fact_state_mut(f)
                 .ok_or("missing expression publication witness")?;
+            let state = &mut *state_guard;
             let (table, fields) = state.decoded.as_mut().ok_or("missing expression row")?;
             let m = self.union_digest.as_mut().unwrap();
             m.stats.shared_row_copies += u64::from(RowFields::strong_count(fields) > 1);

@@ -287,3 +287,56 @@ python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
 The report preserves saturation outcomes and storage-field deltas as well as
 net Graph bytes. Nine Python tests cover pooling and passive selection; 47
 ownership tests pass, including transferred-frame saturation observation.
+
+### Completed-owner fact representation
+
+The pooled traces expose a repeated invariant: completed-owner facts are owned,
+not local-union owned, have no decoded copy or Entry alias, and no receipt slot.
+Transfer now checks this contract atomically. The owner supplies those invariant
+fields; each fact retains only its mutable epoch, birth epoch, hash and visibility.
+This removes redundant representation state without bit packing or another index.
+Ordinary facts remain unchanged. Reads use a borrowed/value view; mutation uses a
+stack guard, keeping ordinary lifecycle changes compact. An exceptional alias or
+representation change restores the original source Cell before committing it.
+This does not remove logical fact identities, source frames, or their lifecycle
+obligations. It does not skip additional rule applications or RHS operations.
+
+Same seed artifacts, before/after requested Graph bytes:
+
+| pass3 | before | after | saved |
+|---|---:|---:|---:|
+| fact | 759,727 | 747,247 | 12,480 |
+| loopfact | 674,105 | 662,041 | 12,064 |
+| sum-bits | 2,043,955 | 1,989,427 | 54,528 |
+| dot-product | 2,009,467 | 1,965,147 | 44,320 |
+
+Owned fact state falls 64→32 bytes; all four runs have zero representation
+fallbacks. Allocated fact slices include retired entries, so savings are not
+simply 32 times the live fact count. `owned-state-results.json` also records
+execution peaks and takeover temporary bytes; these peaks include Program and
+executor allocations, unlike the separately measured final Graph. No speed or
+major compression claim follows from these modest reductions.
+
+Validation: 2,652 cached Run graph/RHS/write checks plus terminal non-Run effects
+pass, with identical final exports. The separate reviewed marked sum-bits artifact
+has Graph 2,447,294→2,392,254 bytes and unchanged final digest
+`1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82`;
+`choice_diagnosis.py` on its saved exports returns pass. This does not extend the
+native semantic contract to the four unmarked inputs.
+
+47 ownership, eight Unit, five fact-state lifecycle, five local-union, eight
+port-completion, five repair-cell and 14 stable-port tests pass. Default and
+receipt-slot configurations compile. Three maintenance assertions fail both here
+and at unchanged `eae8acf6`: repair-ports subscription count, and two union-digest
+binding-audit comparisons (their left/right payload hashes are identical between
+control and candidate). These remain known baseline failures, not passing tests.
+
+Reproduce by measuring each seed candidate with `runtime_storage_peak` into
+`candidate-owned-fact-heap.json` using `inherited-owners --port-domains-only`.
+For the cached gate, copy each unchanged candidate into `owned-state/CASE` with
+its source-bound selection, then run `check-passive` as above. Summarize with:
+
+```
+python3 benchmarks/cell-batched-learning/owned_state.py out/cell-batched-learning \
+  benchmarks/cell-batched-learning/owned-state-results.json
+```

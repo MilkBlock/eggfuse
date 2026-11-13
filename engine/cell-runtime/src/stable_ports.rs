@@ -186,9 +186,10 @@ impl Graph {
         }
         let Some(scalars) = scalars else { return; };
         let fields = Fields { component: frame.component, program, ports, operation: f.op as usize, scalars: scalars.into_boxed_slice() };
-        let state = self
+        let mut state_guard = self
             .cells.fact_state_mut(f)
             .unwrap();
+        let state = &mut *state_guard;
         state.decoded = None;
         let stats = self.stable_ports.as_mut().unwrap();
         assert!(
@@ -260,7 +261,7 @@ impl Graph {
     pub(in crate::graph) fn read_stable_fact(
         &self,
         f: FactRef,
-        state: &FactState,
+        state: crate::graph::fact_states::FactRead<'_>,
         stored: &Stored,
     ) -> Result<Row> {
         Ok(Row {
@@ -294,9 +295,10 @@ impl Graph {
         let port_key = stable.is_some_and(|(table, _)| self.port_keys_enabled(table));
         let unique = port_key && stable.unwrap().1 && self.unique_port_input(f, columns);
         let m = self.ownership.as_mut().unwrap();
-        let state = self
+        let mut state_guard = self
             .cells.fact_state_mut(f)
             .unwrap();
+        let state = &mut *state_guard;
         let mut stats = stable.map(|_| self.stable_ports.as_mut().unwrap());
         let (table, key) = if let Some((table, key)) = stable {
             let stats = stats.as_mut().unwrap();

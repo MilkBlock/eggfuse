@@ -3,6 +3,7 @@
 use super::*;
 use crate::{slots::ReadSlots,value::Value};
 use std::ops::Range;
+use crate::graph::fact_states::OwnedFact;
 pub(super) const COMPLETED:u32=1<<31;
 use super::super::CellMetadata as Metadata;
 pub(super) struct Frame {
@@ -15,12 +16,13 @@ pub(super) struct Frame {
 pub(super) struct Owner {
     pub frames:usize,
     pub slots:Box<[(usize,Value)]>,
-    pub facts:Box<[(u32,Option<super::super::FactState>)]>,
+    pub facts:Box<[(u32,Option<OwnedFact>)]>,
 }
 #[derive(Default)]
 pub(super) struct Completed {
     pub frames:Vec<Frame>,
     pub owners:Vec<Owner>,
+    pub representation_fallbacks:u64,
 }
 pub(crate) struct Slots<'a>(pub &'a [(usize,Value)]);
 impl ReadSlots for Slots<'_> {
@@ -51,11 +53,11 @@ impl Cells {
         let f=self.completed.frames.get(self.completed_index(id)?)?;
         Some(Slots(&self.completed.owners[f.owner].slots[f.slots.clone()]))
     }
-    pub(crate) fn completed_facts(&self,id:u32)->Option<&[(u32,Option<super::super::FactState>)]> {
+    pub(crate) fn completed_facts(&self,id:u32)->Option<&[(u32,Option<OwnedFact>)]> {
         let f=self.completed.frames.get(self.completed_index(id)?)?;
         Some(&self.completed.owners[f.owner].facts[f.facts.clone()])
     }
-    pub(crate) fn completed_facts_mut(&mut self,id:u32)->Option<&mut [(u32,Option<super::super::FactState>)]> {
+    pub(crate) fn completed_facts_mut(&mut self,id:u32)->Option<&mut [(u32,Option<OwnedFact>)]> {
         let f=self.completed.frames.get(self.completed_index(id)?)?;
         Some(&mut self.completed.owners[f.owner].facts[f.facts.clone()])
     }
@@ -65,7 +67,8 @@ impl Cells {
         if ids.len()<2 || self.completed.frames.len().saturating_add(ids.len())>=COMPLETED as usize
             || ids.iter().enumerate().any(|(i,id)|ids[..i].contains(id))
             || ids.iter().any(|id| {
-            self.get(id).is_none_or(|c| !c.completed || c.parent.is_some() || !c.values.is_unshared())
+            self.get(id).is_none_or(|c| !c.completed || c.parent.is_some() || !c.values.is_unshared()
+                    || c.facts.iter().any(|(_,s)|OwnedFact::checked(s).is_none()))
         }) {return false;}
         ids.iter().all(|id|(*id as usize)<self.positions.len())
     }
@@ -82,7 +85,7 @@ impl Cells {
             let c=self.remove(&id).unwrap();
             let meta=Metadata::from(&c);
             let start=values.len();values.extend(c.values.into_unshared().unwrap());
-            let first=states.len();states.extend(c.facts.into_iter().map(|(op,s)|(op,Some(s))));
+            let first=states.len();states.extend(c.facts.into_iter().map(|(op,s)|(op,Some(OwnedFact::checked(&s).expect("checked owner fact")))));
             let position=u32::try_from(self.completed.frames.len()+1).unwrap();
             assert!(position<COMPLETED);
             self.completed.frames.push(Frame{id,owner,meta,slots:start..values.len(),facts:first..states.len()});
@@ -106,7 +109,8 @@ impl Cells {
             } else {
                 let c=self.get(&id)?;
                 if !c.completed || c.parent.is_some() || !c.values.is_unshared()
-                    || id as usize>=self.positions.len() {return None;}
+                    || id as usize>=self.positions.len()
+                    || c.facts.iter().any(|(_,s)|OwnedFact::checked(s).is_none()) {return None;}
                 added+=1;
             }
         }
@@ -140,7 +144,7 @@ impl Cells {
             } else {
                 let c=self.remove(&id).unwrap();let meta=Metadata::from(&c);
                 values.extend(c.values.into_unshared().unwrap());
-                facts.extend(c.facts.into_iter().map(|(op,s)|(op,Some(s))));
+                facts.extend(c.facts.into_iter().map(|(op,s)|(op,Some(OwnedFact::checked(&s).expect("checked owner fact")))));
                 let index=self.completed.frames.len();
                 self.completed.frames.push(Frame{id,owner:destination,meta,
                     slots:first_slot..values.len(),facts:first_fact..facts.len()});
@@ -163,12 +167,24 @@ impl Cells {
         let values=owner.slots[frame.slots.clone()].iter_mut()
             .map(|(s,v)|(*s,std::mem::replace(v,Value::Int(0)))).collect();
         let facts=owner.facts[frame.facts.clone()].iter_mut()
-            .filter_map(|(op,s)|Some((*op,s.take()?))).collect();
+            .filter_map(|(op,s)|Some((*op,s.take()?.restore()))).collect();
         self.retire_completed(id);
         Some(Cell{template:meta.template,started_epoch:meta.started_epoch,
             completed_prefix:meta.completed_prefix,recipe_depth:meta.recipe_depth,
             completed:meta.completed,symbolic_slots:meta.symbolic_slots,
             parent:None,values,facts})
+    }
+    pub(crate) fn write_completed_fact(&mut self,f:super::super::FactRef,state:super::super::FactState) {
+        if let Some(compact)=OwnedFact::checked(&state) {
+            let facts=self.completed_facts_mut(f.cell).expect("live completed writer");
+            let i=facts.binary_search_by_key(&f.op,|p|p.0).expect("live completed fact");
+            facts[i].1=Some(compact);
+        } else {
+            let mut cell=self.unseal_completed(f.cell).expect("exceptional completed writer");
+            *cell.facts.get_mut(&f.op).expect("live completed fact")=state;
+            self.insert(f.cell,cell);
+            self.completed.representation_fallbacks+=1;
+        }
     }
     pub(crate) fn retire_completed(&mut self,id:u32)->bool {
         let Some(index)=self.completed_index(id) else {return false;};
@@ -194,7 +210,8 @@ impl Cells {
         for owner in self.completed.owners.iter().filter(|o|o.frames>0) {*widths.entry(owner.frames).or_default()+=1;}
         let slots=self.completed.owners.iter().map(|o|o.slots.len()).sum::<usize>();
         let live_slots=self.completed.frames.iter().map(|f|f.slots.len()).sum::<usize>();
-        serde_json::json!({"source_records":self.records.len(),"completed_frames":self.completed.frames.len(),
+        serde_json::json!({"source_records":self.records.len(),"owned_fact_bytes":std::mem::size_of::<OwnedFact>(),
+            "representation_fallbacks":self.completed.representation_fallbacks,"completed_frames":self.completed.frames.len(),
             "owners":epochs.len(),"cross_stage_owners":epochs.values().filter(|e|e.len()>1).count(),
             "owner_widths":widths,"templates":templates,"stored_slot_entries":slots,
             "live_slot_entries":live_slots,"retired_slot_entries":slots-live_slots,
