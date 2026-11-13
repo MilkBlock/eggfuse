@@ -1,0 +1,76 @@
+{
+  "attempts": [
+    {
+      "artifact": "out/cell-query-fragments/timing",
+      "status": "interrupted-by-concurrent-work",
+      "completed_groups": 3,
+      "interruption": {
+        "utc": "2026-11-13T09:14:39.945234+00:00",
+        "phase": "after-sample",
+        "lane": "candidate",
+        "case": "ray",
+        "iteration": -1,
+        "compilers": [
+          "37416   0.0 /Users/mineralsteins/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+          "37418  96.1 /Users/mineralsteins/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc"
+        ],
+        "workloads": []
+      },
+      "reused_samples": false
+    },
+    {
+      "artifact": "out/cell-query-fragments/timing-2",
+      "status": "interrupted-by-concurrent-work",
+      "completed_groups": 0,
+      "interruption": {
+        "utc": "2026-11-13T09:16:16.165371+00:00",
+        "phase": "before-group",
+        "lane": "control",
+        "case": "sum",
+        "iteration": null,
+        "compilers": [],
+        "workloads": [
+          "37768 100.0 target/debug/examples/batch_cell_learning"
+        ]
+      },
+      "reused_samples": false
+    },
+    {
+      "artifact": "out/cell-query-fragments/timing-3",
+      "status": "interrupted-by-concurrent-work",
+      "completed_groups": 1,
+      "interruption": {
+        "utc": "2026-11-13T09:19:52.301644+00:00",
+        "phase": "after-sample",
+        "lane": "control",
+        "case": "ray",
+        "iteration": 1,
+        "compilers": [
+          "39229   0.0 /Users/mineralsteins/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+          "39231  65.7 /Users/mineralsteins/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc",
+          "39241 1168.6 /Users/mineralsteins/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc",
+          "39252  88.7 /Users/mineralsteins/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc"
+        ],
+        "workloads": []
+      },
+      "reused_samples": false
+    },
+    {
+      "artifact": "out/cell-query-fragments/timing-4",
+      "status": "interrupted-by-concurrent-work",
+      "completed_groups": 0,
+      "interruption": {
+        "utc": "2026-11-13T09:28:03.986054+00:00",
+        "phase": "before-group",
+        "lane": "control",
+        "case": "sum",
+        "iteration": null,
+        "compilers": [],
+        "workloads": [
+          "41806  97.2 target/debug/examples/batch_cell_learning"
+        ]
+      },
+      "reused_samples": false
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+# Worker result fragments
+
+This experiment runs the actual standalone Cell CPU, not the native egglog
+runtime. The frozen control is `67d32b09`; only the query result transport changes.
+
+The preceding Raytrace execution returned 1,554,547 residual answers. The
+coordinator reopened each result array, looked up each answer's compiled rule
+and appended its Instance to another array before sending it to winner selection.
+Range workers already return compiled origin spans. When those spans all name
+one rule, that rule can own the entire original allocation. No additional Bake
+iteration is needed to prove this transport ownership. Catalog growth alone
+would leave the serial transport intact.
+
+The candidate moves the original array and its existing origin spans to the
+rule's finishing task. That task gathers rows and performs the existing stable
+input/source sort and deduplication. Alternating fragments and mixed-rule rows
+retain their arrival order, including exact source ties. The coordinator still
+routes mixed-rule arrays and point expansions by row. A rule's accumulated
+answers must reach the existing worker grain (64 in these runs), and the Run
+must already be pooled. Its finishing task therefore qualifies for a worker.
+Once it qualifies, subsequent small arrays also transfer as fragments. Smaller
+rule outputs retain the ordinary buffer; worker/inline destinations remain counted.
+
+This removes per-answer coordinator routing within the proven coverage, not
+all result compaction. Instances and their actual witnesses retain ownership;
+no binding copy, new fact graph, per-producer subscription or extra task barrier
+is introduced. Origin codes become source positions once per span. Rule-level
+completion still waits for its contributors. Error ordering, source Run
+visibility, delta ownership, residual enumeration and winner rules remain live.
+The change does not discharge cross-Run reads or allow early RHS visibility.
+
+Metrics distinguish transferred arrays/rows/spans, remaining coordinator rows,
+worker versus inline gather rows, fallback rows moved a second time, fragment
+header capacity, and ordered-buffer capacity. Original worker answer capacity
+remains charged after transferring its allocation. Byte counters are accumulated
+capacities, not peak resident memory or allocator call counts.
+
+The initial work-only trial admitted all single-rule arrays. Raytrace transferred
+1,139,666 answers, including 40,255 gathered inline; sum-bits transferred only
+373 answers, all inline. Those small arrays paid new packaging costs without
+moving work off the coordinator. The final eligibility rule excludes them.
+The initial exports remain under `candidate-all-fragments` and their work report
+under `all-fragments-results.json` in the artifact root. An intermediate check
+applied the grain to individual arrays: it transferred 771,430 Raytrace answers
+but increased fallback regathering to 355,811 rows. The final criterion uses the
+rule-level task size, matching the scheduler. Intermediate exports remain under
+`candidate-array-grain` and `array-grain-results.json`. Neither variant was timed.
+
+The final work run preserves exact sum-bits and Raytrace states, all 1,428 and
+16,883 source Run summaries, logical effects and iterative Bake evidence.
+The unchanged native sum contract validator passes and its CPU export hash
+equals the fresh candidate state. Raytrace is a differential runtime check,
+not an extension of the native contract. Validation includes 209 runtime unit
+tests, 110 compiler integration tests, legacy/all-feature compilation and the
+three README commands. Another 20 query/residual integration tests passed with
+the concurrent Bake diagnostic changes present at integration. The frozen
+timing candidate is `e5dba47b`, and `24510d66` integrates the same runtime files
+into that mainline. File hashes and binary hashes are in `provenance.json`.
+
+| Final transport work | sum-bits | Raytrace |
+|---|---:|---:|
+| Residual answers | 4,082 | 1,554,547 |
+| Original arrays transferred | 0 | 17,093 |
+| Answers transferred to finishing workers | 0 | 1,035,361 |
+| Remaining coordinator row routing | 4,082 | 519,186 |
+| Transferred answers gathered inline | 0 | 0 |
+| Fallback answers regathered by workers | 0 | 233,351 |
+| New fragment header capacity | 0 | 2,804,928 B |
+| Fallback buffer capacity before gathering | 0 | 55,385,088 B |
+
+Raytrace's merge buffer plus new fragment/fallback capacities sum to 357,224,928 B
+versus 404,538,816 B for the control merge buffer. Original answer capacity remains
+363,177,024 B in both. The default output record grows from 88 to 96 bytes;
+its plan capacity is charged separately. These figures do not measure peak RSS.
+Sum keeps the old merge capacity (1,181,840 B) and no fragment allocations.
+
+Scripts use a fresh artifact directory and isolated checkout:
+
+```sh
+# First freeze the 67d32b09 release binary as ARTIFACT/control-runtime.
+python3 benchmarks/cell-query-fragments/validate.py CHECKOUT ARTIFACT/checks TARGET
+python3 benchmarks/cell-query-fragments/execute.py CONFIG_ROOT ARTIFACT out/cell-entry-owned/semantic
+python3 benchmarks/cell-query-fragments/check.py ARTIFACT RESULTS.json
+```
+
+`CONFIG_ROOT/manifest.json` supplies the unchanged input programs and four-worker
+arguments. Control and candidate use `cell-absorption,view-ports,parallel-publication`
+release features. Sequential timings follow with
+`benchmarks/raytrace-parallel/quick.py`; all control samples precede every
+candidate sample, without interleaving or concurrent compilation.
+
+Timing attempts were interrupted by concurrent compilers or Bake experiments;
+two stopped before any sample. No completed performance comparison is available
+yet. Samples are retained separately and never pooled. See
+`timing-attempts.json`. The guard now also recognizes Cargo test executables
+under debug/release `deps` directories, not only compilers and named benchmarks.

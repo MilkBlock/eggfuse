@@ -35,6 +35,7 @@ def processes():
                 'control-runtime', 'baseline-runtime')
                 or 'target/debug/examples/' in fields[2]
                 or 'target/release/examples/' in fields[2]
+                or (executable.parent.name == 'deps' and executable.parent.parent.name in ('debug', 'release'))
                 or (executable.parent.name == 'binaries' and executable.name.isdigit())):
             workloads.append(line)
     return {'utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),

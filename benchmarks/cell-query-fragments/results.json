@@ -1,0 +1,585 @@
+{
+  "scope": "actual standalone Cell CPU; native sum contract and differential Raytrace",
+  "control_commit": "67d32b09",
+  "validation": [
+    {
+      "name": "runtime-unit",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--lib",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "integration",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "query_workers",
+        "--test",
+        "parallel_residuals",
+        "--test",
+        "cell_execution",
+        "--test",
+        "cell_absorption",
+        "--test",
+        "entry_publications",
+        "--test",
+        "scoped_completion",
+        "--test",
+        "completion_batches",
+        "--test",
+        "parallel_publication"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "legacy",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--no-default-features"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "all-features",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--all-features"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "readme-compile",
+      "command": [
+        "cargo",
+        "cell-compile",
+        "--case",
+        "sum-bits",
+        "--output",
+        "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-query-fragments/checks/readme-program"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "readme-run",
+      "command": [
+        "cargo",
+        "cell-run",
+        "--program",
+        "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-query-fragments/checks/readme-program/program.json",
+        "--output",
+        "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-query-fragments/checks/readme-run"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "readme-bench",
+      "command": [
+        "cargo",
+        "cell-bench",
+        "--program",
+        "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-query-fragments/checks/readme-program/program.json",
+        "--repeat",
+        "5"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "release",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "workloads": {
+    "sum": {
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "source_runs": 1428,
+      "exact_state_runs_effects_bake_evidence": true,
+      "work": {
+        "control": {
+          "query": {
+            "result_writes": 1802
+          },
+          "residual": {
+            "compiled_entries": 573,
+            "enabled": true,
+            "executor_counter_bytes": 552,
+            "organization": "shared-cell-run/v1",
+            "plan_capacity_bytes": 273368,
+            "stats": {
+              "absorption_capacity_bytes": 5184,
+              "admission_probes": 12595,
+              "admission_rejected": 8270,
+              "admission_rows": 6082,
+              "answer_capacity_bytes": 1272936,
+              "answers": 4082,
+              "batches": 332,
+              "chunks": 860,
+              "column_prepare_reuses": 0,
+              "column_prepares": 3045,
+              "coordinator_entries": 3204,
+              "direct_batches": 1872,
+              "direct_entries": 11880,
+              "entries": 11880,
+              "entry_header_capacity_bytes": 582576,
+              "execute_seconds": 0.005488078000000004,
+              "expansion_probes": 37,
+              "expansion_rows": 4840,
+              "filter_probes": 4631,
+              "filter_rejected": 3957,
+              "index_rows_examined": 11262,
+              "input_rows": 15837,
+              "merge_capacity_bytes": 1181840,
+              "merge_execute_seconds": 0.00039652900000000256,
+              "merge_inline_tasks": 1687,
+              "merge_pool_calls": 0,
+              "merge_prepare_seconds": 0.0,
+              "merge_task_capacity_bytes": 0,
+              "merge_tasks": 1688,
+              "merge_worker_rows": [
+                70
+              ],
+              "merge_worker_seconds": [
+                1.3292e-05
+              ],
+              "merge_worker_tasks": [
+                1
+              ],
+              "merged_runs": 332,
+              "mixed_runs": 193,
+              "order_comparisons": 9754,
+              "partitioned_admission_probes": 1549,
+              "partitioned_admitted": 632,
+              "partitioned_answers": 685,
+              "partitioned_entries": 1532,
+              "partitioned_expansion_rows": 842,
+              "partitioned_inline_entries": 666,
+              "partitioned_pivots": 1173,
+              "partitioned_point_reads": 323,
+              "partitioned_worker_entries": [
+                387,
+                79,
+                300,
+                100
+              ],
+              "point_reads": 932,
+              "prepare_seconds": 0.0005648900000000058,
+              "queued_row_owners": 11182,
+              "row_reads": 5180,
+              "run_pool_calls": 71,
+              "worker_entries": [
+                3003,
+                2124,
+                1904,
+                1645
+              ],
+              "worker_inputs": [
+                3620,
+                2514,
+                2617,
+                1907
+              ],
+              "worker_rows": [
+                1214,
+                775,
+                711,
+                769
+              ],
+              "worker_task_seconds": [
+                0.0009742099999999999,
+                0.000732128,
+                0.0006689989999999998,
+                0.0005603279999999998
+              ]
+            },
+            "task_counter_bytes": 136
+          }
+        },
+        "candidate": {
+          "query": {
+            "result_coordinator_rows": 4082,
+            "result_fragment_batches": 0,
+            "result_fragment_rows": 0,
+            "result_fragment_spans": 0,
+            "result_writes": 1802
+          },
+          "residual": {
+            "compiled_entries": 573,
+            "enabled": true,
+            "executor_counter_bytes": 608,
+            "organization": "shared-cell-run/v1",
+            "output_record_bytes": 96,
+            "plan_capacity_bytes": 278024,
+            "result_buffer_header_bytes": 32,
+            "stats": {
+              "absorption_capacity_bytes": 5184,
+              "admission_probes": 12595,
+              "admission_rejected": 8270,
+              "admission_rows": 6082,
+              "answer_capacity_bytes": 1272936,
+              "answers": 4082,
+              "batches": 332,
+              "chunks": 860,
+              "column_prepare_reuses": 0,
+              "column_prepares": 3045,
+              "coordinator_entries": 3204,
+              "direct_batches": 1872,
+              "direct_entries": 11880,
+              "entries": 11880,
+              "entry_header_capacity_bytes": 582576,
+              "execute_seconds": 0.0050241669999999995,
+              "expansion_probes": 37,
+              "expansion_rows": 4840,
+              "filter_probes": 4631,
+              "filter_rejected": 3957,
+              "fragment_gather_rows": 0,
+              "fragment_header_capacity_bytes": 0,
+              "fragment_inline_rows": 0,
+              "fragment_ordered_capacity_bytes": 0,
+              "fragment_ordered_rows": 0,
+              "fragment_pieces": 0,
+              "fragment_worker_rows": 0,
+              "index_rows_examined": 11262,
+              "input_rows": 15837,
+              "merge_capacity_bytes": 1181840,
+              "merge_execute_seconds": 0.00038459700000000274,
+              "merge_inline_tasks": 1687,
+              "merge_pool_calls": 0,
+              "merge_prepare_seconds": 0.0,
+              "merge_task_capacity_bytes": 0,
+              "merge_tasks": 1688,
+              "merge_worker_rows": [
+                70
+              ],
+              "merge_worker_seconds": [
+                1.225e-05
+              ],
+              "merge_worker_tasks": [
+                1
+              ],
+              "merged_runs": 332,
+              "mixed_runs": 193,
+              "order_comparisons": 9644,
+              "partitioned_admission_probes": 1549,
+              "partitioned_admitted": 632,
+              "partitioned_answers": 685,
+              "partitioned_entries": 1532,
+              "partitioned_expansion_rows": 842,
+              "partitioned_inline_entries": 666,
+              "partitioned_pivots": 1173,
+              "partitioned_point_reads": 323,
+              "partitioned_worker_entries": [
+                253,
+                187,
+                177,
+                249
+              ],
+              "point_reads": 932,
+              "prepare_seconds": 0.0005169190000000047,
+              "queued_row_owners": 11182,
+              "row_reads": 5180,
+              "run_pool_calls": 71,
+              "worker_entries": [
+                2873,
+                2303,
+                1989,
+                1511
+              ],
+              "worker_inputs": [
+                3438,
+                2793,
+                2408,
+                2019
+              ],
+              "worker_rows": [
+                1052,
+                835,
+                824,
+                758
+              ],
+              "worker_task_seconds": [
+                0.0008173309999999995,
+                0.000714416,
+                0.0006142510000000001,
+                0.0005690799999999999
+              ]
+            },
+            "task_counter_bytes": 136
+          }
+        }
+      },
+      "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+    },
+    "ray": {
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "source_runs": 16883,
+      "exact_state_runs_effects_bake_evidence": true,
+      "work": {
+        "control": {
+          "query": {
+            "result_writes": 2049344
+          },
+          "residual": {
+            "compiled_entries": 573,
+            "enabled": true,
+            "executor_counter_bytes": 552,
+            "organization": "shared-cell-run/v1",
+            "plan_capacity_bytes": 273376,
+            "stats": {
+              "absorption_capacity_bytes": 622848,
+              "admission_probes": 4210431,
+              "admission_rejected": 2317447,
+              "admission_rows": 2476084,
+              "answer_capacity_bytes": 363177024,
+              "answers": 1554547,
+              "batches": 4949,
+              "chunks": 56520,
+              "column_prepare_reuses": 0,
+              "column_prepares": 62057,
+              "coordinator_entries": 42086,
+              "direct_batches": 19395,
+              "direct_entries": 4133689,
+              "entries": 4133689,
+              "entry_header_capacity_bytes": 12338496,
+              "execute_seconds": 0.8150441840000006,
+              "expansion_probes": 1243,
+              "expansion_rows": 2814311,
+              "filter_probes": 8037755,
+              "filter_rejected": 7271866,
+              "index_rows_examined": 5363136,
+              "input_rows": 11405555,
+              "merge_capacity_bytes": 404538816,
+              "merge_execute_seconds": 0.1752000230000145,
+              "merge_inline_tasks": 23059,
+              "merge_pool_calls": 0,
+              "merge_prepare_seconds": 0.0,
+              "merge_task_capacity_bytes": 0,
+              "merge_tasks": 27020,
+              "merge_worker_rows": [
+                374514,
+                357176,
+                337512,
+                332108
+              ],
+              "merge_worker_seconds": [
+                0.042494300000000006,
+                0.04119068,
+                0.039101352,
+                0.03841708299999997
+              ],
+              "merge_worker_tasks": [
+                1109,
+                960,
+                962,
+                930
+              ],
+              "merged_runs": 4949,
+              "mixed_runs": 3670,
+              "order_comparisons": 12972277,
+              "partitioned_admission_probes": 2252117,
+              "partitioned_admitted": 1305623,
+              "partitioned_answers": 993965,
+              "partitioned_entries": 2251724,
+              "partitioned_expansion_rows": 2053919,
+              "partitioned_inline_entries": 29101,
+              "partitioned_pivots": 42662,
+              "partitioned_point_reads": 1153608,
+              "partitioned_worker_entries": [
+                492510,
+                611943,
+                593742,
+                524428
+              ],
+              "point_reads": 1229233,
+              "prepare_seconds": 0.012046702999999643,
+              "queued_row_owners": 205839,
+              "row_reads": 2883551,
+              "run_pool_calls": 2897,
+              "worker_entries": [
+                960334,
+                1087381,
+                1056907,
+                986981
+              ],
+              "worker_inputs": [
+                2901471,
+                2896942,
+                2742934,
+                2724640
+              ],
+              "worker_rows": [
+                653261,
+                751848,
+                749198,
+                644267
+              ],
+              "worker_task_seconds": [
+                0.4824933490000005,
+                0.511602471000001,
+                0.49069627399999954,
+                0.46941508400000004
+              ]
+            },
+            "task_counter_bytes": 136
+          }
+        },
+        "candidate": {
+          "query": {
+            "result_coordinator_rows": 519186,
+            "result_fragment_batches": 17093,
+            "result_fragment_rows": 1035361,
+            "result_fragment_spans": 18333,
+            "result_writes": 2049344
+          },
+          "residual": {
+            "compiled_entries": 573,
+            "enabled": true,
+            "executor_counter_bytes": 608,
+            "organization": "shared-cell-run/v1",
+            "output_record_bytes": 96,
+            "plan_capacity_bytes": 278032,
+            "result_buffer_header_bytes": 32,
+            "stats": {
+              "absorption_capacity_bytes": 622848,
+              "admission_probes": 4210431,
+              "admission_rejected": 2317447,
+              "admission_rows": 2476084,
+              "answer_capacity_bytes": 363177024,
+              "answers": 1554547,
+              "batches": 4949,
+              "chunks": 56520,
+              "column_prepare_reuses": 0,
+              "column_prepares": 62057,
+              "coordinator_entries": 42086,
+              "direct_batches": 19395,
+              "direct_entries": 4133689,
+              "entries": 4133689,
+              "entry_header_capacity_bytes": 12338496,
+              "execute_seconds": 0.7917119770000016,
+              "expansion_probes": 1243,
+              "expansion_rows": 2814311,
+              "filter_probes": 8037755,
+              "filter_rejected": 7271866,
+              "fragment_gather_rows": 1035361,
+              "fragment_header_capacity_bytes": 2804928,
+              "fragment_inline_rows": 0,
+              "fragment_ordered_capacity_bytes": 55385088,
+              "fragment_ordered_rows": 233351,
+              "fragment_pieces": 20976,
+              "fragment_worker_rows": 1035361,
+              "index_rows_examined": 5363136,
+              "input_rows": 11405555,
+              "merge_capacity_bytes": 299034912,
+              "merge_execute_seconds": 0.1874897720000145,
+              "merge_inline_tasks": 23059,
+              "merge_pool_calls": 0,
+              "merge_prepare_seconds": 0.0,
+              "merge_task_capacity_bytes": 0,
+              "merge_tasks": 27020,
+              "merge_worker_rows": [
+                372066,
+                339995,
+                357319,
+                331930
+              ],
+              "merge_worker_seconds": [
+                0.0446021639999999,
+                0.042048441999999964,
+                0.045559994,
+                0.04135904900000001
+              ],
+              "merge_worker_tasks": [
+                1124,
+                974,
+                958,
+                905
+              ],
+              "merged_runs": 4949,
+              "mixed_runs": 3670,
+              "order_comparisons": 12968194,
+              "partitioned_admission_probes": 2252117,
+              "partitioned_admitted": 1305623,
+              "partitioned_answers": 993965,
+              "partitioned_entries": 2251724,
+              "partitioned_expansion_rows": 2053919,
+              "partitioned_inline_entries": 29101,
+              "partitioned_pivots": 42662,
+              "partitioned_point_reads": 1153608,
+              "partitioned_worker_entries": [
+                489696,
+                620373,
+                592992,
+                519562
+              ],
+              "point_reads": 1229233,
+              "prepare_seconds": 0.011665606999999602,
+              "queued_row_owners": 205839,
+              "row_reads": 2883551,
+              "run_pool_calls": 2897,
+              "worker_entries": [
+                962585,
+                1088944,
+                1057061,
+                983013
+              ],
+              "worker_inputs": [
+                2904138,
+                2898486,
+                2746437,
+                2716926
+              ],
+              "worker_rows": [
+                651175,
+                757356,
+                748826,
+                641217
+              ],
+              "worker_task_seconds": [
+                0.46224350499999933,
+                0.4923502969999997,
+                0.47294626499999853,
+                0.45188778899999865
+              ]
+            },
+            "task_counter_bytes": 136
+          }
+        }
+      },
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+    }
+  },
+  "native_sum_acceptance": {
+    "status": "pass",
+    "sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505"
+  }
+}

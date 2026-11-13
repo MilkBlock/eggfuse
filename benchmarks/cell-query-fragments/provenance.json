@@ -1,0 +1,19 @@
+{
+  "control_commit": "67d32b09",
+  "candidate_source_files": {
+    "query_workers.rs": "fc347d65845446a97a4d32fd8fc727da3ac961e7a48e452383661edb96ffabcb",
+    "query_expansion_workers.rs": "fa277980cbfa2db32862079f8d2ef8b3618af036eaeb9e09952f918e63cd30d7",
+    "query_result_fragments.rs": "836b9f342e6725d2a12aca2f7f56c2fe63585a9065349d53dc668cd5a2361405"
+  },
+  "runtime_sha256": {
+    "control": "c568d85b1f6cfdc9d5da5d5cda7c3a7c71b4a3cf8f0f7423fa13e1bd3e6101fb",
+    "candidate": "97274b7a75ec5f64b03dad5dc17a3e8f342dcec3a921f570f43048818fc29f37"
+  },
+  "candidate_commit": "e5dba47b",
+  "integration_commit": "24510d66",
+  "mainline_query_and_residual_tests": {
+    "passed": 20,
+    "log": "out/cell-query-fragments/mainline-integration.log",
+    "base_commit": "8190d5c9"
+  }
+}
