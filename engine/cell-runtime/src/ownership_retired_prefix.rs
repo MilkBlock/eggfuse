@@ -189,8 +189,9 @@ impl Graph {
             || !m.composition.heap.is_empty()
             || m.composition.entry.is_some()
             || m.composition.components.is_frozen()
+            // Training can extend shapes; passive catalog tracing cannot. The
+            // compiled prefix proof remains authoritative while observing it.
             || m.composition.training.is_some()
-            || m.composition.catalog_trace.is_some()
         {
             return Err("retired prefix takeover requires idle compiled ownership".into());
         }

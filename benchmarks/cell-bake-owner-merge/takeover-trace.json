@@ -1,0 +1,77 @@
+{
+  "runs": 882,
+  "records": 1449,
+  "hop_distribution": {
+    "1": 571,
+    "2": 324,
+    "3": 554
+  },
+  "eligible_hop_distribution": {
+    "1": 64,
+    "2": 145,
+    "3": 255
+  },
+  "saturation": {
+    "missing_local_constructor": 4537,
+    "rhs_covered_by_inputs": 222,
+    "write_effect": 1050,
+    "primitive_proof_missing": 354,
+    "rhs_covered": 135,
+    "nontrivial_union": 157,
+    "visibility_effect": 75,
+    "no_local_component": 2
+  },
+  "batches": [
+    {
+      "budget": 32,
+      "added_fragments": 32,
+      "replaced_prefixes": 32,
+      "graph_bytes": 1254943,
+      "program_bytes": 107519028,
+      "same_final_digest": true,
+      "same_runs": true
+    },
+    {
+      "budget": 128,
+      "added_fragments": 81,
+      "replaced_prefixes": 81,
+      "graph_bytes": 1242855,
+      "program_bytes": 107935263,
+      "same_final_digest": true,
+      "same_runs": true
+    },
+    {
+      "budget": 256,
+      "added_fragments": 81,
+      "replaced_prefixes": 81,
+      "graph_bytes": 1242855,
+      "program_bytes": 107935263,
+      "same_final_digest": true,
+      "same_runs": true
+    }
+  ],
+  "scope": "actual standalone Cell runtime requested-heap Graph measurement; not upstream egglog or timing",
+  "seed_graph_bytes": 1256075,
+  "historical_graph_bytes": 3979373,
+  "historical_denominator_limitation": "working-tree observation, not isolated immutable baseline binary",
+  "threshold_bytes": 1193811,
+  "remaining_bytes": 49044,
+  "observed_inventory_equal_to_unobserved": true,
+  "selected_all_882_graph_and_ordered_audits_equal": true,
+  "semantic_status": "pass",
+  "jobs": {
+    "fixture": 383,
+    "build": 384,
+    "observation": 386,
+    "batch": 387,
+    "all_69_ownership_tests": 388,
+    "selected_run_checks": 389,
+    "native_semantic": 390
+  },
+  "sha256": {
+    "seed": "2b906dc46730c452c285d7a82501fdb005d5c5ee324f85de8ffb1264e223bd85",
+    "selected": "c3f72bdf3265664c2426658cc2f755eb94958fdff7115300cff1bcd2930502f4",
+    "trace": "14bc0a70c5cc34a8ddb4a209d1608b98759088248e085c1783b160c8c2a9b2e8",
+    "runtime": "8823e4fdb6290f1ddc4774bf62cfb3db2b1c68e5651d34c619c85f8075453a7c"
+  }
+}

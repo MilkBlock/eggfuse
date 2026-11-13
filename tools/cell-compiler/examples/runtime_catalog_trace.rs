@@ -7,9 +7,15 @@ use eggfuse_cell_runtime::{
 use serde_json::{Value, json};
 use std::{error::Error, fs};
 fn main() -> Result<(), Box<dyn Error>> {
-    let args = std::env::args().skip(1).collect::<Vec<_>>();
+    let mut args = std::env::args().skip(1).collect::<Vec<_>>();
+    let completed = args.iter().any(|s| s == "--completed-owners");
+    let retired = args.iter().any(|s| s == "--retired-prefixes");
+    args.retain(|s| s != "--completed-owners" && s != "--retired-prefixes");
+    if retired && !completed {
+        return Err("--retired-prefixes requires --completed-owners".into());
+    }
     if args.len() != 3 && !((args.len() == 4 || args.len() == 5) && args[3] == "--closure-history") {
-        return Err("usage: runtime_catalog_trace PROGRAM EXPECTED_TRACE OUTPUT [--closure-history [EVENT_LIMIT]]".into());
+        return Err("usage: runtime_catalog_trace PROGRAM EXPECTED_TRACE OUTPUT [--closure-history [EVENT_LIMIT]] [--completed-owners [--retired-prefixes]]".into());
     }
     let expected: Value = serde_json::from_slice(&fs::read(&args[1])?)?;
     let checks = expected["run_checks"]
@@ -19,6 +25,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut graph = Graph::new_with_local_congruence(p)?;
     graph.trace_ownership_catalog(16)?;
     let mut e = Executor::new(graph, false);
+    if completed {
+        e.use_completed_parent_takeover()?;
+        e.graph.use_port_domains_only()?;
+        e.graph.use_cell_stable_fields()?;
+    }
     if args.len() == 5 { e.collect_iterative_history(args[4].parse()?); }
     else if args.len() == 4 { e.collect_iterative_pairs(); }
     let mut runs = 0;
@@ -34,7 +45,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         if e.steps.len() == runs {
             break;
         }
-        e.graph.compact_retained_capacity()?;
+        if completed {
+            e.graph.transfer_completed_owners()?;
+            e.graph.compact_source_record_capacity();
+            if retired { e.graph.compact_retired_prefixes()?; }
+        } else {
+            e.graph.compact_retained_capacity()?;
+        }
         let observed =
             json!({"graph":artifact_digest(&e.graph.export()?),"audit":artifact_digest(&effects)});
         if checks.get(runs) != Some(&observed) {
@@ -46,6 +63,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         return Err("Run count differs from saved trace".into());
     }
     let mut result = json!({"scope":"actual standalone Cell runtime; passive installed-catalog observations, no compression or timing claim",
+        "completed_owners":completed,"retired_prefixes":retired,
         "runs":runs,"all_saved_run_checks_equal":true,"expected_trace_digest":artifact_digest(&expected),
         "catalog_trace":e.graph.ownership_catalog_trace()?,"ownership":e.graph.ownership_report(),
         "source_storage":e.graph.retained_cell_storage(),"final_state":e.graph.export()?});

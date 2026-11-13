@@ -1578,6 +1578,7 @@ fn retired_suffix_returns_to_existing_prefix_and_can_complete_again() {
     "#);
     let mut control=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
     let mut actual=Executor::new(Graph::new_with_local_congruence(p).unwrap(),true);
+    actual.graph.trace_ownership_catalog(16).unwrap();
     control.use_completed_parent_takeover().unwrap();actual.use_completed_parent_takeover().unwrap();
     control.graph.use_cell_stable_fields().unwrap();actual.graph.use_cell_stable_fields().unwrap();
     let mut retired=0;
