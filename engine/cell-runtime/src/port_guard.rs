@@ -496,6 +496,13 @@ mod tests {
         frames.remove(&mut cells,&7);
         assert!(read(&cells,&frames,&components,&shapes,&parents,port).is_err());
         assert_eq!(read(&cells,&frames,&components,&shapes,&parents,PortRef{cell:8,local:0}).unwrap(),Value::Eq(99));
+        // Reusing an internal component slot cannot revive retired source IDs.
+        frames.remove(&mut cells,&8);
+        components[1]=Some(composition::Component{shape:0,frames:smallvec::smallvec![99],signals:vec![Some(777)]});
+        frames.insert(&mut cells,99,composition::Frame{component:1,ordinal:0,code:0});
+        assert!(read(&cells,&frames,&components,&shapes,&parents,port).is_err());
+        assert!(read(&cells,&frames,&components,&shapes,&parents,PortRef{cell:8,local:0}).is_err());
+        assert_eq!(read(&cells,&frames,&components,&shapes,&parents,PortRef{cell:99,local:0}).unwrap(),Value::Eq(777));
     }
 
     #[test]

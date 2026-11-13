@@ -115,6 +115,7 @@ impl Graph {
             m.composition.live_facts[right as usize]=0;
             let frame_count=a.frames.len();
             *m.composition.components.local_mut(left as usize)=Some(a);
+            m.composition.quarantine_component(right);
             m.stats.components_live-=1;m.stats.components_retired+=1;
             m.stats.signal_bindings_live-=(old_bound-new_bound) as u64;
             m.stats.signal_bindings_retired+=(old_bound-new_bound) as u64;

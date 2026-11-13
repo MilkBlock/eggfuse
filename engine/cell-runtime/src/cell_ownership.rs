@@ -268,6 +268,8 @@ struct Stats {
     domain_legacy_visits: Counter<u64>,
     domain_results: Counter<u64>,
     uncovered_births: u64,
+    component_slots_reused:u64,
+    component_slots_released:u64,
     components_created: u64,
     components_retired: u64,
     components_live: u64,
@@ -803,11 +805,15 @@ impl Graph {
         true
     }
     pub(crate) fn ownership_barrier(&mut self) {
+        let settled=self.pending_unions.is_empty() && self.dirty.is_empty() && self.dirty_markers.is_empty();
+        #[cfg(feature="sparse-cells")]
+        let settled=settled && self.active_rhs.is_none();
         if let Some(m) = &mut self.ownership {
             assert!(
                 m.pending.is_empty(),
                 "unsettled owner at publication boundary"
             );
+            if settled {m.stats.component_slots_released+=m.composition.release_retired_components() as u64;}
             m.stats.stage_barriers += 1;
             m.stats.carried_facts += m.stats.owned_live;
             m.stats.carried_components += m.stats.components_live;
@@ -1048,7 +1054,10 @@ impl Graph {
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
             "barrier_history":self.ownership.as_ref().map(|m|json!({"enabled":m.keep_barrier_history,
                 "start_after_barriers":m.barrier_history_start,"retained_capacity_bytes":m.barriers.capacity()*std::mem::size_of::<Barrier>()})),
-            "inventory":{"shared_field_layout_bytes":0,"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.len()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
+            "inventory":{"component_slots":self.ownership.as_ref().unwrap().composition.components.len(),
+                "reusable_component_slots":self.ownership.as_ref().unwrap().composition.reusable_components,
+                "quarantined_component_slots":self.ownership.as_ref().unwrap().composition.retired_components.len()-self.ownership.as_ref().unwrap().composition.reusable_components,
+                "shared_field_layout_bytes":0,"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.len()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
                 "eligible_live_facts":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>(),
                 "unsupported_live_rows":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|!**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>()},
             "stats":self.ownership.as_ref().map(|m|&m.stats),"pending_keys":self.ownership.as_ref().map_or(0,|m|m.pending.len())})
@@ -1132,7 +1141,7 @@ impl Runtime {
     /// Destructive observer only. Preserve last-owner accounting, and never
     /// allocate the output buffer while measuring a field release.
     pub(super) fn release_runtime_storage(self, live: &impl Fn()->usize, rows: &mut Vec<(&'static str,usize)>) {
-        assert!(rows.capacity()-rows.len()>=18);
+        assert!(rows.capacity()-rows.len()>=19);
         macro_rules! release {
             ($name:literal,$value:expr)=>{{
                 let before=live();drop($value);rows.push(($name,before-live()));
@@ -1140,6 +1149,7 @@ impl Runtime {
         }
         release!("ownership.components",self.composition.components);
         release!("ownership.live_facts",self.composition.live_facts);
+        release!("ownership.retired_components",self.composition.retired_components);
         release!("ownership.frames",self.composition.frames);
         release!("ownership.shapes",self.composition.shapes);
         release!("ownership.transitions",self.composition.learned_transitions);

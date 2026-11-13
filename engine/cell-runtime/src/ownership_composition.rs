@@ -671,6 +671,10 @@ pub(super) struct Runtime {
     pub components: crate::read_epoch::Slots<Option<Component>>,
     // Coordinator-only lifetime metadata. Guards never consult these counts.
     pub live_facts: Vec<usize>,
+    // Ready prefix plus quarantined suffix. Only a settled boundary promotes
+    // retired slots; source identities remain monotonic and are never reused.
+    pub retired_components: Vec<u32>,
+    pub reusable_components: usize,
     pub frames: Frames,
     // One immutable directory shared by compiled plans, Graphs and readers.
     // Only exploratory training appends through copy-on-write.
@@ -706,6 +710,8 @@ impl Runtime {
         Self {
             components: Default::default(),
             live_facts: vec![],
+            retired_components: vec![],
+            reusable_components: 0,
             frames: Frames::default(),
             shapes: p.shapes.clone(),
             learned_transitions: HashMap::default(),
@@ -717,6 +723,34 @@ impl Runtime {
             columns: vec![],
             retired_prefix_sources: None,
         }
+    }
+    fn allocate_component(&mut self,component:Component)->(u32,bool) {
+        assert!(!self.components.is_frozen(),"component birth during a read epoch");
+        if self.reusable_components>0 {
+            self.reusable_components-=1;
+            let id=self.retired_components.swap_remove(self.reusable_components);
+            assert!(self.components[id as usize].is_none());
+            assert_eq!(self.live_facts[id as usize],0);
+            *self.components.local_mut(id as usize)=Some(component);
+            self.witness_selection.set(None);
+            (id,true)
+        } else {
+            let id=u32::try_from(self.components.len()).expect("composition capacity");
+            self.components.push_bounded(Some(component));
+            crate::read_epoch::push_bounded(&mut self.live_facts,0);
+            (id,false)
+        }
+    }
+    pub(super) fn quarantine_component(&mut self,id:u32) {
+        assert!(self.components[id as usize].is_none());
+        assert_eq!(self.live_facts[id as usize],0);
+        self.retired_components.push(id);
+    }
+    pub(super) fn release_retired_components(&mut self)->usize {
+        if self.components.is_frozen() || !self.heap.is_empty() || self.entry.is_some() {return 0;}
+        let released=self.retired_components.len()-self.reusable_components;
+        self.reusable_components=self.retired_components.len();
+        released
     }
     /// Diagnostic only: count actual first cross-frame binding reuse, not
     /// potential symbolic substitutions or repeated uses of one consumer slot.
@@ -1089,19 +1123,13 @@ impl Graph {
             }
             (component, ordinal)
         } else {
-            let id = u32::try_from(m.composition.components.len()).expect("composition capacity");
-            m.composition.components.push(Some(Component {
+            let before = m.composition.live_facts.capacity();
+            let (id,reused)=m.composition.allocate_component(Component {
                 shape: program,
                 frames: smallvec::smallvec![cell],
-                signals: vec![
-                    None;
-                    m.composition.shapes[program]
-                        .signals
-                        .len()
-                ],
-            }));
-            let before = m.composition.live_facts.capacity();
-            m.composition.live_facts.push(0);
+                signals: vec![None;m.composition.shapes[program].signals.len()],
+            });
+            m.stats.component_slots_reused+=u64::from(reused);
             m.stats.component_lifetime_growths +=
                 u64::from(before != m.composition.live_facts.capacity());
             m.stats.components_created += 1;
@@ -1182,6 +1210,7 @@ impl Graph {
                 m.composition.frames.remove(&mut self.cells, id);
             }
             m.composition.components.retire(f.component as usize);
+            m.composition.quarantine_component(f.component);
             m.stats.components_live -= 1;
             m.stats.components_retired += 1;
         }
@@ -1190,6 +1219,26 @@ impl Graph {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn component_slots_wait_for_a_settled_boundary_and_readers() {
+        let mut runtime=Runtime::new(&Plan::default());
+        let component=|cell|Component{shape:0,frames:smallvec::smallvec![cell],signals:vec![]};
+        assert_eq!(runtime.allocate_component(component(10)),(0,false));
+        let snapshot=runtime.components.freeze();
+        runtime.components.retire(0);runtime.quarantine_component(0);
+        assert_eq!(runtime.release_retired_components(),0,"frozen readers still own the old slot");
+        assert_eq!(snapshot[0].as_ref().unwrap().frames[0],10);
+        drop(snapshot);runtime.components.thaw();
+        assert_eq!(runtime.allocate_component(component(11)),(1,false),"retirement alone does not release a slot");
+        assert_eq!(runtime.release_retired_components(),1);
+        assert_eq!(runtime.allocate_component(component(12)),(0,true));
+        runtime.components.retire(1);runtime.quarantine_component(1);
+        assert_eq!(runtime.allocate_component(component(13)),(2,false),"new retirements stay quarantined");
+        assert_eq!(runtime.release_retired_components(),1);
+        assert_eq!(runtime.allocate_component(component(14)),(1,true));
+        assert_eq!(runtime.components[0].as_ref().unwrap().frames[0],12);
+        assert_eq!(runtime.components.len(),3);
+    }
     #[test]
     fn retained_frame_addresses_support_sparse_imports_and_dense_reuse() {
         let mut frames = Frames::default();

@@ -5,6 +5,16 @@ use rustc_hash::FxHashMap as HashMap;
 use serde::Serialize;
 use std::{hash::Hash, ops::Index, sync::Arc};
 
+/// Bound spare space for coordinator directories that survive many Runs.
+pub(crate) fn push_bounded<T>(values:&mut Vec<T>, value:T) {
+    let needed=values.len()+1;
+    if needed>values.capacity() {
+        let capacity=needed.next_power_of_two().min(needed.div_ceil(128)*128);
+        values.reserve_exact(capacity-values.len());
+    }
+    values.push(value);
+}
+
 #[derive(Clone, Copy, Debug, Default, Serialize)]
 pub(crate) struct Work {
     pub writes: u64,
@@ -176,6 +186,10 @@ impl<T> Slots<T> {
             "component birth during a completion read epoch"
         );
         self.local.push(value);
+    }
+    pub fn push_bounded(&mut self,value:T) {
+        assert!(self.base.is_none(),"component birth during a completion read epoch");
+        push_bounded(&mut self.local,value);
     }
     pub fn reader(&self) -> SlotsRead<'_, T> {
         SlotsRead {

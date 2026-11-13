@@ -1,0 +1,85 @@
+{
+  "scope": "actual standalone Cell runtime; retired component slot reuse after settled boundaries; not timing",
+  "base_commit": "6b86e7db",
+  "program_sha256": "015a4363cf3da4fe354c25efe4032a5136529c67f9e8d96b7ecb0d0148d0e77c",
+  "binary_sha256": "8823e4fdb6290f1ddc4774bf62cfb3db2b1c68e5651d34c619c85f8075453a7c",
+  "before_report_sha256": "234e49e2bee56f7c068d82daee4dec36b096d3b645a3a114ce2a2242b192efcf",
+  "after_report_sha256": "88edbbe1e63e70354480833a16839b77f4bd7a877a6c49dc5430ba335ba040d2",
+  "graph_bytes_before": 1297491,
+  "graph_bytes_after": 1256075,
+  "saved_bytes": 41416,
+  "resident_program_bytes": 107599014,
+  "process_peak_before": 113470380,
+  "process_peak_after": 113429158,
+  "extra_takeover_peak_bytes": 19568,
+  "field_changes": {
+    "cells": {
+      "before": 392054,
+      "after": 392430
+    },
+    "ownership.components": {
+      "before": 264064,
+      "after": 228224
+    },
+    "ownership.live_facts": {
+      "before": 16384,
+      "after": 11264
+    },
+    "ownership.retired_components": {
+      "before": 0,
+      "after": 128
+    },
+    "ownership.boundaries": {
+      "before": 208160,
+      "after": 207200
+    }
+  },
+  "component_slots_before": 1601,
+  "component_slots_after": 1364,
+  "work_changes": {
+    "component_slots_reused": {
+      "before": 0,
+      "after": 237
+    },
+    "component_slots_released": {
+      "before": 0,
+      "after": 237
+    },
+    "dispatch_comparisons": {
+      "before": 3525,
+      "after": 3542
+    },
+    "component_lifetime_growths": {
+      "before": 10,
+      "after": 18
+    }
+  },
+  "logical_components_equal_after_aligning_stable_sources": true,
+  "run_sequence_and_final_state_equal": true,
+  "source_lifecycles_equal_after_aligning_ids": true,
+  "remaining_to_historical_30_percent_bytes": 62264,
+  "validation": {
+    "jobs": [
+      377,
+      380
+    ],
+    "runtime_library_tests": 217,
+    "ownership_tests": 69,
+    "no_default_features": "pass",
+    "worker_feature_suites": {
+      "ownership": 69,
+      "compiler": 19,
+      "witness_sources": 13
+    },
+    "per_run": {
+      "status": "pass",
+      "runs": 882,
+      "report_sha256": "e6be71f9333b9df0b94373cd990ac83ff620077c1d4bdb99da5387fcce8a6a36",
+      "matches_saved_checks": true
+    },
+    "native_final_state": {
+      "status": "pass",
+      "report_sha256": "107438ef63ad7bb3b8c544c6619575a23813f6ab4c78aff186e93bd99d145976"
+    }
+  }
+}
