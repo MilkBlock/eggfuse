@@ -140,3 +140,32 @@ The runtime remains `bc3e2d19`. A later clean attempt uses a fresh directory;
 the contaminated numbers and their raw samples are not erased or pooled with it.
 Boundary checks cannot detect work that starts and finishes wholly between
 checks, nor eliminate unrelated system load or grouped-order drift.
+
+A second attempt was interrupted by the corrected guard at the last candidate
+Raytrace sample boundary when a Cargo process appeared. `timing-interrupted.json`
+retains its observations, every duration and raw-sample hashes. It is not used
+for performance acceptance, and boundary evidence does not locate that work
+within inference, export or report construction.
+
+## Completed guarded checkpoint
+
+The third attempt, using the same binaries, flags, group order and sample
+counts, completed with no compiler or other Cell workload detected at its
+48 sample/group boundaries. All 20 warmup and measured executions match the
+frozen final states, source Run summaries and logical effects; native sum
+acceptance remains tied to the fresh export. `timing-results.json` contains all
+individual durations and observations. No within-group samples were discarded.
+
+| Four-worker inference median | Control `b9b93023` | Unit witnesses | Change |
+| --- | ---: | ---: | ---: |
+| sum-bits, five samples | 25.081 ms | 26.002 ms | +3.67% |
+| Raytrace, three samples | 5.364695 s | 5.332909 s | −0.59% |
+
+Raytrace is effectively unchanged in this short grouped checkpoint and sum-bits
+regresses. This does **not** establish a speedup despite the eliminated source
+lookups and allocations. The added parallel probes, witness storage and dispatch
+costs remain charged; the measurements do not isolate which cost explains the
+small-workload regression. Further work should reduce these costs before
+expanding coverage. The implementation is `bc3e2d19`; harness correction
+`c24cd9f8` changes no runtime code. This result establishes neither full worker
+utilization nor removal of the remaining shared-index/publication boundaries.

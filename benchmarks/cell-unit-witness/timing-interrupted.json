@@ -1,0 +1,200 @@
+{
+  "scope": "actual standalone Cell CPU; short sequential four-worker checkpoint",
+  "order_policy": "all control workloads complete before any candidate workload; never interleaved",
+  "control_commit": "b9b93023",
+  "candidate_commit": "c24cd9f8e23b0f2bd3ab8aef417ca301bcea5296",
+  "measurement_status": "interrupted-by-concurrent-work",
+  "interpretation": "Guard stopped at the final candidate Raytrace sample boundary after seeing another Cargo process. No performance acceptance; retain every sample. Boundary evidence alone does not locate the interference within inference/export/report time.",
+  "progress_sha256": "5e17d10121b7cf262061bb535abca0ba5b6368a247412faf6f19a2c937b7df17",
+  "failure_observation": {
+    "utc": "2026-11-13T04:37:53.292653+00:00",
+    "compilers": [
+      "11707   0.0 /Users/mineralsteins/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo"
+    ],
+    "workloads": [],
+    "processes": "  173  30.8 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n  336   1.7 /usr/sbin/coreaudiod\n  376   1.0 /System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/com.apple.DriverKit-AppleBCMWLAN\n  518   6.4 /System/Library/CoreServices/WindowManager.app/Contents/MacOS/WindowManager\n  529   5.4 /Applications/WezTerm.app/Contents/MacOS/wezterm-gui\n  573   3.9 /Applications/DingTalk.app/Contents/MacOS/DingTalk\n  583   5.5 /Applications/QQMusic.app/Contents/MacOS/QQMusic\n  749   3.1 /Applications/ToDesk.app/Contents/MacOS/ToDesk\n  849   1.6 /Applications/GaomonTablet.app/Contents/Resources/GaomonDaemon\n 2514   1.2 /Applications/Lark.app/Contents/MacOS/Feishu\n 9178  50.5 /opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n11707   0.0 /Users/mineralsteins/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo\n11708   9.3 (rustc)\n12401   1.3 /Applications/wpsoffice.app/Contents/SharedSupport/wpsbackend.app/Contents/MacOS/wpsbackend\n12701  79.1 /System/Library/PrivateFrameworks/StorageManagement.framework/PlugIns/StorageManagementService\n12784  93.4 /System/Library/PrivateFrameworks/StorageManagement.framework/PlugIns/ApplicationsStorageExtension.appex/Contents/MacOS/ApplicationsStorageExtension\n21085   1.0 /System/Library/PrivateFrameworks/TCC.framework/Support/tccd\n23966   2.1 /Applications/wpsoffice.app/Contents/SharedSupport/wpscloudsvr.app/Contents/MacOS/wpscloudsvr\n59263   1.2 /System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent\n29762   1.9 /Users/mineralsteins/.nvm/versions/node/v22.19.0/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex",
+    "phase": "after-sample",
+    "lane": "candidate",
+    "case": "ray",
+    "iteration": 2,
+    "process_scope": "CPU >= 1 percent or guarded compiler/runtime"
+  },
+  "groups": [
+    {
+      "directory": "group-0000",
+      "lane": "control",
+      "raw_samples_sha256": "3fa72fb1dc089fe8d7d963906c1c669151105699b759997895a31feaedd8e0f0",
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 0.026922916,
+          "process_wall_seconds": 0.13379258394706994,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 0.025175583,
+          "process_wall_seconds": 0.1301264590001665,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 0.025167416,
+          "process_wall_seconds": 0.13043320801807567,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        },
+        {
+          "iteration": 3,
+          "inference_seconds": 0.025791583,
+          "process_wall_seconds": 0.13888654200127348,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        },
+        {
+          "iteration": 4,
+          "inference_seconds": 0.024391667,
+          "process_wall_seconds": 0.12827724998351187,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        }
+      ],
+      "warmup_samples": [
+        {
+          "iteration": -1,
+          "inference_seconds": 0.025433792,
+          "process_wall_seconds": 0.1363565840292722,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        }
+      ]
+    },
+    {
+      "directory": "group-0001",
+      "lane": "control",
+      "raw_samples_sha256": "abd8cd92f0cf022f293a211f04dee0352b53924bc5fb61e62491cd21c4a93c26",
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 5.510730709,
+          "process_wall_seconds": 9.918662542011589,
+          "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+          "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 5.300830417,
+          "process_wall_seconds": 9.371599374979269,
+          "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+          "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 5.308337375,
+          "process_wall_seconds": 9.431915207998827,
+          "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+          "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+        }
+      ],
+      "warmup_samples": [
+        {
+          "iteration": -1,
+          "inference_seconds": 5.804349083,
+          "process_wall_seconds": 10.700613749970216,
+          "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+          "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+        }
+      ]
+    },
+    {
+      "directory": "group-0002",
+      "lane": "candidate",
+      "raw_samples_sha256": "739cbcaeec06b1a6612dfc9a95d50099d92ca9f4652a936af87e50a92bf7509b",
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 0.026901667,
+          "process_wall_seconds": 0.13803866697708145,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 0.027571625,
+          "process_wall_seconds": 0.14443829201627523,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 0.025806875,
+          "process_wall_seconds": 0.13263812504010275,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        },
+        {
+          "iteration": 3,
+          "inference_seconds": 0.025327125,
+          "process_wall_seconds": 0.13289529096800834,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        },
+        {
+          "iteration": 4,
+          "inference_seconds": 0.025482333,
+          "process_wall_seconds": 0.132886708015576,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        }
+      ],
+      "warmup_samples": [
+        {
+          "iteration": -1,
+          "inference_seconds": 0.029381125,
+          "process_wall_seconds": 0.14803858305094764,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "schedule_sha256": "7f73793c0e6a2176cff490f695a7dd23d16e202e6b5f72bed3d8a9763c11b0ec"
+        }
+      ]
+    },
+    {
+      "directory": "group-0003",
+      "lane": "candidate",
+      "raw_samples_sha256": "286d0fdf31e83702d28ef1158ffbece6580c433e1ad218153e4486513c009703",
+      "samples": [
+        {
+          "iteration": 0,
+          "inference_seconds": 5.215691084,
+          "process_wall_seconds": 9.240409166028257,
+          "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+          "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+        },
+        {
+          "iteration": 1,
+          "inference_seconds": 5.306809042,
+          "process_wall_seconds": 9.727216666971799,
+          "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+          "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+        },
+        {
+          "iteration": 2,
+          "inference_seconds": 5.9947645000000005,
+          "process_wall_seconds": 10.369654833979439,
+          "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+          "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+        }
+      ],
+      "warmup_samples": [
+        {
+          "iteration": -1,
+          "inference_seconds": 5.273592541,
+          "process_wall_seconds": 9.326671165996231,
+          "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+          "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+        }
+      ]
+    }
+  ]
+}
