@@ -53,6 +53,12 @@ class TokenCommit(unittest.TestCase):
         s=seed();s['visible'][0]=False
         self.assertTrue(commit(s,proposals([[1,17]]),np)[1]['stale_source'][0])
 
+    def test_dirty_float_token_cannot_generate_successor(self):
+        s=seed();s['token_dirty']=np.array([True,False,False,False,False])
+        out,m=commit(s,proposals([[1,17]]),np)
+        self.assertFalse(m['accepted'].any());self.assertTrue(m['stale_token'][0])
+        self.assertTrue(m['needs_attention']);self.assertTrue(out['active'][0])
+
     def test_device_matches_dynamic_sources_and_stops_repeated_derivations(self):
         if not mx.metal.is_available():self.skipTest('Metal required')
         plan=dict(producer=np.array([0,1],np.int32),consumer=np.array([1,2],np.int32),

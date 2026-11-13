@@ -1,0 +1,9 @@
+{
+  "source_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "compiled_union_sites": 52,
+  "unsupported_union_sites": [],
+  "scope": "Static union-site lowering only; no workload executed",
+  "global_identity_registry_required": true,
+  "complete_witness_views_required": true,
+  "bounded_rounds_do_not_prove_saturation": true
+}

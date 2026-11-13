@@ -25,7 +25,8 @@ def commit(state, proposals, xp):
     source = proposals['source']
     in_range = (source >= 0) & (source < capacity)
     safe_source = xp.clip(source, 0, capacity-1)
-    valid_source = (in_range & state['present'][safe_source] & state['active'][safe_source]
+    stale_token=state.get('token_dirty',xp.zeros_like(state['active']))[safe_source]
+    valid_source = (in_range & ~stale_token & state['present'][safe_source] & state['active'][safe_source]
                     & state['visible'][safe_source]
                     & (state['generation'][safe_source] == proposals['generation']))
     finite = xp.all(xp.isfinite(proposals['tokens']), axis=1)
@@ -66,6 +67,7 @@ def commit(state, proposals, xp):
     if 'slot_roots' in state:
         if 'slot_roots' not in proposals:raise ValueError('proposal lost authoritative root slots')
         output['slot_roots']=xp.where(written[:,None],proposals['slot_roots'][pick],state['slot_roots'])
+    if 'token_dirty' in state:output['token_dirty']=xp.where(written,False,state['token_dirty'])
     output['present'] = state['present'] | written
     output['active'] = (state['active'] & ~retired) | written
     output['visible'] = state['visible'] | written
@@ -76,6 +78,7 @@ def commit(state, proposals, xp):
     output['generation'] = xp.where(written, state['generation']+1, state['generation'])
     marks = dict(accepted=accepted, transferred=transferable,
         stale_source=proposals['matched'] & ~valid_source,
+        stale_token=proposals['matched'] & stale_token,
         nonfinite=proposals['matched'] & ~finite,
         unsettled_source=proposals['matched'] & valid_source & ~settled,
         capacity=novel & ~accepted,
@@ -85,7 +88,7 @@ def commit(state, proposals, xp):
     # "no new admission", never a complete egraph saturation certificate.
     marks['missing_witness']=proposals.get('missing_witness',xp.zeros_like(accepted))
     marks['no_new_admission'] = ~xp.any(accepted)
-    marks['needs_attention'] = xp.any(marks['stale_source'] | marks['nonfinite'] | marks['unsettled_source'] | marks['capacity'] | marks['missing_witness']) | xp.any(output['present'] & output['active'] & ~output['settled'])
+    marks['needs_attention'] = xp.any(marks['stale_source'] | marks['nonfinite'] | marks['unsettled_source'] | marks['capacity'] | marks['missing_witness']) | xp.any(output['present'] & output['active'] & (~output['settled'] | output.get('token_dirty',xp.zeros_like(output['active']))))
     return output, marks
 
 
