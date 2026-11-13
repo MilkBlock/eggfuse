@@ -1,0 +1,152 @@
+diff --git a/engine/cell-runtime/src/cell_prefix.rs b/engine/cell-runtime/src/cell_prefix.rs
+index aeeba9d8..94c28585 100644
+--- a/engine/cell-runtime/src/cell_prefix.rs
++++ b/engine/cell-runtime/src/cell_prefix.rs
+@@ -38,7 +38,9 @@ impl<'a> SourcePrefix<'a> {
+ impl Prefix for SourcePrefix<'_> {
+     #[cfg(feature = "sparse-cells")]
+     const SEALED_INPUTS: bool = true;
+-    const RECORD_RECEIPTS: bool = cfg!(feature = "structural-depth");
++    // A selected stage cursor may finish entirely inside this temporary frame.
++    // Effects keeps only requested results; unobserved operations add no record.
++    const RECORD_RECEIPTS: bool = true;
+     fn pending_cells(&self)->&[u32] {self.pending}
+     fn next(&mut self, known: &mut crate::known_results::Stats) -> Option<usize> {
+         for op in self.positions.by_ref() {
+@@ -127,6 +129,40 @@ impl Graph {
+                 if P::RECORD_RECEIPTS { receipts.record(op, point.witness); }
+                 continue;
+             }
++            // Consult the same baked route while the source frame is still
++            // temporary. Pending older tails retain the original dependency
++            // probe and ordered execution path; never bypass it with a proof.
++            #[cfg(feature="sparse-cells")]
++            let route=if witness.is_none() && prefix.pending_cells().is_empty()
++                && matches!(instruction,Op::Let(..)) {
++                self.prefix_constructor_witness(cell,&frame,op)
++            } else {None};
++            #[cfg(feature="sparse-cells")]
++            if let Some((target,evidence))=route && evidence.checked()
++                && let Some(point)=self.cell_witness_result(table,target)? {
++                let Op::Let(dst,..)=instruction else {unreachable!()};
++                self.stats.constructor_requests+=1;
++                self.stats.constructor_reused+=1;
++                self.stats.constructor_cell_route_accepted+=1;
++                self.stats.constructor_cell_prefix_route_accepted+=1;
++                if evidence.compiled() {
++                    self.stats.constructor_cell_route_key_proved+=1;
++                    self.stats.constructor_cell_route_key_fields_avoided+=args.len() as u64;
++                } else {
++                    self.stats.constructor_cell_route_compared_admissions+=1;
++                    self.stats.constructor_cell_route_recheck_fields_avoided+=args.len() as u64;
++                }
++                #[cfg(feature="storage-metrics")]
++                crate::receipt_trace::constructor(FactRef{cell,op:op as u32},table,point.witness,false,true);
++                frame.values.insert(*dst,point.value);
++                prefix.reused();
++                if P::RECORD_RECEIPTS {receipts.record(op,point.witness);}
++                continue;
++            }
++            #[cfg(feature="sparse-cells")]
++            let direct=route.map(|(fact,_)|fact);
++            #[cfg(not(feature="sparse-cells"))]
++            let direct=None;
+             let key: smallvec::SmallVec<[Value; 4]> = self.frame_arguments(cell, &frame, args)?;
+             #[cfg(feature="sparse-cells")]
+             if !prefix.pending_cells().is_empty() {
+@@ -147,7 +183,14 @@ impl Graph {
+             let assigned = if let Op::Set(_, _, v) = instruction {
+                 Some(self.argument_in(cell, &frame, v)?)
+             } else { None };
+-            if let Some(row) = self.lookup_prepared_constructor(table, &key, witness)? {
++            let accepted=self.stats.constructor_prepared_accepted;
++            let row=self.lookup_prepared_constructor(table,&key,witness.or(direct))?;
++            if direct.is_some() {
++                let count=self.stats.constructor_prepared_accepted-accepted;
++                self.stats.constructor_cell_route_accepted+=count;
++                self.stats.constructor_cell_prefix_route_accepted+=count;
++            }
++            if let Some(row) = row {
+                 let value = row.values.last().unwrap();
+                 match instruction {
+                     Op::Let(dst, ..) => {
+diff --git a/engine/cell-runtime/src/graph.rs b/engine/cell-runtime/src/graph.rs
+index 9818df60..9200ebac 100644
+--- a/engine/cell-runtime/src/graph.rs
++++ b/engine/cell-runtime/src/graph.rs
+@@ -341,6 +341,7 @@ pub struct Stats {
+     pub constructor_cell_route_static_candidate_checks_avoided:u64,
+     pub constructor_cell_route_witnesses: u64,
+     pub constructor_cell_route_accepted: u64,
++    pub constructor_cell_prefix_route_accepted: u64,
+     #[serde(default)]
+     pub constructor_cell_route_key_proved:u64,
+     pub constructor_cell_route_compared_admissions:u64,
+diff --git a/engine/cell-runtime/src/ownership_witnesses.rs b/engine/cell-runtime/src/ownership_witnesses.rs
+index b978612f..d4b2cbdd 100644
+--- a/engine/cell-runtime/src/ownership_witnesses.rs
++++ b/engine/cell-runtime/src/ownership_witnesses.rs
+@@ -153,11 +153,17 @@ impl Routes {
+ }
+ impl Graph {
+     pub(crate) fn cell_constructor_witness(&mut self, cell: u32, operation: usize) -> Option<(FactRef,KeyEvidence)> {
++        self.constructor_witness_in(cell,operation,None)
++    }
++    pub(crate) fn prefix_constructor_witness(&mut self, cell:u32, frame:&Cell, operation:usize)->Option<(FactRef,KeyEvidence)> {
++        self.constructor_witness_in(cell,operation,Some(frame))
++    }
++    fn constructor_witness_in(&mut self, cell:u32, operation:usize, frame:Option<&Cell>)->Option<(FactRef,KeyEvidence)> {
+         let rhs_cell=cell;
+         if self.program.cell_ownership.witnesses.0.is_empty() { return None; }
+         let owner = self.ownership.as_ref()?;
+         let entry = owner.composition.entry.as_ref()?;
+-        if self.rhs_frame(cell)?.template != entry.template { return None; }
++        if frame.or_else(||self.rhs_frame(cell))?.template != entry.template { return None; }
+         let plans=&self.program.cell_ownership.witnesses;
+         let routes = plans.0.get(entry.rule)?;
+         for &index in routes.operations.get(operation)? {
+@@ -201,7 +207,7 @@ impl Graph {
+                 let mut equal=true;
+                 for (field,arg) in row.values.iter().zip(args) {
+                     self.stats.constructor_cell_route_alternative_fields+=1;
+-                    if self.argument(rhs_cell,arg).ok().as_ref()!=Some(field) {equal=false;break;}
++                    if frame.map_or_else(||self.argument(rhs_cell,arg),|frame|self.argument_in(rhs_cell,frame,arg)).ok().as_ref()!=Some(field) {equal=false;break;}
+                 }
+                 if !equal {continue;}
+             }
+diff --git a/engine/cell-runtime/src/runtime.rs b/engine/cell-runtime/src/runtime.rs
+index 1511b294..3985b3d5 100644
+--- a/engine/cell-runtime/src/runtime.rs
++++ b/engine/cell-runtime/src/runtime.rs
+@@ -2472,11 +2472,18 @@ impl Executor {
+         } else { prepared };
+         #[cfg(not(feature="sparse-cells"))]
+         let prefix_end = prepared;
++        // The ordinary execution path consumes selected history results.
++        // Do not send such a continuation through a source-only prefix and
++        // silently replace its existing handoff with fresh constructor queries.
++        #[cfg(feature="iterative-bake")]
++        let prefix_has_transfer=!available.is_empty();
++        #[cfg(not(feature="iterative-bake"))]
++        let prefix_has_transfer=false;
+         #[allow(unused_mut)]
+         let mut ordinary = |me: &mut Self, values: crate::slots::Slots,
+                         receipts: &mut crate::cell::Effects| -> Result<Start> {
+             if me.graph.program.rules[rid].completion == crate::cell::Completion::Constructors
+-                && stage_cursor.is_none() && origin.is_none()
++                && origin.is_none() && !prefix_has_transfer
+                 && (!defer_constructor_prefix || prefix_end==me.graph.program.templates[template].ops.len())
+             {
+                 let width = me.graph.program.templates[template].ops.len();
+diff --git a/tools/cell-compiler/tests/cell_ownership.rs b/tools/cell-compiler/tests/cell_ownership.rs
+index e096c3e1..2bcb121c 100644
+--- a/tools/cell-compiler/tests/cell_ownership.rs
++++ b/tools/cell-compiler/tests/cell_ownership.rs
+@@ -1951,6 +1951,7 @@ fn one_entry_reuses_static_route_selection_for_multiple_constructor_results() {
+     assert_eq!(candidate.snapshots,control.snapshots);
+     assert_eq!(candidate.binding_audit,control.binding_audit);
+     let s=&candidate.graph.stats;
++    assert!(s.constructor_cell_prefix_route_accepted>0,"the temporary source prefix must use its baked witness route");
+     assert!(s.constructor_cell_route_selection_reuses>s.constructor_cell_route_probes,
+         "distinct instances should share the static group without sharing actual values");
+     assert_eq!(s.constructor_cell_route_anchor_reads,
