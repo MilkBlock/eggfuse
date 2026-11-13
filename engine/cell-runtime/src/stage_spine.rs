@@ -2196,10 +2196,11 @@ impl Programs {
         #[cfg(not(feature = "sparse-cells"))]
         { true }
     }
-    /// A completed, unchanged single write can put its root source directly
-    /// in the final Entry slot while the executor exclusively owns the RHS
-    /// phase. No query may observe these slots until repair and source-order
-    /// resolution finish. Live histories retain ordinary Cell completion.
+    /// A completed single write can put its root source directly in the final
+    /// Entry slot while the executor exclusively owns the RHS phase. Changed
+    /// and newly created rows carry the same actual function witness: repair
+    /// forwarding and source-order resolution still precede every query.
+    /// Live histories retain ordinary Cell completion.
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn complete_absorbed_root(&mut self, g: &Graph, rid: usize, cell: u32,
         step: Started, write: &crate::row_kernel::Write, index: usize,

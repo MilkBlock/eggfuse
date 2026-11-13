@@ -146,22 +146,16 @@ impl Executor {
             task.audit(self.graph.epoch, write.table)?;
             if let Some(step) = step {
                 self.stage_spine.effects(0, u64::from(task.changed), 0);
-                let step = if !task.changed {
-                    let Some(step) = self.stage_spine.complete_absorbed_root(
-                        &self.graph,
-                        rid,
-                        task.cell,
-                        step,
-                        &write,
-                        task.index,
-                        &mut self.entry_schedule,
-                    )?
-                    else {
-                        continue;
-                    };
-                    step
-                } else {
-                    step
+                let Some(step) = self.stage_spine.complete_absorbed_root(
+                    &self.graph,
+                    rid,
+                    task.cell,
+                    step,
+                    &write,
+                    task.index,
+                    &mut self.entry_schedule,
+                )? else {
+                    continue;
                 };
                 self.stage_spine.complete(
                     &self.graph,

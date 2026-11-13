@@ -6,11 +6,18 @@ fn compare(source: &str) -> (Executor, Executor) {
     compare_mode(source, true)
 }
 fn compare_mode(source: &str, audit: bool) -> (Executor, Executor) {
+    compare_config(source, audit, 0)
+}
+fn compare_config(source: &str, audit: bool, workers: usize) -> (Executor, Executor) {
     let core = eggfuse_bake::device_frontend::core("entry-publications", source).unwrap();
     let p = Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap();
     let mut old = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), audit);
     let mut nodes = Executor::new(Graph::new_with_repair_ports(p).unwrap(), audit);
     nodes.use_entry_publications().unwrap();
+    if workers > 0 {
+        nodes.use_query_workers(workers, 8).unwrap();
+        nodes.use_cell_execution(1).unwrap();
+    }
     #[cfg(feature = "iterative-bake")]
     {
         let execute = |runtime: &mut Executor| {
@@ -149,7 +156,7 @@ fn repeated_publications_skip_batch_losers_but_revalidate_later_batches() {
 }
 
 #[test]
-fn inline_function_output_keeps_last_producer_forwarding_and_late_inputs() {
+fn single_function_output_keeps_last_producer_forwarding_and_late_inputs() {
     let source = r#"
 (datatype E (N i64) (Start E) (Ready E) (Seen E i64))
 (function Cost (E) i64 :merge (min old new))
@@ -170,11 +177,24 @@ fn inline_function_output_keeps_last_producer_forwarding_and_late_inputs() {
     let a = old.report();
     let b = nodes.report();
     let s = &b["stage_spine"]["stats"];
-    assert!(s["inline_function_receipts"].as_u64().unwrap() > 0, "{s}");
-    assert_eq!(s["inline_function_receipts"], s["inline_function_reads"]);
-    assert!(s["receipt_redirects"].as_u64().unwrap() > 0, "{s}");
+    assert_eq!(s["inline_function_receipts"], 0, "root writes need no pending receipt");
+    assert_eq!(s["inline_function_reads"], 0);
+    assert!(s["absorbed_root_completions"].as_u64().unwrap() > 0);
+    assert!(b["entry_schedule"]["stats"]["staged_root_redirects"].as_u64().unwrap() > 0);
     assert_eq!(a["stage_spine"]["stats"]["inline_function_receipts"], 0);
-    assert!(b["entry_schedule"]["stats"]["publication_loser_skips"].as_u64().unwrap() > 0);
+
+    // A live producer history still needs ordinary inline completion. Keep
+    // coverage of its actual receipt forwarding instead of dropping the gate.
+    let produced = source.replace("(Start E)", "(Start E) (Seed E)")
+        .replace("(ruleset make)", "(ruleset seed) (ruleset make)\n(rule ((Seed x)) ((Start x)) :ruleset seed)")
+        .replace("(Start (N", "(Seed (N")
+        .replace("(seq (run make)", "(seq (run seed) (run make)");
+    let (_, live) = compare_mode(&produced, false);
+    let r = live.report();
+    let live = &r["stage_spine"]["stats"];
+    assert!(live["inline_function_receipts"].as_u64().unwrap() > 0);
+    assert_eq!(live["inline_function_receipts"], live["inline_function_reads"]);
+    assert!(live["receipt_redirects"].as_u64().unwrap() > 0);
 }
 
 #[test]
@@ -392,4 +412,40 @@ fn sealed_outputs_keep_query_aliases_and_retirable_boundaries_in_source_order() 
     assert_eq!(n("captured_anchors"), n("output_registrations") + n("cell_output_sealed_receipts"));
     assert_eq!(n("cell_output_receipts"), n("cell_output_registrations") + n("cell_output_sealed_receipts"));
     assert_eq!(s["cell_output_receipts"], s["cell_output_deliveries"]);
+}
+
+#[test]
+fn changed_worker_roots_publish_without_pending_completion_at_each_run_boundary() {
+    let seeds = (0..64).map(|n| format!("(N {n})")).collect::<Vec<_>>().join("\n");
+    for merge in ["old", "(min old new)", "(max old new)"] {
+        // Run prefixes compare the optimized, non-audit path at every boundary.
+        // The same-Run observer cannot see new rows; later reads see the final
+        // merge after duplicate writes and Eq-key forwarding.
+        for schedule in ["(run make)", "(run make) (run read)", "(run make) (run read) (run again) (run read)"] {
+            let source = format!(r#"
+(datatype E (N i64) (Seen E i64) (Early E))
+(function Cost (E) i64 :merge {merge})
+(ruleset make) (ruleset read) (ruleset again)
+(rule ((= x (N n))) ((set (Cost x) n)) :ruleset make)
+(rule ((= x (N n))) ((set (Cost x) (+ n 1))) :ruleset make)
+(rule ((= n (Cost x))) ((Early x)) :ruleset make)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset make)
+(rule ((= n (Cost x))) ((Seen x n)) :ruleset read)
+(rule ((= x (N n))) ((set (Cost x) 0)) :ruleset again)
+{seeds}
+(run-schedule (seq {schedule}))
+"#);
+            for workers in [2, 4] {
+                let (_, candidate) = compare_config(&source, false, workers);
+                let r = candidate.report();
+                let writes = &r["cell_execution"]["runtime"]["stats"]["writes"];
+                assert!(writes["rows"].as_u64().unwrap() >= 64, "{writes}");
+                let stage = &r["stage_spine"]["stats"];
+                assert!(stage["absorbed_root_completions"].as_u64().unwrap() >= 128, "{stage}");
+                assert_eq!(stage["inline_function_receipts"], 0);
+                assert_eq!(stage["inline_function_reads"], 0);
+                assert!(r["entry_schedule"]["stats"]["staged_root_redirects"].as_u64().unwrap() > 0);
+            }
+        }
+    }
 }
