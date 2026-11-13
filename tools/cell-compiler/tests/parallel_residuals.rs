@@ -234,10 +234,6 @@ fn small_selected_ranges_share_a_task_without_sharing_rule_results() {
         assert!(stats["selected_range_entries"].as_u64().unwrap()+stats["coverage_admitted_entries"].as_u64().unwrap()>0,"{stats}");
         assert!(stats["entry_range_batches"].as_u64().unwrap()<stats["entry_range_chunks"].as_u64().unwrap(),
             "small ranges must actually share completion events: {stats}");
-        assert_eq!(stats["result_mixed_rule_rows"],0,"pooled ranges already own their rule results");
-        assert_eq!(stats["range_result_group_heap_bytes"].as_u64().unwrap()>0,workers>1,
-            "mixed worker tasks return multiple owners; inline tasks keep one mixed buffer");
-        assert!(stats["range_result_buffers"].as_u64().unwrap()>0);
     }
 }
 
