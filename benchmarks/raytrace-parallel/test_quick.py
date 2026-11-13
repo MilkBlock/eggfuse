@@ -13,6 +13,18 @@ spec.loader.exec_module(quick)
 
 
 class GuardTests(unittest.TestCase):
+    def test_predeclared_counts_survive_queue_submission(self):
+        args = tuple(Path(x) for x in ('before', 'after', 'output', 'result.json'))
+        with patch.object(quick.jobs, 'current_lease', return_value=None), \
+                patch.object(quick.jobs, 'run_command', return_value=0) as launch:
+            quick.run(*args, sum_repeats=15, ray_repeats=7)
+        self.assertEqual(launch.call_args.args[1][2:6],
+                         ['--sum-repeats', '15', '--ray-repeats', '7'])
+        self.assertEqual(launch.call_args.args[1][-4:], list(map(str, args)))
+        with patch.object(quick.jobs, 'run_command', side_effect=AssertionError('must not submit')):
+            with self.assertRaisesRegex(ValueError, 'positive'):
+                quick.run(*args, ray_repeats=0)
+
     def test_timing_api_also_queues_the_whole_trial(self):
         args = tuple(Path(x) for x in ('before', 'after', 'output', 'result.json'))
         with patch.object(quick.jobs, 'current_lease', return_value=None), \

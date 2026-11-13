@@ -4,6 +4,7 @@
 Each invocation of the established process timer contains exactly one lane.
 There is no lane interleaving, concurrent benchmark, sampler or compilation.
 """
+import argparse
 import datetime
 import gzip
 import hashlib
@@ -83,10 +84,13 @@ def verify_frozen_references(result, control, candidate):
     result['native_sum_acceptance_sha256'] = timer['sha'](candidate / 'semantic-acceptance.json')
 
 
-def run(control, candidate, output, result_path):
+def run(control, candidate, output, result_path, *, sum_repeats=5, ray_repeats=3):
+    if sum_repeats < 1 or ray_repeats < 1:
+        raise ValueError('Sample counts must be positive and fixed before the trial')
     lease = jobs.current_lease()
     if lease is None:
         code = jobs.run_command(jobs.DEFAULT_STATE, [sys.executable, str(Path(__file__).resolve()),
+            '--sum-repeats', str(sum_repeats), '--ray-repeats', str(ray_repeats),
             *map(str, (control, candidate, output, result_path))], kind='timing')
         if code:
             raise RuntimeError(f'Scheduled timing job exited with status {code}')
@@ -113,7 +117,7 @@ def run(control, candidate, output, result_path):
     for label, root in (('control', control), ('candidate', candidate)):
         runtime = root / 'candidate-runtime'
         assert timer['sha'](runtime) == configs[label]['runtime_sha256']
-        for case, repeat in (('sum', 5), ('ray', 3)):
+        for case, repeat in (('sum', sum_repeats), ('ray', ray_repeats)):
             guard(result, output, 'before-group', label, case)
             config = configs[label]['lanes'][case]
             lane = {'runtime': str(runtime), 'program': config['program'], 'args': config['args']}
@@ -176,4 +180,10 @@ def finish(result, control, candidate, result_path):
 if __name__ == '__main__':
     if not __debug__:
         raise SystemExit('run without Python -O')
-    run(*(Path(arg) for arg in sys.argv[1:]))
+    parser = argparse.ArgumentParser(description=__doc__)
+    for name in ('control', 'candidate', 'output', 'result_path'):
+        parser.add_argument(name, type=Path)
+    parser.add_argument('--sum-repeats', type=int, default=5)
+    parser.add_argument('--ray-repeats', type=int, default=3)
+    args = parser.parse_args()
+    run(**vars(args))
