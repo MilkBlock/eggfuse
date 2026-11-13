@@ -61,6 +61,8 @@ def commit(state, proposals, xp):
     if 'slots' in proposals:
         output['slots']=xp.where(written[:,None],proposals['slots'][pick],state['slots'])
         output['slot_valid']=xp.where(written[:,None],proposals['slot_valid'][pick],state['slot_valid'])
+    if 'effect_pc' in state:
+        output['effect_pc']=xp.where(written,0,state['effect_pc'])
     output['present'] = state['present'] | written
     output['active'] = (state['active'] & ~retired) | written
     output['visible'] = state['visible'] | written
