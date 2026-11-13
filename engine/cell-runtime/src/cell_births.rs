@@ -437,7 +437,10 @@ impl Graph {
     pub(crate) fn take_local_job(&mut self,rule:usize,cell:u32,window:&mut Option<Window>,
         stop:usize,queued:bool)->Result<(Counts,Option<Job>)> {
         let mut counts=Counts {resume_checks:1,..Counts::default()};
-        if !self.local_jobs_supported() {return Ok((counts,None));}
+        // These backends can have additional birth-time effects. Their source
+        // handler remains authoritative until those effects join the proof.
+        if self.stable_ports.is_some() || self.union_digest.is_some() || self.ownership.is_some()
+            || self.local_unions.is_some() || cfg!(feature="keeper-proof") {return Ok((counts,None));}
         let Some(cert)=*window else {return Ok((counts,None));};
         let position=self.rhs_frame(cell).unwrap().completed_prefix;
         let Some(plan)=self.program.executions[rule].births.as_ref() else {return Ok((counts,None));};
@@ -486,11 +489,6 @@ impl Graph {
             cell,self.parents.reader(),&mut counts) else {return Ok((counts,None));};
         let root=plan.steps.binary_search_by_key(&first_anchor,|s|s.operation).unwrap();
         let isolated=queued && plan.isolated[from] && from>0 && first_anchor==plan.steps[from-1].operation;
-        // Ownership has already observed the source-created fresh anchor.
-        // A complete isolated tail produces only this Cell's new facts, so its
-        // ordinary ordered registration can extend that same composition.
-        // Peer-result tails need additional actual-result Entry evidence.
-        if queued && self.ownership.is_some() && !isolated {return Ok((counts,None));}
         if queued && !isolated && !plan.lineage[from].contains(&plan.steps[root].destination) {return Ok((counts,None));}
         // This first boundary may use retained parent projections. Acquire its
         // ordinary operands once, then move the actual key into the worker.
@@ -727,12 +725,9 @@ impl Graph {
         // template contains none. Do not carry its old parent read epoch
         // across admission that could complete that repair.
         self.pending_unions.is_empty() && self.dirty.is_empty() && self.dirty_markers.is_empty()
-            && self.ownership_settled()
     }
     pub(crate) fn local_jobs_supported(&self)->bool {
-        // Canonical ownership fields use the existing private row computation;
-        // activate_fields still performs all source-ordered owner registration.
-        self.stable_ports.is_none() && self.union_digest.is_none()
+        self.stable_ports.is_none() && self.union_digest.is_none() && self.ownership.is_none()
             && self.local_unions.is_none() && !cfg!(feature="keeper-proof")
     }
 }

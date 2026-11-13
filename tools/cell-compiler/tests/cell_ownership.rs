@@ -1971,7 +1971,7 @@ fn one_entry_reuses_static_route_selection_for_multiple_constructor_results() {
 }
 
 #[test]
-fn baked_result_entry_precedes_worker_owned_tail() {
+fn baked_result_entry_survives_constructor_preparation() {
     let seed=(0..48).map(|n|format!("(Tick (N {n}))")).collect::<Vec<_>>().join("\n");
     let source=format!(r#"
         (datatype E (N i64) (Tick E) (F E) (G E) (H E))
@@ -2001,11 +2001,7 @@ fn baked_result_entry_precedes_worker_owned_tail() {
             "owned_births","owned_live","signal_bindings_created"] {
             assert_eq!(before["stats"][key],after["stats"][key],"{key}");
         }
-        let report=candidate.report();let births=&report["cell_execution"]["runtime"]["stats"]["births"];
-        if workers>1 {assert!(births["worker_operations"].as_u64().unwrap()>0,"{births}");}
-        assert_eq!(births["root_jobs"],0);
-        eprintln!("baked owner workers={workers}: local={}, worker={}, result joins={}",
-            births["local_births"],births["worker_operations"],after["stats"]["composition_result_joins"]);
+        eprintln!("prepared owner workers={workers}: result joins={}",after["stats"]["composition_result_joins"]);
     }
 }
 

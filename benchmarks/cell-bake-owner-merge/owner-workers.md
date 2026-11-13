@@ -1,5 +1,10 @@
 # Canonical ownership continues on constructor workers
 
+**Worker admission experiment `674477c4` is rejected and restored.** The
+source-prefix result-Entry repair remains; canonical ownership no longer admits
+constructor worker tails. The implementation description below records the
+experiment, not a newly enabled ordinary path.
+
 The requested Bake line is `codex/cell-parallel-admission`, containing
 `d0d8ee33`. This checkout fast-forwarded the entire committed line through
 `b3322f9f`; it did not substitute the older structural-compression branch.
@@ -81,3 +86,56 @@ eggfuse-job run --kind timing -- python3 benchmarks/raytrace-parallel/quick.py O
 
 The control checkout is pinned at `b3322f9f`. Do not treat these ownership-lane
 results as a comparison against the historical fastest ordinary configuration.
+
+## Workload result and restoration
+
+Compute job 238 freezes both ordinary-feature binaries and validates exact
+sum-bits/Raytrace states, all 1,428/16,883 source Run summaries and effects.
+Both native sum-bits proofs pass with the fresh CPU export hash. The workload
+programs have no learned ownership fragments: their composition hit counts are
+zero. The learned-catalog integration fixture above supplies that separate
+cross-stage coverage; these workload measurements do not demonstrate new Bake
+transition hits.
+
+| Work | sum-bits control → experiment | Raytrace control → experiment |
+| --- | ---: | ---: |
+| Ordinary key lookups | 14,653 → 14,086 | 4,332,972 → 4,177,781 |
+| Local births + local reuse | 0 → 548 + 19 | 0 → 153,268 + 1,923 |
+| Constructor operations on workers | 0 → 407 | 0 → 126,996 |
+| Jobs / batches | 0 → 265 / 48 | 0 → 81,137 / 2,882 |
+| Queue capacity, cumulative | 0 → 609,528 B | 0 → 67,893,184 B |
+| Event capacity, cumulative | 0 → 254,448 B | 0 → 72,459,392 B |
+
+Owned birth/live counts and signal binding creations remain equal. The lookup
+reduction equals covered local operations; it is not a net count of all hashes
+or dispatch operations. The added capacities are cumulative, not peak memory.
+
+Timing job 240 completes all control groups before all candidate groups, with
+one warmup and fixed five sum-bits / three Raytrace samples per lane. All 48
+process guards are clear. Every sample is preserved in
+`owner-worker-results.json`, along with frozen binary hashes and work data.
+
+| Inference median | Control | Experiment | Change |
+| --- | ---: | ---: | ---: |
+| sum-bits | 21.287 ms | 23.270 ms | +9.31% |
+| Raytrace | 4.833709 s | 5.046035 s | +4.39% |
+
+The worker admission fails the speed gate and is restored, including its batch
+Entry plumbing and fast-registration exclusions. This trial does not isolate
+which added dispatch/ownership maintenance caused the regression. It shows that
+the demonstrated local work reduction is insufficient for an end-to-end win.
+
+The retained fix reports actual results from the source prefix into its existing
+composition Entry, and avoids selecting compact worker prefixes that discard
+required unexported witnesses. The regression test compares exact Run states,
+ordered bindings, final exports and all 48 result joins with serial execution
+while constructor preparation is enabled. No ownership worker admission or
+speedup is claimed for that repair. Reproduce the rejected admission with a
+checkout of `674477c4`; running the driver on the restored head tests the repair
+instead.
+
+After restoration, compute job 243 passes 47 execution, 47 ownership and 14
+query-worker integration tests plus 213 runtime unit tests. The retained runtime
+diff against `b3322f9f` is limited to source-prefix evidence, its shared Entry
+helper and preparation selection; constructor jobs and their scheduler match
+the control again.

@@ -40,56 +40,6 @@ fn same(a: &Executor, b: &Executor) {
 }
 
 #[test]
-fn canonical_owner_tails_keep_owned_registration_and_run_boundaries() {
-    let seed=(0..48).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
-    for existing in [false,true] {
-        let prior=if existing {"(G (F (N 0)))"} else {""};
-        let source=format!(r#"
-(datatype E (N i64) (F E) (G E) (H E) (Seen E))
-(function Out (E) Unit :merge old)
-(ruleset build) (ruleset observe) (ruleset join) (ruleset retire) (ruleset recreate)
-(rule ((= x (N n))) ((let a (F x)) (let b (G a)) (let c (H b)) (set (Out c) ())) :ruleset build)
-(rule ((= x (N n))) ((let a (F x)) (let b (G a)) (let c (H b)) (set (Out c) ())) :ruleset recreate)
-(rule ((Out x)) ((Seen x)) :ruleset observe)
-(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset join)
-(rule ((= x (N 2))) ((delete (G (F x)))) :ruleset retire)
-{seed}
-{prior}
-(run-schedule (seq (run build) (run observe) (run join) (run build)
-    (run retire) (run recreate) (run observe)))
-(check (Seen (H (G (F (N 2))))) (= (F (N 0)) (F (N 1))))
-"#);
-        egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
-        let program=Program::parse(artifact(&source)).unwrap();
-        let mut control=Executor::new(Graph::new_with_cell_ownership(program.clone()).unwrap(),true);
-        control.use_entry_publications().unwrap();
-        control.execute().unwrap();
-        for workers in [1,4] {
-            let mut candidate=Executor::new(Graph::new_with_cell_ownership(program.clone()).unwrap(),true);
-            candidate.use_entry_publications().unwrap();
-            candidate.use_query_workers(workers,1).unwrap();
-            candidate.use_cell_execution(1).unwrap();
-            candidate.execute().unwrap();same(&control,&candidate);
-            let report=candidate.report();let work=&report["cell_execution"]["runtime"]["stats"]["births"];
-            assert!(work["local_births"].as_u64().unwrap()>0,"{work}");
-            if workers>1 {assert!(work["worker_operations"].as_u64().unwrap()>0,"{work}");}
-            assert_eq!(work["root_jobs"],0,"foreign result Entries retain ordinary source handling");
-            assert_eq!(candidate.graph.stats.constructor_registry_batches,0,"owner facts must use owner registration");
-            assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
-            assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
-            assert_eq!(candidate.graph.stats.logical_facts_created,control.graph.stats.logical_facts_created);
-            let a=control.graph.ownership_report();let b=candidate.graph.ownership_report();
-            for key in ["owned_births","owned_live","signal_bindings_created"] {
-                assert_eq!(a["stats"][key],b["stats"][key],"{key}");
-            }
-            assert!(b["stats"]["owned_births"].as_u64().unwrap()>0);
-            eprintln!("canonical ownership existing={existing} workers={workers}: local={}, worker={}, owned={}",
-                work["local_births"],work["worker_operations"],b["stats"]["owned_births"]);
-        }
-    }
-}
-
-#[test]
 fn one_run_keeps_heterogeneous_cell_owners_across_rule_groups() {
     for size in [16, 96] {
         let seed=(0..size).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
