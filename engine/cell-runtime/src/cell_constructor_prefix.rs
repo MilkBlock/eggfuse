@@ -12,11 +12,12 @@ pub(super) struct Step {
     destination: usize,
     aliases: usize,
     ready: usize,
+    owner_entry: bool,
     pub(super) keys: Vec<Arg>,
 }
 impl Plan {
     pub(crate) fn compile_prefix(&mut self, p: &Program, rule: usize, permanent: &[bool],
-        unit_storage: impl Fn(usize)->bool) {
+        unit_storage: impl Fn(usize)->bool, owner_entries: bool) {
         // Additional per-instruction audit effects retain their ordinary host.
         if cfg!(feature="structural-depth") || p.writes.get(rule).is_some_and(Option::is_some) { return; }
         let cell = Definition::new(p, rule).expect("checked Cell");
@@ -45,7 +46,9 @@ impl Plan {
             if keys.iter().any(|a| matches!(a,Arg::Slot(s) if !ready.contains(s)
                 || cell.template.defs.get(s).is_some_and(|&at|at>=operation))) { break; }
             ready.insert(*destination);
-            steps.push(Step { operation, table:*table, destination:*destination, aliases,
+            let owner_entry=owner_entries && p.cell_ownership.markers[cell.rule.template].program.fields
+                .get(operation).and_then(|fields|fields.last()).is_some_and(Option::is_some);
+            steps.push(Step { operation, table:*table, destination:*destination, aliases, owner_entry,
                 ready:scalar_ready.len(), keys });
         }
         let units = steps.last().and_then(|last|
@@ -54,10 +57,14 @@ impl Plan {
             scalar_ready.truncate(steps.last().unwrap().ready);
             self.scalar_ready = scalar_ready;
             self.prefix = steps;
+            self.owner_entries = owner_entries;
             self.units = units.map(Box::new);
         }
     }
     pub(crate) fn prefix_width(&self) -> usize { self.prefix.len() }
+    pub(crate) fn entry_operations(&self) -> impl Iterator<Item=usize> + '_ {
+        self.prefix.iter().filter(|s|s.owner_entry).map(|s|s.operation)
+    }
     pub(crate) fn prepare_units(&self, instance: &mut Instance,
         reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         counts: &mut super::super::unit_prepare::Counts) {
@@ -157,12 +164,30 @@ impl Graph {
         assert!(!steps.is_empty(), "prepared prefix has completed steps");
         self.stats.constructor_prefix_checks += 1;
         let mut checks = 0;
-        let valid = self.sealed_generation == Some(self.stats.unions) && steps.iter().all(|step| {
+        // Training can be enabled after execution planning but before Run one.
+        // Such a late demand cannot use witnesses the worker did not retain.
+        let valid = (!self.needs_ownership_results(rule) || plan.owner_entries)
+            && self.sealed_generation == Some(self.stats.unions) && steps.iter().all(|step| {
             checks += 1;
             self.constructor_prefix_table_ready(step.table)
         });
         self.stats.constructor_prefix_table_checks += checks;
-        if valid { Some((count, results)) } else {
+        if valid {
+            if plan.owner_entries {
+                for index in 0..count {
+                    let plan=self.program.executions[rule].constructor.as_ref().unwrap();
+                    let step=&plan.prefix[index];
+                    if !step.owner_entry {continue;}
+                    let operation=step.operation;
+                    let slot=plan.result_layout.as_ref().and_then(|layout|layout.index(operation))
+                        .expect("compiled ownership result slot");
+                    let witness=results[slot].expect("successful prepared constructor result");
+                    self.stats.constructor_prefix_entry_reads+=1;
+                    self.composition_prepared_result_entry(rule,operation,witness);
+                }
+            }
+            Some((count, results))
+        } else {
             self.stats.constructor_prefix_rejected += 1;
             let witnesses = units.witnesses();
             self.stats.unit_prepared_prefix_discarded += (units.len() - witnesses) as u64;
@@ -209,6 +234,44 @@ impl Graph {
 mod tests {
     use super::*;
     #[test]
+    fn invalid_union_epoch_cannot_publish_any_prepared_composition_result() {
+        for invalid in [false,true] {
+            let mut g=super::super::tests::graph();
+            let template=&mut g.program.templates[0];
+            template.sorts.push(template.sorts[0].clone());
+            template.defs.insert(2,1);
+            std::sync::Arc::make_mut(&mut template.ops).push(Op::Let(2,Call::Table(0),vec![Arg::Slot(1)]));
+            g.program.known_results.static_skip[0]=std::rc::Rc::new(vec![false;2]);
+            g.program.executions[0]=crate::cell::execution::Plan::derive(&g.program.tables,&g.program.templates[0],&[0]);
+            g.program.repair_ports=crate::graph::repair_ports::Plan::derive(&g.program);
+            g.use_cell_ownership().unwrap();g.train_ownership_fragments().unwrap();
+            let mut plan=Plan::derive(&g.program,0).unwrap();
+            plan.compile_prefix(&g.program,0,&[true],|_|false,true);
+            g.program.executions[0].constructor=Some(plan.clone());
+            let effects=crate::cell::EffectPlan::compile(&g.program,0,&[],0,false);
+            plan.result_layout=Some(effects.layout.clone());
+            g.program.executions[0].constructor=Some(plan.clone());
+            let producer=g.linked_slots(0,[(0,Value::Eq(9))].into_iter().collect(),None).unwrap();
+            g.construct(producer,0,0,&[Arg::Slot(0)],1).unwrap();
+            g.construct(producer,1,0,&[Arg::Slot(1)],2).unwrap();
+            g.repair().unwrap();g.changes.clear();
+            let mut instance=Instance::matched([(0,Value::Eq(9))].into_iter().collect(),Default::default(),0);
+            plan.prepare(&mut instance,g.query_reads(&[],&mut 0).as_ref(),
+                &mut Default::default(),&mut Default::default(),&mut Counts::default());
+            assert_eq!(instance.prepared,2);
+            g.sealed_generation=Some(g.stats.unions);
+            if invalid {g.enqueue_union(Value::Eq(9),Value::Eq(7)).unwrap();g.repair().unwrap();}
+            g.begin_owner_entry(0,Default::default());
+            let Prepared::Prefix(results)=std::mem::take(&mut instance.constructor) else {panic!("worker prefix")};
+            let prefix=g.seal_constructor_prefix(0,&mut instance.values,&mut instance.prepared,results,&mut None,&mut Default::default());
+            assert_eq!(prefix.is_none(),invalid);
+            let expected=if invalid {0}else{2};
+            assert_eq!(g.stats.constructor_prefix_entry_reads,expected);
+            assert_eq!(g.ownership_report()["stats"]["composition_result_writes"],expected);
+            g.end_owner_entry();
+        }
+    }
+    #[test]
     fn invalid_constructor_prefix_preserves_completed_scalar_slots_and_the_initial_source_position() {
         for invalid in [false,true] {
             let mut g = super::super::tests::graph();
@@ -225,7 +288,7 @@ mod tests {
             g.program.known_results.static_skip[0]=std::rc::Rc::new(vec![false;4]);
             g.program.executions[0]=crate::cell::execution::Plan::derive(&g.program.tables,&g.program.templates[0],&[0]);
             let mut plan=Plan::derive(&g.program,0).unwrap();
-            plan.compile_prefix(&g.program,0,&[true], |_|false);
+            plan.compile_prefix(&g.program,0,&[true], |_|false,false);
             assert_eq!(plan.prefix_width(),2);
             g.program.executions[0].constructor=Some(plan.clone());
             let producer=g.linked_slots(0,[(0,Value::Eq(9))].into_iter().collect(),None).unwrap();
@@ -276,7 +339,7 @@ mod tests {
             p.executions[0]=crate::cell::execution::Plan::derive(&p.tables,&p.templates[0],&[0]);
             let mut g=Graph::new(p).unwrap();
             let mut plan=Plan::derive(&g.program,0).unwrap();
-            plan.compile_prefix(&g.program,0,&[true,false], |_|true);
+            plan.compile_prefix(&g.program,0,&[true,false], |_|true,false);
             assert_eq!(plan.prefix_width(),2);
             g.program.executions[0].constructor=Some(plan.clone());
             let producer=g.linked_slots(0,[(0,Value::Eq(9))].into_iter().collect(),None).unwrap();

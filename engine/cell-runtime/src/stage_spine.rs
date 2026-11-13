@@ -1759,7 +1759,8 @@ impl Programs {
     pub(crate) fn permanent_tables(&self) -> &[bool] { &self.permanent }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn preparation_layout(&self, p: &Program, rid: usize) -> Option<std::sync::Arc<crate::cell::EffectLayout>> {
-        if !self.capture_receipts(rid) { return None; }
+        if !self.capture_receipts(rid) && !p.executions[rid].constructor.as_ref()
+            .is_some_and(|plan|plan.entry_operations().next().is_some()) { return None; }
         let plan = self.effect_plans[rid].get_or_init(|| Arc::new(crate::cell::EffectPlan::compile(
             p, rid, &self.outputs[rid], self.cell_output_widths[rid], false)));
         Some(plan.layout.clone())
@@ -1796,7 +1797,8 @@ impl Programs {
     pub(crate) fn begin_effects_with_results(&mut self, g: &Graph, rid: usize, full: bool, force: bool,
         _step: Option<&Started>, _facts: &QueryFacts,
         prepared: Option<Vec<Option<Dependency>>>) -> crate::cell::Effects {
-        if !force && !full && !self.capture_receipts(rid) {
+        if !force && !full && !self.capture_receipts(rid)
+            && prepared.as_ref().is_none_or(Vec::is_empty) {
             debug_assert!(prepared.as_ref().is_none_or(Vec::is_empty));
             return Default::default();
         }

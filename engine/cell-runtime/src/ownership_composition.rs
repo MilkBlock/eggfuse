@@ -828,6 +828,18 @@ impl Graph {
     /// Its actual witness must reach the same Entry before first-miss promotion.
     #[cfg(feature="sparse-cells")]
     pub(crate) fn composition_result_entry_with_template(&mut self,cell:u32,template:Option<usize>,op:usize,witness:Dependency,visible:bool) {
+        self.composition_result_witness(Some(cell),template,op,witness,visible);
+    }
+    /// A validated prefix precedes allocation of its source instance. Its
+    /// returned witnesses already exist, so none can be that future instance.
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn composition_prepared_result_entry(&mut self,rule:usize,op:usize,witness:Dependency) {
+        if !self.ownership.as_ref().and_then(|m|m.composition.entry.as_ref())
+            .is_some_and(|entry|entry.rule==rule) {return;}
+        self.composition_result_witness(None,Some(self.program.rules[rule].template),op,witness,true);
+    }
+    #[cfg(feature="sparse-cells")]
+    fn composition_result_witness(&mut self,cell:Option<u32>,template:Option<usize>,op:usize,witness:Dependency,visible:bool) {
         if !visible {return;}
         let Some(m)=&mut self.ownership else {return;};
         let Some(entry)=m.composition.entry.as_mut() else {return;};
@@ -835,10 +847,11 @@ impl Graph {
         if !self.program.cell_ownership.composition.result_rules[entry.rule]
             && m.composition.training.is_none() && m.composition.catalog_trace.is_none() {return;}
         let Dependency::Fact(f)=witness else {return;};
-        if f.cell==cell || m.composition.frames.contains_key(&cell)
+        if cell.is_some_and(|cell|f.cell==cell || m.composition.frames.contains_key(&cell))
             || !m.composition.frames.contains_key(&f.cell) {return;}
-        let template=template.or_else(||self.active_rhs.as_ref().filter(|(id,_)|*id==cell).map(|(_,c)|c.template)
-            .or_else(||self.cells.cell_metadata(cell).map(|c|c.template)));
+        let template=template.or_else(||cell.and_then(|cell|
+            self.active_rhs.as_ref().filter(|(id,_)|*id==cell).map(|(_,c)|c.template)
+                .or_else(||self.cells.cell_metadata(cell).map(|c|c.template))));
         if template!=Some(entry.template) {return;}
         let slot=self.program.cell_ownership.entries[entry.rule].len()+op;
         let program=&self.program.cell_ownership.markers[entry.template].program;

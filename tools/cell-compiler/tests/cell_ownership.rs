@@ -2003,10 +2003,12 @@ fn one_entry_reuses_static_route_selection_for_multiple_constructor_results() {
 #[test]
 fn baked_result_entry_survives_constructor_preparation() {
     let seed=(0..48).map(|n|format!("(Tick (N {n}))")).collect::<Vec<_>>().join("\n");
+    for existing in [1,2] {
+    let producer=if existing==1 {"(F x)"} else {"(G (F x))"};
     let source=format!(r#"
         (datatype E (N i64) (Tick E) (F E) (G E) (H E))
         (ruleset a) (ruleset b) (ruleset join)
-        (rule ((= x (N n))) ((F x)) :ruleset a)
+        (rule ((= x (N n))) ({producer}) :ruleset a)
         (rule ((Tick x)) ((H (G (F x)))) :ruleset b)
         (rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset join)
         {seed}
@@ -2014,12 +2016,15 @@ fn baked_result_entry_survives_constructor_preparation() {
         (check (= (H (G (F (N 0)))) (H (G (F (N 1))))))
     "#);
     let p=program(&source);
-    let mut control=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),true);
+    for stable in [false,true] {
+    let create=|| if stable {Graph::new_with_local_congruence(p.clone()).unwrap()}
+        else {Graph::new_with_cell_ownership(p.clone()).unwrap()};
+    let mut control=Executor::new(create(),true);
     control.use_entry_publications().unwrap();control.execute().unwrap();
     let before=control.graph.ownership_report();
     assert!(before["stats"]["composition_result_joins"].as_u64().unwrap()>0,"{before}");
     for workers in [1,4] {
-        let mut candidate=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),true);
+        let mut candidate=Executor::new(create(),true);
         candidate.use_entry_publications().unwrap();
         candidate.use_query_workers(workers,1).unwrap();candidate.use_cell_execution(1).unwrap();
         candidate.execute().unwrap();
@@ -2031,8 +2036,39 @@ fn baked_result_entry_survives_constructor_preparation() {
             "owned_births","owned_live","signal_bindings_created"] {
             assert_eq!(before["stats"][key],after["stats"][key],"{key}");
         }
-        eprintln!("prepared owner workers={workers}: result joins={}",after["stats"]["composition_result_joins"]);
+        assert!(candidate.graph.stats.constructor_prefix_entry_reads>=existing*48,
+            "the composition must consume the worker's actual result slots");
+        assert!(candidate.graph.stats.constructor_prefix_operations>=48);
+        assert_eq!(candidate.graph.stats.constructor_prefix_rejected,0);
+        let report=candidate.report();
+        assert!(report["stage_spine"]["stats"]["prepared_effect_buffer_moves"].as_u64().unwrap()>0,
+            "the same result allocation continues into RHS");
+        eprintln!("prepared owner existing={existing} stable={stable} workers={workers}: prefix={}, Entry reads={}, result joins={}",
+            candidate.graph.stats.constructor_prefix_operations,candidate.graph.stats.constructor_prefix_entry_reads,
+            after["stats"]["composition_result_joins"]);
     }
+    }
+    }
+}
+
+#[test]
+fn late_training_cannot_consume_an_uncaptured_prefix_result() {
+    let source="(datatype E (N i64) (Tick E) (F E) (G E) (H E))
+        (ruleset a) (ruleset b)
+        (rule ((= x (N n))) ((F x)) :ruleset a)
+        (rule ((Tick x)) ((H (G (F x)))) :ruleset b)
+        (Tick (N 0)) (Tick (N 1)) (run a 1) (run b 1)";
+    let p=raw_program(source);
+    let mut control=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),true);
+    control.graph.train_ownership_fragments().unwrap();control.execute().unwrap();
+    let mut candidate=Executor::new(Graph::new_with_cell_ownership(p).unwrap(),true);
+    candidate.use_query_workers(2,1).unwrap();candidate.use_cell_execution(1).unwrap();
+    candidate.graph.train_ownership_fragments().unwrap();candidate.execute().unwrap();
+    assert_eq!(control.snapshots,candidate.snapshots);
+    assert_eq!(control.binding_audit,candidate.binding_audit);
+    assert_eq!(control.graph.ownership_fragment_profile().unwrap(),candidate.graph.ownership_fragment_profile().unwrap());
+    assert!(candidate.graph.stats.constructor_prefix_rejected>0);
+    assert_eq!(candidate.graph.stats.constructor_prefix_entry_reads,0);
 }
 
 #[test]

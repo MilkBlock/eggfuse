@@ -126,6 +126,7 @@ impl Work {
             Some(J::String(v)) if v == "cell-constructor-preparation/v5" => 5,
             Some(J::String(v)) if v == "cell-constructor-preparation/v6" => 6,
             Some(J::String(v)) if v == "cell-constructor-preparation/v7" => 7,
+            Some(J::String(v)) if v == "cell-constructor-preparation/v8" => 8,
             _ => return Err("unknown Cell constructor preparation accounting".into()),
         };
         for (group, fields) in [
@@ -206,6 +207,12 @@ impl Work {
             report.pointer(&format!("/{key}")).and_then(J::as_u64)
                 .ok_or_else(||format!("missing constructor preparation work {key}"))?
         } else { 0 };
+        work.insert(key.into(),value);
+        let key="stats/constructor_prefix_entry_reads";
+        let value=if constructor_preparation>=8 {
+            report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                .ok_or_else(||format!("missing constructor preparation work {key}"))?
+        } else {0};
         work.insert(key.into(),value);
         // Unit rows are real speculative construction, including candidates
         // subsequently discarded. Prefix rows/instances are subsets of these
@@ -858,7 +865,7 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         "stage_spine/stats/preparation_handoff_rule_checks", "stage_spine/stats/preparation_handoff_history_checks",
         "stage_spine/stats/preparation_handoff_reads", "stage_spine/stats/preparation_handoff_inherited_reads",
         "stats/constructor_prefix_checks", "stats/constructor_prefix_table_checks",
-        "stats/constructor_prefix_discarded_slots", "stats/constructor_prefix_receipt_writes",
+        "stats/constructor_prefix_discarded_slots", "stats/constructor_prefix_receipt_writes", "stats/constructor_prefix_entry_reads",
         "query_workers/stats/execution/constructor/prefix_slot_writes",
         "query_workers/stats/execution/constructor/prefix_slot_growths",
         "query_workers/stats/execution/constructor/prefix_witness_growths",

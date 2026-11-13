@@ -15,6 +15,7 @@ pub(crate) struct Plan {
     // Compile once from the authoritative switch. Rules without a possible
     // result donor need no per-instance history admission checks.
     pub handoff: bool,
+    owner_entries: bool,
     keys: Vec<Arg>,
     prefix: Vec<prefix::Step>,
     // Slots established by the existing input-derived scalar program. Prefix
@@ -241,7 +242,7 @@ impl Plan {
                 Arg::Literal(_) => true,
                 Arg::Slot(s) => ready.contains(s) && cell.template.defs.get(s).is_none_or(|&at| at < operation),
             }) { return Some(Self { operation, table:*table,
-                handoff: p.iterative.supplies_operation(rule, operation), keys, prefix:vec![], scalar_ready:vec![], result_layout:None, units:None }); }
+                handoff: p.iterative.supplies_operation(rule, operation), owner_entries:false, keys, prefix:vec![], scalar_ready:vec![], result_layout:None, units:None }); }
         }
         None
     }

@@ -3377,7 +3377,7 @@ impl Executor {
             "context_bytes":std::mem::size_of::<crate::graph::rhs_ownership::Suspended>(),
             "scope":"existing worker suffix dispatch; source-order driver still waits"}); }
         #[cfg(feature = "sparse-cells")]
-        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v7",
+        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v8",
             "rules":self.graph.program.executions.iter().filter(|p|p.constructor.is_some()).count(),
             "handoff_rules":self.graph.program.executions.iter()
                 .filter(|p|p.constructor.as_ref().is_some_and(|p|p.handoff)).count(),
@@ -3385,6 +3385,8 @@ impl Executor {
                 .filter(|p|p.constructor.as_ref().is_some_and(|p|p.prefix_width()!=0)).count(),
             "prefix_operations":self.graph.program.executions.iter()
                 .filter_map(|p|p.constructor.as_ref()).map(|p|p.prefix_width()).sum::<usize>(),
+            "prefix_entry_operations":self.graph.program.executions.iter()
+                .filter_map(|p|p.constructor.as_ref()).map(|p|p.entry_operations().count()).sum::<usize>(),
             "unit_tail_rules":self.graph.program.executions.iter()
                 .filter(|p|p.constructor.as_ref().is_some_and(|p|p.has_unit_tail())).count(),
             "instance_bytes":std::mem::size_of::<crate::cell::Instance>(),

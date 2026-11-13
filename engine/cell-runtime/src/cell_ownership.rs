@@ -410,6 +410,11 @@ impl Graph {
                     || self.program.cell_ownership.witnesses.0.get(rid).is_some_and(|r|!r.is_empty()))
         })
     }
+    pub(crate) fn needs_ownership_results(&self, rid: usize) -> bool {
+        self.ownership.as_ref().is_some_and(|m|
+            self.program.cell_ownership.composition.result_rules[rid]
+                || m.composition.training.is_some() || m.composition.catalog_trace.is_some())
+    }
     pub(super) fn ownership_settled(&self) -> bool {
         self.ownership.as_ref().is_none_or(|m| m.pending.is_empty())
     }
