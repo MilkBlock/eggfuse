@@ -44,8 +44,11 @@ plan storage actually grows by 90,056 bytes. At 108 paths, plan storage grows
 329,464 bytes and artifact JSON shrinks 181,036 bytes. Neither artifact change
 is evidence of better egraph compression.
 
-Exact artifact hashes, final-state checks and the larger candidate's Run-level
-validation status are recorded in `direct-prefix-growth.json`. Untested
+Job 360 checks the 108-extension candidate against the seed: all 882 Run graphs
+and ordered execution audits pass and match the saved control checks. The
+reviewed native final-state semantic entrypoint also passes all comparisons.
+Exact artifact hashes and validation status are recorded in
+`direct-prefix-growth.json`. Untested
 intermediate-state coverage must not be inferred for the other lanes. The
 best observed Graph is still above the historical 30% target, and this path
 extension does not implement saturated RHS skipping.

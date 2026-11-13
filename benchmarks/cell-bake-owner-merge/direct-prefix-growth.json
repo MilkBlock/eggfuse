@@ -60,7 +60,16 @@
       "suffix_retirements": 190,
       "run_sequence_equal": true,
       "final_export_equal": true,
-      "per_run_validation": "pending"
+      "per_run_validation": {
+        "status": "pass",
+        "runs": 882,
+        "report_sha256": "8a1bfcbdf5d03c08fde1f75fd51e2ef021fb8fa2a2d318b794b35726ec778b04",
+        "same_as_saved_control_checks": true
+      },
+      "native_final_state": {
+        "status": "pass",
+        "report_sha256": "107438ef63ad7bb3b8c544c6619575a23813f6ab4c78aff186e93bd99d145976"
+      }
     },
     "256": {
       "program_sha256": "015a4363cf3da4fe354c25efe4032a5136529c67f9e8d96b7ecb0d0148d0e77c",
@@ -88,5 +97,10 @@
       "final_export_equal": true,
       "per_run_validation": "not run"
     }
-  }
+  },
+  "validation_jobs": [
+    356,
+    360
+  ],
+  "remaining_to_historical_30_percent_bytes": 192472
 }
