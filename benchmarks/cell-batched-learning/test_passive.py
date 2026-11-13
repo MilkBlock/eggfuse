@@ -1,5 +1,6 @@
 import unittest
-from passive import maximal, select
+from passive import maximal, select, prepare
+from pathlib import Path
 
 
 def fragment(hops, root=0):
@@ -12,6 +13,11 @@ def row(f, births=3, inputs=9, cost=2):
 
 
 class PassiveSelectionTests(unittest.TestCase):
+    def test_invalid_batch_budgets_fail_before_reading_inputs(self):
+        for budgets in ((), (0,), (4097,)):
+            with self.assertRaises(ValueError):
+                prepare(Path("missing-audit-root"), budgets)
+
     def test_seed_language_survives_longer_paths(self):
         a, b, c = fragment([(1, 0)]), fragment([(1, 0), (2, 0)]), fragment([(8, 0)], root=1)
         selected, chosen = select([a, c], [row(b)], 1)

@@ -45,7 +45,9 @@ def select(seed, records, budget):
     return result, chosen
 
 
-def prepare(root):
+def prepare(root, budgets=(64, 256)):
+    if not budgets or any(not isinstance(b, int) or not 1 <= b <= 4096 for b in budgets):
+        raise ValueError("proposal budgets must be in 1..4096")
     names = [c['case'] for c in json.loads((root/'manifest.json').read_text())['cases']]
     samples, installed = [], {}
     for name in names:
@@ -89,7 +91,7 @@ def prepare(root):
     out = root/'passive'; out.mkdir(exist_ok=True)
     (out/'pooled-observations.json').write_text(json.dumps(merged, separators=(',', ':')))
     variants = []
-    for budget in (64, 256):
+    for budget in budgets:
         fragments, chosen = select(seeds[names[0]], rows, budget)
         if len(fragments) > 4096:
             raise ValueError('selection exceeds finite catalog bound')
@@ -114,6 +116,6 @@ def prepare(root):
 
 
 if __name__ == '__main__':
-    s = prepare(Path(sys.argv[1]))
+    s = prepare(Path(sys.argv[1]), tuple(map(int, sys.argv[2:])) or (64, 256))
     print(json.dumps({k: v for k, v in s.items() if k != 'variants'}))
     print([(v['budget'], v['added_paths'], v['maximal_paths']) for v in s['variants']])
