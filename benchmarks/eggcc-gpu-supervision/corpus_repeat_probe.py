@@ -15,6 +15,7 @@ from boundary_cell_ridge import D,B,state,output_layout,request_with_roles
 from dominator_completion import compose,freeze
 from collect_observed_corpus import read_bytes
 from decode_cell_completion import representation
+from cell_eq_projection import compile_projection,project as project_eq
 from bounded_cell_readout import readout_features,decode as decode_bounded,port_moments
 from bake_stop_features import plan as stop_plan,pack as pack_stop,evaluate as stop_features
 
@@ -64,8 +65,9 @@ def bound_state(values,body_bound,xp):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--rounds',type=int,default=4);p.add_argument('--bounded-state',action='store_true');p.add_argument('--case-output',type=Path);p.add_argument('--relaxation',type=float,default=1.0);args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--rounds',type=int,default=4);p.add_argument('--bounded-state',action='store_true');p.add_argument('--case-output',type=Path);p.add_argument('--relaxation',type=float,default=1.0);p.add_argument('--project-eq',action='store_true');args=p.parse_args()
     if not 0<args.relaxation<=1:raise ValueError('relaxation must be in (0,1]')
+    if args.project_eq and args.relaxation!=1:raise ValueError('Eq projection ablation requires full-step updates')
     if not 1<=args.rounds<=16:raise ValueError('rounds must be between 1 and 16')
     metadata=json.loads(gzip.decompress(args.model.with_suffix('.json.gz').read_bytes()))
     if metadata['manifest_sha256']!=hashlib.sha256(args.manifest.read_bytes()).hexdigest():raise ValueError('model manifest mismatch')
@@ -105,11 +107,14 @@ def main():
     if correction is not None and stop_coef is None:raise ValueError('correction requires Bake stop head')
     body_bounds=np.array([state_bound(r['sample']['source'],r['rule']) for r in records],np.float32)
     if np.any(np.abs(completed[:,:D])>body_bounds[:,None]+1e-5) or np.any(np.abs(completed[:,D:])>1.00001):raise ValueError('teacher violates declared bounds')
+    eq_wiring=compile_projection(stop_plans,capacity) if args.project_eq else None
+    if args.project_eq:np.testing.assert_allclose(project_eq(completed,eq_wiring,np),completed,atol=1e-6,rtol=1e-6)
     stop_wiring=pack_stop(stop_plans)
     if not mx.metal.is_available():raise RuntimeError('Metal required')
     mx.set_default_device(mx.gpu);gw,gc,gidx,gm,gq,gr=[mx.array(v) for v in (w,coef,indices,mix,q,role)]
     if stop_coef is not None:
         gs=mx.array(stop_coef);gstop=[mx.array(v) for v in stop_wiring]
+    geq=[mx.array(v) for v in eq_wiring] if args.project_eq else None
     gbounds=mx.array(body_bounds)
     if direct is not None:gd=mx.array(direct);gdw=mx.array(direct_w)
     if correction is not None:grc=mx.array(correction)
@@ -121,6 +126,7 @@ def main():
         if correction is not None:
             ca=attachment(candidate,gidx,gm,mx);cx=features(candidate,gq,ca,gw,mx,gr)
             candidate=candidate+mx.concatenate([cx,stop_features(candidate,*gstop,mx)],axis=1)@grc
+        if args.project_eq:candidate=project_eq(candidate,geq,mx)
         if args.bounded_state:candidate=bound_state(candidate,gbounds,mx)
         if args.relaxation!=1:candidate=s+args.relaxation*(candidate-s)
         return mx.where(emit[:,None],candidate,s),emit
@@ -146,12 +152,13 @@ def main():
         if correction is not None:
             ca=attachment(candidate,indices,mix,np);cx=features(candidate,q,ca,w,np,role)
             candidate=candidate+np.concatenate([cx,stop_features(candidate,*stop_wiring,np)],axis=1)@correction
+        if args.project_eq:candidate=project_eq(candidate,eq_wiring,np)
         if args.bounded_state:candidate=bound_state(candidate,body_bounds,np)
         if args.relaxation!=1:candidate=reference+args.relaxation*(candidate-reference)
         reference=np.where(emit[:,None],candidate,reference);reference_emissions.append(emit)
     numeric=numerical_audit(final,reference,emissions,np.array(reference_emissions))
     if not np.isfinite(final).all() or not np.isfinite(reference).all():
-        result=dict(status='failed',reason='nonfinite recurrent state',relaxation=args.relaxation,bounded_state_ablation=args.bounded_state,scope='fixed-binding local GPU recurrence, not ruleset saturation',model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),manifest_sha256=metadata['manifest_sha256'],rounds=args.rounds,cases=len(records),numerical_audit=numeric,state_scales_per_round=scale_report(np.array(state_scales)),emissions_per_round=emissions.sum(1).tolist(),catalog_decode_valid=False,intermediate_cpu_reads=0)
+        result=dict(status='failed',reason='nonfinite recurrent state',relaxation=args.relaxation,bounded_state_ablation=args.bounded_state,project_eq=args.project_eq,scope='fixed-binding local GPU recurrence, not ruleset saturation',model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),manifest_sha256=metadata['manifest_sha256'],rounds=args.rounds,cases=len(records),numerical_audit=numeric,state_scales_per_round=scale_report(np.array(state_scales)),emissions_per_round=emissions.sum(1).tolist(),catalog_decode_valid=False,intermediate_cpu_reads=0)
         args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n');print(json.dumps(result,indent=2,allow_nan=False));raise SystemExit(1)
     ambiguous=np.zeros(len(final),bool);invalid_decode=np.zeros(len(final),bool);dp=prototypes.astype(np.float64)
     for start in range(0,len(final),128):
@@ -163,6 +170,7 @@ def main():
     stopped=~emissions[-1]
     result=dict(scope='necessary fixed-binding local stop probe, not ruleset saturation',manifest_sha256=metadata['manifest_sha256'],model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),numerical_audit=numeric,decoder_f64_disagreements=int(invalid_decode.sum()),stop_feature_version=metadata.get('stop_feature_version'),rounds=args.rounds,cases=len(records),teacher_idempotent_cases=sum(idempotent),oracle_completed_state_false_reemissions=int(np.array(oracle_emit).sum()),free_rollout=dict(emissions_per_round=emissions.sum(1).tolist(),final_exact_catalog_target=int(correct.sum()),final_ambiguous=int(ambiguous.sum()),stopped_at_final_round=int(stopped.sum()),exact_target_and_stopped=int((correct&stopped).sum()),never_emitted_but_initially_novel=int((~emissions.any(0)&novels).sum()),final_body_rmse=float(np.sqrt(np.mean((final[:,:D]-completed[:,:D])**2)))),intermediate_cpu_reads=0,teacher_state_supplied_between_rounds=False,limitations=['Only repetition of the same fixed binding; not full successor or ruleset closure','Oracle-state test is separate and does not correct the free rollout','Request roles and port wiring are static for the original binding','Catalog includes held-out states and does not prove live identity or visibility','No lifetime, ownership-transfer or global novelty proof'])
     result['state_scales_per_round']=scale_report(np.array(state_scales))
+    result['eq_output_projection']=dict(enabled=args.project_eq,covered_inputs=sum(bool(pairs) for _,pairs in stop_plans))
     result['relaxation']=args.relaxation
     result['port_moments']=metadata.get('port_moments',False)
     result['direct_readout']=metadata.get('direct_readout')
@@ -172,7 +180,7 @@ def main():
     result['failure_diagnostics']=[dict(input_identity=r['identity'],family=r['family'],consumer=r['sample']['consumer'],observations=r['observations'],emissions=emissions[:,i].tolist(),exact_catalog_target=bool(correct[i]),body_rmse=float(np.sqrt(body_mse[i]))) for i,r in enumerate(records) if not stopped[i]]
     if args.case_output:
         case_rows=[dict(identity=r['identity'],family=r['family'],source_facts=len(r['sample']['source']),exact_target=bool(correct[i]),stopped=bool(stopped[i]),initially_novel=bool(novels[i]),emissions=emissions[:,i].tolist(),body_rmse=float(np.sqrt(body_mse[i]))) for i,r in enumerate(records)]
-        args.case_output.write_text(json.dumps(dict(model_sha256=result['model_sha256'],manifest_sha256=metadata['manifest_sha256'],rounds=args.rounds,relaxation=args.relaxation,bounded_state_ablation=args.bounded_state,numerical_audit=numeric,cases=case_rows),indent=2)+'\n')
+        args.case_output.write_text(json.dumps(dict(model_sha256=result['model_sha256'],manifest_sha256=metadata['manifest_sha256'],rounds=args.rounds,relaxation=args.relaxation,bounded_state_ablation=args.bounded_state,project_eq=args.project_eq,numerical_audit=numeric,cases=case_rows),indent=2)+'\n')
     result['body_error_summary']=dict(median_rmse=float(np.median(np.sqrt(body_mse))),max_rmse=float(np.sqrt(body_mse.max())),active_requests_squared_error_fraction=float(body_mse[~stopped].sum()/max(float(body_mse.sum()),1e-30)))
     args.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
     if not numeric['passed'] or invalid_decode.any():raise SystemExit(1)

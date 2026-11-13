@@ -1,0 +1,205 @@
+{
+  "probe": {
+    "scope": "necessary fixed-binding local stop probe, not ruleset saturation",
+    "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "model_sha256": "d19a09dcb1fca392ebdc119e6652e8ab848c2b47bb95e34547017708eeac65ea",
+    "numerical_audit": {
+      "passed": false,
+      "state_elements_outside_tolerance": 6810,
+      "nonfinite_state_elements": 0,
+      "emission_disagreements": 0,
+      "max_absolute_state_difference": 0.03529560565948486,
+      "absolute_tolerance": 0.002,
+      "relative_tolerance": 0.004
+    },
+    "decoder_f64_disagreements": 0,
+    "stop_feature_version": "output-energy-direct-union/v1",
+    "rounds": 16,
+    "cases": 850,
+    "teacher_idempotent_cases": 850,
+    "oracle_completed_state_false_reemissions": 2,
+    "free_rollout": {
+      "emissions_per_round": [
+        768,
+        9,
+        7,
+        5,
+        3,
+        3,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "final_exact_catalog_target": 808,
+      "final_ambiguous": 0,
+      "stopped_at_final_round": 849,
+      "exact_target_and_stopped": 808,
+      "never_emitted_but_initially_novel": 11,
+      "final_body_rmse": 0.5712655186653137
+    },
+    "intermediate_cpu_reads": 0,
+    "teacher_state_supplied_between_rounds": false,
+    "limitations": [
+      "Only repetition of the same fixed binding; not full successor or ruleset closure",
+      "Oracle-state test is separate and does not correct the free rollout",
+      "Request roles and port wiring are static for the original binding",
+      "Catalog includes held-out states and does not prove live identity or visibility",
+      "No lifetime, ownership-transfer or global novelty proof"
+    ],
+    "state_scales_per_round": [
+      {
+        "body_max_abs": 15.996158599853516,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 15.996158599853516,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 25.140613555908203,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      },
+      {
+        "body_max_abs": 30.555683135986328,
+        "boundary_max_abs": 1.0,
+        "boundary_coordinates_outside_teacher_range": 0
+      }
+    ],
+    "eq_output_projection": {
+      "enabled": true,
+      "covered_inputs": 29
+    },
+    "relaxation": 1.0,
+    "port_moments": true,
+    "direct_readout": "normalized absolute clip state/v1",
+    "bounded_state_ablation": false,
+    "correction": null,
+    "failure_diagnostics": [
+      {
+        "input_identity": "f6f05f23d9bb2c75b3d1dd2c2d81c17dae3e4d65772aa91ec8692be5198639b8",
+        "family": "c859ab7ce5269866c959ff30650c5a30070cc855c6a323e371fefc64584d77ce",
+        "consumer": 91,
+        "observations": 8,
+        "emissions": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": false,
+        "body_rmse": 1.9923747777938843
+      }
+    ],
+    "body_error_summary": {
+      "median_rmse": 0.04977826774120331,
+      "max_rmse": 10.579730987548828,
+      "active_requests_squared_error_fraction": 0.014310246333479881
+    }
+  },
+  "changed_inputs": [
+    {
+      "identity": "ec9242cfbc541ca1a9dc93f31ec7297529fc49ca5babd00199ee2e1a42094bf8",
+      "before_correct": false,
+      "after_correct": false,
+      "before_stopped": false,
+      "after_stopped": true
+    },
+    {
+      "identity": "54b625f6e4f3384ea4dd7e15291e90aa07b18158165d31753e3c3a36b00d7b3e",
+      "before_correct": false,
+      "after_correct": false,
+      "before_stopped": false,
+      "after_stopped": true
+    },
+    {
+      "identity": "a1e6c03d633d644ff69f9f3503fc483f18f0e87c48e84173128da1060e8b6f5e",
+      "before_correct": false,
+      "after_correct": false,
+      "before_stopped": false,
+      "after_stopped": true
+    }
+  ],
+  "accepted": false
+}
