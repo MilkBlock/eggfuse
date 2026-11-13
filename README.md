@@ -29,10 +29,14 @@ The latest [root continuation checkpoint](benchmarks/cell-root-continuation/READ
 Requires Rust/Cargo and the vendored dependencies in this repository. From the repository root, use fresh output directories:
 
 ```sh
-cargo cell-compile --case sum-bits --output out/sum-bits
-cargo cell-run --program out/sum-bits/program.json --output out/run
-cargo cell-bench --program out/sum-bits/program.json --repeat 5
+python3 tools/local_jobs.py install
+~/.local/bin/eggfuse-job run --kind compute -- cargo cell-compile --case sum-bits --output out/sum-bits
+~/.local/bin/eggfuse-job run --kind compute -- cargo cell-run --program out/sum-bits/program.json --output out/run
+~/.local/bin/eggfuse-job run --kind timing -- cargo cell-bench --program out/sum-bits/program.json --repeat 5
 ```
+
+The [local job queue](tools/local-jobs.md) shares one execution window across
+worktrees so builds, Bake experiments and timing trials do not overlap.
 
 Use `--case raytrace` for the larger example, or `--source app.egg` to compile a supported custom program. See the [compiler documentation](tools/cell-compiler/README.md) for more options.
 

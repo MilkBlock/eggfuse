@@ -13,17 +13,32 @@ spec.loader.exec_module(quick)
 
 
 class GuardTests(unittest.TestCase):
+    def test_timing_api_also_queues_the_whole_trial(self):
+        args = tuple(Path(x) for x in ('before', 'after', 'output', 'result.json'))
+        with patch.object(quick.jobs, 'current_lease', return_value=None), \
+                patch.object(quick.jobs, 'run_command', return_value=0) as launch:
+            quick.run(*args)
+        self.assertEqual(launch.call_args.kwargs, {'kind': 'timing'})
+        self.assertEqual(launch.call_args.args[1][-4:], list(map(str, args)))
+
+    def test_compute_or_unguarded_lease_cannot_start_a_trial(self):
+        for lease in ({'kind':'compute','guard':'known'}, {'kind':'timing','guard':'none'}):
+            with patch.object(quick.jobs, 'current_lease', return_value=lease):
+                with self.assertRaisesRegex(RuntimeError, 'Timing requires'):
+                    quick.run(*(Path(x) for x in ('before','after','output','result.json')))
+
     def test_full_executable_names_with_spaces_and_numeric_benchmark_links(self):
         raw = ('1 0.0 /Users/name with spaces/.rustup/toolchains/stable/bin/cargo\n'
                '2 80.0 /Users/name/.rustup/toolchains/stable/bin/rustc\n'
                '3 100.0 target/debug/examples/batch_cell_learning\n'
                '4 50.0 /tmp/bench/group-0000/binaries/0000\n'
-               '5 30.0 /System/Library/WindowServer\n')
+               '5 30.0 /System/Library/WindowServer\n'
+               '6 100.0 /tmp/target/debug/deps/query_workers-aabbcc\n')
         with patch.object(quick.subprocess, 'check_output', return_value=raw) as call:
             observation = quick.processes()
         self.assertEqual(call.call_args.args[0], ['ps', '-axww', '-o', 'pid=,pcpu=,comm='])
         self.assertEqual(len(observation['compilers']), 2)
-        self.assertEqual(len(observation['workloads']), 2)
+        self.assertEqual(len(observation['workloads']), 3)
 
     def test_guard_preserves_evidence_and_rejects_other_runtime(self):
         observation = {'utc': 'test', 'compilers': [], 'workloads': ['3 0.0 target/debug/examples/other'],

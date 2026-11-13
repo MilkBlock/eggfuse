@@ -1,5 +1,17 @@
 # Repository workflow
 
+- Share the machine-wide local job queue across worktrees. Run Cargo builds,
+  tests, Bake experiments and other heavy CPU jobs with
+  `~/.local/bin/eggfuse-job run --kind compute -- COMMAND ...`. For timing, submit
+  the entire baseline-then-candidate script once with `--kind timing`; do not
+  enqueue individual samples or interleave lanes. Install/update the launcher
+  with `python3 tools/local_jobs.py install` if needed. The queue directory is
+  shared across worktrees; do not select a separate state directory for real
+  measurements. `status`, `wait ID`, and `cancel ID` expose actual job state.
+  Never clear a lock or replay a job merely because an observer timed out.
+  See `tools/local-jobs.md`. The quick timing script acquires a timing lease
+  automatically; its process guards still reject unmanaged interference.
+
 - Validate the minimal CPU branch using the local Cargo compile, run and bench commands in README.md. The debugger and historical experiments live on the research branch. Published site releases require explicit user instruction.
 
 - Maintain Git history as part of completing implementation work: after a coherent change passes its relevant checks, create a focused Conventional Commit with a scope. Report its short commit ID.

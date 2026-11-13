@@ -7,11 +7,16 @@ There is no lane interleaving, concurrent benchmark, sampler or compilation.
 import datetime
 import gzip
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import runpy
 import subprocess
 import sys
+
+_spec = importlib.util.spec_from_file_location('local_jobs', Path(__file__).resolve().parents[2] / 'tools/local_jobs.py')
+jobs = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(jobs)
 
 timer = runpy.run_path(str(Path(__file__).with_name('measure.py')))
 EFFECTS = ('constructor_requests', 'constructor_reused', 'logical_facts_created',
@@ -27,16 +32,10 @@ def processes():
         fields = line.split(None, 2)
         if len(fields) != 3:
             continue
-        executable = Path(fields[2])
-        if executable.name in ('cargo', 'rustc'):
+        category = jobs.classify(fields[2])
+        if category == 'compiler':
             compiler.append(line)
-        elif (executable.name in ('batch_cell_learning', 'runtime_storage_peak',
-                'eggfuse-cell-runtime', 'eggfuse-cell-compiler', 'candidate-runtime',
-                'control-runtime', 'baseline-runtime')
-                or 'target/debug/examples/' in fields[2]
-                or 'target/release/examples/' in fields[2]
-                or (executable.parent.name == 'deps' and executable.parent.parent.name in ('debug', 'release'))
-                or (executable.parent.name == 'binaries' and executable.name.isdigit())):
+        elif category == 'workload':
             workloads.append(line)
     return {'utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
             'compilers': compiler, 'workloads': workloads, 'processes': raw}
@@ -85,6 +84,15 @@ def verify_frozen_references(result, control, candidate):
 
 
 def run(control, candidate, output, result_path):
+    lease = jobs.current_lease()
+    if lease is None:
+        code = jobs.run_command(jobs.DEFAULT_STATE, [sys.executable, str(Path(__file__).resolve()),
+            *map(str, (control, candidate, output, result_path))], kind='timing')
+        if code:
+            raise RuntimeError(f'Scheduled timing job exited with status {code}')
+        return
+    if lease['kind'] != 'timing' or lease['guard'] != 'known':
+        raise RuntimeError('Timing requires a timing lease with unmanaged-process guards enabled')
     control, candidate, output = (p.resolve() for p in (control, candidate, output))
     changed = subprocess.check_output(['git', 'diff', '--name-only', 'HEAD'], text=True).splitlines()
     assert all(not p.startswith(('engine/', 'tools/')) for p in changed), 'commit tested runtime changes before timing'
@@ -97,6 +105,7 @@ def run(control, candidate, output, result_path):
               'control_commit': configs['candidate']['control_commit'],
               'candidate_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
               'groups': [], 'workloads': {}, 'observations': []}
+    result['scheduler'] = {k: lease[k] for k in ('id', 'kind', 'guard', 'submitted', 'started', 'quiet')}
     for case in ('sum', 'ray'):
         a, b = (configs[label]['lanes'][case] for label in ('control', 'candidate'))
         assert a['program'] == b['program'] and a['args'] == b['args']
