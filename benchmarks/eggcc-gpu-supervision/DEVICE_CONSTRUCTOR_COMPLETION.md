@@ -53,3 +53,32 @@ ownership takeover are still unfinished.
 Reference Bake tip remains `51853f11`; its diagnostic receipt omission is based
 on generator provenance, not permission to omit required RHS effects. No native
 runtime or full-workload speed change is claimed here.
+
+## Ordered copy effects
+
+`device_copy_effects` now lowers same-sort slot copies and executes them alongside
+constructor sites in original `(rule, effect_pc)` order. Exact values, Eq roots,
+numeric/category feature columns and validity follow the same source slot.
+A copy consumes no global identity and requires no constructor witness search.
+Missing source slots leave the effect pending. Completed copies mark the token
+dirty; the same completed-state refresh handles copy-only and mixed rules.
+Literal copies remain explicit boundaries, and compile-time sort mismatch is an
+error. Unsupported effects still prevent later sites from running.
+
+71 mechanism tests pass, including copying a distinct actual ID/root pair,
+scalar columns, unavailable source rejection, copy -> constructor -> refresh in
+one GPU invocation, and copy-only completion without external constructor data.
+These tests do not establish full-workload semantics or prediction accuracy.
+
+On the same dot-product recipe, 1,043 of 1,047 copy sites lower; four literal
+copies remain uncovered. Copy plus constructor support covers 1,944 effect sites
+and all effects of 199 rules. Among the previously probed 44 Entries, supported
+prefix coverage rises from 19 to 39 and full effect-list coverage from 11 to 22.
+This is static coverage, not measured completed consumers: external constructor
+views, current roots and all source fields must still be available at runtime.
+Union, mutable writes, primitive computations and literal constructor arguments
+remain major boundaries. Reference Bake tip is still `51853f11`.
+
+Reproduce the coverage report with `device_copy_effects.py TRACE ENTRY_AUDIT
+OUTPUT`; it rejects a mismatched trace identity. Results are saved in
+`copy-completion-coverage.json`. No native runtime or speed claim is made.

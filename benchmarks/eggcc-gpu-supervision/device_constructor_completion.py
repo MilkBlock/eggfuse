@@ -7,15 +7,17 @@ import numpy as np
 from compile_constructor_sites import compile_sites
 from device_witness_views import compile_view,project
 from device_constructor_results import execute_site
+from device_copy_effects import compile_copies,execute_copy
 from device_input_features import compile_inputs
 from device_token_refresh import refresh
 
 
 def compile_completion(recipe,width):
-    compiled=compile_sites(recipe);sites=compiled['sites']
+    compiled=compile_sites(recipe);sites=compiled['sites'];copies=compile_copies(recipe)
+    operations=sorted([('construct',s) for s in sites]+[('copy',s) for s in copies['sites']],key=lambda pair:(pair[1]['rule'],pair[1]['operation']))
     views={(s['table'],len(s['args'])):compile_view(recipe,s['table'],len(s['args'])) for s in sites}
     layouts=[]
-    for rid in sorted({s['rule'] for s in sites}):
+    for rid in sorted({s['rule'] for _,s in operations}):
         rule=recipe['rules'][rid];n=len(rule['slots'])
         if n>width:raise ValueError('completion slot width too small')
         base=compile_inputs(rule)
@@ -25,15 +27,20 @@ def compile_completion(recipe,width):
         for key in ('eq','sorts','numeric_roles'):layout[key][:,:n]=base[key]
         layout['roles'][:,:n]=base['roles'][:,:,:64]
         layouts.append((rid,layout))
-    return dict(sites=sites,views=views,layouts=layouts,marks=compiled['marks'])
+    marks=[m for m in compiled['marks'] if m['reason']!='effect:copy']+copies['marks']
+    return dict(sites=sites,operations=operations,views=views,layouts=layouts,marks=marks)
 
 
 def complete(state,plan,next_id,limit,quota,external_complete,eq_settled,xp):
     attention=xp.array(False);executed=xp.array(0,dtype=xp.int32)
-    for site in plan['sites']:
-        view=project(state,plan['views'][(site['table'],len(site['args']))],external_complete,eq_settled,xp)
-        state,outcome=execute_site(state,site,view,next_id,limit,quota,xp)
-        next_id=outcome['next_id'];attention=attention|outcome['needs_attention']
+    for kind,site in plan['operations']:
+        if kind=='copy':
+            state,outcome=execute_copy(state,site,xp)
+        else:
+            view=project(state,plan['views'][(site['table'],len(site['args']))],external_complete,eq_settled,xp)
+            state,outcome=execute_site(state,site,view,next_id,limit,quota,xp)
+            next_id=outcome['next_id']
+        attention=attention|outcome['needs_attention']
         executed=executed+xp.sum(outcome['ready'].astype(xp.int32))
     refreshed=xp.array(0,dtype=xp.int32)
     rows,width=state['slots'].shape

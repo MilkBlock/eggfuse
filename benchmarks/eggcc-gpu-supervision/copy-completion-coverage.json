@@ -1,0 +1,22 @@
+{
+  "scope": "Static recipe coverage, not executed real-workload completion",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "compiled_copy_sites": 1043,
+  "copy_boundaries": {
+    "literal_copy": 4
+  },
+  "compiled_effect_sites": 1944,
+  "fully_supported_rules": 199,
+  "probed_entries": 44,
+  "probed_entries_with_supported_prefix": 39,
+  "probed_fully_supported_entries": 22,
+  "boundary_counts": {
+    "effect:union": 52,
+    "literal_argument": 125,
+    "effect:set": 221,
+    "effect:compute": 62,
+    "effect:panic": 49,
+    "effect:subsume": 19,
+    "literal_copy": 4
+  }
+}
