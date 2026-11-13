@@ -433,6 +433,14 @@ impl Executor {
         if self.cell_execution.is_some() { self.refresh_cell_execution_layouts(); }
         Ok(())
     }
+    /// Same-binary diagnostic: retain pending completion for changed roots.
+    /// Unchanged roots and all Cell execution/Entry ownership stay enabled.
+    #[cfg(feature = "sparse-cells")]
+    pub fn use_deferred_changed_roots(&mut self) -> Result<()> {
+        if !self.steps.is_empty() { return Err("configure root publication before the first Run".into()); }
+        self.stage_spine.direct_changed_roots = false;
+        Ok(())
+    }
     #[cfg(feature = "cell-absorption")]
     pub fn use_cell_absorption(&mut self) -> Result<()> {
         if !self.steps.is_empty() { return Err("configure Cell absorption before execution".into()); }
@@ -2286,7 +2294,7 @@ impl Executor {
                 #[cfg(feature = "sparse-cells")]
                 let step = if self.completion.is_none() {
                     let Some(step) = self.stage_spine.complete_absorbed_root(&self.graph, rid, cell,
-                        step, &write, index, &mut self.entry_schedule)? else {
+                        step, &write, index, changed, &mut self.entry_schedule)? else {
                         #[cfg(feature="storage-metrics")]
                         if changed { self.graph.retire_completed_writer_inputs(cell, rid); }
                         return Ok(None);

@@ -1010,6 +1010,8 @@ struct ReadyPublication {
 pub struct Programs {
     #[cfg(feature = "sparse-cells")]
     pub(crate) direct_sealed_answers: bool,
+    #[cfg(feature = "sparse-cells")]
+    pub(crate) direct_changed_roots: bool,
     #[cfg(feature = "structural-depth")]
     pub(crate) structural: crate::depth_runtime::Depth,
     #[cfg(feature = "structural-depth")]
@@ -1422,6 +1424,8 @@ impl Programs {
         let mut s = Self {
             #[cfg(feature = "sparse-cells")]
             direct_sealed_answers: false,
+            #[cfg(feature = "sparse-cells")]
+            direct_changed_roots: true,
             enabled,
             receipts: true,
             audit_receipts: false,
@@ -2203,8 +2207,11 @@ impl Programs {
     /// Live histories retain ordinary Cell completion.
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn complete_absorbed_root(&mut self, g: &Graph, rid: usize, cell: u32,
-        step: Started, write: &crate::row_kernel::Write, index: usize,
+        step: Started, write: &crate::row_kernel::Write, index: usize, changed: bool,
         entries: &mut crate::entry_schedule::Scheduler) -> Result<Option<Started>> {
+        // Diagnostic control restores only changed writes' deferred delivery;
+        // unchanged roots retain the original direct path and its counters.
+        if changed && !self.direct_changed_roots { return Ok(Some(step)); }
         self.stats.absorbed_root_checks += 1;
         if !matches!(step, Started::Root { .. }) || !self.compiled_commits || !self.receipts
             || self.audit_receipts || !self.permanent[write.table]
@@ -3503,6 +3510,12 @@ impl Programs {
                 * (std::mem::size_of::<crate::cell::EffectLayout>() + 2*std::mem::size_of::<usize>()),
             "entry_references":self.entries.len() + extra.len(),"legacy_entry_references":self.entries.len(),"node_entry_references":extra.len(),"context_fact_references":facts,
             "scope":"source-scheduled RHS continuation from committed producer contexts; exhaustive functional-key entries; unknown delta entries use ordinary matching; no early effect visibility"});
+        #[cfg(feature = "sparse-cells")]
+        let report = {
+            let mut report = report;
+            report["direct_changed_roots"] = self.direct_changed_roots.into();
+            report
+        };
         #[cfg(feature = "iterative-bake")]
         let report = {
             let mut r = report;
