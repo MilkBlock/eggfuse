@@ -1,0 +1,41 @@
+{
+  "scope": "bounded isolated constructor Cell state generation; not source-program execution",
+  "program_sha256": "25776d5a8242b50bd90b686dd8dce79217800e642775693f60907dd96d2976a2",
+  "seed_tokens": 3,
+  "generated_tokens": 267,
+  "identity_entries_removed": 62,
+  "generation_counts": [
+    3,
+    118,
+    149
+  ],
+  "cell_templates": 34,
+  "cell_batches": 269,
+  "cpu_bootstrap_calls": 1,
+  "cpu_matching_during_rollout": 0,
+  "intermediate_device_readbacks": 0,
+  "cpu_encode_generated_tokens": 0,
+  "final_state_values": 52320,
+  "max_cpu_gpu_error": 7.301568984985352e-07,
+  "prepare_seconds": 0.10421924997353926,
+  "gpu_first_call_seconds": 1.2490082919830456,
+  "cpu_reference_seconds": 0.006703374965582043,
+  "saturation_claimed": false,
+  "speculative_stages": true,
+  "backpropagation": false,
+  "learned_transition": false,
+  "limitations": [
+    "Initial query bootstrap is CPU work; input encoding is fixed, not learned",
+    "No full source schedule execution; cross-ruleset transitions are marked, and speculative ones need validation",
+    "No novelty/duplicate elimination; token counts are derivations, not new facts",
+    "Exact structure is in shared templates and symbolic boundary provenance; float codes are not equality proofs",
+    "Generated states are term encodings, not a trained semantic completion model",
+    "Capacity/depth boundaries require continuation or CPU handling; no runtime speedup claimed"
+  ],
+  "mark_counts": {
+    "initial matches blocked by unsupported effects": 1,
+    "speculative stage requires CPU validation": 186,
+    "unsupported consumer effect": 33,
+    "depth boundary": 84
+  }
+}

@@ -26,7 +26,7 @@ budget exhaustion rejects the entire candidate, never a truncated list.
 For the directly compiled full sum-bits program:
 
 - 548 rule templates examined; 397 have supported complete effect sequences.
-- 843 proved entry substitutions connect 196 producers to 154 consumers.
+- 781 entry substitutions remain after removing 62 identity self-handoffs; they connect 184 producers to 110 consumers.
 - 618 substitutions cross source ruleset names.
 - 151 producers retain explicit effect boundaries.
 
@@ -34,7 +34,7 @@ These counts are potential local coverage, **not executed transitions or saved
 work**. An RHS fact occurrence can already exist; it does not prove novelty.
 Every entry explicitly requires novelty checking. The catalog cannot authorize
 advancing a source Run, dropping a visibility check, or declaring saturation.
-There are currently zero GPU-generated tokens on this path.
+The subsequent [bounded device dataflow experiment](GENERATED_CELL_FLOW.md) generates speculative Cell states; it does not yet establish novelty or full source execution.
 
 Remaining integration obligations:
 

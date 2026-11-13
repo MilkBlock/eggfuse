@@ -10,6 +10,12 @@ TABLES={name:dict(name=name,kind='constructor') for name in ['F','G','Pair']}
 
 
 class Successors(unittest.TestCase):
+    def test_identity_self_handoff_is_removed(self):
+        p=rule([atom('F',0,1)],[make('F',2,0)],2)
+        catalog=compile_catalog(dict(tables=list(TABLES.values()),rules=[p]))
+        self.assertEqual(catalog['edges'],[])
+        self.assertEqual(catalog['identity_entries_removed'],1)
+
     def test_complete_query_not_just_pivot_is_required(self):
         p=rule([atom('F',0,1)],[make('G',2,1)])
         facts,mark=complete_template(p,TABLES);self.assertIsNone(mark)

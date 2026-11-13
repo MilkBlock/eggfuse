@@ -84,7 +84,7 @@ def match_consumer(rule,facts,limit=256):
 
 def compile_catalog(recipe):
     tables={t['name']:t for t in recipe['tables']};rules=recipe['rules']
-    cells=[];boundaries=[];edges=[];inverted=defaultdict(set)
+    cells=[];boundaries=[];edges=[];identity_entries_removed=0;inverted=defaultdict(set)
     for rid,r in enumerate(rules):
         for atom in r['query']:
             name=atom['call'].get('table')
@@ -99,8 +99,11 @@ def compile_catalog(recipe):
             if any(tables.get(a['call'].get('table'),{}).get('kind')!='constructor' for a in consumer['query']):continue
             entries,exhausted=match_consumer(consumer,facts)
             if exhausted:boundaries.append(dict(rule=rid,consumer=cid,reason='Bake match capacity'));continue
-            for entry in entries:edges.append(dict(producer=rid,consumer=cid,source_set=r['metadata'].get('source_set'),target_set=consumer['metadata'].get('source_set'),**entry))
-    return dict(schema='cell-token-successors/v1',cells=cells,edges=edges,boundaries=boundaries,
+            for entry in entries:
+                if rid==cid and all(tuple(ref)==('input',slot) for slot,ref in entry['inputs']):
+                    identity_entries_removed+=1;continue
+                edges.append(dict(producer=rid,consumer=cid,source_set=r['metadata'].get('source_set'),target_set=consumer['metadata'].get('source_set'),**entry))
+    return dict(schema='cell-token-successors/v1',cells=cells,edges=edges,boundaries=boundaries,identity_entries_removed=identity_entries_removed,
         obligations=['Seed Cell assumptions must be established before entry',
         'Source Run ordering and visibility boundaries remain authoritative',
         'Symbols describe terms, never physical result addresses',

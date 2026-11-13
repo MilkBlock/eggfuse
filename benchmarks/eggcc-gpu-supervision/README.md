@@ -420,4 +420,4 @@ tests pass. Saved counts and residual examples are in `proven-union-results.json
 
 [Whole-workload ridge holdout](MULTITRACE_RIDGE.md): full sum-bits/loopfact training, gcd calibration and preselected dot-product testing, with native auditing of every GPU pair prediction.
 
-[Generated Cell continuation prerequisite](CELL_TOKEN_SUCCESSORS.md): compiler-derived complete consumer bindings from producer templates; no recorded matches used, GPU generation still pending.
+[Generated Cell continuation prerequisite](CELL_TOKEN_SUCCESSORS.md): compiler-derived complete consumer bindings from producer templates; no recorded matches used. The [bounded generated-state experiment](GENERATED_CELL_FLOW.md) now exercises device-to-device continuation, with unresolved stage and novelty obligations.
