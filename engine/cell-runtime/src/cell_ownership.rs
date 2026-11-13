@@ -292,6 +292,8 @@ struct Stats {
     domain_legacy_visits: Counter<u64>,
     domain_results: Counter<u64>,
     uncovered_births: u64,
+    component_slots_reused:u64,
+    component_slots_released:u64,
     components_created: u64,
     components_retired: u64,
     components_live: u64,
@@ -419,7 +421,7 @@ impl Graph {
             Some(json!({"id":id,"shape":component.shape,"frames":component.frames.as_slice(),
                 "signals":component.signals,"live_facts":c.live_facts[id],
                 "roots":component.signals.iter().map(|v|v.map(|id|root(&self.parents,id))).collect::<Vec<_>>(),
-                "frame_codes":component.frames.iter().map(|id| c.frames[id].code).collect::<Vec<_>>()}))
+                "frame_codes":component.frames.iter().map(|id| c.frames.at(&self.cells,id).code).collect::<Vec<_>>()}))
         }).collect::<Vec<_>>();
         json!({"scope":"final live composition owners; diagnostic export after observation, not retained runtime state",
             "source_eq_bindings":self.cells.iter().map(|(&id,cell)| json!({
@@ -580,7 +582,7 @@ impl Graph {
         let cell = (id >> 32) as u32;
         let slot = (id as u32).checked_sub(1)? as usize;
         let m = self.ownership.as_ref()?;
-        let frame = m.composition.frames.get(&cell)?;
+        let frame = m.composition.frames.get(&self.cells, &cell)?;
         // Preserve the cheap foreign-component rejection before the local
         // native-slot map, as used by binding and union dispatch.
         if expected_component.is_some_and(|expected| frame.component != expected) {
@@ -604,7 +606,7 @@ impl Graph {
         if bound != id && m.stats.signal_root(&self.parents, bound) != id {
             return None;
         }
-        Some(m.composition.signal(&self.program.cell_ownership, port.component, port.symbol))
+        Some(m.composition.signal(&self.program.cell_ownership, &self.cells, port.component, port.symbol))
     }
     fn boundary(&mut self, root: u64, signal: Signal) {
         let m = self.ownership.as_mut().unwrap();
@@ -616,7 +618,7 @@ impl Graph {
     }
     fn bind_cell_port(&mut self, f: FactRef, local: usize, port: ports::ComponentPort, id: u64) {
         let signal = self.ownership.as_ref().unwrap().composition.signal(
-            &self.program.cell_ownership, port.component, port.symbol);
+            &self.program.cell_ownership, &self.cells, port.component, port.symbol);
         let native = self.signal_is_native(signal, id);
         let m = self.ownership.as_mut().unwrap();
         m.stats.internal_ports_seen += u64::from(native);
@@ -631,7 +633,7 @@ impl Graph {
             assert!(bound == id || m.stats.signal_root(&self.parents, bound) == id,
                 "symbolic alias disagrees with live port");
             if m.composition.training.is_some() {
-                let frame = m.composition.frames[&f.cell];
+                let frame = m.composition.frames.at(&self.cells, &f.cell);
                 let c = m.composition.components[signal.component as usize]
                     .as_ref()
                     .unwrap();
@@ -645,7 +647,7 @@ impl Graph {
                             .is_some_and(|fact| fact.owned)
                 }) {
                     m.composition
-                        .observe_shared_binding(f.cell, local, signal.symbol);
+                        .observe_shared_binding(&self.cells, f.cell, local, signal.symbol);
                 }
             }
         } else {
@@ -842,11 +844,15 @@ impl Graph {
         true
     }
     pub(crate) fn ownership_barrier(&mut self) {
+        let settled=self.pending_unions.is_empty() && self.dirty.is_empty() && self.dirty_markers.is_empty();
+        #[cfg(feature="sparse-cells")]
+        let settled=settled && self.active_rhs.is_none();
         if let Some(m) = &mut self.ownership {
             assert!(
                 m.pending.is_empty(),
                 "unsettled owner at publication boundary"
             );
+            if settled {m.stats.component_slots_released+=m.composition.release_retired_components() as u64;}
             m.stats.stage_barriers += 1;
             m.stats.carried_facts += m.stats.owned_live;
             m.stats.carried_components += m.stats.components_live;
@@ -934,7 +940,7 @@ impl Graph {
                     s.domain_static_type_guards.set(s.domain_static_type_guards.get() + 1);
                     operator
                 } else {
-                    let frame = m.frames[&fact.cell];
+                    let frame = m.frames.at(&self.cells,&fact.cell);
                     self.program.cell_ownership.code_operators[frame.code][fact.op as usize]
                 };
                 s.domain_type_guards.set(s.domain_type_guards.get() + 1);
@@ -1009,7 +1015,7 @@ impl Graph {
                     .sum::<u64>()
             );
             assert_eq!(
-                m.composition.frames.len(),
+                m.composition.frames.len(&self.cells, ),
                 m.composition
                     .components
                     .iter()
@@ -1087,7 +1093,10 @@ impl Graph {
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
             "barrier_history":self.ownership.as_ref().map(|m|json!({"enabled":m.keep_barrier_history,
                 "start_after_barriers":m.barrier_history_start,"retained_capacity_bytes":m.barriers.capacity()*std::mem::size_of::<Barrier>()})),
-            "inventory":{"shared_field_layout_bytes":0,"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.len()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
+            "inventory":{"component_slots":self.ownership.as_ref().unwrap().composition.components.len(),
+                "reusable_component_slots":self.ownership.as_ref().unwrap().composition.reusable_components,
+                "quarantined_component_slots":self.ownership.as_ref().unwrap().composition.retired_components.len()-self.ownership.as_ref().unwrap().composition.reusable_components,
+                "shared_field_layout_bytes":0,"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.len()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
                 "eligible_live_facts":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>(),
                 "unsupported_live_rows":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|!**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>()},
             "stats":self.ownership.as_ref().map(|m|&m.stats),"pending_keys":self.ownership.as_ref().map_or(0,|m|m.pending.len())})
@@ -1097,7 +1106,7 @@ impl Graph {
 impl Graph {
     pub(super) fn inherited_cell_slot(&self, cell: u32, template: usize, slot: usize) -> Option<Value> {
         let m = self.ownership.as_ref()?;
-        let frame = m.composition.frames.get(&cell)?;
+        let frame = m.composition.frames.get(&self.cells, &cell)?;
         let component = m.composition.components.get(frame.component as usize)?.as_ref()?;
         let local = self.program.cell_ownership.markers[template].program.slots.get(slot).copied().flatten()?;
         let symbol = m.composition.shapes[component.shape].as_ref().ports[frame.ordinal][local];
@@ -1111,9 +1120,9 @@ impl Graph {
         let mut saved = 0;
         let ids = self.cells.iter().map(|(&id,_)|id).collect::<Vec<_>>();
         for id in ids {
+            let Some(frame) = m.composition.frames.get(&self.cells, &id).copied() else { continue; };
             let c = self.cells.get_mut(&id).unwrap();
             if !c.completed { continue; }
-            let Some(frame) = m.composition.frames.get(&id) else { continue; };
             let component = m.composition.components[frame.component as usize].as_ref().unwrap();
             let ports = &m.composition.shapes[component.shape].ports[frame.ordinal];
             let slots = &self.program.cell_ownership.markers[c.template].program.slots;
@@ -1171,7 +1180,7 @@ impl Runtime {
     /// Destructive observer only. Preserve last-owner accounting, and never
     /// allocate the output buffer while measuring a field release.
     pub(super) fn release_runtime_storage(self, live: &impl Fn()->usize, rows: &mut Vec<(&'static str,usize)>) {
-        assert!(rows.capacity()-rows.len()>=18);
+        assert!(rows.capacity()-rows.len()>=19);
         macro_rules! release {
             ($name:literal,$value:expr)=>{{
                 let before=live();drop($value);rows.push(($name,before-live()));
@@ -1179,6 +1188,7 @@ impl Runtime {
         }
         release!("ownership.components",self.composition.components);
         release!("ownership.live_facts",self.composition.live_facts);
+        release!("ownership.retired_components",self.composition.retired_components);
         release!("ownership.frames",self.composition.frames);
         release!("ownership.shapes",self.composition.shapes);
         release!("ownership.transitions",self.composition.learned_transitions);

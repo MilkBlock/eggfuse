@@ -22,7 +22,7 @@ impl Graph {
             m.stats.dual_route_probes+=1;
             let key=|entry:usize| {
                 let Some(Some(Dependency::Fact(f)))=anchors.get(entry) else {return None;};
-                let frame=m.composition.frames.get(&f.cell)?;
+                let frame=m.composition.frames.get(&self.cells, &f.cell)?;
                 let shape=m.composition.components[frame.component as usize].as_ref()?.shape;
                 Some((shape,frame.ordinal,f.op,frame.code))
             };
@@ -39,7 +39,7 @@ impl Graph {
             let mut ids=[None;2];let mut valid=true;
             for &(entry,component,ordinal,op) in &join.pattern.anchors {
                 let Some(Some(Dependency::Fact(f)))=anchors.get(entry) else {valid=false;break;};
-                let Some(frame)=m.composition.frames.get(&f.cell) else {valid=false;break;};
+                let Some(frame)=m.composition.frames.get(&self.cells, &f.cell) else {valid=false;break;};
                 if f.op!=op || frame.ordinal!=ordinal
                     || self.cells.fact_state(*f).is_none_or(|s|!s.owned || s.hidden)
                     || ids[component].is_some_and(|id|id!=frame.component) {valid=false;break;}
@@ -51,7 +51,7 @@ impl Graph {
             for (side,&id) in ids.iter().enumerate() {
                 let c=m.composition.components[id as usize].as_ref().unwrap();
                 if c.shape!=join.pattern.components[side].0
-                    || c.frames.iter().map(|id|m.composition.frames[id].code).ne(join.pattern.components[side].1.iter().copied())
+                    || c.frames.iter().map(|id|m.composition.frames.at(&self.cells, id).code).ne(join.pattern.components[side].1.iter().copied())
                     || c.frames.iter().any(|id|self.cells.cell_metadata(*id).is_some_and(|meta|!meta.completed)) {
                     valid=false;break;
                 }
@@ -87,7 +87,7 @@ impl Graph {
                 let c=m.composition.components[id as usize].as_ref().unwrap();
                 for (symbol,value) in c.signals.iter().enumerate() {
                     let Some(value)=value else {continue;};let value=m.stats.signal_root(&self.parents,*value);
-                    let signal=m.composition.signal(&self.program.cell_ownership,id,symbol);
+                    let signal=m.composition.signal(&self.program.cell_ownership, &self.cells,id,symbol);
                     m.stats.boundary_probes+=1;
                     if let Some(set)=m.boundaries.get_mut(&value) {
                         if set.remove(&signal) {m.stats.boundary_live-=1;m.stats.boundary_edges_removed+=1;}
@@ -107,14 +107,15 @@ impl Graph {
             a.shape=join.target;a.signals=signals;
             // Left source addresses are unchanged; only the appended side moves.
             for (ordinal,&cell) in a.frames.iter().enumerate().skip(retained_prefix) {
-                let code=m.composition.frames[&cell].code;
-                m.composition.frames.insert(cell,Frame{component:left,ordinal,code});
+                let code=m.composition.frames.at(&self.cells, &cell).code;
+                m.composition.frames.insert(&mut self.cells, cell,Frame{component:left,ordinal,code});
                 m.stats.dual_source_moves+=1;
             }
             m.composition.live_facts[left as usize]+=m.composition.live_facts[right as usize];
             m.composition.live_facts[right as usize]=0;
             let frame_count=a.frames.len();
             *m.composition.components.local_mut(left as usize)=Some(a);
+            m.composition.quarantine_component(right);
             m.stats.components_live-=1;m.stats.components_retired+=1;
             m.stats.signal_bindings_live-=(old_bound-new_bound) as u64;
             m.stats.signal_bindings_retired+=(old_bound-new_bound) as u64;
@@ -130,7 +131,7 @@ impl Graph {
             for symbol in 0..join.shape.signals.len() {
                 let m=self.ownership.as_ref().unwrap();
                 let Some(value)=m.composition.components[left as usize].as_ref().unwrap().signals[symbol] else {continue;};
-                let signal=m.composition.signal(&self.program.cell_ownership,left,symbol);
+                let signal=m.composition.signal(&self.program.cell_ownership, &self.cells,left,symbol);
                 if !self.signal_is_native(signal,value) {self.boundary(value,signal);}
             }
             return;

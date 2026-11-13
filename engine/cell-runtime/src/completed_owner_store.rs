@@ -12,6 +12,7 @@ use crate::graph::fact_states::{OwnedFact,RestoreCause};
 pub(super) const COMPLETED:u32=1<<31;
 use super::super::CellMetadata as Metadata;
 pub(super) struct Frame {
+    pub(super) routing:Option<crate::graph::cell_ownership::composition::Frame>,
     pub id:u32,
     pub owner:usize,
     started_epoch:u64,
@@ -105,7 +106,14 @@ fn reserve_bounded<T>(records:&mut Vec<T>,added:usize) {
 }
 impl Cells {
     pub(crate) fn completed_ids(&self)->impl Iterator<Item=u32> {self.completed.frames.iter().map(|f|f.id)}
-    pub(crate) fn release_source_capacity(&mut self) {self.records.shrink_to_fit();}
+    pub(crate) fn release_source_capacity(&mut self) {
+        self.records.shrink_to_fit();
+        // Completed sources no longer occupy the fallback map. Reclaim its
+        // previous stage's buckets together with the ordinary source arena.
+        if self.route_fallback.capacity()>self.route_fallback.len().saturating_mul(4).max(32) {
+            self.route_fallback.shrink_to(self.route_fallback.len().max(16));
+        }
+    }
     pub(crate) fn completed_index(&self,id:u32)->Option<usize> {
         let address=self.positions.get(id as usize).copied().unwrap_or(0);
         (address & COMPLETED != 0).then_some((address & !COMPLETED).wrapping_sub(1) as usize)
@@ -166,7 +174,7 @@ impl Cells {
             let layout=self.completed.layout(meta,slots,ops);
             let position=u32::try_from(self.completed.frames.len()+1).unwrap();
             assert!(position<COMPLETED);
-            self.completed.frames.push(Frame{id,owner,started_epoch:meta.started_epoch,recipe_depth:meta.recipe_depth,layout,slot_start,fact_start});
+            self.completed.frames.push(Frame{routing:self.route_fallback.remove(&id),id,owner,started_epoch:meta.started_epoch,recipe_depth:meta.recipe_depth,layout,slot_start,fact_start});
             self.positions[id as usize]=COMPLETED|position;
         }
         let facts=states.finish();
@@ -262,7 +270,7 @@ impl Cells {
                 for (op,state) in c.facts {ops.push(op);facts.push(Some(OwnedFact::checked(&state).expect("checked owner fact")),meta.started_epoch);}
                 let layout=self.completed.layout(meta,slots,ops);
                 let index=self.completed.frames.len();
-                self.completed.frames.push(Frame{id,owner:destination,started_epoch:meta.started_epoch,recipe_depth:meta.recipe_depth,layout,slot_start,fact_start});
+                self.completed.frames.push(Frame{routing:self.route_fallback.remove(&id),id,owner:destination,started_epoch:meta.started_epoch,recipe_depth:meta.recipe_depth,layout,slot_start,fact_start});
                 self.positions[id as usize]=COMPLETED|(index as u32+1);
             }
         }
@@ -319,6 +327,8 @@ impl Cells {
     pub(crate) fn retire_completed(&mut self,id:u32)->bool {
         let Some(index)=self.completed_index(id) else {return false;};
         let removed=self.completed.frames.swap_remove(index);
+        // Source storage can retire before native Eq addressing does.
+        if let Some(route)=removed.routing {self.route_fallback.insert(id,route);}
         self.positions[id as usize]=0;
         if let Some(moved)=self.completed.frames.get(index) {
             self.positions[moved.id as usize]=COMPLETED|u32::try_from(index+1).unwrap();
@@ -356,6 +366,8 @@ impl Cells {
             serde_json::json!({"id":id,"sources":o.frames,"slot_entries":o.slots.len(),
                 "fact_entries":o.facts.len(),"live_facts":o.facts.live()})).collect::<Vec<_>>();
         serde_json::json!({"schema":"completed-regions/v1","layouts":layouts,"frames":frames,"owners":owners,
+            "routing":{"in_source_records":self.completed.frames.iter().filter(|f|f.routing.is_some()).count(),
+                "fallback_records":self.route_fallback.len(),"fallback_capacity":self.route_fallback.capacity()},
             "source_record_bytes":std::mem::size_of::<Frame>(),"owner_record_bytes":std::mem::size_of::<Owner>(),
             "source_record_capacity":self.completed.frames.capacity(),"owner_record_capacity":self.completed.owners.capacity(),
             "scope":"export-only physical source ranges; layout identity excludes values, epochs and ownership proofs"})
@@ -442,7 +454,17 @@ mod stage_layout_tests {
                 started_epoch:id as u64*10,recipe_depth:id,completed:true,parent:None,
                 values:[(0,Value::Int(id as i64))].into_iter().collect(),facts:Default::default()});
         }
+        for id in 1..=5 {
+            cells.set_source_route(id,crate::graph::cell_ownership::composition::Frame {
+                component:7,ordinal:id as usize-1,code:id as usize+20});
+        }
         assert!(cells.transfer_completed(&[1,2,3,4,5]));
+        assert!(cells.route_fallback.is_empty(),"completed routes move out of the fallback directory");
+        assert_eq!(cells.source_route_count(),5);
+        cells.set_source_route(2,crate::graph::cell_ownership::composition::Frame {
+            component:9,ordinal:0,code:22});
+        assert_eq!(cells.source_route(&2).unwrap().component,9);
+        assert!(cells.route_fallback.is_empty());
         assert_eq!(cells.completed.layouts.len(),4,"only identical stages share metadata");
         let first=&cells.completed.frames[cells.completed_index(1).unwrap()];
         let second=&cells.completed.frames[cells.completed_index(2).unwrap()];
@@ -456,6 +478,11 @@ mod stage_layout_tests {
         let restored=cells.unseal_completed(1,RestoreCause::ComponentRetirement).unwrap();
         assert_eq!((restored.template,restored.completed_prefix,restored.started_epoch,restored.recipe_depth),(4,7,10,1));
         assert!(restored.completed && restored.symbolic_slots);
+        assert_eq!(cells.route_fallback.len(),1,"restoration preserves the old native source route");
+        assert_eq!(cells.source_route(&1).unwrap().code,21);
+        assert_eq!(cells.source_route(&5).unwrap().code,25,"swap removal preserves moved source routing");
+        cells.remove_source_route(&1);
+        assert!(cells.source_route(&1).is_none());
         assert_eq!(cells.completed_slots(2).unwrap().as_ptr(),sibling);
         let remaining=cells.completed_meta(2).unwrap();
         assert_eq!((remaining.started_epoch,remaining.recipe_depth),(20,2));
@@ -467,6 +494,10 @@ mod stage_layout_tests {
         assert_eq!(after["frames"][0]["slot_start"],1,"sibling did not move");
         assert_eq!(after["frames"][0]["started_epoch"],20);
         cells.retire_completed(2);
+        assert!(cells.completed_meta(2).is_none());
+        assert_eq!(cells.source_route(&2).unwrap().component,9,"route can outlive source storage");
+        cells.remove_source_route(&2);
+        assert!(cells.source_route(&2).is_none());
         assert_eq!(cells.completed.layouts.len(),3,"last source releases stage layout");
     }
 }

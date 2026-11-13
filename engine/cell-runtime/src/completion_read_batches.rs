@@ -207,7 +207,7 @@ impl Graph {
             return false;
         }
         let m = self.ownership.as_ref().unwrap();
-        let frame = m.composition.frames[&f.cell];
+        let frame = m.composition.frames.at(&self.cells, &f.cell);
         let Some(component) = &m.composition.components[frame.component as usize] else {
             return false;
         };
@@ -380,7 +380,7 @@ impl Graph {
             return Ok(context);
         }
         let runtime = self.ownership.as_ref().unwrap();
-        let frame = runtime.composition.frames[&f.cell];
+        let frame = runtime.composition.frames.at(&self.cells, &f.cell);
         let component = runtime.composition.components[frame.component as usize]
             .as_ref().ok_or("expired completion source component")?;
         let plan = self.program.cell_ownership.composition.conditions[component.shape].clone();

@@ -21,6 +21,34 @@ fn program(src: &str) -> Program {
 }
 
 #[test]
+fn retired_component_storage_is_reused_across_source_runs() {
+    let mut source=String::from(r#"
+        (datatype E (N i64) (F E i64))
+        (function Tick () i64 :merge new)
+        (ruleset create) (ruleset remove) (ruleset step)
+        (rule ((= x (N 1)) (= n (Tick))) ((F x n)) :ruleset create)
+        (rule ((= f (F x n))) ((delete (F x n))) :ruleset remove)
+        (rule ((= n (Tick))) ((set (Tick) (+ n 1))) :ruleset step)
+        (N 1) (set (Tick) 0)
+    "#);
+    for _ in 0..8 {source.push_str("(run create 1) (run remove 1) (run step 1)\n");}
+    // Keep sources independent in this fixture so deleting F retires its whole
+    // component instead of leaving it inside N's learned composition.
+    let core=eggfuse_bake::device_frontend::core("slot-reuse",&source).unwrap();
+    let p=Program::parse(compiler::compile(core,&BTreeSet::new()).unwrap()).unwrap();
+    let mut e=Executor::new(Graph::new_with_local_congruence(p).unwrap(),true);
+    e.execute().unwrap();
+    let state=e.graph.export().unwrap();let rows=state["rows"].as_array().unwrap();
+    assert_eq!(rows.iter().filter(|r|r["table"]=="N").count(),1);
+    assert_eq!(rows.iter().filter(|r|r["table"]=="F").count(),0);
+    let report=e.graph.ownership_report();
+    assert!(report["stats"]["component_slots_reused"].as_u64().unwrap()>0,
+        "exercise real retirement and allocation, not just a free-list counter");
+    assert!(report["inventory"]["component_slots"].as_u64().unwrap()
+        < report["stats"]["components_created"].as_u64().unwrap());
+}
+
+#[test]
 fn saturation_observer_sees_birth_free_effects_and_rejects_unproved_work() {
     for (body, outcome) in [
         ("(N n)", "rhs_covered"),

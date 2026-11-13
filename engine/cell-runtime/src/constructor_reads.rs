@@ -131,7 +131,7 @@ impl Read<'_> {
     fn native_signal(&self, id: u64, w: &mut Work) -> Option<Signal> {
         let cell = (id >> 32) as u32;
         let slot = (id as u32).checked_sub(1)? as usize;
-        let frame = self.frames.get(&cell)?;
+        let frame = self.frames.get(self.cells,&cell)?;
         let local = *self.plan.code_programs[frame.code].native.get(&slot)?;
         let component = self.components.get(frame.component as usize)?.as_ref()?;
         let shape = self.shapes[component.shape].as_ref();
@@ -144,7 +144,7 @@ impl Read<'_> {
         }
         let class = self.plan.query_classes.as_ref().map_or(0, |classes| {
             let (frame, local) = shape.origins[symbol];
-            classes.symbols[self.frames[&component.frames[frame]].code][local]
+            classes.symbols[self.frames.at(self.cells,&component.frames[frame]).code][local]
         });
         Some(Signal { class, component: frame.component, symbol })
     }
@@ -207,7 +207,7 @@ impl Read<'_> {
                 let operator = if let Some(operator) = uses.known_operator(position) {
                     w.static_type_guards += 1;
                     operator
-                } else { self.plan.code_operators[self.frames[&fact.cell].code][fact.op as usize] };
+                } else { self.plan.code_operators[self.frames.at(self.cells,&fact.cell).code][fact.op as usize] };
                 if operator != table {
                     w.type_rejections += 1; continue;
                 }

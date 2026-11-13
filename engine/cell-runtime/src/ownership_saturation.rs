@@ -72,7 +72,7 @@ impl Graph {
         let mut components = BTreeSet::new();
         for atom in 0..self.program.rules[rid].query.len() {
             if let Some(Dependency::Fact(f)) = binding.known.receipt(atom) {
-                if let Some(frame) = owner.composition.frames.get(&f.cell) {
+                if let Some(frame) = owner.composition.frames.get(&self.cells, &f.cell) {
                     components.insert(frame.component);
                 }
             }
@@ -133,7 +133,7 @@ impl Graph {
                         let frame = component.frames.iter().position(|id| *id == f.cell)?;
                         Some((atom, frame, f.op))
                     }).collect::<Sites>();
-                    let codes = component.frames.iter().map(|id| owner.composition.frames[id].code).collect();
+                    let codes = component.frames.iter().map(|id| owner.composition.frames.at(&self.cells, id).code).collect();
                     witness_recipes.push((rid, component.shape, codes, anchors, results, reason=="rhs_covered"));
                 }
                 if reason == "rhs_covered" { break; }

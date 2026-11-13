@@ -204,7 +204,7 @@ impl Graph {
         for fact in facts {
             let Some(node)=self.stable_node(fact) else {continue;};
             let values=self.stable_values(&node,false)?;
-            let frame=self.ownership.as_ref().unwrap().composition.frames[&fact.cell];
+            let frame=self.ownership.as_ref().unwrap().composition.frames.at(&self.cells, &fact.cell);
             let program=self.program.cell_ownership.code_programs[frame.code].clone();
             self.capture_cell_scalars(fact,&values,&program.fields[fact.op as usize]);
             self.stable_ports.as_mut().unwrap().nodes.remove(&fact);
@@ -226,7 +226,7 @@ impl Graph {
     #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
     pub(crate) fn cell_field_reads_slot(&self,cell:u32,slot:usize)->bool {
         if !self.cell_stable_fields_enabled() {return false;}
-        let Some(frame)=self.ownership.as_ref().unwrap().composition.frames.get(&cell) else {return false;};
+        let Some(frame)=self.ownership.as_ref().unwrap().composition.frames.get(&self.cells, &cell) else {return false;};
         let program=&self.program.cell_ownership.code_programs[frame.code];
         let template=&self.program.templates[self.cells.cell_metadata(cell).unwrap().template];
         self.cells.fact_states(cell).any(|(fact,state)| {
@@ -292,7 +292,7 @@ impl Graph {
             self.ensure_composition_frame(f.cell);
         }
         let owner = self.ownership.as_mut().unwrap();
-        let frame = owner.composition.frames[&f.cell];
+        let frame = owner.composition.frames.at(&self.cells, &f.cell);
         if BIND {
             owner.composition.live_facts[frame.component as usize] += 1;
             owner.stats.component_lifetime_updates += 1;
@@ -390,7 +390,7 @@ impl Graph {
     }
     pub fn fact_port(&self, f: FactRef, column: usize) -> Option<PortRef> {
         self.stable_node(f)?;
-        let frame=self.ownership.as_ref()?.composition.frames.get(&f.cell)?;
+        let frame=self.ownership.as_ref()?.composition.frames.get(&self.cells, &f.cell)?;
         let local=*self.program.cell_ownership.code_programs[frame.code].fields.get(f.op as usize)?.get(column)?;
         local.map(|local|PortRef{cell:f.cell,local})
     }
