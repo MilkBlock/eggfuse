@@ -1,0 +1,101 @@
+{
+  "scope": "Same-binary standalone Cell runtime, installed witness catalogs versus no catalog; no timing claim",
+  "cases": [
+    {
+      "case": "fact",
+      "seed_program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "candidate_program": "c94fa2da6d160a837efa1ac0b6d1332f1f23c63e3c31112f1984b0f7cab08676",
+      "runs": 418,
+      "same_final_state": true,
+      "graph_before": 705175,
+      "graph_after": 705175,
+      "program_bytes_added": 111184,
+      "port_key_lookups_before": 2452,
+      "port_key_lookups_after": 2422,
+      "route_work": {
+        "constructor_cell_route_probes": 258,
+        "constructor_cell_route_alternative_checks": 22,
+        "constructor_cell_route_alternative_fields": 36,
+        "constructor_cell_route_witnesses": 39,
+        "constructor_cell_route_accepted": 30,
+        "constructor_cell_route_key_proved": 1,
+        "constructor_cell_route_source_checks": 1,
+        "constructor_cell_route_proof_admissions": 1,
+        "constructor_cell_route_key_fields_avoided": 1
+      },
+      "prepared_field_delta": 76
+    },
+    {
+      "case": "loopfact",
+      "seed_program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "candidate_program": "fb56d5498f2f1b6b6a3f430af90df9008e4b3770758da0345463790c343feb8b",
+      "runs": 398,
+      "same_final_state": true,
+      "graph_before": 616289,
+      "graph_after": 616289,
+      "program_bytes_added": 92660,
+      "port_key_lookups_before": 1927,
+      "port_key_lookups_after": 1910,
+      "route_work": {
+        "constructor_cell_route_probes": 204,
+        "constructor_cell_route_alternative_checks": 13,
+        "constructor_cell_route_alternative_fields": 20,
+        "constructor_cell_route_witnesses": 21,
+        "constructor_cell_route_accepted": 17,
+        "constructor_cell_route_key_proved": 2,
+        "constructor_cell_route_source_checks": 2,
+        "constructor_cell_route_proof_admissions": 2,
+        "constructor_cell_route_key_fields_avoided": 2
+      },
+      "prepared_field_delta": 33
+    },
+    {
+      "case": "sum-bits",
+      "seed_program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "candidate_program": "4c29b9f5d8d09d999cd1e64883170574a456d17788216868dede4f438f39feb3",
+      "runs": 882,
+      "same_final_state": true,
+      "graph_before": 1830387,
+      "graph_after": 1830387,
+      "program_bytes_added": 297564,
+      "port_key_lookups_before": 11455,
+      "port_key_lookups_after": 11330,
+      "route_work": {
+        "constructor_cell_route_probes": 1649,
+        "constructor_cell_route_alternative_checks": 107,
+        "constructor_cell_route_alternative_fields": 139,
+        "constructor_cell_route_witnesses": 239,
+        "constructor_cell_route_accepted": 125,
+        "constructor_cell_route_key_proved": 15,
+        "constructor_cell_route_source_checks": 15,
+        "constructor_cell_route_proof_admissions": 15,
+        "constructor_cell_route_key_fields_avoided": 15
+      },
+      "prepared_field_delta": 344
+    },
+    {
+      "case": "dot-product",
+      "seed_program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "candidate_program": "821f999d16c0b17eabbdbf8c90a56bbe6a0fdc29d5cd754c70040ccf3c483fc9",
+      "runs": 954,
+      "same_final_state": true,
+      "graph_before": 1798019,
+      "graph_after": 1798019,
+      "program_bytes_added": 274040,
+      "port_key_lookups_before": 8299,
+      "port_key_lookups_after": 8139,
+      "route_work": {
+        "constructor_cell_route_probes": 1988,
+        "constructor_cell_route_alternative_checks": 87,
+        "constructor_cell_route_alternative_fields": 124,
+        "constructor_cell_route_witnesses": 385,
+        "constructor_cell_route_accepted": 160,
+        "constructor_cell_route_key_proved": 47,
+        "constructor_cell_route_source_checks": 48,
+        "constructor_cell_route_proof_admissions": 48,
+        "constructor_cell_route_key_fields_avoided": 82
+      },
+      "prepared_field_delta": 437
+    }
+  ]
+}

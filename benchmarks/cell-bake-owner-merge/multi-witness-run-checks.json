@@ -1,0 +1,33 @@
+{
+  "scope": "Per-Run graph, RHS and write digests plus terminal effects; standalone runtime",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "c94fa2da6d160a837efa1ac0b6d1332f1f23c63e3c31112f1984b0f7cab08676",
+      "runs": 418,
+      "all_saved_run_checks_equal": true,
+      "final_state": "d04728e6402e21992b9748a09ec99ace5f6639bc268ac5bcafbc24d0fd52f2f0"
+    },
+    {
+      "case": "loopfact",
+      "program": "fb56d5498f2f1b6b6a3f430af90df9008e4b3770758da0345463790c343feb8b",
+      "runs": 398,
+      "all_saved_run_checks_equal": true,
+      "final_state": "623c3b05d895a4200f8ea907ea4468a92a000c975f654483e54c42c96c90bf7a"
+    },
+    {
+      "case": "sum-bits",
+      "program": "4c29b9f5d8d09d999cd1e64883170574a456d17788216868dede4f438f39feb3",
+      "runs": 882,
+      "all_saved_run_checks_equal": true,
+      "final_state": "3bae7a5ad756595f8c454b27baabbf7e830cf06b61d6aa69c0f7437ee747ab2a"
+    },
+    {
+      "case": "dot-product",
+      "program": "821f999d16c0b17eabbdbf8c90a56bbe6a0fdc29d5cd754c70040ccf3c483fc9",
+      "runs": 954,
+      "all_saved_run_checks_equal": true,
+      "final_state": "191d2a4bd738e7afd0783d30b5d5c1f1219ac92887bb96b95239edfec27141d9"
+    }
+  ]
+}

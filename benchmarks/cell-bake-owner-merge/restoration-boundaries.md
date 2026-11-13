@@ -489,3 +489,46 @@ CARGO_INCREMENTAL=0 cargo test --locked -p eggfuse-cell-compiler --features iter
 Next measure installed-catalog coverage with the multi-target route, including
 selection comparisons and additional static target storage. The large logical
 compression and stage-switch RHS objective is still open.
+
+## Installed multi-target catalog results
+
+Reused the exact-source, already-audited `witness-observation.json` files from the
+structural worktree and compiled them with current `apply-witnesses`. Their
+29/24/90/79 recipes match the observed path counts. Candidate artifacts differ
+from frozen seeds only by `ownership_witnesses` and the artifact checksum.
+Both sides were executed with the same current binary and inherited-owner mode.
+
+| case | port-key lookups before → after | route probes | alternative checks | alternative field checks | additional prepared field checks |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| fact | 2,452 → 2,422 | 258 | 22 | 36 | 76 |
+| loopfact | 1,927 → 1,910 | 204 | 13 | 20 | 33 |
+| sum-bits | 11,455 → 11,330 | 1,649 | 107 | 139 | 344 |
+| dot-product | 8,299 → 8,139 | 1,988 | 87 | 124 | 437 |
+
+All 2,652 per-Run graph/RHS/write checks and four terminal checks pass. Final
+Graph owned heap is unchanged in each pair: 705,175 / 616,289 / 1,830,387 /
+1,798,019 bytes. Retained Program grows by 111,184 / 92,660 / 297,564 / 274,040
+bytes (catalog JSON and derived routes included). There is no runtime instance
+compression from this change and no timing claim. These comparisons are against
+no witness catalog, not an isolated single-target ablation.
+
+This removes 0.9%–1.9% of port-key queries. It is useful lookup coverage, but far
+from the requested structural target. The high route-probe count relative to
+accepted results argues for selecting applicability earlier in the compiled Entry
+and for whole-handoff/state takeover, rather than treating more speculative
+candidate probes as progress by themselves.
+
+Reproduce with the build flags above:
+
+```sh
+target/debug/examples/batch_cell_learning apply-witnesses out/cell-bake-owner-merge/batch witness-source witness-multi
+target/debug/examples/batch_cell_learning check-passive out/cell-bake-owner-merge/batch witness-multi
+```
+
+For each case, run runtime_storage_peak on the seed and witness-multi candidate
+with `inherited-owners --port-domains-only`, writing CASE-seed.json and
+CASE-multi.json into out/cell-witness-multi, then:
+
+```sh
+python3 benchmarks/cell-bake-owner-merge/multi_witness_results.py out/cell-witness-multi out/cell-bake-owner-merge/batch benchmarks/cell-bake-owner-merge/multi-witness-results.json
+```
