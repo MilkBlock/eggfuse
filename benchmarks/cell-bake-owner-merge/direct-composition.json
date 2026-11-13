@@ -1,0 +1,122 @@
+{
+  "scope": "actual standalone Cell runtime; memory and observed work, not timing",
+  "program_sha256": "62911e0ab8e5fc31728b022c9adb23aee211839950f58ff743cf3be73edd89da",
+  "trace_sha256": "ae364a24c2d75332802d2ad3743052dc2d958c510bd8f6c189157672c0aa2584",
+  "checked_sha256": "44115ec220d52632936235f509643d721ffc7dab46341fbaa09bc32801de1bc6",
+  "runs": 882,
+  "baseline_graph": 1545531,
+  "baseline_program": 105884383,
+  "baseline_physical_owners": 306,
+  "baseline_completed_owner_records_bytes": 166748,
+  "proposal_count": 1193,
+  "repeated_shared_proposals": 464,
+  "cursor_history": {
+    "events": 3241,
+    "depth_histogram": {
+      "1": 3241
+    },
+    "cross_run_edges": 0,
+    "uncompiled_roots": 3241
+  },
+  "pre_apply_rhs_outcomes": {
+    "missing_local_constructor": 4772,
+    "rhs_covered_by_inputs": 222,
+    "write_effect": 931,
+    "primitive_proof_missing": 341,
+    "nontrivial_union": 157,
+    "visibility_effect": 75,
+    "no_local_component": 2,
+    "rhs_covered": 32
+  },
+  "multi_source_applications_by_width": {
+    "8": 4,
+    "6": 11,
+    "4": 111,
+    "2": 3024,
+    "5": 57,
+    "3": 810,
+    "7": 4
+  },
+  "candidates": {
+    "32": {
+      "program_sha256": "8f53fe8f9c64fde8448db2de65f39add271461077576172a3dcbe426c94ac27c",
+      "memory_sha256": "fd6212f84a92c1d23c82461806c3506bbec29b48ae6ccd2a8b0ef82bc78dcccf",
+      "graph_bytes": 1569727,
+      "graph_saved": -24196,
+      "program_bytes": 106095346,
+      "process_peak": 112243457,
+      "components": 1839,
+      "frame_widths": {
+        "1": 1443,
+        "2": 396
+      },
+      "signal_slots": 8437,
+      "final_state_exact": true,
+      "physical_owners": 603,
+      "completed_owner_records_bytes": 198592,
+      "run_graph_and_ordered_audits_checked": false,
+      "graph_field_deltas": {
+        "cells": 30892,
+        "ownership.components": 6528,
+        "ownership.boundaries": -13224
+      }
+    },
+    "128": {
+      "program_sha256": "93199f7f56ef4a9f2d3f82428b9cb34bc973d3e4f63251908b93327131bc0be4",
+      "memory_sha256": "f12f7af42170ffefaeaa8411249e832b2bdf4c466199cf0252393ebb50700901",
+      "graph_bytes": 1448995,
+      "graph_saved": 96536,
+      "program_bytes": 106675058,
+      "process_peak": 112702184,
+      "components": 1643,
+      "frame_widths": {
+        "1": 1009,
+        "2": 634
+      },
+      "signal_slots": 8359,
+      "final_state_exact": true,
+      "physical_owners": 768,
+      "completed_owner_records_bytes": 210080,
+      "run_graph_and_ordered_audits_checked": true,
+      "graph_field_deltas": {
+        "cells": 40176,
+        "ownership.components": -102336,
+        "ownership.live_facts": -16384,
+        "ownership.heap": -1024,
+        "ownership.boundaries": -16968
+      }
+    },
+    "256": {
+      "program_sha256": "72b3d6cbdf65f124752f013a6cce043bda57d1e2ee48b781e37f5eea465e2dfe",
+      "memory_sha256": "8b85b989a17dc1755edea94cf8e6a46a828a3b2ac1069e9186f6e78fad54e421",
+      "graph_bytes": 1457431,
+      "graph_saved": 88100,
+      "program_bytes": 107446450,
+      "process_peak": 113482268,
+      "components": 1584,
+      "frame_widths": {
+        "1": 884,
+        "2": 700
+      },
+      "signal_slots": 8273,
+      "final_state_exact": true,
+      "physical_owners": 825,
+      "completed_owner_records_bytes": 221584,
+      "run_graph_and_ordered_audits_checked": false,
+      "graph_field_deltas": {
+        "cells": 51796,
+        "ownership.components": -101152,
+        "ownership.live_facts": -16384,
+        "ownership.heap": -1024,
+        "ownership.boundaries": -21336
+      }
+    }
+  },
+  "limitations": [
+    "Proposal alternatives overlap; observed applies are not committed mutations or saved work.",
+    "Cursor ancestry and ownership-component composition are distinct; root-only history is not proof of no cross-stage data reuse.",
+    "Final-state equality does not replace per-Run checks for candidates marked unchecked.",
+    "Resident Program and process peak remain charged; Graph savings alone do not establish total-memory improvement.",
+    "Historical 30% target and saturated-stage RHS skipping remain unfinished."
+  ]
+}
