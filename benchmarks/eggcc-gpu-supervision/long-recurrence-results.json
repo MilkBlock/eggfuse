@@ -1,0 +1,298 @@
+{
+  "base": {
+    "scope": "necessary fixed-binding local stop probe, not ruleset saturation",
+    "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "model_sha256": "bf5bd7085c0866c9c7f362d03cc8b2a3c3e5cf7994433b0c8cbd49a4cdaac4c7",
+    "numerical_audit": {
+      "passed": false,
+      "state_elements_outside_tolerance": 904,
+      "nonfinite_state_elements": 0,
+      "emission_disagreements": 0,
+      "max_absolute_state_difference": 256.0,
+      "absolute_tolerance": 0.002,
+      "relative_tolerance": 0.004
+    },
+    "decoder_f64_disagreements": 1,
+    "stop_feature_version": "output-energy-direct-union/v1",
+    "rounds": 8,
+    "cases": 850,
+    "teacher_idempotent_cases": 850,
+    "oracle_completed_state_false_reemissions": 2,
+    "free_rollout": {
+      "emissions_per_round": [
+        768,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7
+      ],
+      "final_exact_catalog_target": 819,
+      "final_ambiguous": 1,
+      "stopped_at_final_round": 843,
+      "exact_target_and_stopped": 815,
+      "never_emitted_but_initially_novel": 11,
+      "final_body_rmse": 827087.0625
+    },
+    "intermediate_cpu_reads": 0,
+    "teacher_state_supplied_between_rounds": false,
+    "limitations": [
+      "Only repetition of the same fixed binding; not full successor or ruleset closure",
+      "Oracle-state test is separate and does not correct the free rollout",
+      "Request roles and port wiring are static for the original binding",
+      "Catalog includes held-out states and does not prove live identity or visibility",
+      "No lifetime, ownership-transfer or global novelty proof"
+    ],
+    "state_scales_per_round": [
+      {
+        "body_max_abs": 16.353654861450195,
+        "boundary_max_abs": 1.1849839687347412,
+        "boundary_coordinates_outside_teacher_range": 22
+      },
+      {
+        "body_max_abs": 37.3343391418457,
+        "boundary_max_abs": 13.081806182861328,
+        "boundary_coordinates_outside_teacher_range": 16407
+      },
+      {
+        "body_max_abs": 263.4695739746094,
+        "boundary_max_abs": 99.83879852294922,
+        "boundary_coordinates_outside_teacher_range": 47403
+      },
+      {
+        "body_max_abs": 5438.4052734375,
+        "boundary_max_abs": 1018.357666015625,
+        "boundary_coordinates_outside_teacher_range": 75403
+      },
+      {
+        "body_max_abs": 46628.9921875,
+        "boundary_max_abs": 19405.01953125,
+        "boundary_coordinates_outside_teacher_range": 126929
+      },
+      {
+        "body_max_abs": 551676.0,
+        "boundary_max_abs": 144303.515625,
+        "boundary_coordinates_outside_teacher_range": 177515
+      },
+      {
+        "body_max_abs": 3919537.5,
+        "boundary_max_abs": 1946737.125,
+        "boundary_coordinates_outside_teacher_range": 203633
+      },
+      {
+        "body_max_abs": 53680232.0,
+        "boundary_max_abs": 14808046.0,
+        "boundary_coordinates_outside_teacher_range": 211637
+      }
+    ],
+    "correction": null,
+    "failure_diagnostics": [
+      {
+        "input_identity": "97429990af0bc0e1e5ebefdc6a54425d4899dbf8eef40bfbe545e4e6e0b4dbd3",
+        "family": "916e950adf695d2a03f67e09edb7d3e1c31abea8afa283299badae7b46dcab70",
+        "consumer": 341,
+        "observations": 1,
+        "emissions": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": true,
+        "body_rmse": 1564879.125
+      },
+      {
+        "input_identity": "ed07ab0f3deb7a1d501681cb11c5d2d65feae78218492287fd1d3486545ccbe2",
+        "family": "953ba4ab5a8bcb1db3fdb4a9533c39841a8245ce4fd1a19030e24eb6c8da7805",
+        "consumer": 542,
+        "observations": 320,
+        "emissions": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": true,
+        "body_rmse": 566.3011474609375
+      },
+      {
+        "input_identity": "ee64435b8212285efa0f66ccc555a8634916fba68a4a9e08d362bb5243d31375",
+        "family": "104dfc668efa36133cf0c6d0a0f9dc502f738de8c118c102c1b2f93d628ec0cd",
+        "consumer": 341,
+        "observations": 1,
+        "emissions": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": true,
+        "body_rmse": 24062670.0
+      },
+      {
+        "input_identity": "ec9242cfbc541ca1a9dc93f31ec7297529fc49ca5babd00199ee2e1a42094bf8",
+        "family": "a40d49553da1dbee8c2a8fde1687ff8894f32f108151367848051eb6b537d085",
+        "consumer": 136,
+        "observations": 1,
+        "emissions": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": false,
+        "body_rmse": 1266.55615234375
+      },
+      {
+        "input_identity": "54b625f6e4f3384ea4dd7e15291e90aa07b18158165d31753e3c3a36b00d7b3e",
+        "family": "e45b540fc1effa311131474037e6cca94852497501086d5716f6d0f54950cad3",
+        "consumer": 137,
+        "observations": 1,
+        "emissions": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": true,
+        "body_rmse": 1266.55615234375
+      },
+      {
+        "input_identity": "a1e6c03d633d644ff69f9f3503fc483f18f0e87c48e84173128da1060e8b6f5e",
+        "family": "2fdc95ce425f7f8191a517baf488031f16953366ed4614b52f73b27b9ec1b0c0",
+        "consumer": 538,
+        "observations": 1,
+        "emissions": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": false,
+        "body_rmse": 8518.248046875
+      },
+      {
+        "input_identity": "c7c2af1b24306dcb474068acfc2c0ef98f3bbe7d03bb7c034757a6e2dd5df85c",
+        "family": "2e3f6cefe492e935b1e42efa1a016f818056a1a0120ba84d3395c987249475c1",
+        "consumer": 294,
+        "observations": 9,
+        "emissions": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_catalog_target": false,
+        "body_rmse": 33014.6640625
+      }
+    ],
+    "body_error_summary": {
+      "median_rmse": 0.06466419994831085,
+      "max_rmse": 24062670.0,
+      "active_requests_squared_error_fraction": 1.0
+    }
+  },
+  "correction": {
+    "status": "failed",
+    "reason": "nonfinite recurrent state",
+    "scope": "fixed-binding local GPU recurrence, not ruleset saturation",
+    "model_sha256": "b8e85078ea763ed80bc3939b4a5e32702f3140ba4baf3fab1af942425ca618df",
+    "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "rounds": 8,
+    "cases": 850,
+    "numerical_audit": {
+      "passed": false,
+      "state_elements_outside_tolerance": 34081,
+      "nonfinite_state_elements": 34080,
+      "emission_disagreements": 0,
+      "max_absolute_state_difference": 2.821613973514613e+23,
+      "absolute_tolerance": 0.002,
+      "relative_tolerance": 0.004
+    },
+    "state_scales_per_round": [
+      {
+        "body_max_abs": 16.819711685180664,
+        "boundary_max_abs": 1.1974127292633057,
+        "boundary_coordinates_outside_teacher_range": 22
+      },
+      {
+        "body_max_abs": 45.486114501953125,
+        "boundary_max_abs": 14.769798278808594,
+        "boundary_coordinates_outside_teacher_range": 19418
+      },
+      {
+        "body_max_abs": 370.32269287109375,
+        "boundary_max_abs": 223.8444366455078,
+        "boundary_coordinates_outside_teacher_range": 49901
+      },
+      {
+        "body_max_abs": 16009.6435546875,
+        "boundary_max_abs": 6707.20166015625,
+        "boundary_coordinates_outside_teacher_range": 60374
+      },
+      {
+        "body_max_abs": 43703232.0,
+        "boundary_max_abs": 22754616.0,
+        "boundary_coordinates_outside_teacher_range": 70411
+      },
+      {
+        "body_max_abs": 318902294806528.0,
+        "boundary_max_abs": 165483663851520.0,
+        "boundary_coordinates_outside_teacher_range": 125588
+      },
+      {
+        "body_max_abs": 1.7001891185793996e+28,
+        "boundary_max_abs": 8.822550556296628e+27,
+        "boundary_coordinates_outside_teacher_range": 149454
+      },
+      {
+        "body_max_abs": null,
+        "boundary_max_abs": null,
+        "boundary_coordinates_outside_teacher_range": 125836
+      }
+    ],
+    "emissions_per_round": [
+      768,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      4
+    ],
+    "catalog_decode_valid": false,
+    "intermediate_cpu_reads": 0
+  },
+  "assessment": "Both fail longer recurrence; no stable saturation claim"
+}

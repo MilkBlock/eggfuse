@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from corpus_repeat_probe import wiring,attachment,numerical_audit
+from corpus_repeat_probe import wiring,attachment,numerical_audit,scale_report
 from corpus_cell_ridge import initial_attachment
 from boundary_cell_ridge import D,B
 from dominator_completion import compose
@@ -28,5 +28,18 @@ class Repeat(unittest.TestCase):
     def test_numerical_failures_are_reported_without_relaxing_tolerance(self):
         result=numerical_audit(np.array([[.01]]),np.array([[0.]]),np.array([[True]]),np.array([[False]]))
         self.assertFalse(result['passed']);self.assertEqual(result['state_elements_outside_tolerance'],1);self.assertEqual(result['emission_disagreements'],1)
+
+    def test_nonfinite_values_fail_even_when_both_backends_agree(self):
+        for value in (np.nan,np.inf,-np.inf):
+            result=numerical_audit(np.array([[value]]),np.array([[value]]),np.array([[False]]),np.array([[False]]))
+            self.assertFalse(result['passed'])
+            self.assertEqual(result['nonfinite_state_elements'],1)
+            self.assertIsNone(result['max_absolute_state_difference'])
+
+    def test_nonfinite_scale_reports_are_json_safe(self):
+        import json
+        result=scale_report([[np.inf,np.nan,3]])
+        self.assertEqual(result,[dict(body_max_abs=None,boundary_max_abs=None,boundary_coordinates_outside_teacher_range=3)])
+        json.dumps(result,allow_nan=False)
 
 if __name__=='__main__':unittest.main()

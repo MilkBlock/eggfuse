@@ -79,3 +79,33 @@ single-step correction samples will resolve instability.
 `cell-correction-results.json` includes exact model hashes, active-request changes
 and the full probe. Binary model files remain on the external SSD. The 36 related
 unit tests pass; the full GPU probe provides the numerical integration check.
+
+## Eight-round falsification
+
+Extending the same fixed-binding GPU recurrence to eight rounds fails for both
+models (`long-recurrence-results.json`). The base model remains finite but has
+904 coordinates outside the unchanged NumPy agreement tolerance; aggregate body
+RMSE reaches 827,087. The correction model reaches nonfinite state at round eight,
+with 34,080 nonfinite coordinates in the union of the two backend outputs. Neither
+result is accepted; both probes exit 1.
+
+The corrected model's maximum absolute boundary coordinate progresses through
+1.20, 14.77, 223.84, 6707.20, 2.28e7, 1.65e14 and 8.82e27 before becoming nonfinite.
+Teacher boundary channels are tanh outputs and therefore bounded by [-1,1]. The
+base also leaves this range on the first round. Scale summaries are reduced on
+the GPU and returned only at the end; they do not correct intermediate values.
+
+One plausible amplification path is now visible in the implementation: state
+residuals are unconstrained, raw body features bypass the random tanh branch,
+and output/difference energies enter the extra linear columns quadratically.
+The correction readout can therefore amplify a state already outside the training
+range. This is a mechanism hypothesis, not an isolated causal attribution. A
+bounded-feature/readout ablation is warranted before more unconstrained fitting.
+Simply clamping the old predictions would change their meaning and would require
+its own accuracy and recurrence verification.
+
+The probe now persists a strict JSON failure report for nonfinite states and does
+not report catalog success for them. Tests ensure identical NaN/Inf outputs still
+fail backend agreement; matching bad floating-point values are not a pass. The
+38 related tests pass. Finite comparison differences are evaluated in f64 to avoid
+an overflow in the audit itself; acceptance tolerances are unchanged.

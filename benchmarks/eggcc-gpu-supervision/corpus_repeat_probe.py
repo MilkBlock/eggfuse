@@ -33,13 +33,23 @@ def attachment(states,indices,mix,xp):
 
 
 def numerical_audit(actual,reference,emissions,reference_emissions):
-    tolerance=.002+.004*np.abs(reference)
-    difference=np.abs(actual-reference)
-    violations=int(np.count_nonzero(difference>tolerance))
+    finite=np.isfinite(actual)&np.isfinite(reference)
+    with np.errstate(invalid='ignore',over='ignore'):
+        tolerance=.002+.004*np.abs(reference.astype(np.float64))
+        difference=np.abs(actual.astype(np.float64)-reference.astype(np.float64))
+    violations=int(np.count_nonzero(~finite|(difference>tolerance)))
     decisions=int(np.count_nonzero(emissions!=reference_emissions))
     return dict(passed=bool(not violations and not decisions),state_elements_outside_tolerance=violations,
-                emission_disagreements=decisions,max_absolute_state_difference=float(difference.max()),
+                nonfinite_state_elements=int(np.count_nonzero(~finite)),
+                emission_disagreements=decisions,max_absolute_state_difference=float(difference[finite].max()) if finite.any() else None,
                 absolute_tolerance=.002,relative_tolerance=.004)
+
+
+def scale_report(scales):
+    return [dict(body_max_abs=float(row[0]) if np.isfinite(row[0]) else None,
+                 boundary_max_abs=float(row[1]) if np.isfinite(row[1]) else None,
+                 boundary_coordinates_outside_teacher_range=int(row[2])) for row in np.asarray(scales)]
+
 
 
 def main():
@@ -96,11 +106,13 @@ def main():
     print(json.dumps(dict(oracle_false_reemissions=int(np.array(oracle_emit).sum()),cases=len(records))),flush=True)
     gp=mx.array(prototypes);gpf=mx.array(pf);gf=mx.array(families)
     def rollout(s):
-        emissions=[]
-        for _ in range(args.rounds):s,emit=one(s);emissions.append(emit)
+        emissions=[];state_scales=[]
+        for _ in range(args.rounds):
+            s,emit=one(s);emissions.append(emit)
+            state_scales.append(mx.stack([mx.max(mx.abs(s[:,:D])),mx.max(mx.abs(s[:,D:])),mx.sum((mx.abs(s[:,D:])>1.001).astype(mx.float32))]))
         d=mx.where(gf[:,None]==gpf[None,:],distances(s,gp,mx),mx.inf)
-        return s,mx.stack(emissions),mx.argmin(d,axis=1)
-    final,emissions,selected=mx.compile(rollout)(mx.array(initial));mx.eval(final,emissions,selected)
+        return s,mx.stack(emissions),mx.argmin(d,axis=1),mx.stack(state_scales)
+    final,emissions,selected,state_scales=mx.compile(rollout)(mx.array(initial));mx.eval(final,emissions,selected,state_scales)
     final=np.array(final);emissions=np.array(emissions);selected=np.array(selected)
     reference=initial.copy();reference_emissions=[]
     for _ in range(args.rounds):
@@ -113,7 +125,9 @@ def main():
             candidate=candidate+np.concatenate([cx,stop_features(candidate,*stop_wiring,np)],axis=1)@correction
         reference=np.where(emit[:,None],candidate,reference);reference_emissions.append(emit)
     numeric=numerical_audit(final,reference,emissions,np.array(reference_emissions))
-    if not np.isfinite(final).all():raise ValueError('nonfinite recurrent state')
+    if not np.isfinite(final).all() or not np.isfinite(reference).all():
+        result=dict(status='failed',reason='nonfinite recurrent state',scope='fixed-binding local GPU recurrence, not ruleset saturation',model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),manifest_sha256=metadata['manifest_sha256'],rounds=args.rounds,cases=len(records),numerical_audit=numeric,state_scales_per_round=scale_report(np.array(state_scales)),emissions_per_round=emissions.sum(1).tolist(),catalog_decode_valid=False,intermediate_cpu_reads=0)
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n');print(json.dumps(result,indent=2,allow_nan=False));raise SystemExit(1)
     ambiguous=np.zeros(len(final),bool);invalid_decode=np.zeros(len(final),bool);dp=prototypes.astype(np.float64)
     for start in range(0,len(final),128):
         stop=min(start+128,len(final));d=distances(final[start:stop].astype(np.float64),dp,np);d[families[start:stop,None]!=pf[None,:]]=np.inf
@@ -123,6 +137,7 @@ def main():
     correct=(selected==np.array(expected))&~ambiguous&~invalid_decode
     stopped=~emissions[-1]
     result=dict(scope='necessary fixed-binding local stop probe, not ruleset saturation',manifest_sha256=metadata['manifest_sha256'],model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),numerical_audit=numeric,decoder_f64_disagreements=int(invalid_decode.sum()),stop_feature_version=metadata.get('stop_feature_version'),rounds=args.rounds,cases=len(records),teacher_idempotent_cases=sum(idempotent),oracle_completed_state_false_reemissions=int(np.array(oracle_emit).sum()),free_rollout=dict(emissions_per_round=emissions.sum(1).tolist(),final_exact_catalog_target=int(correct.sum()),final_ambiguous=int(ambiguous.sum()),stopped_at_final_round=int(stopped.sum()),exact_target_and_stopped=int((correct&stopped).sum()),never_emitted_but_initially_novel=int((~emissions.any(0)&novels).sum()),final_body_rmse=float(np.sqrt(np.mean((final[:,:D]-completed[:,:D])**2)))),intermediate_cpu_reads=0,teacher_state_supplied_between_rounds=False,limitations=['Only repetition of the same fixed binding; not full successor or ruleset closure','Oracle-state test is separate and does not correct the free rollout','Request roles and port wiring are static for the original binding','Catalog includes held-out states and does not prove live identity or visibility','No lifetime, ownership-transfer or global novelty proof'])
+    result['state_scales_per_round']=scale_report(np.array(state_scales))
     result['correction']=metadata.get('correction')
     body_mse=np.mean((final[:,:D]-completed[:,:D])**2,axis=1)
     result['failure_diagnostics']=[dict(input_identity=r['identity'],family=r['family'],consumer=r['sample']['consumer'],observations=r['observations'],emissions=emissions[:,i].tolist(),exact_catalog_target=bool(correct[i]),body_rmse=float(np.sqrt(body_mse[i]))) for i,r in enumerate(records) if not stopped[i]]
