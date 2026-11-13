@@ -12,11 +12,16 @@ def identity(value):return json.dumps(value,sort_keys=True,separators=(',',':'),
 
 
 def prepare(recipe,snapshot,rid,spare,include_effects=False):
+    return prepare_family(recipe,snapshot,[rid],spare,include_effects)
+
+
+def prepare_family(recipe,snapshot,rules,spare,include_effects=True):
     from device_query_join import compile_query
-    original=recipe['rules'][rid];tables={t['name']:t for t in recipe['tables']}
-    required=sorted({a['call'].get('table') for a in original['query'] if 'table' in a['call']})
+    if not rules or len(set(rules))!=len(rules):raise ValueError('nonempty unique rule family required')
+    originals=[recipe['rules'][rid] for rid in rules];tables={t['name']:t for t in recipe['tables']}
+    required=sorted({a['call'].get('table') for original in originals for a in original['query'] if 'table' in a['call']})
     if include_effects:
-        for op in original['effects']:
+        for op in (op for original in originals for op in original['effects']):
             if op['kind']=='copy' and 'slot' in op.get('arg',{}):continue
             if op['kind']=='construct' and all('slot' in a for a in op['args']):
                 required.append(op['call']['table']);continue
@@ -25,14 +30,15 @@ def prepare(recipe,snapshot,rid,spare,include_effects=False):
         if any(r['table'] in required and r.get('subsumed',False) for r in snapshot['rows']):
             raise ValueError('hidden constructor reuse requires separate coverage')
     if any(tables[t]['kind']!='constructor' for t in required):raise ValueError('constructor snapshot only')
-    local=dict(tables=copy.deepcopy(recipe['tables']),rules=[copy.deepcopy(original)])
+    local=dict(tables=copy.deepcopy(recipe['tables']),rules=copy.deepcopy(originals))
     seed_rules={}
     for name in required:
         table=tables[name];seed_rules[name]=len(local['rules']);n=len(table['schema'])
         local['rules'].append(dict(metadata=dict(source_set='snapshot'),slots=[dict(sort=copy.deepcopy(s),definition='query') for s in table['schema']],
             query=[dict(call=dict(table=name),args=[dict(slot=i) for i in range(n)])],effects=[]))
-    query=compile_query(local,0)
-    if not query['covered'] or not query['atoms']:raise ValueError('unsupported consumer query')
+    for rid in range(len(originals)):
+        query=compile_query(local,rid)
+        if not query['covered'] or not query['atoms']:raise ValueError('unsupported consumer query')
     rows=[];seen=set()
     for row in snapshot['rows']:
         if row['table'] not in seed_rules:continue

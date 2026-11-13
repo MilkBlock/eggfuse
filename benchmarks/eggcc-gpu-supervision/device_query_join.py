@@ -38,7 +38,14 @@ def match(state,plan,capacity,external_complete,eq_settled,xp):
     for atom_index,atom in enumerate(plan['atoms']):
         view=project(state,atom['view'],external_complete,eq_settled,xp,include_fields=True)
         complete=complete&view['complete'];n=view['live'].shape[0];candidate_lanes+=capacity*n
-        keep=live[:,None]&view['live'][None,:];first={}
+        # Shared Cell views may expose the same logical fact repeatedly. Remove
+        # those copies before bounded compaction, retaining the first witness.
+        # Distinct result roots remain distinct, including unsettled collisions.
+        fact_values=xp.where(xp.array(atom['eq'])[None,:],view['value_roots'],view['values'])
+        same_fact=xp.all(fact_values[:,None,:]==fact_values[None,:,:],axis=2)
+        earlier=xp.arange(n)[None,:]<xp.arange(n)[:,None]
+        first_fact=view['live']&~xp.any(same_fact&earlier&view['live'][None,:],axis=1)
+        keep=live[:,None]&first_fact[None,:];first={}
         for field,(slot,eq) in enumerate(zip(atom['slots'],atom['eq'])):
             current=view['value_roots'][:,field] if eq else view['values'][:,field]
             if slot in bound:

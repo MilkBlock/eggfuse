@@ -18,7 +18,7 @@ def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_i
         machine=initial(schedule,repeat_slots,xp);opened=xp.array(False);changed=xp.array(False);failed=xp.array(False)
     else:
         machine=continuation['control'];opened=continuation['open_run'];changed=continuation['unreported_change'];failed=continuation['failed_run']
-    logs={k:[] for k in ('stage','query_started','run_done','run_changed','new_tokens','new_constructors','new_equivalences')}
+    logs={k:[] for k in ('stage','query_started','query_failed','run_done','run_changed','new_tokens','new_constructors','new_equivalences')}
     if takeover_catalog is not None:
         for key in ('takeover_attempted','takeover_released','takeover_copied_fields','takeover_blocked'):logs[key]=[]
     for _ in range(ticks):
@@ -30,12 +30,21 @@ def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_i
             queried,q=run_round(state,blocks,model,xp.where(begin,stage,-1),xp,key_context=key_context)
         else:
             queried,q=query_kernel(state,blocks,model,xp.where(begin,stage,-1),xp,external_complete=external_complete,eq_settled=eq_settled,key_context=key_context)
-        candidate,new_id,e=complete(queried,completion,next_id,limit,quota,external_complete,eq_settled,xp,eq_context,eq_rounds)
         error=xp.array(False)
         for key in ('stale_source','nonfinite','unsettled_source','capacity','missing_witness','transfer_blocked'):
             error=error|xp.any(q[key])
         error=error|xp.any(q['invalid_key'])|q['key_context_pending']
         failed=failed|(begin&error)
+        candidate,new_id,e=complete(queried,completion,next_id,limit,quota,external_complete,eq_settled,xp,eq_context,eq_rounds)
+        # Failed enumeration cannot commit a partial Run's effects or IDs.
+        # Admitted instances remain pending evidence for explicit recovery.
+        candidate={k:xp.where(~failed,candidate[k],v) for k,v in queried.items()}
+        new_id=xp.where(~failed,new_id,next_id)
+        for key in ('new_constructors','new_equivalences'):e[key]=xp.where(~failed,e[key],0)
+        e['semantic_changed']=~failed&e['semantic_changed']
+        if eq_context is not None:
+            e['eq_context']={k:xp.where(~failed,e['eq_context'][k],v) for k,v in eq_context.items()}
+            e['eq_settled']=xp.where(~failed,e['eq_settled'],eq_settled)
         changed=changed|(in_run&e['semantic_changed'])
         after_eq=e.get('eq_settled',eq_settled)
         safe=xp.clip(stage,0,query_covered.shape[0]-1)
@@ -46,7 +55,7 @@ def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_i
             candidate,tm=finish(candidate,takeover_catalog,done,xp,budget=takeover_budget)
             for key,value in tm.items():logs['takeover_'+key].append(value)
         machine,control=tick(machine,schedule,done,changed,xp)
-        for key,value in dict(stage=stage,query_started=begin,run_done=done,run_changed=done&changed,
+        for key,value in dict(stage=stage,query_started=begin,query_failed=begin&error,run_done=done,run_changed=done&changed,
                               new_tokens=xp.where(begin,q['new_tokens'],0),new_constructors=xp.where(in_run,e['new_constructors'],0),
                               new_equivalences=xp.where(in_run,e['new_equivalences'],0)).items():logs[key].append(value)
         state={k:xp.where(in_run,candidate[k],v) for k,v in state.items()}

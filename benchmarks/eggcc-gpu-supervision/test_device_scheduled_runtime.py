@@ -23,6 +23,24 @@ def fixture():
 
 
 class ScheduledRuntime(unittest.TestCase):
+    def test_failed_query_does_not_commit_rhs_or_allocate_ids(self):
+        from device_entry_round import run_round
+        s,n,b,m,p,c,meta=fixture();dev=lambda d:{k:mx.array(v) for k,v in d.items()}
+        def failed_query(state,blocks,model,stage,xp,**kwargs):
+            out,q=run_round(state,blocks,model,stage,xp,key_context=kwargs.get('key_context'))
+            q['missing_witness']=q['missing_witness']|(stage>=0)
+            return out,q
+        db=[tuple(dev(v) for v in block) for block in b];dm=dev(m);dp=helper.device_plan(p);dc=dev(c)
+        out,last,marks=mx.compile(lambda state:run(state,db,dm,dp,dc,meta['repeat_slots'],mx.array([True]),mx.array(n),mx.array(200),mx.array(100),mx.array(True),mx.array(True),6,mx,query_kernel=failed_query))(dev(s))
+        mx.eval(out,last,marks)
+        self.assertEqual(int(last),n);self.assertTrue(bool(marks['failed_run']))
+        self.assertEqual(int(mx.sum(marks['query_failed'])),1)
+        self.assertEqual(int(mx.sum(marks['new_constructors'])),0)
+        self.assertEqual(int(mx.sum(marks['run_done'])),0)
+        added=np.array(out['present'])&~s['present']
+        self.assertTrue(added.any());self.assertFalse(np.array(out['settled'])[added].any())
+        self.assertTrue((np.array(out['effect_pc'])[added]==0).all())
+
     def test_real_effects_drive_saturation_not_new_token_count(self):
         if not mx.metal.is_available():self.skipTest('Metal required')
         s,n,b,m,p,c,meta=fixture();dev=lambda d:{k:mx.array(v) for k,v in d.items()}

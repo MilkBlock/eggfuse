@@ -20,6 +20,24 @@ def device_plan(plan):
 
 
 class QueryJoin(unittest.TestCase):
+    def test_duplicate_cell_views_do_not_exhaust_binding_capacity(self):
+        r,s=fixture();s['keys'][1,0]=0
+        for key in ('slots','slot_roots','slot_valid'):s[key][1]=s[key][0]
+        plan=device_plan(compile_query(r,0));dev={k:mx.array(v) for k,v in s.items()}
+        out=mx.compile(lambda state:match(state,plan,1,mx.array(True),mx.array(True),mx))(dev);mx.eval(out)
+        self.assertTrue(bool(out['complete']));self.assertFalse(bool(out['overflow']))
+        self.assertEqual(int(mx.sum(out['live'])),1)
+        self.assertEqual(int(out['witness_rows'][0,0]),0)
+        # A different result root is a different fact and must still overflow.
+        s['slot_roots'][1,1]=11
+        other=match(s,compile_query(r,0),1,True,True,np)
+        self.assertTrue(other['overflow']);self.assertFalse(other['complete'])
+        # Scalar roots are not authoritative: compare actual scalar identities.
+        s['slot_roots'][1]=s['slot_roots'][0];s['slots'][1,0]=8
+        r['rules'][0]['slots'][0]['sort']=dict(kind='i64',name='i64')
+        other=match(s,compile_query(r,0),1,True,True,np)
+        self.assertTrue(other['overflow'])
+
     def test_two_sources_join_by_eq_but_return_actual_ids_and_witnesses(self):
         if not mx.metal.is_available():self.skipTest('Metal required')
         r,s=fixture();p=device_plan(compile_query(r,2));ds={k:mx.array(v) for k,v in s.items()}
