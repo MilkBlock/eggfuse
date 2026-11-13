@@ -53,6 +53,9 @@ def collect(control, candidate):
                 'query': report['query_workers']['stats'], 'free_join': report['free_join'],
                 'source': report['stats'], 'compiled_payload_bytes': report['cell_execution']['compiled_payload_bytes'],
             }
+        trial = b['query_workers']['residual_expansion']
+        assert trial['compiled_point_entries'] == 177, 'reproduce the trial revision, not the restored default'
+        assert (trial['stats']['point_entries'], trial['stats']['point_answers']) == (5, 2)
         result['workloads'][case] = output
     proof = read(candidate / 'semantic-acceptance.json')
     assert proof['status'] == 'pass'

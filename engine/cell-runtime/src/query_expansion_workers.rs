@@ -4,7 +4,7 @@ use crate::query::snapshot::{Read, Domain};
 use smallvec::SmallVec;
 
 struct Plan {
-    layout:Vec<(usize,Vec<usize>)>, tables:Vec<usize>, expanded:Option<usize>,
+    layout:Vec<(usize,Vec<usize>)>, tables:Vec<usize>, expanded:usize,
     code:usize, table:usize, active:bool, partitioned:bool, serial_position:usize,
 }
 #[derive(Default,Serialize)]
@@ -27,7 +27,6 @@ struct Work {
     partitioned_expansion_rows:u64, partitioned_point_reads:u64,
     partitioned_worker_entries:Vec<u64>, partitioned_inline_entries:u64,
     column_prepares:u64, column_prepare_reuses:u64,
-    point_entries:u64, point_answers:u64,
 }
 #[derive(Default)]
 pub(super) struct Output {
@@ -127,7 +126,6 @@ impl Plans {
         "task_counter_bytes":std::mem::size_of::<InputWork>(),
         "executor_counter_bytes":std::mem::size_of::<Work>(),
         "compiled_entries":self.rules.iter().flatten().filter(|p|p.is_some()).count(),
-        "compiled_point_entries":self.rules.iter().flatten().flatten().filter(|p|p.expanded.is_none()).count(),
         "plan_capacity_bytes":self.plan_bytes(),"stats":self.work}) }
     fn plan_bytes(&self)->usize {
         self.rules.capacity()*std::mem::size_of::<Vec<Option<Plan>>>()
@@ -144,14 +142,8 @@ impl Plans {
             if k.routes.is_some() || k.sum_filter.is_some() {return None;}
             #[cfg(feature="cell-absorption")]
             if k.absorption.is_some() {return None;}
-            // A complete point query needs the same sealed Entry, delta owner
-            // and successful Instance as an expansion. A missing expansion is
-            // not a reason to enumerate/filter it again on the source thread.
-            // Special routes and absorption still retain their own executor.
-            let expanded=k.query.steps.iter().find(|s|s.expansion.is_some());
-            if let Some(step)=expanded {
-                if step.expansion.as_ref()?.bound.is_empty() || !p.physical.ranges[rid][step.atom].is_empty() {return None;}
-            }
+            let expanded=k.query.steps.iter().find(|s|s.expansion.is_some())?;
+            if expanded.expansion.as_ref()?.bound.is_empty() || !p.physical.ranges[rid][expanded.atom].is_empty() {return None;}
             let mut layout=BTreeMap::<usize,BTreeSet<usize>>::new();
             let mut tables=BTreeSet::new();
             for s in &k.query.steps {
@@ -160,12 +152,7 @@ impl Plans {
                     layout.entry(*t).or_default().extend(e.bound.iter().map(|(c,_)|*c));
                 }
             }
-            // Source point kernels do not run Free Join admission: exact
-            // point reads already establish those facts in instruction order.
-            // Keep that order (including errors) and do not build probe-only
-            // columns or add another domain lookup in front of every read.
-            let admission=if expanded.is_some() {entry.entries[rid][pivot].as_slice()} else {&[]};
-            for step in admission {
+            for step in &entry.entries[rid][pivot] {
                 let shape=&entry.projections[step.projection];
                 if shape.columns.is_empty() {return None;}
                 tables.insert(shape.table);
@@ -177,7 +164,7 @@ impl Plans {
                 rule:rid,template:p.rules[rid].template,pivot,inherits_entry:false,slots:k.query.result_slots(),reads:p.rules[rid].query.len(),expansion:true,
                 #[cfg(feature="cell-query-sharing-audit")] audit_prefixes:Vec::new(),});
             Some(Plan {layout:layout.into_iter().map(|(t,c)|(t,c.into_iter().collect())).collect(),
-                tables:tables.into_iter().collect(),expanded:expanded.map(|s|s.atom),code,table,active:false,
+                tables:tables.into_iter().collect(),expanded:expanded.atom,code,table,active:false,
                 partitioned:false,serial_position:0})
         }).collect()).collect();
         Self {enabled:true,rules,ready:vec![0;codes.len()],outputs:(0..p.rules.len()).map(|_|Output::default()).collect(),..Default::default()}
@@ -188,8 +175,7 @@ impl Plans {
             let plan=self.rules[rid][pivot].as_ref().unwrap();
             self.ready[plan.code]=i;
             Prepared {index:index.read_columns(&plan.layout,plan.table),filter:sieve.entry_filter(rid,pivot),
-                steps:if plan.expanded.is_some() {&entries.entries[rid][pivot]} else {&[]},
-                projections:&entries.projections,expanded:plan.expanded,
+                steps:&entries.entries[rid][pivot],projections:&entries.projections,expanded:plan.expanded,
                 partitioned:plan.partitioned}
         }).collect()
     }
@@ -360,7 +346,6 @@ impl Workers {
         t.partitioned_admitted+=w.partitioned_admitted;t.partitioned_answers+=w.partitioned_answers;
         t.partitioned_admission_probes+=w.partitioned_admission_probes;
         t.partitioned_expansion_rows+=w.partitioned_expansion_rows;t.partitioned_point_reads+=w.partitioned_point_reads;
-        t.point_entries+=w.point_entries;t.point_answers+=w.point_answers;
         t.answer_capacity_bytes+=(answer_capacity*std::mem::size_of::<(usize,Binding)>()) as u64;
         t.worker_entries.resize(self.stats.worker_entries.len(),0);t.worker_inputs.resize(self.stats.worker_entries.len(),0);
         t.worker_rows.resize(self.stats.worker_entries.len(),0);t.worker_task_seconds.resize(self.stats.worker_entries.len(),0.0);
@@ -394,7 +379,7 @@ impl Workers {
 }
 pub(super) struct Prepared<'a> {
     index:Read<'a>,filter:crate::sieve::EntryFilter<'a>,steps:&'a [crate::entry_join::Step],
-    projections:&'a [crate::entry_join::Projection],expanded:Option<usize>,partitioned:bool,
+    projections:&'a [crate::entry_join::Projection],expanded:usize,partitioned:bool,
 }
 #[derive(Default)]
 struct InputWork {
@@ -404,7 +389,6 @@ struct InputWork {
     input_rows:u64, filter_probes:u64, filter_rejected:u64, direct_entries:u64,
     partitioned_entries:u64, partitioned_admitted:u64, partitioned_answers:u64,
     partitioned_admission_probes:u64, partitioned_expansion_rows:u64, partitioned_point_reads:u64,
-    point_entries:u64, point_answers:u64,
 }
 #[derive(Default)]
 pub(super) struct ChunkWork {
@@ -429,7 +413,6 @@ impl Prepared<'_> {
             if q.filter || self.partitioned {w.direct_entries+=1;}
             if self.partitioned {w.partitioned_entries+=1;}
             c.entries+=1;
-            w.point_entries+=u64::from(self.expanded.is_none());
             let owner=(entry.epoch,entry.witness);
             let mut domain=None;
             for step in self.steps {
@@ -447,7 +430,7 @@ impl Prepared<'_> {
                     (e,first.unwrap())>owner || ((e,first.unwrap())==owner && step.atom<q.code.pivot))) {
                     w.admission_rejected+=1;return Ok(());
                 }
-                if Some(step.atom)==self.expanded {domain=Some(selected);}
+                if step.atom==self.expanded {domain=Some(selected);}
             }
             w.partitioned_admitted+=u64::from(self.partitioned);
             frame.witnesses.clear();frame.witnesses.push((q.code.pivot,entry.witness));
@@ -455,7 +438,6 @@ impl Prepared<'_> {
                 inputs:&q.code.inputs,known:&known.facts,frame,counts:c,work:w,answers,
                 source:q.source,watermark:known.watermark}.step(0,None,entry.epoch,domain.as_ref())
         })();
-        if self.expanded.is_none() {w.point_answers+=c.answers-partition_before.3;}
         if self.partitioned {
             w.partitioned_admission_probes+=w.admission_probes-partition_before.0;
             w.partitioned_expansion_rows+=w.expansion_rows-partition_before.1;

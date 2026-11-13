@@ -1,0 +1,19 @@
+{
+  "status": "restored",
+  "trial_commit": "61e4c118",
+  "control_commit": "f0fb1443",
+  "engine_tools_exact_control": true,
+  "files": [
+    {
+      "path": "engine/cell-runtime/src/query_expansion_workers.rs",
+      "control_blob": "5a24b07b36a4a7f2298890039ae73d57380504b6",
+      "restored_blob": "5a24b07b36a4a7f2298890039ae73d57380504b6"
+    },
+    {
+      "path": "tools/cell-compiler/tests/parallel_residuals.rs",
+      "control_blob": "3b0bda57575bf081c6168df78bec4b97296b1a45",
+      "restored_blob": "3b0bda57575bf081c6168df78bec4b97296b1a45"
+    }
+  ],
+  "validation": "Exact restored source matches the previously validated control; no new runtime behavior remains. Trial checks and timings are retained separately."
+}
