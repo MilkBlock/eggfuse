@@ -431,6 +431,12 @@ impl Plan {
         }
         true
     }
+    /// Derivation emits this immutable directory in Key order. Production
+    /// instances reuse it instead of copying it into a per-Graph hash table.
+    pub fn transition(&self, key:&Key)->Option<usize> {
+        let index=self.transitions.binary_search_by(|(candidate,_)|candidate.cmp(key)).ok()?;
+        Some(self.transitions[index].1)
+    }
     fn substitutions(
         &self,
         programs: &[Arc<PortProgram>],
@@ -567,7 +573,7 @@ pub(super) struct Runtime {
     pub live_facts: Vec<usize>,
     pub frames: Frames,
     pub shapes: Vec<Option<Arc<Shape>>>,
-    pub transitions: HashMap<Key, usize>,
+    pub learned_transitions: HashMap<Key, usize>,
     pub training: Option<Training>,
     pub catalog_trace: Option<Box<CatalogTrace>>,
     pub entry: Option<Entry>,
@@ -597,7 +603,7 @@ impl Runtime {
             live_facts: vec![],
             frames: Frames::default(),
             shapes: p.shapes.iter().cloned().map(Some).collect(),
-            transitions: p.transitions.iter().cloned().collect(),
+            learned_transitions: HashMap::default(),
             training: None,
             catalog_trace: None,
             entry: None,
@@ -822,13 +828,13 @@ impl Graph {
                             op: f.op,
                         },
                     };
+                    let baked=self.program.cell_ownership.composition.transition(&key);
                     if prefer_catalog {
-                        let installed = m.composition.transitions.get(&key)
-                            .is_some_and(|&shape| shape < self.program.cell_ownership.composition.shapes.len());
+                        let installed = baked.is_some();
                         if installed != (pass == 0) { continue; }
                     }
                     m.stats.composition_transition_probes += 1;
-                    let shape = if let Some(&shape) = m.composition.transitions.get(&key) {
+                    let shape = if let Some(shape) = baked.or_else(||m.composition.learned_transitions.get(&key).copied()) {
                         m.stats.composition_cache_hits += 1;
                         m.stats.composition_baked_hits +=
                             u64::from(shape < self.program.cell_ownership.composition.shapes.len());
@@ -853,7 +859,7 @@ impl Graph {
                         t.fragments.push(fragment);
                         let id = m.composition.shapes.len();
                         m.composition.shapes.push(Some(Arc::new(code)));
-                        m.composition.transitions.insert(key, id);
+                        m.composition.learned_transitions.insert(key, id);
                         m.stats.composition_shape_builds += 1;
                         m.stats.composition_materializations += 1;
                         m.stats.composition_shape_steps += steps as u64;

@@ -1063,7 +1063,7 @@ impl Runtime {
         release!("ownership.live_facts",self.composition.live_facts);
         release!("ownership.frames",self.composition.frames);
         release!("ownership.shapes",self.composition.shapes);
-        release!("ownership.transitions",self.composition.transitions);
+        release!("ownership.transitions",self.composition.learned_transitions);
         release!("ownership.training",self.composition.training);
         release!("ownership.catalog_trace",self.composition.catalog_trace);
         release!("ownership.entry",self.composition.entry);

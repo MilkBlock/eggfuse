@@ -1310,3 +1310,14 @@ fn selection_budgets_are_explicit_and_bounded() {
     once["minimum_activations"]=json!(0);
     assert!(select_profile_with_budget(&once,4096,262144).is_err());
 }
+
+#[test]
+fn immutable_transition_directory_matches_all_compiled_routes() {
+    let p=program(STAGES);
+    let plan=&p.cell_ownership.composition;
+    assert!(!plan.transitions.is_empty());
+    assert!(plan.transitions.windows(2).all(|pair|pair[0].0<pair[1].0));
+    for (key,target) in &plan.transitions {assert_eq!(plan.transition(key),Some(*target));}
+    let mut missing=plan.transitions[0].0.clone();missing.shape=usize::MAX;
+    assert_eq!(plan.transition(&missing),None);
+}

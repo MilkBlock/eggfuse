@@ -1,0 +1,14 @@
+{
+  "scope": "actual standalone Cell runtime; identical accepted marked program; immutable compiled directory reused",
+  "program": "f0417499d1850595eb10c4353fc251e802c9d4e075790384279049ac1614092f",
+  "before_graph_bytes": 2502270,
+  "after_graph_bytes": 2477174,
+  "saved_graph_bytes": 25096,
+  "before_directory_bytes": 25096,
+  "after_directory_bytes": 0,
+  "retained_program_bytes_unchanged": true,
+  "all_other_graph_field_charges_equal": true,
+  "final_state_sha256": "1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82",
+  "validation": "42 ownership tests, 8 Unit tests, all 2652 batched source Run checks; marked program final digest unchanged",
+  "limits": "no speed claim; dominated source instances and fact records still remain"
+}
