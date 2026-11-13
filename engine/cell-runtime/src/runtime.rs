@@ -2284,9 +2284,13 @@ impl Executor {
             if let Some(step) = stage_cursor {
                 self.stage_spine.effects(0, u64::from(changed), 0);
                 #[cfg(feature = "sparse-cells")]
-                let step = if !changed && self.completion.is_none() {
+                let step = if self.completion.is_none() {
                     let Some(step) = self.stage_spine.complete_absorbed_root(&self.graph, rid, cell,
-                        step, &write, index, &mut self.entry_schedule)? else { return Ok(None) };
+                        step, &write, index, &mut self.entry_schedule)? else {
+                        #[cfg(feature="storage-metrics")]
+                        if changed { self.graph.retire_completed_writer_inputs(cell, rid); }
+                        return Ok(None);
+                    };
                     step
                 } else { step };
                 self.stage_spine.complete(
