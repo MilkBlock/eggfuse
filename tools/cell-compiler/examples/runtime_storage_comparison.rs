@@ -52,10 +52,11 @@ fn step(exec: &mut Executor, next: usize) -> Result<Value, Box<dyn std::error::E
 }
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut args = std::env::args().skip(1).collect::<Vec<_>>();
+    let retired=if let Some(i)=args.iter().position(|a|a=="--retired-prefixes") {args.remove(i);true} else {false};
     let completed=args.last().is_some_and(|arg|arg=="--completed-owners");
     if completed {args.pop();}
-    if !(2..=3).contains(&args.len()) {
-        return Err("usage: runtime_storage_comparison PROGRAM OUTPUT [OPTIMIZED_PROGRAM] [--completed-owners]".into());
+    if !(2..=3).contains(&args.len()) || (retired && !completed) {
+        return Err("usage: runtime_storage_comparison PROGRAM OUTPUT [OPTIMIZED_PROGRAM] [--completed-owners] [--retired-prefixes]".into());
     }
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
     let program = p.artifact["sha256"].clone();
@@ -65,6 +66,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         p
     };
+    let optimized_program=optimized.artifact["sha256"].clone();
     let mut compact = Executor::new(Graph::new_with_local_congruence(optimized)?, false);
     if completed {
         compact.use_completed_parent_takeover()?;
@@ -91,6 +93,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             compact.graph.transfer_completed_owners()?;
             compact.graph.compact_source_record_capacity();
         } else {compact.graph.compact_retained_capacity()?;}
+        if retired {compact.graph.compact_retired_prefixes()?;}
         compaction_seconds += start.elapsed().as_secs_f64();
         let graph = baseline.graph.export()?;
         if graph != compact.graph.export()? {
@@ -102,7 +105,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         peak_before = peak_before.max(a["counted_bytes"].as_u64().unwrap());
         peak_after = peak_after.max(b["counted_bytes"].as_u64().unwrap());
     }
-    let mut result = json!({"completed_owners":completed,"program_sha256":program,"runs":runs,"every_run_graph_and_ordered_audits_equal":true,
+    let mut result = json!({"completed_owners":completed,"retired_prefixes":retired,"program_sha256":program,"optimized_program_sha256":optimized_program,"runs":runs,"every_run_graph_and_ordered_audits_equal":true,
         "run_checks":run_checks,"baseline":baseline.graph.retained_cell_storage(),"compacted":compact.graph.retained_cell_storage(),
         "boundary_peak_before":peak_before,"boundary_peak_after":peak_after,"compaction_seconds":compaction_seconds,
         "scope":"actual Cell runtime state takeover and capacity reclamation; boundary array peaks exclude within-Run peaks; not a speed benchmark"});

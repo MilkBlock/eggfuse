@@ -1535,6 +1535,37 @@ fn later_single_stage_joins_the_existing_physical_owner() {
 
 #[test]
 #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn retired_suffix_returns_to_existing_prefix_and_can_complete_again() {
+    let p=program(r#"
+        (datatype E (N i64) (Start E) (Pair E E))
+        (function Saved (E) E :merge old)
+        (ruleset a) (ruleset b) (ruleset save) (ruleset remove) (ruleset join)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((= p (Pair s x))) ((set (Saved x) p)) :ruleset save)
+        (rule ((= s (Start x))) ((delete (Pair s x))) :ruleset remove)
+        (rule ((= x (N 1)) (= y (N 2))) ((union x y)) :ruleset join)
+        (N 1) (N 2) (run a 1) (run b 1) (run save 1)
+        (run remove 1) (run join 1) (run b 1)
+    "#);
+    let mut control=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+    let mut actual=Executor::new(Graph::new_with_local_congruence(p).unwrap(),true);
+    control.use_completed_parent_takeover().unwrap();actual.use_completed_parent_takeover().unwrap();
+    control.graph.use_cell_stable_fields().unwrap();actual.graph.use_cell_stable_fields().unwrap();
+    let mut retired=0;
+    for run in 1..=6 {
+        control.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
+        control.graph.transfer_completed_owners().unwrap();actual.graph.transfer_completed_owners().unwrap();
+        retired+=actual.graph.compact_retired_prefixes().unwrap();
+        assert_eq!(control.graph.export().unwrap(),actual.graph.export().unwrap());
+        assert_eq!(control.snapshots,actual.snapshots);
+        assert_eq!(control.binding_audit,actual.binding_audit);
+    }
+    assert!(retired>0,"exercise a real exhausted suffix, not just an idle scan");
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
 fn referenced_parent_can_transfer_before_the_child_finishes() {
     let p=program("(datatype E (N i64) (Start E i64) (Pair E E) (Seen i64))
         (ruleset a) (ruleset b) (ruleset c)

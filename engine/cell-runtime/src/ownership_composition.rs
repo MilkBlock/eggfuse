@@ -120,6 +120,8 @@ pub struct Key {
 }
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Plan {
+    #[serde(skip)]
+    pub(super) retired_prefixes: Arc<Vec<(usize,usize)>>,
     pub sources: Vec<Vec<Source>>,
     pub active_rules: Vec<bool>,
     pub result_rules: Vec<bool>,
@@ -253,6 +255,9 @@ impl Plan {
         drop(self.shapes);
         rows.push(("composition.shapes", before - live_bytes()));
         let before = live_bytes();
+        drop(self.retired_prefixes);
+        rows.push(("composition.retired_prefixes", before - live_bytes()));
+        let before = live_bytes();
         drop(self.conditions);
         rows.push(("composition.conditions", before - live_bytes()));
         let before = live_bytes();
@@ -311,6 +316,7 @@ impl Plan {
             })
             .collect();
         let mut plan = Self {
+            retired_prefixes: Default::default(),
             sources,
             conditions: vec![],
             effects: vec![],

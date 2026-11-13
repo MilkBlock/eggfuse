@@ -9,6 +9,8 @@ pub mod slices;
 use slices::{PortProgram, Signal};
 #[path = "ownership_composition.rs"]
 pub mod composition;
+#[path = "ownership_retired_prefix.rs"]
+mod retired_prefix;
 #[path = "stable_ports.rs"]
 pub mod ports;
 #[path = "ownership_query_classes.rs"]
@@ -167,6 +169,7 @@ impl Plan {
             plan.prepare_codes(&p.templates);
             composition::join_trace::plan::install(p,&mut plan)?;
         }
+        plan.composition.bake_retired_prefixes();
         if let Some(raw) = p.artifact.get("ownership_markers") {
             if *raw != plan.artifact(p) {
                 return Err("ownership marker differs from typed entry/body wiring".into());
@@ -276,6 +279,8 @@ struct Stats {
     // Reasons overlap: a skipped apply may have several outstanding obligations.
     dual_pending_fact_skips:u64, dual_pending_signal_skips:u64,
     dual_frozen_skips:u64, dual_union_skips:u64, dual_dirty_skips:u64,
+    retired_prefix_scans:u64, retired_prefix_takeovers:u64,
+    retired_prefix_frames:u64, retired_prefix_symbols:u64, retired_prefix_native_guards:u64,
     composition_transition_probes: u64,
     composition_unbaked_fallbacks: u64,
     composition_cross_stage_joins: u64,
