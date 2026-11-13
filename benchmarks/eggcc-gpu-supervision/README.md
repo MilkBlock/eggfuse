@@ -415,3 +415,5 @@ rejection when post-Run observations contradict a derived result. All 26 Python
 tests pass. Saved counts and residual examples are in `proven-union-results.json`.
 
 [Native Cell Eq supervisor](NATIVE_AUDIT.md): actual runtime boundary audit and Metal proposal replay; CPU execution and additional audit costs reported separately.
+
+[Calibrated structural ridge](CALIBRATED_RIDGE.md): template alias normalization and floating pair interactions reduce false Eq proposals; stage coverage and recall remain limiting.

@@ -1,0 +1,163 @@
+{
+  "validation_positive_pairs_without_training_positive_rule": 298,
+  "scope": "actual matched Cell inputs; Metal floating inference; replay only",
+  "backpropagation": false,
+  "cpu_prepare_seconds": 0.16981787496479228,
+  "selection": "validation F0.5 only; chronological 60/20/20 Run split",
+  "selected": "alias_normalized_roles",
+  "variants": {
+    "calibration_only": {
+      "positive_weight": 1.0,
+      "regularizer": 10.0,
+      "threshold": 0.175,
+      "validation_f05": 0.32855939342881213,
+      "dimensions": 289,
+      "gpu_encode_first_seconds": 0.01495133398566395,
+      "ridge_search_seconds": 0.043208207993302494,
+      "gpu_fused_first_seconds": 0.00271162495482713,
+      "train": {
+        "pairs": 11474,
+        "positive_pairs": 197,
+        "tp": 176,
+        "fp": 75,
+        "fn": 21,
+        "precision": 0.701195219123506,
+        "recall": 0.8934010152284264,
+        "f2": 0.8469682386910491
+      },
+      "validation": {
+        "pairs": 4643,
+        "positive_pairs": 315,
+        "tp": 78,
+        "fp": 140,
+        "fn": 237,
+        "precision": 0.3577981651376147,
+        "recall": 0.24761904761904763,
+        "f2": 0.2638700947225981
+      },
+      "test": {
+        "pairs": 1409,
+        "positive_pairs": 6,
+        "tp": 6,
+        "fp": 29,
+        "fn": 0,
+        "precision": 0.17142857142857143,
+        "recall": 1.0,
+        "f2": 0.5084745762711864
+      },
+      "all": {
+        "pairs": 17526,
+        "positive_pairs": 518,
+        "tp": 260,
+        "fp": 244,
+        "fn": 258,
+        "precision": 0.5158730158730159,
+        "recall": 0.5019305019305019,
+        "f2": 0.5046583850931677
+      }
+    },
+    "typed_pair_interactions": {
+      "positive_weight": 1.0,
+      "regularizer": 10.0,
+      "threshold": 0.44999999999999996,
+      "validation_f05": 0.2,
+      "dimensions": 513,
+      "gpu_encode_first_seconds": 0.008099500031676143,
+      "ridge_search_seconds": 0.07879691699054092,
+      "gpu_fused_first_seconds": 0.002917375008109957,
+      "train": {
+        "pairs": 11474,
+        "positive_pairs": 197,
+        "tp": 178,
+        "fp": 0,
+        "fn": 19,
+        "precision": 1.0,
+        "recall": 0.9035532994923858,
+        "f2": 0.9213250517598344
+      },
+      "validation": {
+        "pairs": 4643,
+        "positive_pairs": 315,
+        "tp": 15,
+        "fp": 0,
+        "fn": 300,
+        "precision": 1.0,
+        "recall": 0.047619047619047616,
+        "f2": 0.058823529411764705
+      },
+      "test": {
+        "pairs": 1409,
+        "positive_pairs": 6,
+        "tp": 6,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f2": 1.0
+      },
+      "all": {
+        "pairs": 17526,
+        "positive_pairs": 518,
+        "tp": 199,
+        "fp": 0,
+        "fn": 319,
+        "precision": 1.0,
+        "recall": 0.3841698841698842,
+        "f2": 0.4381329810656099
+      }
+    },
+    "alias_normalized_roles": {
+      "positive_weight": 20.0,
+      "regularizer": 1000.0,
+      "threshold": 0.44999999999999996,
+      "validation_f05": 0.5102040816326531,
+      "dimensions": 513,
+      "gpu_encode_first_seconds": 0.0027937080012634397,
+      "ridge_search_seconds": 0.07490174996200949,
+      "gpu_fused_first_seconds": 0.0027645829832181334,
+      "train": {
+        "pairs": 11474,
+        "positive_pairs": 197,
+        "tp": 195,
+        "fp": 14,
+        "fn": 2,
+        "precision": 0.9330143540669856,
+        "recall": 0.9898477157360406,
+        "f2": 0.9779338014042126
+      },
+      "validation": {
+        "pairs": 4643,
+        "positive_pairs": 315,
+        "tp": 55,
+        "fp": 1,
+        "fn": 260,
+        "precision": 0.9821428571428571,
+        "recall": 0.1746031746031746,
+        "f2": 0.20896656534954408
+      },
+      "test": {
+        "pairs": 1409,
+        "positive_pairs": 6,
+        "tp": 6,
+        "fp": 10,
+        "fn": 0,
+        "precision": 0.375,
+        "recall": 1.0,
+        "f2": 0.75
+      },
+      "all": {
+        "pairs": 17526,
+        "positive_pairs": 518,
+        "tp": 256,
+        "fp": 25,
+        "fn": 262,
+        "precision": 0.9110320284697508,
+        "recall": 0.4942084942084942,
+        "f2": 0.5439864003399915
+      }
+    }
+  },
+  "program_sha256": "c9ce3a6fe289a86fe681592664e3148eec55b06b3c4d53bd8725de7ced3b949a",
+  "trace_sha256": "6d456379a02b1502578f61d019ae75ea35a4f0756a52f3e3419d11732575ca75",
+  "gpu_completed_bindings": 0
+}
