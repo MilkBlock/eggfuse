@@ -97,6 +97,7 @@ def main():
         w=saved['w'];coef=saved['coef'];prototypes=saved['prototypes'];pf=saved['prototype_families'];stop_coef=saved['stop_coef'] if 'stop_coef' in saved.files else None
         correction=saved['correction_coef'] if 'correction_coef' in saved.files else None
         direct=saved['direct_coef'] if 'direct_coef' in saved.files else None
+        direct_w=saved['direct_w'] if 'direct_w' in saved.files else w
     direct_mode=metadata.get('direct_mode','tanh')
     if direct_mode not in ('tanh','clip'):raise ValueError('unknown direct readout mode')
     if direct is not None and (stop_coef is None or correction is not None):raise ValueError('direct readout requires stop head and no correction')
@@ -109,13 +110,13 @@ def main():
     if stop_coef is not None:
         gs=mx.array(stop_coef);gstop=[mx.array(v) for v in stop_wiring]
     gbounds=mx.array(body_bounds)
-    if direct is not None:gd=mx.array(direct)
+    if direct is not None:gd=mx.array(direct);gdw=mx.array(direct_w)
     if correction is not None:grc=mx.array(correction)
     def one(s):
         a=attachment(s,gidx,gm,mx);x=features(s,gq,a,gw,mx,gr);out=x@gc
         score=out[:,-1] if stop_coef is None else (mx.concatenate([x,stop_features(s,*gstop,mx)],axis=1)@gs)[:,0]
         emit=score>=.5
-        candidate=s+out[:,:-1] if direct is None else decode_bounded(readout_features(s,gq,a,gw,gr,gbounds,gstop,mx)@gd,gbounds,mx,direct_mode)
+        candidate=s+out[:,:-1] if direct is None else decode_bounded(readout_features(s,gq,a,gdw,gr,gbounds,gstop,mx)@gd,gbounds,mx,direct_mode)
         if correction is not None:
             ca=attachment(candidate,gidx,gm,mx);cx=features(candidate,gq,ca,gw,mx,gr)
             candidate=candidate+mx.concatenate([cx,stop_features(candidate,*gstop,mx)],axis=1)@grc
@@ -139,7 +140,7 @@ def main():
         a=attachment(reference,indices,mix,np);x=features(reference,q,a,w,np,role);out=x@coef
         score=out[:,-1] if stop_coef is None else (np.concatenate([x,stop_features(reference,*stop_wiring,np)],axis=1)@stop_coef)[:,0]
         emit=score>=.5
-        candidate=reference+out[:,:-1] if direct is None else decode_bounded(readout_features(reference,q,a,w,role,body_bounds,stop_wiring,np)@direct,body_bounds,np,direct_mode)
+        candidate=reference+out[:,:-1] if direct is None else decode_bounded(readout_features(reference,q,a,direct_w,role,body_bounds,stop_wiring,np)@direct,body_bounds,np,direct_mode)
         if correction is not None:
             ca=attachment(candidate,indices,mix,np);cx=features(candidate,q,ca,w,np,role)
             candidate=candidate+np.concatenate([cx,stop_features(candidate,*stop_wiring,np)],axis=1)@correction

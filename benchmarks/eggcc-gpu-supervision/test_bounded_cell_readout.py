@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import mlx.core as mx
 from boundary_cell_ridge import D,B
-from bounded_cell_readout import normalize,preactivation,decode
+from bounded_cell_readout import normalize,preactivation,decode,readout_features
 
 
 class BoundedReadout(unittest.TestCase):
@@ -39,5 +39,13 @@ class BoundedReadout(unittest.TestCase):
         self.assertEqual(result[0,0],1.5);self.assertEqual(result[0,D],1)
         np.testing.assert_array_equal(np.array(decode(mx.array(raw),mx.array(bounds),mx,'clip')),result)
         with self.assertRaises(ValueError):decode(raw,bounds,np,'other')
+
+    def test_extended_projection_preserves_existing_feature_columns(self):
+        rng=np.random.default_rng(8);values=rng.normal(0,.1,(1,D+B)).astype(np.float32);q=rng.normal(0,.1,(1,D)).astype(np.float32);bounds=np.ones(1,np.float32)
+        w=rng.normal(0,.1,(6*D,3)).astype(np.float32);wide=np.concatenate([w,rng.normal(0,.1,(6*D,2)).astype(np.float32)],axis=1)
+        wiring=(np.ones((1,1),np.float32),np.zeros((1,1),np.int32),np.zeros((1,1),np.int32),np.zeros((1,1),np.float32))
+        a=readout_features(values,q,q,w,q,bounds,wiring,np);b=readout_features(values,q,q,wide,q,bounds,wiring,np)
+        np.testing.assert_allclose(a[:,:-8],b[:,:a.shape[1]-8],atol=1e-6);np.testing.assert_array_equal(a[:,-8:],b[:,-8:])
+        self.assertEqual(b.shape[1],a.shape[1]+2)
 
 if __name__=='__main__':unittest.main()

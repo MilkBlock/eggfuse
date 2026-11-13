@@ -17,7 +17,7 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);a=p.parse_args()
     mh=hashlib.sha256(a.manifest.read_bytes()).hexdigest();meta=json.loads(gzip.decompress(a.model.with_suffix('.json.gz').read_bytes()))
     if meta['manifest_sha256']!=mh or not meta['positioned_roles']:raise ValueError('model contract mismatch')
-    with np.load(a.model) as z:w=z['w']
+    with np.load(a.model) as z:w=z['direct_w'] if 'direct_w' in z.files else z['w']
     records,_=load_records(json.loads(a.manifest.read_text()));groups=defaultdict(list)
     for r in records:
         if r['split']=='validation':continue
