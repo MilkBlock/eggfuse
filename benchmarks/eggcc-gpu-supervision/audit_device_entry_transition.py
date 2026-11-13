@@ -9,10 +9,11 @@ from cell_token_successors import compile_catalog
 from lower_device_entries import lower,tensors
 from multi_entry_ridge import output_rows,template,encode,scalar
 from device_entry_transition import compile_features,step
+from device_entry_round import run_rounds
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--joint-rounds',action='store_true');a=p.parse_args()
     raw=read_bytes(a.trace);trace=json.loads(raw);recipe=trace['recipe']
     if not all(trace.get(k) is True for k in ('strict_run_graphs_equal','strict_audit_reference_equal','run_control_counts_equal')):raise ValueError('capture audit missing')
     if not mx.metal.is_available():raise RuntimeError('Metal required')
@@ -22,7 +23,7 @@ def main():
     for run in trace['runs']:
         for b in run['audit']['bindings']:
             if b['rhs']['completed'] and all('unavailable' not in s for s in b['rhs']['slots']):sources.setdefault(b['rule'],b)
-    lowered=lower(recipe,compile_catalog(recipe),source_slots=True);records=[]
+    lowered=lower(recipe,compile_catalog(recipe),source_slots=True);records=[];joint={}
     dev=lambda d:{k:mx.array(v) for k,v in d.items()}
     for entry in lowered['entries']:
         rid=entry['producer']
@@ -49,6 +50,9 @@ def main():
         roles,_=template(recipe['rules'][rid]);s['tokens'][0]=encode(rows,roles,'class-balanced')
         one=dict(lowered,entries=[entry]);plan=tensors(one,np.zeros((1,128,128)),np.zeros((1,128)));plan.pop('weights');plan.pop('bias')
         il,cl=compile_features(recipe,entry);dp,di,dc=map(dev,(plan,il,cl));stage=mx.array(entry['stage'])
+        if a.joint_rounds:
+            group=joint.setdefault((rid,entry['stage']),dict(state=s,blocks=[],entries=[]))
+            group['blocks'].append((dp,di,dc));group['entries'].append(entry)
         out,marks=mx.compile(lambda state:step(state,dp,di,dc,model,stage,mx))(dev(s));mx.eval(out,marks)
         admitted=bool(np.array(marks['admission']['accepted'])[0]);exact=True
         if admitted:
@@ -56,15 +60,34 @@ def main():
             exact=np.array_equal(np.array(out['keys'])[1],expected)
         records.append(dict(entry=entry['entry'],producer=rid,consumer=entry['consumer'],admitted=admitted,exact_projected_key=bool(exact),
                             finite=bool(np.isfinite(np.array(out['tokens'])).all()),transferred=bool(np.array(marks['admission']['transferred']).any())))
+    joint_records=[]
+    for (rid,stage_id),group in joint.items():
+        capacity=max(2,len(group['blocks'])+1);state={}
+        for key,value in group['state'].items():
+            pad=np.zeros((capacity-2,)+value.shape[1:],value.dtype)
+            if key in ('keys','slots','slot_roots'):pad.fill(-1)
+            state[key]=np.concatenate([value,pad],axis=0)
+        expected=set()
+        for entry in group['entries']:
+            expected.add(tuple([entry['consumer']]+[int(state['slots'][0,i]) if ok else -1 for i,ok in zip(entry['projection'],entry['projection_valid'])]))
+        expected.discard(tuple(state['keys'][0]))
+        blocks=group['blocks'];stage=mx.array(stage_id)
+        out,marks=mx.compile(lambda state:run_rounds(state,blocks,model,stage,2,mx))(dev(state));mx.eval(out,marks)
+        keys=np.array(out['keys']);present=np.array(out['present']);actual={tuple(k) for k in keys[present]};actual.discard(tuple(state['keys'][0]))
+        counts=np.array(marks['new_tokens']).tolist()
+        joint_records.append(dict(producer=rid,stage=stage_id,blocks=len(blocks),new_tokens=counts,needs_attention=np.array(marks['needs_attention']).tolist(),
+                                  pending_tokens=int((np.array(out['present']) & ~np.array(out['settled'])).sum()),exact_keys=actual==expected,
+                                  passed=actual==expected and counts==[len(expected),0]))
     result=dict(scope='One captured completed source per supported recipe Entry; GPU continuation, encoding, ridge and admission. Not autonomous Eggcc execution',
         trace_sha256=hashlib.sha256(raw).hexdigest(),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),
         lowered_entries=len(lowered['entries']),tested_entries=len(records),admitted=sum(r['admitted'] for r in records),
-        passed=bool(records) and all(r['admitted'] and r['exact_projected_key'] and r['finite'] and not r['transferred'] for r in records),records=records,
+        joint_rounds=a.joint_rounds,joint_records=joint_records,
+        passed=(not a.joint_rounds or (bool(joint_records) and all(r['passed'] for r in joint_records))) and bool(records) and all(r['admitted'] and r['exact_projected_key'] and r['finite'] and not r['transferred'] for r in records),records=records,
         limitations=['Source states captured from CPU and locally relabeled; no consumer match list supplied',
                      'One example per Entry is coverage probing, not complete matching or prediction accuracy',
                      'New token prediction is not proof of completed effects or ownership transfer',
                      'No multi-source query, cross-stage closure or whole-workload speed claim'])
-    a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:v for k,v in result.items() if k!='records'},indent=2))
+    a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:v for k,v in result.items() if k not in ('records','joint_records')},indent=2))
     if not result['passed']:raise SystemExit(1)
 
 

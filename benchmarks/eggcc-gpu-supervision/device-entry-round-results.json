@@ -1,0 +1,880 @@
+{
+  "scope": "One captured completed source per supported recipe Entry; GPU continuation, encoding, ridge and admission. Not autonomous Eggcc execution",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+  "lowered_entries": 157,
+  "tested_entries": 44,
+  "admitted": 44,
+  "joint_rounds": true,
+  "joint_records": [
+    {
+      "producer": 60,
+      "stage": 0,
+      "blocks": 2,
+      "new_tokens": [
+        2,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 2,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 100,
+      "stage": 0,
+      "blocks": 2,
+      "new_tokens": [
+        2,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 2,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 102,
+      "stage": 0,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 104,
+      "stage": 0,
+      "blocks": 2,
+      "new_tokens": [
+        2,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 2,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 107,
+      "stage": 0,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 115,
+      "stage": 0,
+      "blocks": 3,
+      "new_tokens": [
+        3,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 3,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 116,
+      "stage": 0,
+      "blocks": 2,
+      "new_tokens": [
+        2,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 2,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 118,
+      "stage": 0,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 119,
+      "stage": 0,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 120,
+      "stage": 0,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 121,
+      "stage": 0,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 122,
+      "stage": 0,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 124,
+      "stage": 0,
+      "blocks": 2,
+      "new_tokens": [
+        2,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 2,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 127,
+      "stage": 0,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 131,
+      "stage": 0,
+      "blocks": 3,
+      "new_tokens": [
+        3,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 3,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 139,
+      "stage": 0,
+      "blocks": 3,
+      "new_tokens": [
+        3,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 3,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 145,
+      "stage": 0,
+      "blocks": 3,
+      "new_tokens": [
+        3,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 3,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 265,
+      "stage": 0,
+      "blocks": 3,
+      "new_tokens": [
+        3,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 3,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 270,
+      "stage": 5,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 271,
+      "stage": 5,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 354,
+      "stage": 14,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 407,
+      "stage": 20,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 409,
+      "stage": 20,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 413,
+      "stage": 20,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 477,
+      "stage": 32,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 506,
+      "stage": 33,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 517,
+      "stage": 33,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 519,
+      "stage": 33,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    },
+    {
+      "producer": 530,
+      "stage": 33,
+      "blocks": 1,
+      "new_tokens": [
+        1,
+        0
+      ],
+      "needs_attention": [
+        true,
+        true
+      ],
+      "pending_tokens": 1,
+      "exact_keys": true,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "records": [
+    {
+      "entry": 181,
+      "producer": 60,
+      "consumer": 58,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 182,
+      "producer": 60,
+      "consumer": 145,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 185,
+      "producer": 100,
+      "consumer": 116,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 186,
+      "producer": 100,
+      "consumer": 151,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 190,
+      "producer": 102,
+      "consumer": 65,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 192,
+      "producer": 104,
+      "consumer": 58,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 193,
+      "producer": 104,
+      "consumer": 145,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 194,
+      "producer": 107,
+      "consumer": 55,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 215,
+      "producer": 115,
+      "consumer": 54,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 216,
+      "producer": 115,
+      "consumer": 63,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 217,
+      "producer": 115,
+      "consumer": 161,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 221,
+      "producer": 116,
+      "consumer": 100,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 222,
+      "producer": 116,
+      "consumer": 151,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 229,
+      "producer": 118,
+      "consumer": 64,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 230,
+      "producer": 119,
+      "consumer": 64,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 231,
+      "producer": 120,
+      "consumer": 64,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 232,
+      "producer": 121,
+      "consumer": 65,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 233,
+      "producer": 122,
+      "consumer": 65,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 235,
+      "producer": 124,
+      "consumer": 58,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 236,
+      "producer": 124,
+      "consumer": 145,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 237,
+      "producer": 127,
+      "consumer": 55,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 250,
+      "producer": 131,
+      "consumer": 50,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 251,
+      "producer": 131,
+      "consumer": 70,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 252,
+      "producer": 131,
+      "consumer": 86,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 263,
+      "producer": 139,
+      "consumer": 55,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 264,
+      "producer": 139,
+      "consumer": 58,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 265,
+      "producer": 139,
+      "consumer": 145,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 266,
+      "producer": 145,
+      "consumer": 55,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 267,
+      "producer": 145,
+      "consumer": 58,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 268,
+      "producer": 145,
+      "consumer": 139,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 324,
+      "producer": 265,
+      "consumer": 100,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 325,
+      "producer": 265,
+      "consumer": 116,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 326,
+      "producer": 265,
+      "consumer": 151,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 330,
+      "producer": 270,
+      "consumer": 270,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 332,
+      "producer": 271,
+      "consumer": 271,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 766,
+      "producer": 354,
+      "consumer": 352,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 792,
+      "producer": 407,
+      "consumer": 413,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 795,
+      "producer": 409,
+      "consumer": 413,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 799,
+      "producer": 413,
+      "consumer": 413,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 907,
+      "producer": 477,
+      "consumer": 477,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 913,
+      "producer": 506,
+      "consumer": 536,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 915,
+      "producer": 517,
+      "consumer": 536,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 916,
+      "producer": 519,
+      "consumer": 536,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    },
+    {
+      "entry": 929,
+      "producer": 530,
+      "consumer": 528,
+      "admitted": true,
+      "exact_projected_key": true,
+      "finite": true,
+      "transferred": false
+    }
+  ],
+  "limitations": [
+    "Source states captured from CPU and locally relabeled; no consumer match list supplied",
+    "One example per Entry is coverage probing, not complete matching or prediction accuracy",
+    "New token prediction is not proof of completed effects or ownership transfer",
+    "No multi-source query, cross-stage closure or whole-workload speed claim"
+  ]
+}

@@ -57,3 +57,41 @@ Eggcc execution. No native runtime or full-workload speed claim is made.
 
 Reproduce: `audit_device_entry_transition.py TRACE MODEL OUTPUT`; evidence is in
 `device-entry-transition-results.json` with trace/model hashes and per-Entry data.
+
+## Joint snapshot rounds
+
+`propose` now separates candidate generation from admission; `step` retains its
+single-block interface. `device_entry_round.run_round` calls all static Entry
+blocks against the same input state, concatenates candidates in block/source
+order, then performs one admission. Newly admitted tokens cannot become query
+inputs of later blocks in that same round. `run_rounds` compiles a fixed round
+budget with no intermediate CPU reads. This is a dataflow round, not a claim to
+implement all original source Run semantics or an unbounded GPU loop.
+
+Joint deduplication and ownership competition see every candidate block. Two
+competing successors cannot independently retire the same source. Coverage bits
+still come from the existing caller/compiler contract; actual lowering grants
+no ownership transfer. The static Python loop unrolls blocks; it does not branch
+on device values. Distinct input layouts still incur block-specific work, and
+concatenated proposal storage/pairwise dedup remain bounded prototype costs.
+
+The new GPU test generates two branches from one snapshot, admits a continuation
+only on the next round, and observes new-token counts [2, 1, 0]. It also tests
+cross-block duplicates, competing transfers, wrong round-budget assumptions and
+empty-catalog rejection. 65 mechanism tests pass.
+
+With `--joint-rounds`, the real source probe combines its 44 supported Entry
+examples into 29 source/stage groups (at most three Entry blocks per group).
+The first round produces 44 tokens total and the second produces zero new tokens;
+all projected keys agree with the compiled interface. The report preserves
+pending-token and attention counts. Zero new tokens is not a saturation claim:
+new consumers with unfinished effects remain pending. Source captures and local
+identity labels are still supplied by the CPU, and full multi-source matching,
+original source schedule, ordered effects and cross-stage closure remain absent.
+
+Reference Bake tip `51853f11` omits generated diagnostic apply receipts only
+through the generator's explicit provenance and no-reader proof; it does not
+eliminate query-marker publication or authorize skipping a ruleset. Similarly,
+this joint admission removes repeated per-block dedup/commit boundaries, but it
+does not eliminate required effect completion or build a replacement apply log.
+No native runtime or full-workload performance change is claimed.

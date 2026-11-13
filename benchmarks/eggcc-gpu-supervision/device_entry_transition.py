@@ -26,7 +26,7 @@ def compile_features(recipe,entry,channels=4):
         route=np.array([routes or [np.zeros(channels)]],np.float32),edge_valid=np.array([[True]*count or [False]]))
 
 
-def step(state,plan,input_layout,coefficient_layout,model,stage,xp):
+def propose(state,plan,input_layout,coefficient_layout,model,stage,xp):
     if plan['producer'].shape[0]!=1 or 'destination_projection' not in plan:
         raise ValueError('one source-slot Entry required per compiled block')
     n=state['tokens'].shape[0];width=input_layout['required'].shape[1]
@@ -54,5 +54,10 @@ def step(state,plan,input_layout,coefficient_layout,model,stage,xp):
     tokens,numeric=infer(state,request,model,xp,coefficient_layout)
     wanted=p['matched'];p['tokens']=tokens;p['matched']=wanted&numeric['ready']
     p['missing_witness']=p['missing_witness']|(wanted&~numeric['ready'])
+    return p,dict(encoding=encoding,numeric=numeric)
+
+
+def step(state,plan,input_layout,coefficient_layout,model,stage,xp):
+    p,marks=propose(state,plan,input_layout,coefficient_layout,model,stage,xp)
     out,admission=commit(state,p,xp)
-    return out,dict(admission=admission,encoding=encoding,numeric=numeric)
+    return out,dict(marks,admission=admission)
