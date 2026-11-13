@@ -750,6 +750,56 @@ fn fragment_loading_validates_routes_even_before_enabling_ownership() {
 }
 
 #[test]
+fn ownership_catalog_headers_each_bind_to_the_current_source() {
+    use eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest;
+    let p = program(STAGES);
+    let mut raw = p.artifact.clone();
+    let source = source_digest(&raw);
+    raw["ownership_witnesses"] = json!({"source":source,"recipes":[]});
+    raw["ownership_dual_sources"] = json!({"source":source,"schema":"dual-source-patterns/v1","patterns":[]});
+    let load = |mut raw: serde_json::Value| {
+        raw.as_object_mut().unwrap().remove("sha256");
+        raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+        Program::parse(raw).and_then(|mut p| { p.prepare_cell_ownership()?; Ok(p) })
+    };
+    load(raw.clone()).unwrap();
+    for (name, error) in [
+        ("ownership_fragments", "ownership fragments have a different source"),
+        ("ownership_dual_sources", "dual-source source/schema"),
+        ("ownership_witnesses", "constructor witness source mismatch"),
+    ] {
+        // A valid neighboring catalog must not vouch for this header. Also
+        // exercise catalogs alone, including lazy ownership preparation.
+        for alone in [false, true] {
+            let mut base = raw.clone();
+            if alone {
+                for other in ["ownership_fragments", "ownership_dual_sources", "ownership_witnesses"] {
+                    if other != name { base.as_object_mut().unwrap().remove(other); }
+                }
+            }
+            load(base.clone()).unwrap();
+            for invalid in [json!("stale"), json!(7), json!(null)] {
+                let mut changed = base.clone();
+                changed[name]["source"] = invalid;
+                assert!(load(changed).unwrap_err().contains(error), "{name}");
+            }
+            let mut missing = base;
+            missing[name].as_object_mut().unwrap().remove("source");
+            assert!(load(missing).unwrap_err().contains(error), "{name}");
+        }
+    }
+    // A second valid program must not reuse the first program's digest, even
+    // when all installed headers agree with each other.
+    let mut other = raw_program(&STAGES.replace("(N 0) (N 1)", "(N 7) (N 8)")).artifact.clone();
+    assert_ne!(source_digest(&other), source);
+    for name in ["ownership_fragments", "ownership_dual_sources", "ownership_witnesses"] {
+        other[name] = raw[name].clone();
+    }
+    assert!(load(other).unwrap_err().contains("ownership fragments have a different source"));
+    load(raw).unwrap();
+}
+
+#[test]
 fn different_entry_guards_share_identical_local_code() {
     let src = r#"
 (datatype E (N i64) (F E))

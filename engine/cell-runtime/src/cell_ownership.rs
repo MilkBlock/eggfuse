@@ -61,6 +61,26 @@ pub struct Marker {
     #[serde(skip)]
     pub program: Arc<PortProgram>,
 }
+/// Every ownership catalog selects code from the same immutable source. Check
+/// its identity once per Plan construction, without retaining a digest/cache in
+/// Program or trusting one catalog's header on behalf of another. Subcompilers
+/// still re-prove their typed wiring, schema and resource bounds.
+fn validate_catalog_sources(artifact: &J) -> Result<()> {
+    let mut source = None;
+    for (name, error) in [
+        ("ownership_fragments", "ownership fragments have a different source or schema"),
+        ("ownership_dual_sources", "dual-source source/schema"),
+        ("ownership_witnesses", "constructor witness source mismatch"),
+    ] {
+        if let Some(catalog) = artifact.get(name) {
+            let expected = source.get_or_insert_with(|| composition::source_digest(artifact));
+            if catalog["source"].as_str() != Some(expected.as_str()) {
+                return Err(error.into());
+            }
+        }
+    }
+    Ok(())
+}
 impl Plan {
     pub(crate) fn has_witness_routes(&self, rule:usize)->bool {
         self.witnesses.0.get(rule).is_some_and(|r|!r.is_empty())
@@ -101,6 +121,7 @@ impl Plan {
         rows.push(("ownership.routes", before - live_bytes()));
     }
     pub(crate) fn derive(p: &Program) -> Result<Self> {
+        validate_catalog_sources(&p.artifact)?;
         let tables = p
             .repair_ports
             .key_eq_columns

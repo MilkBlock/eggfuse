@@ -194,11 +194,9 @@ struct Recipe {
     rhs_sites: Vec<(usize, usize, u32)>,
 }
 impl Routes {
-    pub fn compile(p: &Program, plan: &Plan) -> Result<Self> {
+    pub(super) fn compile(p: &Program, plan: &Plan) -> Result<Self> {
         let Some(raw) = p.artifact.get("ownership_witnesses") else { return Ok(Self::default()); };
-        if raw["source"] != composition::source_digest(&p.artifact) {
-            return Err("constructor witness source mismatch".into());
-        }
+        // Source identity was checked by the enclosing ownership Plan.
         let recipes: Vec<Recipe> = serde_json::from_value(raw["recipes"].clone()).map_err(|e|e.to_string())?;
         if recipes.len() > 4096 { return Err("constructor witness catalog too large".into()); }
         let mut routes: Vec<Vec<Option<Operation>>> = vec![Vec::new(); p.rules.len()];

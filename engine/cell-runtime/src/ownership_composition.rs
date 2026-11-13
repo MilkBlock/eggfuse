@@ -339,9 +339,9 @@ impl Plan {
             .map(|(id, s)| ((**s).clone(), id))
             .collect();
         if let Some(raw) = p.artifact.get("ownership_fragments") {
-            if raw["schema"] != format.fragment_schema()
-                || raw["source"] != source_digest(&p.artifact)
-            {
+            // The enclosing ownership Plan already checked every catalog's
+            // source against one digest of this immutable artifact.
+            if raw["schema"] != format.fragment_schema() {
                 return Err("ownership fragments have a different source or schema".into());
             }
             let selected: Vec<Fragment> = serde_json::from_value(raw["fragments"].clone())
