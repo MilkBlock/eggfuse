@@ -344,3 +344,35 @@ collect these paths. Two saturation tests pass, preserving exports, snapshots an
 binding audits, checking relative source positions and rejecting partial/input-only
 paths. No runtime effect is skipped by this change. The next compilation step can
 now consume actual source positions instead of repeating a whole-component scan.
+
+## Installed-catalog witness-path replay
+
+The batch checker accepts `witness-trace` to observe the installed candidate while
+checking the saved per-Run graph, RHS and write digests. It records the full catalog
+trace alongside existing completion diagnostics; production execution is unchanged.
+`witness_path_results.py` joins paths to the exact candidate artifact and ranks
+observed constructor positions by applications. It also counts rule/shape groups
+with several paths, so selection ambiguity is visible rather than hidden by an
+arbitrary route choice. Counts include positions already handled by static aliases;
+they must not be interpreted as additional removable operations.
+
+The existing `complete_handoff` is the intended execution outlet: it validates a
+live actual receipt against current arguments and assigns its actual result. A
+shape-relative path can supply a candidate receipt, but cannot bypass that check
+without a compiler proof of operand correspondence. Shape programs share layouts
+across operators; rule tables and source code/operator compatibility must also be
+proved. Current trace lacks a compiled mapping from consumer query anchors to the
+selected component; reconstructing that by scanning components would defeat the
+intended takeover. This is the next missing compilation obligation.
+
+```sh
+target/debug/examples/batch_cell_learning check-passive out/cell-bake-owner-merge/batch owned-state witness-trace
+python3 benchmarks/cell-bake-owner-merge/witness_path_results.py out/cell-bake-owner-merge/batch/owned-state benchmarks/cell-bake-owner-merge/witness-path-results.json
+```
+
+The first witness replay completed all four Run and terminal checks, then failed
+writing checked.json with OS error 28 (StorageFull). That artifact is incomplete;
+no ranked-path results or successful end-to-end replay are claimed. Two completed
+local test executables were removed to reclaim build space; source files, saved
+traces and benchmark evidence were retained. A fresh replay/output validation is
+still required before using the new witness-path data for compilation.
