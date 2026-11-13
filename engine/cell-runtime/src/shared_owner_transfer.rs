@@ -1,5 +1,5 @@
-//! Opt-in physical replacement at an idle source Run boundary. Only frames in
-//! the same already checked composed component can share a backing owner.
+//! Opt-in physical replacement at an idle source Run boundary. Logical
+//! components stay independent even when small completed frames share arrays.
 use super::*;
 impl Graph {
     /// A completed source need not join a multi-frame storage owner to stop
@@ -31,29 +31,47 @@ impl Graph {
     /// Completed singleton components use the same inherited fact storage.
     /// A multi-frame history is not a prerequisite for compact lifecycle state.
     pub fn transfer_completed_owners(&mut self)->Result<usize> {
-        self.transfer_completed_storage(false, true)
+        self.transfer_completed_storage::<true>(false, true)
     }
     /// Experimental reuse of existing child storage inside a larger component.
     pub fn transfer_completed_owner_segments(&mut self)->Result<usize> {
-        self.transfer_completed_storage(true, true)
+        self.transfer_completed_storage::<false>(true, true)
     }
     /// Diagnostic ablation of singleton admission; all other storage logic is shared.
     pub fn transfer_completed_multi_owners(&mut self)->Result<usize> {
-        self.transfer_completed_storage(false, false)
+        self.transfer_completed_storage::<false>(false, false)
     }
-    fn transfer_completed_storage(&mut self,reuse_segments:bool,singletons:bool)->Result<usize> {
+    /// Same lifecycle admission, without sharing small singleton backing arrays.
+    pub fn transfer_completed_unpooled_owners(&mut self)->Result<usize> {
+        self.transfer_completed_storage::<false>(false, true)
+    }
+    fn transfer_completed_storage<const POOL:bool>(&mut self,reuse_segments:bool,singletons:bool)->Result<usize> {
         if self.active_rhs.is_some() || !self.ownership_settled() || !self.pending_unions.is_empty() || !self.dirty.is_empty() {
             return Err("completed owner transfer requires a settled Run boundary".into());
         }
         let Some(m)=self.ownership.as_ref() else {return Ok(0);};
-        let groups=m.composition.components.iter().flatten().map(|component| {
-            component.frames.iter().copied().filter(|id| {
+        let mut groups=Vec::new();let mut pending=Vec::new();let mut bytes=0;
+        for component in m.composition.components.iter().flatten() {
+            let ids=component.frames.iter().copied().filter(|id| {
                 self.cells.completed_meta(*id).is_some()
                     || self.cells.get(id).is_some_and(|c| c.completed && c.parent.is_none()
                         && !c.facts.is_empty() && c.values.is_unshared()
                         && c.facts.iter().all(|(&op,s)|s.owned && self.stable_node(FactRef{cell:*id,op}).is_some()))
-            }).collect::<Vec<_>>()
-        }).filter(|g|!g.is_empty() && (singletons || g.len()>1)).collect::<Vec<_>>();
+            }).collect::<Vec<_>>();
+            if ids.is_empty() || (!singletons && ids.len()==1) {continue;}
+            if POOL && ids.len()==1 && self.cells.completed_meta(ids[0]).is_none() {
+                // Bound source count and estimated array payload while collecting
+                // groups once. Sources retain independent restoration slices.
+                let c=self.cells.get(&ids[0]).unwrap();
+                let size=c.values.len()*std::mem::size_of::<(usize,Value)>()
+                    +c.facts.len()*std::mem::size_of::<crate::graph::fact_states::OwnedFact>();
+                if !pending.is_empty() && (pending.len()==16 || bytes+size>4096) {
+                    groups.push(std::mem::take(&mut pending));bytes=0;
+                }
+                pending.push(ids[0]);bytes+=size;
+            } else {groups.push(ids);}
+        }
+        if !pending.is_empty() {groups.push(pending);}
         let mut count=0;
         for ids in groups {
             let extending=ids.iter().any(|id|self.cells.completed_meta(*id).is_some());
@@ -85,13 +103,14 @@ impl Graph {
                 self.stats.shared_owner_slots_delegated+=removed as u64;
             }
             if extending {
-                let extension=if reuse_segments {
-                    self.cells.extend_completed_segments(&ids).map(|(added,reused)| {
-                        self.stats.shared_owner_segment_extensions+=1;
-                        self.stats.shared_owner_segments_reused+=reused as u64;
-                        (added,0,0,0)
-                    })
-                } else {self.cells.extend_completed(&ids)};
+                let flat=if reuse_segments {None} else {self.cells.extend_completed(&ids)};
+                // A physical slab may also contain unrelated live components.
+                // Never copy those siblings to grow this logical component.
+                let extension=flat.or_else(||self.cells.extend_completed_segments(&ids).map(|(added,reused)| {
+                    self.stats.shared_owner_segment_extensions+=1;
+                    self.stats.shared_owner_segments_reused+=reused as u64;
+                    (added,0,0,0)
+                }));
                 if let Some((added,merged,slots,facts))=extension {
                     count+=added;
                     self.stats.shared_owner_referenced_frames+=referenced as u64;

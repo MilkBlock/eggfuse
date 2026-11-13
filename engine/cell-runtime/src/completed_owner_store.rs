@@ -77,7 +77,7 @@ impl Cells {
         let frame=&self.completed.frames[self.completed_index(f.cell)?];
         self.completed.owners[frame.owner].facts.take(frame.facts.clone(),frame.meta.started_epoch,f.op)
     }
-    /// Called only for a checked completed component, at an idle Run boundary.
+    /// Called only for checked completed sources, at an idle Run boundary.
     /// Reject the whole group before moving any source frame.
     pub(crate) fn can_transfer_completed(&self,ids:&[u32])->bool {
         self.can_transfer_segment(ids,1)
@@ -279,6 +279,7 @@ impl Cells {
                 "component_retirement":self.completed.restorations[1],"representation":self.completed.restorations[2],
                 "scope":"restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"},
             "fact_storage_encoding":"stage-inherited rows with per-fact lifecycle exceptions",
+            "owner_grouping":"physical arrays may span logical components; source frames restore independently",
             "fact_storage_live_bytes":self.completed_live_fact_bytes(),
             "representation_fallbacks":self.completed.representation_fallbacks,"completed_frames":self.completed.frames.len(),
             "owners":epochs.len(),"cross_stage_owners":epochs.values().filter(|e|e.len()>1).count(),

@@ -136,6 +136,26 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature="storage-metrics")]
+    fn partial_physical_owner_extends_without_moving_unrelated_sources() {
+        let mut cells=super::super::arena::Cells::default();
+        for id in [10,20,30] {
+            cells.insert(id,cell());cells.insert_fact_state(FactRef{cell:id,op:7},state(3));
+        }
+        assert!(cells.transfer_completed(&[10,20]));
+        let sibling=cells.completed_facts(20).unwrap().as_ptr();
+        assert!(cells.extend_completed(&[10,30]).is_none());
+        assert_eq!(cells.extend_completed_segments(&[10,30]),Some((1,1)));
+        assert_eq!(cells.completed_facts(20).unwrap().as_ptr(),sibling);
+        let restored=cells.unseal_completed(10,RestoreCause::Representation).unwrap();
+        assert_eq!(restored.facts.len(),1);
+        assert_eq!(cells.completed_facts(20).unwrap().as_ptr(),sibling);
+        assert_eq!(cells.fact_state(FactRef{cell:30,op:7}).unwrap().epoch,3);
+        cells.remove_fact_state(FactRef{cell:20,op:7}).unwrap();cells.retire_completed(20);
+        assert_eq!(cells.fact_state(FactRef{cell:30,op:7}).unwrap().hash,9);
+    }
+
+    #[test]
     fn stable_fact_access_survives_owner_relocation_and_retirement() {
         let mut cells=super::super::arena::Cells::default();
         cells.insert(10,cell());cells.insert(20,cell());
