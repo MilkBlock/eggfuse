@@ -59,6 +59,7 @@ pub(super) struct Completed {
     pub frames:Vec<Frame>,
     pub owners:Vec<Owner>,
     pub representation_fallbacks:u64,
+    retired_slot_clears:u64,
     restorations:[Restoration;3],
     layouts:HashSet<Arc<Layout>>,
     layout_checks:u64,
@@ -314,6 +315,13 @@ impl Cells {
         let owner=&mut self.completed.owners[removed.owner];
         owner.frames-=1;
         if owner.frames==0 {owner.slots=Box::default();owner.facts=Facts::default();}
+        else {
+            // The source is unreachable, but unrelated siblings still own the
+            // array. Drop its heap values now without moving any sibling range.
+            let slots=&mut owner.slots[removed.slots()];
+            self.completed.retired_slot_clears+=slots.len() as u64;
+            slots.fill(Value::Int(0));
+        }
         self.completed.release_layout(removed.layout);
         true
     }
@@ -376,6 +384,7 @@ impl Cells {
             "stored_fact_entries":self.completed.owners.iter().map(|o|o.facts.len()).sum::<usize>(),
             "live_fact_entries":self.completed.owners.iter().map(|o|o.facts.live()).sum::<usize>(),
             "inherited_fact_lifecycles":self.completed.owners.iter().map(|o|o.facts.inherited()).sum::<usize>(),
+            "retired_slot_clears":self.completed.retired_slot_clears,
             "owner_header_slots":self.completed.owners.len()})
     }
     pub(crate) fn completed_live_fact_bytes(&self)->usize {
@@ -393,6 +402,26 @@ impl Cells {
 #[cfg(test)]
 mod stage_layout_tests {
     use super::*;
+    #[test]
+    fn retired_source_releases_heap_values_without_moving_live_siblings() {
+        let mut cells=Cells::default();
+        let text=Arc::new("retired source payload".repeat(1024));
+        let weak=Arc::downgrade(&text);
+        for (id,value) in [(1,Value::Text(text)),(2,Value::Int(19))] {
+            cells.insert(id,Cell{template:0,completed_prefix:0,symbolic_slots:false,
+                started_epoch:1,recipe_depth:0,completed:true,parent:None,
+                values:[(0,value)].into_iter().collect(),facts:Default::default()});
+        }
+        assert!(cells.transfer_completed(&[1,2]));
+        let sibling=cells.completed_slots(2).unwrap().as_ptr();
+        let array_bytes=cells.completed_storage().1;
+        assert!(weak.upgrade().is_some());
+        assert!(cells.retire_completed(1));
+        assert!(weak.upgrade().is_none(),"a live sibling must not retain a retired source's value payload");
+        assert_eq!(cells.completed_slots(2).unwrap().as_ptr(),sibling);
+        assert_eq!(cells.completed_value(2,0),Some(&Value::Int(19)));
+        assert_eq!(cells.completed_storage().1,array_bytes,"payload release does not relocate the shared array");
+    }
     #[test]
     fn shared_stage_preserves_source_epochs_depths_and_independent_restoration() {
         let mut cells=Cells::default();
