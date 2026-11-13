@@ -1,0 +1,84 @@
+{
+  "scope": "Standalone saved-boundary token prediction, not runtime takeover or semantic completion",
+  "provenance": {
+    "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-multi-entry-ridge/runtime-native.json": "d7cbf05cbf4e7739fda8cf05683d3b2266eef12f6572c3f5d841548b00427308",
+    "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-multi-entry-ridge/corpus.json": "2ad0c096cf90455369c0f393ddf281bb712f4eb1b6fb061c8bd967974183e881",
+    "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/benchmarks/cell-multi-entry-ridge/dataset.py": "8f3f1b76abe6392dbe0fb699c0c391dfb0529b1575ef186be2cdfb28f876dcc6",
+    "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/benchmarks/cell-multi-entry-ridge/train.py": "870cd70b4db3fb0b015f788174bea172d535ce8130d5fd1cb872e67ca8533bbf"
+  },
+  "cases": {
+    "train": 272,
+    "validation": 95,
+    "test": 102
+  },
+  "train_transitions": 1498,
+  "test_transitions": 595,
+  "conflicting_graph_and_ruleset_successors": 0,
+  "test_transition_states_seen_in_training": 450,
+  "selection": [
+    {
+      "regularization": 0.01,
+      "validation_rollout8_mse": 42983.484375
+    },
+    {
+      "regularization": 1.0,
+      "validation_rollout8_mse": 1.3377856016159058
+    },
+    {
+      "regularization": 100.0,
+      "validation_rollout8_mse": 0.0986691489815712
+    }
+  ],
+  "selected_regularization": 100.0,
+  "teacher_input_one_step_scaled_mse": 0.043074898421764374,
+  "unseen_state_one_step_scaled_mse": 0.1371886283159256,
+  "unseen_state_transitions": 145,
+  "persistence_one_step_scaled_mse": 0.3421952426433563,
+  "rollout": {
+    "1": {
+      "scaled_final_mse": 0.5925500392913818,
+      "nearest_known_completion_correct": 48,
+      "total": 102
+    },
+    "2": {
+      "scaled_final_mse": 0.22678731381893158,
+      "nearest_known_completion_correct": 83,
+      "total": 102
+    },
+    "4": {
+      "scaled_final_mse": 0.12262298911809921,
+      "nearest_known_completion_correct": 86,
+      "total": 102
+    },
+    "8": {
+      "scaled_final_mse": 0.1406075656414032,
+      "nearest_known_completion_correct": 80,
+      "total": 102
+    }
+  },
+  "gpu_rollout8": {
+    "scaled_final_mse": 0.14060752093791962,
+    "nearest_known_completion_correct": 80,
+    "total": 102
+  },
+  "cpu_gpu_max_abs_difference": 0.0001068115234375,
+  "exact_final_token_catalog_diagnostic": {
+    "scaled_final_mse": 0.0,
+    "nearest_known_completion_correct": 102,
+    "total": 102
+  },
+  "unseen_test_completions": 0,
+  "token_width": 105,
+  "random_feature_width": 256,
+  "backpropagation": false,
+  "intermediate_graph_decodes": 0,
+  "intermediate_teacher_substitutions": 0,
+  "limitations": [
+    "CPU recursive graph encoder; not live shared slots",
+    "Run transition model does not encode delta or watermark",
+    "nearest completion label is diagnostic, not proof or executable result",
+    "CPU residual completion not implemented",
+    "existing development split, not a fresh blind test",
+    "No runtime speedup claimed"
+  ]
+}
