@@ -64,7 +64,7 @@ def bound_state(values,body_bound,xp):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--rounds',type=int,default=4);p.add_argument('--bounded-state',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--rounds',type=int,default=4);p.add_argument('--bounded-state',action='store_true');p.add_argument('--case-output',type=Path);args=p.parse_args()
     if not 1<=args.rounds<=16:raise ValueError('rounds must be between 1 and 16')
     metadata=json.loads(gzip.decompress(args.model.with_suffix('.json.gz').read_bytes()))
     if metadata['manifest_sha256']!=hashlib.sha256(args.manifest.read_bytes()).hexdigest():raise ValueError('model manifest mismatch')
@@ -97,6 +97,8 @@ def main():
         w=saved['w'];coef=saved['coef'];prototypes=saved['prototypes'];pf=saved['prototype_families'];stop_coef=saved['stop_coef'] if 'stop_coef' in saved.files else None
         correction=saved['correction_coef'] if 'correction_coef' in saved.files else None
         direct=saved['direct_coef'] if 'direct_coef' in saved.files else None
+    direct_mode=metadata.get('direct_mode','tanh')
+    if direct_mode not in ('tanh','clip'):raise ValueError('unknown direct readout mode')
     if direct is not None and (stop_coef is None or correction is not None):raise ValueError('direct readout requires stop head and no correction')
     if correction is not None and stop_coef is None:raise ValueError('correction requires Bake stop head')
     body_bounds=np.array([state_bound(r['sample']['source'],r['rule']) for r in records],np.float32)
@@ -113,7 +115,7 @@ def main():
         a=attachment(s,gidx,gm,mx);x=features(s,gq,a,gw,mx,gr);out=x@gc
         score=out[:,-1] if stop_coef is None else (mx.concatenate([x,stop_features(s,*gstop,mx)],axis=1)@gs)[:,0]
         emit=score>=.5
-        candidate=s+out[:,:-1] if direct is None else decode_bounded(readout_features(s,gq,a,gw,gr,gbounds,gstop,mx)@gd,gbounds,mx)
+        candidate=s+out[:,:-1] if direct is None else decode_bounded(readout_features(s,gq,a,gw,gr,gbounds,gstop,mx)@gd,gbounds,mx,direct_mode)
         if correction is not None:
             ca=attachment(candidate,gidx,gm,mx);cx=features(candidate,gq,ca,gw,mx,gr)
             candidate=candidate+mx.concatenate([cx,stop_features(candidate,*gstop,mx)],axis=1)@grc
@@ -137,7 +139,7 @@ def main():
         a=attachment(reference,indices,mix,np);x=features(reference,q,a,w,np,role);out=x@coef
         score=out[:,-1] if stop_coef is None else (np.concatenate([x,stop_features(reference,*stop_wiring,np)],axis=1)@stop_coef)[:,0]
         emit=score>=.5
-        candidate=reference+out[:,:-1] if direct is None else decode_bounded(readout_features(reference,q,a,w,role,body_bounds,stop_wiring,np)@direct,body_bounds,np)
+        candidate=reference+out[:,:-1] if direct is None else decode_bounded(readout_features(reference,q,a,w,role,body_bounds,stop_wiring,np)@direct,body_bounds,np,direct_mode)
         if correction is not None:
             ca=attachment(candidate,indices,mix,np);cx=features(candidate,q,ca,w,np,role)
             candidate=candidate+np.concatenate([cx,stop_features(candidate,*stop_wiring,np)],axis=1)@correction
@@ -162,6 +164,9 @@ def main():
     result['correction']=metadata.get('correction')
     body_mse=np.mean((final[:,:D]-completed[:,:D])**2,axis=1)
     result['failure_diagnostics']=[dict(input_identity=r['identity'],family=r['family'],consumer=r['sample']['consumer'],observations=r['observations'],emissions=emissions[:,i].tolist(),exact_catalog_target=bool(correct[i]),body_rmse=float(np.sqrt(body_mse[i]))) for i,r in enumerate(records) if not stopped[i]]
+    if args.case_output:
+        case_rows=[dict(identity=r['identity'],family=r['family'],source_facts=len(r['sample']['source']),exact_target=bool(correct[i]),stopped=bool(stopped[i]),initially_novel=bool(novels[i]),emissions=emissions[:,i].tolist(),body_rmse=float(np.sqrt(body_mse[i]))) for i,r in enumerate(records)]
+        args.case_output.write_text(json.dumps(dict(model_sha256=result['model_sha256'],manifest_sha256=metadata['manifest_sha256'],rounds=args.rounds,numerical_audit=numeric,cases=case_rows),indent=2)+'\n')
     result['body_error_summary']=dict(median_rmse=float(np.median(np.sqrt(body_mse))),max_rmse=float(np.sqrt(body_mse.max())),active_requests_squared_error_fraction=float(body_mse[~stopped].sum()/max(float(body_mse.sum()),1e-30)))
     args.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
     if not numeric['passed'] or invalid_decode.any():raise SystemExit(1)

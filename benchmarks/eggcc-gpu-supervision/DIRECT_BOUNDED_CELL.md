@@ -80,3 +80,51 @@ and evaluate decoded validation error rather than relying only on preactivation
 loss. The current comparison does not prove which design choice lost the 42
 successes. Full successor changes, growing token sets, native identity and CPU
 supervision remain separate obligations.
+
+## Direct-coordinate loss ablation
+
+`fit_bounded_cell.py --readout clip` retains the same features, initial/predicted/
+completed training examples, fixed random projection, data partitions and emission
+head. Its labels are normalized target coordinates themselves, rather than their
+atanh. The output uses range projection instead of tanh. This compares the
+training-target/output pair; it does not isolate target weighting from output
+nonlinearity. Regularization is still selected on validation only.
+
+Both modes stay available; old model metadata defaults to tanh. Optional
+`corpus_repeat_probe.py --case-output CASES.json` writes final per-input audit
+records, including correctness, stopping, full emission sequence and body RMSE.
+The records contain model/manifest hashes and the numerical audit verdict. They
+are diagnostics, not input to fitting or a substitute for the full result.
+
+```sh
+$PYTHON benchmarks/eggcc-gpu-supervision/fit_bounded_cell.py MANIFEST BASE.npz CLIP.npz CLIP_FIT.json --readout clip
+$PYTHON benchmarks/eggcc-gpu-supervision/corpus_repeat_probe.py MANIFEST CLIP.npz CLIP_PROBE.json --rounds 16 --case-output CLIP_CASES.json
+```
+
+### Paired result
+
+| 16-round metric / 850 inputs | atanh target + tanh | direct target + projection |
+|---|---:|---:|
+| Exact target and stopped | 775 | 790 |
+| Final active requests | 6 | 4 |
+| Aggregate body RMSE | 0.7340 | 0.9827 |
+| Median per-input body RMSE | 0.05905 | 0.05392 |
+| Numerical audit | pass | pass |
+| f64 decoder disagreements | 0 | 0 |
+
+Validation selects alpha 0.1 for the direct-coordinate fit versus 1.0 for the
+atanh fit. Both use the same regularization candidates. Their validation losses
+are measured in different target spaces and are not directly comparable.
+
+Paired identities show 770 successes shared, 20 gained by the projected readout,
+5 lost, and 55 failing both. Therefore the net gain of 15 is not a uniform
+improvement. Aggregate continuous error worsens despite improved candidate
+success and median error. Neither is a full completion runtime, and the direct
+variant still falls short of the earlier 817 correct-and-stopped diagnostic.
+The earlier clipped residual fails the numerical audit, so it is not a valid
+stable alternative either.
+
+`direct-readout-comparison.json` preserves both complete probes, changed-input
+identities and hashes of the full external case audits. The tanh run is repeated
+with case audit enabled, and reproduces its previous aggregate results. There
+are 44 passing related unit tests. No acceptance tolerance or test split changed.

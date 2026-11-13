@@ -33,4 +33,11 @@ class BoundedReadout(unittest.TestCase):
         target=np.zeros((1,D+B),np.float32);target[0,D]=1.1
         with self.assertRaises(ValueError):preactivation(target,np.array([1],np.float32))
 
+    def test_clip_mode_and_unknown_mode(self):
+        bounds=np.array([2],np.float32);raw=np.full((1,D+B),.75,np.float32);raw[0,D]=3
+        result=decode(raw,bounds,np,'clip')
+        self.assertEqual(result[0,0],1.5);self.assertEqual(result[0,D],1)
+        np.testing.assert_array_equal(np.array(decode(mx.array(raw),mx.array(bounds),mx,'clip')),result)
+        with self.assertRaises(ValueError):decode(raw,bounds,np,'other')
+
 if __name__=='__main__':unittest.main()

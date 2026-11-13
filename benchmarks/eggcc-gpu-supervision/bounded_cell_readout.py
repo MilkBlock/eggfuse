@@ -21,6 +21,7 @@ def preactivation(target,bounds):
     return np.arctanh(np.clip(unit,-1+1e-4,1-1e-4)).astype(np.float32)
 
 
-def decode(raw,bounds,xp):
-    unit=xp.tanh(raw)
+def decode(raw,bounds,xp,mode='tanh'):
+    if mode not in ('tanh','clip'):raise ValueError('unknown bounded readout')
+    unit=xp.tanh(raw) if mode=='tanh' else xp.clip(raw,-1,1)
     return xp.concatenate([unit[:,:D]*bounds[:,None],unit[:,D:]],axis=1)
