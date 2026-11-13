@@ -22,14 +22,16 @@ read = lambda path: json.loads(path.read_text())
 sha = runpy.run_path(str(ROOT / 'benchmarks/cell-bake-full-merge/check.py'))['sha']
 
 
-def check(accepted, original_audit, program, candidate_audit, output):
+def check(accepted, original_audit, program, candidate_audit, output, control_program=None):
     lease = quick['jobs'].current_lease()
     assert __debug__ and lease and lease['kind'] == 'compute'
     config = read(accepted / 'manifest.json')
     lane = config['lanes']['ray']
-    original = Path(lane['program'])
+    original = control_program or Path(lane['program'])
     a, b = read(original), read(program)
     metadata = {'sha256', 'ownership_fragments', 'ownership_markers', 'ownership_witnesses'}
+    reference_source = read(Path(lane['program']))
+    assert {k:v for k,v in a.items() if k not in metadata} == {k:v for k,v in reference_source.items() if k not in metadata}
     assert {k:v for k,v in a.items() if k not in metadata} == {k:v for k,v in b.items() if k not in metadata}
     prefixes = [read(p / 'control.json') for p in (original_audit, candidate_audit)]
     for raw, prefix, directory in zip((a, b), prefixes, (original_audit, candidate_audit)):
@@ -79,7 +81,7 @@ def check(accepted, original_audit, program, candidate_audit, output):
     (output / 'validation.json').write_text(json.dumps(result, indent=2)+'\n')
 
 
-def measure(validated, output, repeats):
+def measure(validated, output, repeats, original_validated=None):
     lease = quick['jobs'].current_lease()
     assert __debug__ and lease and lease['kind'] == 'timing' and lease['guard'] == 'known'
     assert repeats > 0
@@ -89,10 +91,18 @@ def measure(validated, output, repeats):
     assert sha(binary) == proof['runtime_sha256']
     output.mkdir(exist_ok=False)
     result = dict(scope='same-binary four-worker Raytrace catalog; differential contract, not native proof',
-        order_policy='entire control then entire candidate; never interleaved', scheduler=lease,
+        order_policy='optional entire original, entire control, entire candidate; never interleaved', scheduler=lease,
         observations=[], lanes={}, validation_sha256=sha(validated / 'validation.json'))
-    for name in ('control', 'candidate'):
-        lane = proof['lanes'][name]
+    lanes = [(name, validated, name, proof) for name in ('control', 'candidate')]
+    if original_validated is not None:
+        original = read(original_validated / 'validation.json')
+        assert original['status'] == 'pass' and original['runtime_sha256'] == proof['runtime_sha256']
+        assert original['semantic_reference'] == proof['semantic_reference']
+        assert original['lanes']['control']['args'] == proof['lanes']['control']['args']
+        lanes.insert(0, ('original', original_validated, 'control', original))
+        result['original_validation_sha256'] = sha(original_validated / 'validation.json')
+    for name, reference_root, reference_name, reference in lanes:
+        lane = reference['lanes'][reference_name]
         assert sha(Path(lane['program'])) == lane['program_file_sha256']
         group = output / name
         quick['guard'](result, output, 'before-group', name, 'ray')
@@ -102,7 +112,7 @@ def measure(validated, output, repeats):
         raw = read(group / 'samples.json')
         assert raw['semantic_reference'] == proof['semantic_reference']
         assert all(row['lanes'] == [name] for row in raw['execution_order'])
-        report = read(validated / name / 'report.json')
+        report = read(reference_root / reference_name / 'report.json')
         data = raw['lanes'][name]
         for row in data['warmup_samples'] + data['samples']:
             assert all(row['stats'][k] == report['stats'][k] for k in EFFECTS)
@@ -112,6 +122,9 @@ def measure(validated, output, repeats):
         quick['guard'](result, output, 'after-group', name, 'ray')
     a,b = [result['lanes'][n]['medians']['inference_seconds'] for n in ('control','candidate')]
     result['inference_change_percent'] = (b/a-1)*100
+    if original_validated is not None:
+        original = result['lanes']['original']['medians']['inference_seconds']
+        result['inference_change_from_original_percent'] = (b/original-1)*100
     result['measurement_status'] = 'completed-with-boundary-guards'
     (output / 'result.json').write_text(json.dumps(result,indent=2)+'\n')
     print(f'Raytrace: {a:.6f} -> {b:.6f} ({result["inference_change_percent"]:+.2f}%)')
@@ -123,10 +136,14 @@ if __name__ == '__main__':
     check_parser = sub.add_parser('check')
     for name in ('accepted','original_audit','program','candidate_audit','output'):
         check_parser.add_argument(name,type=Path)
+    check_parser.add_argument('--control-program',type=Path,
+        help='compare an already learned catalog, still bound to the unchanged accepted source')
     timing_parser = sub.add_parser('time')
     for name in ('validated','output'):
         timing_parser.add_argument(name,type=Path)
     timing_parser.add_argument('--repeats',type=int,default=3)
+    timing_parser.add_argument('--original-validated',type=Path,
+        help='also time the original catalog from an earlier validated same-runtime pair, as a whole first lane')
     args = vars(parser.parse_args())
     action = check if args.pop('command') == 'check' else measure
     action(**args)
