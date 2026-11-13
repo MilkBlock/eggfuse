@@ -65,7 +65,7 @@ pub(in crate::graph) struct Read<'a> {
     plan: &'a Plan,
     frames: &'a composition::Frames,
     components: crate::read_epoch::SlotsRead<'a, Option<composition::Component>>,
-    shapes: &'a [Option<Arc<composition::Shape>>],
+    shapes: &'a [Arc<composition::Shape>],
     boundaries: &'a HashMap<u64, crate::tiny_set::TinySet<Signal>>,
     classes: Option<&'a query_classes::Plan>,
     parents: &'a Parents,
@@ -121,7 +121,7 @@ impl Read<'_> {
         let frame = self.frames.get(&cell)?;
         let local = *self.plan.code_programs[frame.code].native.get(&slot)?;
         let component = self.components.get(frame.component as usize)?.as_ref()?;
-        let shape = self.shapes[component.shape].as_ref()?;
+        let shape = self.shapes[component.shape].as_ref();
         let symbol = shape.ports[frame.ordinal][local];
         let bound = component.signals[symbol]?;
         if bound != id {
@@ -185,7 +185,7 @@ impl Read<'_> {
             w.signal_visits += 1;
             let component = self.components.get(signal.component as usize).and_then(Option::as_ref)
                 .ok_or("expired query component")?;
-            let shape = self.shapes[component.shape].as_ref().ok_or("missing query shape")?;
+            let shape = self.shapes.get(component.shape).ok_or("missing query shape")?;
             let uses = composition::queries::FieldUses::new(component, shape, self.plan, signal.symbol, column);
             for position in 0..uses.len() {
                 w.slice_steps += 1; w.column_checks += u64::from(!uses.indexed());

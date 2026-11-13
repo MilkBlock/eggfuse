@@ -2,17 +2,19 @@
 //! static wiring without merging owners or retaining instance identities.
 use super::*;
 #[path="ownership_join_plan.rs"]
-mod plan;
+pub(in crate::graph::cell_ownership) mod plan;
+#[path="ownership_join_runtime.rs"]
+mod runtime;
 
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-pub(super) struct Pattern {
-    rule: usize,
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub(in crate::graph::cell_ownership) struct Pattern {
+    pub(in crate::graph::cell_ownership) rule: usize,
     // Component order is first occurrence in query Entry order, not allocation ID.
-    components: Vec<(usize, Vec<usize>)>,
+    pub(in crate::graph::cell_ownership) components: Vec<(usize, Vec<usize>)>,
     // Entry, component ordinal, source-frame ordinal, fact operation.
-    anchors: Vec<(usize, usize, usize, u32)>,
+    pub(in crate::graph::cell_ownership) anchors: Vec<(usize, usize, usize, u32)>,
     // Matched query slot -> (component ordinal, shared symbol).
-    shared_slots: Vec<(usize, Vec<(usize, usize)>)>,
+    pub(in crate::graph::cell_ownership) shared_slots: Vec<(usize, Vec<(usize, usize)>)>,
 }
 #[derive(Default, Serialize)]
 struct Counts { applications: u64, cross_epoch_applications: u64 }
@@ -52,7 +54,7 @@ impl Graph {
             if self.cells.fact_state(*f).is_none_or(|s|!s.owned || s.hidden) {continue;}
             let Some(frame)=m.composition.frames.get(&f.cell) else {continue;};
             let component=m.composition.components[frame.component as usize].as_ref().unwrap();
-            let shape=m.composition.shapes[component.shape].as_ref().unwrap();
+            let shape = &m.composition.shapes[component.shape];
             let ordinal=if let Some(i)=ids.iter().position(|&id|id==frame.component) {i} else {
                 let i=ids.len();ids.push(frame.component);
                 pattern.components.push((component.shape,component.frames.iter().map(|id|m.composition.frames[id].code).collect()));i

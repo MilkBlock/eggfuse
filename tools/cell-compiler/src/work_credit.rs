@@ -588,6 +588,15 @@ impl Work {
                 else {report["local_union_cells"]["stats"][field].as_u64().ok_or_else(||format!("missing local completion work {field}"))?};
             work.insert(key, value);
         }
+        let dual=match report["cell_ownership"].get("dual_source") {
+            None=>false,
+            Some(J::String(v)) if v=="matched-takeover/v1"=>true,
+            _=>return Err("unknown dual-source work".into()),
+        };
+        for field in ["dual_route_probes","dual_candidates","dual_symbol_checks","dual_source_moves","dual_field_moves","dual_pending_skips"] {
+            let value=if dual {report["cell_ownership"]["stats"][field].as_u64().ok_or("missing dual-source work")?} else {0};
+            work.insert(format!("cell_ownership/stats/{field}"),value);
+        }
         let result_entries=match report["cell_ownership"].get("result_entries") {
             None=>false,
             Some(J::String(v)) if v=="completed-rhs/v1"=>true,
@@ -754,6 +763,12 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     assert_eq!(work.savings(&Work::read(&result_entry).unwrap()).0,-1);
     result_entry["cell_ownership"]["stats"]["composition_result_writes"]=J::Null;
     assert!(Work::read(&result_entry).is_err());
+
+    let mut dual=report.clone();
+    dual["cell_ownership"]["stats"]["dual_source_moves"]=json!(report["cell_ownership"]["stats"]["dual_source_moves"].as_u64().unwrap()+1);
+    assert_eq!(work.savings(&Work::read(&dual).unwrap()).0,-1);
+    dual["cell_ownership"]["stats"]["dual_source_moves"]=J::Null;
+    assert!(Work::read(&dual).is_err());
 
     // A current report must charge the new paths and reject missing evidence.
     for (group, fields) in [

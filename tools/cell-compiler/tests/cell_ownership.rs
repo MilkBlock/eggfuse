@@ -2109,3 +2109,76 @@ fn multi_source_trace_groups_actual_matches_without_instance_identities() {
         }
     }
 }
+
+#[test]
+fn dual_source_takeover_retires_bindings_and_keeps_ports_through_later_union() {
+    let src=r#"
+        (datatype E (N i64) (F E) (G E) (H E))
+        (N 0) (N 1)
+        (ruleset f) (ruleset g) (ruleset h) (ruleset u) (ruleset d)
+        (rule ((= x (N n))) ((F x)) :ruleset f)
+        (rule ((= x (N n))) ((G x)) :ruleset g)
+        (rule ((= a (F x)) (= b (G x))) ((H x)) :ruleset h)
+        (rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset u)
+        (rule ((= x (N 0))) ((delete (F x))) :ruleset d)
+        (run f 1) (run g 1) (run h 1) (run d 1) (run u 1) (run h 1)
+    "#;
+    use eggfuse_cell_runtime::program::{Op,Call};
+    let learned=program(src);
+    let h=learned.rules.iter().position(|r|learned.templates[r.template].ops.iter().any(|op|
+        matches!(op,Op::Let(_,Call::Table(t),_) if learned.tables[*t].name=="H"))).unwrap();
+    let mut raw=learned.artifact.clone();
+    let suffixes=raw["ownership_fragments"]["fragments"].as_array().unwrap().iter()
+        .filter(|f|f["hops"].as_array().unwrap().len()==1 && f["hops"][0]["rule"]==h)
+        .cloned().collect::<Vec<_>>();
+    assert!(!suffixes.is_empty(),"the control must already know the H suffix");
+    raw["ownership_fragments"]["fragments"]=json!(suffixes);
+    raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let mut observed=Graph::new_with_cell_ownership(Program::parse(raw.clone()).unwrap()).unwrap();
+    observed.trace_ownership_catalog(8).unwrap();
+    let mut observed=Executor::new(observed,true);observed.execute().unwrap();
+    let trace=observed.graph.ownership_catalog_trace().unwrap();
+    let patterns=trace["multi_source"]["patterns"].as_array().unwrap().iter().filter(|r|r["pattern"]["components"].as_array().unwrap().iter().all(|c|c[1].as_array().unwrap().len()==1)).map(|r|r["pattern"].clone()).collect::<Vec<_>>();
+    assert_eq!(patterns.len(),1);
+    raw["ownership_fragments"]["query_classes"]=json!(true);
+    raw.as_object_mut().unwrap().remove("ownership_markers");
+    let mut plain=raw.clone();plain.as_object_mut().unwrap().remove("sha256");
+    plain["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&plain).into();
+    raw["ownership_dual_sources"]=json!({"schema":"dual-source-patterns/v1",
+        "source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),"patterns":patterns});
+    raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    // The serialized checked marker must include the installed rule activation,
+    // and re-derive it from patterns rather than trusting cached active flags.
+    let certified=Graph::new_with_cell_ownership(Program::parse(raw.clone()).unwrap()).unwrap();
+    raw["ownership_markers"]=certified.program.cell_ownership.artifact(&certified.program);
+    raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let make=|raw,projected,workers| {
+        let mut g=Graph::new_with_local_congruence(Program::parse(raw).unwrap()).unwrap();
+        g.use_port_domains_only().unwrap();
+        if projected {g.use_template_stable_fields().unwrap();}
+        let mut e=Executor::new(g,true);
+        if workers>0 {e.use_query_workers(workers,1).unwrap();}
+        e
+    };
+    for (projected,workers) in [(false,0),(true,2)] {
+    let mut control=make(plain.clone(),projected,workers);let mut target=make(raw.clone(),projected,workers);
+    control.execute_until(Some(2)).unwrap();target.execute_until(Some(2)).unwrap();
+    let ftable=target.graph.program.tables.iter().position(|t|t.name=="G").unwrap();
+    let eggfuse_cell_runtime::graph::Dependency::Fact(f)=target.graph.witnesses(ftable)[0] else {panic!("fact")};
+    let port=target.graph.fact_port(f,0).unwrap();let before=target.graph.read_port(port).unwrap();
+    control.execute_until(Some(3)).unwrap();target.execute_until(Some(3)).unwrap();
+    assert_eq!(target.graph.read_port(port).unwrap(),before);
+    assert_eq!(target.graph.fact_port(f,0),Some(port));
+    let a=control.graph.ownership_report();let b=target.graph.ownership_report();
+    assert!(b["stats"]["dual_admissions"].as_u64().unwrap()>0,"{b}");
+    assert!(b["stats"]["dual_bindings_retired"].as_u64().unwrap()>0);
+    assert!(a["stats"]["composition_requests"].as_u64().unwrap()>0);
+    assert_eq!(b["stats"]["composition_requests"],a["stats"]["composition_requests"],"joining must retain the old H suffix instead of allocating it independently");
+    assert!(b["stats"]["signal_bindings_live"].as_u64().unwrap()<a["stats"]["signal_bindings_live"].as_u64().unwrap());
+    assert!(b["stats"]["components_live"].as_u64().unwrap()<a["stats"]["components_live"].as_u64().unwrap());
+    control.execute().unwrap();target.execute().unwrap();
+    assert_eq!(control.snapshots,target.snapshots);
+    assert_eq!(control.binding_audit,target.binding_audit);
+    assert_eq!(control.graph.export().unwrap(),target.graph.export().unwrap());
+    }
+}

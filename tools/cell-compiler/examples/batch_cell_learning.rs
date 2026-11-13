@@ -29,6 +29,27 @@ fn main()->Result<()> {
     if a[0]=="learn-results" {
         if a.len()!=4 {return Err("learn-results ROOT SEED_VARIANT OUTPUT_VARIANT".into());}
         result_entries::run(Path::new(&a[1]),&a[2],&a[3])?;
+    } else if a[0]=="apply-dual" {
+        if a.len()!=4 {return Err("apply-dual ROOT OBSERVATION_VARIANT OUTPUT_VARIANT".into());}
+        if a[2]==a[3] {return Err("dual-source output must differ from observation".into());}
+        let root=Path::new(&a[1]);
+        for name in ["fact","loopfact","sum-bits","dot-product"] {
+            let input=root.join(&a[2]).join(name);let output=root.join(&a[3]).join(name);
+            let mut raw=read(input.join("candidate.json"))?;
+            let compiled=read(input.join("compiled-joins.json"))?;
+            if compiled["source_program"]!=raw["sha256"] {return Err("dual-source seed identity".into());}
+            let patterns=compiled["candidates"].as_array().ok_or("compiled candidates")?.iter()
+                .filter(|r|r["observed"]["applications"].as_u64().unwrap_or(0)>=2)
+                .map(|r|r["compiled"]["pattern"].clone()).collect::<Vec<_>>();
+            raw["ownership_dual_sources"]=json!({"schema":"dual-source-patterns/v1",
+                "source":source_digest(&raw),"patterns":patterns});
+            raw.as_object_mut().unwrap().remove("ownership_markers");
+            raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=artifact_digest(&raw).into();
+            let _checked=executor(raw.clone())?;
+            fs::create_dir_all(&output)?;write(output.join("candidate.json"),&raw)?;
+            fs::copy(input.join("selection.json"),output.join("selection.json"))?;
+            eprintln!("installed {name}: {} repeated dual-source patterns",patterns.len());
+        }
     } else if a[0]=="compile-joins" {
         if a.len()!=3 {return Err("compile-joins ROOT VARIANT".into());}
         let root=Path::new(&a[1]).join(&a[2]);

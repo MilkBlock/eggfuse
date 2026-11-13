@@ -12,7 +12,7 @@ mod saturation;
 #[path = "ownership_witness_plan.rs"]
 mod witness_plan;
 #[path = "ownership_join_trace.rs"]
-mod join_trace;
+pub(super) mod join_trace;
 
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 pub struct Source {
@@ -124,7 +124,15 @@ pub struct Plan {
     pub active_rules: Vec<bool>,
     pub result_rules: Vec<bool>,
     #[serde(skip)]
-    pub shapes: Vec<Arc<Shape>>,
+    pub(super) joins: Vec<Arc<join_trace::plan::Compiled>>,
+    #[serde(skip)]
+    pub(super) join_rules: Vec<join_trace::plan::RuleRoutes>,
+    #[serde(skip)]
+    pub(super) join_rejected:usize,
+    #[serde(skip)]
+    // One immutable directory shared by compiled plans, Graphs and readers.
+    // Only exploratory training appends through copy-on-write.
+    pub shapes: Arc<Vec<Arc<Shape>>>,
     /// Re-derived from checked wiring, never trusted from a profile.
     #[serde(skip)]
     pub conditions: Vec<Arc<conditions::Plan>>,
@@ -141,7 +149,7 @@ pub struct Plan {
 pub fn source_digest(raw: &J) -> String {
     crate::checksum::artifact_digest_excluding_root(
         raw,
-        &["sha256", "ownership_markers", "ownership_fragments", "ownership_witnesses"],
+        &["sha256", "ownership_markers", "ownership_fragments", "ownership_witnesses", "ownership_dual_sources"],
     )
 }
 /// A bounded training/catalog policy, never evidence for an equality.
@@ -238,6 +246,8 @@ impl Plan {
         let before = live_bytes();
         drop(self.active_rules);
         drop(self.result_rules);
+        drop(self.joins);
+        drop(self.join_rules);
         rows.push(("composition.active_rules", before - live_bytes()));
         let before = live_bytes();
         drop(self.shapes);
@@ -307,11 +317,12 @@ impl Plan {
             queries: vec![],
             active_rules: vec![false; p.rules.len()],
             result_rules: vec![false; p.rules.len()],
-            shapes: programs
+            joins: vec![],join_rules:vec![],join_rejected:0,
+            shapes: Arc::new(programs
                 .iter()
                 .enumerate()
                 .map(|(id, p)| Arc::new(Shape::initial(id, p)))
-                .collect(),
+                .collect()),
             fragments: (0..programs.len())
                 .map(|root| Fragment { root, hops: vec![] })
                 .collect(),
@@ -371,7 +382,7 @@ impl Plan {
                         } else {
                             let id = plan.shapes.len();
                             intern.insert(code.clone(), id);
-                            plan.shapes.push(Arc::new(code));
+                            Arc::make_mut(&mut plan.shapes).push(Arc::new(code));
                             plan.fragments.push(prefix);
                             id
                         };
@@ -595,7 +606,9 @@ pub(super) struct Runtime {
     // Coordinator-only lifetime metadata. Guards never consult these counts.
     pub live_facts: Vec<usize>,
     pub frames: Frames,
-    pub shapes: Arc<Vec<Option<Arc<Shape>>>>,
+    // One immutable directory shared by compiled plans, Graphs and readers.
+    // Only exploratory training appends through copy-on-write.
+    pub shapes: Arc<Vec<Arc<Shape>>>,
     pub learned_transitions: HashMap<Key, usize>,
     pub training: Option<Training>,
     pub catalog_trace: Option<Box<CatalogTrace>>,
@@ -610,13 +623,13 @@ impl Runtime {
         let shape = self.components[frame.component as usize].as_ref().unwrap().shape;
         ports::ComponentPort {
             component: frame.component,
-            symbol: self.shapes[shape].as_ref().unwrap().ports[frame.ordinal][local],
+            symbol: self.shapes[shape].ports[frame.ordinal][local],
         }
     }
     pub(super) fn signal(&self, plan: &super::Plan, component: u32, symbol: usize) -> Signal {
         let class = plan.query_classes.as_ref().map_or(0, |classes| {
             let c = self.components[component as usize].as_ref().unwrap();
-            let (frame, local) = self.shapes[c.shape].as_ref().unwrap().origins[symbol];
+            let (frame, local) = self.shapes[c.shape].origins[symbol];
             classes.symbols[self.frames[&c.frames[frame]].code][local]
         });
         Signal { class, component, symbol }
@@ -626,7 +639,7 @@ impl Runtime {
             components: Default::default(),
             live_facts: vec![],
             frames: Frames::default(),
-            shapes: Arc::new(p.shapes.iter().cloned().map(Some).collect()),
+            shapes: p.shapes.clone(),
             learned_transitions: HashMap::default(),
             training: None,
             catalog_trace: None,
@@ -644,7 +657,7 @@ impl Runtime {
             return;
         };
         let frame = self.frames[&cell];
-        let shape = self.shapes[record].as_ref().unwrap();
+        let shape = &self.shapes[record];
         if shape.ports[..frame.ordinal]
             .iter()
             .any(|ports| ports.contains(&symbol))
@@ -702,6 +715,7 @@ impl Graph {
     }
     fn start_ownership_fragment_training(&mut self, max_frames: usize, extend: bool) -> Result<()> {
         let max_frames = checked_frame_limit(Some(&json!(max_frames)))?;
+        if !self.program.cell_ownership.composition.joins.is_empty() {return Err("dual-source catalogs require saved-trace learning, not append-only exploratory training".into());}
         let m = self
             .ownership
             .as_mut()
@@ -736,7 +750,7 @@ impl Graph {
         // as whole-execution savings.
         let mut candidates = BTreeMap::<Fragment, (Observation, usize)>::new();
         for (&id, obs) in &t.observations {
-            let shape = m.composition.shapes[id].as_ref().unwrap();
+            let shape = &m.composition.shapes[id];
             let full = t.fragments[id].clone();
             let handles = shape.signals.iter().map(|s| s.len()).sum::<usize>();
             let entry = candidates
@@ -798,6 +812,7 @@ impl Graph {
     }
     pub(super) fn composition_entry(&mut self, rid: usize, anchors: smallvec::SmallVec<[Option<Dependency>; 4]>) {
         self.observe_component_join(rid, &anchors);
+        self.take_over_matched_components(rid,&anchors);
         let Some(m) = &mut self.ownership else { return };
         debug_assert!(m.composition.entry.is_none());
         m.composition.entry = Some(Entry { rule: rid,
@@ -919,12 +934,12 @@ impl Graph {
                         let Some(subst) = substitutions(
                             &self.program.cell_ownership.composition.sources,
                             &self.program.cell_ownership.programs,
-                            m.composition.shapes[c.shape].as_ref().unwrap(),
+                            &m.composition.shapes[c.shape],
                             &key.hop,
                         ) else {
                             continue;
                         };
-                        let (code, steps) = m.composition.shapes[c.shape].as_ref().unwrap().append(
+                        let (code, steps) = m.composition.shapes[c.shape].append(
                             program,
                             &self.program.cell_ownership.programs[program],
                             &subst,
@@ -934,7 +949,7 @@ impl Graph {
                         fragment.hops.push(key.hop.clone());
                         t.fragments.push(fragment);
                         let id = m.composition.shapes.len();
-                        Arc::make_mut(&mut m.composition.shapes).push(Some(Arc::new(code)));
+                        Arc::make_mut(&mut m.composition.shapes).push(Arc::new(code));
                         m.composition.learned_transitions.insert(key, id);
                         m.stats.composition_shape_builds += 1;
                         m.stats.composition_materializations += 1;
@@ -963,6 +978,7 @@ impl Graph {
             trace.uncovered_births += 1;
             let plan = &self.program.cell_ownership.composition;
             for key in proposals {
+                if key.shape>=plan.fragments.len() {continue;}
                 let Some(subst) = plan.substitutions(&self.program.cell_ownership.programs, key.shape, &key.hop) else { continue; };
                 let entry = trace.records.entry(key.clone()).or_insert_with(|| {
                     let mut fragment = plan.fragments[key.shape].clone();
@@ -986,14 +1002,12 @@ impl Graph {
             c.frames.push(cell);
             c.shape = shape;
             c.signals.resize(
-                m.composition.shapes[shape].as_ref().unwrap().signals.len(),
+                m.composition.shapes[shape].signals.len(),
                 None,
             );
             m.stats.composition_requests += 1;
             m.stats.composition_result_joins+=u64::from(result_join);
             m.stats.composition_substituted_ports += m.composition.shapes[shape]
-                .as_ref()
-                .unwrap()
                 .last_substitutions as u64;
             m.stats.composition_cross_stage_joins += u64::from(cross_stage);
             // All substitutions are in the precompiled port map. No runtime
@@ -1013,8 +1027,6 @@ impl Graph {
                 signals: vec![
                     None;
                     m.composition.shapes[program]
-                        .as_ref()
-                        .unwrap()
                         .signals
                         .len()
                 ],
@@ -1085,7 +1097,7 @@ impl Graph {
                 if let Some(cell) = self.cells.get_mut(id) {
                     if cell.symbolic_slots {
                         let frame = m.composition.frames[id];
-                        let ports = &m.composition.shapes[c.shape].as_ref().unwrap().ports[frame.ordinal];
+                        let ports = &m.composition.shapes[c.shape].ports[frame.ordinal];
                         let program = &self.program.cell_ownership.markers[cell.template].program;
                         for (slot, local) in program.slots.iter().enumerate() {
                             if cell.values.contains_key(&slot) { continue; }

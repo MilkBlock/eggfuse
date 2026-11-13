@@ -9,7 +9,7 @@ impl Graph {
         let Some(owner)=self.ownership.as_ref() else {return;};
         let Some(frame)=owner.composition.frames.get(&cell) else {return;};
         let component=owner.composition.components[frame.component as usize].as_ref().unwrap();
-        let ports=&owner.composition.shapes[component.shape].as_ref().unwrap().ports[frame.ordinal];
+        let ports=&owner.composition.shapes[component.shape].ports[frame.ordinal];
         let Some(c)=self.cells.get_mut(&cell).filter(|c|c.completed) else {return;};
         let slots=&self.program.cell_ownership.markers[c.template].program.slots;
         let mut checks=0;
@@ -101,7 +101,7 @@ impl Graph {
                 let m=self.ownership.as_ref().unwrap();
                 let frame=m.composition.frames[&id];
                 let component=m.composition.components[frame.component as usize].as_ref().unwrap();
-                let ports=&m.composition.shapes[component.shape].as_ref().unwrap().ports[frame.ordinal];
+                let ports=&m.composition.shapes[component.shape].ports[frame.ordinal];
                 let c=self.cells.get_mut(&id).unwrap();
                 let slots=&self.program.cell_ownership.markers[c.template].program.slots;
                 let removed=c.values.retain_owned(|slot,value| {

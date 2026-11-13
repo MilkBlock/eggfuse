@@ -1,0 +1,661 @@
+{
+  "scope": "same frozen binary, standalone Cell CPU Graph and retained Program heap; no native acceptance or speed claim",
+  "pair_order": [
+    "seed control",
+    "dual-source takeover"
+  ],
+  "cases": [
+    {
+      "case": "fact",
+      "runs": 418,
+      "programs": [
+        "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+        "bc29dbd06e072b42b83fe755f28540abb14ceea8d2181e3e94a2c5cdc2384050"
+      ],
+      "saved_run_checks_equal": true,
+      "final_states_equal": true,
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          645935,
+          674863
+        ],
+        "retained_program_teardown_bytes": [
+          158777869,
+          159702781
+        ],
+        "execution_and_takeover_peak_bytes": [
+          162364619,
+          163318479
+        ],
+        "max_takeover_extra_bytes": [
+          11648,
+          11932
+        ]
+      },
+      "work": {
+        "dual_candidates": [
+          0,
+          1450
+        ],
+        "dual_admissions": [
+          0,
+          38
+        ],
+        "dual_pending_skips": [
+          0,
+          265
+        ],
+        "dual_symbol_checks": [
+          0,
+          474
+        ],
+        "dual_source_moves": [
+          0,
+          158
+        ],
+        "dual_field_moves": [
+          0,
+          244
+        ],
+        "dual_temporary_bytes": [
+          0,
+          7424
+        ],
+        "dual_bindings_retired": [
+          0,
+          38
+        ],
+        "components_live": [
+          492,
+          487
+        ],
+        "signal_bindings_live": [
+          1963,
+          1970
+        ],
+        "owned_live": [
+          948,
+          948
+        ],
+        "boundary_live": [
+          1282,
+          1289
+        ],
+        "boundary_edges_created": [
+          1390,
+          1639
+        ],
+        "boundary_edges_removed": [
+          108,
+          350
+        ],
+        "boundary_probes": [
+          143,
+          566
+        ],
+        "signal_root_queries": [
+          44,
+          890
+        ],
+        "signal_parent_probes": [
+          74,
+          1018
+        ],
+        "composition_unbaked_fallbacks": [
+          762,
+          827
+        ]
+      },
+      "source_storage": {
+        "completed_owner_frames": [
+          752,
+          752
+        ],
+        "explicit_cell_slots": [
+          888,
+          893
+        ],
+        "cell_slot_bytes": [
+          14648,
+          14728
+        ],
+        "fact_record_live_bytes": [
+          13056,
+          13056
+        ],
+        "completed_owner_records_bytes": [
+          83700,
+          83724
+        ]
+      },
+      "graph_field_deltas": {
+        "cells": 296,
+        "functions": 0,
+        "parents": 0,
+        "writer_dir": 0,
+        "local_unions": 0,
+        "ownership.components": 26064,
+        "ownership.live_facts": 4096,
+        "ownership.frames": 0,
+        "ownership.shapes": 584,
+        "ownership.transitions": 0,
+        "ownership.training": 0,
+        "ownership.catalog_trace": 0,
+        "ownership.entry": 0,
+        "ownership.heap": 0,
+        "ownership.columns": 0,
+        "ownership.boundaries": -2112,
+        "ownership.port_completion": 0,
+        "ownership.pending": 0,
+        "ownership.tables": 0,
+        "ownership.stats": 0,
+        "ownership.barriers": 0,
+        "stable_ports": 0,
+        "repair_ports": 0,
+        "union_digest": 0,
+        "members": 0,
+        "intern": 0,
+        "function_keys": 0,
+        "uses": 0,
+        "changes": 0,
+        "anchors": 0,
+        "dirty": 0,
+        "dirty_markers": 0,
+        "dirty_facts": 0,
+        "parent_users": 0,
+        "garbage": 0,
+        "receipt_forwards": 0
+      },
+      "graph_reduction_percent": -4.478469195816914
+    },
+    {
+      "case": "loopfact",
+      "runs": 398,
+      "programs": [
+        "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+        "6c042fce49163bb698dfbd082c75dd97d19a8608e2ffb36a1ebc5793cbee88af"
+      ],
+      "saved_run_checks_equal": true,
+      "final_states_equal": true,
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          572285,
+          570633
+        ],
+        "retained_program_teardown_bytes": [
+          158273075,
+          158690630
+        ],
+        "execution_and_takeover_peak_bytes": [
+          161643817,
+          162059740
+        ],
+        "max_takeover_extra_bytes": [
+          11152,
+          11152
+        ]
+      },
+      "work": {
+        "dual_candidates": [
+          0,
+          412
+        ],
+        "dual_admissions": [
+          0,
+          22
+        ],
+        "dual_pending_skips": [
+          0,
+          155
+        ],
+        "dual_symbol_checks": [
+          0,
+          282
+        ],
+        "dual_source_moves": [
+          0,
+          95
+        ],
+        "dual_field_moves": [
+          0,
+          149
+        ],
+        "dual_temporary_bytes": [
+          0,
+          4480
+        ],
+        "dual_bindings_retired": [
+          0,
+          22
+        ],
+        "components_live": [
+          464,
+          474
+        ],
+        "signal_bindings_live": [
+          1868,
+          1874
+        ],
+        "owned_live": [
+          892,
+          892
+        ],
+        "boundary_live": [
+          1231,
+          1237
+        ],
+        "boundary_edges_created": [
+          1267,
+          1409
+        ],
+        "boundary_edges_removed": [
+          36,
+          172
+        ],
+        "boundary_probes": [
+          126,
+          372
+        ],
+        "signal_root_queries": [
+          6,
+          497
+        ],
+        "signal_parent_probes": [
+          11,
+          549
+        ],
+        "composition_unbaked_fallbacks": [
+          721,
+          784
+        ]
+      },
+      "source_storage": {
+        "completed_owner_frames": [
+          689,
+          689
+        ],
+        "explicit_cell_slots": [
+          822,
+          831
+        ],
+        "cell_slot_bytes": [
+          13216,
+          13360
+        ],
+        "fact_record_live_bytes": [
+          12480,
+          12480
+        ],
+        "completed_owner_records_bytes": [
+          74696,
+          74428
+        ]
+      },
+      "graph_field_deltas": {
+        "cells": -28,
+        "functions": 0,
+        "parents": 0,
+        "writer_dir": 0,
+        "local_unions": 0,
+        "ownership.components": -1728,
+        "ownership.live_facts": 0,
+        "ownership.frames": 0,
+        "ownership.shapes": 296,
+        "ownership.transitions": 0,
+        "ownership.training": 0,
+        "ownership.catalog_trace": 0,
+        "ownership.entry": 0,
+        "ownership.heap": 0,
+        "ownership.columns": 0,
+        "ownership.boundaries": -192,
+        "ownership.port_completion": 0,
+        "ownership.pending": 0,
+        "ownership.tables": 0,
+        "ownership.stats": 0,
+        "ownership.barriers": 0,
+        "stable_ports": 0,
+        "repair_ports": 0,
+        "union_digest": 0,
+        "members": 0,
+        "intern": 0,
+        "function_keys": 0,
+        "uses": 0,
+        "changes": 0,
+        "anchors": 0,
+        "dirty": 0,
+        "dirty_markers": 0,
+        "dirty_facts": 0,
+        "parent_users": 0,
+        "garbage": 0,
+        "receipt_forwards": 0
+      },
+      "graph_reduction_percent": 0.2886673597945033
+    },
+    {
+      "case": "sum-bits",
+      "runs": 882,
+      "programs": [
+        "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+        "2bdd87204fb1d3473bff51d2f4b5981680aa1ae002c83d513626a56ad57bea43"
+      ],
+      "saved_run_checks_equal": true,
+      "final_states_equal": true,
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          1702627,
+          1697059
+        ],
+        "retained_program_teardown_bytes": [
+          160648455,
+          167464915
+        ],
+        "execution_and_takeover_peak_bytes": [
+          166929382,
+          173739926
+        ],
+        "max_takeover_extra_bytes": [
+          11888,
+          15904
+        ]
+      },
+      "work": {
+        "dual_candidates": [
+          0,
+          16156
+        ],
+        "dual_admissions": [
+          0,
+          116
+        ],
+        "dual_pending_skips": [
+          0,
+          1928
+        ],
+        "dual_symbol_checks": [
+          0,
+          1740
+        ],
+        "dual_source_moves": [
+          0,
+          475
+        ],
+        "dual_field_moves": [
+          0,
+          709
+        ],
+        "dual_temporary_bytes": [
+          0,
+          27200
+        ],
+        "dual_bindings_retired": [
+          0,
+          116
+        ],
+        "components_live": [
+          1344,
+          1344
+        ],
+        "signal_bindings_live": [
+          6761,
+          6754
+        ],
+        "owned_live": [
+          2895,
+          2895
+        ],
+        "boundary_live": [
+          4699,
+          4691
+        ],
+        "boundary_edges_created": [
+          6431,
+          7397
+        ],
+        "boundary_edges_removed": [
+          1732,
+          2706
+        ],
+        "boundary_probes": [
+          1039,
+          2517
+        ],
+        "signal_root_queries": [
+          969,
+          3917
+        ],
+        "signal_parent_probes": [
+          1623,
+          5045
+        ],
+        "composition_unbaked_fallbacks": [
+          3281,
+          3520
+        ]
+      },
+      "source_storage": {
+        "completed_owner_frames": [
+          2177,
+          2177
+        ],
+        "explicit_cell_slots": [
+          3085,
+          3108
+        ],
+        "cell_slot_bytes": [
+          56312,
+          57000
+        ],
+        "fact_record_live_bytes": [
+          48756,
+          48756
+        ],
+        "completed_owner_records_bytes": [
+          219716,
+          219060
+        ]
+      },
+      "graph_field_deltas": {
+        "cells": -432,
+        "functions": 0,
+        "parents": 0,
+        "writer_dir": 0,
+        "local_unions": 0,
+        "ownership.components": -10128,
+        "ownership.live_facts": 0,
+        "ownership.frames": 0,
+        "ownership.shapes": 4224,
+        "ownership.transitions": 0,
+        "ownership.training": 0,
+        "ownership.catalog_trace": 0,
+        "ownership.entry": 0,
+        "ownership.heap": 0,
+        "ownership.columns": 0,
+        "ownership.boundaries": 768,
+        "ownership.port_completion": 0,
+        "ownership.pending": 0,
+        "ownership.tables": 0,
+        "ownership.stats": 0,
+        "ownership.barriers": 0,
+        "stable_ports": 0,
+        "repair_ports": 0,
+        "union_digest": 0,
+        "members": 0,
+        "intern": 0,
+        "function_keys": 0,
+        "uses": 0,
+        "changes": 0,
+        "anchors": 0,
+        "dirty": 0,
+        "dirty_markers": 0,
+        "dirty_facts": 0,
+        "parent_users": 0,
+        "garbage": 0,
+        "receipt_forwards": 0
+      },
+      "graph_reduction_percent": 0.3270240634032029
+    },
+    {
+      "case": "dot-product",
+      "runs": 954,
+      "programs": [
+        "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+        "675d73a72e7b6228b2984336f2c155688619546c9eac537721417a551f3c6b69"
+      ],
+      "saved_run_checks_equal": true,
+      "final_states_equal": true,
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          1648851,
+          1634963
+        ],
+        "retained_program_teardown_bytes": [
+          162126363,
+          166272572
+        ],
+        "execution_and_takeover_peak_bytes": [
+          168097189,
+          172229530
+        ],
+        "max_takeover_extra_bytes": [
+          15848,
+          13456
+        ]
+      },
+      "work": {
+        "dual_candidates": [
+          0,
+          12249
+        ],
+        "dual_admissions": [
+          0,
+          90
+        ],
+        "dual_pending_skips": [
+          0,
+          877
+        ],
+        "dual_symbol_checks": [
+          0,
+          1339
+        ],
+        "dual_source_moves": [
+          0,
+          407
+        ],
+        "dual_field_moves": [
+          0,
+          648
+        ],
+        "dual_temporary_bytes": [
+          0,
+          20944
+        ],
+        "dual_bindings_retired": [
+          0,
+          90
+        ],
+        "components_live": [
+          1308,
+          1366
+        ],
+        "signal_bindings_live": [
+          6254,
+          6281
+        ],
+        "owned_live": [
+          2825,
+          2825
+        ],
+        "boundary_live": [
+          4032,
+          4059
+        ],
+        "boundary_edges_created": [
+          4557,
+          5290
+        ],
+        "boundary_edges_removed": [
+          525,
+          1231
+        ],
+        "boundary_probes": [
+          607,
+          1750
+        ],
+        "signal_root_queries": [
+          256,
+          2607
+        ],
+        "signal_parent_probes": [
+          385,
+          2887
+        ],
+        "composition_unbaked_fallbacks": [
+          2836,
+          3220
+        ]
+      },
+      "source_storage": {
+        "completed_owner_frames": [
+          2122,
+          2122
+        ],
+        "explicit_cell_slots": [
+          3283,
+          3314
+        ],
+        "cell_slot_bytes": [
+          56512,
+          58736
+        ],
+        "fact_record_live_bytes": [
+          42516,
+          42516
+        ],
+        "completed_owner_records_bytes": [
+          207028,
+          196636
+        ]
+      },
+      "graph_field_deltas": {
+        "cells": -8352,
+        "functions": 0,
+        "parents": 0,
+        "writer_dir": 0,
+        "local_unions": 0,
+        "ownership.components": -9696,
+        "ownership.live_facts": 0,
+        "ownership.frames": 0,
+        "ownership.shapes": 2048,
+        "ownership.transitions": 0,
+        "ownership.training": 0,
+        "ownership.catalog_trace": 0,
+        "ownership.entry": 0,
+        "ownership.heap": 0,
+        "ownership.columns": 0,
+        "ownership.boundaries": 2112,
+        "ownership.port_completion": 0,
+        "ownership.pending": 0,
+        "ownership.tables": 0,
+        "ownership.stats": 0,
+        "ownership.barriers": 0,
+        "stable_ports": 0,
+        "repair_ports": 0,
+        "union_digest": 0,
+        "members": 0,
+        "intern": 0,
+        "function_keys": 0,
+        "uses": 0,
+        "changes": 0,
+        "anchors": 0,
+        "dirty": 0,
+        "dirty_markers": 0,
+        "dirty_facts": 0,
+        "parent_users": 0,
+        "garbage": 0,
+        "receipt_forwards": 0
+      },
+      "graph_reduction_percent": 0.8422835053015665
+    }
+  ]
+}

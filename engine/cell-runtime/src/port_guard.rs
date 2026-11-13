@@ -27,7 +27,7 @@ pub(super) struct Snapshot {
     components: Arc<Vec<Option<composition::Component>>>,
     pending: Arc<Vec<BTreeMap<FactRef, u64>>>,
     programs: Arc<Vec<Arc<PortProgram>>>,
-    shapes: Arc<Vec<Option<Arc<composition::Shape>>>>,
+    shapes: Arc<Vec<Arc<composition::Shape>>>,
 }
 #[derive(Clone, Copy, Default, Serialize)]
 pub(super) struct EpochWork {
@@ -99,7 +99,7 @@ pub struct ReadView<'a> {
     #[cfg(feature="sparse-cells")]
     projected: Option<Projection<'a>>,
     programs: &'a [Arc<PortProgram>],
-    shapes: &'a [Option<Arc<composition::Shape>>],
+    shapes: &'a [Arc<composition::Shape>],
     parents: crate::value::parent_epoch::Read<'a>,
     components: crate::read_epoch::SlotsRead<'a, Option<composition::Component>>,
     nodes: crate::read_epoch::MapRead<'a, FactRef, Stored>,
@@ -140,7 +140,7 @@ impl<'a> ReadView<'a> {
         let fields = &node.fields;
         let component = self.components.get(fields.component as usize).and_then(Option::as_ref)
             .ok_or("expired stable field component")?;
-        let shape = self.shapes.get(component.shape).and_then(Option::as_ref)
+        let shape = self.shapes.get(component.shape)
             .ok_or("missing stable field shape")?;
         let program = self.programs.get(*shape.programs.get(fields.frame).ok_or("stable field frame")?)
             .ok_or("stable field program")?;
@@ -172,7 +172,7 @@ impl<'a> ReadView<'a> {
         if !state.owned || state.decoded.is_some() {return None;}
         let frame = frames.get(&fact.cell)?;
         let component = self.components.get(frame.component as usize)?.as_ref()?;
-        let shape = self.shapes.get(component.shape)?.as_ref()?;
+        let shape = self.shapes.get(component.shape)?;
         let program = self.programs.get(*shape.programs.get(frame.ordinal)?)?;
         let fields = program.fields.get(fact.op as usize)?;
         if fields.is_empty() || fields.iter().any(Option::is_none) {return None;}
@@ -187,7 +187,7 @@ impl<'a> ReadView<'a> {
             .ok_or("expired stable source port or snapshot-local reader")?;
         let component=self.components.get(frame.component as usize).and_then(Option::as_ref)
             .ok_or("expired stable source component")?;
-        let shape=self.shapes.get(component.shape).and_then(Option::as_ref).ok_or("stable source shape")?;
+        let shape=self.shapes.get(component.shape).ok_or("stable source shape")?;
         let symbol=*shape.ports.get(frame.ordinal).and_then(|ports|ports.get(port.local)).ok_or("stable source local port")?;
         self.read_port_counted(ComponentPort{component:frame.component,symbol})
     }
@@ -440,7 +440,7 @@ mod tests {
     #[test]
     fn source_port_survives_component_and_symbol_relocation_but_not_retirement() {
         fn read(frames:&composition::Frames,components:&[Option<composition::Component>],
-                shapes:&[Option<Arc<composition::Shape>>],parents:&Parents,port:PortRef)->Result<Value> {
+                shapes:&[Arc<composition::Shape>],parents:&Parents,port:PortRef)->Result<Value> {
             ReadView {
                 source_frames:Some(frames),
                 #[cfg(feature="sparse-cells")]
@@ -451,8 +451,8 @@ mod tests {
             }.read_port(port)
         }
         let shapes=vec![
-            Some(Arc::new(composition::Shape{ports:vec![Arc::new(vec![0])],..Default::default()})),
-            Some(Arc::new(composition::Shape{ports:vec![Arc::new(vec![0]),Arc::new(vec![1])],..Default::default()})),
+            Arc::new(composition::Shape{ports:vec![Arc::new(vec![0])],..Default::default()}),
+            Arc::new(composition::Shape{ports:vec![Arc::new(vec![0]),Arc::new(vec![1])],..Default::default()}),
         ];
         let mut frames=composition::Frames::default();
         frames.insert(7,composition::Frame{component:0,ordinal:0,code:0});
@@ -474,7 +474,7 @@ mod tests {
     #[test]
     fn shared_multi_input_code_requires_every_equality_and_scalar_guard() {
         let programs = vec![Arc::new(PortProgram { fields: vec![vec![None]], ..Default::default() })];
-        let shapes = vec![Some(Arc::new(composition::Shape { programs: vec![0], ports: vec![Arc::new(vec![])], ..Default::default() }))];
+        let shapes = vec![Arc::new(composition::Shape { programs: vec![0], ports: vec![Arc::new(vec![])], ..Default::default() })];
         let mut parents = Parents::default();
         parents.insert(11, 10);
         let components = vec![Some(composition::Component {
@@ -580,7 +580,7 @@ mod tests {
         send_sync::<KeyGuard<'static>>();
         send_sync::<composition::conditions::Plan>();
         let programs = vec![Arc::new(PortProgram { fields: vec![vec![None]], ..Default::default() })];
-        let shapes = vec![Some(Arc::new(composition::Shape { programs: vec![0], ports: vec![Arc::new(vec![])], ..Default::default() }))];
+        let shapes = vec![Arc::new(composition::Shape { programs: vec![0], ports: vec![Arc::new(vec![])], ..Default::default() })];
         let mut parents = Parents::default();
         parents.insert(11, 10);
         let components = vec![Some(composition::Component {

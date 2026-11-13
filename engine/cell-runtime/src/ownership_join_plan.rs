@@ -2,13 +2,15 @@
 //! uses the existing Shape representation, plus source-local relocation maps.
 use super::*;
 
-#[derive(Serialize)]
-struct Compiled {
-    pattern: Pattern,
-    frame_offsets: [usize; 2],
-    symbol_maps: [Vec<usize>; 2],
-    shape: Shape,
-    aliased_symbols: usize,
+#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+pub(in crate::graph::cell_ownership) struct Compiled {
+    pub(in crate::graph::cell_ownership) pattern: Pattern,
+    pub(in crate::graph::cell_ownership) frame_offsets: [usize; 2],
+    pub(in crate::graph::cell_ownership) symbol_maps: [Vec<usize>; 2],
+    pub(in crate::graph::cell_ownership) shape: Arc<Shape>,
+    #[serde(skip)]
+    pub(in crate::graph::cell_ownership) target: usize,
+    pub(in crate::graph::cell_ownership) aliased_symbols: usize,
 }
 fn representative(parent:&[usize],mut n:usize)->usize {
     while parent[n]!=n {n=parent[n];}n
@@ -93,7 +95,7 @@ fn compile(p:&Program,plan:&super::super::super::Plan,pattern:Pattern)->Result<C
     for steps in &mut joined.signals {
         let steps=Arc::make_mut(steps);steps.sort_unstable_by_key(|s|(s.frame,s.op));steps.dedup();
     }
-    Ok(Compiled{pattern,frame_offsets,symbol_maps,shape:joined,aliased_symbols:total-labels.len()})
+    Ok(Compiled{pattern,frame_offsets,symbol_maps,shape:Arc::new(joined),target:0,aliased_symbols:total-labels.len()})
 }
 impl Graph {
     /// Compile candidates, not installed transitions. Dynamic admission and old
@@ -126,4 +128,84 @@ impl Graph {
                 "old stable-field and PortRef addresses","complete query-class masks for all merged uses",
                 "boundary-route replacement and source-address migration","source-local retirement and restoration"]}))
     }
+}
+
+pub(in crate::graph::cell_ownership) type RouteKey=[(usize,usize,u32,usize);2];
+pub(in crate::graph::cell_ownership) type RuleRoutes=BTreeMap<(usize,usize),BTreeMap<RouteKey,Vec<usize>>>;
+
+// Keep every existing suffix on either source. An incomplete closure rejects
+// the join instead of stealing an old productive append route at runtime.
+fn closure(p:&Program,plan:&crate::graph::cell_ownership::Plan,join:&Compiled,
+    outgoing:&BTreeMap<usize,Vec<(Hop,usize)>>)->Option<(Vec<Shape>,Vec<(usize,Hop,usize)>)> {
+    type State=(Shape,[usize;2],[Vec<usize>;2]);
+    let initial:State=((*join.shape).clone(),[join.pattern.components[0].0,join.pattern.components[1].0],
+        [ (0..join.pattern.components[0].1.len()).collect(),
+          (join.frame_offsets[1]..join.shape.programs.len()).collect() ]);
+    let mut states=vec![initial.clone()];let mut seen=HashMap::default();seen.insert(initial,0);
+    let mut edges=Vec::new();let mut cursor=0;
+    while cursor<states.len() {
+        let (shape,parents,maps)=states[cursor].clone();
+        for side in 0..2 {
+            for (hop,next) in outgoing.get(&parents[side]).into_iter().flatten() {
+                if shape.programs.len()>=32 {return None;}
+                let lifted=Hop{source_frame:maps[side][hop.source_frame],..hop.clone()};
+                let subst=super::super::substitutions(&plan.composition.sources,&plan.programs,&shape,&lifted)?;
+                let program=plan.markers[p.rules[hop.rule].template].program_id;
+                let target=shape.append(program,&plan.programs[program],&subst).0;
+                let mut parents=parents;parents[side]=*next;
+                let mut maps=maps.clone();maps[side].push(shape.programs.len());
+                let state=(target,parents,maps);
+                let target=if let Some(&id)=seen.get(&state) {id} else {
+                    if states.len()>=128 {return None;}
+                    let id=states.len();seen.insert(state.clone(),id);states.push(state);id
+                };
+                edges.push((cursor,lifted,target));
+            }
+        }
+        cursor+=1;
+    }
+    Some((states.into_iter().map(|s|s.0).collect(),edges))
+}
+pub(in crate::graph::cell_ownership) fn install(p:&Program,plan:&mut crate::graph::cell_ownership::Plan)->Result<()> {
+    let Some(raw)=p.artifact.get("ownership_dual_sources") else {return Ok(());};
+    if raw["source"]!=source_digest(&p.artifact) || raw["schema"]!="dual-source-patterns/v1" {return Err("dual-source source/schema".into());}
+    let patterns:Vec<Pattern>=serde_json::from_value(raw["patterns"].clone()).map_err(|e|e.to_string())?;
+    if patterns.len()>4096 {return Err("dual-source budget".into());}
+    let mut joins=Vec::new();
+    for pattern in patterns {joins.push(compile(p,plan,pattern)?);}
+    let seed_shapes=plan.composition.shapes.len();
+    let mut outgoing=BTreeMap::<usize,Vec<(Hop,usize)>>::new();
+    let mut transitions=plan.composition.transitions.iter().cloned().collect::<BTreeMap<_,_>>();
+    for (key,target) in &plan.composition.transitions {outgoing.entry(key.shape).or_default().push((key.hop.clone(),*target));}
+    let mut intern=plan.composition.shapes.iter().enumerate().map(|(id,s)|((**s).clone(),id)).collect::<HashMap<_,_>>();
+    plan.composition.join_rules=vec![RuleRoutes::new();p.rules.len()];
+    for mut join in joins {
+        let Some((shapes,edges))=closure(p,plan,&join,&outgoing) else {plan.composition.join_rejected+=1;continue;};
+        if plan.composition.shapes.len()-seed_shapes+shapes.len()>8192 {plan.composition.join_rejected+=1;continue;}
+        let mut ids=Vec::with_capacity(shapes.len());
+        for shape in shapes {
+            let id=if let Some(&id)=intern.get(&shape) {id} else {
+                let id=plan.composition.shapes.len();intern.insert(shape.clone(),id);
+                Arc::make_mut(&mut plan.composition.shapes).push(Arc::new(shape));id
+            };
+            ids.push(id);
+        }
+        join.target=ids[0];join.shape=plan.composition.shapes[join.target].clone();
+        for (from,hop,to) in edges {
+            if transitions.insert(Key{shape:ids[from],hop},ids[to]).is_some_and(|old|old!=ids[to]) {
+                return Err("conflicting inherited dual-source transition".into());
+            }
+        }
+        let first=join.pattern.anchors.iter().find(|a|a.1==0).ok_or("missing first join anchor")?;
+        let second=join.pattern.anchors.iter().find(|a|a.1==1).ok_or("missing second join anchor")?;
+        let key=[(join.pattern.components[0].0,first.2,first.3,join.pattern.components[0].1[first.2]),
+            (join.pattern.components[1].0,second.2,second.3,join.pattern.components[1].1[second.2])];
+        let index=plan.composition.joins.len();
+        plan.composition.active_rules[join.pattern.rule]=true;
+        plan.composition.join_rules[join.pattern.rule].entry((first.0,second.0)).or_default().entry(key).or_default().push(index);
+        plan.composition.joins.push(Arc::new(join));
+    }
+    if !plan.composition.joins.is_empty() {plan.composition.max_frames=32;}
+    plan.composition.transitions=transitions.into_iter().collect();
+    Ok(())
 }

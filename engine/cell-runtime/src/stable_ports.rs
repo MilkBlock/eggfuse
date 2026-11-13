@@ -198,7 +198,7 @@ impl Graph {
             .as_ref().unwrap();
         // Clone only shared code handles so binding can mutate the instance.
         // The frame/shape map is resolved once, not once per equality column.
-        let ports = owner.composition.shapes[component.shape].as_ref().unwrap().ports
+        let ports = owner.composition.shapes[component.shape].ports
             [frame.ordinal].clone();
         let program = self.program.cell_ownership.code_programs[frame.code].clone();
         let symbols = &program.fields[f.op as usize];
@@ -488,5 +488,18 @@ impl Graph {
             "birth_hints_enabled":self.port_birth_hints,"birth_indexed_port_keys":indexed_port_keys,"port_key_matching":stats.keys,
             "pending_canonical_keys":pending_canonical_keys,
             "pending_port_equality_checks":self.ownership.as_ref().unwrap().pending.len()-pending_canonical_keys})
+    }
+}
+
+impl Graph {
+    pub(in crate::graph::cell_ownership) fn relocate_stable_source(&mut self,cell:u32,component:u32,frame:usize)->usize {
+        let Some(runtime)=self.stable_ports.as_mut() else {return 0;};
+        let mut moved=0;
+        for (fact,_) in self.cells.fact_states(cell) {
+            if let Some(node)=runtime.nodes.local_mut(&fact) {
+                node.fields.component=component;node.fields.frame=frame;moved+=1;
+            }
+        }
+        moved
     }
 }

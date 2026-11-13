@@ -27,15 +27,27 @@ fn code_groups(plan: &super::Plan) -> Vec<Vec<usize>> {
 /// Shape interning deliberately forgets concrete operator identity. Cover all
 /// codes of the source layout, constrained only by the actual checked Entry.
 fn edges(p: &Program, plan: &super::Plan, mut visit: impl FnMut((usize, usize), (usize, usize))) {
+    // A dual-source takeover introduces aliases between complete old Shapes.
+    // Propagate possible uses both ways before choosing any runtime origin class.
+    for join in &plan.composition.joins {
+        let mut origins=vec![None;join.shape.signals.len()];
+        for (component,(shape,codes)) in join.pattern.components.iter().enumerate() {
+            for (symbol,&(frame,local)) in plan.composition.shapes[*shape].origins.iter().enumerate() {
+                let node=(codes[frame],local);let target=join.symbol_maps[component][symbol];
+                if let Some(first)=origins[target] {visit(first,node);visit(node,first);} else {origins[target]=Some(node);}
+            }
+        }
+    }
     let groups = code_groups(plan);
     for (key, _) in &plan.composition.transitions {
         let hop = &key.hop;
-        let Some(&atom) = plan.entries[hop.rule].get(hop.entry) else {
-            continue;
-        };
         let rule = &p.rules[hop.rule];
-        let Call::Table(table) = rule.query[atom].call else {
-            continue;
+        let table = if let Some(&atom)=plan.entries[hop.rule].get(hop.entry) {
+            let Call::Table(table)=rule.query[atom].call else {continue;};table
+        } else {
+            let operation=hop.entry-plan.entries[hop.rule].len();
+            let Some(Op::Let(_,Call::Table(table),_))=p.templates[rule.template].ops.get(operation) else {continue;};
+            if !p.tables[*table].constructor {continue;}*table
         };
         let program = plan.composition.shapes[key.shape].programs[hop.source_frame];
         let receiver = plan.markers[rule.template].code;

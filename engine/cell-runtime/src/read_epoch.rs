@@ -48,6 +48,10 @@ impl<K: Copy + Eq + Hash, V> Map<K, V> {
                 .map_or_else(|| base.get(key), Option::as_ref),
         }
     }
+    pub(crate) fn local_mut(&mut self,key:&K)->Option<&mut V> {
+        assert!(self.base.is_none(),"map relocation during a read epoch");
+        self.local.get_mut(key)
+    }
     pub fn insert(&mut self, key: K, value: V) -> Option<V> {
         // Pure constructor completion can retire nodes, but cannot create one.
         assert!(
@@ -146,6 +150,8 @@ impl<T> From<Vec<T>> for Slots<T> {
     }
 }
 impl<T> Slots<T> {
+    pub(crate) fn is_frozen(&self)->bool {self.base.is_some()}
+
     /// Birth/shape updates are forbidden while workers retain a read epoch.
     /// This accessor never clones a value.
     pub fn local_mut(&mut self, index: usize) -> &mut T {

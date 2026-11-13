@@ -163,6 +163,10 @@ impl Plan {
             entries,
             routes,
         };
+        if p.artifact.get("ownership_dual_sources").is_some() {
+            plan.prepare_codes(&p.templates);
+            composition::join_trace::plan::install(p,&mut plan)?;
+        }
         if let Some(raw) = p.artifact.get("ownership_markers") {
             if *raw != plan.artifact(p) {
                 return Err("ownership marker differs from typed entry/body wiring".into());
@@ -267,6 +271,8 @@ struct Stats {
     composition_entry_reads: u64,
     composition_result_writes:u64,
     composition_result_joins:u64,
+    dual_route_probes:u64, dual_candidates:u64, dual_admissions:u64, dual_symbol_checks:u64, dual_source_moves:u64,
+    dual_field_moves:u64, dual_temporary_bytes:u64, dual_bindings_retired:u64, dual_pending_skips:u64,
     composition_transition_probes: u64,
     composition_unbaked_fallbacks: u64,
     composition_cross_stage_joins: u64,
@@ -581,7 +587,7 @@ impl Graph {
                 let c = m.composition.components[signal.component as usize]
                     .as_ref()
                     .unwrap();
-                let shape = m.composition.shapes[c.shape].as_ref().unwrap();
+                let shape = &m.composition.shapes[c.shape];
                 // A retained slot with no live producer is not an observed
                 // cross-frame reuse. Profiling must still count real uses.
                 if shape.signals[signal.symbol].iter().any(|step| {
@@ -623,8 +629,6 @@ impl Graph {
             .as_ref()
             .unwrap();
         let steps = &m.composition.shapes[component.shape]
-            .as_ref()
-            .unwrap()
             .signals[signal.symbol];
         while let Some(step) = steps.get(position) {
             m.stats.slice_steps += 1;
@@ -730,7 +734,7 @@ impl Graph {
                 let c = m.composition.components[cursor.signal.component as usize]
                     .as_ref()
                     .unwrap();
-                let shape = m.composition.shapes[c.shape].as_ref().unwrap();
+                let shape = &m.composition.shapes[c.shape];
                 let step = &shape.signals[cursor.signal.symbol][cursor.position];
                 let old = columns.capacity();
                 m.stats.dispatch_static_field_tests += self.program.cell_ownership.programs[shape.programs[step.frame]]
@@ -1031,11 +1035,11 @@ impl Graph {
             .map(|m| Arc::as_ptr(&m.program))
             .collect::<BTreeSet<_>>()
             .len();
-        json!({"result_entries":"completed-rhs/v1","routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":self.program.cell_ownership.format.marker_schema(),"port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},
+        json!({"dual_source":"matched-takeover/v1","result_entries":"completed-rhs/v1","routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":self.program.cell_ownership.format.marker_schema(),"port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"dual_plans":self.program.cell_ownership.composition.joins.len(),"dual_closure_rejections":self.program.cell_ownership.composition.join_rejected,"max_frames":self.program.cell_ownership.composition.max_frames},
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
             "barrier_history":self.ownership.as_ref().map(|m|json!({"enabled":m.keep_barrier_history,
                 "start_after_barriers":m.barrier_history_start,"retained_capacity_bytes":m.barriers.capacity()*std::mem::size_of::<Barrier>()})),
-            "inventory":{"shared_field_layout_bytes":0,"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.iter().flatten().count()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
+            "inventory":{"shared_field_layout_bytes":0,"component_lifetime_capacity_bytes":self.ownership.as_ref().unwrap().composition.live_facts.capacity()*std::mem::size_of::<usize>(),"allocated_signal_slots":self.ownership.as_ref().unwrap().composition.components.iter().flatten().map(|c|c.signals.capacity()).sum::<usize>(),"active_signal_bindings":active_bindings,"retained_inactive_signal_bindings":self.ownership.as_ref().unwrap().stats.signal_bindings_live - active_bindings as u64,"shared_port_programs":programs,"baked_composition_recipes":self.program.cell_ownership.composition.transitions.len(),"runtime_composition_shapes":self.ownership.as_ref().map_or(0,|m|m.composition.shapes.len()),"internal_eq_ports":internal,"boundary_eq_ports":boundary,"cross_stage_live_facts":across,"largest_component_frames":self.ownership.as_ref().map_or(0,|m|m.composition.components.iter().flatten().map(|c|c.frames.len()).max().unwrap_or(0)),
                 "eligible_live_facts":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>(),
                 "unsupported_live_rows":self.program.cell_ownership.tables.iter().enumerate().filter(|(_,ok)|!**ok).map(|(t,_)|self.witness_count(t)).sum::<usize>()},
             "stats":self.ownership.as_ref().map(|m|&m.stats),"pending_keys":self.ownership.as_ref().map_or(0,|m|m.pending.len())})
@@ -1048,7 +1052,7 @@ impl Graph {
         let frame = m.composition.frames.get(&cell)?;
         let component = m.composition.components.get(frame.component as usize)?.as_ref()?;
         let local = self.program.cell_ownership.markers[template].program.slots.get(slot).copied().flatten()?;
-        let symbol = m.composition.shapes[component.shape].as_ref()?.ports[frame.ordinal][local];
+        let symbol = m.composition.shapes[component.shape].as_ref().ports[frame.ordinal][local];
         Some(Value::Eq(root(&self.parents, component.signals[symbol]?)))
     }
     /// Transfer only completed, proven-equal slots to existing shared symbols.
@@ -1063,7 +1067,7 @@ impl Graph {
             if !c.completed { continue; }
             let Some(frame) = m.composition.frames.get(&id) else { continue; };
             let component = m.composition.components[frame.component as usize].as_ref().unwrap();
-            let ports = &m.composition.shapes[component.shape].as_ref().unwrap().ports[frame.ordinal];
+            let ports = &m.composition.shapes[component.shape].ports[frame.ordinal];
             let slots = &self.program.cell_ownership.markers[c.template].program.slots;
             let removed = c.values.retain_owned(|slot, value| {
                 let Value::Eq(value) = value else { return true; };

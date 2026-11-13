@@ -134,7 +134,6 @@ impl Graph {
         let shape = owner
             .shapes
             .get(component.shape)
-            .and_then(Option::as_ref)
             .ok_or("missing field-use shape")?;
         let plan = &self.program.cell_ownership;
         Ok(FieldUses::new(component, shape, plan, signal.symbol, column))
