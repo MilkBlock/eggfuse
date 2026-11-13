@@ -94,3 +94,19 @@ not evidence that the requested large runtime compression is complete.
 
 Use `--collect-only` with the analysis script to recheck these saved reports
 without building or replaying the workloads.
+
+## Shared parallel branch integration
+
+The structural-compression tip `8ca2cc62`, worker result transfer `e5dba47b`
+and worker integration `24510d66` are ancestors of the shared
+`codex/cell-parallel-admission` branch at `08841d4a`. No additional merge of
+those tips is needed. Compiler witness selection and parallel execution use
+the same runtime and Cell definitions on this branch.
+
+The follow-up freezes each immutable group operation list into a boxed slice.
+Compilation still collects operations in temporary vectors, then drops their
+spare capacity; query dispatch, worker transfer and dynamic validity checks
+are unchanged. All 59 `cell_ownership` integration tests pass with
+`iterative-bake,sparse-cells,storage-metrics,eggfuse-cell-runtime/slot-transfer-audit`.
+This is not a new native semantic acceptance or a measured compression result;
+the corrected layout still requires complete memory measurement.

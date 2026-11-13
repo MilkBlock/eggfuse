@@ -50,7 +50,7 @@ pub(super) struct Rule {
 }
 impl Rule {pub(super) fn is_empty(&self)->bool {self.entries.is_empty()}}
 #[derive(Clone,Debug,Default,PartialEq,Eq)]
-struct Group {operations:Vec<(usize,smallvec::SmallVec<[Target;1]>)>}
+struct Group {operations:Box<[(usize,smallvec::SmallVec<[Target;1]>)]>}
 /// Coordinator scratch for a pure lookup in the immutable compiled catalog.
 /// The full key includes rule/Entry and source layout, not an instance address.
 /// It may cross Runs: every use resolves current facts and rechecks admission.
@@ -59,7 +59,7 @@ struct Group {operations:Vec<(usize,smallvec::SmallVec<[Target;1]>)>}
 pub(super) struct Selection {rule:usize,entry:usize,key:Key,group:Option<usize>}
 impl Routes {
     fn group(operations:Vec<Vec<Option<Operation>>>)->Self {
-        let mut rules=Vec::with_capacity(operations.len());let mut groups=Vec::<Group>::new();
+        let mut rules=Vec::with_capacity(operations.len());let mut groups=Vec::<Vec<(usize,smallvec::SmallVec<[Target;1]>)>>::new();
         for operations in operations {
             let mut rule=Rule{operations:vec![Default::default();operations.len()],..Default::default()};
             for (op,operation) in operations.into_iter().enumerate() {
@@ -68,14 +68,14 @@ impl Routes {
                     rule.operations[op].push(entry);
                     let routes=rule.entries.entry(entry).or_default();
                     for (key,targets) in candidates {
-                        let group=*routes.entry(key).or_insert_with(||{let n=groups.len();groups.push(Group::default());n});
-                        groups[group].operations.push((op,targets));
+                        let group=*routes.entry(key).or_insert_with(||{let n=groups.len();groups.push(Vec::new());n});
+                        groups[group].push((op,targets));
                     }
                 }
             }
             rules.push(rule);
         }
-        Self(rules,groups)
+        Self(rules,groups.into_iter().map(|operations|Group{operations:operations.into_boxed_slice()}).collect())
     }
 }
 #[derive(serde::Deserialize)]
