@@ -98,7 +98,9 @@ states, all 1,428 sum and 16,883 Raytrace Run summaries, and logical effects.
 The unchanged native sum validator passes and its CPU hash matches the new
 export. The 211 runtime tests, 111 integration tests, legacy/all-feature checks
 and three README commands pass. Candidate `50e3822a` is the checked merge on
-`codex/table-entry-integration`; it is not adopted into the active runtime.
+`codex/table-entry-integration`. This trial did not adopt it: the two-case speed
+gate below failed. A subsequent concurrent integration, `3d55cec0`, merged it
+into the active runtime. That merge does not change this trial's acceptance result.
 
 `results.json` records accounting job 79. Entry updates, predicates, retirements
 and Sieve logical work agree. Raytrace still processes 2,155,707 publication
@@ -113,7 +115,7 @@ adding 1,311 and 15,158 change-map length visits. Sum executes no split task or
 parallel publication batch. These are work/representation changes, not a speed
 acceptance result.
 
-## Fixed sequential timing: not adopted
+## Fixed sequential timing: speed gate failed
 
 Job 81 completed 15 sum and 7 Raytrace samples per lane, plus one warmup each,
 using only the corrected frozen executables. All control workloads finished
@@ -132,8 +134,10 @@ no repeat-until-green trial. Sum ranges from 25.265–27.801 ms in the control
 and 25.430–62.319 ms in the candidate. That variation does not establish an OS,
 thermal, scheduler or algorithmic cause. Likewise, the small Raytrace median
 improvement is not a stable speedup claim in light of the earlier A/A evidence.
-The dependency split remains a validated experiment rather than the new active
-runtime baseline. The shared-target build fix is retained independently.
+The dependency split was subsequently integrated by `3d55cec0`, despite this
+unresolved speed result. The shared-target build fix is retained independently.
+The frozen comparison remains `03065edb` versus `50e3822a`; later main-branch
+changes are not silently folded into these measurements.
 
 The next diagnosis needs inference-scoped CPU time and actual wait accounting,
 so elapsed stalls can be distinguished from extra computation. Existing whole-
