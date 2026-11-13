@@ -562,15 +562,19 @@ fn workers_write_actual_rows_and_invalidate_duplicate_cells_before_publication()
 
 #[test]
 fn speculative_scalar_failure_preserves_the_original_partial_effects() {
-    let seed = (0..64).map(|i| format!("(Offer (N {i}) {})", if i == 32 { i64::MAX } else { i }))
+    for produced in [false, true] {
+    let source_name = if produced {"Seed"} else {"Offer"};
+    let produce = if produced {"(rule ((= s (Seed x v))) ((Offer x v)) :ruleset produce)"} else {""};
+    let seed = (0..64).map(|i| format!("({source_name} (N {i}) {})", if i == 32 { i64::MAX } else { i }))
         .collect::<Vec<_>>().join("\n");
     let source = format!(r#"
-(datatype E (N i64) (Offer E i64))
+(datatype E (N i64) (Seed E i64) (Offer E i64))
 (function Score (E) i64 :merge (min old new))
-(ruleset step)
+(ruleset step) (ruleset produce)
+{produce}
 (rule ((= q (Offer x v))) ((set (Score x) (+ v 1))) :ruleset step)
 {seed}
-(run-schedule (run step))
+(run-schedule (seq (run produce) (run step)))
 "#);
     let mut control = executor(&source, 4);
     let mut candidate = executor(&source, 4);
@@ -578,6 +582,55 @@ fn speculative_scalar_failure_preserves_the_original_partial_effects() {
     assert_eq!(control.execute().unwrap_err(), candidate.execute().unwrap_err());
     assert_eq!(control.graph.export().unwrap(), candidate.graph.export().unwrap());
     assert_eq!(candidate.report()["cell_execution"]["runtime"]["stats"]["writes"]["fallback_batches"], 1);
+    }
+}
+
+#[test]
+fn selected_cursors_continue_through_worker_writes_and_source_ordered_publication() {
+    let seed = (0..64).map(|i| format!("(N {i})")).collect::<Vec<_>>().join("\n");
+    for merge in ["old", "(min old new)", "(max old new)"] {
+        let source = format!(r#"
+(datatype E (N i64) (Offer E i64) (Seen E i64))
+(function Score (E) i64 :merge {merge})
+(ruleset produce) (ruleset consume) (ruleset observe) (ruleset change) (ruleset remove)
+(rule ((= x (N n))) ((Offer x n) (Offer x (+ n 1))) :ruleset produce)
+(rule ((= q (Offer x n))) ((set (Score x) n)) :ruleset consume)
+(rule ((= n (Score x))) ((Seen x n)) :ruleset consume)
+(rule ((= n (Score x))) ((Seen x n)) :ruleset observe)
+(rule ((= x (N n)) (= n 1)) ((union x (N 0))) :ruleset change)
+(rule ((= x (N n)) (= n 2)) ((delete (Score x)) (delete (Offer x n))) :ruleset remove)
+{seed}
+(run-schedule (seq (run produce) (run consume) (run observe)
+                  (run remove) (run produce) (run consume) (run observe)
+                  (run change) (run consume) (run observe)))
+"#);
+        egglog::EGraph::default().parse_and_run_program(None, &source).unwrap();
+        let mut control = executor(&source, 4);
+        #[cfg(feature="iterative-bake")]
+        { eggfuse_cell_runtime::transfer_audit::set_active(true);
+          eggfuse_cell_runtime::transfer_audit::enable_write_audit(); }
+        control.execute().unwrap();
+        #[cfg(feature="iterative-bake")]
+        let writes = eggfuse_cell_runtime::transfer_audit::take_write_digests();
+        for workers in [2, 4] {
+            let mut candidate = executor(&source, workers);
+            candidate.use_cell_execution(1).unwrap();
+            candidate.execute().unwrap();
+            same(&control, &candidate);
+            #[cfg(feature="iterative-bake")]
+            assert_eq!(writes, eggfuse_cell_runtime::transfer_audit::take_write_digests());
+            let report = candidate.report();
+            let counts = &report["cell_execution"]["runtime"]["stats"]["writes"];
+            assert!(counts["inherited_candidates"].as_u64().unwrap() >= 128, "{counts}");
+            assert!(counts["invalidated"].as_u64().unwrap() > 0);
+            assert!(counts["origin_token_bytes"].as_u64().unwrap() > 0);
+            for key in ["steps_executed", "resumed_steps", "completed_steps", "max_chain"] {
+                assert_eq!(report["stage_spine"]["stats"][key], control.report()["stage_spine"]["stats"][key], "{key}");
+            }
+        }
+        #[cfg(feature="iterative-bake")]
+        eggfuse_cell_runtime::transfer_audit::set_active(false);
+    }
 }
 
 #[test]
