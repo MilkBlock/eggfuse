@@ -1,0 +1,355 @@
+{
+  "scope": "actual standalone Cell CPU; work and semantics, not timing",
+  "control": {
+    "scope": "actual standalone Cell CPU work and semantics; not timing",
+    "control_commit": "704d1c0e",
+    "runtime_sha256": "7af313c0f4b96b874eaf49cf77897f219827325d58418d885743108f63262915",
+    "lanes": {
+      "sum": {
+        "command": [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/control/candidate-runtime",
+          "--program",
+          "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+          "--output",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/control/candidate-sum",
+          "--repair-ports",
+          "--entry-publications",
+          "--cell-absorption",
+          "--query-workers",
+          "4",
+          "--parallel-residuals",
+          "--parallel-publication",
+          "--cell-execution-grain",
+          "1"
+        ],
+        "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+        "args": [
+          "--repair-ports",
+          "--entry-publications",
+          "--cell-absorption",
+          "--query-workers",
+          "4",
+          "--parallel-residuals",
+          "--parallel-publication",
+          "--cell-execution-grain",
+          "1"
+        ],
+        "exit_code": 0
+      },
+      "ray": {
+        "command": [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/control/candidate-runtime",
+          "--program",
+          "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+          "--output",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/control/candidate-ray",
+          "--repair-ports",
+          "--entry-publications",
+          "--cell-absorption",
+          "--query-workers",
+          "4",
+          "--parallel-residuals",
+          "--parallel-publication",
+          "--cell-execution-grain",
+          "1"
+        ],
+        "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+        "args": [
+          "--repair-ports",
+          "--entry-publications",
+          "--cell-absorption",
+          "--query-workers",
+          "4",
+          "--parallel-residuals",
+          "--parallel-publication",
+          "--cell-execution-grain",
+          "1"
+        ],
+        "exit_code": 0
+      }
+    }
+  },
+  "candidate": {
+    "scope": "actual standalone Cell CPU work and semantics; not timing",
+    "control_commit": "704d1c0e",
+    "runtime_sha256": "9db383893103d0f3d1b21ea43482cd83c4099334a5e39ff6bc1245364895f2e3",
+    "lanes": {
+      "sum": {
+        "command": [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/candidate/candidate-runtime",
+          "--program",
+          "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+          "--output",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/candidate/candidate-sum",
+          "--repair-ports",
+          "--entry-publications",
+          "--cell-absorption",
+          "--query-workers",
+          "4",
+          "--parallel-residuals",
+          "--parallel-publication",
+          "--cell-execution-grain",
+          "1"
+        ],
+        "program": "/Users/mineralsteins/.codex-minato/worktrees/7c16/egg_layout/out/cell-completion-coverage/readme-program/program.json",
+        "args": [
+          "--repair-ports",
+          "--entry-publications",
+          "--cell-absorption",
+          "--query-workers",
+          "4",
+          "--parallel-residuals",
+          "--parallel-publication",
+          "--cell-execution-grain",
+          "1"
+        ],
+        "exit_code": 0
+      },
+      "ray": {
+        "command": [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/candidate/candidate-runtime",
+          "--program",
+          "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+          "--output",
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/candidate/candidate-ray",
+          "--repair-ports",
+          "--entry-publications",
+          "--cell-absorption",
+          "--query-workers",
+          "4",
+          "--parallel-residuals",
+          "--parallel-publication",
+          "--cell-execution-grain",
+          "1"
+        ],
+        "program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+        "args": [
+          "--repair-ports",
+          "--entry-publications",
+          "--cell-absorption",
+          "--query-workers",
+          "4",
+          "--parallel-residuals",
+          "--parallel-publication",
+          "--cell-execution-grain",
+          "1"
+        ],
+        "exit_code": 0
+      }
+    }
+  },
+  "validation": {
+    "sum": {
+      "exact_state_runs_effects": true,
+      "runs": 1428,
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+    },
+    "ray": {
+      "exact_state_runs_effects": true,
+      "runs": 16883,
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+    }
+  },
+  "native_sum_status": "pass",
+  "checks": [
+    {
+      "name": "runtime-unit",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--lib",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "integration",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "query_workers",
+        "--test",
+        "parallel_residuals",
+        "--test",
+        "cell_execution",
+        "--test",
+        "cell_absorption",
+        "--test",
+        "entry_publications",
+        "--test",
+        "scoped_completion",
+        "--test",
+        "completion_batches",
+        "--test",
+        "parallel_publication"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "legacy",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--no-default-features"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "all-features",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--all-features"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "readme-compile",
+      "command": [
+        "cargo",
+        "cell-compile",
+        "--case",
+        "sum-bits",
+        "--output",
+        "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/checks-3/readme-program"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "readme-run",
+      "command": [
+        "cargo",
+        "cell-run",
+        "--program",
+        "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/checks-3/readme-program/program.json",
+        "--output",
+        "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/checks-3/readme-run"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "readme-bench",
+      "command": [
+        "cargo",
+        "cell-bench",
+        "--program",
+        "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-rhs-boundaries/checks-3/readme-program/program.json",
+        "--repeat",
+        "5"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "release",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "workloads": {
+    "sum": {
+      "unchanged_entry_work": {
+        "owner_entry_updates": 0,
+        "worker_entry_updates": 0,
+        "predicate_checks": 5728,
+        "consumer_seed_deliveries": 1115,
+        "cell_entry_deliveries": 3241,
+        "retired_packets": 660
+      },
+      "packet_in_place_updates": 586,
+      "packet_epoch_memberships_retained": 0,
+      "row_allocation_reuse": {
+        "control": {
+          "row_reuse_checks": 586,
+          "row_reuses": 586,
+          "row_reuse_shared": 0
+        },
+        "candidate": {
+          "row_reuse_checks": 586,
+          "row_reuses": 586,
+          "row_reuse_shared": 0
+        }
+      },
+      "phases_diagnostic": {
+        "control": {
+          "delivery_gc": 0.000256838,
+          "query_update": 0.003541205,
+          "repair": 0.001325536,
+          "rhs": 0.008975336,
+          "search": 0.0123882
+        },
+        "candidate": {
+          "delivery_gc": 0.000234184,
+          "query_update": 0.003467659,
+          "repair": 0.001292161,
+          "rhs": 0.008464672,
+          "search": 0.011955118
+        }
+      }
+    },
+    "ray": {
+      "unchanged_entry_work": {
+        "owner_entry_updates": 1950525,
+        "worker_entry_updates": 1178955,
+        "predicate_checks": 2285533,
+        "consumer_seed_deliveries": 247761,
+        "cell_entry_deliveries": 371548,
+        "retired_packets": 152766
+      },
+      "packet_in_place_updates": 1375425,
+      "packet_epoch_memberships_retained": 0,
+      "row_allocation_reuse": {
+        "control": {
+          "row_reuse_checks": 1376537,
+          "row_reuses": 1374605,
+          "row_reuse_shared": 1932
+        },
+        "candidate": {
+          "row_reuse_checks": 1375425,
+          "row_reuses": 1373493,
+          "row_reuse_shared": 1932
+        }
+      },
+      "phases_diagnostic": {
+        "control": {
+          "delivery_gc": 0.031808656,
+          "query_update": 1.123857316,
+          "repair": 0.456198132,
+          "rhs": 2.069844167,
+          "search": 1.768365
+        },
+        "candidate": {
+          "delivery_gc": 0.0300013,
+          "query_update": 1.043012505,
+          "repair": 0.437366374,
+          "rhs": 1.969063951,
+          "search": 1.718899682
+        }
+      }
+    }
+  }
+}

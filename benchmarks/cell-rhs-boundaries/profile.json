@@ -1,0 +1,145 @@
+{
+  "scope": "actual standalone Cell runtime; sampled diagnostic, not performance acceptance",
+  "reference_commit": "704d1c0e",
+  "runtime_sha256": "7af313c0f4b96b874eaf49cf77897f219827325d58418d885743108f63262915",
+  "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+  "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+  "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+  "exact_state_runs_effects": true,
+  "sample_delay_seconds": 1.2,
+  "sample_duration_seconds": 4,
+  "sample_interval_ms": 2,
+  "sample_sha256": "84117c1eb8c7daa4ebdfb20702c9ab2473a46172b67e8c1d8dce00ba0ecef9d9",
+  "phases": {
+    "delivery_gc": 0.04936763,
+    "query_update": 1.603385479,
+    "repair": 0.55106179,
+    "rhs": 2.774793567,
+    "search": 2.325953495
+  },
+  "limits": "A bounded wall-residence sample, not CPU percentages or a full-run census. Inclusive stacks overlap; inlining limits attribution. No per-Run logging or query profiling was enabled.",
+  "threads": [
+    {
+      "thread": "Thread_25437756   DispatchQueue_1: com.apple.main-thread  (serial)",
+      "samples": 1210,
+      "own_top": {
+        "__psynch_cvwait": 369,
+        "_platform_memmove": 61,
+        "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert": 27,
+        "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert": 21,
+        "eggfuse_cell_runtime::value::parent_epoch::Parents::get": 17,
+        "_$LT$eggfuse_cell_runtime..graph..arena..Cells$u20$as$u20$eggfuse_cell_runtime..graph..fact_states..FactStates$GT$::fact_state": 17,
+        "eggfuse_cell_runtime::query::Columns::put": 17,
+        "eggfuse_cell_runtime::stage_spine::Programs::complete": 15,
+        "eggfuse_cell_runtime::entry_schedule::epoch_runs::Epochs::remove": 14,
+        "eggfuse_cell_runtime::sieve::Summary::allows": 13,
+        "eggfuse_cell_runtime::executor::Executor::run::_$u7b$$u7b$closure$u7d$$u7d$": 12,
+        "eggfuse_cell_runtime::graph::Graph::replace_row_edges": 12,
+        "eggfuse_cell_runtime::graph::Graph::slot_fields": 12,
+        "mi_free": 12,
+        "eggfuse_cell_runtime::executor::Executor::start_cell_execution": 12
+      },
+      "inference_samples": 1209,
+      "publication_samples": 317,
+      "publication_symbols": {
+        "eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables": 317
+      }
+    },
+    {
+      "thread": "Thread_25437760: cell-query-0",
+      "samples": 1210,
+      "own_top": {
+        "__psynch_cvwait": 797,
+        "swtch_pri": 51,
+        "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate": 27,
+        "eggfuse_cell_runtime::sieve::Summary::allows": 19,
+        "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold": 14,
+        "__psynch_mutexwait": 12,
+        "eggfuse_cell_runtime::query::Columns::put": 12,
+        "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate": 11,
+        "_platform_memmove": 11,
+        "_$LT$eggfuse_cell_runtime..graph..arena..Cells$u20$as$u20$eggfuse_cell_runtime..graph..fact_states..FactStates$GT$::fact_state": 11,
+        "__psynch_cvsignal": 11,
+        "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step": 10,
+        "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold": 9,
+        "_$LT$eggfuse_cell_runtime..slots..FrameMap$LT$K$C$V$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LP$K$C$V$RP$$GT$$GT$::extend": 8,
+        "rayon::slice::sort::recurse": 8
+      },
+      "inference_samples": 0,
+      "publication_samples": 0,
+      "publication_symbols": {}
+    },
+    {
+      "thread": "Thread_25437761: cell-query-1",
+      "samples": 1210,
+      "own_top": {
+        "__psynch_cvwait": 848,
+        "swtch_pri": 58,
+        "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate": 27,
+        "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step": 17,
+        "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate": 14,
+        "_$LT$eggfuse_cell_runtime..graph..arena..Cells$u20$as$u20$eggfuse_cell_runtime..graph..fact_states..FactStates$GT$::fact_state": 14,
+        "eggfuse_cell_runtime::sieve::Summary::allows": 14,
+        "__psynch_mutexwait": 11,
+        "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold": 9,
+        "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold": 9,
+        "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert": 8,
+        "eggfuse_cell_runtime::query::snapshot::TableRead::domain": 8,
+        "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$": 7,
+        "_platform_memmove": 7,
+        "core::ptr::drop_in_place$LT$$u5b$eggfuse_cell_runtime..value..Value$u5d$$GT$": 5
+      },
+      "inference_samples": 0,
+      "publication_samples": 0,
+      "publication_symbols": {}
+    },
+    {
+      "thread": "Thread_25437762: cell-query-2",
+      "samples": 1210,
+      "own_top": {
+        "__psynch_cvwait": 873,
+        "swtch_pri": 51,
+        "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate": 28,
+        "eggfuse_cell_runtime::sieve::Summary::allows": 19,
+        "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold": 17,
+        "_$LT$eggfuse_cell_runtime..graph..arena..Cells$u20$as$u20$eggfuse_cell_runtime..graph..fact_states..FactStates$GT$::fact_state": 15,
+        "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step": 13,
+        "__psynch_mutexwait": 10,
+        "mi_page_thread_collect_to_local": 9,
+        "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold": 9,
+        "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate": 7,
+        "_platform_memmove": 7,
+        "eggfuse_cell_runtime::sieve::publication::table_events::Events::complete": 7,
+        "eggfuse_cell_runtime::executor::query_workers::entry_ranges::run::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$": 6,
+        "core::ptr::drop_in_place$LT$$u5b$eggfuse_cell_runtime..value..Value$u5d$$GT$": 5
+      },
+      "inference_samples": 0,
+      "publication_samples": 0,
+      "publication_symbols": {}
+    },
+    {
+      "thread": "Thread_25437763: cell-query-3",
+      "samples": 1210,
+      "own_top": {
+        "__psynch_cvwait": 890,
+        "swtch_pri": 51,
+        "eggfuse_cell_runtime::executor::query_workers::expansion::Prepared::evaluate": 30,
+        "_$LT$eggfuse_cell_runtime..graph..arena..Cells$u20$as$u20$eggfuse_cell_runtime..graph..fact_states..FactStates$GT$::fact_state": 19,
+        "_platform_memmove": 13,
+        "core::iter::adapters::flatten::FlattenCompat$LT$I$C$U$GT$::iter_try_fold": 13,
+        "eggfuse_cell_runtime::executor::query_workers::expansion::Host::step": 12,
+        "eggfuse_cell_runtime::sieve::Summary::allows": 12,
+        "__psynch_mutexwait": 11,
+        "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::next": 10,
+        "eggfuse_cell_runtime::cell::query::BoundStep$LT$A$GT$::evaluate": 9,
+        "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold": 9,
+        "eggfuse_cell_runtime::query::snapshot::TableRead::domain": 9,
+        "mi_page_thread_collect_to_local": 7,
+        "eggfuse_cell_runtime::graph::query_reads::QueryReads::point": 6
+      },
+      "inference_samples": 0,
+      "publication_samples": 0,
+      "publication_symbols": {}
+    }
+  ]
+}

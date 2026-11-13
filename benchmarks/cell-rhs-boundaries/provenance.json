@@ -1,0 +1,22 @@
+{
+  "control_commit": "704d1c0e",
+  "candidate_commit": "9b107d455e67d7930cdbb05a3d377f9dc686ecff",
+  "runtime_sources": {
+    "engine/cell-runtime/src/entry_schedule.rs": "b6a77fd81570bbbc8c9cc2f14e006fbe30d5f8763a1bd0da928b079ceb5e7ab8",
+    "engine/cell-runtime/src/entry_publication_workers.rs": "c09baa2d82febbd4db7d1685c6a298822cb5c2001f0834ba264ea09210f6703e",
+    "engine/cell-runtime/src/entry_packet_update.rs": "812d191a9110fc2be33cbb438a93d15e7f0084499a194440fdcc247790944869",
+    "tools/cell-compiler/tests/entry_publications.rs": "195b4e685f8c68b0600215caa78a07d5a5ca12520fa493da6221a717fd528f7c"
+  },
+  "control_runtime_sha256": "7af313c0f4b96b874eaf49cf77897f219827325d58418d885743108f63262915",
+  "candidate_runtime_sha256": "9db383893103d0f3d1b21ea43482cd83c4099334a5e39ff6bc1245364895f2e3",
+  "validation_job": "26",
+  "work_job": "28",
+  "timing_job": "32",
+  "prior_timing_attempt": {
+    "job": "31",
+    "status": "rejected before any sample",
+    "reason": "uncommitted unrelated runtime changes in shared main worktree",
+    "resolution": "run frozen binaries from the clean committed isolated checkout"
+  },
+  "adopted": false
+}
