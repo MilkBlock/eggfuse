@@ -113,6 +113,18 @@ impl Graph {
     }
 }
 impl Read<'_> {
+    pub fn witness(&self,fact:FactRef,table:usize,key:Option<&[Value]>,work:&mut Work)
+        ->Result<Option<(Value,u64,Dependency)>> {
+        if let Some(key)=key {
+            return self.candidate(fact,table,key,work).map(|r|r.and_then(|(v,e,w,h)|(!h).then_some((v,e,w))));
+        }
+        work.candidates+=1;
+        let Some(node)=self.guard.node(fact,&mut work.reads) else {return Ok(None);};
+        if node.table!=table {return Ok(None);}
+        work.metadata_reads+=1;
+        let Some(state)=self.cells.fact_state(fact).filter(|s|!s.hidden) else {return Ok(None);};
+        Ok(Some((self.guard.result(&node,&mut work.reads)?,state.epoch,Dependency::Fact(fact))))
+    }
     pub fn complete_table(&self, table: usize) -> bool {
         self.plan.tables[table] && self.owned_counts[table] == self.members[table].len()
     }

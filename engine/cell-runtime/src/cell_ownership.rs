@@ -23,7 +23,7 @@ pub(in crate::graph) mod query_read;
 #[path = "port_completion.rs"]
 pub(crate) mod completion;
 #[path = "ownership_witnesses.rs"]
-mod witnesses;
+pub(in crate::graph) mod witnesses;
 
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Plan {
@@ -62,6 +62,9 @@ pub struct Marker {
     pub program: Arc<PortProgram>,
 }
 impl Plan {
+    pub(crate) fn has_witness_routes(&self, rule:usize)->bool {
+        self.witnesses.0.get(rule).is_some_and(|r|!r.is_empty())
+    }
     #[cfg(feature = "storage-metrics")]
     pub(crate) fn release_storage_by_field(self, live_bytes: &impl Fn() -> usize, rows: &mut Vec<(&'static str, usize)>) {
         assert!(rows.capacity() - rows.len() >= 32);

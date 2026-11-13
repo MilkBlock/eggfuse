@@ -127,8 +127,17 @@ impl Work {
             Some(J::String(v)) if v == "cell-constructor-preparation/v6" => 6,
             Some(J::String(v)) if v == "cell-constructor-preparation/v7" => 7,
             Some(J::String(v)) if v == "cell-constructor-preparation/v8" => 8,
+            Some(J::String(v)) if v == "cell-constructor-preparation/v9" => 9,
             _ => return Err("unknown Cell constructor preparation accounting".into()),
         };
+        for field in ["attempts","anchor_reads","probes","operation_checks","candidates","lifecycle_checks"] {
+            let key=format!("query_workers/stats/execution/constructor/witnesses/{field}");
+            let value=if constructor_preparation>=9 && report["query_workers"]["enabled"]==true {
+                report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                    .ok_or_else(||format!("missing prepared witness work {key}"))?
+            } else {0};
+            work.insert(key,value);
+        }
         for (group, fields) in [
             ("stats", &["constructor_prepared_checks", "constructor_prepared_fields"][..]),
             ("query_workers/stats/execution/constructor", &["attempts", "key_fields", "key_spills", "result_writes"]),
@@ -796,6 +805,18 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
     assert_eq!(report["query_workers"]["organization"], "cell-run-events/v6");
+    for field in ["attempts","anchor_reads","probes","operation_checks","candidates","lifecycle_checks"] {
+        let path=format!("/query_workers/stats/execution/constructor/witnesses/{field}");
+        let mut extra=report.clone();
+        *extra.pointer_mut(&path).unwrap()=json!(report.pointer(&path).unwrap().as_u64().unwrap()+1);
+        assert_eq!(work.savings(&Work::read(&extra).unwrap()).0,-1);
+        *extra.pointer_mut(&path).unwrap()=J::Null;
+        assert!(Work::read(&extra).unwrap_err().contains("missing prepared witness work"));
+    }
+    for field in ["hits","proved_hits","selection_reuses"] {
+        let mut extra=report.clone();extra["query_workers"]["stats"]["execution"]["constructor"]["witnesses"][field]=json!(1000000);
+        assert_eq!(work.savings(&Work::read(&extra).unwrap()).0,0,"outcomes do not earn duplicate credit");
+    }
     for field in ["constructor_cell_route_anchor_reads","constructor_cell_route_address_checks"] {
         let mut extra=report.clone();extra["stats"][field]=json!(report["stats"][field].as_u64().unwrap()+1);
         assert_eq!(work.savings(&Work::read(&extra).unwrap()).0,-1);

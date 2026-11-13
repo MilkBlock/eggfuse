@@ -16,6 +16,7 @@ pub(crate) struct Plan {
     // result donor need no per-instance history admission checks.
     pub handoff: bool,
     owner_entries: bool,
+    witness_rule:Option<std::num::NonZeroUsize>,
     keys: Vec<Arg>,
     prefix: Vec<prefix::Step>,
     // Slots established by the existing input-derived scalar program. Prefix
@@ -203,6 +204,7 @@ pub(crate) struct Counts {
     pub prefix_progress_writes: u64,
     pub prefix_scalar_checks: u64,
     pub prefix_scalar_stops: u64,
+    pub witnesses:crate::graph::query_reads::PreparedWork,
 }
 impl Counts {
     pub fn add(&mut self, other: &Self) {
@@ -212,6 +214,7 @@ impl Counts {
             prefix_witness_growths, prefix_witness_bytes);
         add!(prefix_layout_checks, prefix_result_initializations, prefix_progress_writes);
         add!(prefix_scalar_checks, prefix_scalar_stops);
+        self.witnesses.add(&other.witnesses);
     }
 }
 impl Plan {
@@ -242,7 +245,9 @@ impl Plan {
                 Arg::Literal(_) => true,
                 Arg::Slot(s) => ready.contains(s) && cell.template.defs.get(s).is_none_or(|&at| at < operation),
             }) { return Some(Self { operation, table:*table,
-                handoff: p.iterative.supplies_operation(rule, operation), owner_entries:false, keys, prefix:vec![], scalar_ready:vec![], result_layout:None, units:None }); }
+                handoff: p.iterative.supplies_operation(rule, operation), owner_entries:false,
+                witness_rule:p.cell_ownership.has_witness_routes(rule).then(||std::num::NonZeroUsize::new(rule+1).unwrap()),
+                keys, prefix:vec![], scalar_ready:vec![], result_layout:None, units:None }); }
         }
         None
     }
@@ -261,23 +266,10 @@ impl Plan {
             self.prepare_prefix(instance, reads, scratch, work, counts);
             return;
         }
-        let Some(reads) = reads.filter(|r| r.constructor_available(self.table)) else {
+        let Some(reads) = reads else {
             counts.unavailable += 1; return;
         };
-        let mut key = smallvec::SmallVec::<[Value; 4]>::new();
-        for arg in &self.keys {
-            let value = match arg {
-                Arg::Literal(v) => v,
-                Arg::Slot(s) => match instance.values.get(s) {
-                    Some(v) => v, None => { counts.missing_inputs += 1; return; }
-                },
-            };
-            counts.key_fields += 1;
-            key.push(canon(value, reads.parents));
-        }
-        counts.key_spills += u64::from(key.spilled());
-        counts.lookups += 1;
-        match reads.point(self.table, &key, scratch, work) {
+        match self.probe(self.operation,self.table,&self.keys,instance,reads,scratch,work,counts,&mut Default::default()) {
             Ok(Some((_, _, Dependency::Fact(fact)))) => {
                 instance.constructor = Prepared::Found(fact);
                 counts.hits += 1;
@@ -288,5 +280,38 @@ impl Plan {
             // operation remains responsible at its original effect position.
             _ => counts.unavailable += 1,
         }
+    }
+    pub(super) fn probe(&self,operation:usize,table:usize,args:&[Arg],instance:&Instance,
+        reads:&crate::graph::query_reads::QueryReads<'_>,scratch:&mut crate::graph::query_reads::Scratch,
+        work:&mut crate::graph::query_reads::Work,counts:&mut Counts,
+        selection:&mut crate::graph::query_reads::PreparedSelection)
+        ->std::result::Result<Option<(Value,u64,Dependency)>,()> {
+        let Counts{key_fields,key_spills,missing_inputs,witnesses,..}=counts;
+        let mut make_key=|| {
+            let mut values=smallvec::SmallVec::<[Value;4]>::new();
+            for arg in args {
+                let value=match arg {
+                    Arg::Literal(v)=>v,
+                    Arg::Slot(slot)=>match instance.values.get(slot) {
+                        Some(v)=>v,None=>{*missing_inputs+=1;return Err(());}
+                    },
+                };
+                *key_fields+=1;values.push(canon(value,reads.parents));
+            }
+            *key_spills+=u64::from(values.spilled());Ok(values)
+        };
+        let Some(rule)=self.witness_rule else {
+            if !reads.constructor_available(table) {return Err(());}
+            let key=make_key()?;
+            counts.lookups+=1;
+            return reads.point(table,&key,scratch,work).map_err(|_|());
+        };
+        let mut key=None;
+        if let Some(result)=reads.prepared_witness(rule.get()-1,operation,table,&instance.known,
+                selection,witnesses,work,&mut key,&mut make_key) {return Ok(Some(result));}
+        if !reads.constructor_available(table) {return Err(());}
+        let key=key.get_or_insert_with(make_key).as_ref().map_err(|_|())?;
+        counts.lookups+=1;
+        reads.point(table,key,scratch,work).map_err(|_|())
     }
 }

@@ -104,6 +104,85 @@ impl Routes {
         Self(rules,groups.into_iter().map(|operations|Group{operations:operations.into_boxed_slice()}).collect())
     }
 }
+
+/// Stack scratch scoped to one prepared instance. It owns no values or graph
+/// evidence and never survives the borrowed Run view or crosses Graphs.
+#[derive(Default)]
+pub(crate) struct PreparedSelection(Option<Selection>);
+#[derive(Default,serde::Serialize)]
+pub(crate) struct PreparedWork {
+    pub attempts:u64,
+    pub anchor_reads:u64,
+    pub probes:u64,
+    pub operation_checks:u64,
+    pub candidates:u64,
+    pub lifecycle_checks:u64,
+    pub selection_reuses:u64,
+    pub hits:u64,
+    pub proved_hits:u64,
+}
+impl PreparedWork {
+    pub fn add(&mut self,other:&Self) {
+        if other.attempts==0 {return;}
+        macro_rules! add {($($f:ident),*)=>{$(self.$f+=other.$f;)*}}
+        add!(attempts,anchor_reads,probes,operation_checks,candidates,lifecycle_checks,
+            selection_reuses,hits,proved_hits);
+    }
+}
+/// The existing catalog and composition directories, borrowed without the
+/// coordinator's mutable Entry/cache. No instances, bindings or rows are copied.
+pub(in crate::graph) struct Read<'a> {
+    routes:&'a Routes,
+    entries:&'a [Vec<usize>],
+    frames:&'a composition::Frames,
+    components:&'a crate::read_epoch::Slots<Option<composition::Component>>,
+}
+impl Graph {
+    pub(in crate::graph) fn prepared_witness_reader(&self)->Option<Read<'_>> {
+        let owner=self.ownership.as_ref()?;
+        let plan=&self.program.cell_ownership;
+        if plan.witnesses.0.is_empty() {return None;}
+        Some(Read{routes:&plan.witnesses,entries:&plan.entries,
+            frames:&owner.composition.frames,components:&owner.composition.components})
+    }
+}
+impl Read<'_> {
+    pub fn find<T>(&self,rule:usize,operation:usize,known:&crate::cell::QueryFacts,
+        selection:&mut PreparedSelection,work:&mut PreparedWork,
+        mut accept:impl FnMut(FactRef,FactRef,bool,&mut PreparedWork)->Option<T>)->Option<T> {
+        work.attempts+=1;
+        let routes=self.routes.0.get(rule)?;
+        let entries=routes.operations.get(operation)?;
+        if entries.is_empty() {return None;}
+        for &index in entries {
+            let Some(Dependency::Fact(anchor))=known.receipt(self.entries[rule][index]) else {continue;};
+            work.anchor_reads+=1;
+            let Some(source)=self.frames.get(&anchor.cell) else {continue;};
+            let Some(component)=self.components.get(source.component as usize).and_then(Option::as_ref) else {continue;};
+            let key=(component.shape,source.ordinal,source.code,anchor.op);
+            let group=if let Some(cached)=selection.0.filter(|s|s.rule==rule && s.entry==index && s.key==key) {
+                work.selection_reuses+=1;cached.group
+            } else {
+                work.probes+=1;
+                let group=routes.entries[&index].get(&key).copied();
+                selection.0=Some(Selection{rule,entry:index,key,group,address:None});group
+            };
+            let Some(group)=group else {continue;};
+            work.operation_checks+=1;
+            let operations=&self.routes.1[group].operations;
+            let Ok(position)=operations.binary_search_by_key(&operation,|p|p.0) else {continue;};
+            for &Target{frame,code,op,key_proved} in &operations[position].1 {
+                work.candidates+=1;
+                let Some(&cell)=component.frames.get(frame) else {continue;};
+                if !self.frames.get(&cell).is_some_and(|f|f.code==code && f.component==source.component) {continue;}
+                if let Some(result)=accept(anchor,FactRef{cell,op},key_proved,work) {
+                    work.hits+=1;return Some(result);
+                }
+            }
+        }
+        None
+    }
+}
 #[derive(serde::Deserialize)]
 struct Recipe {
     rule: usize,

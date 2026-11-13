@@ -98,6 +98,7 @@ impl Plan {
         let mut results = Vec::new();
         let mut completed = 0;
         let mut ready = 0;
+        let mut selection=Default::default();
         for step in &self.prefix {
             let mut missing = false;
             for slot in &self.scalar_ready[ready..step.ready] {
@@ -106,22 +107,7 @@ impl Plan {
             }
             if missing { counts.prefix_scalar_stops += 1; break; }
             ready = step.ready;
-            if !reads.constructor_available(step.table) { counts.unavailable += 1; break; }
-            let mut key = smallvec::SmallVec::<[Value;4]>::new();
-            for arg in &step.keys {
-                let value = match arg {
-                    Arg::Literal(v) => v,
-                    Arg::Slot(s) => match instance.values.get(s) {
-                        Some(v) => v,
-                        None => { counts.missing_inputs += 1; break; },
-                    },
-                };
-                key.push(canon(value,reads.parents)); counts.key_fields += 1;
-            }
-            if key.len()!=step.keys.len() { break; }
-            counts.key_spills += u64::from(key.spilled());
-            counts.lookups += 1;
-            match reads.point(step.table,&key,scratch,work) {
+            match self.probe(step.operation,step.table,&step.keys,instance,reads,scratch,work,counts,&mut selection) {
                 Ok(Some((value,_,Dependency::Fact(witness)))) => {
                     if completed == 0 {
                         instance.values.reserve_exact(self.prefix.len());

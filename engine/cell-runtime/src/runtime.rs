@@ -3377,7 +3377,7 @@ impl Executor {
             "context_bytes":std::mem::size_of::<crate::graph::rhs_ownership::Suspended>(),
             "scope":"existing worker suffix dispatch; source-order driver still waits"}); }
         #[cfg(feature = "sparse-cells")]
-        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v8",
+        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v9",
             "rules":self.graph.program.executions.iter().filter(|p|p.constructor.is_some()).count(),
             "handoff_rules":self.graph.program.executions.iter()
                 .filter(|p|p.constructor.as_ref().is_some_and(|p|p.handoff)).count(),

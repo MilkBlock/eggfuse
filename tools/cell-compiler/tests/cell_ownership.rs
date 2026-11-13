@@ -1573,13 +1573,14 @@ fn compiled_constructor_witness_replaces_cross_stage_lookup() {
     assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
     assert!(candidate.graph.stats.constructor_cell_route_key_proved>0);
     assert!(candidate.graph.stats.constructor_cell_route_key_fields_avoided>0);
-    for mutation in ["hide", "delete", "union"] {
+    for mutation in ["hide", "delete", "union"] {for workers in [0,4] {
         let mut plain=raw.clone();plain.as_object_mut().unwrap().remove("ownership_witnesses");
         plain.as_object_mut().unwrap().remove("sha256");
         plain["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&plain).into();
         let mut base=Executor::new(Graph::new_with_local_congruence(Program::parse(plain).unwrap()).unwrap(),true);
         let mut actual=Executor::new(Graph::new_with_local_congruence(Program::parse(raw.clone()).unwrap()).unwrap(),true);
         for e in [&mut base,&mut actual] {
+            if workers!=0 {e.use_query_workers(workers,1).unwrap();e.use_cell_execution(1).unwrap();}
             e.execute_until(Some(2)).unwrap();
             let table=e.graph.program.tables.iter().position(|t|t.name=="Start").unwrap();
             let witness=e.graph.witnesses(table)[0];
@@ -1595,7 +1596,8 @@ fn compiled_constructor_witness_replaces_cross_stage_lookup() {
         }
         assert_eq!(base.graph.export().unwrap(),actual.graph.export().unwrap(),"mutation={mutation}");
         assert_eq!(base.snapshots,actual.snapshots,"mutation={mutation}");
-    }
+        assert_eq!(base.binding_audit,actual.binding_audit,"mutation={mutation}");
+    }}
     raw["ownership_witnesses"]["recipes"][0]["frame_codes"][0]=json!(usize::MAX);
     raw.as_object_mut().unwrap().remove("sha256");
     raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
@@ -1998,6 +2000,71 @@ fn one_entry_reuses_static_route_selection_for_multiple_constructor_results() {
     assert_eq!(s.constructor_cell_route_anchor_reads+s.constructor_cell_route_address_reuses,
         s.constructor_cell_route_probes+s.constructor_cell_route_selection_reuses);
     assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
+}
+
+#[test]
+fn prepared_workers_use_baked_witnesses_and_check_unproved_keys() {
+    let seed=(0..48).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
+    for delta in [0,1] {
+    let p=program(&format!(r#"
+        (datatype E (N i64) (Start E) (Pair E E) (Wrap E E E) (G E))
+        (ruleset a) (ruleset b) (ruleset c) (ruleset d) (ruleset u)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((= p (Pair s x))) ((Wrap p s x)) :ruleset c)
+        (rule ((Wrap p s x) (= x (N n))) ((Start x) (Pair s x) (Start (N (+ n {delta}))) (G x)) :ruleset d)
+        (rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset u)
+        {seed} (run a 1) (run b 1) (run c 1) (run u 1) (run d 1)
+    "#));
+    let mut observer=Graph::new_with_local_congruence(p.clone()).unwrap();
+    observer.trace_ownership_catalog(16).unwrap();
+    let mut observer=Executor::new(observer,true);observer.execute().unwrap();
+    let trace=observer.graph.ownership_catalog_trace().unwrap();
+    let mut raw=p.artifact.clone();
+    raw["ownership_witnesses"]=json!({"source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),
+        "recipes":trace["saturation"]["witness_recipes"]});
+    // The observer stops at the intervening N lookup. Deliberately offer the
+    // same genuine local Start as a hint for the later computed key: this is
+    // not a proof. The recipe compiler must withhold key_proved, and workers
+    // must reject it for unmerged n+1 inputs rather than trust the hint.
+    let start=p.tables.iter().position(|t|t.name=="Start").unwrap();
+    let mut hinted=0;
+    for recipe in raw["ownership_witnesses"]["recipes"].as_array_mut().unwrap() {
+        let rule=recipe["rule"].as_u64().unwrap() as usize;
+        let ops=&p.templates[p.rules[rule].template].ops;
+        let starts=ops.iter().enumerate().filter_map(|(op,i)|matches!(i,
+            eggfuse_cell_runtime::program::Op::Let(_,eggfuse_cell_runtime::program::Call::Table(t),_) if *t==start).then_some(op)).collect::<Vec<_>>();
+        if starts.len()<2 {continue;}
+        let sites=recipe["rhs_sites"].as_array_mut().unwrap();
+        if let Some(mut site)=sites.iter().find(|s|s[0].as_u64()==Some(starts[0] as u64)).cloned() {
+            site[0]=json!(starts[starts.len()-1]);sites.push(site);hinted+=1;
+        }
+    }
+    assert!(hinted>0);
+    raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let baked=Program::parse(raw).unwrap();
+    for stable in [false,true] {for workers in [1,4] {
+        let execute=|program| {
+            let g=if stable {Graph::new_with_local_congruence(program)}else{Graph::new_with_cell_ownership(program)}.unwrap();
+            let mut e=Executor::new(g,true);
+            e.use_query_workers(workers,1).unwrap();e.use_cell_execution(1).unwrap();e.execute().unwrap();e
+        };
+        let control=execute(p.clone());let candidate=execute(baked.clone());
+        assert_eq!(control.snapshots,candidate.snapshots);
+        assert_eq!(control.binding_audit,candidate.binding_audit);
+        assert_eq!(control.graph.export().unwrap(),candidate.graph.export().unwrap());
+        assert_eq!(control.graph.stats.constructor_requests,candidate.graph.stats.constructor_requests);
+        assert_eq!(control.graph.stats.logical_facts_created,candidate.graph.stats.logical_facts_created);
+        let report=candidate.report();let w=&report["query_workers"]["stats"]["execution"]["constructor"]["witnesses"];
+        assert!(w["proved_hits"].as_u64().unwrap()>=48,"{w}");
+        assert!(w["hits"].as_u64().unwrap()>w["proved_hits"].as_u64().unwrap(),"unproved keys must be compared: {w}");
+        assert!(w["selection_reuses"].as_u64().unwrap()>0,"{w}");
+        assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
+        if delta==1 {assert!(w["candidates"].as_u64().unwrap()>w["hits"].as_u64().unwrap(),"mismatched hinted keys must fall back: {w}");}
+        eprintln!("prepared witnesses delta={delta} stable={stable} workers={workers}: {w}; lookups {} -> {}",
+            control.graph.key_lookup_calls.get(),candidate.graph.key_lookup_calls.get());
+    }}
+    }
 }
 
 #[test]

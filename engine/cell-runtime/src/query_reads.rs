@@ -3,6 +3,7 @@
 use crate::graph::FactStates as _;
 use super::*;
 pub(crate) use cell_ownership::query_read::{Scratch, Work};
+pub(crate) use cell_ownership::witnesses::{PreparedSelection,PreparedWork};
 
 pub(crate) struct QueryReads<'a> {
     keys: &'a [scalar_keys::FunctionKeys],
@@ -10,6 +11,9 @@ pub(crate) struct QueryReads<'a> {
     constructors: Option<Constructors<'a>>,
     tables: &'a [Table],
     pub parents: &'a Parents,
+    witnesses:Option<cell_ownership::witnesses::Read<'a>>,
+    cells:&'a arena::Cells,
+    forwards:&'a HashMap<Dependency,Dependency>,
 }
 enum Constructors<'a> {
     Canonical(Canonical<'a>),
@@ -51,10 +55,36 @@ impl Graph {
                 members: &self.members, hash_mask: self.constructor_hash_mask() }))
         } else { self.constructor_query_reader().map(Constructors::Ports) };
         Some(QueryReads { keys: &self.function_keys, functions: &self.functions, parents: &self.parents,
-            constructors, tables: &self.program.tables })
+            constructors, tables: &self.program.tables, witnesses:self.prepared_witness_reader(),
+            cells:&self.cells, forwards:&self.receipt_forwards })
     }
 }
 impl QueryReads<'_> {
+    pub fn prepared_witness(&self,rule:usize,operation:usize,table:usize,known:&crate::cell::QueryFacts,
+        selection:&mut PreparedSelection,counts:&mut PreparedWork,work:&mut Work,
+        key:&mut Option<std::result::Result<smallvec::SmallVec<[Value;4]>,()>>,
+        mut keys:impl FnMut()->std::result::Result<smallvec::SmallVec<[Value;4]>,()>)->Option<(Value,u64,Dependency)> {
+        let reader=self.witnesses.as_ref()?;
+        // A key is constructed lazily only when the shared proof does not cover
+        // it. The caller retains that same key for a possible ordinary fallback.
+        reader.find(rule,operation,known,selection,counts,|anchor,fact,proved,counts| {
+            counts.lifecycle_checks+=1;
+            if self.forwards.contains_key(&Dependency::Fact(fact))
+                || !self.cells.fact_state(fact).is_some_and(|s|s.owned && !s.hidden) {return None;}
+            let proved=proved && {
+                counts.lifecycle_checks+=1;
+                !self.forwards.contains_key(&Dependency::Fact(anchor))
+                    && self.cells.fact_state(anchor).is_some_and(|s|s.owned && !s.hidden)
+            };
+            let key=if proved {None}else{Some(key.get_or_insert_with(&mut keys).as_ref().ok()?.as_slice())};
+            let result=match self.constructors.as_ref()? {
+                Constructors::Canonical(read)=>read.witness(fact,table,key,work),
+                Constructors::Ports(read)=>read.witness(fact,table,key,work),
+            }.ok().flatten()?;
+            counts.proved_hits+=u64::from(proved);
+            Some(result)
+        })
+    }
     #[cfg(feature="cell-absorption")]
     pub(crate) fn absorption_value(&self,table:usize,key:&Value)->Option<i64> {
         let &index=self.keys[table].get(std::slice::from_ref(key),self.functions)?;
@@ -124,6 +154,19 @@ impl QueryReads<'_> {
     }
 }
 impl Canonical<'_> {
+    fn witness(&self,fact:FactRef,table:usize,key:Option<&[Value]>,work:&mut Work)
+        ->Result<Option<(Value,u64,Dependency)>> {
+        if let Some(key)=key {
+            return self.candidate(fact,table,key,work).map(|r|r.and_then(|(v,e,w,h)|(!h).then_some((v,e,w))));
+        }
+        work.canonical_candidates+=1;
+        let Some(state)=self.cells.fact_state(fact) else {return Ok(None);};
+        let Some((actual,fields))=&state.decoded else {return Ok(None);};
+        if *actual!=table || state.hidden {return Ok(None);}
+        let Some(value)=fields.last() else {return Ok(None);};
+        work.canonical_result_reads+=1;
+        Ok(Some((value.clone(),state.epoch,Dependency::Fact(fact))))
+    }
     fn candidate(&self, fact: FactRef, table: usize, key: &[Value], work: &mut Work)
         -> Result<Option<(Value, u64, Dependency, bool)>> {
         work.canonical_candidates += 1;
