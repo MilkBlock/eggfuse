@@ -1,0 +1,169 @@
+{
+  "scope": "four separate standalone Cell executions sharing one learned catalog; no timing or native semantic claim",
+  "pool": {
+    "samples": [
+      "fact",
+      "loopfact",
+      "sum-bits",
+      "dot-product"
+    ],
+    "records": 2797,
+    "shared_across_samples": 334,
+    "sample_support": {
+      "4": 99,
+      "1": 2463,
+      "2": 167,
+      "3": 68
+    },
+    "transferable_records": {
+      "fact": 2710,
+      "loopfact": 2710,
+      "sum-bits": 2710,
+      "dot-product": 2710
+    },
+    "scope": "candidate reuse, not saved bytes or native semantic proof"
+  },
+  "selected_fragments": 533,
+  "selected_shared_across_inputs": 272,
+  "cases": [
+    {
+      "case": "fact",
+      "source_sha256": "84615f276c5968cadaec53abf228a9acab66dd6c1597e902e9af1a8cab6ed149",
+      "runs": 418,
+      "baseline_program": "f3eeedae7c9722023fc3620cdb34a407113964f3ca101cca85d4fe814552aa7d",
+      "candidate_program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "graph_bytes_before": 803567,
+      "graph_bytes_after": 778319,
+      "graph_delta": -25248,
+      "graph_bytes_with_copied_catalog": 828503,
+      "duplicate_directory_bytes_removed": 50184,
+      "graph_reduction_fraction": 0.03141990649192916,
+      "retained_program_bytes_before": 154617803,
+      "retained_program_bytes_after": 157952897,
+      "source_frames_before": 753,
+      "source_frames_after": 753,
+      "explicit_slots_before": 1236,
+      "explicit_slots_after": 1190,
+      "fact_bytes_before": 68256,
+      "fact_bytes_after": 68256,
+      "changed_graph_fields": {
+        "cells": 6360,
+        "ownership.components": -24560,
+        "ownership.live_facts": -4096,
+        "ownership.shapes": 4344,
+        "ownership.boundaries": -7296
+      },
+      "run_graph_rhs_writes_equal": true,
+      "selected_paths_seen_in_training": 141,
+      "selected_paths_from_other_inputs": 392
+    },
+    {
+      "case": "loopfact",
+      "source_sha256": "26c0d368e168673ed0925e10e42651c255cc7068fa33af96ee065371b88b2051",
+      "runs": 398,
+      "baseline_program": "45a613ba1743f88c32a543b620fd6e50148f905a510776aa53105b95c32b6f30",
+      "candidate_program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "graph_bytes_before": 726057,
+      "graph_bytes_after": 682265,
+      "graph_delta": -43792,
+      "graph_bytes_with_copied_catalog": 732449,
+      "duplicate_directory_bytes_removed": 50184,
+      "graph_reduction_fraction": 0.060314823767280035,
+      "retained_program_bytes_before": 154141109,
+      "retained_program_bytes_after": 157476771,
+      "source_frames_before": 691,
+      "source_frames_after": 691,
+      "explicit_slots_before": 1198,
+      "explicit_slots_after": 1158,
+      "fact_bytes_before": 64224,
+      "fact_bytes_after": 64224,
+      "changed_graph_fields": {
+        "cells": -10712,
+        "ownership.components": -26096,
+        "ownership.live_facts": -4096,
+        "ownership.shapes": 4344,
+        "ownership.heap": -128,
+        "ownership.boundaries": -7104
+      },
+      "run_graph_rhs_writes_equal": true,
+      "selected_paths_seen_in_training": 162,
+      "selected_paths_from_other_inputs": 371
+    },
+    {
+      "case": "sum-bits",
+      "source_sha256": "29b8396e56c0a08bc11ca9e5d52afdc25c138e5e4731d2780484bb004b3686d1",
+      "runs": 882,
+      "baseline_program": "b8943c15a9833e12efd847dc9daa98ded56da9afb2ddd8cc4ef2d2217e971592",
+      "candidate_program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "graph_bytes_before": 2257323,
+      "graph_bytes_after": 2073387,
+      "graph_delta": -183936,
+      "graph_bytes_with_copied_catalog": 2123571,
+      "duplicate_directory_bytes_removed": 50184,
+      "graph_reduction_fraction": 0.08148412965269036,
+      "retained_program_bytes_before": 154959841,
+      "retained_program_bytes_after": 158294759,
+      "source_frames_before": 2180,
+      "source_frames_after": 2180,
+      "explicit_slots_before": 4121,
+      "explicit_slots_after": 3989,
+      "fact_bytes_before": 208440,
+      "fact_bytes_after": 208440,
+      "changed_graph_fields": {
+        "cells": -52904,
+        "ownership.components": -90464,
+        "ownership.live_facts": -16384,
+        "ownership.shapes": 4344,
+        "ownership.heap": -1024,
+        "ownership.boundaries": -27504
+      },
+      "run_graph_rhs_writes_equal": true,
+      "selected_paths_seen_in_training": 403,
+      "selected_paths_from_other_inputs": 130
+    },
+    {
+      "case": "dot-product",
+      "source_sha256": "02f301e6689c2ddfca4c8a01b431d031a3289c6bba98f141deecd71edacded68",
+      "runs": 954,
+      "baseline_program": "001d074f81d236cb90e12bb383669123a65596363e29c7ef22770422c4a8184d",
+      "candidate_program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "graph_bytes_before": 2199779,
+      "graph_bytes_after": 2047203,
+      "graph_delta": -152576,
+      "graph_bytes_with_copied_catalog": 2097387,
+      "duplicate_directory_bytes_removed": 50184,
+      "graph_reduction_fraction": 0.06935969476933823,
+      "retained_program_bytes_before": 156470583,
+      "retained_program_bytes_after": 159805445,
+      "source_frames_before": 2136,
+      "source_frames_after": 2136,
+      "explicit_slots_before": 4098,
+      "explicit_slots_after": 3954,
+      "fact_bytes_before": 203400,
+      "fact_bytes_after": 203400,
+      "changed_graph_fields": {
+        "cells": -20552,
+        "ownership.components": -94544,
+        "ownership.live_facts": -16384,
+        "ownership.shapes": 4344,
+        "ownership.boundaries": -25440
+      },
+      "run_graph_rhs_writes_equal": true,
+      "selected_paths_seen_in_training": 306,
+      "selected_paths_from_other_inputs": 227
+    }
+  ],
+  "aggregate": {
+    "graph_bytes_before": 5986726,
+    "graph_bytes_after": 5581174,
+    "graph_reduction_fraction": 0.0677418675917354,
+    "meaning": "sum of separate final Graph heaps, not a combined live egraph or a peak"
+  },
+  "admission": "all four Graph heaps improve after eliminating duplicate directory; no held-out or native-generalization claim",
+  "limitations": [
+    "Same-source Run checks do not extend the native semantic contract beyond reviewed sum-bits.",
+    "This unmarked direct-source batch differs from the prior marked sum-bits baseline.",
+    "All four inputs contribute training data; these are not held-out generalization results.",
+    "Static definition identity is conservative; this is not saturation-history equivalence."
+  ]
+}

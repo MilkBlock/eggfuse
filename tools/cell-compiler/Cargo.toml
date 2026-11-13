@@ -76,3 +76,7 @@ required-features = ["iterative-bake", "sparse-cells"]
 [[example]]
 name = "relower_entry_values"
 required-features = ["iterative-bake", "sparse-cells"]
+
+[[example]]
+name = "batch_cell_learning"
+required-features = ["iterative-bake", "sparse-cells", "storage-metrics"]
