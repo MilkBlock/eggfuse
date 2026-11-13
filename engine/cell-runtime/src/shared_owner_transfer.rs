@@ -52,6 +52,17 @@ impl Graph {
         let Some(m)=self.ownership.as_ref() else {return Ok(0);};
         let mut groups=Vec::new();let mut pending=Vec::new();let mut bytes=0;
         for component in m.composition.components.iter().flatten() {
+            // A completed/retired source has no ordinary Cell record. Without
+            // one, this component cannot contribute a new transfer or suffix.
+            // Restoring a source recreates that record and reopens admission.
+            let fresh=component.frames.iter().any(|id| {
+                self.stats.shared_owner_admission_source_probes+=1;
+                self.cells.get(id).is_some()
+            });
+            if !fresh {
+                self.stats.shared_owner_settled_components_skipped+=1;
+                continue;
+            }
             let ids=component.frames.iter().copied().filter(|id| {
                 self.cells.completed_meta(*id).is_some()
                     || self.cells.get(id).is_some_and(|c| c.completed && c.parent.is_none()

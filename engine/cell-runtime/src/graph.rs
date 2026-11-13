@@ -480,6 +480,8 @@ pub struct Stats {
     pub shared_owner_slots_delegated:u64,
     #[serde(default)]
     pub shared_owner_segment_extensions:u64,
+    pub shared_owner_admission_source_probes:u64,
+    pub shared_owner_settled_components_skipped:u64,
     #[serde(default)]
     pub shared_owner_segments_reused:u64,
     #[serde(default)]

@@ -1479,7 +1479,12 @@ fn later_single_stage_joins_the_existing_physical_owner() {
         let storage=actual.graph.retained_cell_storage();
         assert_eq!(storage["completed_owners"]["owners"],1);
         assert_eq!(storage["completed_owners"]["completed_frames"],4);
+        let skipped=actual.graph.stats.shared_owner_settled_components_skipped;
+        let probes=actual.graph.stats.shared_owner_admission_source_probes;
         assert_eq!(actual.graph.transfer_completed_owners().unwrap(),0,"idle boundary is a no-op");
+        assert_eq!(actual.graph.stats.shared_owner_settled_components_skipped-skipped,1);
+        assert_eq!(actual.graph.stats.shared_owner_admission_source_probes-probes,4);
+        assert_eq!(actual.graph.retained_cell_storage(),storage,"idle admission changes no retained state");
     }
 }
 
