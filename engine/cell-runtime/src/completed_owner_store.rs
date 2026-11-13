@@ -116,6 +116,11 @@ impl Cells {
         let f=self.completed.frames.get(self.completed_index(id)?)?;
         Some(Slots{positions:&f.layout.slots,values:&self.completed.owners[f.owner].slots[f.slots()]})
     }
+    pub(crate) fn completed_value(&self,id:u32,slot:usize)->Option<&Value> {
+        let f=self.completed.frames.get(self.completed_index(id)?)?;
+        let offset=f.layout.slots.binary_search(&slot).ok()?;
+        self.completed.owners[f.owner].slots.get(f.slot_start+offset)
+    }
     pub(crate) fn completed_facts(&self,id:u32)->Option<fact_storage::View<'_>> {
         let f=self.completed.frames.get(self.completed_index(id)?)?;
         Some(self.completed.owners[f.owner].facts.view(f.fact_start,&f.layout.ops,f.started_epoch))

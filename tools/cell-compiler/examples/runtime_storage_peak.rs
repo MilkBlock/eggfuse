@@ -55,8 +55,8 @@ fn detach(exec: Executor) -> Graph {
 }
 fn main() -> Result<(), Box<dyn Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    if !(args.len()>=3 && args[3..].iter().all(|a| matches!(a.as_str(),"--port-domains-only"|"--template-fields"))) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners" | "nested-owners" | "multi-owner-control" | "unpooled-owner-control") {
-        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners|nested-owners|multi-owner-control|unpooled-owner-control [--port-domains-only] [--template-fields]".into());
+    if !(args.len()>=3 && args[3..].iter().all(|a| matches!(a.as_str(),"--port-domains-only"|"--template-fields"|"--cell-fields"))) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners" | "nested-owners" | "multi-owner-control" | "unpooled-owner-control") {
+        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners|nested-owners|multi-owner-control|unpooled-owner-control [--port-domains-only] [--template-fields|--cell-fields]".into());
     }
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
     let program = p.artifact["sha256"].clone();
@@ -70,6 +70,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     if matches!(args[2].as_str(),"inherited-owners"|"nested-owners"|"multi-owner-control" | "unpooled-owner-control") {e.use_completed_parent_takeover()?;}
     if args[3..].iter().any(|a|a=="--port-domains-only") {e.graph.use_port_domains_only()?;}
     if args[3..].iter().any(|a|a=="--template-fields") {e.graph.use_template_stable_fields()?;}
+    if args[3..].iter().any(|a|a=="--cell-fields") {e.graph.use_cell_stable_fields()?;}
     let setup_peak = PEAK.load(Relaxed);
     let setup_live = LIVE.load(Relaxed);
     loop {

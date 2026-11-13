@@ -119,6 +119,7 @@ impl Graph {
         })
     }
     fn delegate_completed_scalars(&mut self,cell:u32) {
+        if self.cell_stable_fields_enabled() {return;}
         let Some(c)=self.cells.get(&cell).filter(|c|c.completed) else {return;};
         let mut slots=self.scalar_plan(c.template).iter().filter_map(|&(slot,_,_)| {
             let value=c.values.get(&slot)?;
@@ -134,6 +135,7 @@ impl Graph {
     /// Restore only bindings losing their last provider, before either stable
     /// fields or the composed owner are retired. Fact identity stays unchanged.
     pub(super) fn preserve_completed_scalars(&mut self,f:FactRef) {
+        if self.cell_stable_fields_enabled() {return;}
         use crate::slots::ReadSlots;
         let Some(meta)=self.cells.cell_metadata(f.cell).filter(|m|m.symbolic_slots) else {return;};
         let mut restore=Vec::new();

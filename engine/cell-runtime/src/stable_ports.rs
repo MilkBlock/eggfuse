@@ -38,11 +38,12 @@ impl From<Signal> for ComponentPort {
 enum Field {
     Port(ComponentPort),
     Scalar(Value),
+    CellScalar(Value),
 }
 impl Field {
     fn value(&self, port: impl FnOnce(ComponentPort) -> Result<Value>) -> Result<Value> {
         match self {
-            Self::Scalar(value) => Ok(value.clone()),
+            Self::Scalar(value) | Self::CellScalar(value) => Ok(value.clone()),
             Self::Port(p) => port(*p),
         }
     }
@@ -62,7 +63,35 @@ struct FieldView<'a> {
     component: u32,
     columns: &'a [Option<usize>],
     ports: &'a [usize],
-    scalars: &'a [Value],
+    scalars: ScalarView<'a>,
+}
+enum ScalarView<'a> {
+    Stored(&'a [Value]),
+    #[cfg(feature="sparse-cells")]
+    Cell { cells: &'a crate::graph::arena::Cells, templates: &'a [Template], cell: u32, operation: u32 },
+}
+fn scalar_argument(template:&Template,operation:u32,column:usize)->Option<&Arg> {
+    match template.ops.get(operation as usize)? {
+        Op::Let(_,Call::Table(_),args)=>args.get(column),
+        Op::Set(_,args,value)=>args.get(column).or_else(||(column==args.len()).then_some(value)),
+        _=>None,
+    }
+}
+impl ScalarView<'_> {
+    fn get(&self,index:usize,column:usize)->Option<Value> {
+        match self {
+            Self::Stored(values)=>values.get(index).cloned(),
+            #[cfg(feature="sparse-cells")]
+            Self::Cell{cells,templates,cell,operation}=>{
+                let template=templates.get(cells.cell_metadata(*cell)?.template)?;
+                match scalar_argument(template,*operation,column)? {
+                    Arg::Literal(value)=>Some(value.clone()),
+                    Arg::Slot(slot)=>cells.get(cell).and_then(|c|c.values.get(slot))
+                        .or_else(||cells.completed_value(*cell,*slot)).cloned(),
+                }
+            },
+        }
+    }
 }
 impl FieldView<'_> {
     fn len(&self) -> usize { self.columns.len() }
@@ -71,7 +100,9 @@ impl FieldView<'_> {
             Some(local) => Field::Port(ComponentPort { component: self.component, symbol: self.ports[local] }),
             None => {
                 let index = self.columns[..column].iter().filter(|s|s.is_none()).count();
-                Field::Scalar(self.scalars[index].clone())
+                match self.scalars {ScalarView::Stored(_)=>Field::Scalar(self.scalars.get(index,column)?),
+                    #[cfg(feature="sparse-cells")]
+                    ScalarView::Cell{..}=>Field::CellScalar(self.scalars.get(index,column)?)}
             }
         })
     }
@@ -90,6 +121,9 @@ pub struct Stored {
 pub(in crate::graph) struct Runtime {
     keys: bool,
     pub(super) template_fields: bool,
+    pub(super) cell_fields: bool,
+    cell_scalar_installs: u64,
+    cell_scalar_reads: Counter<u64>,
     /// Materialized stable fields. Template projection leaves only scalar-bearing
     /// records here; its borrowed workers use the existing sparse Cell lifecycle.
     #[serde(skip)]
@@ -148,6 +182,47 @@ impl Graph {
         runtime.template_fields = true;
         Ok(())
     }
+    /// Source slots and template operands replace all per-fact field records.
+    /// Enable before completed sources have delegated their scalar ownership.
+    #[cfg(feature="sparse-cells")]
+    pub fn use_cell_stable_fields(&mut self)->Result<()> {
+        if self.cell_stable_fields_enabled() {return Ok(());}
+        if self.cells.completed_ids().next().is_some() || self.stats.completed_scalar_slots_elided!=0 {
+            return Err("cell fields must precede completed scalar delegation".into());
+        }
+        self.use_template_stable_fields()?;
+        let facts=self.cells.cell_ids().flat_map(|id|self.cells.fact_states(id).map(|(f,_)|f)).collect::<Vec<_>>();
+        for fact in facts {
+            let Some(node)=self.stable_node(fact) else {continue;};
+            let values=self.stable_values(&node,false)?;
+            let frame=self.ownership.as_ref().unwrap().composition.frames[&fact.cell];
+            let program=self.program.cell_ownership.code_programs[frame.code].clone();
+            self.capture_cell_scalars(fact,&values,&program.fields[fact.op as usize]);
+            self.stable_ports.as_mut().unwrap().nodes.remove(&fact);
+        }
+        let runtime=self.stable_ports.as_mut().unwrap();
+        runtime.nodes.compact();runtime.cell_fields=true;
+        Ok(())
+    }
+    pub(in crate::graph) fn cell_stable_fields_enabled(&self)->bool {
+        self.stable_ports.as_ref().is_some_and(|p|p.cell_fields)
+    }
+    fn capture_cell_scalars(&mut self,f:FactRef,values:&[Value],symbols:&[Option<usize>]) {
+        let c=self.cells.get_mut(&f.cell).expect("new scalar provider source");
+        let template=&self.program.templates[c.template];
+        let mut installed=0;
+        for (column,(value,symbol)) in values.iter().zip(symbols).enumerate() {
+            if symbol.is_some() {continue;}
+            match scalar_argument(template,f.op,column).expect("typed scalar field source") {
+                Arg::Literal(literal)=>assert_eq!(literal,value,"immutable literal operand"),
+                Arg::Slot(slot)=>{
+                    if let Some(old)=c.values.get(slot) {assert_eq!(old,value,"immutable scalar operand");}
+                    else {c.values.insert(*slot,value.clone());installed+=1;}
+                }
+            }
+        }
+        self.stable_ports.as_mut().unwrap().cell_scalar_installs+=installed;
+    }
     pub fn new_with_stable_ports(p: Program) -> Result<Self> {
         let mut g = Self::new_with_cell_ownership(p)?;
         g.use_stable_port_fields()?;
@@ -204,6 +279,7 @@ impl Graph {
         let symbols = &program.fields[f.op as usize];
         assert_eq!(symbols.len(), values.len());
         let mut scalars = self.stable_ports.as_ref().map(|_| Vec::new());
+        let cell_fields=self.cell_stable_fields_enabled();
         let mut count = 0;
         for (value, symbol) in values.iter().zip(symbols) {
             if let Some(&local) = symbol.as_ref() {
@@ -218,10 +294,13 @@ impl Graph {
                     !matches!(value, Value::Eq(_) | Value::Set(_)),
                     "scalar ownership field"
                 );
-                scalars.push(value.clone());
+                if !cell_fields {scalars.push(value.clone());}
             }
         }
         let Some(scalars) = scalars else { return; };
+        if self.cell_stable_fields_enabled() {
+            self.capture_cell_scalars(f,values,symbols);
+        }
         let fields = Fields { component: frame.component, frame: frame.ordinal, operation: f.op, scalars: scalars.into_boxed_slice() };
         let mut state_guard = self
             .cells.fact_state_mut(f)
@@ -230,7 +309,7 @@ impl Graph {
         state.decoded = None;
         let stats = self.stable_ports.as_mut().unwrap();
         assert!(!stats.nodes.is_frozen(), "node birth during a completion read epoch");
-        if !stats.template_fields || !fields.scalars.is_empty() {
+        if !stats.cell_fields && (!stats.template_fields || !fields.scalars.is_empty()) {
             assert!(stats.nodes.insert(f, Stored { table, fields }).is_none(),
                 "stable representation installed once per fact incarnation");
         }
@@ -248,17 +327,21 @@ impl Graph {
     }
     pub(in crate::graph) fn stable_node_unmetered(&self, f: FactRef) -> Option<Cow<'_, Stored>> {
         let runtime = self.stable_ports.as_ref()?;
-        if let Some(node) = runtime.nodes.get(&f) { return Some(Cow::Borrowed(node)); }
+        if !runtime.cell_fields {
+            if let Some(node) = runtime.nodes.get(&f) { return Some(Cow::Borrowed(node)); }
+        }
         #[cfg(feature="sparse-cells")]
         if runtime.template_fields {
-            return self.stable_port_reader().ok()?.project_node(f).map(Cow::Owned);
+            return self.stable_port_reader().ok()?.project_node(f);
         }
         None
     }
     pub(in crate::graph) fn retire_stable_node(&mut self, f: FactRef, owned: bool) {
         if let Some(runtime) = self.stable_ports.as_mut() {
-            runtime.node_retirement_probes += 1;
-            let removed = runtime.nodes.remove(&f);
+            let removed=if runtime.cell_fields {false} else {
+                runtime.node_retirement_probes += 1;
+                runtime.nodes.remove(&f)
+            };
             runtime.nodes_retired += u64::from(removed || (runtime.template_fields && owned));
         }
     }
@@ -288,10 +371,11 @@ impl Graph {
         stored: &Stored,
         col: usize,
     ) -> Result<Value> {
-        self.stable_field_view(stored)?
-            .get(col)
-            .ok_or("stable field column")?
-            .value(|port| self.read_component_port(port))
+        let field=self.stable_field_view(stored)?.get(col).ok_or("stable field column")?;
+        if matches!(field,Field::CellScalar(_)) {
+            let stats=self.stable_ports.as_ref().unwrap();stats.cell_scalar_reads.set(stats.cell_scalar_reads.get()+1);
+        }
+        field.value(|port| self.read_component_port(port))
     }
     pub(in crate::graph) fn stable_values(
         &self,
@@ -313,6 +397,7 @@ impl Graph {
             .map(|field| view.field_value(&field, meter, &mut work))
             .collect::<Result<Vec<_>>>();
         // Preserve successful-prefix work even when a later port has expired.
+        if meter {let stats=self.stable_ports.as_ref().unwrap();stats.cell_scalar_reads.set(stats.cell_scalar_reads.get()+work.cell_scalar_reads);}
         if meter && work.port_reads != 0 {
             self.record_port_reads(work.port_reads, work.parent_probes);
         }

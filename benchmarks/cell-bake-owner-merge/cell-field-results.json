@@ -1,0 +1,1161 @@
+{
+  "scope": "actual standalone Cell CPU; same frozen binary; template-only projection versus Cell scalar ownership; no native or timing claim",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+      "runs": 418,
+      "input_hashes": [
+        "f2373eac7bdf43fecf0480eb7deace7690ed8402f5f9c6bfcec7c5a321cae357",
+        "d8d5a5510eae493aaf2f18630c3adf314876e34d5a018242fea5c55838c55518"
+      ],
+      "saved_run_checks_equal": true,
+      "overlap_saved_run_checks_equal": true,
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          563487,
+          535367
+        ],
+        "retained_program_teardown_bytes": [
+          158777909,
+          158777909
+        ],
+        "execution_and_takeover_peak_bytes": [
+          162282263,
+          162254135
+        ],
+        "max_takeover_extra_bytes": [
+          11648,
+          11648
+        ]
+      },
+      "graph_reduction_percent": 4.9903547020605625,
+      "graph_fields": {
+        "cells": [
+          122192,
+          126334
+        ],
+        "functions": [
+          42176,
+          42176
+        ],
+        "parents": [
+          4616,
+          4616
+        ],
+        "writer_dir": [
+          8256,
+          8256
+        ],
+        "local_unions": [
+          0,
+          0
+        ],
+        "ownership.components": [
+          74048,
+          74048
+        ],
+        "ownership.live_facts": [
+          4096,
+          4096
+        ],
+        "ownership.frames": [
+          40896,
+          40896
+        ],
+        "ownership.shapes": [
+          0,
+          0
+        ],
+        "ownership.transitions": [
+          0,
+          0
+        ],
+        "ownership.training": [
+          0,
+          0
+        ],
+        "ownership.catalog_trace": [
+          0,
+          0
+        ],
+        "ownership.entry": [
+          0,
+          0
+        ],
+        "ownership.heap": [
+          256,
+          256
+        ],
+        "ownership.columns": [
+          32,
+          32
+        ],
+        "ownership.boundaries": [
+          70040,
+          70040
+        ],
+        "ownership.port_completion": [
+          0,
+          0
+        ],
+        "ownership.pending": [
+          104,
+          104
+        ],
+        "ownership.tables": [
+          2080,
+          2080
+        ],
+        "ownership.stats": [
+          0,
+          0
+        ],
+        "ownership.barriers": [
+          0,
+          0
+        ],
+        "stable_ports": [
+          32262,
+          0
+        ],
+        "repair_ports": [
+          2080,
+          2080
+        ],
+        "union_digest": [
+          0,
+          0
+        ],
+        "members": [
+          28544,
+          28544
+        ],
+        "intern": [
+          1608,
+          1608
+        ],
+        "function_keys": [
+          22956,
+          22956
+        ],
+        "uses": [
+          12296,
+          12296
+        ],
+        "changes": [
+          30516,
+          30516
+        ],
+        "anchors": [
+          10247,
+          10247
+        ],
+        "dirty": [
+          192,
+          192
+        ],
+        "dirty_markers": [
+          0,
+          0
+        ],
+        "dirty_facts": [
+          7592,
+          7592
+        ],
+        "parent_users": [
+          2184,
+          2184
+        ],
+        "garbage": [
+          56,
+          56
+        ],
+        "receipt_forwards": [
+          2120,
+          2120
+        ]
+      },
+      "source_storage": {
+        "explicit_cell_slots": [
+          888,
+          1065
+        ],
+        "cell_slot_bytes": [
+          14648,
+          17480
+        ],
+        "completed_owner_frames": [
+          752,
+          752
+        ],
+        "fact_record_live_bytes": [
+          13056,
+          13056
+        ]
+      },
+      "fields": {
+        "live_stable_nodes": [
+          948,
+          948
+        ],
+        "materialized_stable_nodes": [
+          295,
+          0
+        ],
+        "template_projected_nodes": [
+          653,
+          948
+        ]
+      },
+      "scalar_work": {
+        "cell_scalar_installs": [
+          0,
+          61
+        ],
+        "cell_scalar_reads": [
+          0,
+          3844
+        ],
+        "node_retirement_probes": [
+          67,
+          0
+        ]
+      },
+      "overlap": {
+        "enabled": true,
+        "stats": {
+          "epochs": 7,
+          "projection_candidates": 110,
+          "projection_records": 85,
+          "projection_scalar_values": 33,
+          "projection_scalar_bytes_total": 528,
+          "projection_comparisons": 427,
+          "projection_insertion_moves": 151,
+          "projection_capacity_bytes_total": 7440,
+          "projection_capacity_bytes_peak": 1920,
+          "base_snapshots": 28,
+          "task_spawns": 14,
+          "projected_tasks": 48,
+          "input_buffer_allocations": 7,
+          "input_buffer_bytes": 3072,
+          "activity_allocations": 1,
+          "reader_activity_updates": 28,
+          "channel_builds": 0,
+          "channel_receives": 0,
+          "slot_publications": 48,
+          "slot_abandons": 0,
+          "slot_collection_reads": 48,
+          "ordered_slot_reads": 48,
+          "row_handle_clones": 48,
+          "result_buffer_allocations": 14,
+          "result_buffer_bytes": 18544,
+          "overlay": {
+            "writes": 242,
+            "growths": 34,
+            "copied_units": 0,
+            "merged_entries": 150
+          },
+          "layers": {
+            "parents": {
+              "writes": 44,
+              "growths": 4,
+              "copied_units": 0,
+              "merged_entries": 44
+            },
+            "nodes": {
+              "writes": 0,
+              "growths": 0,
+              "copied_units": 0,
+              "merged_entries": 0
+            },
+            "components": {
+              "writes": 15,
+              "growths": 2,
+              "copied_units": 0,
+              "merged_entries": 15
+            },
+            "queues": {
+              "writes": 183,
+              "growths": 28,
+              "copied_units": 0,
+              "merged_entries": 91
+            }
+          }
+        },
+        "observed": {
+          "effective_unions_with_active_readers": 0
+        },
+        "scope": "immutable epoch bases with coordinator write overlays; grouped readers publish directly to ordered result slots",
+        "performance_admission": false
+      }
+    },
+    {
+      "case": "loopfact",
+      "program": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+      "runs": 398,
+      "input_hashes": [
+        "ad69be9d69f44cc95b0ea4780ff83bd4f26dfac4a6d5c329dcf08e8956ba04df",
+        "4ac65a1af9a3f4ea1420bbb9b7811b563aa9994631245663339e12d0d6aa8d4e"
+      ],
+      "saved_run_checks_equal": true,
+      "overlap_saved_run_checks_equal": true,
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          540013,
+          512765
+        ],
+        "retained_program_teardown_bytes": [
+          158273115,
+          158273115
+        ],
+        "execution_and_takeover_peak_bytes": [
+          161611637,
+          161584381
+        ],
+        "max_takeover_extra_bytes": [
+          11152,
+          11152
+        ]
+      },
+      "graph_reduction_percent": 5.045804452855762,
+      "graph_fields": {
+        "cells": [
+          111732,
+          115834
+        ],
+        "functions": [
+          41864,
+          41864
+        ],
+        "parents": [
+          4616,
+          4616
+        ],
+        "writer_dir": [
+          6200,
+          6200
+        ],
+        "local_unions": [
+          0,
+          0
+        ],
+        "ownership.components": [
+          69824,
+          69824
+        ],
+        "ownership.live_facts": [
+          4096,
+          4096
+        ],
+        "ownership.frames": [
+          40896,
+          40896
+        ],
+        "ownership.shapes": [
+          0,
+          0
+        ],
+        "ownership.transitions": [
+          0,
+          0
+        ],
+        "ownership.training": [
+          0,
+          0
+        ],
+        "ownership.catalog_trace": [
+          0,
+          0
+        ],
+        "ownership.entry": [
+          0,
+          0
+        ],
+        "ownership.heap": [
+          128,
+          128
+        ],
+        "ownership.columns": [
+          32,
+          32
+        ],
+        "ownership.boundaries": [
+          68264,
+          68264
+        ],
+        "ownership.port_completion": [
+          0,
+          0
+        ],
+        "ownership.pending": [
+          104,
+          104
+        ],
+        "ownership.tables": [
+          2080,
+          2080
+        ],
+        "ownership.stats": [
+          0,
+          0
+        ],
+        "ownership.barriers": [
+          0,
+          0
+        ],
+        "stable_ports": [
+          31350,
+          0
+        ],
+        "repair_ports": [
+          2080,
+          2080
+        ],
+        "union_digest": [
+          0,
+          0
+        ],
+        "members": [
+          27232,
+          27232
+        ],
+        "intern": [
+          1608,
+          1608
+        ],
+        "function_keys": [
+          22464,
+          22464
+        ],
+        "uses": [
+          12352,
+          12352
+        ],
+        "changes": [
+          30456,
+          30456
+        ],
+        "anchors": [
+          10247,
+          10247
+        ],
+        "dirty": [
+          192,
+          192
+        ],
+        "dirty_markers": [
+          0,
+          0
+        ],
+        "dirty_facts": [
+          7384,
+          7384
+        ],
+        "parent_users": [
+          2184,
+          2184
+        ],
+        "garbage": [
+          56,
+          56
+        ],
+        "receipt_forwards": [
+          536,
+          536
+        ]
+      },
+      "source_storage": {
+        "explicit_cell_slots": [
+          822,
+          995
+        ],
+        "cell_slot_bytes": [
+          13216,
+          15984
+        ],
+        "completed_owner_frames": [
+          689,
+          689
+        ],
+        "fact_record_live_bytes": [
+          12480,
+          12480
+        ]
+      },
+      "fields": {
+        "live_stable_nodes": [
+          892,
+          892
+        ],
+        "materialized_stable_nodes": [
+          259,
+          0
+        ],
+        "template_projected_nodes": [
+          633,
+          892
+        ]
+      },
+      "scalar_work": {
+        "cell_scalar_installs": [
+          0,
+          40
+        ],
+        "cell_scalar_reads": [
+          0,
+          3457
+        ],
+        "node_retirement_probes": [
+          47,
+          0
+        ]
+      },
+      "overlap": {
+        "enabled": true,
+        "stats": {
+          "epochs": 8,
+          "projection_candidates": 60,
+          "projection_records": 47,
+          "projection_scalar_values": 15,
+          "projection_scalar_bytes_total": 240,
+          "projection_comparisons": 145,
+          "projection_insertion_moves": 37,
+          "projection_capacity_bytes_total": 3696,
+          "projection_capacity_bytes_peak": 768,
+          "base_snapshots": 32,
+          "task_spawns": 16,
+          "projected_tasks": 30,
+          "input_buffer_allocations": 8,
+          "input_buffer_bytes": 1920,
+          "activity_allocations": 1,
+          "reader_activity_updates": 32,
+          "channel_builds": 0,
+          "channel_receives": 0,
+          "slot_publications": 30,
+          "slot_abandons": 0,
+          "slot_collection_reads": 30,
+          "ordered_slot_reads": 30,
+          "row_handle_clones": 30,
+          "result_buffer_allocations": 16,
+          "result_buffer_bytes": 11648,
+          "overlay": {
+            "writes": 124,
+            "growths": 20,
+            "copied_units": 0,
+            "merged_entries": 80
+          },
+          "layers": {
+            "parents": {
+              "writes": 28,
+              "growths": 2,
+              "copied_units": 0,
+              "merged_entries": 28
+            },
+            "nodes": {
+              "writes": 0,
+              "growths": 0,
+              "copied_units": 0,
+              "merged_entries": 0
+            },
+            "components": {
+              "writes": 2,
+              "growths": 1,
+              "copied_units": 0,
+              "merged_entries": 2
+            },
+            "queues": {
+              "writes": 94,
+              "growths": 17,
+              "copied_units": 0,
+              "merged_entries": 50
+            }
+          }
+        },
+        "observed": {
+          "effective_unions_with_active_readers": 0
+        },
+        "scope": "immutable epoch bases with coordinator write overlays; grouped readers publish directly to ordered result slots",
+        "performance_admission": false
+      }
+    },
+    {
+      "case": "sum-bits",
+      "program": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+      "runs": 882,
+      "input_hashes": [
+        "9381e46c21e7aad65bb1f58c0b46a660eedd233da9e79272056c95b934edd681",
+        "c922cc1ccf30f153ffe3203abee739420cab26a08c8b370a2e5b838426d19be8"
+      ],
+      "saved_run_checks_equal": true,
+      "overlap_saved_run_checks_equal": true,
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          1595091,
+          1486983
+        ],
+        "retained_program_teardown_bytes": [
+          160648495,
+          160648495
+        ],
+        "execution_and_takeover_peak_bytes": [
+          166821938,
+          166713822
+        ],
+        "max_takeover_extra_bytes": [
+          11888,
+          15908
+        ]
+      },
+      "graph_reduction_percent": 6.777544353268872,
+      "graph_fields": {
+        "cells": [
+          379192,
+          394850
+        ],
+        "functions": [
+          100296,
+          100296
+        ],
+        "parents": [
+          35848,
+          35848
+        ],
+        "writer_dir": [
+          26856,
+          26856
+        ],
+        "local_unions": [
+          0,
+          0
+        ],
+        "ownership.components": [
+          280192,
+          280192
+        ],
+        "ownership.live_facts": [
+          16384,
+          16384
+        ],
+        "ownership.frames": [
+          163584,
+          163584
+        ],
+        "ownership.shapes": [
+          0,
+          0
+        ],
+        "ownership.transitions": [
+          0,
+          0
+        ],
+        "ownership.training": [
+          0,
+          0
+        ],
+        "ownership.catalog_trace": [
+          0,
+          0
+        ],
+        "ownership.entry": [
+          0,
+          0
+        ],
+        "ownership.heap": [
+          1024,
+          1024
+        ],
+        "ownership.columns": [
+          32,
+          32
+        ],
+        "ownership.boundaries": [
+          215144,
+          215144
+        ],
+        "ownership.port_completion": [
+          0,
+          0
+        ],
+        "ownership.pending": [
+          104,
+          104
+        ],
+        "ownership.tables": [
+          2080,
+          2080
+        ],
+        "ownership.stats": [
+          0,
+          0
+        ],
+        "ownership.barriers": [
+          0,
+          0
+        ],
+        "stable_ports": [
+          123766,
+          0
+        ],
+        "repair_ports": [
+          2080,
+          2080
+        ],
+        "union_digest": [
+          0,
+          0
+        ],
+        "members": [
+          65024,
+          65024
+        ],
+        "intern": [
+          1608,
+          1608
+        ],
+        "function_keys": [
+          28448,
+          28448
+        ],
+        "uses": [
+          27428,
+          27428
+        ],
+        "changes": [
+          51160,
+          51160
+        ],
+        "anchors": [
+          10247,
+          10247
+        ],
+        "dirty": [
+          192,
+          192
+        ],
+        "dirty_markers": [
+          0,
+          0
+        ],
+        "dirty_facts": [
+          9360,
+          9360
+        ],
+        "parent_users": [
+          8712,
+          8712
+        ],
+        "garbage": [
+          56,
+          56
+        ],
+        "receipt_forwards": [
+          4232,
+          4232
+        ]
+      },
+      "source_storage": {
+        "explicit_cell_slots": [
+          3085,
+          3953
+        ],
+        "cell_slot_bytes": [
+          56312,
+          70296
+        ],
+        "completed_owner_frames": [
+          2177,
+          2177
+        ],
+        "fact_record_live_bytes": [
+          48756,
+          48756
+        ]
+      },
+      "fields": {
+        "live_stable_nodes": [
+          2895,
+          2895
+        ],
+        "materialized_stable_nodes": [
+          1070,
+          0
+        ],
+        "template_projected_nodes": [
+          1825,
+          2895
+        ]
+      },
+      "scalar_work": {
+        "cell_scalar_installs": [
+          0,
+          185
+        ],
+        "cell_scalar_reads": [
+          0,
+          25236
+        ],
+        "node_retirement_probes": [
+          844,
+          0
+        ]
+      },
+      "overlap": {
+        "enabled": true,
+        "stats": {
+          "epochs": 83,
+          "projection_candidates": 2641,
+          "projection_records": 1484,
+          "projection_scalar_values": 386,
+          "projection_scalar_bytes_total": 6176,
+          "projection_comparisons": 13761,
+          "projection_insertion_moves": 15555,
+          "projection_capacity_bytes_total": 103136,
+          "projection_capacity_bytes_peak": 12384,
+          "base_snapshots": 332,
+          "task_spawns": 166,
+          "projected_tasks": 684,
+          "input_buffer_allocations": 83,
+          "input_buffer_bytes": 43776,
+          "activity_allocations": 1,
+          "reader_activity_updates": 332,
+          "channel_builds": 0,
+          "channel_receives": 0,
+          "slot_publications": 684,
+          "slot_abandons": 0,
+          "slot_collection_reads": 684,
+          "ordered_slot_reads": 609,
+          "row_handle_clones": 609,
+          "result_buffer_allocations": 166,
+          "result_buffer_bytes": 263984,
+          "overlay": {
+            "writes": 3177,
+            "growths": 80,
+            "copied_units": 0,
+            "merged_entries": 1891
+          },
+          "layers": {
+            "parents": {
+              "writes": 502,
+              "growths": 5,
+              "copied_units": 0,
+              "merged_entries": 502
+            },
+            "nodes": {
+              "writes": 0,
+              "growths": 0,
+              "copied_units": 0,
+              "merged_entries": 0
+            },
+            "components": {
+              "writes": 235,
+              "growths": 4,
+              "copied_units": 0,
+              "merged_entries": 235
+            },
+            "queues": {
+              "writes": 2440,
+              "growths": 71,
+              "copied_units": 0,
+              "merged_entries": 1154
+            }
+          }
+        },
+        "observed": {
+          "effective_unions_with_active_readers": 2
+        },
+        "scope": "immutable epoch bases with coordinator write overlays; grouped readers publish directly to ordered result slots",
+        "performance_admission": false
+      }
+    },
+    {
+      "case": "dot-product",
+      "program": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+      "runs": 954,
+      "input_hashes": [
+        "cfd4f5e947e59e0cd5f30b068849bccffe1098b979a6603bd642a31c203a7097",
+        "d02f32416f314a923565ee753928cc0002d24e19b0efe6ebc1d1efaea937af5c"
+      ],
+      "saved_run_checks_equal": true,
+      "overlap_saved_run_checks_equal": true,
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          1491139,
+          1434643
+        ],
+        "retained_program_teardown_bytes": [
+          162126403,
+          162126403
+        ],
+        "execution_and_takeover_peak_bytes": [
+          167939569,
+          167883065
+        ],
+        "max_takeover_extra_bytes": [
+          15848,
+          15848
+        ]
+      },
+      "graph_reduction_percent": 3.788781595813673,
+      "graph_fields": {
+        "cells": [
+          353400,
+          364078
+        ],
+        "functions": [
+          121936,
+          121936
+        ],
+        "parents": [
+          18440,
+          18440
+        ],
+        "writer_dir": [
+          26856,
+          26856
+        ],
+        "local_unions": [
+          0,
+          0
+        ],
+        "ownership.components": [
+          267440,
+          267440
+        ],
+        "ownership.live_facts": [
+          16384,
+          16384
+        ],
+        "ownership.frames": [
+          163584,
+          163584
+        ],
+        "ownership.shapes": [
+          0,
+          0
+        ],
+        "ownership.transitions": [
+          0,
+          0
+        ],
+        "ownership.training": [
+          0,
+          0
+        ],
+        "ownership.catalog_trace": [
+          0,
+          0
+        ],
+        "ownership.entry": [
+          0,
+          0
+        ],
+        "ownership.heap": [
+          1024,
+          1024
+        ],
+        "ownership.columns": [
+          32,
+          32
+        ],
+        "ownership.boundaries": [
+          197792,
+          197792
+        ],
+        "ownership.port_completion": [
+          0,
+          0
+        ],
+        "ownership.pending": [
+          104,
+          104
+        ],
+        "ownership.tables": [
+          2080,
+          2080
+        ],
+        "ownership.stats": [
+          0,
+          0
+        ],
+        "ownership.barriers": [
+          0,
+          0
+        ],
+        "stable_ports": [
+          67174,
+          0
+        ],
+        "repair_ports": [
+          2080,
+          2080
+        ],
+        "union_digest": [
+          0,
+          0
+        ],
+        "members": [
+          56256,
+          56256
+        ],
+        "intern": [
+          3208,
+          3208
+        ],
+        "function_keys": [
+          29536,
+          29536
+        ],
+        "uses": [
+          36208,
+          36208
+        ],
+        "changes": [
+          53804,
+          53804
+        ],
+        "anchors": [
+          10247,
+          10247
+        ],
+        "dirty": [
+          192,
+          192
+        ],
+        "dirty_markers": [
+          0,
+          0
+        ],
+        "dirty_facts": [
+          8320,
+          8320
+        ],
+        "parent_users": [
+          8712,
+          8712
+        ],
+        "garbage": [
+          56,
+          56
+        ],
+        "receipt_forwards": [
+          4232,
+          4232
+        ]
+      },
+      "source_storage": {
+        "explicit_cell_slots": [
+          3283,
+          3867
+        ],
+        "cell_slot_bytes": [
+          56512,
+          65856
+        ],
+        "completed_owner_frames": [
+          2122,
+          2122
+        ],
+        "fact_record_live_bytes": [
+          42516,
+          42516
+        ]
+      },
+      "fields": {
+        "live_stable_nodes": [
+          2825,
+          2825
+        ],
+        "materialized_stable_nodes": [
+          802,
+          0
+        ],
+        "template_projected_nodes": [
+          2023,
+          2825
+        ]
+      },
+      "scalar_work": {
+        "cell_scalar_installs": [
+          0,
+          134
+        ],
+        "cell_scalar_reads": [
+          0,
+          15947
+        ],
+        "node_retirement_probes": [
+          336,
+          0
+        ]
+      },
+      "overlap": {
+        "enabled": true,
+        "stats": {
+          "epochs": 38,
+          "projection_candidates": 706,
+          "projection_records": 442,
+          "projection_scalar_values": 94,
+          "projection_scalar_bytes_total": 1504,
+          "projection_comparisons": 3340,
+          "projection_insertion_moves": 1263,
+          "projection_capacity_bytes_total": 30688,
+          "projection_capacity_bytes_peak": 6144,
+          "base_snapshots": 152,
+          "task_spawns": 76,
+          "projected_tasks": 260,
+          "input_buffer_allocations": 38,
+          "input_buffer_bytes": 16640,
+          "activity_allocations": 1,
+          "reader_activity_updates": 152,
+          "channel_builds": 0,
+          "channel_receives": 0,
+          "slot_publications": 260,
+          "slot_abandons": 0,
+          "slot_collection_reads": 260,
+          "ordered_slot_reads": 260,
+          "row_handle_clones": 260,
+          "result_buffer_allocations": 76,
+          "result_buffer_bytes": 100448,
+          "overlay": {
+            "writes": 1224,
+            "growths": 58,
+            "copied_units": 0,
+            "merged_entries": 786
+          },
+          "layers": {
+            "parents": {
+              "writes": 249,
+              "growths": 4,
+              "copied_units": 0,
+              "merged_entries": 249
+            },
+            "nodes": {
+              "writes": 0,
+              "growths": 0,
+              "copied_units": 0,
+              "merged_entries": 0
+            },
+            "components": {
+              "writes": 83,
+              "growths": 3,
+              "copied_units": 0,
+              "merged_entries": 83
+            },
+            "queues": {
+              "writes": 892,
+              "growths": 51,
+              "copied_units": 0,
+              "merged_entries": 454
+            }
+          }
+        },
+        "observed": {
+          "effective_unions_with_active_readers": 2
+        },
+        "scope": "immutable epoch bases with coordinator write overlays; grouped readers publish directly to ordered result slots",
+        "performance_admission": false
+      }
+    }
+  ]
+}

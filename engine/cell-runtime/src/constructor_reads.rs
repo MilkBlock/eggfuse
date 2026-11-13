@@ -47,6 +47,7 @@ impl Work {
         self.reads.port_reads += other.reads.port_reads;
         self.reads.parent_probes += other.reads.parent_probes;
         self.reads.key_fields += other.reads.key_fields;
+        self.reads.cell_scalar_reads += other.reads.cell_scalar_reads;
     }
 }
 #[derive(Default)]

@@ -2113,14 +2113,14 @@ fn multi_source_trace_groups_actual_matches_without_instance_identities() {
 #[test]
 fn dual_source_takeover_retires_bindings_and_keeps_ports_through_later_union() {
     let src=r#"
-        (datatype E (N i64) (F E) (G E) (H E))
+        (datatype E (N i64) (F E i64) (G E i64) (H E))
         (N 0) (N 1)
         (ruleset f) (ruleset g) (ruleset h) (ruleset u) (ruleset d)
-        (rule ((= x (N n))) ((F x)) :ruleset f)
-        (rule ((= x (N n))) ((G x)) :ruleset g)
-        (rule ((= a (F x)) (= b (G x))) ((H x)) :ruleset h)
+        (rule ((= x (N n))) ((F x n)) :ruleset f)
+        (rule ((= x (N n))) ((G x n)) :ruleset g)
+        (rule ((= a (F x n)) (= b (G x n))) ((H x)) :ruleset h)
         (rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset u)
-        (rule ((= x (N 0))) ((delete (F x))) :ruleset d)
+        (rule ((= x (N 0))) ((delete (F x 0))) :ruleset d)
         (run f 1) (run g 1) (run h 1) (run d 1) (run u 1) (run h 1)
     "#;
     use eggfuse_cell_runtime::program::{Op,Call};
@@ -2155,12 +2155,13 @@ fn dual_source_takeover_retires_bindings_and_keeps_ports_through_later_union() {
     let make=|raw,projected,workers| {
         let mut g=Graph::new_with_local_congruence(Program::parse(raw).unwrap()).unwrap();
         g.use_port_domains_only().unwrap();
-        if projected {g.use_template_stable_fields().unwrap();}
+        if projected==1 {g.use_template_stable_fields().unwrap();}
+        if projected==2 {g.use_cell_stable_fields().unwrap();}
         let mut e=Executor::new(g,true);
         if workers>0 {e.use_query_workers(workers,1).unwrap();}
         e
     };
-    for (projected,workers) in [(false,0),(true,2)] {
+    for (projected,workers) in [(0,0),(1,2),(2,2)] {
     let mut control=make(plain.clone(),projected,workers);let mut target=make(raw.clone(),projected,workers);
     control.execute_until(Some(2)).unwrap();target.execute_until(Some(2)).unwrap();
     let ftable=target.graph.program.tables.iter().position(|t|t.name=="G").unwrap();
@@ -2170,6 +2171,7 @@ fn dual_source_takeover_retires_bindings_and_keeps_ports_through_later_union() {
     assert_eq!(target.graph.read_port(port).unwrap(),before);
     assert_eq!(target.graph.fact_port(f,0),Some(port));
     let a=control.graph.ownership_report();let b=target.graph.ownership_report();
+    if projected==2 {assert_eq!(b["stats"]["dual_field_moves"],0);}
     assert!(b["stats"]["dual_admissions"].as_u64().unwrap()>0,"{b}");
     assert!(b["stats"]["dual_bindings_retired"].as_u64().unwrap()>0);
     assert!(a["stats"]["composition_requests"].as_u64().unwrap()>0);
@@ -2180,5 +2182,43 @@ fn dual_source_takeover_retires_bindings_and_keeps_ports_through_later_union() {
     assert_eq!(control.snapshots,target.snapshots);
     assert_eq!(control.binding_audit,target.binding_audit);
     assert_eq!(control.graph.export().unwrap(),target.graph.export().unwrap());
+    }
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn cell_fields_keep_scalar_sources_through_completed_storage_and_union() {
+    let p=program(r#"
+        (datatype E (N i64) (F E i64 String) (G E i64) (Seen E i64))
+        (ruleset make) (ruleset merge) (ruleset read) (ruleset remove)
+        (rule ((= x (N n))) ((F x 7 "fixed") (G x n)) :ruleset make)
+        (rule ((= a (N 1)) (= b (N 2))) ((union a b)) :ruleset merge)
+        (rule ((= g (G x n))) ((Seen g n)) :ruleset read)
+        (rule ((F x n s)) ((delete (F x n s))) :ruleset remove)
+        (N 1) (N 2) (run make 1) (run merge 1) (run read 1) (run remove 1) (run read 1)
+    "#);
+    for workers in [0,2] {
+        let mut control=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+        actual.graph.use_cell_stable_fields().unwrap();
+        actual.graph.use_cell_stable_fields().unwrap();
+        control.use_completed_parent_takeover().unwrap();actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {
+            actual.use_query_workers(workers,1).unwrap();
+            actual.graph.use_parallel_port_guards(2,1).unwrap();
+            actual.graph.use_completion_read_batches(2).unwrap();
+            actual.graph.use_overlapped_completion().unwrap();
+        }
+        for run in 1..=5 {
+            control.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
+            control.graph.transfer_completed_owners().unwrap();actual.graph.transfer_completed_owners().unwrap();
+            assert_eq!(control.graph.export().unwrap(),actual.graph.export().unwrap(),"Run {run}, workers {workers}");
+            assert_eq!(actual.graph.stable_port_report()["materialized_stable_nodes"],0);
+        }
+        assert_eq!(control.snapshots,actual.snapshots);
+        assert_eq!(control.binding_audit,actual.binding_audit);
+        assert_eq!(actual.graph.stats.completed_scalar_slots_elided,0);
+        assert_eq!(actual.graph.stable_port_report()["stats"]["node_retirement_probes"],0);
+        assert!(actual.graph.stable_port_report()["template_projected_nodes"].as_u64().unwrap()>0);
     }
 }

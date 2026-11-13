@@ -637,6 +637,12 @@ impl Work {
             } else { 0 };
             work.insert(key, value);
         }
+        let cell_fields=report["stable_ports"]["stats"]["cell_fields"]==true;
+        for field in ["cell_scalar_installs","cell_scalar_reads"] {
+            let value=if cell_fields {report["stable_ports"]["stats"][field].as_u64()
+                .ok_or_else(||format!("missing Cell field work {field}"))?} else {0};
+            work.insert(format!("stable_ports/stats/{field}"),value);
+        }
         for field in ["attempts", "boundary_signals", "boundary_sites", "condition_visits",
             "inactive_sites", "pending_sites", "operator_guards", "scalar_guards", "equality_guards", "shared_symbol_guards",
             "anchor_probes", "boundary_uncompiled_steps", "boundary_indexed_steps", "local_candidates", "boundary_candidates",
@@ -684,6 +690,10 @@ impl Work {
             } else { 0 };
             work.insert(format!("stable_ports/completion_batches/overlap/{field}"), value);
         }
+        let scalar_copies=if cell_fields && overlap["enabled"]==true {
+            overlap["stats"]["projection_scalar_values"].as_u64().ok_or("missing Cell field snapshot copies")?
+        } else {0};
+        work.insert("stable_ports/completion_batches/overlap/projection_scalar_values".into(),scalar_copies);
         for field in ["writes", "growths", "copied_units", "merged_entries"] {
             let value = if overlap["enabled"] == true {
                 overlap["stats"]["overlay"][field].as_u64().ok_or_else(|| format!("missing overlay work {field}"))?
@@ -1264,4 +1274,30 @@ mod tests {
         report["port_completion"]["stats"].as_object_mut().unwrap().remove("pure_epoch_frontier_checks");
         assert!(Work::read(&report).unwrap_err().contains("missing port completion work pure_epoch_frontier_checks"));
     }
+    #[test]
+    #[cfg(feature="sparse-cells")]
+    fn cell_field_reads_and_snapshot_values_are_charged() {
+        use eggfuse_cell_runtime::{compiler,executor::Executor,graph::Graph,program::Program};
+        let src=r#"(datatype E (N i64) (F E i64))
+            (F (N 0) 7) (F (N 1) 7) (F (N 0) 8) (F (N 1) 8)
+            (ruleset u) (rule ((= a (N 0)) (= b (N 1))) ((union a b)) :ruleset u) (run u 1)"#;
+        let raw=compiler::compile(eggfuse_bake::device_frontend::core("cell-fields",src).unwrap(),&Default::default()).unwrap();
+        let mut g=Graph::new_with_local_congruence(Program::parse(raw).unwrap()).unwrap();
+        g.use_cell_stable_fields().unwrap();g.use_parallel_port_guards(2,1).unwrap();
+        g.use_completion_read_batches(16).unwrap();g.use_overlapped_completion().unwrap();
+        let mut e=Executor::new(g,false);e.execute().unwrap();let report=e.report();
+        let work=Work::read(&report).unwrap();
+        assert!(work.0["stable_ports/stats/cell_scalar_reads"]>0);
+        assert!(work.0["stable_ports/completion_batches/overlap/projection_scalar_values"]>0);
+        let mut extra=report.clone();
+        extra["stable_ports"]["stats"]["cell_scalar_reads"]=json!(report["stable_ports"]["stats"]["cell_scalar_reads"].as_u64().unwrap()+1);
+        assert_eq!(work.savings(&Work::read(&extra).unwrap()).0,-1);
+        for field in ["cell_scalar_installs","cell_scalar_reads"] {
+            let mut missing=report.clone();missing["stable_ports"]["stats"].as_object_mut().unwrap().remove(field);
+            assert!(Work::read(&missing).unwrap_err().contains("missing Cell field work"));
+        }
+        let mut missing=report;missing["stable_ports"]["completion_batches"]["overlap"]["stats"].as_object_mut().unwrap().remove("projection_scalar_values");
+        assert!(Work::read(&missing).unwrap_err().contains("snapshot copies"));
+    }
+
 }

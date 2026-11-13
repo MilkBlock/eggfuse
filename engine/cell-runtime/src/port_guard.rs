@@ -7,8 +7,7 @@ use composition::conditions::Condition;
 use std::sync::Arc;
 
 #[cfg(feature="sparse-cells")]
-#[derive(Clone, Copy)]
-struct FrozenFact { fact: FactRef, table: usize, component: u32, frame: usize }
+struct FrozenFact { fact: FactRef, node: Stored }
 #[derive(Clone, Copy, Default, Serialize)]
 pub(super) struct ProjectionWork {
     pub candidates: u64,
@@ -16,12 +15,15 @@ pub(super) struct ProjectionWork {
     pub comparisons: u64,
     pub insertion_moves: u64,
     pub capacity_bytes: usize,
+    pub scalar_values: u64,
+    pub scalar_capacity_bytes: usize,
 }
 
 pub(super) struct Snapshot {
     #[cfg(feature="sparse-cells")]
     projected: Vec<FrozenFact>,
     pub projection_work: ProjectionWork,
+    cell_fields: bool,
     parents: Arc<crate::value::parent_epoch::Base>,
     nodes: Arc<HashMap<FactRef, Stored>>,
     components: Arc<Vec<Option<composition::Component>>>,
@@ -56,7 +58,7 @@ impl Snapshot {
         ReadView {
             source_frames: None,
             #[cfg(feature="sparse-cells")]
-            projected: (!self.projected.is_empty()).then_some(Projection::Frozen(&self.projected)),
+            projected: (!self.projected.is_empty()).then_some(Projection::Frozen(&self.projected,self.cell_fields)),
             programs: &self.programs,
             shapes: &self.shapes,
             parents: crate::value::parent_epoch::Read {
@@ -87,6 +89,7 @@ pub struct Work {
     pub parent_probes: u64,
     pub key_fields: u64,
     pub scalar_guards: u64,
+    pub cell_scalar_reads: u64,
     pub equality_guards: u64,
     pub shared_symbol_guards: u64,
 }
@@ -112,8 +115,10 @@ enum Projection<'a> {
         cells: &'a crate::graph::arena::Cells,
         frames: &'a composition::Frames,
         operators: &'a [Vec<usize>],
+        templates: &'a [Template],
+        cell_fields: bool,
     },
-    Frozen(&'a [FrozenFact]),
+    Frozen(&'a [FrozenFact],bool),
 }
 
 pub struct KeyGuard<'a> {
@@ -144,29 +149,40 @@ impl<'a> ReadView<'a> {
             .ok_or("missing stable field shape")?;
         let program = self.programs.get(*shape.programs.get(fields.frame).ok_or("stable field frame")?)
             .ok_or("stable field program")?;
+        let mut scalars=ScalarView::Stored(&fields.scalars);
+        #[cfg(feature="sparse-cells")]
+        if fields.scalars.is_empty() {
+            if let Some(Projection::Live{cells,templates,cell_fields:true,..})=self.projected {
+                let cell=*component.frames.get(fields.frame).ok_or("scalar source frame")?;
+                // Equality-only/result reads do not touch scalar source metadata.
+                scalars=ScalarView::Cell{cells,templates,cell,operation:fields.operation};
+            }
+        }
         Ok(FieldView { component: fields.component,
             columns: program.fields.get(fields.operation as usize).ok_or("stable field operation")?,
-            ports: shape.ports.get(fields.frame).ok_or("stable field ports")?, scalars: &fields.scalars })
+            ports: shape.ports.get(fields.frame).ok_or("stable field ports")?, scalars })
     }
 
     pub(in crate::graph::cell_ownership) fn node(&self, fact: FactRef, work: &mut Work) -> Option<Cow<'a, Stored>> {
         work.node_lookups += 1;
-        if let Some(node) = self.nodes.get(&fact) {return Some(Cow::Borrowed(node));}
+        #[cfg(feature="sparse-cells")]
+        let direct=matches!(self.projected,Some(Projection::Live{cell_fields:true,..}|Projection::Frozen(_,true)));
+        #[cfg(not(feature="sparse-cells"))]
+        let direct=false;
+        if !direct {if let Some(node) = self.nodes.get(&fact) {return Some(Cow::Borrowed(node));}}
         #[cfg(feature="sparse-cells")]
         if let Some(node) = self.project_node(fact) {
             work.template_node_projections += 1;
-            return Some(Cow::Owned(node));
+            return Some(node);
         }
         None
     }
     #[cfg(feature="sparse-cells")]
-    pub(super) fn project_node(&self, fact: FactRef) -> Option<Stored> {
-        let Projection::Live {cells, frames, operators} = self.projected? else {
-            let Projection::Frozen(records) = self.projected? else {unreachable!()};
+    pub(super) fn project_node(&self, fact: FactRef) -> Option<Cow<'a,Stored>> {
+        let Projection::Live {cells, frames, operators, cell_fields,..} = self.projected? else {
+            let Projection::Frozen(records,_) = self.projected? else {unreachable!()};
             let record = records.get(records.binary_search_by_key(&fact, |r| r.fact).ok()?)?;
-            return Some(Stored {table: record.table, fields: Fields {
-                component: record.component, frame: record.frame, operation: fact.op, scalars: Box::default(),
-            }});
+            return Some(Cow::Borrowed(&record.node));
         };
         let state = cells.fact_state(fact)?;
         if !state.owned || state.decoded.is_some() {return None;}
@@ -175,9 +191,9 @@ impl<'a> ReadView<'a> {
         let shape = self.shapes.get(component.shape)?;
         let program = self.programs.get(*shape.programs.get(frame.ordinal)?)?;
         let fields = program.fields.get(fact.op as usize)?;
-        if fields.is_empty() || fields.iter().any(Option::is_none) {return None;}
-        Some(Stored {table:*operators.get(frame.code)?.get(fact.op as usize)?,
-            fields:Fields{component:frame.component,frame:frame.ordinal,operation:fact.op,scalars:Box::default()}})
+        if fields.is_empty() || (!cell_fields && fields.iter().any(Option::is_none)) {return None;}
+        Some(Cow::Owned(Stored {table:*operators.get(frame.code)?.get(fact.op as usize)?,
+            fields:Fields{component:frame.component,frame:frame.ordinal,operation:fact.op,scalars:Box::default()}}))
     }
     pub fn read_port(&self, port: PortRef) -> Result<Value> {
         self.read_source_port_counted(port).map(|(value,_)|value)
@@ -210,6 +226,7 @@ impl<'a> ReadView<'a> {
         Ok(self.parents.root_counted(id))
     }
     pub(super) fn field_value(&self, field: &Field, meter: bool, work: &mut Work) -> Result<Value> {
+        if meter && matches!(field,Field::CellScalar(_)) {work.cell_scalar_reads+=1;}
         field.value(|port| {
             let (value, probes) = self.read_port_counted(port)?;
             if meter {
@@ -223,6 +240,7 @@ impl<'a> ReadView<'a> {
     fn field_matches(&self, field: &Field, value: &Value, work: &mut Work) -> Result<bool> {
         match field {
             Field::Scalar(stored) => Ok(stored == value),
+            Field::CellScalar(stored) => {work.cell_scalar_reads+=1;Ok(stored==value)},
             Field::Port(port) => {
                 let (current, probes) = self.read_port_counted(*port)?;
                 work.port_reads += 1;
@@ -323,8 +341,12 @@ impl Graph {
                     }) else {continue;};
                     if let Some(node) = view.project_node(fact) {
                         projection_work.insertion_moves += (records.len()-position) as u64;
-                        records.insert(position, FrozenFact {fact, table:node.table,
-                            component:node.fields.component, frame:node.fields.frame});
+                        let fields=view.fields(&node).expect("projected scalar source");
+                        let scalars=fields.iter().filter_map(|field|match field {Field::Scalar(v)|Field::CellScalar(v)=>Some(v),_=>None}).collect::<Vec<_>>().into_boxed_slice();
+                        projection_work.scalar_values+=scalars.len() as u64;
+                        projection_work.scalar_capacity_bytes+=std::mem::size_of_val(scalars.as_ref());
+                        let mut node=node.into_owned();node.fields.scalars=scalars;
+                        records.insert(position, FrozenFact {fact,node});
                     }
                 }
                 projection_work.records = records.len() as u64;
@@ -336,6 +358,7 @@ impl Graph {
         let _ = candidates;
         let parents = self.parents.freeze();
         let nodes = self.stable_ports.as_mut().unwrap().nodes.freeze();
+        let cell_fields=self.cell_stable_fields_enabled();
         let owner = self.ownership.as_mut().unwrap();
         let components = owner.composition.components.freeze();
         let pending = owner.pending.freeze();
@@ -343,6 +366,7 @@ impl Graph {
             #[cfg(feature="sparse-cells")]
             projected,
             projection_work,
+            cell_fields,
             programs: self.program.cell_ownership.programs.clone(),
             shapes: owner.composition.shapes.clone(),
             parents,
@@ -374,6 +398,7 @@ impl Graph {
             projected: self.stable_ports.as_ref().unwrap().template_fields.then_some(Projection::Live {
                 cells: &self.cells, frames: &self.ownership.as_ref().unwrap().composition.frames,
                 operators: &self.program.cell_ownership.code_operators,
+                templates: &self.program.templates, cell_fields:self.cell_stable_fields_enabled(),
             }),
             programs: &self.program.cell_ownership.programs,
             shapes: &self.ownership.as_ref().unwrap().composition.shapes,
@@ -422,6 +447,7 @@ impl Graph {
     pub(super) fn record_guard_reads(&self, work: &Work) {
         self.record_port_reads(work.port_reads, work.parent_probes);
         let stats = self.stable_ports.as_ref().unwrap();
+        stats.cell_scalar_reads.set(stats.cell_scalar_reads.get()+work.cell_scalar_reads);
         stats.field_layout_reads.set(stats.field_layout_reads.get() + work.field_layout_reads);
         stats.template_node_projections.set(stats.template_node_projections.get() + work.template_node_projections);
         stats

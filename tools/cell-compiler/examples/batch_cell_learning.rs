@@ -155,7 +155,7 @@ fn main()->Result<()> {
             eprintln!("compiled witnesses {name}");
         }
     } else if a[0]=="apply-passive" || a[0]=="check-passive" || a[0]=="check-nested" {
-        if a.len()!=3 && !(a[0]=="check-passive" && a.len()==4 && matches!(a[3].as_str(),"witnesses"|"witness-trace"|"receipt-trace"|"template-fields"|"template-overlap")) {return Err("apply-passive/check-passive/check-nested ROOT VARIANT [witnesses|witness-trace|receipt-trace|template-fields|template-overlap for check-passive]".into());}
+        if a.len()!=3 && !(a[0]=="check-passive" && a.len()==4 && matches!(a[3].as_str(),"witnesses"|"witness-trace"|"receipt-trace"|"template-fields"|"template-overlap"|"cell-fields"|"cell-overlap")) {return Err("apply-passive/check-passive/check-nested ROOT VARIANT [witnesses|witness-trace|receipt-trace|template-fields|template-overlap|cell-fields|cell-overlap for check-passive]".into());}
         let root=Path::new(&a[1]);let variant=root.join(&a[2]);
         let manifest=read(root.join("manifest.json"))?;
         let mut reports=vec![];
@@ -208,8 +208,9 @@ fn main()->Result<()> {
                 let receipt_trace=a.get(3).is_some_and(|s|s=="receipt-trace");
                 if receipt_trace {eggfuse_cell_runtime::receipt_trace::start(65536);}
                 if a.get(3).is_some_and(|a|a=="witness-trace") {target.graph.trace_ownership_catalog(16)?;}
-                if a.get(3).is_some_and(|a|matches!(a.as_str(),"template-fields"|"template-overlap")) {target.graph.use_template_stable_fields()?;}
-                if a.get(3).is_some_and(|a|a=="template-overlap") {
+                if a.get(3).is_some_and(|a|matches!(a.as_str(),"template-fields"|"template-overlap"|"cell-fields"|"cell-overlap")) {target.graph.use_template_stable_fields()?;}
+                if a.get(3).is_some_and(|a|matches!(a.as_str(),"cell-fields"|"cell-overlap")) {target.graph.use_cell_stable_fields()?;}
+                if a.get(3).is_some_and(|a|matches!(a.as_str(),"template-overlap"|"cell-overlap")) {
                     target.graph.use_parallel_port_guards(2,1)?;
                     target.graph.use_completion_read_batches(16)?;
                     target.graph.use_overlapped_completion()?;
@@ -265,7 +266,7 @@ fn main()->Result<()> {
                 eprintln!("checked {name}: {} Runs",checks.len());
             }
         }
-        write(variant.join(if a[0]=="apply-passive" {"compiled.json"} else if a[0]=="check-nested" {"checked-nested.json"} else if a.get(3).is_some_and(|a|a=="witness-trace") {"witness-checked.json"} else {"checked.json"}),&json!({"cases":reports}))?;
+        write(variant.join(if a[0]=="apply-passive" {"compiled.json"} else if a[0]=="check-nested" {"checked-nested.json"} else if a.get(3).is_some_and(|a|a=="witness-trace") {"witness-checked.json"} else if a.get(3).is_some_and(|s|s=="cell-fields") {"cell-fields-checked.json"} else if a.get(3).is_some_and(|s|s=="cell-overlap") {"cell-overlap-checked.json"} else {"checked.json"}),&json!({"cases":reports}))?;
     } else if a[0]=="verify" || a[0]=="observe" {
         let observe=a[0]=="observe";
         let root=Path::new(&a[1]);let manifest=read(root.join("manifest.json"))?;

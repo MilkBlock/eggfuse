@@ -11,6 +11,8 @@ struct Stats {
     epochs: u64,
     projection_candidates: u64,
     projection_records: u64,
+    projection_scalar_values: u64,
+    projection_scalar_bytes_total: u64,
     projection_comparisons: u64,
     projection_insertion_moves: u64,
     projection_capacity_bytes_total: u64,
@@ -400,10 +402,12 @@ impl Graph {
         runtime.stats.epochs += 1;
         runtime.stats.projection_candidates += projection_work.candidates;
         runtime.stats.projection_records += projection_work.records;
+        runtime.stats.projection_scalar_values += projection_work.scalar_values;
+        runtime.stats.projection_scalar_bytes_total += projection_work.scalar_capacity_bytes as u64;
         runtime.stats.projection_comparisons += projection_work.comparisons;
         runtime.stats.projection_insertion_moves += projection_work.insertion_moves;
-        runtime.stats.projection_capacity_bytes_total += projection_work.capacity_bytes as u64;
-        runtime.stats.projection_capacity_bytes_peak = runtime.stats.projection_capacity_bytes_peak.max(projection_work.capacity_bytes);
+        runtime.stats.projection_capacity_bytes_total += (projection_work.capacity_bytes+projection_work.scalar_capacity_bytes) as u64;
+        runtime.stats.projection_capacity_bytes_peak = runtime.stats.projection_capacity_bytes_peak.max(projection_work.capacity_bytes+projection_work.scalar_capacity_bytes);
         runtime.stats.base_snapshots += 4;
         runtime.stats.task_spawns += lanes as u64;
         runtime.stats.projected_tasks += count as u64;
