@@ -597,3 +597,60 @@ target/debug/examples/batch_cell_learning check-nested out/cell-batched-learning
 python3 benchmarks/cell-batched-learning/nested_owner_results.py \
   out/cell-batched-learning benchmarks/cell-batched-learning/nested-owner-results.json
 ```
+
+### Nested Cell granularity: a rule body is not an indivisible child
+
+The next storage change must address actual cross-component wiring rather than
+only shrinking source headers. `subcell_links.py` reads the existing batch
+snapshots, decodes possible native result addresses, and verifies the producer's
+current symbol binding before classifying a link. It keeps distinct instances and
+operator codes distinct even when they share one port layout. It separately tests
+whether an owned, visible provider fact remains. These are snapshot candidates,
+not a replacement for match evidence or a count of removable boundary records.
+A visible provider site alone is also not proof of immutable constructor semantics;
+mutable reads still require their original freshness obligations.
+
+| pass3 | cross-component symbol references | with visible provider | largest producer references | distinct producer ports |
+|---|---:|---:|---:|---:|
+| fact | 964 | 957 | 768 | 62 |
+| loopfact | 915 | 910 | 614 | 47 |
+| sum-bits | 4,052 | 2,962 | 1,576 | 78 |
+| dot-product | 3,488 | 3,406 | 2,315 | 161 |
+
+In these frozen inputs the largest producer is component 128 / source frame 129 /
+template 341: the typed `initialization` rule. It contains 48–171 live facts in
+one source frame. Its 5,273 references account for 56.0% of all 9,419 cross-component
+symbol references, but are spread across many different ports. A whole-component
+merge would pull unrelated initialized expressions into the same owner. Conversely,
+selecting only existing source-frame boundaries cannot expose their repeated small
+substructures. On sum-bits, 1,090 cross-component references have no currently
+owned visible provider in the mapped producer; an address alone cannot authorize
+importing a fact or skipping its construction.
+
+The architectural requirement is therefore both **composition and slicing**:
+
+1. Keep source rule/effect execution identity separate from reusable Cell regions.
+   A typed child view selects existing fact operations and exports their ports;
+   it must not allocate duplicate facts just to express a subcell.
+2. A parent template references typed child templates, port projections and stage
+   obligations. A parent instance references actual child occurrences and only its
+   new state. Repeated layouts with different bindings remain distinct occurrences.
+3. Use actual successful Entry/apply evidence to select multi-child joins. The
+   current append-only transition chooses one component and a new source frame;
+   shared roots alone do not establish a safe multi-child join.
+4. Remove flattened descriptors and redundant boundary maintenance only inside the
+   proven coverage. Shared actual children retain their lifecycle obligations;
+   static wiring must not become per-child lists of consumer instances.
+
+No new runtime compression or stage skip is implemented by this audit. It changes
+the next target from generic completed-metadata packing to typed views within large
+source Cells and composition of those views. Existing local index/visibility/Run
+checks remain authoritative. Twenty-one Python tests pass, including invalid
+native bindings, hidden providers, foreign slots, and same-layout/different-operator
+counterexamples. This uses saved traces; it does not rerun workloads or timings.
+
+```
+python3 benchmarks/cell-batched-learning/subcell_links.py out/cell-batched-learning \
+  benchmarks/cell-batched-learning/subcell-link-results.json
+python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
+```

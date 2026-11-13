@@ -1,0 +1,802 @@
+{
+  "scope": "final snapshots of actual standalone Cell executions; candidate subcell links, not saved work",
+  "obligations": [
+    "actual rule-match/Entry evidence for joining children",
+    "typed operator identity and port projection",
+    "fact visibility and instance lifetime",
+    "original Run/effect order and uncovered boundary work"
+  ],
+  "limitations": "Retained symbol links are not an exact count of live boundary-index records. A native binding without a visible provider does not prove a reusable live fact. Common inputs do not authorize merging whole components.",
+  "cases": [
+    {
+      "case": "fact",
+      "source_program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "components": 492,
+      "counts": {
+        "bound_symbols": 1963,
+        "no_native_frame": 284,
+        "native_symbol": 681,
+        "cross_component_symbols": 964,
+        "cross_component_with_visible_provider": 957,
+        "same_component_alias": 34
+      },
+      "directed_component_pairs": 494,
+      "largest_producers": [
+        {
+          "component": 128,
+          "source_frames": [
+            129
+          ],
+          "source_templates": [
+            341
+          ],
+          "live_facts": 66,
+          "retained_symbols": 73,
+          "cross_component_symbols": 768,
+          "consumer_components": 325,
+          "referenced_output_ports": 62,
+          "largest_port_fanouts": [
+            [
+              9,
+              51
+            ],
+            [
+              22,
+              27
+            ],
+            [
+              27,
+              24
+            ],
+            [
+              5,
+              22
+            ],
+            [
+              28,
+              22
+            ]
+          ],
+          "links_with_visible_provider": 768
+        },
+        {
+          "component": 442,
+          "source_frames": [
+            1401,
+            1422,
+            1423,
+            1424,
+            1425
+          ],
+          "source_templates": [
+            465,
+            469,
+            469,
+            469,
+            469
+          ],
+          "live_facts": 11,
+          "retained_symbols": 20,
+          "cross_component_symbols": 24,
+          "consumer_components": 18,
+          "referenced_output_ports": 6,
+          "largest_port_fanouts": [
+            [
+              1,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              9,
+              4
+            ],
+            [
+              8,
+              4
+            ]
+          ],
+          "links_with_visible_provider": 24
+        },
+        {
+          "component": 444,
+          "source_frames": [
+            1403
+          ],
+          "source_templates": [
+            472
+          ],
+          "live_facts": 2,
+          "retained_symbols": 2,
+          "cross_component_symbols": 23,
+          "consumer_components": 23,
+          "referenced_output_ports": 1,
+          "largest_port_fanouts": [
+            [
+              1,
+              23
+            ]
+          ],
+          "links_with_visible_provider": 23
+        },
+        {
+          "component": 293,
+          "source_frames": [
+            475,
+            592,
+            639,
+            693
+          ],
+          "source_templates": [
+            142,
+            140,
+            55,
+            91
+          ],
+          "live_facts": 7,
+          "retained_symbols": 8,
+          "cross_component_symbols": 19,
+          "consumer_components": 15,
+          "referenced_output_ports": 2,
+          "largest_port_fanouts": [
+            [
+              3,
+              10
+            ],
+            [
+              2,
+              9
+            ]
+          ],
+          "links_with_visible_provider": 19
+        },
+        {
+          "component": 441,
+          "source_frames": [
+            1400,
+            1426,
+            1491
+          ],
+          "source_templates": [
+            464,
+            470,
+            471
+          ],
+          "live_facts": 9,
+          "retained_symbols": 14,
+          "cross_component_symbols": 15,
+          "consumer_components": 11,
+          "referenced_output_ports": 6,
+          "largest_port_fanouts": [
+            [
+              2,
+              4
+            ],
+            [
+              10,
+              3
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "links_with_visible_provider": 15
+        }
+      ]
+    },
+    {
+      "case": "loopfact",
+      "source_program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "components": 464,
+      "counts": {
+        "bound_symbols": 1868,
+        "no_native_frame": 289,
+        "native_symbol": 637,
+        "cross_component_symbols": 915,
+        "cross_component_with_visible_provider": 910,
+        "same_component_alias": 27
+      },
+      "directed_component_pairs": 520,
+      "largest_producers": [
+        {
+          "component": 128,
+          "source_frames": [
+            129
+          ],
+          "source_templates": [
+            341
+          ],
+          "live_facts": 48,
+          "retained_symbols": 53,
+          "cross_component_symbols": 614,
+          "consumer_components": 271,
+          "referenced_output_ports": 47,
+          "largest_port_fanouts": [
+            [
+              10,
+              55
+            ],
+            [
+              45,
+              31
+            ],
+            [
+              44,
+              27
+            ],
+            [
+              27,
+              26
+            ],
+            [
+              26,
+              20
+            ]
+          ],
+          "links_with_visible_provider": 614
+        },
+        {
+          "component": 237,
+          "source_frames": [
+            391,
+            472,
+            577
+          ],
+          "source_templates": [
+            141,
+            140,
+            140
+          ],
+          "live_facts": 7,
+          "retained_symbols": 7,
+          "cross_component_symbols": 35,
+          "consumer_components": 23,
+          "referenced_output_ports": 4,
+          "largest_port_fanouts": [
+            [
+              6,
+              11
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              2,
+              9
+            ],
+            [
+              3,
+              6
+            ]
+          ],
+          "links_with_visible_provider": 35
+        },
+        {
+          "component": 391,
+          "source_frames": [
+            1107,
+            1130,
+            1131,
+            1132,
+            1133,
+            1134
+          ],
+          "source_templates": [
+            465,
+            469,
+            469,
+            469,
+            469,
+            469
+          ],
+          "live_facts": 14,
+          "retained_symbols": 24,
+          "cross_component_symbols": 33,
+          "consumer_components": 23,
+          "referenced_output_ports": 8,
+          "largest_port_fanouts": [
+            [
+              1,
+              5
+            ],
+            [
+              20,
+              5
+            ],
+            [
+              8,
+              5
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              5,
+              4
+            ]
+          ],
+          "links_with_visible_provider": 33
+        },
+        {
+          "component": 393,
+          "source_frames": [
+            1109
+          ],
+          "source_templates": [
+            472
+          ],
+          "live_facts": 2,
+          "retained_symbols": 2,
+          "cross_component_symbols": 31,
+          "consumer_components": 31,
+          "referenced_output_ports": 1,
+          "largest_port_fanouts": [
+            [
+              1,
+              31
+            ]
+          ],
+          "links_with_visible_provider": 31
+        },
+        {
+          "component": 389,
+          "source_frames": [
+            1105,
+            1135,
+            1216
+          ],
+          "source_templates": [
+            464,
+            470,
+            471
+          ],
+          "live_facts": 9,
+          "retained_symbols": 14,
+          "cross_component_symbols": 16,
+          "consumer_components": 12,
+          "referenced_output_ports": 6,
+          "largest_port_fanouts": [
+            [
+              2,
+              5
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              11,
+              2
+            ]
+          ],
+          "links_with_visible_provider": 16
+        }
+      ]
+    },
+    {
+      "case": "sum-bits",
+      "source_program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "components": 1344,
+      "counts": {
+        "bound_symbols": 6761,
+        "no_native_frame": 561,
+        "native_symbol": 2062,
+        "cross_component_symbols": 4052,
+        "cross_component_with_visible_provider": 2962,
+        "same_component_alias": 86
+      },
+      "directed_component_pairs": 2518,
+      "largest_producers": [
+        {
+          "component": 128,
+          "source_frames": [
+            129
+          ],
+          "source_templates": [
+            341
+          ],
+          "live_facts": 85,
+          "retained_symbols": 96,
+          "cross_component_symbols": 1576,
+          "consumer_components": 593,
+          "referenced_output_ports": 78,
+          "largest_port_fanouts": [
+            [
+              8,
+              164
+            ],
+            [
+              40,
+              58
+            ],
+            [
+              73,
+              52
+            ],
+            [
+              32,
+              46
+            ],
+            [
+              41,
+              45
+            ]
+          ],
+          "links_with_visible_provider": 1506
+        },
+        {
+          "component": 774,
+          "source_frames": [
+            2672,
+            2691
+          ],
+          "source_templates": [
+            432
+          ],
+          "live_facts": 7,
+          "retained_symbols": 17,
+          "cross_component_symbols": 137,
+          "consumer_components": 113,
+          "referenced_output_ports": 2,
+          "largest_port_fanouts": [
+            [
+              9,
+              77
+            ],
+            [
+              10,
+              60
+            ]
+          ],
+          "links_with_visible_provider": 0
+        },
+        {
+          "component": 634,
+          "source_frames": [
+            2158,
+            2184,
+            2185,
+            2186,
+            2187,
+            2188,
+            2189,
+            2190
+          ],
+          "source_templates": [
+            465,
+            469,
+            469,
+            469,
+            469,
+            469,
+            469,
+            469
+          ],
+          "live_facts": 20,
+          "retained_symbols": 32,
+          "cross_component_symbols": 108,
+          "consumer_components": 80,
+          "referenced_output_ports": 12,
+          "largest_port_fanouts": [
+            [
+              8,
+              19
+            ],
+            [
+              20,
+              16
+            ],
+            [
+              4,
+              13
+            ],
+            [
+              24,
+              12
+            ],
+            [
+              1,
+              9
+            ]
+          ],
+          "links_with_visible_provider": 108
+        },
+        {
+          "component": 886,
+          "source_frames": [
+            3266,
+            3283
+          ],
+          "source_templates": [
+            308,
+            312
+          ],
+          "live_facts": 6,
+          "retained_symbols": 13,
+          "cross_component_symbols": 105,
+          "consumer_components": 64,
+          "referenced_output_ports": 4,
+          "largest_port_fanouts": [
+            [
+              3,
+              53
+            ],
+            [
+              8,
+              26
+            ],
+            [
+              10,
+              24
+            ],
+            [
+              12,
+              2
+            ]
+          ],
+          "links_with_visible_provider": 0
+        },
+        {
+          "component": 855,
+          "source_frames": [
+            3221,
+            3231
+          ],
+          "source_templates": [
+            312,
+            311
+          ],
+          "live_facts": 7,
+          "retained_symbols": 13,
+          "cross_component_symbols": 104,
+          "consumer_components": 76,
+          "referenced_output_ports": 3,
+          "largest_port_fanouts": [
+            [
+              5,
+              39
+            ],
+            [
+              10,
+              36
+            ],
+            [
+              3,
+              29
+            ]
+          ],
+          "links_with_visible_provider": 0
+        }
+      ]
+    },
+    {
+      "case": "dot-product",
+      "source_program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "components": 1308,
+      "counts": {
+        "bound_symbols": 6254,
+        "no_native_frame": 419,
+        "native_symbol": 2222,
+        "cross_component_symbols": 3488,
+        "cross_component_with_visible_provider": 3406,
+        "same_component_alias": 125
+      },
+      "directed_component_pairs": 1939,
+      "largest_producers": [
+        {
+          "component": 128,
+          "source_frames": [
+            129
+          ],
+          "source_templates": [
+            341
+          ],
+          "live_facts": 171,
+          "retained_symbols": 184,
+          "cross_component_symbols": 2315,
+          "consumer_components": 951,
+          "referenced_output_ports": 161,
+          "largest_port_fanouts": [
+            [
+              11,
+              247
+            ],
+            [
+              6,
+              68
+            ],
+            [
+              175,
+              51
+            ],
+            [
+              136,
+              49
+            ],
+            [
+              150,
+              48
+            ]
+          ],
+          "links_with_visible_provider": 2285
+        },
+        {
+          "component": 1025,
+          "source_frames": [
+            3422
+          ],
+          "source_templates": [
+            472
+          ],
+          "live_facts": 2,
+          "retained_symbols": 2,
+          "cross_component_symbols": 110,
+          "consumer_components": 110,
+          "referenced_output_ports": 1,
+          "largest_port_fanouts": [
+            [
+              1,
+              110
+            ]
+          ],
+          "links_with_visible_provider": 110
+        },
+        {
+          "component": 1022,
+          "source_frames": [
+            3419,
+            3515,
+            3516,
+            3517,
+            3518,
+            3519,
+            3520,
+            3521
+          ],
+          "source_templates": [
+            465,
+            469,
+            469,
+            469,
+            469,
+            469,
+            469,
+            469
+          ],
+          "live_facts": 18,
+          "retained_symbols": 32,
+          "cross_component_symbols": 62,
+          "consumer_components": 46,
+          "referenced_output_ports": 10,
+          "largest_port_fanouts": [
+            [
+              5,
+              9
+            ],
+            [
+              8,
+              8
+            ],
+            [
+              12,
+              8
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          "links_with_visible_provider": 62
+        },
+        {
+          "component": 6,
+          "source_frames": [
+            4,
+            171,
+            230,
+            392,
+            443,
+            480,
+            482
+          ],
+          "source_templates": [
+            566,
+            534,
+            519,
+            537,
+            535,
+            520,
+            539
+          ],
+          "live_facts": 11,
+          "retained_symbols": 21,
+          "cross_component_symbols": 33,
+          "consumer_components": 31,
+          "referenced_output_ports": 4,
+          "largest_port_fanouts": [
+            [
+              6,
+              21
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              15,
+              5
+            ],
+            [
+              8,
+              1
+            ]
+          ],
+          "links_with_visible_provider": 33
+        },
+        {
+          "component": 1244,
+          "source_frames": [
+            4429,
+            4562,
+            4578,
+            4603,
+            4608,
+            5639,
+            5667,
+            5727
+          ],
+          "source_templates": [
+            43,
+            407,
+            413,
+            43,
+            407,
+            413,
+            43
+          ],
+          "live_facts": 8,
+          "retained_symbols": 30,
+          "cross_component_symbols": 29,
+          "consumer_components": 22,
+          "referenced_output_ports": 1,
+          "largest_port_fanouts": [
+            [
+              14,
+              29
+            ]
+          ],
+          "links_with_visible_provider": 29
+        }
+      ]
+    }
+  ]
+}
