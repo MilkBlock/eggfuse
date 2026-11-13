@@ -3,6 +3,37 @@ import numpy as np
 from multi_entry_ridge import encode,scalar,pooling,replay,WIDTH,state_key,encoding_audit,input_seed
 
 class MultiEntryRidge(unittest.TestCase):
+    def test_source_context_keeps_baseline_projection_fixed(self):
+        from multi_entry_ridge import projection
+        base=projection(1408);extended=projection(1536,True)
+        np.testing.assert_array_equal(base[:384],extended[:384])
+        np.testing.assert_array_equal(base[384:],extended[512:])
+        rng=np.random.default_rng(82);x=rng.normal(size=(3,1408)).astype(np.float32)
+        more=np.concatenate([x[:,:384],np.zeros((3,128),np.float32),x[:,384:]],axis=1)
+        np.testing.assert_allclose(x@base,more@extended,atol=2e-6)
+
+    def test_source_context_uses_template_connections_not_future_results(self):
+        from unittest.mock import patch
+        from copy import deepcopy
+        from multi_entry_ridge import dataset
+        sort=dict(kind='eq',name='E')
+        rule=dict(slots=[dict(sort=sort)],query=[dict(call=dict(name='F'),args=[dict(slot=0)])],effects=[])
+        binding=dict(rule=0,values=[dict(slot=0,value={})],eq_ports=[dict(slot=0,sort='E',before=1)],
+                     rhs=dict(completed=True,slots=[dict(slot=0,value={},eq_port=dict(sort='E',after_run=1))]))
+        trace=dict(recipe=dict(rules=[rule]),runs=[dict(ordinal=i,audit=dict(bindings=[deepcopy(binding)])) for i in range(2)])
+        links=dict(windows=[dict(consumer_run=1,producer_run=0,groups=[dict(providers=[dict(binding=0,rule=0,slot=0)])],
+                                consumers=[dict(binding=0,ports=[dict(slot=0,group=0)])])])
+        def make(t):
+            with patch('historical_cell_sources.link_history',return_value=links):
+                return dataset(t,4,False,'class-history-neighborhood-input',True)
+        before=make(trace)
+        changed=deepcopy(trace);changed['runs'][1]['audit']['bindings'][0]['rhs']['slots'][0]['eq_port']['after_run']=99
+        after=make(changed)
+        np.testing.assert_array_equal(before[1]['q'],after[1]['q'])
+        self.assertEqual(before[1]['q'].shape,(384,))
+        np.testing.assert_array_equal(before[0]['q'][-128:],np.zeros(128))
+        self.assertGreater(np.max(abs(before[1]['q'][-128:])),.01)
+
     def test_node_ids_not_float_features(self):
         roles=np.random.default_rng(1).normal(size=(3,64)).astype(np.float32)
         first=[(0,{},('E',10)),(1,{},('E',10)),(2,{},('E',20))]

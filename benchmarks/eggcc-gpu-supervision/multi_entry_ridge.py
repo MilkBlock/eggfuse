@@ -140,7 +140,7 @@ def context_route(route,historical,encoding):
     return route
 
 
-def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
+def dataset(trace,channels=1,zero_role_channels=False,encoding="slot",source_neighborhood=False):
     if not 1<=channels<=8:raise ValueError("channel count outside experiment limits")
     separated=encoding in ('class-history-split','class-history-repeat')
     if separated and channels!=8:raise ValueError('context comparison requires eight channels')
@@ -151,7 +151,7 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
         links=link_history(trace,fallback_only=encoding in ('class-history-fallback','class-history-earliest','class-history-neighborhood','class-history-neighborhood-input'),earliest=encoding in ('class-history-earliest','class-history-neighborhood','class-history-neighborhood-input'))
     else:links=link(trace)
     targets=[template(r) for r in trace['recipe']['rules']]
-    neighborhoods=[neighborhood_template(r) for r in trace['recipe']['rules']] if encoding in ('class-history-neighborhood','class-history-neighborhood-input') else None
+    neighborhoods=[neighborhood_template(r) for r in trace['recipe']['rules']] if source_neighborhood or encoding in ('class-history-neighborhood','class-history-neighborhood-input') else None
     compiled=neighborhoods if encoding=='class-history-neighborhood' else targets
     families=[template_identity(r) for r in trace['recipe']['rules']]
     nodes=[];addresses={};by_consumer={}
@@ -160,7 +160,7 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
     for run in trace['runs']:
         for ordinal,b in enumerate(run['audit']['bindings']):
             idx=len(nodes);address=(run['ordinal'],ordinal);roles,q=compiled[b['rule']]
-            incoming=[];routes=[];connected=set()
+            incoming=[];routes=[];connected=set();source_context=[]
             if address in by_consumer:
                 w,c=by_consumer[address]
                 for port in c['ports']:
@@ -176,10 +176,17 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
                         if zero_role_channels:route[1:]=0
                         route=context_route(route,port.get('relation')=='historical_observed_identity',encoding)
                         incoming.append((source,edge/np.sqrt(len(g['providers']))));routes.append(route)
+                        if source_neighborhood:
+                            cr=neighborhoods[b['rule']][0][port['slot']]
+                            sr=neighborhoods[p['rule']][0][p['slot']]
+                            source_context.append(np.concatenate([np.tanh(cr+sr),np.tanh(cr-sr)])/np.sqrt(len(g['providers'])))
             seed=input_seed(b,roles,connected,encoding)
             if encoding=='class-history-neighborhood-input':
                 nr,nq=neighborhoods[b['rule']]
                 q=np.concatenate([q,input_seed(b,nr,connected,encoding),nq])
+            if source_neighborhood:
+                context=sum(source_context,np.zeros(WIDTH,np.float32))/np.sqrt(max(1,len(source_context)))
+                q=np.concatenate([q,np.tanh(context)])
             target=encode(output_rows(b),targets[b['rule']][0],encoding)
             valid=b['rhs']['completed'] and all('unavailable' not in s for s in b['rhs']['slots'])
             # A missing full local state is an explicit CPU boundary in this probe.
@@ -203,6 +210,17 @@ def pooling(nodes,states):
             messages=np.array([states[i]*w for i,w in n['edges']],np.float32)
             result[j]=(np.array(routes).T@messages).reshape(-1)/np.sqrt(len(n['edges']))
     return result
+
+
+def projection(raw_width,source_neighborhood=False):
+    """Keep baseline random features fixed when adding source context columns."""
+    rng=np.random.default_rng(412)
+    base_width=raw_width-(WIDTH if source_neighborhood else 0)
+    base=rng.normal(0,1/np.sqrt(base_width),(base_width,256)).astype(np.float32)
+    if not source_neighborhood:return base
+    # This experiment extends the neighborhood-input request (128 + 256).
+    extra=rng.normal(0,1/np.sqrt(base_width),(WIDTH,256)).astype(np.float32)
+    return np.concatenate([base[:384],extra,base[384:]])
 
 
 def features(seed,q,pool,w,xp):
@@ -259,7 +277,8 @@ def metric(pred,target,mask):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('training',type=Path);p.add_argument('validation',type=Path)
-    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface','class-history','class-history-split','class-history-repeat','class-history-fallback','class-history-earliest','class-history-neighborhood','class-history-neighborhood-input'],default='slot');a=p.parse_args()
+    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface','class-history','class-history-split','class-history-repeat','class-history-fallback','class-history-earliest','class-history-neighborhood','class-history-neighborhood-input'],default='slot');p.add_argument('--source-neighborhood',action='store_true');a=p.parse_args()
+    if a.source_neighborhood and a.encoding!='class-history-neighborhood-input':raise ValueError('source neighborhood requires neighborhood-input baseline')
     preparation_started=time.monotonic()
     corpus_raw=a.corpus_manifest.read_bytes();corpus=json.loads(corpus_raw);corpus_sha=hashlib.sha256(corpus_raw).hexdigest()
     all_nodes=[];partition=[];provenance=dict(corpus_manifest=corpus_sha)
@@ -271,7 +290,7 @@ def main():
             if entry['split']!=name:raise ValueError('case partition mismatch')
             raw=read_bytes(Path(entry['trace']))
             if hashlib.sha256(raw).hexdigest()!=entry['trace_sha256']:raise ValueError('trace hash mismatch')
-            nodes=dataset(json.loads(raw),a.channels,a.zero_role_channels,a.encoding);offset=len(all_nodes)
+            nodes=dataset(json.loads(raw),a.channels,a.zero_role_channels,a.encoding,a.source_neighborhood);offset=len(all_nodes)
             for n in nodes:n['edges']=[(i+offset,v) for i,v in n['edges']]
             all_nodes.extend(nodes);partition.extend([name]*len(nodes))
     raw=read_bytes(a.test_trace);test_trace=json.loads(raw)
@@ -279,10 +298,10 @@ def main():
     if len(cases)!=1 or cases[0]['split']!='test':raise ValueError('test partition mismatch')
     original=json.loads(read_bytes(Path(cases[0]['program'])))
     if original['recipe']!=test_trace['recipe']:raise ValueError('test recipe mismatch')
-    test=dataset(test_trace,a.channels,a.zero_role_channels,a.encoding);provenance['test_trace']=hashlib.sha256(raw).hexdigest()
+    test=dataset(test_trace,a.channels,a.zero_role_channels,a.encoding,a.source_neighborhood);provenance['test_trace']=hashlib.sha256(raw).hexdigest()
     seed,q,target=arrays(all_nodes);pool=pooling(all_nodes,target)
     raw_width=seed.shape[1]+q.shape[1]+256*a.channels
-    rng=np.random.default_rng(412);w=rng.normal(0,1/np.sqrt(raw_width),(raw_width,256)).astype(np.float32)
+    w=projection(raw_width,a.source_neighborhood)
     x=features(seed,q,pool,w,np);parts=np.array(partition);valid=np.array([n['valid'] for n in all_nodes])
     preparation_seconds=time.monotonic()-preparation_started
     fitting_started=time.monotonic()
@@ -290,7 +309,7 @@ def main():
     zero_coef,zero_fit=train(features(seed,q,np.zeros_like(pool),w,np),np.arctanh(np.clip(target,-.999,.999)),
         (parts=='train')&valid,(parts=='validation')&valid)
     fitting_seconds=time.monotonic()-fitting_started
-    with a.model.open('wb') as f:np.savez_compressed(f,w=w,coef=coef,zero_provider_coef=zero_coef,channels=a.channels,zero_role_channels=a.zero_role_channels,encoding=a.encoding)
+    with a.model.open('wb') as f:np.savez_compressed(f,w=w,coef=coef,zero_provider_coef=zero_coef,channels=a.channels,zero_role_channels=a.zero_role_channels,encoding=a.encoding,source_neighborhood=a.source_neighborhood)
     if not mx.metal.is_available():raise RuntimeError('Metal required')
     mx.set_default_device(mx.gpu);seed,q,target=arrays(test);pool=pooling(test,target)
     oracle=mx.tanh(features(mx.array(seed),mx.array(q),mx.array(pool),mx.array(w),mx)@mx.array(coef));mx.eval(oracle)
@@ -305,7 +324,7 @@ def main():
     oracle_outside=int(np.count_nonzero(abs(np.array(oracle)-gold)>.002+.004*abs(gold)))
     result=dict(scope='observed-wiring multi-provider numeric Cell token replay, not autonomous egraph execution',
         provenance=provenance,fit=fit,backpropagation=False,state_width=WIDTH,train_valid=int(sum(n['valid'] and p=='train' for n,p in zip(all_nodes,partition))),
-        encoding=a.encoding,channels=a.channels,zero_role_channels=a.zero_role_channels,raw_feature_width=raw_width,
+        encoding=a.encoding,source_neighborhood=a.source_neighborhood,channels=a.channels,zero_role_channels=a.zero_role_channels,raw_feature_width=raw_width,
         edge_coefficient_floats=sum(v.size for n in test for _,v in n['edges']),
         route_coefficient_floats=sum(v.size for n in test for v in n['edge_routes']),
         expanded_edge_equivalent_floats=sum(v.size*a.channels for n in test for _,v in n['edges']),

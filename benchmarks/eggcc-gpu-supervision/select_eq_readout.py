@@ -66,6 +66,7 @@ def main():
     p.add_argument('trace',type=Path);p.add_argument('model',type=Path);p.add_argument('model_report',type=Path)
     p.add_argument('weights',type=Path);p.add_argument('output',type=Path);p.add_argument('--marks',type=Path,required=True);p.add_argument('--reject-unstable-candidates',action='store_true');a=p.parse_args()
     report=json.loads(a.model_report.read_text());model=verified(a.model,report,'model_sha256')
+    source_neighborhood=bool(model.get('source_neighborhood',False))
     encoding=str(model.get('encoding','slot'));channels=int(model['channels']);zero=bool(model['zero_role_channels'])
     w=np.random.default_rng(208).normal(0,1/np.sqrt(512),(512,256)).astype(np.float32)
     provenance={};data={};binary=None
@@ -81,7 +82,7 @@ def main():
             if entry['split']!=partition or hashlib.sha256(raw).hexdigest()!=entry['trace_sha256']:raise ValueError('case provenance mismatch')
             trace=json.loads(raw)
             if not all(trace.get(k) is True for k in ('strict_run_graphs_equal','strict_audit_reference_equal','run_control_counts_equal')):raise ValueError('capture audit missing')
-            nodes,rows=examples(trace,channels,zero,True,encoding)
+            nodes,rows=examples(trace,channels,zero,True,encoding,source_neighborhood)
             data[partition].append((entry['case'],nodes,rows))
     xs=[];ys=[];unique=set()
     for _,nodes,rows in data['train']:
@@ -123,7 +124,7 @@ def main():
     with a.weights.open('wb') as f:np.savez_compressed(f,w=w,coef=coef,alphas=ALPHAS)
     raw=read_bytes(a.trace);trace_sha=hashlib.sha256(raw).hexdigest()
     if trace_sha!=report['provenance']['test_trace']:raise ValueError('test trace mismatch')
-    nodes,rows=examples(json.loads(raw),channels,zero,True,encoding)
+    nodes,rows=examples(json.loads(raw),channels,zero,True,encoding,source_neighborhood)
     predicted=np.array(executor(nodes,model['w'],model['coef'],prepare(nodes,'two'),True)())
     clock=time.monotonic();matrix,_=materialize(readout_rows(rows,True),predicted,w,True);encoding_seconds=time.monotonic()-clock
     indices=sorted(set(selected.values()));clock=time.monotonic();scores,test_numeric=gpu_read(matrix,coef[:,indices]);read_seconds=time.monotonic()-clock
