@@ -101,3 +101,30 @@ compiler or Cell workload appears. Keep every attempt and sample; do not merge
 unaffected pieces of interrupted attempts. Boundary guards cannot exclude all
 system load or work entirely between observations. Grouped timing is not a
 statistical-significance or full worker-utilization claim.
+
+## Sequential quick checkpoint
+
+Control `6a8ea4ac`, candidate runtime `483e379b`, four workers, identical frozen
+programs and flags. This attempt completed on its first run, with no compiler
+or other Cell workload detected at 48 sample/group boundaries. All 20 warmup
+and measured executions pass frozen-state, Run-order and effect checks. No
+samples were discarded; the order is control sum, control Ray, candidate sum,
+candidate Ray. Native sum acceptance remains tied to the fresh CPU export.
+
+| Inference median | Control | Candidate | Change |
+| --- | ---: | ---: | ---: |
+| sum-bits, five samples | 24.205 ms | 25.382 ms | +4.86% |
+| Raytrace, three samples | 5.227398 s | 4.985200 s | −4.63% |
+
+Individual Raytrace ranges are 5.218226–5.270761 s / 4.954621–5.604177 s;
+sum-bits ranges are 24.145–28.723 ms / 24.109–26.325 ms. The Raytrace median
+improves in this short grouped checkpoint, but candidate variation, grouped
+order and system load prevent attributing the entire change to this code.
+Sum-bits regresses, so this is not a general speedup.
+
+The candidate's accumulated source-Run phase medians remain roughly 1.847 s
+RHS, 1.707 s search, 0.991 s query update and 0.413 s repair. These are wall
+intervals that can contain worker work or waits, **not** isolated serial CPU
+costs. They motivate returning to the larger RHS/publication/wait boundaries
+after removing this preparation overhead. Do not use the storage reduction
+as proof that those boundaries or full worker utilization are solved.
