@@ -49,7 +49,7 @@ def scalar(value):
 
 
 def encode(rows,roles,encoding="slot"):
-    if encoding not in ("slot","class-balanced","class-interface","class-history"):raise ValueError("unknown token encoding")
+    if encoding not in ("slot","class-balanced","class-interface","class-history","class-history-split","class-history-repeat"):raise ValueError("unknown token encoding")
     groups=defaultdict(list)
     for slot,value,key in rows:
         if key is not None:groups[key].append(slot)
@@ -78,7 +78,7 @@ def input_rows(binding):
 def input_seed(binding,roles,connected,encoding):
     # Connected Eq slots still carry interface correlations between providers.
     rows=input_rows(binding)
-    return encode([r for r in rows if encoding in ('class-interface','class-history') or r[0] not in connected],roles,encoding)
+    return encode([r for r in rows if encoding in ('class-interface','class-history','class-history-split','class-history-repeat') or r[0] not in connected],roles,encoding)
 
 
 def output_rows(binding):
@@ -110,10 +110,21 @@ def template_identity(rule):
     return hashlib.sha256(json.dumps(structural,sort_keys=True).encode()).hexdigest()
 
 
+def context_route(route,historical,encoding):
+    if encoding=='class-history-split':
+        zero=np.zeros_like(route)
+        return np.concatenate([zero,route] if historical else [route,zero])
+    if encoding=='class-history-repeat':return np.concatenate([route,route])/np.sqrt(2)
+    return route
+
+
 def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
     if not 1<=channels<=8:raise ValueError("channel count outside experiment limits")
-    routing=np.random.default_rng(777).normal(0,1/np.sqrt(128),(128,channels-1)).astype(np.float32)
-    if encoding=='class-history':
+    separated=encoding in ('class-history-split','class-history-repeat')
+    if separated and channels!=8:raise ValueError('context comparison requires eight channels')
+    role_channels=4 if separated else channels
+    routing=np.random.default_rng(777).normal(0,1/np.sqrt(128),(128,role_channels-1)).astype(np.float32)
+    if encoding.startswith('class-history'):
         from historical_cell_sources import link_history
         links=link_history(trace)
     else:links=link(trace)
@@ -139,6 +150,7 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
                                              np.tanh(roles[port['slot']]-pr[p['slot']])])
                         route=np.concatenate([np.ones(1,np.float32),np.tanh(3*np.concatenate([roles[port['slot']],pr[p['slot']]])@routing)])
                         if zero_role_channels:route[1:]=0
+                        route=context_route(route,port.get('relation')=='historical_observed_identity',encoding)
                         incoming.append((source,edge/np.sqrt(len(g['providers']))));routes.append(route)
             seed=input_seed(b,roles,connected,encoding)
             target=encode(output_rows(b),roles,encoding)
@@ -220,7 +232,7 @@ def metric(pred,target,mask):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('training',type=Path);p.add_argument('validation',type=Path)
-    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface','class-history'],default='slot');a=p.parse_args()
+    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced','class-interface','class-history','class-history-split','class-history-repeat'],default='slot');a=p.parse_args()
     preparation_started=time.monotonic()
     corpus_raw=a.corpus_manifest.read_bytes();corpus=json.loads(corpus_raw);corpus_sha=hashlib.sha256(corpus_raw).hexdigest()
     all_nodes=[];partition=[];provenance=dict(corpus_manifest=corpus_sha)
@@ -277,7 +289,7 @@ def main():
         test_cases=len(test),cpu_boundary_tokens=int((~valid).sum()),depths=max(n['depth'] for n in test)+1,
         reports={label:dict(gold_provider_inputs=metric(np.array(oracle),target,m),predicted_provider_inputs=metric(pred,target,m),no_provider_refit=metric(no_provider,target,m),shuffled_providers=metric(shuffled_pred,target,m))
                  for label,m in [('all_valid',valid),('linked',valid&linked),('multiple_providers',valid&multiple)]},
-        history_context='latest observed constructor Run per typed identity; unproved lifetime' if a.encoding=='class-history' else None,
+        history_context='latest observed constructor Run per typed identity; unproved lifetime' if a.encoding.startswith('class-history') else None,
         encoding_audit=dict(train_validation=encoding_audit(all_nodes),test=encoding_audit(test)),no_provider_fit=zero_fit,
         numerical_audit=dict(passed=bool(audit and outside==0 and oracle_outside==0),rollout_outside=outside,gold_outside=oracle_outside),
         gpu_replay_wall_seconds=gpu_wall,cpu_replay_wall_seconds=cpu_wall,

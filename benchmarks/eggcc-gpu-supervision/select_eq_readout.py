@@ -36,7 +36,7 @@ def gpu_read(matrix,coef):
         out=mx.array(matrix[start:start+4096])@weight;mx.eval(out);chunks.append(np.array(out))
     scores=np.concatenate(chunks);reference=matrix@coef;check=audit(scores,reference)
     check['threshold_disagreements']=int(((scores>=.5)!=(reference>=.5)).sum())
-    if not check['passed'] or check['threshold_disagreements']:raise ValueError('numeric readout disagreement')
+    if not check['passed'] or check['threshold_disagreements']:raise ValueError('numeric readout disagreement: '+json.dumps(check))
     return scores,check
 
 

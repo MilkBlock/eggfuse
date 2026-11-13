@@ -1,0 +1,132 @@
+{
+  "scope": "observed-wiring multi-provider numeric Cell token replay, not autonomous egraph execution",
+  "provenance": {
+    "corpus_manifest": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "train": "e1e830c2d1beef561494bca8c53f3ee04f0c9d5360c3b538dff9a9f021395977",
+    "validation": "1d0a3dbdf423b426cd7c68406f7a1807ba2c24e77c6e5583c4e7f84ae04bd1eb",
+    "test_trace": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38"
+  },
+  "fit": {
+    "alpha": 10.0,
+    "validation_target_mse": 4.7237412218237296e-05
+  },
+  "backpropagation": false,
+  "state_width": 128,
+  "train_valid": 23056,
+  "encoding": "class-history-split",
+  "channels": 8,
+  "zero_role_channels": false,
+  "raw_feature_width": 2240,
+  "edge_coefficient_floats": 8289280,
+  "route_coefficient_floats": 518080,
+  "expanded_edge_equivalent_floats": 66314240,
+  "inference_weight_floats": 893056,
+  "model_coefficient_floats": 1212672,
+  "preparation_seconds": 7.656480167002883,
+  "fitting_seconds": 1.314596290991176,
+  "consumed_cpu_boundary_tokens": 0,
+  "test_cases": 5935,
+  "cpu_boundary_tokens": 382,
+  "depths": 91,
+  "reports": {
+    "all_valid": {
+      "gold_provider_inputs": {
+        "cases": 5553,
+        "rmse": 0.02955584317411592,
+        "max_abs": 0.6507208347320557
+      },
+      "predicted_provider_inputs": {
+        "cases": 5553,
+        "rmse": 0.02977096526784934,
+        "max_abs": 0.6323552131652832
+      },
+      "no_provider_refit": {
+        "cases": 5553,
+        "rmse": 0.035554714922877255,
+        "max_abs": 0.7711175680160522
+      },
+      "shuffled_providers": {
+        "cases": 5553,
+        "rmse": 0.04271264217591237,
+        "max_abs": 0.6432965397834778
+      }
+    },
+    "linked": {
+      "gold_provider_inputs": {
+        "cases": 5550,
+        "rmse": 0.02955395868454242,
+        "max_abs": 0.6507208347320557
+      },
+      "predicted_provider_inputs": {
+        "cases": 5550,
+        "rmse": 0.02976921026271213,
+        "max_abs": 0.6323552131652832
+      },
+      "no_provider_refit": {
+        "cases": 5550,
+        "rmse": 0.03554808108825457,
+        "max_abs": 0.7711175680160522
+      },
+      "shuffled_providers": {
+        "cases": 5550,
+        "rmse": 0.042717354408150096,
+        "max_abs": 0.6432965397834778
+      }
+    },
+    "multiple_providers": {
+      "gold_provider_inputs": {
+        "cases": 5254,
+        "rmse": 0.030067651631252034,
+        "max_abs": 0.6507208347320557
+      },
+      "predicted_provider_inputs": {
+        "cases": 5254,
+        "rmse": 0.030314667706371503,
+        "max_abs": 0.6323552131652832
+      },
+      "no_provider_refit": {
+        "cases": 5254,
+        "rmse": 0.03628732164858838,
+        "max_abs": 0.7711175680160522
+      },
+      "shuffled_providers": {
+        "cases": 5254,
+        "rmse": 0.042994796999372496,
+        "max_abs": 0.6432965397834778
+      }
+    }
+  },
+  "history_context": "latest observed constructor Run per typed identity; unproved lifetime",
+  "encoding_audit": {
+    "train_validation": {
+      "distinct_codes": 1221,
+      "conflicting_codes": 0,
+      "instances_in_conflicting_codes": 0
+    },
+    "test": {
+      "distinct_codes": 1009,
+      "conflicting_codes": 0,
+      "instances_in_conflicting_codes": 0
+    }
+  },
+  "no_provider_fit": {
+    "alpha": 0.1,
+    "validation_target_mse": 0.00013790155935566872
+  },
+  "numerical_audit": {
+    "passed": true,
+    "rollout_outside": 0,
+    "gold_outside": 0
+  },
+  "gpu_replay_wall_seconds": 1.09293520799838,
+  "cpu_replay_wall_seconds": 1.0731086250161752,
+  "intermediate_cpu_state_reads": 0,
+  "model_sha256": "b61e49f8eabb438176026b3a6986061e73cfeab015ae64532fad0107790fecc3",
+  "limitations": [
+    "Observed successful matches and routing are supplied by CPU traces",
+    "Incomplete captured states are supplied as explicit CPU boundary tokens",
+    "Dense code has no exact graph decoder, ownership certificate, novelty or saturation head",
+    "External input observations supplied per consumer; their autonomous production is not tested",
+    "Timing includes compilation and plan/upload work; no throughput or speedup claim"
+  ]
+}

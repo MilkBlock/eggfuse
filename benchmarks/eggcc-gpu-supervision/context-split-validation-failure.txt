@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/select_eq_readout.py", line 124, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/select_eq_readout.py", line 84, in main
+    x,_=materialize(readout_rows(rows,True),predicted,w,True);scores,numeric[case]=gpu_read(x,coef)
+                                                                                   ~~~~~~~~^^^^^^^^
+  File "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/select_eq_readout.py", line 39, in gpu_read
+    if not check['passed'] or check['threshold_disagreements']:raise ValueError('numeric readout disagreement: '+json.dumps(check))
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: numeric readout disagreement: {"passed": true, "finite": true, "outside": 0, "max_abs": 8.682697781647875e-06, "threshold_disagreements": 2}
