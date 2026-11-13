@@ -80,7 +80,7 @@ impl Cells {
     /// Called only for a checked completed component, at an idle Run boundary.
     /// Reject the whole group before moving any source frame.
     pub(crate) fn can_transfer_completed(&self,ids:&[u32])->bool {
-        self.can_transfer_segment(ids,2)
+        self.can_transfer_segment(ids,1)
     }
     fn can_transfer_segment(&self,ids:&[u32],minimum:usize)->bool {
         if ids.len()<minimum || self.completed.frames.len().saturating_add(ids.len())>=COMPLETED as usize
@@ -92,7 +92,7 @@ impl Cells {
         ids.iter().all(|id|(*id as usize)<self.positions.len())
     }
     pub(crate) fn transfer_completed(&mut self,ids:&[u32])->bool {
-        self.transfer_segment(ids,2)
+        self.transfer_segment(ids,1)
     }
     fn transfer_segment(&mut self,ids:&[u32],minimum:usize)->bool {
         if !self.can_transfer_segment(ids,minimum) {return false;}

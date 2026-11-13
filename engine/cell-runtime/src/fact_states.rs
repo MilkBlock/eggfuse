@@ -112,6 +112,30 @@ mod tests {
             decoded:None,entry:None,hidden:false,epoch,born:epoch,hash:9}
     }
     #[test]
+    #[cfg(feature="storage-metrics")]
+    fn singleton_owner_inherits_state_and_restores_only_its_frame() {
+        let mut cells=super::super::arena::Cells::default();
+        let f=FactRef{cell:10,op:7};
+        cells.insert(10,cell());cells.insert_fact_state(f,state(3));
+        assert!(!cells.transfer_completed(&[]));
+        assert!(cells.transfer_completed(&[10]));
+        assert!(cells.get(&10).is_none());
+        assert_eq!(cells.completed_profile()["inherited_fact_lifecycles"],1);
+        cells.fact_state_mut(f).unwrap().hidden=true;
+        cells.fact_state_mut(f).unwrap().epoch=5;
+        cells.insert(20,cell());cells.insert_fact_state(FactRef{cell:20,op:7},state(3));
+        assert!(cells.extend_completed(&[10,20]).is_some());
+        let restored=cells.unseal_completed(10,RestoreCause::Representation).unwrap();
+        assert!(restored.facts.get(&7).unwrap().hidden);
+        assert_eq!(restored.facts.get(&7).unwrap().epoch,5);
+        assert_eq!(restored.facts.get(&7).unwrap().born,3);
+        assert_eq!(cells.fact_state(FactRef{cell:20,op:7}).unwrap().hash,9);
+        cells.remove_fact_state(FactRef{cell:20,op:7}).unwrap();
+        cells.retire_completed(20);
+        assert_eq!(cells.completed_storage().3,0);
+    }
+
+    #[test]
     fn stable_fact_access_survives_owner_relocation_and_retirement() {
         let mut cells=super::super::arena::Cells::default();
         cells.insert(10,cell());cells.insert(20,cell());

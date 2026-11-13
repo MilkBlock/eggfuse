@@ -28,14 +28,20 @@ impl Graph {
     /// Matched diagnostic control: reclaim only the source record arena's spare
     /// capacity, without removing fields, facts, or parent links.
     pub fn compact_source_record_capacity(&mut self) {self.cells.release_source_capacity();}
+    /// Completed singleton components use the same inherited fact storage.
+    /// A multi-frame history is not a prerequisite for compact lifecycle state.
     pub fn transfer_completed_owners(&mut self)->Result<usize> {
-        self.transfer_completed_storage(false)
+        self.transfer_completed_storage(false, true)
     }
     /// Experimental reuse of existing child storage inside a larger component.
     pub fn transfer_completed_owner_segments(&mut self)->Result<usize> {
-        self.transfer_completed_storage(true)
+        self.transfer_completed_storage(true, true)
     }
-    fn transfer_completed_storage(&mut self,reuse_segments:bool)->Result<usize> {
+    /// Diagnostic ablation of singleton admission; all other storage logic is shared.
+    pub fn transfer_completed_multi_owners(&mut self)->Result<usize> {
+        self.transfer_completed_storage(false, false)
+    }
+    fn transfer_completed_storage(&mut self,reuse_segments:bool,singletons:bool)->Result<usize> {
         if self.active_rhs.is_some() || !self.ownership_settled() || !self.pending_unions.is_empty() || !self.dirty.is_empty() {
             return Err("completed owner transfer requires a settled Run boundary".into());
         }
@@ -47,7 +53,7 @@ impl Graph {
                         && !c.facts.is_empty() && c.values.is_unshared()
                         && c.facts.iter().all(|(&op,s)|s.owned && self.stable_node(FactRef{cell:*id,op}).is_some()))
             }).collect::<Vec<_>>()
-        }).filter(|g|g.len()>1).collect::<Vec<_>>();
+        }).filter(|g|!g.is_empty() && (singletons || g.len()>1)).collect::<Vec<_>>();
         let mut count=0;
         for ids in groups {
             let extending=ids.iter().any(|id|self.cells.completed_meta(*id).is_some());
