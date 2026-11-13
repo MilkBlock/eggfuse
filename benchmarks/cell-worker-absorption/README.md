@@ -64,7 +64,8 @@ python3 benchmarks/cell-worker-absorption/check.py out/cell-unit-projection FRES
 The native sum validator must pass and match the fresh CPU export. Raytrace
 keeps exact final-state, source Run-summary, effect, catalog/application/trace
 evidence and reverse-occupancy comparison. Direct-origin work counters may
-increase after proven domain rejection, and must never decrease; this; this does not extend the native sum contract.
+increase after proven domain rejection, and must never decrease. This does not
+extend the native sum contract.
 
 After committing the tested runtime, execute the quick checkpoint:
 
@@ -108,3 +109,33 @@ These allocation totals are accumulated capacities, not peak live memory.
 Sum moves only 72 absorptions (38 threaded, 34 inline), and 151 source probes.
 Its small coverage is a material limit. Timing is recorded separately after
 committing the validated runtime.
+
+## Sequential timing of `be290103`
+
+All control workloads finished before any candidate workload. Sum has five
+measured processes and Raytrace three, each group after one warmup. All 48
+boundary checks found no other compiler or runtime. Every timing sample kept
+exact state, ordered Run summaries and actual effect counts. Raw samples and
+process snapshots are retained in `timing-results.json` and
+`out/cell-worker-absorption-timing`.
+
+| Inference median | Control | Candidate | Observed change |
+|---|---:|---:|---:|
+| sum-bits | 37.288 ms | 28.213 ms | -24.34% |
+| Raytrace | 7.776 s | 5.877 s | -24.43% |
+
+**Performance acceptance is inconclusive.** The before-group snapshots show
+WindowServer at 162.1/167.8% CPU for the two control groups, then 106.1/40.4%
+for candidate groups. Storage management processes were also active. Load,
+export and report phases became faster too, including sum where this change
+transfers very little work. These observations do not establish causality,
+but they prevent claiming the observed 24% as this optimization's speedup.
+The previous control checkpoint was materially faster than this control group.
+No samples were discarded or mixed with another trial.
+
+The implementation remains an experimental takeover with verified semantics
+and real worker coverage, not evidence of saturated workers or an accepted
+end-to-end speedup. The next cost to address is retaining the useful grouped
+completion proof under worker ownership, instead of paying repeated per-row
+lookups and growing answer/merge intermediates. That must preserve the same
+exact domain, freshness and source-boundary obligations.
