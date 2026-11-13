@@ -9,6 +9,7 @@ pub(super) struct Stats {
     enabled:bool, batches:u64, pool_calls:u64, tables:u64, rows:u64,
     row_reads:u64, column_rows:u64, range_rows:u64, neighbor_rows:u64,
     inline_rows:u64, readiness_fallbacks:u64, small_batches:u64,
+    admission_bound_tables:u64, admission_bound_rejections:u64, admission_owner_checks_avoided:u64,
     worker_rows:Vec<u64>, worker_tables:Vec<u64>, worker_task_seconds:Vec<f64>,
     prepare_seconds:f64, execute_seconds:f64, restore_seconds:f64,
     task_capacity_bytes:u64, change_capacity_bytes:u64, max_table_rows:u64,
@@ -168,6 +169,35 @@ impl Publication {
     pub(crate) fn enable_parallel(&mut self) {self.parallel.enabled=true;}
     pub(crate) fn parallel_enabled(&self)->bool {self.parallel.enabled}
     pub(super) fn publish_parallel(&mut self,g:&Graph,columns:&mut QueryIndexes,
+        ranges:Option<&mut RangeIndex>,neighbor:&mut Context,pool:Option<&rayon::ThreadPool>,grain:usize,
+        entries:Option<&mut crate::entry_schedule::Scheduler>,
+        sieve:Option<&mut crate::sieve::Sieve>,
+        publish_ports:&mut impl FnMut(usize,&FxHashMap<Dependency,Change>,bool))->Result<Option<bool>> {
+        // Needed owner rows are a subset of the sealed change maps. Their
+        // existing lengths can reject small batches without probing indexes,
+        // range maps, neighbor state or Entry readiness. Stop as soon as this
+        // bound ceases to prove rejection; no retained admission state exists.
+        let minimum=grain.max(256);
+        let (mut rows,mut tables)=(0usize,0u64);
+        for (_,changes) in g.changes.tables() {
+            tables+=1;
+            rows=rows.saturating_add(changes.len());
+            if rows>=minimum {break;}
+        }
+        self.parallel.admission_bound_tables+=tables;
+        if rows<minimum {
+            self.parallel.small_batches+=1;
+            self.parallel.admission_bound_rejections+=1;
+            self.parallel.admission_owner_checks_avoided+=tables;
+            return Ok(None);
+        }
+        self.publish_parallel_candidates(g,columns,ranges,neighbor,pool,grain,entries,sieve,publish_ports)
+    }
+    // Keep task storage and its register pressure out of the small-batch path.
+    // The row bound grants no readiness or owner proof: retain the exact owner
+    // count and canonical-read checks before moving any publication owners.
+    #[inline(never)]
+    fn publish_parallel_candidates(&mut self,g:&Graph,columns:&mut QueryIndexes,
         mut ranges:Option<&mut RangeIndex>,neighbor:&mut Context,pool:Option<&rayon::ThreadPool>,grain:usize,
         mut entries:Option<&mut crate::entry_schedule::Scheduler>,
         sieve:Option<&mut crate::sieve::Sieve>,
