@@ -1,0 +1,17 @@
+{
+  "scope": "Static immutable-constructor query coverage; not runtime enumeration or full ruleset coverage",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "rules": 548,
+  "supported_rules": 382,
+  "supported_multi_atom_rules": 314,
+  "max_supported_atoms": 10,
+  "boundary_counts": {
+    "non_constructor_atom": 139,
+    "unbound_query_slots": 111,
+    "literal_atom": 52
+  },
+  "shared_view_layouts": 170,
+  "shared_static_view_bytes": 82792,
+  "complete_ruleset_authorized": false,
+  "ownership_transfer_authorized": false
+}

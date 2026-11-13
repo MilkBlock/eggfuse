@@ -32,7 +32,7 @@ def compile_view(recipe,table_id,arity):
         supported=np.array([r['supported'] for r in records],bool))
 
 
-def project(state,plan,external_complete,eq_settled,xp):
+def project(state,plan,external_complete,eq_settled,xp,include_fields=False):
     rows=state['slots'].shape[0];records=plan['rule'].shape[0]
     associated=(state['present'][:,None] & state['visible'][:,None]
                 & (state['keys'][:,0,None]==plan['rule'][None,:]))
@@ -48,9 +48,15 @@ def project(state,plan,external_complete,eq_settled,xp):
     complete=external_complete & eq_settled & ~xp.any(lost)
     keys=xp.concatenate([xp.full((rows,records,1),plan['table'],dtype=state['slots'].dtype),roots[:,:,:-1]],axis=2)
     ids=slots[:,:,-1]
-    return dict(keys=keys.reshape(rows*records,plan['arity']+1),ids=ids.reshape(-1),
+    result=dict(keys=keys.reshape(rows*records,plan['arity']+1),ids=ids.reshape(-1),
         roots=roots[:,:,-1].reshape(-1),live=live.reshape(-1),complete=complete,
         missing=lost.reshape(-1))
+    if include_fields:
+        result.update(values=slots.reshape(rows*records,plan['arity']+1),value_roots=roots.reshape(rows*records,plan['arity']+1),
+            source=xp.broadcast_to(xp.arange(rows)[:,None],(rows,records)).reshape(-1),
+            record=xp.broadcast_to(xp.arange(records)[None,:],(rows,records)).reshape(-1),
+            source_slots=xp.broadcast_to(plan['slots'][None,:,:],(rows,records,plan['arity']+1)).reshape(rows*records,plan['arity']+1))
+    return result
 
 
 def main():
