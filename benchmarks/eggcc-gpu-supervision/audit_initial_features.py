@@ -5,8 +5,8 @@ from pathlib import Path
 import numpy as np
 from corpus_cell_ridge import load_records,initial_attachment
 from boundary_cell_ridge import state,output_layout,request_with_roles
-from corpus_repeat_probe import state_bound
-from bounded_cell_readout import readout_features,normalize
+from corpus_repeat_probe import state_bound,wiring as input_wiring
+from bounded_cell_readout import readout_features,normalize,port_moments
 from bake_stop_features import plan,pack
 
 
@@ -25,7 +25,9 @@ def main():
         v=state(s['source'],ports,cap,allow_absent=True).astype(np.float32);target=state(s['completion']['facts'],ports,cap,mapping).astype(np.float32)
         bounds=np.array([state_bound(s['source'],r['rule'])],np.float32);q=request_with_roles(r['rule'],s['binding'],False)[None,:];role=request_with_roles(r['rule'],s['binding'],True)[None,:];att=initial_attachment(v,ports,s['binding'])[None,:]
         wiring=pack([plan(s['source'],r['rule'],s['binding'],ports,cap)])
-        x=readout_features(v[None,:],q,att,w,role,bounds,wiring,np).astype(np.float32)
+        indices,mix=input_wiring(ports,s['binding'],max(1,len(s['binding'])))
+        moments=port_moments(v[None,:],indices[None,:],mix[None,:],np) if meta.get('port_moments') else None
+        x=readout_features(v[None,:],q,att,w,role,bounds,wiring,np,moments).astype(np.float32)
         groups[fingerprint(x)].append(dict(identity=r['identity'],split=r['split'],family=r['family'],target_digest=fingerprint(normalize(target[None,:],bounds,np))))
     conflicts=[dict(feature_digest=k,inputs=rows) for k,rows in groups.items() if len({r['target_digest'] for r in rows})>1]
     result=dict(scope='exact f32 initial-feature collisions only; no near-collision or recurrent-state proof',manifest_sha256=mh,model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),feature_groups=len(groups),conflicting_groups=len(conflicts),conflicts=conflicts)

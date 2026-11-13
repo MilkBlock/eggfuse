@@ -15,7 +15,7 @@ from boundary_cell_ridge import D,B,state,output_layout,request_with_roles
 from dominator_completion import compose,freeze
 from collect_observed_corpus import read_bytes
 from decode_cell_completion import representation
-from bounded_cell_readout import readout_features,decode as decode_bounded
+from bounded_cell_readout import readout_features,decode as decode_bounded,port_moments
 from bake_stop_features import plan as stop_plan,pack as pack_stop,evaluate as stop_features
 
 
@@ -64,7 +64,8 @@ def bound_state(values,body_bound,xp):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--rounds',type=int,default=4);p.add_argument('--bounded-state',action='store_true');p.add_argument('--case-output',type=Path);args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--rounds',type=int,default=4);p.add_argument('--bounded-state',action='store_true');p.add_argument('--case-output',type=Path);p.add_argument('--relaxation',type=float,default=1.0);args=p.parse_args()
+    if not 0<args.relaxation<=1:raise ValueError('relaxation must be in (0,1]')
     if not 1<=args.rounds<=16:raise ValueError('rounds must be between 1 and 16')
     metadata=json.loads(gzip.decompress(args.model.with_suffix('.json.gz').read_bytes()))
     if metadata['manifest_sha256']!=hashlib.sha256(args.manifest.read_bytes()).hexdigest():raise ValueError('model manifest mismatch')
@@ -116,11 +117,12 @@ def main():
         a=attachment(s,gidx,gm,mx);x=features(s,gq,a,gw,mx,gr);out=x@gc
         score=out[:,-1] if stop_coef is None else (mx.concatenate([x,stop_features(s,*gstop,mx)],axis=1)@gs)[:,0]
         emit=score>=.5
-        candidate=s+out[:,:-1] if direct is None else decode_bounded(readout_features(s,gq,a,gdw,gr,gbounds,gstop,mx)@gd,gbounds,mx,direct_mode)
+        candidate=s+out[:,:-1] if direct is None else decode_bounded(readout_features(s,gq,a,gdw,gr,gbounds,gstop,mx,port_moments(s,gidx,gm,mx) if metadata.get('port_moments') else None)@gd,gbounds,mx,direct_mode)
         if correction is not None:
             ca=attachment(candidate,gidx,gm,mx);cx=features(candidate,gq,ca,gw,mx,gr)
             candidate=candidate+mx.concatenate([cx,stop_features(candidate,*gstop,mx)],axis=1)@grc
         if args.bounded_state:candidate=bound_state(candidate,gbounds,mx)
+        if args.relaxation!=1:candidate=s+args.relaxation*(candidate-s)
         return mx.where(emit[:,None],candidate,s),emit
     # Separate oracle diagnostic: the same request on its true completed state.
     oracle,oracle_emit=mx.compile(one)(mx.array(completed));mx.eval(oracle,oracle_emit)
@@ -140,15 +142,16 @@ def main():
         a=attachment(reference,indices,mix,np);x=features(reference,q,a,w,np,role);out=x@coef
         score=out[:,-1] if stop_coef is None else (np.concatenate([x,stop_features(reference,*stop_wiring,np)],axis=1)@stop_coef)[:,0]
         emit=score>=.5
-        candidate=reference+out[:,:-1] if direct is None else decode_bounded(readout_features(reference,q,a,direct_w,role,body_bounds,stop_wiring,np)@direct,body_bounds,np,direct_mode)
+        candidate=reference+out[:,:-1] if direct is None else decode_bounded(readout_features(reference,q,a,direct_w,role,body_bounds,stop_wiring,np,port_moments(reference,indices,mix,np) if metadata.get('port_moments') else None)@direct,body_bounds,np,direct_mode)
         if correction is not None:
             ca=attachment(candidate,indices,mix,np);cx=features(candidate,q,ca,w,np,role)
             candidate=candidate+np.concatenate([cx,stop_features(candidate,*stop_wiring,np)],axis=1)@correction
         if args.bounded_state:candidate=bound_state(candidate,body_bounds,np)
+        if args.relaxation!=1:candidate=reference+args.relaxation*(candidate-reference)
         reference=np.where(emit[:,None],candidate,reference);reference_emissions.append(emit)
     numeric=numerical_audit(final,reference,emissions,np.array(reference_emissions))
     if not np.isfinite(final).all() or not np.isfinite(reference).all():
-        result=dict(status='failed',reason='nonfinite recurrent state',scope='fixed-binding local GPU recurrence, not ruleset saturation',model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),manifest_sha256=metadata['manifest_sha256'],rounds=args.rounds,cases=len(records),numerical_audit=numeric,state_scales_per_round=scale_report(np.array(state_scales)),emissions_per_round=emissions.sum(1).tolist(),catalog_decode_valid=False,intermediate_cpu_reads=0)
+        result=dict(status='failed',reason='nonfinite recurrent state',relaxation=args.relaxation,bounded_state_ablation=args.bounded_state,scope='fixed-binding local GPU recurrence, not ruleset saturation',model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),manifest_sha256=metadata['manifest_sha256'],rounds=args.rounds,cases=len(records),numerical_audit=numeric,state_scales_per_round=scale_report(np.array(state_scales)),emissions_per_round=emissions.sum(1).tolist(),catalog_decode_valid=False,intermediate_cpu_reads=0)
         args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n');print(json.dumps(result,indent=2,allow_nan=False));raise SystemExit(1)
     ambiguous=np.zeros(len(final),bool);invalid_decode=np.zeros(len(final),bool);dp=prototypes.astype(np.float64)
     for start in range(0,len(final),128):
@@ -160,6 +163,8 @@ def main():
     stopped=~emissions[-1]
     result=dict(scope='necessary fixed-binding local stop probe, not ruleset saturation',manifest_sha256=metadata['manifest_sha256'],model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),numerical_audit=numeric,decoder_f64_disagreements=int(invalid_decode.sum()),stop_feature_version=metadata.get('stop_feature_version'),rounds=args.rounds,cases=len(records),teacher_idempotent_cases=sum(idempotent),oracle_completed_state_false_reemissions=int(np.array(oracle_emit).sum()),free_rollout=dict(emissions_per_round=emissions.sum(1).tolist(),final_exact_catalog_target=int(correct.sum()),final_ambiguous=int(ambiguous.sum()),stopped_at_final_round=int(stopped.sum()),exact_target_and_stopped=int((correct&stopped).sum()),never_emitted_but_initially_novel=int((~emissions.any(0)&novels).sum()),final_body_rmse=float(np.sqrt(np.mean((final[:,:D]-completed[:,:D])**2)))),intermediate_cpu_reads=0,teacher_state_supplied_between_rounds=False,limitations=['Only repetition of the same fixed binding; not full successor or ruleset closure','Oracle-state test is separate and does not correct the free rollout','Request roles and port wiring are static for the original binding','Catalog includes held-out states and does not prove live identity or visibility','No lifetime, ownership-transfer or global novelty proof'])
     result['state_scales_per_round']=scale_report(np.array(state_scales))
+    result['relaxation']=args.relaxation
+    result['port_moments']=metadata.get('port_moments',False)
     result['direct_readout']=metadata.get('direct_readout')
     result['bounded_state_ablation']=args.bounded_state
     result['correction']=metadata.get('correction')
@@ -167,7 +172,7 @@ def main():
     result['failure_diagnostics']=[dict(input_identity=r['identity'],family=r['family'],consumer=r['sample']['consumer'],observations=r['observations'],emissions=emissions[:,i].tolist(),exact_catalog_target=bool(correct[i]),body_rmse=float(np.sqrt(body_mse[i]))) for i,r in enumerate(records) if not stopped[i]]
     if args.case_output:
         case_rows=[dict(identity=r['identity'],family=r['family'],source_facts=len(r['sample']['source']),exact_target=bool(correct[i]),stopped=bool(stopped[i]),initially_novel=bool(novels[i]),emissions=emissions[:,i].tolist(),body_rmse=float(np.sqrt(body_mse[i]))) for i,r in enumerate(records)]
-        args.case_output.write_text(json.dumps(dict(model_sha256=result['model_sha256'],manifest_sha256=metadata['manifest_sha256'],rounds=args.rounds,numerical_audit=numeric,cases=case_rows),indent=2)+'\n')
+        args.case_output.write_text(json.dumps(dict(model_sha256=result['model_sha256'],manifest_sha256=metadata['manifest_sha256'],rounds=args.rounds,relaxation=args.relaxation,bounded_state_ablation=args.bounded_state,numerical_audit=numeric,cases=case_rows),indent=2)+'\n')
     result['body_error_summary']=dict(median_rmse=float(np.median(np.sqrt(body_mse))),max_rmse=float(np.sqrt(body_mse.max())),active_requests_squared_error_fraction=float(body_mse[~stopped].sum()/max(float(body_mse.sum()),1e-30)))
     args.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
     if not numeric['passed'] or invalid_decode.any():raise SystemExit(1)

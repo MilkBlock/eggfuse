@@ -6,12 +6,12 @@ from corpus_cell_ridge import load_records,features,initial_attachment
 from boundary_cell_ridge import D,state,output_layout,request_with_roles
 from bake_stop_features import plan,pack,evaluate
 from whole_cell_ridge import train
-from corpus_repeat_probe import state_bound,bound_state
-from bounded_cell_readout import readout_features,preactivation,normalize
+from corpus_repeat_probe import state_bound,bound_state,wiring as input_wiring
+from bounded_cell_readout import readout_features,preactivation,normalize,port_moments
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('base',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--readout',choices=['tanh','clip'],default='tanh');p.add_argument('--extra-features',type=int,default=0);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('base',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--readout',choices=['tanh','clip'],default='tanh');p.add_argument('--extra-features',type=int,default=0);p.add_argument('--port-moments',action='store_true');a=p.parse_args()
     if not 0<=a.extra_features<=2048:raise ValueError('extra feature count outside experiment bounds')
     meta=json.loads(gzip.decompress(a.base.with_suffix('.json.gz').read_bytes()));mh=hashlib.sha256(a.manifest.read_bytes()).hexdigest()
     if meta['manifest_sha256']!=mh:raise ValueError('manifest mismatch')
@@ -31,6 +31,7 @@ def main():
         initial=state(s['source'],ports,meta['capacity'],allow_absent=True).astype(np.float32);target=state(done['facts'],ports,meta['capacity'],mapping).astype(np.float32)
         q=request_with_roles(r['rule'],s['binding'],False)[None,:];role=request_with_roles(r['rule'],s['binding'],True)[None,:]
         bounds=np.array([state_bound(s['source'],r['rule'])],np.float32)
+        input_indices,input_mix=input_wiring(ports,s['binding'],max(1,len(s['binding'])))
         wiring=pack([plan(s['source'],r['rule'],s['binding'],ports,meta['capacity'])])
         def encode(v):
             att=initial_attachment(v,ports,s['binding'])[None,:]
@@ -42,7 +43,8 @@ def main():
         if a.readout=='clip':label=normalize(target[None,:],bounds,np)[0]
         for value in (initial,candidate,target):
             att=initial_attachment(value,ports,s['binding'])[None,:]
-            x=readout_features(value[None,:],q,att,direct_w,role,bounds,wiring,np)
+            moments=port_moments(value[None,:],input_indices[None,:],input_mix[None,:],np) if a.port_moments else None
+            x=readout_features(value[None,:],q,att,direct_w,role,bounds,wiring,np,moments)
             xs.append(x[0]);ys.append(label);splits.append(r['split'])
         if i%250==0:print(json.dumps(dict(encoded=i,total=len(records))),flush=True)
     x=np.array(xs,np.float32);y=np.array(ys,np.float32);splits=np.array(splits)
@@ -57,9 +59,10 @@ def main():
             truth=np.tanh(y[mask]) if a.readout=='tanh' else y[mask]
             reconstruction[part][name]=dict(cases=int(mask.sum()),normalized_body_rmse=float(np.sqrt(np.mean((decoded[:,:D]-truth[:,:D])**2))),boundary_rmse=float(np.sqrt(np.mean((decoded[:,D:]-truth[:,D:])**2))))
     with a.model.open('wb') as f:np.savez_compressed(f,**weights)
+    meta['port_moments']=a.port_moments
     meta['direct_readout']='normalized absolute '+a.readout+' state/v1';meta['direct_mode']=a.readout;meta['direct_base_sha256']=hashlib.sha256(a.base.read_bytes()).hexdigest()
     a.model.with_suffix('.json.gz').write_bytes(gzip.compress(json.dumps(meta).encode(),mtime=0))
-    result=dict(scope='standalone absolute bounded state; no test fitting, no backpropagation',manifest_sha256=mh,model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),base_sha256=meta['direct_base_sha256'],fit=fit,extra_features=a.extra_features,feature_width=x.shape[1],reconstruction=reconstruction,readout=a.readout,training_rows=int((splits=='train').sum()),validation_rows=int((splits=='validation').sum()),test_rows=0)
+    result=dict(scope='standalone absolute bounded state; no test fitting, no backpropagation',manifest_sha256=mh,model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),base_sha256=meta['direct_base_sha256'],fit=fit,port_moments=a.port_moments,extra_features=a.extra_features,feature_width=x.shape[1],reconstruction=reconstruction,readout=a.readout,training_rows=int((splits=='train').sum()),validation_rows=int((splits=='validation').sum()),test_rows=0)
     a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result),flush=True)
 
 if __name__=='__main__':main()

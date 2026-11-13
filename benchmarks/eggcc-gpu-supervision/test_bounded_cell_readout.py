@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import mlx.core as mx
 from boundary_cell_ridge import D,B
-from bounded_cell_readout import normalize,preactivation,decode,readout_features
+from bounded_cell_readout import normalize,preactivation,decode,readout_features,port_moments
 
 
 class BoundedReadout(unittest.TestCase):
@@ -47,5 +47,15 @@ class BoundedReadout(unittest.TestCase):
         a=readout_features(values,q,q,w,q,bounds,wiring,np);b=readout_features(values,q,q,wide,q,bounds,wiring,np)
         np.testing.assert_allclose(a[:,:-8],b[:,:a.shape[1]-8],atol=1e-6);np.testing.assert_array_equal(a[:,-8:],b[:,-8:])
         self.assertEqual(b.shape[1],a.shape[1]+2)
+
+    def test_port_moments_distinguish_cancellation_and_use_current_channels(self):
+        values=np.zeros((2,D+2*B),np.float32);values[0,D:D+B]=.5;values[0,D+B:]=-.5
+        indices=np.array([[0,1],[0,1]],np.int32);mix=np.ones((2,2,B,D),np.float32)
+        result=port_moments(values,indices,mix,np)
+        self.assertTrue((result[0,:D]>0).all());np.testing.assert_array_equal(result[0,D:],0)
+        np.testing.assert_array_equal(result[1],0)
+        np.testing.assert_allclose(np.array(port_moments(mx.array(values),mx.array(indices),mx.array(mix),mx)),result,atol=1e-6)
+        values[0,D+B:]=.5
+        self.assertTrue((port_moments(values,indices,mix,np)[0,D:]>0).all())
 
 if __name__=='__main__':unittest.main()
