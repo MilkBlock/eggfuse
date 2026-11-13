@@ -77,6 +77,12 @@ def execute_site(state,site,witness,next_id,limit,quota,xp):
     output['slot_valid']=state['slot_valid'] | write
     if 'slot_roots' in state:
         output['slot_roots']=xp.where(write,outcome['result_root'][:,None],state['slot_roots'])
+    if 'tokens' in state or 'token_dirty' in state:
+        output['token_dirty']=state.get('token_dirty',xp.zeros_like(state['present'])) | outcome['ready']
+    for column in ('scalar_numbers','scalar_numeric','scalar_valid','scalar_codes'):
+        if column in state:
+            mask=write[:,:,None] if state[column].ndim==3 else write
+            output[column]=xp.where(mask,0,state[column])
     output['effect_pc']=state['effect_pc']+outcome['ready'].astype(xp.int32)
     output['settled']=state['settled'] | (outcome['ready'] & site['last_effect'])
     outcome['incomplete_witness_view']=selected&~view_complete

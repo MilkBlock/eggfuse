@@ -56,9 +56,9 @@ class ConstructorResults(unittest.TestCase):
             dict(metadata=dict(source_set='s'),slots=slots(3,1),query=[dict(call=dict(table='Input'),args=[dict(slot=0)])],effects=[op('F',0,1),op('G',1,2)]),
             dict(metadata=dict(source_set='s'),slots=slots(2,2),query=[dict(call=dict(table='G'),args=[dict(slot=0),dict(slot=1)])],effects=[])])
         sites=compile_sites(recipe)['sites'];layout=lower(recipe,compile_catalog(recipe),source_slots=True)
-        ep=tensors(layout,np.array([np.eye(3)],np.float32),np.zeros((1,3),np.float32));plan={k:mx.array(v) for k,v in ep.items()}
+        ep=tensors(layout,np.array([np.eye(128)],np.float32),np.zeros((1,128),np.float32));plan={k:mx.array(v) for k,v in ep.items()}
         state=dict(keys=mx.array([[0,7,-1],[-1,-1,-1]],mx.int32),slots=mx.array([[7,-1,-1],[-1,-1,-1]],mx.int32),
-            slot_valid=mx.array([[True,False,False],[False,False,False]]),tokens=mx.array([[.2,.3,.4],[0.,0.,0.]]),
+            slot_valid=mx.array([[True,False,False],[False,False,False]]),tokens=mx.zeros((2,128),mx.float32),
             present=mx.array([True,False]),active=mx.array([True,False]),visible=mx.array([True,False]),settled=mx.array([False,False]),
             readers=mx.array([False,False]),generation=mx.array([1,0],mx.int32),effect_pc=mx.zeros((2,),mx.int32))
         witness=dict(keys=mx.array([[-1,-1]],mx.int32),ids=mx.array([0],mx.int32),roots=mx.array([0],mx.int32),live=mx.array([False]))
@@ -67,6 +67,10 @@ class ConstructorResults(unittest.TestCase):
             for site in sites:
                 s,result=execute_site(s,site,witness,next_id,mx.array(200),mx.array(100),mx)
                 next_id=result['next_id']
+            from device_token_refresh import refresh
+            from multi_entry_ridge import template
+            roles=mx.array(template(recipe['rules'][0])[0][None])
+            s,_=refresh(s,mx.zeros((1,3),mx.int32),mx.ones((1,3),mx.bool_),mx.ones((1,3),mx.bool_),roles,mx.zeros((2,3,64)),mx.ones((2,3),mx.bool_),mx.array(True),mx)
             return commit(s,closed_entry_proposals(s,plan,mx.array(0),mx),mx)
         out,marks=mx.compile(flow)(state);mx.eval(out,marks)
         np.testing.assert_array_equal(np.array(out['slots'])[0],[7,100,101])

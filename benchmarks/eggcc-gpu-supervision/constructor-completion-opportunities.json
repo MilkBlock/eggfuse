@@ -1,0 +1,11 @@
+{
+  "entries": 44,
+  "pure_constructor_entries": 11,
+  "constructor_prefix_entries": 19,
+  "first_effects": {
+    "construct": 24,
+    "copy": 20
+  },
+  "scope": "Static classification of previously probed consumers; not executed completion",
+  "reference_entry_audit": "device-entry-transition-results.json"
+}
