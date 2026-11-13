@@ -108,8 +108,8 @@ all measured samples and the hash of the full raw timing record.
 | sum-bits (5 samples) | 27.219 ms | 29.534 ms | +8.51% |
 | Raytrace (3 samples) | 5.665 s | 5.447 s | -3.85% |
 
-The candidate remains on `codex/cell-cursor-writes`; it is **not adopted** into
-the active parallel branch. The two-workload improvement gate failed. Sum-bits
+At this checkpoint, the two-workload improvement gate failed and the experiment
+did not justify adoption. Later integration is recorded below. Sum-bits
 does not enter the changed write path, so these counters cannot explain its
 whole-binary regression. Code/data layout, uncaptured background activity and
 group-order drift are possible causes, not established explanations or grounds
@@ -163,7 +163,7 @@ Wall time increased 5.90% and process CPU increased 5.86%. The three enabled
 samples were 5.203, 5.788 and 5.787 seconds, with coordinator CPU of 3.885, 4.349
 and 4.277 seconds. The phase totals also changed beyond writes, so this trial
 does not isolate every source of variation. No sample was removed. The new path
-still has not earned adoption; extra worker coverage is not evidence of speed.
+still has not passed performance acceptance; extra worker coverage is not evidence of speed.
 
 Sum-bits, which enters neither scalar-write batch path, changed from 26.814 to
 26.249 ms (-2.10%). This comparison does not reproduce the previous +8.51%
@@ -221,8 +221,17 @@ guards. `source-results.json` retains all timing samples and frozen work counts.
 | Raytrace | 5.287 s | 5.328 s | +0.76% |
 
 This is near parity, not a demonstrated speedup. The two-workload gate still
-fails; the branch remains unadopted. The source-owner change did delete its
+fails. The source-owner change did delete its
 targeted handoff storage without losing coverage, but values still move from
 the instance into `WriteTask`. A next structural step is to let tasks borrow
 the original instances directly, measuring the resulting descriptor size,
 retained-buffer lifetime and access locality rather than assuming it is free.
+
+### Integration status
+
+Another session merged `401cbe5e` into the shared parallel branch in `2db70937`,
+then merged through `da4737c0` in `a93e2ab6` and added `c1d99e67` (dual-source
+compiler layouts). These are actual Git integrations, not speed-gate approvals.
+The measurements above use immutable frozen binaries: job 142 identifies
+`da4737c0` explicitly, not the later merged branch. They must not be presented as
+validation or timing of `c1d99e67` or subsequent uncommitted ownership work.
