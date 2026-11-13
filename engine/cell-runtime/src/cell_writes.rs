@@ -41,6 +41,9 @@ pub(crate) struct Counts {
     pub owner_completion_bytes: u64,
     pub inherited_candidates: u64,
     pub origin_token_bytes: u64,
+    /// Existing incoming instance buffers held through worker completion;
+    /// cumulative capacity, not a new allocation or peak memory.
+    pub retained_source_bytes: u64,
 }
 
 #[cfg(test)]

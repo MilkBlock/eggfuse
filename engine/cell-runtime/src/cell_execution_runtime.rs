@@ -85,6 +85,7 @@ pub(crate) struct QueueCounts {
 }
 pub(crate) struct State {
     pub grain: usize,
+    pub cursor_writes: bool,
     pub counts: Counts,
     pub writes: Box<crate::graph::cell_writes::Counts>,
 }

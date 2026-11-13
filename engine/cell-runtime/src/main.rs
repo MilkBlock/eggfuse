@@ -44,6 +44,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --guard-workers N [--guard-grain N] (experimental parallel candidate reads; default grain 32)");
         println!("  --query-workers N [--query-grain N] (Cell function-point query batches; 1 = inline; default grain 64)");
         println!("  --cell-execution-grain N (experimental owned Cell resumption on query workers; source effects remain ordered)");
+        #[cfg(feature = "sparse-cells")]
+        println!("  --serial-cursor-writes (diagnostic control: keep selected-Cursor writes on their source owner)");
         println!("  --completion-batch-tasks 2..64 (experimental reads across completion tasks; requires --guard-workers)");
         println!("  --overlap-completion (experimental snapshot reads overlapping ordered commits; requires completion batches)");
         println!("  --port-scopes (experimental concrete-port influence and selective completion)");
@@ -120,6 +122,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "--audit-stages" | "--inspect-program" | "--cell-ownership" | "--stable-ports" | "--port-keys" | "--local-congruence" | "--scoped-queues" | "--scoped-execution" | "--port-scopes" | "--pure-epochs" | "--unique-port-publication" | "--local-unions" | "--union-digest" | "--congruence-cells" | "--repair-ports" | "--overlap-completion" => {}
             #[cfg(feature = "sparse-cells")]
             "--entry-publications" => {}
+            #[cfg(feature = "sparse-cells")]
+            "--serial-cursor-writes" => {}
             #[cfg(feature = "cell-absorption")]
             "--cell-absorption" => {}
             #[cfg(feature = "cell-entry-reverse")]
@@ -242,6 +246,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         runtime.use_cell_execution(grain.parse()?)?;
         #[cfg(not(feature = "sparse-cells"))]
         { let _ = grain; return Err("Cell execution requires sparse-cells".into()); }
+    }
+    #[cfg(feature = "sparse-cells")]
+    if args.iter().any(|x| x == "--serial-cursor-writes") {
+        runtime.use_serial_cursor_writes()?;
     }
     #[cfg(feature = "cell-absorption")]
     if args.iter().any(|x| x == "--cell-absorption") {

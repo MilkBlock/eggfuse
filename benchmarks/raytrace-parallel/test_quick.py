@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exercise concurrency detection and retention without timing Cell workloads."""
 import importlib.util
+import copy
 import json
 from pathlib import Path
 import tempfile
@@ -13,6 +14,29 @@ spec.loader.exec_module(quick)
 
 
 class GuardTests(unittest.TestCase):
+    def test_flag_control_changes_one_option_in_the_same_binary_only(self):
+        flag = '--serial-cursor-writes'
+        base = {'runtime_sha256': 'same', 'lanes': {
+            case: {'program': case, 'args': ['--query-workers', '4']}
+            for case in ('sum', 'ray')}}
+        configs = {lane: copy.deepcopy(base) for lane in ('control', 'candidate')}
+        quick.validate_pair(configs)
+        for lane in configs['control']['lanes'].values(): lane['args'].append(flag)
+        quick.validate_pair(configs, flag)
+        with self.assertRaises(AssertionError): quick.validate_pair(configs)
+        configs['control']['runtime_sha256'] = 'different'
+        with self.assertRaises(AssertionError): quick.validate_pair(configs, flag)
+        configs['control']['runtime_sha256'] = 'same'
+        configs['candidate']['lanes']['sum']['args'].append('--unrelated')
+        with self.assertRaises(AssertionError): quick.validate_pair(configs, flag)
+
+    def test_flag_diagnosis_is_preserved_by_queue_submission(self):
+        args = tuple(Path(x) for x in ('before', 'after', 'output', 'result.json'))
+        with patch.object(quick.jobs, 'current_lease', return_value=None), \
+                patch.object(quick.jobs, 'run_command', return_value=0) as launch:
+            quick.run(*args, same_runtime_control_flag='--serial-cursor-writes')
+        self.assertIn('--same-runtime-control-flag=--serial-cursor-writes', launch.call_args.args[1])
+
     def test_predeclared_counts_survive_queue_submission(self):
         args = tuple(Path(x) for x in ('before', 'after', 'output', 'result.json'))
         with patch.object(quick.jobs, 'current_lease', return_value=None), \

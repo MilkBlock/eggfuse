@@ -298,7 +298,7 @@ mod tests {
         let mut values = Slots::with_capacity(8);
         values.extend([(0, Value::Int(1)), (1, Value::Int(2))]);
         let cell = host.graph.begin_transient(0, values, None).unwrap();
-        host.cell_execution = Some(crate::cell::execution::runtime::State { grain: 64, counts: Default::default(), writes: Default::default() });
+        host.cell_execution = Some(crate::cell::execution::runtime::State { grain: 64, cursor_writes: true, counts: Default::default(), writes: Default::default() });
         let execution = Execution {
             units: Default::default(),
             rule: 0, cell, phase: Phase::Ready, ops, aliases: None, known: QueryFacts::None,
