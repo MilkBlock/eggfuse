@@ -1,0 +1,182 @@
+{
+  "scope": "frozen-model packed GPU Cell replay; observed routing, no autonomous matching",
+  "model_sha256": "40cc75ee385280ae931012aa6521239276ddb1868a7a36c00291eb3b6d30e454",
+  "test_trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "runs": {
+    "flat": {
+      "costs": {
+        "layers": 31,
+        "readouts": 31,
+        "aggregation_groups": 30,
+        "zero_input_groups": 1,
+        "padded_edges": 91014,
+        "coefficient_bytes": 48055392,
+        "source_index_bytes": 364056,
+        "destination_index_bytes": 22212,
+        "peak_layer_coefficient_bytes": 25990800
+      },
+      "plan_seconds": 0.01913183298893273,
+      "gpu_setup_seconds": 0.008992624992970377,
+      "gpu_cold_seconds": 0.019432040979154408,
+      "gpu_second_call_seconds": 0.006014790968038142,
+      "cpu_setup_seconds": 0.007860667014028877,
+      "cpu_execute_seconds": 0.024744791036937386,
+      "numeric_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 1.6093254089355469e-06
+      },
+      "reused_plan_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 0.0
+      }
+    },
+    "packed": {
+      "costs": {
+        "layers": 31,
+        "readouts": 31,
+        "aggregation_groups": 114,
+        "zero_input_groups": 1,
+        "padded_edges": 16343,
+        "coefficient_bytes": 8629104,
+        "source_index_bytes": 65372,
+        "destination_index_bytes": 22212,
+        "peak_layer_coefficient_bytes": 3192288
+      },
+      "plan_seconds": 0.018128166033420712,
+      "gpu_setup_seconds": 0.0055191669962368906,
+      "gpu_cold_seconds": 0.008747540996409953,
+      "gpu_second_call_seconds": 0.005583457998000085,
+      "cpu_setup_seconds": 0.004366708977613598,
+      "cpu_execute_seconds": 0.01567925000563264,
+      "numeric_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 1.6093254089355469e-06
+      },
+      "reused_plan_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 0.0
+      }
+    },
+    "two_groups": {
+      "costs": {
+        "layers": 31,
+        "readouts": 31,
+        "aggregation_groups": 59,
+        "zero_input_groups": 1,
+        "padded_edges": 27831,
+        "coefficient_bytes": 14694768,
+        "source_index_bytes": 111324,
+        "destination_index_bytes": 22212,
+        "peak_layer_coefficient_bytes": 6534000
+      },
+      "plan_seconds": 0.018998582963831723,
+      "gpu_setup_seconds": 0.005794916010927409,
+      "gpu_cold_seconds": 0.00676725001540035,
+      "gpu_second_call_seconds": 0.005436416016891599,
+      "cpu_setup_seconds": 0.0045523750013671815,
+      "cpu_execute_seconds": 0.01540704199578613,
+      "numeric_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 1.6093254089355469e-06
+      },
+      "reused_plan_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 0.0
+      }
+    }
+  },
+  "two_groups_vs_original": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 1.6093254089355469e-06
+  },
+  "packed_vs_original": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 1.6093254089355469e-06
+  },
+  "flat_vs_original": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 1.6093254089355469e-06
+  },
+  "recovery": {
+    "flat": {
+      "covered_cases": 3855,
+      "correct": 3647,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.826005457556435
+    },
+    "packed": {
+      "covered_cases": 3855,
+      "correct": 3647,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.826005457556435
+    },
+    "two_groups": {
+      "covered_cases": 3855,
+      "correct": 3647,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.826005457556435
+    },
+    "original": {
+      "covered_cases": 3855,
+      "correct": 3647,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.826005457556435
+    },
+    "template_mean": {
+      "covered_cases": 3855,
+      "correct": 2457,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.39097744360902253
+    },
+    "template_mode": {
+      "covered_cases": 3855,
+      "correct": 2873,
+      "ambiguous": 0,
+      "unseen_target": 1190,
+      "unknown_template": 508,
+      "distinct_covered_states": 266,
+      "mean_accuracy_per_distinct_state": 0.39473684210526316
+    }
+  },
+  "intermediate_cpu_state_reads": 0,
+  "backpropagation": false,
+  "limitations": [
+    "Two diagnostic calls per plan, not a throughput campaign",
+    "Flat control also eliminates zero-edge gather; original comparison is reported separately",
+    "Coefficients still duplicated across instances; only degree padding is reduced",
+    "No coverage, ownership, matching or saturation improvement"
+  ]
+}
