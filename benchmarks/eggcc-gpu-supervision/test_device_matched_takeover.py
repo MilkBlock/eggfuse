@@ -56,14 +56,27 @@ class MatchedTakeover(unittest.TestCase):
         dev=lambda d:{k:mx.array(v) for k,v in d.items()}
         db=[(stage,device_plan(plan)) for stage,plan in blocks];dc=completion_plan(cp)
         ds,dm,ctx=dev(schedule),dev(model),dev(context)
-        def flow(state):
-            return run(state,db,dm,dc,ds,meta['repeat_slots'],mx.array([True,True]),mx.array(201),mx.array(256),mx.array(55),mx.array(True),mx.array(True),12,mx,eq_context=ctx,query_kernel=run_round,takeover_catalog=catalog)
+        def flow(state,capture=False):
+            def query(s,b,m,stage,xp,**kwargs):return run_round(s,b,m,stage,xp,capture=capture,**kwargs)
+            return run(state,db,dm,dc,ds,meta['repeat_slots'],mx.array([True,True]),mx.array(201),mx.array(256),mx.array(55),mx.array(True),mx.array(True),12,mx,eq_context=ctx,query_kernel=query,takeover_catalog=catalog)
         out,n,marks=mx.compile(flow)(dev(packed));mx.eval(out,n,marks)
         self.assertTrue(bool(marks['finished']));self.assertEqual(int(n),202)
         self.assertEqual(int(mx.sum(marks['takeover_released'])),2)
         self.assertEqual(int(mx.sum(out['owner_live'])),2)
         self.assertEqual(int(mx.sum(marks['new_tokens'])),2)
         done=np.array(marks['run_done']);self.assertEqual(np.array(marks['stage'])[done].tolist(),[0,0,1])
+        # Observation must not disable transfer or alter later-stage queries.
+        captured,cn,cm=mx.compile(lambda state:flow(state,True))(dev(packed));mx.eval(captured,cn,cm)
+        self.assertEqual(int(cn),int(n))
+        for key in out:
+            if np.issubdtype(np.array(out[key]).dtype,np.floating):np.testing.assert_allclose(np.array(captured[key]),np.array(out[key]),atol=3e-6)
+            else:np.testing.assert_array_equal(np.array(captured[key]),np.array(out[key]))
+        for key in ('stage','run_done','new_tokens','takeover_released','takeover_blocked'):
+            np.testing.assert_array_equal(np.array(cm[key]),np.array(marks[key]))
+        from device_match_capture import audit
+        recorded=[c for tick in cm['query_captures'] for c in tick if bool(c['recorded'])]
+        self.assertTrue(recorded)
+        for c in recorded:self.assertTrue(audit(recipe,c)['passed'])
         # Dense execution has no capacity pressure and provides the same semantics.
         ref,rn,rm=run(s,blocks,model,cp,schedule,meta['repeat_slots'],np.array([True,True]),np.array(201),np.array(256),np.array(55),np.array(True),np.array(True),12,np,eq_context=context,query_kernel=run_round)
         final={k:np.array(v) for k,v in out.items()};rows=np.arange(4)[:,None];slots=np.arange(5)[None,:]

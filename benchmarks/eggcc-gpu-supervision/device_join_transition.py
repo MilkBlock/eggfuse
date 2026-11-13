@@ -41,7 +41,7 @@ def compile_transition(recipe,rid,channels=4,views=None,source_relations=False):
                 completed=not recipe['rules'][rid]['effects'],source_relations=source_relations)
 
 
-def proposals(state,plan,model,capacity,external_complete,eq_settled,xp):
+def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=False):
     bindings,features,encoding=match_inputs(state,plan['query'],plan['inputs'],capacity,external_complete,eq_settled,xp)
     sources=[];edges=[];routes=[];generations=[];relations=[]
     for port in plan['ports']:
@@ -87,21 +87,26 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp):
             value=read_slot(state,key,rows,slots,xp);mask=bindings['slot_valid'][:,:,None] if value.ndim==3 else bindings['slot_valid']
             value=xp.where(mask,value,0);padding=(capacity,width-local)+value.shape[2:]
             p[key]=xp.concatenate([value,xp.zeros(padding,value.dtype)],axis=1)
-    return p,dict(query_complete=bindings['complete'],overflow=bindings['overflow'],candidate_lanes=bindings['candidate_lanes'],encoding=encoding,numerical=numerical)
+    marks=dict(query_complete=bindings['complete'],overflow=bindings['overflow'],candidate_lanes=bindings['candidate_lanes'],encoding=encoding,numerical=numerical)
+    if capture:
+        from device_match_capture import collect
+        marks['capture']=collect(state,bindings,request,tokens,numerical,plan,xp)
+    return p,marks
 
 
-def step(state,plan,model,capacity,external_complete,eq_settled,xp,key_context=None):
-    p,marks=proposals(state,plan,model,capacity,external_complete,eq_settled,xp)
+def step(state,plan,model,capacity,external_complete,eq_settled,xp,key_context=None,capture=False):
+    p,marks=proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture)
     out,admission=commit(state,p,xp,key_context)
+    if capture:marks['capture']=dict(marks['capture'],accepted=admission['accepted'])
     return out,dict(marks,admission=admission)
 
 
-def run_round(state,blocks,model,stage,xp,capacity=16,external_complete=False,eq_settled=False,key_context=None):
+def run_round(state,blocks,model,stage,xp,capacity=16,external_complete=False,eq_settled=False,key_context=None,capture=False):
     if not blocks:raise ValueError('empty query catalog is not coverage')
-    candidates=[];complete=xp.array(True)
+    candidates=[];complete=xp.array(True);captures=[]
     max_atoms=max(len(plan['query']['atoms']) for _,plan in blocks)
     for stage_id,plan in blocks:
-        p,marks=proposals(state,plan,model,capacity,external_complete,eq_settled,xp)
+        p,marks=proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture)
         enabled=stage==stage_id
         p['matched']=p['matched']&enabled;p['missing_witness']=p['missing_witness']&enabled
         complete=complete&(~enabled|marks['query_complete'])
@@ -109,9 +114,12 @@ def run_round(state,blocks,model,stage,xp,capacity=16,external_complete=False,eq
             value=p[key];pad=max_atoms-value.shape[1]
             p[key]=xp.concatenate([value,xp.full((capacity,pad),False if key=='witness_valid' else -1,value.dtype)],axis=1)
         candidates.append(p)
+        if capture:captures.append(dict(marks['capture'],enabled=enabled))
     combined={k:xp.concatenate([p[k] for p in candidates],axis=0) for k in candidates[0]}
     out,marks=commit(state,combined,xp,key_context)
     marks['query_complete']=complete;marks['needs_attention']=marks['needs_attention']|~complete
     marks['new_tokens']=xp.sum(marks['accepted'].astype(xp.int32))
     marks['proposed_matches']=xp.sum(combined['matched'].astype(xp.int32))
+    if capture:
+        marks['captures']=tuple(dict(c,accepted=marks['accepted'][i*capacity:(i+1)*capacity]) for i,c in enumerate(captures))
     return out,marks

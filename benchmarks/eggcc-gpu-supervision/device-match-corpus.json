@@ -1,0 +1,49 @@
+{
+  "scope": "real four-rule Cell-family GPU witness corpus, not full Eggcc or trained accuracy",
+  "corpus_manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+  "records": [
+    {
+      "case": "014-fitsinside",
+      "partition": "train",
+      "status": "verified",
+      "capture": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/device-match-corpus/train-014-fitsinside.npz",
+      "result": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/device-match-corpus/train-014-fitsinside.result.json",
+      "trace_sha256": "0c687720faa5ee2aa1210e798290c6853af121291957481677748abf824f9213",
+      "samples": 7,
+      "continued_samples": 4,
+      "relocated_witness_observations": 31,
+      "artifact_sha256": "d72fbba3d48b206cdeba6abdfc623e12e0a97f3e6f9f125684cc9e1527ccb9dd",
+      "logical_array_bytes": 2893960,
+      "padded_capture_array_bytes": 17039840,
+      "cpu_audit_and_prepare_seconds": 0.018590749998111278
+    },
+    {
+      "case": "040-euler",
+      "partition": "validation",
+      "status": "verified",
+      "capture": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/device-match-corpus/validation-040-euler.npz",
+      "result": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/device-match-corpus/validation-040-euler.result.json",
+      "trace_sha256": "b824812a4c74ad3cf380f0703558f3136db29e69fa985d9471d638b4cde0591a",
+      "samples": 5,
+      "continued_samples": 2,
+      "relocated_witness_observations": 23,
+      "artifact_sha256": "285aee4f239003a1e1f865b0c699096f53371bdeca1ad650ace7795d7ad1f22a",
+      "logical_array_bytes": 2878584,
+      "padded_capture_array_bytes": 17039840,
+      "cpu_audit_and_prepare_seconds": 0.017503959010355175
+    }
+  ],
+  "samples_by_partition": {
+    "train": 7,
+    "validation": 5
+  },
+  "passed": true,
+  "backpropagation": false,
+  "limitations": [
+    "Final snapshots with selected derived tables removed, not original initialization",
+    "Only four type-analysis rules",
+    "No model fitting here; split labels retained for downstream training",
+    "CPU targets independently computed after device execution"
+  ]
+}

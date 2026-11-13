@@ -1,0 +1,85 @@
+{
+  "scope": "real four-rule type-analysis family on incomplete snapshot seeds; not full Eggcc multi-stage runtime",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+  "rules": [
+    534,
+    535,
+    536,
+    537
+  ],
+  "seed_rows": 40,
+  "capacity": 32,
+  "ticks": 24,
+  "finished": true,
+  "failed_run": false,
+  "generated_cells": 7,
+  "fresh_constructor_ids": 7,
+  "released_rows": 9,
+  "blocked_takeovers": 0,
+  "gpu_run_new_facts": [
+    3,
+    2,
+    2,
+    0
+  ],
+  "gpu_run_new_cells": [
+    3,
+    2,
+    2,
+    0
+  ],
+  "pending_cells": 0,
+  "live_owners": 38,
+  "logical_cells": 47,
+  "cpu_run_new_facts": [
+    3,
+    2,
+    2,
+    0
+  ],
+  "cpu_applications_per_run": [
+    3,
+    5,
+    7,
+    7
+  ],
+  "expected_facts": 47,
+  "actual_facts": 47,
+  "exact_closure": true,
+  "views_complete": true,
+  "unresolved_facts": 0,
+  "explained_allocations": true,
+  "unique_fresh_terms": true,
+  "problems": [],
+  "gpu_compile_upload_execute_seconds": 1.0001254589878954,
+  "cpu_closure_and_check_seconds": 0.010180166980717331,
+  "passed": true,
+  "limitations": [
+    "Original rule bodies, one selected ruleset family; other type-analysis rules are not covered",
+    "No captured future matches or intermediate device readbacks; fixed host launch budget with device control",
+    "Exact GPU query/effect kernels establish completion; ridge accuracy and neural-like throughput remain unproved",
+    "Modified final snapshot is not original program initialization; no native run-boundary proof"
+  ],
+  "capture": {
+    "schema": "device-joint-witness/v1",
+    "case": "010-dot-product",
+    "partition": "test",
+    "corpus_manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "program_file_sha256": "5bdc810ef0193fc96ed7dcf2cccadf0af4b75a35348763f9b3292983f6f860d8",
+    "samples": 7,
+    "continued_samples": 4,
+    "relocated_witness_observations": 31,
+    "matched_snapshots": 22,
+    "query_calls": 16,
+    "errors": [],
+    "passed": true,
+    "feature_reconstruction_max_abs": 1.6167759895324707e-06,
+    "target_reconstruction_max_abs": 1.1920928955078125e-07,
+    "logical_array_bytes": 2893960,
+    "padded_capture_array_bytes": 17039840,
+    "cpu_audit_and_prepare_seconds": 0.017666583007667214,
+    "scope": "actual GPU-selected joint witnesses and independent CPU completion targets; four-rule family only",
+    "artifact_sha256": "a5dd1ce7a2efa5f93d5e71fd62806cb23a096d4b718bcabb7f1bbf0443c4c241"
+  }
+}

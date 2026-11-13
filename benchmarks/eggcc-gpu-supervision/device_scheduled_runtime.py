@@ -18,6 +18,7 @@ def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_i
         machine=initial(schedule,repeat_slots,xp);opened=xp.array(False);changed=xp.array(False);failed=xp.array(False)
     else:
         machine=continuation['control'];opened=continuation['open_run'];changed=continuation['unreported_change'];failed=continuation['failed_run']
+    captures=[]
     logs={k:[] for k in ('stage','query_started','query_failed','run_done','run_changed','new_tokens','new_constructors','new_equivalences')}
     if takeover_catalog is not None:
         for key in ('takeover_attempted','takeover_released','takeover_copied_fields','takeover_blocked'):logs[key]=[]
@@ -30,6 +31,8 @@ def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_i
             queried,q=run_round(state,blocks,model,xp.where(begin,stage,-1),xp,key_context=key_context)
         else:
             queried,q=query_kernel(state,blocks,model,xp.where(begin,stage,-1),xp,external_complete=external_complete,eq_settled=eq_settled,key_context=key_context)
+        if 'captures' in q:
+            captures.append(tuple(dict(c,recorded=begin&c['enabled'],stage=stage) for c in q['captures']))
         error=xp.array(False)
         for key in ('stale_source','nonfinite','unsettled_source','capacity','missing_witness','transfer_blocked'):
             error=error|xp.any(q[key])
@@ -66,5 +69,6 @@ def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_i
     _,finished=current(machine,schedule,xp)
     result={k:xp.stack(v) for k,v in logs.items()}
     result.update(finished=finished,open_run=opened,failed_run=failed,unreported_change=changed,control=machine,eq_settled=eq_settled)
+    if captures:result['query_captures']=tuple(captures)
     if eq_context is not None:result['eq_context']=eq_context
     return state,next_id,result
