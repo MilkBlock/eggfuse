@@ -1,0 +1,84 @@
+{
+  "scope": "Capacity sensitivity audit; no training, GPU execution or runtime takeover",
+  "widths": [
+    {
+      "scope": "Exact saved-state capacity audit; full materialization reference, not proposed runtime storage",
+      "block_width": 8,
+      "cases": 551,
+      "state_snapshots": 3548,
+      "transitions": {
+        "transitions": 2997,
+        "row_growth": 1321,
+        "scalar_occurrence_growth": 1323,
+        "scalar_block_growth": 831,
+        "new_numeric_values": 249
+      },
+      "scalar_occurrences": 51567,
+      "block_capacity_slots": 64144,
+      "global_max_capacity_slots": 113536,
+      "scalar_block_padding_fraction": 0.19607445747069094,
+      "min_scalar_blocks": 1,
+      "max_scalar_blocks": 4,
+      "reference_occurrences": 119050,
+      "limitations": [
+        "scalar-only capacity excludes topology, identity, validity and model hidden state",
+        "distinct scalar values are not independent information or entropy",
+        "actual intermediate snapshots are teacher evidence, not runtime-accessible input",
+        "does not authorize data-dependent allocation, skip publication, or establish GPU speedup"
+      ]
+    },
+    {
+      "scope": "Exact saved-state capacity audit; full materialization reference, not proposed runtime storage",
+      "block_width": 16,
+      "cases": 551,
+      "state_snapshots": 3548,
+      "transitions": {
+        "transitions": 2997,
+        "row_growth": 1321,
+        "scalar_occurrence_growth": 1323,
+        "scalar_block_growth": 320,
+        "new_numeric_values": 249
+      },
+      "scalar_occurrences": 51567,
+      "block_capacity_slots": 81120,
+      "global_max_capacity_slots": 113536,
+      "scalar_block_padding_fraction": 0.3643121301775148,
+      "min_scalar_blocks": 1,
+      "max_scalar_blocks": 2,
+      "reference_occurrences": 119050,
+      "limitations": [
+        "scalar-only capacity excludes topology, identity, validity and model hidden state",
+        "distinct scalar values are not independent information or entropy",
+        "actual intermediate snapshots are teacher evidence, not runtime-accessible input",
+        "does not authorize data-dependent allocation, skip publication, or establish GPU speedup"
+      ]
+    },
+    {
+      "scope": "Exact saved-state capacity audit; full materialization reference, not proposed runtime storage",
+      "block_width": 32,
+      "cases": 551,
+      "state_snapshots": 3548,
+      "transitions": {
+        "transitions": 2997,
+        "row_growth": 1321,
+        "scalar_occurrence_growth": 1323,
+        "scalar_block_growth": 0,
+        "new_numeric_values": 249
+      },
+      "scalar_occurrences": 51567,
+      "block_capacity_slots": 113536,
+      "global_max_capacity_slots": 113536,
+      "scalar_block_padding_fraction": 0.5458092587373168,
+      "min_scalar_blocks": 1,
+      "max_scalar_blocks": 1,
+      "reference_occurrences": 119050,
+      "limitations": [
+        "scalar-only capacity excludes topology, identity, validity and model hidden state",
+        "distinct scalar values are not independent information or entropy",
+        "actual intermediate snapshots are teacher evidence, not runtime-accessible input",
+        "does not authorize data-dependent allocation, skip publication, or establish GPU speedup"
+      ]
+    }
+  ],
+  "runtime_sha256": "d7cbf05cbf4e7739fda8cf05683d3b2266eef12f6572c3f5d841548b00427308"
+}
