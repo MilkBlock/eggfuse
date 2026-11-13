@@ -43,6 +43,7 @@ impl Work {
             candidate_pushes, candidate_growths, candidate_sort_comparisons);
         add!(canonical_lookups, canonical_candidates, canonical_field_checks, canonical_result_reads);
         self.reads.node_lookups += other.reads.node_lookups;
+        self.reads.template_node_projections += other.reads.template_node_projections;
         self.reads.port_reads += other.reads.port_reads;
         self.reads.parent_probes += other.reads.parent_probes;
         self.reads.key_fields += other.reads.key_fields;
@@ -138,11 +139,11 @@ impl Read<'_> {
         -> Result<Option<(Value, u64, Dependency, bool)>> {
         w.candidates += 1;
         let Some(node) = self.guard.node(fact, &mut w.reads) else { return Ok(None) };
-        if !self.guard.key_matches(node, table, key, &mut w.reads)? { return Ok(None); }
+        if !self.guard.key_matches(&node, table, key, &mut w.reads)? { return Ok(None); }
         w.metadata_reads += 1;
         let state = self.cells.fact_state(fact)
             .ok_or("live stable constructor has no lifecycle state")?;
-        Ok(Some((self.guard.result(node, &mut w.reads)?, state.epoch, Dependency::Fact(fact), state.hidden)))
+        Ok(Some((self.guard.result(&node, &mut w.reads)?, state.epoch, Dependency::Fact(fact), state.hidden)))
     }
     pub fn point(&self, table: usize, key: &[Value], scratch: &mut Scratch, w: &mut Work)
         -> Result<Option<(Value, u64, Dependency)>> {

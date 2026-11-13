@@ -127,7 +127,7 @@ impl Graph {
                 return None;
             }
             counts.anchor_reads += 1;
-            let Ok(Value::Eq(id)) = self.read_stable_column(stored, column) else {
+            let Ok(Value::Eq(id)) = self.read_stable_column(&stored, column) else {
                 counts.incomplete_rejections += 1;
                 return Some(false);
             };

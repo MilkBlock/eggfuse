@@ -3,6 +3,7 @@
 //! into the stored node. Optional port-key matching uses immutable birth hints
 //! and complete symbolic domains; scoped completion remains a separate step.
 use super::*;
+use std::borrow::Cow;
 #[path = "local_port_conditions.rs"]
 mod conditions;
 #[path = "port_guard.rs"]
@@ -45,19 +46,25 @@ impl Field {
 #[derive(Clone, Debug)]
 struct Fields {
     component: u32,
-    program: Arc<PortProgram>,
-    ports: Arc<Vec<usize>>,
-    operation: usize,
+    operation: u32,
+    frame: usize,
     scalars: Box<[Value]>,
 }
-impl Fields {
-    fn len(&self) -> usize { self.program.fields[self.operation].len() }
+/// A short borrowed projection of the existing Cell definition. Nodes do not
+/// own per-fact copies of the program/port-map handles.
+struct FieldView<'a> {
+    component: u32,
+    columns: &'a [Option<usize>],
+    ports: &'a [usize],
+    scalars: &'a [Value],
+}
+impl FieldView<'_> {
+    fn len(&self) -> usize { self.columns.len() }
     fn get(&self, column: usize) -> Option<Field> {
-        let fields = &self.program.fields[self.operation];
-        Some(match *fields.get(column)? {
+        Some(match *self.columns.get(column)? {
             Some(local) => Field::Port(PortRef { component: self.component, symbol: self.ports[local] }),
             None => {
-                let index = fields[..column].iter().filter(|s|s.is_none()).count();
+                let index = self.columns[..column].iter().filter(|s|s.is_none()).count();
                 Field::Scalar(self.scalars[index].clone())
             }
         })
@@ -67,6 +74,7 @@ impl Fields {
     }
     fn last(&self) -> Option<Field> { self.get(self.len().checked_sub(1)?) }
 }
+
 #[derive(Clone, Debug)]
 pub struct Stored {
     pub(super) table: usize,
@@ -75,11 +83,14 @@ pub struct Stored {
 #[derive(Default, Serialize)]
 pub(in crate::graph) struct Runtime {
     keys: bool,
-    /// The sole owner of stable fields. Plain values let workers borrow the
-    /// directory without borrowing Cell metadata or its Rc-backed recipe cache.
+    pub(super) template_fields: bool,
+    /// Materialized stable fields. Template projection leaves only scalar-bearing
+    /// records here; its borrowed workers use the existing sparse Cell lifecycle.
     #[serde(skip)]
     pub(super) nodes: crate::read_epoch::Map<FactRef, Stored>,
     node_lookups: Counter<u64>,
+    template_node_projections: Counter<u64>,
+    field_layout_reads: Counter<u64>,
     node_retirement_probes: u64,
     nodes_retired: u64,
     #[serde(skip)]
@@ -111,6 +122,26 @@ pub(in crate::graph) struct Runtime {
     result_publications: u64,
 }
 impl Graph {
+    /// Experimental direct projection. Plain borrowed workers are supported;
+    /// overlapping mutation requires an independent frozen lifecycle view.
+    #[cfg(feature="sparse-cells")]
+    pub fn use_template_stable_fields(&mut self) -> Result<()> {
+        self.use_stable_port_fields()?;
+        if self.active_rhs.is_some() || !self.ownership_settled() || !self.pending_unions.is_empty() || !self.dirty.is_empty() {
+            return Err("template fields require a settled source boundary".into());
+        }
+        let runtime = self.stable_ports.as_ref().unwrap();
+        if runtime.batches.is_some() { return Err("template fields do not yet support completion batches".into()); }
+        if runtime.template_fields { return Ok(()); }
+        let remove = self.cells.cell_ids().flat_map(|id| self.cells.fact_states(id).map(|(f,_)|f))
+            .filter(|f| runtime.nodes.get(f).is_some_and(|node|node.fields.scalars.is_empty()))
+            .collect::<Vec<_>>();
+        let runtime = self.stable_ports.as_mut().unwrap();
+        for fact in remove { runtime.nodes.remove(&fact); }
+        runtime.nodes.compact();
+        runtime.template_fields = true;
+        Ok(())
+    }
     pub fn new_with_stable_ports(p: Program) -> Result<Self> {
         let mut g = Self::new_with_cell_ownership(p)?;
         g.use_stable_port_fields()?;
@@ -185,29 +216,43 @@ impl Graph {
             }
         }
         let Some(scalars) = scalars else { return; };
-        let fields = Fields { component: frame.component, program, ports, operation: f.op as usize, scalars: scalars.into_boxed_slice() };
+        let fields = Fields { component: frame.component, frame: frame.ordinal, operation: f.op, scalars: scalars.into_boxed_slice() };
         let mut state_guard = self
             .cells.fact_state_mut(f)
             .unwrap();
         let state = &mut *state_guard;
         state.decoded = None;
         let stats = self.stable_ports.as_mut().unwrap();
-        assert!(
-            stats.nodes.insert(f, Stored { table, fields }).is_none(),
-            "stable representation installed once per fact incarnation"
-        );
+        if !stats.template_fields || !fields.scalars.is_empty() {
+            assert!(stats.nodes.insert(f, Stored { table, fields }).is_none(),
+                "stable representation installed once per fact incarnation");
+        }
         stats.rows_installed += 1;
         stats.ports_installed += count;
     }
-    pub(in crate::graph) fn stable_node(&self, f: FactRef) -> Option<&Stored> {
+    pub(in crate::graph) fn stable_node(&self, f: FactRef) -> Option<Cow<'_, Stored>> {
         let runtime = self.stable_ports.as_ref()?;
         runtime.node_lookups.set(runtime.node_lookups.get() + 1);
-        runtime.nodes.get(&f)
+        let node = self.stable_node_unmetered(f)?;
+        if matches!(&node, Cow::Owned(_)) {
+            runtime.template_node_projections.set(runtime.template_node_projections.get()+1);
+        }
+        Some(node)
     }
-    pub(in crate::graph) fn retire_stable_node(&mut self, f: FactRef) {
+    pub(in crate::graph) fn stable_node_unmetered(&self, f: FactRef) -> Option<Cow<'_, Stored>> {
+        let runtime = self.stable_ports.as_ref()?;
+        if let Some(node) = runtime.nodes.get(&f) { return Some(Cow::Borrowed(node)); }
+        #[cfg(feature="sparse-cells")]
+        if runtime.template_fields {
+            return self.stable_port_reader().ok()?.project_node(f).map(Cow::Owned);
+        }
+        None
+    }
+    pub(in crate::graph) fn retire_stable_node(&mut self, f: FactRef, owned: bool) {
         if let Some(runtime) = self.stable_ports.as_mut() {
             runtime.node_retirement_probes += 1;
-            runtime.nodes_retired += u64::from(runtime.nodes.remove(&f));
+            let removed = runtime.nodes.remove(&f);
+            runtime.nodes_retired += u64::from(removed || (runtime.template_fields && owned));
         }
     }
     pub fn read_port(&self, port: PortRef) -> Result<Value> {
@@ -215,8 +260,14 @@ impl Graph {
         self.record_port_reads(1, probes);
         Ok(value)
     }
+    fn stable_field_view<'a>(&'a self, stored: &'a Stored) -> Result<FieldView<'a>> {
+        let runtime = self.stable_ports.as_ref().ok_or("stable fields disabled")?;
+        runtime.field_layout_reads.set(runtime.field_layout_reads.get() + 1);
+        self.stable_port_reader()?.fields(stored)
+    }
     pub fn fact_port(&self, f: FactRef, column: usize) -> Option<PortRef> {
-        let fields = &self.stable_node(f)?.fields;
+        let node = self.stable_node(f)?;
+        let fields = self.stable_field_view(&node).ok()?;
         match fields.get(column)? {
             Field::Port(p) => Some(p),
             Field::Scalar(_) => None,
@@ -227,8 +278,7 @@ impl Graph {
         stored: &Stored,
         col: usize,
     ) -> Result<Value> {
-        stored
-            .fields
+        self.stable_field_view(stored)?
             .get(col)
             .ok_or("stable field column")?
             .value(|port| self.read_port(port))
@@ -247,8 +297,8 @@ impl Graph {
         // interior counters and reborrowing the graph for every equality field.
         let view = self.stable_port_reader()?;
         let mut work = guard::Work::default();
-        let result = stored
-            .fields
+        let fields = self.stable_field_view(stored)?;
+        let result = fields
             .iter()
             .map(|field| view.field_value(&field, meter, &mut work))
             .collect::<Result<Vec<_>>>();
@@ -284,10 +334,8 @@ impl Graph {
     ) {
         // Several signals may contribute disjoint, unsorted column slices.
         let stable = self.stable_node(f).map(|stored| {
-            (
-                stored.table,
-                columns.iter().any(|&i| i + 1 < stored.fields.len()),
-            )
+            let width = self.stable_field_view(&stored).expect("live stable layout").len();
+            (stored.table, columns.iter().any(|&i| i + 1 < width))
         });
         if stable.is_some() && columns.is_empty() {
             return;
@@ -374,11 +422,11 @@ impl Graph {
         let mut ports = 0;
         for cell_id in self.cells.cell_ids() {
             for (id, fact) in self.cells.fact_states(cell_id) {
-                if let Some(row) = stats.nodes.get(&id) {
+                if let Some(row) = self.stable_node_unmetered(id) {
                     assert!(fact.owned && fact.decoded.is_none());
                     nodes += 1;
-                    ports += row
-                        .fields
+                    let view = self.stable_port_reader().unwrap();
+                    ports += view.fields(&row).expect("live stable layout")
                         .iter()
                         .filter(|f| matches!(f, Field::Port(_)))
                         .count();
@@ -389,7 +437,7 @@ impl Graph {
         }
         assert_eq!(
             nodes,
-            stats.nodes.len(),
+            if stats.template_fields { (stats.rows_installed - stats.nodes_retired) as usize } else { stats.nodes.len() },
             "stable directory contains only live facts"
         );
         assert_eq!(stats.rows_installed - stats.nodes_retired, nodes as u64);
@@ -426,7 +474,7 @@ impl Graph {
             })
             .count();
         json!({"enabled":true,"scope":"standalone Cell CPU; stable stored fields; global Run barrier still enabled",
-            "stats":stats,"unique_publication":self.unique_publication_report(),"local_conditions":self.local_condition_report(),"parallel_guards":self.parallel_guard_report(),"completion_batches":self.completion_batch_report(),"live_stable_nodes":nodes,"live_port_fields":ports,
+            "stats":stats,"unique_publication":self.unique_publication_report(),"local_conditions":self.local_condition_report(),"parallel_guards":self.parallel_guard_report(),"completion_batches":self.completion_batch_report(),"live_stable_nodes":nodes,"materialized_stable_nodes":stats.nodes.len(),"template_projected_nodes":nodes-stats.nodes.len(),"live_port_fields":ports,
             "birth_hints_enabled":self.port_birth_hints,"birth_indexed_port_keys":indexed_port_keys,"port_key_matching":stats.keys,
             "pending_canonical_keys":pending_canonical_keys,
             "pending_port_equality_checks":self.ownership.as_ref().unwrap().pending.len()-pending_canonical_keys})

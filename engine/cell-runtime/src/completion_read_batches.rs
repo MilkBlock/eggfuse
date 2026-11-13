@@ -99,7 +99,7 @@ impl Task<'_> {
         for &candidate in self.candidates {
             self.counts.candidates += 1;
             let target = view.node(candidate.fact, &mut self.counts.work);
-            let pending = target.is_some_and(|node| {
+            let pending = target.as_ref().is_some_and(|node| {
                 self.counts.pending_probes += 1;
                 ready.contains(node.table, &candidate.fact)
             });
@@ -124,14 +124,14 @@ impl Task<'_> {
                     view.condition_matches(
                         self.component,
                         &self.plan.conditions[id],
-                        target,
+                        &target,
                         self.values,
                         &mut self.counts.work,
                     )
                 }
             } else {
                 view.key_matches(
-                    target,
+                    &target,
                     self.table,
                     &self.values[..self.values.len() - 1],
                     &mut self.counts.work,
@@ -163,6 +163,9 @@ impl Task<'_> {
 
 impl Graph {
     pub fn use_completion_read_batches(&mut self, limit: usize) -> Result<()> {
+        if self.stable_ports.as_ref().is_some_and(|s|s.template_fields) {
+            return Err("template fields do not yet support completion batches".into());
+        }
         if !(2..=64).contains(&limit) {
             return Err("completion batch task limit must be between 2 and 64".into());
         }
@@ -506,7 +509,7 @@ impl Graph {
                 continue;
             }
             answer.result.as_ref().map_err(Clone::clone)?;
-            let row = self.read_stable_fact(f, state, stored)?;
+            let row = self.read_stable_fact(f, state, &stored)?;
             let cross = self.cells.cell_metadata(fact.cell).unwrap().started_epoch != self.cells.cell_metadata(f.cell).unwrap().started_epoch;
             let local = self.local_condition_stats();
             if answer.candidate.condition.is_some() {

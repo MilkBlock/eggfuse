@@ -160,12 +160,12 @@ impl Graph {
         let mut work = guard::Work::default();
         let matched = self
             .stable_port_reader()?
-            .key_matches(row, table, key, &mut work);
+            .key_matches(&row, table, key, &mut work);
         self.record_guard_reads(&work);
         if !matched? {
             return Ok(None);
         }
-        self.read_stable_fact(f, self.cells.fact_state(f).unwrap(), row)
+        self.read_stable_fact(f, self.cells.fact_state(f).unwrap(), &row)
             .map(Some)
     }
     pub(in crate::graph) fn complete_port_key(&mut self, f: FactRef, row: Row) -> Result<()> {

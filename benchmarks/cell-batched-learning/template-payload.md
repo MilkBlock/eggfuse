@@ -48,10 +48,12 @@ nor equal current roots licenses inventing or resurrecting a fact.
 ## Worker constraint, checked in current code
 
 `port_guard::Snapshot` freezes the stable-node map and component bindings using
-read_epoch. It deliberately does not borrow Cells: ordinary Cell values/recipe
-caches contain Rc-backed state. Coordinator retirement is represented by overlays.
-Consequently, simply changing `stable_node` to read `Cells.fact_state` is not a
-complete replacement. A successful unified representation must expose a plain
+read_epoch. It does not borrow Cells; coordinator retirement is represented by overlays.
+Correction after checking the feature-specific types: sparse-cells uses Arc-backed
+RowFields and FrameSlots, so ordinary borrowed workers can read Cells. The obstacle
+is an independently frozen lifecycle view during overlapping coordinator mutation,
+not Send/Sync for sparse Cell values. Consequently, simply changing `stable_node`
+to read `Cells.fact_state` does not complete the overlapping snapshot replacement. A successful unified representation must expose a plain
 immutable lifecycle view to workers while keeping retirement/visibility overlays
 authoritative. Copying all Cells for every worker wave, or adding a second full
 membership set, would reintroduce the storage/maintenance being removed.

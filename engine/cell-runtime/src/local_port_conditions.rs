@@ -217,7 +217,7 @@ impl Graph {
                 self.stable_port_reader()?.condition_matches(
                     component,
                     condition,
-                    stored,
+                    &stored,
                     &row.values,
                     &mut work,
                 )
@@ -238,7 +238,7 @@ impl Graph {
             // interface, preserving visibility, receipts and ordered retirement.
             let state = self.cells.fact_state(FactRef{cell,op}).unwrap();
             return self
-                .read_stable_fact(target, state, self.stable_node(target).unwrap())
+                .read_stable_fact(target, state, &self.stable_node(target).unwrap())
                 .map(|r| Some(Some(r)));
         }
         Ok(Some(None))

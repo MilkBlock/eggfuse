@@ -41,7 +41,7 @@ pub(in super::super) struct Runtime {
 struct Job<'a> {
     candidate: Candidate,
     pending: bool,
-    target: Option<&'a Stored>,
+    live: bool,
     condition: Option<&'a composition::conditions::Condition>,
     result: Result<bool>,
     work: guard::Work,
@@ -50,6 +50,8 @@ struct Job<'a> {
 
 pub(super) fn add_work(total: &mut guard::Work, work: &guard::Work) {
     total.node_lookups += work.node_lookups;
+    total.template_node_projections += work.template_node_projections;
+    total.field_layout_reads += work.field_layout_reads;
     total.port_reads += work.port_reads;
     total.parent_probes += work.parent_probes;
     total.key_fields += work.key_fields;
@@ -58,8 +60,8 @@ pub(super) fn add_work(total: &mut guard::Work, work: &guard::Work) {
     total.shared_symbol_guards += work.shared_symbol_guards;
 }
 
-// Only this small read context crosses the Send/Sync boundary. Row itself owns
-// an Rc on both storage backends, so pass its borrowed values, not &Row.
+// Borrow field values and resolve candidates on the worker. Sparse Cell lifecycle
+// reads are shareable; no prepared node descriptor is retained per job.
 fn run_round(
     pool: &rayon::ThreadPool,
     grain: usize,
@@ -90,17 +92,16 @@ impl Job<'_> {
         if self.pending {
             return;
         }
-        let Some(target) = self.target else {
-            return;
-        };
+        let Some(target) = view.node(self.candidate.fact, &mut self.work) else {return;};
+        self.live = true;
         self.result = if let Some(condition) = self.condition {
             if target.table != table {
                 Ok(false)
             } else {
-                view.condition_matches(component, condition, target, values, &mut self.work)
+                view.condition_matches(component, condition, &target, values, &mut self.work)
             }
         } else {
-            view.key_matches(target, table, &values[..values.len() - 1], &mut self.work)
+            view.key_matches(&target, table, &values[..values.len() - 1], &mut self.work)
         };
     }
 }
@@ -183,7 +184,6 @@ impl Graph {
             // One bounded descriptor allocation at most. No persistent binding/
             // subscriber list, cloned row, Rc/Arc increment or canonical port copy.
             let mut jobs = smallvec::SmallVec::<[Job<'_>; 32]>::with_capacity(round.len());
-            let mut fact_lookups = 0;
             for &candidate in round {
                 let pending = self
                     .dependency_table(Dependency::Fact(candidate.fact))
@@ -194,16 +194,10 @@ impl Graph {
                             .pending
                             .contains(t, &candidate.fact)
                     });
-                let target = if pending {
-                    None
-                } else {
-                    fact_lookups += 1;
-                    self.stable_node(candidate.fact)
-                };
                 jobs.push(Job {
                     candidate,
                     pending,
-                    target,
+                    live: false,
                     condition: candidate.condition.map(|id| plan.conditions[id].as_ref()),
                     result: Ok(false),
                     work: guard::Work::default(),
@@ -269,12 +263,12 @@ impl Graph {
                         speculative_keys += 1;
                     }
                 }
-                live += u64::from(!job.pending && job.target.is_some());
+                live += u64::from(!job.pending && job.live);
                 if job.pending {
                     pending += 1;
                 } else if job.condition.is_some() {
                     visits += 1;
-                    if job.target.is_none() {
+                    if !job.live {
                         inactive += 1;
                     } else {
                         operators += 1;
@@ -311,7 +305,7 @@ impl Graph {
             stats.rounds += 1;
             stats.chunks += round.len().div_ceil(runtime.grain) as u64;
             stats.prepared_candidates += round.len() as u64;
-            stats.prepared_fact_lookups += fact_lookups;
+            // Candidate fields are resolved by the worker; no prepared node handle.
             stats.prepared_live_guards += live;
             stats.collected_results += round.len() as u64;
             stats.scratch_allocations += u64::from(spilled) + u64::from(load_spill);
@@ -335,7 +329,7 @@ impl Graph {
                 }
                 let state = self.cells.fact_state(target).unwrap();
                 return self
-                    .read_stable_fact(target, state, self.stable_node(target).unwrap())
+                    .read_stable_fact(target, state, &self.stable_node(target).unwrap())
                     .map(|row| Some(Some(row)));
             }
         }

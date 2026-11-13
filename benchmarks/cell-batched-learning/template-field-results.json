@@ -1,0 +1,62 @@
+{
+  "scope": "actual standalone Cell runtime; opt-in template field projection; not native egglog or speed results",
+  "limitation": "logical facts and Cell identities are unchanged; overlapping completion is unsupported; process peaks include Program and Executor",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "graph_bytes_before": 705175,
+      "graph_bytes_after": 629911,
+      "graph_bytes_saved": 75264,
+      "percent_saved": 10.673,
+      "logical_stable_facts": 948,
+      "materialized_node_records": 295,
+      "node_records_removed": 653,
+      "process_peak_before": 161663816,
+      "process_peak_after": 161588596,
+      "same_final_state_lifecycle_and_restoration": true
+    },
+    {
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "graph_bytes_before": 616289,
+      "graph_bytes_after": 591201,
+      "graph_bytes_saved": 25088,
+      "percent_saved": 4.071,
+      "logical_stable_facts": 892,
+      "materialized_node_records": 259,
+      "node_records_removed": 633,
+      "process_peak_before": 160952987,
+      "process_peak_after": 160927943,
+      "same_final_state_lifecycle_and_restoration": true
+    },
+    {
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "graph_bytes_before": 1830387,
+      "graph_bytes_after": 1730035,
+      "graph_bytes_saved": 100352,
+      "percent_saved": 5.483,
+      "logical_stable_facts": 2895,
+      "materialized_node_records": 1070,
+      "node_records_removed": 1825,
+      "process_peak_before": 164881251,
+      "process_peak_after": 164780943,
+      "same_final_state_lifecycle_and_restoration": true
+    },
+    {
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "graph_bytes_before": 1798019,
+      "graph_bytes_after": 1647491,
+      "graph_bytes_saved": 150528,
+      "percent_saved": 8.372,
+      "logical_stable_facts": 2825,
+      "materialized_node_records": 802,
+      "node_records_removed": 2023,
+      "process_peak_before": 166105874,
+      "process_peak_after": 165955390,
+      "same_final_state_lifecycle_and_restoration": true
+    }
+  ]
+}

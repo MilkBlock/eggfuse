@@ -103,7 +103,7 @@ fn main()->Result<()> {
             eprintln!("compiled witnesses {name}");
         }
     } else if a[0]=="apply-passive" || a[0]=="check-passive" || a[0]=="check-nested" {
-        if a.len()!=3 && !(a[0]=="check-passive" && a.len()==4 && a[3]=="witnesses") {return Err("apply-passive/check-passive/check-nested ROOT VARIANT [witnesses for check-passive]".into());}
+        if a.len()!=3 && !(a[0]=="check-passive" && a.len()==4 && matches!(a[3].as_str(),"witnesses"|"template-fields")) {return Err("apply-passive/check-passive/check-nested ROOT VARIANT [witnesses|template-fields for check-passive]".into());}
         let root=Path::new(&a[1]);let variant=root.join(&a[2]);
         let manifest=read(root.join("manifest.json"))?;
         let mut reports=vec![];
@@ -153,6 +153,7 @@ fn main()->Result<()> {
                 let raw=read(dir.join("candidate.json"))?;
                 if raw["ownership_fragments"]!=proposal["selection"] {return Err("candidate differs from selection".into());}
                 let mut target=executor(raw)?;
+                if a.get(3).is_some_and(|s|s=="template-fields") {target.graph.use_template_stable_fields()?;}
                 let observe_witnesses=a.get(3).is_some_and(|s|s=="witnesses");
                 if observe_witnesses {target.graph.trace_ownership_catalog(16)?;}
                 for (i,expected) in checks.iter().enumerate() {

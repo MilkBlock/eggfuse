@@ -186,3 +186,18 @@ fn invalid_pool_configuration_does_not_change_graph_and_pool_is_reused() {
     assert!(executor.graph.use_parallel_port_guards(3, 1).is_err());
     assert_eq!(executor.graph.parallel_guard_report()["pool_builds"], 1);
 }
+
+#[test]
+#[cfg(feature="sparse-cells")]
+fn projected_fields_survive_worker_guards_and_recreated_facts() {
+    let source=source(true,true);
+    let mut serial=executor(&source,None);
+    let mut parallel=executor(&source,Some(1));
+    parallel.graph.use_template_stable_fields().unwrap();
+    serial.execute().unwrap();parallel.execute().unwrap();
+    compare(&serial,&parallel);
+    assert!(parallel.graph.parallel_guard_report()["stats"]["rounds"].as_u64().unwrap()>0);
+    let report=parallel.graph.stable_port_report();
+    assert!(report["template_projected_nodes"].as_u64().unwrap()>0);
+    assert!(report["stats"]["template_node_projections"].as_u64().unwrap()>0);
+}
