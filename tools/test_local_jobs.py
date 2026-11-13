@@ -149,6 +149,28 @@ class QueueTests(unittest.TestCase):
             jobs.rpc(self.state, 'lease', id=job['id'], token='old', pid=os.getpid())
 
 
+class InstallTests(unittest.TestCase):
+    def test_reinstall_identical_code_does_not_rewrite_or_contact_live_daemon(self):
+        with tempfile.TemporaryDirectory() as temp, patch.object(jobs.Path, 'home', return_value=Path(temp)):
+            with patch('builtins.print'):
+                jobs.install()
+                source = Path(temp) / '.local/share/eggfuse-jobs/local_jobs.py'
+                launcher = Path(temp) / '.local/bin/eggfuse-job'
+                before = [p.stat().st_mtime_ns for p in (source, launcher)]
+                with patch.object(jobs, 'rpc', side_effect=AssertionError('must not contact daemon')):
+                    jobs.install()
+                self.assertEqual(before, [p.stat().st_mtime_ns for p in (source, launcher)])
+
+    def test_install_preserves_an_unrelated_launcher(self):
+        with tempfile.TemporaryDirectory() as temp, patch.object(jobs.Path, 'home', return_value=Path(temp)):
+            launcher = Path(temp) / '.local/bin/eggfuse-job'
+            launcher.parent.mkdir(parents=True)
+            launcher.write_text('unrelated command')
+            with self.assertRaisesRegex(RuntimeError, 'unrelated launcher'):
+                jobs.install()
+            self.assertEqual(launcher.read_text(), 'unrelated command')
+
+
 class AdmissionTests(unittest.TestCase):
     def test_unmanaged_work_resets_the_entire_quiet_interval(self):
         with tempfile.TemporaryDirectory() as temp:

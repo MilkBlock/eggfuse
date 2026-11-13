@@ -414,18 +414,24 @@ def install():
     package.mkdir(parents=True, exist_ok=True)
     launcher.parent.mkdir(parents=True, exist_ok=True)
     source = package / 'local_jobs.py'
-    if Path(__file__).resolve() != source.resolve():
-        if source.exists() and source.read_bytes() != Path(__file__).read_bytes():
+    if Path(__file__).resolve() != source.resolve() and (
+            not source.exists() or source.read_bytes() != Path(__file__).read_bytes()):
+        if source.exists():
             try:
                 rpc(DEFAULT_STATE, 'ping')
             except (FileNotFoundError, ConnectionRefusedError):
                 pass
             else:
                 raise RuntimeError('Stop the idle scheduler before updating its installed code')
-        shutil.copy2(Path(__file__), source)
-    launcher.write_text('#!/bin/sh\nexec ' + shlex.quote(sys.executable) + ' '
-                        + shlex.quote(str(source)) + ' "$@"\n')
-    launcher.chmod(0o755)
+        temporary = package / f'install-{os.getpid()}.tmp'
+        shutil.copy2(Path(__file__), temporary)
+        temporary.replace(source)
+    text = '#!/bin/sh\nexec ' + shlex.quote(sys.executable) + ' ' + shlex.quote(str(source)) + ' "$@"\n'
+    if not launcher.exists() or launcher.read_text() != text:
+        temporary = launcher.with_name(f'.eggfuse-job-{os.getpid()}.tmp')
+        temporary.write_text(text)
+        temporary.chmod(0o755)
+        temporary.replace(launcher)
     print(launcher)
     return 0
 
