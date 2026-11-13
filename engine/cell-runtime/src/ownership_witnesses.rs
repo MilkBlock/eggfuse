@@ -133,7 +133,14 @@ impl Graph {
             for &Target{frame:target,code,op,key_proved} in targets {
             let Some(&cell) = component.frames.get(target) else { continue; };
             if !owner.composition.frames.get(&cell).is_some_and(|f|f.code==code && f.component==source.component) { continue; }
-            if targets.len()>1 {
+            if key_proved {self.stats.constructor_cell_route_source_checks+=1;}
+            let key_proved=key_proved && self.cells.fact_state(*anchor).is_some_and(|s|s.owned && !s.hidden);
+            if targets.len()>1 && key_proved {
+                // Shared wiring already proves all inputs. Only check candidate
+                // existence here; final admission still checks dirty/forwarding.
+                if !self.cells.fact_state(FactRef{cell,op}).is_some_and(|s|s.owned && !s.hidden) {continue;}
+                self.stats.constructor_cell_route_static_candidate_checks_avoided+=1;
+            } else if targets.len()>1 {
                 self.stats.constructor_cell_route_alternative_checks+=1;
                 let fact=FactRef{cell,op};
                 let Ok(Some(row))=self.fact(fact) else {continue;};
@@ -148,8 +155,6 @@ impl Graph {
                 if !equal {continue;}
             }
             self.stats.constructor_cell_route_witnesses += 1;
-            if key_proved {self.stats.constructor_cell_route_source_checks+=1;}
-            let key_proved=key_proved && self.cells.fact_state(*anchor).is_some_and(|s|s.owned && !s.hidden);
             let evidence=if key_proved {KeyEvidence::Compiled}
                 else if targets.len()>1 {KeyEvidence::Compared} else {KeyEvidence::Unchecked};
             return Some((FactRef { cell, op },evidence));

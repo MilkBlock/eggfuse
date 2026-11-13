@@ -1835,6 +1835,7 @@ fn check_later_constructor_witness(compared:bool) {
     if !compared {
         assert!(candidate.graph.stats.constructor_cell_route_key_proved>0);
         assert!(candidate.graph.stats.constructor_cell_route_key_fields_avoided>0);
+        assert!(candidate.graph.stats.constructor_cell_route_static_candidate_checks_avoided>0);
     }
     assert!(candidate.graph.stats.constructor_cell_route_alternative_checks>=2);
     if compared {

@@ -39,3 +39,19 @@ This local deletion follows the user's preference for a small check before the
 next optimization. No new workload timing campaign or native semantic claim is
 made. The original witness coverage remains small; this is not evidence of the
 requested large compression or a complete saturated-cell RHS takeover.
+
+## Static candidate admission on the shared parallel branch
+
+Compiler-proved multi-target candidates now validate the source anchor before
+reading a candidate row. A live proof skips the candidate's full key comparison;
+final result admission still checks dirty tables, forwarding and live ownership.
+Unproved candidates retain current-value comparisons and the full fallback.
+`constructor_cell_route_static_candidate_checks_avoided` counts this separate
+candidate-phase deletion, not another saved final-admission check. All 56
+ownership integration tests pass on `codex/cell-parallel-admission`.
+
+Integration audit: structural branch `8ca2cc62` is already an ancestor through
+`db61fbe4`; worker result transfer `e5dba47b` and integration `24510d66` are
+also ancestors. Continue from this common runtime instead of a separate
+compression branch. No performance or native-runtime semantic result is claimed
+by this integration check.
