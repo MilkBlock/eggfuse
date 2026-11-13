@@ -39,3 +39,8 @@ ownership worker cases. Job 426 passes 217 runtime unit tests and 76 ownership
 tests with storage instrumentation, plus the no-default-feature compile.
 Workload validation and timing follow as a separate experiment; these tests
 alone do not establish a speedup. Comparisons use entire control then candidate.
+
+Root absence also requires the ownership completion queue to be settled.
+Owned keys can remain pending after equality is committed while the ordinary
+dirty queues are empty. Job 434 proves this exact case rejects worker admission
+before repair and returns the existing constructor after repair.

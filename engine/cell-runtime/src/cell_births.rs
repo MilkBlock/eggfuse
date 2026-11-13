@@ -735,6 +735,7 @@ impl Graph {
         // template contains none. Do not carry its old parent read epoch
         // across admission that could complete that repair.
         self.pending_unions.is_empty() && self.dirty.is_empty() && self.dirty_markers.is_empty()
+            && self.ownership_settled()
     }
     pub(crate) fn local_jobs_supported(&self)->bool {
         self.stable_ports.is_none() && self.union_digest.is_none()

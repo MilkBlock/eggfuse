@@ -118,6 +118,30 @@ mod tests {
     use std::sync::atomic::AtomicUsize;
 
     #[test]
+    fn owned_pending_keys_cannot_prove_a_fresh_root() {
+        let mut g=super::super::tests::graph();
+        g.program.repair_ports=crate::graph::repair_ports::Plan::derive(&g.program);
+        g.use_cell_ownership().unwrap();
+        let (old,_,_)=super::super::tests::start(&mut g);
+        g.repair().unwrap();
+        // Commit equality without completing its owned keys. Unlike legacy
+        // subscriptions, this pending work need not appear in graph.dirty.
+        g.union(100,50).unwrap();
+        assert!(g.pending_unions.is_empty() && g.dirty.is_empty() && g.dirty_markers.is_empty());
+        assert!(!g.ownership_settled());
+        let cell=g.begin_transient(0,[(0,Value::Eq(50))].into_iter().collect(),None).unwrap();
+        let mut effects=Effects::default();
+        let (counts,job)=g.take_root_job(0,cell,4,&[],0,&mut effects.writer(),
+            #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+        assert!(job.is_none());assert_eq!(counts.root_bucket_probes,0);
+        g.repair().unwrap();
+        let (counts,job)=g.take_root_job(0,cell,4,&[],0,&mut effects.writer(),
+            #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+        assert!(job.is_none());assert_eq!(counts.root_existing_reuses,1);
+        assert_eq!(g.slot(cell,1).unwrap(),g.slot(old,1).unwrap());
+    }
+
+    #[test]
     fn disjoint_complete_roots_need_no_peer_slots_and_hash_collisions_keep_sharing() {
         for collide in [false,true] {
             let mut g=super::super::tests::graph();
