@@ -110,3 +110,27 @@ python3 benchmarks/cell-bake-full-merge/check.py \
   out/cell-bake-full-merge/candidate \
   out/cell-bake-full-merge /tmp/cell-bake-full-merge-rechecked.json
 ```
+
+
+## Second sequential timing trial
+
+After the competing Bake workload ended, a fresh trial repeated **all control
+workloads before all candidate workloads**, without reusing the first trial's
+samples. All 48 boundary guards observed no compiler or competing test runtime;
+each measured sample preserved the exact graph, Run summaries and effects.
+Sum has five measured processes and Raytrace three, after one warmup per group.
+
+| Inference median | Control `7936e334` | Merge snapshot `d4b9fa2d` | Observed change |
+|---|---:|---:|---:|
+| sum-bits | 28.117 ms | 30.110 ms | +7.09% |
+| Raytrace | 5.592 s | 6.488 s | +16.03% |
+
+**This checkpoint does not pass performance acceptance.** Raytrace sample ranges
+are 5.514–5.608 s and 6.459–7.049 s. Sum ranges are 26.492–28.998 ms and
+26.977–34.728 ms. The saved process snapshots show substantial system storage
+scanning throughout both lanes and changing desktop activity. The guard excludes
+known compilers/experiment executables; it does not certify an idle machine.
+The measured slowdown therefore needs further isolation; neither dismiss it as
+noise nor attribute its full magnitude to the merge. No further timing campaign
+was run under this persistent background load. Full records are in
+`timing-results.json`; the interrupted trial remains separate.

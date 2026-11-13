@@ -1,5 +1,5 @@
 {
-  "scope": "Interrupted timing retained; no complete performance comparison",
+  "scope": "One interrupted trial and one completed independent trial; samples are never pooled",
   "attempts": [
     {
       "artifact_root": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-full-merge/timing",
@@ -134,6 +134,163 @@
         }
       ],
       "raw_progress_sha256": "e4e1cd0c1fca7f5a93b659fabb198335b44bfac18756718c5da234e64214aaa8"
+    },
+    {
+      "artifact_root": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-full-merge/timing-2",
+      "status": "completed-with-boundary-guards",
+      "candidate_commit": "d4b9fa2d37c3dc32216114c1add7eb812cd95a49",
+      "completed_groups": [
+        {
+          "lane": "control",
+          "case": "sum",
+          "directory": "group-0000",
+          "execution_order": [
+            {
+              "iteration": -1,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 0,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 1,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 2,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 3,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 4,
+              "lanes": [
+                "control"
+              ]
+            }
+          ]
+        },
+        {
+          "lane": "control",
+          "case": "ray",
+          "directory": "group-0001",
+          "execution_order": [
+            {
+              "iteration": -1,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 0,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 1,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 2,
+              "lanes": [
+                "control"
+              ]
+            }
+          ]
+        },
+        {
+          "lane": "candidate",
+          "case": "sum",
+          "directory": "group-0002",
+          "execution_order": [
+            {
+              "iteration": -1,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 0,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 1,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 2,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 3,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 4,
+              "lanes": [
+                "candidate"
+              ]
+            }
+          ]
+        },
+        {
+          "lane": "candidate",
+          "case": "ray",
+          "directory": "group-0003",
+          "execution_order": [
+            {
+              "iteration": -1,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 0,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 1,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 2,
+              "lanes": [
+                "candidate"
+              ]
+            }
+          ]
+        }
+      ],
+      "result_sha256": "0af01764b07b8e1d4a4c0f9047daf9c078ac9c67e444b63cd4ef86a502b4365d",
+      "performance_acceptance": "not accepted: both observed inference medians regressed; background system load prevents isolating the cause"
     }
   ]
 }
