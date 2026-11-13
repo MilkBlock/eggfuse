@@ -1562,6 +1562,12 @@ fn retired_suffix_returns_to_existing_prefix_and_can_complete_again() {
         assert_eq!(control.binding_audit,actual.binding_audit);
     }
     assert!(retired>0,"exercise a real exhausted suffix, not just an idle scan");
+    let before=actual.graph.ownership_report()["stats"].clone();
+    assert!(before["retired_prefix_events"].as_u64().unwrap()>0);
+    for _ in 0..3 {assert_eq!(actual.graph.compact_retired_prefixes().unwrap(),0);}
+    let after=actual.graph.ownership_report()["stats"].clone();
+    assert_eq!(before["retired_prefix_scans"],after["retired_prefix_scans"],
+        "idle boundaries must not repeat a component scan");
 }
 
 #[test]

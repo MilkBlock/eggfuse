@@ -281,6 +281,7 @@ struct Stats {
     dual_frozen_skips:u64, dual_union_skips:u64, dual_dirty_skips:u64,
     retired_prefix_scans:u64, retired_prefix_takeovers:u64,
     retired_prefix_frames:u64, retired_prefix_symbols:u64, retired_prefix_native_guards:u64,
+    retired_prefix_events:u64, retired_prefix_bootstrap_scans:u64,
     composition_transition_probes: u64,
     composition_unbaked_fallbacks: u64,
     composition_cross_stage_joins: u64,
@@ -1131,7 +1132,7 @@ impl Runtime {
     /// Destructive observer only. Preserve last-owner accounting, and never
     /// allocate the output buffer while measuring a field release.
     pub(super) fn release_runtime_storage(self, live: &impl Fn()->usize, rows: &mut Vec<(&'static str,usize)>) {
-        assert!(rows.capacity()-rows.len()>=17);
+        assert!(rows.capacity()-rows.len()>=18);
         macro_rules! release {
             ($name:literal,$value:expr)=>{{
                 let before=live();drop($value);rows.push(($name,before-live()));
@@ -1147,6 +1148,7 @@ impl Runtime {
         release!("ownership.entry",self.composition.entry);
         release!("ownership.heap",self.composition.heap);
         release!("ownership.columns",self.composition.columns);
+        release!("ownership.retired_prefix_sources",self.composition.retired_prefix_sources);
         release!("ownership.boundaries",self.boundaries);
         release!("ownership.port_completion",self.port_completion);
         release!("ownership.pending",self.pending);

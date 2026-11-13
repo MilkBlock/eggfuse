@@ -622,6 +622,8 @@ pub(super) struct Runtime {
     pub witness_selection:std::cell::Cell<Option<super::witnesses::Selection>>,
     pub heap: Vec<Cursor>,
     pub columns: Vec<usize>,
+    // Opt-in coordinator worklist of retired source IDs, resolved through Frames.
+    pub retired_prefix_sources: Option<Vec<u32>>,
 }
 impl Runtime {
     #[inline]
@@ -653,6 +655,7 @@ impl Runtime {
             witness_selection:Default::default(),
             heap: vec![],
             columns: vec![],
+            retired_prefix_sources: None,
         }
     }
     /// Diagnostic only: count actual first cross-frame binding reuse, not

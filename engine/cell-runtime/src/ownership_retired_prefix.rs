@@ -158,8 +158,19 @@ mod tests {
 }
 
 impl Graph {
-    /// Diagnostic/opt-in Run-boundary takeover. It scans existing components;
-    /// no retirement queue or reverse dependency is retained. Charge that scan.
+    pub(in crate::graph) fn record_retired_prefix_source(&mut self, cell: u32) {
+        // Resolve the component later: a join can move a retired source.
+        if let Some(m) = self.ownership.as_mut() {
+            if let Some(pending) = m.composition.retired_prefix_sources.as_mut() {
+                if m.composition.frames.get(&cell).is_some() {
+                    pending.push(cell);
+                    m.stats.retired_prefix_events += 1;
+                }
+            }
+        }
+    }
+    /// Opt-in Run-boundary takeover. Bootstrap once, then consume actual source
+    /// retirement events. No per-producer consumer list is maintained.
     pub fn compact_retired_prefixes(&mut self) -> Result<usize> {
         if self.active_rhs.is_some()
             || !self.pending_unions.is_empty()
@@ -189,8 +200,34 @@ impl Graph {
         if routes.is_empty() {
             return Ok(0);
         }
+        let m = self.ownership.as_mut().unwrap();
+        let mut candidates = match m.composition.retired_prefix_sources.take() {
+            Some(mut sources) => {
+                // A join may have changed the component since retirement;
+                // source identities remain stable. Removed frames need no work.
+                sources.retain_mut(|source| {
+                    if let Some(frame) = m.composition.frames.get(source) {
+                        *source = frame.component;
+                        true
+                    } else {
+                        false
+                    }
+                });
+                sources.sort_unstable();
+                sources.dedup();
+                sources
+            }
+            None => {
+                m.stats.retired_prefix_bootstrap_scans += m.composition.components.len() as u64;
+                (0..m.composition.components.len())
+                    .map(|id| id as u32)
+                    .collect()
+            }
+        };
+        let mut retries = 0;
         let mut removed = 0;
-        for id in 0..m.composition.components.len() {
+        for index in 0..candidates.len() {
+            let id = candidates[index] as usize;
             let m = self.ownership.as_mut().unwrap();
             m.stats.retired_prefix_scans += 1;
             let Some(c) = m.composition.components[id].as_ref() else {
@@ -223,6 +260,10 @@ impl Graph {
                 c.frames[frames..].contains(&((root(&self.parents, *value) >> 32) as u32))
             }) {
                 m.stats.retired_prefix_native_guards += 1;
+                // A later union can clear this guard without another deletion.
+                // Retain the stable retired source, not a reusable component ID.
+                candidates[retries] = *c.frames.last().unwrap();
+                retries += 1;
                 continue;
             }
             for (symbol, value) in c.signals.iter().enumerate().skip(symbols) {
@@ -260,6 +301,14 @@ impl Graph {
             c.signals.shrink_to_fit();
             removed += dead;
         }
+        candidates.truncate(retries);
+        // Bootstrap can be large; keep only storage for outstanding retries.
+        candidates.shrink_to_fit();
+        self.ownership
+            .as_mut()
+            .unwrap()
+            .composition
+            .retired_prefix_sources = Some(candidates);
         Ok(removed)
     }
 }

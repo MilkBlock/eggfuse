@@ -1,0 +1,39 @@
+{
+  "scope": "actual standalone Cell runtime; retirement-driven work reduction, not timing",
+  "base_commit": "ee5e75f0",
+  "program_sha256": "72b3d6cbdf65f124752f013a6cce043bda57d1e2ee48b781e37f5eea465e2dfe",
+  "binary_sha256": "358f98197a63c21170e36901239be6c543252f7dfeca09bd3b6278b82318e769",
+  "control_report_sha256": "f467df7e5587271ac8e1a790c87ef5a0c6f86727edb76211f3b38183c471c330",
+  "candidate_report_sha256": "3f57dfc38f744a869b56afdec36c57b72e4eaf0cbe5bb87f112d658f669eb3d2",
+  "scans_before": 1074658,
+  "scans_after": 263,
+  "bootstrap_scans": 129,
+  "retirement_events": 134,
+  "retired_frames": 129,
+  "graph_bytes": 1392459,
+  "program_bytes": 107450586,
+  "takeover_extra_bytes": 11376,
+  "process_peak_bytes": 113421636,
+  "event_worklist_final_heap_bytes": 0,
+  "ownership_inventory_equal": true,
+  "run_sequence_equal": true,
+  "final_state_equal": true,
+  "validation": {
+    "ownership_tests": 68,
+    "jobs": [
+      353,
+      354,
+      357
+    ],
+    "per_run": {
+      "runs": 882,
+      "status": "pass",
+      "report_sha256": "5efadd86afa344df3bf4b20e4c04b25d76d34e74802c1bf2dd6184aaf73a7c5a",
+      "matches_previous_run_checks": true
+    },
+    "native_final_state": {
+      "status": "pass",
+      "report_sha256": "107438ef63ad7bb3b8c544c6619575a23813f6ab4c78aff186e93bd99d145976"
+    }
+  }
+}
