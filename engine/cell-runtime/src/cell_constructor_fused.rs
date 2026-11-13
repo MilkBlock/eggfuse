@@ -13,7 +13,7 @@ pub(crate) type Wave=Continued<Completed,Ready,Owner,Counts>;
 
 impl Graph {
     pub(crate) fn prepare_fused_constructors(&mut self,tasks:&[(Job,crate::cell::Effects)])->Option<Owner> {
-        if !self.local_jobs_supported() || !self.pipelined_births_ready()
+        if !self.local_registration_supported() || !self.pipelined_births_ready()
             || crate::sync_diagnostics::registry_inline() || tasks.len()<2 {return None;}
         let operations:usize=tasks.iter().map(|(j,_)|j.operations()).sum();
         if operations<32 || !tasks.windows(2).all(|w|w[0].0.cell<w[1].0.cell) {return None;}

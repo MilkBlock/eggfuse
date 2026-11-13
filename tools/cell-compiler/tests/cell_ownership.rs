@@ -20,6 +20,102 @@ fn program(src: &str) -> Program {
     Program::parse(raw).unwrap()
 }
 
+#[cfg(feature="parallel-publication")]
+fn worker_owner(p:Program,workers:usize)->Executor {
+    let mut e=Executor::new(Graph::new_with_cell_ownership(p).unwrap(),true);
+    if workers!=0 {
+        e.use_query_workers(workers,8).unwrap();
+        e.use_parallel_residuals().unwrap();
+        e.use_parallel_publication().unwrap();
+        e.use_cell_execution(1).unwrap();
+    }
+    e
+}
+
+#[cfg(feature="parallel-publication")]
+#[test]
+fn worker_births_preserve_composed_entries_foreign_returns_and_run_lifetimes() {
+    let mut source=String::from(r#"
+        (datatype E (N i64) (F E) (G E i64) (H E) (Pair E E))
+        (function Done (E) Unit :merge old)
+        (function Audit (E) Unit :merge old)
+        (ruleset build) (ruleset extend) (ruleset join) (ruleset remove)
+        (rule ((= x (N n))) ((let f (F x)) (let g (G f 0)) (Pair g g)) :ruleset build)
+        (rule ((= x (N n))) ((let f (F x)) (let g (G f 1)) (Pair g g)) :ruleset build)
+        (rule ((= g (G f n))) ((let h (H g)) (set (Done h) ()) (set (Audit h) ())) :ruleset extend)
+        (rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset join)
+        (rule ((= x (N 2))) ((delete (F x))) :ruleset remove)
+    "#);
+    for i in 0..96 {source+=&format!("(N {i})\n");}
+    source+="(run build 1) (run extend 1) (run join 1) (run build 1) (run extend 1) (run remove 1) (run build 1) (run extend 1)";
+    egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+    let p=program(&source);
+    assert!(!p.cell_ownership.composition.transitions.is_empty(),"exercise a learned catalog");
+    let mut control=worker_owner(p.clone(),0);control.execute().unwrap();
+    for workers in [1,2,4] {
+        let mut candidate=worker_owner(p.clone(),workers);candidate.execute().unwrap();
+        assert_eq!(candidate.snapshots,control.snapshots,"all Run graphs with {workers} workers");
+        assert_eq!(candidate.binding_audit,control.binding_audit,"ordered bindings");
+        assert_eq!(candidate.graph.export().unwrap(),control.graph.export().unwrap());
+        assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
+        assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
+        let report=candidate.report();
+        let births=&report["cell_execution"]["runtime"]["stats"]["births"];
+        if workers>1 {assert!(births["worker_operations"].as_u64().unwrap()>0,"{births}");}
+        let ownership=candidate.graph.ownership_report();
+        let previous=control.graph.ownership_report();
+        for counter in ["owned_births","composition_result_writes","composition_baked_hits"] {
+            assert!(ownership["stats"][counter].is_u64(),"missing {counter}");
+            assert_eq!(ownership["stats"][counter],previous["stats"][counter],"{counter}");
+        }
+    }
+}
+
+#[cfg(feature="parallel-publication")]
+#[test]
+fn worker_owner_entries_drain_before_the_first_source_error() {
+    let mut source=String::from(r#"
+        (datatype E (N i64) (F E) (G E) (Bad E i64))
+        (ruleset build)
+        (rule ((= x (N n))) ((let f (F x)) (G f)) :ruleset build)
+        (rule ((= x (N n))) ((Bad x (/ 1 (- n 4)))) :ruleset build)
+    "#);
+    for i in 0..96 {source+=&format!("(N {i})\n");}
+    source+="(run build 1)";
+    let core=eggfuse_bake::device_frontend::core("owner-errors",&source).unwrap();
+    let p=Program::parse(compiler::compile(core,&BTreeSet::new()).unwrap()).unwrap();
+    let mut control=worker_owner(p.clone(),0);let error=control.execute().unwrap_err();
+    for workers in [2,4] {
+        let mut candidate=worker_owner(p.clone(),workers);
+        assert_eq!(candidate.execute().unwrap_err(),error);
+        assert_eq!(candidate.graph.export().unwrap(),control.graph.export().unwrap());
+        assert_eq!(candidate.binding_audit,control.binding_audit);
+    }
+}
+
+#[cfg(feature="parallel-publication")]
+#[test]
+fn peer_owned_root_returns_are_available_before_first_local_birth() {
+    let mut source=String::from(r#"
+        (datatype E (N i64) (F E) (G E i64) (H E))
+        (ruleset build)
+        (rule ((= x (N n)) (= y (N m)) (< m 4)) ((let f (F x)) (let g (G f m)) (H g)) :ruleset build)
+    "#);
+    for i in 0..96 {source+=&format!("(N {i})\n");}
+    source+="(run build 1)";
+    let p=program(&source);
+    let mut control=worker_owner(p.clone(),0);control.execute().unwrap();
+    let mut candidate=worker_owner(p,4);candidate.execute().unwrap();
+    assert_eq!(candidate.snapshots,control.snapshots);
+    assert_eq!(candidate.binding_audit,control.binding_audit);
+    let work=&candidate.report()["cell_execution"]["runtime"]["stats"]["births"];
+    assert!(work["owner_result_candidates"].as_u64().unwrap()>0,"{work}");
+    let a=control.graph.ownership_report();let b=candidate.graph.ownership_report();
+    for key in ["composition_result_joins","composition_baked_hits","owned_births","signal_bindings_created"] {
+        assert_eq!(a["stats"][key],b["stats"][key],"{key}");
+    }
+}
+
 #[test]
 fn retired_component_storage_is_reused_across_source_runs() {
     let mut source=String::from(r#"
@@ -2305,7 +2401,24 @@ fn late_observation_selects_captured_results_before_worker_execution() {
     enable(&mut candidate.graph).unwrap();candidate.execute().unwrap();
     assert_eq!(control.snapshots,candidate.snapshots);
     assert_eq!(control.binding_audit,candidate.binding_audit);
-    assert_eq!(evidence(&control.graph).unwrap(),evidence(&candidate.graph).unwrap());
+    let mut before=evidence(&control.graph).unwrap();
+    let mut after=evidence(&candidate.graph).unwrap();
+    if trace {
+        // Constructor workers now overlap the next source admission. A live
+        // pending source is not a local saturation proof, even when its final
+        // graph and source-ordered composition proposals are identical.
+        let a=before.as_object_mut().unwrap().remove("saturation").unwrap();
+        let b=after.as_object_mut().unwrap().remove("saturation").unwrap();
+        for key in ["witness_recipes","witness_paths"] {assert_eq!(a[key],b[key]);}
+        let applications=|v:&serde_json::Value|v["rows"].as_array().unwrap().iter()
+            .map(|r|r["counts"]["applications"].as_u64().unwrap()).sum::<u64>();
+        assert_eq!(applications(&a),4);assert_eq!(applications(&b),4);
+        let pending=b["rows"].as_array().unwrap().iter()
+            .filter(|r|r["outcome"]=="pending_completion").collect::<Vec<_>>();
+        assert_eq!(pending.len(),1);
+        assert_eq!(pending[0]["counts"]["covered_prefix_ops"],0);
+    }
+    assert_eq!(before,after,"all source-ordered composition observations");
     assert!(candidate.graph.stats.constructor_prepared_inputs>0);
     assert_eq!(candidate.graph.stats.constructor_prefix_rejected,0);
     assert_eq!(candidate.graph.stats.constructor_prefix_operations,0);

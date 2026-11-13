@@ -168,6 +168,7 @@ impl Executor {
         #[cfg(feature="storage-metrics")]
         let probe=crate::rhs_projection_trace::before(&self.graph,execution.rule,execution.cell,position,&execution.known);
         execution.effects.writer().record(position,point.witness);
+        self.graph.composition_result_entry(execution.cell,position,point.witness,true);
         let frame=self.graph.rhs_frame_mut(execution.cell).unwrap();
         frame.values.insert(*dst,point.value);
         frame.completed_prefix=position+1;
@@ -184,31 +185,35 @@ impl Executor {
         publication:Option<crate::graph::cell_births::Publication>) -> Result<()> {
         let mut execution = parked.execution;
         self.graph.restore_rhs(parked.context);
-        if let Some(Completed { done, effects }) = completed {
-            debug_assert_eq!(done.cell(), execution.cell);
-            execution.effects = effects;
-            if let Some(worker) = done.worker {
-                let stats = &mut self.cell_execution.as_mut().unwrap().counts.scheduler;
-                if stats.worker_jobs.len() <= worker {
-                    let before = stats.worker_jobs.capacity();
-                    stats.worker_jobs.resize(worker + 1, 0);
-                    stats.queue_growths += u64::from(before != stats.worker_jobs.capacity());
-                    stats.queue_bytes += ((stats.worker_jobs.capacity() - before) * std::mem::size_of::<u64>()) as u64;
+        let result=(|| {
+            if let Some(Completed { done, effects }) = completed {
+                debug_assert_eq!(done.cell(), execution.cell);
+                execution.effects = effects;
+                if let Some(worker) = done.worker {
+                    let stats = &mut self.cell_execution.as_mut().unwrap().counts.scheduler;
+                    if stats.worker_jobs.len() <= worker {
+                        let before = stats.worker_jobs.capacity();
+                        stats.worker_jobs.resize(worker + 1, 0);
+                        stats.queue_growths += u64::from(before != stats.worker_jobs.capacity());
+                        stats.queue_bytes += ((stats.worker_jobs.capacity() - before) * std::mem::size_of::<u64>()) as u64;
+                    }
+                    stats.worker_jobs[worker] += 1;
                 }
-                stats.worker_jobs[worker] += 1;
+                let worker = done.worker.is_some();
+                let mut counts = self.graph.commit_registered_local_job(done, &mut execution.effects.writer(),publication)?;
+                execution.work.facts += counts.committed_rows;
+                execution.work.updates += counts.unit_inserts;
+                execution.work.constructors += counts.local_births + counts.local_reuses;
+                if worker { counts.worker_operations += counts.local_births + counts.local_reuses; }
+                self.cell_execution.as_mut().unwrap().counts.births.add(counts);
             }
-            let worker = done.worker.is_some();
-            let mut counts = self.graph.commit_registered_local_job(done, &mut execution.effects.writer(),publication)?;
-            execution.work.facts += counts.committed_rows;
-            execution.work.updates += counts.unit_inserts;
-            execution.work.constructors += counts.local_births + counts.local_reuses;
-            if worker { counts.worker_operations += counts.local_births + counts.local_reuses; }
-            self.cell_execution.as_mut().unwrap().counts.births.add(counts);
-        }
-        self.finish_attached_cell(execution)?;
+            self.finish_attached_cell(execution)?;
+            Ok(())
+        })();
+        self.graph.end_owner_entry();
         self.graph.sealed_input_cell = None;
         self.graph.sealed_generation = None;
-        Ok(())
+        result
     }
     fn consume_fused_constructors(&mut self,owner:crate::graph::cell_births::fused::Owner,
         tasks:Vec<(Job,crate::cell::Effects)>,parents:std::sync::Arc<crate::value::parent_epoch::Base>,
@@ -391,6 +396,7 @@ impl Executor {
                     None,
                 )?;
                 let Some(mut execution) = started else {
+                    self.graph.end_owner_entry();
                     self.graph.sealed_input_cell = None;
                     self.graph.sealed_generation = None;
                     continue;
@@ -680,6 +686,9 @@ impl Executor {
                     execution.phase = owned_cell::Phase::Boundary;
                     self.resolve_cell_boundary(&mut execution, position)?;
                 }
+                // A parked instance already moved its Entry into Suspended;
+                // an attached completion releases its own Entry here.
+                self.graph.end_owner_entry();
                 self.poll_cell_queue(queue,pending,false)?;
                 if queue.owners.len() >= READY_LIMIT {self.dispatch_cell_queue(queue,pending)?;}
                 self.graph.sealed_input_cell = None;
@@ -690,6 +699,7 @@ impl Executor {
         // Earlier infallible tails must finish even when admission of a later
         // source instance fails (for example, exhausted Cell identities).
         if result.is_err() {
+            self.graph.end_owner_entry();
             self.graph.promote_active();
         }
         if result.is_err() {

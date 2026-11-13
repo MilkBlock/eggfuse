@@ -242,6 +242,7 @@ pub(crate) struct Counts {
     pub result_reads:u64, pub result_hits:u64, pub evaluations:u64, pub duplicate_evaluations:u64,
     pub bloom_checks:u64, pub bloom_skips:u64, pub bloom_writes:u64,
     pub result_handles:u64, pub frame_handles:u64, pub dependency_proofs:u64, pub key_screens:u64, pub directory_checks:u64,
+    pub owner_result_candidates:u64, pub owner_result_bytes:u64,
 }
 impl Counts {
     pub(crate) fn add(&mut self,b:Self) {
@@ -255,7 +256,8 @@ impl Counts {
             slot_seals,slot_leases,slot_reattachments,root_snapshots,root_writes,root_growths,root_merges,
             plan_handles,prefix_growths,prefix_bytes,sealed_bytes,captured_reads,captured_writes,
             shared_slots,shared_bytes,shared_growths,result_reads,result_hits,evaluations,duplicate_evaluations,
-            bloom_checks,bloom_skips,bloom_writes,result_handles,frame_handles,dependency_proofs,key_screens,directory_checks);
+            bloom_checks,bloom_skips,bloom_writes,result_handles,frame_handles,dependency_proofs,key_screens,directory_checks,
+            owner_result_candidates,owner_result_bytes);
     }
 }
 struct Born { operation:usize, table:usize, fields:RowFields, hash:u64 }
@@ -264,7 +266,11 @@ type Rows=smallvec::SmallVec<[Born;4]>;
 pub(crate) fn pending_bytes()->usize {std::mem::size_of::<Rows>()}
 // Only committed logical work belongs to the Cell result. Diagnostic work is
 // accumulated by the worker loop, including private results later discarded.
-struct Piece { end:usize, rows:Rows, units:Vec<units::Row>, aliases:u64, births:u64, reuses:u64 }
+struct Piece { end:usize, rows:Rows, units:Vec<units::Row>, aliases:u64, births:u64, reuses:u64,
+    // Only foreign returns before the first birth can select a composition
+    // Entry. Validate them in source order before activating that first row.
+    // This transient evidence is discarded at adoption, never retained history.
+    owner_results:Vec<(usize,FactRef)> }
 struct Local {
     values:crate::slots::FrameSlots,
     facts:smallvec::SmallVec<[(u32,RowFields);4]>,
@@ -326,7 +332,7 @@ impl Plan {
     fn prepare(&self,from:usize,limit:usize,cell:u32,frame:&mut impl Frame,
         parents:Read<'_>,first:usize,first_anchor:usize,first_key:smallvec::SmallVec<[Value;4]>,
         receipts:&mut EffectWriter<'_>,counts:&mut Counts)->Piece {
-        let mut out=Piece {end:frame.position(),rows:Rows::new(),units:Vec::new(),aliases:0,births:0,reuses:0};
+        let mut out=Piece {end:frame.position(),rows:Rows::new(),units:Vec::new(),aliases:0,births:0,reuses:0,owner_results:Vec::new()};
         let capacity=frame.values().capacity_bytes();
         let mut first_key=Some(first_key);
         for (index,step) in self.steps[from..limit].iter().enumerate() {
@@ -394,6 +400,7 @@ pub(crate) struct Job {
     key:smallvec::SmallVec<[Value;4]>, isolated:bool, fresh_root:Option<usize>,
     unit_epoch:Option<u64>,
     root:Option<u64>,
+    owner_results:bool,
 }
 pub(crate) struct Done { cell:u32, frame:Local, piece:Piece, pub worker:Option<usize> }
 impl Done {
@@ -414,7 +421,7 @@ impl Job {
             .is_some_and(|tail|tail.starts_at(stop) && tail.ends_at(end))
     }
     pub(crate) fn unstarted(self)->Done {
-        Done{cell:self.cell,piece:Piece{end:self.frame.completed_prefix,rows:Rows::new(),units:Vec::new(),aliases:0,births:0,reuses:0},
+        Done{cell:self.cell,piece:Piece{end:self.frame.completed_prefix,rows:Rows::new(),units:Vec::new(),aliases:0,births:0,reuses:0,owner_results:Vec::new()},
             frame:self.frame,worker:None}
     }
     pub(crate) fn operations(&self)->usize {self.limit-self.from}
@@ -439,8 +446,7 @@ impl Graph {
         let mut counts=Counts {resume_checks:1,..Counts::default()};
         // These backends can have additional birth-time effects. Their source
         // handler remains authoritative until those effects join the proof.
-        if self.stable_ports.is_some() || self.union_digest.is_some() || self.ownership.is_some()
-            || self.local_unions.is_some() || cfg!(feature="keeper-proof") {return Ok((counts,None));}
+        if !self.local_jobs_supported() {return Ok((counts,None));}
         let Some(cert)=*window else {return Ok((counts,None));};
         let position=self.rhs_frame(cell).unwrap().completed_prefix;
         let Some(plan)=self.program.executions[rule].births.as_ref() else {return Ok((counts,None));};
@@ -498,7 +504,8 @@ impl Graph {
         let (values,sealed)=self.rhs_frame_mut(cell).unwrap().values.lease();
         counts.slot_seals+=u64::from(sealed);counts.slot_leases+=1;frame.values=values;
         counts.sealed_bytes+=u64::from(sealed)*crate::slots::FrameSlots::seal_bytes() as u64;
-        Ok((counts,Some(Job{cell,plan,frame,from,limit,first:cert.first,anchor:first_anchor,key:first_key,isolated,fresh_root:Some(root),unit_epoch,root:None})))
+        Ok((counts,Some(Job{cell,plan,frame,from,limit,first:cert.first,anchor:first_anchor,key:first_key,isolated,fresh_root:Some(root),unit_epoch,root:None,
+            owner_results:self.needs_worker_owner_results(rule,cell)})))
     }
     pub(crate) fn commit_local_job(&mut self,done:Done,receipts:&mut EffectWriter<'_>)->Result<Counts> {
         self.commit_registered_local_job(done,receipts,None)
@@ -523,6 +530,9 @@ impl Graph {
     fn register_local_piece(&mut self,cell:u32,piece:Piece,
         publication:Option<constructor_registration::Publication>)->Result<Counts> {
         let mut counts=Counts{local_births:piece.births,local_reuses:piece.reuses,..Counts::default()};
+        for &(operation,witness) in &piece.owner_results {
+            self.composition_result_entry(cell,operation,Dependency::Fact(witness),true);
+        }
         if let Some(publication)=publication {
             let rows=self.publish_registered_births(publication);
             debug_assert!(piece.rows.is_empty() || piece.rows.len()==rows);
@@ -727,7 +737,13 @@ impl Graph {
         self.pending_unions.is_empty() && self.dirty.is_empty() && self.dirty_markers.is_empty()
     }
     pub(crate) fn local_jobs_supported(&self)->bool {
-        self.stable_ports.is_none() && self.union_digest.is_none() && self.ownership.is_none()
+        self.stable_ports.is_none() && self.union_digest.is_none()
             && self.local_unions.is_none() && !cfg!(feature="keeper-proof")
+    }
+    // The legacy registry owns canonical indexes and reverse subscriptions.
+    // Canonical ownership births instead use activate_fields at source adoption
+    // to bind their compiled component ports exactly once.
+    pub(crate) fn local_registration_supported(&self)->bool {
+        self.local_jobs_supported() && self.ownership.is_none()
     }
 }

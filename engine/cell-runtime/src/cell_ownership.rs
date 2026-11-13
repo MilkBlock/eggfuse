@@ -452,6 +452,11 @@ impl Graph {
             self.program.cell_ownership.composition.result_rules[rid]
                 || m.composition.training.is_some() || m.composition.catalog_trace.is_some())
     }
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn needs_worker_owner_results(&self,rule:usize,cell:u32)->bool {
+        self.needs_ownership_results(rule) && self.ownership.as_ref().is_some_and(|m|
+            m.composition.entry.is_some() && !m.composition.frames.contains_key(&self.cells,&cell))
+    }
     pub(crate) fn reconcile_ownership_preparation(&mut self) {
         #[cfg(feature="sparse-cells")]
         for rid in 0..self.program.executions.len() {

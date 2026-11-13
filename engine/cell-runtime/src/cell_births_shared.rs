@@ -338,6 +338,7 @@ impl<'a> Batch<'a> {
             units: Vec::new(),
             aliases: 0,
             births:0,reuses:0,
+            owner_results:Vec::new(),
         };
         // This is another handle to the same sealed inputs, not a bindings copy.
         // Peers may retain this immutable prefix after its source owner resumes.
@@ -376,6 +377,13 @@ impl<'a> Batch<'a> {
                 piece.births += 1;
                 counts.root_births += u64::from(owner.starts_root() && index==owner.from);
             } else {
+                if owner.owner_results && piece.rows.is_empty() && value.witness.cell!=owner.cell {
+                    let before=piece.owner_results.capacity();
+                    piece.owner_results.push((step.operation,value.witness));
+                    counts.owner_result_candidates+=1;
+                    counts.owner_result_bytes+=((piece.owner_results.capacity()-before)
+                        *std::mem::size_of::<(usize,FactRef)>()) as u64;
+                }
                 values.insert(step.destination, value.fields.last().unwrap().clone());
                 counts.value_writes += 1;
                 piece.reuses += 1;
@@ -577,6 +585,7 @@ impl Graph {
             counts,
             Some(Job {
                 cell,
+                owner_results:self.needs_worker_owner_results(rule,cell),
                 unit_epoch,
                 plan,
                 frame: Local {

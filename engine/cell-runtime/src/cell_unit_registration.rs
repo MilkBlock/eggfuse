@@ -182,7 +182,7 @@ impl Graph {
         let start=self.functions.len();
         let end=start.checked_add(count).filter(|&end|end<u32::MAX as usize)?;
         let ordered=done.windows(2).all(|w|w[0].done.cell<w[1].done.cell);
-        let births=birth_count!=0 && self.local_jobs_supported() && ordered && done.iter().enumerate().all(|(i,d)| {
+        let births=birth_count!=0 && self.local_registration_supported() && ordered && done.iter().enumerate().all(|(i,d)| {
             self.cells.get(&d.done.cell).is_some_and(|c|
                 c.parent.is_none_or(|parent|done.binary_search_by_key(&parent.cell,|d|d.done.cell).map_or(true,|p|p<i))
                 && d.done.piece.rows.iter().all(|r|
@@ -332,7 +332,7 @@ mod tests {
     fn completed(rows:Vec<units::Row>)->Completed {
         Completed {effects:Default::default(),done:Done {cell:0,worker:None,
             frame:Local {values:Default::default(),facts:Default::default(),completed_prefix:0},
-            piece:Piece {end:0,rows:Default::default(),units:rows,aliases:0,births:0,reuses:0}}}
+            piece:Piece {end:0,rows:Default::default(),units:rows,aliases:0,births:0,reuses:0,owner_results:Vec::new()}}}
     }
     fn constructor_units(unit_tables:usize)->(Graph,Vec<Completed>) {
         use std::sync::Arc;

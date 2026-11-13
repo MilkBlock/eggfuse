@@ -2155,10 +2155,6 @@ impl Executor {
         b: Binding,
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
     ) -> Result<()> {
-        if self.graph.needs_ownership_entry(rid) {
-            let anchors=self.graph.program.cell_ownership.entries[rid].iter().map(|&a|b.known.receipt(a)).collect::<smallvec::SmallVec<[_;4]>>();
-            self.graph.begin_owner_entry(rid,anchors);
-        }
         let result = (|| {
             let Some(mut execution) = self.start_cell_execution(rid, b, &[], false,
                 #[cfg(feature="structural-depth")] evidence)? else { return Ok(()) };
@@ -2180,6 +2176,13 @@ impl Executor {
         defer_constructor_prefix: bool,
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
     ) -> Result<Option<owned_cell::Execution>> {
+        // Both ordinary execution and worker admission start the same source
+        // Entry. Suspension moves it with the instance until source adoption.
+        if self.graph.needs_ownership_entry(rid) {
+            let anchors=self.graph.program.cell_ownership.entries[rid].iter()
+                .map(|&a|b.known.receipt(a)).collect();
+            self.graph.begin_owner_entry(rid,anchors);
+        }
         self.graph.observe_saturated_apply(rid, &b, !pending.is_empty());
         #[cfg(feature = "iterative-bake")]
         let mut b = b;

@@ -65,6 +65,7 @@ impl Graph {
                 #[cfg(feature="storage-metrics")]
                 let probe=crate::rhs_projection_trace::before(self,rule,cell,position,known);
                 receipts.record(position,row.witness);
+                self.composition_result_entry(cell,position,row.witness,!row.hidden);
                 let frame=self.rhs_frame_mut(cell).unwrap();
                 frame.values.insert(destination,row.values.last().unwrap().clone());
                 frame.completed_prefix=position+1;
@@ -105,7 +106,8 @@ impl Graph {
         let unit_epoch=plan.units.as_ref().map(|_|self.epoch);
         let limit=plan.steps.len();
         Ok((counts,Some(Job {cell,plan,frame:Local {values,facts:Default::default(),completed_prefix:position},
-            from,limit,first:position,anchor:position,key,isolated:false,fresh_root:Some(from),unit_epoch,root:Some(hash)})))
+            from,limit,first:position,anchor:position,key,isolated:false,fresh_root:Some(from),unit_epoch,root:Some(hash),
+            owner_results:self.needs_worker_owner_results(rule,cell)})))
     }
 }
 
