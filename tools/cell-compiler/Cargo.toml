@@ -62,6 +62,10 @@ name = "runtime_catalog_trace"
 required-features = ["sparse-cells", "storage-metrics"]
 
 [[example]]
+name = "worker_prefix_catalog_trace"
+required-features = ["iterative-bake", "cell-absorption", "view-ports", "parallel-publication"]
+
+[[example]]
 name = "audit_matched_handoffs"
 required-features = ["iterative-bake", "sparse-cells", "storage-metrics"]
 
