@@ -61,3 +61,50 @@ Still required: request construction from live multi-entry matching rather than
 observed traces; GPU dynamic scalar/neighborhood encoding; a proved complete
 ownership takeover; original Run closure and stage progression. This is a
 standalone mechanism and saved-input numerical audit, not full Eggcc execution.
+
+## Shared coefficient layouts and width buckets
+
+The live adapter now accepts a separate resident coefficient layout. A single
+layout broadcasts over a batch; a bank of layouts accepts one checked integer
+layout index per request. Source indices, generations, seed/query features,
+readiness and edge masks remain dynamic. Invalid layout indices block readiness.
+Both paths continue into the same proposal/admission call. This is a batched
+coefficient gather followed by dense floating operations, not a GPU traversal or
+per-port hash lookup. It still has gather cost and does not remove all indexing.
+
+The saved-input audit groups exactly identical ordered edge/channel coefficients,
+including provider multiplicity. This is numeric layout sharing, not a claim
+that distinct Cells have identical semantics. Layout discovery currently uses
+observed routes; the runtime compiler must supply legal layouts and live source
+bindings. `pack_audit_requests` explicitly provides generation-one oracle state
+and is not a runtime request builder.
+
+Exact-layout grouping alone reduced inputs to 16,899,235 bytes but fragmented
+execution into 1,558 batches. Width buckets instead pad shared layouts to the next
+power of two, keeping different layouts in the same dispatch. On the same 5,935
+saved inputs:
+
+| Layout | Uploaded coefficient + request bytes | Batches | Warm GPU batch sum |
+|---|---:|---:|---:|
+| Expanded | 80,748,229 | 93 | 51.20 ms |
+| Shared, width buckets | 19,391,897 | 96 | 47.09 ms |
+
+The shared total contains 9,745,824 static bytes and 9,646,073 dynamic bytes. This
+is a 76% input-byte reduction for this audit, not total runtime memory reduction.
+Warm time sums the minimum of three executions of each prepared batch, with a
+synchronization per batch. Preparation, upload/readback and actual matching are
+not included; no end-to-end speedup is claimed. Initial compilation is sensitive
+to persistent kernel caches: earlier first-use bucket execution took 2.80 s,
+while the recorded repeated audit took 0.0757 s. Neither is a portable startup
+estimate. Resident banks also retain padding and indexing overhead.
+
+Both current audit modes retain maximum reference difference 4.11272e-6 and
+identical direct-linked token MSE 0.00170610; this change does not improve model
+accuracy. 56 mechanism tests pass, including mixed indexed layouts, invalid index
+rejection, per-source generation checks and GPU numerical equivalence.
+
+Reproduce with `audit_device_ridge_transition.py TRACE MODEL OUTPUT`, adding
+`--shared-layouts` for exact grouping or `--bucket-layouts` for banked width
+buckets. Reports are `expanded-ridge-layout-results.json`,
+`shared-ridge-layout-results.json` and `bucket-ridge-layout-results.json`.
+Reference Bake tip remains `2232ef9b`. No native runtime code is changed here.

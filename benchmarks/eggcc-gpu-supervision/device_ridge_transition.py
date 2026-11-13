@@ -7,7 +7,7 @@ ownership coverage, scalar computation or a completion proof.
 from device_token_commit import closed_entry_proposals
 
 
-def infer(state, request, model, xp):
+def infer(state, request, model, xp, layout=None):
     sources=request['sources']
     mask=request['edge_valid']
     capacity=state['tokens'].shape[0]
@@ -20,30 +20,38 @@ def infer(state, request, model, xp):
     finite_source=xp.all(xp.isfinite(values),axis=2)
     usable=mask&live&finite_source
     values=xp.where(usable[:,:,None],values,0)
-    edge=xp.where(mask[:,:,None],request['edge'],0)
-    route=xp.where(mask[:,:,None],request['route'],0)
+    coefficients=request if layout is None else layout
+    layout_ready=xp.ones(sources.shape[0],dtype=xp.bool_)
+    edge=coefficients['edge'];route=coefficients['route']
+    if 'layout_index' in request:
+        index=request['layout_index']
+        layout_ready=(index>=0)&(index<edge.shape[0])
+        index=xp.clip(index,0,edge.shape[0]-1)
+        edge=edge[index];route=route[index]
+    edge=xp.where(mask[:,:,None],edge,0)
+    route=xp.where(mask[:,:,None],route,0)
     count=xp.maximum(xp.sum(mask.astype(xp.float32),axis=1),1)
     pool=(xp.swapaxes(route,1,2)@(values*edge))/xp.sqrt(count[:,None,None])
     pool=pool.reshape(sources.shape[0],-1)
     seed=request['seed'];q=request['q']
-    repeated=xp.concatenate([seed]*request['route'].shape[2],axis=1)
+    repeated=xp.concatenate([seed]*coefficients['route'].shape[2],axis=1)
     raw=xp.concatenate([seed,q,pool,repeated*pool],axis=1)
     features=xp.concatenate([xp.ones((seed.shape[0],1),dtype=xp.float32),raw,xp.tanh(raw@model['w'])],axis=1)
     tokens=xp.tanh(features@model['coef'])
     missing=xp.any(mask&~live,axis=1)
     nonfinite=xp.any(mask&~finite_source,axis=1)|~xp.all(xp.isfinite(tokens),axis=1)
-    ready=request['input_ready']&~missing&~nonfinite
+    ready=request['input_ready']&layout_ready&~missing&~nonfinite
     return tokens,dict(ready=ready,missing_source=missing,nonfinite=nonfinite,
-                       missing_input=~request['input_ready'],needs_attention=xp.any(~ready))
+                       missing_layout=~layout_ready,missing_input=~request['input_ready'],needs_attention=xp.any(~ready))
 
 
-def proposals(state,plan,stage,request,model,xp):
+def proposals(state,plan,stage,request,model,xp,layout=None):
     """Requests align with source-major, entry-minor compiled candidates.
 
     Replace the old square test transform, rather than evaluating both paths.
     Numerical readiness cannot grant query or effect/ownership coverage.
     """
-    tokens,marks=infer(state,request,model,xp)
+    tokens,marks=infer(state,request,model,xp,layout)
     p=closed_entry_proposals(state,plan,stage,xp,token_values=tokens)
     wanted=p['matched']
     p['matched']=wanted&marks['ready']

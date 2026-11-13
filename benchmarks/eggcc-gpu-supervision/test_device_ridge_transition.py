@@ -27,6 +27,39 @@ class RidgeTransition(unittest.TestCase):
         expected=np.tanh(features(r['seed'],r['q'],pool,m['w'],np)@m['coef'])
         np.testing.assert_allclose(out,expected,atol=1e-6);self.assertTrue(marks['ready'].all())
 
+    def test_shared_layout_preserves_dynamic_source_checks_on_gpu(self):
+        s,r,m=fixture()
+        layout={k:r.pop(k)[:1] for k in ('edge','route')}
+        expanded=dict(r,**{k:np.repeat(v,3,axis=0) for k,v in layout.items()})
+        expected,em=infer(s,expanded,m,np)
+        actual,marks=infer(s,r,m,np,layout)
+        np.testing.assert_allclose(actual,expected,atol=1e-6)
+        r['generations'][1,0]=99
+        self.assertFalse(infer(s,r,m,np,layout)[1]['ready'][1])
+        if mx.metal.is_available():
+            dev=lambda d:{k:mx.array(v) for k,v in d.items()}
+            ds,dr,dm,dl=map(dev,(s,r,m,layout))
+            out,mark=mx.compile(lambda state,req:infer(state,req,dm,mx,dl))(ds,dr)
+            mx.eval(out,mark)
+            np.testing.assert_allclose(np.array(out)[0],expected[0],atol=2e-6)
+            self.assertEqual(np.array(mark['ready']).tolist(),[True,False,True])
+
+    def test_indexed_layout_matches_expanded_and_rejects_invalid_index(self):
+        s,r,m=fixture();layout={k:r.pop(k) for k in ('edge','route')}
+        index=np.array([2,0,1],np.int32);r['layout_index']=index
+        expanded=dict(r,**{k:v[index] for k,v in layout.items()});expanded.pop('layout_index')
+        expected,_=infer(s,expanded,m,np)
+        out,marks=infer(s,r,m,np,layout)
+        np.testing.assert_allclose(out,expected,atol=1e-6)
+        r['layout_index'][1]=-1
+        self.assertEqual(infer(s,r,m,np,layout)[1]['ready'].tolist(),[True,False,True])
+        if mx.metal.is_available():
+            dev=lambda d:{k:mx.array(v) for k,v in d.items()}
+            ds,dr,dm,dl=map(dev,(s,r,m,layout))
+            out,mark=mx.compile(lambda state,req:infer(state,req,dm,mx,dl))(ds,dr);mx.eval(out,mark)
+            np.testing.assert_allclose(np.array(out)[[0,2]],expected[[0,2]],atol=2e-6)
+            self.assertEqual(np.array(mark['ready']).tolist(),[True,False,True])
+
     def test_generation_dirty_and_missing_inputs(self):
         for cause in ('generation','token_dirty','visible','settled','input_ready'):
             s,r,m=fixture()
