@@ -1,0 +1,30 @@
+{
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "scope": "Oracle captured-state encoding audit, not predicted completion or autonomous GPU runtime",
+  "cases": 5553,
+  "excluded_incomplete": 382,
+  "template_groups": 154,
+  "batches": 192,
+  "max_slots": 396,
+  "maximum_partition_mask_elements": 156816,
+  "total_uploaded_input_bytes": 12123972,
+  "preparation_seconds": 0.1247964542126283,
+  "cpu_reference_encoding_seconds": 0.17000974348047748,
+  "gpu_upload_seconds": 0.003182320506311953,
+  "gpu_encoding_seconds_including_compilation": 1.0999196142074652,
+  "readback_seconds": 0.000720576848834753,
+  "max_absolute_difference": 6.258487701416016e-07,
+  "outside_tolerance": 0,
+  "absolute_tolerance": 2e-05,
+  "finite": true,
+  "passed": true,
+  "backpropagation": false,
+  "accuracy_gain_claimed": false,
+  "limitations": [
+    "Audit remaps exact typed identities to local class labels; not a runtime identity allocator",
+    "Dynamic scalar codes prepared on CPU for audit; runtime scalar production remains required",
+    "Template groups and batches selected on CPU in this audit driver",
+    "Dense Eq-partition masks have quadratic slot cost",
+    "Cold aggregate costs include multiple compiled shapes; not a runtime speed benchmark"
+  ]
+}
