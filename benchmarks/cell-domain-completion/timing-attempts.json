@@ -1,0 +1,20 @@
+[
+  {
+    "artifacts": "out/cell-domain-completion-timing",
+    "status": "interrupted-by-concurrent-work",
+    "phase": "after control Raytrace warmup, before candidate",
+    "compiler_pids": [
+      75493,
+      75503,
+      75536
+    ],
+    "followup_workload_pid": 75610,
+    "policy": "retain all samples; no performance comparison; a subsequent trial starts all control workloads again"
+  },
+  {
+    "artifacts": "out/cell-domain-completion-timing-2",
+    "status": "completed-samples-postprocessing-recovered",
+    "original_exit_code": 1,
+    "reason": "Missing hashlib.file_digest on isolated-checkout Python; streaming checksum replacement verifies the same saved samples and frozen references. No timing rerun."
+  }
+]

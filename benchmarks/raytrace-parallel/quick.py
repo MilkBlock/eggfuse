@@ -67,7 +67,10 @@ def verify_frozen_references(result, control, candidate):
                 digest = timer['sha'](state)
             else:
                 with gzip.open(str(state) + '.gz', 'rb') as stream:
-                    digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+                    checksum = hashlib.sha256()
+                    for block in iter(lambda: stream.read(1 << 20), b''):
+                        checksum.update(block)
+                    digest = checksum.hexdigest()
             schedule = [[step[k] for k in timer['KEYS']] for step in report['steps']]
             assert result['workloads'][case][label]['semantic_reference'] == {
                 'state_sha256': digest,
@@ -134,6 +137,15 @@ def run(control, candidate, output, result_path):
             result['groups'].append({'lane': label, 'case': case, 'directory': group.name,
                                      'execution_order': raw['execution_order']})
             guard(result, output, 'after-group', label, case)
+    finish(result, control, candidate, result_path)
+
+
+def finish(result, control, candidate, result_path):
+    """Finalize a completed trial; never launch, replace or combine samples."""
+    assert [(g['lane'], g['case']) for g in result['groups']] == [
+        ('control', 'sum'), ('control', 'ray'), ('candidate', 'sum'), ('candidate', 'ray')]
+    assert result['observations'][-1]['phase'] == 'after-group'
+    assert not any(o['compilers'] or o['workloads'] for o in result['observations'])
     for case, data in result['workloads'].items():
         before, after = (data[label]['medians']['inference_seconds'] for label in ('control', 'candidate'))
         data['inference_change_percent'] = (after / before - 1) * 100

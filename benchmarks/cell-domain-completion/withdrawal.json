@@ -1,0 +1,35 @@
+{
+  "withdrawn_experiment": "254cb07f",
+  "restored_source": "b1ab039d",
+  "exact_restored_files": [
+    "Cargo.lock",
+    "engine/cell-runtime/Cargo.toml",
+    "engine/cell-runtime/src/neighbor.rs",
+    "engine/cell-runtime/src/query.rs",
+    "engine/cell-runtime/src/query_expansion_workers.rs",
+    "engine/cell-runtime/src/query_snapshot.rs",
+    "engine/cell-runtime/src/runtime.rs",
+    "tools/cell-compiler/tests/cell_absorption.rs"
+  ],
+  "removed_file": "engine/cell-runtime/src/neighbor_completion.rs",
+  "unrelated_later_changes": "preserved; other worktree writers are outside this withdrawal",
+  "test": {
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-p",
+      "eggfuse-cell-compiler",
+      "--features",
+      "iterative-bake,cell-absorption,view-ports,parallel-publication",
+      "--test",
+      "cell_absorption"
+    ],
+    "environment": {
+      "CARGO_INCREMENTAL": "0",
+      "CARGO_BUILD_JOBS": "1"
+    },
+    "exit_code": 0
+  },
+  "withdrawal_commit": "9eb78c49"
+}
