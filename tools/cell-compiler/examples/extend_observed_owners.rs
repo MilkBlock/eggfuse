@@ -2,13 +2,23 @@
 use eggfuse_cell_runtime::{program::Program, checksum::{artifact_digest, canonical}, graph::cell_ownership::composition};
 use serde_json::{Value, json};
 use std::{collections::BTreeSet, fs};
-fn select(raw:&mut Value, trace:&Value, budget:usize)->Result<Value,Box<dyn std::error::Error>> {
+fn select(raw:&mut Value, trace:&Value, budget:usize, capacity:Option<usize>)->Result<Value,Box<dyn std::error::Error>> {
     let observed=&trace["catalog_trace"];
     if trace["all_saved_run_checks_equal"]!=true || observed["schema"]!="eggfuse-ownership-catalog-trace/v1"
         || trace["runs"].as_u64().is_none_or(|runs|runs==0)
         || raw["sha256"].as_str().is_none() || observed["catalog_sha256"]!=raw["sha256"]
         || observed["source"]!=composition::source_digest(raw) {
         return Err("source-bound audited passive catalog trace required".into());
+    }
+    let capacity=match capacity {
+        Some(n)=>n,
+        None=>raw["ownership_fragments"].get("max_fragments")
+            .map(|v|v.as_u64().and_then(|n|usize::try_from(n).ok()).ok_or("invalid fragment capacity"))
+            .transpose()?.unwrap_or(256),
+    };
+    if !(1..=4096).contains(&capacity) {return Err("fragment capacity must be in 1..=4096".into());}
+    if raw["ownership_fragments"]["fragments"].as_array().is_some_and(|f|f.len()>capacity) {
+        return Err("fragment capacity cannot discard seed paths".into());
     }
     // A source without a selected catalog still has the implicit singleton
     // shapes. Start from that empty transition language rather than requiring
@@ -59,7 +69,7 @@ fn select(raw:&mut Value, trace:&Value, budget:usize)->Result<Value,Box<dyn std:
         let subsumed=|old:&Value|old["root"]==f["root"]
             && hops.starts_with(old["hops"].as_array().unwrap());
         let replaces=fragments.iter().filter(|old|subsumed(old)).count();
-        if fragments.len()+1-replaces>256 {capacity_rejections+=1;continue;}
+        if fragments.len()+1-replaces>capacity {capacity_rejections+=1;continue;}
         let last=hops.last().unwrap();
         // Alternative Entries for one observed source/consumer overlap. Admit
         // one candidate per group rather than adding their support as savings.
@@ -72,9 +82,10 @@ fn select(raw:&mut Value, trace:&Value, budget:usize)->Result<Value,Box<dyn std:
     }
     let extent=raw["ownership_fragments"]["max_frames"].as_u64().unwrap_or(4).max(8);
     raw["ownership_fragments"]["max_frames"]=json!(extent);
+    raw["ownership_fragments"]["max_fragments"]=json!(capacity);
     raw.as_object_mut().unwrap().remove("ownership_markers");
     let report=json!({"scope":"passive proposal selection; not measured savings",
-        "seed_fragments":before,"maximal_seed_fragments":maximal_seed,"added_fragments":chosen.len(),
+        "seed_fragments":before,"maximal_seed_fragments":maximal_seed,"max_fragments":capacity,"added_fragments":chosen.len(),
         "replaced_prefixes":replaced_prefixes,"capacity_rejections":capacity_rejections,"max_frames":extent,
         "trace_catalog_sha256":observed["catalog_sha256"],"selected":chosen,
         "obligations":["typed Entry substitutions rechecked by Program loader", "runtime source/visibility/lifetime checks unchanged", "all seed paths retained through maximal prefix coverage; changed dispatch contexts require execution admission"]});
@@ -84,11 +95,11 @@ fn select(raw:&mut Value, trace:&Value, budget:usize)->Result<Value,Box<dyn std:
 }
 fn main()->Result<(),Box<dyn std::error::Error>> {
     let args=std::env::args().skip(1).collect::<Vec<_>>();
-    if args.len()!=4 {return Err("usage: extend_observed_owners PROGRAM TRACE BUDGET NEW_DIR".into());}
+    if args.len()!=4 && args.len()!=5 {return Err("usage: extend_observed_owners PROGRAM TRACE BUDGET NEW_DIR [MAX_FRAGMENTS]".into());}
     let mut raw:Value=serde_json::from_slice(&fs::read(&args[0])?)?;
     let trace:Value=serde_json::from_slice(&fs::read(&args[1])?)?;
     let mut seed=Program::parse(raw.clone())?;seed.prepare_cell_ownership()?;
-    let mut report=select(&mut raw,&trace,args[2].parse()?)?;
+    let mut report=select(&mut raw,&trace,args[2].parse()?,args.get(4).map(|s|s.parse()).transpose()?)?;
     let mut checked=Program::parse(raw)?;checked.prepare_cell_ownership()?;
     let edges=|p:&Program| {
         let plan=&p.cell_ownership.composition;
@@ -121,15 +132,15 @@ mod tests {
                     "matched_births":4,"available_shared_inputs":4,"static_instruction_handles":2}]}});
             let before=raw.clone();
             trace["all_saved_run_checks_equal"]=json!(false);
-            assert!(select(&mut raw,&trace,32).is_err());assert_eq!(raw,before);
+            assert!(select(&mut raw,&trace,32,None).is_err());assert_eq!(raw,before);
             trace["all_saved_run_checks_equal"]=json!(true);
             trace["catalog_trace"]["catalog_sha256"]=json!("stale-catalog");
-            assert!(select(&mut raw,&trace,32).is_err());assert_eq!(raw,before);
+            assert!(select(&mut raw,&trace,32,None).is_err());assert_eq!(raw,before);
             trace["catalog_trace"]["catalog_sha256"]=raw["sha256"].clone();
             trace["catalog_trace"]["source"]=json!("different");
-            assert!(select(&mut raw,&trace,32).is_err());assert_eq!(raw,before);
+            assert!(select(&mut raw,&trace,32,None).is_err());assert_eq!(raw,before);
             trace["catalog_trace"]["source"]=composition::source_digest(&raw).into();
-            let report=select(&mut raw,&trace,32).unwrap();
+            let report=select(&mut raw,&trace,32,None).unwrap();
             assert_eq!(report["seed_fragments"],0);assert_eq!(report["added_fragments"],1);
             assert_eq!(raw["ownership_fragments"]["schema"],format!("eggfuse-ownership-fragments/{version}"));
         }
@@ -144,7 +155,19 @@ mod tests {
         let trace=json!({"all_saved_run_checks_equal":true,"runs":1,"catalog_trace":{"catalog_sha256":raw["sha256"],
             "schema":"eggfuse-ownership-catalog-trace/v1","source":composition::source_digest(&raw),
             "records":[row(999,vec![hop(2)],100),row(7,vec![hop(1),hop(3)],10)]}});
-        let result=select(&mut raw,&trace,32).unwrap();
+        let mut wider=raw.clone();
+        let wide=select(&mut wider,&trace,32,Some(512)).unwrap();
+        assert_eq!(wide["added_fragments"],2);
+        assert_eq!(wide["capacity_rejections"],0);
+        assert_eq!(wider["ownership_fragments"]["fragments"].as_array().unwrap().len(),257);
+        assert_eq!(wider["ownership_fragments"]["max_fragments"],512);
+        let mut configured=raw.clone();
+        configured["ownership_fragments"]["max_fragments"]=json!(512);
+        let inherited=select(&mut configured,&trace,32,None).unwrap();
+        assert_eq!(inherited["added_fragments"],2);
+        assert!(select(&mut raw.clone(),&trace,32,Some(128)).is_err());
+        assert!(select(&mut raw.clone(),&trace,32,Some(4097)).is_err());
+        let result=select(&mut raw,&trace,32,None).unwrap();
         assert_eq!(result["added_fragments"],1);
         assert_eq!(result["replaced_prefixes"],1);
         assert_eq!(result["capacity_rejections"],1);
@@ -167,7 +190,7 @@ mod tests {
         let trace=json!({"all_saved_run_checks_equal":true,"runs":1,"catalog_trace":{"catalog_sha256":raw["sha256"],
             "schema":"eggfuse-ownership-catalog-trace/v1","source":composition::source_digest(&raw),
             "records":[row(0,10),row(1,5)]}});
-        let result=select(&mut raw,&trace,32).unwrap();
+        let result=select(&mut raw,&trace,32,None).unwrap();
         assert_eq!(result["maximal_seed_fragments"],1);
         assert_eq!(result["added_fragments"],1);
         let paths=raw["ownership_fragments"]["fragments"].as_array().unwrap();
@@ -177,6 +200,6 @@ mod tests {
         }
         assert_eq!(result["selected"][0]["matched_births"],10);
         let mut invalid=trace;invalid["all_saved_run_checks_equal"]=json!(false);
-        assert!(select(&mut raw,&invalid,1).is_err());
+        assert!(select(&mut raw,&invalid,1,None).is_err());
     }
 }

@@ -1,0 +1,199 @@
+{
+  "scope": "actual standalone Cell runtime; rejected catalog variants, no new selected memory result",
+  "baseline_graph_bytes": 1242855,
+  "baseline_program_bytes": 107935263,
+  "selected_changed": false,
+  "jobs": {
+    "audited_trace": 391,
+    "depth_batch": 393,
+    "selector_tests": 395,
+    "selector_build": 397,
+    "width_batch": 398
+  },
+  "batches": {
+    "depth": {
+      "runs": 882,
+      "records": 1464,
+      "hop_distribution": {
+        "1": 544,
+        "2": 306,
+        "3": 193,
+        "4": 421
+      },
+      "eligible_hop_distribution": {
+        "1": 61,
+        "2": 121,
+        "3": 50,
+        "4": 168
+      },
+      "saturation": {
+        "missing_local_constructor": 4515,
+        "rhs_covered_by_inputs": 222,
+        "write_effect": 1044,
+        "primitive_proof_missing": 357,
+        "rhs_covered": 160,
+        "nontrivial_union": 157,
+        "visibility_effect": 75,
+        "no_local_component": 2
+      },
+      "batches": [
+        {
+          "budget": 32,
+          "added_fragments": 32,
+          "replaced_prefixes": 32,
+          "graph_bytes": 1246523,
+          "program_bytes": 107912757,
+          "same_final_digest": true,
+          "same_runs": true
+        },
+        {
+          "budget": 128,
+          "added_fragments": 60,
+          "replaced_prefixes": 60,
+          "graph_bytes": 1254095,
+          "program_bytes": 108200201,
+          "same_final_digest": true,
+          "same_runs": true
+        },
+        {
+          "budget": 256,
+          "added_fragments": 60,
+          "replaced_prefixes": 60,
+          "graph_bytes": 1254095,
+          "program_bytes": 108200201,
+          "same_final_digest": true,
+          "same_runs": true
+        }
+      ]
+    },
+    "capacity512": {
+      "runs": 882,
+      "records": 1464,
+      "hop_distribution": {
+        "1": 544,
+        "2": 306,
+        "3": 193,
+        "4": 421
+      },
+      "eligible_hop_distribution": {
+        "1": 61,
+        "2": 121,
+        "3": 50,
+        "4": 168
+      },
+      "saturation": {
+        "missing_local_constructor": 4515,
+        "rhs_covered_by_inputs": 222,
+        "write_effect": 1044,
+        "primitive_proof_missing": 357,
+        "rhs_covered": 160,
+        "nontrivial_union": 157,
+        "visibility_effect": 75,
+        "no_local_component": 2
+      },
+      "batches": [
+        {
+          "budget": 32,
+          "max_fragments": 512,
+          "added_fragments": 32,
+          "replaced_prefixes": 9,
+          "graph_bytes": 1246671,
+          "program_bytes": 107924312,
+          "same_final_digest": true,
+          "same_runs": true
+        },
+        {
+          "budget": 128,
+          "max_fragments": 512,
+          "added_fragments": 128,
+          "replaced_prefixes": 25,
+          "graph_bytes": 1251591,
+          "program_bytes": 108744790,
+          "same_final_digest": true,
+          "same_runs": true
+        },
+        {
+          "budget": 256,
+          "max_fragments": 512,
+          "added_fragments": 256,
+          "replaced_prefixes": 51,
+          "graph_bytes": 1252975,
+          "program_bytes": 109962056,
+          "same_final_digest": true,
+          "same_runs": true
+        }
+      ]
+    },
+    "capacity1024": {
+      "runs": 882,
+      "records": 1464,
+      "hop_distribution": {
+        "1": 544,
+        "2": 306,
+        "3": 193,
+        "4": 421
+      },
+      "eligible_hop_distribution": {
+        "1": 61,
+        "2": 121,
+        "3": 50,
+        "4": 168
+      },
+      "saturation": {
+        "missing_local_constructor": 4515,
+        "rhs_covered_by_inputs": 222,
+        "write_effect": 1044,
+        "primitive_proof_missing": 357,
+        "rhs_covered": 160,
+        "nontrivial_union": 157,
+        "visibility_effect": 75,
+        "no_local_component": 2
+      },
+      "batches": [
+        {
+          "budget": 32,
+          "max_fragments": 1024,
+          "added_fragments": 32,
+          "replaced_prefixes": 9,
+          "graph_bytes": 1246671,
+          "program_bytes": 107924312,
+          "same_final_digest": true,
+          "same_runs": true
+        },
+        {
+          "budget": 128,
+          "max_fragments": 1024,
+          "added_fragments": 128,
+          "replaced_prefixes": 25,
+          "graph_bytes": 1251591,
+          "program_bytes": 108744790,
+          "same_final_digest": true,
+          "same_runs": true
+        },
+        {
+          "budget": 256,
+          "max_fragments": 1024,
+          "added_fragments": 256,
+          "replaced_prefixes": 51,
+          "graph_bytes": 1252975,
+          "program_bytes": 109962056,
+          "same_final_digest": true,
+          "same_runs": true
+        }
+      ]
+    }
+  },
+  "source_stage_opportunity": {
+    "source_frames": 2177,
+    "physical_owners": 307,
+    "owner_stage_groups": 352,
+    "mixed_stage_owners": 39,
+    "exceptions_to_owner_majority_stage": 80,
+    "source_record_bytes": 80,
+    "owner_record_bytes": 80,
+    "scope": "saved exact runtime metadata equality; not a static invariant or implemented saving"
+  },
+  "sha256": {
+    "trace": "581334d9eb81e36dc3dee08fbdf9be621d131a0fec6dc9aeb559489766e7946c"
+  }
+}
