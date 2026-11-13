@@ -1,0 +1,23 @@
+{
+  "control_commit": "57813edd",
+  "candidate_commit": "e97ebde4f3bb6901efb6095dd8a836940ea67444",
+  "runtime_sources": {
+    "engine/cell-runtime/src/parallel_publication.rs": "6dba6570c4a2cbf8f7a00dac8dd077272ce317ef7766069f5636f2087673ecd3",
+    "engine/cell-runtime/src/sieve_publication.rs": "6c6a7fa552be1916ee9d3137a316071edaa1071a592a6498aa224f932596fa01",
+    "engine/cell-runtime/src/sieve_table_events.rs": "d4e68cd6dd883bc1c293accdce2322756794a4b584dc91d4b8fbb68405154366",
+    "tools/cell-compiler/tests/parallel_publication.rs": "e2c28f0ff1c6f143c4a3b9ef44cb6c596b0b80aa4bae7a8cabd8073117aba66b"
+  },
+  "control_runtime_sha256": "f449bd0a4c0eb0908dbc780a5a09b1c8688b4178fdb5e3cef40bb47e0c8ca67e",
+  "candidate_runtime_sha256": "c1496d7a2ece0dcd8ec5c6aa07fb282973542bc62fbfb1ec7ec542664c97c15b",
+  "reference_job": "37",
+  "validation_job": "40",
+  "work_job": "42",
+  "timing_jobs": {
+    "interrupted": "43",
+    "short": "46",
+    "fixed_15_7": "48"
+  },
+  "adopted": false,
+  "experiment_branch": "codex/table-entry-events",
+  "fixed_count_harness_commit": "4205ca2e"
+}

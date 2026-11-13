@@ -1,0 +1,21 @@
+[
+  {
+    "job": "43",
+    "status": "interrupted on known unmanaged competition",
+    "archive": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-table-entry-events/timing/progress.json",
+    "archive_sha256": "d6ade670f39228076305550375aaa09c5f98754294584b4ffb18752e364d6419",
+    "last_boundary": {
+      "utc": "2026-11-13T11:16:37.117300+00:00",
+      "compilers": [],
+      "workloads": [
+        "74685   0.0 target/debug/examples/emit_cell_source"
+      ],
+      "phase": "after-sample",
+      "lane": "control",
+      "case": "sum",
+      "iteration": 0,
+      "process_scope": "CPU >= 1 percent or guarded compiler/runtime"
+    },
+    "reuse_samples": false
+  }
+]
