@@ -103,7 +103,8 @@ impl Graph {
         let start=plan.partition_point(|p|p.0<slot);
         plan[start..].iter().take_while(|p|p.0==slot).find_map(|&(_,op,col)| {
             if excluding==Some(op) {return None;}
-            let value=self.read_stable_column(self.stable_node(FactRef{cell,op})?,col).ok()?;
+            let node=self.stable_node(FactRef{cell,op})?;
+            let value=self.read_stable_column(&node,col).ok()?;
             matches!(value,Value::Int(_)|Value::Float(_)|Value::Text(_)).then_some(value)
         })
     }
@@ -131,7 +132,7 @@ impl Graph {
             let present=if let Some(c)=self.cells.get(&f.cell) {c.values.get(&slot).is_some()}
                 else {self.cells.completed_slots(f.cell).is_some_and(|s|s.get(&slot).is_some())};
             if present || self.completed_scalar_slot(f.cell,meta.template,slot,Some(op)).is_some() {continue;}
-            if let Some(value)=self.stable_node(f).and_then(|s|self.read_stable_column(s,col).ok()) {
+            if let Some(value)=self.stable_node(f).and_then(|s|self.read_stable_column(&s,col).ok()) {
                 if !restore.iter().any(|(s,_)|*s==slot) {restore.push((slot,value));}
             }
         }

@@ -29,7 +29,7 @@ pub struct Plan {
     format: wire::Format,
     pub tables: Vec<bool>,
     pub markers: Vec<Marker>,
-    pub programs: Vec<Arc<PortProgram>>,
+    pub programs: Arc<Vec<Arc<PortProgram>>>,
     /// Structure-of-arrays dispatch: native ports retain a compact pointer
     /// array; operator tags are compiled separately from source instructions.
     #[serde(skip)]
@@ -137,7 +137,7 @@ impl Plan {
         let composition = composition::Plan::derive(p, &markers, &programs, &entries, format)?;
         let mut plan = Self {
             format,
-            programs,
+            programs: Arc::new(programs),
             code_programs: vec![],
             code_operators: vec![],
             query_classes: None,
@@ -938,8 +938,8 @@ impl Graph {
                     across += u64::from(s.born < self.epoch);
                     let program =
                         &self.program.cell_ownership.markers[self.cells.cell_metadata(f.cell).unwrap().template].program;
-                    let values = if let Some(stored) = self.stable_ports.as_ref().and_then(|p| p.nodes.get(&f)) {
-                        self.stable_values(stored, false).expect("read owned stable body")
+                    let values = if let Some(stored) = self.stable_node_unmetered(f) {
+                        self.stable_values(&stored, false).expect("read owned stable body")
                     } else { s.decoded.as_ref().expect("settled owned body").1.clone() };
                     for (column, v) in values.iter().enumerate() {
                         if let Value::Eq(id) = v {

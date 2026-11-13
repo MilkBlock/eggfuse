@@ -1249,7 +1249,7 @@ impl Graph {
     }
     fn fact_column(&self, f: FactRef, col: usize) -> Result<Value> {
         if let Some(stored) = self.stable_node(f) {
-            return self.read_stable_column(stored, col);
+            return self.read_stable_column(&stored, col);
         }
         // Recipe parameters are immutable even after this fact is hidden/deleted.
         // Derived Cells can keep their binding without copying the parent's fields.
@@ -1303,7 +1303,7 @@ impl Graph {
             return Ok(None);
         };
         if let Some(stored) = self.stable_node(f) {
-            return self.read_stable_fact(f, s, stored).map(Some);
+            return self.read_stable_fact(f, s, &stored).map(Some);
         }
         if let Some((table, values)) = &s.decoded {
             return Ok(Some(Row {
@@ -2046,7 +2046,7 @@ impl Graph {
         if actual != table { return Ok(None); }
         // Match fact()'s precedence without materializing its key columns.
         let value = if let Some(stored) = self.stable_node(witness) {
-            self.read_stable_column(stored, args.len())?
+            self.read_stable_column(&stored, args.len())?
         } else if let Some((_, values)) = &state.decoded {
             values.last().expect("constructor result").clone()
         } else {
@@ -2668,7 +2668,7 @@ impl Graph {
             let s = self
                 .cells.remove_fact_state(f)
                 .unwrap();
-            self.retire_stable_node(f);
+            self.retire_stable_node(f, s.owned);
             #[cfg(feature = "receipt-slots")]
             if s.port_slot != 0 {
                 self.retired_port_slots

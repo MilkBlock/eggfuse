@@ -179,3 +179,31 @@ Reproduce without executing the workload again:
 ```sh
 python3 benchmarks/cell-bake-owner-merge/template_projection_census.py out/cell-explicit-barriers benchmarks/cell-bake-owner-merge/template-projection-census.json
 ```
+
+## Projection implementation integration
+
+Adapted the runtime portion of structural commit `8ca2cc62` to this branch.
+`use_template_stable_fields()` removes scalar-free stable-node records at a
+settled boundary and omits their later insertions. FactState remains the liveness
+authority. Scalar-bearing records keep their actual values. Shared program/shape
+wiring replaces per-node Arc handles; field reads resolve existing frame ordinals.
+No parallel binding graph or per-producer consumer list was added.
+
+Ordinary borrowed worker guards support projection. Overlapped completion batches
+currently reject this opt-in mode in either configuration order: the candidate
+membership snapshot still needs integration. The default materialized path keeps
+its epoch snapshot and now shares program/shape directories. This is an explicit
+incomplete integration boundary, not completion of the parallel compression goal.
+
+49 ownership, 11 completion-batch, 5 parallel-guard and 2 read-guard tests pass.
+The new projection test compares every Run through union, deletion and later
+stages with zero/two query workers, and asserts actual record removal. Build:
+
+```sh
+CARGO_INCREMENTAL=0 cargo test --locked -p eggfuse-cell-compiler --features sparse-cells,storage-metrics,eggfuse-cell-runtime/slot-transfer-audit --test cell_ownership --test completion_batches --test parallel_guards --test read_guards
+```
+
+These tests establish the covered execution behavior; fresh full-workload memory
+and per-Run comparisons remain required before claiming a branch-level reduction.
+The previously measured structural-branch savings are not reused as this branch's
+results. This removes duplicate stable metadata, not logical egraph facts.

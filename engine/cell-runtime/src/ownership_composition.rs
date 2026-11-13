@@ -572,7 +572,7 @@ pub(super) struct Runtime {
     // Coordinator-only lifetime metadata. Guards never consult these counts.
     pub live_facts: Vec<usize>,
     pub frames: Frames,
-    pub shapes: Vec<Option<Arc<Shape>>>,
+    pub shapes: Arc<Vec<Option<Arc<Shape>>>>,
     pub learned_transitions: HashMap<Key, usize>,
     pub training: Option<Training>,
     pub catalog_trace: Option<Box<CatalogTrace>>,
@@ -602,7 +602,7 @@ impl Runtime {
             components: Default::default(),
             live_facts: vec![],
             frames: Frames::default(),
-            shapes: p.shapes.iter().cloned().map(Some).collect(),
+            shapes: Arc::new(p.shapes.iter().cloned().map(Some).collect()),
             learned_transitions: HashMap::default(),
             training: None,
             catalog_trace: None,
@@ -860,7 +860,7 @@ impl Graph {
                         fragment.hops.push(key.hop.clone());
                         t.fragments.push(fragment);
                         let id = m.composition.shapes.len();
-                        m.composition.shapes.push(Some(Arc::new(code)));
+                        Arc::make_mut(&mut m.composition.shapes).push(Some(Arc::new(code)));
                         m.composition.learned_transitions.insert(key, id);
                         m.stats.composition_shape_builds += 1;
                         m.stats.composition_materializations += 1;

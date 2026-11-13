@@ -11,6 +11,8 @@ pub(super) struct Snapshot {
     nodes: Arc<HashMap<FactRef, Stored>>,
     components: Arc<Vec<Option<composition::Component>>>,
     pending: Arc<Vec<BTreeMap<FactRef, u64>>>,
+    programs: Arc<Vec<Arc<PortProgram>>>,
+    shapes: Arc<Vec<Option<Arc<composition::Shape>>>>,
 }
 #[derive(Clone, Copy, Default, Serialize)]
 pub(super) struct EpochWork {
@@ -37,6 +39,10 @@ impl EpochWork {
 impl Snapshot {
     pub fn reader(&self) -> ReadView<'_> {
         ReadView {
+            #[cfg(feature="sparse-cells")]
+            projected: None,
+            programs: &self.programs,
+            shapes: &self.shapes,
             parents: crate::value::parent_epoch::Read {
                 base: &self.parents,
                 delta: None,
@@ -59,6 +65,8 @@ impl Snapshot {
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize)]
 pub struct Work {
     pub node_lookups: u64,
+    pub template_node_projections: u64,
+    pub field_layout_reads: u64,
     pub port_reads: u64,
     pub parent_probes: u64,
     pub key_fields: u64,
@@ -71,14 +79,26 @@ pub struct Work {
 /// relation. It contains no Graph, Rc, interior counters, locks or copied rows.
 #[derive(Clone, Copy)]
 pub struct ReadView<'a> {
+    #[cfg(feature="sparse-cells")]
+    projected: Option<Projection<'a>>,
+    programs: &'a [Arc<PortProgram>],
+    shapes: &'a [Option<Arc<composition::Shape>>],
     parents: crate::value::parent_epoch::Read<'a>,
     components: crate::read_epoch::SlotsRead<'a, Option<composition::Component>>,
     nodes: crate::read_epoch::MapRead<'a, FactRef, Stored>,
 }
 
+#[cfg(feature="sparse-cells")]
+#[derive(Clone, Copy)]
+struct Projection<'a> {
+    cells: &'a crate::graph::arena::Cells,
+    frames: &'a composition::Frames,
+    operators: &'a [Vec<usize>],
+}
+
 pub struct KeyGuard<'a> {
     view: ReadView<'a>,
-    target: &'a Stored,
+    target: Cow<'a, Stored>,
     table: usize,
     key: &'a [Value],
 }
@@ -90,15 +110,48 @@ impl KeyGuard<'_> {
         let mut work = Work::default();
         let result = self
             .view
-            .key_matches(self.target, self.table, self.key, &mut work);
+            .key_matches(&self.target, self.table, self.key, &mut work);
         (result, work)
     }
 }
 
-impl ReadView<'_> {
-    pub(in crate::graph::cell_ownership) fn node(&self, fact: FactRef, work: &mut Work) -> Option<&Stored> {
+impl<'a> ReadView<'a> {
+    pub(super) fn fields<'b>(&self, node: &'b Stored) -> Result<FieldView<'b>> where 'a: 'b {
+        let fields = &node.fields;
+        let component = self.components.get(fields.component as usize).and_then(Option::as_ref)
+            .ok_or("expired stable field component")?;
+        let shape = self.shapes.get(component.shape).and_then(Option::as_ref)
+            .ok_or("missing stable field shape")?;
+        let program = self.programs.get(*shape.programs.get(fields.frame).ok_or("stable field frame")?)
+            .ok_or("stable field program")?;
+        Ok(FieldView { component: fields.component,
+            columns: program.fields.get(fields.operation as usize).ok_or("stable field operation")?,
+            ports: shape.ports.get(fields.frame).ok_or("stable field ports")?, scalars: &fields.scalars })
+    }
+
+    pub(in crate::graph::cell_ownership) fn node(&self, fact: FactRef, work: &mut Work) -> Option<Cow<'a, Stored>> {
         work.node_lookups += 1;
-        self.nodes.get(&fact)
+        if let Some(node) = self.nodes.get(&fact) {return Some(Cow::Borrowed(node));}
+        #[cfg(feature="sparse-cells")]
+        if let Some(node) = self.project_node(fact) {
+            work.template_node_projections += 1;
+            return Some(Cow::Owned(node));
+        }
+        None
+    }
+    #[cfg(feature="sparse-cells")]
+    pub(super) fn project_node(&self, fact: FactRef) -> Option<Stored> {
+        let source = self.projected?;
+        let state = source.cells.fact_state(fact)?;
+        if !state.owned || state.decoded.is_some() {return None;}
+        let frame = source.frames.get(&fact.cell)?;
+        let component = self.components.get(frame.component as usize)?.as_ref()?;
+        let shape = self.shapes.get(component.shape)?.as_ref()?;
+        let program = self.programs.get(*shape.programs.get(frame.ordinal)?)?;
+        let fields = program.fields.get(fact.op as usize)?;
+        if fields.is_empty() || fields.iter().any(Option::is_none) {return None;}
+        Some(Stored {table:*source.operators.get(frame.code)?.get(fact.op as usize)?,
+            fields:Fields{component:frame.component,frame:frame.ordinal,operation:fact.op,scalars:Box::default()}})
     }
     pub fn read_port(&self, port: PortRef) -> Result<Value> {
         self.read_port_counted(port).map(|(value, _)| value)
@@ -151,10 +204,11 @@ impl ReadView<'_> {
         key: &[Value],
         work: &mut Work,
     ) -> Result<bool> {
-        if target.table != table || target.fields.len() != key.len() + 1 {
-            return Ok(false);
-        }
-        for (field, value) in target.fields.iter().zip(key) {
+        if target.table != table { return Ok(false); }
+        work.field_layout_reads += 1;
+        let fields = self.fields(target)?;
+        if fields.len() != key.len() + 1 { return Ok(false); }
+        for (field, value) in fields.iter().zip(key) {
             work.key_fields += 1;
             if !self.field_matches(&field, value, work)? {
                 return Ok(false);
@@ -165,7 +219,8 @@ impl ReadView<'_> {
 
     #[cfg(feature = "sparse-cells")]
     pub(in crate::graph::cell_ownership) fn result(&self, node: &Stored, work: &mut Work) -> Result<Value> {
-        self.field_value(&node.fields.last().ok_or("constructor without result")?, true, work)
+        work.field_layout_reads += 1;
+        self.field_value(&self.fields(node)?.last().ok_or("constructor without result")?, true, work)
     }
 
     pub(super) fn condition_matches(
@@ -176,9 +231,13 @@ impl ReadView<'_> {
         source: &[Value],
         work: &mut Work,
     ) -> Result<bool> {
+        let fields = if condition.scalar_columns.is_empty() { None } else {
+            work.field_layout_reads += 1;
+            Some(self.fields(target)?)
+        };
         for &column in &condition.scalar_columns {
             work.scalar_guards += 1;
-            if !self.field_matches(&target.fields.get(column).ok_or("condition field column")?, &source[column], work)? {
+            if !self.field_matches(&fields.as_ref().unwrap().get(column).ok_or("condition field column")?, &source[column], work)? {
                 return Ok(false);
             }
         }
@@ -212,12 +271,16 @@ impl ReadView<'_> {
 
 impl Graph {
     pub(super) fn freeze_completion_reads(&mut self) -> Snapshot {
+        assert!(!self.stable_ports.as_ref().unwrap().template_fields,
+            "template fields require a frozen lifecycle view before overlapped completion");
         let parents = self.parents.freeze();
         let nodes = self.stable_ports.as_mut().unwrap().nodes.freeze();
         let owner = self.ownership.as_mut().unwrap();
         let components = owner.composition.components.freeze();
         let pending = owner.pending.freeze();
         Snapshot {
+            programs: self.program.cell_ownership.programs.clone(),
+            shapes: owner.composition.shapes.clone(),
             parents,
             nodes,
             components,
@@ -242,6 +305,13 @@ impl Graph {
             return Err("stable fields disabled".into());
         }
         Ok(ReadView {
+            #[cfg(feature="sparse-cells")]
+            projected: self.stable_ports.as_ref().unwrap().template_fields.then_some(Projection {
+                cells: &self.cells, frames: &self.ownership.as_ref().unwrap().composition.frames,
+                operators: &self.program.cell_ownership.code_operators,
+            }),
+            programs: &self.program.cell_ownership.programs,
+            shapes: &self.ownership.as_ref().unwrap().composition.shapes,
             parents: self.parents.reader(),
             components: self
                 .ownership
@@ -287,6 +357,8 @@ impl Graph {
     pub(super) fn record_guard_reads(&self, work: &Work) {
         self.record_port_reads(work.port_reads, work.parent_probes);
         let stats = self.stable_ports.as_ref().unwrap();
+        stats.field_layout_reads.set(stats.field_layout_reads.get() + work.field_layout_reads);
+        stats.template_node_projections.set(stats.template_node_projections.get() + work.template_node_projections);
         stats
             .node_lookups
             .set(stats.node_lookups.get() + work.node_lookups);
@@ -302,6 +374,8 @@ mod tests {
 
     #[test]
     fn shared_multi_input_code_requires_every_equality_and_scalar_guard() {
+        let programs = vec![Arc::new(PortProgram { fields: vec![vec![None]], ..Default::default() })];
+        let shapes = vec![Some(Arc::new(composition::Shape { programs: vec![0], ports: vec![Arc::new(vec![])], ..Default::default() }))];
         let mut parents = Parents::default();
         parents.insert(11, 10);
         let components = vec![Some(composition::Component {
@@ -317,11 +391,14 @@ mod tests {
         };
         let target = Stored {
             table: 0,
-            fields: Fields { component: 0, program: Arc::new(PortProgram { fields: vec![vec![None]], ..Default::default() }), ports: Arc::new(vec![]), operation: 0, scalars: vec![Value::Int(7)].into_boxed_slice() },
+            fields: Fields { component: 0, frame: 0, operation: 0, scalars: vec![Value::Int(7)].into_boxed_slice() },
         };
         let mut work = Work::default();
         assert!(
             !ReadView {
+            #[cfg(feature="sparse-cells")]
+            projected: None,
+                programs: &programs, shapes: &shapes,
                 parents: parents.reader(),
                 components: crate::read_epoch::SlotsRead {
                     base: &components,
@@ -340,6 +417,9 @@ mod tests {
         let mut work = Work::default();
         assert!(
             !ReadView {
+            #[cfg(feature="sparse-cells")]
+            projected: None,
+                programs: &programs, shapes: &shapes,
                 parents: parents.reader(),
                 components: crate::read_epoch::SlotsRead {
                     base: &components,
@@ -365,6 +445,9 @@ mod tests {
         let mut work = Work::default();
         assert!(
             ReadView {
+            #[cfg(feature="sparse-cells")]
+            projected: None,
+                programs: &programs, shapes: &shapes,
                 parents: parents.reader(),
                 components: crate::read_epoch::SlotsRead {
                     base: &components,
@@ -394,6 +477,8 @@ mod tests {
         send_sync::<ReadView<'static>>();
         send_sync::<KeyGuard<'static>>();
         send_sync::<composition::conditions::Plan>();
+        let programs = vec![Arc::new(PortProgram { fields: vec![vec![None]], ..Default::default() })];
+        let shapes = vec![Some(Arc::new(composition::Shape { programs: vec![0], ports: vec![Arc::new(vec![])], ..Default::default() }))];
         let mut parents = Parents::default();
         parents.insert(11, 10);
         let components = vec![Some(composition::Component {
@@ -403,6 +488,9 @@ mod tests {
         })];
         let nodes = HashMap::default();
         let view = ReadView {
+            #[cfg(feature="sparse-cells")]
+            projected: None,
+            programs: &programs, shapes: &shapes,
             parents: parents.reader(),
             components: crate::read_epoch::SlotsRead {
                 base: &components,
@@ -421,7 +509,7 @@ mod tests {
         };
         let target = Stored {
             table: 0,
-            fields: Fields { component: 0, program: Arc::new(PortProgram { fields: vec![vec![]], ..Default::default() }), ports: Arc::new(vec![]), operation: 0, scalars: Box::new([]) },
+            fields: Fields { component: 0, frame: 0, operation: 0, scalars: Box::new([]) },
         };
         let barrier = std::sync::Barrier::new(3);
         let answers = std::thread::scope(|scope| {

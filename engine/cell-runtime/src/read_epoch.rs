@@ -80,6 +80,10 @@ impl<K: Copy + Eq + Hash, V> Map<K, V> {
             changes: self.base.as_ref().map(|_| &self.changes),
         }
     }
+    pub(crate) fn compact(&mut self) {
+        assert!(self.base.is_none(), "compact outside read epoch");
+        self.local.shrink_to_fit();
+    }
     pub fn freeze(&mut self) -> Arc<HashMap<K, V>> {
         assert!(self.base.is_none());
         self.work = Work::default();
@@ -108,8 +112,8 @@ impl<K, V> Clone for MapRead<'_, K, V> {
         *self
     }
 }
-impl<K: Eq + Hash, V> MapRead<'_, K, V> {
-    pub fn get(&self, key: &K) -> Option<&V> {
+impl<'a, K: Eq + Hash, V> MapRead<'a, K, V> {
+    pub fn get(&self, key: &K) -> Option<&'a V> {
         self.changes
             .and_then(|c| c.get(key))
             .map_or_else(|| self.base.get(key), Option::as_ref)

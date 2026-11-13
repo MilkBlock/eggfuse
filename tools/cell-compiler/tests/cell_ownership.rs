@@ -1517,3 +1517,40 @@ fn production_does_not_retain_barrier_history_and_explicit_observation_preserves
     assert_eq!(report["barrier_history"]["start_after_barriers"],prefix);
     assert_eq!(report["barriers"].as_array().unwrap().len() as u64,count-prefix);
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn template_fields_replace_records_through_union_retirement_and_stages() {
+    let p=program("(datatype E (N i64) (F E) (Pair E E) (Seen E))
+        (ruleset a) (ruleset merge) (ruleset observe) (ruleset remove)
+        (rule ((= x (N n))) ((F x)) :ruleset a)
+        (rule ((= x (N 1)) (= y (N 2))) ((union x y)) :ruleset merge)
+        (rule ((= f (F x))) ((Pair f x) (Seen f)) :ruleset observe)
+        (rule ((F x)) ((delete (F x))) :ruleset remove)
+        (N 1) (N 2) (run a 1) (run merge 1) (run observe 1) (run remove 1) (run observe 1)");
+    for workers in [0,2] {
+        let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),false);
+        reference.use_completed_parent_takeover().unwrap();
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {
+            reference.execute_until(Some(1)).unwrap();
+            actual.execute_until(Some(1)).unwrap();
+        }
+        actual.graph.use_template_stable_fields().unwrap();
+        actual.graph.use_template_stable_fields().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        let mut projected=false;
+        for run in 1..=5 {
+            reference.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
+            reference.graph.transfer_completed_owners().unwrap();actual.graph.transfer_completed_owners().unwrap();
+            assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap(),"Run {run}");
+            let report=actual.graph.stable_port_report();
+            projected |= report["template_projected_nodes"].as_u64().unwrap()>0;
+            assert_eq!(report["live_stable_nodes"], reference.graph.stable_port_report()["live_stable_nodes"]);
+        }
+        assert!(projected,"must remove real node records, not only add a read route");
+        actual.graph.use_parallel_port_guards(2,1).unwrap();
+        assert!(actual.graph.use_completion_read_batches(2).is_err(),"overlap needs a frozen lifecycle view");
+    }
+}
