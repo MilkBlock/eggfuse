@@ -18,11 +18,23 @@ pub(super) struct Owner {
     pub slots:Box<[(usize,Value)]>,
     pub facts:Box<[(u32,Option<OwnedFact>)]>,
 }
+/// Container reconstruction only; excludes subsequent scalar insertion, arena
+/// growth, component scans and retained owner backing arrays.
+#[derive(Default,serde::Serialize)]
+pub(super) struct Restoration {
+    events:u64,
+    slots:u64,
+    facts:u64,
+    capacity_bytes:u64,
+    max_capacity_bytes:usize,
+    max_template:Option<usize>,
+}
 #[derive(Default)]
 pub(super) struct Completed {
     pub frames:Vec<Frame>,
     pub owners:Vec<Owner>,
     pub representation_fallbacks:u64,
+    pub restoration:Restoration,
 }
 pub(crate) struct Slots<'a>(pub &'a [(usize,Value)]);
 impl ReadSlots for Slots<'_> {
@@ -169,10 +181,21 @@ impl Cells {
         let facts=owner.facts[frame.facts.clone()].iter_mut()
             .filter_map(|(op,s)|Some((*op,s.take()?.restore()))).collect();
         self.retire_completed(id);
-        Some(Cell{template:meta.template,started_epoch:meta.started_epoch,
+        let cell=Cell{template:meta.template,started_epoch:meta.started_epoch,
             completed_prefix:meta.completed_prefix,recipe_depth:meta.recipe_depth,
             completed:meta.completed,symbolic_slots:meta.symbolic_slots,
-            parent:None,values,facts})
+            parent:None,values,facts};
+        let bytes=cell.values.capacity_bytes()+cell.facts.capacity_bytes();
+        let work=&mut self.completed.restoration;
+        work.events+=1;
+        work.slots+=cell.values.len() as u64;
+        work.facts+=cell.facts.len() as u64;
+        work.capacity_bytes+=bytes as u64;
+        if bytes>work.max_capacity_bytes || work.max_template.is_none() {
+            work.max_capacity_bytes=bytes;
+            work.max_template=Some(meta.template);
+        }
+        Some(cell)
     }
     pub(crate) fn write_completed_fact(&mut self,f:super::super::FactRef,state:super::super::FactState) {
         if let Some(compact)=OwnedFact::checked(&state) {
@@ -211,6 +234,7 @@ impl Cells {
         let slots=self.completed.owners.iter().map(|o|o.slots.len()).sum::<usize>();
         let live_slots=self.completed.frames.iter().map(|f|f.slots.len()).sum::<usize>();
         serde_json::json!({"source_records":self.records.len(),"owned_fact_bytes":std::mem::size_of::<OwnedFact>(),
+            "restoration":self.completed.restoration,
             "representation_fallbacks":self.completed.representation_fallbacks,"completed_frames":self.completed.frames.len(),
             "owners":epochs.len(),"cross_stage_owners":epochs.values().filter(|e|e.len()>1).count(),
             "owner_widths":widths,"templates":templates,"stored_slot_entries":slots,

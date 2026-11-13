@@ -190,6 +190,21 @@ mod tests {
         assert_eq!(restored.values.get(&0),Some(&Value::Int(10)));
         assert_eq!(restored.facts.get(&7).unwrap().epoch,99);
         assert_eq!(cells.completed_slots(50).unwrap().get(&0),Some(&Value::Int(50)));
+        let report=cells.completed_profile();
+        assert_eq!(report["restoration"]["events"],1);
+        assert_eq!(report["restoration"]["slots"],1);
+        assert_eq!(report["restoration"]["facts"],1);
+        let bytes=restored.values.capacity_bytes()+restored.facts.capacity_bytes();
+        assert_eq!(report["restoration"]["capacity_bytes"],bytes);
+        assert_eq!(report["restoration"]["max_capacity_bytes"],bytes);
+        assert!(cells.unseal_completed(10).is_none());
+        assert_eq!(cells.completed_profile()["restoration"],report["restoration"]);
+        // A retired fact is not reconstructed, and siblings remain compressed.
+        let empty=cells.unseal_completed(20).unwrap();
+        assert!(empty.facts.is_empty());
+        assert_eq!(cells.completed_profile()["restoration"]["facts"],1);
+        assert_eq!(cells.completed_profile()["restoration"]["events"],2);
+        assert!(cells.completed_meta(30).is_some());
     }
 
     #[test]
