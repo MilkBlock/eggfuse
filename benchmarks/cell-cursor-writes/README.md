@@ -95,3 +95,26 @@ memory. The broader path also creates more existing worker task storage; the
 temporary-byte counter does not include the old coordinator allocations it
 replaces. Sum-bits enters neither version's scalar-write batch path and preserves
 the same stage statistics. No timing conclusion follows from these counts.
+
+## Timing and adoption decision
+
+Queue job 126 compared control `23d55e65` with candidate `2d7ac486`, using the
+ordinary features above. All 48 boundary guards were clear, and every sample
+matched the frozen state, source Runs and logical effects. `timing.json` retains
+all measured samples and the hash of the full raw timing record.
+
+| Inference median | Control | Candidate | Change |
+| --- | ---: | ---: | ---: |
+| sum-bits (5 samples) | 27.219 ms | 29.534 ms | +8.51% |
+| Raytrace (3 samples) | 5.665 s | 5.447 s | -3.85% |
+
+The candidate remains on `codex/cell-cursor-writes`; it is **not adopted** into
+the active parallel branch. The two-workload improvement gate failed. Sum-bits
+does not enter the changed write path, so these counters cannot explain its
+whole-binary regression. Code/data layout, uncaptured background activity and
+group-order drift are possible causes, not established explanations or grounds
+to discard the result. No repeats were added after seeing the outcome.
+
+Raytrace's greater worker coverage and lower inference time justify preserving
+the experiment. They do not establish full worker utilization or remove the
+remaining serial source completion, whose cost is still explicitly charged.
