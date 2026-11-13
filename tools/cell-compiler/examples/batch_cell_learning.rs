@@ -13,16 +13,17 @@ fn executor_control(raw:Value,takeover:bool)->Result<Executor> {
     let mut g=Graph::new_with_local_congruence(Program::parse(raw)?)?;g.use_port_domains_only()?;
     let mut e=Executor::new(g,false);if takeover {e.use_completed_parent_takeover()?;}Ok(e)
 }
-fn step(e:&mut Executor,n:usize)->Result<Value> {
+fn step(e:&mut Executor,n:usize)->Result<Value> {step_storage(e,n,false)}
+fn step_storage(e:&mut Executor,n:usize,nested:bool)->Result<Value> {
     audit::take_digests();audit::take_write_digests();
     audit::set_active(true);audit::enable_write_audit();
     let result=e.execute_until(Some(n));audit::set_active(false);result?;
-    e.graph.transfer_completed_owners()?;
+    if nested {e.graph.transfer_completed_owner_segments()?;} else {e.graph.transfer_completed_owners()?;}
     Ok(json!({"graph":artifact_digest(&e.graph.export()?),"rhs":audit::take_digests(),"writes":audit::take_write_digests()}))
 }
 fn main()->Result<()> {
     let a=std::env::args().skip(1).collect::<Vec<_>>();
-    if a.len()<2 {return Err("batch_cell_learning prepare SUITE OUTPUT CASE... | apply OUTPUT | verify OUTPUT | observe OUTPUT | apply-passive ROOT VARIANT | check-passive ROOT VARIANT".into());}
+    if a.len()<2 {return Err("batch_cell_learning prepare SUITE OUTPUT CASE... | apply OUTPUT | verify OUTPUT | observe OUTPUT | apply-passive ROOT VARIANT | check-passive ROOT VARIANT | check-nested ROOT VARIANT".into());}
     if a[0]=="prepare" {
         if a.len()<4 {return Err("prepare needs suite, output and cases".into());}
         let suite=read(&a[1])?;let base=Path::new(&a[1]).parent().unwrap();let out=Path::new(&a[2]);
@@ -83,8 +84,26 @@ fn main()->Result<()> {
             write(dir.join("candidate.json"),&raw)?;
             eprintln!("compiled pooled catalog for {name}");
         }
-    } else if a[0]=="apply-passive" || a[0]=="check-passive" {
-        if !(a.len()==3 || (a.len()==4 && a[0]=="check-passive" && matches!(a[3].as_str(),"template-fields"|"template-overlap"))) {return Err("apply-passive/check-passive ROOT VARIANT [template-fields|template-overlap]".into());}
+    } else if a[0]=="apply-witnesses" {
+        if a.len()!=4 {return Err("apply-witnesses ROOT OBSERVATION_VARIANT OUTPUT_VARIANT".into());}
+        let root=Path::new(&a[1]);let manifest=read(root.join("manifest.json"))?;
+        for case in manifest["cases"].as_array().unwrap() {
+            let name=case["case"].as_str().unwrap();
+            let mut raw=read(root.join(name).join("candidate.json"))?;
+            let observed=read(root.join(&a[2]).join(name).join("witness-observation.json"))?;
+            if observed["source_program"]!=raw["sha256"] || observed["all_saved_run_checks_equal"]!=true
+                || observed["terminal_check_equal"]!=true {return Err("unaudited witness observation".into());}
+            let original=raw["sha256"].clone();
+            raw["ownership_witnesses"]=json!({"source":source_digest(&raw),"recipes":observed["catalog_trace"]["saturation"]["witness_recipes"]});
+            raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=artifact_digest(&raw).into();
+            let mut checked=Program::parse(raw.clone())?;checked.prepare_cell_ownership()?;
+            let dir=root.join(&a[3]).join(name);fs::create_dir_all(&dir)?;
+            write(dir.join("selection.json"),&json!({"source_program":original,"selection":raw["ownership_fragments"]}))?;
+            write(dir.join("candidate.json"),&raw)?;
+            eprintln!("compiled witnesses {name}");
+        }
+    } else if a[0]=="apply-passive" || a[0]=="check-passive" || a[0]=="check-nested" {
+        if a.len()!=3 && !(a[0]=="check-passive" && a.len()==4 && matches!(a[3].as_str(),"witnesses"|"template-fields"|"template-overlap")) {return Err("apply-passive/check-passive/check-nested ROOT VARIANT [witnesses|template-fields|template-overlap for check-passive]".into());}
         let root=Path::new(&a[1]);let variant=root.join(&a[2]);
         let manifest=read(root.join("manifest.json"))?;
         let mut reports=vec![];
@@ -140,23 +159,33 @@ fn main()->Result<()> {
                     target.graph.use_completion_read_batches(16)?;
                     target.graph.use_overlapped_completion()?;
                 }
+                let observe_witnesses=a.get(3).is_some_and(|s|s=="witnesses");
+                if observe_witnesses {target.graph.trace_ownership_catalog(16)?;}
                 for (i,expected) in checks.iter().enumerate() {
-                    let observed=step(&mut target,i+1)?;
+                    let observed=step_storage(&mut target,i+1,a[0]=="check-nested")?;
                     if target.steps.len()!=i+1 || observed!=*expected {
                         write(dir.join("failure.json"),&json!({"run":i+1,"expected":expected,"observed":observed}))?;
                         return Err(format!("{name}: differs at Run {}",i+1).into());
                     }
                 }
-                if step(&mut target,checks.len()+1)?!=terminal || target.steps.len()!=checks.len() {return Err("terminal check differs".into());}
+                if step_storage(&mut target,checks.len()+1,a[0]=="check-nested")?!=terminal || target.steps.len()!=checks.len() {return Err("terminal check differs".into());}
+                if observe_witnesses {
+                    write(dir.join("witness-observation.json"),&json!({
+                        "source_program":target.graph.program.artifact["sha256"],
+                        "all_saved_run_checks_equal":true,"terminal_check_equal":true,
+                        "runs":checks.len(),"catalog_trace":target.graph.ownership_catalog_trace()?,
+                        "ownership_storage":target.graph.ownership_storage_trace()}))?;
+                }
                 reports.push(json!({"case":name,"runs":checks.len(),"all_saved_run_checks_equal":true,
                     "program":target.graph.program.artifact["sha256"],"source_storage":target.graph.retained_cell_storage(),
                     "completion_batches":target.graph.completion_batch_report(),
                     "stable_ports":target.graph.stable_port_report(),
+                    "key_lookup_calls":target.graph.key_lookup_calls.get(),"runtime_stats":target.graph.stats,
                     "final_state":artifact_digest(&target.graph.export()?)}));
                 eprintln!("checked {name}: {} Runs",checks.len());
             }
         }
-        write(variant.join(if a[0]=="apply-passive" {"compiled.json"} else {"checked.json"}),&json!({"cases":reports}))?;
+        write(variant.join(if a[0]=="apply-passive" {"compiled.json"} else if a[0]=="check-nested" {"checked-nested.json"} else {"checked.json"}),&json!({"cases":reports}))?;
     } else if a[0]=="verify" || a[0]=="observe" {
         let observe=a[0]=="observe";
         let root=Path::new(&a[1]);let manifest=read(root.join("manifest.json"))?;

@@ -11,10 +11,12 @@ struct Counts {
     prefix_static_alias_ops: u64,
     prefix_remaining_effect_ops: u64,
 }
+// Static positions only: no instance/eclass/value IDs survive observation.
+type Sites = Vec<(usize, usize, u32)>;
 #[derive(Default)]
 pub(super) struct Trace {
+    witnesses: BTreeMap<(usize, usize, Vec<usize>, Sites, Sites), u64>,
     rows: BTreeMap<(usize, Option<usize>, bool, &'static str), Counts>,
-    witness_paths: BTreeMap<(usize, usize, Vec<(usize, usize, u32)>), u64>,
     component_checks: u64,
     fact_checks: u64,
 }
@@ -28,8 +30,19 @@ impl Trace {
                 "outcome":reason,"counts":counts})
             })
             .collect::<Vec<_>>();
-        let paths=self.witness_paths.iter().map(|((rule,shape,path),applications)|json!({"rule":rule,"shape":shape,"constructor_positions":path,"applications":applications})).collect::<Vec<_>>();
-        json!({"rows":rows,"witness_paths":paths,"witness_path_scope":"observed full RHS coverage; tuples are RHS operation, shape frame ordinal, source operation; no instance IDs or executable proof","component_checks":self.component_checks,"fact_checks":self.fact_checks,
+        let witnesses = self.witnesses.iter().map(|((rule,shape,codes,anchors,results),applications)|
+            json!({"rule":rule,"shape":shape,"frame_codes":codes,"query_sites":anchors,"rhs_sites":results,
+                "applications":applications})).collect::<Vec<_>>();
+        // Compatibility projection of the same recipes, not a second trace.
+        let mut paths=BTreeMap::<(usize,usize,Sites),u64>::new();
+        for ((rule,shape,_,_,sites),applications) in &self.witnesses {
+            *paths.entry((*rule,*shape,sites.clone())).or_default()+=applications;
+        }
+        let paths=paths.into_iter().map(|((rule,shape,sites),applications)|json!({"rule":rule,"shape":shape,"constructor_positions":sites,"applications":applications})).collect::<Vec<_>>();
+        json!({"rows":rows,"witness_recipes":witnesses,"witness_paths":paths,
+            "witness_path_scope":"projection of observed full RHS recipes; positions contain no instance IDs and do not alone prove executable replacement",
+            "witness_contract":"positions are [query atom or RHS operation, component frame, fact operation]; only local matched receipts are listed; full query and dynamic key/visibility obligations remain authoritative; observations are not static proofs",
+            "component_checks":self.component_checks,"fact_checks":self.fact_checks,
             "scope":"one observation per actual apply entry; rhs_covered means current matched RHS effects already witnessed inside one live Cell component",
             "limitations":"not a saturation certificate for all matches; query elimination, delta ownership, audit replacement and future invalidation still require compilation; unsupported effects are not skippable; no saved work claimed"})
     }
@@ -67,8 +80,8 @@ impl Graph {
         let rule = &self.program.rules[rid];
         let ops = &self.program.templates[rule.template].ops;
         let mut best = (None, false, "no_local_component", 0);
-        let mut best_path=Vec::new();
         let mut checks = 0;
+        let mut witness_recipe = None;
         let mut fact_checks = 0;
         if pending_peers || !owner.pending.is_empty() {
             best.2 = "pending_completion";
@@ -100,7 +113,7 @@ impl Graph {
                     continue;
                 };
                 checks += 1;
-                let (prefix, reason, visited, path) =
+                let (prefix, reason, visited, results) =
                     self.covered_rhs(component, ops, &rule.inputs, &binding.values);
                 fact_checks += visited;
                 let cross = component.frames.iter().any(|id| {
@@ -110,9 +123,18 @@ impl Graph {
                 });
                 if best.0.is_none() || prefix > best.3 || reason == "rhs_covered" {
                     best = (Some(component.shape), cross, reason, prefix);
-                    best_path=path;
                 }
                 if reason == "rhs_covered" {
+                    let anchors = (0..rule.query.len()).filter_map(|atom| {
+                        let Dependency::Fact(f) = binding.known.receipt(atom)? else { return None; };
+                        let frame = component.frames.iter().position(|id| *id == f.cell)?;
+                        Some((atom, frame, f.op))
+                    }).collect::<Sites>();
+                    // Input-only coverage has no constructor witness to compile.
+                    if !results.is_empty() {
+                        let codes = component.frames.iter().map(|id| owner.composition.frames[id].code).collect();
+                        witness_recipe = Some((rid, component.shape, codes, anchors, results));
+                    }
                     break;
                 }
             }
@@ -126,8 +148,8 @@ impl Graph {
             .as_mut()
             .unwrap()
             .saturation;
-        if best.2=="rhs_covered" && !best_path.is_empty() {
-            *trace.witness_paths.entry((rid,best.0.expect("covered component"),best_path)).or_default()+=1;
+        if let Some(recipe) = witness_recipe {
+            *trace.witnesses.entry(recipe).or_default() += 1;
         }
         trace.component_checks += checks;
         trace.fact_checks += fact_checks;
@@ -153,14 +175,14 @@ impl Graph {
         ops: &[Op],
         inputs: &[usize],
         input: &crate::slots::Slots,
-    ) -> (usize, &'static str, u64, Vec<(usize,usize,u32)>) {
-        let mut path=Vec::new();
+    ) -> (usize, &'static str, u64, Sites) {
         // Proof scratch only. Exclude prepared RHS outputs: those are not
         // evidence that their effects already existed before this application.
         let mut values = BTreeMap::new();
+        let mut sites = Vec::new();
         for slot in inputs {
             let Some(value) = input.get(slot) else {
-                return (0, "missing_input", 0, path);
+                return (0, "missing_input", 0, sites);
             };
             values.insert(*slot, canon(value, &self.parents));
         }
@@ -191,10 +213,10 @@ impl Graph {
                         .map(|a| argument(a, &values, &self.parents))
                         .collect::<Option<Vec<_>>>()
                     else {
-                        return (index, "unbound_operand", visits, path);
+                        return (index, "unbound_operand", visits, sites);
                     };
                     let mut found = None;
-                    'frames: for (ordinal,id) in component.frames.iter().enumerate() {
+                    'frames: for (frame, id) in component.frames.iter().enumerate() {
                         for (fact, state) in self.cells.fact_states(*id) {
                             if !state.owned || state.hidden {
                                 continue;
@@ -211,14 +233,14 @@ impl Graph {
                                     .zip(&key)
                                     .all(|(a, b)| canon(a, &self.parents) == *b)
                             {
-                                found = row.values.last().map(|v| canon(v, &self.parents));
-                                path.push((index,ordinal,fact.op));
+                                found = row.values.last().map(|v| (canon(v, &self.parents), frame, fact.op));
                                 break 'frames;
                             }
                         }
                     }
                     match found {
-                        Some(v) => {
+                        Some((v, frame, operation)) => {
+                            sites.push((index, frame, operation));
                             values.insert(*dst, v);
                             None
                         }
@@ -232,9 +254,9 @@ impl Graph {
                 Op::Panic => Some("failure_effect"),
             };
             if let Some(reason) = reason {
-                return (index, reason, visits, path);
+                return (index, reason, visits, sites);
             }
         }
-        (ops.len(), "rhs_covered", visits, path)
+        (ops.len(), "rhs_covered", visits, sites)
     }
 }

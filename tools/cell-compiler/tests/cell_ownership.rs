@@ -57,6 +57,17 @@ fn saturation_observer_sees_birth_free_effects_and_rejects_unproved_work() {
             }
         } else {assert!(paths.is_empty(),"partial or input-only coverage is not a constructor path");}
 
+        let recipes = report["saturation"]["witness_recipes"].as_array().unwrap();
+        if body == "(N n)" {
+            assert_eq!(recipes.len(), 1, "distinct instance values share one static recipe");
+            assert_eq!(recipes[0]["applications"], 2);
+            assert!(!recipes[0]["rhs_sites"].as_array().unwrap().is_empty());
+            for site in recipes[0]["rhs_sites"].as_array().unwrap() {
+                assert_eq!(site[1], 0, "frame position, never the actual Cell ID");
+            }
+        } else {
+            assert!(recipes.is_empty(), "partial or input-only coverage is not a constructor recipe");
+        }
     }
 }
 
@@ -1432,17 +1443,17 @@ fn later_single_stage_joins_the_existing_physical_owner() {
             moved.push(actual.graph.transfer_completed_owners().unwrap());
             assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
         }
-        assert_eq!(moved,vec![0,2,1],"the third Run must absorb its single new frame");
-        assert_eq!(actual.graph.stats.shared_owner_extensions,1);
-        assert_eq!(actual.graph.stats.shared_owner_extension_frames,1);
-        for name in ["Start","Pair","Seen"] {
+        assert_eq!(moved,vec![2,1,1],"the third Run must absorb its single new frame");
+        assert_eq!(actual.graph.stats.shared_owner_extensions,2);
+        assert_eq!(actual.graph.stats.shared_owner_extension_frames,2);
+        for name in ["N","Start","Pair","Seen"] {
             let table=actual.graph.program.tables.iter().position(|t|t.name==name).unwrap();
             let eggfuse_cell_runtime::graph::Dependency::Fact(f)=actual.graph.witnesses(table)[0] else {panic!("constructor")};
             assert!(actual.graph.cells.get(&f.cell).is_none(),"{name} no longer needs an ordinary source frame");
         }
         let storage=actual.graph.retained_cell_storage();
         assert_eq!(storage["completed_owners"]["owners"],1);
-        assert_eq!(storage["completed_owners"]["completed_frames"],3);
+        assert_eq!(storage["completed_owners"]["completed_frames"],4);
         assert_eq!(actual.graph.transfer_completed_owners().unwrap(),0,"idle boundary is a no-op");
     }
 }
@@ -1467,7 +1478,7 @@ fn referenced_parent_can_transfer_before_the_child_finishes() {
     }).unwrap();
     let child=e.graph.linked_frame(template,Default::default(),Some(parent)).unwrap();
     let expected=e.graph.slot(child,slot).unwrap();
-    assert_eq!(e.graph.transfer_completed_owners().unwrap(),2);
+    assert_eq!(e.graph.transfer_completed_owners().unwrap(),3);
     assert!(e.graph.cells.get(&parent.cell).is_none());
     assert!(e.graph.stats.shared_owner_referenced_frames>0);
     assert_eq!(e.graph.slot(child,slot).unwrap(),expected);
@@ -1489,7 +1500,7 @@ fn saturated_observer_reads_cross_stage_age_from_transferred_frames() {
     let mut g=Graph::new_with_local_congruence(p).unwrap();g.trace_ownership_catalog(16).unwrap();
     let mut e=Executor::new(g,false);e.use_completed_parent_takeover().unwrap();
     e.execute_until(Some(2)).unwrap();
-    assert_eq!(e.graph.transfer_completed_owners().unwrap(),2);
+    assert_eq!(e.graph.transfer_completed_owners().unwrap(),3);
     let n=e.graph.program.tables.iter().position(|t|t.name=="N").unwrap();
     e.graph.hide(n,&[eggfuse_cell_runtime::value::Value::Int(1)],true).unwrap();
     e.graph.collect_garbage();
@@ -1497,6 +1508,174 @@ fn saturated_observer_reads_cross_stage_age_from_transferred_frames() {
     let trace=e.graph.ownership_catalog_trace().unwrap();
     assert!(trace["saturation"]["rows"].as_array().unwrap().iter().any(|r|
         r["outcome"]=="rhs_covered" && r["cross_epoch"]==true),"{trace}");
+    let recipes=trace["saturation"]["witness_recipes"].as_array().unwrap();
+    assert!(recipes.iter().any(|r| !r["rhs_sites"].as_array().unwrap().is_empty()),
+        "transferred predecessors must still export shape-relative witnesses: {trace}");
+}
+
+#[test]
+#[cfg(feature="sparse-cells")]
+fn compiled_constructor_witness_replaces_cross_stage_lookup() {
+    let p=program("(datatype E (N i64) (Start E) (Pair E E))
+        (ruleset a) (ruleset b) (ruleset c)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((Pair s x)) ((Start x)) :ruleset c)
+        (N 1) (N 2) (run a 1) (run b 1) (run c 1)");
+    let mut g=Graph::new_with_local_congruence(p.clone()).unwrap();
+    g.trace_ownership_catalog(16).unwrap();
+    let mut control=Executor::new(g,true);control.execute().unwrap();
+    let trace=control.graph.ownership_catalog_trace().unwrap();
+    let mut raw=p.artifact.clone();
+    raw["ownership_witnesses"]=json!({"source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),
+        "recipes":trace["saturation"]["witness_recipes"]});
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let p=Program::parse(raw.clone()).unwrap();
+    let mut candidate=Executor::new(Graph::new_with_local_congruence(p).unwrap(),true);
+    candidate.execute().unwrap();
+    assert_eq!(control.graph.export().unwrap(),candidate.graph.export().unwrap());
+    assert_eq!(control.snapshots,candidate.snapshots);
+    assert_eq!(control.binding_audit,candidate.binding_audit);
+    assert!(candidate.graph.stats.constructor_cell_route_accepted>0,
+        "compiled routes must remove a lookup, not only populate a catalog: {} probes, {} witnesses",
+        candidate.graph.stats.constructor_cell_route_probes,candidate.graph.stats.constructor_cell_route_witnesses);
+    assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
+    assert!(candidate.graph.stats.constructor_cell_route_key_proved>0);
+    assert!(candidate.graph.stats.constructor_cell_route_key_fields_avoided>0);
+    for mutation in ["hide", "delete", "union"] {
+        let mut plain=raw.clone();plain.as_object_mut().unwrap().remove("ownership_witnesses");
+        plain.as_object_mut().unwrap().remove("sha256");
+        plain["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&plain).into();
+        let mut base=Executor::new(Graph::new_with_local_congruence(Program::parse(plain).unwrap()).unwrap(),true);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(Program::parse(raw.clone()).unwrap()).unwrap(),true);
+        for e in [&mut base,&mut actual] {
+            e.execute_until(Some(2)).unwrap();
+            let table=e.graph.program.tables.iter().position(|t|t.name=="Start").unwrap();
+            let witness=e.graph.witnesses(table)[0];
+            let row=e.graph.row(witness).unwrap().unwrap();
+            if mutation=="union" {
+                let n=e.graph.program.tables.iter().position(|t|t.name=="N").unwrap();
+                let rows=e.graph.witnesses(n).iter().map(|&w|e.graph.row(w).unwrap().unwrap()).collect::<Vec<_>>();
+                e.graph.enqueue_union(rows[0].values.last().unwrap().clone(),rows[1].values.last().unwrap().clone()).unwrap();
+                e.graph.repair().unwrap();
+            } else {e.graph.hide(table,&row.values[..row.values.len()-1],mutation=="delete").unwrap();}
+            e.graph.collect_garbage();
+            e.execute().unwrap();
+        }
+        assert_eq!(base.graph.export().unwrap(),actual.graph.export().unwrap(),"mutation={mutation}");
+        assert_eq!(base.snapshots,actual.snapshots,"mutation={mutation}");
+    }
+    raw["ownership_witnesses"]["recipes"][0]["frame_codes"][0]=json!(usize::MAX);
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let rejected=Program::parse(raw).and_then(Graph::new_with_local_congruence);
+    assert!(rejected.is_err(),"untrusted operator code must be rejected");
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_parent_uses_local_values_when_constructor_is_foreign() {
+    let p=program("(datatype E (N i64) (Get E i64) (Indexed E i64) (Pair E E) (Seen E))
+        (ruleset init) (ruleset a) (ruleset b)
+        (rule ((= x (N n))) ((Get x 7) (Indexed x 7)) :ruleset init)
+        (rule ((Get x i)) ((Indexed x i) (Pair x x)) :ruleset a)
+        (rule ((Pair x y)) ((subsume (Get x 7)) (Seen y)) :ruleset b)
+        (N 1) (N 2) (run init 1) (run a 1) (run b 1)");
+    let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+    reference.execute().unwrap();
+    for workers in [0,2] {
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        actual.execute().unwrap();
+        assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+        assert_eq!(reference.snapshots,actual.snapshots);
+        let rid=p.artifact["recipe"]["rules"].as_array().unwrap().iter()
+            .position(|r|r["metadata"]["source_set"]=="a").unwrap();
+        let template=p.rules[rid].template;
+        let children=actual.graph.cells.iter().filter(|(_,c)|c.template==template).collect::<Vec<_>>();
+        assert!(!children.is_empty());
+        assert!(children.iter().all(|(_,c)|c.parent.is_none()),
+            "an already stored scalar must discharge its parent even when Indexed is foreign");
+        assert!(actual.graph.stats.completed_parent_detachments>0);
+    }
+}
+
+#[test]
+#[cfg(feature="sparse-cells")]
+fn compiled_constructor_witness_preserves_existing_scalar_query_alias_elision() {
+    let p=program("(datatype E (N i64)) (N 7) (N 19) (ruleset r)
+        (rule ((= x (N n))) ((N n)) :ruleset r) (run r 1)");
+    let mut graph=Graph::new_with_local_congruence(p.clone()).unwrap();
+    graph.trace_ownership_catalog(16).unwrap();
+    let mut control=Executor::new(graph,true);control.execute().unwrap();
+    let trace=control.graph.ownership_catalog_trace().unwrap();
+    let mut raw=p.artifact.clone();
+    raw["ownership_witnesses"]=json!({"source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),
+        "recipes":trace["saturation"]["witness_recipes"]});
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let mut actual=Executor::new(Graph::new_with_local_congruence(Program::parse(raw).unwrap()).unwrap(),true);
+    actual.execute().unwrap();
+    assert_eq!(control.graph.export().unwrap(),actual.graph.export().unwrap());
+    assert_eq!(control.snapshots,actual.snapshots);
+    assert_eq!(control.binding_audit,actual.binding_audit);
+    // Query alias completion already removes this RHS; do not count it again
+    // as a new route optimization or force it through constructor dispatch.
+    assert_eq!(control.graph.stats.constructor_requests,0);
+    assert_eq!(actual.graph.stats.constructor_requests,0);
+    assert_eq!(actual.graph.stats.constructor_cell_route_key_proved,0);
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn atomic_constructor_slots_survive_union_collision() {
+    use eggfuse_cell_runtime::value::Value;
+    let p=program("(datatype E (N i64) (F E)) (ruleset empty) (run empty 1)");
+    let mut reference=Graph::new(p.clone()).unwrap();
+    let mut actual=Graph::new_with_cell_ownership(p).unwrap();
+    let n=actual.program.tables.iter().position(|t|t.name=="N").unwrap();
+    let f=actual.program.tables.iter().position(|t|t.name=="F").unwrap();
+    for graph in [&mut reference,&mut actual] {
+        let a=graph.dynamic_construct(n,vec![Value::Int(1)]).unwrap();
+        let b=graph.dynamic_construct(n,vec![Value::Int(2)]).unwrap();
+        graph.dynamic_construct(f,vec![a.clone()]).unwrap();
+        graph.dynamic_construct(f,vec![b.clone()]).unwrap();
+        for cell in graph.cells.values() {
+            assert!(cell.completed);
+            assert_eq!(cell.completed_prefix,1);
+        }
+        graph.enqueue_union(a,b).unwrap();
+        graph.repair().unwrap();
+    }
+    assert!(actual.stats.completed_symbolic_slots_elided>0);
+    assert_eq!(reference.export().unwrap(),actual.export().unwrap());
+}
+
+#[test]
+fn shared_layout_operator_proof_keeps_ambiguous_constructors_dynamic() {
+    let p=program("(datatype E (N i64) (F E) (H E) (Pair E E))
+        (ruleset r) (rule ((= x (N n))) ((let f (F x)) (let h (H x)) (Pair f h)) :ruleset r)
+        (N 1) (run r 1)");
+    let g=Graph::new_with_cell_ownership(p).unwrap();
+    let plan=&g.program.cell_ownership;
+    let f=g.program.tables.iter().position(|t|t.name=="F").unwrap();
+    let h=g.program.tables.iter().position(|t|t.name=="H").unwrap();
+    let fm=&plan.markers[g.program.table_templates[f]];
+    let hm=&plan.markers[g.program.table_templates[h]];
+    assert_eq!(fm.program_id,hm.program_id);
+    assert_ne!(fm.code,hm.code);
+    assert_eq!(plan.layout_operators[fm.program_id][0],usize::MAX);
+    let mut proved=0;
+    for marker in &plan.markers {
+        for (op,&table) in plan.layout_operators[marker.program_id].iter().enumerate() {
+            if table==usize::MAX {continue;}
+            proved+=1;
+            assert_eq!(table,plan.code_operators[marker.code][op]);
+        }
+    }
+    assert!(proved>0,"multi-operation typed bodies should retain static type proofs");
 }
 
 #[test]

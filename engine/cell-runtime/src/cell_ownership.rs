@@ -22,11 +22,15 @@ mod ready;
 pub(in crate::graph) mod query_read;
 #[path = "port_completion.rs"]
 pub(crate) mod completion;
+#[path = "ownership_witnesses.rs"]
+mod witnesses;
 
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Plan {
     #[serde(skip)]
     format: wire::Format,
+    #[serde(skip)]
+    witnesses: witnesses::Routes,
     pub tables: Vec<bool>,
     pub markers: Vec<Marker>,
     pub programs: Arc<Vec<Arc<PortProgram>>>,
@@ -36,6 +40,10 @@ pub struct Plan {
     pub code_programs: Vec<Arc<PortProgram>>,
     #[serde(skip)]
     pub code_operators: Vec<Vec<usize>>,
+    /// Operator identity common to every concrete code sharing a port layout.
+    /// MAX means ambiguous; runtime code remains authoritative there.
+    #[serde(skip)]
+    pub layout_operators: Vec<Vec<usize>>,
     #[serde(skip)]
     pub query_classes: Option<Arc<query_classes::Plan>>,
     pub composition: composition::Plan,
@@ -73,8 +81,14 @@ impl Plan {
         drop(self.code_operators);
         rows.push(("ownership.code_operators", before - live_bytes()));
         let before = live_bytes();
+        drop(self.layout_operators);
+        rows.push(("ownership.layout_operators", before - live_bytes()));
+        let before = live_bytes();
         drop(self.query_classes);
         rows.push(("ownership.query_classes", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.witnesses);
+        rows.push(("ownership.witnesses", before - live_bytes()));
         self.composition.release_storage_by_field(live_bytes, rows);
         let before = live_bytes();
         drop(self.entries);
@@ -140,7 +154,9 @@ impl Plan {
             programs: Arc::new(programs),
             code_programs: vec![],
             code_operators: vec![],
+            layout_operators: vec![],
             query_classes: None,
+            witnesses: Default::default(),
             composition,
             tables,
             markers,
@@ -157,6 +173,10 @@ impl Plan {
             plan.query_classes = Some(Arc::new(if raw == &J::Bool(true) {
                 query_classes::Plan::bake(p,&plan)
             } else {query_classes::Plan::validate(raw,p,&plan)?}));
+        }
+        if p.artifact.get("ownership_witnesses").is_some() {
+            plan.prepare_codes(&p.templates);
+            plan.witnesses = witnesses::Routes::compile(p, &plan)?;
         }
         Ok(plan)
     }
@@ -179,6 +199,21 @@ impl Plan {
                 shared.insert(key, id);
                 id
             };
+        }
+        self.layout_operators = vec![Vec::new(); self.programs.len()];
+        let mut initialized = vec![false; self.programs.len()];
+        for marker in &self.markers {
+            let target = &mut self.layout_operators[marker.program_id];
+            let operators = &self.code_operators[marker.code];
+            if !initialized[marker.program_id] {
+                *target = operators.clone();
+                initialized[marker.program_id] = true;
+            } else {
+                debug_assert_eq!(target.len(), operators.len());
+                for (known, &actual) in target.iter_mut().zip(operators) {
+                    if *known != actual { *known = usize::MAX; }
+                }
+            }
         }
     }
     pub fn fragment_schema(&self) -> &'static str { self.format.fragment_schema() }
@@ -278,6 +313,7 @@ struct Stats {
     domain_column_checks: Counter<u64>,
     domain_legacy_fact_probes: Counter<u64>,
     domain_type_guards: Counter<u64>,
+    domain_static_type_guards: Counter<u64>,
     domain_type_rejections: Counter<u64>,
     query_class_probes: Counter<u64>,
     query_class_range_jumps: Counter<u64>,
@@ -362,7 +398,8 @@ impl Graph {
         self.ownership.as_ref().is_some_and(|m| {
             self.program.cell_ownership.markers[self.program.rules[rid].template].program.active()
                 && (m.composition.catalog_trace.is_some() || m.composition.training.is_some()
-                    || self.program.cell_ownership.composition.active_rules[rid])
+                    || self.program.cell_ownership.composition.active_rules[rid]
+                    || self.program.cell_ownership.witnesses.0.get(rid).is_some_and(|r|!r.is_empty()))
         })
     }
     pub(super) fn ownership_settled(&self) -> bool {
@@ -435,6 +472,8 @@ impl Graph {
             m.stats.adopted_existing += 1;
             m.stats.owned_live += 1;
             self.initialize_cell_fields::<true>(f, row.table, &row.values);
+            #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+            self.delegate_completed_slots(f.cell);
         }
         Ok(())
     }
@@ -834,11 +873,16 @@ impl Graph {
                     s.domain_column_checks.set(s.domain_column_checks.get() + 1);
                 }
                 let Some(fact) = uses.fact(position, false) else { continue; };
-                // The instance selects concrete compiled code even when its
-                // port layout is shared with other operators. Discriminate
-                // with that code before probing any live node directory.
-                let frame = m.frames[&fact.cell];
-                let operator = self.program.cell_ownership.code_operators[frame.code][fact.op as usize];
+                // Shared layout proof replaces the instance-code read where
+                // every concrete template agrees on the operator. Ambiguous
+                // layouts still discriminate before probing the live node.
+                let operator = if let Some(operator) = uses.known_operator(position) {
+                    s.domain_static_type_guards.set(s.domain_static_type_guards.get() + 1);
+                    operator
+                } else {
+                    let frame = m.frames[&fact.cell];
+                    self.program.cell_ownership.code_operators[frame.code][fact.op as usize]
+                };
                 s.domain_type_guards.set(s.domain_type_guards.get() + 1);
                 if operator != table {
                     s.domain_type_rejections.set(s.domain_type_rejections.get() + 1);

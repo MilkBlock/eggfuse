@@ -55,8 +55,8 @@ fn detach(exec: Executor) -> Graph {
 }
 fn main() -> Result<(), Box<dyn Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    if (args.len()<3 || args.iter().skip(3).any(|a| !matches!(a.as_str(),"--port-domains-only"|"--template-fields"))) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners") {
-        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners [--port-domains-only] [--template-fields]".into());
+    if !(args.len()>=3 && args[3..].iter().all(|a| matches!(a.as_str(),"--port-domains-only"|"--template-fields"))) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners" | "nested-owners") {
+        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners|nested-owners [--port-domains-only] [--template-fields]".into());
     }
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
     let program = p.artifact["sha256"].clone();
@@ -67,9 +67,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let source_loaded = LIVE.load(Relaxed);
     reset_peak();
     let mut e = Executor::new(Graph::new_with_local_congruence(p)?, false);
-    if args[2] == "inherited-owners" {e.use_completed_parent_takeover()?;}
-    if args.iter().any(|a|a=="--port-domains-only") {e.graph.use_port_domains_only()?;}
-    if args.iter().any(|a|a=="--template-fields") {e.graph.use_template_stable_fields()?;}
+    if matches!(args[2].as_str(),"inherited-owners"|"nested-owners") {e.use_completed_parent_takeover()?;}
+    if args[3..].iter().any(|a|a=="--port-domains-only") {e.graph.use_port_domains_only()?;}
+    if args[3..].iter().any(|a|a=="--template-fields") {e.graph.use_template_stable_fields()?;}
     let setup_peak = PEAK.load(Relaxed);
     let setup_live = LIVE.load(Relaxed);
     loop {
@@ -90,7 +90,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             e.graph.compact_retained_capacity()?;
         }
         if args[2] == "inherited-owners" {e.graph.transfer_completed_owners()?;}
-        if matches!(args[2].as_str(), "record-control" | "inherited-owners") {
+        if args[2] == "nested-owners" {e.graph.transfer_completed_owner_segments()?;}
+        if matches!(args[2].as_str(), "record-control" | "inherited-owners" | "nested-owners") {
             e.graph.compact_source_record_capacity();
         }
         let takeover_peak = PEAK.load(Relaxed);
@@ -130,6 +131,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         "source_storage":e.graph.retained_cell_storage(),
         "completion_work":e.graph.stats,
         "maintenance":e.graph.maintenance_report(),
+        "ownership_query_work":e.graph.ownership_report()["stats"],
+        "stable_fields":e.graph.stable_port_report(),
         "scope":"single-lane process live requested heap including Program, Graph, Executor and fixed diagnostic buffer; not Graph-exclusive peak or RSS",
         "trace_buffer_bytes":trace_bytes,"source_loaded_live_bytes":source_loaded,
         "setup_peak_bytes":setup_peak,"setup_live_bytes":setup_live,

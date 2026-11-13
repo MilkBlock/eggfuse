@@ -1,0 +1,100 @@
+{
+  "scope": "saved actual standalone Cell runtime; storage and dispatch census, not savings",
+  "limitations": [
+    "coverage observations are from the same source/catalog, not linked to final surviving apply instances",
+    "hidden owned facts still require congruence maintenance",
+    "symbols without local owned sites can still serve external Entry or slot reads",
+    "static site counts are snapshot structure, not measured dispatch visits",
+    "the zero-Cell-storage bound is deliberately unattainable, not a proposed representation"
+  ],
+  "cases": [
+    {
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "graph_bytes": 705175,
+      "cell_bytes": 181432,
+      "maintenance_bytes": 292510,
+      "bytes_remaining_if_all_cell_storage_disappeared": 523743,
+      "fully_covered_apply_observations": 98,
+      "apply_observations": 1525,
+      "current_layout": {
+        "components": 492,
+        "source_frames": 778,
+        "composition_positions_without_source_frame": 26,
+        "multi_frame_components": 133,
+        "bound_symbols": 1963,
+        "static_dispatch_sites": 2909,
+        "live_owned_dispatch_sites": 2377,
+        "symbols_without_live_owned_site": 60,
+        "symbols_with_only_hidden_owned_sites": 0,
+        "absent_or_unowned_dispatch_sites": 532
+      }
+    },
+    {
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "graph_bytes": 616289,
+      "cell_bytes": 155736,
+      "maintenance_bytes": 235422,
+      "bytes_remaining_if_all_cell_storage_disappeared": 460553,
+      "fully_covered_apply_observations": 63,
+      "apply_observations": 1239,
+      "current_layout": {
+        "components": 464,
+        "source_frames": 707,
+        "composition_positions_without_source_frame": 18,
+        "multi_frame_components": 109,
+        "bound_symbols": 1868,
+        "static_dispatch_sites": 2716,
+        "live_owned_dispatch_sites": 2251,
+        "symbols_without_live_owned_site": 63,
+        "symbols_with_only_hidden_owned_sites": 0,
+        "absent_or_unowned_dispatch_sites": 465
+      }
+    },
+    {
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "graph_bytes": 1830387,
+      "cell_bytes": 506952,
+      "maintenance_bytes": 883038,
+      "bytes_remaining_if_all_cell_storage_disappeared": 1323435,
+      "fully_covered_apply_observations": 401,
+      "apply_observations": 6532,
+      "current_layout": {
+        "components": 1344,
+        "source_frames": 2371,
+        "composition_positions_without_source_frame": 194,
+        "multi_frame_components": 484,
+        "bound_symbols": 6761,
+        "static_dispatch_sites": 10519,
+        "live_owned_dispatch_sites": 7711,
+        "symbols_without_live_owned_site": 711,
+        "symbols_with_only_hidden_owned_sites": 141,
+        "absent_or_unowned_dispatch_sites": 2808
+      }
+    },
+    {
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "graph_bytes": 1798019,
+      "cell_bytes": 502568,
+      "maintenance_bytes": 846518,
+      "bytes_remaining_if_all_cell_storage_disappeared": 1295451,
+      "fully_covered_apply_observations": 259,
+      "apply_observations": 5935,
+      "current_layout": {
+        "components": 1308,
+        "source_frames": 2268,
+        "composition_positions_without_source_frame": 146,
+        "multi_frame_components": 348,
+        "bound_symbols": 6254,
+        "static_dispatch_sites": 9600,
+        "live_owned_dispatch_sites": 7531,
+        "symbols_without_live_owned_site": 380,
+        "symbols_with_only_hidden_owned_sites": 0,
+        "absent_or_unowned_dispatch_sites": 2069
+      }
+    }
+  ]
+}

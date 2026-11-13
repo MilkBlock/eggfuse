@@ -380,3 +380,540 @@ python3 benchmarks/cell-batched-learning/saturation_credit.py out/cell-batched-l
   benchmarks/cell-batched-learning/saturation-credit-results.json
 python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
 ```
+
+### Shape-relative constructor witness candidates
+
+The passive observer now exports `witness_recipes` for fully covered RHSs that
+have actual constructor witnesses. Each site is `[atom/effect, frame, operation]`;
+no runtime Cell ID, eclass ID or captured value enters its identity. Query sites
+list only retained receipts inside the selected component, not a replacement for
+the full query. Input-only unions and partial coverage emit no constructor recipe.
+These records exist only when catalog tracing is enabled.
+
+A critical distinction is preserved: port `shape.programs` identify shared wiring,
+while `frame_codes` identify typed operator programs. Two constructors may share
+one wiring layout. A witness recipe must include both; using the shape's program
+ID to address the operator directory is invalid. The new regression fixture uses
+identical F/G layouts and rejects an F code substituted at a G witness site.
+
+`witness_plans.py` checks operator names, arity, query-to-symbol projections, copies,
+RHS input symbols and union operands against the source definition. It separates
+external Eq checks, scalar checks and unproved Eq relations. It does not use trace
+values to discharge any obligation. Even exact wiring still requires live facts,
+visibility, correct instance generation, the original match/delta contract and
+Run/publication order. The emitted analysis is not executable authorization.
+
+The first usable path is a guarded direct witness, not an unconditional saturated
+jump: address the fact by checked frame/op, compare remaining inputs, and return
+its actual result reference. The runtime must then remove the corresponding
+constructor lookup; adding a speculative probe in front of unchanged work would
+not establish takeover. This runtime replacement remains to be implemented.
+
+To capture without rerunning the baseline, use the source-bound cached checker:
+
+```
+target/debug/examples/batch_cell_learning check-passive \
+  out/cell-batched-learning owned-state witnesses
+python3 benchmarks/cell-batched-learning/witness_plans.py \
+  out/cell-batched-learning/owned-state \
+  benchmarks/cell-batched-learning/witness-plan-results.json
+```
+
+The `owned-state` directory contains unchanged seed candidates and source-bound
+selections, as in the completed-owner checks. Capture writes a separate
+`witness-observation.json` only after all saved Run and terminal checks pass.
+Tests cover two distinct instances sharing one recipe, partial/input-only
+exclusion, and witnesses surviving completed-owner transfer. No new runtime
+compression or speed improvement is claimed from exporting these candidates.
+
+The audited batch yields 222 per-input witness recipes covering 431 actual applies:
+
+| pass3 | recipes | observed applies | exact-wiring applies |
+|---|---:|---:|---:|
+| fact | 29 | 57 | 0 |
+| loopfact | 24 | 30 | 0 |
+| sum-bits | 90 | 179 | 8 |
+| dot-product | 79 | 165 | 44 |
+
+All 2,652 saved Run checks and terminal checks pass. All 47 ownership tests and
+17 Python analysis tests pass. These per-input recipe counts are not deduplicated
+across workloads. Only 52 observed applies discharge all static key obligations;
+the other candidates require guards. Thus treating all 431 as unconditional
+saturated transitions would overstate the evidence. The large compression goal
+remains unmet; the next runtime change must consume these witnesses while removing
+an existing lookup and, where proven, its intermediate retained state.
+
+### Guarded constructor witness execution (explicit experiment)
+
+An optional `ownership_witnesses` catalog now lowers the observed addresses into
+operation-indexed routes. Loading checks source identity, shape/code compatibility,
+query and RHS operators, and constructor eligibility. It never trusts a trace to
+prove key equality. The runtime uses the existing current Entry, checks its source
+frame/code and the target frame/code, and passes that actual fact reference to the
+existing live prepared-result consumer. It constructs the key once; a valid witness
+returns its actual result and eliminates the ordinary constructor lookup. A dead,
+hidden or mismatching witness falls back using that same key. A Cell-route witness
+never receives the stronger Run certificate used by query-prepared results.
+
+No extra per-instance binding, result history, or reverse consumer list is added.
+Rules absent from the catalog have no witness Entry admission; operations without
+a plan do not probe routes. Entries are admitted for selected witness rules even
+when those rules have no birth-producing composition transition. Without this
+admission the first fixture had zero probes: collecting a catalog alone did not
+connect it to execution. The regression now requires both an accepted route and
+fewer actual key lookups, in addition to equal graphs, snapshots and binding audits.
+It also checks hidden/deleted witnesses and rejects invalid operator code.
+
+| pass3 | route probes | accepted / lookups removed | added field checks | Graph bytes delta |
+|---|---:|---:|---:|---:|
+| fact | 258 | 23 | 72 | 0 |
+| loopfact | 204 | 14 | 35 | 0 |
+| sum-bits | 1,649 | 115 | 392 | 0 |
+| dot-product | 1,988 | 148 | 532 | 0 |
+
+The initial rule-wide route map required 6,895 probes. Compiling per-operation
+admission and only the relevant Entry positions reduces that to 4,099, preserving
+all 300 acceptances. Measured port constructor index lookups decrease by exactly
+300 as well. Failed guards are charged, not counted as skipped work. Retained
+Program increases 91–293 KB per case (including artifact/catalog storage), reported
+separately. Final Graph remains unchanged. The catalog is **not installed in the
+shared seed**, and no speed or large compression result is claimed. Reusing an
+already-existing constructor does not by itself eliminate its retained fact state.
+
+48 ownership tests and 17 Python tests pass; the default runtime also compiles.
+The final dispatch implementation is checked against all 2,652 saved source Run
+checks and terminal effects. This is the same-source standalone Cell contract,
+not a new native egglog semantic admission for these unmarked inputs.
+
+```
+target/debug/examples/batch_cell_learning apply-witnesses \
+  out/cell-batched-learning owned-state witness-direct
+target/debug/examples/batch_cell_learning check-passive \
+  out/cell-batched-learning witness-direct
+# Measure each witness-direct/CASE/candidate.json in inherited-owners
+# --port-domains-only mode; heap.json is the first route implementation,
+# heap-dispatch.json is the final per-operation dispatch implementation.
+python3 benchmarks/cell-batched-learning/direct_witness_results.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/direct-witness-results.json
+```
+
+### Residual inherited values instead of a complete parent dependency
+
+The completed-parent plan previously required every remaining inherited slot to
+have a local symbolic or stable-scalar provider. A single missing provider kept
+the whole parent edge, even when the value was already stored in the child. In
+particular an RHS constructor can reuse a foreign fact and provide no local
+scalar storage. A compile-time list of possible local providers cannot establish
+that a provider actually exists for this instance.
+
+The compiler now emits the complete remaining parent-slot read obligation.
+At completion, the runtime uses existing local values first, then equal local
+symbolic/stable-scalar providers, and captures only uncovered actual values into
+the existing child slots. It computes the residual before changing ownership;
+errors preserve the original parent. Only after satisfying every retained read
+obligation does it release the parent reference. Original Run-boundary GC remains
+unchanged. This introduces no extra binding map or per-producer consumer list.
+
+The same shared catalog now produces:
+
+| pass3 | parent edges | ordinary source records | Graph bytes before → after |
+|---|---:|---:|---:|
+| fact | 89 → 0 | 461 → 371 | 747,247 → 732,807 |
+| loopfact | 76 → 0 | 438 → 366 | 662,041 → 657,009 |
+| sum-bits | 216 → 0 | 1,116 → 893 | 1,989,427 → 1,962,163 |
+| dot-product | 231 → 0 | 1,211 → 983 | 1,965,147 → 1,935,099 |
+
+These are physical storage gains, **not logical node elimination**: logical frames
+remain 753 / 691 / 2,180 / 2,136 and live fact counts remain 948 / 892 / 2,895 / 2,825.
+Parent-free children can join existing completed owners. Capturing the residual
+adds 135 / 116 / 333 / 373 slot writes over execution; explicit final slots increase
+by 113 / 107 / 260 / 315. Cumulative capacity growth from capture is 624 / 864 /
+2,088 / 1,656 bytes. The report charges those costs and takeover peaks. Net Graph
+savings remain only 0.8–1.9%; zero parent edges is not evidence of the larger
+compression goal being reached.
+
+49 ownership tests (including serial and two-worker reuse of foreign constructor
+results) and eight Unit tests pass. The batch is checked against all saved source
+Runs and terminal effects. The separate reviewed marked sum-bits retains digest
+`1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82`;
+Graph is 2,392,254 → 2,362,006 bytes and saved-export `choice_diagnosis.py` returns
+pass. This does not create a new native semantic contract for the unmarked batch.
+
+Measure each unchanged seed candidate into `candidate-residual-parent-heap.json`
+in `inherited-owners --port-domains-only` mode, then summarize:
+
+```
+python3 benchmarks/cell-batched-learning/residual_parent_results.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/residual-parent-results.json
+target/debug/examples/batch_cell_learning check-passive out/cell-batched-learning owned-state
+```
+
+### Reusing completed child storage inside a larger Cell
+
+A composed Cell can contain several smaller completed Cells. The prior extension
+path flattens all their slots and facts into one replacement array on each later
+stage. The optional `nested-owners` experiment retains existing storage segments
+and transfers only newly completed source frames. The existing component frame
+list and source-to-owner directory remain authoritative: no second runtime child
+registry or reverse dependency list is introduced. It can reuse a partial old
+segment without consuming its siblings because it never relocates that segment.
+
+A lifecycle test checks unchanged old array addresses, atomic rejection of duplicate
+sources, a one-frame suffix, partial unsealing, deletion and surviving siblings.
+Six fact-state tests pass. `check-nested` passes all 2,652 source-bound cached Run
+and terminal checks, using segment reuse only at the original transfer boundaries.
+This remains a standalone Cell runtime check, not new native semantic admission.
+
+The four workloads avoid 4,355 old-slot moves and 3,710 old-fact moves. This is
+real removal of repeated transfer work, **not final egraph compression**:
+
+| pass3 | Graph before | nested storage | added bytes |
+|---|---:|---:|---:|
+| fact | 732,807 | 733,431 | 624 |
+| loopfact | 657,009 | 662,273 | 5,264 |
+| sum-bits | 1,962,163 | 1,975,179 | 13,016 |
+| dot-product | 1,935,099 | 1,949,387 | 14,288 |
+
+Old slots/facts no longer move during extension, but independently allocated
+segments add headers and retain some retired entries until their own segment
+retires. The original per-source frame descriptors also remain. **The experiment
+is not selected as the default**; there is no speed measurement or large-compression
+claim. Smaller transient allocations are not guaranteed either; the recorded
+peak is reported separately.
+
+This identifies the required next representation change. Template reuse and
+instance reuse must be distinct. A parent template can reference child templates
+with static port projections and stage obligations. A parent instance should
+carry only actual child identity/parameters and new state. A repeated small
+pattern with different bindings is a different instance; sharing one actual child
+requires a lifetime proof. Runtime source IDs and fact visibility cannot disappear
+until their addresses and outstanding readers have a proved replacement. Merely
+adding child blocks while preserving every flattened descriptor is insufficient.
+
+```
+# runtime_storage_peak PROGRAM OUTPUT nested-owners --port-domains-only
+# Write candidate-nested-owner-heap.json for each unchanged shared seed.
+target/debug/examples/batch_cell_learning check-nested out/cell-batched-learning owned-state
+python3 benchmarks/cell-batched-learning/nested_owner_results.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/nested-owner-results.json
+```
+
+### Nested Cell granularity: a rule body is not an indivisible child
+
+The next storage change must address actual cross-component wiring rather than
+only shrinking source headers. `subcell_links.py` reads the existing batch
+snapshots, decodes possible native result addresses, and verifies the producer's
+current symbol binding before classifying a link. It keeps distinct instances and
+operator codes distinct even when they share one port layout. It separately tests
+whether an owned, visible provider fact remains. These are snapshot candidates,
+not a replacement for match evidence or a count of removable boundary records.
+A visible provider site alone is also not proof of immutable constructor semantics;
+mutable reads still require their original freshness obligations.
+
+| pass3 | cross-component symbol references | with visible provider | largest producer references | distinct producer ports |
+|---|---:|---:|---:|---:|
+| fact | 964 | 957 | 768 | 62 |
+| loopfact | 915 | 910 | 614 | 47 |
+| sum-bits | 4,052 | 2,962 | 1,576 | 78 |
+| dot-product | 3,488 | 3,406 | 2,315 | 161 |
+
+In these frozen inputs the largest producer is component 128 / source frame 129 /
+template 341: the typed `initialization` rule. It contains 48–171 live facts in
+one source frame. Its 5,273 references account for 56.0% of all 9,419 cross-component
+symbol references, but are spread across many different ports. A whole-component
+merge would pull unrelated initialized expressions into the same owner. Conversely,
+selecting only existing source-frame boundaries cannot expose their repeated small
+substructures. On sum-bits, 1,090 cross-component references have no currently
+owned visible provider in the mapped producer; an address alone cannot authorize
+importing a fact or skipping its construction.
+
+The architectural requirement is therefore both **composition and slicing**:
+
+1. Keep source rule/effect execution identity separate from reusable Cell regions.
+   A typed child view selects existing fact operations and exports their ports;
+   it must not allocate duplicate facts just to express a subcell.
+2. A parent template references typed child templates, port projections and stage
+   obligations. A parent instance references actual child occurrences and only its
+   new state. Repeated layouts with different bindings remain distinct occurrences.
+3. Use actual successful Entry/apply evidence to select multi-child joins. The
+   current append-only transition chooses one component and a new source frame;
+   shared roots alone do not establish a safe multi-child join.
+4. Remove flattened descriptors and redundant boundary maintenance only inside the
+   proven coverage. Shared actual children retain their lifecycle obligations;
+   static wiring must not become per-child lists of consumer instances.
+
+No new runtime compression or stage skip is implemented by this audit. It changes
+the next target from generic completed-metadata packing to typed views within large
+source Cells and composition of those views. Existing local index/visibility/Run
+checks remain authoritative. Twenty-one Python tests pass, including invalid
+native bindings, hidden providers, foreign slots, and same-layout/different-operator
+counterexamples. This uses saved traces; it does not rerun workloads or timings.
+
+```
+python3 benchmarks/cell-batched-learning/subcell_links.py out/cell-batched-learning \
+  benchmarks/cell-batched-learning/subcell-link-results.json
+python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
+```
+
+### Repeated static child views in the saved batch
+
+`subcell_patterns.py` now mines two- and three-operation output-to-input paths
+inside existing components. It alpha-renames static template ports, retains typed
+operator IDs within each source program, and never uses current union roots to
+invent wiring. Hidden or non-owned providers are excluded. Scalar columns remain
+parameters requiring validation; this is not a saturation certificate.
+
+| pass3 | repeated patterns | greedily disjoint children | covered existing facts | children crossing birth epochs |
+|---|---:|---:|---:|---:|
+| fact | 83 | 65 | 181 | 14 |
+| loopfact | 86 | 71 | 199 | 12 |
+| sum-bits | 156 | 260 | 720 | 48 |
+| dot-product | 215 | 263 | 753 | 43 |
+
+These are actual standalone Cell runtime snapshots, not native egglog measurements.
+The deterministic greedy packing counts each fact once across all selected views;
+it is neither an optimal packing nor a prediction of saved bytes. Facts retain
+identity, and no runtime path has been removed. Birth epochs do not establish
+source Run order. Different scalar bindings remain different child occurrences.
+
+This narrows the next takeover experiment to concrete multi-operation views,
+including views spanning source frames, rather than retaining only whole-rule
+frames. A typed compiler admission must still check immutable constructor versus
+mutable function semantics, scalar bindings, actual Entry evidence and original
+Run boundaries. Storage takeover must remove the corresponding independent
+records and charge view addressing; a catalog alone cannot discharge this work.
+The observed cross-epoch candidates motivate stage-aware child completion, but do
+not authorize skipping an apply or publishing a future effect early.
+
+```
+python3 benchmarks/cell-batched-learning/subcell_patterns.py out/cell-batched-learning \
+  benchmarks/cell-batched-learning/subcell-pattern-results.json
+python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
+```
+
+All 24 analysis tests pass, including alpha-renaming, operator and alias distinction,
+scalar-column distinction, hidden providers, and union roots that must not create
+static edges. No workloads, timing campaign or runtime semantics were changed.
+
+### Typed child-view lowering and batched layout sharing
+
+`subcell_views.py` lowers the saved paths into constructor-only child-view
+candidates. Each column is checked against the source table schema; an aliased Eq
+port must have one consistent sort. Cross-program layout identity includes table
+names, full schemas and alpha-renamed wiring, rather than program-local table IDs.
+The four samples share 86 layouts for 659 selected occurrences covering 1,853
+existing facts. Per-case selection remains 65/71/260/263 children. These are
+compiler candidates only, not a new runtime fact registry or completed takeover.
+
+Scalar columns are parameters projected from the original `(FactRef, column)`.
+They are not captured trace values, copied bindings, or assumed equal merely
+because their columns have the same sort. Eq parameters refer to existing
+component symbols. This distinction matters: an all-Eq-only admission would retain
+just 263 children covering 620 facts; it would reject valid reusable constructor
+layouts simply because their instances carry different scalar parameters.
+All selected operators in this batch pass constructor and schema validation.
+
+The generated artifact explicitly has `executable: false`: it still lacks Entry
+admission, visibility/generation validation and source Run scheduling proofs.
+All ports are exported conservatively, so no external-use information is lost.
+Before runtime integration, these occurrence addresses must be replaced by shared
+shape/frame-relative addressing where proved, without retaining this offline
+catalog as a second instance directory. No runtime memory or RHS saving is claimed.
+
+```
+python3 benchmarks/cell-batched-learning/subcell_views.py out/cell-batched-learning \
+  out/cell-batched-learning/typed-child-views.json \
+  benchmarks/cell-batched-learning/subcell-view-results.json
+```
+
+The existing Python discovery command passes 29 tests. New checks cover equivalent
+layouts under different table numbering, mutable-table rejection, column schema
+mismatch, conflicting Eq sorts, and projections onto the original scalar fields.
+
+### Runtime facts inherit completed Cell stage state
+
+Completed facts now derive `born == epoch == source.started_epoch` and visible
+state from their existing source frame when that equality is established at
+transfer. A 16-byte row retains the operation, hash and exception/deletion index;
+only divergent facts store an independent 24-byte lifecycle. Updates reuse one
+exception per fact rather than accumulating history. Retired exception storage is
+reclaimed on owner compaction/retirement. Source frame identities and all actual
+facts remain unchanged. This is state deduplication, not nested-template execution
+or skipping RHS effects. The sparse/storage-metrics takeover path remains opt-in.
+
+Transfer and extension stream directly into this representation, without first
+building an expanded fact array. Frame-specific epochs remain separate even when
+multiple source stages share an owner. Exceptional representation changes retain
+the original unseal fallback. Accounting includes exception capacity and the
+larger owner headers; live fact payload accounting was updated to the actual
+representation.
+
+| pass3 | Graph before | Graph after | inherited/live completed fact lifecycles |
+|---|---:|---:|---:|
+| fact | 732,807 | 728,679 | 446 / 481 |
+| loopfact | 657,009 | 650,241 | 419 / 452 |
+| sum-bits | 1,962,163 | 1,942,435 | 1,380 / 1,786 |
+| dot-product | 1,935,099 | 1,910,595 | 1,396 / 1,574 |
+
+The full Graph reduction is only 0.6–1.3%, despite substantially smaller covered
+fact records. This is not the large-compression target. Maximum takeover temporary
+allocation falls for fact/loopfact, is unchanged for sum-bits, and increases from
+22,840 to 23,272 bytes for dot-product; do not claim uniformly reduced peaks.
+
+Validation: 160 runtime unit tests, default runtime compilation, all 2,652 saved
+Run graph/RHS/write checks plus terminal effects, exact saved lifecycle traces,
+and final-state digests pass. Marked sum-bits Graph bytes are 2,345,710 (previously
+2,362,006), and its new final digest matches the reviewed saved exports;
+`choice_diagnosis.py` returns `pass` / exit 0. These are actual standalone Cell
+runtime results, not a new native contract for the other workloads. No timing was
+measured. New lifecycle tests cover independent source epochs, hash-only writes,
+bounded repeated mutations, deletion, and existing owner extension/retirement
+checks now include reordered source stages.
+
+Reproduce with the existing Cargo example build, then measure each unchanged
+candidate into `candidate-stage-inherited-heap.json` using `inherited-owners
+--port-domains-only`. Use `check-passive` with unchanged candidate/selection inputs
+in `stage-inherited/CASE`, and summarize with:
+
+```
+python3 benchmarks/cell-batched-learning/stage_inherited_results.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/stage-inherited-results.json
+```
+
+### Shared wiring proves RHS keys without merging instance lifetimes
+
+Optional constructor-witness routes now compile a key proof from one successful
+immutable constructor query anchor. The proof follows Copy operations, forgets
+slots overwritten by other Lets, and checks every RHS key argument against the
+selected target's static ports. A scalar projection is identified by its exact
+source frame/operation/column, never by an observed value or its sort alone.
+Unproved routes continue through the existing exact-key path. The artifact cannot
+supply a trusted proof flag: the compiler derives it from source operations.
+
+At execution, the original route resolves the actual source and target instances.
+A proved route still checks source liveness/visibility, target liveness/visibility,
+operator identity, forwarding and pending dirty state. It reads the target's
+actual result column directly, before building RHS key arguments. No persistent
+bindings, nested instance tree or additional producer-consumer lists are added.
+The new proof flag fits the existing route target's padding on the measured target.
+Original source queries, delta ownership, effect order and result binding remain.
+This is not a permanent saturation certificate and does not skip unions or effects.
+
+| pass3 | key constructions removed | key fields not constructed | repeated target-field checks removed | source/proof checks | fallback after proof admission |
+|---|---:|---:|---:|---:|---:|
+| fact | 1 | 1 | 1 | 1 / 1 | 0 |
+| loopfact | 2 | 2 | 2 | 2 / 2 | 0 |
+| sum-bits | 15 | 15 | 15 | 15 / 15 | 0 |
+| dot-product | 47 | 82 | 82 | 48 / 48 | 1 |
+
+Total: 65 key constructions removed, with 100 key arguments not evaluated and
+100 repeated target-field comparisons removed. The 66 source checks and 66
+proof admissions are charged separately. Route probes, accepted routes and total
+port-key index lookups are unchanged from the preceding direct-witness experiment;
+its existing 300 avoided index lookups are not credited again. This remains a
+small work reduction with no speed claim. Final Graph bytes and exact lifecycle
+snapshots equal the current stage-inherited seed in every case: no runtime memory
+compression is attributable to this change. The default catalog is unchanged.
+
+Validation includes 50 Cell integration tests, source-copy/overwrite/scalar-identity
+proof tests, and default runtime compilation. The route integration fixture now
+checks an unexpected cross-stage union as well as hidden/deleted witnesses.
+The scalar alias fixture confirms that existing query completion already removes
+that RHS entirely; it must not be forced through this path or credited twice.
+All 2,652 saved Run graph/RHS/write checks plus terminal effects pass for the
+optional witness catalog. These checks use the standalone runtime contracts.
+
+Reproduce by rebuilding the existing examples, recording each
+`witness-direct/CASE/candidate.json` to `heap-key-proof.json` with
+`inherited-owners --port-domains-only`, then:
+
+```
+target/debug/examples/batch_cell_learning check-passive out/cell-batched-learning witness-direct
+python3 benchmarks/cell-batched-learning/key_proof_results.py out/cell-batched-learning \
+  benchmarks/cell-batched-learning/key-proof-results.json
+```
+
+### Observation history is explicit, not default execution state
+
+The production ownership path previously appended a 96-byte barrier record at
+every source barrier and retained the vector for the whole execution. Searches of
+the runtime show that this array is consumed only by the diagnostic ownership
+report; matching, pending completion, stage switching and iterative catalog
+selection do not read it. Cumulative counters remain authoritative and unchanged.
+
+Ordinary execution now leaves this history empty. `Executor::new(graph, true)`,
+explicit catalog observation and exploratory fragment training retain it, as does
+`Graph::trace_ownership_barriers()`. Explicit late activation is supported and
+idempotent: `barrier_history.start_after_barriers` exposes the missing prefix rather
+than presenting a partial trace as complete. Reports include whether retention is
+enabled and its actual capacity bytes. Existing audit/learning paths still receive
+all requested observations; their memory cost must remain charged to those modes.
+
+| pass3 | ordinary Graph before | ordinary Graph after | history allocation removed |
+|---|---:|---:|---:|
+| fact | 728,679 | 704,103 | 24,576 |
+| loopfact | 650,241 | 625,665 | 24,576 |
+| sum-bits | 1,942,435 | 1,844,131 | 98,304 |
+| dot-product | 1,910,595 | 1,812,291 | 98,304 |
+
+Every other measured Graph field is byte-for-byte equal in teardown accounting;
+all final-state hashes and exact fact-lifecycle snapshots are unchanged. This
+removes an unnecessary default maintenance path, but is not structural fact
+compression and does not meet the 30%-of-original target. It should not be credited
+as a gain from a larger baked Cell or a new RHS skip. No timing campaign was run.
+
+Validation: 51 Cell integration tests, including ordinary/audit/catalog-trace/late
+activation behavior, and default runtime compilation. The marked sum-bits final
+digest matches the reviewed saved exports and `choice_diagnosis.py` passes.
+The change does not alter source Run boundaries or effect scheduling.
+
+Reproduce with the existing example build and `runtime_storage_peak` on each
+unchanged seed, recording `candidate-explicit-history-heap.json` with
+`inherited-owners --port-domains-only`, then:
+
+```
+python3 benchmarks/cell-batched-learning/explicit_history_results.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/explicit-history-results.json
+```
+
+## Complete atomic constructor frames before delegating their slots
+
+Synthetic table templates contain one constructor operation. Import and dynamic
+construction previously left their frames incomplete even after activation
+succeeded. Mark that single operation complete and project duplicate Eq bindings
+through existing composed ports. Imported frames delegate after ownership adopts
+their fields. Failed activation does not complete a frame; normal RHS completion
+boundaries are unchanged. Scalar values stay stored. No additional runtime index,
+child ownership hierarchy, or larger restoration unit is introduced.
+
+This lets actual completed source frames participate in the existing cross-Run
+owner takeover. It does not skip rule applications or imply saturation under
+future unions. The source frame remains the restoration boundary. Fact identities,
+birth epochs, visibility and residual matching remain live obligations.
+
+Against the current explicit-history seed, final Graph-owned heap changes:
+
+| case | before | after |
+|---|---:|---:|
+| fact | 704103 | 705175 |
+| loopfact | 625665 | 616289 |
+| sum-bits | 1844131 | 1830387 |
+| dot-product | 1812291 | 1798019 |
+
+These are small mixed results, not substantial egraph compression. Broader owner
+coverage also changes headers/capacity; completion eligibility alone is not a
+sufficient storage-selection cost model. Logical fact and instance identities are
+unchanged. Compare lifecycle by logical Cell ID, excluding the intentionally
+changed completion/storage-placement flags, not incidental arena iteration order.
+The marked sum-bits Graph uses 2222254 bytes versus 2247406; its executed final
+digest matches the saved semantic exports and choice diagnosis passes.
+
+Validation: 52 ownership tests, including dynamic constructor union collision,
+pass; default runtime compile passes. Reproduce memory comparisons with the
+existing runtime_storage_peak inherited-owners mode, writing candidate-atomic-heap.json,
+then atomic_completion_results.py ROOT OUTPUT. No latency benchmark was run.
+The rebuilt batch checker also passes all 2,652 saved source Run checks and the
+four terminal checks using the stage-inherited seed selection. Extra Eq bindings
+removed are 291/307/453/533 respectively. Scalar-driven restoration capacities
+remain 672/0/4320/3360 bytes, with no component/representation unseals. Thus this
+coverage expansion does not increase the observed restoration work in these cases.

@@ -1,0 +1,6839 @@
+{
+  "scope": "offline reproof of observed shape-relative witness wiring, not an executable takeover or memory saving",
+  "live_obligations": [
+    "original full query and delta ownership",
+    "fact liveness and visibility",
+    "shape and frame generation",
+    "publication and Run ordering"
+  ],
+  "cases": [
+    {
+      "case": "fact",
+      "source_program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "runs": 418,
+      "plans": [
+        {
+          "rule": 58,
+          "shape": 350,
+          "frame_codes": [
+            42,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "frame_codes": [
+            37,
+            42,
+            42,
+            43,
+            43,
+            44,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "frame_codes": [
+            37,
+            42,
+            42,
+            43,
+            43,
+            44,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              3,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "frame_codes": [
+            37,
+            42,
+            42,
+            43,
+            43,
+            44,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              4,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              6,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 88,
+          "shape": 671,
+          "frame_codes": [
+            73,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 88,
+          "shape": 759,
+          "frame_codes": [
+            64,
+            70,
+            71,
+            71,
+            67,
+            69,
+            69
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              4,
+              0
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 476,
+          "frame_codes": [
+            110,
+            108,
+            41,
+            70
+          ],
+          "query_sites": [
+            [
+              0,
+              2,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 645,
+          "frame_codes": [
+            63,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 647,
+          "frame_codes": [
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 5,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 648,
+          "frame_codes": [
+            70,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "frame_codes": [
+            69,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "frame_codes": [
+            69,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 671,
+          "frame_codes": [
+            73,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 758,
+          "frame_codes": [
+            64,
+            70,
+            71,
+            71,
+            67,
+            69
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 758,
+          "frame_codes": [
+            64,
+            70,
+            71,
+            71,
+            67,
+            69
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 759,
+          "frame_codes": [
+            64,
+            70,
+            71,
+            71,
+            67,
+            69,
+            69
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 759,
+          "frame_codes": [
+            64,
+            70,
+            71,
+            71,
+            67,
+            69,
+            69
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 759,
+          "frame_codes": [
+            64,
+            70,
+            71,
+            71,
+            67,
+            69,
+            69
+          ],
+          "query_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 92,
+          "shape": 667,
+          "frame_codes": [
+            67,
+            69
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 278,
+          "shape": 627,
+          "frame_codes": [
+            338,
+            202
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              6
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 469,
+          "shape": 785,
+          "frame_codes": [
+            337,
+            341,
+            341,
+            341,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 469,
+          "shape": 785,
+          "frame_codes": [
+            337,
+            341,
+            341,
+            341,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              3,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 469,
+          "shape": 785,
+          "frame_codes": [
+            337,
+            341,
+            341,
+            341,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              2,
+              3
+            ],
+            [
+              4,
+              2,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 469,
+          "shape": 785,
+          "frame_codes": [
+            337,
+            341,
+            341,
+            341,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              2,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 777,
+          "frame_codes": [
+            336,
+            342
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 763,
+          "frame_codes": [
+            349,
+            351
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 765,
+          "frame_codes": [
+            309,
+            351
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 4,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 510,
+          "shape": 637,
+          "frame_codes": [
+            631,
+            368
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 512,
+          "shape": 637,
+          "frame_codes": [
+            634,
+            368
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        }
+      ],
+      "recipes": 29,
+      "exact_wiring_recipes": 0,
+      "exact_wiring_applications": 0
+    },
+    {
+      "case": "loopfact",
+      "source_program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "runs": 398,
+      "plans": [
+        {
+          "rule": 58,
+          "shape": 378,
+          "frame_codes": [
+            386,
+            349,
+            375,
+            44,
+            112,
+            41,
+            45,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 492,
+          "frame_codes": [
+            109,
+            108,
+            45,
+            70,
+            70,
+            108,
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              8,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 492,
+          "frame_codes": [
+            109,
+            108,
+            45,
+            70,
+            70,
+            108,
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              9,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              4,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 645,
+          "frame_codes": [
+            63,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 646,
+          "frame_codes": [
+            63,
+            71,
+            67,
+            69
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "frame_codes": [
+            69,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "frame_codes": [
+            69,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 663,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 663,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              5,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 671,
+          "frame_codes": [
+            73,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 751,
+          "frame_codes": [
+            70,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 752,
+          "frame_codes": [
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 92,
+          "shape": 665,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              5,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 469,
+          "shape": 786,
+          "frame_codes": [
+            337,
+            341,
+            341,
+            341,
+            341,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 469,
+          "shape": 786,
+          "frame_codes": [
+            337,
+            341,
+            341,
+            341,
+            341,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              2,
+              3
+            ],
+            [
+              4,
+              2,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 777,
+          "frame_codes": [
+            336,
+            342
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 840,
+          "frame_codes": [
+            338,
+            342,
+            343
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              6
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 763,
+          "frame_codes": [
+            349,
+            351
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 765,
+          "frame_codes": [
+            309,
+            351
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 510,
+          "shape": 637,
+          "frame_codes": [
+            631,
+            368
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        }
+      ],
+      "recipes": 24,
+      "exact_wiring_recipes": 0,
+      "exact_wiring_applications": 0
+    },
+    {
+      "case": "sum-bits",
+      "source_program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "runs": 882,
+      "plans": [
+        {
+          "rule": 58,
+          "shape": 350,
+          "frame_codes": [
+            42,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 378,
+          "frame_codes": [
+            386,
+            349,
+            375,
+            44,
+            112,
+            41,
+            45,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 393,
+          "frame_codes": [
+            41,
+            44,
+            112
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "frame_codes": [
+            36,
+            42,
+            43,
+            43,
+            43,
+            43,
+            43,
+            44,
+            112,
+            112,
+            112,
+            41,
+            41,
+            41,
+            43,
+            43
+          ],
+          "query_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "frame_codes": [
+            36,
+            42,
+            43,
+            43,
+            43,
+            43,
+            43,
+            44,
+            112,
+            112,
+            112,
+            41,
+            41,
+            41,
+            43,
+            43
+          ],
+          "query_sites": [
+            [
+              0,
+              4,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "frame_codes": [
+            36,
+            42,
+            43,
+            43,
+            43,
+            43,
+            43,
+            44,
+            112,
+            112,
+            112,
+            41,
+            41,
+            41,
+            43,
+            43
+          ],
+          "query_sites": [
+            [
+              0,
+              14,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "frame_codes": [
+            37,
+            42,
+            42,
+            43,
+            43,
+            44,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "frame_codes": [
+            37,
+            42,
+            42,
+            43,
+            43,
+            44,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              6,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "frame_codes": [
+            37,
+            42,
+            42,
+            43,
+            43,
+            44,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              3,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 615,
+          "frame_codes": [
+            37,
+            42,
+            42,
+            43,
+            43,
+            44,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              4,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              6,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 64,
+          "shape": 466,
+          "frame_codes": [
+            0,
+            50
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              11
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 8,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 87,
+          "shape": 671,
+          "frame_codes": [
+            73,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 88,
+          "shape": 670,
+          "frame_codes": [
+            67,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 88,
+          "shape": 671,
+          "frame_codes": [
+            73,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 88,
+          "shape": 753,
+          "frame_codes": [
+            70,
+            70,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 476,
+          "frame_codes": [
+            110,
+            108,
+            41,
+            70
+          ],
+          "query_sites": [
+            [
+              0,
+              2,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 492,
+          "frame_codes": [
+            109,
+            108,
+            45,
+            70,
+            70,
+            108,
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              8,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 492,
+          "frame_codes": [
+            109,
+            108,
+            45,
+            70,
+            70,
+            108,
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              9,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              4,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 645,
+          "frame_codes": [
+            63,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 646,
+          "frame_codes": [
+            63,
+            71,
+            67,
+            69
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 647,
+          "frame_codes": [
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 5,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 647,
+          "frame_codes": [
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 652,
+          "frame_codes": [
+            63,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 652,
+          "frame_codes": [
+            63,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "frame_codes": [
+            69,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 10,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "frame_codes": [
+            69,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 10,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 658,
+          "frame_codes": [
+            69,
+            70,
+            73,
+            70,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              5,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 658,
+          "frame_codes": [
+            69,
+            70,
+            73,
+            70,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              5,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 659,
+          "frame_codes": [
+            69,
+            70,
+            73,
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              5,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 659,
+          "frame_codes": [
+            69,
+            70,
+            73,
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 659,
+          "frame_codes": [
+            69,
+            70,
+            73,
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 659,
+          "frame_codes": [
+            69,
+            70,
+            73,
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              4,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 671,
+          "frame_codes": [
+            73,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 671,
+          "frame_codes": [
+            73,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 751,
+          "frame_codes": [
+            70,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 6,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 752,
+          "frame_codes": [
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 4,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 753,
+          "frame_codes": [
+            70,
+            70,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 753,
+          "frame_codes": [
+            70,
+            70,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 755,
+          "frame_codes": [
+            64,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 755,
+          "frame_codes": [
+            64,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 761,
+          "frame_codes": [
+            70,
+            70,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 91,
+          "shape": 755,
+          "frame_codes": [
+            64,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 92,
+          "shape": 647,
+          "frame_codes": [
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 92,
+          "shape": 753,
+          "frame_codes": [
+            70,
+            70,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 92,
+          "shape": 755,
+          "frame_codes": [
+            64,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 124,
+          "shape": 867,
+          "frame_codes": [
+            43,
+            43,
+            97,
+            112,
+            41,
+            97,
+            99,
+            112,
+            41,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              6,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "query_symbol_alias",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 124,
+          "shape": 877,
+          "frame_codes": [
+            43,
+            43,
+            97,
+            112,
+            41,
+            43,
+            97,
+            99,
+            112,
+            41
+          ],
+          "query_sites": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              7,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "query_symbol_alias",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 124,
+          "shape": 877,
+          "frame_codes": [
+            43,
+            43,
+            97,
+            112,
+            41,
+            43,
+            97,
+            99,
+            112,
+            41
+          ],
+          "query_sites": [
+            [
+              0,
+              9,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              9,
+              1
+            ],
+            [
+              1,
+              6,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 278,
+          "shape": 627,
+          "frame_codes": [
+            338,
+            202
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              6
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 278,
+          "shape": 714,
+          "frame_codes": [
+            92,
+            95,
+            202,
+            202
+          ],
+          "query_sites": [
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 387,
+          "shape": 141,
+          "frame_codes": [
+            274
+          ],
+          "query_sites": [
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              3,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 4,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 391,
+          "shape": 139,
+          "frame_codes": [
+            275
+          ],
+          "query_sites": [
+            [
+              2,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 6,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 391,
+          "shape": 217,
+          "frame_codes": [
+            278
+          ],
+          "query_sites": [
+            [
+              2,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 452,
+          "shape": 586,
+          "frame_codes": [
+            234,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 452,
+          "shape": 676,
+          "frame_codes": [
+            351,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 469,
+          "shape": 788,
+          "frame_codes": [
+            337,
+            341,
+            341,
+            341,
+            341,
+            341,
+            341,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 469,
+          "shape": 788,
+          "frame_codes": [
+            337,
+            341,
+            341,
+            341,
+            341,
+            341,
+            341,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              2,
+              3
+            ],
+            [
+              4,
+              2,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 777,
+          "frame_codes": [
+            336,
+            342
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 780,
+          "frame_codes": [
+            336,
+            342,
+            343
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 840,
+          "frame_codes": [
+            338,
+            342,
+            343
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              6
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 847,
+          "frame_codes": [
+            339,
+            342,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              8
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 848,
+          "frame_codes": [
+            339,
+            342,
+            341,
+            343
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              8
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 480,
+          "shape": 556,
+          "frame_codes": [
+            24,
+            309
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 480,
+          "shape": 597,
+          "frame_codes": [
+            228,
+            309
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              4
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 482,
+          "shape": 797,
+          "frame_codes": [
+            384,
+            349,
+            349,
+            349,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 482,
+          "shape": 797,
+          "frame_codes": [
+            384,
+            349,
+            349,
+            349,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 482,
+          "shape": 798,
+          "frame_codes": [
+            384,
+            349,
+            349,
+            349,
+            349,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 482,
+          "shape": 798,
+          "frame_codes": [
+            384,
+            349,
+            349,
+            349,
+            349,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              5,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              5,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 483,
+          "shape": 797,
+          "frame_codes": [
+            384,
+            349,
+            349,
+            349,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 483,
+          "shape": 797,
+          "frame_codes": [
+            384,
+            349,
+            349,
+            349,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 483,
+          "shape": 798,
+          "frame_codes": [
+            384,
+            349,
+            349,
+            349,
+            349,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 483,
+          "shape": 798,
+          "frame_codes": [
+            384,
+            349,
+            349,
+            349,
+            349,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              5,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              5,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 763,
+          "frame_codes": [
+            349,
+            351
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 8,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 764,
+          "frame_codes": [
+            349,
+            351,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 765,
+          "frame_codes": [
+            309,
+            351
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 4,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 488,
+          "shape": 676,
+          "frame_codes": [
+            351,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 488,
+          "shape": 764,
+          "frame_codes": [
+            349,
+            351,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 489,
+          "shape": 548,
+          "frame_codes": [
+            216,
+            349
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 489,
+          "shape": 586,
+          "frame_codes": [
+            234,
+            349
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              4
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 489,
+          "shape": 586,
+          "frame_codes": [
+            234,
+            349
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              4
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 4,
+          "remaining_static_obligations": [
+            "query_symbol_alias"
+          ]
+        },
+        {
+          "rule": 489,
+          "shape": 676,
+          "frame_codes": [
+            351,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 489,
+          "shape": 678,
+          "frame_codes": [
+            349,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 489,
+          "shape": 678,
+          "frame_codes": [
+            349,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 489,
+          "shape": 764,
+          "frame_codes": [
+            349,
+            351,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 508,
+          "shape": 305,
+          "frame_codes": [
+            375
+          ],
+          "query_sites": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              0,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 508,
+          "shape": 702,
+          "frame_codes": [
+            375,
+            397,
+            397,
+            397
+          ],
+          "query_sites": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              0,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 508,
+          "shape": 703,
+          "frame_codes": [
+            375,
+            397,
+            397,
+            397,
+            397
+          ],
+          "query_sites": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              0,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 510,
+          "shape": 637,
+          "frame_codes": [
+            631,
+            368
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              1,
+              2
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 510,
+          "shape": 637,
+          "frame_codes": [
+            631,
+            368
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 512,
+          "shape": 637,
+          "frame_codes": [
+            634,
+            368
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        }
+      ],
+      "recipes": 90,
+      "exact_wiring_recipes": 1,
+      "exact_wiring_applications": 8
+    },
+    {
+      "case": "dot-product",
+      "source_program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "runs": 954,
+      "plans": [
+        {
+          "rule": 58,
+          "shape": 378,
+          "frame_codes": [
+            386,
+            349,
+            375,
+            44,
+            112,
+            41,
+            45,
+            44
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 396,
+          "frame_codes": [
+            41,
+            44,
+            112,
+            341
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "frame_codes": [
+            36,
+            42,
+            43,
+            43,
+            43,
+            43,
+            43,
+            44,
+            112,
+            112,
+            112,
+            41,
+            41,
+            41,
+            43,
+            43
+          ],
+          "query_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "frame_codes": [
+            36,
+            42,
+            43,
+            43,
+            43,
+            43,
+            43,
+            44,
+            112,
+            112,
+            112,
+            41,
+            41,
+            41,
+            43,
+            43
+          ],
+          "query_sites": [
+            [
+              0,
+              4,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 58,
+          "shape": 523,
+          "frame_codes": [
+            36,
+            42,
+            43,
+            43,
+            43,
+            43,
+            43,
+            44,
+            112,
+            112,
+            112,
+            41,
+            41,
+            41,
+            43,
+            43
+          ],
+          "query_sites": [
+            [
+              0,
+              14,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              7,
+              0
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 65,
+          "shape": 596,
+          "frame_codes": [
+            29,
+            309,
+            367,
+            51,
+            67,
+            78,
+            95,
+            273,
+            338
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              4
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 88,
+          "shape": 672,
+          "frame_codes": [
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 645,
+          "frame_codes": [
+            63,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 647,
+          "frame_codes": [
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 652,
+          "frame_codes": [
+            63,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 652,
+          "frame_codes": [
+            63,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "frame_codes": [
+            69,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 654,
+          "frame_codes": [
+            69,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 663,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 663,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              4,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 665,
+          "frame_codes": [
+            65,
+            70,
+            70,
+            71,
+            67,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              6,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 751,
+          "frame_codes": [
+            70,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 5,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 752,
+          "frame_codes": [
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 752,
+          "frame_codes": [
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 4,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 90,
+          "shape": 761,
+          "frame_codes": [
+            70,
+            70,
+            70,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 92,
+          "shape": 752,
+          "frame_codes": [
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 92,
+          "shape": 752,
+          "frame_codes": [
+            70,
+            70,
+            71,
+            71
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 116,
+          "shape": 891,
+          "frame_codes": [
+            95,
+            256
+          ],
+          "query_sites": [
+            [
+              0,
+              1,
+              4
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              4
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 122,
+          "shape": 594,
+          "frame_codes": [
+            29,
+            309,
+            367,
+            51,
+            67,
+            78,
+            95
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              4
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              4
+            ],
+            [
+              1,
+              6,
+              1
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 124,
+          "shape": 880,
+          "frame_codes": [
+            43,
+            43,
+            97,
+            112,
+            41,
+            43,
+            97,
+            99,
+            112,
+            41,
+            43,
+            44,
+            97
+          ],
+          "query_sites": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              7,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              4,
+              1
+            ],
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "query_symbol_alias",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 124,
+          "shape": 883,
+          "frame_codes": [
+            43,
+            43,
+            97,
+            112,
+            41,
+            43,
+            97,
+            99,
+            112,
+            41,
+            43,
+            44,
+            97,
+            99,
+            112,
+            112
+          ],
+          "query_sites": [
+            [
+              0,
+              9,
+              1
+            ],
+            [
+              1,
+              13,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              9,
+              1
+            ],
+            [
+              1,
+              6,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "query_symbol_alias",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 252,
+          "shape": 367,
+          "frame_codes": [
+            67,
+            186
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              3,
+              1,
+              3
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 252,
+          "shape": 368,
+          "frame_codes": [
+            71,
+            186
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              3,
+              1,
+              3
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 257,
+          "shape": 367,
+          "frame_codes": [
+            67,
+            186
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              3
+            ]
+          ],
+          "applications": 4,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 257,
+          "shape": 368,
+          "frame_codes": [
+            71,
+            186
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              3
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 258,
+          "shape": 403,
+          "frame_codes": [
+            41,
+            44,
+            112,
+            69,
+            190,
+            187
+          ],
+          "query_sites": [
+            [
+              3,
+              4,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              5,
+              2
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 259,
+          "shape": 402,
+          "frame_codes": [
+            41,
+            44,
+            112,
+            69,
+            190
+          ],
+          "query_sites": [
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              4,
+              2
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 278,
+          "shape": 470,
+          "frame_codes": [
+            336,
+            202,
+            202
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 278,
+          "shape": 890,
+          "frame_codes": [
+            338,
+            338,
+            202
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              6
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 388,
+          "shape": 49,
+          "frame_codes": [
+            271
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 388,
+          "shape": 49,
+          "frame_codes": [
+            271
+          ],
+          "query_sites": [
+            [
+              2,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 388,
+          "shape": 215,
+          "frame_codes": [
+            273
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 388,
+          "shape": 215,
+          "frame_codes": [
+            273
+          ],
+          "query_sites": [
+            [
+              2,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 409,
+          "shape": 832,
+          "frame_codes": [
+            29,
+            287,
+            289,
+            29,
+            29,
+            287
+          ],
+          "query_sites": [
+            [
+              3,
+              3,
+              4
+            ]
+          ],
+          "rhs_sites": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 409,
+          "shape": 832,
+          "frame_codes": [
+            29,
+            287,
+            289,
+            29,
+            29,
+            287
+          ],
+          "query_sites": [
+            [
+              3,
+              3,
+              4
+            ],
+            [
+              4,
+              3,
+              5
+            ]
+          ],
+          "rhs_sites": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 409,
+          "shape": 832,
+          "frame_codes": [
+            29,
+            287,
+            289,
+            29,
+            29,
+            287
+          ],
+          "query_sites": [
+            [
+              4,
+              3,
+              5
+            ]
+          ],
+          "rhs_sites": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 409,
+          "shape": 835,
+          "frame_codes": [
+            29,
+            287,
+            289,
+            29,
+            287
+          ],
+          "query_sites": [
+            [
+              3,
+              3,
+              4
+            ],
+            [
+              4,
+              3,
+              5
+            ]
+          ],
+          "rhs_sites": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 409,
+          "shape": 835,
+          "frame_codes": [
+            29,
+            287,
+            289,
+            29,
+            287
+          ],
+          "query_sites": [
+            [
+              4,
+              3,
+              5
+            ]
+          ],
+          "rhs_sites": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 409,
+          "shape": 836,
+          "frame_codes": [
+            29,
+            287,
+            289,
+            29,
+            287,
+            289
+          ],
+          "query_sites": [
+            [
+              3,
+              3,
+              4
+            ]
+          ],
+          "rhs_sites": [
+            [
+              4,
+              1,
+              3
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 413,
+          "shape": 580,
+          "frame_codes": [
+            287,
+            289
+          ],
+          "query_sites": [
+            [
+              0,
+              1,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              0,
+              3
+            ]
+          ],
+          "applications": 10,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 413,
+          "shape": 829,
+          "frame_codes": [
+            29,
+            287,
+            289
+          ],
+          "query_sites": [
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              1,
+              3
+            ]
+          ],
+          "applications": 13,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 413,
+          "shape": 833,
+          "frame_codes": [
+            29,
+            287,
+            289,
+            29,
+            29,
+            287,
+            289
+          ],
+          "query_sites": [
+            [
+              0,
+              6,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              5,
+              3
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 413,
+          "shape": 836,
+          "frame_codes": [
+            29,
+            287,
+            289,
+            29,
+            287,
+            289
+          ],
+          "query_sites": [
+            [
+              0,
+              5,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              0,
+              4,
+              3
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": []
+        },
+        {
+          "rule": 469,
+          "shape": 788,
+          "frame_codes": [
+            337,
+            341,
+            341,
+            341,
+            341,
+            341,
+            341,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 469,
+          "shape": 788,
+          "frame_codes": [
+            337,
+            341,
+            341,
+            341,
+            341,
+            341,
+            341,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              2,
+              3
+            ],
+            [
+              4,
+              2,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 469,
+          "shape": 788,
+          "frame_codes": [
+            337,
+            341,
+            341,
+            341,
+            341,
+            341,
+            341,
+            341
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              3,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              3,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 424,
+          "frame_codes": [
+            112,
+            41,
+            44,
+            112,
+            99,
+            69,
+            351,
+            376,
+            276,
+            342,
+            341
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              9,
+              2
+            ],
+            [
+              3,
+              9,
+              3
+            ],
+            [
+              4,
+              9,
+              4
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 448,
+          "frame_codes": [
+            112,
+            41,
+            83,
+            44,
+            99,
+            112,
+            69,
+            351,
+            376,
+            276,
+            342,
+            341
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              10,
+              2
+            ],
+            [
+              3,
+              10,
+              3
+            ],
+            [
+              4,
+              10,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 777,
+          "frame_codes": [
+            336,
+            342
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 778,
+          "frame_codes": [
+            336,
+            342,
+            342
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 778,
+          "frame_codes": [
+            336,
+            342,
+            342
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              2,
+              4
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "dynamic_key_equality",
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 779,
+          "frame_codes": [
+            336,
+            342,
+            342,
+            343
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              2
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 470,
+          "shape": 801,
+          "frame_codes": [
+            341,
+            342
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              4,
+              1,
+              4
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        },
+        {
+          "rule": 479,
+          "shape": 245,
+          "frame_codes": [
+            309
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 479,
+          "shape": 290,
+          "frame_codes": [
+            354
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              4
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              4
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 479,
+          "shape": 684,
+          "frame_codes": [
+            350,
+            349,
+            349,
+            309,
+            351
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              3,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 480,
+          "shape": 245,
+          "frame_codes": [
+            309
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 480,
+          "shape": 290,
+          "frame_codes": [
+            354
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              4
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              4
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 480,
+          "shape": 589,
+          "frame_codes": [
+            29,
+            309
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              4
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 684,
+          "frame_codes": [
+            350,
+            349,
+            349,
+            309,
+            351
+          ],
+          "query_sites": [
+            [
+              1,
+              4,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 763,
+          "frame_codes": [
+            349,
+            351
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 9,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 764,
+          "frame_codes": [
+            349,
+            351,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 764,
+          "frame_codes": [
+            349,
+            351,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 484,
+          "shape": 765,
+          "frame_codes": [
+            309,
+            351
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 488,
+          "shape": 625,
+          "frame_codes": [
+            108,
+            349
+          ],
+          "query_sites": [
+            [
+              0,
+              0,
+              6
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "applications": 1,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 489,
+          "shape": 677,
+          "frame_codes": [
+            351,
+            349,
+            349
+          ],
+          "query_sites": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              2,
+              1
+            ]
+          ],
+          "applications": 3,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 509,
+          "shape": 290,
+          "frame_codes": [
+            354
+          ],
+          "query_sites": [
+            [
+              2,
+              0,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 509,
+          "shape": 290,
+          "frame_codes": [
+            354
+          ],
+          "query_sites": [
+            [
+              3,
+              0,
+              3
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              3
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 509,
+          "shape": 299,
+          "frame_codes": [
+            367
+          ],
+          "query_sites": [
+            [
+              2,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 509,
+          "shape": 299,
+          "frame_codes": [
+            367
+          ],
+          "query_sites": [
+            [
+              3,
+              0,
+              1
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              0,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check"
+          ]
+        },
+        {
+          "rule": 510,
+          "shape": 637,
+          "frame_codes": [
+            631,
+            368
+          ],
+          "query_sites": [
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "rhs_sites": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ],
+          "applications": 2,
+          "remaining_static_obligations": [
+            "external_eq_key_check",
+            "scalar_key_check"
+          ]
+        }
+      ],
+      "recipes": 79,
+      "exact_wiring_recipes": 11,
+      "exact_wiring_applications": 44
+    }
+  ]
+}

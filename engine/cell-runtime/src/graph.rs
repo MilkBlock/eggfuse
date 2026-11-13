@@ -332,6 +332,17 @@ pub struct Stats {
     #[serde(default)]
     pub constructor_registry_fragments:u64,
     #[serde(default)]
+    pub constructor_cell_route_probes: u64,
+    pub constructor_cell_route_witnesses: u64,
+    pub constructor_cell_route_accepted: u64,
+    #[serde(default)]
+    pub constructor_cell_route_key_proved:u64,
+    #[serde(default)]
+    pub constructor_cell_route_source_checks:u64,
+    #[serde(default)]
+    pub constructor_cell_route_proof_admissions:u64,
+    #[serde(default)]
+    pub constructor_cell_route_key_fields_avoided:u64,
     pub constructor_prepared_checks: u64,
     #[serde(default)]
     pub constructor_prepared_fields: u64,
@@ -466,6 +477,10 @@ pub struct Stats {
     #[serde(default)]
     pub shared_owner_slots_delegated:u64,
     #[serde(default)]
+    pub shared_owner_segment_extensions:u64,
+    #[serde(default)]
+    pub shared_owner_segments_reused:u64,
+    #[serde(default)]
     pub completed_symbolic_slot_checks:u64,
     #[serde(default)]
     pub completed_symbolic_slots_elided:u64,
@@ -503,6 +518,10 @@ pub struct Stats {
     pub completed_parent_detachments: u64,
     #[serde(default)]
     pub completed_parent_slots_delegated: u64,
+    #[serde(default)]
+    pub completed_parent_residual_slots: u64,
+    #[serde(default)]
+    pub completed_parent_residual_capacity_bytes: u64,
     pub native_table_reads: u64,
     pub native_table_writes: u64,
     pub native_free_join_calls: u64,
@@ -881,6 +900,7 @@ impl Graph {
                     val,
                     r["subsumed"].as_bool().unwrap_or(false),
                 )?;
+                g.finish_atomic_constructor(cell);
             } else {
                 g.set_function(table, key, val)?;
             }
@@ -2060,6 +2080,20 @@ impl Graph {
         self.stats.constructor_prepared_key_fields_avoided += args.len() as u64;
         Ok(Some(point))
     }
+    /// Bake proved the key from a successful immutable query anchor and shared
+    /// ports. This proof survives equality growth, but never authorizes a dead,
+    /// hidden or currently dirty constructor. Return the actual stored result.
+    #[cfg(feature="sparse-cells")]
+    fn cell_witness_result(&mut self,table:usize,witness:FactRef)->Result<Option<Point>> {
+        self.stats.constructor_cell_route_proof_admissions+=1;
+        if !self.dirty_facts[table].is_empty() || self.receipt_forwards.contains_key(&Dependency::Fact(witness)) {return Ok(None);}
+        let Some(state)=self.cells.fact_state(witness).filter(|s|s.owned && !s.hidden) else {return Ok(None);};
+        let Some(stored)=self.stable_node(witness) else {return Ok(None);};
+        if self.dependency_table(Dependency::Fact(witness))!=Some(table) {return Ok(None);}
+        let width=self.program.tables[table].schema.len()-1;
+        let value=self.read_stable_column(&stored,width)?;
+        Ok(Some(Point{value,hidden:false,epoch:state.epoch,witness:Dependency::Fact(witness)}))
+    }
     /// A prepared witness is evidence for this one source lookup, never an
     /// assigned Eq value. Invalid evidence uses the very same current key.
     pub(crate) fn lookup_prepared_constructor(&mut self, table: usize, key: &[Value],
@@ -2105,8 +2139,27 @@ impl Graph {
             self.rhs_frame_mut(cell).unwrap().values.insert(dst, point.value.clone());
             return Ok(point.value);
         }
+        #[cfg(feature = "sparse-cells")]
+        let route = if witness.is_none() { self.cell_constructor_witness(cell, op) } else { None };
+        #[cfg(feature = "sparse-cells")]
+        if let Some((target,true))=route && let Some(point)=self.cell_witness_result(t,target)? {
+            if let Some(receipt)=receipt {*receipt=Some(point.witness);}
+            if let Some(visible)=visible {*visible=true;}
+            self.stats.constructor_reused+=1;
+            self.stats.constructor_cell_route_accepted+=1;
+            self.stats.constructor_cell_route_key_proved+=1;
+            self.stats.constructor_cell_route_key_fields_avoided+=aa.len() as u64;
+            self.rhs_frame_mut(cell).unwrap().values.insert(dst,point.value.clone());
+            return Ok(point.value);
+        }
         let key = self.inline_arguments(cell, aa)?;
-        let row = self.lookup_prepared_constructor(t, &key, witness.map(ConstructorWitness::fact))?;
+        #[cfg(feature = "sparse-cells")]
+        let direct=route.map(|(fact,_)|fact);
+        #[cfg(not(feature = "sparse-cells"))]
+        let direct = None;
+        let accepted = self.stats.constructor_prepared_accepted;
+        let row = self.lookup_prepared_constructor(t, &key, witness.map(ConstructorWitness::fact).or(direct))?;
+        if direct.is_some() { self.stats.constructor_cell_route_accepted += self.stats.constructor_prepared_accepted - accepted; }
         if let Some(row) = row {
             if let Some(receipt) = receipt {
                 *receipt = Some(row.witness);
@@ -2177,7 +2230,20 @@ impl Graph {
         // absent; do not repeat the (potentially expensive) port-domain lookup.
         // As before, dynamic hits do not enter the RHS constructor path.
         self.stats.constructor_requests += 1;
-        self.insert_constructor(cell, 0, t, &key, dst)
+        let value = self.insert_constructor(cell, 0, t, &key, dst)?;
+        self.finish_atomic_constructor(cell);
+        Ok(value)
+    }
+    // Synthetic table templates contain exactly one constructor operation.
+    // Complete only after activation succeeds; ordinary RHS frames retain their
+    // execution-controlled completion boundary.
+    fn finish_atomic_constructor(&mut self, cell: u32) {
+        let frame = self.cells.get_mut(&cell).expect("new constructor frame");
+        debug_assert_eq!(self.program.templates[frame.template].ops.len(), 1);
+        frame.completed = true;
+        frame.completed_prefix = 1;
+        #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+        self.delegate_completed_slots(cell);
     }
     pub fn enqueue_union(&mut self, a: Value, b: Value) -> Result<()> {
         self.stats.union_requests += 1;

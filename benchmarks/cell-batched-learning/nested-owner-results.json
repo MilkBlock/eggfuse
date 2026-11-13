@@ -1,0 +1,110 @@
+{
+  "scope": "actual standalone Cell runtime; optional segment reuse; no speed or compression claim",
+  "admission": "not selected: all four final Graph heaps increase",
+  "cases": [
+    {
+      "case": "fact",
+      "source_program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "before": {
+        "graph_bytes": 732807,
+        "takeover_temporary_peak": 12664,
+        "source_records": 371,
+        "completed_frames": 382,
+        "owners": 127,
+        "moved_old_slots": 337,
+        "moved_old_facts": 339
+      },
+      "after": {
+        "graph_bytes": 733431,
+        "takeover_temporary_peak": 13800,
+        "source_records": 371,
+        "completed_frames": 382,
+        "owners": 209,
+        "moved_old_slots": 0,
+        "moved_old_facts": 0
+      },
+      "graph_bytes_added": 624,
+      "segment_extensions": 82,
+      "reused_segments": 150,
+      "same_final_state": true
+    },
+    {
+      "case": "loopfact",
+      "source_program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "before": {
+        "graph_bytes": 657009,
+        "takeover_temporary_peak": 14928,
+        "source_records": 366,
+        "completed_frames": 325,
+        "owners": 105,
+        "moved_old_slots": 253,
+        "moved_old_facts": 280
+      },
+      "after": {
+        "graph_bytes": 662273,
+        "takeover_temporary_peak": 14928,
+        "source_records": 366,
+        "completed_frames": 325,
+        "owners": 170,
+        "moved_old_slots": 0,
+        "moved_old_facts": 0
+      },
+      "graph_bytes_added": 5264,
+      "segment_extensions": 67,
+      "reused_segments": 109,
+      "same_final_state": true
+    },
+    {
+      "case": "sum-bits",
+      "source_program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "before": {
+        "graph_bytes": 1962163,
+        "takeover_temporary_peak": 24320,
+        "source_records": 893,
+        "completed_frames": 1287,
+        "owners": 461,
+        "moved_old_slots": 1094,
+        "moved_old_facts": 1256
+      },
+      "after": {
+        "graph_bytes": 1975179,
+        "takeover_temporary_peak": 24320,
+        "source_records": 893,
+        "completed_frames": 1287,
+        "owners": 725,
+        "moved_old_slots": 0,
+        "moved_old_facts": 0
+      },
+      "graph_bytes_added": 13016,
+      "segment_extensions": 278,
+      "reused_segments": 484,
+      "same_final_state": true
+    },
+    {
+      "case": "dot-product",
+      "source_program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "before": {
+        "graph_bytes": 1935099,
+        "takeover_temporary_peak": 22840,
+        "source_records": 983,
+        "completed_frames": 1153,
+        "owners": 344,
+        "moved_old_slots": 2671,
+        "moved_old_facts": 1835
+      },
+      "after": {
+        "graph_bytes": 1949387,
+        "takeover_temporary_peak": 22664,
+        "source_records": 983,
+        "completed_frames": 1153,
+        "owners": 662,
+        "moved_old_slots": 0,
+        "moved_old_facts": 0
+      },
+      "graph_bytes_added": 14288,
+      "segment_extensions": 355,
+      "reused_segments": 786,
+      "same_final_state": true
+    }
+  ]
+}

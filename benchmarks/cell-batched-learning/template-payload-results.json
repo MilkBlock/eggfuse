@@ -1,0 +1,84 @@
+{
+  "scope": "saved standalone Cell runtime snapshots; no removed records or bytes claimed",
+  "obligations": [
+    "activation state",
+    "fact visibility and retirement",
+    "external Entry reads",
+    "worker snapshot isolation",
+    "bounded union fallback"
+  ],
+  "cases": [
+    {
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "counts": {
+        "allocated_logical_signal_slots": 2298,
+        "other_bindings": 1160,
+        "owned_facts": 948,
+        "scalar_columns": 377,
+        "facts_without_scalars": 653,
+        "hidden_facts_without_scalars": 0,
+        "facts_with_scalars": 295,
+        "exact_origin_address_bindings": 803,
+        "unbound_slots": 335
+      },
+      "graph_bytes": 705175,
+      "stable_field_storage_bytes": 107526,
+      "raw_origin_value_bytes": 6424
+    },
+    {
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "counts": {
+        "allocated_logical_signal_slots": 2160,
+        "other_bindings": 1115,
+        "owned_facts": 892,
+        "scalar_columns": 320,
+        "facts_without_scalars": 633,
+        "hidden_facts_without_scalars": 0,
+        "facts_with_scalars": 259,
+        "exact_origin_address_bindings": 753,
+        "unbound_slots": 292
+      },
+      "graph_bytes": 616289,
+      "stable_field_storage_bytes": 56438,
+      "raw_origin_value_bytes": 6024
+    },
+    {
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "counts": {
+        "allocated_logical_signal_slots": 8232,
+        "other_bindings": 3911,
+        "owned_facts": 2895,
+        "scalar_columns": 1392,
+        "facts_without_scalars": 1825,
+        "hidden_facts_without_scalars": 42,
+        "facts_with_scalars": 1070,
+        "exact_origin_address_bindings": 2850,
+        "unbound_slots": 1471
+      },
+      "graph_bytes": 1830387,
+      "stable_field_storage_bytes": 224118,
+      "raw_origin_value_bytes": 22800
+    },
+    {
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "counts": {
+        "allocated_logical_signal_slots": 7494,
+        "other_bindings": 3540,
+        "owned_facts": 2825,
+        "scalar_columns": 991,
+        "facts_without_scalars": 2023,
+        "hidden_facts_without_scalars": 0,
+        "facts_with_scalars": 802,
+        "exact_origin_address_bindings": 2714,
+        "unbound_slots": 1240
+      },
+      "graph_bytes": 1798019,
+      "stable_field_storage_bytes": 217702,
+      "raw_origin_value_bytes": 21712
+    }
+  ]
+}

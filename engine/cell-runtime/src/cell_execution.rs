@@ -50,9 +50,9 @@ pub(crate) struct Plan {
     #[cfg(feature = "sparse-cells")]
     #[serde(skip)]
     pub births: Option<std::sync::Arc<crate::graph::cell_births::Plan>>,
-    /// Parent columns still reachable after completion, only when every one
-    /// has a composed symbol or stable scalar operand. None rejects the template
-    /// before runtime probing.
+    /// Parent columns still reachable after completion. Runtime keeps existing
+    /// values, uses checked local providers, and captures only residual values
+    /// before releasing the parent. None disables takeover for this template.
     #[cfg(all(feature = "sparse-cells",feature="storage-metrics"))]
     #[serde(skip)]
     pub parent_completion: Option<Box<[usize]>>,

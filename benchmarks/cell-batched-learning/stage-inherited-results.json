@@ -1,0 +1,102 @@
+{
+  "scope": "actual standalone Cell runtime; stage metadata inheritance, not fact elimination",
+  "limitations": "Graph teardown includes all fields; process peak includes Program and executor. No speed claim or nested-template execution claim.",
+  "cases": [
+    {
+      "case": "fact",
+      "before": {
+        "graph_bytes": 732807,
+        "fact_capacity_bytes": 60984,
+        "fact_live_bytes": 52864,
+        "owner_headers_bytes": 40960,
+        "execution_and_takeover_peak": 161666723,
+        "max_takeover_extra": 12664
+      },
+      "after": {
+        "graph_bytes": 728679,
+        "fact_capacity_bytes": 50712,
+        "fact_live_bytes": 42160,
+        "owner_headers_bytes": 47104,
+        "execution_and_takeover_peak": 161662595,
+        "max_takeover_extra": 11320
+      },
+      "graph_bytes_saved": 4128,
+      "inherited_lifecycles": 446,
+      "live_owned_facts": 481,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "loopfact",
+      "before": {
+        "graph_bytes": 657009,
+        "fact_capacity_bytes": 55392,
+        "fact_live_bytes": 49760,
+        "owner_headers_bytes": 35840,
+        "execution_and_takeover_peak": 160972462,
+        "max_takeover_extra": 14928
+      },
+      "after": {
+        "graph_bytes": 650241,
+        "fact_capacity_bytes": 45552,
+        "fact_live_bytes": 39704,
+        "owner_headers_bytes": 38912,
+        "execution_and_takeover_peak": 160965694,
+        "max_takeover_extra": 14832
+      },
+      "graph_bytes_saved": 6768,
+      "inherited_lifecycles": 419,
+      "live_owned_facts": 452,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "sum-bits",
+      "before": {
+        "graph_bytes": 1962163,
+        "fact_capacity_bytes": 176008,
+        "fact_live_bytes": 151288,
+        "owner_headers_bytes": 133120,
+        "execution_and_takeover_peak": 164965745,
+        "max_takeover_extra": 24320
+      },
+      "after": {
+        "graph_bytes": 1942435,
+        "fact_capacity_bytes": 143992,
+        "fact_live_bytes": 118168,
+        "owner_headers_bytes": 145408,
+        "execution_and_takeover_peak": 164946209,
+        "max_takeover_extra": 24320
+      },
+      "graph_bytes_saved": 19728,
+      "inherited_lifecycles": 1380,
+      "live_owned_facts": 1786,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "dot-product",
+      "before": {
+        "graph_bytes": 1935099,
+        "fact_capacity_bytes": 174288,
+        "fact_live_bytes": 153032,
+        "owner_headers_bytes": 117760,
+        "execution_and_takeover_peak": 166214005,
+        "max_takeover_extra": 22840
+      },
+      "after": {
+        "graph_bytes": 1910595,
+        "fact_capacity_bytes": 140568,
+        "fact_live_bytes": 119528,
+        "owner_headers_bytes": 126976,
+        "execution_and_takeover_peak": 166189405,
+        "max_takeover_extra": 23272
+      },
+      "graph_bytes_saved": 24504,
+      "inherited_lifecycles": 1396,
+      "live_owned_facts": 1574,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "scope": "actual standalone Cell runtime; optional constructor witness catalog, not a speed measurement",
+  "limitations": "Existing index lookups saved by witness routes are not counted again. The default shared seed is unchanged. No additional runtime compression.",
+  "cases": [
+    {
+      "case": "fact",
+      "key_constructions_removed": 1,
+      "key_fields_not_constructed": 1,
+      "repeated_target_field_checks_removed": 1,
+      "source_liveness_checks": 1,
+      "proof_admissions": 1,
+      "proof_admissions_falling_back": 0,
+      "route_probes": 258,
+      "route_accepted": 23,
+      "graph_bytes": 728679,
+      "graph_equal_to_current_seed": true,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "loopfact",
+      "key_constructions_removed": 2,
+      "key_fields_not_constructed": 2,
+      "repeated_target_field_checks_removed": 2,
+      "source_liveness_checks": 2,
+      "proof_admissions": 2,
+      "proof_admissions_falling_back": 0,
+      "route_probes": 204,
+      "route_accepted": 14,
+      "graph_bytes": 650241,
+      "graph_equal_to_current_seed": true,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "sum-bits",
+      "key_constructions_removed": 15,
+      "key_fields_not_constructed": 15,
+      "repeated_target_field_checks_removed": 15,
+      "source_liveness_checks": 15,
+      "proof_admissions": 15,
+      "proof_admissions_falling_back": 0,
+      "route_probes": 1649,
+      "route_accepted": 115,
+      "graph_bytes": 1942435,
+      "graph_equal_to_current_seed": true,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "dot-product",
+      "key_constructions_removed": 47,
+      "key_fields_not_constructed": 82,
+      "repeated_target_field_checks_removed": 82,
+      "source_liveness_checks": 48,
+      "proof_admissions": 48,
+      "proof_admissions_falling_back": 1,
+      "route_probes": 1988,
+      "route_accepted": 148,
+      "graph_bytes": 1910595,
+      "graph_equal_to_current_seed": true,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    }
+  ]
+}

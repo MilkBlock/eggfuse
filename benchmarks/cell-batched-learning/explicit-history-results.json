@@ -1,0 +1,50 @@
+{
+  "scope": "actual standalone Cell runtime, ordinary non-audit execution; explicit tracing still retains history",
+  "limitations": "Removes default diagnostic history, not logical facts or instance fields. Process peaks include Program and executor. No speed claim.",
+  "cases": [
+    {
+      "case": "fact",
+      "source_program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "graph_before": 728679,
+      "graph_after": 704103,
+      "diagnostic_history_bytes_removed": 24576,
+      "process_peak_before": 161662595,
+      "process_peak_after": 161638020,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "loopfact",
+      "source_program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "graph_before": 650241,
+      "graph_after": 625665,
+      "diagnostic_history_bytes_removed": 24576,
+      "process_peak_before": 160965694,
+      "process_peak_after": 160941119,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "sum-bits",
+      "source_program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "graph_before": 1942435,
+      "graph_after": 1844131,
+      "diagnostic_history_bytes_removed": 98304,
+      "process_peak_before": 164946209,
+      "process_peak_after": 164868479,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "dot-product",
+      "source_program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "graph_before": 1910595,
+      "graph_after": 1812291,
+      "diagnostic_history_bytes_removed": 98304,
+      "process_peak_before": 166189405,
+      "process_peak_after": 166091102,
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    }
+  ]
+}
