@@ -58,6 +58,9 @@ def commit(state, proposals, xp):
     output = dict(state)
     output['keys'] = xp.where(written[:,None], proposals['keys'][pick], state['keys'])
     output['tokens'] = xp.where(written[:,None], proposals['tokens'][pick], state['tokens'])
+    if 'slots' in proposals:
+        output['slots']=xp.where(written[:,None],proposals['slots'][pick],state['slots'])
+        output['slot_valid']=xp.where(written[:,None],proposals['slot_valid'][pick],state['slot_valid'])
     output['present'] = state['present'] | written
     output['active'] = (state['active'] & ~retired) | written
     output['visible'] = state['visible'] | written
@@ -75,8 +78,9 @@ def commit(state, proposals, xp):
         duplicate=eligible & (known | prior))
     # Closure also requires caller-supplied query/effect coverage. This is only
     # "no new admission", never a complete egraph saturation certificate.
+    marks['missing_witness']=proposals.get('missing_witness',xp.zeros_like(accepted))
     marks['no_new_admission'] = ~xp.any(accepted)
-    marks['needs_attention'] = xp.any(marks['stale_source'] | marks['nonfinite'] | marks['unsettled_source'] | marks['capacity'])
+    marks['needs_attention'] = xp.any(marks['stale_source'] | marks['nonfinite'] | marks['unsettled_source'] | marks['capacity'] | marks['missing_witness']) | xp.any(output['present'] & output['active'] & ~output['settled'])
     return output, marks
 
 
@@ -95,13 +99,30 @@ def closed_entry_proposals(state, plan, stage, xp):
                & (stage == plan['stage'][None,:])
                & plan['query_covered'][None,:])
     projection = plan['projection']
-    payload_keys = state['keys'][:,projection]
+    use_slots='destination_projection' in plan
+    payload_keys = (state['slots'] if use_slots else state['keys'])[:,projection]
+    missing=xp.zeros_like(matched)
+    if use_slots:
+        ready=xp.all(state['slot_valid'][:,projection] | ~plan['projection_valid'][None,:,:],axis=2)
+        missing=matched & ~ready
+        matched=matched & ready
+    if 'projection_valid' in plan:  # Static layout option, not a device predicate.
+        payload_keys=xp.where(plan['projection_valid'][None,:,:],payload_keys,-1)
     target = xp.broadcast_to(plan['consumer'][None,:,None],(capacity,entries,1))
     keys = xp.concatenate([target,payload_keys],axis=2)
     values = xp.tanh(xp.matmul(state['tokens'][:,None,None,:],plan['weights'][None,:,:,:]).squeeze(axis=2)+plan['bias'][None,:,:])
-    return dict(keys=keys.reshape(capacity*entries,-1),tokens=values.reshape(capacity*entries,-1),
+    proposals=dict(keys=keys.reshape(capacity*entries,-1),tokens=values.reshape(capacity*entries,-1),
         source=xp.broadcast_to(xp.arange(capacity)[:,None],(capacity,entries)).reshape(-1),
         generation=xp.broadcast_to(state['generation'][:,None],(capacity,entries)).reshape(-1),
         matched=matched.reshape(-1),
         transfer_covered=xp.broadcast_to(plan['transfer_covered'][None,:],(capacity,entries)).reshape(-1),
         completed=xp.broadcast_to(plan['completed'][None,:],(capacity,entries)).reshape(-1))
+
+    proposals['missing_witness']=missing.reshape(-1)
+    if use_slots:
+        indices=xp.broadcast_to(plan['destination_projection'][None,:,:],(capacity,entries,plan['destination_projection'].shape[1]))
+        values=xp.take_along_axis(payload_keys,indices,axis=2)
+        valid=xp.broadcast_to(plan['destination_valid'][None,:,:],values.shape)
+        proposals['slots']=xp.where(valid,values,-1).reshape(capacity*entries,-1)
+        proposals['slot_valid']=valid.reshape(capacity*entries,-1)
+    return proposals
