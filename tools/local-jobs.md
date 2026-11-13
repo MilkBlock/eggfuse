@@ -61,6 +61,16 @@ The queue does not suspend unrelated processes or freeze background OS services.
 Sessions bypassing the launcher therefore remain detectable interference, not
 participants whose execution the scheduler can prevent.
 
+Execution exclusion does not validate Cargo artifact identity. A shared target
+can leave a fresh fingerprint beside a top-level launcher from another
+worktree/configuration. Frozen runtime comparisons use `tools/freeze_runtime.py`:
+inside the lease, clean only the runtime release package, rebuild its requested
+features and immediately copy the executable. Dependency and debug caches stay.
+The helper records its commands, features and binary hash. Check expected runtime
+path coverage as well: two identical executables can pass a semantic comparison
+while failing to test the proposed change. The publication integration caught
+and rejected exactly that case before timing.
+
 Cancellation terminates only the owned process group, escalating after five
 seconds if necessary. It cannot cancel an unrelated external blocker. The
 guardian keeps the reservation while background descendants remain. If the

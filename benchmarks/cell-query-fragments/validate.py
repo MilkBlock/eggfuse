@@ -3,7 +3,7 @@
 import json
 import os
 from pathlib import Path
-import shutil
+import runpy
 import subprocess
 import sys
 
@@ -28,14 +28,25 @@ def run(checkout, output, target):
     results = []
     for name, args in commands:
         command = ['cargo', *args]
-        with (output / f'{name}.log').open('w') as log:
-            code = subprocess.run(command, cwd=checkout, env=env, stdout=log, stderr=subprocess.STDOUT).returncode
-        results.append(dict(name=name, command=command, exit_code=code))
+        if name == 'release':
+            freeze = runpy.run_path(str(Path(__file__).resolve().parents[2] / 'tools/freeze_runtime.py'))['freeze']
+            try:
+                evidence = freeze(checkout, target, output / 'candidate-runtime', output / f'{name}.log', features)
+                code = 0
+            except subprocess.CalledProcessError as error:
+                code = error.returncode
+            record = dict(name=name, command=command, exit_code=code)
+            if not code:
+                record['freeze_build'] = evidence
+        else:
+            with (output / f'{name}.log').open('w') as log:
+                code = subprocess.run(command, cwd=checkout, env=env, stdout=log, stderr=subprocess.STDOUT).returncode
+            record = dict(name=name, command=command, exit_code=code)
+        results.append(record)
         (output / 'validation.json').write_text(json.dumps(results, indent=2) + '\n')
         print(name, code, flush=True)
         if code:
             raise SystemExit(code)
-    shutil.copy2(target / 'release/eggfuse-cell-runtime', output / 'candidate-runtime')
 
 
 if __name__ == '__main__':

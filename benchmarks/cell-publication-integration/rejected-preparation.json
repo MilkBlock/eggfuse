@@ -1,0 +1,44 @@
+{
+  "scope": "actual standalone Cell CPU integration; preparation is not timing",
+  "control_commit": "03065edb300a62e868aa950c2d7af5eacc98ed32",
+  "merge_source": "0dfdfb2a41038158ebcded7e5026f30a03f43759",
+  "scheduler_job": "72",
+  "sources": {
+    "engine/cell-runtime/src/parallel_publication.rs": "17c594998bbbba563e1bc42e523fdd421aa37ac04b5d845874d1a4a3f21d801b",
+    "engine/cell-runtime/src/sieve_publication.rs": "6c6a7fa552be1916ee9d3137a316071edaa1071a592a6498aa224f932596fa01",
+    "engine/cell-runtime/src/sieve_table_events.rs": "d4e68cd6dd883bc1c293accdce2322756794a4b584dc91d4b8fbb68405154366",
+    "tools/cell-compiler/tests/parallel_publication.rs": "e2c28f0ff1c6f143c4a3b9ef44cb6c596b0b80aa4bae7a8cabd8073117aba66b"
+  },
+  "integration_patch_sha256": "21dce046ec68494b4cb213db2632ddd9f7e52fe3b80a58a297514313a12f9537",
+  "control_runtime_sha256": "81aec993e830745acc7abd3c76dcfc144f5fc2189b4ef15644ea636ef4a04052",
+  "candidate_runtime_sha256": "81aec993e830745acc7abd3c76dcfc144f5fc2189b4ef15644ea636ef4a04052",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication"
+      ],
+      "cwd": "/private/tmp/eggfuse-table-entry-events",
+      "exit_code": 0
+    }
+  ],
+  "features": "cell-absorption,view-ports,parallel-publication",
+  "started": 1794571736.603413,
+  "finished": 1794572091.320269,
+  "acceptance": "invalid: both frozen lanes contain the control executable; do not time these exports",
+  "observed_candidate_split_entry_tasks": "absent",
+  "retained_artifacts": "out/cell-publication-integration",
+  "timed": false,
+  "observed_path": {
+    "control_pool_calls": 783,
+    "candidate_pool_calls": 783,
+    "candidate_split_entry_tasks": "absent",
+    "candidate_admission_bound_rejections": "absent"
+  }
+}
