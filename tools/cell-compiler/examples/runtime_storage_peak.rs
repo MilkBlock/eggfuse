@@ -55,8 +55,8 @@ fn detach(exec: Executor) -> Graph {
 }
 fn main() -> Result<(), Box<dyn Error>> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
-    if !(args.len()==3 || (args.len()==4 && args[3]=="--port-domains-only")) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners") {
-        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners [--port-domains-only]".into());
+    if !(args.len()==3 || (args.len()==4 && args[3]=="--port-domains-only")) || !matches!(args[2].as_str(), "baseline" | "takeover" | "record-control" | "inherited-owners" | "nested-owners") {
+        return Err("usage: runtime_storage_peak PROGRAM OUTPUT baseline|takeover|record-control|inherited-owners|nested-owners [--port-domains-only]".into());
     }
     let p = Program::parse(serde_json::from_slice(&fs::read(&args[0])?)?)?;
     let program = p.artifact["sha256"].clone();
@@ -67,7 +67,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let source_loaded = LIVE.load(Relaxed);
     reset_peak();
     let mut e = Executor::new(Graph::new_with_local_congruence(p)?, false);
-    if args[2] == "inherited-owners" {e.use_completed_parent_takeover()?;}
+    if matches!(args[2].as_str(),"inherited-owners"|"nested-owners") {e.use_completed_parent_takeover()?;}
     if args.len()==4 {e.graph.use_port_domains_only()?;}
     let setup_peak = PEAK.load(Relaxed);
     let setup_live = LIVE.load(Relaxed);
@@ -89,7 +89,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             e.graph.compact_retained_capacity()?;
         }
         if args[2] == "inherited-owners" {e.graph.transfer_completed_owners()?;}
-        if matches!(args[2].as_str(), "record-control" | "inherited-owners") {
+        if args[2] == "nested-owners" {e.graph.transfer_completed_owner_segments()?;}
+        if matches!(args[2].as_str(), "record-control" | "inherited-owners" | "nested-owners") {
             e.graph.compact_source_record_capacity();
         }
         let takeover_peak = PEAK.load(Relaxed);

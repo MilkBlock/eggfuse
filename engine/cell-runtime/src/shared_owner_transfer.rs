@@ -29,6 +29,13 @@ impl Graph {
     /// capacity, without removing fields, facts, or parent links.
     pub fn compact_source_record_capacity(&mut self) {self.cells.release_source_capacity();}
     pub fn transfer_completed_owners(&mut self)->Result<usize> {
+        self.transfer_completed_storage(false)
+    }
+    /// Experimental reuse of existing child storage inside a larger component.
+    pub fn transfer_completed_owner_segments(&mut self)->Result<usize> {
+        self.transfer_completed_storage(true)
+    }
+    fn transfer_completed_storage(&mut self,reuse_segments:bool)->Result<usize> {
         if self.active_rhs.is_some() || !self.ownership_settled() || !self.pending_unions.is_empty() || !self.dirty.is_empty() {
             return Err("completed owner transfer requires a settled Run boundary".into());
         }
@@ -72,7 +79,14 @@ impl Graph {
                 self.stats.shared_owner_slots_delegated+=removed as u64;
             }
             if extending {
-                if let Some((added,merged,slots,facts))=self.cells.extend_completed(&ids) {
+                let extension=if reuse_segments {
+                    self.cells.extend_completed_segments(&ids).map(|(added,reused)| {
+                        self.stats.shared_owner_segment_extensions+=1;
+                        self.stats.shared_owner_segments_reused+=reused as u64;
+                        (added,0,0,0)
+                    })
+                } else {self.cells.extend_completed(&ids)};
+                if let Some((added,merged,slots,facts))=extension {
                     count+=added;
                     self.stats.shared_owner_referenced_frames+=referenced as u64;
                     self.stats.shared_owner_extensions+=1;

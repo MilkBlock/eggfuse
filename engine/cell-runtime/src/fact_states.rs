@@ -225,4 +225,32 @@ mod tests {
         assert!(!cells.fact_state(FactRef{cell:10,op:7}).unwrap().owned);
     }
 
+    #[test]
+    #[cfg(feature="storage-metrics")]
+    fn nested_extension_reuses_existing_segments_and_preserves_sibling_lifetimes() {
+        use crate::{slots::ReadSlots,value::Value};
+        let mut cells=super::super::arena::Cells::default();
+        for id in [10,20,30] {
+            let mut c=cell();c.values.insert(0,Value::Int(id as i64));cells.insert(id,c);
+            cells.insert_fact_state(FactRef{cell:id,op:7},state(id as u64));
+        }
+        assert!(cells.transfer_completed(&[10,20]));
+        let old_facts=cells.completed_facts(10).unwrap().as_ptr();
+        let old_slots=cells.completed_slots(10).unwrap().0.as_ptr();
+        assert!(cells.extend_completed_segments(&[10,30,30]).is_none());
+        // Unlike flattening, reusing a slice does not consume its siblings.
+        assert_eq!(cells.extend_completed_segments(&[10,30]),Some((1,1)));
+        assert_eq!(cells.completed_facts(10).unwrap().as_ptr(),old_facts);
+        assert_eq!(cells.completed_slots(10).unwrap().0.as_ptr(),old_slots);
+        assert_eq!(cells.completed_slots(30).unwrap().get(&0),Some(&Value::Int(30)));
+        assert!(cells.extend_completed_segments(&[10,20,30]).is_none());
+        cells.fact_state_mut(FactRef{cell:10,op:7}).unwrap().hidden=true;
+        let restored=cells.unseal_completed(10).unwrap();
+        assert!(restored.facts[&7].hidden);
+        assert_eq!(cells.fact_state(FactRef{cell:20,op:7}).unwrap().epoch,20);
+        assert_eq!(cells.fact_state(FactRef{cell:30,op:7}).unwrap().epoch,30);
+        cells.remove_fact_state(FactRef{cell:20,op:7});cells.retire_completed(20);
+        assert_eq!(cells.completed_slots(30).unwrap().get(&0),Some(&Value::Int(30)));
+    }
+
 }

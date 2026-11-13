@@ -547,3 +547,53 @@ python3 benchmarks/cell-batched-learning/residual_parent_results.py \
   out/cell-batched-learning benchmarks/cell-batched-learning/residual-parent-results.json
 target/debug/examples/batch_cell_learning check-passive out/cell-batched-learning owned-state
 ```
+
+### Reusing completed child storage inside a larger Cell
+
+A composed Cell can contain several smaller completed Cells. The prior extension
+path flattens all their slots and facts into one replacement array on each later
+stage. The optional `nested-owners` experiment retains existing storage segments
+and transfers only newly completed source frames. The existing component frame
+list and source-to-owner directory remain authoritative: no second runtime child
+registry or reverse dependency list is introduced. It can reuse a partial old
+segment without consuming its siblings because it never relocates that segment.
+
+A lifecycle test checks unchanged old array addresses, atomic rejection of duplicate
+sources, a one-frame suffix, partial unsealing, deletion and surviving siblings.
+Six fact-state tests pass. `check-nested` passes all 2,652 source-bound cached Run
+and terminal checks, using segment reuse only at the original transfer boundaries.
+This remains a standalone Cell runtime check, not new native semantic admission.
+
+The four workloads avoid 4,355 old-slot moves and 3,710 old-fact moves. This is
+real removal of repeated transfer work, **not final egraph compression**:
+
+| pass3 | Graph before | nested storage | added bytes |
+|---|---:|---:|---:|
+| fact | 732,807 | 733,431 | 624 |
+| loopfact | 657,009 | 662,273 | 5,264 |
+| sum-bits | 1,962,163 | 1,975,179 | 13,016 |
+| dot-product | 1,935,099 | 1,949,387 | 14,288 |
+
+Old slots/facts no longer move during extension, but independently allocated
+segments add headers and retain some retired entries until their own segment
+retires. The original per-source frame descriptors also remain. **The experiment
+is not selected as the default**; there is no speed measurement or large-compression
+claim. Smaller transient allocations are not guaranteed either; the recorded
+peak is reported separately.
+
+This identifies the required next representation change. Template reuse and
+instance reuse must be distinct. A parent template can reference child templates
+with static port projections and stage obligations. A parent instance should
+carry only actual child identity/parameters and new state. A repeated small
+pattern with different bindings is a different instance; sharing one actual child
+requires a lifetime proof. Runtime source IDs and fact visibility cannot disappear
+until their addresses and outstanding readers have a proved replacement. Merely
+adding child blocks while preserving every flattened descriptor is insufficient.
+
+```
+# runtime_storage_peak PROGRAM OUTPUT nested-owners --port-domains-only
+# Write candidate-nested-owner-heap.json for each unchanged shared seed.
+target/debug/examples/batch_cell_learning check-nested out/cell-batched-learning owned-state
+python3 benchmarks/cell-batched-learning/nested_owner_results.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/nested-owner-results.json
+```

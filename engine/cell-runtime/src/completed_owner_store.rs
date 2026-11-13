@@ -64,7 +64,10 @@ impl Cells {
     /// Called only for a checked completed component, at an idle Run boundary.
     /// Reject the whole group before moving any source frame.
     pub(crate) fn can_transfer_completed(&self,ids:&[u32])->bool {
-        if ids.len()<2 || self.completed.frames.len().saturating_add(ids.len())>=COMPLETED as usize
+        self.can_transfer_segment(ids,2)
+    }
+    fn can_transfer_segment(&self,ids:&[u32],minimum:usize)->bool {
+        if ids.len()<minimum || self.completed.frames.len().saturating_add(ids.len())>=COMPLETED as usize
             || ids.iter().enumerate().any(|(i,id)|ids[..i].contains(id))
             || ids.iter().any(|id| {
             self.get(id).is_none_or(|c| !c.completed || c.parent.is_some() || !c.values.is_unshared()
@@ -73,7 +76,10 @@ impl Cells {
         ids.iter().all(|id|(*id as usize)<self.positions.len())
     }
     pub(crate) fn transfer_completed(&mut self,ids:&[u32])->bool {
-        if !self.can_transfer_completed(ids) {return false;}
+        self.transfer_segment(ids,2)
+    }
+    fn transfer_segment(&mut self,ids:&[u32],minimum:usize)->bool {
+        if !self.can_transfer_segment(ids,minimum) {return false;}
         reserve_bounded(&mut self.completed.frames,ids.len());
         reserve_bounded(&mut self.completed.owners,1);
         let slots=ids.iter().map(|id|self.get(id).unwrap().values.len()).sum();
@@ -93,6 +99,23 @@ impl Cells {
         }
         self.completed.owners.push(Owner{frames:ids.len(),slots:values.into_boxed_slice(),facts:states.into_boxed_slice()});
         true
+    }
+    /// A larger completed Cell can retain several existing storage segments.
+    /// The authoritative component already names their logical source frames;
+    /// no second child directory or copied parent arrays are required.
+    pub(crate) fn extend_completed_segments(&mut self,ids:&[u32])->Option<(usize,usize)> {
+        let mut owners=Vec::new();let mut added=Vec::new();
+        for (i,&id) in ids.iter().enumerate() {
+            if ids[..i].contains(&id) {return None;}
+            if let Some(index)=self.completed_index(id) {
+                let owner=self.completed.frames[index].owner;
+                if !owners.contains(&owner) {owners.push(owner);}
+            } else {added.push(id);}
+        }
+        if owners.is_empty() || added.is_empty() {return None;}
+        // Only the suffix moves. A single new frame is legal because its
+        // surrounding composed Cell already has an admitted completed segment.
+        self.transfer_segment(&added,1).then_some((added.len(),owners.len()))
     }
     /// Extend one proved component's storage with later completed stages. All
     /// members of any old owner must participate, so no omitted slice loses its

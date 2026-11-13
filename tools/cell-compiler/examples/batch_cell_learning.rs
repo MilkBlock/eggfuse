@@ -13,16 +13,17 @@ fn executor_control(raw:Value,takeover:bool)->Result<Executor> {
     let mut g=Graph::new_with_local_congruence(Program::parse(raw)?)?;g.use_port_domains_only()?;
     let mut e=Executor::new(g,false);if takeover {e.use_completed_parent_takeover()?;}Ok(e)
 }
-fn step(e:&mut Executor,n:usize)->Result<Value> {
+fn step(e:&mut Executor,n:usize)->Result<Value> {step_storage(e,n,false)}
+fn step_storage(e:&mut Executor,n:usize,nested:bool)->Result<Value> {
     audit::take_digests();audit::take_write_digests();
     audit::set_active(true);audit::enable_write_audit();
     let result=e.execute_until(Some(n));audit::set_active(false);result?;
-    e.graph.transfer_completed_owners()?;
+    if nested {e.graph.transfer_completed_owner_segments()?;} else {e.graph.transfer_completed_owners()?;}
     Ok(json!({"graph":artifact_digest(&e.graph.export()?),"rhs":audit::take_digests(),"writes":audit::take_write_digests()}))
 }
 fn main()->Result<()> {
     let a=std::env::args().skip(1).collect::<Vec<_>>();
-    if a.len()<2 {return Err("batch_cell_learning prepare SUITE OUTPUT CASE... | apply OUTPUT | verify OUTPUT | observe OUTPUT | apply-passive ROOT VARIANT | check-passive ROOT VARIANT".into());}
+    if a.len()<2 {return Err("batch_cell_learning prepare SUITE OUTPUT CASE... | apply OUTPUT | verify OUTPUT | observe OUTPUT | apply-passive ROOT VARIANT | check-passive ROOT VARIANT | check-nested ROOT VARIANT".into());}
     if a[0]=="prepare" {
         if a.len()<4 {return Err("prepare needs suite, output and cases".into());}
         let suite=read(&a[1])?;let base=Path::new(&a[1]).parent().unwrap();let out=Path::new(&a[2]);
@@ -101,8 +102,8 @@ fn main()->Result<()> {
             write(dir.join("candidate.json"),&raw)?;
             eprintln!("compiled witnesses {name}");
         }
-    } else if a[0]=="apply-passive" || a[0]=="check-passive" {
-        if a.len()!=3 && !(a[0]=="check-passive" && a.len()==4 && a[3]=="witnesses") {return Err("apply-passive/check-passive ROOT VARIANT [witnesses]".into());}
+    } else if a[0]=="apply-passive" || a[0]=="check-passive" || a[0]=="check-nested" {
+        if a.len()!=3 && !(a[0]=="check-passive" && a.len()==4 && a[3]=="witnesses") {return Err("apply-passive/check-passive/check-nested ROOT VARIANT [witnesses for check-passive]".into());}
         let root=Path::new(&a[1]);let variant=root.join(&a[2]);
         let manifest=read(root.join("manifest.json"))?;
         let mut reports=vec![];
@@ -155,13 +156,13 @@ fn main()->Result<()> {
                 let observe_witnesses=a.get(3).is_some_and(|s|s=="witnesses");
                 if observe_witnesses {target.graph.trace_ownership_catalog(16)?;}
                 for (i,expected) in checks.iter().enumerate() {
-                    let observed=step(&mut target,i+1)?;
+                    let observed=step_storage(&mut target,i+1,a[0]=="check-nested")?;
                     if target.steps.len()!=i+1 || observed!=*expected {
                         write(dir.join("failure.json"),&json!({"run":i+1,"expected":expected,"observed":observed}))?;
                         return Err(format!("{name}: differs at Run {}",i+1).into());
                     }
                 }
-                if step(&mut target,checks.len()+1)?!=terminal || target.steps.len()!=checks.len() {return Err("terminal check differs".into());}
+                if step_storage(&mut target,checks.len()+1,a[0]=="check-nested")?!=terminal || target.steps.len()!=checks.len() {return Err("terminal check differs".into());}
                 if observe_witnesses {
                     write(dir.join("witness-observation.json"),&json!({
                         "source_program":target.graph.program.artifact["sha256"],
@@ -176,7 +177,7 @@ fn main()->Result<()> {
                 eprintln!("checked {name}: {} Runs",checks.len());
             }
         }
-        write(variant.join(if a[0]=="apply-passive" {"compiled.json"} else {"checked.json"}),&json!({"cases":reports}))?;
+        write(variant.join(if a[0]=="apply-passive" {"compiled.json"} else if a[0]=="check-nested" {"checked-nested.json"} else {"checked.json"}),&json!({"cases":reports}))?;
     } else if a[0]=="verify" || a[0]=="observe" {
         let observe=a[0]=="observe";
         let root=Path::new(&a[1]);let manifest=read(root.join("manifest.json"))?;
