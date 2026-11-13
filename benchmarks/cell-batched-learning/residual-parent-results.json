@@ -1,0 +1,122 @@
+{
+  "scope": "actual standalone Cell runtime, unchanged shared catalog; no speed claim",
+  "limits": "logical source identities and live facts remain; execution peak includes Program and executor; cumulative capture work is not final retained storage",
+  "cases": [
+    {
+      "case": "fact",
+      "source_program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "before": {
+        "graph_bytes": 747247,
+        "parent_edges": 89,
+        "source_records": 461,
+        "logical_frames": 753,
+        "logical_facts": 948,
+        "explicit_slots": 1066,
+        "execution_peak": 161680182,
+        "takeover_temporary_peak": 13496
+      },
+      "after": {
+        "graph_bytes": 732807,
+        "parent_edges": 0,
+        "source_records": 371,
+        "logical_frames": 753,
+        "logical_facts": 948,
+        "explicit_slots": 1179,
+        "execution_peak": 161666723,
+        "takeover_temporary_peak": 12664
+      },
+      "graph_bytes_saved": 14440,
+      "residual_slots_captured": 135,
+      "residual_capacity_growth_bytes": 624,
+      "parent_detachments": 169,
+      "final_state_equal": true
+    },
+    {
+      "case": "loopfact",
+      "source_program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "before": {
+        "graph_bytes": 662041,
+        "parent_edges": 76,
+        "source_records": 438,
+        "logical_frames": 691,
+        "logical_facts": 892,
+        "explicit_slots": 1022,
+        "execution_peak": 160976641,
+        "takeover_temporary_peak": 11712
+      },
+      "after": {
+        "graph_bytes": 657009,
+        "parent_edges": 0,
+        "source_records": 366,
+        "logical_frames": 691,
+        "logical_facts": 892,
+        "explicit_slots": 1129,
+        "execution_peak": 160972462,
+        "takeover_temporary_peak": 14928
+      },
+      "graph_bytes_saved": 5032,
+      "residual_slots_captured": 116,
+      "residual_capacity_growth_bytes": 864,
+      "parent_detachments": 126,
+      "final_state_equal": true
+    },
+    {
+      "case": "sum-bits",
+      "source_program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "before": {
+        "graph_bytes": 1989427,
+        "parent_edges": 216,
+        "source_records": 1116,
+        "logical_frames": 2180,
+        "logical_facts": 2895,
+        "explicit_slots": 3276,
+        "execution_peak": 165018084,
+        "takeover_temporary_peak": 21488
+      },
+      "after": {
+        "graph_bytes": 1962163,
+        "parent_edges": 0,
+        "source_records": 893,
+        "logical_frames": 2180,
+        "logical_facts": 2895,
+        "explicit_slots": 3536,
+        "execution_peak": 164965745,
+        "takeover_temporary_peak": 24320
+      },
+      "graph_bytes_saved": 27264,
+      "residual_slots_captured": 333,
+      "residual_capacity_growth_bytes": 2088,
+      "parent_detachments": 413,
+      "final_state_equal": true
+    },
+    {
+      "case": "dot-product",
+      "source_program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "before": {
+        "graph_bytes": 1965147,
+        "parent_edges": 231,
+        "source_records": 1211,
+        "logical_frames": 2136,
+        "logical_facts": 2825,
+        "explicit_slots": 3479,
+        "execution_peak": 166276424,
+        "takeover_temporary_peak": 25568
+      },
+      "after": {
+        "graph_bytes": 1935099,
+        "parent_edges": 0,
+        "source_records": 983,
+        "logical_frames": 2136,
+        "logical_facts": 2825,
+        "explicit_slots": 3794,
+        "execution_peak": 166214005,
+        "takeover_temporary_peak": 22840
+      },
+      "graph_bytes_saved": 30048,
+      "residual_slots_captured": 373,
+      "residual_capacity_growth_bytes": 1656,
+      "parent_detachments": 476,
+      "final_state_equal": true
+    }
+  ]
+}

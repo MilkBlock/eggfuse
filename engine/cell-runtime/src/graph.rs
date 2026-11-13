@@ -375,6 +375,10 @@ pub struct Stats {
     pub completed_parent_detachments: u64,
     #[serde(default)]
     pub completed_parent_slots_delegated: u64,
+    #[serde(default)]
+    pub completed_parent_residual_slots: u64,
+    #[serde(default)]
+    pub completed_parent_residual_capacity_bytes: u64,
     pub native_table_reads: u64,
     pub native_table_writes: u64,
     pub native_free_join_calls: u64,

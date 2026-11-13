@@ -496,3 +496,54 @@ target/debug/examples/batch_cell_learning check-passive \
 python3 benchmarks/cell-batched-learning/direct_witness_results.py \
   out/cell-batched-learning benchmarks/cell-batched-learning/direct-witness-results.json
 ```
+
+### Residual inherited values instead of a complete parent dependency
+
+The completed-parent plan previously required every remaining inherited slot to
+have a local symbolic or stable-scalar provider. A single missing provider kept
+the whole parent edge, even when the value was already stored in the child. In
+particular an RHS constructor can reuse a foreign fact and provide no local
+scalar storage. A compile-time list of possible local providers cannot establish
+that a provider actually exists for this instance.
+
+The compiler now emits the complete remaining parent-slot read obligation.
+At completion, the runtime uses existing local values first, then equal local
+symbolic/stable-scalar providers, and captures only uncovered actual values into
+the existing child slots. It computes the residual before changing ownership;
+errors preserve the original parent. Only after satisfying every retained read
+obligation does it release the parent reference. Original Run-boundary GC remains
+unchanged. This introduces no extra binding map or per-producer consumer list.
+
+The same shared catalog now produces:
+
+| pass3 | parent edges | ordinary source records | Graph bytes before → after |
+|---|---:|---:|---:|
+| fact | 89 → 0 | 461 → 371 | 747,247 → 732,807 |
+| loopfact | 76 → 0 | 438 → 366 | 662,041 → 657,009 |
+| sum-bits | 216 → 0 | 1,116 → 893 | 1,989,427 → 1,962,163 |
+| dot-product | 231 → 0 | 1,211 → 983 | 1,965,147 → 1,935,099 |
+
+These are physical storage gains, **not logical node elimination**: logical frames
+remain 753 / 691 / 2,180 / 2,136 and live fact counts remain 948 / 892 / 2,895 / 2,825.
+Parent-free children can join existing completed owners. Capturing the residual
+adds 135 / 116 / 333 / 373 slot writes over execution; explicit final slots increase
+by 113 / 107 / 260 / 315. Cumulative capacity growth from capture is 624 / 864 /
+2,088 / 1,656 bytes. The report charges those costs and takeover peaks. Net Graph
+savings remain only 0.8–1.9%; zero parent edges is not evidence of the larger
+compression goal being reached.
+
+49 ownership tests (including serial and two-worker reuse of foreign constructor
+results) and eight Unit tests pass. The batch is checked against all saved source
+Runs and terminal effects. The separate reviewed marked sum-bits retains digest
+`1ccf8502afaebbfcb0f8e4820c9a9e8bff699f7008fa1b431dbf1f16da270b82`;
+Graph is 2,392,254 → 2,362,006 bytes and saved-export `choice_diagnosis.py` returns
+pass. This does not create a new native semantic contract for the unmarked batch.
+
+Measure each unchanged seed candidate into `candidate-residual-parent-heap.json`
+in `inherited-owners --port-domains-only` mode, then summarize:
+
+```
+python3 benchmarks/cell-batched-learning/residual_parent_results.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/residual-parent-results.json
+target/debug/examples/batch_cell_learning check-passive out/cell-batched-learning owned-state
+```

@@ -1,6 +1,6 @@
 //! Discharge a completed instance's parent dependency through its existing
-//! composed symbols and immutable scalar operands. Unknown projections retain
-//! the ordinary parent.
+//! composed symbols, immutable scalar operands and only the residual actual
+//! values. An unreadable projection leaves the ordinary parent intact.
 use super::*;
 fn retire_dead_values(values:&mut crate::slots::FrameSlots,dead:&[usize])->usize {
     let removed=values.retain_owned(|slot,_|dead.binary_search(slot).is_err());
@@ -41,18 +41,28 @@ impl Graph {
         if self.ownership.is_none() { return Ok(()); }
         let template = c.template;
         self.stats.completed_parent_candidates += 1;
-        // No partially copied bindings and no second ownership table. All
-        // retained parent projections must already have a checked local provider.
+        // Build the residual before changing ownership. A failed read leaves
+        // the original parent and every binding untouched. The existing frame
+        // owns the residual; there is no second binding store.
+        let mut residual=smallvec::SmallVec::<[(usize,Value);4]>::new();
+        let mut delegated=0;
         for &slot in layout.iter() {
             self.stats.completed_parent_slot_checks += 1;
-            let Some(value) = self.inherited_cell_slot(cell, template, slot).or_else(||self.completed_scalar_slot(cell,template,slot,None)) else { return Ok(()); };
-            if self.slot(cell, slot)? != value { return Ok(()); }
+            if self.cells.get(&cell).unwrap().values.get(&slot).is_some() {continue;}
+            let Ok(actual)=self.slot(cell,slot) else {return Ok(());};
+            let provider=self.inherited_cell_slot(cell, template, slot)
+                .or_else(||self.completed_scalar_slot(cell,template,slot,None));
+            if provider.as_ref()==Some(&actual) {delegated+=1;} else {residual.push((slot,actual));}
         }
         let c = self.cells.get_mut(&cell).unwrap();
+        let capacity=c.values.capacity_bytes();
+        self.stats.completed_parent_residual_slots+=residual.len() as u64;
+        for (slot,value) in residual {c.values.insert(slot,value);}
+        self.stats.completed_parent_residual_capacity_bytes+=c.values.capacity_bytes().saturating_sub(capacity) as u64;
         c.symbolic_slots = true;
         c.parent = None;
         self.stats.completed_parent_detachments += 1;
-        self.stats.completed_parent_slots_delegated += layout.len() as u64;
+        self.stats.completed_parent_slots_delegated += delegated;
         self.release_reference(parent);
         // Existing source-Run GC retires unused ancestors after pending matches
         // have consumed their bindings. Never collect ancestors mid-Run.

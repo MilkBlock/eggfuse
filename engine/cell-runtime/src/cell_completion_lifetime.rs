@@ -42,14 +42,11 @@ pub(crate) fn parent_layout(p:&Program,rid:usize)->Option<Box<[usize]>> {
     let t=&p.templates[rule.template];
     if t.parent_columns.is_empty() {return None;}
     let used=retained_slots(p,rid)?;
-    let ports=&p.cell_ownership.markers.get(rule.template)?.program.slots;
-    let mut retained=Vec::new();
-    for &slot in t.parent_columns.keys().filter(|s|used.binary_search(s).is_ok()) {
-        if ports.get(slot).copied().flatten().is_none()
-            && !p.executions[rid].completed_scalar_slots.as_ref()?.iter().any(|p|p.0==slot) {return None;}
-        retained.push(slot);
-    }
-    Some(retained.into_boxed_slice())
+    // This is the complete remaining read obligation, not an all-or-nothing
+    // promise that every value has a local symbolic provider. The runtime may
+    // retain only the uncovered actual values before releasing the parent.
+    Some(t.parent_columns.keys().filter(|s|used.binary_search(s).is_ok())
+        .copied().collect::<Vec<_>>().into_boxed_slice())
 }
 
 /// Retire dead execution state after result capture; live recipes remain readable.

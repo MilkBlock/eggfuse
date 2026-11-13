@@ -1552,3 +1552,32 @@ fn compiled_constructor_witness_replaces_cross_stage_lookup() {
     let rejected=Program::parse(raw).and_then(Graph::new_with_local_congruence);
     assert!(rejected.is_err(),"untrusted operator code must be rejected");
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn completed_parent_uses_local_values_when_constructor_is_foreign() {
+    let p=program("(datatype E (N i64) (Get E i64) (Indexed E i64) (Pair E E) (Seen E))
+        (ruleset init) (ruleset a) (ruleset b)
+        (rule ((= x (N n))) ((Get x 7) (Indexed x 7)) :ruleset init)
+        (rule ((Get x i)) ((Indexed x i) (Pair x x)) :ruleset a)
+        (rule ((Pair x y)) ((subsume (Get x 7)) (Seen y)) :ruleset b)
+        (N 1) (N 2) (run init 1) (run a 1) (run b 1)");
+    let mut reference=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+    reference.execute().unwrap();
+    for workers in [0,2] {
+        let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+        actual.use_completed_parent_takeover().unwrap();
+        if workers>0 {actual.use_query_workers(workers,1).unwrap();}
+        actual.execute().unwrap();
+        assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
+        assert_eq!(reference.snapshots,actual.snapshots);
+        let rid=p.artifact["recipe"]["rules"].as_array().unwrap().iter()
+            .position(|r|r["metadata"]["source_set"]=="a").unwrap();
+        let template=p.rules[rid].template;
+        let children=actual.graph.cells.iter().filter(|(_,c)|c.template==template).collect::<Vec<_>>();
+        assert!(!children.is_empty());
+        assert!(children.iter().all(|(_,c)|c.parent.is_none()),
+            "an already stored scalar must discharge its parent even when Indexed is foreign");
+        assert!(actual.graph.stats.completed_parent_detachments>0);
+    }
+}
