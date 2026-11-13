@@ -214,10 +214,11 @@ fn main()->Result<()> {
                 if a.get(3).is_some_and(|a|a=="witness-trace") {
                     let report=reports.last_mut().unwrap();
                     let saturation=report["catalog_trace"]["saturation"].take();
+                    let multi_source=report["catalog_trace"]["multi_source"].take();
                     let admissions=report["catalog_trace"]["admissions"].take();
                     let admission_scope=report["catalog_trace"]["admission_scope"].take();
                     let uncovered_births=report["catalog_trace"]["uncovered_births"].take();
-                    report["catalog_trace"]=json!({"saturation":saturation,
+                    report["catalog_trace"]=json!({"saturation":saturation,"multi_source":multi_source,
                         "admissions":admissions,"admission_scope":admission_scope,
                         "uncovered_births":uncovered_births});
                     for field in ["source_storage","stable_ports","completion_batches"] {report.as_object_mut().unwrap().remove(field);}

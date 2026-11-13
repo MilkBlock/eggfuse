@@ -2048,3 +2048,44 @@ fn rhs_result_entry_cannot_join_after_its_witness_is_hidden_or_deleted() {
         assert_eq!(report["stats"]["composition_result_joins"],0,"{effect}");
     }
 }
+
+#[test]
+fn multi_source_trace_groups_actual_matches_without_instance_identities() {
+    for (second, connected) in [("x",true),("y",false)] {
+        let src=format!(r#"
+            (datatype E (N i64) (F E) (G E) (H E))
+            (N 0) (N 1)
+            (ruleset f) (ruleset g) (ruleset h) (ruleset u)
+            (rule ((= x (N n))) ((F x)) :ruleset f)
+            (rule ((= x (N n))) ((G x)) :ruleset g)
+            (rule ((= a (F x)) (= b (G {second}))) ((H x)) :ruleset h)
+            (rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset u)
+            (run f 1) (run g 1) (run h 1)
+            (run u 1) (run h 1)
+        "#);
+        let core=eggfuse_bake::device_frontend::core("multi-source",&src).unwrap();
+        let p=Program::parse(compiler::compile(core,&BTreeSet::new()).unwrap()).unwrap();
+        let mut plain=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),true);
+        let mut graph=Graph::new_with_cell_ownership(p).unwrap();graph.trace_ownership_catalog(8).unwrap();
+        let mut traced=Executor::new(graph,true);
+        plain.execute().unwrap();traced.execute().unwrap();
+        assert_eq!(plain.snapshots,traced.snapshots);
+        assert_eq!(plain.binding_audit,traced.binding_audit);
+        assert_eq!(plain.graph.export().unwrap(),traced.graph.export().unwrap());
+        let report=traced.graph.ownership_catalog_trace().unwrap();
+        let joins=&report["multi_source"];
+        assert_eq!(joins["inconsistent_slots"],0);
+        assert_eq!(joins["dropped_patterns"],0);
+        let patterns=joins["patterns"].as_array().unwrap();
+        if connected {
+            assert_eq!(patterns.len(),1,"different actual values must share one query-relative pattern: {joins}");
+            assert!(patterns[0]["counts"]["applications"].as_u64().unwrap()>=2);
+            assert!(patterns[0]["counts"]["cross_epoch_applications"].as_u64().unwrap()>=2);
+            assert_eq!(patterns[0]["pattern"]["components"].as_array().unwrap().len(),2);
+            assert_eq!(patterns[0]["pattern"]["shared_slots"].as_array().unwrap().len(),1);
+        } else {
+            assert!(patterns.is_empty(),"co-occurrence or later union is not a shared query-slot proof: {joins}");
+            assert!(joins["disconnected_entries"].as_u64().unwrap()>0);
+        }
+    }
+}

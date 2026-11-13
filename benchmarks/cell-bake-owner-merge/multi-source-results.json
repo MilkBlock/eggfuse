@@ -1,0 +1,1515 @@
+{
+  "scope": "standalone Cell CPU observation; matches are not committed mutations or compression savings",
+  "input_sha256": "4d41376c114c810db73308a9762a85cdff133f407ba0ab3d0a1a8ca7d99d6f5e",
+  "identity_scope": "query Entry order and static shape/code/operation positions; artifact-local, not canonicalized across workloads",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+      "runs": 418,
+      "all_saved_run_checks_equal": true,
+      "counts": {
+        "entries": 1329,
+        "multi_component_entries": 900,
+        "disconnected_entries": 91,
+        "patterns": 629,
+        "connected_applications": 809,
+        "cross_epoch_applications": 809
+      },
+      "control_final_census": {
+        "components": 492,
+        "bound_signals": 1963,
+        "distinct_eq_roots": 809,
+        "duplicate_roots_within_components": 133
+      },
+      "component_width_applications": {
+        "2": 617,
+        "3": 154,
+        "4": 24,
+        "5": 10,
+        "6": 4
+      },
+      "source_frame_width_applications": {
+        "2": 158,
+        "3": 185,
+        "4": 162,
+        "5": 90,
+        "6": 39,
+        "7": 45,
+        "8": 40,
+        "9": 37,
+        "10": 12,
+        "11": 22,
+        "12": 5,
+        "13": 6,
+        "14": 4,
+        "15": 2,
+        "21": 1,
+        "22": 1
+      },
+      "top_patterns": [
+        {
+          "pattern": {
+            "rule": 390,
+            "components": [
+              [
+                393,
+                [
+                  41,
+                  44,
+                  112
+                ]
+              ],
+              [
+                136,
+                [
+                  276
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shared_slots": [
+              [
+                0,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 11,
+            "cross_epoch_applications": 11
+          }
+        },
+        {
+          "pattern": {
+            "rule": 476,
+            "components": [
+              [
+                280,
+                [
+                  344
+                ]
+              ],
+              [
+                278,
+                [
+                  342
+                ]
+              ],
+              [
+                327,
+                [
+                  573
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                3
+              ],
+              [
+                2,
+                2,
+                0,
+                0
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ]
+              ],
+              [
+                5,
+                [
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 6,
+            "cross_epoch_applications": 6
+          }
+        },
+        {
+          "pattern": {
+            "rule": 518,
+            "components": [
+              [
+                393,
+                [
+                  41,
+                  44,
+                  112
+                ]
+              ],
+              [
+                199,
+                [
+                  248
+                ]
+              ],
+              [
+                306,
+                [
+                  376
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                12
+              ],
+              [
+                2,
+                2,
+                0,
+                4
+              ]
+            ],
+            "shared_slots": [
+              [
+                0,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    2,
+                    4
+                  ]
+                ]
+              ],
+              [
+                4,
+                [
+                  [
+                    1,
+                    6
+                  ],
+                  [
+                    2,
+                    3
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 6,
+            "cross_epoch_applications": 6
+          }
+        },
+        {
+          "pattern": {
+            "rule": 90,
+            "components": [
+              [
+                393,
+                [
+                  41,
+                  44,
+                  112
+                ]
+              ],
+              [
+                647,
+                [
+                  70,
+                  71
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                1,
+                0
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    5
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 5,
+            "cross_epoch_applications": 5
+          }
+        },
+        {
+          "pattern": {
+            "rule": 390,
+            "components": [
+              [
+                579,
+                [
+                  43,
+                  112
+                ]
+              ],
+              [
+                139,
+                [
+                  275
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                3
+              ],
+              [
+                1,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shared_slots": [
+              [
+                0,
+                [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 5,
+            "cross_epoch_applications": 5
+          }
+        }
+      ]
+    },
+    {
+      "case": "loopfact",
+      "program": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+      "runs": 398,
+      "all_saved_run_checks_equal": true,
+      "counts": {
+        "entries": 1074,
+        "multi_component_entries": 759,
+        "disconnected_entries": 113,
+        "patterns": 541,
+        "connected_applications": 646,
+        "cross_epoch_applications": 646
+      },
+      "control_final_census": {
+        "components": 464,
+        "bound_signals": 1868,
+        "distinct_eq_roots": 765,
+        "duplicate_roots_within_components": 125
+      },
+      "component_width_applications": {
+        "2": 470,
+        "3": 149,
+        "4": 21,
+        "5": 5,
+        "6": 1
+      },
+      "source_frame_width_applications": {
+        "2": 93,
+        "3": 136,
+        "4": 128,
+        "5": 97,
+        "6": 28,
+        "7": 29,
+        "8": 44,
+        "9": 21,
+        "10": 19,
+        "11": 20,
+        "12": 11,
+        "13": 7,
+        "14": 1,
+        "15": 3,
+        "16": 4,
+        "17": 2,
+        "18": 1,
+        "22": 2
+      },
+      "top_patterns": [
+        {
+          "pattern": {
+            "rule": 476,
+            "components": [
+              [
+                280,
+                [
+                  344
+                ]
+              ],
+              [
+                278,
+                [
+                  342
+                ]
+              ],
+              [
+                327,
+                [
+                  573
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                3
+              ],
+              [
+                2,
+                2,
+                0,
+                0
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ]
+              ],
+              [
+                5,
+                [
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 10,
+            "cross_epoch_applications": 10
+          }
+        },
+        {
+          "pattern": {
+            "rule": 390,
+            "components": [
+              [
+                393,
+                [
+                  41,
+                  44,
+                  112
+                ]
+              ],
+              [
+                136,
+                [
+                  276
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shared_slots": [
+              [
+                0,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 9,
+            "cross_epoch_applications": 9
+          }
+        },
+        {
+          "pattern": {
+            "rule": 543,
+            "components": [
+              [
+                698,
+                [
+                  377,
+                  395
+                ]
+              ],
+              [
+                305,
+                [
+                  375
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                1,
+                2
+              ],
+              [
+                1,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    2
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 6,
+            "cross_epoch_applications": 6
+          }
+        },
+        {
+          "pattern": {
+            "rule": 104,
+            "components": [
+              [
+                393,
+                [
+                  41,
+                  44,
+                  112
+                ]
+              ],
+              [
+                78,
+                [
+                  83
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shared_slots": [
+              [
+                0,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 5,
+            "cross_epoch_applications": 5
+          }
+        },
+        {
+          "pattern": {
+            "rule": 124,
+            "components": [
+              [
+                393,
+                [
+                  41,
+                  44,
+                  112
+                ]
+              ],
+              [
+                88,
+                [
+                  99
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shared_slots": [
+              [
+                0,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 4,
+            "cross_epoch_applications": 4
+          }
+        }
+      ]
+    },
+    {
+      "case": "sum-bits",
+      "program": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+      "runs": 882,
+      "all_saved_run_checks_equal": true,
+      "counts": {
+        "entries": 5681,
+        "multi_component_entries": 4284,
+        "disconnected_entries": 407,
+        "patterns": 2542,
+        "connected_applications": 3877,
+        "cross_epoch_applications": 3877
+      },
+      "control_final_census": {
+        "components": 1344,
+        "bound_signals": 6761,
+        "distinct_eq_roots": 2193,
+        "duplicate_roots_within_components": 784
+      },
+      "component_width_applications": {
+        "2": 2889,
+        "3": 803,
+        "4": 110,
+        "5": 56,
+        "6": 11,
+        "7": 4,
+        "8": 4
+      },
+      "source_frame_width_applications": {
+        "2": 294,
+        "3": 755,
+        "4": 779,
+        "5": 499,
+        "6": 370,
+        "7": 303,
+        "8": 164,
+        "9": 115,
+        "10": 177,
+        "11": 111,
+        "12": 82,
+        "13": 39,
+        "14": 26,
+        "15": 13,
+        "16": 18,
+        "17": 36,
+        "18": 31,
+        "19": 14,
+        "20": 17,
+        "21": 3,
+        "22": 6,
+        "23": 9,
+        "24": 1,
+        "25": 4,
+        "26": 3,
+        "27": 3,
+        "28": 2,
+        "30": 3
+      },
+      "top_patterns": [
+        {
+          "pattern": {
+            "rule": 476,
+            "components": [
+              [
+                280,
+                [
+                  344
+                ]
+              ],
+              [
+                278,
+                [
+                  342
+                ]
+              ],
+              [
+                327,
+                [
+                  573
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                3
+              ],
+              [
+                2,
+                2,
+                0,
+                0
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ]
+              ],
+              [
+                5,
+                [
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 26,
+            "cross_epoch_applications": 26
+          }
+        },
+        {
+          "pattern": {
+            "rule": 476,
+            "components": [
+              [
+                280,
+                [
+                  344
+                ]
+              ],
+              [
+                274,
+                [
+                  338
+                ]
+              ],
+              [
+                327,
+                [
+                  573
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                6
+              ],
+              [
+                2,
+                2,
+                0,
+                0
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ]
+              ],
+              [
+                5,
+                [
+                  [
+                    1,
+                    4
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 20,
+            "cross_epoch_applications": 20
+          }
+        },
+        {
+          "pattern": {
+            "rule": 118,
+            "components": [
+              [
+                466,
+                [
+                  0,
+                  50
+                ]
+              ],
+              [
+                710,
+                [
+                  95,
+                  101
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                11
+              ],
+              [
+                1,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shared_slots": [
+              [
+                1,
+                [
+                  [
+                    0,
+                    9
+                  ],
+                  [
+                    1,
+                    3
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 16,
+            "cross_epoch_applications": 16
+          }
+        },
+        {
+          "pattern": {
+            "rule": 476,
+            "components": [
+              [
+                280,
+                [
+                  344
+                ]
+              ],
+              [
+                279,
+                [
+                  343
+                ]
+              ],
+              [
+                327,
+                [
+                  573
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                5
+              ],
+              [
+                2,
+                2,
+                0,
+                0
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ]
+              ],
+              [
+                5,
+                [
+                  [
+                    1,
+                    3
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 16,
+            "cross_epoch_applications": 16
+          }
+        },
+        {
+          "pattern": {
+            "rule": 91,
+            "components": [
+              [
+                771,
+                [
+                  230,
+                  234
+                ]
+              ],
+              [
+                65,
+                [
+                  69
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                1,
+                4
+              ],
+              [
+                1,
+                1,
+                0,
+                0
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    11
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 14,
+            "cross_epoch_applications": 14
+          }
+        }
+      ]
+    },
+    {
+      "case": "dot-product",
+      "program": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+      "runs": 954,
+      "all_saved_run_checks_equal": true,
+      "counts": {
+        "entries": 4751,
+        "multi_component_entries": 3441,
+        "disconnected_entries": 439,
+        "patterns": 2064,
+        "connected_applications": 3002,
+        "cross_epoch_applications": 3002
+      },
+      "control_final_census": {
+        "components": 1308,
+        "bound_signals": 6254,
+        "distinct_eq_roots": 2351,
+        "duplicate_roots_within_components": 581
+      },
+      "component_width_applications": {
+        "2": 1911,
+        "3": 748,
+        "4": 179,
+        "5": 81,
+        "6": 35,
+        "7": 15,
+        "8": 33
+      },
+      "source_frame_width_applications": {
+        "2": 450,
+        "3": 524,
+        "4": 439,
+        "5": 273,
+        "6": 260,
+        "7": 198,
+        "8": 107,
+        "9": 111,
+        "10": 130,
+        "11": 96,
+        "12": 69,
+        "13": 56,
+        "14": 30,
+        "15": 35,
+        "16": 16,
+        "17": 50,
+        "18": 76,
+        "19": 12,
+        "20": 23,
+        "21": 10,
+        "22": 6,
+        "23": 16,
+        "24": 5,
+        "26": 3,
+        "27": 2,
+        "32": 3,
+        "36": 2
+      },
+      "top_patterns": [
+        {
+          "pattern": {
+            "rule": 476,
+            "components": [
+              [
+                280,
+                [
+                  344
+                ]
+              ],
+              [
+                272,
+                [
+                  336
+                ]
+              ],
+              [
+                327,
+                [
+                  573
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                2
+              ],
+              [
+                2,
+                2,
+                0,
+                0
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ]
+              ],
+              [
+                5,
+                [
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 28,
+            "cross_epoch_applications": 28
+          }
+        },
+        {
+          "pattern": {
+            "rule": 476,
+            "components": [
+              [
+                280,
+                [
+                  344
+                ]
+              ],
+              [
+                278,
+                [
+                  342
+                ]
+              ],
+              [
+                327,
+                [
+                  573
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                3
+              ],
+              [
+                2,
+                2,
+                0,
+                0
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ]
+              ],
+              [
+                5,
+                [
+                  [
+                    1,
+                    2
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 16,
+            "cross_epoch_applications": 16
+          }
+        },
+        {
+          "pattern": {
+            "rule": 476,
+            "components": [
+              [
+                280,
+                [
+                  344
+                ]
+              ],
+              [
+                279,
+                [
+                  343
+                ]
+              ],
+              [
+                327,
+                [
+                  573
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                5
+              ],
+              [
+                2,
+                2,
+                0,
+                0
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ]
+              ],
+              [
+                5,
+                [
+                  [
+                    1,
+                    3
+                  ],
+                  [
+                    2,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 16,
+            "cross_epoch_applications": 16
+          }
+        },
+        {
+          "pattern": {
+            "rule": 104,
+            "components": [
+              [
+                393,
+                [
+                  41,
+                  44,
+                  112
+                ]
+              ],
+              [
+                78,
+                [
+                  83
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shared_slots": [
+              [
+                0,
+                [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 14,
+            "cross_epoch_applications": 14
+          }
+        },
+        {
+          "pattern": {
+            "rule": 543,
+            "components": [
+              [
+                365,
+                [
+                  417,
+                  391,
+                  376,
+                  394,
+                  392,
+                  377,
+                  395
+                ]
+              ],
+              [
+                305,
+                [
+                  375
+                ]
+              ]
+            ],
+            "anchors": [
+              [
+                0,
+                0,
+                6,
+                2
+              ],
+              [
+                1,
+                1,
+                0,
+                1
+              ]
+            ],
+            "shared_slots": [
+              [
+                2,
+                [
+                  [
+                    0,
+                    20
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ]
+              ]
+            ]
+          },
+          "counts": {
+            "applications": 14,
+            "cross_epoch_applications": 14
+          }
+        }
+      ]
+    }
+  ]
+}

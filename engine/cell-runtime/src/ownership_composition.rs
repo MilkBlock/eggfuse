@@ -11,6 +11,8 @@ pub mod queries;
 mod saturation;
 #[path = "ownership_witness_plan.rs"]
 mod witness_plan;
+#[path = "ownership_join_trace.rs"]
+mod join_trace;
 
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 pub struct Source {
@@ -498,6 +500,7 @@ pub(super) struct CatalogTrace {
     uncovered_births: u64,
     admissions: BTreeMap<(usize, Option<usize>, &'static str), u64>,
     saturation: saturation::Trace,
+    joins: join_trace::Trace,
 }
 #[derive(Default)]
 pub(super) struct Training {
@@ -684,7 +687,7 @@ impl Graph {
             "admissions":trace.admissions.iter().map(|(&(template,rule,reason),&count)|
                 json!({"template":template,"rule":rule,"reason":reason,"count":count})).collect::<Vec<_>>(),
             "admission_scope":"new composition frames only; birth/join/fallback count frames, anchor reasons count attempted alternatives; not final singleton attribution",
-            "records":records,"saturation":trace.saturation.report()}))
+            "records":records,"saturation":trace.saturation.report(),"multi_source":trace.joins.report()}))
     }
     pub fn train_ownership_fragments(&mut self) -> Result<()> {
         self.train_ownership_fragments_with_limit(4)
@@ -794,6 +797,7 @@ impl Graph {
         )
     }
     pub(super) fn composition_entry(&mut self, rid: usize, anchors: smallvec::SmallVec<[Option<Dependency>; 4]>) {
+        self.observe_component_join(rid, &anchors);
         let Some(m) = &mut self.ownership else { return };
         debug_assert!(m.composition.entry.is_none());
         m.composition.entry = Some(Entry { rule: rid,
