@@ -654,3 +654,43 @@ python3 benchmarks/cell-batched-learning/subcell_links.py out/cell-batched-learn
   benchmarks/cell-batched-learning/subcell-link-results.json
 python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
 ```
+
+### Repeated static child views in the saved batch
+
+`subcell_patterns.py` now mines two- and three-operation output-to-input paths
+inside existing components. It alpha-renames static template ports, retains typed
+operator IDs within each source program, and never uses current union roots to
+invent wiring. Hidden or non-owned providers are excluded. Scalar columns remain
+parameters requiring validation; this is not a saturation certificate.
+
+| pass3 | repeated patterns | greedily disjoint children | covered existing facts | children crossing birth epochs |
+|---|---:|---:|---:|---:|
+| fact | 83 | 65 | 181 | 14 |
+| loopfact | 86 | 71 | 199 | 12 |
+| sum-bits | 156 | 260 | 720 | 48 |
+| dot-product | 215 | 263 | 753 | 43 |
+
+These are actual standalone Cell runtime snapshots, not native egglog measurements.
+The deterministic greedy packing counts each fact once across all selected views;
+it is neither an optimal packing nor a prediction of saved bytes. Facts retain
+identity, and no runtime path has been removed. Birth epochs do not establish
+source Run order. Different scalar bindings remain different child occurrences.
+
+This narrows the next takeover experiment to concrete multi-operation views,
+including views spanning source frames, rather than retaining only whole-rule
+frames. A typed compiler admission must still check immutable constructor versus
+mutable function semantics, scalar bindings, actual Entry evidence and original
+Run boundaries. Storage takeover must remove the corresponding independent
+records and charge view addressing; a catalog alone cannot discharge this work.
+The observed cross-epoch candidates motivate stage-aware child completion, but do
+not authorize skipping an apply or publishing a future effect early.
+
+```
+python3 benchmarks/cell-batched-learning/subcell_patterns.py out/cell-batched-learning \
+  benchmarks/cell-batched-learning/subcell-pattern-results.json
+python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
+```
+
+All 24 analysis tests pass, including alpha-renaming, operator and alias distinction,
+scalar-column distinction, hidden providers, and union roots that must not create
+static edges. No workloads, timing campaign or runtime semantics were changed.
