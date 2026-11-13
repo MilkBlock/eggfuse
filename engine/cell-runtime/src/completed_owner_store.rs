@@ -381,6 +381,7 @@ impl Cells {
             "owners":epochs.len(),"cross_stage_owners":epochs.values().filter(|e|e.len()>1).count(),
             "owner_widths":widths,"templates":templates,"stored_slot_entries":slots,
             "live_slot_entries":live_slots,"retired_slot_entries":slots-live_slots,
+            "stored_hash_bytes":self.completed.owners.iter().map(|o|o.facts.hash_bytes()).sum::<usize>(),
             "stored_fact_entries":self.completed.owners.iter().map(|o|o.facts.len()).sum::<usize>(),
             "live_fact_entries":self.completed.owners.iter().map(|o|o.facts.live()).sum::<usize>(),
             "inherited_fact_lifecycles":self.completed.owners.iter().map(|o|o.facts.inherited()).sum::<usize>(),

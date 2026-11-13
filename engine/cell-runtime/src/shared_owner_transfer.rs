@@ -50,19 +50,19 @@ impl Graph {
             return Err("completed owner transfer requires a settled Run boundary".into());
         }
         let Some(m)=self.ownership.as_ref() else {return Ok(0);};
+        // Ordinary source records are the authoritative not-yet-transferred
+        // inventory. Completed storage/restored sources already enter/leave it;
+        // do not scan every historical component to rediscover that inventory.
+        let mut candidates=Vec::new();
+        for (&id,_) in self.cells.iter() {
+            self.stats.shared_owner_admission_source_probes+=1;
+            if let Some(frame)=m.composition.frames.get(&id) {candidates.push(frame.component);}
+        }
+        // Preserve the original component order, including physical pooling.
+        candidates.sort_unstable();candidates.dedup();
         let mut groups=Vec::new();let mut pending=Vec::new();let mut bytes=0;
-        for component in m.composition.components.iter().flatten() {
-            // A completed/retired source has no ordinary Cell record. Without
-            // one, this component cannot contribute a new transfer or suffix.
-            // Restoring a source recreates that record and reopens admission.
-            let fresh=component.frames.iter().any(|id| {
-                self.stats.shared_owner_admission_source_probes+=1;
-                self.cells.get(id).is_some()
-            });
-            if !fresh {
-                self.stats.shared_owner_settled_components_skipped+=1;
-                continue;
-            }
+        for id in candidates {
+            let Some(component)=m.composition.components.get(id as usize).and_then(Option::as_ref) else {continue;};
             let ids=component.frames.iter().copied().filter(|id| {
                 self.cells.completed_meta(*id).is_some()
                     || self.cells.get(id).is_some_and(|c| c.completed && c.parent.is_none()

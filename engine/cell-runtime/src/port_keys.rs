@@ -19,6 +19,7 @@ impl Graph {
             .filter_map(|(fact,state)|self.live_table(Dependency::Fact(fact))
                 .filter(|&t|self.port_keys_enabled(t)).map(|_|(fact,state.hash))).collect::<Vec<_>>();
         for (fact,hash) in retired {
+            self.cells.fact_state_mut(fact).unwrap().hash=0;
             if let Some(bucket)=self.intern.get_mut(&hash) {
                 bucket.remove(&fact);
                 if bucket.is_empty() {self.intern.remove(&hash);}

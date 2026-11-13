@@ -1842,7 +1842,7 @@ impl Graph {
         }
         // In port-key mode this is an immutable birth hint, not a promise
         // that the hash follows future canonical representatives.
-        let h = self.constructor_hash(t, key);
+        let h = if self.constructor_hint_enabled(t) {self.constructor_hash(t, key)} else {0};
         let vs = Self::shared_fields(key, &v);
         self.activate_fields(f,t,vs,h,hidden)
     }
@@ -1855,6 +1855,8 @@ impl Graph {
             crate::transfer_audit::logical_write(self.epoch,t,key,None,value)?;
         }
         let port_key = self.port_keys_enabled(t);
+        // Covered port domains own uniqueness; no birth-hint index reads this hash.
+        let h = if self.constructor_hint_enabled(t) {h} else {0};
         #[cfg(feature = "sparse-cells")]
         self.promote_owner(f.cell);
         let local_union_owned = self.defer_local_birth(f, t);
