@@ -1,0 +1,561 @@
+{
+  "scope": "standalone Cell CPU runtime; same-runtime seed versus learned result catalog; no timing or native semantic claim",
+  "pair_order": [
+    "control",
+    "candidate"
+  ],
+  "cases": [
+    {
+      "case": "fact",
+      "runs": 418,
+      "control_program": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+      "candidate_program": "6293c57fb94058410cdbc209d9367f6b6ece102709d3734987c4c91f693818cd",
+      "saved_run_checks_equal": true,
+      "memory_final_states_equal": true,
+      "added_result_fragments": 7,
+      "work": {
+        "signal_bindings_created": [
+          2007,
+          2001
+        ],
+        "signal_bindings_live": [
+          1963,
+          1960
+        ],
+        "composition_entry_reads": [
+          1808,
+          1880
+        ],
+        "composition_result_writes": [
+          0,
+          262
+        ],
+        "composition_result_joins": [
+          0,
+          6
+        ],
+        "composition_transition_probes": [
+          1053,
+          1102
+        ],
+        "composition_substituted_ports": [
+          362,
+          369
+        ],
+        "composition_shape_builds": [
+          0,
+          0
+        ],
+        "boundary_edges_created": [
+          1390,
+          1385
+        ],
+        "owned_live": [
+          948,
+          948
+        ]
+      },
+      "source_storage": {
+        "completed_owner_frames": [
+          752,
+          752
+        ],
+        "explicit_cell_slots": [
+          888,
+          888
+        ],
+        "completed_owner_records_bytes": [
+          83700,
+          83964
+        ],
+        "fact_record_live_bytes": [
+          13056,
+          13056
+        ],
+        "cell_slot_bytes": [
+          14648,
+          14568
+        ],
+        "writer_bytes": [
+          29680,
+          29680
+        ]
+      },
+      "key_lookup_calls": [
+        2697,
+        2697
+      ],
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          645935,
+          645715
+        ],
+        "retained_program_teardown_bytes": [
+          158777869,
+          158804038
+        ],
+        "execution_and_takeover_peak_bytes": [
+          162364635,
+          162390586
+        ],
+        "max_takeover_extra_bytes": [
+          11648,
+          11648
+        ]
+      },
+      "graph_field_deltas": {
+        "cells": 172,
+        "functions": 0,
+        "parents": 0,
+        "writer_dir": 0,
+        "local_unions": 0,
+        "ownership.components": 32,
+        "ownership.live_facts": 0,
+        "ownership.frames": 0,
+        "ownership.shapes": 56,
+        "ownership.transitions": 0,
+        "ownership.training": 0,
+        "ownership.catalog_trace": 0,
+        "ownership.entry": 0,
+        "ownership.heap": 0,
+        "ownership.columns": 0,
+        "ownership.boundaries": -480,
+        "ownership.port_completion": 0,
+        "ownership.pending": 0,
+        "ownership.tables": 0,
+        "ownership.stats": 0,
+        "ownership.barriers": 0,
+        "stable_ports": 0,
+        "repair_ports": 0,
+        "union_digest": 0,
+        "members": 0,
+        "intern": 0,
+        "function_keys": 0,
+        "uses": 0,
+        "changes": 0,
+        "anchors": 0,
+        "dirty": 0,
+        "dirty_markers": 0,
+        "dirty_facts": 0,
+        "parent_users": 0,
+        "garbage": 0,
+        "receipt_forwards": 0
+      },
+      "graph_reduction_percent": 0.03405915455889641
+    },
+    {
+      "case": "loopfact",
+      "runs": 398,
+      "control_program": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+      "candidate_program": "2f41e5e014f77c4b7f495ad374c75ab478923e83d40a9a8dccecbd426c992d5a",
+      "saved_run_checks_equal": true,
+      "memory_final_states_equal": true,
+      "added_result_fragments": 7,
+      "work": {
+        "signal_bindings_created": [
+          1873,
+          1866
+        ],
+        "signal_bindings_live": [
+          1868,
+          1861
+        ],
+        "composition_entry_reads": [
+          1480,
+          1516
+        ],
+        "composition_result_writes": [
+          0,
+          175
+        ],
+        "composition_result_joins": [
+          0,
+          7
+        ],
+        "composition_transition_probes": [
+          964,
+          996
+        ],
+        "composition_substituted_ports": [
+          304,
+          315
+        ],
+        "composition_shape_builds": [
+          0,
+          0
+        ],
+        "boundary_edges_created": [
+          1267,
+          1260
+        ],
+        "owned_live": [
+          892,
+          892
+        ]
+      },
+      "source_storage": {
+        "completed_owner_frames": [
+          689,
+          689
+        ],
+        "explicit_cell_slots": [
+          822,
+          818
+        ],
+        "completed_owner_records_bytes": [
+          74696,
+          75068
+        ],
+        "fact_record_live_bytes": [
+          12480,
+          12480
+        ],
+        "cell_slot_bytes": [
+          13216,
+          13152
+        ],
+        "writer_bytes": [
+          27504,
+          27504
+        ]
+      },
+      "key_lookup_calls": [
+        2116,
+        2119
+      ],
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          572285,
+          572241
+        ],
+        "retained_program_teardown_bytes": [
+          158273075,
+          158299836
+        ],
+        "execution_and_takeover_peak_bytes": [
+          161643833,
+          161670552
+        ],
+        "max_takeover_extra_bytes": [
+          11152,
+          11208
+        ]
+      },
+      "graph_field_deltas": {
+        "cells": 308,
+        "functions": 0,
+        "parents": 0,
+        "writer_dir": 0,
+        "local_unions": 0,
+        "ownership.components": 48,
+        "ownership.live_facts": 0,
+        "ownership.frames": 0,
+        "ownership.shapes": 56,
+        "ownership.transitions": 0,
+        "ownership.training": 0,
+        "ownership.catalog_trace": 0,
+        "ownership.entry": 0,
+        "ownership.heap": 0,
+        "ownership.columns": 0,
+        "ownership.boundaries": -456,
+        "ownership.port_completion": 0,
+        "ownership.pending": 0,
+        "ownership.tables": 0,
+        "ownership.stats": 0,
+        "ownership.barriers": 0,
+        "stable_ports": 0,
+        "repair_ports": 0,
+        "union_digest": 0,
+        "members": 0,
+        "intern": 0,
+        "function_keys": 0,
+        "uses": 0,
+        "changes": 0,
+        "anchors": 0,
+        "dirty": 0,
+        "dirty_markers": 0,
+        "dirty_facts": 0,
+        "parent_users": 0,
+        "garbage": 0,
+        "receipt_forwards": 0
+      },
+      "graph_reduction_percent": 0.007688476895251206
+    },
+    {
+      "case": "sum-bits",
+      "runs": 882,
+      "control_program": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+      "candidate_program": "d9a8ebadce77a1caf4af955cc65f49b79db2427e5dcce38487acc9414846a495",
+      "saved_run_checks_equal": true,
+      "memory_final_states_equal": true,
+      "added_result_fragments": 45,
+      "work": {
+        "signal_bindings_created": [
+          7680,
+          7665
+        ],
+        "signal_bindings_live": [
+          6761,
+          6768
+        ],
+        "composition_entry_reads": [
+          8229,
+          8609
+        ],
+        "composition_result_writes": [
+          0,
+          2037
+        ],
+        "composition_result_joins": [
+          0,
+          76
+        ],
+        "composition_transition_probes": [
+          4380,
+          4731
+        ],
+        "composition_substituted_ports": [
+          1499,
+          1594
+        ],
+        "composition_shape_builds": [
+          0,
+          0
+        ],
+        "boundary_edges_created": [
+          6431,
+          6397
+        ],
+        "owned_live": [
+          2895,
+          2895
+        ]
+      },
+      "source_storage": {
+        "completed_owner_frames": [
+          2177,
+          2177
+        ],
+        "explicit_cell_slots": [
+          3085,
+          3074
+        ],
+        "completed_owner_records_bytes": [
+          219716,
+          220300
+        ],
+        "fact_record_live_bytes": [
+          48756,
+          48756
+        ],
+        "cell_slot_bytes": [
+          56312,
+          55416
+        ],
+        "writer_bytes": [
+          81552,
+          81552
+        ]
+      },
+      "key_lookup_calls": [
+        11965,
+        12051
+      ],
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          1702627,
+          1703795
+        ],
+        "retained_program_teardown_bytes": [
+          160648455,
+          160887114
+        ],
+        "execution_and_takeover_peak_bytes": [
+          166929398,
+          167169227
+        ],
+        "max_takeover_extra_bytes": [
+          11888,
+          11888
+        ]
+      },
+      "graph_field_deltas": {
+        "cells": 0,
+        "functions": 0,
+        "parents": 0,
+        "writer_dir": 0,
+        "local_unions": 0,
+        "ownership.components": 1792,
+        "ownership.live_facts": 0,
+        "ownership.frames": 0,
+        "ownership.shapes": 360,
+        "ownership.transitions": 0,
+        "ownership.training": 0,
+        "ownership.catalog_trace": 0,
+        "ownership.entry": 0,
+        "ownership.heap": 0,
+        "ownership.columns": 0,
+        "ownership.boundaries": -984,
+        "ownership.port_completion": 0,
+        "ownership.pending": 0,
+        "ownership.tables": 0,
+        "ownership.stats": 0,
+        "ownership.barriers": 0,
+        "stable_ports": 0,
+        "repair_ports": 0,
+        "union_digest": 0,
+        "members": 0,
+        "intern": 0,
+        "function_keys": 0,
+        "uses": 0,
+        "changes": 0,
+        "anchors": 0,
+        "dirty": 0,
+        "dirty_markers": 0,
+        "dirty_facts": 0,
+        "parent_users": 0,
+        "garbage": 0,
+        "receipt_forwards": 0
+      },
+      "graph_reduction_percent": -0.06859987536906864
+    },
+    {
+      "case": "dot-product",
+      "runs": 954,
+      "control_program": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+      "candidate_program": "68210b292748ad65e4fc3e8c4040a2904c96f7fc0da18c70a9297b744574d5ea",
+      "saved_run_checks_equal": true,
+      "memory_final_states_equal": true,
+      "added_result_fragments": 27,
+      "work": {
+        "signal_bindings_created": [
+          6504,
+          6522
+        ],
+        "signal_bindings_live": [
+          6254,
+          6285
+        ],
+        "composition_entry_reads": [
+          6595,
+          6765
+        ],
+        "composition_result_writes": [
+          0,
+          980
+        ],
+        "composition_result_joins": [
+          0,
+          54
+        ],
+        "composition_transition_probes": [
+          3809,
+          3974
+        ],
+        "composition_substituted_ports": [
+          1311,
+          1343
+        ],
+        "composition_shape_builds": [
+          0,
+          0
+        ],
+        "boundary_edges_created": [
+          4557,
+          4570
+        ],
+        "owned_live": [
+          2825,
+          2825
+        ]
+      },
+      "source_storage": {
+        "completed_owner_frames": [
+          2122,
+          2122
+        ],
+        "explicit_cell_slots": [
+          3283,
+          3248
+        ],
+        "completed_owner_records_bytes": [
+          207028,
+          198044
+        ],
+        "fact_record_live_bytes": [
+          42516,
+          42516
+        ],
+        "cell_slot_bytes": [
+          56512,
+          56336
+        ],
+        "writer_bytes": [
+          96856,
+          96856
+        ]
+      },
+      "key_lookup_calls": [
+        9202,
+        9289
+      ],
+      "memory": {
+        "graph_owned_teardown_bytes": [
+          1648851,
+          1637011
+        ],
+        "retained_program_teardown_bytes": [
+          162126363,
+          162297744
+        ],
+        "execution_and_takeover_peak_bytes": [
+          168097205,
+          168256844
+        ],
+        "max_takeover_extra_bytes": [
+          15848,
+          13456
+        ]
+      },
+      "graph_field_deltas": {
+        "cells": -9200,
+        "functions": 0,
+        "parents": 0,
+        "writer_dir": 0,
+        "local_unions": 0,
+        "ownership.components": -4672,
+        "ownership.live_facts": 0,
+        "ownership.frames": 0,
+        "ownership.shapes": 232,
+        "ownership.transitions": 0,
+        "ownership.training": 0,
+        "ownership.catalog_trace": 0,
+        "ownership.entry": 0,
+        "ownership.heap": 0,
+        "ownership.columns": 0,
+        "ownership.boundaries": 1800,
+        "ownership.port_completion": 0,
+        "ownership.pending": 0,
+        "ownership.tables": 0,
+        "ownership.stats": 0,
+        "ownership.barriers": 0,
+        "stable_ports": 0,
+        "repair_ports": 0,
+        "union_digest": 0,
+        "members": 0,
+        "intern": 0,
+        "function_keys": 0,
+        "uses": 0,
+        "changes": 0,
+        "anchors": 0,
+        "dirty": 0,
+        "dirty_markers": 0,
+        "dirty_facts": 0,
+        "parent_users": 0,
+        "garbage": 0,
+        "receipt_forwards": 0
+      },
+      "graph_reduction_percent": 0.7180757994506459
+    }
+  ]
+}

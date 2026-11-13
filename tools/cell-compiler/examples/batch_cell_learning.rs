@@ -21,10 +21,15 @@ fn step_storage(e:&mut Executor,n:usize,nested:bool)->Result<Value> {
     if nested {e.graph.transfer_completed_owner_segments()?;} else {e.graph.transfer_completed_owners()?;}
     Ok(json!({"graph":artifact_digest(&e.graph.export()?),"rhs":audit::take_digests(),"writes":audit::take_write_digests()}))
 }
+#[path="batch_cell_learning/result_entries.rs"]
+mod result_entries;
 fn main()->Result<()> {
     let a=std::env::args().skip(1).collect::<Vec<_>>();
-    if a.len()<2 {return Err("batch_cell_learning prepare SUITE OUTPUT CASE... | apply OUTPUT | verify OUTPUT | observe OUTPUT | apply-passive ROOT VARIANT | check-passive ROOT VARIANT | check-nested ROOT VARIANT".into());}
-    if a[0]=="compile-witness" {
+    if a.len()<2 {return Err("batch_cell_learning prepare SUITE OUTPUT CASE... | apply OUTPUT | verify OUTPUT | observe OUTPUT | apply-passive ROOT VARIANT | check-passive ROOT VARIANT | check-nested ROOT VARIANT | learn-results ROOT SEED_VARIANT OUTPUT_VARIANT".into());}
+    if a[0]=="learn-results" {
+        if a.len()!=4 {return Err("learn-results ROOT SEED_VARIANT OUTPUT_VARIANT".into());}
+        result_entries::run(Path::new(&a[1]),&a[2],&a[3])?;
+    } else if a[0]=="compile-witness" {
         let root=Path::new(&a[1]);
         for name in ["fact","loopfact","sum-bits","dot-product"] {
             let dir=root.join(name);
@@ -197,6 +202,7 @@ fn main()->Result<()> {
                     "catalog_trace":if a.get(3).is_some_and(|a|a=="witness-trace") {Some(target.graph.ownership_catalog_trace()?)} else {None},
                     "completion_batches":target.graph.completion_batch_report(),
                     "stable_ports":target.graph.stable_port_report(),
+                    "ownership":target.graph.ownership_report(),
                     "key_lookup_calls":target.graph.key_lookup_calls.get(),"runtime_stats":target.graph.stats,
                     "final_state":artifact_digest(&target.graph.export()?)}));
                 if receipt_trace {
