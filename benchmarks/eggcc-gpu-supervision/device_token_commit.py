@@ -31,6 +31,18 @@ def commit(state, proposals, xp):
                     & (state['generation'][safe_source] == proposals['generation']))
     finite = xp.all(xp.isfinite(proposals['tokens']), axis=1)
     settled = state['settled'][safe_source]
+    multi_source='witness_sources' in proposals
+    if multi_source:
+        witnesses=proposals['witness_sources'];mask=proposals['witness_valid']
+        if witnesses.ndim!=2 or witnesses.shape[0]!=count or witnesses.shape!=mask.shape or witnesses.shape!=proposals['witness_generations'].shape:
+            raise ValueError('witness layout mismatch')
+        safe=xp.clip(witnesses,0,capacity-1)
+        dirty=state.get('token_dirty',xp.zeros_like(state['active']))[safe]
+        valid=((witnesses>=0)&(witnesses<capacity)&state['present'][safe]&state['visible'][safe]
+               &(state['generation'][safe]==proposals['witness_generations'])&~dirty)
+        valid_source=xp.any(mask,axis=1)&xp.all(~mask|valid,axis=1)
+        stale_token=xp.any(mask&dirty,axis=1)
+        settled=xp.all(~mask|state['settled'][safe],axis=1)
     eligible = proposals['matched'] & valid_source & settled & finite
     # Completed/retired logical keys remain known: repeated derivations are not
     # new facts and may not reactivate work merely by producing another vector.
@@ -51,10 +63,13 @@ def commit(state, proposals, xp):
     pick = xp.argmax(write.astype(xp.int32), axis=0)
     # A source with competing matched successors retains its activation owner,
     # even if one candidate is duplicate or over capacity in this round.
-    same_source = source[:,None] == source[None,:]
-    competitors = xp.sum((same_source & eligible[None,:]).astype(xp.int32), axis=1)
-    transferable = (accepted & proposals['transfer_covered'] & (competitors == 1)
-                    & state['settled'][safe_source] & ~state['readers'][safe_source])
+    if multi_source:
+        transferable=xp.zeros_like(accepted) # No inferred unique owner or primary-owner competition scan.
+    else:
+        same_source = source[:,None] == source[None,:]
+        competitors = xp.sum((same_source & eligible[None,:]).astype(xp.int32), axis=1)
+        transferable = (accepted & proposals['transfer_covered'] & (competitors == 1)
+                        & state['settled'][safe_source] & ~state['readers'][safe_source])
     retired = xp.any(transferable[:,None] & (source[:,None] == xp.arange(capacity)[None,:]), axis=0)
     output = dict(state)
     output['keys'] = xp.where(written[:,None], proposals['keys'][pick], state['keys'])

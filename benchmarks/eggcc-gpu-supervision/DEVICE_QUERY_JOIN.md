@@ -60,3 +60,48 @@ shows why physical batching alone is not a full takeover. Here, returning
 multi-source matches is likewise not ownership transfer: retaining and removing
 source responsibilities under a proved composed Cell remains unfinished.
 No native runtime, prediction-accuracy or whole-workload speed claim is made.
+
+## Joint matches through ridge and admission
+
+`device_join_transition` now compiles source/consumer role coefficient banks for
+query input ports, selects them from matched witness occurrences, pools current
+source tokens and invokes the existing ridge feature map. Projected scalar
+features and exact values share the same field provenance. The resulting slots,
+roots and token go directly into the common admission path. Query overflow and
+incomplete views stay visible even when some proven partial matches are admitted.
+
+Joint proposals retain all atom witnesses and their generations. Admission
+checks every witness's presence, visibility, settlement and token freshness;
+it does not require a shared reader to own activation. A placeholder source of
+-1 explicitly avoids inventing one primary owner. Multi-source proposals never
+transfer activation, even if a caller incorrectly sets the old transfer flag.
+They also skip the old single-primary competition scan. Actual ownership
+transfer still requires a separate composed-Cell proof and lifecycle takeover.
+
+`run_round` jointly admits multiple such query blocks with padded witness masks.
+The nested scheduled runtime accepts this query kernel while preserving its
+one-query-snapshot-per-Run protocol and current external/Eq coverage gates.
+Unknown coverage defaults to false. Unsupported queries are not silently
+installed, and this does not establish complete residual enumeration or delta
+ownership for a real ruleset.
+
+94 mechanism tests pass. GPU tests cover multi-source matching, encoding, ridge
+and admission in one call; actual IDs/roots remain distinct. Changing a secondary
+witness's generation, visibility, freshness or settlement blocks admission. A
+nested local runtime fixture executes a constructor from the joined match and
+reports completed-Run changes [true, false]. Shared input sources remain live;
+no transfer is credited. Test weights are synthetic, not a new prediction-rate
+result. The static role scheme chooses the first binding witness per port; its
+provider distribution still needs evaluation against the frozen trained model.
+
+Remaining limits include dense join/compaction work, coefficient-bank residency,
+full constructor-view coverage, witness retirement after admission, exact
+original encounter/delta semantics and semantic key deduplication when different
+actual identities share one Eq class across Runs. Existing exact integer-key
+admission is not a proof that all such aliases are globally deduplicated. The
+integrated fixture has sufficient capacity and explicitly complete local query
+coverage; it is not full Eggcc acceptance or a performance result.
+
+Reference Bake tip remains `20c85cfa`. The change reuses existing slots and
+admission rather than introducing another runtime fact graph, but it still
+retains source responsibilities and does not claim full ownership completion.
