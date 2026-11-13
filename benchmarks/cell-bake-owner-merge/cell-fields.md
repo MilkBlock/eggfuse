@@ -131,3 +131,20 @@ remain available; the materialized-field mode keeps its original provider path.
 The source-field fixture exercises both configuration orders through completed
 storage, union, deletion and worker reads. This is removal of redundant plans and
 lookup work, not a newly measured whole-graph compression percentage.
+
+## Compaction preserves authoritative scalar operands
+
+The computed-scalar regression adds `k = n + 1` before publishing `F(x,k)`
+and compacts at each of five source Run boundaries, before completed-owner
+transfer. Before the fix, the ordinary recipe proved `k` reconstructible and
+removed its slot; direct field projection then panicked on the missing value.
+Recipe reconstructibility is not permission to remove a direct field operand.
+
+Compaction now derives these operands from the existing source template and
+owned facts, including hidden owned facts. It retains only slots read by scalar
+columns of those facts; no reader index or persistent liveness bitmap is added.
+Other reconstructible slots remain eligible for removal. Source retirement,
+union and completed storage remain in the same fixture, with serial execution
+and two-worker overlapping execution compared to materialized-field control at
+every Run boundary. This is a standalone Cell CPU correctness repair, not an
+additional compression result or native egglog acceptance.
