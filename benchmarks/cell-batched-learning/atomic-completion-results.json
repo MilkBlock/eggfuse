@@ -1,0 +1,177 @@
+{
+  "scope": "actual standalone Cell runtime; final Graph-owned heap, not runtime timing or native egglog memory",
+  "cases": [
+    {
+      "case": "fact",
+      "graph_bytes_before": 704103,
+      "graph_bytes_after": 705175,
+      "extra_eq_slots_elided": 291,
+      "restoration": {
+        "scalar_provider": {
+          "events": 2,
+          "requested_scalar_slots": 2,
+          "restored_slots": 4,
+          "restored_facts": 2,
+          "restored_array_capacity_bytes": 672,
+          "max_array_capacity_bytes": 336,
+          "max_source_template": 145,
+          "max_source_slots": 2,
+          "max_source_facts": 1
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "same_final_state_and_fact_lifecycle": true
+    },
+    {
+      "case": "loopfact",
+      "graph_bytes_before": 625665,
+      "graph_bytes_after": 616289,
+      "extra_eq_slots_elided": 307,
+      "restoration": {
+        "scalar_provider": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "same_final_state_and_fact_lifecycle": true
+    },
+    {
+      "case": "sum-bits",
+      "graph_bytes_before": 1844131,
+      "graph_bytes_after": 1830387,
+      "extra_eq_slots_elided": 453,
+      "restoration": {
+        "scalar_provider": {
+          "events": 13,
+          "requested_scalar_slots": 13,
+          "restored_slots": 24,
+          "restored_facts": 16,
+          "restored_array_capacity_bytes": 4320,
+          "max_array_capacity_bytes": 360,
+          "max_source_template": 59,
+          "max_source_slots": 3,
+          "max_source_facts": 1
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "same_final_state_and_fact_lifecycle": true
+    },
+    {
+      "case": "dot-product",
+      "graph_bytes_before": 1812291,
+      "graph_bytes_after": 1798019,
+      "extra_eq_slots_elided": 533,
+      "restoration": {
+        "scalar_provider": {
+          "events": 10,
+          "requested_scalar_slots": 10,
+          "restored_slots": 20,
+          "restored_facts": 10,
+          "restored_array_capacity_bytes": 3360,
+          "max_array_capacity_bytes": 336,
+          "max_source_template": 145,
+          "max_source_slots": 2,
+          "max_source_facts": 1
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "same_final_state_and_fact_lifecycle": true
+    }
+  ]
+}

@@ -769,6 +769,7 @@ impl Graph {
                     val,
                     r["subsumed"].as_bool().unwrap_or(false),
                 )?;
+                g.finish_atomic_constructor(cell);
             } else {
                 g.set_function(table, key, val)?;
             }
@@ -2076,7 +2077,20 @@ impl Graph {
         // absent; do not repeat the (potentially expensive) port-domain lookup.
         // As before, dynamic hits do not enter the RHS constructor path.
         self.stats.constructor_requests += 1;
-        self.insert_constructor(cell, 0, t, &key, dst)
+        let value = self.insert_constructor(cell, 0, t, &key, dst)?;
+        self.finish_atomic_constructor(cell);
+        Ok(value)
+    }
+    // Synthetic table templates contain exactly one constructor operation.
+    // Complete only after activation succeeds; ordinary RHS frames retain their
+    // execution-controlled completion boundary.
+    fn finish_atomic_constructor(&mut self, cell: u32) {
+        let frame = self.cells.get_mut(&cell).expect("new constructor frame");
+        debug_assert_eq!(self.program.templates[frame.template].ops.len(), 1);
+        frame.completed = true;
+        frame.completed_prefix = 1;
+        #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+        self.delegate_completed_slots(cell);
     }
     pub fn enqueue_union(&mut self, a: Value, b: Value) -> Result<()> {
         self.stats.union_requests += 1;

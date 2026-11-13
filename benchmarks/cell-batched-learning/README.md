@@ -875,3 +875,45 @@ unchanged seed, recording `candidate-explicit-history-heap.json` with
 python3 benchmarks/cell-batched-learning/explicit_history_results.py \
   out/cell-batched-learning benchmarks/cell-batched-learning/explicit-history-results.json
 ```
+
+## Complete atomic constructor frames before delegating their slots
+
+Synthetic table templates contain one constructor operation. Import and dynamic
+construction previously left their frames incomplete even after activation
+succeeded. Mark that single operation complete and project duplicate Eq bindings
+through existing composed ports. Imported frames delegate after ownership adopts
+their fields. Failed activation does not complete a frame; normal RHS completion
+boundaries are unchanged. Scalar values stay stored. No additional runtime index,
+child ownership hierarchy, or larger restoration unit is introduced.
+
+This lets actual completed source frames participate in the existing cross-Run
+owner takeover. It does not skip rule applications or imply saturation under
+future unions. The source frame remains the restoration boundary. Fact identities,
+birth epochs, visibility and residual matching remain live obligations.
+
+Against the current explicit-history seed, final Graph-owned heap changes:
+
+| case | before | after |
+|---|---:|---:|
+| fact | 704103 | 705175 |
+| loopfact | 625665 | 616289 |
+| sum-bits | 1844131 | 1830387 |
+| dot-product | 1812291 | 1798019 |
+
+These are small mixed results, not substantial egraph compression. Broader owner
+coverage also changes headers/capacity; completion eligibility alone is not a
+sufficient storage-selection cost model. Logical fact and instance identities are
+unchanged. Compare lifecycle by logical Cell ID, excluding the intentionally
+changed completion/storage-placement flags, not incidental arena iteration order.
+The marked sum-bits Graph uses 2222254 bytes versus 2247406; its executed final
+digest matches the saved semantic exports and choice diagnosis passes.
+
+Validation: 52 ownership tests, including dynamic constructor union collision,
+pass; default runtime compile passes. Reproduce memory comparisons with the
+existing runtime_storage_peak inherited-owners mode, writing candidate-atomic-heap.json,
+then atomic_completion_results.py ROOT OUTPUT. No latency benchmark was run.
+The rebuilt batch checker also passes all 2,652 saved source Run checks and the
+four terminal checks using the stage-inherited seed selection. Extra Eq bindings
+removed are 291/307/453/533 respectively. Scalar-driven restoration capacities
+remain 672/0/4320/3360 bytes, with no component/representation unseals. Thus this
+coverage expansion does not increase the observed restoration work in these cases.

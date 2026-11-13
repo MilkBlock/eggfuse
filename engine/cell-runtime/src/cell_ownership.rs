@@ -448,6 +448,8 @@ impl Graph {
             m.stats.adopted_existing += 1;
             m.stats.owned_live += 1;
             self.initialize_cell_fields::<true>(f, row.table, &row.values);
+            #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+            self.delegate_completed_slots(f.cell);
         }
         Ok(())
     }

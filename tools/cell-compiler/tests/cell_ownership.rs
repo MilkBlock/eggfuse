@@ -1430,17 +1430,17 @@ fn later_single_stage_joins_the_existing_physical_owner() {
             moved.push(actual.graph.transfer_completed_owners().unwrap());
             assert_eq!(reference.graph.export().unwrap(),actual.graph.export().unwrap());
         }
-        assert_eq!(moved,vec![0,2,1],"the third Run must absorb its single new frame");
-        assert_eq!(actual.graph.stats.shared_owner_extensions,1);
-        assert_eq!(actual.graph.stats.shared_owner_extension_frames,1);
-        for name in ["Start","Pair","Seen"] {
+        assert_eq!(moved,vec![2,1,1],"the third Run must absorb its single new frame");
+        assert_eq!(actual.graph.stats.shared_owner_extensions,2);
+        assert_eq!(actual.graph.stats.shared_owner_extension_frames,2);
+        for name in ["N","Start","Pair","Seen"] {
             let table=actual.graph.program.tables.iter().position(|t|t.name==name).unwrap();
             let eggfuse_cell_runtime::graph::Dependency::Fact(f)=actual.graph.witnesses(table)[0] else {panic!("constructor")};
             assert!(actual.graph.cells.get(&f.cell).is_none(),"{name} no longer needs an ordinary source frame");
         }
         let storage=actual.graph.retained_cell_storage();
         assert_eq!(storage["completed_owners"]["owners"],1);
-        assert_eq!(storage["completed_owners"]["completed_frames"],3);
+        assert_eq!(storage["completed_owners"]["completed_frames"],4);
         assert_eq!(actual.graph.transfer_completed_owners().unwrap(),0,"idle boundary is a no-op");
     }
 }
@@ -1465,7 +1465,7 @@ fn referenced_parent_can_transfer_before_the_child_finishes() {
     }).unwrap();
     let child=e.graph.linked_frame(template,Default::default(),Some(parent)).unwrap();
     let expected=e.graph.slot(child,slot).unwrap();
-    assert_eq!(e.graph.transfer_completed_owners().unwrap(),2);
+    assert_eq!(e.graph.transfer_completed_owners().unwrap(),3);
     assert!(e.graph.cells.get(&parent.cell).is_none());
     assert!(e.graph.stats.shared_owner_referenced_frames>0);
     assert_eq!(e.graph.slot(child,slot).unwrap(),expected);
@@ -1487,7 +1487,7 @@ fn saturated_observer_reads_cross_stage_age_from_transferred_frames() {
     let mut g=Graph::new_with_local_congruence(p).unwrap();g.trace_ownership_catalog(16).unwrap();
     let mut e=Executor::new(g,false);e.use_completed_parent_takeover().unwrap();
     e.execute_until(Some(2)).unwrap();
-    assert_eq!(e.graph.transfer_completed_owners().unwrap(),2);
+    assert_eq!(e.graph.transfer_completed_owners().unwrap(),3);
     let n=e.graph.program.tables.iter().position(|t|t.name=="N").unwrap();
     e.graph.hide(n,&[eggfuse_cell_runtime::value::Value::Int(1)],true).unwrap();
     e.graph.collect_garbage();
@@ -1645,4 +1645,29 @@ fn production_does_not_retain_barrier_history_and_explicit_observation_preserves
     let report=late.graph.ownership_report();
     assert_eq!(report["barrier_history"]["start_after_barriers"],prefix);
     assert_eq!(report["barriers"].as_array().unwrap().len() as u64,count-prefix);
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn atomic_constructor_slots_survive_union_collision() {
+    use eggfuse_cell_runtime::value::Value;
+    let p=program("(datatype E (N i64) (F E)) (ruleset empty) (run empty 1)");
+    let mut reference=Graph::new(p.clone()).unwrap();
+    let mut actual=Graph::new_with_cell_ownership(p).unwrap();
+    let n=actual.program.tables.iter().position(|t|t.name=="N").unwrap();
+    let f=actual.program.tables.iter().position(|t|t.name=="F").unwrap();
+    for graph in [&mut reference,&mut actual] {
+        let a=graph.dynamic_construct(n,vec![Value::Int(1)]).unwrap();
+        let b=graph.dynamic_construct(n,vec![Value::Int(2)]).unwrap();
+        graph.dynamic_construct(f,vec![a.clone()]).unwrap();
+        graph.dynamic_construct(f,vec![b.clone()]).unwrap();
+        for cell in graph.cells.values() {
+            assert!(cell.completed);
+            assert_eq!(cell.completed_prefix,1);
+        }
+        graph.enqueue_union(a,b).unwrap();
+        graph.repair().unwrap();
+    }
+    assert!(actual.stats.completed_symbolic_slots_elided>0);
+    assert_eq!(reference.export().unwrap(),actual.export().unwrap());
 }
