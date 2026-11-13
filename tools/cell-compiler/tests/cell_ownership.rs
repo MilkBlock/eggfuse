@@ -40,6 +40,9 @@ fn saturation_observer_sees_birth_free_effects_and_rejects_unproved_work() {
         assert_eq!(a.snapshots, b.snapshots);
         assert_eq!(a.binding_audit, b.binding_audit);
         let report = b.graph.ownership_catalog_trace().unwrap();
+        assert!(b.graph.compile_ownership_witness_candidates(&serde_json::json!("wrong-source"),&report["saturation"]).is_err());
+        let candidate=b.graph.compile_ownership_witness_candidates(&b.graph.program.artifact["sha256"],&report["saturation"]).unwrap();
+        assert!(candidate["entries"].is_array());
         let rows = report["saturation"]["rows"].as_array().unwrap();
         assert!(rows.iter().any(|r|r["outcome"] == outcome), "{body}: {report}");
         let applications = rows.iter().map(|r|r["counts"]["applications"].as_u64().unwrap()).sum::<u64>();

@@ -23,7 +23,18 @@ fn step(e:&mut Executor,n:usize)->Result<Value> {
 fn main()->Result<()> {
     let a=std::env::args().skip(1).collect::<Vec<_>>();
     if a.len()<2 {return Err("batch_cell_learning prepare SUITE OUTPUT CASE... | apply OUTPUT | verify OUTPUT | observe OUTPUT | apply-passive ROOT VARIANT | check-passive ROOT VARIANT".into());}
-    if a[0]=="prepare" {
+    if a[0]=="compile-witness" {
+        let root=Path::new(&a[1]);
+        for name in ["fact","loopfact","sum-bits","dot-product"] {
+            let dir=root.join(name);
+            let observation=read(dir.join("witness-checked.json"))?;
+            if observation["all_saved_run_checks_equal"]!=true {return Err("unaudited witness trace".into());}
+            let e=executor(read(dir.join("candidate.json"))?)?;
+            let plan=e.graph.compile_ownership_witness_candidates(&observation["program"],&observation["catalog_trace"]["saturation"])?;
+            write(dir.join("witness-candidates.json"),&plan)?;
+            eprintln!("{name}: {} candidate addresses",plan["entries"].as_array().unwrap().len());
+        }
+    } else if a[0]=="prepare" {
         if a.len()<4 {return Err("prepare needs suite, output and cases".into());}
         let suite=read(&a[1])?;let base=Path::new(&a[1]).parent().unwrap();let out=Path::new(&a[2]);
         fs::create_dir_all(out)?;let mut cases=vec![];
