@@ -82,6 +82,39 @@ def match_consumer(rule,facts,limit=256):
     return out,False
 
 
+def continuation_contract(producer,consumer,facts,entry):
+    """Compile an interface, not permission to transfer a live instance.
+
+    Fact indices address the shared completed template. Result symbols must be
+    resolved through actual returned witnesses, including foreign reuse.
+    """
+    witnesses=dict(entry['witnesses'])
+    if len(witnesses)!=len(entry['witnesses']) or set(witnesses)!=set(range(len(consumer['query']))):
+        raise ValueError('incomplete or duplicate query witness')
+    inputs=dict(entry['inputs'])
+    if len(inputs)!=len(entry['inputs']):raise ValueError('duplicate input slot')
+    if set(inputs)!={i for i,s in enumerate(consumer['slots']) if s['definition']=='query'}:
+        raise ValueError('incomplete input projection')
+    for at,fi in witnesses.items():
+        if not 0<=fi<len(facts):raise ValueError('invalid witness address')
+        name,values,_=facts[fi];atom=consumer['query'][at]
+        if name!=atom['call'].get('table') or len(values)!=len(atom['args']):
+            raise ValueError('witness constructor mismatch')
+        for arg,value in zip(atom['args'],values):
+            expected=inputs.get(arg['slot']) if 'slot' in arg else ('literal',json.dumps(arg,sort_keys=True))
+            if expected!=value:raise ValueError('witness binding mismatch')
+    return dict(schema='cell-continuation-contract/v1',
+        completed_effect_prefix=len(producer['effects']),
+        query_projection=[dict(atom=at,fact=witnesses[at]) for at in range(len(consumer['query']))],
+        scalar_input_slots=[i for i in inputs if consumer['slots'][i]['sort']['kind']!='eq'],
+        result_addressing='actual returned witness; never logical producer operation alone',
+        boundary= 'same_ruleset' if producer['metadata'].get('source_set')==consumer['metadata'].get('source_set') else 'source_run_boundary',
+        runtime_obligations=['matched_source_inputs','completed_source_effects','settled_completion',
+            'live_visible_witnesses','current_owner_generation','legal_source_run',
+            'delta_and_novelty','exclusive_activation_or_shared_readers'],
+        ownership_transfer_authorized=False)
+
+
 def compile_catalog(recipe):
     tables={t['name']:t for t in recipe['tables']};rules=recipe['rules']
     cells=[];boundaries=[];edges=[];identity_entries_removed=0;inverted=defaultdict(set)
@@ -102,7 +135,7 @@ def compile_catalog(recipe):
             for entry in entries:
                 if rid==cid and all(tuple(ref)==('input',slot) for slot,ref in entry['inputs']):
                     identity_entries_removed+=1;continue
-                edges.append(dict(producer=rid,consumer=cid,source_set=r['metadata'].get('source_set'),target_set=consumer['metadata'].get('source_set'),**entry))
+                edges.append(dict(producer=rid,consumer=cid,source_set=r['metadata'].get('source_set'),target_set=consumer['metadata'].get('source_set'),contract=continuation_contract(r,consumer,facts,entry),**entry))
     return dict(schema='cell-token-successors/v1',cells=cells,edges=edges,boundaries=boundaries,identity_entries_removed=identity_entries_removed,
         obligations=['Seed Cell assumptions must be established before entry',
         'Source Run ordering and visibility boundaries remain authoritative',
