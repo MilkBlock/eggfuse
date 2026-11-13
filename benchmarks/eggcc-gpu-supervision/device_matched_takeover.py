@@ -41,16 +41,25 @@ def initialize(state,max_atoms):
                 **{k:np.full((len(state['present']),max_atoms),-1,np.int32) for k in COLUMNS})
 
 
-def finish(state,catalog,boundary,xp):
+def finish(state,catalog,boundary,xp,budget=None,diagnostics=False):
     """Static bounded sweep; no CPU value reads or per-source subscriber lists."""
     out=dict(state);attempted=xp.array(0,xp.int32);released=xp.array(0,xp.int32);copied=xp.array(0,xp.int32)
+    reasons={k:xp.array(0,xp.int32) for k in ('stale','value_mismatch','uncovered_alias','occupied_destination','epoch_exhausted')} if diagnostics else {}
     quiescent=boundary&~xp.any(state['readers'])
     n,atoms=state['takeover_plan'].shape
+    limit=n if budget is None else min(n,budget)
+    if limit<1:raise ValueError('positive takeover target budget required')
+    eligible=quiescent&state['present']&state['settled']&xp.any(state['takeover_plan']>=0,axis=1)
+    targets=xp.sort(xp.where(eligible,xp.arange(n),n))[:limit]
+    consumed=xp.zeros(n,xp.bool_)
     tables={k:xp.array(np.array([p[k] for p in catalog])) for k in ('producer','consumer','projection','required','copied')} if catalog else {}
-    for target in range(n):
+    for lane in range(limit):
+        address=targets[lane];target=xp.minimum(address,n-1)
+        valid_target=address<n
+        consumed=consumed|((xp.arange(n)==target)&valid_target)
         for atom in range(atoms):
             index=state['takeover_plan'][target,atom]
-            selected=quiescent&(index>=0)&state['present'][target]&state['settled'][target]
+            selected=valid_target&(index>=0)
             if catalog:  # Static catalog shape, not a device control branch.
                 enabled=selected&(index<len(catalog))
                 plan=dict(covered=True,**{k:v[xp.clip(index,0,len(catalog)-1)] for k,v in tables.items()})
@@ -58,8 +67,11 @@ def finish(state,catalog,boundary,xp):
                     state['takeover_generation'][target,atom],state['takeover_target_generation'][target],enabled,xp)
                 attempted=attempted+enabled.astype(xp.int32)
                 released=released+marks['released_rows'];copied=copied+marks['copied_fields']
+                for key in reasons:reasons[key]=reasons[key]+(enabled&~marks['transferred']&marks[key]).astype(xp.int32)
     # One-shot optional compression. Failed plans leave all semantic state live.
     # Busy readers postpone the attempt and keep evidence for a later boundary.
-    for key in COLUMNS:out[key]=xp.where(quiescent,-1,state[key])
-    out['takeover_target_generation']=xp.where(quiescent,-1,state['takeover_target_generation'])
-    return out,dict(attempted=attempted,released=released,copied_fields=copied,blocked=attempted-released)
+    for key in COLUMNS:out[key]=xp.where(consumed[:,None],-1,state[key])
+    out['takeover_target_generation']=xp.where(consumed,-1,state['takeover_target_generation'])
+    result=dict(attempted=attempted,released=released,copied_fields=copied,blocked=attempted-released)
+    if diagnostics:result['blocked_reasons']=reasons
+    return out,result

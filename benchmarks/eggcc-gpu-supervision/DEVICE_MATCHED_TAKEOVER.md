@@ -63,8 +63,10 @@ reject stale source/target generations, and preserve hints on duplicate matches.
 
 Evidence storage is 12*N*A + 4*N bytes for N logical rows and A maximum query
 atoms. Static transfer plans and their record-index tables add storage too;
-neither is credited as free. The current fixed-shape sweep attempts up to N*A
-locations per boundary, selecting a plan with an exact bounded index. Each
+neither is credited as free. The initial fixed-shape sweep attempted up to N*A locations per boundary.
+SNAPSHOT_COMPLETION.md adds evidence compaction and an optional target budget B,
+retaining unprocessed hints and attempting up to B*A locations. Plan selection
+still uses an exact bounded index. Each
 attempt still scans alias projections and uses functional array updates. It
 adds no data-dependent GPU control flow but is not a throughput implementation
 or a speedup claim. Counters report attempted, released, blocked and copied
@@ -82,8 +84,8 @@ when an existing prefix preserves addresses and all reachable later appends;
 it also reports expensive component scans. This GPU implementation follows the
 settled-boundary and actual-source evidence requirements but does **not** claim
 that preserving physical fields proves suffix retirement safe. It keeps those
-logical routes intact. A future efficient sweep should use compacted admitted
-instances and existing lifecycle events, without rebuilding subscriber lists.
+logical routes intact. The subsequent bounded sweep compacts eligible admitted instances; further
+lifecycle-driven work must still avoid rebuilding subscriber lists.
 
 Run test_device_matched_takeover plus the existing admission, ownership, Eq,
 query and schedule suites: 159 related tests pass. This change does not modify

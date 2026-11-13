@@ -12,6 +12,17 @@ def fixture():
 
 
 class SnapshotImport(unittest.TestCase):
+    def test_effect_tables_are_imported_and_hidden_reuse_is_not_assumed(self):
+        recipe,snapshot=fixture();eq=dict(kind='eq',name='E')
+        recipe['tables'].append(dict(name='G',kind='constructor',schema=[eq,eq]))
+        recipe['rules'][0]['slots'].append(dict(sort=eq,definition='effect'))
+        recipe['rules'][0]['effects']=[dict(kind='construct',call=dict(table='G'),args=[dict(slot=1)],dst=2)]
+        snapshot['rows'].append(dict(table='G',subsumed=False,values=[snapshot['rows'][0]['values'][1],dict(sort='E',eq='Cell(7)')]))
+        _,_,_,rows=prepare(recipe,snapshot,0,2,include_effects=True)
+        self.assertEqual({r['table'] for r in rows},{'F','G'})
+        snapshot['rows'][1]['subsumed']=True
+        with self.assertRaisesRegex(ValueError,'hidden'):prepare(recipe,snapshot,0,2,include_effects=True)
+
     def test_exact_identity_scalar_precision_visibility_and_duplicates(self):
         recipe,snapshot=fixture();row=snapshot['rows'][0]
         snapshot['rows'].extend([copy.deepcopy(row),dict(row,subsumed=True)])

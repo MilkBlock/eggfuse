@@ -17,6 +17,20 @@ def setup():
 
 
 class MatchedTakeover(unittest.TestCase):
+    def test_budget_preserves_unprocessed_evidence(self):
+        s,p,c,m=setup();matched,_=step(s,p,m,4,True,True,np)
+        # A stale hint precedes the valid newly admitted consumer.
+        for key in ('takeover_plan','takeover_source','takeover_generation'):
+            matched[key][1]=matched[key][2]
+        matched['takeover_target_generation'][1]=-1
+        out,marks=finish(matched,c,np.array(True),np,budget=1)
+        self.assertEqual(marks['released'],0)
+        self.assertTrue((out['takeover_plan'][1]==-1).all())
+        np.testing.assert_array_equal(out['takeover_plan'][2],matched['takeover_plan'][2])
+        final,marks=finish(out,c,np.array(True),np,budget=1)
+        self.assertEqual(marks['released'],2)
+        self.assertTrue((final['takeover_plan']==-1).all())
+
     def test_run_completion_automatically_reclaims_for_next_ruleset(self):
         from device_join_transition import compile_transition,run_round
         from device_constructor_completion import compile_completion

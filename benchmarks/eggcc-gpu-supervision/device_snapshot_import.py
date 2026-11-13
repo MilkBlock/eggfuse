@@ -11,10 +11,19 @@ from multi_entry_ridge import template,encode,scalar
 def identity(value):return json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False)
 
 
-def prepare(recipe,snapshot,rid,spare):
+def prepare(recipe,snapshot,rid,spare,include_effects=False):
     from device_query_join import compile_query
     original=recipe['rules'][rid];tables={t['name']:t for t in recipe['tables']}
     required=sorted({a['call'].get('table') for a in original['query'] if 'table' in a['call']})
+    if include_effects:
+        for op in original['effects']:
+            if op['kind']=='copy' and 'slot' in op.get('arg',{}):continue
+            if op['kind']=='construct' and all('slot' in a for a in op['args']):
+                required.append(op['call']['table']);continue
+            raise ValueError('unsupported snapshot effect')
+        required=sorted(set(required))
+        if any(r['table'] in required and r.get('subsumed',False) for r in snapshot['rows']):
+            raise ValueError('hidden constructor reuse requires separate coverage')
     if any(tables[t]['kind']!='constructor' for t in required):raise ValueError('constructor snapshot only')
     local=dict(tables=copy.deepcopy(recipe['tables']),rules=[copy.deepcopy(original)])
     seed_rules={}

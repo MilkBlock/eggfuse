@@ -10,7 +10,7 @@ from device_entry_round import run_round
 from device_constructor_completion import complete
 
 
-def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_id,limit,quota,external_complete,eq_settled,ticks,xp,eq_context=None,eq_rounds=4,continuation=None,query_kernel=None,takeover_catalog=None):
+def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_id,limit,quota,external_complete,eq_settled,ticks,xp,eq_context=None,eq_rounds=4,continuation=None,query_kernel=None,takeover_catalog=None,takeover_budget=None):
     if ticks<1:raise ValueError('positive tick budget required')
     if query_covered.shape[0]<1:raise ValueError('stage coverage array required')
     state=ensure_roots(state,xp)
@@ -43,7 +43,7 @@ def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_i
         done=in_run&(opened|begin)&covered&external_complete&after_eq&~e['needs_attention']&~failed
         if takeover_catalog is not None:
             from device_matched_takeover import finish
-            candidate,tm=finish(candidate,takeover_catalog,done,xp)
+            candidate,tm=finish(candidate,takeover_catalog,done,xp,budget=takeover_budget)
             for key,value in tm.items():logs['takeover_'+key].append(value)
         machine,control=tick(machine,schedule,done,changed,xp)
         for key,value in dict(stage=stage,query_started=begin,run_done=done,run_changed=done&changed,
