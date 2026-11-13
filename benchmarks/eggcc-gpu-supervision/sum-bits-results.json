@@ -1,0 +1,349 @@
+{
+  "scope": "Real sum-bits eggcc Pass 3 binding replay; numerical GPU supervision, no live GPU takeover",
+  "program_sha256": "c9ce3a6fe289a86fe681592664e3148eec55b06b3c4d53bd8725de7ced3b949a",
+  "strict_audit_reference_equal": true,
+  "hashes": {
+    "out/eggcc-gpu-supervision/sum-bits.json": "0fa6508d1d7fc70ca93e3e7a44b71a15df6fc8bd48954f163d6fb4785c336d9a",
+    "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/benchmarks/cell-f32-scalar/compiler.py": "0524144911c5fcacb2e044c7645d2c0522ba2a5ace11b4532ba9e261aee44c56",
+    "target/debug/examples/gpu_supervision_oracle": "0a6764a3e5abcad0e3455c99c7198fd332daced9493a67697c7d6e88403b999f"
+  },
+  "counts": {
+    "all_bindings": 7265,
+    "cpu_only_non_scalar": 6631,
+    "scalar_bindings": 634,
+    "gpu_checked": 634,
+    "gpu_marked": 0,
+    "cpu_detected": 0,
+    "silent_errors": 0
+  },
+  "rates": {
+    "gpu_coverage_of_all_bindings": 0.08726772195457674,
+    "gpu_coverage_of_scalar_bindings": 1.0,
+    "cpu_only_of_scalar_bindings": 0.0,
+    "preflight_marked_of_scalar_bindings": 0.0,
+    "gpu_marked_of_checked": 0.0,
+    "cpu_detected_of_checked": 0.0,
+    "silent_errors_of_checked": 0.0,
+    "cpu_only_discovered_share_of_reported_issues": null
+  },
+  "cpu_metrics": {
+    "reference_seconds": 0.004867248999999999,
+    "comparison_seconds": 0.000607209,
+    "repair_copy_seconds": 0.000269871,
+    "checks_per_second": 115810.55147377148,
+    "microseconds_per_checked_binding": 8.634791798107253,
+    "oracle_process_seconds": 0.11789087584475055,
+    "entry_routing_seconds": 0.01038604200584814
+  },
+  "gpu_first_requests_seconds": 0.8473991261562333,
+  "groups": [
+    {
+      "rule": 575,
+      "bindings": 10,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 0.000114459,
+      "cpu_comparison_seconds": 0.0001445,
+      "cpu_repair_copy_seconds": 0.000221083,
+      "gpu_first_request_seconds": 0.275013750011567
+    },
+    {
+      "rule": 577,
+      "bindings": 37,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 0.000215833,
+      "cpu_comparison_seconds": 3.6709e-05,
+      "cpu_repair_copy_seconds": 3.375e-06,
+      "gpu_first_request_seconds": 0.1793807090143673
+    },
+    {
+      "rule": 57,
+      "bindings": 81,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 0.000544125,
+      "cpu_comparison_seconds": 1.825e-05,
+      "cpu_repair_copy_seconds": 2.417e-06,
+      "gpu_first_request_seconds": 0.0007722500013187528
+    },
+    {
+      "rule": 59,
+      "bindings": 104,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 0.000609375,
+      "cpu_comparison_seconds": 4.1125e-05,
+      "cpu_repair_copy_seconds": 5.916e-06,
+      "gpu_first_request_seconds": 0.180596542020794
+    },
+    {
+      "rule": 144,
+      "bindings": 101,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 0.000574708,
+      "cpu_comparison_seconds": 5.3625e-05,
+      "cpu_repair_copy_seconds": 5.917e-06,
+      "gpu_first_request_seconds": 0.0009916249546222389
+    },
+    {
+      "rule": 62,
+      "bindings": 68,
+      "unique_output_columns": 2,
+      "cpu_reference_seconds": 0.000597666,
+      "cpu_comparison_seconds": 3.7125e-05,
+      "cpu_repair_copy_seconds": 4.875e-06,
+      "gpu_first_request_seconds": 0.19942983402870595
+    },
+    {
+      "rule": 138,
+      "bindings": 94,
+      "unique_output_columns": 2,
+      "cpu_reference_seconds": 0.000881333,
+      "cpu_comparison_seconds": 2.7792e-05,
+      "cpu_repair_copy_seconds": 3.875e-06,
+      "gpu_first_request_seconds": 0.0009462079615332186
+    },
+    {
+      "rule": 151,
+      "bindings": 28,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 0.000208041,
+      "cpu_comparison_seconds": 2.725e-05,
+      "cpu_repair_copy_seconds": 4.041e-06,
+      "gpu_first_request_seconds": 0.0008160830475389957
+    },
+    {
+      "rule": 152,
+      "bindings": 2,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 2.3583e-05,
+      "cpu_comparison_seconds": 1.6167e-05,
+      "cpu_repair_copy_seconds": 1.541e-06,
+      "gpu_first_request_seconds": 0.0006651250296272337
+    },
+    {
+      "rule": 148,
+      "bindings": 2,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 2.2959e-05,
+      "cpu_comparison_seconds": 1.5417e-05,
+      "cpu_repair_copy_seconds": 1.458e-06,
+      "gpu_first_request_seconds": 0.0007281670114025474
+    },
+    {
+      "rule": 157,
+      "bindings": 3,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 3.8084e-05,
+      "cpu_comparison_seconds": 1.7208e-05,
+      "cpu_repair_copy_seconds": 1.75e-06,
+      "gpu_first_request_seconds": 0.0007791669922880828
+    },
+    {
+      "rule": 158,
+      "bindings": 1,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 1.5958e-05,
+      "cpu_comparison_seconds": 1.4209e-05,
+      "cpu_repair_copy_seconds": 1.291e-06,
+      "gpu_first_request_seconds": 0.0014586670440621674
+    },
+    {
+      "rule": 498,
+      "bindings": 37,
+      "unique_output_columns": 2,
+      "cpu_reference_seconds": 0.000375792,
+      "cpu_comparison_seconds": 2.3125e-05,
+      "cpu_repair_copy_seconds": 2.333e-06,
+      "gpu_first_request_seconds": 0.0008670829702168703
+    },
+    {
+      "rule": 501,
+      "bindings": 29,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 0.000218791,
+      "cpu_comparison_seconds": 1.4708e-05,
+      "cpu_repair_copy_seconds": 3.083e-06,
+      "gpu_first_request_seconds": 0.0007448329706676304
+    },
+    {
+      "rule": 500,
+      "bindings": 3,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 3.1583e-05,
+      "cpu_comparison_seconds": 1.7333e-05,
+      "cpu_repair_copy_seconds": 1.625e-06,
+      "gpu_first_request_seconds": 0.0007704590098001063
+    },
+    {
+      "rule": 146,
+      "bindings": 10,
+      "unique_output_columns": 2,
+      "cpu_reference_seconds": 0.000142542,
+      "cpu_comparison_seconds": 2.9708e-05,
+      "cpu_repair_copy_seconds": 1.291e-06,
+      "gpu_first_request_seconds": 0.0008563750307075679
+    },
+    {
+      "rule": 350,
+      "bindings": 8,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 7.025e-05,
+      "cpu_comparison_seconds": 1.4625e-05,
+      "cpu_repair_copy_seconds": 1.208e-06,
+      "gpu_first_request_seconds": 0.000727167003788054
+    },
+    {
+      "rule": 499,
+      "bindings": 8,
+      "unique_output_columns": 3,
+      "cpu_reference_seconds": 0.000114708,
+      "cpu_comparison_seconds": 3.1333e-05,
+      "cpu_repair_copy_seconds": 1.5e-06,
+      "gpu_first_request_seconds": 0.0010954160243272781
+    },
+    {
+      "rule": 150,
+      "bindings": 8,
+      "unique_output_columns": 1,
+      "cpu_reference_seconds": 6.7459e-05,
+      "cpu_comparison_seconds": 2.7e-05,
+      "cpu_repair_copy_seconds": 1.292e-06,
+      "gpu_first_request_seconds": 0.0007596660288982093
+    }
+  ],
+  "local_marks_path": "out/eggcc-gpu-supervision/sum-bits-results.marks.json",
+  "local_mark_counts": {
+    "outside compiled numeric region": 6631
+  },
+  "fault_injection": [
+    {
+      "rule": 575,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 577,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 57,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 59,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 144,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 62,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 138,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 151,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 152,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 148,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 157,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 158,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 498,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 501,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 500,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 146,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 350,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 499,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    },
+    {
+      "rule": 150,
+      "marked_wrong_detected": true,
+      "silent_wrong_detected": true,
+      "silent_nan_detected": true
+    }
+  ],
+  "injected_fault_metrics": {
+    "known_errors": 57,
+    "detected_errors": 57,
+    "proactively_marked_errors": 19,
+    "cpu_only_discovered_errors": 38,
+    "detection_rate": 1.0
+  },
+  "fault_scope": "Three host-side output/flag fault controls per GPU rule batch, never included in natural rates",
+  "denominator_notes": [
+    "Uncovered scalar bindings are cpu_only, not model errors",
+    "Issue share is null when no issues, not zero-percent recall",
+    "CPU oracle recomputes every GPU-covered scalar result; no sampled verification",
+    "Reference and comparison timings exclude JSON/process startup, reported separately",
+    "Reference executable is debug build; these are diagnostic rates, not optimized CPU limits"
+  ],
+  "runtime_note": "CPU-only and domain-marked bindings already execute on the exact original CPU run; covered corrections affect replay outputs only",
+  "natural_correction_graph_mutations": 0
+}
