@@ -1,0 +1,8 @@
+{
+  "scope": "exact f32 initial-feature collisions only; no near-collision or recurrent-state proof",
+  "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "model_sha256": "5b5fe40859e429b5cc225bb7d775bb508213491e705f274062bf638ec8cc05b1",
+  "feature_groups": 1998,
+  "conflicting_groups": 0,
+  "conflicts": []
+}

@@ -1,0 +1,975 @@
+{
+  "scope": "held-out common-failure diagnosis, not a training set or native mutation audit",
+  "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "left_model_sha256": "fd47039c66d4d253ca26e124214b55fca4b8946fd1892eb8999260c682764745",
+  "right_model_sha256": "5b5fe40859e429b5cc225bb7d775bb508213491e705f274062bf638ec8cc05b1",
+  "artifact_sha256": {
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113/direct-tanh-cases.json": "e34fde3f5bb274135877b1f76b16548167443a77423fbaa550e6b40a48c0d03b",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113/direct-clip-cases.json": "b1eb5942f04c277d0e8ff8a1d4fb97947fcc351769e1bfc48a906dac746a93c3"
+  },
+  "cases": 850,
+  "common_failures": 55,
+  "common_failure_coverage": {
+    "exact_training_input": 41,
+    "new_input_known_family": 12,
+    "uncovered_family": 2
+  },
+  "all_input_coverage": {
+    "exact_training_input": 711,
+    "new_input_known_family": 122,
+    "uncovered_family": 17
+  },
+  "common_failure_categories": [
+    {
+      "left": "missed_initial_emission",
+      "right": "missed_initial_emission",
+      "count": 11
+    },
+    {
+      "left": "still_active",
+      "right": "still_active",
+      "count": 4
+    },
+    {
+      "left": "still_active",
+      "right": "wrong_target_stopped",
+      "count": 1
+    },
+    {
+      "left": "wrong_target_stopped",
+      "right": "wrong_target_stopped",
+      "count": 39
+    }
+  ],
+  "all_outcomes": [
+    {
+      "left": "missed_initial_emission",
+      "right": "missed_initial_emission",
+      "count": 11
+    },
+    {
+      "left": "still_active",
+      "right": "still_active",
+      "count": 4
+    },
+    {
+      "left": "still_active",
+      "right": "success",
+      "count": 1
+    },
+    {
+      "left": "still_active",
+      "right": "wrong_target_stopped",
+      "count": 1
+    },
+    {
+      "left": "success",
+      "right": "success",
+      "count": 770
+    },
+    {
+      "left": "success",
+      "right": "wrong_target_stopped",
+      "count": 5
+    },
+    {
+      "left": "wrong_target_stopped",
+      "right": "success",
+      "count": 19
+    },
+    {
+      "left": "wrong_target_stopped",
+      "right": "wrong_target_stopped",
+      "count": 39
+    }
+  ],
+  "common_failure_rows": [
+    {
+      "identity": "0cdb1d7b6a6954663674e6ef4ddbdb486df0fc821a8c8043cc1b7e63d680b95b",
+      "family": "cbfb2167c881370bf8fe3e2a7c4d58852faa277eadd45c223b9d4977482676b8",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 6,
+      "represented_observations": 51,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 4,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1
+      },
+      "left_body_rmse": 0.1532267928123474,
+      "right_body_rmse": 0.1398625373840332
+    },
+    {
+      "identity": "0f96aa58a0050e0004b5affc12fc4948e5545c26f74813a3b5bad3c740c5e126",
+      "family": "0e58d3e8dd0d7f8aa912899bfa6bc0eb8651e50650a3832304b87e7734630d8c",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 871,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.1535884439945221,
+      "right_body_rmse": 0.14312084019184113
+    },
+    {
+      "identity": "1411d74cfbbdacdf1a4b2321289c264e0889449e944044372753be8f739c1004",
+      "family": "ae31545a800ce5bfab336905fe41eb17e511f55188be8015467a478dea4dbfb3",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 32,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 3,
+      "effect_counts": {
+        "copy": 2,
+        "construct": 4
+      },
+      "left_body_rmse": 0.15127059817314148,
+      "right_body_rmse": 0.13484689593315125
+    },
+    {
+      "identity": "23233726a076c5d6ce0d3878f33f0f6d2a8891c940736d837e90250be233b57a",
+      "family": "a7c13b3faf27d6ce571b75b2bd21091e3f64ee11c3631e8ef116ecd4234fc584",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 5,
+      "represented_observations": 12,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "construct": 2
+      },
+      "left_body_rmse": 0.1256670355796814,
+      "right_body_rmse": 0.11674772948026657
+    },
+    {
+      "identity": "2515dc405266de1f75bce94687149070a95222f42af53860e06a84c4d24df262",
+      "family": "e8d2f6cb77096087308b5d5bc7f1b3491146c7b0686bef785ccca18cd2947496",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 1,
+      "represented_observations": 72,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1
+      },
+      "left_body_rmse": 0.09305501729249954,
+      "right_body_rmse": 0.08076676726341248
+    },
+    {
+      "identity": "2549c60691527d49bf845b4bea89d547c3d97f09671a718342c239a2a4eb93ad",
+      "family": "207200b5e437111147ee57e8138cf1129d6c123b2887de62bd04df0ebce832c7",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 3,
+      "represented_observations": 6,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 6,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1
+      },
+      "left_body_rmse": 0.11533472687005997,
+      "right_body_rmse": 0.10944939404726028
+    },
+    {
+      "identity": "316b0e58fafafc0d1a7243a0fd27f89e8b701a7008c21eec53c767acd8c4e290",
+      "family": "2860127673c7d1fca124dc6e17a2fb745fb5fb9f57158b213b348ad1c7459008",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 1,
+      "represented_observations": 417,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 1,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 3
+      },
+      "left_body_rmse": 0.18301190435886383,
+      "right_body_rmse": 0.1557430624961853
+    },
+    {
+      "identity": "34cf2325d52c1baf11d72d6f47c5dfd3e6515882cac1e28513c1fcc7ad98b445",
+      "family": "e692c7a2ad46d2bc59ad8d4cd8a337f9b910f1c629046b2462fe789fc4e98956",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 16,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 5,
+      "effect_counts": {
+        "construct": 2
+      },
+      "left_body_rmse": 0.06595835834741592,
+      "right_body_rmse": 0.05392235144972801
+    },
+    {
+      "identity": "3ffbfd876915045a3a4c5de288da5342c1a910ab992279c7dc8ce647166ad5a2",
+      "family": "849571aecb3c6ae78d53544ab4ce6fecfe3e97a008cdfd42f07223202e540fe1",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 4,
+      "represented_observations": 21,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.2222503125667572,
+      "right_body_rmse": 0.23296789824962616
+    },
+    {
+      "identity": "4338de2877518bd1f60cae9a94e1596c46fcc7920ca6453fe6ed96f0480db0cb",
+      "family": "d0b1757ae445a79dbded1ac0231edc5550a89f35809e2a9aaa6f195d18d9e805",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 1,
+      "represented_observations": 1,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 4,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.175862118601799,
+      "right_body_rmse": 0.16530054807662964
+    },
+    {
+      "identity": "491f795b2b95008f46b0f3226ebfba3fd8984ad40672e3ca75f23042b2e5200e",
+      "family": "2e3f6cefe492e935b1e42efa1a016f818056a1a0120ba84d3395c987249475c1",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 6,
+      "represented_observations": 1,
+      "left_category": "missed_initial_emission",
+      "right_category": "missed_initial_emission",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 2,
+        "set": 1
+      },
+      "left_body_rmse": 0.1875288337469101,
+      "right_body_rmse": 0.1875288337469101
+    },
+    {
+      "identity": "4955ec5f501dae322ee11aba1e999a42f80888dcb1c80d3337c88adeb2f790e3",
+      "family": "849571aecb3c6ae78d53544ab4ce6fecfe3e97a008cdfd42f07223202e540fe1",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 4,
+      "represented_observations": 1,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.1926359385251999,
+      "right_body_rmse": 0.17146047949790955
+    },
+    {
+      "identity": "4993f7e692c74fe5fe3f05b4d2ea8d510744b6f90b98e5906830117239156641",
+      "family": "36c441a00d74f7da6f7e3c13f01f1341f5caa34cf3bc80b706d96c06113212da",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 13,
+      "represented_observations": 250,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 3,
+        "set": 1
+      },
+      "left_body_rmse": 0.17405739426612854,
+      "right_body_rmse": 0.1461355835199356
+    },
+    {
+      "identity": "4af9f1385ed848aa3675efba5f2aa6f96327b85b3d95c2580f8a846e43376204",
+      "family": "276b3ed38929557413a504b2710c2d40188711eb1b0b39df0e163c97788bcbdc",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 1,
+      "represented_observations": 20,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 3,
+      "effect_counts": {
+        "copy": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.14298483729362488,
+      "right_body_rmse": 0.11900293827056885
+    },
+    {
+      "identity": "4e49f6fb4a661bbd89a0786b6baf78dc84915bad384ff3124531395afb124666",
+      "family": "8b2b327409d1fa39ad78cb352984ffa222cfa6842a126338efaf19cee6b8e7be",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 3,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 4,
+      "effect_counts": {
+        "copy": 1,
+        "union": 1
+      },
+      "left_body_rmse": 0.07656477391719818,
+      "right_body_rmse": 0.07045719027519226
+    },
+    {
+      "identity": "54b625f6e4f3384ea4dd7e15291e90aa07b18158165d31753e3c3a36b00d7b3e",
+      "family": "e45b540fc1effa311131474037e6cca94852497501086d5716f6d0f54950cad3",
+      "coverage": "uncovered_family",
+      "training_family_inputs": 0,
+      "represented_observations": 1,
+      "left_category": "still_active",
+      "right_category": "still_active",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "union": 1
+      },
+      "left_body_rmse": 0.586692750453949,
+      "right_body_rmse": 1.6536972522735596
+    },
+    {
+      "identity": "6918d537d7e2cc13027e522257c11e5ffa98e13d264996b03cc5b66c87f95489",
+      "family": "a3d0cb68ce667519d92e6e7d6f450172211aa6000d5c6b30bf194da0e0ee15d6",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 5,
+      "represented_observations": 689,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 3,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1
+      },
+      "left_body_rmse": 0.08218493312597275,
+      "right_body_rmse": 0.07912537455558777
+    },
+    {
+      "identity": "72bd103d1a4dd0abe5a0c84a2da1b72ac4b83b1ebf4b4785d88d7001c7b99edf",
+      "family": "7c1b7c4b82e01cc533152a0d0c789d7cdf658761cc9038c26cd3c4943b69cf50",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 37,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.18461401760578156,
+      "right_body_rmse": 0.16811002790927887
+    },
+    {
+      "identity": "72e89dac9205aae806ba1d0319b5c851701b8eaaac3f8359adcc8177f9bf8c01",
+      "family": "249089031a6e71117c875a0c0c4997a76ec2398d684e2aa100a5b67b99899a26",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 3,
+      "represented_observations": 5,
+      "left_category": "missed_initial_emission",
+      "right_category": "missed_initial_emission",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.1404004693031311,
+      "right_body_rmse": 0.1404004693031311
+    },
+    {
+      "identity": "7a71bf8216f2237ec62e404bb7cb692569f12bbc6db2fe169cb471ef98c96e62",
+      "family": "1d572929c4de39437b3a87c334f343e6a1de4e4ccb785b21ea2bf96dc244bad3",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 1,
+      "represented_observations": 169,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1
+      },
+      "left_body_rmse": 0.12727729976177216,
+      "right_body_rmse": 0.10619558393955231
+    },
+    {
+      "identity": "7bd4ea9ead38196b79ef1fe8d3c8f414e027990fb892f9bffb38ad22ea2b3e0e",
+      "family": "a40d49553da1dbee8c2a8fde1687ff8894f32f108151367848051eb6b537d085",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 10,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "union": 1
+      },
+      "left_body_rmse": 0.1002921313047409,
+      "right_body_rmse": 0.08945166319608688
+    },
+    {
+      "identity": "8127b57cbe1c3d8c1b08bcf00fc4e0a316e4cd5f91b980f4e2877947b0a4eac0",
+      "family": "d33383ac1d26dcd94d522b030f791da9c95a19690ad837a6a8a168969498fdff",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 58,
+      "left_category": "missed_initial_emission",
+      "right_category": "missed_initial_emission",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.27602511644363403,
+      "right_body_rmse": 0.27602511644363403
+    },
+    {
+      "identity": "81c4c26c8092676a4fd876495eb46b9002fc141449b7e9e7cab5c6c20849ba36",
+      "family": "276b3ed38929557413a504b2710c2d40188711eb1b0b39df0e163c97788bcbdc",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 1,
+      "represented_observations": 13,
+      "left_category": "missed_initial_emission",
+      "right_category": "missed_initial_emission",
+      "source_facts": 3,
+      "effect_counts": {
+        "copy": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.18962785601615906,
+      "right_body_rmse": 0.18962785601615906
+    },
+    {
+      "identity": "82a46372d1e363f2103626d4a20edf63c1236295aa6a0d3d071c973c6b5799b1",
+      "family": "5373358638f53a4c16eb93c23d525efcd9d039465a56942f4988173bba4f789c",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 4,
+      "represented_observations": 14,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 5,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 3
+      },
+      "left_body_rmse": 0.22507187724113464,
+      "right_body_rmse": 0.21189938485622406
+    },
+    {
+      "identity": "83166796654517f4a498d9ea5dbec4ccfc885b8566dd7033f20a04e19f3683f1",
+      "family": "2a0bf6b761940a4104a3d8e895b5fa48fd3d6c7da41e5bb9710b5fa65c9221a7",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 1,
+      "represented_observations": 4,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 2
+      },
+      "left_body_rmse": 0.1316978931427002,
+      "right_body_rmse": 0.11766715347766876
+    },
+    {
+      "identity": "89642f781877f3ef749f8593dbc2d4d3c773f0f3b8b7ec70e6d1970d7b2d01e2",
+      "family": "84bb757c039d959a735f9257ef4263ab035c469e826ffdd09402e87adc7964f2",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 1,
+      "represented_observations": 78,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 3,
+      "effect_counts": {
+        "construct": 2
+      },
+      "left_body_rmse": 0.10147440433502197,
+      "right_body_rmse": 0.08424042910337448
+    },
+    {
+      "identity": "9278da36c583ca08128b3e2bdaa665868a2169c2d8513000f33e27792ac9d373",
+      "family": "f14bd094a5debb413140118b1f99a197359a9b5f593873ad21118bf700ae45e1",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 1,
+      "represented_observations": 94,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 1,
+      "effect_counts": {
+        "construct": 1
+      },
+      "left_body_rmse": 0.17017483711242676,
+      "right_body_rmse": 0.1673915982246399
+    },
+    {
+      "identity": "93c7d2fe10fe5598364be4ab21798303e280a32075b5a6430b5c2cba4dbf10b1",
+      "family": "409ae79417afbd0f2ae6a563b99cec3898f4f38c733dd7d5524c80a0afe8e156",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 5,
+      "represented_observations": 435,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 4,
+      "effect_counts": {
+        "construct": 2
+      },
+      "left_body_rmse": 0.09077271819114685,
+      "right_body_rmse": 0.08117272704839706
+    },
+    {
+      "identity": "a1e6c03d633d644ff69f9f3503fc483f18f0e87c48e84173128da1060e8b6f5e",
+      "family": "2fdc95ce425f7f8191a517baf488031f16953366ed4614b52f73b27b9ec1b0c0",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 2,
+      "represented_observations": 1,
+      "left_category": "still_active",
+      "right_category": "still_active",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "union": 1
+      },
+      "left_body_rmse": 1.589754343032837,
+      "right_body_rmse": 1.7909150123596191
+    },
+    {
+      "identity": "a3665a2797ea41bf328bbf77404270fc04604c74ae9566c74514bb575a412704",
+      "family": "62fb4bd14860c3b670d10ffe3dd286fa380e78e3f3cf939ba4aef9d23fe6c451",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 3,
+      "represented_observations": 1564,
+      "left_category": "still_active",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 2,
+        "union": 1
+      },
+      "left_body_rmse": 0.9919058084487915,
+      "right_body_rmse": 0.12003808468580246
+    },
+    {
+      "identity": "a4ddc40bd3a1855592ec104d3e4c9848daf94a73f8a6dad5df339ddcbc3d832b",
+      "family": "207200b5e437111147ee57e8138cf1129d6c123b2887de62bd04df0ebce832c7",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 3,
+      "represented_observations": 112,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 6,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1
+      },
+      "left_body_rmse": 0.12043799459934235,
+      "right_body_rmse": 0.10574778914451599
+    },
+    {
+      "identity": "a91c8bc72d78cf81c1406c28fc0ff53386d7d6b960ecb7fd36a85638e21682e9",
+      "family": "c133b1cef030ae53126f690abb5da8580821bb9cdb9496bbabef200c9c4d6e05",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 3,
+      "represented_observations": 16,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.1858396977186203,
+      "right_body_rmse": 0.16927269101142883
+    },
+    {
+      "identity": "a9afc45e864514aedee2ee6e43162e9f0554dee64486e05fa084f50befcb0a31",
+      "family": "849571aecb3c6ae78d53544ab4ce6fecfe3e97a008cdfd42f07223202e540fe1",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 4,
+      "represented_observations": 3,
+      "left_category": "missed_initial_emission",
+      "right_category": "missed_initial_emission",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.23110949993133545,
+      "right_body_rmse": 0.23110949993133545
+    },
+    {
+      "identity": "aca374f8c4b9686fdea2637ffd15ec48afd07ccda868d011717afe604befab40",
+      "family": "0f23e2a9d9f34a01d4e0f79a8f3fd2744269b5aba3987af5a1b08a7dc2cc08d9",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 1,
+      "represented_observations": 53,
+      "left_category": "missed_initial_emission",
+      "right_category": "missed_initial_emission",
+      "source_facts": 3,
+      "effect_counts": {
+        "copy": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.20589183270931244,
+      "right_body_rmse": 0.20589183270931244
+    },
+    {
+      "identity": "b136d68ba9b8f38c672d7207c799694f79e9f35bde9d21c73808e891049070a4",
+      "family": "2d09c7b618d2d845a15c69b59910ec5d3e98c7b6a4d4c614ba3c92900b11c151",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 1,
+      "represented_observations": 13,
+      "left_category": "missed_initial_emission",
+      "right_category": "missed_initial_emission",
+      "source_facts": 3,
+      "effect_counts": {
+        "copy": 2,
+        "set": 1
+      },
+      "left_body_rmse": 0.2660984694957733,
+      "right_body_rmse": 0.2660984694957733
+    },
+    {
+      "identity": "b5509195ffcfce43a2465e1ccc91a23d9e573b8e7168282165b192603f7d0aa3",
+      "family": "9bee90b140fbd05e462ce054c695caaf0f678328b56772abbeea60a946629dc3",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 6,
+      "represented_observations": 38,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 5,
+      "effect_counts": {
+        "construct": 2
+      },
+      "left_body_rmse": 0.08128824084997177,
+      "right_body_rmse": 0.07609287649393082
+    },
+    {
+      "identity": "b953c0cd2cf9f8983fc4ace20092264237aeb589d3c9ec95fdf1d87a117e8060",
+      "family": "9cc6a38dff20061f48558c63014aa469bfd503c984f7de249b055e11a0344f57",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 5,
+      "represented_observations": 410,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 4,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1
+      },
+      "left_body_rmse": 0.16647635400295258,
+      "right_body_rmse": 0.14431558549404144
+    },
+    {
+      "identity": "b9579bda4c479d3854702d908c7a667b46227c7d1d4ec42561c5a7c709d5f8c9",
+      "family": "ec8c675da1c4914ab7d29678a6cb83f9b1ca3127a50260b3755831476facfb38",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 5,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.1600634902715683,
+      "right_body_rmse": 0.15223245322704315
+    },
+    {
+      "identity": "c7c2af1b24306dcb474068acfc2c0ef98f3bbe7d03bb7c034757a6e2dd5df85c",
+      "family": "2e3f6cefe492e935b1e42efa1a016f818056a1a0120ba84d3395c987249475c1",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 6,
+      "represented_observations": 9,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 2,
+        "set": 1
+      },
+      "left_body_rmse": 0.3446548283100128,
+      "right_body_rmse": 0.35410529375076294
+    },
+    {
+      "identity": "d1a186e5ac2f255561dd5fddfaaee49988f86a287e3b1ceacf96bccefd0544e1",
+      "family": "dbfc8ce437e4cc521245de5668e499c9562242e730f848b0eb152c9b5e6e1577",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 7,
+      "represented_observations": 429,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "construct": 3
+      },
+      "left_body_rmse": 0.15095822513103485,
+      "right_body_rmse": 0.11951927840709686
+    },
+    {
+      "identity": "d5e7fd3cca7afc853e33053342f05cd51665ea8a3464c657a3c5f6ce23930c8d",
+      "family": "d33383ac1d26dcd94d522b030f791da9c95a19690ad837a6a8a168969498fdff",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 58,
+      "left_category": "missed_initial_emission",
+      "right_category": "missed_initial_emission",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.24887867271900177,
+      "right_body_rmse": 0.24887867271900177
+    },
+    {
+      "identity": "dc955897a3aa73531248e6b3fcdd48f16875a9e328bff63cfe3d5163be197ff7",
+      "family": "df0b3c4633aa02e0586b68538425180512d54ed6143dff1f42699f0675cd0b63",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 3,
+      "represented_observations": 115,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.10877875983715057,
+      "right_body_rmse": 0.091097891330719
+    },
+    {
+      "identity": "e10ac2afac1cbdc64ab0c298795eb3253b3995ae7c4a88e126109417929bf52d",
+      "family": "38228264af5a8b56b68471cb02e6c566929f61aae557119326ebb3d3440f7886",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 1,
+      "represented_observations": 8,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 2
+      },
+      "left_body_rmse": 0.15611782670021057,
+      "right_body_rmse": 0.14145998656749725
+    },
+    {
+      "identity": "e4ea353eba1f7cc5cb6c506693e704eb6a02ffbc4caf06bb0b44db45957f3cc6",
+      "family": "c2e6174e125ec8924ec6024555784b87175fc0d34259829b196eeceed94b8499",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 2,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "union": 1
+      },
+      "left_body_rmse": 0.09452095627784729,
+      "right_body_rmse": 0.08633080124855042
+    },
+    {
+      "identity": "e6c2605f91e1f9675eeea2c4ab1d4682d7675e23aef639d39efe617ceb1126b0",
+      "family": "abba44adb82c82a4686028ca6105946f5659c4b4ee8f64df3f67ea09325e842a",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 3,
+      "represented_observations": 32,
+      "left_category": "missed_initial_emission",
+      "right_category": "missed_initial_emission",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.12767159938812256,
+      "right_body_rmse": 0.12767159938812256
+    },
+    {
+      "identity": "ead16c706443f3c9a1843db065761a0345cad617cff90ce4c61e160c97035b11",
+      "family": "04bedd209e0e015917c59e7eebe7cfbacbea4f3d571194ae7435387db2cc553a",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 48,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 2,
+        "set": 1
+      },
+      "left_body_rmse": 0.20403745770454407,
+      "right_body_rmse": 0.18880623579025269
+    },
+    {
+      "identity": "ec9242cfbc541ca1a9dc93f31ec7297529fc49ca5babd00199ee2e1a42094bf8",
+      "family": "a40d49553da1dbee8c2a8fde1687ff8894f32f108151367848051eb6b537d085",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 2,
+      "represented_observations": 1,
+      "left_category": "still_active",
+      "right_category": "still_active",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "union": 1
+      },
+      "left_body_rmse": 0.586692750453949,
+      "right_body_rmse": 1.6536972522735596
+    },
+    {
+      "identity": "ed07ab0f3deb7a1d501681cb11c5d2d65feae78218492287fd1d3486545ccbe2",
+      "family": "953ba4ab5a8bcb1db3fdb4a9533c39841a8245ce4fd1a19030e24eb6c8da7805",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 320,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "union": 1
+      },
+      "left_body_rmse": 0.11728793382644653,
+      "right_body_rmse": 0.08721866458654404
+    },
+    {
+      "identity": "ee7a337547057594d4e2b2db289f62e6e21b8e71b6297b8d7b35fc3d19be3703",
+      "family": "c133b1cef030ae53126f690abb5da8580821bb9cdb9496bbabef200c9c4d6e05",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 3,
+      "represented_observations": 1,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.20230385661125183,
+      "right_body_rmse": 0.20143134891986847
+    },
+    {
+      "identity": "f03d2a1e866a4d089f6b6dc135cfb26946d618b33b2c996621337f1700c98f64",
+      "family": "e45b540fc1effa311131474037e6cca94852497501086d5716f6d0f54950cad3",
+      "coverage": "uncovered_family",
+      "training_family_inputs": 0,
+      "represented_observations": 17,
+      "left_category": "missed_initial_emission",
+      "right_category": "missed_initial_emission",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "union": 1
+      },
+      "left_body_rmse": 0.12099654227495193,
+      "right_body_rmse": 0.12099654227495193
+    },
+    {
+      "identity": "f17d2f71d259896b12920b56001876898aa072f6ac803ce043dec6ac3ef82709",
+      "family": "fbd50f8bdbb3d7d8f9c0c40b35f5b86f15141f81847ba4e577b8f52eebb765ee",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 2,
+      "represented_observations": 46,
+      "left_category": "missed_initial_emission",
+      "right_category": "missed_initial_emission",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.27625155448913574,
+      "right_body_rmse": 0.27625155448913574
+    },
+    {
+      "identity": "f3e77b8325d7993013507101b9017ceef74792ee7e7ae88261e43e9d07225488",
+      "family": "e562fa877a466d68980cbe33ce9950d8f40b6a385ac7a5f4ca0837b25d1d9e94",
+      "coverage": "exact_training_input",
+      "training_family_inputs": 6,
+      "represented_observations": 2140,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "construct": 2
+      },
+      "left_body_rmse": 0.1647251546382904,
+      "right_body_rmse": 0.15530359745025635
+    },
+    {
+      "identity": "f5e0c6961e93886fbe8f46500f439245072b06585a467e946f059f49ef25834c",
+      "family": "849571aecb3c6ae78d53544ab4ce6fecfe3e97a008cdfd42f07223202e540fe1",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 4,
+      "represented_observations": 14,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.29723718762397766,
+      "right_body_rmse": 0.31158632040023804
+    },
+    {
+      "identity": "f6f05f23d9bb2c75b3d1dd2c2d81c17dae3e4d65772aa91ec8692be5198639b8",
+      "family": "c859ab7ce5269866c959ff30650c5a30070cc855c6a323e371fefc64584d77ce",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 7,
+      "represented_observations": 8,
+      "left_category": "still_active",
+      "right_category": "still_active",
+      "source_facts": 2,
+      "effect_counts": {
+        "construct": 2
+      },
+      "left_body_rmse": 0.987401008605957,
+      "right_body_rmse": 1.9406956434249878
+    },
+    {
+      "identity": "fe00543a8c501b592cb1525b68a643939a83f988943865cceb433166fae882db",
+      "family": "c133b1cef030ae53126f690abb5da8580821bb9cdb9496bbabef200c9c4d6e05",
+      "coverage": "new_input_known_family",
+      "training_family_inputs": 3,
+      "represented_observations": 1,
+      "left_category": "wrong_target_stopped",
+      "right_category": "wrong_target_stopped",
+      "source_facts": 2,
+      "effect_counts": {
+        "copy": 1,
+        "construct": 1,
+        "set": 1
+      },
+      "left_body_rmse": 0.2556954622268677,
+      "right_body_rmse": 0.2619922161102295
+    }
+  ]
+}
