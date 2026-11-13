@@ -340,3 +340,43 @@ its source-bound selection, then run `check-passive` as above. Summarize with:
 python3 benchmarks/cell-batched-learning/owned_state.py out/cell-batched-learning \
   benchmarks/cell-batched-learning/owned-state-results.json
 ```
+
+### Batch saturation credit audit
+
+`saturation_credit.py` joins the saved catalog observations to the exact source
+artifact and the current heap census. It pools rules by their complete static
+definition (including stage metadata), never their sample-local rule number.
+Full RHS coverage is counted separately from partial prefixes. Copies and already
+compiled static aliases receive no additional effect credit. Counts are checked
+against the observation's instruction totals before use.
+
+Across the four cases there are 15,231 observed applies, of which 821 (5.39%) have
+fully witnessed RHS effects: 524 remaining constructor operations and 390
+already-equal union operations, alongside 969 copies and 14 static aliases.
+These are potential redundant operations, not saved mutations. The largest
+constructor group is `BodyContainsExpr(body, Get(tup, i)) ->
+BodyContainsExpr(body, tup)`: 141 observed repeats across all four inputs.
+The largest union group is `SubTuple(expr, 0, len) -> expr` under a mutable
+`tuple-length` read: 180 already-equal unions. Its history cannot justify dropping
+that mutable read or future union-enabled matches.
+
+Only 20 of 5,760 retained logical frames have no facts, and all 20 have retainers.
+There are 7,560 live facts, 250 parent edges internal to a component and 362
+boundary parent edges. Empty-frame cleanup therefore cannot explain a large
+compression opportunity. Internal edges are observed co-location, not proof of
+safe inheritance contraction. All old cross-epoch trace buckets are aggregated;
+the known observer age issue must not inflate a cross-stage claim.
+
+This changes the next experiment: prioritize a compiled constructor witness
+projection for recurring relation closure, with shape-relative frame/op positions,
+then use that same proof to remove intermediate state. A generic runtime scan of
+all facts would duplicate the expensive passive observer. The proof must retain
+actual returned references, visibility, mutable-read freshness and delta ownership;
+final live fact identities cannot be erased merely because an apply was redundant.
+No new runtime takeover or speedup is claimed by this analysis.
+
+```
+python3 benchmarks/cell-batched-learning/saturation_credit.py out/cell-batched-learning \
+  benchmarks/cell-batched-learning/saturation-credit-results.json
+python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
+```
