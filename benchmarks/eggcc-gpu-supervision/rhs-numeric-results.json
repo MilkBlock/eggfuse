@@ -1,0 +1,175 @@
+{
+  "scope": "Full-recipe scalar dataflow replay on Metal; CPU supplies matches and commits all graph effects",
+  "rules": 582,
+  "rules_with_executed_numeric_kernels": 19,
+  "checked_scalar_operations": 869,
+  "accepted_scalar_operations": 869,
+  "accepted_primitives": {
+    "+": 720,
+    "-": 149
+  },
+  "marks": [],
+  "rules_report": [
+    {
+      "rule": 57,
+      "bindings": 81,
+      "checked_scalar_operations": 81,
+      "accepted_scalar_operations": 81,
+      "cpu_check_seconds": 0.00024500000290572643,
+      "device_request_seconds": 0.3020596250426024
+    },
+    {
+      "rule": 59,
+      "bindings": 104,
+      "checked_scalar_operations": 104,
+      "accepted_scalar_operations": 104,
+      "cpu_check_seconds": 0.0002633330295793712,
+      "device_request_seconds": 0.006236291024833918
+    },
+    {
+      "rule": 62,
+      "bindings": 68,
+      "checked_scalar_operations": 136,
+      "accepted_scalar_operations": 136,
+      "cpu_check_seconds": 0.0002484580036252737,
+      "device_request_seconds": 0.6147945839911699
+    },
+    {
+      "rule": 138,
+      "bindings": 94,
+      "checked_scalar_operations": 188,
+      "accepted_scalar_operations": 188,
+      "cpu_check_seconds": 0.00031525001395493746,
+      "device_request_seconds": 0.005940207978710532
+    },
+    {
+      "rule": 144,
+      "bindings": 101,
+      "checked_scalar_operations": 101,
+      "accepted_scalar_operations": 101,
+      "cpu_check_seconds": 0.0002604579785838723,
+      "device_request_seconds": 0.0004202080308459699
+    },
+    {
+      "rule": 146,
+      "bindings": 10,
+      "checked_scalar_operations": 30,
+      "accepted_scalar_operations": 30,
+      "cpu_check_seconds": 3.7624966353178024e-05,
+      "device_request_seconds": 0.0004681249847635627
+    },
+    {
+      "rule": 148,
+      "bindings": 2,
+      "checked_scalar_operations": 2,
+      "accepted_scalar_operations": 2,
+      "cpu_check_seconds": 6.62502134218812e-06,
+      "device_request_seconds": 0.00028920802287757397
+    },
+    {
+      "rule": 150,
+      "bindings": 8,
+      "checked_scalar_operations": 8,
+      "accepted_scalar_operations": 8,
+      "cpu_check_seconds": 2.483295975252986e-05,
+      "device_request_seconds": 0.0002714580041356385
+    },
+    {
+      "rule": 151,
+      "bindings": 28,
+      "checked_scalar_operations": 28,
+      "accepted_scalar_operations": 28,
+      "cpu_check_seconds": 6.791698979213834e-05,
+      "device_request_seconds": 0.0002615830162540078
+    },
+    {
+      "rule": 152,
+      "bindings": 2,
+      "checked_scalar_operations": 2,
+      "accepted_scalar_operations": 2,
+      "cpu_check_seconds": 6.459013093262911e-06,
+      "device_request_seconds": 0.000649333989713341
+    },
+    {
+      "rule": 157,
+      "bindings": 3,
+      "checked_scalar_operations": 3,
+      "accepted_scalar_operations": 3,
+      "cpu_check_seconds": 2.174999099224806e-05,
+      "device_request_seconds": 0.0007276660180650651
+    },
+    {
+      "rule": 158,
+      "bindings": 1,
+      "checked_scalar_operations": 1,
+      "accepted_scalar_operations": 1,
+      "cpu_check_seconds": 1.3415992725640535e-05,
+      "device_request_seconds": 0.005143417045474052
+    },
+    {
+      "rule": 350,
+      "bindings": 8,
+      "checked_scalar_operations": 8,
+      "accepted_scalar_operations": 8,
+      "cpu_check_seconds": 3.2790994737297297e-05,
+      "device_request_seconds": 0.0005985419848002493
+    },
+    {
+      "rule": 498,
+      "bindings": 37,
+      "checked_scalar_operations": 74,
+      "accepted_scalar_operations": 74,
+      "cpu_check_seconds": 0.000155624991748482,
+      "device_request_seconds": 0.004871083016041666
+    },
+    {
+      "rule": 499,
+      "bindings": 8,
+      "checked_scalar_operations": 24,
+      "accepted_scalar_operations": 24,
+      "cpu_check_seconds": 6.125000072643161e-05,
+      "device_request_seconds": 0.2112499590148218
+    },
+    {
+      "rule": 500,
+      "bindings": 3,
+      "checked_scalar_operations": 3,
+      "accepted_scalar_operations": 3,
+      "cpu_check_seconds": 1.7457990907132626e-05,
+      "device_request_seconds": 0.0006502919713966548
+    },
+    {
+      "rule": 501,
+      "bindings": 29,
+      "checked_scalar_operations": 29,
+      "accepted_scalar_operations": 29,
+      "cpu_check_seconds": 8.095800876617432e-05,
+      "device_request_seconds": 0.0008089159964583814
+    },
+    {
+      "rule": 575,
+      "bindings": 10,
+      "checked_scalar_operations": 10,
+      "accepted_scalar_operations": 10,
+      "cpu_check_seconds": 2.162496093660593e-05,
+      "device_request_seconds": 0.0005827090353704989
+    },
+    {
+      "rule": 577,
+      "bindings": 37,
+      "checked_scalar_operations": 37,
+      "accepted_scalar_operations": 37,
+      "cpu_check_seconds": 8.995900861918926e-05,
+      "device_request_seconds": 0.0003084999625571072
+    }
+  ],
+  "gpu_completed_bindings": 0,
+  "backpropagation": false,
+  "limitations": [
+    "No GPU query, constructor, union or mutable update takeover",
+    "Batches combine saved Runs for replay only, never authorize reordering effects",
+    "CPU reference is independent bounded arithmetic, not the native primitive oracle",
+    "Division is approximate f32 with exact CPU comparison; mismatches require correction",
+    "Request times include compile/copy; no end-to-end speedup claim"
+  ]
+}

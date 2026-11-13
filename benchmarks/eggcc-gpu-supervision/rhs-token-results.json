@@ -1,0 +1,175 @@
+{
+  "scope": "Entire-recipe RHS token wiring and actual-binding instantiation audit; not GPU execution",
+  "program_sha256": "c9ce3a6fe289a86fe681592664e3148eec55b06b3c4d53bd8725de7ced3b949a",
+  "compiled_rules": 582,
+  "instantiated_bindings": 7265,
+  "static_copies_eliminated": 1091,
+  "observed_copy_instructions_represented_as_aliases": 6903,
+  "observed_ordered_operations": {
+    "construct": 12292,
+    "set": 5055,
+    "compute": 869,
+    "union": 689,
+    "subsume": 75
+  },
+  "rules_with_cpu_marks": 68,
+  "gpu_completed_bindings": 0,
+  "runtime_operations_removed": 0,
+  "per_ruleset": [
+    {
+      "ruleset": "add-to-debug-expr",
+      "rules": 0,
+      "instantiated_bindings": 0
+    },
+    {
+      "ruleset": "all-optimizations",
+      "rules": 44,
+      "instantiated_bindings": 16
+    },
+    {
+      "ruleset": "always-run",
+      "rules": 222,
+      "instantiated_bindings": 3250
+    },
+    {
+      "ruleset": "apply-drop-unions",
+      "rules": 1,
+      "instantiated_bindings": 90
+    },
+    {
+      "ruleset": "apply-subst-unions",
+      "rules": 1,
+      "instantiated_bindings": 0
+    },
+    {
+      "ruleset": "boundary-analysis",
+      "rules": 1,
+      "instantiated_bindings": 4
+    },
+    {
+      "ruleset": "boundary-analysis-prep",
+      "rules": 1,
+      "instantiated_bindings": 4
+    },
+    {
+      "ruleset": "canon",
+      "rules": 8,
+      "instantiated_bindings": 18
+    },
+    {
+      "ruleset": "cell-spine-complete",
+      "rules": 34,
+      "instantiated_bindings": 733
+    },
+    {
+      "ruleset": "cheap-optimizations",
+      "rules": 31,
+      "instantiated_bindings": 8
+    },
+    {
+      "ruleset": "cicm-index",
+      "rules": 2,
+      "instantiated_bindings": 101
+    },
+    {
+      "ruleset": "cleanup-drop",
+      "rules": 3,
+      "instantiated_bindings": 73
+    },
+    {
+      "ruleset": "context",
+      "rules": 17,
+      "instantiated_bindings": 774
+    },
+    {
+      "ruleset": "drop",
+      "rules": 17,
+      "instantiated_bindings": 182
+    },
+    {
+      "ruleset": "error-checking",
+      "rules": 24,
+      "instantiated_bindings": 0
+    },
+    {
+      "ruleset": "initialization",
+      "rules": 1,
+      "instantiated_bindings": 1
+    },
+    {
+      "ruleset": "interval-analysis",
+      "rules": 43,
+      "instantiated_bindings": 10
+    },
+    {
+      "ruleset": "is-resolved",
+      "rules": 17,
+      "instantiated_bindings": 254
+    },
+    {
+      "ruleset": "loop-iters-analysis",
+      "rules": 4,
+      "instantiated_bindings": 1
+    },
+    {
+      "ruleset": "mem-simple",
+      "rules": 13,
+      "instantiated_bindings": 0
+    },
+    {
+      "ruleset": "non-weakly-linear",
+      "rules": 7,
+      "instantiated_bindings": 4
+    },
+    {
+      "ruleset": "passthrough",
+      "rules": 6,
+      "instantiated_bindings": 12
+    },
+    {
+      "ruleset": "state-edge-passthrough",
+      "rules": 1,
+      "instantiated_bindings": 2
+    },
+    {
+      "ruleset": "subst",
+      "rules": 18,
+      "instantiated_bindings": 0
+    },
+    {
+      "ruleset": "subsume-after-helpers",
+      "rules": 1,
+      "instantiated_bindings": 2
+    },
+    {
+      "ruleset": "term-subst",
+      "rules": 12,
+      "instantiated_bindings": 80
+    },
+    {
+      "ruleset": "terms",
+      "rules": 8,
+      "instantiated_bindings": 236
+    },
+    {
+      "ruleset": "terms-helpers",
+      "rules": 3,
+      "instantiated_bindings": 295
+    },
+    {
+      "ruleset": "terms-helpers-helpers",
+      "rules": 3,
+      "instantiated_bindings": 206
+    },
+    {
+      "ruleset": "type-analysis",
+      "rules": 60,
+      "instantiated_bindings": 820
+    },
+    {
+      "ruleset": "type-helpers",
+      "rules": 10,
+      "instantiated_bindings": 97
+    }
+  ]
+}

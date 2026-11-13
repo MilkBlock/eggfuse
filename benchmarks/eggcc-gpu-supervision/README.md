@@ -216,3 +216,49 @@ The next semantic work includes query joins, constructors, Eq/union and mutable
 function merge, rather than further tuning the scalar-family demonstration.
 No new native sum-bits semantic acceptance is claimed by a same-runtime trace
 comparison, and no end-to-end speedup is claimed.
+
+## Whole-recipe RHS port wiring and numeric backend
+
+`rhs_tokens.py TRACE OUTPUT_DIR` compiles all 582 RHS definitions into shared
+ordered operation wiring. Copies become aliases in this plan. Input identities
+remain exact typed references; a constructor's result is an unresolved returned
+port, not a guessed producer address. Set/union reference these ports, and
+subsume/delete/panic retain their original positions with CPU marks. Unknown
+operations fail compilation. All 7,265 actual bindings instantiate the plan.
+The observed ordered instructions comprise 12,292 construct, 5,055 set, 869
+compute, 689 union and 75 subsume instructions. These are instructions attached
+to successful bindings, not proof that every instruction committed a mutation.
+1,091 static copies (6,903 observed instances) are aliases in the plan; the
+actual CPU runtime has not removed those operations because this is not yet
+its execution representation.
+
+`rhs_numeric.py TRACE OUTPUT.json` executes all available input-ready scalar
+nodes from those plans as fixed compiled Metal dataflows. It handles +, -, *,
+truncating /, min/max, bool-< and boolean and/or. Unresolved table-result ports
+are never converted to numbers; dependent numeric operations remain uncovered.
+Integer inputs are bounded before float conversion, and invalid or out-of-range
+results get marks. Division remains approximate and requires exact comparison.
+An independent bounded Python integer reference checks outputs; this is not a
+new native primitive semantic proof. The actual sum-bits trace exercises 19
+numeric kernels and 869 operations (720 additions and 149 subtractions), all
+accepted. The other operators are exercised by synthetic tests, not this trace.
+
+```
+python3 benchmarks/eggcc-gpu-supervision/rhs_tokens.py TRACE OUTPUT_DIR
+MLX_PYTHON benchmarks/eggcc-gpu-supervision/rhs_numeric.py TRACE OUTPUT.json
+MLX_PYTHON -m unittest discover -s benchmarks/eggcc-gpu-supervision -p 'test_rhs_*.py'
+```
+
+Seven RHS tests check exact identity preservation, actual-result placeholders,
+copy aliases, unsupported/undefined operations, arithmetic/boolean kernels,
+division failure, overflow marks and unresolved scalar table reads. Together
+with the seven control tests they pass. Saved summaries are
+`rhs-token-results.json` and `rhs-numeric-results.json`.
+
+The numerical experiment batches saved CPU matches across Runs solely for
+replay. It does not authorize effect reordering or supply autonomous GPU query
+completion. GPU-completed bindings and runtime operations removed remain zero.
+In particular, ordinary constructor/set/union operations are compiled ports,
+not yet device-executed graph semantics. The numeric interpreter is a broad
+exact-reference backend for the whole-program design, not the learned token
+completion model and not evidence of most-ruleset GPU support.
