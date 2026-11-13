@@ -3,6 +3,7 @@
 Unsupported effects stay pending at their original effect_pc. External witness
 coverage and a settled Eq snapshot are caller obligations, not inferred here.
 """
+from device_slot_owners import shape as slot_shape,read as read_slot,has as has_slot,ensure_roots
 import numpy as np
 from compile_constructor_sites import compile_sites
 from device_witness_views import compile_view,project
@@ -64,7 +65,7 @@ def complete(state,plan,next_id,limit,quota,external_complete,eq_settled,xp,eq_c
         if not plan.get('include_unions',False):raise ValueError('registry requires typed completion plan')
         eq_context=dict(eq_context)
         limit=xp.minimum(limit,eq_context['roots'].shape[0])
-        state=dict(state,slot_roots=state.get('slot_roots',state['slots']),token_dirty=state.get('token_dirty',xp.zeros_like(state['present'])))
+        state=ensure_roots(state,xp)
     attention=xp.array(False);executed=xp.array(0,dtype=xp.int32)
     new_constructors=xp.array(0,dtype=xp.int32);new_equivalences=xp.array(0,dtype=xp.int32)
     for kind,site in plan['operations']:
@@ -73,8 +74,9 @@ def complete(state,plan,next_id,limit,quota,external_complete,eq_settled,xp,eq_c
             ids=state['keys'][:,0];safe=xp.clip(ids,0,plan['eq_types'].shape[0]-1)
             types=plan['eq_types'][safe]
             eq_slots=(types>=0)&(ids[:,None]>=0)
-            values=state['slots'];size=eq_context['roots'].shape[0]
-            used=state['present'][:,None]&state['slot_valid']&eq_slots
+            n,w=slot_shape(state);rr=xp.arange(n)[:,None];ss=xp.arange(w)[None,:]
+            values=read_slot(state,'slots',rr,ss,xp);size=eq_context['roots'].shape[0]
+            used=state['present'][:,None]&read_slot(state,'slot_valid',rr,ss,xp)&eq_slots
             bad_type=(values<0)|(values>=size)|(eq_context['sorts'][xp.clip(values,0,size-1)]!=types)
             typed_snapshot=~xp.any(used&bad_type)&~xp.any(state['present']&((ids<0)|(ids>=plan['eq_types'].shape[0])))
             requested=xp.any(active)
@@ -105,16 +107,16 @@ def complete(state,plan,next_id,limit,quota,external_complete,eq_settled,xp,eq_c
         attention=attention|outcome['needs_attention']
         executed=executed+xp.sum(outcome['ready'].astype(xp.int32))
     refreshed=xp.array(0,dtype=xp.int32)
-    rows,width=state['slots'].shape
+    rows,width=slot_shape(state);rr=xp.arange(rows)[:,None];ss=xp.arange(width)[None,:]
     for rid,layout in plan['layouts']:
         selected=dict(state,present=state['present']&(state['keys'][:,0]==rid))
-        codes=state.get('scalar_codes',xp.zeros((rows,width,64),xp.float32))
-        valid=state.get('scalar_valid',xp.zeros((rows,width),xp.bool_))
-        if 'scalar_numbers' in state and 'scalar_numeric' in state:
-            number=state['scalar_numbers'];finite=xp.isfinite(number);safe=xp.where(finite,number,0)
+        codes=read_slot(state,'scalar_codes',rr,ss,xp) if has_slot(state,'scalar_codes') else xp.zeros((rows,width,64),xp.float32)
+        valid=read_slot(state,'scalar_valid',rr,ss,xp) if has_slot(state,'scalar_valid') else xp.zeros((rows,width),xp.bool_)
+        if has_slot(state,'scalar_numbers') and has_slot(state,'scalar_numeric'):
+            number=read_slot(state,'scalar_numbers',rr,ss,xp);finite=xp.isfinite(number);safe=xp.where(finite,number,0)
             numeric=xp.tanh((xp.sign(safe)*xp.log1p(xp.abs(safe)))[:,:,None]*layout['numeric_roles'])
-            codes=xp.where(state['scalar_numeric'][:,:,None],numeric,codes)
-            valid=xp.where(state['scalar_numeric'],finite,valid)
+            codes=xp.where(read_slot(state,'scalar_numeric',rr,ss,xp)[:,:,None],numeric,codes)
+            valid=xp.where(read_slot(state,'scalar_numeric',rr,ss,xp),finite,valid)
         updated,marks=refresh(selected,layout['sorts'],layout['eq'],layout['required'],layout['roles'],codes,valid,eq_settled,xp)
         updated['present']=state['present'];state=updated
         refreshed=refreshed+xp.sum(marks['refreshed'].astype(xp.int32))

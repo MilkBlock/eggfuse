@@ -4,6 +4,7 @@ Inputs must already represent the initialized graph with no pending source
 operations. Coverage is a caller/compiler proof obligation; existing real
 single-source catalogs cannot certify it. No ownership proof is invented here.
 """
+from device_slot_owners import ensure_roots
 from device_schedule import initial,current,tick
 from device_entry_round import run_round
 from device_constructor_completion import complete
@@ -12,7 +13,7 @@ from device_constructor_completion import complete
 def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_id,limit,quota,external_complete,eq_settled,ticks,xp,eq_context=None,eq_rounds=4,continuation=None,query_kernel=None):
     if ticks<1:raise ValueError('positive tick budget required')
     if query_covered.shape[0]<1:raise ValueError('stage coverage array required')
-    state=dict(state,slot_roots=state.get('slot_roots',state['slots']),token_dirty=state.get('token_dirty',xp.zeros_like(state['present'])))
+    state=ensure_roots(state,xp)
     if continuation is None:
         machine=initial(schedule,repeat_slots,xp);opened=xp.array(False);changed=xp.array(False);failed=xp.array(False)
     else:

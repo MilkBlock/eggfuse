@@ -4,7 +4,8 @@ This opt-in GPU mechanism transfers **sealed payload storage**, not logical
 activation or proof responsibilities. It is integrated with constructor witness
 projection, multi-source query matching and input encoding. New instance admission now reuses the owner arena (see DEVICE_OWNER_ADMISSION.md).
 Constructor/copy writers and token refresh now support it (DEVICE_OWNER_EFFECTS.md).
-Eq completion and the full stage loop are not yet lowered to it. It is not a complete autonomous Eggcc runtime.
+Eq completion and the nested stage loop now support this storage in the bounded
+closed-family tests (DEVICE_OWNER_UNION.md). Full workload integration remains open. It is not a complete autonomous Eggcc runtime.
 
 ## Representation and actual removed storage obligation
 

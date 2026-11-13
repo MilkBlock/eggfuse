@@ -50,8 +50,9 @@ dense candidate/row masks and functional array updates. These are extra costs,
 not a speed improvement. The prior directory and template costs still apply.
 Constructor/copy operations and token refresh now support new pending instances
 (DEVICE_OWNER_EFFECTS.md); general RHS operations remain incomplete.
-Eq refresh, lifecycle-aware reclamation and stage-loop wiring
-remain required before whole-run takeover or native semantic acceptance.
+Owner Eq refresh and stage-loop wiring are now locally tested (DEVICE_OWNER_UNION.md).
+Automatic takeover scheduling, lifecycle-aware reclamation and whole-workload
+audits remain required before native semantic acceptance.
 
 The Bake reference advanced to 6dcbd782. It measured only 135 admitted joins out
 of a much larger proposed catalog, with 1947 guard exits associated with queued

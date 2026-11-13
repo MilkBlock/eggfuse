@@ -51,10 +51,10 @@ owner references; the current implementation uses dense masks and functional
 array updates that may allocate whole arrays. A zero logical-copy count is not
 a byte-transfer or speed claim. No real-workload memory or speed result is given.
 
-These direct kernels and query/admission paths are connected. The higher-level
-completion controller and nested schedule still have dense-state paths; owner-
-aware Eq propagation, union integration, remaining primitives/mutable effects,
-retirement/reclamation and whole-Run semantic audits remain outstanding. This
+These direct kernels and query/admission paths are connected. The higher-level completion controller and nested schedule now support owner-
+backed Eq/union completion in bounded tests (DEVICE_OWNER_UNION.md). Automatic
+matched-source takeover scheduling, remaining primitives/mutable effects,
+retirement/reclamation and whole-workload semantic audits remain outstanding. This
 is not yet an owner-backed end-to-end Eggcc execution.
 
 Bake branch 89714c74 rejected an eager queued-union join trial: additional joins

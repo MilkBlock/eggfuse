@@ -136,6 +136,13 @@ def write_slot(state,dst,values,commit,xp,plan):
     return out
 
 
+def ensure_roots(state,xp):
+    out=dict(state,token_dirty=state.get('token_dirty',xp.zeros_like(state['present'])))
+    if 'slot_owner' in state:out['owner_slot_roots']=state.get('owner_slot_roots',state['owner_slots'])
+    else:out['slot_roots']=state.get('slot_roots',state['slots'])
+    return out
+
+
 def compile_transfer(recipe,entry,width):
     source=recipe['rules'][entry['producer']];target=recipe['rules'][entry['consumer']]
     if width<max(len(source['slots']),len(target['slots'])):raise ValueError('owner width too small')

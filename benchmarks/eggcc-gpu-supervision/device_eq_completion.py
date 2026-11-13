@@ -5,6 +5,7 @@ model. Stable identities stay in slots; only slot_roots is refreshed. A round
 budget is never interpreted as saturation.
 """
 from device_witness_views import project
+from device_slot_owners import shape,read,has,live
 
 
 def merge_round(roots,sorts,pairs,active,xp):
@@ -28,29 +29,49 @@ def merge_round(roots,sorts,pairs,active,xp):
 
 
 def refresh_slots(state,roots,eq_slots,xp):
-    size=roots.shape[0];ids=state['slots']
-    used=state['present'][:,None]&state['slot_valid']&eq_slots
-    valid=(ids>=0)&(ids<size)
-    output=dict(state)
-    output['slot_roots']=xp.where(used&valid,roots[xp.clip(ids,0,size-1)],ids)
-    changed=xp.any(used & (output['slot_roots']!=state.get('slot_roots',ids)),axis=1)
+    size=roots.shape[0];output=dict(state)
+    if 'slot_owner' in state:
+        import numpy as np
+        n,width=shape(state);rows=xp.arange(n)[:,None];slots=xp.arange(width)[None,:]
+        owners=state['owner_slots'].shape[0]
+        used=state['present'][:,None]&read(state,'slot_valid',rows,slots,xp)
+        address=xp.clip(state['slot_owner'],0,owners-1)[:,None]*width+xp.clip(state['owner_projection'],0,width-1)
+        def count(mask):
+            if xp is np:return np.bincount(address.reshape(-1),weights=mask.reshape(-1),minlength=owners*width).reshape(owners,width)
+            return xp.zeros(owners*width,xp.int32).at[address.reshape(-1)].add(mask.reshape(-1).astype(xp.int32)).reshape(owners,width)
+        eq=count(used&eq_slots)>0;scalar=count(used&~eq_slots)>0
+        ids=state['owner_slots'];valid=(ids>=0)&(ids<size)
+        conflict=xp.any(eq&scalar)
+        before=read(state,'slot_roots' if has(state,'slot_roots') else 'slots',rows,slots,xp)
+        old=state.get('owner_slot_roots',ids)
+        updated=xp.where(eq&valid,roots[xp.clip(ids,0,size-1)],old)
+        output['owner_slot_roots']=xp.where(conflict,old,updated)
+        after=read(output,'slot_roots',rows,slots,xp)
+        changed=xp.any(used&eq_slots&(before!=after),axis=1)
+        invalid=xp.any(eq&~valid)|conflict|xp.any(state['present']&~live(state,xp.arange(n),xp))
+    else:
+        ids=state['slots'];used=state['present'][:,None]&state['slot_valid']&eq_slots
+        valid=(ids>=0)&(ids<size)
+        output['slot_roots']=xp.where(used&valid,roots[xp.clip(ids,0,size-1)],ids)
+        changed=xp.any(used & (output['slot_roots']!=state.get('slot_roots',ids)),axis=1)
+        invalid=xp.any(used&~valid)
     output['token_dirty']=state.get('token_dirty',xp.zeros_like(changed)) | changed
-    return output,xp.any(used&~valid)
+    return output,invalid
 
 
 def close(state,roots,sorts,eq_slots,pairs,active,views,external_complete,rounds,xp):
     if rounds<1:raise ValueError('positive round budget required')
     external_complete=xp.array(external_complete,dtype=xp.bool_)
-    invalid=xp.array(False);missing=xp.array(False);changed=xp.array(True)
+    invalid_checks=[];missing_checks=[];changed=xp.array(True)
     for _ in range(rounds):
         before=roots
-        roots,bad=merge_round(roots,sorts,pairs,active,xp);invalid=invalid|bad
-        current,bad=refresh_slots(state,roots,eq_slots,xp);invalid=invalid|bad
+        roots,bad=merge_round(roots,sorts,pairs,active,xp);invalid_checks.append(bad)
+        current,bad=refresh_slots(state,roots,eq_slots,xp);invalid_checks.append(bad)
         pending_pairs=[pairs];pending_masks=[active]
         for plan in views:  # Static Bake plans; no host reads of device state.
             # Provisional labels generate conditions only, never settlement.
             witness=project(current,plan,external_complete,xp.array(True),xp)
-            missing=missing|~witness['complete']
+            missing_checks.append(~witness['complete'])
             n=witness['ids'].shape[0];ix=xp.arange(n)
             same=xp.all(witness['keys'][:,None,:]==witness['keys'][None,:,:],axis=2)
             condition=(same&witness['live'][:,None]&witness['live'][None,:]
@@ -60,8 +81,10 @@ def close(state,roots,sorts,eq_slots,pairs,active,views,external_complete,rounds
             pending_pairs.append(xp.stack([left,right],axis=2).reshape(-1,2))
             pending_masks.append(condition.reshape(-1))
         roots,bad=merge_round(roots,sorts,xp.concatenate(pending_pairs,axis=0),xp.concatenate(pending_masks),xp)
-        invalid=invalid|bad;changed=xp.any(roots!=before)
-    output,bad=refresh_slots(state,roots,eq_slots,xp);invalid=invalid|bad
+        invalid_checks.append(bad);changed=xp.any(roots!=before)
+    output,bad=refresh_slots(state,roots,eq_slots,xp);invalid_checks.append(bad)
+    invalid=xp.any(xp.stack(invalid_checks))
+    missing=xp.any(xp.stack(missing_checks)) if missing_checks else xp.array(False)
     pending=changed|invalid|missing|~external_complete
     return output,roots,dict(settled=~pending,budget_pending=changed,invalid=invalid,missing_view=missing,needs_attention=pending,token_refresh_required=xp.any(output['token_dirty']))
 
@@ -85,14 +108,15 @@ def compile_unions(recipe):
 def union_inputs(state,plan,xp):
     selected=(state['present'][:,None]&state['active'][:,None]&state['visible'][:,None]&~state['settled'][:,None]
               &(state['keys'][:,0,None]==plan['rule'][None,:])&(state['effect_pc'][:,None]==plan['operation'][None,:]))
-    available=state['slot_valid'][:,plan['left']]&state['slot_valid'][:,plan['right']]
-    pairs=xp.stack([state['slots'][:,plan['left']],state['slots'][:,plan['right']]],axis=2)
+    rows=xp.arange(shape(state)[0])[:,None]
+    available=read(state,'slot_valid',rows,plan['left'][None,:],xp)&read(state,'slot_valid',rows,plan['right'][None,:],xp)
+    pairs=xp.stack([read(state,'slots',rows,plan['left'][None,:],xp),read(state,'slots',rows,plan['right'][None,:],xp)],axis=2)
     return pairs.reshape(-1,2),(selected&available).reshape(-1),selected&~available
 
 
 def finish_unions(state,plan,active,closure,xp):
     # Source snapshot is unchanged between collection and this ordered finish.
-    accepted=active.reshape(state['slots'].shape[0],-1)&closure['settled']
+    accepted=active.reshape(shape(state)[0],-1)&closure['settled']
     advance=xp.any(accepted,axis=1)
     output=dict(state)
     output['effect_pc']=state['effect_pc']+advance.astype(xp.int32)
