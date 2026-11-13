@@ -200,12 +200,8 @@ impl Absorption {
 }
 #[cfg(feature="cell-absorption")]
 pub(crate) enum RowProof { Outside, Fresh, Missing, Required, Absorbed }
-#[cfg(all(feature="cell-absorption",feature="parallel-residuals"))]
-#[path="neighbor_completion.rs"]
-pub(crate) mod completion;
 #[cfg(feature="cell-absorption")]
 impl Activated<'_> {
-    pub(crate) fn input_column(&self)->usize {self.plan.input_column}
     /// One typed Cell proof, shared by source neighborhoods and worker reads.
     /// The proof never depends on a digest or cached row identity.
     pub(crate) fn prove(&self,row:&Row,read:impl FnOnce(usize,&Value)->Option<i64>)->RowProof {
@@ -219,21 +215,12 @@ impl Activated<'_> {
 #[derive(Default,Serialize)]
 pub(crate) struct WorkerAbsorption {
     candidates:u64, fresh:u64, probes:u64, missing:u64, absorbed:u64,
-    group_checks:u64, group_hits:u64, group_rows:u64,
-    group_writes:u64, group_allocations:u64, group_contention:u64,
 }
 #[cfg(feature="cell-absorption")]
 impl WorkerAbsorption {
-    #[cfg(feature="parallel-residuals")]
-    pub(crate) fn check(&mut self,active:Activated<'_>,row:&Row,reads:&crate::graph::query_reads::QueryReads<'_>,
-        build:Option<&mut completion::Build<'_>>)->bool {
+    pub(crate) fn check(&mut self,active:Activated<'_>,row:&Row,reads:&crate::graph::query_reads::QueryReads<'_>)->bool {
         self.candidates+=1;
-        match active.prove(row,|table,key| {
-            self.probes+=1;
-            let value=reads.absorption_value(table,key)?;
-            if let Some(build)=build {build.observe(value,row.epoch);}
-            Some(value)
-        }) {
+        match active.prove(row,|table,key| {self.probes+=1;reads.absorption_value(table,key)}) {
             RowProof::Fresh=>self.fresh+=1,
             RowProof::Missing=>self.missing+=1,
             RowProof::Absorbed=>{self.absorbed+=1;return true;}
@@ -241,12 +228,10 @@ impl WorkerAbsorption {
         }
         false
     }
-    pub(crate) fn has_work(&self)->bool {self.candidates!=0 || self.group_checks!=0}
+    pub(crate) fn candidates(&self)->u64 {self.candidates}
     pub(crate) fn add(&mut self,other:Self) {
         self.candidates+=other.candidates;self.fresh+=other.fresh;self.probes+=other.probes;
         self.missing+=other.missing;self.absorbed+=other.absorbed;
-        self.group_checks+=other.group_checks;self.group_hits+=other.group_hits;self.group_rows+=other.group_rows;
-        self.group_writes+=other.group_writes;self.group_allocations+=other.group_allocations;self.group_contention+=other.group_contention;
     }
 }
 #[cfg(feature = "cell-absorption")]

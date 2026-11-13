@@ -7,7 +7,7 @@ edition = "2024"
 parallel-publication = ["parallel-residuals"]
 parallel-residuals = ["sparse-cells"]
 sparse-cells = ["iterative-bake"]
-cell-absorption = ["sparse-cells", "dep:once_cell"]
+cell-absorption = ["sparse-cells"]
 cell-entry-reverse = ["sparse-cells"]
 parallel-entry-filters = ["sparse-cells"]
 storage-metrics = ["dep:libc"]
@@ -41,7 +41,6 @@ spine-blocks = []
 iterative-bake = ["spine-blocks"]
 
 [dependencies]
-once_cell = { version = "1.21.4", optional = true, default-features = false, features = ["alloc", "race"] }
 libc = { version = "0.2", optional = true }
 eggfuse-structural-key = { path = "../structural-key" }
 serde = { version = "1", features = ["derive", "rc"] }

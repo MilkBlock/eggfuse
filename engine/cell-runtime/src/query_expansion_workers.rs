@@ -464,7 +464,7 @@ impl Prepared<'_> {
                 source:q.source,watermark:known.watermark}.step(0,None,entry.epoch,domain.as_ref())
         })();
         #[cfg(feature="cell-absorption")]
-        if absorption_work.has_work() {
+        if absorption_work.candidates()!=0 {
             if let Some((_,work))=chunk.absorption.iter_mut().find(|(rule,_)|*rule==q.code.rule) {work.add(absorption_work);}
             else {chunk.absorption.push((q.code.rule,absorption_work));}
         }
@@ -509,14 +509,6 @@ impl Host<'_, '_, '_> {
                         &f.operand_in(self.reads.parents,|col|&self.entry.values[col],&self.frame.values,expanded)))).collect();
                     selected=self.index.domain(table,selectors); &selected
                 };
-                #[cfg(feature="cell-absorption")]
-                let mut completion=if let Some(active)=self.absorption
-                    && let Some(group)=domain.completion(active.input_column()) {
-                    match group.begin(active,self.absorption_work) {
-                        Some(build)=>Some(build),
-                        None=>{self.work.index_rows_examined+=domain.take_examined();return Ok(());}
-                    }
-                } else {None};
                 let mark=self.frame.witnesses.len();
                 for w in domain.iter() {
                     self.work.row_reads+=1;
@@ -528,14 +520,12 @@ impl Host<'_, '_, '_> {
                         |col|&self.entry.values[col],&self.frame.values,Some((position,&row))).as_ref()==&row.values[*c]) {continue;}
                     #[cfg(feature="cell-absorption")]
                     if let Some(active)=self.absorption
-                        && self.absorption_work.check(active,&row,self.reads,completion.as_mut()) {continue;}
+                        && self.absorption_work.check(active,&row,self.reads) {continue;}
                     self.frame.witnesses.truncate(mark);
                     self.frame.witnesses.push((ins.atom,w));
                     self.step(position+1,Some((position,&row)),epoch.max(row.epoch),None)?;
                 }
                 self.work.index_rows_examined += domain.take_examined();
-                #[cfg(feature="cell-absorption")]
-                if let Some(completion)=completion {completion.finish(self.absorption_work);}
                 self.frame.witnesses.truncate(mark);
                 return Ok(());
             }

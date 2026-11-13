@@ -18,30 +18,21 @@ pub(crate) struct Read<'a> {
     bits: u32,
 }
 pub(crate) struct TableRead<'a> {
-    version: u64,
     keys: &'a HashMap<Dependency, SmallVec<[u64; 4]>>,
     columns: SmallVec<[(usize, &'a HashMap<u64, Bucket>); 4]>,
 }
 pub(crate) struct Domain<'a> {
-    bucket: Option<&'a Bucket>,
-    version: u64,
+    rows: Option<&'a crate::tiny_set::TinySet<Dependency>>,
     keys: &'a HashMap<Dependency, SmallVec<[u64; 4]>>,
     selectors: SmallVec<[(usize, u64); 4]>,
     examined: std::cell::Cell<u64>,
 }
 impl Domain<'_> {
     pub fn iter(&self) -> impl Iterator<Item = Dependency> + '_ {
-        self.bucket.into_iter().flat_map(|b| b.facts.iter()).copied().inspect(|_| self.examined.set(self.examined.get()+1)).filter(|w|
+        self.rows.into_iter().flat_map(|rows| rows.iter()).copied().inspect(|_| self.examined.set(self.examined.get()+1)).filter(|w|
             self.selectors.len() == 1 || self.selectors.iter().all(|(c,k)| self.keys[w][*c] == *k))
     }
     pub fn take_examined(&self) -> u64 { self.examined.replace(0) }
-    #[cfg(feature="cell-absorption")]
-    pub(crate) fn completion(&self,column:usize)->Option<crate::neighbor::completion::Read<'_>> {
-        if self.selectors.len()!=1 || self.selectors[0].0!=column {return None;}
-        let bucket=self.bucket?;
-        (bucket.facts.len()>1).then_some(crate::neighbor::completion::Read {
-            completion:&bucket.completion, version:self.version, rows:bucket.facts.len() })
-    }
 }
 impl<'a> Read<'a> {
     pub fn entry_hashes(&self, witness: Dependency) -> Option<&[u64]> {
@@ -62,11 +53,11 @@ impl<'a> TableRead<'a> {
         for &(column, hash) in &selectors {
             let map = read.columns.iter().find(|(c,_)| *c == column).expect("compiled read column").1;
             let Some(bucket) = map.get(&hash) else {
-                return Domain { bucket: None, version:read.version, keys: read.keys, selectors, examined:Default::default() };
+                return Domain { rows: None, keys: read.keys, selectors, examined:Default::default() };
             };
             if best.is_none_or(|old| bucket.facts.len() < old.facts.len()) { best = Some(bucket); }
         }
-        Domain { bucket: Some(best.expect("connected expansion")), version:read.version, keys: read.keys, selectors, examined:Default::default() }
+        Domain { rows: Some(&best.expect("connected expansion").facts), keys: read.keys, selectors, examined:Default::default() }
     }
 }
 impl QueryIndexes {
@@ -85,7 +76,7 @@ impl QueryIndexes {
     #[cfg(feature = "parallel-publication")]
     pub(crate) fn publication_support(&self, table:usize, columns:&[usize]) -> TableRead<'_> {
         let index=&self.tables[&table];
-        TableRead {version:index.version,keys:&index.keys,columns:columns.iter().map(|&c|(c,index.column(c))).collect()}
+        TableRead {keys:&index.keys,columns:columns.iter().map(|&c|(c,index.column(c))).collect()}
     }
     pub(crate) fn prepare_columns(&mut self, graph:&Graph, layout:&[(usize,Vec<usize>)]) -> Result<()> {
         for (table,columns) in layout {
@@ -99,7 +90,7 @@ impl QueryIndexes {
     pub(crate) fn read_columns<'a>(&'a self, layout:&[(usize,Vec<usize>)], entry_table:usize) -> Read<'a> {
         let tables=layout.iter().map(|(table,columns)| {
             let index=&self.tables[table];
-            (*table,TableRead {version:index.version,keys:&index.keys,columns:columns.iter().map(|&c|
+            (*table,TableRead {keys:&index.keys,columns:columns.iter().map(|&c|
                 (c,index.values[c].get().expect("prepared Run column"))).collect()})
         }).collect();
         Read {tables,bits:self.bits,entry_keys:self.tables.get(&entry_table).map(|i|&i.keys)}
@@ -110,7 +101,7 @@ impl QueryIndexes {
 impl PublicationTask {
     /// Borrow the original completed table while unrelated owners still write.
     pub(crate) fn publication_support(&self, columns:&[usize])->TableRead<'_> {
-        TableRead {version:self.index.version,keys:&self.index.keys,columns:columns.iter().map(|&c|(c,self.index.column(c))).collect()}
+        TableRead {keys:&self.index.keys,columns:columns.iter().map(|&c|(c,self.index.column(c))).collect()}
     }
 }
 
