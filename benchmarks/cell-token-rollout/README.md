@@ -216,3 +216,74 @@ Regularization was fixed before this run; no test-result search was performed.
 The next step needs a semantic token target beyond these known scalar parameters,
 a larger training domain, and actual CPU residual acceptance. Merely making more
 suffix tokens or passing this arithmetic control does not finish the runtime goal.
+
+## GPU-completed region with actual CPU residual execution
+
+`residual.py` now checks the completion/CPU boundary, not just numerical labels.
+For each existing initial SubTuple Cell, a fixed GPU program prepares every
+suffix token and its successor parameters. Input-length-derived ragged wiring
+packs all 291 active tokens without the previous 335 padding positions. The
+wiring arrays are constructed once on CPU; their allocation/gather costs are
+not claimed to be free. The GPU does no graph lookup, union, per-node dispatch,
+intermediate host read or dynamic allocation. This path uses compiled exact
+bounded arithmetic, not ridge-authorized semantic facts.
+
+At exit the legacy CPU adapter materializes a completed region using the actual
+original rewrite consequences. Suffix length >1 gives the original rule 138
+union; length 1 gives rule 137's union. Each consequence follows by induction
+from its initial SubTuple and earlier suffixes. The bounded arithmetic result is
+checked exactly before source actions are constructed. Identity stays as the
+same exact `(Input 0)` expression; it is not approximated by floating features.
+No guessed `(producer, operation)` result address is used.
+
+The CPU residual ruleset **omits rule 138 entirely** and retains associativity,
+unit-length expansion, Get/Single equivalence and adjacent interval merge. After
+residual saturation, the test enables the complete original ruleset. Acceptance
+requires ALL of:
+
+1. Residual endpoint equals the original Cell endpoint under exact supported DAG
+   canonicalization, with all five tables and visibility preserved.
+2. It also equals the independent original native egglog endpoint.
+3. Every subsequent full-rule audit Run reports no change.
+4. Two additional complete-rule Runs satisfy the exporter's fixed-point check.
+
+All 12 cases pass. A negative control omits the GPU-completed region: the residual
+endpoint is then rejected and full rules change the graph in three Runs. Merely
+running the full rules afterward and comparing final graphs would conceal this
+failure; the test deliberately checks the endpoint BEFORE that audit.
+
+| Work across 12 cases | Original | CPU residual |
+|---|---:|---:|
+| Executed bindings | 2,049 | 1,666 |
+| Saturation Runs, excluding verification Runs | 105 | 75 |
+
+The adapter additionally executes **291 boundary action requests**. Those are not
+291 new mutations and cannot be ignored when interpreting the 383 fewer rule
+bindings. This is the first measured replacement of CPU matching in this
+restricted experiment, not an overall speedup or a production feature.
+
+Scope matters: this is an explicit source transformation for the positive,
+unbounded saturation endpoint of these tuple cases. It changes when derived
+facts become visible, and **does not preserve arbitrary finite Run semantics**.
+There are no mutable functions, deletion or hidden rows in this contract. No
+exclusions or extra equivalence rules were added to make comparisons pass.
+Generalizing the omission of rule 138 requires a closure argument for every
+admitted entry, not just these tests; arbitrary programs are not admitted.
+
+The completion stays off the graph during GPU execution. The CPU boundary still
+uses source actions to materialize a completed region in the existing runtime.
+Thus this is not yet a native token-only runtime or the elimination of all
+publication/repair costs. Compiler/frontend/startup and full-rule verification
+are included in recorded process times; those are timeout diagnostics, not fair
+end-to-end speed measurements. Each CPU invocation stays under one second.
+
+```
+python residual.py --runtime ../../out/cell-token-rollout/larger/runtime.json \
+  --runner ../../target/debug/examples/real_completion_dataset \
+  --reference-dir REFERENCE_DIR --output ../../out/cell-token-rollout/residual
+```
+
+The program exits nonzero on a failed requested case. Exact numeric acceptance,
+actual CPU residual execution, original native comparison and the negative
+control are the relevant checks for this isolated experiment. The sum-bits
+contract is neither invoked nor silently extended to these tuple programs.
