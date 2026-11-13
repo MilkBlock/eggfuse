@@ -20,8 +20,26 @@ class HandoffTrace(unittest.TestCase):
         p,t = self.fixture()
         r = analyze(p,t)
         self.assertEqual(r['totals']['exact_cross_run_links'], 1)
+        self.assertEqual(r['links'][0]['producer_op'], 0)
         self.assertEqual(r['groups'][0]['without_query_continuation'], 1)
         self.assertEqual(r['groups'][0]['min_run_gap'], 2)
+
+    def test_distinct_publication_operations_remain_distinct(self):
+        p,t = self.fixture()
+        window = copy.deepcopy(t['handoff']['windows'][0])
+        window['run'] = 4
+        window['before'][0]['origin']['op'] = 7
+        t['handoff']['windows'].append(window)
+        r = analyze(p,t)
+        self.assertEqual([link['producer_op'] for link in r['links']], [0,7])
+        self.assertEqual([link['producer_rule'] for link in r['links']], [0,0])
+
+    def test_missing_or_invalid_operation_is_not_guessed(self):
+        p,t = self.fixture()
+        for operation in (None,-1,True,'0'):
+            t['handoff']['windows'][0]['before'][0]['origin']['op'] = operation
+            with self.assertRaises(ValueError):
+                analyze(p,t)
 
     def test_missing_or_different_binding_is_not_an_equality_proof(self):
         p,t = self.fixture()

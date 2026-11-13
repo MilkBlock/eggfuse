@@ -67,6 +67,25 @@ held at the earlier match. Do not invent cursor ancestry by casting those IDs.
 Existing successful-match evidence, ordinary residual enumeration and current
 actual-result checks remain the authority.
 
+The link analyzer now retains `producer_op` from the boundary row's actual
+`origin`, including when the same producer has multiple publication operations.
+Missing or invalid operation identity is rejected. The handoff installer consumes
+that exact operation, checks the completed event's rule identity, and checks that
+the typed operation writes the observed table. It no longer guesses from a unique
+Set instruction; old reports must be regenerated. Five analyzer tests cover
+separate operations, absent/invalid origins, missing bindings and future/dropped
+execution evidence; the installer example compile check passes.
+
+Do not batch-install retained-history routes merely because this boundary is
+now representable. The earlier `cell-structural-compression/matched-handoffs.md`
+experiment already rejected that storage strategy: 102 fewer queries accompanied
+133 -> 341 retained history owners and unchanged Graph bytes. This metadata fix
+adds no runtime state and makes no compression claim. A new takeover must consume
+existing instance/Entry slots and retire displaced state, or it repeats that
+measured failure. The old raw View8 trace is absent in this worktree; the saved
+report is historical evidence, not fresh validation of the current runtime.
+
+
 ```sh
 python3 benchmarks/cell-bake-owner-merge/catalog_inventory.py out/cell-bake-owner-merge/batch/prefix-all benchmarks/cell-bake-owner-merge/catalog-inventory.json
 ~/.local/bin/eggfuse-job run --kind compute -- env CARGO_INCREMENTAL=0 cargo test --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-cells,storage-metrics,eggfuse-cell-runtime/slot-transfer-audit --test matched_handoffs

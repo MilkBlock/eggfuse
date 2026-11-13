@@ -23,10 +23,17 @@ fn main()->Result<(),Box<dyn Error>> {
         let producer=link["producer_rule"].as_u64().ok_or("producer")? as usize;
         let consumer=link["consumer_rule"].as_u64().ok_or("consumer")? as usize;
         let pivot=link["atom"].as_u64().ok_or("pivot")? as usize;
-        let ops=p.templates[p.rules[producer].template].ops.iter().enumerate()
-            .filter_map(|(op,i)|matches!(i,Op::Set(t,_,_) if *t==table).then_some(op)).collect::<Vec<_>>();
-        let [op]=ops.as_slice() else {return Err("producer requires a unique observed table write".into());};
-        *support.entry((producer,*op,consumer,pivot)).or_insert(0usize)+=1;
+        let op=link["producer_op"].as_u64().ok_or("missing exact producer operation; regenerate link report")? as usize;
+        let event=link["producer_event"].as_u64().ok_or("missing producer event")? as usize;
+        let source_event=trace["completed_history"]["events"].get(event).ok_or("unknown producer event")?;
+        if source_event["entry"][0].as_u64()!=Some(producer as u64) {
+            return Err("link producer differs from completed execution".into());
+        }
+        let rule=p.rules.get(producer).ok_or("unknown producer rule")?;
+        if !matches!(p.templates[rule.template].ops.get(op),Some(Op::Set(t,_,_)) if *t==table) {
+            return Err("observed producer operation does not publish the handoff table".into());
+        }
+        *support.entry((producer,op,consumer,pivot)).or_insert(0usize)+=1;
     }
     let routes=support.keys().copied().collect::<Vec<_>>();
     let mut plan=raw["iterative_bake"].clone();

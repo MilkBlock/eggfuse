@@ -84,6 +84,9 @@ def analyze(program, trace):
                 if event['run'] >= window['run']:
                     raise ValueError('boundary origin must precede consumer Run')
                 producer = event['entry'][0]
+                operation = origin.get('op')
+                if type(operation) is not int or operation < 0:
+                    raise ValueError('boundary origin requires an exact producer operation')
                 group = groups[(producer, rid)]
                 group['matches'] += 1
                 group['without_query_continuation'] += match['continuation'] is None
@@ -91,7 +94,7 @@ def analyze(program, trace):
                 group['source_without_cursor_parent'] += event['parent'] is None
                 gaps[(producer, rid)].append(window['run'] - event['run'])
                 totals['exact_cross_run_links'] += 1
-                links.append(dict(producer_event=event_id, producer_rule=producer,
+                links.append(dict(producer_event=event_id, producer_rule=producer, producer_op=operation,
                                   consumer_rule=rid, consumer_run=window['run'],
                                   consumer_ordinal=match['ordinal'], atom=atom_id))
     consumer_history = [e for e in history['events'] if e['entry'][0] in consumers]
