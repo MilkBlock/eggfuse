@@ -74,16 +74,23 @@ def main():
     initial,completed,q,role,mix=arrays;indices=np.array(indices,np.int32);families=np.array(families,np.int32);novels=np.array(novels,bool)
     with np.load(args.model) as saved:
         w=saved['w'];coef=saved['coef'];prototypes=saved['prototypes'];pf=saved['prototype_families'];stop_coef=saved['stop_coef'] if 'stop_coef' in saved.files else None
+        correction=saved['correction_coef'] if 'correction_coef' in saved.files else None
+    if correction is not None and stop_coef is None:raise ValueError('correction requires Bake stop head')
     stop_wiring=pack_stop(stop_plans)
     if not mx.metal.is_available():raise RuntimeError('Metal required')
     mx.set_default_device(mx.gpu);gw,gc,gidx,gm,gq,gr=[mx.array(v) for v in (w,coef,indices,mix,q,role)]
     if stop_coef is not None:
         gs=mx.array(stop_coef);gstop=[mx.array(v) for v in stop_wiring]
+    if correction is not None:grc=mx.array(correction)
     def one(s):
         a=attachment(s,gidx,gm,mx);x=features(s,gq,a,gw,mx,gr);out=x@gc
         score=out[:,-1] if stop_coef is None else (mx.concatenate([x,stop_features(s,*gstop,mx)],axis=1)@gs)[:,0]
         emit=score>=.5
-        return mx.where(emit[:,None],s+out[:,:-1],s),emit
+        candidate=s+out[:,:-1]
+        if correction is not None:
+            ca=attachment(candidate,gidx,gm,mx);cx=features(candidate,gq,ca,gw,mx,gr)
+            candidate=candidate+mx.concatenate([cx,stop_features(candidate,*gstop,mx)],axis=1)@grc
+        return mx.where(emit[:,None],candidate,s),emit
     # Separate oracle diagnostic: the same request on its true completed state.
     oracle,oracle_emit=mx.compile(one)(mx.array(completed));mx.eval(oracle,oracle_emit)
     print(json.dumps(dict(oracle_false_reemissions=int(np.array(oracle_emit).sum()),cases=len(records))),flush=True)
@@ -100,7 +107,11 @@ def main():
         a=attachment(reference,indices,mix,np);x=features(reference,q,a,w,np,role);out=x@coef
         score=out[:,-1] if stop_coef is None else (np.concatenate([x,stop_features(reference,*stop_wiring,np)],axis=1)@stop_coef)[:,0]
         emit=score>=.5
-        reference=np.where(emit[:,None],reference+out[:,:-1],reference);reference_emissions.append(emit)
+        candidate=reference+out[:,:-1]
+        if correction is not None:
+            ca=attachment(candidate,indices,mix,np);cx=features(candidate,q,ca,w,np,role)
+            candidate=candidate+np.concatenate([cx,stop_features(candidate,*stop_wiring,np)],axis=1)@correction
+        reference=np.where(emit[:,None],candidate,reference);reference_emissions.append(emit)
     numeric=numerical_audit(final,reference,emissions,np.array(reference_emissions))
     if not np.isfinite(final).all():raise ValueError('nonfinite recurrent state')
     ambiguous=np.zeros(len(final),bool);invalid_decode=np.zeros(len(final),bool);dp=prototypes.astype(np.float64)
@@ -112,6 +123,7 @@ def main():
     correct=(selected==np.array(expected))&~ambiguous&~invalid_decode
     stopped=~emissions[-1]
     result=dict(scope='necessary fixed-binding local stop probe, not ruleset saturation',manifest_sha256=metadata['manifest_sha256'],model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),numerical_audit=numeric,decoder_f64_disagreements=int(invalid_decode.sum()),stop_feature_version=metadata.get('stop_feature_version'),rounds=args.rounds,cases=len(records),teacher_idempotent_cases=sum(idempotent),oracle_completed_state_false_reemissions=int(np.array(oracle_emit).sum()),free_rollout=dict(emissions_per_round=emissions.sum(1).tolist(),final_exact_catalog_target=int(correct.sum()),final_ambiguous=int(ambiguous.sum()),stopped_at_final_round=int(stopped.sum()),exact_target_and_stopped=int((correct&stopped).sum()),never_emitted_but_initially_novel=int((~emissions.any(0)&novels).sum()),final_body_rmse=float(np.sqrt(np.mean((final[:,:D]-completed[:,:D])**2)))),intermediate_cpu_reads=0,teacher_state_supplied_between_rounds=False,limitations=['Only repetition of the same fixed binding; not full successor or ruleset closure','Oracle-state test is separate and does not correct the free rollout','Request roles and port wiring are static for the original binding','Catalog includes held-out states and does not prove live identity or visibility','No lifetime, ownership-transfer or global novelty proof'])
+    result['correction']=metadata.get('correction')
     body_mse=np.mean((final[:,:D]-completed[:,:D])**2,axis=1)
     result['failure_diagnostics']=[dict(input_identity=r['identity'],family=r['family'],consumer=r['sample']['consumer'],observations=r['observations'],emissions=emissions[:,i].tolist(),exact_catalog_target=bool(correct[i]),body_rmse=float(np.sqrt(body_mse[i]))) for i,r in enumerate(records) if not stopped[i]]
     result['body_error_summary']=dict(median_rmse=float(np.median(np.sqrt(body_mse))),max_rmse=float(np.sqrt(body_mse.max())),active_requests_squared_error_fraction=float(body_mse[~stopped].sum()/max(float(body_mse.sum()),1e-30)))
