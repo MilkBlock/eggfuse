@@ -174,3 +174,31 @@ its eligibility check and is a diagnostic, not a zero-overhead subtraction.
 Off-CPU time and event residence are not pure synchronization costs. The measured
 process CPU increase prevents attributing this slowdown solely to waits. Mean
 process cores stayed near 1.8; four-worker saturation is still unproven.
+
+## Source-instance handoff
+
+The following change keeps the incoming `Vec<Binding>` as the source owner
+through the worker write. Its original value allocation moves to the existing
+write task; its Cursor token and query receipts stay in the instance. Once the
+write owners restore source order, completion zips the tasks with those same
+instances. This deletes both the optional query-context vector and the sparse
+`(ordinal, origin)` vector, including their packing and later alignment scans.
+There is no new binding copy or consumer list.
+
+The tradeoff is a longer lifetime for the incoming instance array. The new
+`retained_source_bytes` counter charges its cumulative capacity during worker
+execution; this is existing storage, not newly allocated or peak memory.
+`origin_token_bytes` now reports zero for the deleted side array. Necessary
+Cursor storage in the instance and original source arena still exists.
+
+The scalar-write proof and Run boundaries are unchanged. Speculative failure
+still returns the untouched input batch before any values or tokens move. The
+existing selected-Cursor, partial-error and query-receipt tests cover the new
+handoff; no performance conclusion follows just from removing the vectors.
+
+`source_batch.py ACCEPTED TARGET OUTPUT` freezes an ordinary candidate, reuses
+the immutable `23d55e65` ordinary control, and checks work counts and accepted
+semantics. Run it under a compute lease, then run the original quick harness
+under one timing lease (5 sum-bits and 3 Raytrace samples; all control first).
+It also compares coverage with `2d7ac486`, so a lower counter caused by losing
+continuations cannot count as a successful removal.

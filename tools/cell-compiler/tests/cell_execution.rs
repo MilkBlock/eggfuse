@@ -631,7 +631,8 @@ fn selected_cursors_continue_through_worker_writes_and_source_ordered_publicatio
             } else {
                 assert!(counts["inherited_candidates"].as_u64().unwrap() >= 128, "{counts}");
                 assert!(counts["invalidated"].as_u64().unwrap() > 0);
-                assert!(counts["origin_token_bytes"].as_u64().unwrap() > 0);
+                assert_eq!(counts["origin_token_bytes"], 0);
+                assert!(counts["retained_source_bytes"].as_u64().unwrap() > 0);
             }
             for key in ["steps_executed", "resumed_steps", "completed_steps", "max_chain"] {
                 assert_eq!(report["stage_spine"]["stats"][key], control.report()["stage_spine"]["stats"][key], "{key}");

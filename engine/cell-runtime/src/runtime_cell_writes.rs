@@ -84,19 +84,17 @@ impl Executor {
         counts.direct_batches += u64::from(direct);
         counts.candidates += rows.len() as u64;
         let clock = Instant::now();
-        let mut contexts = rows
-            .iter()
-            .any(|b| !matches!(b.known, QueryFacts::None))
-            .then(|| Vec::with_capacity(rows.len()));
         let mut tasks = Vec::with_capacity(rows.len());
-        // Only tokens cross this boundary; their original Cursors and histories
-        // stay in sealed_cursors. Root-only batches allocate no extra container.
-        let mut origins = Vec::new();
+        // Keep the incoming instances as their source owners. Only the original
+        // value storage moves to the write owner; Cursor tokens and query
+        // receipts stay in place instead of being repacked into side arrays.
+        let mut inherited = 0;
         let mut projections = prepared.into_iter();
         let template = self.graph.program.rules[rid].template;
-        for (ordinal, b) in rows.into_iter().enumerate() {
+        for (ordinal, b) in rows.iter_mut().enumerate() {
             if b.direct.is_some() {
-                self.graph.observe_saturated_apply(rid, &b, false);
+                inherited += 1;
+                self.graph.observe_saturated_apply(rid, b, false);
             }
             #[cfg(feature = "slot-transfer-audit")]
             crate::transfer_audit::rhs(rid);
@@ -112,31 +110,19 @@ impl Executor {
                 projections.next().unwrap().unwrap()
             };
             #[allow(unused_mut)]
-            let mut task = WriteTask::new(b.values, key, value, destination, ordinal);
-            task.parent = b.parent;
+            let mut task = WriteTask::new(std::mem::take(&mut b.values), key, value, destination, ordinal);
+            task.parent = b.parent.take();
             #[cfg(feature = "slot-transfer-audit")]
             {
                 task.source = crate::transfer_audit::suspend_source();
-            }
-            if let Some(contexts) = &mut contexts {
-                contexts.push(b.known);
-            }
-            if let Some(origin) = b.direct {
-                origins.push((ordinal, origin));
             }
             tasks.push(task);
         }
         let counts = &mut self.cell_execution.as_mut().unwrap().writes;
         counts.source_completion_ns += clock.elapsed().as_nanos() as u64;
-        counts.temporary_bytes += (tasks.capacity() * std::mem::size_of::<WriteTask>()
-            + origins.capacity() * std::mem::size_of::<(usize, crate::stage_spine::DirectOrigin)>()
-            + contexts
-                .as_ref()
-                .map_or(0, |v| v.capacity() * std::mem::size_of::<QueryFacts>()))
-            as u64;
-        counts.inherited_candidates += origins.len() as u64;
-        counts.origin_token_bytes += (origins.capacity()
-            * std::mem::size_of::<(usize, crate::stage_spine::DirectOrigin)>()) as u64;
+        counts.temporary_bytes += (tasks.capacity() * std::mem::size_of::<WriteTask>()) as u64;
+        counts.inherited_candidates += inherited;
+        counts.retained_source_bytes += (rows.capacity() * std::mem::size_of::<Binding>()) as u64;
         self.graph.write_cells(
             rid,
             &mut tasks,
@@ -147,12 +133,11 @@ impl Executor {
         let clock = Instant::now();
         // Only source completion/publication remains here. The actual values,
         // decoded rows and final writer slots have already been installed.
-        let mut contexts = contexts.into_iter().flatten();
-        let mut origins = origins.into_iter().peekable();
-        for task in tasks {
-            let known = contexts.next().unwrap_or_default();
-            let step = if origins.peek().is_some_and(|(ordinal, _)| *ordinal == task.ordinal) {
-                let (_, origin) = origins.next().unwrap();
+        debug_assert_eq!(tasks.len(), rows.len());
+        for (ordinal, (task, b)) in tasks.into_iter().zip(rows).enumerate() {
+            debug_assert_eq!(task.ordinal, ordinal, "write owners restore source order");
+            let known = b.known;
+            let step = if let Some(origin) = b.direct {
                 // Same selected cursor as start_cell_execution, consumed once
                 // at source completion. No input-key search or binding rebuild.
                 self.stage_spine.begin_step(&self.graph.program, rid, &Default::default(),
@@ -192,7 +177,6 @@ impl Executor {
                 )?;
             }
         }
-        debug_assert!(origins.next().is_none());
         self.cell_execution
             .as_mut()
             .unwrap()
