@@ -65,6 +65,15 @@ impl Plan {
     pub(crate) fn entry_operations(&self) -> impl Iterator<Item=usize> + '_ {
         self.prefix.iter().filter(|s|s.owner_entry).map(|s|s.operation)
     }
+    pub(crate) fn require_owner_results(&mut self) {
+        // Observation can be enabled after planning, before any Run. Select
+        // single-result preparation there; never speculate and reject every
+        // instance merely because its shared layout lacks the new demands.
+        if !self.owner_entries {
+            self.prefix.clear();
+            self.units=None;
+        }
+    }
     pub(crate) fn prepare_units(&self, instance: &mut Instance,
         reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         counts: &mut super::super::unit_prepare::Counts) {
@@ -164,10 +173,7 @@ impl Graph {
         assert!(!steps.is_empty(), "prepared prefix has completed steps");
         self.stats.constructor_prefix_checks += 1;
         let mut checks = 0;
-        // Training can be enabled after execution planning but before Run one.
-        // Such a late demand cannot use witnesses the worker did not retain.
-        let valid = (!self.needs_ownership_results(rule) || plan.owner_entries)
-            && self.sealed_generation == Some(self.stats.unions) && steps.iter().all(|step| {
+        let valid = self.sealed_generation == Some(self.stats.unions) && steps.iter().all(|step| {
             checks += 1;
             self.constructor_prefix_table_ready(step.table)
         });

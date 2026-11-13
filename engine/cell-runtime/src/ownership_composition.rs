@@ -681,6 +681,7 @@ impl Graph {
         }
         m.composition.catalog_trace = Some(Box::new(CatalogTrace { max_frames, ..Default::default() }));
         m.trace_barriers();
+        self.reconcile_ownership_preparation();
         Ok(())
     }
     pub fn ownership_catalog_trace(&self) -> Result<J> {
@@ -735,6 +736,7 @@ impl Graph {
             ..Training::default()
         });
         m.trace_barriers();
+        self.reconcile_ownership_preparation();
         Ok(())
     }
     pub fn ownership_fragment_profile(&self) -> Result<J> {

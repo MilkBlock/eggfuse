@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 import runpy
+import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -13,7 +14,7 @@ def git(checkout, *args):
     return subprocess.check_output(['git', '-C', str(checkout), *args], text=True).strip()
 
 
-def run(accepted, target, control_checkout, output, learned_program=None):
+def run(accepted, target, control_checkout, output, learned_program=None, reuse_control=None):
     lease = runpy.run_path(str(ROOT / 'tools/local_jobs.py'))['current_lease']()
     assert __debug__ and lease and lease['kind'] == 'compute'
     assert not git(ROOT, 'status', '--porcelain')
@@ -35,6 +36,19 @@ def run(accepted, target, control_checkout, output, learned_program=None):
                   commits=commits, lanes={})
     for name, checkout in [('control', control_checkout), ('candidate', ROOT)]:
         lane = output / name
+        if name == 'control' and reuse_control is not None:
+            prior = json.loads((reuse_control / 'work.json').read_text())
+            assert prior['commits']['control'] == commits['control']
+            sha = runpy.run_path(str(ROOT / 'benchmarks/cell-bake-full-merge/check.py'))['sha']
+            assert sha(reuse_control / 'control/runtime') == prior['lanes']['control']['build']['runtime_sha256']
+            old_config = json.loads((reuse_control / 'config/manifest.json').read_text())
+            assert old_config['lanes'] == manifest['lanes']
+            if learned_program is not None:
+                assert sha(learned_program) == prior['learned_validation']['program_sha256']
+            shutil.copytree(reuse_control / 'control', lane)
+            result['lanes']['control'] = prior['lanes']['control']
+            result['reused_control'] = str(reuse_control)
+            continue
         lane.mkdir()
         build = freeze(checkout, target, lane / 'runtime', lane / 'build.log',
                        'cell-absorption,view-ports,parallel-publication')
@@ -105,4 +119,6 @@ if __name__ == '__main__':
         parser.add_argument(name, type=Path)
     parser.add_argument('--learned-program', type=Path,
                         help='also audit an unchanged saved catalog; outside native contract and timing')
+    parser.add_argument('--reuse-control', type=Path,
+                        help='reuse a frozen, validated control from the identical source commit and inputs')
     run(**{k: v.resolve() if v is not None else None for k, v in vars(parser.parse_args()).items()})

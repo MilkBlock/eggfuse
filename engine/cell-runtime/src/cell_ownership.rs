@@ -415,6 +415,15 @@ impl Graph {
             self.program.cell_ownership.composition.result_rules[rid]
                 || m.composition.training.is_some() || m.composition.catalog_trace.is_some())
     }
+    pub(crate) fn reconcile_ownership_preparation(&mut self) {
+        #[cfg(feature="sparse-cells")]
+        for rid in 0..self.program.executions.len() {
+            if self.needs_ownership_results(rid)
+                && let Some(plan)=&mut self.program.executions[rid].constructor {
+                plan.require_owner_results();
+            }
+        }
+    }
     pub(super) fn ownership_settled(&self) -> bool {
         self.ownership.as_ref().is_none_or(|m| m.pending.is_empty())
     }
@@ -454,6 +463,7 @@ impl Graph {
             keep_barrier_history:false,
             barrier_history_start:0,
         });
+        self.reconcile_ownership_preparation();
         // Import is already settled. Adopt existing covered bodies, rather than
         // limiting ownership to rows born after activation.
         let facts = (0..self.program.tables.len())

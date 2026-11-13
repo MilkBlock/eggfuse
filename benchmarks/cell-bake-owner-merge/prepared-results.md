@@ -32,14 +32,18 @@ result-transfer counters. Entry joins and prefix counts alone are not speedups.
 Run visibility, pending completion, table readiness and the sealed union epoch
 remain authoritative. All checks precede composition writes. An invalid prefix
 uses the existing fallback, preserving completed scalar work and clearing
-speculative Eq slots. Enabling training after execution planning invalidates a
-prefix whose compiled layout did not retain the newly required evidence.
+speculative Eq slots. Enabling ownership, training or catalog tracing reconciles
+the compiled plans at configuration time. If a previously compiled prefix did
+not retain the newly required witnesses, that rule selects existing single-result
+preparation before the workers run. Ordinary prefixes pay no per-instance check
+for this configuration change, and late observation does not speculate/reject
+the same incompatible prefix repeatedly.
 
 Tests compare exact Run snapshots, ordered bindings and final states for one
 and two reused foreign results, canonical ownership and stable ports, and one
 and four workers. Composition writes/joins and baked hits must match serial
 execution. Separate tests check union-epoch invalidation before any composition
-write and late training. These are standalone Cell CPU tests. Jobs 266–267 pass
+write and late training/tracing. These are standalone Cell CPU tests. Jobs 266–267 pass
 112 integration tests, 215 runtime tests and no-default compilation after fixing
 the optional execution-plan lookup for the existing synthetic EffectPlan test.
 Job 256 also passes all six work-credit tests, including the v8 required counter.
@@ -56,4 +60,22 @@ eggfuse-job run --kind compute -- python3 benchmarks/cell-bake-owner-merge/owner
 eggfuse-job run --kind timing -- python3 benchmarks/raytrace-parallel/quick.py OUTPUT/control/checked OUTPUT/candidate/checked OUTPUT/timing OUTPUT/timing.json
 ```
 
-Measured work and timing will be recorded after both binaries pass validation.
+The first version (`0a58f12b`) checked that configuration condition at every
+prefix seal. Its ordinary work counters were identical to control, but job 272
+recorded sum-bits 21.811→23.625 ms (+8.32%) and Raytrace 4.742334→4.811298 s
+(+1.45%). This did not pass the speed gate. The grouped trial cannot attribute
+all of that difference to the added check; it motivated removing the unnecessary
+hot-path work before a new trial.
+
+The saved learned catalog has no result-entry joins in these executions. It
+does exercise restored preparation on other Entry-sensitive rules: 492→2,540
+prefix constructor operations, 8,832→6,784 composition Entry reads, and unchanged
+1,099 baked hits. Generic lookups increase 14,506→14,962; worker result capacity
+grows 1,248→39,200 cumulative allocated bytes, and buffer moves 48→876. Job 274's
+separate learned-catalog diagnostic records 21.033→20.263 ms (-3.66%). Seven
+samples per binary, one warmup each, all control then all candidate; no native
+acceptance or significance claim. These figures do not establish that retaining
+the extra buffers always pays off. Actual result-Entry retention remains covered
+by the short multi-result tests; its workload coverage must not be invented.
+
+The final configuration-only adjustment and its fresh trial are recorded below.

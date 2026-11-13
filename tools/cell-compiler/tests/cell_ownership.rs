@@ -2052,23 +2052,29 @@ fn baked_result_entry_survives_constructor_preparation() {
 }
 
 #[test]
-fn late_training_cannot_consume_an_uncaptured_prefix_result() {
+fn late_observation_selects_captured_results_before_worker_execution() {
     let source="(datatype E (N i64) (Tick E) (F E) (G E) (H E))
         (ruleset a) (ruleset b)
         (rule ((= x (N n))) ((F x)) :ruleset a)
         (rule ((Tick x)) ((H (G (F x)))) :ruleset b)
         (Tick (N 0)) (Tick (N 1)) (run a 1) (run b 1)";
     let p=raw_program(source);
+    for trace in [false,true] {
+    let enable=|g:&mut Graph|if trace {g.trace_ownership_catalog(4)}else{g.train_ownership_fragments()};
+    let evidence=|g:&Graph|if trace {g.ownership_catalog_trace()}else{g.ownership_fragment_profile()};
     let mut control=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),true);
-    control.graph.train_ownership_fragments().unwrap();control.execute().unwrap();
-    let mut candidate=Executor::new(Graph::new_with_cell_ownership(p).unwrap(),true);
+    enable(&mut control.graph).unwrap();control.execute().unwrap();
+    let mut candidate=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),true);
     candidate.use_query_workers(2,1).unwrap();candidate.use_cell_execution(1).unwrap();
-    candidate.graph.train_ownership_fragments().unwrap();candidate.execute().unwrap();
+    enable(&mut candidate.graph).unwrap();candidate.execute().unwrap();
     assert_eq!(control.snapshots,candidate.snapshots);
     assert_eq!(control.binding_audit,candidate.binding_audit);
-    assert_eq!(control.graph.ownership_fragment_profile().unwrap(),candidate.graph.ownership_fragment_profile().unwrap());
-    assert!(candidate.graph.stats.constructor_prefix_rejected>0);
+    assert_eq!(evidence(&control.graph).unwrap(),evidence(&candidate.graph).unwrap());
+    assert!(candidate.graph.stats.constructor_prepared_inputs>0);
+    assert_eq!(candidate.graph.stats.constructor_prefix_rejected,0);
+    assert_eq!(candidate.graph.stats.constructor_prefix_operations,0);
     assert_eq!(candidate.graph.stats.constructor_prefix_entry_reads,0);
+    }
 }
 
 #[test]
