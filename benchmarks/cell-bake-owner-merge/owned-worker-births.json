@@ -1,0 +1,403 @@
+{
+  "scope": "actual standalone Cell CPU, canonical ownership, four workers; not upstream egglog or CPU utilization",
+  "commits": {
+    "control": "62c5f9848f262a81cec8a7acfbba095de533dfa5",
+    "candidate": "cf65e4b13c60a16150950da4e3d8813a27b81059"
+  },
+  "implementation_commits": [
+    "1a6e9c84",
+    "cf65e4b1"
+  ],
+  "jobs": {
+    "integration": 423,
+    "runtime_storage_and_compile": 426,
+    "pending_owner_key_regression": 434,
+    "baseline_exports": 428,
+    "recover_saved_native_acceptance": 432,
+    "candidate_validation": 436,
+    "timing": 438
+  },
+  "validation": {
+    "control": {
+      "workloads": {
+        "sum": {
+          "exact_state_runs_effects": true,
+          "runs": 1428,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+        },
+        "ray": {
+          "exact_state_runs_effects": true,
+          "runs": 16883,
+          "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+        }
+      },
+      "native_sum": "pass",
+      "runtime_sha256": "6f34f0d3671ac2aa122cd03ab58bcffafa5bf5479435c3769d56b0492ca18957"
+    },
+    "candidate": {
+      "workloads": {
+        "sum": {
+          "exact_state_runs_effects": true,
+          "runs": 1428,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+        },
+        "ray": {
+          "exact_state_runs_effects": true,
+          "runs": 16883,
+          "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+        }
+      },
+      "native_sum": "pass",
+      "runtime_sha256": "1088b3784f29dcadcf76c0930ab2a659691b95e0a826aa96d807d81b3f1f0d5b"
+    }
+  },
+  "work": {
+    "control": {
+      "sum": {
+        "key_queries": 14653,
+        "births": {
+          "local_births": 0,
+          "local_reuses": 0,
+          "worker_operations": 0,
+          "root_jobs": 0,
+          "slot_leases": 0,
+          "slot_reattachments": 0,
+          "source_operand_reads": 0,
+          "operand_reads": 0,
+          "directory_checks": 0,
+          "owner_result_candidates": 0,
+          "owner_result_bytes": 0
+        },
+        "scheduler": {
+          "jobs": 0,
+          "batches": 0,
+          "queue_bytes": 0,
+          "event_bytes": 0
+        },
+        "ownership": {
+          "owned_births": 3611,
+          "owned_live": 2895,
+          "signal_bindings_created": 8909,
+          "composition_result_writes": 0,
+          "composition_result_joins": 0,
+          "composition_baked_hits": 0
+        }
+      },
+      "ray": {
+        "key_queries": 4332972,
+        "births": {
+          "local_births": 0,
+          "local_reuses": 0,
+          "worker_operations": 0,
+          "root_jobs": 0,
+          "slot_leases": 0,
+          "slot_reattachments": 0,
+          "source_operand_reads": 0,
+          "operand_reads": 0,
+          "directory_checks": 0,
+          "owner_result_candidates": 0,
+          "owner_result_bytes": 0
+        },
+        "scheduler": {
+          "jobs": 0,
+          "batches": 0,
+          "queue_bytes": 0,
+          "event_bytes": 0
+        },
+        "ownership": {
+          "owned_births": 820311,
+          "owned_live": 658670,
+          "signal_bindings_created": 2151665,
+          "composition_result_writes": 0,
+          "composition_result_joins": 0,
+          "composition_baked_hits": 0
+        }
+      },
+      "learned": {
+        "key_queries": 14373,
+        "births": {
+          "local_births": 0,
+          "local_reuses": 0,
+          "worker_operations": 0,
+          "root_jobs": 0,
+          "slot_leases": 0,
+          "slot_reattachments": 0,
+          "source_operand_reads": 0,
+          "operand_reads": 0,
+          "directory_checks": 0,
+          "owner_result_candidates": 0,
+          "owner_result_bytes": 0
+        },
+        "scheduler": {
+          "jobs": 0,
+          "batches": 0,
+          "queue_bytes": 0,
+          "event_bytes": 0
+        },
+        "ownership": {
+          "owned_births": 3611,
+          "owned_live": 2895,
+          "signal_bindings_created": 8108,
+          "composition_result_writes": 1666,
+          "composition_result_joins": 49,
+          "composition_baked_hits": 709
+        }
+      }
+    },
+    "candidate": {
+      "sum": {
+        "key_queries": 12984,
+        "births": {
+          "local_births": 1563,
+          "local_reuses": 106,
+          "worker_operations": 1502,
+          "root_jobs": 1101,
+          "slot_leases": 1101,
+          "slot_reattachments": 1101,
+          "source_operand_reads": 3557,
+          "operand_reads": 1037,
+          "directory_checks": 15891,
+          "owner_result_candidates": 0,
+          "owner_result_bytes": 0
+        },
+        "scheduler": {
+          "jobs": 1101,
+          "batches": 135,
+          "queue_bytes": 2688896,
+          "event_bytes": 1053904
+        },
+        "ownership": {
+          "owned_births": 3611,
+          "owned_live": 2895,
+          "signal_bindings_created": 8909,
+          "composition_result_writes": 0,
+          "composition_result_joins": 0,
+          "composition_baked_hits": 0
+        }
+      },
+      "ray": {
+        "key_queries": 3974644,
+        "births": {
+          "local_births": 352978,
+          "local_reuses": 5350,
+          "worker_operations": 329913,
+          "root_jobs": 203573,
+          "slot_leases": 216383,
+          "slot_reattachments": 216383,
+          "source_operand_reads": 561481,
+          "operand_reads": 266775,
+          "directory_checks": 3152891,
+          "owner_result_candidates": 0,
+          "owner_result_bytes": 0
+        },
+        "scheduler": {
+          "jobs": 216383,
+          "batches": 6554,
+          "queue_bytes": 200400456,
+          "event_bytes": 201990352
+        },
+        "ownership": {
+          "owned_births": 820311,
+          "owned_live": 658670,
+          "signal_bindings_created": 2151665,
+          "composition_result_writes": 0,
+          "composition_result_joins": 0,
+          "composition_baked_hits": 0
+        }
+      },
+      "learned": {
+        "key_queries": 12716,
+        "births": {
+          "local_births": 1563,
+          "local_reuses": 106,
+          "worker_operations": 1502,
+          "root_jobs": 1101,
+          "slot_leases": 1101,
+          "slot_reattachments": 1101,
+          "source_operand_reads": 3557,
+          "operand_reads": 1050,
+          "directory_checks": 16020,
+          "owner_result_candidates": 4,
+          "owner_result_bytes": 256
+        },
+        "scheduler": {
+          "jobs": 1101,
+          "batches": 135,
+          "queue_bytes": 2688896,
+          "event_bytes": 1073144
+        },
+        "ownership": {
+          "owned_births": 3611,
+          "owned_live": 2895,
+          "signal_bindings_created": 8108,
+          "composition_result_writes": 1666,
+          "composition_result_joins": 48,
+          "composition_baked_hits": 709
+        }
+      }
+    }
+  },
+  "timing": {
+    "sum": {
+      "control": {
+        "medians": {
+          "inference_seconds": 0.027117,
+          "process_wall_seconds": 0.15207512502092868,
+          "load_seconds": 0.069141125,
+          "setup_seconds": 0.014233708,
+          "export_seconds": 0.005785333,
+          "report_seconds": 0.009286875,
+          "process_unattributed_seconds": 0.03712216596625892,
+          "process_after_report_residual_seconds": 0.02754262396625892
+        },
+        "inference_samples": [
+          0.02685525,
+          0.027117,
+          0.027885417,
+          0.026569375,
+          0.027898667
+        ],
+        "runtime_sha256": "6f34f0d3671ac2aa122cd03ab58bcffafa5bf5479435c3769d56b0492ca18957",
+        "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+        "raw_samples_sha256": "508c0d35382103529b8776e0609e88ca09c3e76b4dc28bc9c50cac9d59f6288b"
+      },
+      "candidate": {
+        "medians": {
+          "inference_seconds": 0.03347925,
+          "process_wall_seconds": 0.15623120800592005,
+          "load_seconds": 0.067000416,
+          "setup_seconds": 0.014001834,
+          "export_seconds": 0.005824958,
+          "report_seconds": 0.00847125,
+          "process_unattributed_seconds": 0.037054624043650355,
+          "process_after_report_residual_seconds": 0.028853624043650355
+        },
+        "inference_samples": [
+          0.03347925,
+          0.032095958,
+          0.035063,
+          0.034639334,
+          0.033374667
+        ],
+        "runtime_sha256": "1088b3784f29dcadcf76c0930ab2a659691b95e0a826aa96d807d81b3f1f0d5b",
+        "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+        "raw_samples_sha256": "16c554aec2f10965858e5df2c4773467ac6e9d0a3f41f3aa7a778d9b020b643d"
+      },
+      "inference_change_percent": 23.46221927204337
+    },
+    "ray": {
+      "control": {
+        "medians": {
+          "inference_seconds": 5.580270042,
+          "process_wall_seconds": 8.122660166991409,
+          "load_seconds": 0.377802625,
+          "setup_seconds": 0.04741175,
+          "export_seconds": 1.243890416,
+          "report_seconds": 0.403633792,
+          "process_unattributed_seconds": 0.873458042991409,
+          "process_after_report_residual_seconds": 0.4778370439645718
+        },
+        "inference_samples": [
+          5.580270042,
+          5.57952925,
+          5.58257375
+        ],
+        "runtime_sha256": "6f34f0d3671ac2aa122cd03ab58bcffafa5bf5479435c3769d56b0492ca18957",
+        "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+        "raw_samples_sha256": "d1d4172f767aea09c4e58ec32578ca7888e12c0794eb6ebeafbc0f6a77c3cea4"
+      },
+      "candidate": {
+        "medians": {
+          "inference_seconds": 6.0813015,
+          "process_wall_seconds": 8.627325415960513,
+          "load_seconds": 0.374182125,
+          "setup_seconds": 0.047007584,
+          "export_seconds": 1.222716125,
+          "report_seconds": 0.4210565,
+          "process_unattributed_seconds": 0.8874984170183069,
+          "process_after_report_residual_seconds": 0.4664419170183069
+        },
+        "inference_samples": [
+          6.05959675,
+          6.0813015,
+          6.142204541
+        ],
+        "runtime_sha256": "1088b3784f29dcadcf76c0930ab2a659691b95e0a826aa96d807d81b3f1f0d5b",
+        "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+        "raw_samples_sha256": "91cb113cb84b3968045edb675e74becdc75a44b2289a67435245520de0ec0e4e"
+      },
+      "inference_change_percent": 8.978623869973635
+    },
+    "learned": {
+      "control": {
+        "medians": {
+          "inference_seconds": 0.027197334,
+          "process_wall_seconds": 0.18245516601018608,
+          "load_seconds": 0.100688708,
+          "setup_seconds": 0.012369917,
+          "export_seconds": 0.005356125,
+          "report_seconds": 0.009045583,
+          "process_unattributed_seconds": 0.036178833016722256,
+          "process_after_report_residual_seconds": 0.027228625016722255
+        },
+        "inference_samples": [
+          0.027197334,
+          0.027100916,
+          0.027852875,
+          0.027397834,
+          0.026241709
+        ],
+        "runtime_sha256": "6f34f0d3671ac2aa122cd03ab58bcffafa5bf5479435c3769d56b0492ca18957",
+        "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+        "raw_samples_sha256": "4e8daee22b4837fdb2300a1ef78d7e5bdcccf842bf9799ca1a64814e359e285b"
+      },
+      "candidate": {
+        "medians": {
+          "inference_seconds": 0.035002167,
+          "process_wall_seconds": 0.19371495896484703,
+          "load_seconds": 0.101730875,
+          "setup_seconds": 0.013157,
+          "export_seconds": 0.005777917,
+          "report_seconds": 0.009293292,
+          "process_unattributed_seconds": 0.037809250964847024,
+          "process_after_report_residual_seconds": 0.028438833964847025
+        },
+        "inference_samples": [
+          0.036220167,
+          0.034947708,
+          0.034556166,
+          0.035002167,
+          0.035589042
+        ],
+        "runtime_sha256": "1088b3784f29dcadcf76c0930ab2a659691b95e0a826aa96d807d81b3f1f0d5b",
+        "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+        "raw_samples_sha256": "7c4ccefb396e9c3624a48ef7c0c77163a7d4773723f084c837f60f10fed7ea5b"
+      },
+      "inference_change_percent": 28.697051703670674
+    }
+  },
+  "timing_order": "whole control, optional previous experiment, then whole candidate; never interleaved",
+  "boundary_guards": 76,
+  "performance_adoption": "rejected; experimental branch only",
+  "artifacts": {
+    "work": "/Volumes/Extreme SSD/eggfuse-experiments/3063/cell-bake-refresh/owned-worker-births-checked",
+    "timing": "/Volumes/Extreme SSD/eggfuse-experiments/3063/cell-bake-refresh/owned-worker-births-timing"
+  },
+  "hashes": {
+    "work.json": "58ee01a378b7c563df8f7b2ad56d5bbe64f995c15afe8aeb71d61aa4e06a14c3",
+    "timing/result.json": "a9f814d45784e0a011e5b99beee8a5dc6b0843534fbde0e7df64273dab7e5795",
+    "control/sum/report.json": "4da58b615caf2d50d83ece8354f56f6a5550a166aab2eef6e45bef0d95a19eb5",
+    "control/ray/report.json": "a9917d14a7d252a3f11230bd1aa2e62624a257df48d0bab5b2f79cab65e537a8",
+    "control/learned/report.json": "64d0326cd99ff4fb996028a5e7ea1db813028a73a1200e7e998d834e30573c2e",
+    "candidate/sum/report.json": "ba6805eafbcdb67a668dd3d60945d49c097017a314e93954900c6bc607b49841",
+    "candidate/ray/report.json": "79fde6f1962b7eea4f1ccb748bcc52463dd405b132d61cc89ff9163c0b6b8075",
+    "candidate/learned/report.json": "e1fd350fc7ee320d525f167051a2f3bfee8938e623dcc2871a86b49bea33b66d"
+  },
+  "learned_validation": {
+    "scope": "unchanged saved Bake catalog; differential final state, Run summaries and effects; not native acceptance or timing",
+    "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+    "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "exact_state_runs_effects": true,
+    "runs": 1428
+  }
+}
