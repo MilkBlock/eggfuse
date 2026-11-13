@@ -1508,7 +1508,7 @@ fn compiled_constructor_witness_replaces_cross_stage_lookup() {
         (rule ((= x (N n))) ((Start x)) :ruleset a)
         (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
         (rule ((Pair s x)) ((Start x)) :ruleset c)
-        (N 1) (run a 1) (run b 1) (run c 1)");
+        (N 1) (N 2) (run a 1) (run b 1) (run c 1)");
     let mut g=Graph::new_with_local_congruence(p.clone()).unwrap();
     g.trace_ownership_catalog(16).unwrap();
     let mut control=Executor::new(g,true);control.execute().unwrap();
@@ -1528,7 +1528,9 @@ fn compiled_constructor_witness_replaces_cross_stage_lookup() {
         "compiled routes must remove a lookup, not only populate a catalog: {} probes, {} witnesses",
         candidate.graph.stats.constructor_cell_route_probes,candidate.graph.stats.constructor_cell_route_witnesses);
     assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
-    for delete in [false, true] {
+    assert!(candidate.graph.stats.constructor_cell_route_key_proved>0);
+    assert!(candidate.graph.stats.constructor_cell_route_key_fields_avoided>0);
+    for mutation in ["hide", "delete", "union"] {
         let mut plain=raw.clone();plain.as_object_mut().unwrap().remove("ownership_witnesses");
         plain.as_object_mut().unwrap().remove("sha256");
         plain["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&plain).into();
@@ -1539,12 +1541,17 @@ fn compiled_constructor_witness_replaces_cross_stage_lookup() {
             let table=e.graph.program.tables.iter().position(|t|t.name=="Start").unwrap();
             let witness=e.graph.witnesses(table)[0];
             let row=e.graph.row(witness).unwrap().unwrap();
-            e.graph.hide(table,&row.values[..row.values.len()-1],delete).unwrap();
+            if mutation=="union" {
+                let n=e.graph.program.tables.iter().position(|t|t.name=="N").unwrap();
+                let rows=e.graph.witnesses(n).iter().map(|&w|e.graph.row(w).unwrap().unwrap()).collect::<Vec<_>>();
+                e.graph.enqueue_union(rows[0].values.last().unwrap().clone(),rows[1].values.last().unwrap().clone()).unwrap();
+                e.graph.repair().unwrap();
+            } else {e.graph.hide(table,&row.values[..row.values.len()-1],mutation=="delete").unwrap();}
             e.graph.collect_garbage();
             e.execute().unwrap();
         }
-        assert_eq!(base.graph.export().unwrap(),actual.graph.export().unwrap(),"delete={delete}");
-        assert_eq!(base.snapshots,actual.snapshots,"delete={delete}");
+        assert_eq!(base.graph.export().unwrap(),actual.graph.export().unwrap(),"mutation={mutation}");
+        assert_eq!(base.snapshots,actual.snapshots,"mutation={mutation}");
     }
     raw["ownership_witnesses"]["recipes"][0]["frame_codes"][0]=json!(usize::MAX);
     raw.as_object_mut().unwrap().remove("sha256");
@@ -1580,4 +1587,30 @@ fn completed_parent_uses_local_values_when_constructor_is_foreign() {
             "an already stored scalar must discharge its parent even when Indexed is foreign");
         assert!(actual.graph.stats.completed_parent_detachments>0);
     }
+}
+
+#[test]
+#[cfg(feature="sparse-cells")]
+fn compiled_constructor_witness_preserves_existing_scalar_query_alias_elision() {
+    let p=program("(datatype E (N i64)) (N 7) (N 19) (ruleset r)
+        (rule ((= x (N n))) ((N n)) :ruleset r) (run r 1)");
+    let mut graph=Graph::new_with_local_congruence(p.clone()).unwrap();
+    graph.trace_ownership_catalog(16).unwrap();
+    let mut control=Executor::new(graph,true);control.execute().unwrap();
+    let trace=control.graph.ownership_catalog_trace().unwrap();
+    let mut raw=p.artifact.clone();
+    raw["ownership_witnesses"]=json!({"source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),
+        "recipes":trace["saturation"]["witness_recipes"]});
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let mut actual=Executor::new(Graph::new_with_local_congruence(Program::parse(raw).unwrap()).unwrap(),true);
+    actual.execute().unwrap();
+    assert_eq!(control.graph.export().unwrap(),actual.graph.export().unwrap());
+    assert_eq!(control.snapshots,actual.snapshots);
+    assert_eq!(control.binding_audit,actual.binding_audit);
+    // Query alias completion already removes this RHS; do not count it again
+    // as a new route optimization or force it through constructor dispatch.
+    assert_eq!(control.graph.stats.constructor_requests,0);
+    assert_eq!(actual.graph.stats.constructor_requests,0);
+    assert_eq!(actual.graph.stats.constructor_cell_route_key_proved,0);
 }

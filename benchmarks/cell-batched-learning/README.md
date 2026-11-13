@@ -779,3 +779,56 @@ in `stage-inherited/CASE`, and summarize with:
 python3 benchmarks/cell-batched-learning/stage_inherited_results.py \
   out/cell-batched-learning benchmarks/cell-batched-learning/stage-inherited-results.json
 ```
+
+### Shared wiring proves RHS keys without merging instance lifetimes
+
+Optional constructor-witness routes now compile a key proof from one successful
+immutable constructor query anchor. The proof follows Copy operations, forgets
+slots overwritten by other Lets, and checks every RHS key argument against the
+selected target's static ports. A scalar projection is identified by its exact
+source frame/operation/column, never by an observed value or its sort alone.
+Unproved routes continue through the existing exact-key path. The artifact cannot
+supply a trusted proof flag: the compiler derives it from source operations.
+
+At execution, the original route resolves the actual source and target instances.
+A proved route still checks source liveness/visibility, target liveness/visibility,
+operator identity, forwarding and pending dirty state. It reads the target's
+actual result column directly, before building RHS key arguments. No persistent
+bindings, nested instance tree or additional producer-consumer lists are added.
+The new proof flag fits the existing route target's padding on the measured target.
+Original source queries, delta ownership, effect order and result binding remain.
+This is not a permanent saturation certificate and does not skip unions or effects.
+
+| pass3 | key constructions removed | key fields not constructed | repeated target-field checks removed | source/proof checks | fallback after proof admission |
+|---|---:|---:|---:|---:|---:|
+| fact | 1 | 1 | 1 | 1 / 1 | 0 |
+| loopfact | 2 | 2 | 2 | 2 / 2 | 0 |
+| sum-bits | 15 | 15 | 15 | 15 / 15 | 0 |
+| dot-product | 47 | 82 | 82 | 48 / 48 | 1 |
+
+Total: 65 key constructions removed, with 100 key arguments not evaluated and
+100 repeated target-field comparisons removed. The 66 source checks and 66
+proof admissions are charged separately. Route probes, accepted routes and total
+port-key index lookups are unchanged from the preceding direct-witness experiment;
+its existing 300 avoided index lookups are not credited again. This remains a
+small work reduction with no speed claim. Final Graph bytes and exact lifecycle
+snapshots equal the current stage-inherited seed in every case: no runtime memory
+compression is attributable to this change. The default catalog is unchanged.
+
+Validation includes 50 Cell integration tests, source-copy/overwrite/scalar-identity
+proof tests, and default runtime compilation. The route integration fixture now
+checks an unexpected cross-stage union as well as hidden/deleted witnesses.
+The scalar alias fixture confirms that existing query completion already removes
+that RHS entirely; it must not be forced through this path or credited twice.
+All 2,652 saved Run graph/RHS/write checks plus terminal effects pass for the
+optional witness catalog. These checks use the standalone runtime contracts.
+
+Reproduce by rebuilding the existing examples, recording each
+`witness-direct/CASE/candidate.json` to `heap-key-proof.json` with
+`inherited-owners --port-domains-only`, then:
+
+```
+target/debug/examples/batch_cell_learning check-passive out/cell-batched-learning witness-direct
+python3 benchmarks/cell-batched-learning/key_proof_results.py out/cell-batched-learning \
+  benchmarks/cell-batched-learning/key-proof-results.json
+```

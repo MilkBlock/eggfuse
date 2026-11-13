@@ -204,6 +204,14 @@ pub struct Stats {
     pub constructor_cell_route_probes: u64,
     pub constructor_cell_route_witnesses: u64,
     pub constructor_cell_route_accepted: u64,
+    #[serde(default)]
+    pub constructor_cell_route_key_proved:u64,
+    #[serde(default)]
+    pub constructor_cell_route_source_checks:u64,
+    #[serde(default)]
+    pub constructor_cell_route_proof_admissions:u64,
+    #[serde(default)]
+    pub constructor_cell_route_key_fields_avoided:u64,
     pub constructor_prepared_checks: u64,
     #[serde(default)]
     pub constructor_prepared_fields: u64,
@@ -1918,6 +1926,20 @@ impl Graph {
         self.stats.constructor_prepared_key_fields_avoided += args.len() as u64;
         Ok(Some(point))
     }
+    /// Bake proved the key from a successful immutable query anchor and shared
+    /// ports. This proof survives equality growth, but never authorizes a dead,
+    /// hidden or currently dirty constructor. Return the actual stored result.
+    #[cfg(feature="sparse-cells")]
+    fn cell_witness_result(&mut self,table:usize,witness:FactRef)->Result<Option<Point>> {
+        self.stats.constructor_cell_route_proof_admissions+=1;
+        if !self.dirty_facts[table].is_empty() || self.receipt_forwards.contains_key(&Dependency::Fact(witness)) {return Ok(None);}
+        let Some(state)=self.cells.fact_state(witness).filter(|s|s.owned && !s.hidden) else {return Ok(None);};
+        let Some(stored)=self.stable_node(witness) else {return Ok(None);};
+        if self.dependency_table(Dependency::Fact(witness))!=Some(table) {return Ok(None);}
+        let width=self.program.tables[table].schema.len()-1;
+        let value=self.read_stable_column(stored,width)?;
+        Ok(Some(Point{value,hidden:false,epoch:state.epoch,witness:Dependency::Fact(witness)}))
+    }
     /// A prepared witness is evidence for this one source lookup, never an
     /// assigned Eq value. Invalid evidence uses the very same current key.
     pub(crate) fn lookup_prepared_constructor(&mut self, table: usize, key: &[Value],
@@ -1963,10 +1985,22 @@ impl Graph {
             self.rhs_frame_mut(cell).unwrap().values.insert(dst, point.value.clone());
             return Ok(point.value);
         }
-        let key = self.inline_arguments(cell, aa)?;
-        // A Cell route has no Run certificate: always check its actual key.
         #[cfg(feature = "sparse-cells")]
-        let direct = if witness.is_none() { self.cell_constructor_witness(cell, op) } else { None };
+        let route = if witness.is_none() { self.cell_constructor_witness(cell, op) } else { None };
+        #[cfg(feature = "sparse-cells")]
+        if let Some((target,true))=route && let Some(point)=self.cell_witness_result(t,target)? {
+            if let Some(receipt)=receipt {*receipt=Some(point.witness);}
+            if let Some(visible)=visible {*visible=true;}
+            self.stats.constructor_reused+=1;
+            self.stats.constructor_cell_route_accepted+=1;
+            self.stats.constructor_cell_route_key_proved+=1;
+            self.stats.constructor_cell_route_key_fields_avoided+=aa.len() as u64;
+            self.rhs_frame_mut(cell).unwrap().values.insert(dst,point.value.clone());
+            return Ok(point.value);
+        }
+        let key = self.inline_arguments(cell, aa)?;
+        #[cfg(feature = "sparse-cells")]
+        let direct=route.map(|(fact,_)|fact);
         #[cfg(not(feature = "sparse-cells"))]
         let direct = None;
         let accepted = self.stats.constructor_prepared_accepted;
