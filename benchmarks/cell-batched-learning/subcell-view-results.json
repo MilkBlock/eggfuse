@@ -1,0 +1,45 @@
+{
+  "scope": "offline typed child-view compilation from standalone Cell snapshots; no runtime takeover",
+  "layouts": 86,
+  "cases": [
+    {
+      "case": "fact",
+      "views": 65,
+      "selected_facts": 181,
+      "layouts": 24,
+      "cross_birth_epoch": 14,
+      "rejected_overlapping_occurrences": {}
+    },
+    {
+      "case": "loopfact",
+      "views": 71,
+      "selected_facts": 199,
+      "layouts": 27,
+      "cross_birth_epoch": 12,
+      "rejected_overlapping_occurrences": {}
+    },
+    {
+      "case": "sum-bits",
+      "views": 260,
+      "selected_facts": 720,
+      "layouts": 50,
+      "cross_birth_epoch": 48,
+      "rejected_overlapping_occurrences": {}
+    },
+    {
+      "case": "dot-product",
+      "views": 263,
+      "selected_facts": 753,
+      "layouts": 47,
+      "cross_birth_epoch": 43,
+      "rejected_overlapping_occurrences": {}
+    }
+  ],
+  "obligations": [
+    "successful Entry and delta ownership",
+    "current fact identity and visibility",
+    "original Run/effect ordering",
+    "generation and retirement",
+    "external users of exported ports"
+  ]
+}

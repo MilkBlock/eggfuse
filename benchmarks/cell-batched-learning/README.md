@@ -694,3 +694,38 @@ python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
 All 24 analysis tests pass, including alpha-renaming, operator and alias distinction,
 scalar-column distinction, hidden providers, and union roots that must not create
 static edges. No workloads, timing campaign or runtime semantics were changed.
+
+### Typed child-view lowering and batched layout sharing
+
+`subcell_views.py` lowers the saved paths into constructor-only child-view
+candidates. Each column is checked against the source table schema; an aliased Eq
+port must have one consistent sort. Cross-program layout identity includes table
+names, full schemas and alpha-renamed wiring, rather than program-local table IDs.
+The four samples share 86 layouts for 659 selected occurrences covering 1,853
+existing facts. Per-case selection remains 65/71/260/263 children. These are
+compiler candidates only, not a new runtime fact registry or completed takeover.
+
+Scalar columns are parameters projected from the original `(FactRef, column)`.
+They are not captured trace values, copied bindings, or assumed equal merely
+because their columns have the same sort. Eq parameters refer to existing
+component symbols. This distinction matters: an all-Eq-only admission would retain
+just 263 children covering 620 facts; it would reject valid reusable constructor
+layouts simply because their instances carry different scalar parameters.
+All selected operators in this batch pass constructor and schema validation.
+
+The generated artifact explicitly has `executable: false`: it still lacks Entry
+admission, visibility/generation validation and source Run scheduling proofs.
+All ports are exported conservatively, so no external-use information is lost.
+Before runtime integration, these occurrence addresses must be replaced by shared
+shape/frame-relative addressing where proved, without retaining this offline
+catalog as a second instance directory. No runtime memory or RHS saving is claimed.
+
+```
+python3 benchmarks/cell-batched-learning/subcell_views.py out/cell-batched-learning \
+  out/cell-batched-learning/typed-child-views.json \
+  benchmarks/cell-batched-learning/subcell-view-results.json
+```
+
+The existing Python discovery command passes 29 tests. New checks cover equivalent
+layouts under different table numbering, mutable-table rejection, column schema
+mismatch, conflicting Eq sorts, and projections onto the original scalar fields.
