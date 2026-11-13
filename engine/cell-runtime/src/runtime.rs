@@ -3341,6 +3341,8 @@ impl Executor {
             "semijoin":self.free_join.semijoin_report(),"projection_survey":survey,"entry_schedule":self.entry_schedule.report(),"free_join":self.free_join.stats,"sieve":self.sieve.report(),"neighbor_context":self.neighbor.report(&self.graph.program),
             "local_context":self.local_context.report(&self.graph.program),"stage_spine":spine,"key_lookup_calls":self.graph.key_lookup_calls.get(),
             "multi_stage":{"stats":self.continuation_stats,"witness_plan":self.graph.program.multi_stage.witness_report()},"known_results":self.graph.known_stats,"physical":{"range":self.range_index.as_ref().map(|r|&r.stats)}});
+        #[cfg(all(feature="cell-absorption",feature="parallel-residuals"))]
+        {report["query_domain_completion"]=self.query_indexes.completion_storage();}
         report["cell_execution"]=json!({"schema":"cell-execution-boundaries/v2",
                 "rules":self.graph.program.executions.len(),
                 "segments":self.graph.program.executions.iter().map(|p|p.segments.len()).sum::<usize>(),

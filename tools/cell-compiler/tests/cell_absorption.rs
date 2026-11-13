@@ -202,3 +202,38 @@ fn deletable_outputs_and_ordered_merges_have_no_absorption_proof() {
         assert_eq!(r["neighbor_context"]["absorption"]["stats"]["matches_absorbed"], 0);
     }
 }
+
+#[cfg(feature="parallel-residuals")]
+#[test]
+fn worker_bucket_completion_reuses_proofs_and_reopens_on_new_structure() {
+    let mut source=String::from(r#"
+        (datatype E (N i64) (Get E i64))
+        (function Cost (E) i64 :merge (min old new))
+        (ruleset copy) (ruleset twenty) (ruleset ten) (ruleset five) (ruleset late) (ruleset remove)
+        (rule ((= g (Get x i)) (= n (Cost x))) ((set (Cost g) n)) :ruleset copy)
+        (rule ((= x (N i))) ((set (Cost x) 20)) :ruleset twenty)
+        (rule ((= x (N i))) ((set (Cost x) 10)) :ruleset ten)
+        (rule ((= x (N i))) ((set (Cost x) 5)) :ruleset five)
+        (rule () ((Get (N 0) 9)) :ruleset late)
+        (rule () ((delete (Get (N 1) 0))) :ruleset remove)
+    "#);
+    for i in 0..32 {
+        source+=&format!("(set (Cost (N {i})) 30)\n");
+        for child in 0..3 {source+=&format!("(set (Cost (Get (N {i}) {child})) 1)\n");}
+    }
+    source+="(run-schedule (seq (run copy) (run twenty) (run copy) (run ten) (run copy) (run late) (run copy) (run remove) (run five) (run copy)))\n(check (= (Cost (Get (N 0) 9)) 5))";
+    egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+    let before=run(&source,true,0);
+    for workers in [1,2,4] {
+        let after=run(&source,true,workers);
+        assert_eq!(before.snapshots,after.snapshots,"all Run states, visibility and reservations");
+        assert_eq!(before.binding_audit,after.binding_audit,"required writes and source winner order");
+        let a=before.report();let b=after.report();
+        assert_eq!(a["neighbor_context"]["absorption"]["stats"]["matches_absorbed"],b["neighbor_context"]["absorption"]["stats"]["matches_absorbed"]);
+        let work=&b["neighbor_context"]["absorption"]["stats"]["worker"];
+        if std::env::var("CELL_CPU_HASH_BITS").ok().as_deref()!=Some("0") {
+            assert!(work["group_hits"].as_u64().unwrap()>0,"reuse across Runs: {work}");
+            assert!(work["group_rows"].as_u64().unwrap()>0,"skip actual domain iteration: {work}");
+        } else {assert_eq!(work["group_hits"],0,"mixed exact keys cannot certify a whole colliding bucket");}
+    }
+}

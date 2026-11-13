@@ -86,6 +86,8 @@ impl SparseRefinements {
 use std::collections::BTreeSet;
 #[derive(Default)]
 struct Bucket {
+    #[cfg(all(feature="cell-absorption",feature="parallel-residuals"))]
+    completion: crate::neighbor::completion::Completion,
     #[cfg(feature = "projection-stamps")]
     membership_version: u64,
     #[cfg(not(feature = "sparse-cells"))]
@@ -947,6 +949,18 @@ impl QueryIndexes {
             let built=t.values.iter().filter(|c|c.get().is_some()).count();
             (total+t.values.len(),live+built,refs+built*t.keys.len())
         })
+    }
+    #[cfg(all(feature="cell-absorption",feature="parallel-residuals"))]
+    pub(crate) fn completion_storage(&self)->serde_json::Value {
+        let mut buckets=0;let mut capacity=0;let mut heap=0;
+        for column in self.tables.values().flat_map(|t|t.values.iter().filter_map(ColumnCell::get)) {
+            buckets+=column.len();capacity+=column.capacity();
+            heap+=column.values().map(|b|b.completion.heap_bytes()).sum::<usize>();
+        }
+        serde_json::json!({"buckets":buckets,"bucket_capacity":capacity,
+            "field_bytes":std::mem::size_of::<crate::neighbor::completion::Completion>(),
+            "field_capacity_bytes":capacity*std::mem::size_of::<crate::neighbor::completion::Completion>(),
+            "live_proof_heap_bytes":heap})
     }
     pub fn refinement_storage(&self) -> (usize, usize) {
         self.tables
