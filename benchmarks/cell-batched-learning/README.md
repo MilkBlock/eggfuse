@@ -729,3 +729,53 @@ python3 benchmarks/cell-batched-learning/subcell_views.py out/cell-batched-learn
 The existing Python discovery command passes 29 tests. New checks cover equivalent
 layouts under different table numbering, mutable-table rejection, column schema
 mismatch, conflicting Eq sorts, and projections onto the original scalar fields.
+
+### Runtime facts inherit completed Cell stage state
+
+Completed facts now derive `born == epoch == source.started_epoch` and visible
+state from their existing source frame when that equality is established at
+transfer. A 16-byte row retains the operation, hash and exception/deletion index;
+only divergent facts store an independent 24-byte lifecycle. Updates reuse one
+exception per fact rather than accumulating history. Retired exception storage is
+reclaimed on owner compaction/retirement. Source frame identities and all actual
+facts remain unchanged. This is state deduplication, not nested-template execution
+or skipping RHS effects. The sparse/storage-metrics takeover path remains opt-in.
+
+Transfer and extension stream directly into this representation, without first
+building an expanded fact array. Frame-specific epochs remain separate even when
+multiple source stages share an owner. Exceptional representation changes retain
+the original unseal fallback. Accounting includes exception capacity and the
+larger owner headers; live fact payload accounting was updated to the actual
+representation.
+
+| pass3 | Graph before | Graph after | inherited/live completed fact lifecycles |
+|---|---:|---:|---:|
+| fact | 732,807 | 728,679 | 446 / 481 |
+| loopfact | 657,009 | 650,241 | 419 / 452 |
+| sum-bits | 1,962,163 | 1,942,435 | 1,380 / 1,786 |
+| dot-product | 1,935,099 | 1,910,595 | 1,396 / 1,574 |
+
+The full Graph reduction is only 0.6–1.3%, despite substantially smaller covered
+fact records. This is not the large-compression target. Maximum takeover temporary
+allocation falls for fact/loopfact, is unchanged for sum-bits, and increases from
+22,840 to 23,272 bytes for dot-product; do not claim uniformly reduced peaks.
+
+Validation: 160 runtime unit tests, default runtime compilation, all 2,652 saved
+Run graph/RHS/write checks plus terminal effects, exact saved lifecycle traces,
+and final-state digests pass. Marked sum-bits Graph bytes are 2,345,710 (previously
+2,362,006), and its new final digest matches the reviewed saved exports;
+`choice_diagnosis.py` returns `pass` / exit 0. These are actual standalone Cell
+runtime results, not a new native contract for the other workloads. No timing was
+measured. New lifecycle tests cover independent source epochs, hash-only writes,
+bounded repeated mutations, deletion, and existing owner extension/retirement
+checks now include reordered source stages.
+
+Reproduce with the existing Cargo example build, then measure each unchanged
+candidate into `candidate-stage-inherited-heap.json` using `inherited-owners
+--port-domains-only`. Use `check-passive` with unchanged candidate/selection inputs
+in `stage-inherited/CASE`, and summarize with:
+
+```
+python3 benchmarks/cell-batched-learning/stage_inherited_results.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/stage-inherited-results.json
+```

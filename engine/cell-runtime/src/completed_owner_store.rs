@@ -3,6 +3,9 @@
 use super::*;
 use crate::{slots::ReadSlots,value::Value};
 use std::ops::Range;
+#[path="completed_fact_storage.rs"]
+mod fact_storage;
+use fact_storage::Facts;
 use crate::graph::fact_states::OwnedFact;
 pub(super) const COMPLETED:u32=1<<31;
 use super::super::CellMetadata as Metadata;
@@ -16,7 +19,7 @@ pub(super) struct Frame {
 pub(super) struct Owner {
     pub frames:usize,
     pub slots:Box<[(usize,Value)]>,
-    pub facts:Box<[(u32,Option<OwnedFact>)]>,
+    facts:Facts,
 }
 #[derive(Default)]
 pub(super) struct Completed {
@@ -53,13 +56,13 @@ impl Cells {
         let f=self.completed.frames.get(self.completed_index(id)?)?;
         Some(Slots(&self.completed.owners[f.owner].slots[f.slots.clone()]))
     }
-    pub(crate) fn completed_facts(&self,id:u32)->Option<&[(u32,Option<OwnedFact>)]> {
+    pub(crate) fn completed_facts(&self,id:u32)->Option<fact_storage::View<'_>> {
         let f=self.completed.frames.get(self.completed_index(id)?)?;
-        Some(&self.completed.owners[f.owner].facts[f.facts.clone()])
+        Some(self.completed.owners[f.owner].facts.view(f.facts.clone(),f.meta.started_epoch))
     }
-    pub(crate) fn completed_facts_mut(&mut self,id:u32)->Option<&mut [(u32,Option<OwnedFact>)]> {
-        let f=self.completed.frames.get(self.completed_index(id)?)?;
-        Some(&mut self.completed.owners[f.owner].facts[f.facts.clone()])
+    pub(crate) fn take_completed_fact(&mut self,f:super::super::FactRef)->Option<OwnedFact> {
+        let frame=&self.completed.frames[self.completed_index(f.cell)?];
+        self.completed.owners[frame.owner].facts.take(frame.facts.clone(),frame.meta.started_epoch,f.op)
     }
     /// Called only for a checked completed component, at an idle Run boundary.
     /// Reject the whole group before moving any source frame.
@@ -86,18 +89,20 @@ impl Cells {
         let facts=ids.iter().map(|id|self.get(id).unwrap().facts.len()).sum();
         let owner=self.completed.owners.len();
         let mut values=Vec::with_capacity(slots);
-        let mut states=Vec::with_capacity(facts);
+        let mut states=Facts::builder(facts);
         for &id in ids {
             let c=self.remove(&id).unwrap();
             let meta=Metadata::from(&c);
             let start=values.len();values.extend(c.values.into_unshared().unwrap());
-            let first=states.len();states.extend(c.facts.into_iter().map(|(op,s)|(op,Some(OwnedFact::checked(&s).expect("checked owner fact")))));
+            let first=states.len();
+            for (op,s) in c.facts {states.push(op,Some(OwnedFact::checked(&s).expect("checked owner fact")),meta.started_epoch);}
             let position=u32::try_from(self.completed.frames.len()+1).unwrap();
             assert!(position<COMPLETED);
             self.completed.frames.push(Frame{id,owner,meta,slots:start..values.len(),facts:first..states.len()});
             self.positions[id as usize]=COMPLETED|position;
         }
-        self.completed.owners.push(Owner{frames:ids.len(),slots:values.into_boxed_slice(),facts:states.into_boxed_slice()});
+        let facts=states.finish();
+        self.completed.owners.push(Owner{frames:ids.len(),slots:values.into_boxed_slice(),facts});
         true
     }
     /// A larger completed Cell can retain several existing storage segments.
@@ -147,10 +152,10 @@ impl Cells {
             if let Some(i)=self.completed_index(id) {
                 let f=&self.completed.frames[i];let o=&self.completed.owners[f.owner];
                 slot_count+=f.slots.len();
-                fact_count+=o.facts[f.facts.clone()].iter().filter(|p|p.1.is_some()).count();
+                fact_count+=o.facts.view(f.facts.clone(),f.meta.started_epoch).iter().count();
             } else {let c=self.get(&id).unwrap();slot_count+=c.values.len();fact_count+=c.facts.len();}
         }
-        let mut values=Vec::with_capacity(slot_count);let mut facts=Vec::with_capacity(fact_count);
+        let mut values=Vec::with_capacity(slot_count);let mut facts=Facts::builder(fact_count);
         let mut moved_slots=0;let mut moved_facts=0;
         for &id in ids {
             let first_slot=values.len();let first_fact=facts.len();
@@ -160,14 +165,16 @@ impl Cells {
                 for (slot,value) in &mut owner.slots[frame.slots.clone()] {
                     values.push((*slot,std::mem::replace(value,Value::Int(0))));moved_slots+=1;
                 }
-                for (op,state) in &mut owner.facts[frame.facts.clone()] {
-                    if let Some(state)=state.take() {facts.push((*op,Some(state)));moved_facts+=1;}
+                for i in frame.facts.clone() {
+                    if let Some(state)=owner.facts.take_at(i,frame.meta.started_epoch) {
+                        facts.push(owner.facts.op(i),Some(state),frame.meta.started_epoch);moved_facts+=1;
+                    }
                 }
                 frame.owner=destination;frame.slots=first_slot..values.len();frame.facts=first_fact..facts.len();
             } else {
                 let c=self.remove(&id).unwrap();let meta=Metadata::from(&c);
                 values.extend(c.values.into_unshared().unwrap());
-                facts.extend(c.facts.into_iter().map(|(op,s)|(op,Some(OwnedFact::checked(&s).expect("checked owner fact")))));
+                for (op,s) in c.facts {facts.push(op,Some(OwnedFact::checked(&s).expect("checked owner fact")),meta.started_epoch);}
                 let index=self.completed.frames.len();
                 self.completed.frames.push(Frame{id,owner:destination,meta,
                     slots:first_slot..values.len(),facts:first_fact..facts.len()});
@@ -175,9 +182,10 @@ impl Cells {
             }
         }
         for &(owner,_) in &owners {
-            self.completed.owners[owner]=Owner{frames:0,slots:Box::default(),facts:Box::default()};
+            self.completed.owners[owner]=Owner{frames:0,slots:Box::default(),facts:Facts::default()};
         }
-        self.completed.owners[destination]=Owner{frames:ids.len(),slots:values.into_boxed_slice(),facts:facts.into_boxed_slice()};
+        let facts=facts.finish();
+        self.completed.owners[destination]=Owner{frames:ids.len(),slots:values.into_boxed_slice(),facts};
         Some((added,owners.len()-1,moved_slots,moved_facts))
     }
     /// Boundary fallback: move the remaining fields/facts back before a
@@ -189,8 +197,9 @@ impl Cells {
         let owner=&mut self.completed.owners[frame.owner];
         let values=owner.slots[frame.slots.clone()].iter_mut()
             .map(|(s,v)|(*s,std::mem::replace(v,Value::Int(0)))).collect();
-        let facts=owner.facts[frame.facts.clone()].iter_mut()
-            .filter_map(|(op,s)|Some((*op,s.take()?.restore()))).collect();
+        let facts=frame.facts.clone().filter_map(|i| {
+            Some((owner.facts.op(i),owner.facts.take_at(i,meta.started_epoch)?.restore()))
+        }).collect();
         self.retire_completed(id);
         Some(Cell{template:meta.template,started_epoch:meta.started_epoch,
             completed_prefix:meta.completed_prefix,recipe_depth:meta.recipe_depth,
@@ -199,9 +208,8 @@ impl Cells {
     }
     pub(crate) fn write_completed_fact(&mut self,f:super::super::FactRef,state:super::super::FactState) {
         if let Some(compact)=OwnedFact::checked(&state) {
-            let facts=self.completed_facts_mut(f.cell).expect("live completed writer");
-            let i=facts.binary_search_by_key(&f.op,|p|p.0).expect("live completed fact");
-            facts[i].1=Some(compact);
+            let frame=&self.completed.frames[self.completed_index(f.cell).expect("live completed writer")];
+            self.completed.owners[frame.owner].facts.write(frame.facts.clone(),frame.meta.started_epoch,f.op,compact);
         } else {
             let mut cell=self.unseal_completed(f.cell).expect("exceptional completed writer");
             *cell.facts.get_mut(&f.op).expect("live completed fact")=state;
@@ -218,7 +226,7 @@ impl Cells {
         }
         let owner=&mut self.completed.owners[removed.owner];
         owner.frames-=1;
-        if owner.frames==0 {owner.slots=Box::default();owner.facts=Box::default();}
+        if owner.frames==0 {owner.slots=Box::default();owner.facts=Facts::default();}
         true
     }
     pub(crate) fn completed_profile(&self)->serde_json::Value {
@@ -234,19 +242,25 @@ impl Cells {
         let slots=self.completed.owners.iter().map(|o|o.slots.len()).sum::<usize>();
         let live_slots=self.completed.frames.iter().map(|f|f.slots.len()).sum::<usize>();
         serde_json::json!({"source_records":self.records.len(),"owned_fact_bytes":std::mem::size_of::<OwnedFact>(),
+            "fact_storage_encoding":"stage-inherited rows with per-fact lifecycle exceptions",
+            "fact_storage_live_bytes":self.completed_live_fact_bytes(),
             "representation_fallbacks":self.completed.representation_fallbacks,"completed_frames":self.completed.frames.len(),
             "owners":epochs.len(),"cross_stage_owners":epochs.values().filter(|e|e.len()>1).count(),
             "owner_widths":widths,"templates":templates,"stored_slot_entries":slots,
             "live_slot_entries":live_slots,"retired_slot_entries":slots-live_slots,
             "stored_fact_entries":self.completed.owners.iter().map(|o|o.facts.len()).sum::<usize>(),
-            "live_fact_entries":self.completed.owners.iter().flat_map(|o|o.facts.iter()).filter(|p|p.1.is_some()).count(),
+            "live_fact_entries":self.completed.owners.iter().map(|o|o.facts.live()).sum::<usize>(),
+            "inherited_fact_lifecycles":self.completed.owners.iter().map(|o|o.facts.inherited()).sum::<usize>(),
             "owner_header_slots":self.completed.owners.len()})
+    }
+    pub(crate) fn completed_live_fact_bytes(&self)->usize {
+        self.completed.owners.iter().map(|o|o.facts.live_bytes()).sum()
     }
     pub(crate) fn completed_storage(&self)->(usize,usize,usize,usize) {
         (self.completed.frames.capacity()*std::mem::size_of::<Frame>()
             +self.completed.owners.capacity()*std::mem::size_of::<Owner>(),
          self.completed.owners.iter().map(|o|std::mem::size_of_val(o.slots.as_ref())).sum(),
-         self.completed.owners.iter().map(|o|std::mem::size_of_val(o.facts.as_ref())).sum(),
+         self.completed.owners.iter().map(|o|o.facts.bytes()).sum(),
          self.completed.frames.len())
     }
 }

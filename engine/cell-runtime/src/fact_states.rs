@@ -5,7 +5,7 @@ use super::{FactRef,FactState};
 mod owned;
 pub(crate) use owned::{FactRead,FactWrite};
 #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
-pub(crate) use owned::OwnedFact;
+pub(crate) use owned::{OwnedFact,FactLifecycle};
 #[cfg(not(feature="sparse-cells"))]
 use super::Cell;
 pub(crate) trait FactStates {
@@ -36,7 +36,7 @@ impl FactStates for super::arena::Cells {
     fn fact_state(&self, f:FactRef)->Option<FactRead<'_>> {
         #[cfg(feature="storage-metrics")]
         if let Some(facts)=self.completed_facts(f.cell) {
-            return facts[facts.binary_search_by_key(&f.op,|p|p.0).ok()?].1.as_ref().map(OwnedFact::read);
+            return facts.get(f.op).map(|s|s.read());
         }
         self.get(&f.cell)?.facts.get(&f.op).map(FactRead::from)
     }
@@ -45,7 +45,7 @@ impl FactStates for super::arena::Cells {
         #[cfg(feature="storage-metrics")]
         if self.completed_index(f.cell).is_some() {
             let facts=self.completed_facts(f.cell)?;
-            let state=facts[facts.binary_search_by_key(&f.op,|p|p.0).ok()?].1?.restore();
+            let state=facts.get(f.op)?.restore();
             return Some(FactWrite::Owned{cells:self,fact:f,state:Some(state)});
         }
         self.get_mut(&f.cell)?.facts.get_mut(&f.op).map(FactWrite::Ordinary)
@@ -53,8 +53,7 @@ impl FactStates for super::arena::Cells {
     fn remove_fact_state(&mut self, f:FactRef)->Option<FactState> {
         #[cfg(feature="storage-metrics")]
         if self.completed_index(f.cell).is_some() {
-            let facts=self.completed_facts_mut(f.cell)?;
-            return facts[facts.binary_search_by_key(&f.op,|p|p.0).ok()?].1.take().map(OwnedFact::restore);
+            return self.take_completed_fact(f).map(OwnedFact::restore);
         }
         self.get_mut(&f.cell)?.facts.remove(&f.op)
     }
@@ -65,13 +64,13 @@ impl FactStates for super::arena::Cells {
     }
     fn fact_count(&self, cell:u32)->Option<usize> {
         #[cfg(feature="storage-metrics")]
-        if let Some(facts)=self.completed_facts(cell) {return Some(facts.iter().filter(|p|p.1.is_some()).count());}
+        if let Some(facts)=self.completed_facts(cell) {return Some(facts.iter().count());}
         Some(self.get(&cell)?.facts.len())
     }
     fn fact_states(&self, cell:u32)->impl Iterator<Item=(FactRef,FactRead<'_>)> {
         let active=self.get(&cell).into_iter().flat_map(move |c|c.facts.iter().map(move |(&op,s)|(FactRef{cell,op},FactRead::from(s))));
         #[cfg(feature="storage-metrics")]
-        {active.chain(self.completed_facts(cell).into_iter().flatten().filter_map(move |(op,s)|Some((FactRef{cell,op:*op},s.as_ref()?.read()))))}
+        {active.chain(self.completed_facts(cell).into_iter().flat_map(move |view|view.into_iter().map(move |(op,s)|(FactRef{cell,op},s.read()))))}
         #[cfg(not(feature="storage-metrics"))]
         {active}
     }
@@ -174,7 +173,7 @@ mod tests {
         assert!(cells.extend_completed(&[10,20,50,50]).is_none());
         assert!(cells.get(&50).is_some());
         assert_eq!(cells.completed_slots(10).unwrap().get(&0),Some(&Value::Int(10)));
-        let (added,merged,slots,facts)=cells.extend_completed(&[10,20,30,40,50]).unwrap();
+        let (added,merged,slots,facts)=cells.extend_completed(&[50,30,40,20,10]).unwrap();
         assert_eq!((added,merged,slots,facts),(1,1,4,3));
         assert!(cells.get(&50).is_none());
         assert!(cells.extend_completed(&[10,20,30,40,50]).is_none());

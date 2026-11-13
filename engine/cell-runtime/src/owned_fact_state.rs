@@ -30,13 +30,20 @@ pub(crate) struct OwnedFact {
     hidden:bool,
 }
 #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+#[derive(Clone,Copy)]
+pub(crate) struct FactLifecycle {epoch:u64,born:u64,hidden:bool}
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
 impl OwnedFact {
+    pub fn lifecycle(&self)->FactLifecycle {FactLifecycle{epoch:self.epoch,born:self.born,hidden:self.hidden}}
+    pub fn from_lifecycle(life:FactLifecycle,hash:u64)->Self {Self{epoch:life.epoch,born:life.born,hidden:life.hidden,hash}}
     pub fn checked(s:&FactState)->Option<Self> {
         if !s.owned || s.local_union_owned || s.decoded.is_some() || s.entry.is_some() {return None;}
         #[cfg(feature="receipt-slots")]
         if s.port_slot!=0 {return None;}
         Some(Self{epoch:s.epoch,born:s.born,hash:s.hash,hidden:s.hidden})
     }
+    pub fn inherited(epoch:u64,hash:u64)->Self {Self{epoch,born:epoch,hidden:false,hash}}
+    pub fn inherits(&self,epoch:u64)->bool {self.epoch==epoch && self.born==epoch && !self.hidden}
     pub fn read(&self)->FactRead<'static> {FactRead{owned:true,local_union_owned:false,
         #[cfg(feature="receipt-slots")] port_slot:0,
         decoded:None,entry:None,hidden:self.hidden,epoch:self.epoch,born:self.born,hash:self.hash}}

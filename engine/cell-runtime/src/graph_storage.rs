@@ -186,7 +186,7 @@ impl Graph {
             "fact_lifecycle":self.fact_lifecycle_trace(),"completed_owners":self.cells.completed_profile(),"cell_records_bytes":records,"completed_owner_records_bytes":completed_records,"completed_owner_frames":completed_frames,"cell_positions_bytes":positions,"id_outliers":outliers,
             "cell_slot_bytes":slots,"shared_slot_owners":frames.len(),"removal_entries":removals,
             "fact_record_capacity_bytes":facts,"fact_record_live_bytes":(fact_count-owned_fact_count)*std::mem::size_of::<(u32,FactState)>()
-                +owned_fact_count*std::mem::size_of::<(u32,Option<fact_states::OwnedFact>)>(),
+                +self.cells.completed_live_fact_bytes(),
             "decoded_row_bytes":rows,"decoded_row_owners":decoded.len(),
             "function_records_bytes":function_records,"function_row_bytes":function_rows,
             "cell_fact_arities":arities,
