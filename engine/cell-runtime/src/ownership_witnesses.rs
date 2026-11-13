@@ -21,10 +21,20 @@ struct Target {frame:usize,code:usize,op:u32,key_proved:bool}
 enum Input {Port(usize),Scalar(usize,u32,usize)}
 fn prove_key(query:&[Arg], source:&[Input], prefix:&[Op], args:&[Arg], target:&[Input])->bool {
     if query.len()!=source.len() || args.len()!=target.len() {return false;}
+    // A successful immutable anchor establishes equality for every repeated
+    // query variable. This temporary quotient exists only while compiling routes.
+    fn root(mut input:Input, aliases:&[(Input,Input)])->Input {
+        while let Some((_,next))=aliases.iter().find(|(from,_)|*from==input) {input=*next;}
+        input
+    }
+    let mut aliases=Vec::new();
     let mut slots=BTreeMap::new();
     for (arg,&input) in query.iter().zip(source) {
         if let Arg::Slot(slot)=arg {
-            if slots.insert(*slot,input).is_some_and(|old|old!=input) {return false;}
+            if let Some(old)=slots.insert(*slot,input) {
+                let old=root(old,&aliases);let new=root(input,&aliases);
+                if old!=new {aliases.push((new,old));}
+            }
         }
     }
     for op in prefix {
@@ -38,7 +48,7 @@ fn prove_key(query:&[Arg], source:&[Input], prefix:&[Op], args:&[Arg], target:&[
         }
     }
     args.iter().zip(target).all(|(arg,input)|match arg {
-        Arg::Slot(slot)=>slots.get(slot)==Some(input),_=>false,
+        Arg::Slot(slot)=>slots.get(slot).is_some_and(|value|root(*value,&aliases)==root(*input,&aliases)),_=>false,
     })
 }
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -262,6 +272,17 @@ mod tests {
         assert!(selected.component(&runtime,anchor).is_none(),"same-shaped source cannot reuse another instance address");
         runtime.components.retire(0);
         assert!(selected.component(&runtime,anchor).is_none());
+    }
+    #[test]
+    fn repeated_anchor_variables_prove_transitive_port_equality() {
+        let query=[Arg::Slot(0),Arg::Slot(1),Arg::Slot(0),Arg::Slot(1)];
+        let source=[Input::Port(7),Input::Port(9),Input::Port(9),Input::Port(11)];
+        assert!(prove_key(&query,&source,&[],&[Arg::Slot(0)],&[Input::Port(11)]));
+        assert!(prove_key(&query,&source,&[Op::Copy(2,Arg::Slot(0))],&[Arg::Slot(2)],&[Input::Port(7)]));
+        assert!(!prove_key(&query,&source,&[],&[Arg::Slot(0)],&[Input::Port(13)]));
+        assert!(!prove_key(&query,&source,&[Op::Let(0,Call::Table(0),vec![])],&[Arg::Slot(0)],&[Input::Port(11)]));
+        assert!(!prove_key(&[Arg::Slot(0),Arg::Slot(1)],&[Input::Port(7),Input::Port(9)],
+            &[],&[Arg::Slot(0)],&[Input::Port(9)]));
     }
     #[test]
     fn constructor_key_proof_follows_copies_but_not_overwritten_bindings() {
