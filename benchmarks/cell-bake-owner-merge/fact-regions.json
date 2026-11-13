@@ -1,0 +1,639 @@
+{
+  "scope": "Frozen standalone runtime; exact observed membership, not compiler proof or saved bytes",
+  "cases": {
+    "fact": {
+      "input_sha256": "f69fc713e9fd4cfc53dc365bef07a0af962c36ed93535744b243dade9d2e0f55",
+      "program_sha256": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "counts": {
+        "ordinary_sources_excluded": 1,
+        "completed_sources": 752,
+        "present_facts": 948,
+        "nominal_fact_positions": 1361,
+        "absent_positions": 413,
+        "full_membership_sources": 508,
+        "partial_membership_sources": 244,
+        "stage_default_facts": 878,
+        "lifecycle_exception_facts": 70
+      },
+      "distinct_membership_patterns": 157,
+      "sources_in_repeated_patterns": 685,
+      "largest_partial_patterns": [
+        {
+          "template": 145,
+          "present_ops": [
+            2
+          ],
+          "sources": 41,
+          "nominal_ops": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "template": 55,
+          "present_ops": [
+            1
+          ],
+          "sources": 20,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 127,
+          "present_ops": [
+            1
+          ],
+          "sources": 20,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 519,
+          "present_ops": [
+            4
+          ],
+          "sources": 19,
+          "nominal_ops": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "template": 62,
+          "present_ops": [
+            5
+          ],
+          "sources": 14,
+          "nominal_ops": [
+            1,
+            2,
+            5
+          ]
+        },
+        {
+          "template": 124,
+          "present_ops": [
+            1
+          ],
+          "sources": 14,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 518,
+          "present_ops": [
+            3
+          ],
+          "sources": 10,
+          "nominal_ops": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "template": 125,
+          "present_ops": [
+            1
+          ],
+          "sources": 7,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 145,
+          "present_ops": [
+            1,
+            2
+          ],
+          "sources": 6,
+          "nominal_ops": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "template": 140,
+          "present_ops": [
+            6
+          ],
+          "sources": 5,
+          "nominal_ops": [
+            1,
+            2,
+            5,
+            6
+          ]
+        },
+        {
+          "template": 520,
+          "present_ops": [
+            3
+          ],
+          "sources": 5,
+          "nominal_ops": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "template": 107,
+          "present_ops": [
+            1
+          ],
+          "sources": 4,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "loopfact": {
+      "input_sha256": "cf45e6b7b79188adb2d689d707e74526a8091e6784d4be44d3cdcf26664aea3a",
+      "program_sha256": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "counts": {
+        "ordinary_sources_excluded": 2,
+        "completed_sources": 689,
+        "present_facts": 892,
+        "nominal_fact_positions": 1244,
+        "absent_positions": 352,
+        "full_membership_sources": 465,
+        "partial_membership_sources": 224,
+        "stage_default_facts": 818,
+        "lifecycle_exception_facts": 74
+      },
+      "distinct_membership_patterns": 168,
+      "sources_in_repeated_patterns": 602,
+      "largest_partial_patterns": [
+        {
+          "template": 145,
+          "present_ops": [
+            2
+          ],
+          "sources": 28,
+          "nominal_ops": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "template": 55,
+          "present_ops": [
+            1
+          ],
+          "sources": 16,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 127,
+          "present_ops": [
+            1
+          ],
+          "sources": 16,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 519,
+          "present_ops": [
+            4
+          ],
+          "sources": 14,
+          "nominal_ops": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "template": 62,
+          "present_ops": [
+            5
+          ],
+          "sources": 11,
+          "nominal_ops": [
+            1,
+            2,
+            5
+          ]
+        },
+        {
+          "template": 124,
+          "present_ops": [
+            1
+          ],
+          "sources": 11,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 107,
+          "present_ops": [
+            1
+          ],
+          "sources": 7,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 125,
+          "present_ops": [
+            1
+          ],
+          "sources": 7,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 518,
+          "present_ops": [
+            3
+          ],
+          "sources": 6,
+          "nominal_ops": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "template": 91,
+          "present_ops": [
+            1
+          ],
+          "sources": 5,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 145,
+          "present_ops": [
+            1,
+            2
+          ],
+          "sources": 5,
+          "nominal_ops": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "template": 518,
+          "present_ops": [
+            1
+          ],
+          "sources": 5,
+          "nominal_ops": [
+            1,
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    "sum-bits": {
+      "input_sha256": "192cb941eb10f3278143b9912cfd6d592a208ab384a16400688f79bc75b17ccb",
+      "program_sha256": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "counts": {
+        "ordinary_sources_excluded": 3,
+        "completed_sources": 2177,
+        "present_facts": 2895,
+        "nominal_fact_positions": 4361,
+        "absent_positions": 1466,
+        "full_membership_sources": 1262,
+        "partial_membership_sources": 915,
+        "stage_default_facts": 2311,
+        "lifecycle_exception_facts": 584
+      },
+      "distinct_membership_patterns": 244,
+      "sources_in_repeated_patterns": 2086,
+      "largest_partial_patterns": [
+        {
+          "template": 145,
+          "present_ops": [
+            2
+          ],
+          "sources": 140,
+          "nominal_ops": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "template": 62,
+          "present_ops": [
+            5
+          ],
+          "sources": 67,
+          "nominal_ops": [
+            1,
+            2,
+            5
+          ]
+        },
+        {
+          "template": 127,
+          "present_ops": [
+            1
+          ],
+          "sources": 35,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 308,
+          "present_ops": [
+            3
+          ],
+          "sources": 34,
+          "nominal_ops": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "template": 125,
+          "present_ops": [
+            1
+          ],
+          "sources": 32,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 519,
+          "present_ops": [
+            4
+          ],
+          "sources": 32,
+          "nominal_ops": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "template": 91,
+          "present_ops": [
+            0
+          ],
+          "sources": 27,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 107,
+          "present_ops": [
+            1
+          ],
+          "sources": 26,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 520,
+          "present_ops": [
+            3
+          ],
+          "sources": 26,
+          "nominal_ops": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "template": 55,
+          "present_ops": [
+            1
+          ],
+          "sources": 23,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 124,
+          "present_ops": [
+            1
+          ],
+          "sources": 23,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 91,
+          "present_ops": [
+            1
+          ],
+          "sources": 21,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "dot-product": {
+      "input_sha256": "a7aa21cf4a9adb077e68f27df9ea5f201142032eaff9dba0b7594e96448c5b92",
+      "program_sha256": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "counts": {
+        "ordinary_sources_excluded": 14,
+        "completed_sources": 2122,
+        "present_facts": 2825,
+        "nominal_fact_positions": 4156,
+        "absent_positions": 1331,
+        "full_membership_sources": 1295,
+        "partial_membership_sources": 827,
+        "stage_default_facts": 2466,
+        "lifecycle_exception_facts": 359
+      },
+      "distinct_membership_patterns": 191,
+      "sources_in_repeated_patterns": 2058,
+      "largest_partial_patterns": [
+        {
+          "template": 145,
+          "present_ops": [
+            2
+          ],
+          "sources": 88,
+          "nominal_ops": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "template": 265,
+          "present_ops": [
+            3
+          ],
+          "sources": 44,
+          "nominal_ops": [
+            2,
+            3
+          ]
+        },
+        {
+          "template": 55,
+          "present_ops": [
+            1
+          ],
+          "sources": 40,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 127,
+          "present_ops": [
+            1
+          ],
+          "sources": 40,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 519,
+          "present_ops": [
+            4
+          ],
+          "sources": 37,
+          "nominal_ops": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "template": 125,
+          "present_ops": [
+            1
+          ],
+          "sources": 35,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 62,
+          "present_ops": [
+            5
+          ],
+          "sources": 32,
+          "nominal_ops": [
+            1,
+            2,
+            5
+          ]
+        },
+        {
+          "template": 124,
+          "present_ops": [
+            1
+          ],
+          "sources": 30,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 520,
+          "present_ops": [
+            3
+          ],
+          "sources": 29,
+          "nominal_ops": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "template": 407,
+          "present_ops": [
+            3
+          ],
+          "sources": 28,
+          "nominal_ops": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "template": 100,
+          "present_ops": [
+            1
+          ],
+          "sources": 26,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        },
+        {
+          "template": 116,
+          "present_ops": [
+            1
+          ],
+          "sources": 26,
+          "nominal_ops": [
+            0,
+            1
+          ]
+        }
+      ]
+    }
+  }
+}
