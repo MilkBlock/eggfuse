@@ -89,8 +89,15 @@ def encoding_audit(nodes):
                 instances_in_conflicting_codes=sum(members[k] for k in bad))
 
 
+def template_identity(rule):
+    # Exact static layout/operations, including literals; no runtime IDs or rule names.
+    structural=dict(query=rule['query'],effects=rule['effects'],sorts=[s['sort'] for s in rule['slots']])
+    return hashlib.sha256(json.dumps(structural,sort_keys=True).encode()).hexdigest()
+
+
 def dataset(trace):
     links=link(trace);compiled=[template(r) for r in trace['recipe']['rules']]
+    families=[template_identity(r) for r in trace['recipe']['rules']]
     nodes=[];addresses={};by_consumer={}
     for w in links['windows']:
         for c in w['consumers']:by_consumer[(w['consumer_run'],c['binding'])]=(w,c)
@@ -116,7 +123,7 @@ def dataset(trace):
             # A missing full local state is an explicit CPU boundary in this probe.
             depth=1+max((nodes[i]['depth'] for i,_ in incoming),default=-1)
             nodes.append(dict(seed=seed,q=q,target=target,edges=incoming,depth=depth,valid=valid,
-                              linked=bool(incoming),multiple=len({i for i,_ in incoming})>1,state_key=state_key(output_rows(b))))
+                              linked=bool(incoming),multiple=len({i for i,_ in incoming})>1,state_key=state_key(output_rows(b)),family=families[b['rule']]))
             addresses[address]=idx
     return nodes
 

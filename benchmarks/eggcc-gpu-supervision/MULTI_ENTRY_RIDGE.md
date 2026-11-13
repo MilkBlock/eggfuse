@@ -4,7 +4,9 @@ The GPU now consumes **predicted** producer states along actual multi-entry
 connections and evaluates changed consumer requests. This is a standalone
 observed-wiring experiment, not autonomous matching, token generation or egraph
 saturation. The current aggregation fails to beat a model without producer
-states, despite stable numerical replay.
+states on RMSE, despite stable numerical replay. The later
+[dynamic-state audit](MULTI_ENTRY_DYNAMICS.md) finds a small improvement in
+training-dictionary state recovery; these are different measures.
 
 ## Data and representation
 
