@@ -127,3 +127,7 @@ The expanded corpus has not yet been used for a full GPU model retraining or
 full successor-state coverage. The small optional feature ablation above is
 reported separately and did not improve exact-target count. Collection volume,
 feature distinguishability and learned correctness are separate measurements.
+
+The [cross-workload corpus model](CORPUS_CELL_RIDGE.md) now trains on this data,
+with separate seen-input and new-input results and an explicit emission check.
+It saves model weights externally; it is still a single-transition prototype.
