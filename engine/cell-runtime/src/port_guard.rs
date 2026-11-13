@@ -54,6 +54,7 @@ impl EpochWork {
 impl Snapshot {
     pub fn reader(&self) -> ReadView<'_> {
         ReadView {
+            source_frames: None,
             #[cfg(feature="sparse-cells")]
             projected: (!self.projected.is_empty()).then_some(Projection::Frozen(&self.projected)),
             programs: &self.programs,
@@ -94,6 +95,7 @@ pub struct Work {
 /// relation. It contains no Graph, Rc, interior counters, locks or copied rows.
 #[derive(Clone, Copy)]
 pub struct ReadView<'a> {
+    source_frames: Option<&'a composition::Frames>,
     #[cfg(feature="sparse-cells")]
     projected: Option<Projection<'a>>,
     programs: &'a [Arc<PortProgram>],
@@ -178,9 +180,18 @@ impl<'a> ReadView<'a> {
             fields:Fields{component:frame.component,frame:frame.ordinal,operation:fact.op,scalars:Box::default()}})
     }
     pub fn read_port(&self, port: PortRef) -> Result<Value> {
-        self.read_port_counted(port).map(|(value, _)| value)
+        self.read_source_port_counted(port).map(|(value,_)|value)
     }
-    pub(super) fn read_port_counted(&self, port: PortRef) -> Result<(Value, u64)> {
+    pub(super) fn read_source_port_counted(&self, port: PortRef) -> Result<(Value,u64)> {
+        let frame=self.source_frames.and_then(|frames|frames.get(&port.cell))
+            .ok_or("expired stable source port or snapshot-local reader")?;
+        let component=self.components.get(frame.component as usize).and_then(Option::as_ref)
+            .ok_or("expired stable source component")?;
+        let shape=self.shapes.get(component.shape).and_then(Option::as_ref).ok_or("stable source shape")?;
+        let symbol=*shape.ports.get(frame.ordinal).and_then(|ports|ports.get(port.local)).ok_or("stable source local port")?;
+        self.read_port_counted(ComponentPort{component:frame.component,symbol})
+    }
+    pub(super) fn read_port_counted(&self, port: ComponentPort) -> Result<(Value, u64)> {
         let signals = &self
             .components
             .get(port.component as usize)
@@ -358,6 +369,7 @@ impl Graph {
             return Err("stable fields disabled".into());
         }
         Ok(ReadView {
+            source_frames: Some(&self.ownership.as_ref().unwrap().composition.frames),
             #[cfg(feature="sparse-cells")]
             projected: self.stable_ports.as_ref().unwrap().template_fields.then_some(Projection::Live {
                 cells: &self.cells, frames: &self.ownership.as_ref().unwrap().composition.frames,
@@ -426,6 +438,40 @@ mod tests {
     use super::*;
 
     #[test]
+    fn source_port_survives_component_and_symbol_relocation_but_not_retirement() {
+        fn read(frames:&composition::Frames,components:&[Option<composition::Component>],
+                shapes:&[Option<Arc<composition::Shape>>],parents:&Parents,port:PortRef)->Result<Value> {
+            ReadView {
+                source_frames:Some(frames),
+                #[cfg(feature="sparse-cells")]
+                projected:None,
+                programs:&[],shapes,parents:parents.reader(),
+                components:crate::read_epoch::SlotsRead{base:components,changes:None},
+                nodes:crate::read_epoch::MapRead{base:&HashMap::default(),changes:None},
+            }.read_port(port)
+        }
+        let shapes=vec![
+            Some(Arc::new(composition::Shape{ports:vec![Arc::new(vec![0])],..Default::default()})),
+            Some(Arc::new(composition::Shape{ports:vec![Arc::new(vec![0]),Arc::new(vec![1])],..Default::default()})),
+        ];
+        let mut frames=composition::Frames::default();
+        frames.insert(7,composition::Frame{component:0,ordinal:0,code:0});
+        let mut components=vec![Some(composition::Component{shape:0,frames:smallvec::smallvec![7],signals:vec![Some(10)]})];
+        let mut parents=Parents::default();let port=PortRef{cell:7,local:0};
+        assert_eq!(read(&frames,&components,&shapes,&parents,port).unwrap(),Value::Eq(10));
+        components.push(Some(composition::Component{shape:1,frames:smallvec::smallvec![8,7],signals:vec![Some(99),Some(10)]}));
+        frames.insert(7,composition::Frame{component:1,ordinal:1,code:0});
+        frames.insert(8,composition::Frame{component:1,ordinal:0,code:0});
+        components[0]=None;
+        assert_eq!(read(&frames,&components,&shapes,&parents,port).unwrap(),Value::Eq(10));
+        parents.insert(10,5);
+        assert_eq!(read(&frames,&components,&shapes,&parents,port).unwrap(),Value::Eq(5));
+        frames.remove(&7);
+        assert!(read(&frames,&components,&shapes,&parents,port).is_err());
+        assert_eq!(read(&frames,&components,&shapes,&parents,PortRef{cell:8,local:0}).unwrap(),Value::Eq(99));
+    }
+
+    #[test]
     fn shared_multi_input_code_requires_every_equality_and_scalar_guard() {
         let programs = vec![Arc::new(PortProgram { fields: vec![vec![None]], ..Default::default() })];
         let shapes = vec![Some(Arc::new(composition::Shape { programs: vec![0], ports: vec![Arc::new(vec![])], ..Default::default() }))];
@@ -449,6 +495,7 @@ mod tests {
         let mut work = Work::default();
         assert!(
             !ReadView {
+            source_frames: None,
             #[cfg(feature="sparse-cells")]
             projected: None,
                 programs: &programs, shapes: &shapes,
@@ -470,6 +517,7 @@ mod tests {
         let mut work = Work::default();
         assert!(
             !ReadView {
+            source_frames: None,
             #[cfg(feature="sparse-cells")]
             projected: None,
                 programs: &programs, shapes: &shapes,
@@ -498,6 +546,7 @@ mod tests {
         let mut work = Work::default();
         assert!(
             ReadView {
+            source_frames: None,
             #[cfg(feature="sparse-cells")]
             projected: None,
                 programs: &programs, shapes: &shapes,
@@ -541,6 +590,7 @@ mod tests {
         })];
         let nodes = HashMap::default();
         let view = ReadView {
+            source_frames: None,
             #[cfg(feature="sparse-cells")]
             projected: None,
             programs: &programs, shapes: &shapes,

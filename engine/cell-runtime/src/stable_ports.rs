@@ -13,14 +13,20 @@ mod keys;
 #[path = "unique_port_publication.rs"]
 mod publication;
 
-/// A shared symbolic address. Component IDs are monotonic and never recycled;
-/// a retired address is rejected rather than rebound to a later instance.
+/// Stable source-local address. Composition can relocate a source without
+/// changing this token. Source IDs are monotonic; retired sources never rebind.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 pub struct PortRef {
+    pub cell: u32,
+    pub local: usize,
+}
+/// Short-lived resolved address inside the current composition layout.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
+pub(crate) struct ComponentPort {
     pub component: u32,
     pub symbol: usize,
 }
-impl From<Signal> for PortRef {
+impl From<Signal> for ComponentPort {
     fn from(s: Signal) -> Self {
         Self {
             component: s.component,
@@ -30,11 +36,11 @@ impl From<Signal> for PortRef {
 }
 #[derive(Clone, Debug)]
 enum Field {
-    Port(PortRef),
+    Port(ComponentPort),
     Scalar(Value),
 }
 impl Field {
-    fn value(&self, port: impl FnOnce(PortRef) -> Result<Value>) -> Result<Value> {
+    fn value(&self, port: impl FnOnce(ComponentPort) -> Result<Value>) -> Result<Value> {
         match self {
             Self::Scalar(value) => Ok(value.clone()),
             Self::Port(p) => port(*p),
@@ -62,7 +68,7 @@ impl FieldView<'_> {
     fn len(&self) -> usize { self.columns.len() }
     fn get(&self, column: usize) -> Option<Field> {
         Some(match *self.columns.get(column)? {
-            Some(local) => Field::Port(PortRef { component: self.component, symbol: self.ports[local] }),
+            Some(local) => Field::Port(ComponentPort { component: self.component, symbol: self.ports[local] }),
             None => {
                 let index = self.columns[..column].iter().filter(|s|s.is_none()).count();
                 Field::Scalar(self.scalars[index].clone())
@@ -202,7 +208,7 @@ impl Graph {
         for (value, symbol) in values.iter().zip(symbols) {
             if let Some(&local) = symbol.as_ref() {
                 let Value::Eq(id) = value else { panic!("typed equality field") };
-                let port = PortRef { component: frame.component, symbol: ports[local] };
+                let port = ComponentPort { component: frame.component, symbol: ports[local] };
                 if BIND {
                     self.bind_cell_port(f, local, port, *id);
                 }
@@ -257,6 +263,11 @@ impl Graph {
         }
     }
     pub fn read_port(&self, port: PortRef) -> Result<Value> {
+        let (value,probes)=self.stable_port_reader()?.read_source_port_counted(port)?;
+        self.record_port_reads(1,probes);
+        Ok(value)
+    }
+    fn read_component_port(&self, port: ComponentPort) -> Result<Value> {
         let (value, probes) = self.stable_port_reader()?.read_port_counted(port)?;
         self.record_port_reads(1, probes);
         Ok(value)
@@ -267,12 +278,10 @@ impl Graph {
         self.stable_port_reader()?.fields(stored)
     }
     pub fn fact_port(&self, f: FactRef, column: usize) -> Option<PortRef> {
-        let node = self.stable_node(f)?;
-        let fields = self.stable_field_view(&node).ok()?;
-        match fields.get(column)? {
-            Field::Port(p) => Some(p),
-            Field::Scalar(_) => None,
-        }
+        self.stable_node(f)?;
+        let frame=self.ownership.as_ref()?.composition.frames.get(&f.cell)?;
+        let local=*self.program.cell_ownership.code_programs[frame.code].fields.get(f.op as usize)?.get(column)?;
+        local.map(|local|PortRef{cell:f.cell,local})
     }
     pub(in crate::graph) fn read_stable_column(
         &self,
@@ -282,7 +291,7 @@ impl Graph {
         self.stable_field_view(stored)?
             .get(col)
             .ok_or("stable field column")?
-            .value(|port| self.read_port(port))
+            .value(|port| self.read_component_port(port))
     }
     pub(in crate::graph) fn stable_values(
         &self,

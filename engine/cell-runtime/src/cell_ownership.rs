@@ -522,7 +522,7 @@ impl Graph {
     /// Resolve the address encoded by an equality ID. This is not an equality
     /// proof: native_signal still validates the actual retained symbol binding.
     #[inline]
-    fn native_port(&self, id: u64, expected_component: Option<u32>) -> Option<ports::PortRef> {
+    fn native_port(&self, id: u64, expected_component: Option<u32>) -> Option<ports::ComponentPort> {
         let cell = (id >> 32) as u32;
         let slot = (id as u32).checked_sub(1)? as usize;
         let m = self.ownership.as_ref()?;
@@ -560,7 +560,7 @@ impl Graph {
             m.stats.boundary_live += 1;
         }
     }
-    fn bind_cell_port(&mut self, f: FactRef, local: usize, port: ports::PortRef, id: u64) {
+    fn bind_cell_port(&mut self, f: FactRef, local: usize, port: ports::ComponentPort, id: u64) {
         let signal = self.ownership.as_ref().unwrap().composition.signal(
             &self.program.cell_ownership, port.component, port.symbol);
         let native = self.signal_is_native(signal, id);

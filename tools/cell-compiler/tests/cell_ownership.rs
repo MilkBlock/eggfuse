@@ -2074,6 +2074,26 @@ fn multi_source_trace_groups_actual_matches_without_instance_identities() {
         assert_eq!(plain.graph.export().unwrap(),traced.graph.export().unwrap());
         let report=traced.graph.ownership_catalog_trace().unwrap();
         let joins=&report["multi_source"];
+        let source=&traced.graph.program.artifact["sha256"];
+        let compiled=traced.graph.compile_multi_source_candidates(source,joins).unwrap();
+        assert!(traced.graph.compile_multi_source_candidates(&json!("other"),joins).is_err());
+        if connected {
+            let candidates=compiled["candidates"].as_array().unwrap();
+            assert_eq!(candidates.len(),1);
+            let c=&candidates[0]["compiled"];
+            assert_eq!(c["aliased_symbols"],1);
+            assert_eq!(c["shape"]["programs"].as_array().unwrap().len(),2);
+            let maps=c["symbol_maps"].as_array().unwrap();
+            let sites=joins["patterns"][0]["pattern"]["shared_slots"][0][1].as_array().unwrap();
+            let mapped=sites.iter().map(|s|maps[s[0].as_u64().unwrap() as usize][s[1].as_u64().unwrap() as usize].clone()).collect::<Vec<_>>();
+            assert!(mapped.windows(2).all(|w|w[0]==w[1]));
+            let mut forged=joins.clone();
+            forged["patterns"][0]["pattern"]["shared_slots"][0][1][0][1]=json!(999999);
+            assert!(traced.graph.compile_multi_source_candidates(source,&forged).is_err());
+            let mut forged=joins.clone();
+            forged["patterns"][0]["pattern"]["anchors"][0][3]=json!(999999);
+            assert!(traced.graph.compile_multi_source_candidates(source,&forged).is_err());
+        } else {assert!(compiled["candidates"].as_array().unwrap().is_empty());}
         assert_eq!(joins["inconsistent_slots"],0);
         assert_eq!(joins["dropped_patterns"],0);
         let patterns=joins["patterns"].as_array().unwrap();

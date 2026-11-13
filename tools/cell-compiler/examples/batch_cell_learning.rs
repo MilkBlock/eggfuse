@@ -29,6 +29,21 @@ fn main()->Result<()> {
     if a[0]=="learn-results" {
         if a.len()!=4 {return Err("learn-results ROOT SEED_VARIANT OUTPUT_VARIANT".into());}
         result_entries::run(Path::new(&a[1]),&a[2],&a[3])?;
+    } else if a[0]=="compile-joins" {
+        if a.len()!=3 {return Err("compile-joins ROOT VARIANT".into());}
+        let root=Path::new(&a[1]).join(&a[2]);
+        for name in ["fact","loopfact","sum-bits","dot-product"] {
+            let dir=root.join(name);
+            let observed=read(dir.join("witness-checked.json"))?;
+            let raw=read(dir.join("candidate.json"))?;
+            if observed["program"]!=raw["sha256"] || observed["all_saved_run_checks_equal"]!=true {
+                return Err("audited matching multi-source program required".into());
+            }
+            let e=executor(raw)?;
+            let compiled=e.graph.compile_multi_source_candidates(&observed["program"],&observed["catalog_trace"]["multi_source"])?;
+            write(dir.join("compiled-joins.json"),&compiled)?;
+            eprintln!("compiled {name}: {} dual-source candidates",compiled["candidates"].as_array().unwrap().len());
+        }
     } else if a[0]=="compile-witness" {
         let root=Path::new(&a[1]);
         for name in ["fact","loopfact","sum-bits","dot-product"] {

@@ -606,9 +606,9 @@ pub(super) struct Runtime {
 }
 impl Runtime {
     #[inline]
-    pub(super) fn port(&self, frame: Frame, local: usize) -> ports::PortRef {
+    pub(super) fn port(&self, frame: Frame, local: usize) -> ports::ComponentPort {
         let shape = self.components[frame.component as usize].as_ref().unwrap().shape;
-        ports::PortRef {
+        ports::ComponentPort {
             component: frame.component,
             symbol: self.shapes[shape].as_ref().unwrap().ports[frame.ordinal][local],
         }
@@ -1042,7 +1042,7 @@ impl Graph {
         self.ownership.as_ref().unwrap().composition.signal(
             &self.program.cell_ownership, port.component, port.symbol)
     }
-    pub(super) fn composed_port(&self, cell: u32, local: usize) -> ports::PortRef {
+    pub(super) fn composed_port(&self, cell: u32, local: usize) -> ports::ComponentPort {
         let m = &self.ownership.as_ref().unwrap().composition;
         m.port(m.frames[&cell], local)
     }

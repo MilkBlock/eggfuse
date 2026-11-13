@@ -1,9 +1,11 @@
 //! Successful query Entries can connect several old components. Observe their
 //! static wiring without merging owners or retaining instance identities.
 use super::*;
+#[path="ownership_join_plan.rs"]
+mod plan;
 
-#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
-struct Pattern {
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub(super) struct Pattern {
     rule: usize,
     // Component order is first occurrence in query Entry order, not allocation ID.
     components: Vec<(usize, Vec<usize>)>,
