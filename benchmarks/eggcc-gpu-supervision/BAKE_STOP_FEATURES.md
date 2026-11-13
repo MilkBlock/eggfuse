@@ -77,3 +77,37 @@ PYTHONPATH=benchmarks/eggcc-gpu-supervision $PYTHON -m unittest test_bake_stop_f
 Large model artifacts remain on the external SSD. The probe additionally records
 identities and error magnitudes for final active requests, to guide the next
 training/feature investigation without silently adding a forced stop.
+
+## Why the seven requests remain active
+
+`audit_stop_failures.py` reconstructs their original input, true completed state
+and one predicted update. It checks model/manifest fingerprints against the GPU
+probe and only diagnoses held-out failures; it does not add them to training.
+
+All seven have oracle-completed emission scores below 0.5, but scores above 0.5
+on their own first prediction. Three conservative template families have no
+training inputs. The four covered families have 2, 2, 2 and 6 distinct training
+inputs; one failing input exactly matches a training input. Thus this failure is
+not explained solely by previously unseen templates or insufficient stop labels
+on true completed states.
+
+Two failures are large initialization bodies (118 and 238 construct effects).
+Four are direct union/copy effects: their true completed operand difference energy
+is zero, but the predicted channels retain difference energy between 0.0067 and
+0.0761. The remaining failure has construct/set/copy effects. These observations
+locate a distribution gap; they do not isolate which numerical feature causes
+each decision.
+
+The next training experiment should use predictions from **training inputs only**
+as inputs to a correction target, while preserving independent workload holdouts.
+It must not simply label every predicted state as stopped: an inaccurate state
+can still require correction. Evaluate state correction and learned emission
+separately, and retain free GPU recurrence without teacher refill. This remains
+necessary groundwork for changing successor requests, not a substitute for it.
+
+```sh
+$PYTHON benchmarks/eggcc-gpu-supervision/audit_stop_failures.py MANIFEST HINTS.npz HINTS_PROBE.json FAILURE_AUDIT.json
+```
+
+`stop-failure-audit-results.json` stores compact evidence with effect counts; the
+full audit on the external SSD retains the corresponding effect instructions.
