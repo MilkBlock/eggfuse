@@ -1,0 +1,143 @@
+{
+  "scope": "actual standalone Cell CPU exported segments; offline structural analysis, not a measured representation saving",
+  "limitations": [
+    "Header payload model excludes new registry, allocation headers, padding and capacity.",
+    "Static membership does not prove current values, saturation, visibility or legal RHS skipping.",
+    "Physical regrouping requires separate source-sized movement and external-reader proofs.",
+    "Final ranges do not establish peak memory or lifetime retention costs."
+  ],
+  "cases": [
+    {
+      "case": "fact",
+      "input_sha256": "8abab58e7d849398190d6b960bc6b7c4ff968006b3aff4a8727a7907536241aa",
+      "program": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+      "runs": 418,
+      "final": "d04728e6402e21992b9748a09ec99ace5f6639bc268ac5bcafbc24d0fd52f2f0",
+      "counts": {
+        "external_source_readers": 13,
+        "slot_entries_in_source_ranges": 1062,
+        "slot_entries_outside_source_ranges": 26,
+        "fact_entries_in_source_ranges": 969,
+        "fact_entries_outside_source_ranges": 10,
+        "physical_owners_spanning_logical_components": 66,
+        "sources_in_spanning_owners": 469,
+        "owners_without_logical_component": 0,
+        "completed_sources": 752,
+        "physical_owners": 292,
+        "logical_components_with_storage": 492,
+        "fragmented_logical_components": 126,
+        "physical_layout_patterns": 126,
+        "owners_in_repeated_patterns": 215,
+        "source_positions_in_unique_patterns": 539
+      },
+      "header_factorization": {
+        "removed_frame_layout_range_bytes": 18048,
+        "new_source_ordinal_bytes": 6016,
+        "shared_position_descriptor_bytes": 12936,
+        "owner_layout_handle_bytes": 2336,
+        "payload_delta_bytes": -3240
+      },
+      "current_source_record_bytes": 48,
+      "current_owner_record_bytes": 80
+    },
+    {
+      "case": "loopfact",
+      "input_sha256": "ae91829aec16d34a64b8118e1f53606eb47b510e8012c0d3904041d94b9fd039",
+      "program": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+      "runs": 398,
+      "final": "623c3b05d895a4200f8ea907ea4468a92a000c975f654483e54c42c96c90bf7a",
+      "counts": {
+        "external_source_readers": 13,
+        "slot_entries_in_source_ranges": 989,
+        "slot_entries_outside_source_ranges": 1,
+        "fact_entries_in_source_ranges": 918,
+        "fact_entries_outside_source_ranges": 1,
+        "physical_owners_spanning_logical_components": 56,
+        "sources_in_spanning_owners": 444,
+        "owners_without_logical_component": 0,
+        "completed_sources": 689,
+        "physical_owners": 246,
+        "logical_components_with_storage": 464,
+        "fragmented_logical_components": 106,
+        "physical_layout_patterns": 136,
+        "owners_in_repeated_patterns": 152,
+        "source_positions_in_unique_patterns": 552
+      },
+      "header_factorization": {
+        "removed_frame_layout_range_bytes": 16536,
+        "new_source_ordinal_bytes": 5512,
+        "shared_position_descriptor_bytes": 13248,
+        "owner_layout_handle_bytes": 1968,
+        "payload_delta_bytes": -4192
+      },
+      "current_source_record_bytes": 48,
+      "current_owner_record_bytes": 80
+    },
+    {
+      "case": "sum-bits",
+      "input_sha256": "2407ae0c5e3f8558190cbc80ae76dcc07da12d96904b080660d385c342de890f",
+      "program": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+      "runs": 882,
+      "final": "3bae7a5ad756595f8c454b27baabbf7e830cf06b61d6aa69c0f7437ee747ab2a",
+      "counts": {
+        "external_source_readers": 37,
+        "slot_entries_in_source_ranges": 3944,
+        "slot_entries_outside_source_ranges": 436,
+        "fact_entries_in_source_ranges": 3103,
+        "fact_entries_outside_source_ranges": 238,
+        "physical_owners_spanning_logical_components": 177,
+        "sources_in_spanning_owners": 1285,
+        "owners_without_logical_component": 0,
+        "completed_sources": 2177,
+        "physical_owners": 907,
+        "logical_components_with_storage": 1344,
+        "fragmented_logical_components": 423,
+        "physical_layout_patterns": 318,
+        "owners_in_repeated_patterns": 686,
+        "source_positions_in_unique_patterns": 1452
+      },
+      "header_factorization": {
+        "removed_frame_layout_range_bytes": 52248,
+        "new_source_ordinal_bytes": 17416,
+        "shared_position_descriptor_bytes": 34848,
+        "owner_layout_handle_bytes": 7256,
+        "payload_delta_bytes": -7272
+      },
+      "current_source_record_bytes": 48,
+      "current_owner_record_bytes": 80
+    },
+    {
+      "case": "dot-product",
+      "input_sha256": "2c6d522b54100dd851dbbe2b8d17d7e4f4d05156854579a09c6c2b95e9e0a671",
+      "program": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+      "runs": 954,
+      "final": "191d2a4bd738e7afd0783d30b5d5c1f1219ac92887bb96b95239edfec27141d9",
+      "counts": {
+        "external_source_readers": 58,
+        "slot_entries_in_source_ranges": 3825,
+        "slot_entries_outside_source_ranges": 228,
+        "fact_entries_in_source_ranges": 2914,
+        "fact_entries_outside_source_ranges": 105,
+        "physical_owners_spanning_logical_components": 161,
+        "sources_in_spanning_owners": 1256,
+        "owners_without_logical_component": 0,
+        "completed_sources": 2122,
+        "physical_owners": 850,
+        "logical_components_with_storage": 1308,
+        "fragmented_logical_components": 328,
+        "physical_layout_patterns": 246,
+        "owners_in_repeated_patterns": 690,
+        "source_positions_in_unique_patterns": 1321
+      },
+      "header_factorization": {
+        "removed_frame_layout_range_bytes": 50928,
+        "new_source_ordinal_bytes": 16976,
+        "shared_position_descriptor_bytes": 31704,
+        "owner_layout_handle_bytes": 6800,
+        "payload_delta_bytes": -4552
+      },
+      "current_source_record_bytes": 48,
+      "current_owner_record_bytes": 80
+    }
+  ]
+}

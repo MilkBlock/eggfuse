@@ -317,6 +317,30 @@ impl Cells {
         self.completed.release_layout(removed.layout);
         true
     }
+    /// Export only: relate logical sources to actual physical segments. Keep
+    /// values out of this trace; no region directory is maintained at runtime.
+    pub(crate) fn completed_layout_trace(&self)->serde_json::Value {
+        use std::collections::{BTreeMap,BTreeSet};
+        let key=|f:&Frame| (f.layout.template,f.layout.completed_prefix,f.layout.symbolic_slots,
+            f.layout.slots.to_vec(),f.layout.ops.to_vec());
+        let keys=self.completed.frames.iter().map(key).collect::<BTreeSet<_>>();
+        let ids=keys.iter().enumerate().map(|(id,key)|(key,id)).collect::<BTreeMap<_,_>>();
+        let layouts=keys.iter().map(|(template,prefix,symbolic,slots,ops)|serde_json::json!({
+            "template":template,"completed_prefix":prefix,"symbolic_slots":symbolic,"slots":slots,"ops":ops
+        })).collect::<Vec<_>>();
+        let mut frames=self.completed.frames.iter().map(|f|serde_json::json!({
+            "cell":f.id,"owner":f.owner,"layout":ids[&key(f)],"started_epoch":f.started_epoch,
+            "recipe_depth":f.recipe_depth,"slot_start":f.slot_start,"fact_start":f.fact_start
+        })).collect::<Vec<_>>();
+        frames.sort_by_key(|f|f["cell"].as_u64().unwrap());
+        let owners=self.completed.owners.iter().enumerate().filter(|(_,o)|o.frames>0).map(|(id,o)|
+            serde_json::json!({"id":id,"sources":o.frames,"slot_entries":o.slots.len(),
+                "fact_entries":o.facts.len(),"live_facts":o.facts.live()})).collect::<Vec<_>>();
+        serde_json::json!({"schema":"completed-regions/v1","layouts":layouts,"frames":frames,"owners":owners,
+            "source_record_bytes":std::mem::size_of::<Frame>(),"owner_record_bytes":std::mem::size_of::<Owner>(),
+            "source_record_capacity":self.completed.frames.capacity(),"owner_record_capacity":self.completed.owners.capacity(),
+            "scope":"export-only physical source ranges; layout identity excludes values, epochs and ownership proofs"})
+    }
     pub(crate) fn completed_profile(&self)->serde_json::Value {
         use std::collections::{BTreeMap,BTreeSet};
         let mut templates=BTreeMap::<usize,usize>::new();
@@ -382,6 +406,11 @@ mod stage_layout_tests {
         let first=&cells.completed.frames[cells.completed_index(1).unwrap()];
         let second=&cells.completed.frames[cells.completed_index(2).unwrap()];
         assert!(Arc::ptr_eq(&first.layout,&second.layout));
+        let before=cells.completed_layout_trace();
+        assert_eq!(before["layouts"].as_array().unwrap().len(),4);
+        assert_eq!(before["owners"].as_array().unwrap().len(),1);
+        assert_eq!(before["owners"][0]["sources"],5);
+        assert_eq!(before["frames"][0]["layout"],before["frames"][1]["layout"]);
         let sibling=cells.completed_slots(2).unwrap().as_ptr();
         let restored=cells.unseal_completed(1,RestoreCause::ComponentRetirement).unwrap();
         assert_eq!((restored.template,restored.completed_prefix,restored.started_epoch,restored.recipe_depth),(4,7,10,1));
@@ -390,6 +419,12 @@ mod stage_layout_tests {
         let remaining=cells.completed_meta(2).unwrap();
         assert_eq!((remaining.started_epoch,remaining.recipe_depth),(20,2));
         assert_eq!(cells.completed.layouts.len(),4,"sibling still owns shared stage");
+        let after=cells.completed_layout_trace();
+        assert_eq!(after["owners"][0]["slot_entries"],5,"export preserves holes left by a restored source");
+        assert_eq!(after["owners"][0]["sources"],4);
+        assert_eq!(after["frames"][0]["cell"],2);
+        assert_eq!(after["frames"][0]["slot_start"],1,"sibling did not move");
+        assert_eq!(after["frames"][0]["started_epoch"],20);
         cells.retire_completed(2);
         assert_eq!(cells.completed.layouts.len(),3,"last source releases stage layout");
     }
