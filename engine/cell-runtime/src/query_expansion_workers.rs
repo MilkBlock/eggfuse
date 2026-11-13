@@ -2,6 +2,8 @@
 use super::*;
 use crate::query::snapshot::{Read, Domain};
 use smallvec::SmallVec;
+#[path = "query_result_fragments.rs"]
+mod fragments;
 
 struct Plan {
     layout:Vec<(usize,Vec<usize>)>, tables:Vec<usize>, expanded:usize,
@@ -19,6 +21,9 @@ struct Work {
     direct_batches:u64, worker_inputs:Vec<u64>, queued_row_owners:u64,
     merged_runs:u64, run_pool_calls:u64, mixed_runs:u64, order_comparisons:u64,
     merge_capacity_bytes:u64,
+    fragment_gather_rows:u64, fragment_ordered_rows:u64, fragment_pieces:u64,
+    fragment_worker_rows:u64, fragment_inline_rows:u64,
+    fragment_header_capacity_bytes:u64, fragment_ordered_capacity_bytes:u64,
     merge_pool_calls:u64, merge_tasks:u64, merge_inline_tasks:u64,
     merge_task_capacity_bytes:u64, merge_prepare_seconds:f64, merge_execute_seconds:f64,
     merge_worker_rows:Vec<u64>, merge_worker_tasks:Vec<u64>, merge_worker_seconds:Vec<f64>,
@@ -32,7 +37,7 @@ struct Work {
 }
 #[derive(Default)]
 pub(super) struct Output {
-    pub pending:bool, direct:u64, candidates:u64, pub rows:Vec<((usize,usize),Binding)>,
+    pub pending:bool, direct:u64, candidates:u64, pub rows:fragments::Answers,
     pub coverage:Option<PendingCoverage>,
     merged:Option<(usize,usize)>, // (candidates before dedup, prior serial answers)
 }
@@ -43,12 +48,11 @@ pub(super) struct PendingCoverage { pub residual:usize, pub owned:bool }
 struct Merge<'a> {
     inputs:&'a [usize], serial:&'a mut Vec<Binding>,
     rows:Vec<((usize,usize),Binding)>, count:usize,
-    comparisons:u64, capacity_bytes:u64, worker:Option<usize>, seconds:f64,
+    comparisons:u64, capacity_bytes:u64, worker:Option<usize>,
 }
 impl Merge<'_> {
     fn run(&mut self,pooled:bool) {
         self.worker=pooled.then(rayon::current_thread_index).flatten();
-        let clock=Instant::now();
         // Raw entries precede ordinary answers. Already-filtered Seeds keep
         // their original position between serial kernel results. Stable ties
         // retain expansion row order, exactly as the coordinator sorter did.
@@ -59,12 +63,12 @@ impl Merge<'_> {
             x.compare_inputs(y,self.inputs).then_with(||a.cmp(b))});
         self.rows.dedup_by(|(_,x),(_,y)|x.compare_inputs(y,self.inputs).is_eq());
         self.serial.extend(self.rows.drain(..).map(|(_,b)|b));
-        self.seconds=clock.elapsed().as_secs_f64();
     }
 }
 
-pub(super) struct MergeWork { pub comparisons:u64, pub bytes:u64, pub seconds:f64, pub worker:Option<usize>, pub count:usize }
-pub(super) struct PendingMerge { rows:Vec<((usize,usize),Binding)> }
+pub(super) struct MergeWork { pub comparisons:u64, pub bytes:u64, pub seconds:f64, pub worker:Option<usize>, pub count:usize,
+    gather:fragments::Gather }
+pub(super) struct PendingMerge { rows:fragments::Answers }
 impl Output {
     pub fn resolve_coverage(&mut self,g:&Graph,spine:&mut crate::stage_spine::Programs,rid:usize,stats:&mut Stats) {
         if let Some(coverage)=self.coverage.take() {
@@ -89,11 +93,13 @@ impl Output {
 impl PendingMerge {
     pub fn len(&self)->usize {self.rows.len()}
     pub fn run(self,serial:&mut Vec<Binding>,inputs:&[usize],pooled:bool)->(usize,usize,usize,MergeWork) {
+        let clock=Instant::now();
         let previous=serial.len();
-        let mut job=Merge {inputs,serial,rows:self.rows,count:0,comparisons:0,capacity_bytes:0,worker:None,seconds:0.0};
+        let (rows,gather)=self.rows.gather();
+        let mut job=Merge {inputs,serial,rows,count:0,comparisons:0,capacity_bytes:0,worker:None};
         job.run(pooled);
         (job.count,previous,job.serial.len(),MergeWork {comparisons:job.comparisons,bytes:job.capacity_bytes,
-            seconds:job.seconds,worker:job.worker,count:job.count})
+            seconds:clock.elapsed().as_secs_f64(),worker:job.worker,count:job.count,gather})
     }
 }
 
@@ -108,13 +114,35 @@ fn residual_winners_preserve_source_and_stable_expansion_ties() {
         let mut job=Merge {inputs:&[0],serial:&mut serial,
             rows:vec![((0,2),binding(1,12)),((0,1),binding(1,11)),
                 ((1,0),binding(2,21)),((0,3),binding(3,30)),((0,3),binding(3,31))],
-            count:0,comparisons:0,capacity_bytes:0,worker:None,seconds:0.0};
+            count:0,comparisons:0,capacity_bytes:0,worker:None};
         if pooled {rayon::ThreadPoolBuilder::new().num_threads(2).build().unwrap().install(||job.run(true));}
         else {job.run(false);}
         assert_eq!(job.count,7);
         assert_eq!(job.serial.iter().map(|b|b.epoch).collect::<Vec<_>>(),[11,20,30]);
         assert_eq!(job.worker.is_some(),pooled);
         assert!(job.rows.is_empty());
+    }
+}
+#[cfg(test)]
+#[test]
+fn fragmented_winners_match_flat_results_with_serial_and_source_ties() {
+    let binding=|key,epoch|Binding::matched([(0,Value::Int(key))].into_iter().collect(),QueryFacts::None,epoch);
+    for pooled in [false,true] {
+        let mut serial=vec![binding(2,20),binding(1,10)];
+        let mut rows=fragments::Answers::default();
+        rows.push(((0,2),binding(1,12)));
+        rows.range(vec![(1,binding(1,11)),(0,binding(2,21))],smallvec::smallvec![(1,0),(2,1)]);
+        rows.push(((0,3),binding(3,30)));
+        rows.range(vec![(3,binding(3,31))],smallvec::smallvec![(1,0)]);
+        let job=PendingMerge {rows};
+        let run=||job.run(&mut serial,&[0],pooled);
+        let (count,previous,winners,work)=if pooled {
+            rayon::ThreadPoolBuilder::new().num_threads(2).build().unwrap().install(run)
+        } else {run()};
+        assert_eq!((count,previous,winners),(7,2,3));
+        assert_eq!(serial.iter().map(|b|b.epoch).collect::<Vec<_>>(),[11,20,30]);
+        assert_eq!(work.worker.is_some(),pooled);
+        assert_eq!((work.gather.range_rows,work.gather.ordered_rows),(3,2));
     }
 }
 #[derive(Default)]
@@ -127,6 +155,8 @@ impl Plans {
         "organization":"shared-cell-run/v1",
         "task_counter_bytes":std::mem::size_of::<InputWork>(),
         "executor_counter_bytes":std::mem::size_of::<Work>(),
+        "result_buffer_header_bytes":std::mem::size_of::<fragments::Answers>(),
+        "output_record_bytes":std::mem::size_of::<Output>(),
         "compiled_entries":self.rules.iter().flatten().filter(|p|p.is_some()).count(),
         "plan_capacity_bytes":self.plan_bytes(),"stats":self.work}) }
     fn plan_bytes(&self)->usize {
@@ -193,6 +223,13 @@ impl Plans {
         let stats=&mut self.work;
         stats.merge_tasks+=1;stats.merge_inline_tasks+=u64::from(work.worker.is_none());
         stats.order_comparisons+=work.comparisons;stats.merge_capacity_bytes+=work.bytes;
+        stats.fragment_gather_rows+=work.gather.range_rows;
+        if work.worker.is_some() {stats.fragment_worker_rows+=work.gather.range_rows;}
+        else {stats.fragment_inline_rows+=work.gather.range_rows;}
+        stats.fragment_ordered_rows+=work.gather.ordered_rows;
+        stats.fragment_pieces+=work.gather.pieces;
+        stats.fragment_header_capacity_bytes+=work.gather.header_capacity_bytes;
+        stats.fragment_ordered_capacity_bytes+=work.gather.ordered_capacity_bytes;
         stats.merge_execute_seconds+=work.seconds;
         if let Some(worker)=work.worker {
             if stats.merge_worker_rows.len()<=worker {

@@ -162,6 +162,10 @@ pub(super) struct Stats {
     pub range_answer_span_bytes: u64,
     pub range_answer_span_heap_bytes: u64,
     pub coverage_range_descriptors:u64,
+    pub result_fragment_batches: u64,
+    pub result_fragment_rows: u64,
+    pub result_fragment_spans: u64,
+    pub result_coordinator_rows: u64,
     pub coverage_range_rows:u64,
     pub coverage_admitted_entries:u64,
     pub coverage_supported_entries:u64,
@@ -1237,6 +1241,7 @@ impl Workers {
                                 #[cfg(feature="parallel-residuals")]
                                 if code.expansion {
                                     let position=plans.position(code.rule,code.pivot,q.ordinal);
+                                    self.stats.result_coordinator_rows+=1;
                                     outputs[code.rule].rows.push(((position,q.order),answer));continue;
                                 }
                                 if code.inherits_entry && !g.has_visibility_changes(q.row.table)
@@ -1259,13 +1264,33 @@ impl Workers {
                                 self.stats.coverage_supported_entries+=supported;
                                 self.stats.coverage_events+=1;
                             }
-                            let mut origins=done.origins.iter();
-                            let mut origin=origins.next();
-                            for (at,(source,answer)) in done.answers.drain(..).enumerate() {
-                                while origin.is_some_and(|(end,_)|at>=*end) {origin=origins.next();}
-                                let code=&codes[origin.expect("answer belongs to a compiled range").1];
-                                let position=plans.position(code.rule,code.pivot,0);
-                                outputs[code.rule].rows.push(((position,source),answer));
+                            // Compiled origins prove one rule owns this entire
+                            // result array. Transfer its allocation, retaining
+                            // arrival order; the finishing worker opens rows.
+                            let owner=done.origins.first().filter(|_|pooled)
+                                .map(|(_,code)|codes[*code].rule)
+                                .filter(|rid|outputs[*rid].rows.reaches_grain(done.answers.len(),grain))
+                                .filter(|rid|done.origins.iter().all(|(_,code)|codes[*code].rule==*rid));
+                            if let Some(rid)=owner {
+                                self.stats.result_fragment_batches+=1;
+                                self.stats.result_fragment_rows+=done.answers.len() as u64;
+                                self.stats.result_fragment_spans+=done.origins.len() as u64;
+                                for (_,code) in &mut done.origins {
+                                    let origin=&codes[*code];
+                                    *code=plans.position(origin.rule,origin.pivot,0);
+                                }
+                                outputs[rid].rows.range(std::mem::take(&mut done.answers),
+                                    std::mem::take(&mut done.origins));
+                            } else {
+                                self.stats.result_coordinator_rows+=done.answers.len() as u64;
+                                let mut origins=done.origins.iter();
+                                let mut origin=origins.next();
+                                for (at,(source,answer)) in done.answers.drain(..).enumerate() {
+                                    while origin.is_some_and(|(end,_)|at>=*end) {origin=origins.next();}
+                                    let code=&codes[origin.expect("answer belongs to a compiled range").1];
+                                    let position=plans.position(code.rule,code.pivot,0);
+                                    outputs[code.rule].rows.push(((position,source),answer));
+                                }
                             }
                             chunks.push((done.answers,done.error,done.counts,done.worker,done.residual,done.seconds));
                         }
@@ -1382,9 +1407,9 @@ impl Workers {
         for chunk in chunks {
             #[cfg(feature="parallel-residuals")]
             #[allow(unused_mut)]
-            let (answers,_,counts,worker,mut residual,_seconds)=chunk;
+            let (_answers,_,counts,worker,mut residual,_seconds)=chunk;
             #[cfg(not(feature="parallel-residuals"))]
-            let (answers,_,counts,worker,_seconds)=chunk;
+            let (_answers,_,counts,worker,_seconds)=chunk;
             g.record_constructor_query_work(&counts.constructors);
             self.stats.entry_range_rows += counts.entry_range_rows;
             self.stats.entry_range_row_borrows += counts.entry_range_row_borrows;
@@ -1403,7 +1428,8 @@ impl Workers {
             #[cfg(feature="cell-absorption")]
             for (rule,work) in residual.absorption.drain(..) {neighbor.record_worker_absorption(rule,work,worker);}
             #[cfg(feature="parallel-residuals")]
-            self.record_expansion_chunk(g,sieve,residual,worker,_seconds,answers.capacity());
+            // The original allocation may already belong to a finishing rule.
+            self.record_expansion_chunk(g,sieve,residual,worker,_seconds,counts.output_buffer_capacity as usize);
 
         }
         #[cfg(feature="parallel-residuals")]
