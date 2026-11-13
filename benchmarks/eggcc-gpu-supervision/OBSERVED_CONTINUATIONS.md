@@ -69,3 +69,47 @@ request across an empty Run, rejection of external equivalences, a missing
 consumer premise, unproved Run gaps and unaudited traces. These fixtures prove the
 collector can accept the stated contract; they are not real-benchmark chain data.
 No native engine path was changed. The related 59 tests pass.
+
+## Preserve multi-entry boundary candidates
+
+The optional `--boundary-output PATH.jsonl` streams previously rejected
+`external_consumer_input` pairs to disk. Each record retains the actual case,
+program fingerprint, split, Run and binding ordinals, rulesets, proved-empty Run
+gaps, producer local state and consumer input evidence. Consumer Eq ports are
+partitioned into producer-interface symbols and typed external equivalence
+classes. Repeated external inputs share a class index. Consumer post-Run roots
+are not used for that classification.
+
+These are **observed shared-interface candidates**, not causal links or
+completion training targets. Both `causal_link_proven` and
+`takeover_authorized` are false. A consumer's successful match supplies its
+observed input evidence; it does not prove that this particular producer
+caused it, that the external premises are available earlier, or that a GPU
+may omit their computation. Future consumer inputs must not leak into the
+producer's prediction features. Roots are program/Run-scoped audit identities,
+not numeric model features. Unsupported teacher operations are still rejected.
+
+Reproduction (ROOT is the external corpus directory):
+
+```sh
+python3 benchmarks/eggcc-gpu-supervision/collect_observed_continuations.py \
+  "$ROOT/manifest.json" "$ROOT/observed-boundary-report.json" \
+  --boundary-output "$ROOT/observed-boundary-candidates.jsonl"
+```
+
+With the unchanged first-ten-case / 20,000-binding limits, the saved report
+`observed-continuation-boundary-results.json` records 13,339 candidate pairs, 238 unique
+producer applications and 2,885 unique consumer matches. Candidate counts are
+not unique mutation counts. External-class counts range from one to six:
+279 / 4,437 / 5,777 / 1,798 / 911 / 137 pairs respectively. There are no
+cross-ruleset pairs in this sample; all observed candidates cross Runs within
+the same ruleset. Closed local proof count remains zero. Train/validation/test
+candidate counts are 11,338 / 11 / 1,990, preserving the workload split.
+
+Raw evidence is on the external drive and its SHA-256 is in the report.
+This is offline analysis of real CPU traces, not a GPU execution benchmark or
+native semantic acceptance. No executor behavior changed. The related Python
+suite passed 61 tests, including external-alias typing and preventing a
+boundary candidate from becoming a proven chain. Next capture work must supply
+actual RHS returned witnesses and boundary premise validity; a shared port
+alone cannot authorize token ownership transfer.

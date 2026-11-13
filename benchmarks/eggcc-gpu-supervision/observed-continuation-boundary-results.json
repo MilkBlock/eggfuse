@@ -1,0 +1,500 @@
+{
+  "schema": "observed-local-cell-continuations/v1",
+  "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "chains": [],
+  "cases": [
+    {
+      "case": "000-ackermann",
+      "split": "validation",
+      "trace_sha256": "438f7643370026c76e44dc29c0ed4ab2ec1cb5895b5b0c8ae93d4a515977229f",
+      "chains": 0,
+      "counts": {
+        "proved_empty_run_gaps": 78,
+        "producer_bindings": 109,
+        "consumer:unsupported observed scalar: Unit": 57,
+        "producer_no_local_change": 15,
+        "consumer:external_consumer_input": 11,
+        "producer:non-constructor premise": 79
+      }
+    },
+    {
+      "case": "001-armstrong",
+      "split": "train",
+      "trace_sha256": "73551d473db0747e358af29c18a2776d15afe4de90cbd909a60eb52934c3d6ab",
+      "chains": 0,
+      "counts": {
+        "proved_empty_run_gaps": 205,
+        "producer_bindings": 504,
+        "consumer:unsupported observed scalar: Unit": 147,
+        "producer_no_local_change": 194,
+        "consumer:external_consumer_input": 1323,
+        "consumer:non-constructor premise": 16,
+        "producer:non-constructor premise": 145,
+        "consumer:unsupported effect: subsume": 86,
+        "outside_local_equality": 26
+      }
+    },
+    {
+      "case": "002-binary-fmt",
+      "split": "train",
+      "trace_sha256": "ad17ee3d51ff4493b46d5a2f8accf4c620e07649f5c576c328d26aa426a356d6",
+      "chains": 0,
+      "counts": {
+        "proved_empty_run_gaps": 91,
+        "producer_bindings": 75,
+        "consumer:unsupported observed scalar: Unit": 15,
+        "producer_no_local_change": 10,
+        "consumer:external_consumer_input": 8,
+        "producer:non-constructor premise": 55
+      }
+    },
+    {
+      "case": "003-birthday",
+      "split": "train",
+      "trace_sha256": "722ab7fc1ce1d548d53e0818d933eec3e8ec6a95bf933c5805a54a41c1bb77c7",
+      "chains": 0,
+      "counts": {
+        "proved_empty_run_gaps": 58,
+        "producer_bindings": 53,
+        "consumer:unsupported observed scalar: Unit": 18,
+        "producer_no_local_change": 13,
+        "consumer:external_consumer_input": 4,
+        "consumer:non-constructor premise": 1,
+        "producer:non-constructor premise": 27
+      }
+    },
+    {
+      "case": "004-bitshift",
+      "split": "train",
+      "trace_sha256": "294e79eb27fdc96f6ca8dc279df3ce3558f7d5373af01b6245355ec8902f1caa",
+      "chains": 0,
+      "counts": {
+        "proved_empty_run_gaps": 118,
+        "producer_bindings": 247,
+        "consumer:unsupported observed scalar: Unit": 54,
+        "producer_no_local_change": 103,
+        "consumer:external_consumer_input": 555,
+        "producer:non-constructor premise": 103,
+        "outside_local_equality": 12
+      }
+    },
+    {
+      "case": "006-catalan",
+      "split": "train",
+      "trace_sha256": "31b9769cd75f8ccd6fd3ce79c4b8589bb1fbfabcf4292973599c4efddc7b2859",
+      "chains": 0,
+      "counts": {
+        "proved_empty_run_gaps": 195,
+        "producer_bindings": 257,
+        "consumer:unsupported observed scalar: Unit": 51,
+        "producer_no_local_change": 104,
+        "consumer:external_consumer_input": 772,
+        "consumer:non-constructor premise": 1,
+        "producer:non-constructor premise": 105,
+        "outside_local_equality": 17
+      }
+    },
+    {
+      "case": "007-check-primes",
+      "split": "train",
+      "trace_sha256": "11b9b21983dc5fed66ca522a3b64e11d9df330b982e82b7c1c71d5d1de4e2c91",
+      "chains": 0,
+      "counts": {
+        "proved_empty_run_gaps": 182,
+        "producer_bindings": 401,
+        "consumer:unsupported observed scalar: Unit": 75,
+        "producer_no_local_change": 225,
+        "consumer:external_consumer_input": 3675,
+        "consumer:non-constructor premise": 3,
+        "producer:non-constructor premise": 90,
+        "outside_local_equality": 30
+      }
+    },
+    {
+      "case": "008-collatz",
+      "split": "test",
+      "trace_sha256": "1429316013388f88eab704474ed855495efd23acd79e650422cb0ac221345c18",
+      "chains": 0,
+      "counts": {
+        "proved_empty_run_gaps": 114,
+        "producer_bindings": 243,
+        "consumer:unsupported observed scalar: Unit": 65,
+        "producer_no_local_change": 133,
+        "consumer:external_consumer_input": 1980,
+        "consumer:non-constructor premise": 2,
+        "producer:non-constructor premise": 52,
+        "outside_local_equality": 18
+      }
+    },
+    {
+      "case": "009-digital-root",
+      "split": "train",
+      "trace_sha256": "b70a7d8f98dd587e39e2fedab9a6353f06b8c0cf65759e8cc931a6e81426f582",
+      "chains": 0,
+      "counts": {
+        "proved_empty_run_gaps": 204,
+        "producer_bindings": 644,
+        "consumer:unsupported observed scalar: Unit": 41,
+        "producer_no_local_change": 287,
+        "consumer:external_consumer_input": 5001,
+        "consumer:non-constructor premise": 23,
+        "producer:non-constructor premise": 94,
+        "consumer:unsupported effect: subsume": 147,
+        "outside_local_equality": 32
+      }
+    },
+    {
+      "case": "010-dot-product",
+      "split": "test",
+      "trace_sha256": "e66f20de4de8a356170b4bd3bf39d2817da1257ecd47aafcb0b568e894a6b6c7",
+      "chains": 0,
+      "counts": {
+        "proved_empty_run_gaps": 162,
+        "producer_bindings": 120,
+        "consumer:unsupported observed scalar: Unit": 83,
+        "producer_no_local_change": 34,
+        "consumer:external_consumer_input": 10,
+        "consumer:non-constructor premise": 1,
+        "producer:non-constructor premise": 60
+      }
+    }
+  ],
+  "skipped": [
+    {
+      "case": "005-bitwise-ops",
+      "reason": "binding budget"
+    },
+    {
+      "case": "011-euclid",
+      "reason": "case budget"
+    },
+    {
+      "case": "012-fact",
+      "reason": "case budget"
+    },
+    {
+      "case": "013-factors",
+      "reason": "case budget"
+    },
+    {
+      "case": "014-fitsinside",
+      "reason": "case budget"
+    },
+    {
+      "case": "015-fizz-buzz",
+      "reason": "case budget"
+    },
+    {
+      "case": "016-gcd",
+      "reason": "case budget"
+    },
+    {
+      "case": "017-hanoi",
+      "reason": "case budget"
+    },
+    {
+      "case": "018-is-decreasing",
+      "reason": "case budget"
+    },
+    {
+      "case": "019-lcm",
+      "reason": "case budget"
+    },
+    {
+      "case": "020-loopfact",
+      "reason": "case budget"
+    },
+    {
+      "case": "021-mod_inv",
+      "reason": "case budget"
+    },
+    {
+      "case": "022-orders",
+      "reason": "binding budget"
+    },
+    {
+      "case": "023-palindrome",
+      "reason": "binding budget"
+    },
+    {
+      "case": "024-pascals-row",
+      "reason": "case budget"
+    },
+    {
+      "case": "025-perfect",
+      "reason": "case budget"
+    },
+    {
+      "case": "026-primes-between",
+      "reason": "binding budget"
+    },
+    {
+      "case": "027-pythagorean_triple",
+      "reason": "case budget"
+    },
+    {
+      "case": "028-quadratic",
+      "reason": "case budget"
+    },
+    {
+      "case": "029-recfact",
+      "reason": "case budget"
+    },
+    {
+      "case": "030-relative-primes",
+      "reason": "case budget"
+    },
+    {
+      "case": "031-reverse",
+      "reason": "case budget"
+    },
+    {
+      "case": "032-sum-bits",
+      "reason": "case budget"
+    },
+    {
+      "case": "033-sum-check",
+      "reason": "case budget"
+    },
+    {
+      "case": "034-sum-divisors",
+      "reason": "case budget"
+    },
+    {
+      "case": "035-sum-sq-diff",
+      "reason": "case budget"
+    },
+    {
+      "case": "036-totient",
+      "reason": "case budget"
+    },
+    {
+      "case": "037-up-arrow",
+      "reason": "binding budget"
+    },
+    {
+      "case": "038-conjugate-gradient",
+      "reason": "binding budget"
+    },
+    {
+      "case": "040-euler",
+      "reason": "case budget"
+    },
+    {
+      "case": "041-leibniz",
+      "reason": "case budget"
+    },
+    {
+      "case": "042-mandelbrot",
+      "reason": "binding budget"
+    },
+    {
+      "case": "043-n_root",
+      "reason": "case budget"
+    },
+    {
+      "case": "044-newton",
+      "reason": "case budget"
+    },
+    {
+      "case": "045-norm",
+      "reason": "binding budget"
+    },
+    {
+      "case": "046-ray-sphere-intersection",
+      "reason": "case budget"
+    },
+    {
+      "case": "047-riemann",
+      "reason": "binding budget"
+    },
+    {
+      "case": "048-sqrt",
+      "reason": "case budget"
+    },
+    {
+      "case": "049-dead-branch",
+      "reason": "case budget"
+    },
+    {
+      "case": "050-adj2csr",
+      "reason": "binding budget"
+    },
+    {
+      "case": "051-adler32",
+      "reason": "binding budget"
+    },
+    {
+      "case": "052-binary-search",
+      "reason": "case budget"
+    },
+    {
+      "case": "053-bubblesort",
+      "reason": "case budget"
+    },
+    {
+      "case": "054-csrmv",
+      "reason": "binding budget"
+    },
+    {
+      "case": "055-fib",
+      "reason": "case budget"
+    },
+    {
+      "case": "056-major-elm",
+      "reason": "case budget"
+    },
+    {
+      "case": "057-mat-mul",
+      "reason": "binding budget"
+    },
+    {
+      "case": "058-max-subarray",
+      "reason": "case budget"
+    },
+    {
+      "case": "059-quickselect",
+      "reason": "binding budget"
+    },
+    {
+      "case": "060-quicksort",
+      "reason": "binding budget"
+    },
+    {
+      "case": "061-vsmul",
+      "reason": "case budget"
+    },
+    {
+      "case": "062-cholesky_decomp",
+      "reason": "binding budget"
+    },
+    {
+      "case": "063-mat-inv",
+      "reason": "binding budget"
+    },
+    {
+      "case": "064-fenwick_tree",
+      "reason": "case budget"
+    },
+    {
+      "case": "067-gemm",
+      "reason": "binding budget"
+    },
+    {
+      "case": "068-gemver",
+      "reason": "binding budget"
+    },
+    {
+      "case": "069-gesummv",
+      "reason": "binding budget"
+    },
+    {
+      "case": "070-symm",
+      "reason": "binding budget"
+    },
+    {
+      "case": "071-syr2k",
+      "reason": "binding budget"
+    },
+    {
+      "case": "072-syrk",
+      "reason": "binding budget"
+    },
+    {
+      "case": "073-trmm",
+      "reason": "binding budget"
+    },
+    {
+      "case": "076-atax",
+      "reason": "binding budget"
+    },
+    {
+      "case": "077-bicg",
+      "reason": "binding budget"
+    },
+    {
+      "case": "078-doitgen",
+      "reason": "binding budget"
+    },
+    {
+      "case": "079-mvt",
+      "reason": "binding budget"
+    },
+    {
+      "case": "080-cholesky",
+      "reason": "binding budget"
+    },
+    {
+      "case": "081-durbin",
+      "reason": "binding budget"
+    },
+    {
+      "case": "082-gramschmidt",
+      "reason": "binding budget"
+    },
+    {
+      "case": "083-lu",
+      "reason": "binding budget"
+    },
+    {
+      "case": "085-trisolv",
+      "reason": "binding budget"
+    },
+    {
+      "case": "087-floyd-warshall",
+      "reason": "binding budget"
+    },
+    {
+      "case": "088-nussinov",
+      "reason": "binding budget"
+    },
+    {
+      "case": "092-jacobi-1d",
+      "reason": "binding budget"
+    },
+    {
+      "case": "093-jacobi-2d",
+      "reason": "binding budget"
+    },
+    {
+      "case": "094-seidel-2d",
+      "reason": "binding budget"
+    }
+  ],
+  "limits": {
+    "max_cases": 10,
+    "max_bindings": 20000
+  },
+  "summary": {
+    "chains": 0,
+    "observations": 0,
+    "cross_ruleset": 0
+  },
+  "limitations": [
+    "Adjacent nonempty observed Runs; intervening Runs must have zero executed bindings; union/copy producers only",
+    "Consumer local completion is conditional teacher output, not observed constructor return identity",
+    "Actual match occurrence and local premise closure do not prove arbitrary full-program takeover",
+    "No neural or GPU successor execution in this collector"
+  ],
+  "boundary_candidates": {
+    "enabled": true,
+    "counts": {
+      "candidate_pairs": 13339,
+      "external_classes:3": 5777,
+      "split:validation": 11,
+      "cross_ruleset_pairs": 0,
+      "external_classes:2": 4437,
+      "external_classes:4": 1798,
+      "split:train": 11338,
+      "external_classes:1": 279,
+      "external_classes:6": 137,
+      "external_classes:5": 911,
+      "split:test": 1990
+    },
+    "unique_consumers": 2885,
+    "unique_producers": 238,
+    "sha256": "9c8a33491cc42410901a0b788b2be173d8d0d76a40025617e8dc8fd7b9c1a4f1",
+    "causal_link_proven": false,
+    "takeover_authorized": false
+  }
+}

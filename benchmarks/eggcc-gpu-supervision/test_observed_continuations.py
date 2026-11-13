@@ -1,5 +1,5 @@
 import copy,unittest
-from collect_observed_continuations import collect
+from collect_observed_continuations import collect,boundary_inputs
 from test_cell_token_successors import rule,atom,make,TABLES
 from test_observed_cell_targets import binding
 
@@ -27,6 +27,25 @@ class ObservedContinuation(unittest.TestCase):
     def test_all_consumer_premises_required(self):
         p,t=fixture();p['recipe']['rules'][1]['query'].append(atom('Pair',0,1,2))
         rows,counts=collect(p,t,'case','test');self.assertFalse(rows);self.assertEqual(counts['local_premise:missing consumer premise'],1)
+
+    def test_external_candidates_are_not_proven_chains(self):
+        p,t=fixture();b=t['runs'][1]['audit']['bindings'][0]
+        b['eq_ports'][2]['before']=99
+        candidates=[];rows,counts=collect(p,t,'case','test',candidates.append)
+        self.assertFalse(rows);self.assertEqual(len(candidates),1)
+        c=candidates[0]
+        self.assertFalse(c['causal_link_proven']);self.assertFalse(c['takeover_authorized'])
+        self.assertEqual(c['consumer_inputs']['external_classes'],1)
+        self.assertEqual(c['consumer_binding_ordinal'],0)
+        self.assertEqual(c['empty_intervening_runs'],[2])
+
+    def test_external_aliases_are_typed_and_not_post_run_labels(self):
+        b=binding([9,9,9],[20,30,40]);b['eq_ports'][2]['sort']='Other'
+        first=boundary_inputs(b,{})
+        self.assertEqual(first['external_classes'],2)
+        self.assertEqual([p['source']['index'] for p in first['ports']],[0,0,1])
+        for p in b['eq_ports']:p['after']=999
+        self.assertEqual(first,boundary_inputs(b,{}))
 
     def test_gap_with_effects_or_missing_audit_rejected(self):
         p,t=fixture();t['steps'][1]['executed_bindings']=1
