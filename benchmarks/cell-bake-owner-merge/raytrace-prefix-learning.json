@@ -1,0 +1,260 @@
+{
+  "scope": "actual four-worker standalone Cell runtime; source-preserving composition; bounded Run graph audit plus full differential final-state/summary/effect checks",
+  "runtime_commit": "451058f3",
+  "audit_tool_commit": "1771dd5e",
+  "runtime_sha256": "d86edcc3b0f6391132b3c5535484edece2e68d08fbf1879173731beeef87fb07",
+  "artifacts": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/raytrace-prefix-learning",
+  "jobs": {
+    "tests": 372,
+    "original_prefix": 373,
+    "selection": 374,
+    "release_tools": 376,
+    "candidate_prefix_and_full_check": 378,
+    "timing": 379
+  },
+  "prefix": {
+    "runs": 128,
+    "full_execution_claimed": false,
+    "original_applications": 35903,
+    "original_proposals": 17446,
+    "original_witness_recipes": 2119,
+    "candidate_proposals": 13002,
+    "candidate_witness_recipes": 2124,
+    "exact_source_prefix_equal": true,
+    "original_worker_entries": [
+      25840,
+      26134,
+      26240,
+      25935
+    ]
+  },
+  "selection": {
+    "scope": "passive proposal selection; not measured savings",
+    "seed_fragments": 0,
+    "maximal_seed_fragments": 0,
+    "added_fragments": 32,
+    "replaced_prefixes": 0,
+    "capacity_rejections": 0,
+    "max_frames": 8,
+    "trace_catalog_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+    "obligations": [
+      "typed Entry substitutions rechecked by Program loader",
+      "runtime source/visibility/lifetime checks unchanged",
+      "all seed paths retained through maximal prefix coverage; changed dispatch contexts require execution admission"
+    ],
+    "all_seed_transitions_preserved": true
+  },
+  "full_validation": {
+    "status": "pass",
+    "runs": 16883,
+    "state_and_schedule": {
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+    },
+    "source_and_effects_equal": true
+  },
+  "work_changes": {
+    "boundary_edges_created": {
+      "control": 1840693,
+      "candidate": 1827856
+    },
+    "boundary_edges_removed": {
+      "control": 544931,
+      "candidate": 538527
+    },
+    "boundary_insert_attempts": {
+      "control": 1840693,
+      "candidate": 1827856
+    },
+    "boundary_live": {
+      "control": 1295762,
+      "candidate": 1289329
+    },
+    "boundary_ports_seen": {
+      "control": 1446144,
+      "candidate": 1443740
+    },
+    "boundary_signal_routes": {
+      "control": 268182,
+      "candidate": 265007
+    },
+    "carried_components": {
+      "control": 2742028387,
+      "candidate": 2661032639
+    },
+    "component_signal_retire_visits": {
+      "control": 421353,
+      "candidate": 414504
+    },
+    "components_created": {
+      "control": 587058,
+      "candidate": 575863
+    },
+    "components_live": {
+      "control": 484346,
+      "candidate": 476145
+    },
+    "components_retired": {
+      "control": 102712,
+      "candidate": 99718
+    },
+    "composition_baked_hits": {
+      "control": 0,
+      "candidate": 11195
+    },
+    "composition_cache_hits": {
+      "control": 0,
+      "candidate": 11195
+    },
+    "composition_cross_stage_joins": {
+      "control": 0,
+      "candidate": 10841
+    },
+    "composition_entry_reads": {
+      "control": 0,
+      "candidate": 273448
+    },
+    "composition_requests": {
+      "control": 0,
+      "candidate": 11195
+    },
+    "composition_result_joins": {
+      "control": 0,
+      "candidate": 541
+    },
+    "composition_result_writes": {
+      "control": 0,
+      "candidate": 88235
+    },
+    "composition_substituted_ports": {
+      "control": 0,
+      "candidate": 13029
+    },
+    "composition_transition_probes": {
+      "control": 0,
+      "candidate": 143571
+    },
+    "composition_unbaked_fallbacks": {
+      "control": 0,
+      "candidate": 132376
+    },
+    "dispatch_comparisons": {
+      "control": 913642,
+      "candidate": 907959
+    },
+    "inactive_slice_steps": {
+      "control": 130525,
+      "candidate": 134011
+    },
+    "internal_ports_seen": {
+      "control": 966111,
+      "candidate": 968515
+    },
+    "marker_entries": {
+      "control": 0,
+      "candidate": 109985
+    },
+    "native_signal_routes": {
+      "control": 171896,
+      "candidate": 174357
+    },
+    "signal_activations": {
+      "control": 440078,
+      "candidate": 439364
+    },
+    "signal_bindings_created": {
+      "control": 2151665,
+      "candidate": 2139542
+    },
+    "signal_bindings_live": {
+      "control": 1817665,
+      "candidate": 1811359
+    },
+    "signal_bindings_retired": {
+      "control": 334000,
+      "candidate": 328183
+    },
+    "signal_parent_probes": {
+      "control": 550804,
+      "candidate": 545269
+    },
+    "signal_root_queries": {
+      "control": 334000,
+      "candidate": 328285
+    },
+    "slice_steps": {
+      "control": 583883,
+      "candidate": 587369
+    }
+  },
+  "key_lookups": {
+    "control": 4332972,
+    "candidate": 4332972
+  },
+  "timing": {
+    "order": "entire control then entire candidate; never interleaved",
+    "repeats": 3,
+    "warmups": 1,
+    "guard_observations": 20,
+    "status": "completed-with-boundary-guards",
+    "lanes": {
+      "control": {
+        "medians": {
+          "inference_seconds": 4.740613834,
+          "process_wall_seconds": 7.183696084015537,
+          "load_seconds": 0.366808417,
+          "setup_seconds": 0.0467045,
+          "export_seconds": 1.167293792,
+          "report_seconds": 0.374013791,
+          "process_unattributed_seconds": 0.8545339990167893,
+          "process_after_report_residual_seconds": 0.4805202080167893
+        },
+        "inference_samples": [
+          4.721592917,
+          4.740613834,
+          4.852079583
+        ],
+        "raw_samples_sha256": "84d3245b98df9b93e63a2c7491a9517fefe6ce7475e5b24f5580003e9e84c2aa"
+      },
+      "candidate": {
+        "medians": {
+          "inference_seconds": 4.6939705830000005,
+          "process_wall_seconds": 7.268120541993994,
+          "load_seconds": 0.488380541,
+          "setup_seconds": 0.032516542,
+          "export_seconds": 1.191005875,
+          "report_seconds": 0.373834,
+          "process_unattributed_seconds": 0.8831464590197742,
+          "process_after_report_residual_seconds": 0.5141997500197741
+        },
+        "inference_samples": [
+          4.7112995,
+          4.6939705830000005,
+          4.65787375
+        ],
+        "raw_samples_sha256": "dd7742f8bef62966b1a5b08cf24828349214f3ec048945832f38b4697bd5cecb"
+      }
+    },
+    "inference_change_percent": -0.9839074143831672
+  },
+  "hashes": {
+    "original-prefix128/control.json": "afbca9b1d7b705607f066af065b67d310533b598c06b33ed10f0031ec73dc880",
+    "original-prefix128/trace.json": "b58eefa20d2f5c8a33e3bc23e8c951785a96fd0c0e9baed8eb7e260980dbb2c0",
+    "round1/program.json": "5edd0d91acdd5c1e44fef198df40dd6c4b1f537d97f1d9c755ae8f3290232964",
+    "round1/selection.json": "cb299523dd5b664f6e406a4e0dfebefadbdf2bedccc82e8b9d8e2c32cb9dfe6f",
+    "round1-prefix128/control.json": "022e16640ebec728da550c892a3ddfe06228fed7c6e910524e453c91525a3de2",
+    "round1-prefix128/trace.json": "845f2b042691912f3279f9000ac19e87c502b78e3f7e966b902daae84b59b111",
+    "round1-full/validation.json": "a7dd578ddc776c4517c1ae28d01d588490823dce6346dba98a1ea979606a4a95",
+    "round1-timing/result.json": "f4560e1ffab94b886c6744f135df6328f24082db1c2713e66b291480b866f97f",
+    "bin/bake_observed_witnesses": "520c73174e40814c848cc9b6874d481d52211ae8ffdd0318448bea2133eb0eeb",
+    "bin/extend_observed_owners": "f158c51385f9cf44c368bdd7c435f999beba535c1ec2a8d70e4e5ade5cdaab36",
+    "bin/worker_prefix_catalog_trace": "0974bc165befa9ee5a1491af2c1537ea04aad68aed92a9495909acb79cabdc9a",
+    "release-bin/bake_observed_witnesses": "51b1c55afd0271c0d7594fa5b6c8fa2b533338a8c8151d7026082173c5ffed72",
+    "release-bin/extend_observed_owners": "d64eeb5db9c06f77bb53b2347b5cbdd80f768f476862cf4bede52236533bc236",
+    "release-bin/worker_prefix_catalog_trace": "c7cf6178f4186fca6dec8314fef47b4e52fbca24b2b67a5d6d4659ec5b6a5021"
+  },
+  "original_program": "/Users/mineralsteins/Repos/egg_related/eggfuse-cell-unified/out/locality-speed/fast-raytrace-program/program.json",
+  "original_program_file_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+  "performance_adoption": false,
+  "reason": "Inference median improves 0.98% in one short grouped trial, but whole-process median regresses 1.18% and load rises 33.14%; no stable speedup established."
+}
