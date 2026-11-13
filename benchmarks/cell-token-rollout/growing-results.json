@@ -1,0 +1,322 @@
+{
+  "scope": "Standalone fixed GPU fanout and token continuation for bounded SubTuple Cells; not full saturation or runtime takeover",
+  "provenance": {
+    "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-multi-entry-ridge/runtime-native.json": "d7cbf05cbf4e7739fda8cf05683d3b2266eef12f6572c3f5d841548b00427308",
+    "out/cell-token-rollout/larger/runtime.json": "3528fc32580456da7ec143501202eeddc97c2c426f346d4289c172805a8bea00",
+    "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/benchmarks/cell-multi-entry-ridge/train.py": "870cd70b4db3fb0b015f788174bea172d535ce8130d5fd1cb872e67ca8533bbf"
+  },
+  "training_distinct_entrances": 14,
+  "training_tokens": 30,
+  "training_length_range": [
+    1,
+    4
+  ],
+  "training_start_range": [
+    0,
+    4
+  ],
+  "token_width": 32,
+  "backpropagation": false,
+  "intermediate_host_reads": 0,
+  "intermediate_graph_decodes": 0,
+  "capacity_source": "initial SubTuple lengths only, admitted length 1..16; no future state",
+  "heldout": [
+    {
+      "id": "connected-6-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 36,
+      "active_output_tokens": 16,
+      "padding_tokens": 20,
+      "token_buffer_bytes": 4608,
+      "learned": {
+        "exact_rounded_tokens": 16,
+        "tokens": 16,
+        "max_abs_error": 0.031928062438964844
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 16,
+        "tokens": 16,
+        "max_abs_error": 0.02587127685546875
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 16,
+        "tokens": 16,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "connected-6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 20,
+      "active_output_tokens": 10,
+      "padding_tokens": 10,
+      "token_buffer_bytes": 2560,
+      "learned": {
+        "exact_rounded_tokens": 10,
+        "tokens": 10,
+        "max_abs_error": 0.005000114440917969
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 10,
+        "tokens": 10,
+        "max_abs_error": 0.0045337677001953125
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 10,
+        "tokens": 10,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "connected-6-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 24,
+      "active_output_tokens": 13,
+      "padding_tokens": 11,
+      "token_buffer_bytes": 3072,
+      "learned": {
+        "exact_rounded_tokens": 13,
+        "tokens": 13,
+        "max_abs_error": 0.33966827392578125
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 13,
+        "tokens": 13,
+        "max_abs_error": 0.3054637908935547
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 13,
+        "tokens": 13,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "connected-8-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 48,
+      "active_output_tokens": 22,
+      "padding_tokens": 26,
+      "token_buffer_bytes": 6144,
+      "learned": {
+        "exact_rounded_tokens": 22,
+        "tokens": 22,
+        "max_abs_error": 0.09978437423706055
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 22,
+        "tokens": 22,
+        "max_abs_error": 0.0798039436340332
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 22,
+        "tokens": 22,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "connected-8-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 30,
+      "active_output_tokens": 14,
+      "padding_tokens": 16,
+      "token_buffer_bytes": 3840,
+      "learned": {
+        "exact_rounded_tokens": 14,
+        "tokens": 14,
+        "max_abs_error": 0.03350353240966797
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 14,
+        "tokens": 14,
+        "max_abs_error": 0.030668258666992188
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 14,
+        "tokens": 14,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "connected-8-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 36,
+      "active_output_tokens": 18,
+      "padding_tokens": 18,
+      "token_buffer_bytes": 4608,
+      "learned": {
+        "exact_rounded_tokens": 15,
+        "tokens": 18,
+        "max_abs_error": 0.5654430389404297
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 15,
+        "tokens": 18,
+        "max_abs_error": 0.5093116760253906
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 18,
+        "tokens": 18,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "connected-12-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 72,
+      "active_output_tokens": 34,
+      "padding_tokens": 38,
+      "token_buffer_bytes": 9216,
+      "learned": {
+        "exact_rounded_tokens": 33,
+        "tokens": 34,
+        "max_abs_error": 0.5156221389770508
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 34,
+        "tokens": 34,
+        "max_abs_error": 0.41354846954345703
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 34,
+        "tokens": 34,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "connected-12-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 50,
+      "active_output_tokens": 22,
+      "padding_tokens": 28,
+      "token_buffer_bytes": 6400,
+      "learned": {
+        "exact_rounded_tokens": 22,
+        "tokens": 22,
+        "max_abs_error": 0.32840919494628906
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 22,
+        "tokens": 22,
+        "max_abs_error": 0.2707042694091797
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 22,
+        "tokens": 22,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "connected-12-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 60,
+      "active_output_tokens": 28,
+      "padding_tokens": 32,
+      "token_buffer_bytes": 7680,
+      "learned": {
+        "exact_rounded_tokens": 12,
+        "tokens": 28,
+        "max_abs_error": 1.2776832580566406
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 12,
+        "tokens": 28,
+        "max_abs_error": 1.1476936340332031
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 28,
+        "tokens": 28,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "connected-16-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 96,
+      "active_output_tokens": 46,
+      "padding_tokens": 50,
+      "token_buffer_bytes": 12288,
+      "learned": {
+        "exact_rounded_tokens": 16,
+        "tokens": 46,
+        "max_abs_error": 1.4606456756591797
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 16,
+        "tokens": 46,
+        "max_abs_error": 1.1734962463378906
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 46,
+        "tokens": 46,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "connected-16-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 70,
+      "active_output_tokens": 30,
+      "padding_tokens": 40,
+      "token_buffer_bytes": 8960,
+      "learned": {
+        "exact_rounded_tokens": 10,
+        "tokens": 30,
+        "max_abs_error": 1.1208887100219727
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 10,
+        "tokens": 30,
+        "max_abs_error": 0.9172897338867188
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 30,
+        "tokens": 30,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "connected-16-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 84,
+      "active_output_tokens": 38,
+      "padding_tokens": 46,
+      "token_buffer_bytes": 10752,
+      "learned": {
+        "exact_rounded_tokens": 5,
+        "tokens": 38,
+        "max_abs_error": 2.3335800170898438
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 5,
+        "tokens": 38,
+        "max_abs_error": 2.1047439575195312
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 38,
+        "tokens": 38,
+        "max_abs_error": 0.0
+      }
+    }
+  ],
+  "engine_operations_removed": 0,
+  "limitations": [
+    "overlapping entrance outputs are not deduplicated on GPU",
+    "CPU checks the exact affine arithmetic at exit; rounded ridge output is not a proof",
+    "family expands suffix Cells only; cross-entry joins and other rules remain uncovered",
+    "hidden channels are learned, not proven sufficient state",
+    "parameter channel exactness does not make downstream ridge exact",
+    "no throughput claim; no CPU residual runtime integration"
+  ]
+}

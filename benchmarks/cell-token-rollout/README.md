@@ -152,3 +152,67 @@ The next numerical experiment must use input/Bake-derived capacity, never future
 teacher layouts, and keep the token block directly consumable by its successor.
 These larger endpoints extend beyond the previous known completion catalog;
 reusing the old 24-class readout cannot establish successful larger completion.
+
+## Growing GPU token blocks: first executable continuation
+
+`growing.py` executes a bounded SubTuple family on Metal. Each initial SubTuple
+is a Cell entrance, not a GPU task per graph node. The batch contains 5–6
+entrance Cells per larger case. The compiled fanout produces suffix Cell tokens;
+the next numeric stage consumes those tokens directly within the same compiled
+GPU graph. There is no intermediate graph decode, host read, table lookup or
+teacher substitution. CPU setup reads initial slots once. Output capacity is
+`entrances * max(initial length)`, bounded by the declared length limit 16;
+future graphs are inspected only after inference for validation.
+
+Token width is 32: two scaled numeric parameters plus 30 fixed nonlinear encoded
+channels. Dense random tanh features and ridge produce the successor tokens;
+ridge is fit by a linear solve, without backpropagation. The training data yields
+only **14 distinct scalar entrances / 30 suffix targets**, despite having 551
+source cases. Lengths are 1–4 and starts 0–4. This is an intentionally limited
+first arithmetic-token experiment, not a learned representation of arbitrary
+Eq/topology. Sharing and boundary identities remain outside this numerical ABI.
+
+The 12 larger cases produce 291 active successor tokens (10–46 per case), using
+626 allocated token positions: **335 padding positions**. Padding is computed,
+not free; active counts do not equal graph mutations. Overlapping entrance
+outputs are not deduplicated by this GPU path.
+
+| Path | Correct rounded parameter triples / 291 |
+|---|---:|
+| Learned token generation and learned consumer | 188 |
+| Exact first two parameter channels, learned consumer | 189 |
+| Compiled exact parameter generation and consumption | 291 |
+
+Each triple is `(suffix start, suffix length, interval end)`. All exact expected
+suffixes are present in the actual completed native-checked graph. Learned GPU
+outputs also match an independent NumPy computation within stated tolerances.
+Rounded predictions are scored but **never treated as proofs**. The exact path
+is checked with array equality, not a tolerance. Its arithmetic uses bounded
+integers and powers-of-two scaling, keeping these operations exact in f32.
+
+This reveals a concrete problem: preserving exact parameters in the first token
+does not help enough if the next learned stage reconstructs them approximately.
+The compiler-known channel must remain authoritative through the whole chain.
+The third row is a numeric compiler control: because it does not consume learned
+hidden channels, the GPU compiler may eliminate those unused calculations. It
+is not evidence that a hybrid learned semantic state is sufficient or faster.
+No token count/capacity evidence here establishes new independent information;
+these suffix parameters are derivable from their entrance and template.
+
+The current output replaces only numeric prototype stages. Actual CPU residual
+completion, cross-entry join/union, lifecycle handling and graph work replacement
+remain unimplemented; engine operations removed remains zero. Final-state
+membership is an arithmetic evidence check, not a substitute for validating
+arbitrary model-proposed effects. No performance claim is made.
+
+```
+python growing.py --training SAVED_RUNTIME_NATIVE.json \
+  --heldout ../../out/cell-token-rollout/larger/runtime.json \
+  --reference-dir REFERENCE_DIR --output ../../out/cell-token-rollout/growing.json
+```
+
+The larger examples are development evaluation cases, not a future blind test.
+Regularization was fixed before this run; no test-result search was performed.
+The next step needs a semantic token target beyond these known scalar parameters,
+a larger training domain, and actual CPU residual acceptance. Merely making more
+suffix tokens or passing this arithmetic control does not finish the runtime goal.
