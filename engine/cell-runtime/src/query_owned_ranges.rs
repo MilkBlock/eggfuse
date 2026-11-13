@@ -228,12 +228,12 @@ pub(super) fn run(
                         &mut done.counts.execution,
                     );
                     if let Some(plan) = &local[code.rule].constructor {
-                        plan.prepare(
+                        plan.complete(
                             &mut answer,
                             Some(reads),
                             &mut frame.constructors,
                             &mut done.counts.constructors,
-                            &mut done.counts.execution.constructor,
+                            &mut done.counts.execution,
                         );
                     }
                     done.counts.answers += 1;

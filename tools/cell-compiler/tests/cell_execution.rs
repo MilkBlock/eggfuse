@@ -197,6 +197,96 @@ fn query_instances_continue_into_unit_rows_without_exposing_same_run_writes() {
 }
 
 #[test]
+fn existing_constructor_results_continue_into_worker_unit_storage() {
+    for (depth,missing) in [(1,false),(2,false),(2,true)] {
+        let seeds=(0..64).map(|n|if depth==1 || missing {format!("(F (N {n}))")}
+            else {format!("(G (F (N {n})))")}).collect::<Vec<_>>().join("\n");
+        let second=if depth==1 {""} else {"(let b (G a))"};
+        let result=if depth==1 {"a"} else {"b"};
+        let repeat=if missing {""} else {"(run build)"};
+        let source=format!(r#"
+(datatype E (N i64) (F E) (G E) (Seen E))
+(function Ticket (E E) Unit :merge new)
+(function Stamp (i64) Unit :merge old)
+(ruleset build) (ruleset observe)
+(rule ((= x (N n))) ((let a (F x)) {second}
+ (set (Ticket a {result}) ()) (set (Stamp 0) ())) :ruleset build)
+(rule ((Ticket a b)) ((Seen b)) :ruleset build)
+(rule ((Ticket a b)) ((Seen b)) :ruleset observe)
+{seeds}
+(run-schedule (seq (run build) (run observe) {repeat}))
+"#);
+        let mut control=executor(&source,0);control.execute().unwrap();
+        for workers in [1,4] {
+            let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+            candidate.execute().unwrap();same(&control,&candidate);
+            assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
+            assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
+            let report=candidate.report();
+            let units=&report["query_workers"]["stats"]["execution"]["units"];
+            assert_eq!(report["cell_execution"]["constructor_preparation"]["inline_evidence_bytes"],32);
+            assert_eq!(report["cell_execution"]["constructor_preparation"]["instance_bytes"],160);
+            if workers==1 {assert_eq!(units["prefix_rows"],0);continue;}
+            if missing {
+                assert_eq!(units["prefix_rows"],0,"a first miss cannot authorize a row using the missing result");
+                assert!(report["cell_execution"]["runtime"]["stats"]["births"]["unit_worker_rows"].as_u64().unwrap()>0);
+                continue;
+            }
+            assert!(units["prefix_instances"].as_u64().unwrap()>0,"{units}");
+            assert_eq!(units["prefix_rows"].as_u64().unwrap(),units["prefix_instances"].as_u64().unwrap()*2);
+            assert_eq!(units["continuation_bytes"].as_u64().unwrap(),units["prefix_instances"].as_u64().unwrap()*48);
+            assert!(candidate.graph.stats.unit_prepared_consumed>0);
+            assert!(candidate.graph.stats.unit_prepared_invalidated>0,"repeated Stamp must discard the duplicate row");
+            assert_eq!(candidate.graph.stats.unit_prepared_prefix_discarded,0);
+        }
+    }
+}
+
+#[test]
+fn constructor_unit_continuation_discards_rows_after_a_pending_union() {
+    let seeds=(0..64).map(|n|format!("(G (F (N {n})))")).collect::<Vec<_>>().join("\n");
+    let source=format!(r#"
+(datatype E (N i64) (F E) (G E))
+(function Ticket (E E) Unit :merge old)
+(ruleset step)
+(rule ((= x (N n)) (= n 1)) ((union x (N 0))) :ruleset step)
+(rule ((= x (N n))) ((let a (F x)) (let b (G a)) (set (Ticket a b) ())) :ruleset step)
+{seeds}
+(run-schedule (run step))
+"#);
+    let mut control=executor(&source,0);control.execute().unwrap();
+    let mut candidate=executor(&source,4);candidate.use_cell_execution(1).unwrap();
+    candidate.execute().unwrap();same(&control,&candidate);
+    assert!(candidate.report()["query_workers"]["stats"]["execution"]["units"]["prefix_rows"].as_u64().unwrap()>0);
+    // This executor defers the actual union until completion. The old facts
+    // still have valid identities, but the Unit adoption must reject its key.
+    assert_eq!(candidate.graph.stats.constructor_prefix_rejected,0);
+    assert!(candidate.graph.stats.unit_prepared_generation_fallback>0);
+    assert!(candidate.graph.stats.unit_prepared_stale>0);
+}
+
+#[test]
+fn constructor_unit_continuation_preserves_a_scalar_error_before_the_write() {
+    let seeds=(0..64).map(|n|format!("(F (N {n}))")).collect::<Vec<_>>().join("\n");
+    let source=format!(r#"
+(datatype E (N i64) (F E))
+(function Ticket (E) Unit :merge old)
+(ruleset step)
+(rule ((= x (N n))) ((let a (F x)) (let unused (/ 1 n)) (set (Ticket a) ())) :ruleset step)
+{seeds}
+(run-schedule (run step))
+"#);
+    let mut control=executor(&source,0);let error=control.execute().unwrap_err();
+    for workers in [1,4] {
+        let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+        assert_eq!(candidate.execute().unwrap_err(),error);same(&control,&candidate);
+        if workers>1 {
+            assert!(candidate.report()["query_workers"]["stats"]["execution"]["units"]["missing"].as_u64().unwrap()>0);
+        }
+    }
+}
+
+#[test]
 fn prepared_unit_keys_never_bypass_an_unrelated_scalar_failure() {
     let source = r#"
 (datatype E (N i64))

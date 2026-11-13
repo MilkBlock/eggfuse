@@ -517,8 +517,8 @@ impl Host<'_, '_, '_> {
         answer.compiled=true;
         self.local.prepare(self.template,&mut answer,&mut self.counts.execution);
         if let Some(plan) = &self.local.constructor {
-            plan.prepare(&mut answer,Some(self.reads),&mut self.frame.constructors,
-                &mut self.counts.constructors,&mut self.counts.execution.constructor);
+            plan.complete(&mut answer,Some(self.reads),&mut self.frame.constructors,
+                &mut self.counts.constructors,&mut self.counts.execution);
         }
         self.answers.push((self.source,answer));
         self.counts.answers+=1;

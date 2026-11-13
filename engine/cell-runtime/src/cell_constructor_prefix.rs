@@ -15,7 +15,8 @@ pub(super) struct Step {
     pub(super) keys: Vec<Arg>,
 }
 impl Plan {
-    pub(crate) fn compile_prefix(&mut self, p: &Program, rule: usize, permanent: &[bool]) {
+    pub(crate) fn compile_prefix(&mut self, p: &Program, rule: usize, permanent: &[bool],
+        unit_storage: impl Fn(usize)->bool) {
         // Additional per-instruction audit effects retain their ordinary host.
         if cfg!(feature="structural-depth") || p.writes.get(rule).is_some_and(Option::is_some) { return; }
         let cell = Definition::new(p, rule).expect("checked Cell");
@@ -47,13 +48,28 @@ impl Plan {
             steps.push(Step { operation, table:*table, destination:*destination, aliases,
                 ready:scalar_ready.len(), keys });
         }
-        if steps.len() > 1 {
+        let units = steps.last().and_then(|last|
+            super::super::unit_prepare::Plan::after_prefix(p,rule,last.operation+1,unit_storage));
+        if steps.len() > 1 || units.is_some() {
             scalar_ready.truncate(steps.last().unwrap().ready);
             self.scalar_ready = scalar_ready;
             self.prefix = steps;
+            self.units = units.map(Box::new);
         }
     }
     pub(crate) fn prefix_width(&self) -> usize { self.prefix.len() }
+    pub(crate) fn prepare_units(&self, instance: &mut Instance,
+        counts: &mut super::super::unit_prepare::Counts) {
+        let Some(plan) = &self.units else { return; };
+        if !matches!(instance.constructor, Prepared::Prefix(_)) || instance.prepared != self.prefix.len() { return; }
+        let units = plan.rows(instance, counts);
+        if units.len() == 0 { return; }
+        let Prepared::Prefix(results) = std::mem::take(&mut instance.constructor) else { unreachable!() };
+        counts.prefix_instances += 1;
+        counts.prefix_rows += units.len() as u64;
+        counts.continuation_bytes += std::mem::size_of::<PrefixUnits>() as u64;
+        instance.constructor = Prepared::PrefixUnits(Box::new(PrefixUnits { results, units }));
+    }
     pub(super) fn prepare_prefix(&self, instance: &mut Instance,
         reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         scratch: &mut crate::graph::query_reads::Scratch,
@@ -130,7 +146,8 @@ impl Graph {
     /// Source effects have not begun, and the prefix contains no graph mutation.
     pub(crate) fn seal_constructor_prefix(&mut self, rule: usize, values: &mut Slots,
         prepared: &mut usize, results: Vec<Option<Dependency>>,
-        first: &mut Option<FactRef>) -> Option<(usize, Vec<Option<Dependency>>)> {
+        first: &mut Option<FactRef>, units: &mut super::super::unit_prepare::Prepared)
+        -> Option<(usize, Vec<Option<Dependency>>)> {
         let count = std::mem::replace(prepared,0);
         let plan = self.program.executions[rule].constructor.as_ref().expect("prepared prefix plan");
         let steps = &plan.prefix[..count];
@@ -144,6 +161,8 @@ impl Graph {
         self.stats.constructor_prefix_table_checks += checks;
         if valid { Some((count, results)) } else {
             self.stats.constructor_prefix_rejected += 1;
+            self.stats.unit_prepared_prefix_discarded += units.len() as u64;
+            *units = Default::default();
             // Eq evidence may expire without invalidating captured scalars.
             // The initial segment had to succeed before the first prefix step.
             *prepared = self.program.executions[rule].segments[0].end;
@@ -201,7 +220,7 @@ mod tests {
             g.program.known_results.static_skip[0]=std::rc::Rc::new(vec![false;4]);
             g.program.executions[0]=crate::cell::execution::Plan::derive(&g.program.tables,&g.program.templates[0],&[0]);
             let mut plan=Plan::derive(&g.program,0).unwrap();
-            plan.compile_prefix(&g.program,0,&[true]);
+            plan.compile_prefix(&g.program,0,&[true], |_|false);
             assert_eq!(plan.prefix_width(),2);
             g.program.executions[0].constructor=Some(plan.clone());
             let producer=g.linked_slots(0,[(0,Value::Eq(9))].into_iter().collect(),None).unwrap();
@@ -217,7 +236,7 @@ mod tests {
             g.sealed_generation=Some(g.stats.unions);g.epoch=1;
             if invalid {g.enqueue_union(Value::Eq(9),Value::Eq(7)).unwrap();g.repair().unwrap();}
             let Prepared::Prefix(results)=std::mem::take(&mut instance.constructor) else {panic!("worker prefix")};
-            let prefix=g.seal_constructor_prefix(0,&mut instance.values,&mut instance.prepared,results,&mut None);
+            let prefix=g.seal_constructor_prefix(0,&mut instance.values,&mut instance.prepared,results,&mut None,&mut Default::default());
             assert_eq!(instance.values.get(&3),Some(&Value::Int(5)));
             assert_eq!(instance.values.get(&4),Some(&Value::Int(10)));
             if invalid {
@@ -237,16 +256,22 @@ mod tests {
     #[test]
     fn invalid_run_or_visibility_evidence_clears_all_speculative_identities_before_source_allocation() {
         for change in ["same","union","delete"] {
-            let mut g = super::super::tests::graph();
-            let template = &mut g.program.templates[0];
+            let mut p = super::super::tests::graph().program;
+            p.tables.push(serde_json::from_value(serde_json::json!({
+                "name":"Ticket","schema":[{"kind":"eq","name":"E"},{"kind":"Unit","name":"Unit"}],
+                "constructor":false,"virtual_fact":false,"internal":false,"merge":{"var":"old"}
+            })).unwrap());
+            let template = &mut p.templates[0];
             template.sorts.push(template.sorts[0].clone());
             template.defs.insert(2,1);
             template.ops=std::sync::Arc::new(vec![Op::Let(1,Call::Table(0),vec![Arg::Slot(0)]),
-                Op::Let(2,Call::Table(0),vec![Arg::Slot(1)])]);
-            g.program.known_results.static_skip[0]=std::rc::Rc::new(vec![false;2]);
-            g.program.executions[0]=crate::cell::execution::Plan::derive(&g.program.tables,&g.program.templates[0],&[0]);
+                Op::Let(2,Call::Table(0),vec![Arg::Slot(1)]),
+                Op::Set(1,vec![Arg::Slot(2)],Arg::Literal(Value::Int(0)))]);
+            p.known_results.static_skip[0]=std::rc::Rc::new(vec![false;3]);
+            p.executions[0]=crate::cell::execution::Plan::derive(&p.tables,&p.templates[0],&[0]);
+            let mut g=Graph::new(p).unwrap();
             let mut plan=Plan::derive(&g.program,0).unwrap();
-            plan.compile_prefix(&g.program,0,&[true]);
+            plan.compile_prefix(&g.program,0,&[true,false], |_|true);
             assert_eq!(plan.prefix_width(),2);
             g.program.executions[0].constructor=Some(plan.clone());
             let producer=g.linked_slots(0,[(0,Value::Eq(9))].into_iter().collect(),None).unwrap();
@@ -256,6 +281,9 @@ mod tests {
             let mut instance=Instance::matched([(0,Value::Eq(9))].into_iter().collect(),Default::default(),0);
             plan.prepare(&mut instance,g.query_reads(&[],&mut 0).as_ref(),
                 &mut Default::default(),&mut Default::default(),&mut Counts::default());
+            let mut instance=rayon::ThreadPoolBuilder::new().num_threads(1).build().unwrap().install(move|| {
+                plan.prepare_units(&mut instance,&mut Default::default());instance
+            });
             assert_eq!(instance.values.get(&1),Some(&first));
             assert_eq!(instance.values.get(&2),Some(&second));
             g.sealed_generation=Some(g.stats.unions);g.epoch=1;
@@ -264,15 +292,20 @@ mod tests {
                 "delete" => {assert!(g.hide(0,&[Value::Eq(9)],true).unwrap());},
                 _ => (),
             }
-            let Prepared::Prefix(results)=std::mem::take(&mut instance.constructor) else {panic!("worker prefix")};
+            let Prepared::PrefixUnits(completed)=std::mem::take(&mut instance.constructor) else {panic!("worker prefix and actual Unit row")};
+            let PrefixUnits { results,mut units }=*completed;
+            assert_eq!(units.len(),1);
             let mut witness=None;
-            let prefix=g.seal_constructor_prefix(0,&mut instance.values,&mut instance.prepared,results,&mut witness);
+            let prefix=g.seal_constructor_prefix(0,&mut instance.values,&mut instance.prepared,results,&mut witness,&mut units);
             if change=="same" {
+                assert_eq!(units.take(2).unwrap().fields[0],second);
                 assert_eq!(g.consume_constructor_prefix(0,prefix.unwrap().0,false),2);
                 assert_eq!(instance.values.get(&1),Some(&first));
                 assert_eq!(g.stats.constructor_prefix_operations,2);
             } else {
                 assert!(prefix.is_none());
+                assert_eq!(units.len(),0,"invalid identities must not survive in a dependent Unit row");
+                assert_eq!(g.stats.unit_prepared_prefix_discarded,1);
                 assert!(!instance.values.contains_key(&1) && !instance.values.contains_key(&2));
                 let cell=g.begin_transient(0,instance.values,None).unwrap();
                 assert!(witness.is_none(), "undemanded result has no extra retained witness");

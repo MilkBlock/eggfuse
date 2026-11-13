@@ -230,6 +230,8 @@ pub struct Stats {
     pub unit_prepared_stale: u64,
     pub unit_prepared_storage_fallback: u64,
     pub unit_prepared_generation_fallback: u64,
+    #[serde(default)]
+    pub unit_prepared_prefix_discarded: u64,
     pub unit_registry_batches: u64,
     pub unit_registry_candidates: u64,
     pub unit_registry_installs: u64,

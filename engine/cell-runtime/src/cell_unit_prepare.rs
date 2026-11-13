@@ -12,6 +12,7 @@ pub(crate) struct Plan { sites: Vec<Site>, required: Vec<usize> }
 #[derive(Default, Debug)]
 pub(crate) struct Prepared(Vec<(usize, Row)>);
 impl Prepared {
+    pub fn len(&self) -> usize { self.0.len() }
     pub fn take(&mut self, operation: usize) -> Option<Row> {
         let rows = &mut self.0;
         // Stored in reverse source order. An earlier operation can have been
@@ -21,15 +22,26 @@ impl Prepared {
     }
 }
 #[derive(Default, Serialize)]
-pub(crate) struct Counts { pub instances: u64, pub rows: u64, pub bytes: u64, pub missing: u64 }
+pub(crate) struct Counts {
+    pub instances: u64, pub rows: u64, pub bytes: u64, pub missing: u64,
+    pub prefix_instances: u64, pub prefix_rows: u64, pub continuation_bytes: u64,
+}
 impl Counts {
     pub fn add(&mut self, other: &Self) {
         self.instances += other.instances; self.rows += other.rows;
         self.bytes += other.bytes; self.missing += other.missing;
+        self.prefix_instances += other.prefix_instances; self.prefix_rows += other.prefix_rows;
+        self.continuation_bytes += other.continuation_bytes;
     }
 }
 impl Plan {
     pub fn derive(p: &Program, rule: usize, storage: impl Fn(usize)->bool) -> Option<Self> {
+        Self::after_prefix(p, rule, 0, storage)
+    }
+    /// `end` is supplied only by the checked permanent-constructor prefix.
+    /// Its destinations can feed Unit rows once that whole prefix completes.
+    pub(super) fn after_prefix(p: &Program, rule: usize, end: usize,
+        storage: impl Fn(usize)->bool) -> Option<Self> {
         if cfg!(feature="structural-depth") || cfg!(feature="family-survey") { return None; }
         let cell = Definition::new(p, rule).ok()?;
         let execution = &p.executions[rule];
@@ -39,6 +51,7 @@ impl Plan {
         for (operation, op) in cell.template.ops.iter().enumerate() {
             if p.known_results.static_skip[rule][operation] || matches!(op, Op::Copy(..)) { continue; }
             match op {
+                Op::Let(dst, Call::Table(_), _) if operation < end => { ready.insert(*dst); }
                 Op::Let(dst, Call::Primitive(..), _) if operation < execution.segments[0].end
                     || execution.input_ready.binary_search(&operation).is_ok() => { ready.insert(*dst); required.push(*dst); }
                 Op::Set(table, keys, value) => {
@@ -66,14 +79,18 @@ impl Plan {
     pub fn prepare(&self, instance: &mut Instance, counts: &mut Counts) {
         if !instance.constructor.pending() { return; }
         instance.constructor = super::constructor_prepare::Prepared::Absent;
+        let rows = self.rows(instance, counts);
+        if rows.len() != 0 { instance.constructor = super::constructor_prepare::Prepared::Units(rows); }
+    }
+    pub(super) fn rows(&self, instance: &Instance, counts: &mut Counts) -> Prepared {
         // Inline small Runs already have the final source executor on their
         // host. Materializing another candidate there adds allocation without
         // increasing parallel work; leave their ordinary write path intact.
-        if rayon::current_thread_index().is_none() { return; }
+        if rayon::current_thread_index().is_none() { return Prepared::default(); }
         // An unrelated failed scalar still prevents the later Set. A prepared
         // key alone is not evidence that the source prefix completed.
         if self.required.iter().any(|s|!instance.values.contains_key(s)) {
-            counts.missing += 1; return;
+            counts.missing += 1; return Prepared::default();
         }
         let mut rows = Vec::with_capacity(self.sites.len());
         for site in &self.sites {
@@ -87,6 +104,6 @@ impl Plan {
         counts.bytes += (rows.capacity()*std::mem::size_of::<(usize, Row)>()) as u64;
         counts.instances += 1; counts.rows += rows.len() as u64;
         rows.reverse();
-        if !rows.is_empty() { instance.constructor = super::constructor_prepare::Prepared::Units(Prepared(rows)); }
+        Prepared(rows)
     }
 }

@@ -149,8 +149,8 @@ impl Work {
                 for row in rows {
                     let row = row.frame_mut();
                     code.prepare(template, row, &mut work.execution);
-                    plan.prepare(row, reads, &mut frame.constructors, &mut work.constructors,
-                        &mut work.execution.constructor);
+                    plan.complete(row, reads, &mut frame.constructors, &mut work.constructors,
+                        &mut work.execution);
                 }
             });
         } else {

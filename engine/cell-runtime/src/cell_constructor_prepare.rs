@@ -21,6 +21,7 @@ pub(crate) struct Plan {
     // steps reference a cumulative slice; there is no second scalar evaluator.
     scalar_ready: Vec<usize>,
     pub(crate) result_layout: Option<std::sync::Arc<crate::cell::EffectLayout>>,
+    units: Option<Box<super::unit_prepare::Plan>>,
 }
 
 #[cfg(test)]
@@ -160,9 +161,17 @@ pub(crate) enum Prepared {
     // Demanded actual results already occupy the source Effects layout.
     // Progress uses Instance.prepared; no temporary per-constructor receipt log.
     Prefix(Vec<Option<Dependency>>),
+    // Only mixed Cells allocate this holder; the ordinary Instance and the
+    // source Execution keep their existing sizes and actual result layouts.
+    PrefixUnits(Box<PrefixUnits>),
     // Input-only Unit cells have no constructor preparation. Reuse this
     // mutually exclusive state instead of widening every matched Instance.
     Units(super::unit_prepare::Prepared),
+}
+#[derive(Debug)]
+pub(crate) struct PrefixUnits {
+    pub results: Vec<Option<Dependency>>,
+    pub units: super::unit_prepare::Prepared,
 }
 impl Prepared {
     pub fn pending(&self) -> bool { matches!(self, Self::Untried) }
@@ -205,6 +214,13 @@ impl Counts {
     }
 }
 impl Plan {
+    pub fn complete(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
+        scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
+        counts: &mut super::execution::Counts) {
+        self.prepare(instance, reads, scratch, work, &mut counts.constructor);
+        self.prepare_units(instance, &mut counts.units);
+    }
+    pub fn has_unit_tail(&self) -> bool { self.units.is_some() }
     pub fn derive(p: &Program, rule: usize) -> Option<Self> {
         let cell = Definition::new(p, rule).ok()?;
         // Captured input rewrites need a stronger temporal alias proof.
@@ -225,14 +241,15 @@ impl Plan {
                 Arg::Literal(_) => true,
                 Arg::Slot(s) => ready.contains(s) && cell.template.defs.get(s).is_none_or(|&at| at < operation),
             }) { return Some(Self { operation, table:*table,
-                handoff: p.iterative.supplies_operation(rule, operation), keys, prefix:vec![], scalar_ready:vec![], result_layout:None }); }
+                handoff: p.iterative.supplies_operation(rule, operation), keys, prefix:vec![], scalar_ready:vec![], result_layout:None, units:None }); }
         }
         None
     }
     pub fn storage_bytes(&self) -> usize { self.keys.capacity() * std::mem::size_of::<Arg>()
         + self.prefix.capacity() * std::mem::size_of::<prefix::Step>()
         + self.scalar_ready.capacity() * std::mem::size_of::<usize>()
-        + self.prefix.iter().map(|s|s.keys.capacity()*std::mem::size_of::<Arg>()).sum::<usize>() }
+        + self.prefix.iter().map(|s|s.keys.capacity()*std::mem::size_of::<Arg>()).sum::<usize>()
+        + self.units.as_ref().map_or(0, |p|std::mem::size_of::<super::unit_prepare::Plan>()+p.storage_bytes()) }
     pub fn prepare(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
         counts: &mut Counts) {

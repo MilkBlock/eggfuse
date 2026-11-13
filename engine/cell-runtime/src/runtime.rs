@@ -2174,10 +2174,17 @@ impl Executor {
                 Prepared::Found(witness) => (Some(witness),None,Default::default()),
                 Prepared::Prefix(results) => {
                     let mut witness=None;
-                    let prefix=self.graph.seal_constructor_prefix(rid,&mut b.values,&mut b.prepared,results,&mut witness);
-                    (witness,prefix,Default::default())
+                    let mut units=Default::default();
+                    let prefix=self.graph.seal_constructor_prefix(rid,&mut b.values,&mut b.prepared,results,&mut witness,&mut units);
+                    (witness,prefix,units)
                 },
                 Prepared::Units(rows) => (None,None,rows),
+                Prepared::PrefixUnits(completed) => {
+                    let crate::cell::constructor_prepare::PrefixUnits { results, mut units } = *completed;
+                    let mut witness = None;
+                    let prefix = self.graph.seal_constructor_prefix(rid,&mut b.values,&mut b.prepared,results,&mut witness,&mut units);
+                    (witness,prefix,units)
+                },
                 _ => (None,None,Default::default()),
             }
         };
@@ -3345,7 +3352,7 @@ impl Executor {
             "context_bytes":std::mem::size_of::<crate::graph::rhs_ownership::Suspended>(),
             "scope":"existing worker suffix dispatch; source-order driver still waits"}); }
         #[cfg(feature = "sparse-cells")]
-        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v6",
+        { report["cell_execution"]["constructor_preparation"] = json!({"schema":"cell-constructor-preparation/v7",
             "rules":self.graph.program.executions.iter().filter(|p|p.constructor.is_some()).count(),
             "handoff_rules":self.graph.program.executions.iter()
                 .filter(|p|p.constructor.as_ref().is_some_and(|p|p.handoff)).count(),
@@ -3353,6 +3360,8 @@ impl Executor {
                 .filter(|p|p.constructor.as_ref().is_some_and(|p|p.prefix_width()!=0)).count(),
             "prefix_operations":self.graph.program.executions.iter()
                 .filter_map(|p|p.constructor.as_ref()).map(|p|p.prefix_width()).sum::<usize>(),
+            "unit_tail_rules":self.graph.program.executions.iter()
+                .filter(|p|p.constructor.as_ref().is_some_and(|p|p.has_unit_tail())).count(),
             "instance_bytes":std::mem::size_of::<crate::cell::Instance>(),
             "inline_evidence_bytes":std::mem::size_of::<crate::cell::constructor_prepare::Prepared>(),
             "scope":"existing Cell handoffs or source-certified permanent constructor prefixes; invalid prefixes clear prepared Eq slots before ordinary allocation"}); }

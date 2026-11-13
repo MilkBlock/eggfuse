@@ -290,7 +290,8 @@ impl Executor {
                 &self.graph.program, rule, |table|self.graph.prepares_unit_storage(table));
             let mut constructor = crate::cell::constructor_prepare::Plan::derive(&self.graph.program, rule);
             if let Some(plan) = &mut constructor {
-                plan.compile_prefix(&self.graph.program,rule,self.stage_spine.permanent_tables());
+                plan.compile_prefix(&self.graph.program,rule,self.stage_spine.permanent_tables(),
+                    |table|self.graph.prepares_unit_storage(table));
             }
             self.graph.program.executions[rule].constructor = constructor;
             self.graph.program.executions[rule].births = crate::graph::cell_births::Plan::derive(&self.graph.program,rule).map(std::sync::Arc::new);
@@ -431,8 +432,8 @@ impl Executor {
                 };
                 local.prepare(template,&mut answer,&mut counts.execution);
                 if let Some(plan) = &local.constructor {
-                    plan.prepare(&mut answer,Some(&reads),&mut frame.constructors,
-                        &mut counts.constructors,&mut counts.execution.constructor);
+                    plan.complete(&mut answer,Some(&reads),&mut frame.constructors,
+                        &mut counts.constructors,&mut counts.execution);
                 }
                 answers.push(answer);
             }
@@ -1083,8 +1084,8 @@ impl Workers {
                     Ok(Some(mut answer)) => {
                         local[code.rule].prepare(&templates[code.template],&mut answer,&mut counts.execution);
                         if let Some(plan) = &local[code.rule].constructor {
-                            plan.prepare(&mut answer,Some(&reads),&mut frame.constructors,
-                                &mut counts.constructors,&mut counts.execution.constructor);
+                            plan.complete(&mut answer,Some(&reads),&mut frame.constructors,
+                                &mut counts.constructors,&mut counts.execution);
                         }
                         // Point-only tasks reserve once. Mixed expansions may
                         // return more rows, so also charge subsequent growth.
