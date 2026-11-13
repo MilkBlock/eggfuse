@@ -1,0 +1,243 @@
+{
+  "scope": "actual standalone Cell runtime, four workers; merge regression check, not optional prefix-retirement timing",
+  "source_branch": "codex/cell-parallel-admission",
+  "source_tip": "fba15b236b277d5fef29ea47f3cb313b007e51d7",
+  "required_ancestor": "d0d8ee332bb9056437dd1ecfad694cfdf80fc442",
+  "commits": {
+    "control": "cf439fae4127caaf244fccfd985300c0a7a5fc38",
+    "candidate": "451058f363821d43f6a0210bedf7f00d75c6d958"
+  },
+  "pre_merge_head": "24bc40ef",
+  "control_equivalence": "24bc40ef only adds Markdown/JSON evidence to cf439fae; runtime sources unchanged",
+  "integration_fix": "Guard active_rhs with sparse-cells, preserving idle/repair/frozen-reader constraints",
+  "checks": {
+    "job_363": {
+      "ownership": 72,
+      "compiler": 19,
+      "witness": 13,
+      "bake_selector": 3,
+      "runtime": 234,
+      "no_default_compile": "failed on missing active_rhs feature guard"
+    },
+    "job_365": {
+      "default_compile": "pass",
+      "no_default_compile": "pass",
+      "targeted_retirement_and_append_tests": 2
+    },
+    "job_367": {
+      "validation": {
+        "sum": {
+          "exact_state_runs_effects": true,
+          "runs": 1428,
+          "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+        },
+        "ray": {
+          "exact_state_runs_effects": true,
+          "runs": 16883,
+          "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+        }
+      },
+      "native_sum_semantics": "pass",
+      "learned_validation": {
+        "scope": "unchanged saved Bake catalog; differential final state, Run summaries and effects; not native acceptance or timing",
+        "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+        "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "exact_state_runs_effects": true,
+        "runs": 1428
+      }
+    }
+  },
+  "runtime_sha256": {
+    "control": "d82bfca5d01c46981cd73984da21e5c78888bc02d1191c491d5a1a8ff7ea2a43",
+    "candidate": "d86edcc3b0f6391132b3c5535484edece2e68d08fbf1879173731beeef87fb07"
+  },
+  "work_equal": {
+    "sum": true,
+    "ray": true
+  },
+  "learned_work_equal": true,
+  "timing": {
+    "job": 368,
+    "order": "whole control, optional previous experiment, then whole candidate; never interleaved",
+    "sample_counts": {
+      "sum": 5,
+      "ray": 3,
+      "learned": 5
+    },
+    "warmup_per_lane_case": 1,
+    "guard_observations": 76,
+    "measurement_status": "completed-with-boundary-guards",
+    "workloads": {
+      "sum": {
+        "control": {
+          "medians": {
+            "inference_seconds": 0.020940125,
+            "process_wall_seconds": 0.14397154201287776,
+            "load_seconds": 0.068331584,
+            "setup_seconds": 0.013934625,
+            "export_seconds": 0.005250792,
+            "report_seconds": 0.008606375,
+            "process_unattributed_seconds": 0.035586834012877766,
+            "process_after_report_residual_seconds": 0.026980459012877767
+          },
+          "inference_samples": [
+            0.020672625,
+            0.0206125,
+            0.020940125,
+            0.022407708,
+            0.021042417
+          ],
+          "runtime_sha256": "d82bfca5d01c46981cd73984da21e5c78888bc02d1191c491d5a1a8ff7ea2a43",
+          "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "raw_samples_sha256": "fd2cb86c3d99e8b154648b51ef87d2254f04d1fd19e6f1a648353f4124ad7651"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 0.021163417,
+            "process_wall_seconds": 0.14020395796978846,
+            "load_seconds": 0.065089584,
+            "setup_seconds": 0.013523041,
+            "export_seconds": 0.0051005,
+            "report_seconds": 0.008243291,
+            "process_unattributed_seconds": 0.03469303995564241,
+            "process_after_report_residual_seconds": 0.02635787498429045
+          },
+          "inference_samples": [
+            0.021015959,
+            0.021400208,
+            0.021163417,
+            0.021502875,
+            0.0210955
+          ],
+          "runtime_sha256": "d86edcc3b0f6391132b3c5535484edece2e68d08fbf1879173731beeef87fb07",
+          "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "raw_samples_sha256": "75931d376b7e591fdb4b13f06ea912f2bea628dd8c7031cf078b6c070fff43da"
+        },
+        "inference_change_percent": 1.0663355638994565
+      },
+      "ray": {
+        "control": {
+          "medians": {
+            "inference_seconds": 4.749768959,
+            "process_wall_seconds": 7.188764500024263,
+            "load_seconds": 0.355687667,
+            "setup_seconds": 0.046899625,
+            "export_seconds": 1.178762959,
+            "report_seconds": 0.381955792,
+            "process_unattributed_seconds": 0.8641980410002779,
+            "process_after_report_residual_seconds": 0.48224224900027785
+          },
+          "inference_samples": [
+            4.7985845000000005,
+            4.702959959,
+            4.749768959
+          ],
+          "runtime_sha256": "d82bfca5d01c46981cd73984da21e5c78888bc02d1191c491d5a1a8ff7ea2a43",
+          "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "raw_samples_sha256": "0dbd50e5c2c0ac7f51c274b05d175c5a899b15d262b18d2c88ee5478a250a215"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 4.971150292,
+            "process_wall_seconds": 7.450547666987404,
+            "load_seconds": 0.3714425,
+            "setup_seconds": 0.048161125,
+            "export_seconds": 1.181073667,
+            "report_seconds": 0.387133208,
+            "process_unattributed_seconds": 0.8387511249874038,
+            "process_after_report_residual_seconds": 0.4659144999874038
+          },
+          "inference_samples": [
+            4.689434458,
+            4.971150292,
+            5.0075865
+          ],
+          "runtime_sha256": "d86edcc3b0f6391132b3c5535484edece2e68d08fbf1879173731beeef87fb07",
+          "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "raw_samples_sha256": "425136737a1eb94e7b2684122553280c2f5e8170d83e3d56b3c784af240788b0"
+        },
+        "inference_change_percent": 4.660886348598492
+      },
+      "learned": {
+        "control": {
+          "medians": {
+            "inference_seconds": 0.022078958,
+            "process_wall_seconds": 0.17665804200805724,
+            "load_seconds": 0.100625292,
+            "setup_seconds": 0.012676958,
+            "export_seconds": 0.005191709,
+            "report_seconds": 0.008573459,
+            "process_unattributed_seconds": 0.03526379100805724,
+            "process_after_report_residual_seconds": 0.02705599900805724
+          },
+          "inference_samples": [
+            0.022078958,
+            0.021975459,
+            0.022478125,
+            0.022049125,
+            0.025241917
+          ],
+          "runtime_sha256": "d82bfca5d01c46981cd73984da21e5c78888bc02d1191c491d5a1a8ff7ea2a43",
+          "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+          "raw_samples_sha256": "961591167d0025ea9349d67d012b4193fa1ca43a82ae8615498abbb315baf44d"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 0.023405375,
+            "process_wall_seconds": 0.18053837498882785,
+            "load_seconds": 0.100009625,
+            "setup_seconds": 0.013938584,
+            "export_seconds": 0.005371333,
+            "report_seconds": 0.008828792,
+            "process_unattributed_seconds": 0.03670383198105803,
+            "process_after_report_residual_seconds": 0.02810054198882786
+          },
+          "inference_samples": [
+            0.023405375,
+            0.02315225,
+            0.021571791,
+            0.0242865,
+            0.024867584
+          ],
+          "runtime_sha256": "d86edcc3b0f6391132b3c5535484edece2e68d08fbf1879173731beeef87fb07",
+          "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+          "raw_samples_sha256": "f90033a7900c5f3caefe65a5f42d32c313396d929070546c7be08ad43a825a20"
+        },
+        "inference_change_percent": 6.00760688072326
+      }
+    }
+  },
+  "artifacts": {
+    "root": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/fba15b23",
+    "work_sha256": "3b741b702aad86717905d014a3e9c96876e6a7465fcc3ec2f93604bb0f76fde3",
+    "timing_sha256": "bc15f5d25fa9886508a1d207e2081661fe32449c50384d7a8a63599ee6da25b9"
+  },
+  "interpretation": "Short grouped trial shows slower inference medians on all three inputs; retain as a regression signal, not a speedup. Cause not isolated. Candidate Raytrace first sample is faster than control median, later two slower. No repeat chosen to replace this result.",
+  "coverage": "Timed runtime never invokes compact_retired_prefixes. Optional lifecycle behavior is covered by tests and separately documented source-branch experiments. Raytrace and learned catalogs use differential contracts; native acceptance is only ordinary sum-bits.",
+  "ray_phase_medians": {
+    "control": {
+      "delivery_gc": 0.020961007,
+      "query_update": 0.891588367,
+      "repair": 0.434308211,
+      "rhs": 1.701947643,
+      "search": 1.699120642
+    },
+    "candidate": {
+      "delivery_gc": 0.022135066,
+      "query_update": 0.9544402869999999,
+      "repair": 0.461277645,
+      "rhs": 1.772204749,
+      "search": 1.725653562
+    }
+  },
+  "ray_retired_prefix_stats": {
+    "retired_prefix_bootstrap_scans": 0,
+    "retired_prefix_events": 0,
+    "retired_prefix_frames": 0,
+    "retired_prefix_native_guards": 0,
+    "retired_prefix_scans": 0,
+    "retired_prefix_symbols": 0,
+    "retired_prefix_takeovers": 0
+  },
+  "ray_source_retirements": 102635
+}
