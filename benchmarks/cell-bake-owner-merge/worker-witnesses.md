@@ -157,3 +157,39 @@ are unchanged. Exact Run snapshots, ordered bindings and exports agree with the
 ordinary-query control. This tests template sharing across distinct instances,
 including targets which must fail exact key comparison. It is not workload
 speed evidence.
+
+### Measured chunk experiment (`364d9a91`)
+
+Job 313 passes exact final state, ordered Run summaries and effect checks on all
+three workloads. Fresh ordinary sum-bits binds to the reviewed native choice
+proof. The unchanged learned artifact remains a separate differential contract.
+On that artifact, static route probes fall **4,676→4,013** (663 fewer, 14.18%);
+selection reuse rises 353→1,016. All 558 accepted witnesses, 35 proved hits,
+1,335 candidate checks, key construction, generic lookups and result-buffer
+work remain unchanged. Thus this change removes repeated static selection,
+but most selection work is still paid.
+
+Job 314 holds one timing lease for all nine groups: whole `aef89181` control,
+whole `b8a113c8` previous experiment, then whole `364d9a91` candidate. The 126
+process-boundary guards are clear. Short-run medians:
+
+| Workload | `aef89181` | `b8a113c8` | `364d9a91` |
+| --- | ---: | ---: | ---: |
+| ordinary sum-bits | 21.398 ms | 22.245 ms | 21.111 ms |
+| Raytrace | 5.015479 s | 4.740771 s | 4.943401 s |
+| learned sum-bits | 22.323 ms | 21.542 ms | 21.100 ms |
+
+Against the pinned baseline the candidate is 1.34%, 1.44% and 5.48% faster;
+against the previous experiment it is 5.10% faster, **4.27% slower**, and 2.05%
+faster. Raytrace samples vary substantially (control 4.793–5.341 s, candidate
+4.739–5.111 s). These results do not establish a consistent speed improvement
+or attribute ordinary-case changes to witness routing, which remains inactive
+there. The experimental code is retained for further investigation; the pinned
+performance baseline stays `aef89181`. Exact samples and work are in
+`witness-chunk-results.json`. Do not add this reduction to the previously
+counted 558 generic lookups as another lookup saving.
+
+The incoming original-workload composition experiment now provides an audited
+1,428-Run seed and actual cross-stage compositions without changing source core.
+That is a better next coverage target than growing this separate 882-Run catalog
+or continuing to tune a route whose ordinary Raytrace coverage is zero.
