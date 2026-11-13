@@ -64,3 +64,60 @@ One timing job completes all control sum-bits/Raytrace/learned groups before any
 candidate group. Five, three and seven samples respectively, each with one
 warmup. The reviewed native contract applies only to ordinary sum-bits; the
 unchanged learned catalog and Raytrace use their stated differential checks.
+
+## Workload result: performance gate failed
+
+The implementation is `b8a113c8`. Job 297 freezes it and validates exact final
+exports, source Run summaries and logical effects for ordinary sum-bits (1,428
+Runs), Raytrace (16,883) and the unchanged learned catalog (882). Native sum-bits
+choice diagnosis passes and binds to the fresh ordinary export. Neither the
+learned workload nor Raytrace gains a new native acceptance claim.
+
+On the learned catalog, generic lookups fall **14,962→14,404**, exactly the 558
+accepted worker witnesses. Prefix work, buffer moves/capacity and 1,099 baked
+composition hits are unchanged. Only 35 accepted witnesses have static key
+proofs; key construction decreases only 13,005→12,988 fields. Additional work:
+
+| worker witness work | count |
+|---|---:|
+| operation attempts | 5,162 |
+| anchor reads | 5,029 |
+| route-map probes | 4,676 |
+| selection reuse | 353 |
+| selected-group operation checks | 1,411 |
+| target candidates | 1,335 |
+| lifecycle checks | 1,370 |
+| accepted witnesses | 558 |
+
+All 5,029 anchor reads reach a map probe or selection reuse. Only 1,411 obtain
+a group; the other 3,618 signatures are absent from the current compiled route
+map. This does not identify which key dimension (shape, source position, code
+or operation) caused each miss, nor prove that they are all future-stage shapes.
+The absent group and candidate checks are new paid work, not savings.
+
+Ordinary sum-bits and Raytrace execute zero new witness attempts. Their generic
+lookups remain 14,653 and 4,332,972 and the recorded preparation/buffer/ownership
+counters are unchanged. Those workloads therefore diagnose common execution
+overhead; they cannot establish witness-route coverage.
+
+Job 298 completes all three control groups before any candidate group. All 84
+process-boundary guards are clear. Short grouped inference medians:
+
+| workload | previous candidate `aef89181` | experiment `b8a113c8` | change |
+|---|---:|---:|---:|
+| ordinary sum-bits | 21.056 ms | 24.101 ms | +14.47% |
+| Raytrace | 4.753641 s | 4.855154 s | +2.14% |
+| learned sum-bits | 20.908 ms | 21.414 ms | +2.42% |
+
+**This is not an accepted speedup.** The implementation and measurements stay
+on the experimental branch; the performance baseline remains `aef89181`.
+Sample values and provenance are retained in `worker-witness-results.json`.
+The ordinary regression cannot be attributed to failed witness probes because
+those inputs execute none. Common preparation changes and grouped-run drift
+remain separate possibilities; no causal profiling result is claimed.
+
+The next work is to select applicable continuation code at the Cell/Entry
+boundary rather than retry its route map at each constructor, and to retain the
+catalog-free preparation path without unnecessary common dispatch. Expanding
+this catalog or counting the 558 successes again would not discharge either
+cost. Large parallel speedup and saturated-Cell replacement remain unfinished.
