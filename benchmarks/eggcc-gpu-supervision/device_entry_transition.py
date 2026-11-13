@@ -8,6 +8,7 @@ from multi_entry_ridge import template,neighborhood_template
 from device_input_features import compile_inputs,encode_inputs
 from device_ridge_transition import infer
 from device_token_commit import closed_entry_proposals,commit
+from device_slot_owners import has as has_slot,read as read_slot
 
 
 def compile_features(recipe,entry,channels=4,source_relations=False):
@@ -44,8 +45,8 @@ def propose(state,plan,input_layout,coefficient_layout,model,stage,xp):
     origin=plan['projection'][0][plan['destination_projection'][0]]
     projected=plan['destination_valid'][0]
     for column,key in [('scalar_numbers','numbers'),('scalar_numeric','numeric'),('scalar_codes','scalar_codes'),('scalar_valid','scalar_valid')]:
-        if column in state:
-            value=state[column][:,origin]
+        if has_slot(state,column):
+            value=read_slot(state,column,xp.arange(n)[:,None],origin[None,:],xp)
             mask=projected[None,:] if value.ndim==2 else projected[None,:,None]
             value=xp.where(mask,value,0)
             inputs[key]=value[:,:width]

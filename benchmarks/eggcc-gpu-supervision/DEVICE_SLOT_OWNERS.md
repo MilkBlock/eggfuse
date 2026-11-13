@@ -2,9 +2,8 @@
 
 This opt-in GPU mechanism transfers **sealed payload storage**, not logical
 activation or proof responsibilities. It is integrated with constructor witness
-projection, multi-source query matching and input encoding. RHS writers, new
-instance admission/allocation, root refresh and the full stage loop are not yet
-lowered to the owner arena. It is not a complete autonomous Eggcc runtime.
+projection, multi-source query matching and input encoding. New instance admission now reuses the owner arena (see DEVICE_OWNER_ADMISSION.md).
+RHS writers, root refresh and the full stage loop are not yet lowered to it. It is not a complete autonomous Eggcc runtime.
 
 ## Representation and actual removed storage obligation
 
@@ -45,8 +44,8 @@ simulate reuse, then successfully run the existing multi-source query and live
 input encoder without host feature readback. Further tests check nonshared field
 and scalar metadata copies, exact constructor-view preservation, chained aliases,
 padding, occupied tails, stale generations, value mismatches and quiescence.
-139 relevant mechanism tests pass. Actual allocator reuse is not implemented;
-the poison test establishes that queries no longer depend on the released row.
+139 relevant mechanism tests pass. The original poison test establishes that queries no longer depend on the released
+row; DEVICE_OWNER_ADMISSION.md adds actual allocation reuse through query admission.
 
 A direct-inheritance-only draft covered zero of the 157 lowered dot-product
 Entries: requiring the receiver to already contain every source field misses
@@ -66,8 +65,8 @@ arrays even when logical moved-field counts are small. No speedup is claimed.
 
 Freeing physical rows releases reusable arena capacity; it does not shrink the
 allocated bank or establish lower process memory. Logical keys and floating
-source tokens remain retained. New instance allocation must use released capacity,
-and writers must respect shared owners, before this becomes a complete takeover.
+source tokens remain retained. New instance allocation now uses released capacity. Writers must still respect
+shared owners before this becomes a complete takeover.
 The quiescence bit is currently a caller-supplied premise, not a concurrent GPU
 reader protocol. Unsynchronized writes are outside the supported contract.
 
@@ -82,5 +81,5 @@ composition opportunities even without Cursor ancestry; keeping only logical
 component counts hides retained source fields and owner fragmentation. Here shared
 fields derive from template projections, missing fields remain stored, and owner
 metadata/movement are charged. The next required integration is writable owner
-storage and allocation at the existing GPU Run boundaries, followed by actual
+storage at the existing GPU Run boundaries, followed by actual
 snapshot audits; no full runtime correctness follows from these local tests.

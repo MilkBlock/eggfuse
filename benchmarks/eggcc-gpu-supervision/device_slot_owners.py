@@ -38,6 +38,42 @@ def read(state,column,rows,slots,xp):
     return xp.where(mask,data,False if column in ('slot_valid','scalar_valid','scalar_numeric') else 0)
 
 
+def live(state,rows,xp):
+    if 'slot_owner' not in state:return xp.ones_like(rows,dtype=xp.bool_)
+    owner=state['slot_owner'][rows];safe=xp.clip(owner,0,len(state['owner_live'])-1)
+    return (owner>=0)&(owner<len(state['owner_live']))&state['owner_live'][safe]&(state['owner_epoch'][rows]==state['owner_generation'][safe])
+
+
+def free_rows(state,xp):
+    ids=xp.arange(len(state['owner_live']))
+    referenced=xp.any(state['present'][:,None]&(state['slot_owner'][:,None]==ids[None,:]),axis=0)
+    return ~state['owner_live']&~referenced&(state['owner_generation']<2147483647)
+
+
+def allocate(state,proposals,accepted,rank,logical_write,pick,xp):
+    """Allocate physical rows only for already admitted logical instances."""
+    free=free_rows(state,xp);free_rank=xp.cumsum(free.astype(xp.int32))-1
+    write=accepted[:,None]&free[None,:]&(rank[:,None]==free_rank[None,:])
+    written=xp.any(write,axis=0);owner_pick=xp.argmax(write.astype(xp.int32),axis=0)
+    destination=xp.argmax(write.astype(xp.int32),axis=1)
+    out=dict(state)
+    for column in COLUMNS:
+        if not has(state,column):continue
+        if column not in proposals:raise ValueError('proposal lost owner column: '+column)
+        values=proposals[column]
+        if values.shape[1:]!=state['owner_'+column].shape[1:]:raise ValueError('owner payload layout mismatch')
+        mask=written[:,None,None] if values.ndim==3 else written[:,None]
+        out['owner_'+column]=xp.where(mask,values[owner_pick],state['owner_'+column])
+    out['owner_live']=state['owner_live']|written
+    out['owner_generation']=state['owner_generation']+written.astype(xp.int32)
+    out['slot_owner']=xp.where(logical_write,destination[pick],state['slot_owner'])
+    out['owner_epoch']=xp.where(logical_write,out['owner_generation'][destination[pick]],state['owner_epoch'])
+    width=state['owner_projection'].shape[1]
+    projection=xp.where(proposals['slot_valid'][pick],xp.arange(width)[None,:],-1)
+    out['owner_projection']=xp.where(logical_write[:,None],projection,state['owner_projection'])
+    return out
+
+
 def compile_transfer(recipe,entry,width):
     source=recipe['rules'][entry['producer']];target=recipe['rules'][entry['consumer']]
     if width<max(len(source['slots']),len(target['slots'])):raise ValueError('owner width too small')

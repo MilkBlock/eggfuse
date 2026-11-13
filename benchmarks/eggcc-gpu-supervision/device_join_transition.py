@@ -8,6 +8,7 @@ from device_input_features import compile_inputs
 from multi_entry_ridge import template,neighborhood_template
 from device_ridge_transition import infer
 from device_token_commit import commit
+from device_slot_owners import shape as slot_shape,has as has_slot,read as read_slot
 
 
 def compile_transition(recipe,rid,channels=4,views=None,source_relations=False):
@@ -59,7 +60,7 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp):
     if plan.get('source_relations',False):
         request['source_relation']=xp.stack(relations,axis=1) if relations else xp.zeros((capacity,1,128),xp.float32)
     tokens,numerical=infer(state,request,model,xp)
-    width=state['slots'].shape[1];local=bindings['slots'].shape[1];key_width=state['keys'].shape[1]
+    width=slot_shape(state)[1];local=bindings['slots'].shape[1];key_width=state['keys'].shape[1]
     required=plan['query']['required']
     if local>width or len(required)+1>key_width:raise ValueError('instance layout too small')
     key=xp.concatenate([xp.full((capacity,1),plan['query']['rule'],xp.int32),bindings['slots'][:,required],xp.full((capacity,key_width-1-len(required)),-1,xp.int32)],axis=1)
@@ -70,10 +71,10 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp):
            missing_witness=(bindings['live']&~numerical['ready'])|~bindings['complete'])
     for key in ('slots','slot_roots','slot_valid'):
         p[key]=xp.concatenate([bindings[key],xp.full((capacity,width-local),False if key=='slot_valid' else -1,bindings[key].dtype)],axis=1)
-    rows=xp.clip(bindings['source_rows'],0,state['slots'].shape[0]-1);slots=xp.clip(bindings['source_slots'],0,width-1)
+    rows=xp.clip(bindings['source_rows'],0,slot_shape(state)[0]-1);slots=xp.clip(bindings['source_slots'],0,width-1)
     for key in ('scalar_numbers','scalar_numeric','scalar_codes','scalar_valid'):
-        if key in state:
-            value=state[key][rows,slots];mask=bindings['slot_valid'][:,:,None] if value.ndim==3 else bindings['slot_valid']
+        if has_slot(state,key):
+            value=read_slot(state,key,rows,slots,xp);mask=bindings['slot_valid'][:,:,None] if value.ndim==3 else bindings['slot_valid']
             value=xp.where(mask,value,0);padding=(capacity,width-local)+value.shape[2:]
             p[key]=xp.concatenate([value,xp.zeros(padding,value.dtype)],axis=1)
     return p,dict(query_complete=bindings['complete'],overflow=bindings['overflow'],candidate_lanes=bindings['candidate_lanes'],encoding=encoding,numerical=numerical)

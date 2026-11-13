@@ -14,6 +14,7 @@ def commit(state, proposals, xp, key_context=None):
     A proposal can transfer activation only from a settled, reader-free owner,
     with one admitted successor and an explicit compiled-coverage bit.
     """
+    from device_slot_owners import live as owner_live,free_rows,allocate
     capacity = state['keys'].shape[0]; count = proposals['keys'].shape[0]
     if capacity < 1 or count < 1:
         raise ValueError('positive static capacity and proposal count required')
@@ -29,6 +30,7 @@ def commit(state, proposals, xp, key_context=None):
     valid_source = (in_range & ~stale_token & state['present'][safe_source] & state['active'][safe_source]
                     & state['visible'][safe_source]
                     & (state['generation'][safe_source] == proposals['generation']))
+    valid_source=valid_source&owner_live(state,safe_source,xp)
     finite = xp.all(xp.isfinite(proposals['tokens']), axis=1)
     settled = state['settled'][safe_source]
     multi_source='witness_sources' in proposals
@@ -40,6 +42,7 @@ def commit(state, proposals, xp, key_context=None):
         dirty=state.get('token_dirty',xp.zeros_like(state['active']))[safe]
         valid=((witnesses>=0)&(witnesses<capacity)&state['present'][safe]&state['visible'][safe]
                &(state['generation'][safe]==proposals['witness_generations'])&~dirty)
+        valid=valid&owner_live(state,safe,xp)
         valid_source=xp.any(mask,axis=1)&xp.all(~mask|valid,axis=1)
         stale_token=xp.any(mask&dirty,axis=1)
         settled=xp.all(~mask|state['settled'][safe],axis=1)
@@ -64,7 +67,8 @@ def commit(state, proposals, xp, key_context=None):
     rank = xp.cumsum(novel.astype(xp.int32))-1
     free = ~state['present']; free_rank = xp.cumsum(free.astype(xp.int32))-1
     free_count = xp.sum(free.astype(xp.int32))
-    accepted = novel & (rank < free_count)
+    owner_capacity=xp.array(count) if 'slot_owner' not in state else xp.sum(free_rows(state,xp).astype(xp.int32))
+    accepted = novel & (rank < free_count) & (rank < owner_capacity)
     write = accepted[:,None] & free[None,:] & (rank[:,None] == free_rank[None,:])
     written = xp.any(write, axis=0)
     # At most one admitted proposal per destination. Indices select exact
@@ -83,19 +87,23 @@ def commit(state, proposals, xp, key_context=None):
     output = dict(state)
     output['keys'] = xp.where(written[:,None], proposals['keys'][pick], state['keys'])
     output['tokens'] = xp.where(written[:,None], proposals['tokens'][pick], state['tokens'])
-    if 'slots' in proposals:
-        output['slots']=xp.where(written[:,None],proposals['slots'][pick],state['slots'])
-        output['slot_valid']=xp.where(written[:,None],proposals['slot_valid'][pick],state['slot_valid'])
-    for column in ('scalar_numbers','scalar_numeric','scalar_codes','scalar_valid'):
-        if column in state:
-            if column not in proposals:raise ValueError('proposal lost scalar slot columns')
-            mask=written[:,None,None] if state[column].ndim==3 else written[:,None]
-            output[column]=xp.where(mask,proposals[column][pick],state[column])
-    if 'effect_pc' in state:
-        output['effect_pc']=xp.where(written,0,state['effect_pc'])
-    if 'slot_roots' in state:
-        if 'slot_roots' not in proposals:raise ValueError('proposal lost authoritative root slots')
-        output['slot_roots']=xp.where(written[:,None],proposals['slot_roots'][pick],state['slot_roots'])
+    if 'slot_owner' in state:
+        owned=allocate(state,proposals,accepted,rank,written,pick,xp)
+        for key in owned:
+            if key.startswith('owner_') or key=='slot_owner':output[key]=owned[key]
+    else:
+        if 'slots' in proposals:
+            output['slots']=xp.where(written[:,None],proposals['slots'][pick],state['slots'])
+            output['slot_valid']=xp.where(written[:,None],proposals['slot_valid'][pick],state['slot_valid'])
+        for column in ('scalar_numbers','scalar_numeric','scalar_codes','scalar_valid'):
+            if column in state:
+                if column not in proposals:raise ValueError('proposal lost scalar slot columns')
+                mask=written[:,None,None] if state[column].ndim==3 else written[:,None]
+                output[column]=xp.where(mask,proposals[column][pick],state[column])
+        if 'slot_roots' in state:
+            if 'slot_roots' not in proposals:raise ValueError('proposal lost authoritative root slots')
+            output['slot_roots']=xp.where(written[:,None],proposals['slot_roots'][pick],state['slot_roots'])
+    if 'effect_pc' in state:output['effect_pc']=xp.where(written,0,state['effect_pc'])
     if 'token_dirty' in state:output['token_dirty']=xp.where(written,False,state['token_dirty'])
     output['present'] = state['present'] | written
     output['active'] = (state['active'] & ~retired) | written
@@ -110,7 +118,7 @@ def commit(state, proposals, xp, key_context=None):
         stale_token=proposals['matched'] & stale_token,
         nonfinite=proposals['matched'] & ~finite,
         unsettled_source=proposals['matched'] & valid_source & ~settled,
-        capacity=novel & ~accepted,
+        capacity=novel & ~accepted,owner_capacity=novel&(rank>=owner_capacity),
         transfer_blocked=accepted & proposals['transfer_covered'] & ~transferable,
         duplicate=eligible & (known | prior))
     # Closure also requires caller-supplied query/effect coverage. This is only
@@ -129,6 +137,7 @@ def closed_entry_proposals(state, plan, stage, xp, token_values=None):
     lowering. completed means the consumer has no outstanding effects, never a
     prediction of settlement. weights/bias are frozen float transition maps.
     """
+    from device_slot_owners import read as read_slot,has as has_slot
     capacity = state['keys'].shape[0]; entries = plan['producer'].shape[0]
     # Candidate shape is fixed; success is computed from live token metadata.
     matched = (state['present'][:,None] & state['active'][:,None]
@@ -137,14 +146,15 @@ def closed_entry_proposals(state, plan, stage, xp, token_values=None):
                & plan['query_covered'][None,:])
     projection = plan['projection']
     use_slots='destination_projection' in plan
-    payload_keys = (state['slots'] if use_slots else state['keys'])[:,projection]
+    rows=xp.arange(capacity)[:,None,None]
+    payload_keys = read_slot(state,'slots',rows,projection[None,:,:],xp) if use_slots else state['keys'][:,projection]
     missing=xp.zeros_like(matched)
     if use_slots:
-        ready=xp.all(state['slot_valid'][:,projection] | ~plan['projection_valid'][None,:,:],axis=2)
+        ready=xp.all(read_slot(state,'slot_valid',rows,projection[None,:,:],xp) | ~plan['projection_valid'][None,:,:],axis=2)
         missing=matched & ~ready
         matched=matched & ready
     if 'completion_projection' in plan:
-        completion_ready=xp.all(state['slot_valid'][:,plan['completion_projection']] | ~plan['completion_valid'][None,:,:],axis=2)
+        completion_ready=xp.all(read_slot(state,'slot_valid',rows,plan['completion_projection'][None,:,:],xp) | ~plan['completion_valid'][None,:,:],axis=2)
         missing=missing | (matched & ~completion_ready)
         matched=matched & completion_ready
     if 'projection_valid' in plan:  # Static layout option, not a device predicate.
@@ -171,14 +181,14 @@ def closed_entry_proposals(state, plan, stage, xp, token_values=None):
         valid=xp.broadcast_to(plan['destination_valid'][None,:,:],values.shape)
         if 'completion_projection' in plan:
             cv=plan['completion_valid'][None,:,:]
-            values=xp.where(cv,state['slots'][:,plan['completion_projection']],values)
+            values=xp.where(cv,read_slot(state,'slots',rows,plan['completion_projection'][None,:,:],xp),values)
             valid=valid | cv
         proposals['slots']=xp.where(valid,values,-1).reshape(capacity*entries,-1)
         proposals['slot_valid']=valid.reshape(capacity*entries,-1)
-        if 'slot_roots' in state:
-            root_inputs=state['slot_roots'][:,projection]
+        if has_slot(state,'slot_roots'):
+            root_inputs=read_slot(state,'slot_roots',rows,projection[None,:,:],xp)
             root_values=xp.take_along_axis(root_inputs,indices,axis=2)
             if 'completion_projection' in plan:
-                root_values=xp.where(plan['completion_valid'][None,:,:],state['slot_roots'][:,plan['completion_projection']],root_values)
+                root_values=xp.where(plan['completion_valid'][None,:,:],read_slot(state,'slot_roots',rows,plan['completion_projection'][None,:,:],xp),root_values)
             proposals['slot_roots']=xp.where(valid,root_values,-1).reshape(capacity*entries,-1)
     return proposals
