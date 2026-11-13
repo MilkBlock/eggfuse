@@ -107,3 +107,16 @@ Check reports use separate `cell-fields-checked.json` and
 `cell-overlap-checked.json` filenames. The analyzer rejects mismatched program,
 Run, final-state or fact-storage identities and nonzero persistent stable records.
 It preserves complete Graph and Program accounting and overlap costs.
+
+## Ordinary sparse build coverage
+
+A subsequent feature-matrix check found that the new source reader referred to
+completed-owner methods even without `storage-metrics`, where those methods do
+not exist. The ordinary sparse build now reads its regular source slots without
+referencing the optional completed store. The transferred-source admission guard
+is likewise conditional; the scalar-delegation guard remains active in both modes.
+`cargo check -p eggfuse-cell-runtime --features sparse-cells` and the actual
+`cell_field_reads_and_snapshot_values_are_charged` execution test with compiler
+features `iterative-bake,sparse-cells` pass through the shared compute queue.
+This repairs availability of the representation outside measurement builds;
+it introduces no additional memory-saving claim or new timing campaign.

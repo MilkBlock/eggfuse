@@ -87,7 +87,12 @@ impl ScalarView<'_> {
                 match scalar_argument(template,*operation,column)? {
                     Arg::Literal(value)=>Some(value.clone()),
                     Arg::Slot(slot)=>cells.get(cell).and_then(|c|c.values.get(slot))
-                        .or_else(||cells.completed_value(*cell,*slot)).cloned(),
+                        .or_else(|| {
+                            #[cfg(feature="storage-metrics")]
+                            {cells.completed_value(*cell,*slot)}
+                            #[cfg(not(feature="storage-metrics"))]
+                            {None}
+                        }).cloned(),
                 }
             },
         }
@@ -187,7 +192,11 @@ impl Graph {
     #[cfg(feature="sparse-cells")]
     pub fn use_cell_stable_fields(&mut self)->Result<()> {
         if self.cell_stable_fields_enabled() {return Ok(());}
-        if self.cells.completed_ids().next().is_some() || self.stats.completed_scalar_slots_elided!=0 {
+        #[cfg(feature="storage-metrics")]
+        let transferred=self.cells.completed_ids().next().is_some();
+        #[cfg(not(feature="storage-metrics"))]
+        let transferred=false;
+        if transferred || self.stats.completed_scalar_slots_elided!=0 {
             return Err("cell fields must precede completed scalar delegation".into());
         }
         self.use_template_stable_fields()?;
