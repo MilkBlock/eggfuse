@@ -432,3 +432,29 @@ RHS_operation,target_frame,target_operation,table)`. The execution integration
 must consume these through existing constructor preparation/handoff and check
 current arguments, fact visibility/incarnation and stage ordering. A candidate
 miss cannot justify suppressing ordinary residual matching or future union matches.
+
+## Reconcile with the merged execution route
+
+During the execution experiment, current HEAD acquired the structural witness
+route implementation (`db61fbe4`, reconciled by `d4b9fa2d`). It already loads
+`ownership_witnesses` into the shared compiler plan, requests query Entries,
+selects shape-relative witnesses, proves keys from shared ports/copies when
+possible, and otherwise retains exact-key validation.
+
+A separate experimental entry directory hit its sibling-constructor test but
+failed the useful-work gate: both control and candidate performed 3 port-key
+lookups. Final exports, snapshots and binding audits matched. Its new lookup
+attempt therefore did not establish removed work. The entire uncommitted duplicate
+runtime directory, execution hook and experimental test were removed. This is
+negative experiment evidence, not an optimization or speedup.
+
+The existing `ownership_witnesses::Routes::compile` currently uses `or_insert`
+for a single Target per `(shape, source ordinal, source code, source operation)`.
+The observed multi-target traces require revisiting this selection. Exact-key
+fallback preserves semantics when the first target is wrong, but cannot exploit
+another witnessed target from the same entry. The next change should extend this
+existing route representation and its validation, not add another per-Graph
+candidate catalog. It must distinguish identical targets from genuinely different
+alternatives, charge key comparisons, and demonstrate fewer generic lookups when
+only a later alternative matches. Key-proved and dynamic-key routes must retain
+liveness, operator/code and original effect-order checks.
