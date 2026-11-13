@@ -80,3 +80,7 @@ required-features = ["iterative-bake", "sparse-cells"]
 [[example]]
 name = "batch_cell_learning"
 required-features = ["iterative-bake", "sparse-cells", "storage-metrics"]
+
+[[example]]
+name = "bake_observed_joins"
+required-features = ["iterative-bake", "sparse-cells"]
