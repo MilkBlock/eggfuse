@@ -1,0 +1,319 @@
+{
+  "scope": "real selected construct/union family on GPU; not full Eggcc",
+  "rules": [
+    283,
+    290,
+    293
+  ],
+  "snapshot_run": 466,
+  "stage": "context",
+  "trace_sha256": "7928ece79308b9253ac58dc9f80add806e2145904013beb263a2b89eb59926ae",
+  "model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+  "lowered_sets": [
+    {
+      "rule": 1,
+      "source_operation": 2,
+      "lowered_operation": 2,
+      "temporary_slot": 7
+    },
+    {
+      "rule": 2,
+      "source_operation": 2,
+      "lowered_operation": 2,
+      "temporary_slot": 6
+    }
+  ],
+  "seed_rows": 98,
+  "generated_cells": 40,
+  "fresh_ids": 5,
+  "released_owner_rows": 34,
+  "generated_source_consumers": 4,
+  "cpu_runs": [
+    {
+      "new_equivalences": 5,
+      "applications": 33,
+      "per_rule_applications": [
+        9,
+        19,
+        5
+      ],
+      "new_constructors": 3
+    },
+    {
+      "new_equivalences": 0,
+      "applications": 33,
+      "per_rule_applications": [
+        11,
+        18,
+        4
+      ],
+      "new_constructors": 2
+    },
+    {
+      "new_equivalences": 1,
+      "applications": 35,
+      "per_rule_applications": [
+        12,
+        19,
+        4
+      ]
+    },
+    {
+      "new_equivalences": 0,
+      "applications": 35,
+      "per_rule_applications": [
+        13,
+        18,
+        4
+      ]
+    }
+  ],
+  "lowered_cpu_runs": [
+    {
+      "new_equivalences": 7,
+      "applications": 33,
+      "per_rule_applications": [
+        9,
+        19,
+        5
+      ],
+      "new_constructors": 3
+    },
+    {
+      "new_equivalences": 1,
+      "applications": 33,
+      "per_rule_applications": [
+        11,
+        18,
+        4
+      ],
+      "new_constructors": 2
+    },
+    {
+      "new_equivalences": 1,
+      "applications": 35,
+      "per_rule_applications": [
+        12,
+        19,
+        4
+      ]
+    },
+    {
+      "new_equivalences": 0,
+      "applications": 35,
+      "per_rule_applications": [
+        13,
+        18,
+        4
+      ]
+    }
+  ],
+  "gpu_matches_per_run": [
+    33,
+    33,
+    35,
+    35
+  ],
+  "gpu_matches_per_rule": [
+    [
+      9,
+      19,
+      5
+    ],
+    [
+      11,
+      18,
+      4
+    ],
+    [
+      12,
+      19,
+      4
+    ],
+    [
+      13,
+      18,
+      4
+    ]
+  ],
+  "gpu_runs": 4,
+  "gpu_run_changes": [
+    true,
+    true,
+    true,
+    false
+  ],
+  "graph_check": {
+    "passed": true,
+    "errors": [],
+    "actual_facts": 96,
+    "expected_facts": 96,
+    "mapped_classes": 66
+  },
+  "boundary_checks": [
+    {
+      "passed": true,
+      "errors": [],
+      "actual_facts": 95,
+      "expected_facts": 95,
+      "mapped_classes": 66
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "actual_facts": 97,
+      "expected_facts": 97,
+      "mapped_classes": 67
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "actual_facts": 96,
+      "expected_facts": 96,
+      "mapped_classes": 66
+    },
+    {
+      "passed": true,
+      "errors": [],
+      "actual_facts": 96,
+      "expected_facts": 96,
+      "mapped_classes": 66
+    }
+  ],
+  "lowering_check": {
+    "passed": true,
+    "errors": [],
+    "actual_facts": 96,
+    "expected_facts": 96,
+    "mapped_classes": 66
+  },
+  "views_complete": true,
+  "query_checks": [
+    {
+      "checked": 9,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 9,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    },
+    {
+      "checked": 19,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 19,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    },
+    {
+      "checked": 5,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 5,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    },
+    {
+      "checked": 11,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 2,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    },
+    {
+      "checked": 18,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 2,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    },
+    {
+      "checked": 4,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 0,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    },
+    {
+      "checked": 12,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 1,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    },
+    {
+      "checked": 19,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 1,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    },
+    {
+      "checked": 4,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 0,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    },
+    {
+      "checked": 13,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 1,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    },
+    {
+      "checked": 18,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 0,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    },
+    {
+      "checked": 4,
+      "errors": {},
+      "passed": true,
+      "enumeration_complete": true,
+      "overflow": false,
+      "accepted": 0,
+      "scope": "selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime"
+    }
+  ],
+  "finished": true,
+  "failed_run": false,
+  "passed": true,
+  "gpu_compile_upload_execute_seconds": 35.642380415985826,
+  "cpu_reference_and_audit_seconds": 0.1834224160411395,
+  "limitations": [
+    "One projected source ruleset, omitted external rules/tables remain uncovered",
+    "Lowering adds temporary slots and potentially fresh IDs/unions",
+    "Exact kernels authorize completion; ridge quality for lowered templates is not established",
+    "No claim of identical intermediate allocation or native full-graph execution"
+  ],
+  "capture": {
+    "schema": "device-composed-witness/v1",
+    "artifact_sha256": "8fd3df23f75d64dfb05e2610c9eef52e815973a0f2f955f76d69aa1bc7044ca8",
+    "passed": true,
+    "target_labels_included": false,
+    "logical_array_bytes": 10234860
+  }
+}
