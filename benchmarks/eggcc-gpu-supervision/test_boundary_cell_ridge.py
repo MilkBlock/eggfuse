@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from boundary_cell_ridge import B,D,state,symbols,projection,features,step
+from boundary_cell_ridge import B,D,state,symbols,projection,features,step,fit_boundary_basis,compress_state,compress_projection,audit_boundary
 from whole_cell_ridge import request
 from test_cell_token_successors import rule,atom,make
 
@@ -41,6 +41,35 @@ class Boundary(unittest.TestCase):
         a,b=self.a,self.b
         result=state([('F',(a,a))],[a,b],2,[(a,a),(b,a)])[D:].reshape(2,B)
         np.testing.assert_array_equal(result[0],result[1])
+
+    def test_folded_projection_matches_reconstructed_boundary(self):
+        rng=np.random.default_rng(3)
+        basis,_=np.linalg.qr(rng.normal(size=(32,8)))
+        basis=basis.astype(np.float32)
+        latent=rng.normal(size=(3,8)).astype(np.float32)
+        projections=rng.normal(size=(3,32,D)).astype(np.float32)
+        folded=compress_projection(projections,basis)
+        direct=np.matmul(latent[:,None,:],folded)
+        reconstructed=np.matmul((latent@basis.T)[:,None,:],projections)
+        np.testing.assert_allclose(direct,reconstructed,rtol=1e-5,atol=1e-5)
+
+    def test_basis_does_not_read_held_out_targets(self):
+        rng=np.random.default_rng(4)
+        source=rng.normal(size=(8,D+12)).astype(np.float32)
+        target=rng.normal(size=source.shape).astype(np.float32)
+        training=np.arange(8)<4
+        basis=fit_boundary_basis(source,target,training,3)
+        source[~training]=1e4;target[~training]=-1e4
+        np.testing.assert_array_equal(basis,fit_boundary_basis(source,target,training,3))
+
+    def test_full_basis_preserves_attachment_and_boundary(self):
+        s=state(self.source,self.ports,5)[None,:]
+        basis=np.eye(5*B,dtype=np.float32)
+        compressed=compress_state(s,basis)
+        np.testing.assert_array_equal(audit_boundary(compressed,basis),s[:,D:])
+        p=projection([(0,self.a)],self.ports,5)[None,:]
+        q=np.zeros((1,D),np.float32);w=np.zeros((5*D,1),np.float32)
+        np.testing.assert_array_equal(features(s,q,p,w,np),features(compressed,q,compress_projection(p,basis),w,np))
 
     def test_unrepresented_boundary_is_explicit(self):
         with self.assertRaisesRegex(ValueError,'unrepresented'):

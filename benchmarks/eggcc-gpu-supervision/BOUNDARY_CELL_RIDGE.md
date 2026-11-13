@@ -81,3 +81,60 @@ $PYTHON -m unittest discover -s benchmarks/eggcc-gpu-supervision -p test_boundar
 
 `boundary-cell-ridge-results.json` records the numerical and exact-body audit.
 This is not the sum-bits native semantic acceptance contract.
+
+## Rank-64 compression experiment: not accepted as an improvement
+
+`--boundary-rank 64` fits an uncentered SVD basis U using **only training-family
+source and target boundary states**. Validation/test values do not fit the basis.
+The rank was fixed at 64 for this experiment. No backpropagation is introduced.
+
+For a row boundary b and request matrix P:
+
+```
+z = b U                           # initial encoding / training targets
+P_compressed = transpose(U) P      # offline Bake projection
+attachment = tanh(z P_compressed)  # GPU, no reconstructed port array
+```
+
+The ridge predicts the next compressed z as well as the body. Both are consumed
+by the second step on device. Only the post-execution CPU audit reconstructs
+boundary channels. Tests establish equivalence of the folded projection to the
+reconstructed projected state, independence from held-out training values, and
+identity-basis equivalence. They do not prove lossy projection preserves facts.
+
+Storage falls from 1,728 to **128 floats per Cell**, and the explicit request
+projection falls from 106,496 to **4,096 floats**. The shared basis has 106,496
+floats offline; it is not transferred as part of the recurrent GPU step. These
+are representation counts, not measured speedups. Offline construction still
+materializes the uncompressed training arrays and projections.
+
+Accuracy regresses under the same known-catalog body audit:
+
+| Metric | Full boundary | Rank 64 |
+|---|---:|---:|
+| Test exact target, out of 140 novel requests | 98 | 87 |
+| Test missed emissions | 4 | 11 |
+| Validation exact target, out of 214 | 94 | 93 |
+| Validation false emissions (novelty head) | 1 | 119 |
+
+The boundary reconstruction diagnostic separates compression error from the
+learned update. Merely projecting the correct target into the rank-64 basis and
+back gives live-channel RMSE **0.15131** on test and **0.21503** on validation.
+The complete learned predictor gives **0.15246** and **0.21535**, respectively.
+These are errors over live channels; padding is excluded. The reconstruction
+numbers are not a lower-bound proof for that masked metric, but they demonstrate
+that this projection already loses substantial held-out boundary information
+without a learned transition. The increased emission error is measured separately;
+this experiment does not establish that all emission errors have the same cause.
+
+The global basis is over padded layout coordinates whose semantic roles vary
+between producer families. This makes shared role/layout alignment an important
+next hypothesis, not an established explanation for every failure. Do not replace
+the full representation with this variant based on size alone. Any replacement
+must preserve request-observable distinctions and newly generated boundary ports.
+The existing new-port, lifecycle, ownership and Run-order gaps remain unchanged.
+
+Reproduce with the earlier commands, adding `--boundary-rank 64` to the model
+command. `boundary-rank64-results.json` includes model and exact-body audit
+results. The first 64 eligible chains still run entirely on Metal between steps;
+this remains an offline standalone prototype, not the complete eggcc GPU runtime.
