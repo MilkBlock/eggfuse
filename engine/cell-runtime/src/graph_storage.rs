@@ -76,7 +76,10 @@ impl Graph {
                     "entry":state.entry,"decoded":state.decoded.is_some()})
             }).collect::<Vec<_>>();
             json!({"cell":id,"template":meta.template,"completed":meta.completed,
-                "started_epoch":meta.started_epoch,"facts":facts})
+                "started_epoch":meta.started_epoch,"facts":facts,
+                "parent":self.cells.get(&id).and_then(|c|c.parent),
+                "retainers":self.parent_users.get(&id).copied().unwrap_or(0),
+                "completed_storage":self.cells.completed_meta(id).is_some()})
         }).collect::<Vec<_>>();
         json!({"scope":"post-execution live fact lifecycle; equal values are observations, not static proof",
             "fact_state_bytes":std::mem::size_of::<FactState>(),

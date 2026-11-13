@@ -145,3 +145,66 @@ Reproduce by rebuilding the two examples above, running `verify`, and measuring
 the unchanged candidate artifacts with `runtime_storage_peak ... inherited-owners
 --port-domains-only`. Results are in `scalar-results.json`; the earlier directory
 and batch measurements are intentionally retained as their own controls.
+
+## Physical owner completion across Runs
+
+The previous physical transfer collected only ordinary Cells, requiring two or
+more eligible sources. Once two earlier frames had transferred, a single later
+stage could not join their backing owner. The composed port shape grew, while
+storage completion stopped at the earlier stage.
+
+Transfer now includes the component's existing completed frames. A later Run
+can absorb one new frame into the existing owner, preserving each original
+logical ID, metadata, scalar binding, and live fact state. The old owner is not
+unsealed into ordinary Cells just to assemble the new one. Complete coverage of
+all participating owner slices is checked before mutation. Dead fact holes are
+omitted when moving the backing arrays; missing facts stay missing. External
+readers no longer disqualify an otherwise complete, parent-free source: their
+stable logical references already support completed storage and retirement
+fallback. Sources that themselves still require a parent remain ineligible.
+
+The new work is charged explicitly: extension events, newly absorbed frames,
+referenced frames, merged owners, and old slot/fact entries moved. This is a
+storage takeover at a settled source Run boundary, not an earlier publication or
+permission to skip a rule. Repeated transfer of an unchanged owner is a no-op.
+
+Testing caught allocation cliffs in **both** completed-frame and owner-header
+Vecs. Enlarging the eligible population could double either directory and lose
+the memory benefit. Both now grow normally at small sizes and in increments of
+128 records thereafter; IDs and record formats are unchanged. Temporary arrays
+still exist during extension and are included in the heap high-water sampling.
+
+`owner-takeover-results.json` compares the fixed catalog against scalar delegation
+alone, including independent source-record counts, actual Graph bytes, temporary
+takeover peaks and work. Program storage is unchanged. The earlier native scope
+limitations still apply. All 2,652 source Run graph/RHS/write checks pass for the
+new takeover and live-reader eligibility, alongside 46 ownership tests, 8 Unit
+tests and the low-level owner-extension lifecycle test. Directory growth is an
+allocation-only change; the final measured exports match the saved controls.
+
+Reproduce the report after the saved before/after heap runs:
+
+```
+python3 benchmarks/cell-batched-learning/takeover_audit.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/owner-takeover-results.json
+```
+
+This still retains logical source metadata and fact records inside the shared
+owner. It has not contracted internal parent lifetimes or achieved the 30% runtime
+egraph target. The saved final trace now includes parent references, retainer
+counts and physical-storage kind. Most remaining parent-free sources are in
+single-frame components (195, 186, 589, 669); improving their composition coverage
+is a larger opportunity than further header packing. There are also 37, 29, 80,
+104 observed within-component cross-stage parent links. Those observations alone
+do not prove that the parent states can be retired: typed Entry projections,
+actual result ownership, external readers and lifecycle preservation remain live
+obligations for a future internal-parent contraction.
+
+Final Graph bytes for the four fixed candidates are respectively 759,727;
+674,105; 2,043,955; 2,009,467: 60,176 fewer bytes in the sum of separate final
+heaps. Ordinary source records fall 495→461, 469→438, 1,251→1,116 and 1,338→1,211
+(327 fewer), while logical source and fact counts remain unchanged. The marked
+accepted sum-bits artifact separately falls 2,460,662→2,447,294 bytes and
+1,580→1,397 ordinary records. Its final digest still equals the reviewed saved
+export, and the saved-export semantic gate passes. These are incremental gains,
+not a claim of large egraph compression or faster RHS execution.

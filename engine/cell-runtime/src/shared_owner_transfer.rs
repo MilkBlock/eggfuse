@@ -35,19 +35,27 @@ impl Graph {
         let Some(m)=self.ownership.as_ref() else {return Ok(0);};
         let groups=m.composition.components.iter().flatten().map(|component| {
             component.frames.iter().copied().filter(|id| {
-                self.parent_users.get(id).copied().unwrap_or(0)==0
-                    && self.cells.get(id).is_some_and(|c| c.completed && c.parent.is_none()
+                self.cells.completed_meta(*id).is_some()
+                    || self.cells.get(id).is_some_and(|c| c.completed && c.parent.is_none()
                         && !c.facts.is_empty() && c.values.is_unshared()
                         && c.facts.iter().all(|(&op,s)|s.owned && self.stable_node(FactRef{cell:*id,op}).is_some()))
             }).collect::<Vec<_>>()
         }).filter(|g|g.len()>1).collect::<Vec<_>>();
         let mut count=0;
         for ids in groups {
-            if !self.cells.can_transfer_completed(&ids) {continue;}
+            let extending=ids.iter().any(|id|self.cells.completed_meta(*id).is_some());
+            if !extending && !self.cells.can_transfer_completed(&ids) {continue;}
+            // An already consolidated component has no new takeover work.
+            if extending && ids.iter().all(|id|self.cells.completed_meta(*id).is_some()) {continue;}
             // A completed parent handoff has already proved symbolic reads.
             // Reuse that storage contract instead of excluding inherited frames.
-            let inherited=ids.iter().filter(|id|self.cells.get(id).unwrap().symbolic_slots).count();
+            // External readers retain logical IDs, not ordinary Cell addresses.
+            // Shared storage already preserves recipe reads and retirement fallback.
+            let referenced=ids.iter().filter(|id|self.cells.get(id).is_some()
+                && self.parent_users.get(id).copied().unwrap_or(0)>0).count();
+            let inherited=ids.iter().filter(|id|self.cells.get(id).is_some_and(|c|c.symbolic_slots)).count();
             for &id in &ids {
+                if self.cells.completed_meta(id).is_some() {continue;}
                 let m=self.ownership.as_ref().unwrap();
                 let frame=m.composition.frames[&id];
                 let component=m.composition.components[frame.component as usize].as_ref().unwrap();
@@ -63,8 +71,20 @@ impl Graph {
                 if removed>0 {c.symbolic_slots=true;}
                 self.stats.shared_owner_slots_delegated+=removed as u64;
             }
-            if self.cells.transfer_completed(&ids) {
+            if extending {
+                if let Some((added,merged,slots,facts))=self.cells.extend_completed(&ids) {
+                    count+=added;
+                    self.stats.shared_owner_referenced_frames+=referenced as u64;
+                    self.stats.shared_owner_extensions+=1;
+                    self.stats.shared_owner_extension_frames+=added as u64;
+                    self.stats.shared_owner_merged_owners+=merged as u64;
+                    self.stats.shared_owner_slot_entries_moved+=slots as u64;
+                    self.stats.shared_owner_fact_entries_moved+=facts as u64;
+                    self.stats.shared_owner_inherited_frames+=inherited as u64;
+                }
+            } else if self.cells.transfer_completed(&ids) {
                 count+=ids.len();
+                self.stats.shared_owner_referenced_frames+=referenced as u64;
                 self.stats.shared_owner_inherited_frames+=inherited as u64;
             }
         }

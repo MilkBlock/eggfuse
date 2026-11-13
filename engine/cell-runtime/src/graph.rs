@@ -347,6 +347,18 @@ pub struct Stats {
     #[serde(default)]
     pub shared_owner_inherited_frames:u64,
     #[serde(default)]
+    pub shared_owner_extensions:u64,
+    #[serde(default)]
+    pub shared_owner_referenced_frames:u64,
+    #[serde(default)]
+    pub shared_owner_extension_frames:u64,
+    #[serde(default)]
+    pub shared_owner_merged_owners:u64,
+    #[serde(default)]
+    pub shared_owner_slot_entries_moved:u64,
+    #[serde(default)]
+    pub shared_owner_fact_entries_moved:u64,
+    #[serde(default)]
     pub shared_owner_dead_slots_elided:u64,
     #[serde(default)]
     pub completed_dead_slots_elided:u64,

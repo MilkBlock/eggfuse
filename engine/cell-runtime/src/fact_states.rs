@@ -147,4 +147,43 @@ mod tests {
         assert_eq!((slots,facts,frames),(0,0,0));
     }
 
+    #[test]
+    #[cfg(feature="storage-metrics")]
+    fn later_stage_extends_owner_without_losing_partial_lifecycles() {
+        use crate::slots::ReadSlots;
+        use crate::value::Value;
+        let mut cells=super::super::arena::Cells::default();
+        for id in [10,20,30,40,50] {
+            let mut c=cell();c.started_epoch=id as u64;c.values.insert(0,Value::Int(id as i64));cells.insert(id,c);
+            cells.insert_fact_state(FactRef{cell:id,op:7},state(id as u64));
+        }
+        assert!(cells.transfer_completed(&[10,20]));
+        assert!(cells.transfer_completed(&[30,40]));
+        let first=FactRef{cell:10,op:7};
+        cells.fact_state_mut(first).unwrap().hidden=true;
+        cells.fact_state_mut(first).unwrap().epoch=99;
+        cells.remove_fact_state(FactRef{cell:20,op:7}).unwrap();
+        // A partial old owner or duplicated source cannot be consumed.
+        assert!(cells.extend_completed(&[10,50]).is_none());
+        assert!(cells.extend_completed(&[10,20,50,50]).is_none());
+        assert!(cells.get(&50).is_some());
+        assert_eq!(cells.completed_slots(10).unwrap().get(&0),Some(&Value::Int(10)));
+        let (added,merged,slots,facts)=cells.extend_completed(&[10,20,30,40,50]).unwrap();
+        assert_eq!((added,merged,slots,facts),(1,1,4,3));
+        assert!(cells.get(&50).is_none());
+        assert!(cells.extend_completed(&[10,20,30,40,50]).is_none());
+        assert!(cells.fact_state(first).unwrap().hidden);
+        assert_eq!(cells.fact_state(first).unwrap().epoch,99);
+        assert_eq!(cells.fact_state(first).unwrap().born,10);
+        assert!(cells.fact_state(FactRef{cell:20,op:7}).is_none());
+        for id in [10,20,30,40,50] {
+            assert_eq!(cells.completed_meta(id).unwrap().started_epoch,id as u64);
+            assert_eq!(cells.completed_slots(id).unwrap().get(&0),Some(&Value::Int(id as i64)));
+        }
+        let restored=cells.unseal_completed(10).unwrap();
+        assert_eq!(restored.values.get(&0),Some(&Value::Int(10)));
+        assert_eq!(restored.facts.get(&7).unwrap().epoch,99);
+        assert_eq!(cells.completed_slots(50).unwrap().get(&0),Some(&Value::Int(50)));
+    }
+
 }
