@@ -3,7 +3,7 @@ from collections import Counter,defaultdict
 from link_rhs_results import link
 
 
-def candidates(trace):
+def candidates(trace,earliest=False):
     adjacent=link(trace);covered={(w['consumer_run'],c['binding'],p['slot']) for w in adjacent['windows'] for c in w['consumers'] for p in c['ports'] if 'group' in p}
     history={};out={};counts=Counter();rules=trace['recipe']['rules'];steps={s['ordinal']:s for s in trace['steps']}
     for position,run in enumerate(trace['runs']):
@@ -33,15 +33,16 @@ def candidates(trace):
                 port=slot['eq_port'];key=(port['sort'],port['identity'])
                 current[key].append(dict(run=ordinal,binding=i,rule=b['rule'],operation=operation,slot=op['dst'],
                     identity=port['identity'],after_run=port['after_run']))
-        for key,providers in current.items():history[key]=(position,providers)
+        for key,providers in current.items():
+            if not earliest or key not in history:history[key]=(position,providers)
         counts['peak_identity_groups']=max(counts['peak_identity_groups'],len(history))
         counts['peak_retained_provider_records']=max(counts['peak_retained_provider_records'],sum(len(p) for _,p in history.values()))
     counts['candidate_consumers']=len({(r,b) for r,b,_ in out})
     return adjacent,out,dict(counts)
 
 
-def link_history(trace,fallback_only=False):
-    adjacent,extra,counts=candidates(trace)
+def link_history(trace,fallback_only=False,earliest=False):
+    adjacent,extra,counts=candidates(trace,earliest=earliest)
     windows={w['consumer_run']:w for w in adjacent['windows']}
     if fallback_only:
         connected={(w['consumer_run'],c['binding']) for w in adjacent['windows'] for c in w['consumers']}
@@ -55,7 +56,7 @@ def link_history(trace,fallback_only=False):
         window=windows.setdefault(run,dict(consumer_run=run,producer_run=None,groups=[],consumers=[]))
         consumers={c['binding']:c for c in window['consumers']};groups={}
         for binding,slot,providers in items:
-            # All alternatives from the most recent observed constructor Run.
+            # All alternatives from the selected observed constructor Run.
             key=tuple((p['run'],p['binding'],p['slot']) for p in providers)
             if key not in groups:
                 groups[key]=len(window['groups']);window['groups'].append(dict(providers=providers))

@@ -30,6 +30,9 @@ class HistoricalSources(unittest.TestCase):
         last=copy.deepcopy(last);last['ordinal']=5;t['runs'].append(last)
         t['steps'].append(dict(ordinal=5,ruleset='c',executed_bindings=2,changed=True))
         self.assertEqual({p['run'] for p in candidates(t)[1][(5,0,0)]},{3})
+        first=candidates(t,earliest=True)[1][(5,0,0)]
+        self.assertEqual({p['run'] for p in first},{1})
+        self.assertEqual(len(first),1)
 
     def test_fallback_leaves_partly_connected_cell_unchanged(self):
         t=fixture();port=t['runs'][0]['audit']['bindings'][0]['rhs']['slots'][0]['eq_port']
