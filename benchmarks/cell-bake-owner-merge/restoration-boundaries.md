@@ -247,3 +247,42 @@ RHS takeover remain incomplete.
 
 Validation completed: all 2,652 saved Run checks and all four terminal checks pass;
 compact evidence is saved in `projection-run-checks.json`.
+
+## Projected candidates in overlapped completion
+
+The earlier explicit rejection is now removed. Adapted the candidate-snapshot
+implementation from the structural worktree: prepared completion tasks supply
+their exact candidate read set. Only live scalar-free candidates receive a frozen
+record containing FactRef, table, component and frame ordinal. Records are deduped
+before insertion into a sorted vector; scalar payloads, equality, component wiring
+and queues continue using their existing epoch snapshots. No full Cell clone,
+per-producer consumer list or persistent membership index is introduced.
+
+Frozen reads resolve membership exclusively through that batch's records. Later
+coordinator retirement cannot make a worker accidentally consult live Cell state.
+The existing coordinator validation remains authoritative at publication. Batch
+records are released after all readers join, including panic cleanup. Scalar-free
+births explicitly obey the frozen-node admission guard that was previously
+implicitly enforced by map insertion.
+
+New overlap counters charge candidate visits, unique records, binary-search
+comparisons, insertion shifts, total batch capacity and maximum batch capacity.
+The vector is bounded by distinct projected candidates, but insertion shifts can
+still be quadratic in that distinct count. This is a measured-cost obligation,
+not a claim that snapshots are free or that overlap becomes faster.
+
+71 integration tests pass (49 ownership, 15 completion batches, 5 parallel guards,
+2 read guards), including a scalar-free fixture that forces an effective union
+while a reader is held, component retirement, panic after coordinator commit and
+first-reader panic. All modes recover to the serial export and an empty completion
+queue. The test checks nonzero projected snapshot records so an all-scalar fixture
+cannot accidentally establish coverage. Default runtime also compiles.
+
+```sh
+CARGO_INCREMENTAL=0 cargo test --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-cells,storage-metrics,eggfuse-cell-runtime/slot-transfer-audit,completion-overlap-probes --test cell_ownership --test completion_batches --test parallel_guards --test read_guards
+```
+
+The previously reported four-case memory savings remain single-lane results.
+End-to-end overlap memory/preparation cost and stage-switch RHS savings remain
+unproven. This integration removes a compatibility blocker; it does not complete
+the large-compression objective.

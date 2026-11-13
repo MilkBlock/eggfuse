@@ -9,6 +9,12 @@ use std::sync::{
 #[derive(Default, Serialize)]
 struct Stats {
     epochs: u64,
+    projection_candidates: u64,
+    projection_records: u64,
+    projection_comparisons: u64,
+    projection_insertion_moves: u64,
+    projection_capacity_bytes_total: u64,
+    projection_capacity_bytes_peak: usize,
     base_snapshots: u64,
     task_spawns: u64,
     projected_tasks: u64,
@@ -260,7 +266,9 @@ impl Graph {
             .unwrap()
             .pool
             .clone();
-        let snapshot = self.freeze_completion_reads();
+        let snapshot = self.freeze_completion_reads(prepared.iter()
+            .flat_map(|p|p.context.candidates.iter().map(|c|c.fact)));
+        let projection_work = snapshot.projection_work;
         let runtime = self.overlap_runtime();
         let activity_allocations = u64::from(runtime.active.is_none());
         let active = runtime
@@ -390,6 +398,12 @@ impl Graph {
         }
         let runtime = self.overlap_runtime();
         runtime.stats.epochs += 1;
+        runtime.stats.projection_candidates += projection_work.candidates;
+        runtime.stats.projection_records += projection_work.records;
+        runtime.stats.projection_comparisons += projection_work.comparisons;
+        runtime.stats.projection_insertion_moves += projection_work.insertion_moves;
+        runtime.stats.projection_capacity_bytes_total += projection_work.capacity_bytes as u64;
+        runtime.stats.projection_capacity_bytes_peak = runtime.stats.projection_capacity_bytes_peak.max(projection_work.capacity_bytes);
         runtime.stats.base_snapshots += 4;
         runtime.stats.task_spawns += lanes as u64;
         runtime.stats.projected_tasks += count as u64;

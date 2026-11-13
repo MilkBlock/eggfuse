@@ -366,13 +366,25 @@ fn batch_configuration_is_bounded_and_requires_a_pool() {
 
 #[cfg(feature = "completion-overlap-probes")]
 fn held_reader_fixture() -> (Executor, Executor) {
+    held_reader_fixture_mode(false)
+}
+#[cfg(feature = "completion-overlap-probes")]
+fn held_reader_fixture_mode(projected: bool) -> (Executor, Executor) {
     use eggfuse_cell_runtime::value::Value;
-    let input = siblings(false, true, false);
+    let mut input = siblings(false, true, false);
+    if projected {
+        input=input.replace("(F E i64)","(F E E)");
+        for root in 0..3 { for scalar in 0..6 {
+            input=input.replace(&format!("(F (N {root}) {scalar})"),
+                &format!("(F (N {root}) (N {}))",scalar+10));
+        }}
+    }
     let source = format!(
         "{}\n(ruleset empty) (run-schedule (run empty))",
         input.split("(ruleset merge)").next().unwrap()
     );
     let (mut serial, mut parallel) = executors(&source, 2, 16);
+    if projected {parallel.graph.use_template_stable_fields().unwrap();}
     parallel.graph.use_overlapped_completion().unwrap();
     for executor in [&mut serial, &mut parallel] {
         executor.execute().unwrap();
@@ -587,4 +599,34 @@ fn a_first_reader_panic_abandons_its_slots_and_releases_the_coordinator() {
         .recv_timeout(std::time::Duration::from_secs(10))
         .expect("an abandoned first slot must release the coordinator");
     thread.join().unwrap();
+}
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="completion-overlap-probes"))]
+fn projected_candidate_snapshot_survives_overlapped_retirement_and_panics() {
+    for panic_mode in 0..3 {
+        let (mut serial,mut parallel)=held_reader_fixture_mode(true);
+        match panic_mode {
+            0=>parallel.graph.use_completion_overlap_probe().unwrap(),
+            1=>parallel.graph.use_completion_overlap_panic_probe().unwrap(),
+            _=>parallel.graph.use_completion_overlap_early_panic_probe().unwrap(),
+        }
+        serial.graph.repair().unwrap();
+        let outcome=std::panic::catch_unwind(std::panic::AssertUnwindSafe(||parallel.graph.repair()));
+        if panic_mode==0 {outcome.unwrap().unwrap();}
+        else {assert!(outcome.is_err());parallel.graph.repair().unwrap();}
+        assert_eq!(serial.graph.export().unwrap(),parallel.graph.export().unwrap());
+        assert_eq!(parallel.graph.pending_completion_tasks(),0);
+        let report=parallel.graph.completion_batch_report();
+        let stats=&report["overlap"]["stats"];
+        assert!(stats["projection_records"].as_u64().unwrap()>0,"{report}");
+        assert!(stats["projection_candidates"].as_u64().unwrap()>=stats["projection_records"].as_u64().unwrap());
+        assert!(stats["projection_capacity_bytes_peak"].as_u64().unwrap()>0);
+        if panic_mode==0 {
+            assert!(report["overlap"]["observed"]["effective_unions_with_active_readers"].as_u64().unwrap()>0);
+        }
+        let storage=parallel.graph.stable_port_report();
+        assert!(storage["template_projected_nodes"].as_u64().unwrap()>0);
+        parallel.graph.ownership_report();
+    }
 }

@@ -80,6 +80,7 @@ impl<K: Copy + Eq + Hash, V> Map<K, V> {
             changes: self.base.as_ref().map(|_| &self.changes),
         }
     }
+    pub(crate) fn is_frozen(&self) -> bool { self.base.is_some() }
     pub(crate) fn compact(&mut self) {
         assert!(self.base.is_none(), "compact outside read epoch");
         self.local.shrink_to_fit();

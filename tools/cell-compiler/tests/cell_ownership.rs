@@ -1551,6 +1551,7 @@ fn template_fields_replace_records_through_union_retirement_and_stages() {
         }
         assert!(projected,"must remove real node records, not only add a read route");
         actual.graph.use_parallel_port_guards(2,1).unwrap();
-        assert!(actual.graph.use_completion_read_batches(2).is_err(),"overlap needs a frozen lifecycle view");
+        actual.graph.use_completion_read_batches(2).unwrap();
+        actual.graph.use_overlapped_completion().unwrap();
     }
 }

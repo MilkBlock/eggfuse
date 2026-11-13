@@ -122,8 +122,8 @@ pub(in crate::graph) struct Runtime {
     result_publications: u64,
 }
 impl Graph {
-    /// Experimental direct projection. Plain borrowed workers are supported;
-    /// overlapping mutation requires an independent frozen lifecycle view.
+    /// Experimental direct projection. Overlapping readers capture only the
+    /// scalar-free candidate membership needed by their prepared task batch.
     #[cfg(feature="sparse-cells")]
     pub fn use_template_stable_fields(&mut self) -> Result<()> {
         self.use_stable_port_fields()?;
@@ -131,7 +131,7 @@ impl Graph {
             return Err("template fields require a settled source boundary".into());
         }
         let runtime = self.stable_ports.as_ref().unwrap();
-        if runtime.batches.is_some() { return Err("template fields do not yet support completion batches".into()); }
+        if runtime.nodes.is_frozen() {return Err("template field admission during a read epoch".into());}
         if runtime.template_fields { return Ok(()); }
         let remove = self.cells.cell_ids().flat_map(|id| self.cells.fact_states(id).map(|(f,_)|f))
             .filter(|f| runtime.nodes.get(f).is_some_and(|node|node.fields.scalars.is_empty()))
@@ -223,6 +223,7 @@ impl Graph {
         let state = &mut *state_guard;
         state.decoded = None;
         let stats = self.stable_ports.as_mut().unwrap();
+        assert!(!stats.nodes.is_frozen(), "node birth during a completion read epoch");
         if !stats.template_fields || !fields.scalars.is_empty() {
             assert!(stats.nodes.insert(f, Stored { table, fields }).is_none(),
                 "stable representation installed once per fact incarnation");

@@ -6,7 +6,22 @@ use super::*;
 use composition::conditions::Condition;
 use std::sync::Arc;
 
+#[cfg(feature="sparse-cells")]
+#[derive(Clone, Copy)]
+struct FrozenFact { fact: FactRef, table: usize, component: u32, frame: usize }
+#[derive(Clone, Copy, Default, Serialize)]
+pub(super) struct ProjectionWork {
+    pub candidates: u64,
+    pub records: u64,
+    pub comparisons: u64,
+    pub insertion_moves: u64,
+    pub capacity_bytes: usize,
+}
+
 pub(super) struct Snapshot {
+    #[cfg(feature="sparse-cells")]
+    projected: Vec<FrozenFact>,
+    pub projection_work: ProjectionWork,
     parents: Arc<crate::value::parent_epoch::Base>,
     nodes: Arc<HashMap<FactRef, Stored>>,
     components: Arc<Vec<Option<composition::Component>>>,
@@ -40,7 +55,7 @@ impl Snapshot {
     pub fn reader(&self) -> ReadView<'_> {
         ReadView {
             #[cfg(feature="sparse-cells")]
-            projected: None,
+            projected: (!self.projected.is_empty()).then_some(Projection::Frozen(&self.projected)),
             programs: &self.programs,
             shapes: &self.shapes,
             parents: crate::value::parent_epoch::Read {
@@ -90,10 +105,13 @@ pub struct ReadView<'a> {
 
 #[cfg(feature="sparse-cells")]
 #[derive(Clone, Copy)]
-struct Projection<'a> {
-    cells: &'a crate::graph::arena::Cells,
-    frames: &'a composition::Frames,
-    operators: &'a [Vec<usize>],
+enum Projection<'a> {
+    Live {
+        cells: &'a crate::graph::arena::Cells,
+        frames: &'a composition::Frames,
+        operators: &'a [Vec<usize>],
+    },
+    Frozen(&'a [FrozenFact]),
 }
 
 pub struct KeyGuard<'a> {
@@ -141,16 +159,22 @@ impl<'a> ReadView<'a> {
     }
     #[cfg(feature="sparse-cells")]
     pub(super) fn project_node(&self, fact: FactRef) -> Option<Stored> {
-        let source = self.projected?;
-        let state = source.cells.fact_state(fact)?;
+        let Projection::Live {cells, frames, operators} = self.projected? else {
+            let Projection::Frozen(records) = self.projected? else {unreachable!()};
+            let record = records.get(records.binary_search_by_key(&fact, |r| r.fact).ok()?)?;
+            return Some(Stored {table: record.table, fields: Fields {
+                component: record.component, frame: record.frame, operation: fact.op, scalars: Box::default(),
+            }});
+        };
+        let state = cells.fact_state(fact)?;
         if !state.owned || state.decoded.is_some() {return None;}
-        let frame = source.frames.get(&fact.cell)?;
+        let frame = frames.get(&fact.cell)?;
         let component = self.components.get(frame.component as usize)?.as_ref()?;
         let shape = self.shapes.get(component.shape)?.as_ref()?;
         let program = self.programs.get(*shape.programs.get(frame.ordinal)?)?;
         let fields = program.fields.get(fact.op as usize)?;
         if fields.is_empty() || fields.iter().any(Option::is_none) {return None;}
-        Some(Stored {table:*source.operators.get(frame.code)?.get(fact.op as usize)?,
+        Some(Stored {table:*operators.get(frame.code)?.get(fact.op as usize)?,
             fields:Fields{component:frame.component,frame:frame.ordinal,operation:fact.op,scalars:Box::default()}})
     }
     pub fn read_port(&self, port: PortRef) -> Result<Value> {
@@ -270,15 +294,44 @@ impl<'a> ReadView<'a> {
 }
 
 impl Graph {
-    pub(super) fn freeze_completion_reads(&mut self) -> Snapshot {
-        assert!(!self.stable_ports.as_ref().unwrap().template_fields,
-            "template fields require a frozen lifecycle view before overlapped completion");
+    pub(super) fn freeze_completion_reads(&mut self, candidates: impl Iterator<Item=FactRef>) -> Snapshot {
+        // Capture only the read set selected by these prepared tasks. The worker
+        // sees presence at this boundary even if the coordinator later retires it.
+        // Scalar data, port bindings and equality still use their existing bases.
+        let mut projection_work = ProjectionWork::default();
+        #[cfg(feature="sparse-cells")]
+        let projected = {
+            let mut records = Vec::<FrozenFact>::new();
+            if self.stable_ports.as_ref().unwrap().template_fields {
+                let view = self.stable_port_reader().expect("stable completion reader");
+                for fact in candidates {
+                    projection_work.candidates += 1;
+                    let Err(position) = records.binary_search_by(|record| {
+                        projection_work.comparisons += 1;
+                        record.fact.cmp(&fact)
+                    }) else {continue;};
+                    if let Some(node) = view.project_node(fact) {
+                        projection_work.insertion_moves += (records.len()-position) as u64;
+                        records.insert(position, FrozenFact {fact, table:node.table,
+                            component:node.fields.component, frame:node.fields.frame});
+                    }
+                }
+                projection_work.records = records.len() as u64;
+                projection_work.capacity_bytes = records.capacity()*std::mem::size_of::<FrozenFact>();
+            }
+            records
+        };
+        #[cfg(not(feature="sparse-cells"))]
+        let _ = candidates;
         let parents = self.parents.freeze();
         let nodes = self.stable_ports.as_mut().unwrap().nodes.freeze();
         let owner = self.ownership.as_mut().unwrap();
         let components = owner.composition.components.freeze();
         let pending = owner.pending.freeze();
         Snapshot {
+            #[cfg(feature="sparse-cells")]
+            projected,
+            projection_work,
             programs: self.program.cell_ownership.programs.clone(),
             shapes: owner.composition.shapes.clone(),
             parents,
@@ -306,7 +359,7 @@ impl Graph {
         }
         Ok(ReadView {
             #[cfg(feature="sparse-cells")]
-            projected: self.stable_ports.as_ref().unwrap().template_fields.then_some(Projection {
+            projected: self.stable_ports.as_ref().unwrap().template_fields.then_some(Projection::Live {
                 cells: &self.cells, frames: &self.ownership.as_ref().unwrap().composition.frames,
                 operators: &self.program.cell_ownership.code_operators,
             }),

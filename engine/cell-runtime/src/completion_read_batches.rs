@@ -163,9 +163,6 @@ impl Task<'_> {
 
 impl Graph {
     pub fn use_completion_read_batches(&mut self, limit: usize) -> Result<()> {
-        if self.stable_ports.as_ref().is_some_and(|s|s.template_fields) {
-            return Err("template fields do not yet support completion batches".into());
-        }
         if !(2..=64).contains(&limit) {
             return Err("completion batch task limit must be between 2 and 64".into());
         }
