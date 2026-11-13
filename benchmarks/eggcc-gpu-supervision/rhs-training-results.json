@@ -1,0 +1,268 @@
+{
+  "schema": "actual-rhs-training-corpus/v1",
+  "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "binary_sha256": "faed357bf9e294ef31940822c6bf6c67f2e64b9c5e1cc78b49d1281486a9f757",
+  "partition": "train",
+  "limits": {
+    "max_cases": 3,
+    "max_bindings": 2000,
+    "timeout": 120,
+    "saved_reference_seconds": 1
+  },
+  "selection": "smallest observed binding counts among complete train cases under limit",
+  "cases": [
+    {
+      "case": "014-fitsinside",
+      "split": "train",
+      "program_sha256": "1d4c2b83cda37a9da656ab926506402ea4f55c3b4dc5053764563dfd2c7a71fb",
+      "wall_seconds": 7.571900749986526,
+      "status": "complete",
+      "trace_sha256": "0c687720faa5ee2aa1210e798290c6853af121291957481677748abf824f9213",
+      "links_sha256": "956fed753378b80b3bde595bb357b37a64e0f29f6f2c4b0c4ef32f43ded90a1f",
+      "trace": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/rhs-training-20261114/014-fitsinside/rhs.json",
+      "links": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/rhs-training-20261114/014-fitsinside/links.json",
+      "capture": {
+        "schema": "actual-rhs-capture-summary/v1",
+        "program_sha256": "1d4c2b83cda37a9da656ab926506402ea4f55c3b4dc5053764563dfd2c7a71fb",
+        "runs": 446,
+        "counts": {
+          "applications": 1031,
+          "completed_applications": 1031,
+          "slot_reads": 8467,
+          "available_slots": 8275,
+          "rhs_only_slots": 2514,
+          "eq_slots": 7087,
+          "rhs_only_eq_slots": 2286,
+          "eq_slots_changed_during_completion": 152
+        },
+        "unavailable": {
+          "expired Cell reference": 192
+        },
+        "unavailable_slot_fraction": 0.022676272587693398,
+        "timing": {
+          "audited_execution_seconds": 0.14225758600000032,
+          "capture_and_audit_wall_seconds": 5.854111167,
+          "observer_seconds": 0.027233546000000004,
+          "reference_execution_seconds": 0.038595958000000014,
+          "result_observer_seconds": 0.037085687999999985,
+          "run_graph_audit_seconds": 5.6639196169999995
+        },
+        "strict_run_graphs_equal": true,
+        "strict_final_graph_equal": true,
+        "scope": "actual CPU execution observation, not GPU inference or native egglog acceptance",
+        "limitations": [
+          "Slot Eq identity is not a constructor ownership or retirement certificate",
+          "No proven producer-consumer causal links or GPU takeover",
+          "Callback timing excludes slot-read collection; observed execution includes it",
+          "Debug audit timing is not a performance benchmark"
+        ]
+      },
+      "link_counts": {
+        "eligible_windows": 148,
+        "constructor_results_requested": 1476,
+        "available_constructor_results": 1476,
+        "consumer_applications_examined": 1030,
+        "consumer_eq_slots_examined": 4874,
+        "linked_consumer_eq_slots": 1157,
+        "same_identity_slots": 1152,
+        "linked_consumer_applications": 567,
+        "external_classes:2": 92,
+        "multi_entry_consumer_applications": 484,
+        "linked_windows": 81,
+        "shared_provider_groups": 509,
+        "stored_provider_references": 767,
+        "external_classes:3": 108,
+        "cross_ruleset_consumer_applications": 119,
+        "external_classes:5": 40,
+        "external_classes:4": 99,
+        "requires_multiple_observed_providers": 240,
+        "external_classes:1": 131,
+        "external_classes:0": 83,
+        "equivalent_identity_slots": 5,
+        "external_classes:6": 6,
+        "external_classes:7": 8
+      }
+    },
+    {
+      "case": "020-loopfact",
+      "split": "train",
+      "program_sha256": "862938c2d8c1bf39c73a6817d5785b414ab24bffdef31f12a4c64445ae54b8c6",
+      "wall_seconds": 8.310655708017293,
+      "status": "complete",
+      "trace_sha256": "cd978ba4c9df1d38d9a82721f3816c68838c9eceea4ab0739836baa4b3a9e067",
+      "links_sha256": "c94c73c596bfe097dd7df9c39c2a2e8429887a672979e68602c475ba37a77dd2",
+      "trace": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/rhs-training-20261114/020-loopfact/rhs.json",
+      "links": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/rhs-training-20261114/020-loopfact/links.json",
+      "capture": {
+        "schema": "actual-rhs-capture-summary/v1",
+        "program_sha256": "862938c2d8c1bf39c73a6817d5785b414ab24bffdef31f12a4c64445ae54b8c6",
+        "runs": 398,
+        "counts": {
+          "applications": 1239,
+          "completed_applications": 1239,
+          "slot_reads": 9130,
+          "available_slots": 8950,
+          "rhs_only_slots": 2814,
+          "eq_slots": 7438,
+          "rhs_only_eq_slots": 2531,
+          "eq_slots_changed_during_completion": 195
+        },
+        "unavailable": {
+          "expired Cell reference": 180
+        },
+        "unavailable_slot_fraction": 0.019715224534501644,
+        "timing": {
+          "audited_execution_seconds": 0.14717574600000002,
+          "capture_and_audit_wall_seconds": 6.618705,
+          "observer_seconds": 0.028323473999999984,
+          "reference_execution_seconds": 0.04540390699999997,
+          "result_observer_seconds": 0.039271455999999975,
+          "run_graph_audit_seconds": 6.416406130999997
+        },
+        "strict_run_graphs_equal": true,
+        "strict_final_graph_equal": true,
+        "scope": "actual CPU execution observation, not GPU inference or native egglog acceptance",
+        "limitations": [
+          "Slot Eq identity is not a constructor ownership or retirement certificate",
+          "No proven producer-consumer causal links or GPU takeover",
+          "Callback timing excludes slot-read collection; observed execution includes it",
+          "Debug audit timing is not a performance benchmark"
+        ]
+      },
+      "link_counts": {
+        "eligible_windows": 126,
+        "constructor_results_requested": 1698,
+        "available_constructor_results": 1698,
+        "consumer_applications_examined": 1238,
+        "consumer_eq_slots_examined": 4969,
+        "linked_consumer_eq_slots": 1576,
+        "same_identity_slots": 1535,
+        "linked_consumer_applications": 776,
+        "external_classes:2": 144,
+        "multi_entry_consumer_applications": 600,
+        "linked_windows": 73,
+        "shared_provider_groups": 680,
+        "stored_provider_references": 998,
+        "external_classes:5": 21,
+        "external_classes:3": 108,
+        "external_classes:4": 83,
+        "requires_multiple_observed_providers": 321,
+        "cross_ruleset_consumer_applications": 103,
+        "external_classes:7": 3,
+        "external_classes:1": 234,
+        "external_classes:6": 5,
+        "external_classes:8": 2,
+        "external_classes:0": 176,
+        "equivalent_identity_slots": 41
+      }
+    },
+    {
+      "case": "029-recfact",
+      "split": "train",
+      "program_sha256": "87cc2620b569bd1d1e70f3d63226b91d947a359c3db78d448f1bfa5e84a02871",
+      "wall_seconds": 8.285945584008005,
+      "status": "complete",
+      "trace_sha256": "b45fddad0faa49d0ab4256a72a205561725e7557d0f5a11c8cfa87144f257dae",
+      "links_sha256": "ab234dd2d596d8d3f5b595d8c34db07824e97a4e9203735f4966f3aa54dd739e",
+      "trace": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/rhs-training-20261114/029-recfact/rhs.json",
+      "links": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/rhs-training-20261114/029-recfact/links.json",
+      "capture": {
+        "schema": "actual-rhs-capture-summary/v1",
+        "program_sha256": "87cc2620b569bd1d1e70f3d63226b91d947a359c3db78d448f1bfa5e84a02871",
+        "runs": 376,
+        "counts": {
+          "applications": 1487,
+          "completed_applications": 1487,
+          "slot_reads": 10623,
+          "available_slots": 10341,
+          "rhs_only_slots": 3294,
+          "eq_slots": 8653,
+          "rhs_only_eq_slots": 2983,
+          "eq_slots_changed_during_completion": 239
+        },
+        "unavailable": {
+          "expired Cell reference": 282
+        },
+        "unavailable_slot_fraction": 0.02654617339734538,
+        "timing": {
+          "audited_execution_seconds": 0.16655319100000002,
+          "capture_and_audit_wall_seconds": 6.565696333,
+          "observer_seconds": 0.03252687800000002,
+          "reference_execution_seconds": 0.04925576299999996,
+          "result_observer_seconds": 0.04555935199999996,
+          "run_graph_audit_seconds": 6.338548624000006
+        },
+        "strict_run_graphs_equal": true,
+        "strict_final_graph_equal": true,
+        "scope": "actual CPU execution observation, not GPU inference or native egglog acceptance",
+        "limitations": [
+          "Slot Eq identity is not a constructor ownership or retirement certificate",
+          "No proven producer-consumer causal links or GPU takeover",
+          "Callback timing excludes slot-read collection; observed execution includes it",
+          "Debug audit timing is not a performance benchmark"
+        ]
+      },
+      "link_counts": {
+        "eligible_windows": 125,
+        "constructor_results_requested": 2078,
+        "available_constructor_results": 2078,
+        "consumer_applications_examined": 1486,
+        "consumer_eq_slots_examined": 5768,
+        "linked_consumer_eq_slots": 2041,
+        "same_identity_slots": 1990,
+        "linked_consumer_applications": 984,
+        "external_classes:2": 238,
+        "multi_entry_consumer_applications": 756,
+        "linked_windows": 78,
+        "shared_provider_groups": 836,
+        "stored_provider_references": 1257,
+        "external_classes:5": 23,
+        "external_classes:3": 102,
+        "requires_multiple_observed_providers": 443,
+        "cross_ruleset_consumer_applications": 70,
+        "external_classes:4": 73,
+        "external_classes:7": 1,
+        "external_classes:6": 7,
+        "external_classes:9": 4,
+        "external_classes:0": 228,
+        "external_classes:1": 304,
+        "equivalent_identity_slots": 51,
+        "external_classes:8": 4
+      }
+    }
+  ],
+  "aggregate_link_counts": {
+    "eligible_windows": 399,
+    "constructor_results_requested": 5252,
+    "available_constructor_results": 5252,
+    "consumer_applications_examined": 3754,
+    "consumer_eq_slots_examined": 15611,
+    "linked_consumer_eq_slots": 4774,
+    "same_identity_slots": 4677,
+    "linked_consumer_applications": 2327,
+    "external_classes:2": 474,
+    "multi_entry_consumer_applications": 1840,
+    "linked_windows": 232,
+    "shared_provider_groups": 2025,
+    "stored_provider_references": 3022,
+    "external_classes:3": 318,
+    "cross_ruleset_consumer_applications": 292,
+    "external_classes:5": 84,
+    "external_classes:4": 255,
+    "requires_multiple_observed_providers": 1004,
+    "external_classes:1": 669,
+    "external_classes:0": 487,
+    "equivalent_identity_slots": 97,
+    "external_classes:6": 18,
+    "external_classes:7": 12,
+    "external_classes:8": 6,
+    "external_classes:9": 4
+  },
+  "completed_cases": 3,
+  "limitations": [
+    "Observed connection evidence only; no causal proof, ownership transfer or GPU takeover",
+    "Only train partition; test and validation are never reassigned",
+    "No ridge fitting or GPU inference in this data collection",
+    "Capture wall includes full per-Run graph comparison; not a performance campaign"
+  ]
+}
