@@ -61,7 +61,7 @@ impl State {
     pub fn report(&self)->serde_json::Value {
         serde_json::json!({"organization":"cell-table-condition-events/v3", "compiled":self.compiled, "valid":self.valid,
             "execute_seconds_scope":"includes overlapped table publication in fused batches; do not add to publication.parallel.execute_seconds",
-            "early_nodes_scope":"condition completed while a different table task was still computing; not worker utilization",
+            "early_nodes_scope":"condition completed before all changed index owners were ready; excludes independent Entry work; not worker utilization",
             "plan_payload_bytes":(self.group.capacity()+self.table_groups.capacity())*std::mem::size_of::<usize>()
                 + self.active.capacity()*std::mem::size_of::<bool>()
                 + self.inputs.capacity()*std::mem::size_of::<Vec<usize>>(),
@@ -311,7 +311,7 @@ impl Sieve {
         plan.work.borrowed_rows+=rows.len() as u64;
         plan.work.row_header_capacity_bytes+=(rows.capacity()*std::mem::size_of::<&[u64]>()) as u64;
         plan.work.prepare_seconds+=clock.elapsed().as_secs_f64();
-        let workers=pool.map_or(1,rayon::ThreadPool::current_num_threads);
+        let workers=pool.map_or(1,rayon::ThreadPool::current_num_threads).max(plan.work.worker_tasks.len());
         plan.work.worker_tasks.resize(workers,0);plan.work.worker_rows.resize(workers,0);plan.work.worker_seconds.resize(workers,0.0);
         let clock=Instant::now();
         let mut ids:Vec<_>=plan.pending.drain(..).collect();
