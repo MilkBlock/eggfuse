@@ -106,3 +106,35 @@ for case in fact loopfact sum-bits dot-product; do
 done
 python3 benchmarks/cell-bake-owner-merge/restoration_results.py out/cell-restoration-boundaries out/cell-bake-owner-merge/batch benchmarks/cell-bake-owner-merge/restoration-results.json
 ```
+
+## Explicit barrier history integration
+
+Adapted the structural branch change `a3269a73`: ordinary execution now retains
+only cumulative ownership counters. Explicit barrier tracing, catalog observation,
+fragment training and Executor audit retain boundary records. A late explicit
+request records its missing prefix; repeated requests do not reset that prefix.
+This avoids allocating history proportional to source Run count in production.
+
+48 ownership integration tests pass, including equal exported state for ordinary,
+audited, catalog-traced and late-traced execution. Four frozen memory replays
+match all prior `completion_work` and `source_storage` fields exactly, including
+restoration counters, plus final hashes and Run counts. The sole changed Graph
+teardown field is `ownership.barriers`:
+
+| case | Graph before | Graph after | released bytes | fraction |
+| --- | ---: | ---: | ---: | ---: |
+| fact | 779,975 | 755,399 | 24,576 | 3.15% |
+| loopfact | 678,385 | 653,809 | 24,576 | 3.62% |
+| sum-bits | 2,054,923 | 1,956,619 | 98,304 | 4.78% |
+| dot-product | 2,030,643 | 1,932,339 | 98,304 | 4.84% |
+
+This is observation-state removal, not fewer logical facts, a RHS takeover or a
+speedup. Pending same-Run reads and small source restoration boundaries remain.
+The next structural target remains duplicate stable/instance representation.
+
+Rebuild and repeat the preceding memory commands into `out/cell-explicit-barriers`,
+then compare with:
+
+```sh
+python3 benchmarks/cell-bake-owner-merge/barrier_results.py out/cell-restoration-boundaries out/cell-explicit-barriers benchmarks/cell-bake-owner-merge/barrier-results.json
+```

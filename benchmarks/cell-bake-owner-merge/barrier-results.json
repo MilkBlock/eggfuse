@@ -1,0 +1,69 @@
+{
+  "scope": "Standalone Cell CPU Graph owned heap; observation storage removal, no logical fact reduction or timing claim",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "runs": 418,
+      "before_bytes": 779975,
+      "after_bytes": 755399,
+      "saved_bytes": 24576,
+      "saved_fraction": 0.03150870220199365,
+      "exact_final_state_and_work": true,
+      "only_changed_field": {
+        "ownership.barriers": [
+          24576,
+          0
+        ]
+      }
+    },
+    {
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "runs": 398,
+      "before_bytes": 678385,
+      "after_bytes": 653809,
+      "saved_bytes": 24576,
+      "saved_fraction": 0.036227216108846744,
+      "exact_final_state_and_work": true,
+      "only_changed_field": {
+        "ownership.barriers": [
+          24576,
+          0
+        ]
+      }
+    },
+    {
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "runs": 882,
+      "before_bytes": 2054923,
+      "after_bytes": 1956619,
+      "saved_bytes": 98304,
+      "saved_fraction": 0.047838288831260345,
+      "exact_final_state_and_work": true,
+      "only_changed_field": {
+        "ownership.barriers": [
+          98304,
+          0
+        ]
+      }
+    },
+    {
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "runs": 954,
+      "before_bytes": 2030643,
+      "after_bytes": 1932339,
+      "saved_bytes": 98304,
+      "saved_fraction": 0.04841028186638419,
+      "exact_final_state_and_work": true,
+      "only_changed_field": {
+        "ownership.barriers": [
+          98304,
+          0
+        ]
+      }
+    }
+  ]
+}
