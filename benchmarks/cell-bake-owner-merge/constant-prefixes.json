@@ -1,0 +1,610 @@
+{
+  "scope": "Offline typed-source classification of observed reuse; no runtime takeover or speed claim",
+  "input_sha256": "8bd41feae7bd3f0f2267171f20a46e37e0cb609617eeb9e9aac8008d0a6df84a",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+      "counts": {
+        "observed_cross_run_uses": 714,
+        "outside_proven_input_independent_prefix": 643,
+        "input_independent_prefix_uses": 71
+      },
+      "groups": [
+        {
+          "expression": [
+            "constructor",
+            "NoTerm",
+            []
+          ],
+          "uses": 35,
+          "sites": [
+            {
+              "rule": 472,
+              "operation": 0,
+              "uses": 35,
+              "source_set": "terms-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "ExtractedExpr"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "slot": 4
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": {
+                "call": {
+                  "table": "Smaller"
+                },
+                "args": [
+                  {
+                    "var": "old"
+                  },
+                  {
+                    "var": "new"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "expression": [
+            "constructor",
+            "TCPair",
+            [
+              [
+                "constructor",
+                "NoTerm",
+                []
+              ],
+              [
+                "literal",
+                "{\"literal\":10000000000000000,\"sort\":{\"kind\":\"i64\",\"name\":\"i64\"}}"
+              ]
+            ]
+          ],
+          "uses": 35,
+          "sites": [
+            {
+              "rule": 472,
+              "operation": 1,
+              "uses": 35,
+              "source_set": "terms-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "ExtractedExpr"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "slot": 4
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": {
+                "call": {
+                  "table": "Smaller"
+                },
+                "args": [
+                  {
+                    "var": "old"
+                  },
+                  {
+                    "var": "new"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "expression": [
+            "constructor",
+            "TNil",
+            []
+          ],
+          "uses": 1,
+          "sites": [
+            {
+              "rule": 540,
+              "operation": 0,
+              "uses": 1,
+              "source_set": "type-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "TypeList-length"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "literal": 0,
+                    "sort": {
+                      "name": "i64",
+                      "kind": "i64"
+                    }
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "loopfact",
+      "program": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+      "counts": {
+        "observed_cross_run_uses": 508,
+        "outside_proven_input_independent_prefix": 421,
+        "input_independent_prefix_uses": 87
+      },
+      "groups": [
+        {
+          "expression": [
+            "constructor",
+            "NoTerm",
+            []
+          ],
+          "uses": 43,
+          "sites": [
+            {
+              "rule": 472,
+              "operation": 0,
+              "uses": 43,
+              "source_set": "terms-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "ExtractedExpr"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "slot": 4
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": {
+                "call": {
+                  "table": "Smaller"
+                },
+                "args": [
+                  {
+                    "var": "old"
+                  },
+                  {
+                    "var": "new"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "expression": [
+            "constructor",
+            "TCPair",
+            [
+              [
+                "constructor",
+                "NoTerm",
+                []
+              ],
+              [
+                "literal",
+                "{\"literal\":10000000000000000,\"sort\":{\"kind\":\"i64\",\"name\":\"i64\"}}"
+              ]
+            ]
+          ],
+          "uses": 43,
+          "sites": [
+            {
+              "rule": 472,
+              "operation": 1,
+              "uses": 43,
+              "source_set": "terms-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "ExtractedExpr"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "slot": 4
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": {
+                "call": {
+                  "table": "Smaller"
+                },
+                "args": [
+                  {
+                    "var": "old"
+                  },
+                  {
+                    "var": "new"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "expression": [
+            "constructor",
+            "TNil",
+            []
+          ],
+          "uses": 1,
+          "sites": [
+            {
+              "rule": 540,
+              "operation": 0,
+              "uses": 1,
+              "source_set": "type-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "TypeList-length"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "literal": 0,
+                    "sort": {
+                      "name": "i64",
+                      "kind": "i64"
+                    }
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "sum-bits",
+      "program": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+      "counts": {
+        "observed_cross_run_uses": 3622,
+        "outside_proven_input_independent_prefix": 3249,
+        "input_independent_prefix_uses": 373
+      },
+      "groups": [
+        {
+          "expression": [
+            "constructor",
+            "NoTerm",
+            []
+          ],
+          "uses": 186,
+          "sites": [
+            {
+              "rule": 472,
+              "operation": 0,
+              "uses": 186,
+              "source_set": "terms-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "ExtractedExpr"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "slot": 4
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": {
+                "call": {
+                  "table": "Smaller"
+                },
+                "args": [
+                  {
+                    "var": "old"
+                  },
+                  {
+                    "var": "new"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "expression": [
+            "constructor",
+            "TCPair",
+            [
+              [
+                "constructor",
+                "NoTerm",
+                []
+              ],
+              [
+                "literal",
+                "{\"literal\":10000000000000000,\"sort\":{\"kind\":\"i64\",\"name\":\"i64\"}}"
+              ]
+            ]
+          ],
+          "uses": 186,
+          "sites": [
+            {
+              "rule": 472,
+              "operation": 1,
+              "uses": 186,
+              "source_set": "terms-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "ExtractedExpr"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "slot": 4
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": {
+                "call": {
+                  "table": "Smaller"
+                },
+                "args": [
+                  {
+                    "var": "old"
+                  },
+                  {
+                    "var": "new"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "expression": [
+            "constructor",
+            "TNil",
+            []
+          ],
+          "uses": 1,
+          "sites": [
+            {
+              "rule": 540,
+              "operation": 0,
+              "uses": 1,
+              "source_set": "type-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "TypeList-length"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "literal": 0,
+                    "sort": {
+                      "name": "i64",
+                      "kind": "i64"
+                    }
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "dot-product",
+      "program": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+      "counts": {
+        "observed_cross_run_uses": 2652,
+        "outside_proven_input_independent_prefix": 2293,
+        "input_independent_prefix_uses": 359
+      },
+      "groups": [
+        {
+          "expression": [
+            "constructor",
+            "NoTerm",
+            []
+          ],
+          "uses": 179,
+          "sites": [
+            {
+              "rule": 472,
+              "operation": 0,
+              "uses": 179,
+              "source_set": "terms-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "ExtractedExpr"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "slot": 4
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": {
+                "call": {
+                  "table": "Smaller"
+                },
+                "args": [
+                  {
+                    "var": "old"
+                  },
+                  {
+                    "var": "new"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "expression": [
+            "constructor",
+            "TCPair",
+            [
+              [
+                "constructor",
+                "NoTerm",
+                []
+              ],
+              [
+                "literal",
+                "{\"literal\":10000000000000000,\"sort\":{\"kind\":\"i64\",\"name\":\"i64\"}}"
+              ]
+            ]
+          ],
+          "uses": 179,
+          "sites": [
+            {
+              "rule": 472,
+              "operation": 1,
+              "uses": 179,
+              "source_set": "terms-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "ExtractedExpr"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "slot": 4
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": {
+                "call": {
+                  "table": "Smaller"
+                },
+                "args": [
+                  {
+                    "var": "old"
+                  },
+                  {
+                    "var": "new"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "expression": [
+            "constructor",
+            "TNil",
+            []
+          ],
+          "uses": 1,
+          "sites": [
+            {
+              "rule": 540,
+              "operation": 0,
+              "uses": 1,
+              "source_set": "type-helpers",
+              "next_effect": [
+                {
+                  "op": "set",
+                  "call": {
+                    "table": "TypeList-length"
+                  },
+                  "args": [
+                    {
+                      "slot": 0
+                    }
+                  ],
+                  "value": {
+                    "literal": 0,
+                    "sort": {
+                      "name": "i64",
+                      "kind": "i64"
+                    }
+                  },
+                  "kind": "set"
+                }
+              ],
+              "merge": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
