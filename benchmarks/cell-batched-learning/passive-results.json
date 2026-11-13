@@ -1,0 +1,310 @@
+{
+  "scope": "actual standalone Cell runtime; one audited batch, two offline selections; no speed or native-generalization claim",
+  "observations": [
+    {
+      "case": "fact",
+      "source_program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "runs": 418,
+      "all_run_checks_equal": true,
+      "uncovered_births": 379,
+      "proposal_paths": 433,
+      "already_installed_local_pair": 110,
+      "proposal_hops": {
+        "1": 295,
+        "2": 62,
+        "3": 21,
+        "4": 15,
+        "7": 17,
+        "8": 11,
+        "5": 8,
+        "6": 4
+      },
+      "saturation_applications_by_outcome": {
+        "write_effect": 324,
+        "missing_local_constructor": 1022,
+        "primitive_proof_missing": 73,
+        "rhs_covered": 57,
+        "rhs_covered_by_inputs": 41,
+        "no_local_component": 2,
+        "nontrivial_union": 6
+      }
+    },
+    {
+      "case": "loopfact",
+      "source_program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "runs": 398,
+      "all_run_checks_equal": true,
+      "uncovered_births": 338,
+      "proposal_paths": 433,
+      "already_installed_local_pair": 165,
+      "proposal_hops": {
+        "1": 227,
+        "2": 80,
+        "3": 45,
+        "4": 28,
+        "8": 11,
+        "6": 14,
+        "7": 13,
+        "9": 5,
+        "10": 10
+      },
+      "saturation_applications_by_outcome": {
+        "write_effect": 280,
+        "missing_local_constructor": 811,
+        "primitive_proof_missing": 72,
+        "rhs_covered": 30,
+        "rhs_covered_by_inputs": 33,
+        "no_local_component": 2,
+        "nontrivial_union": 11
+      }
+    },
+    {
+      "case": "sum-bits",
+      "source_program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "runs": 882,
+      "all_run_checks_equal": true,
+      "uncovered_births": 1458,
+      "proposal_paths": 1378,
+      "already_installed_local_pair": 576,
+      "proposal_hops": {
+        "1": 536,
+        "2": 375,
+        "5": 89,
+        "7": 44,
+        "3": 98,
+        "8": 55,
+        "6": 33,
+        "4": 92,
+        "9": 23,
+        "10": 33
+      },
+      "saturation_applications_by_outcome": {
+        "missing_local_constructor": 4462,
+        "rhs_covered_by_inputs": 222,
+        "write_effect": 1078,
+        "primitive_proof_missing": 357,
+        "rhs_covered": 179,
+        "nontrivial_union": 157,
+        "visibility_effect": 75,
+        "no_local_component": 2
+      }
+    },
+    {
+      "case": "dot-product",
+      "source_program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "runs": 954,
+      "all_run_checks_equal": true,
+      "uncovered_births": 1267,
+      "proposal_paths": 1177,
+      "already_installed_local_pair": 322,
+      "proposal_hops": {
+        "1": 791,
+        "5": 46,
+        "9": 8,
+        "3": 54,
+        "4": 45,
+        "6": 27,
+        "7": 23,
+        "2": 138,
+        "8": 25,
+        "12": 4,
+        "11": 16
+      },
+      "saturation_applications_by_outcome": {
+        "rhs_covered_by_inputs": 94,
+        "primitive_proof_missing": 562,
+        "missing_local_constructor": 3568,
+        "write_effect": 1518,
+        "rhs_covered": 165,
+        "no_local_component": 2,
+        "nontrivial_union": 26
+      }
+    }
+  ],
+  "pooled_records": 3017,
+  "portable_proposals": 1368,
+  "variants": [
+    {
+      "budget": 64,
+      "added_paths": 64,
+      "maximal_paths": 335,
+      "cases": [
+        {
+          "case": "fact",
+          "program": "eecaffc3c27f00f9f38ccfbd532105114c820e55cf037723e0a20b21b24fc57c",
+          "graph_before": 759727,
+          "graph_after": 757303,
+          "source_records_before": 461,
+          "source_records_after": 438,
+          "explicit_slots_before": 1066,
+          "explicit_slots_after": 1055,
+          "program_delta": -762324,
+          "changed_graph_fields": {
+            "cells": -4176,
+            "ownership.components": 768,
+            "ownership.shapes": 504,
+            "ownership.boundaries": 480
+          },
+          "all_seed_transitions_preserved": true,
+          "final_state_equal": true,
+          "all_run_checks_equal": false
+        },
+        {
+          "case": "loopfact",
+          "program": "698182921ec65bb2dad3cbcbe73e97f0c1895e7536934783e296424d4c24690f",
+          "graph_before": 674105,
+          "graph_after": 681329,
+          "source_records_before": 438,
+          "source_records_after": 417,
+          "explicit_slots_before": 1022,
+          "explicit_slots_after": 1011,
+          "program_delta": -762324,
+          "changed_graph_fields": {
+            "cells": 6520,
+            "ownership.components": 368,
+            "ownership.shapes": 504,
+            "ownership.boundaries": -168
+          },
+          "all_seed_transitions_preserved": true,
+          "final_state_equal": true,
+          "all_run_checks_equal": false
+        },
+        {
+          "case": "sum-bits",
+          "program": "a8653eeaff7b7a9cc56726d3460bce93071bb5ebae7dd199dc97d7ca42651e58",
+          "graph_before": 2043955,
+          "graph_after": 2042715,
+          "source_records_before": 1116,
+          "source_records_after": 1016,
+          "explicit_slots_before": 3276,
+          "explicit_slots_after": 3212,
+          "program_delta": -762324,
+          "changed_graph_fields": {
+            "cells": -4376,
+            "ownership.components": 1456,
+            "ownership.shapes": 504,
+            "ownership.boundaries": 1176
+          },
+          "all_seed_transitions_preserved": true,
+          "final_state_equal": true,
+          "all_run_checks_equal": false
+        },
+        {
+          "case": "dot-product",
+          "program": "fe51cfa3a09a088f37b0b9420cfc5844c7ff723a4d94672b91c1dd161c0e133d",
+          "graph_before": 2009467,
+          "graph_after": 1998507,
+          "source_records_before": 1211,
+          "source_records_after": 1149,
+          "explicit_slots_before": 3479,
+          "explicit_slots_after": 3449,
+          "program_delta": -762324,
+          "changed_graph_fields": {
+            "cells": -10320,
+            "ownership.components": 656,
+            "ownership.shapes": 504,
+            "ownership.boundaries": -1800
+          },
+          "all_seed_transitions_preserved": true,
+          "final_state_equal": true,
+          "all_run_checks_equal": false
+        }
+      ],
+      "all_inputs_reduce_graph": false
+    },
+    {
+      "budget": 256,
+      "added_paths": 256,
+      "maximal_paths": 475,
+      "cases": [
+        {
+          "case": "fact",
+          "program": "c87cc3ba18f095a0e43d71d10d5bd8a5ba5a396f01076af45f582d487baf5ae4",
+          "graph_before": 759727,
+          "graph_after": 757743,
+          "source_records_before": 461,
+          "source_records_after": 433,
+          "explicit_slots_before": 1066,
+          "explicit_slots_after": 1055,
+          "program_delta": 133490,
+          "changed_graph_fields": {
+            "cells": -5280,
+            "ownership.components": 1056,
+            "ownership.shapes": 1976,
+            "ownership.boundaries": 264
+          },
+          "all_seed_transitions_preserved": true,
+          "final_state_equal": true,
+          "all_run_checks_equal": true
+        },
+        {
+          "case": "loopfact",
+          "program": "908e0b1c88a267d723d3986381575f4b6bf88960e0c1761f1cd439851165df05",
+          "graph_before": 674105,
+          "graph_after": 680689,
+          "source_records_before": 438,
+          "source_records_after": 408,
+          "explicit_slots_before": 1022,
+          "explicit_slots_after": 1007,
+          "program_delta": 133722,
+          "changed_graph_fields": {
+            "cells": 4552,
+            "ownership.components": 896,
+            "ownership.shapes": 1976,
+            "ownership.boundaries": -840
+          },
+          "all_seed_transitions_preserved": true,
+          "final_state_equal": true,
+          "all_run_checks_equal": true
+        },
+        {
+          "case": "sum-bits",
+          "program": "d1fe5857c125493b9ebc6920299a05c3b309b6a542c655c5717f968d209b2c00",
+          "graph_before": 2043955,
+          "graph_after": 2033691,
+          "source_records_before": 1116,
+          "source_records_after": 971,
+          "explicit_slots_before": 3276,
+          "explicit_slots_after": 3214,
+          "program_delta": 133722,
+          "changed_graph_fields": {
+            "cells": -15992,
+            "ownership.components": 3248,
+            "ownership.shapes": 1976,
+            "ownership.boundaries": 504
+          },
+          "all_seed_transitions_preserved": true,
+          "final_state_equal": true,
+          "all_run_checks_equal": true
+        },
+        {
+          "case": "dot-product",
+          "program": "d95e1c9ec3d1ba8065c6b1b291932a2da1051623ea16bfde945b8ac5061a6848",
+          "graph_before": 2009467,
+          "graph_after": 1996955,
+          "source_records_before": 1211,
+          "source_records_after": 1123,
+          "explicit_slots_before": 3479,
+          "explicit_slots_after": 3427,
+          "program_delta": 133490,
+          "changed_graph_fields": {
+            "cells": -14496,
+            "ownership.components": 848,
+            "ownership.shapes": 1976,
+            "ownership.boundaries": -840
+          },
+          "all_seed_transitions_preserved": true,
+          "final_state_equal": true,
+          "all_run_checks_equal": true
+        }
+      ],
+      "all_inputs_reduce_graph": false
+    }
+  ],
+  "admission": "neither variant replaces the shared seed: loopfact Graph regresses",
+  "limits": [
+    "The 64-path candidate has final-state checks only; the 256-path candidate has full saved Run and terminal-effect checks.",
+    "Saturation outcomes are aggregated across age buckets. Raw age flags from the pre-fix capture undercount transferred frames.",
+    "Logical facts and source identities remain; more physical takeovers do not establish large egraph compression."
+  ]
+}

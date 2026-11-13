@@ -1463,3 +1463,25 @@ fn referenced_parent_can_transfer_before_the_child_finishes() {
     e.graph.collect_garbage();
     assert_eq!(e.graph.slot(child,slot).unwrap(),expected,"retired scalar still belongs to the retained parent");
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn saturated_observer_reads_cross_stage_age_from_transferred_frames() {
+    let p=program("(datatype E (N i64) (Start E) (Pair E E))
+        (ruleset a) (ruleset b) (ruleset c)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((Pair s x)) ((Start x)) :ruleset c)
+        (N 1) (run a 1) (run b 1) (run c 1)");
+    let mut g=Graph::new_with_local_congruence(p).unwrap();g.trace_ownership_catalog(16).unwrap();
+    let mut e=Executor::new(g,false);e.use_completed_parent_takeover().unwrap();
+    e.execute_until(Some(2)).unwrap();
+    assert_eq!(e.graph.transfer_completed_owners().unwrap(),2);
+    let n=e.graph.program.tables.iter().position(|t|t.name=="N").unwrap();
+    e.graph.hide(n,&[eggfuse_cell_runtime::value::Value::Int(1)],true).unwrap();
+    e.graph.collect_garbage();
+    e.execute_until(Some(3)).unwrap();
+    let trace=e.graph.ownership_catalog_trace().unwrap();
+    assert!(trace["saturation"]["rows"].as_array().unwrap().iter().any(|r|
+        r["outcome"]=="rhs_covered" && r["cross_epoch"]==true),"{trace}");
+}

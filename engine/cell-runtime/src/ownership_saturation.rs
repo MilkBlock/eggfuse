@@ -102,7 +102,7 @@ impl Graph {
                 fact_checks += visited;
                 let cross = component.frames.iter().any(|id| {
                     self.cells
-                        .get(id)
+                        .cell_metadata(*id)
                         .is_some_and(|c| c.started_epoch != self.epoch)
                 });
                 if best.0.is_none() || prefix > best.3 || reason == "rhs_covered" {

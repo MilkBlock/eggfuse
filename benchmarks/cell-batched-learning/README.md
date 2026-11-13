@@ -208,3 +208,82 @@ accepted sum-bits artifact separately falls 2,460,662→2,447,294 bytes and
 1,580→1,397 ordinary records. Its final digest still equals the reviewed saved
 export, and the saved-export semantic gate passes. These are incremental gains,
 not a claim of large egraph compression or faster RHS execution.
+
+## Iterating the shared catalog from installed executions
+
+`observe` now records the four inputs **with the installed shared catalog**,
+checking every source Run against the unbaked control and saving the graph,
+ordered RHS and physical-write checks. Passive unmatched-birth proposals retain
+actual source history. They are pooled with the same typed definition and Entry
+mapping as the first batch, but keep `matched_births` and
+`available_shared_inputs` distinct from actual saved bindings.
+
+The batch contains 3,017 proposal paths. Of these, 1,368 map to all four inputs;
+289 were observed on more than one input. The seed catalog is common to all four
+and must agree exactly before shared extension. Per-input unmatched proposal
+counts are 433, 433, 1,378, 1,177. Respectively 110, 165, 576, 322 already have an
+installed local producer/consumer path, but lack the corresponding full source
+history transition. These are candidate counts, not disjoint rule applications.
+
+Two selections add 64 or 256 proposals from this **one captured batch**. Both
+retain every seed path through maximal-prefix coverage. Alternative Entries for
+the same source history and receiver compete rather than accumulating credit.
+The compiler rechecks each target and compares the complete seed transition
+language before writing a candidate artifact. No foreign instance bindings or
+runtime fact graph are introduced.
+
+| Input | Installed seed Graph | +64 proposals | +256 proposals |
+|---|---:|---:|---:|
+| fact | 759,727 | 757,303 | 757,743 |
+| loopfact | 674,105 | 681,329 | 680,689 |
+| sum-bits | 2,043,955 | 2,042,715 | 2,033,691 |
+| dot-product | 2,009,467 | 1,998,507 | 1,996,955 |
+
+**Neither selection replaces the shared seed.** Both regress loopfact, and the
+other gains are small. With 256 proposals, sum-bits ordinary source records fall
+1,116→971, yet only 10,264 Graph bytes disappear. For loopfact, crossing a completed
+frame-directory capacity boundary adds 10,240 bytes, more than the removed source
+storage. More combined shapes also add component/signal storage. Counting newly
+covered paths or physical transfers is therefore not a sufficient credit metric.
+The next structural step must eliminate redundant retained source state, not only
+collect more source frames under the same physical owner.
+
+All eight candidate final exports equal their saved seed controls. The 256-path
+candidate additionally passes all 2,652 saved source Run graph/RHS/write checks
+and terminal non-Run effect checks. The 64-path candidate is **not** admitted by
+that full gate. Program memory is reported separately; no speed or held-out
+result is claimed. The larger egraph compression target remains unmet.
+
+The saved checks avoid re-executing and exporting the entire baseline for every
+candidate. A source-bound terminal check is cached separately; older captures
+reconstruct that check from the admitted seed once, without repeating every
+baseline graph export. Source and artifact hashes must match before replay.
+
+Observation review also found a lifecycle bug: the saturation observer read
+cross-stage age only from ordinary Cells. After shared-storage transfer it could
+mislabel an old component as same-stage. It now reads the common metadata access
+path; a regression test first failed with `rhs_covered / cross_epoch=false` and
+then passes with the transferred predecessor correctly recognized. The saved
+batch's saturation totals are aggregated **across** age buckets. Its old raw age
+flags must not be used to infer cross-stage coverage; future captures use the
+corrected observer. The selection above does not use these age flags.
+
+```
+CARGO_INCREMENTAL=0 CARGO_TARGET_DIR=$PWD/target cargo build \
+  -p eggfuse-cell-compiler --features iterative-bake,sparse-cells,storage-metrics \
+  --example batch_cell_learning --example runtime_storage_peak
+target/debug/examples/batch_cell_learning observe out/cell-batched-learning
+python3 benchmarks/cell-batched-learning/passive.py out/cell-batched-learning
+# Apply each of passive/budget64 and passive/budget256:
+target/debug/examples/batch_cell_learning apply-passive out/cell-batched-learning passive/budget256
+# Measure candidate.json in each variant/case directory with runtime_storage_peak,
+# storing heap.json, in inherited-owners --port-domains-only mode.
+target/debug/examples/batch_cell_learning check-passive out/cell-batched-learning passive/budget256
+python3 benchmarks/cell-batched-learning/analyze_passive.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/passive-results.json
+python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
+```
+
+The report preserves saturation outcomes and storage-field deltas as well as
+net Graph bytes. Nine Python tests cover pooling and passive selection; 47
+ownership tests pass, including transferred-frame saturation observation.
