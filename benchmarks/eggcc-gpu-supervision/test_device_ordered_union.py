@@ -35,6 +35,7 @@ class OrderedUnion(unittest.TestCase):
         dc=dev(ctx)
         out,n,marks=mx.compile(lambda s:complete(s,dp,mx.array(10),mx.array(16),mx.array(6),mx.array(True),mx.array(True),mx,dc,4))(dev(state));mx.eval(out,n,marks)
         self.assertEqual(int(n),10);self.assertEqual(int(marks['executed']),2)
+        self.assertEqual(int(marks['new_equivalences']),2);self.assertEqual(int(marks['new_constructors']),0)
         np.testing.assert_array_equal(np.array(out['slots'])[0],[1,2,3,4,5])
         np.testing.assert_array_equal(np.array(out['slot_roots'])[0],[1,1,3,3,5])
         self.assertEqual(np.array(out['slot_roots'])[1,0],3)
@@ -52,6 +53,13 @@ class OrderedUnion(unittest.TestCase):
         out,n,m=complete(s,p,np.array(10),np.array(16),np.array(6),np.array(True),np.array(True),np,c,4)
         self.assertEqual(out['effect_pc'][0],0);self.assertEqual(n,10);self.assertTrue(m['needs_attention'])
         np.testing.assert_array_equal(m['eq_context']['roots'],c['roots'])
+
+    def test_root_compression_and_reused_constructor_are_not_new_semantics(self):
+        s,p,c=fixture();c['roots'][2]=1;c['roots'][4]=3;c['roots'][5]=4
+        out,n,m=complete(s,p,np.array(10),np.array(16),np.array(6),np.array(True),np.array(True),np,c,4)
+        self.assertEqual(n,10);self.assertEqual(m['executed'],2)
+        self.assertEqual(m['new_equivalences'],0);self.assertFalse(m['semantic_changed'])
+        self.assertTrue(out['settled'][0]);self.assertEqual(m['eq_context']['roots'][5],3)
 
     def test_allocated_constructor_gets_typed_registry_entry(self):
         s,p,c=fixture();s['present'][1]=False

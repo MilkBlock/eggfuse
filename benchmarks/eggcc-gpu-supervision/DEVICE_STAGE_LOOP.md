@@ -92,3 +92,46 @@ alone are not committed semantic changes. Thus this nested controller does not
 yet replace the runtime schedule or discharge uncovered query/ownership work.
 Reference Bake tip remains `9ee7070d`; executable control tables are retained
 runtime memory and are counted as such, not treated as free offline metadata.
+
+## Completed-Run handshake with effect evidence
+
+`device_scheduled_runtime` now connects the nested controller to one snapshot
+query/admission per Run, followed by as many effect-completion ticks as needed.
+An open Run does not rematch after its effects modify the graph. Its phase,
+program counter, query failure and accumulated effect-change flag survive a
+bounded invocation through the returned continuation state. Uncovered queries
+hold the same program counter even after supported effects finish.
+
+Completion reports two supported semantic changes: new constructor allocations
+and decreases in the number of Eq equivalence classes. Copying slots, reusing
+existing constructors, refreshing vectors or adding an execution token is not
+by itself a graph change. Eq path compression changes root pointers but not the
+number of classes, so it does not falsely keep saturation alive. Partial Eq
+changes remain accumulated while a Run is open; they cannot be reported as a
+completed Run until coverage and completion gates pass. Future mutable effects
+will need their own semantic change evidence.
+
+85 mechanism tests pass. A compiled GPU local-family test drives nested
+saturation with actual constructor effects: its completed Runs report changes
+[true, false], although both Runs admit a new token. Another test waits with an
+incomplete external boundary, performs only one query attempt, then resumes the
+same Run after coverage is supplied. A negative coverage test retains its
+unreported change and cannot advance. Eq tests distinguish class merging from
+path compression and constructor reuse; copy-only completion reports no change.
+
+These fixtures assume complete query enumeration of their finite local family.
+In general a token can enable additional execution of already-existing facts;
+coverage must prove those query routes are not omitted merely because an
+intermediate cache token did not exist yet. Current real catalog coverage is
+still false. The controller requires already-initialized source state, aligned
+ruleset IDs, valid external coverage and no unrelated pending source operations.
+It does not establish original cross-instance effect ordering, initial graph
+import, CPU audit rollback or complete ownership takeover. Query failures stay
+latched; automatic retry against a changed snapshot is not introduced.
+
+Reference Bake tip `4c38c51c` learns real cross-stage composition from audited
+executions, yet explicitly shows that fewer components/deeper paths need not
+save retained state. The GPU continuation must likewise remove actual source
+responsibilities under a proved combined template, not credit more generated
+tokens as ownership savings. This commit changes no native runtime and makes
+no full Eggcc correctness, prediction-accuracy or speed claim.

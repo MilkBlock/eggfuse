@@ -36,6 +36,7 @@ class CopyEffects(unittest.TestCase):
         r=fixture.recipe();r['rules'][0]['effects']=[dict(kind='copy',arg=dict(slot=0),dst=1)]
         out,n,m=complete(fixture.state(),compile_completion(r,3),np.array(100),np.array(200),np.array(100),np.array(False),np.array(True),np)
         self.assertEqual(n,100);self.assertTrue(out['settled'][0]);self.assertFalse(out['token_dirty'][0])
+        self.assertFalse(m['semantic_changed'])
         self.assertEqual(m['refreshed'],1) # Copy itself needs no external constructor view.
         r['rules'][0]['slots'][1]['sort']=dict(kind='primitive',name='i64')
         with self.assertRaisesRegex(ValueError,'sort mismatch'):compile_copies(r)

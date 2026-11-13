@@ -64,6 +64,7 @@ def complete(state,plan,next_id,limit,quota,external_complete,eq_settled,xp,eq_c
         limit=xp.minimum(limit,eq_context['roots'].shape[0])
         state=dict(state,slot_roots=state.get('slot_roots',state['slots']),token_dirty=state.get('token_dirty',xp.zeros_like(state['present'])))
     attention=xp.array(False);executed=xp.array(0,dtype=xp.int32)
+    new_constructors=xp.array(0,dtype=xp.int32);new_equivalences=xp.array(0,dtype=xp.int32)
     for kind,site in plan['operations']:
         if kind=='union':
             pairs,active,missing=union_inputs(state,site['plan'],xp)
@@ -79,6 +80,9 @@ def complete(state,plan,next_id,limit,quota,external_complete,eq_settled,xp,eq_c
             active=active&typed_snapshot
             candidate,roots,closure=close(state,eq_context['roots'],eq_context['sorts'],eq_slots,pairs,active,plan['closure_views'],external_complete,eq_rounds,xp)
             state={k:xp.where(required,candidate[k],v) for k,v in state.items()}
+            labels=xp.arange(roots.shape[0],dtype=roots.dtype)
+            merged=xp.sum((eq_context['roots']==labels).astype(xp.int32))-xp.sum((roots==labels).astype(xp.int32))
+            new_equivalences=new_equivalences+xp.where(required,xp.maximum(merged,0),0)
             eq_context['roots']=xp.where(required,roots,eq_context['roots'])
             eq_settled=xp.where(required,closure['settled'],eq_settled)
             state,ready=finish_unions(state,site['plan'],active,closure,xp)
@@ -94,6 +98,7 @@ def complete(state,plan,next_id,limit,quota,external_complete,eq_settled,xp,eq_c
                 allocated=(labels>=next_id)&(labels<outcome['next_id'])
                 eq_context['roots']=xp.where(allocated,labels,eq_context['roots'])
                 eq_context['sorts']=xp.where(allocated,site['result_sort'],eq_context['sorts'])
+            new_constructors=new_constructors+xp.sum(outcome['new_owner'].astype(xp.int32))
             next_id=outcome['next_id']
         attention=attention|outcome['needs_attention']
         executed=executed+xp.sum(outcome['ready'].astype(xp.int32))
@@ -113,6 +118,6 @@ def complete(state,plan,next_id,limit,quota,external_complete,eq_settled,xp,eq_c
         refreshed=refreshed+xp.sum(marks['refreshed'].astype(xp.int32))
         attention=attention|marks['needs_attention']
     pending=state['present']&state['active']&(~state['settled']|state.get('token_dirty',xp.zeros_like(state['present'])))
-    result=dict(executed=executed,refreshed=refreshed,needs_attention=attention|xp.any(pending),pending=pending)
+    result=dict(executed=executed,refreshed=refreshed,new_constructors=new_constructors,new_equivalences=new_equivalences,semantic_changed=(new_constructors>0)|(new_equivalences>0),needs_attention=attention|xp.any(pending),pending=pending)
     if eq_context is not None:result.update(eq_context=eq_context,eq_settled=eq_settled)
     return state,next_id,result
