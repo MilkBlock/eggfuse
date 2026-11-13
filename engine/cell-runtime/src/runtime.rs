@@ -433,6 +433,14 @@ impl Executor {
         if self.cell_execution.is_some() { self.refresh_cell_execution_layouts(); }
         Ok(())
     }
+    /// Experimental direct publication of changed scalar roots. Remains opt-in
+    /// until the end-to-end workload gate establishes a stable improvement.
+    #[cfg(feature = "sparse-cells")]
+    pub fn use_direct_changed_roots(&mut self) -> Result<()> {
+        if !self.steps.is_empty() { return Err("configure root publication before the first Run".into()); }
+        self.stage_spine.direct_changed_roots = true;
+        Ok(())
+    }
     /// Same-binary diagnostic: retain pending completion for changed roots.
     /// Unchanged roots and all Cell execution/Entry ownership stay enabled.
     #[cfg(feature = "sparse-cells")]

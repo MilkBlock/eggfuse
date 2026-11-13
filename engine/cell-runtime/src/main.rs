@@ -47,7 +47,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         #[cfg(feature = "sparse-cells")]
         println!("  --serial-cursor-writes (diagnostic control: keep selected-Cursor writes on their source owner)");
         #[cfg(feature = "sparse-cells")]
-        println!("  --defer-changed-roots (diagnostic control: keep changed root publications in pending completion)");
+        println!("  --direct-changed-roots (experimental: publish completed changed roots directly into Entry)");
+        #[cfg(feature = "sparse-cells")]
+        println!("  --defer-changed-roots (diagnostic override of --direct-changed-roots)");
         println!("  --completion-batch-tasks 2..64 (experimental reads across completion tasks; requires --guard-workers)");
         println!("  --overlap-completion (experimental snapshot reads overlapping ordered commits; requires completion batches)");
         println!("  --port-scopes (experimental concrete-port influence and selective completion)");
@@ -125,7 +127,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             #[cfg(feature = "sparse-cells")]
             "--entry-publications" => {}
             #[cfg(feature = "sparse-cells")]
-            "--serial-cursor-writes" | "--defer-changed-roots" => {}
+            "--serial-cursor-writes" | "--direct-changed-roots" | "--defer-changed-roots" => {}
             #[cfg(feature = "cell-absorption")]
             "--cell-absorption" => {}
             #[cfg(feature = "cell-entry-reverse")]
@@ -253,6 +255,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if args.iter().any(|x| x == "--serial-cursor-writes") {
         runtime.use_serial_cursor_writes()?;
     }
+    #[cfg(feature = "sparse-cells")]
+    if args.iter().any(|x| x == "--direct-changed-roots") {
+        runtime.use_direct_changed_roots()?;
+    }
+    // The diagnostic override deliberately wins when both flags are present.
     #[cfg(feature = "sparse-cells")]
     if args.iter().any(|x| x == "--defer-changed-roots") {
         runtime.use_deferred_changed_roots()?;

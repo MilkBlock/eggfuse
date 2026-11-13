@@ -17,6 +17,8 @@ fn compare_root_control(source: &str, audit: bool, workers: usize, defer: bool) 
     let mut old = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), audit);
     let mut nodes = Executor::new(Graph::new_with_repair_ports(p).unwrap(), audit);
     nodes.use_entry_publications().unwrap();
+    assert_eq!(nodes.report()["stage_spine"]["direct_changed_roots"], false);
+    nodes.use_direct_changed_roots().unwrap();
     if defer { nodes.use_deferred_changed_roots().unwrap(); }
     if workers > 0 {
         nodes.use_query_workers(workers, 8).unwrap();
@@ -41,6 +43,7 @@ fn compare_root_control(source: &str, audit: bool, workers: usize, defer: bool) 
         old.execute().unwrap();
         nodes.execute().unwrap();
     }
+    assert!(nodes.use_direct_changed_roots().is_err());
     if defer { assert!(nodes.use_deferred_changed_roots().is_err()); }
     assert_eq!(nodes.report()["stage_spine"]["direct_changed_roots"], !defer);
     assert_eq!(old.snapshots, nodes.snapshots);

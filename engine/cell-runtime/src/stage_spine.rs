@@ -1425,7 +1425,7 @@ impl Programs {
             #[cfg(feature = "sparse-cells")]
             direct_sealed_answers: false,
             #[cfg(feature = "sparse-cells")]
-            direct_changed_roots: true,
+            direct_changed_roots: false,
             enabled,
             receipts: true,
             audit_receipts: false,

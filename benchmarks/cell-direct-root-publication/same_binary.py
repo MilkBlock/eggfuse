@@ -27,6 +27,8 @@ def prepare(accepted, target, output):
                     features=FEATURES, scheduler_job=lease['id'], lanes={})
     for lane in ('control', 'candidate'):
         config = json.loads((accepted / 'candidate/manifest.json').read_text())
+        for case in ('sum', 'ray'):
+            config['lanes'][case]['args'].append('--direct-changed-roots')
         if lane == 'control':
             for case in ('sum', 'ray'):
                 config['lanes'][case]['args'].append('--defer-changed-roots')
