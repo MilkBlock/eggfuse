@@ -20,6 +20,7 @@ pub(crate) struct Work {
     pub slice_steps: u64,
     pub column_checks: u64,
     pub type_guards: u64,
+    pub static_type_guards: u64,
     pub type_rejections: u64,
     pub results: u64,
     pub class_probes: u64,
@@ -37,7 +38,7 @@ impl Work {
     pub fn add(&mut self, other: &Self) {
         macro_rules! add { ($($f:ident),*) => { $(self.$f += other.$f;)* }; }
         add!(lookups, candidates, port_lookups, hint_probes, hint_hits, domains, signal_visits, slice_steps,
-            column_checks, type_guards, type_rejections, results, class_probes, class_jumps,
+            column_checks, type_guards, static_type_guards, type_rejections, results, class_probes, class_jumps,
             signal_root_lookups, signal_parent_probes, domain_key_fields, metadata_reads,
             candidate_pushes, candidate_growths, candidate_sort_comparisons);
         add!(canonical_lookups, canonical_candidates, canonical_field_checks, canonical_result_reads);
@@ -102,6 +103,7 @@ impl Graph {
         add!(domain_planning_calls, w.domains); add!(domain_queries, w.domains);
         add!(domain_signal_visits, w.signal_visits); add!(domain_route_probes, w.signal_visits);
         add!(domain_slice_steps, w.slice_steps); add!(domain_column_checks, w.column_checks);
+        add!(domain_static_type_guards, w.static_type_guards);
         add!(domain_type_guards, w.type_guards); add!(domain_type_rejections, w.type_rejections);
         add!(domain_results, w.results); add!(query_class_probes, w.class_probes);
         add!(query_class_range_jumps, w.class_jumps);
@@ -188,7 +190,11 @@ impl Read<'_> {
                 w.slice_steps += 1; w.column_checks += u64::from(!uses.indexed());
                 let Some(fact) = uses.fact(position, false) else { continue };
                 w.type_guards += 1;
-                if self.plan.code_operators[self.frames[&fact.cell].code][fact.op as usize] != table {
+                let operator = if let Some(operator) = uses.known_operator(position) {
+                    w.static_type_guards += 1;
+                    operator
+                } else { self.plan.code_operators[self.frames[&fact.cell].code][fact.op as usize] };
+                if operator != table {
                     w.type_rejections += 1; continue;
                 }
                 if self.guard.node(fact, &mut w.reads).is_none_or(|node| node.table != table) { continue; }

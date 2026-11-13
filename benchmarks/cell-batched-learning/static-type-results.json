@@ -1,0 +1,54 @@
+{
+  "scope": "actual standalone Cell runtime; executed candidate type dispatch, not timings",
+  "limitation": "Each static guard replaces one type-dispatch directory read. It does not remove constructor queries, live-node checks, directories, facts, or instances. Ambiguous layouts use concrete instance code.",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "candidate_type_guards": 20125,
+      "static_type_guards": 19002,
+      "instance_directory_type_reads_avoided": 19002,
+      "dynamic_type_guards": 1123,
+      "compiled_layout_operator_bytes": 21592,
+      "graph_bytes": 705175,
+      "graph_fields_unchanged": true,
+      "final_state_and_fact_lifecycle_equal": true
+    },
+    {
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "candidate_type_guards": 14916,
+      "static_type_guards": 14027,
+      "instance_directory_type_reads_avoided": 14027,
+      "dynamic_type_guards": 889,
+      "compiled_layout_operator_bytes": 21184,
+      "graph_bytes": 616289,
+      "graph_fields_unchanged": true,
+      "final_state_and_fact_lifecycle_equal": true
+    },
+    {
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "candidate_type_guards": 155670,
+      "static_type_guards": 146712,
+      "instance_directory_type_reads_avoided": 146712,
+      "dynamic_type_guards": 8958,
+      "compiled_layout_operator_bytes": 21976,
+      "graph_bytes": 1830387,
+      "graph_fields_unchanged": true,
+      "final_state_and_fact_lifecycle_equal": true
+    },
+    {
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "candidate_type_guards": 87162,
+      "static_type_guards": 81523,
+      "instance_directory_type_reads_avoided": 81523,
+      "dynamic_type_guards": 5639,
+      "compiled_layout_operator_bytes": 23432,
+      "graph_bytes": 1798019,
+      "graph_fields_unchanged": true,
+      "final_state_and_fact_lifecycle_equal": true
+    }
+  ]
+}

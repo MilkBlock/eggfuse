@@ -62,10 +62,18 @@ pub(in crate::graph::cell_ownership) struct FieldUses<'a> {
     steps: &'a [Instruction],
     positions: Option<&'a [Position]>,
     programs: &'a [Arc<PortProgram>],
+    operators: &'a [Vec<usize>],
     column: usize,
     symbol: usize,
 }
 impl FieldUses<'_> {
+    /// A shared layout may prove a table without consulting the instance directory.
+    pub fn known_operator(&self, position: usize) -> Option<usize> {
+        let index = self.positions.map_or(position, |p| p[position].0 >> 1);
+        let step = &self.steps[index];
+        let operator = *self.operators.get(self.shape.programs[step.frame])?.get(step.op as usize)?;
+        (operator != usize::MAX).then_some(operator)
+    }
     pub fn indexed(&self) -> bool {
         self.positions.is_some()
     }
@@ -107,7 +115,7 @@ impl<'a> FieldUses<'a> {
         symbol: usize, column: usize) -> Self {
         Self { component, shape, steps: &shape.signals[symbol],
             positions: plan.composition.queries.get(component.shape).map(|p| p.positions(symbol, column)),
-            programs: &plan.programs, column, symbol }
+            programs: &plan.programs, operators: &plan.layout_operators, column, symbol }
     }
 }
 impl Graph {

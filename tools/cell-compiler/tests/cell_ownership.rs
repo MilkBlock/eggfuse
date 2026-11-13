@@ -1671,3 +1671,28 @@ fn atomic_constructor_slots_survive_union_collision() {
     assert!(actual.stats.completed_symbolic_slots_elided>0);
     assert_eq!(reference.export().unwrap(),actual.export().unwrap());
 }
+
+#[test]
+fn shared_layout_operator_proof_keeps_ambiguous_constructors_dynamic() {
+    let p=program("(datatype E (N i64) (F E) (H E) (Pair E E))
+        (ruleset r) (rule ((= x (N n))) ((let f (F x)) (let h (H x)) (Pair f h)) :ruleset r)
+        (N 1) (run r 1)");
+    let g=Graph::new_with_cell_ownership(p).unwrap();
+    let plan=&g.program.cell_ownership;
+    let f=g.program.tables.iter().position(|t|t.name=="F").unwrap();
+    let h=g.program.tables.iter().position(|t|t.name=="H").unwrap();
+    let fm=&plan.markers[g.program.table_templates[f]];
+    let hm=&plan.markers[g.program.table_templates[h]];
+    assert_eq!(fm.program_id,hm.program_id);
+    assert_ne!(fm.code,hm.code);
+    assert_eq!(plan.layout_operators[fm.program_id][0],usize::MAX);
+    let mut proved=0;
+    for marker in &plan.markers {
+        for (op,&table) in plan.layout_operators[marker.program_id].iter().enumerate() {
+            if table==usize::MAX {continue;}
+            proved+=1;
+            assert_eq!(table,plan.code_operators[marker.code][op]);
+        }
+    }
+    assert!(proved>0,"multi-operation typed bodies should retain static type proofs");
+}

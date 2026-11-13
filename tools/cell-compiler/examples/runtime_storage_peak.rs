@@ -130,6 +130,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "source_storage":e.graph.retained_cell_storage(),
         "completion_work":e.graph.stats,
         "maintenance":e.graph.maintenance_report(),
+        "ownership_query_work":e.graph.ownership_report()["stats"],
         "scope":"single-lane process live requested heap including Program, Graph, Executor and fixed diagnostic buffer; not Graph-exclusive peak or RSS",
         "trace_buffer_bytes":trace_bytes,"source_loaded_live_bytes":source_loaded,
         "setup_peak_bytes":setup_peak,"setup_live_bytes":setup_live,
