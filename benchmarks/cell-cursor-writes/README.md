@@ -266,3 +266,30 @@ merged compiler baseline (`c1d99e67` plus experiment documentation), instead of
 comparing the new change with the old `23d55e65` binary. The script requires the
 engine delta to contain only the two write implementation files, checks complete
 state/Run/effect equality, native sum-bits acceptance and unchanged write coverage.
+
+Implementation `e21acfa1` passed 212 runtime tests, 73 relevant integration tests
+and the all-feature compile check (queue jobs 148 and 149). Job 152 froze the
+current control and candidate; both passed exact state/Run/effect comparison and
+the reviewed native sum-bits validator. The binaries have distinct recorded
+hashes. Both retained 1,161,128 Raytrace write candidates, 302,679 inherited
+candidates, 1,071,074 physical row writes and 1,057,105 writer reuses.
+
+Raytrace cumulative temporary capacity fell from 242,141,056 to 204,984,960 bytes
+(-37,156,096 bytes, about 15.34%). Retained source capacity stayed 185,901,120
+bytes. This is descriptor/temporary capacity accounting, not a peak-RSS claim
+or an elimination of deep binding copies (none were introduced by the old move).
+
+Queue job 155 finished the fixed ordinary trial with all 48 boundary guards
+clear. `borrowed-results.json` retains every timing sample, work counts and the
+raw trial hash. The scope is the actual standalone Cell CPU runtime.
+
+| Inference median | Current control `0025734e` | Borrowed instances `e21acfa1` | Change |
+| --- | ---: | ---: | ---: |
+| sum-bits (5 samples) | 26.076 ms | 25.735 ms | -1.31% |
+| Raytrace (3 samples) | 5.091 s | 5.035 s | -1.11% |
+
+Both medians improved in this checkpoint. Sample ranges overlap; this is a small
+grouped result, not a statistical-significance claim or evidence that all workers
+are saturated. It passes the declared two-workload checkpoint and justifies
+integrating this simplification on its tested base. Source completion, shared
+identity allocation and required visibility boundaries still remain.

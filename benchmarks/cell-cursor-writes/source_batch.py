@@ -37,6 +37,8 @@ def prepare(accepted, target, output, control_checkout=None):
     else:
         (output / 'control').symlink_to(accepted / 'control', target_is_directory=True)
     build = freeze(ROOT, target, output / 'runtime', output / 'build.log', FEATURES)
+    control_sha = json.loads((output / 'control/manifest.json').read_text())['runtime_sha256']
+    assert control_sha != build['runtime_sha256'], 'the frozen candidate must test a distinct implementation'
     reference(accepted / 'candidate', output / 'candidate', output / 'runtime', accepted / 'candidate', base)
     result = dict(scope='actual standalone Cell CPU; ordinary build work/semantic checks, not timing',
                   source_commit=commit, control_commit=base, control_build=control_build, build=build, workloads={})
