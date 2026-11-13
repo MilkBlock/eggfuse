@@ -5,6 +5,7 @@ view completeness is relative to resident Cells and an explicit external-coverag
 and settled-Eq guarantee from the surrounding runtime.
 """
 import numpy as np
+from device_slot_owners import shape as slot_shape, dtype as slot_dtype, read as read_slot, has as has_slot
 
 
 def compile_view(recipe,table_id,arity):
@@ -33,20 +34,21 @@ def compile_view(recipe,table_id,arity):
 
 
 def project(state,plan,external_complete,eq_settled,xp,include_fields=False):
-    rows=state['slots'].shape[0];records=plan['rule'].shape[0]
+    rows=slot_shape(state)[0];records=plan['rule'].shape[0]
     associated=(state['present'][:,None] & state['visible'][:,None]
                 & (state['keys'][:,0,None]==plan['rule'][None,:]))
     pc=xp.where(state['settled'][:,None],plan['effect_count'][None,:],state['effect_pc'][:,None])
     exists=associated & (pc>=plan['after'][None,:])
     not_overwritten=pc<plan['expires'][None,:]
-    slots=state['slots'][:,plan['slots']]
-    roots=state.get('slot_roots',state['slots'])[:,plan['slots']]
-    available=xp.all(state['slot_valid'][:,plan['slots']],axis=2)
+    row=xp.arange(rows)[:,None,None];positions=plan['slots'][None,:,:]
+    slots=read_slot(state,'slots',row,positions,xp)
+    roots=read_slot(state,'slot_roots' if has_slot(state,'slot_roots') else 'slots',row,positions,xp)
+    available=xp.all(read_slot(state,'slot_valid',row,positions,xp),axis=2)
     live=exists & not_overwritten & available & plan['supported'][None,:]
     lost=exists & ~live
     # Missing observed data is unknown, not evidence the constructor is absent.
     complete=external_complete & eq_settled & ~xp.any(lost)
-    keys=xp.concatenate([xp.full((rows,records,1),plan['table'],dtype=state['slots'].dtype),roots[:,:,:-1]],axis=2)
+    keys=xp.concatenate([xp.full((rows,records,1),plan['table'],dtype=slot_dtype(state)),roots[:,:,:-1]],axis=2)
     ids=slots[:,:,-1]
     result=dict(keys=keys.reshape(rows*records,plan['arity']+1),ids=ids.reshape(-1),
         roots=roots[:,:,-1].reshape(-1),live=live.reshape(-1),complete=complete,

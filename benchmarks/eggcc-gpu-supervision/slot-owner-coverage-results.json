@@ -1,0 +1,21 @@
+{
+  "scope": "recipe-only sealed-slot composition coverage; not executed storage savings",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "entries": 157,
+  "covered_entries": 157,
+  "boundaries": {},
+  "slot_width": 396,
+  "static_shared_fields": 475,
+  "static_moved_fields": 721,
+  "static_mapping_bytes": 373032,
+  "added_directory_bytes_per_logical_cell": 1592,
+  "added_directory_bytes_per_physical_owner": 5,
+  "source_logical_keys_retained": true,
+  "logical_activation_transfer": false,
+  "writable_owner_runtime": false,
+  "limitations": [
+    "Runtime exact values, scalar columns, generations, aliases and quiescence must still pass",
+    "Batched fixed arenas release reusable capacity, not allocated process bytes",
+    "More multi-source ownership candidates require actual matched slot-origin evidence"
+  ]
+}

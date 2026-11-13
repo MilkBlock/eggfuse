@@ -4,6 +4,7 @@ This fallback is dense candidate work, not a fast learned matching mechanism.
 Overflow or incomplete views prohibit a complete-enumeration claim.
 """
 from device_witness_views import compile_view,project
+from device_slot_owners import shape as slot_shape, dtype as slot_dtype, read as read_slot, has as has_slot
 
 
 def compile_query(recipe,rid,views=None):
@@ -28,7 +29,7 @@ def compile_query(recipe,rid,views=None):
 def match(state,plan,capacity,external_complete,eq_settled,xp):
     if capacity<1:raise ValueError('positive binding capacity required')
     if not plan['covered']:raise ValueError('query contains unsupported atoms')
-    width=plan['width'];values=xp.full((capacity,width),-1,state['slots'].dtype);roots=xp.full_like(values,-1)
+    width=plan['width'];values=xp.full((capacity,width),-1,slot_dtype(state));roots=xp.full_like(values,-1)
     source_rows=xp.full_like(values,-1);source_slots=xp.full_like(values,-1)
     live=xp.arange(capacity)==0;bound=set();eq_bound=set();overflow=xp.array(False)
     complete=xp.array(external_complete,dtype=xp.bool_)&xp.array(eq_settled,dtype=xp.bool_)
@@ -69,23 +70,23 @@ def match(state,plan,capacity,external_complete,eq_settled,xp):
     prior=xp.arange(capacity)[None,:]<xp.arange(capacity)[:,None]
     live=live&~xp.any(same&prior&live[None,:],axis=1)
     slot_valid=live[:,None]&xp.array([i in bound for i in range(width)])[None,:]
-    generations=state['generation'][xp.clip(source_rows,0,state['slots'].shape[0]-1)]
+    generations=state['generation'][xp.clip(source_rows,0,slot_shape(state)[0]-1)]
     return dict(slots=values,slot_roots=roots,slot_valid=slot_valid,live=live,source_rows=source_rows,source_slots=source_slots,
                 source_generations=generations,witness_rows=witnesses,witness_records=records,
-                witness_generations=state['generation'][xp.clip(witnesses,0,state['slots'].shape[0]-1)],complete=complete&~overflow,overflow=overflow,missing_view=~complete,
+                witness_generations=state['generation'][xp.clip(witnesses,0,slot_shape(state)[0]-1)],complete=complete&~overflow,overflow=overflow,missing_view=~complete,
                 candidate_lanes=xp.array(candidate_lanes,dtype=xp.int32))
 
 
 def match_inputs(state,plan,input_layout,capacity,external_complete,eq_settled,xp):
     from device_input_features import encode_inputs
     bindings=match(state,plan,capacity,external_complete,eq_settled,xp)
-    rows=xp.clip(bindings['source_rows'],0,state['slots'].shape[0]-1)
-    slots=xp.clip(bindings['source_slots'],0,state['slots'].shape[1]-1)
+    rows=xp.clip(bindings['source_rows'],0,slot_shape(state)[0]-1)
+    slots=xp.clip(bindings['source_slots'],0,slot_shape(state)[1]-1)
     shape=bindings['slots'].shape
     inputs=dict(roots=bindings['slot_roots'],valid=bindings['slot_valid'],numbers=xp.zeros(shape,xp.float32),
                 numeric=xp.zeros(shape,xp.bool_),scalar_codes=xp.zeros(shape+(64,),xp.float32),scalar_valid=xp.zeros(shape,xp.bool_))
     for column,key in [('scalar_numbers','numbers'),('scalar_numeric','numeric'),('scalar_codes','scalar_codes'),('scalar_valid','scalar_valid')]:
-        if column in state:inputs[key]=state[column][rows,slots]
+        if has_slot(state,column):inputs[key]=read_slot(state,column,rows,slots,xp)
     features,marks=encode_inputs(inputs,input_layout,xp)
     features['input_ready']=features['input_ready']&bindings['live']
     return bindings,features,marks
