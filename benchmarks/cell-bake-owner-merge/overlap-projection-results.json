@@ -1,0 +1,465 @@
+{
+  "scope": "Standalone differential Run checks; no latency or whole-heap claim",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "runs": 418,
+      "final_state": "d04728e6402e21992b9748a09ec99ace5f6639bc268ac5bcafbc24d0fd52f2f0",
+      "all_saved_run_checks_equal": true,
+      "overlap_exercised": true,
+      "projected_snapshot_exercised": true,
+      "overlap": {
+        "enabled": true,
+        "stats": {
+          "epochs": 7,
+          "projection_candidates": 110,
+          "projection_records": 66,
+          "projection_comparisons": 416,
+          "projection_insertion_moves": 117,
+          "projection_capacity_bytes_total": 2816,
+          "projection_capacity_bytes_peak": 1024,
+          "base_snapshots": 28,
+          "task_spawns": 14,
+          "projected_tasks": 48,
+          "input_buffer_allocations": 7,
+          "input_buffer_bytes": 3072,
+          "activity_allocations": 1,
+          "reader_activity_updates": 28,
+          "channel_builds": 0,
+          "channel_receives": 0,
+          "slot_publications": 48,
+          "slot_abandons": 0,
+          "slot_collection_reads": 48,
+          "ordered_slot_reads": 48,
+          "row_handle_clones": 48,
+          "result_buffer_allocations": 14,
+          "result_buffer_bytes": 18160,
+          "overlay": {
+            "writes": 272,
+            "growths": 38,
+            "copied_units": 0,
+            "merged_entries": 180
+          },
+          "layers": {
+            "parents": {
+              "writes": 44,
+              "growths": 4,
+              "copied_units": 0,
+              "merged_entries": 44
+            },
+            "nodes": {
+              "writes": 30,
+              "growths": 4,
+              "copied_units": 0,
+              "merged_entries": 30
+            },
+            "components": {
+              "writes": 15,
+              "growths": 2,
+              "copied_units": 0,
+              "merged_entries": 15
+            },
+            "queues": {
+              "writes": 183,
+              "growths": 28,
+              "copied_units": 0,
+              "merged_entries": 91
+            }
+          }
+        },
+        "observed": {
+          "effective_unions_with_active_readers": 0
+        },
+        "scope": "immutable epoch bases with coordinator write overlays; grouped readers publish directly to ordered result slots",
+        "performance_admission": false
+      },
+      "batch_work": {
+        "attempts": 7,
+        "queue_head_visits": 16,
+        "queue_comparisons": 44,
+        "queue_successor_reads": 47,
+        "preflight_checks": 48,
+        "uncovered_stops": 0,
+        "exact_domain_tasks": 3,
+        "exact_domain_candidates": 3,
+        "short_prefixes": 0,
+        "preparation_errors": 0,
+        "dispatches": 7,
+        "prepared_tasks": 48,
+        "prepared_candidates": 0,
+        "candidate_positions": 110,
+        "pending_probes": 55,
+        "candidate_fact_lookups": 55,
+        "read_set_slots": 69,
+        "read_set_comparisons": 699,
+        "read_set_queries": 88,
+        "result_refreshes": 40,
+        "collected_tasks": 48,
+        "recorded_answers": 45,
+        "guard_candidates": 55,
+        "worker_early_stops": 45,
+        "selection_checks": 45,
+        "selection_pending_skips": 0,
+        "selection_dead_skips": 0,
+        "order_checks": 73,
+        "interleaved_stops": 0,
+        "bridged_tasks": 25,
+        "conflicting_unions": 0,
+        "committed_tasks": 48,
+        "reused_after_union": 40,
+        "unused_tasks": 0,
+        "unsubmitted_tasks": 0,
+        "scratch_allocations": 7,
+        "scratch_bytes_requested": 32640,
+        "peak_tasks": 16
+      },
+      "projected_live_records": 653
+    },
+    {
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "runs": 398,
+      "final_state": "623c3b05d895a4200f8ea907ea4468a92a000c975f654483e54c42c96c90bf7a",
+      "all_saved_run_checks_equal": true,
+      "overlap_exercised": true,
+      "projected_snapshot_exercised": true,
+      "overlap": {
+        "enabled": true,
+        "stats": {
+          "epochs": 8,
+          "projection_candidates": 60,
+          "projection_records": 35,
+          "projection_comparisons": 113,
+          "projection_insertion_moves": 35,
+          "projection_capacity_bytes_total": 1792,
+          "projection_capacity_bytes_peak": 512,
+          "base_snapshots": 32,
+          "task_spawns": 16,
+          "projected_tasks": 30,
+          "input_buffer_allocations": 8,
+          "input_buffer_bytes": 1920,
+          "activity_allocations": 1,
+          "reader_activity_updates": 32,
+          "channel_builds": 0,
+          "channel_receives": 0,
+          "slot_publications": 30,
+          "slot_abandons": 0,
+          "slot_collection_reads": 30,
+          "ordered_slot_reads": 30,
+          "row_handle_clones": 30,
+          "result_buffer_allocations": 16,
+          "result_buffer_bytes": 11408,
+          "overlay": {
+            "writes": 134,
+            "growths": 21,
+            "copied_units": 0,
+            "merged_entries": 90
+          },
+          "layers": {
+            "parents": {
+              "writes": 28,
+              "growths": 2,
+              "copied_units": 0,
+              "merged_entries": 28
+            },
+            "nodes": {
+              "writes": 10,
+              "growths": 1,
+              "copied_units": 0,
+              "merged_entries": 10
+            },
+            "components": {
+              "writes": 2,
+              "growths": 1,
+              "copied_units": 0,
+              "merged_entries": 2
+            },
+            "queues": {
+              "writes": 94,
+              "growths": 17,
+              "copied_units": 0,
+              "merged_entries": 50
+            }
+          }
+        },
+        "observed": {
+          "effective_unions_with_active_readers": 0
+        },
+        "scope": "immutable epoch bases with coordinator write overlays; grouped readers publish directly to ordered result slots",
+        "performance_admission": false
+      },
+      "batch_work": {
+        "attempts": 8,
+        "queue_head_visits": 18,
+        "queue_comparisons": 24,
+        "queue_successor_reads": 30,
+        "preflight_checks": 30,
+        "uncovered_stops": 0,
+        "exact_domain_tasks": 0,
+        "exact_domain_candidates": 0,
+        "short_prefixes": 0,
+        "preparation_errors": 0,
+        "dispatches": 8,
+        "prepared_tasks": 30,
+        "prepared_candidates": 0,
+        "candidate_positions": 60,
+        "pending_probes": 35,
+        "candidate_fact_lookups": 35,
+        "read_set_slots": 42,
+        "read_set_comparisons": 289,
+        "read_set_queries": 56,
+        "result_refreshes": 19,
+        "collected_tasks": 30,
+        "recorded_answers": 28,
+        "guard_candidates": 35,
+        "worker_early_stops": 28,
+        "selection_checks": 28,
+        "selection_pending_skips": 0,
+        "selection_dead_skips": 0,
+        "order_checks": 39,
+        "interleaved_stops": 0,
+        "bridged_tasks": 9,
+        "conflicting_unions": 0,
+        "committed_tasks": 30,
+        "reused_after_union": 19,
+        "unused_tasks": 0,
+        "unsubmitted_tasks": 0,
+        "scratch_allocations": 8,
+        "scratch_bytes_requested": 20400,
+        "peak_tasks": 6
+      },
+      "projected_live_records": 633
+    },
+    {
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "runs": 882,
+      "final_state": "3bae7a5ad756595f8c454b27baabbf7e830cf06b61d6aa69c0f7437ee747ab2a",
+      "all_saved_run_checks_equal": true,
+      "overlap_exercised": true,
+      "projected_snapshot_exercised": true,
+      "overlap": {
+        "enabled": true,
+        "stats": {
+          "epochs": 83,
+          "projection_candidates": 2641,
+          "projection_records": 1132,
+          "projection_comparisons": 9885,
+          "projection_insertion_moves": 13709,
+          "projection_capacity_bytes_total": 49024,
+          "projection_capacity_bytes_peak": 8192,
+          "base_snapshots": 332,
+          "task_spawns": 166,
+          "projected_tasks": 684,
+          "input_buffer_allocations": 83,
+          "input_buffer_bytes": 43776,
+          "activity_allocations": 1,
+          "reader_activity_updates": 332,
+          "channel_builds": 0,
+          "channel_receives": 0,
+          "slot_publications": 684,
+          "slot_abandons": 0,
+          "slot_collection_reads": 684,
+          "ordered_slot_reads": 609,
+          "row_handle_clones": 609,
+          "result_buffer_allocations": 166,
+          "result_buffer_bytes": 258512,
+          "overlay": {
+            "writes": 3394,
+            "growths": 84,
+            "copied_units": 0,
+            "merged_entries": 2108
+          },
+          "layers": {
+            "parents": {
+              "writes": 502,
+              "growths": 5,
+              "copied_units": 0,
+              "merged_entries": 502
+            },
+            "nodes": {
+              "writes": 217,
+              "growths": 4,
+              "copied_units": 0,
+              "merged_entries": 217
+            },
+            "components": {
+              "writes": 235,
+              "growths": 4,
+              "copied_units": 0,
+              "merged_entries": 235
+            },
+            "queues": {
+              "writes": 2440,
+              "growths": 71,
+              "copied_units": 0,
+              "merged_entries": 1154
+            }
+          }
+        },
+        "observed": {
+          "effective_unions_with_active_readers": 3
+        },
+        "scope": "immutable epoch bases with coordinator write overlays; grouped readers publish directly to ordered result slots",
+        "performance_admission": false
+      },
+      "batch_work": {
+        "attempts": 83,
+        "queue_head_visits": 245,
+        "queue_comparisons": 964,
+        "queue_successor_reads": 665,
+        "preflight_checks": 684,
+        "uncovered_stops": 0,
+        "exact_domain_tasks": 29,
+        "exact_domain_candidates": 30,
+        "short_prefixes": 0,
+        "preparation_errors": 0,
+        "dispatches": 83,
+        "prepared_tasks": 684,
+        "prepared_candidates": 0,
+        "candidate_positions": 2641,
+        "pending_probes": 1569,
+        "candidate_fact_lookups": 1641,
+        "read_set_slots": 1289,
+        "read_set_comparisons": 10275,
+        "read_set_queries": 1004,
+        "result_refreshes": 351,
+        "collected_tasks": 684,
+        "recorded_answers": 599,
+        "guard_candidates": 1641,
+        "worker_early_stops": 516,
+        "selection_checks": 487,
+        "selection_pending_skips": 0,
+        "selection_dead_skips": 0,
+        "order_checks": 1012,
+        "interleaved_stops": 0,
+        "bridged_tasks": 403,
+        "conflicting_unions": 14,
+        "committed_tasks": 609,
+        "reused_after_union": 351,
+        "unused_tasks": 75,
+        "unsubmitted_tasks": 0,
+        "scratch_allocations": 92,
+        "scratch_bytes_requested": 473696,
+        "peak_tasks": 16
+      },
+      "projected_live_records": 1825
+    },
+    {
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "runs": 954,
+      "final_state": "191d2a4bd738e7afd0783d30b5d5c1f1219ac92887bb96b95239edfec27141d9",
+      "all_saved_run_checks_equal": true,
+      "overlap_exercised": true,
+      "projected_snapshot_exercised": true,
+      "overlap": {
+        "enabled": true,
+        "stats": {
+          "epochs": 38,
+          "projection_candidates": 706,
+          "projection_records": 371,
+          "projection_comparisons": 3206,
+          "projection_insertion_moves": 949,
+          "projection_capacity_bytes_total": 17152,
+          "projection_capacity_bytes_peak": 4096,
+          "base_snapshots": 152,
+          "task_spawns": 76,
+          "projected_tasks": 260,
+          "input_buffer_allocations": 38,
+          "input_buffer_bytes": 16640,
+          "activity_allocations": 1,
+          "reader_activity_updates": 152,
+          "channel_builds": 0,
+          "channel_receives": 0,
+          "slot_publications": 260,
+          "slot_abandons": 0,
+          "slot_collection_reads": 260,
+          "ordered_slot_reads": 260,
+          "row_handle_clones": 260,
+          "result_buffer_allocations": 76,
+          "result_buffer_bytes": 98368,
+          "overlay": {
+            "writes": 1306,
+            "growths": 61,
+            "copied_units": 0,
+            "merged_entries": 868
+          },
+          "layers": {
+            "parents": {
+              "writes": 249,
+              "growths": 4,
+              "copied_units": 0,
+              "merged_entries": 249
+            },
+            "nodes": {
+              "writes": 82,
+              "growths": 3,
+              "copied_units": 0,
+              "merged_entries": 82
+            },
+            "components": {
+              "writes": 83,
+              "growths": 3,
+              "copied_units": 0,
+              "merged_entries": 83
+            },
+            "queues": {
+              "writes": 892,
+              "growths": 51,
+              "copied_units": 0,
+              "merged_entries": 454
+            }
+          }
+        },
+        "observed": {
+          "effective_unions_with_active_readers": 1
+        },
+        "scope": "immutable epoch bases with coordinator write overlays; grouped readers publish directly to ordered result slots",
+        "performance_admission": false
+      },
+      "batch_work": {
+        "attempts": 38,
+        "queue_head_visits": 108,
+        "queue_comparisons": 525,
+        "queue_successor_reads": 255,
+        "preflight_checks": 260,
+        "uncovered_stops": 0,
+        "exact_domain_tasks": 36,
+        "exact_domain_candidates": 37,
+        "short_prefixes": 0,
+        "preparation_errors": 0,
+        "dispatches": 38,
+        "prepared_tasks": 260,
+        "prepared_candidates": 0,
+        "candidate_positions": 706,
+        "pending_probes": 414,
+        "candidate_fact_lookups": 444,
+        "read_set_slots": 443,
+        "read_set_comparisons": 4071,
+        "read_set_queries": 498,
+        "result_refreshes": 183,
+        "collected_tasks": 260,
+        "recorded_answers": 213,
+        "guard_candidates": 444,
+        "worker_early_stops": 211,
+        "selection_checks": 213,
+        "selection_pending_skips": 0,
+        "selection_dead_skips": 2,
+        "order_checks": 384,
+        "interleaved_stops": 0,
+        "bridged_tasks": 124,
+        "conflicting_unions": 0,
+        "committed_tasks": 260,
+        "reused_after_union": 183,
+        "unused_tasks": 0,
+        "unsubmitted_tasks": 0,
+        "scratch_allocations": 39,
+        "scratch_bytes_requested": 177824,
+        "peak_tasks": 16
+      },
+      "projected_live_records": 2023
+    }
+  ]
+}

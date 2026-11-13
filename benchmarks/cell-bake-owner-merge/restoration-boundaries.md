@@ -286,3 +286,37 @@ The previously reported four-case memory savings remain single-lane results.
 End-to-end overlap memory/preparation cost and stage-switch RHS savings remain
 unproven. This integration removes a compatibility blocker; it does not complete
 the large-compression objective.
+
+## Whole-workload overlap replay
+
+`check-passive ... template-overlap` enables two guard workers (threshold 1),
+batches of at most 16 tasks, template projection and overlapped completion on the
+same installed owned-state catalogs. All 2,652 saved Run graph/RHS/write checks
+and four terminal checks pass. Each workload actually executes projected snapshots:
+
+| case | overlap epochs | candidate visits | projected records, summed over batches | snapshot peak capacity | insertion shifts |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| fact | 7 | 110 | 66 | 1,024 | 117 |
+| loopfact | 8 | 60 | 35 | 512 | 35 |
+| sum-bits | 83 | 2,641 | 1,132 | 8,192 | 13,709 |
+| dot-product | 38 | 706 | 371 | 4,096 | 949 |
+
+Records are deduplicated within a batch, not globally. Peak capacity is only the
+added projected membership vector, not all completion memory or process peak.
+Existing input/result buffers and overlay writes remain; complete counters are
+retained in `overlap-projection-results.json`. For example sum-bits also requests
+258,512 result-buffer bytes over the run. Comparing its 8 KiB snapshot peak to the
+single-lane final-heap saving is not an end-to-end peak or net-memory measurement.
+No latency benefit is claimed. The insertion-shift count makes preparation cost
+visible rather than treating template-derived descriptors as free.
+
+Reproduce after building the batch example with the previously listed features:
+
+```sh
+target/debug/examples/batch_cell_learning check-passive out/cell-bake-owner-merge/batch owned-state template-overlap
+python3 benchmarks/cell-bake-owner-merge/overlap_projection_results.py out/cell-bake-owner-merge/batch/owned-state/checked.json benchmarks/cell-bake-owner-merge/overlap-projection-results.json
+```
+
+This closes the projected-overlap workload coverage gap. It does not reduce RHS
+logical work or establish the requested large compression target; static reuse of
+completed facts and stage transitions remain the structural next step.
