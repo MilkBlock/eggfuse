@@ -25,18 +25,22 @@ def forest(length,start,variant):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--runner',type=Path,required=True)
-    p.add_argument('--reference-dir',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
+    p.add_argument('--reference-dir',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--grid',choices=['original','train','fresh'],default='original');a=p.parse_args()
     ds=module('dataset',a.reference_dir/'dataset.py')
     rules=json.loads(Path(__file__).with_name('source-rules.json').read_text())['rules']
     prefix='(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n(ruleset always-run)\n'
     prefix+='\n'.join(r['source'] for r in rules)+'\n'
     a.output.mkdir(parents=True,exist_ok=True);results=[];accepted=[];requests=[]
     with tempfile.TemporaryDirectory() as d:
-        for length in (6,8,12,16):
-            for variant,start in enumerate((-3,0,7)):
+        lengths={'original':(6,8,12,16),'train':(4,6,8,10,12,14,16),'fresh':(5,7,9,11,13,15)}[a.grid]
+        starts={'original':(-3,0,7),'train':(-12,-8,-4,0,4,8,12),'fresh':(-10,-6,-2,2,6,10)}[a.grid]
+        for length in lengths:
+            for index,start in enumerate(starts):
+                variant=index%3
                 roots=forest(length,start,variant)
                 source=prefix+'\n'.join(roots)+'\n(run-schedule (saturate (run always-run)))\n'
-                case=dict(id=f'connected-{length}-{variant}',source=source,metadata=dict(length=length,variant=variant,start=start,roots=roots),verify_ruleset='always-run',native_reference=True)
+                case=dict(id=f'{a.grid}-{length}-{start}-{variant}',source=source,metadata=dict(length=length,variant=variant,start=start,roots=roots),verify_ruleset='always-run',native_reference=True)
                 requests.append(case);req=Path(d)/'input.json';out=Path(d)/'output.json';req.write_text(json.dumps(dict(cases=[case])))
                 before=time.perf_counter()
                 try:
@@ -60,7 +64,8 @@ def main():
     report=dict(scope='Actual saved Cell executor plus independent native egglog; bounded five-rule DAG contract',
         runner_sha256=hashlib.sha256(a.runner.read_bytes()).hexdigest(),canonicalizer_sha256=hashlib.sha256((a.reference_dir/'dataset.py').read_bytes()).hexdigest(),
         rules_sha256=hashlib.sha256(Path(__file__).with_name('source-rules.json').read_bytes()).hexdigest(),
-        cases=results,all_requested_pass=all(r['status']=='pass' for r in results),timing_scope='1-second timeout enforcement, not a performance comparison',
+        grid=a.grid,cases=results,all_requested_pass=all(r['status']=='pass' for r in results),timing_scope='1-second timeout enforcement, not a performance comparison',
         limitations=['No GPU computation in this collection','Scalar blocks exclude identity, topology and hidden state','Final graph comparison does not independently verify every Run boundary'])
     (a.output/'results.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
+    if not report['all_requested_pass']:raise SystemExit(1)
 if __name__=='__main__':main()

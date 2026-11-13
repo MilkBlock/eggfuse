@@ -287,3 +287,72 @@ The program exits nonzero on a failed requested case. Exact numeric acceptance,
 actual CPU residual execution, original native comparison and the negative
 control are the relevant checks for this isolated experiment. The sum-bits
 contract is neither invoked nor silently extended to these tuple programs.
+
+## Expanded training domain and learned-token CPU acceptance
+
+The first learned fanout was trained on only 14 numeric entrances. To separate
+capacity failure from missing training support, `larger.py --grid train` now
+collects 49 connected cases: lengths 4,6,8,10,12,14,16 and starts
+-12,-8,-4,0,4,8,12. `--grid fresh` collects 36 new cases: lengths 5,7,9,11,13,15
+and starts -10,-6,-2,2,6,10, with the same deterministic three entrance variants.
+All 85 cases independently pass native canonical endpoint checks, fixed-point
+checks and the one-second execution limit. The grids and model settings were
+fixed before evaluating the new GPU outputs. This remains a bounded development
+study; topology/general Eq representation is not tested by scalar accuracy.
+
+Training yields 180 distinct scalar entrances and 933 suffix targets. The model,
+random seed and regularizer remain unchanged. The new evaluation has 822 tokens;
+570 originate from exact scalar entrance pairs absent from training. Both fully
+learned and exact-first-channel/learned-consumer variants get 822/822 rounded
+parameter triples correct, including 570/570 novel-entrance tokens. Maximum
+fully learned error is approximately 0.00149. These are integers after explicit
+exit rounding and exact validation; raw ridge outputs are not exact arithmetic.
+This supports training-domain insufficiency as a substantial cause of the prior
+failure, not a claim that the token representation handles arbitrary semantics.
+
+`growing.py --proposals PATH` retains the actual unrounded GPU output and hashes
+its input runtime. `residual.py --proposals PATH` reads that artifact, checks the
+hash, exact shape, finiteness and integer parameter identities, and corrects
+rejected outputs using the exact CPU reference. It then feeds accepted values
+into the same completed-region boundary and actual residual execution. It does
+not rerun the exact GPU control and falsely label those values learned outputs.
+The JSON artifact is an experimental handoff, not a native zero-copy ABI.
+
+All 36 learned-proposal cases pass residual endpoint equality against both
+original Cell execution and native egglog; enabling full rules makes no change.
+No token needed numeric correction. Omitting the completed region is rejected
+by the negative control, with two changing full-rule audit Runs.
+
+| Work, 36 new cases | Count |
+|---|---:|
+| Original executed bindings | 5,556 |
+| Residual executed bindings | 4,462 |
+| Boundary action requests | 822 |
+| Rejected learned parameter tokens | 0 |
+
+Exact validation computes the reference parameters for every proposal. Zero
+rejections does not eliminate validation cost. The CPU adapter also computes
+successor parameters and materializes source actions; all of that still costs
+work. No end-to-end speedup is established. The semantic contract remains the
+restricted positive saturation endpoint, not arbitrary finite-Run visibility.
+
+Reproduction, from this directory, with the same runner/reference dependencies:
+
+```
+python larger.py --grid train --runner ../../target/debug/examples/real_completion_dataset \
+  --reference-dir REFERENCE_DIR --output ../../out/cell-token-rollout/train-grid
+python larger.py --grid fresh --runner ../../target/debug/examples/real_completion_dataset \
+  --reference-dir REFERENCE_DIR --output ../../out/cell-token-rollout/fresh-grid
+python growing.py --training ../../out/cell-token-rollout/train-grid/runtime.json \
+  --heldout ../../out/cell-token-rollout/fresh-grid/runtime.json \
+  --reference-dir REFERENCE_DIR --output ../../out/cell-token-rollout/growing-expanded.json \
+  --proposals ../../out/cell-token-rollout/fresh-proposals.json
+python residual.py --runtime ../../out/cell-token-rollout/fresh-grid/runtime.json \
+  --runner ../../target/debug/examples/real_completion_dataset \
+  --reference-dir REFERENCE_DIR --proposals ../../out/cell-token-rollout/fresh-proposals.json \
+  --output ../../out/cell-token-rollout/learned-residual
+```
+
+Raw snapshots/proposals stay under ignored output paths. Committed collection,
+numeric and residual summaries retain provenance. Full cost accounting and a
+semantic state representation beyond known tuple parameters remain open.

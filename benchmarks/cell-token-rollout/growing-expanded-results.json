@@ -1,0 +1,1222 @@
+{
+  "scope": "Standalone fixed GPU fanout and token continuation for bounded SubTuple Cells; not full saturation or runtime takeover",
+  "provenance": {
+    "out/cell-token-rollout/train-grid/runtime.json": "6d17c93c8280da0c040347db57f72b0026c39c20c69b5ecb949aeadd291c1d13",
+    "out/cell-token-rollout/fresh-grid/runtime.json": "458165233d3a09db7b5f29cddbf992257dffe87955c5d1d239383be39f2f7d2d",
+    "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/benchmarks/cell-multi-entry-ridge/train.py": "870cd70b4db3fb0b015f788174bea172d535ce8130d5fd1cb872e67ca8533bbf"
+  },
+  "training_distinct_entrances": 180,
+  "training_tokens": 933,
+  "training_length_range": [
+    1,
+    16
+  ],
+  "training_start_range": [
+    -12,
+    22
+  ],
+  "token_width": 32,
+  "backpropagation": false,
+  "intermediate_host_reads": 0,
+  "intermediate_graph_decodes": 0,
+  "capacity_source": "initial SubTuple lengths only, admitted length 1..16; no future state",
+  "heldout": [
+    {
+      "id": "fresh-5--10-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 30,
+      "active_output_tokens": 13,
+      "padding_tokens": 17,
+      "token_buffer_bytes": 3840,
+      "learned": {
+        "exact_rounded_tokens": 13,
+        "tokens": 13,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.0014905929565429688
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 13,
+        "tokens": 13,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.0014057159423828125
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 13,
+        "tokens": 13,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-5--6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 15,
+      "active_output_tokens": 8,
+      "padding_tokens": 7,
+      "token_buffer_bytes": 1920,
+      "learned": {
+        "exact_rounded_tokens": 8,
+        "tokens": 8,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.0008916854858398438
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 8,
+        "tokens": 8,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.000797271728515625
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 8,
+        "tokens": 8,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-5--2-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 18,
+      "active_output_tokens": 10,
+      "padding_tokens": 8,
+      "token_buffer_bytes": 2304,
+      "learned": {
+        "exact_rounded_tokens": 10,
+        "tokens": 10,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.0006620883941650391
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 10,
+        "tokens": 10,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.0005943775177001953
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 10,
+        "tokens": 10,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-5-2-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 30,
+      "active_output_tokens": 13,
+      "padding_tokens": 17,
+      "token_buffer_bytes": 3840,
+      "learned": {
+        "exact_rounded_tokens": 13,
+        "tokens": 13,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.0008487701416015625
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 13,
+        "tokens": 13,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.0008096694946289062
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 13,
+        "tokens": 13,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-5-6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 15,
+      "active_output_tokens": 8,
+      "padding_tokens": 7,
+      "token_buffer_bytes": 1920,
+      "learned": {
+        "exact_rounded_tokens": 8,
+        "tokens": 8,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.0004787445068359375
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 8,
+        "tokens": 8,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.0004367828369140625
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 8,
+        "tokens": 8,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-5-10-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 18,
+      "active_output_tokens": 10,
+      "padding_tokens": 8,
+      "token_buffer_bytes": 2304,
+      "learned": {
+        "exact_rounded_tokens": 10,
+        "tokens": 10,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.0007524490356445312
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 10,
+        "tokens": 10,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.0006952285766601562
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 10,
+        "tokens": 10,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 3,
+        "unseen_entrance_correct": 3,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-7--10-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 42,
+      "active_output_tokens": 19,
+      "padding_tokens": 23,
+      "token_buffer_bytes": 5376,
+      "learned": {
+        "exact_rounded_tokens": 19,
+        "tokens": 19,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 15,
+        "unseen_entrance_correct": 15,
+        "max_abs_error": 0.0014619827270507812
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 19,
+        "tokens": 19,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 15,
+        "unseen_entrance_correct": 15,
+        "max_abs_error": 0.0013685226440429688
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 19,
+        "tokens": 19,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 15,
+        "unseen_entrance_correct": 15,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-7--6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 25,
+      "active_output_tokens": 12,
+      "padding_tokens": 13,
+      "token_buffer_bytes": 3200,
+      "learned": {
+        "exact_rounded_tokens": 12,
+        "tokens": 12,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.0005382895469665527
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 12,
+        "tokens": 12,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.0005168914794921875
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 12,
+        "tokens": 12,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-7--2-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 30,
+      "active_output_tokens": 15,
+      "padding_tokens": 15,
+      "token_buffer_bytes": 3840,
+      "learned": {
+        "exact_rounded_tokens": 15,
+        "tokens": 15,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 11,
+        "unseen_entrance_correct": 11,
+        "max_abs_error": 0.0007221698760986328
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 15,
+        "tokens": 15,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 11,
+        "unseen_entrance_correct": 11,
+        "max_abs_error": 0.0006544589996337891
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 15,
+        "tokens": 15,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 11,
+        "unseen_entrance_correct": 11,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-7-2-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 42,
+      "active_output_tokens": 19,
+      "padding_tokens": 23,
+      "token_buffer_bytes": 5376,
+      "learned": {
+        "exact_rounded_tokens": 19,
+        "tokens": 19,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 15,
+        "unseen_entrance_correct": 15,
+        "max_abs_error": 0.0008563995361328125
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 19,
+        "tokens": 19,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 15,
+        "unseen_entrance_correct": 15,
+        "max_abs_error": 0.0008859634399414062
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 19,
+        "tokens": 19,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 15,
+        "unseen_entrance_correct": 15,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-7-6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 25,
+      "active_output_tokens": 12,
+      "padding_tokens": 13,
+      "token_buffer_bytes": 3200,
+      "learned": {
+        "exact_rounded_tokens": 12,
+        "tokens": 12,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.0005278587341308594
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 12,
+        "tokens": 12,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.00048351287841796875
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 12,
+        "tokens": 12,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 8,
+        "unseen_entrance_correct": 8,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-7-10-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 30,
+      "active_output_tokens": 15,
+      "padding_tokens": 15,
+      "token_buffer_bytes": 3840,
+      "learned": {
+        "exact_rounded_tokens": 15,
+        "tokens": 15,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 11,
+        "unseen_entrance_correct": 11,
+        "max_abs_error": 0.0009517669677734375
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 15,
+        "tokens": 15,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 11,
+        "unseen_entrance_correct": 11,
+        "max_abs_error": 0.0008296966552734375
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 15,
+        "tokens": 15,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 11,
+        "unseen_entrance_correct": 11,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-9--10-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 54,
+      "active_output_tokens": 25,
+      "padding_tokens": 29,
+      "token_buffer_bytes": 6912,
+      "learned": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 19,
+        "unseen_entrance_correct": 19,
+        "max_abs_error": 0.0012340545654296875
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 19,
+        "unseen_entrance_correct": 19,
+        "max_abs_error": 0.0011377334594726562
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 19,
+        "unseen_entrance_correct": 19,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-9--6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 35,
+      "active_output_tokens": 16,
+      "padding_tokens": 19,
+      "token_buffer_bytes": 4480,
+      "learned": {
+        "exact_rounded_tokens": 16,
+        "tokens": 16,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.0006618499755859375
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 16,
+        "tokens": 16,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.0005936622619628906
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 16,
+        "tokens": 16,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-9--2-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 42,
+      "active_output_tokens": 20,
+      "padding_tokens": 22,
+      "token_buffer_bytes": 5376,
+      "learned": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.000881195068359375
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.0008306503295898438
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-9-2-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 54,
+      "active_output_tokens": 25,
+      "padding_tokens": 29,
+      "token_buffer_bytes": 6912,
+      "learned": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 19,
+        "unseen_entrance_correct": 19,
+        "max_abs_error": 0.0007200241088867188
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 19,
+        "unseen_entrance_correct": 19,
+        "max_abs_error": 0.000652313232421875
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 19,
+        "unseen_entrance_correct": 19,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-9-6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 35,
+      "active_output_tokens": 16,
+      "padding_tokens": 19,
+      "token_buffer_bytes": 4480,
+      "learned": {
+        "exact_rounded_tokens": 16,
+        "tokens": 16,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.0008401870727539062
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 16,
+        "tokens": 16,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.0007877349853515625
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 16,
+        "tokens": 16,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-9-10-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 42,
+      "active_output_tokens": 20,
+      "padding_tokens": 22,
+      "token_buffer_bytes": 5376,
+      "learned": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.000701904296875
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.0006237030029296875
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 10,
+        "unseen_entrance_correct": 10,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-11--10-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 66,
+      "active_output_tokens": 31,
+      "padding_tokens": 35,
+      "token_buffer_bytes": 8448,
+      "learned": {
+        "exact_rounded_tokens": 31,
+        "tokens": 31,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 23,
+        "unseen_entrance_correct": 23,
+        "max_abs_error": 0.0010347366333007812
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 31,
+        "tokens": 31,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 23,
+        "unseen_entrance_correct": 23,
+        "max_abs_error": 0.00096893310546875
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 31,
+        "tokens": 31,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 23,
+        "unseen_entrance_correct": 23,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-11--6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 45,
+      "active_output_tokens": 20,
+      "padding_tokens": 25,
+      "token_buffer_bytes": 5760,
+      "learned": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 12,
+        "unseen_entrance_correct": 12,
+        "max_abs_error": 0.0008225440979003906
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 12,
+        "unseen_entrance_correct": 12,
+        "max_abs_error": 0.0006628036499023438
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 12,
+        "unseen_entrance_correct": 12,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-11--2-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 54,
+      "active_output_tokens": 25,
+      "padding_tokens": 29,
+      "token_buffer_bytes": 6912,
+      "learned": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 17,
+        "unseen_entrance_correct": 17,
+        "max_abs_error": 0.00086212158203125
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 17,
+        "unseen_entrance_correct": 17,
+        "max_abs_error": 0.0008392333984375
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 17,
+        "unseen_entrance_correct": 17,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-11-2-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 66,
+      "active_output_tokens": 31,
+      "padding_tokens": 35,
+      "token_buffer_bytes": 8448,
+      "learned": {
+        "exact_rounded_tokens": 31,
+        "tokens": 31,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 23,
+        "unseen_entrance_correct": 23,
+        "max_abs_error": 0.0007231235504150391
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 31,
+        "tokens": 31,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 23,
+        "unseen_entrance_correct": 23,
+        "max_abs_error": 0.0006554126739501953
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 31,
+        "tokens": 31,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 23,
+        "unseen_entrance_correct": 23,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-11-6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 45,
+      "active_output_tokens": 20,
+      "padding_tokens": 25,
+      "token_buffer_bytes": 5760,
+      "learned": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 12,
+        "unseen_entrance_correct": 12,
+        "max_abs_error": 0.000949859619140625
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 12,
+        "unseen_entrance_correct": 12,
+        "max_abs_error": 0.000881195068359375
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 20,
+        "tokens": 20,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 12,
+        "unseen_entrance_correct": 12,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-11-10-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 54,
+      "active_output_tokens": 25,
+      "padding_tokens": 29,
+      "token_buffer_bytes": 6912,
+      "learned": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 21,
+        "unseen_entrance_correct": 21,
+        "max_abs_error": 0.0008945465087890625
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 21,
+        "unseen_entrance_correct": 21,
+        "max_abs_error": 0.00087738037109375
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 25,
+        "tokens": 25,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 21,
+        "unseen_entrance_correct": 21,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-13--10-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 78,
+      "active_output_tokens": 37,
+      "padding_tokens": 41,
+      "token_buffer_bytes": 9984,
+      "learned": {
+        "exact_rounded_tokens": 37,
+        "tokens": 37,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 33,
+        "unseen_entrance_correct": 33,
+        "max_abs_error": 0.0008707046508789062
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 37,
+        "tokens": 37,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 33,
+        "unseen_entrance_correct": 33,
+        "max_abs_error": 0.0007991790771484375
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 37,
+        "tokens": 37,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 33,
+        "unseen_entrance_correct": 33,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-13--6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 55,
+      "active_output_tokens": 24,
+      "padding_tokens": 31,
+      "token_buffer_bytes": 7040,
+      "learned": {
+        "exact_rounded_tokens": 24,
+        "tokens": 24,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.0011835098266601562
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 24,
+        "tokens": 24,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.0010056495666503906
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 24,
+        "tokens": 24,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-13--2-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 66,
+      "active_output_tokens": 30,
+      "padding_tokens": 36,
+      "token_buffer_bytes": 8448,
+      "learned": {
+        "exact_rounded_tokens": 30,
+        "tokens": 30,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.0007200241088867188
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 30,
+        "tokens": 30,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.0006117820739746094
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 30,
+        "tokens": 30,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-13-2-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 78,
+      "active_output_tokens": 37,
+      "padding_tokens": 41,
+      "token_buffer_bytes": 9984,
+      "learned": {
+        "exact_rounded_tokens": 37,
+        "tokens": 37,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 29,
+        "unseen_entrance_correct": 29,
+        "max_abs_error": 0.0008113384246826172
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 37,
+        "tokens": 37,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 29,
+        "unseen_entrance_correct": 29,
+        "max_abs_error": 0.0008001327514648438
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 37,
+        "tokens": 37,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 29,
+        "unseen_entrance_correct": 29,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-13-6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 55,
+      "active_output_tokens": 24,
+      "padding_tokens": 31,
+      "token_buffer_bytes": 7040,
+      "learned": {
+        "exact_rounded_tokens": 24,
+        "tokens": 24,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.0008897781372070312
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 24,
+        "tokens": 24,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.0007467269897460938
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 24,
+        "tokens": 24,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-13-10-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 66,
+      "active_output_tokens": 30,
+      "padding_tokens": 36,
+      "token_buffer_bytes": 8448,
+      "learned": {
+        "exact_rounded_tokens": 30,
+        "tokens": 30,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.0012798309326171875
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 30,
+        "tokens": 30,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.00110626220703125
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 30,
+        "tokens": 30,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 16,
+        "unseen_entrance_correct": 16,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-15--10-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 90,
+      "active_output_tokens": 43,
+      "padding_tokens": 47,
+      "token_buffer_bytes": 11520,
+      "learned": {
+        "exact_rounded_tokens": 43,
+        "tokens": 43,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 33,
+        "unseen_entrance_correct": 33,
+        "max_abs_error": 0.0009374618530273438
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 43,
+        "tokens": 43,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 33,
+        "unseen_entrance_correct": 33,
+        "max_abs_error": 0.0007352828979492188
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 43,
+        "tokens": 43,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 33,
+        "unseen_entrance_correct": 33,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-15--6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 65,
+      "active_output_tokens": 28,
+      "padding_tokens": 37,
+      "token_buffer_bytes": 8320,
+      "learned": {
+        "exact_rounded_tokens": 28,
+        "tokens": 28,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 18,
+        "unseen_entrance_correct": 18,
+        "max_abs_error": 0.0008707046508789062
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 28,
+        "tokens": 28,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 18,
+        "unseen_entrance_correct": 18,
+        "max_abs_error": 0.0008697509765625
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 28,
+        "tokens": 28,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 18,
+        "unseen_entrance_correct": 18,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-15--2-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 78,
+      "active_output_tokens": 35,
+      "padding_tokens": 43,
+      "token_buffer_bytes": 9984,
+      "learned": {
+        "exact_rounded_tokens": 35,
+        "tokens": 35,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 25,
+        "unseen_entrance_correct": 25,
+        "max_abs_error": 0.00081634521484375
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 35,
+        "tokens": 35,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 25,
+        "unseen_entrance_correct": 25,
+        "max_abs_error": 0.0007867813110351562
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 35,
+        "tokens": 35,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 25,
+        "unseen_entrance_correct": 25,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-15-2-0",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 90,
+      "active_output_tokens": 43,
+      "padding_tokens": 47,
+      "token_buffer_bytes": 11520,
+      "learned": {
+        "exact_rounded_tokens": 43,
+        "tokens": 43,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 33,
+        "unseen_entrance_correct": 33,
+        "max_abs_error": 0.0011310577392578125
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 43,
+        "tokens": 43,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 33,
+        "unseen_entrance_correct": 33,
+        "max_abs_error": 0.00113677978515625
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 43,
+        "tokens": 43,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 33,
+        "unseen_entrance_correct": 33,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-15-6-1",
+      "entrance_cells": 5,
+      "token_width": 32,
+      "allocated_output_tokens": 65,
+      "active_output_tokens": 28,
+      "padding_tokens": 37,
+      "token_buffer_bytes": 8320,
+      "learned": {
+        "exact_rounded_tokens": 28,
+        "tokens": 28,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 23,
+        "unseen_entrance_correct": 23,
+        "max_abs_error": 0.000995635986328125
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 28,
+        "tokens": 28,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 23,
+        "unseen_entrance_correct": 23,
+        "max_abs_error": 0.00092315673828125
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 28,
+        "tokens": 28,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 23,
+        "unseen_entrance_correct": 23,
+        "max_abs_error": 0.0
+      }
+    },
+    {
+      "id": "fresh-15-10-2",
+      "entrance_cells": 6,
+      "token_width": 32,
+      "allocated_output_tokens": 78,
+      "active_output_tokens": 35,
+      "padding_tokens": 43,
+      "token_buffer_bytes": 9984,
+      "learned": {
+        "exact_rounded_tokens": 35,
+        "tokens": 35,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 30,
+        "unseen_entrance_correct": 30,
+        "max_abs_error": 0.0011539459228515625
+      },
+      "certified_parameter_channels": {
+        "exact_rounded_tokens": 35,
+        "tokens": 35,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 30,
+        "unseen_entrance_correct": 30,
+        "max_abs_error": 0.0009613037109375
+      },
+      "compiled_parameter_continuation": {
+        "exact_rounded_tokens": 35,
+        "tokens": 35,
+        "rejected_output_tokens": 0,
+        "unseen_entrance_tokens": 30,
+        "unseen_entrance_correct": 30,
+        "max_abs_error": 0.0
+      }
+    }
+  ],
+  "engine_operations_removed": 0,
+  "limitations": [
+    "overlapping entrance outputs are not deduplicated on GPU",
+    "CPU checks the exact affine arithmetic at exit; rounded ridge output is not a proof",
+    "family expands suffix Cells only; cross-entry joins and other rules remain uncovered",
+    "hidden channels are learned, not proven sufficient state",
+    "parameter channel exactness does not make downstream ridge exact",
+    "no throughput claim; no CPU residual runtime integration"
+  ]
+}

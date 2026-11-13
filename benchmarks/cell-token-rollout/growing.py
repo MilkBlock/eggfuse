@@ -14,7 +14,8 @@ def entries(case):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--training',type=Path,required=True);p.add_argument('--heldout',type=Path,required=True)
-    p.add_argument('--reference-dir',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
+    p.add_argument('--reference-dir',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--proposals',type=Path);a=p.parse_args()
     module('dataset',a.reference_dir/'dataset.py');tr=module('train',a.reference_dir/'train.py')
     train=json.loads(a.training.read_text())['cases'];held=json.loads(a.heldout.read_text())['cases']
     # Distinct observed scalar entrances; no heldout target states or capacities.
@@ -35,7 +36,7 @@ def main():
     rw,rb=tr.fit(encode(target),target_readout,.0001)
     assert mx.metal.is_available();mx.set_default_device(mx.gpu)
     ge,geb,gp,gpb,gw,gb,grw,grb=map(mx.array,[enc,eb,projection,bias,w,b,rw,rb])
-    records=[]
+    records=[];proposals=[]
     for case in held:
         values=np.array(entries(case),np.float32)
         if len(values)==0:continue
@@ -81,11 +82,15 @@ def main():
         off=np.broadcast_to(np.arange(cap,dtype=np.float32)[None,:,None],(n,cap,1))
         reference=(feature(broad,off)@w+b)@rw+rb
         np.testing.assert_allclose(outputs[0][0],reference,rtol=1e-4,atol=1e-4)
+        novel=np.broadcast_to(np.array([tuple(v) not in set(observed) for v in values])[:,None],valid.shape)&valid
+        proposals.append(dict(id=case['id'],values=outputs[0][0][valid].tolist()))
         metrics=[]
         for output,mask in outputs:
             rounded=np.rint(output[mask]);truth=expected[mask]
             metrics.append(dict(exact_rounded_tokens=int(np.all(rounded==truth,axis=1).sum()),
-                tokens=len(truth),max_abs_error=float(np.abs(output[mask]-truth).max())))
+                tokens=len(truth),rejected_output_tokens=int(np.any(rounded!=truth,axis=1).sum()),
+                unseen_entrance_tokens=int(novel.sum()),unseen_entrance_correct=int(np.all(np.rint(output[novel])==expected[novel],axis=1).sum()),
+                max_abs_error=float(np.abs(output[mask]-truth).max())))
         records.append(dict(id=case['id'],entrance_cells=n,token_width=32,allocated_output_tokens=n*cap,
             active_output_tokens=int(valid.sum()),padding_tokens=int((~valid).sum()),
             token_buffer_bytes=n*cap*32*4,learned=metrics[0],certified_parameter_channels=metrics[1],compiled_parameter_continuation=metrics[2]))
@@ -99,5 +104,8 @@ def main():
         limitations=['overlapping entrance outputs are not deduplicated on GPU','CPU checks the exact affine arithmetic at exit; rounded ridge output is not a proof',
         'family expands suffix Cells only; cross-entry joins and other rules remain uncovered','hidden channels are learned, not proven sufficient state',
         'parameter channel exactness does not make downstream ridge exact','no throughput claim; no CPU residual runtime integration'])
+    if a.proposals:
+        a.proposals.parent.mkdir(parents=True,exist_ok=True)
+        a.proposals.write_text(json.dumps(dict(schema='learned-tuple-token-proposals/v1',runtime_sha256=hashlib.sha256(a.heldout.read_bytes()).hexdigest(),cases=proposals),indent=2)+'\n')
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
 if __name__=='__main__':main()

@@ -10,10 +10,18 @@ from run import module
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--runtime',type=Path,required=True);p.add_argument('--runner',type=Path,required=True)
-    p.add_argument('--reference-dir',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
+    p.add_argument('--reference-dir',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--proposals',type=Path);a=p.parse_args()
     ds=module('dataset',a.reference_dir/'dataset.py');cases=json.loads(a.runtime.read_text())['cases']
     rules=json.loads(Path(__file__).with_name('source-rules.json').read_text())['rules']
     assert mx.metal.is_available();mx.set_default_device(mx.gpu)
+    proposal_cases=None
+    if a.proposals:
+        proposal_file=json.loads(a.proposals.read_text())
+        assert proposal_file['runtime_sha256']==hashlib.sha256(a.runtime.read_bytes()).hexdigest()
+        assert proposal_file['schema']=='learned-tuple-token-proposals/v1'
+        proposal_cases={c['id']:c['values'] for c in proposal_file['cases']}
+        assert len(proposal_cases)==len(proposal_file['cases'])
     report=[];executions=[];requests=[];negative=None
     a.output.mkdir(parents=True,exist_ok=True)
     with tempfile.TemporaryDirectory() as directory:
@@ -35,11 +43,24 @@ def main():
                 # Subsequent Cell consumes the token directly, including the
                 # successor parameters needed for an expansion boundary.
                 return mx.stack([tokens[:,0],tokens[:,1],tokens[:,0]+1,tokens[:,1]-1],axis=1)
-            fn=mx.compile(run);before=time.perf_counter();device=fn(mx.array(values));mx.eval(device);result=np.array(device)
-            gpu_request=time.perf_counter()-before
+            gpu_request=None;rejected=0
+            if proposal_cases is None:
+                fn=mx.compile(run);before=time.perf_counter();device=fn(mx.array(values));mx.eval(device);result=np.array(device)
+                gpu_request=time.perf_counter()-before
             # Exact acceptance for this compiled arithmetic domain; learned
             # scores are not used to authorize union or any other graph effect.
             expected=np.array([[values[o,0]+j,values[o,1]-j,values[o,0]+j+1,values[o,1]-j-1] for o,j in zip(owners,offsets)],np.float32)
+            if proposal_cases is not None:
+                prediction=np.array(proposal_cases[case['id']],np.float32)
+                assert prediction.shape==(len(expected),3)
+                rounded=np.rint(prediction)
+                correct=np.isfinite(rounded).all(1)&(rounded[:,:2]==expected[:,:2]).all(1)&(rounded[:,2]==expected[:,0]+expected[:,1])
+                rejected=int((~correct).sum())
+                # Exact typed-boundary check, not confidence thresholding.
+                pair=np.where(correct[:,None],rounded[:,:2],expected[:,:2])
+                result=np.column_stack([pair,pair[:,0]+1,pair[:,1]-1])
+                corrupt=rounded.copy();corrupt[0,0]+=1
+                assert not np.array_equal(corrupt[0,:2],expected[0,:2])
             np.testing.assert_array_equal(result,expected)
             prefix='(datatype Expr (Input i64) (Get Expr i64) (Single Expr) (SubTuple Expr i64 i64) (Concat Expr Expr))\n'
             prefix+='(ruleset residual)\n(ruleset full-check)\n'
@@ -73,7 +94,7 @@ def main():
             audit=[s for s in c['steps'] if s['ruleset']=='full-check']
             passed=pre==baseline==native==after and all(not s['changed'] for s in audit)
             report.append(dict(id=case['id'],status='pass' if passed else 'difference',
-                initial_cells=len(values),gpu_active_tokens=len(result),gpu_padding_tokens=0,
+                initial_cells=len(values),rejected_learned_tokens=rejected,gpu_active_tokens=len(result),gpu_padding_tokens=0,
                 boundary_action_requests=len(effects),residual_equals_original=pre==baseline,residual_equals_native=pre==native,
                 full_rule_audit_changed_runs=sum(bool(s['changed']) for s in audit),
                 residual_runs=len(residual),original_runs=len(case['steps'])-2,original_verification_runs=2,
@@ -95,10 +116,12 @@ def main():
     (a.output/'inputs.json').write_text(json.dumps(dict(cases=requests),indent=2)+'\n')
     (a.output/'runtime.json').write_text(json.dumps(dict(cases=executions),indent=2)+'\n')
     output=dict(scope='Exact GPU numeric completion plus transformed-source CPU residual experiment; not production runtime',
+        proposals_sha256=hashlib.sha256(a.proposals.read_bytes()).hexdigest() if a.proposals else None,
+        proposal_mode='saved learned GPU tokens with exact CPU checks and correction' if a.proposals else 'compiled GPU arithmetic',
         input_sha256=hashlib.sha256(a.runtime.read_bytes()).hexdigest(),runner_sha256=hashlib.sha256(a.runner.read_bytes()).hexdigest(),
         negative_control=negative,all_pass=all(r['status']=='pass' for r in report),cases=report,backpropagation=False,intermediate_gpu_host_reads=0,
         disabled_residual_rule=138,
-        limitations=['GPU uses compiled exact arithmetic; no learned semantic completion is proven',
+        limitations=['Only parameter tokens are verified; no learned general Eq/topology completion is proven',
         'CPU boundary adapter materializes completed region as source actions; costs remain',
         'only positive unbounded saturation endpoint contract; original finite-Run visibility is not preserved by this source transform',
         'recorded action requests and executed bindings are not committed mutation counts',
