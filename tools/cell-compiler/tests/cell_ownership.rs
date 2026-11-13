@@ -2256,3 +2256,44 @@ fn cell_fields_keep_scalar_sources_through_completed_storage_and_union() {
         assert!(actual.graph.stable_port_report()["template_projected_nodes"].as_u64().unwrap()>0);
     }
 }
+
+#[test]
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+fn port_domains_retire_unused_hash_storage_across_union_and_delete() {
+    let p=program("(datatype E (N i64) (F E)) (ruleset make) (ruleset join) (ruleset remove)
+        (rule ((= x (N n))) ((F x)) :ruleset make)
+        (rule ((= a (N 1)) (= b (N 2))) ((union a b)) :ruleset join)
+        (rule ((F x)) ((delete (F x))) :ruleset remove)
+        (N 1) (N 2) (run make 1) (run join 1) (run remove 1) (run make 1)");
+    for late in [false,true] {
+    let mut control=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+    let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+    control.use_completed_parent_takeover().unwrap();actual.use_completed_parent_takeover().unwrap();
+    if !late {actual.graph.use_port_domains_only().unwrap();}
+    // Independent dynamic constructors make homogeneous completed owners;
+    // a mixed owner intentionally keeps its hash array for uncovered N keys.
+    for e in [&mut control,&mut actual] {
+        let n=e.graph.program.tables.iter().position(|t|t.name=="N").unwrap();
+        let f=e.graph.program.tables.iter().position(|t|t.name=="F").unwrap();
+        for value in [1,2] {
+            let x=e.graph.dynamic_construct(n,vec![eggfuse_cell_runtime::value::Value::Int(value)]).unwrap();
+            e.graph.dynamic_construct(f,vec![x]).unwrap();
+        }
+    }
+    for run in 1..=4 {
+        control.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
+        if late && run==1 {actual.graph.use_port_domains_only().unwrap();}
+        control.graph.transfer_completed_unpooled_owners().unwrap();
+        actual.graph.transfer_completed_unpooled_owners().unwrap();
+        assert_eq!(control.graph.export().unwrap(),actual.graph.export().unwrap());
+        assert_eq!(control.snapshots,actual.snapshots);
+        assert_eq!(control.binding_audit,actual.binding_audit);
+        if run==1 {
+            let a=control.graph.retained_cell_storage();let b=actual.graph.retained_cell_storage();
+            let a=a["completed_owners"]["stored_hash_bytes"].as_u64().unwrap();
+            let b=b["completed_owners"]["stored_hash_bytes"].as_u64().unwrap();
+            assert!(b<a,"covered constructors must release actual hash arrays: {a} -> {b}");
+        }
+    }
+}
+}
