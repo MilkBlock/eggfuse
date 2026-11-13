@@ -1,0 +1,55 @@
+{
+  "program_sha256": "25776d5a8242b50bd90b686dd8dce79217800e642775693f60907dd96d2976a2",
+  "targets_sha256": "de67cb46076ff0523ff549d7686f1708bb4d515e10d32bcf7d7249ffb65555cb",
+  "scope": "offline whole-Cell semantic completion targets; Metal learned-code proposal only",
+  "backpropagation": false,
+  "fit": {
+    "alpha": 100.0,
+    "validation_target_mse": 0.013089427724480629
+  },
+  "split": "producer modulo 5: 2-4 train, 1 validation, 0 test; not a fresh workload holdout",
+  "metrics": {
+    "train": {
+      "cases": 612,
+      "true_completions": 281,
+      "emitted": 284,
+      "false_emissions": 5,
+      "missed_completions": 2,
+      "latent_rmse": 0.04611010476946831
+    },
+    "validation": {
+      "cases": 444,
+      "true_completions": 214,
+      "emitted": 212,
+      "false_emissions": 1,
+      "missed_completions": 3,
+      "latent_rmse": 0.09582874923944473
+    },
+    "test": {
+      "cases": 296,
+      "true_completions": 140,
+      "emitted": 137,
+      "false_emissions": 2,
+      "missed_completions": 5,
+      "latent_rmse": 0.07968339323997498
+    }
+  },
+  "no_change_baseline_rmse": 0.12089424580335617,
+  "limitations": [
+    "Lossy whole-Cell codes have no exact semantic decoder yet",
+    "Candidate requests come from Bake, not GPU discovery of all matches",
+    "No source Run legality, ownership retirement or global saturation established",
+    "Successful emission is a proposal, not authorized ownership transfer"
+  ],
+  "generated_state_consumption": {
+    "chains": 64,
+    "distinct_initial_producers": 8,
+    "selection": "first 64 admissible two-step cases from test producer families",
+    "first_emissions": 61,
+    "second_emissions": 56,
+    "final_latent_rmse": 0.18162551522254944,
+    "no_change_baseline_rmse": 0.22131302952766418,
+    "intermediate_cpu_reads": 0,
+    "teacher_state_supplied_between_steps": false
+  }
+}
