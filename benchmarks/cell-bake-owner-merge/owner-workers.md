@@ -139,3 +139,9 @@ query-worker integration tests plus 213 runtime unit tests. The retained runtime
 diff against `b3322f9f` is limited to source-prefix evidence, its shared Entry
 helper and preparation selection; constructor jobs and their scheduler match
 the control again.
+
+The full Bake branch was subsequently integrated through `573903e5`, including
+matched-port key proofs and retired-source payload release. Compute job 246 passes
+all 48 ownership integration tests, the completed-source payload regression and
+ten closure-frontier analyzer tests. These checks validate that merge; the timing
+table continues to identify only its frozen `b3322f9f` / `674477c4` pair.

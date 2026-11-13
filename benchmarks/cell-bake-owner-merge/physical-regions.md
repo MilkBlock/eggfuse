@@ -94,3 +94,28 @@ python3 benchmarks/cell-bake-owner-merge/physical_regions.py out/cell-physical-r
 
 The compact JSON records exact input snapshot hashes. Raw snapshots, the frozen
 binary and `provenance.json` remain under the ignored experiment directory.
+
+## Retired source values no longer wait for unrelated siblings
+
+The physical-range audit led to an actual lifetime fix. `retire_completed` removed
+the source address, but kept that source's values inside a shared owner whenever
+another source remained alive. Consequently Text/Set/Key payloads could remain
+strongly referenced even after the source was unreachable. Dropping the last
+owner eventually released them; this was unnecessary lifetime retention, not a
+permanent allocation leak.
+
+Retirement now clears only the removed source's slot range. The last-owner path
+still drops the entire allocation directly. Source restoration already moves
+values into the restored Cell before retirement, so clearing its old range does
+not destroy the restored values. Graph retirement still requires zero facts and
+zero external parent references. No sibling offsets, values or backing addresses
+change; no enclosing Cell is materialized. Array holes remain allocated, and
+shared values with other legitimate owners naturally remain alive.
+
+The regression first failed on the old runtime: an Arc weak reference could still
+upgrade after one of two pooled sources retired. It now proves that the source's
+heap object is released while the sibling's address/value and shared array size
+are unchanged. Four completed-storage and ten fact-lifecycle tests pass. The
+`retired_slot_clears` census counter charges every slot cleared, including slots
+already moved during restoration; it is work, not saved bytes. No new workload
+memory percentage, speedup or large-compression claim is made for this fix.

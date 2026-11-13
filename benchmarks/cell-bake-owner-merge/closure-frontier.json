@@ -1,0 +1,782 @@
+{
+  "scope": "offline native-address provenance in standalone Cell CPU final states",
+  "obligations": [
+    "Not an exhaustive use graph: unknown origins, scalars, external readers and facts remain live.",
+    "Current root equality is never treated as provenance or a saturation proof.",
+    "Unique-consumer regions are candidates only, not legal ownership transfers or memory savings.",
+    "Final-state topology cannot establish transient peak, source Run order or legal RHS skipping."
+  ],
+  "cases": [
+    {
+      "case": "fact",
+      "input_sha256": "8abab58e7d849398190d6b960bc6b7c4ff968006b3aff4a8727a7907536241aa",
+      "program_sha256": "ea21eea0071d26c757fefca578cfd89b60c2daeddc23c9f12af2bc12b35d2e1b",
+      "port_incidence": {
+        "counts": {
+          "non_owned_static_sites": 10,
+          "candidate_ports": 27,
+          "ports_without_owned_result_site": 1,
+          "ports_with_multiple_owned_result_sites": 0,
+          "ports_with_local_input_uses": 18,
+          "ports_touching_hidden_facts": 0,
+          "ports_touching_retained_sources": 10,
+          "ports_touching_lifecycle_exceptions": 8,
+          "live_site_visits": 54,
+          "distinct_live_fact_sites": 54,
+          "static_port_plans": 21
+        },
+        "live_sites_per_port": {
+          "1": 10,
+          "2": 11,
+          "3": 2,
+          "4": 4
+        },
+        "scope": "existing static incidences and current owned facts; no fact retirement or saturation proof"
+      },
+      "counts": {
+        "signal_slots": 2298,
+        "root_changed": 157,
+        "unknown_origin": 280,
+        "local_origin": 840,
+        "unbound": 335,
+        "cross_component_slots": 843,
+        "cross_component_changed_roots": 14,
+        "components": 492,
+        "distinct_cross_edges": 491,
+        "referenced_producers": 29,
+        "shared_producers": 18,
+        "referenced_native_ports": 119,
+        "exclusively_referenced_ports": 27,
+        "shared_native_ports": 92,
+        "exclusive_producers": 11,
+        "exclusive_cycle_nodes": 0,
+        "candidate_regions": 481,
+        "largest_candidate_region": 3
+      },
+      "port_consumer_degree_histogram": {
+        "1": 27,
+        "2": 20,
+        "3": 6,
+        "4": 2,
+        "5": 3,
+        "6": 8,
+        "7": 7,
+        "8": 10,
+        "9": 3,
+        "10": 2,
+        "11": 6,
+        "12": 5,
+        "13": 5,
+        "14": 3,
+        "16": 4,
+        "17": 2,
+        "18": 1,
+        "20": 1,
+        "21": 1,
+        "23": 1,
+        "26": 1,
+        "49": 1
+      },
+      "consumer_degree_histogram": {
+        "1": 11,
+        "2": 3,
+        "3": 1,
+        "6": 3,
+        "7": 1,
+        "8": 2,
+        "11": 1,
+        "12": 1,
+        "13": 1,
+        "14": 2,
+        "18": 1,
+        "23": 1,
+        "325": 1
+      },
+      "candidate_region_widths": {
+        "1": 471,
+        "2": 9,
+        "3": 1
+      },
+      "largest_shared_producers": [
+        {
+          "component": 128,
+          "consumers": 325,
+          "source_frames": 1,
+          "referenced_ports": 65,
+          "max_port_consumers": 49
+        },
+        {
+          "component": 444,
+          "consumers": 23,
+          "source_frames": 1,
+          "referenced_ports": 1,
+          "max_port_consumers": 23
+        },
+        {
+          "component": 442,
+          "consumers": 18,
+          "source_frames": 5,
+          "referenced_ports": 6,
+          "max_port_consumers": 5
+        },
+        {
+          "component": 213,
+          "consumers": 14,
+          "source_frames": 7,
+          "referenced_ports": 4,
+          "max_port_consumers": 6
+        },
+        {
+          "component": 293,
+          "consumers": 14,
+          "source_frames": 4,
+          "referenced_ports": 2,
+          "max_port_consumers": 8
+        },
+        {
+          "component": 453,
+          "consumers": 13,
+          "source_frames": 3,
+          "referenced_ports": 4,
+          "max_port_consumers": 7
+        },
+        {
+          "component": 6,
+          "consumers": 12,
+          "source_frames": 3,
+          "referenced_ports": 1,
+          "max_port_consumers": 12
+        },
+        {
+          "component": 441,
+          "consumers": 11,
+          "source_frames": 3,
+          "referenced_ports": 6,
+          "max_port_consumers": 3
+        },
+        {
+          "component": 271,
+          "consumers": 8,
+          "source_frames": 8,
+          "referenced_ports": 1,
+          "max_port_consumers": 8
+        },
+        {
+          "component": 451,
+          "consumers": 8,
+          "source_frames": 2,
+          "referenced_ports": 4,
+          "max_port_consumers": 3
+        },
+        {
+          "component": 454,
+          "consumers": 7,
+          "source_frames": 2,
+          "referenced_ports": 2,
+          "max_port_consumers": 5
+        },
+        {
+          "component": 148,
+          "consumers": 6,
+          "source_frames": 2,
+          "referenced_ports": 1,
+          "max_port_consumers": 6
+        }
+      ]
+    },
+    {
+      "case": "loopfact",
+      "input_sha256": "ae91829aec16d34a64b8118e1f53606eb47b510e8012c0d3904041d94b9fd039",
+      "program_sha256": "15982787b055100f0f0be1a8a12a338aecdb1111efd5019007064cd2b2576a5c",
+      "port_incidence": {
+        "counts": {
+          "non_owned_static_sites": 5,
+          "candidate_ports": 29,
+          "ports_without_owned_result_site": 0,
+          "ports_with_multiple_owned_result_sites": 0,
+          "ports_with_local_input_uses": 23,
+          "ports_touching_hidden_facts": 0,
+          "ports_touching_retained_sources": 6,
+          "ports_touching_lifecycle_exceptions": 5,
+          "live_site_visits": 63,
+          "distinct_live_fact_sites": 60,
+          "static_port_plans": 28
+        },
+        "live_sites_per_port": {
+          "1": 6,
+          "2": 15,
+          "3": 5,
+          "4": 3
+        },
+        "scope": "existing static incidences and current owned facts; no fact retirement or saturation proof"
+      },
+      "counts": {
+        "signal_slots": 2160,
+        "root_changed": 144,
+        "unknown_origin": 275,
+        "local_origin": 788,
+        "unbound": 292,
+        "cross_component_slots": 805,
+        "cross_component_changed_roots": 9,
+        "components": 464,
+        "distinct_cross_edges": 511,
+        "referenced_producers": 35,
+        "shared_producers": 31,
+        "referenced_native_ports": 123,
+        "exclusively_referenced_ports": 29,
+        "shared_native_ports": 94,
+        "exclusive_producers": 4,
+        "exclusive_cycle_nodes": 0,
+        "candidate_regions": 460,
+        "largest_candidate_region": 2
+      },
+      "port_consumer_degree_histogram": {
+        "1": 29,
+        "2": 23,
+        "3": 7,
+        "4": 5,
+        "5": 5,
+        "6": 10,
+        "7": 7,
+        "8": 2,
+        "9": 3,
+        "10": 6,
+        "11": 5,
+        "12": 5,
+        "13": 6,
+        "14": 2,
+        "15": 2,
+        "19": 1,
+        "21": 1,
+        "25": 1,
+        "28": 1,
+        "31": 1,
+        "54": 1
+      },
+      "consumer_degree_histogram": {
+        "1": 4,
+        "2": 5,
+        "3": 4,
+        "4": 2,
+        "6": 3,
+        "7": 5,
+        "8": 2,
+        "9": 1,
+        "10": 3,
+        "11": 1,
+        "12": 1,
+        "21": 1,
+        "23": 1,
+        "31": 1,
+        "271": 1
+      },
+      "candidate_region_widths": {
+        "1": 456,
+        "2": 4
+      },
+      "largest_shared_producers": [
+        {
+          "component": 128,
+          "consumers": 271,
+          "source_frames": 1,
+          "referenced_ports": 47,
+          "max_port_consumers": 54
+        },
+        {
+          "component": 393,
+          "consumers": 31,
+          "source_frames": 1,
+          "referenced_ports": 1,
+          "max_port_consumers": 31
+        },
+        {
+          "component": 391,
+          "consumers": 23,
+          "source_frames": 6,
+          "referenced_ports": 8,
+          "max_port_consumers": 5
+        },
+        {
+          "component": 237,
+          "consumers": 21,
+          "source_frames": 3,
+          "referenced_ports": 4,
+          "max_port_consumers": 9
+        },
+        {
+          "component": 389,
+          "consumers": 12,
+          "source_frames": 3,
+          "referenced_ports": 6,
+          "max_port_consumers": 3
+        },
+        {
+          "component": 243,
+          "consumers": 11,
+          "source_frames": 4,
+          "referenced_ports": 2,
+          "max_port_consumers": 6
+        },
+        {
+          "component": 6,
+          "consumers": 10,
+          "source_frames": 3,
+          "referenced_ports": 1,
+          "max_port_consumers": 10
+        },
+        {
+          "component": 229,
+          "consumers": 10,
+          "source_frames": 2,
+          "referenced_ports": 2,
+          "max_port_consumers": 7
+        },
+        {
+          "component": 403,
+          "consumers": 10,
+          "source_frames": 3,
+          "referenced_ports": 4,
+          "max_port_consumers": 5
+        },
+        {
+          "component": 402,
+          "consumers": 9,
+          "source_frames": 3,
+          "referenced_ports": 6,
+          "max_port_consumers": 2
+        },
+        {
+          "component": 224,
+          "consumers": 8,
+          "source_frames": 7,
+          "referenced_ports": 1,
+          "max_port_consumers": 8
+        },
+        {
+          "component": 404,
+          "consumers": 8,
+          "source_frames": 2,
+          "referenced_ports": 2,
+          "max_port_consumers": 6
+        }
+      ]
+    },
+    {
+      "case": "sum-bits",
+      "input_sha256": "2407ae0c5e3f8558190cbc80ae76dcc07da12d96904b080660d385c342de890f",
+      "program_sha256": "798d1c66497b58554ec42c895aff9ed0848acac9ea0b22125dcde1a570156e43",
+      "port_incidence": {
+        "counts": {
+          "candidate_ports": 152,
+          "ports_without_owned_result_site": 7,
+          "ports_with_multiple_owned_result_sites": 1,
+          "ports_with_local_input_uses": 87,
+          "ports_touching_hidden_facts": 0,
+          "ports_touching_retained_sources": 12,
+          "ports_touching_lifecycle_exceptions": 64,
+          "live_site_visits": 271,
+          "non_owned_static_sites": 89,
+          "distinct_live_fact_sites": 243,
+          "static_port_plans": 88
+        },
+        "live_sites_per_port": {
+          "0": 6,
+          "1": 59,
+          "2": 61,
+          "3": 14,
+          "4": 12
+        },
+        "scope": "existing static incidences and current owned facts; no fact retirement or saturation proof"
+      },
+      "counts": {
+        "signal_slots": 8232,
+        "root_changed": 1126,
+        "unknown_origin": 545,
+        "local_origin": 2967,
+        "unbound": 1471,
+        "cross_component_slots": 3249,
+        "cross_component_changed_roots": 231,
+        "components": 1344,
+        "distinct_cross_edges": 2384,
+        "referenced_producers": 160,
+        "shared_producers": 131,
+        "referenced_native_ports": 431,
+        "exclusively_referenced_ports": 152,
+        "shared_native_ports": 279,
+        "exclusive_producers": 29,
+        "exclusive_cycle_nodes": 0,
+        "candidate_regions": 1315,
+        "largest_candidate_region": 4
+      },
+      "port_consumer_degree_histogram": {
+        "1": 152,
+        "2": 67,
+        "3": 26,
+        "4": 17,
+        "5": 14,
+        "6": 14,
+        "7": 7,
+        "8": 7,
+        "9": 6,
+        "10": 16,
+        "11": 8,
+        "12": 9,
+        "13": 13,
+        "14": 6,
+        "15": 11,
+        "16": 8,
+        "17": 8,
+        "18": 2,
+        "19": 7,
+        "20": 3,
+        "21": 4,
+        "22": 4,
+        "23": 1,
+        "24": 2,
+        "26": 1,
+        "27": 3,
+        "29": 2,
+        "32": 1,
+        "33": 2,
+        "35": 1,
+        "36": 1,
+        "37": 1,
+        "39": 1,
+        "46": 2,
+        "49": 1,
+        "58": 1,
+        "99": 1,
+        "140": 1
+      },
+      "consumer_degree_histogram": {
+        "1": 29,
+        "2": 25,
+        "3": 12,
+        "4": 10,
+        "5": 2,
+        "6": 8,
+        "7": 7,
+        "8": 5,
+        "9": 3,
+        "10": 4,
+        "11": 4,
+        "12": 4,
+        "13": 5,
+        "14": 2,
+        "15": 1,
+        "16": 2,
+        "17": 3,
+        "18": 4,
+        "19": 3,
+        "21": 1,
+        "22": 2,
+        "23": 1,
+        "24": 1,
+        "25": 1,
+        "26": 3,
+        "27": 3,
+        "29": 2,
+        "31": 2,
+        "32": 2,
+        "33": 1,
+        "47": 1,
+        "48": 1,
+        "57": 1,
+        "68": 1,
+        "80": 1,
+        "99": 1,
+        "106": 1,
+        "585": 1
+      },
+      "candidate_region_widths": {
+        "1": 1296,
+        "2": 11,
+        "3": 6,
+        "4": 2
+      },
+      "largest_shared_producers": [
+        {
+          "component": 128,
+          "consumers": 585,
+          "source_frames": 1,
+          "referenced_ports": 85,
+          "max_port_consumers": 140
+        },
+        {
+          "component": 774,
+          "consumers": 106,
+          "source_frames": 2,
+          "referenced_ports": 5,
+          "max_port_consumers": 58
+        },
+        {
+          "component": 637,
+          "consumers": 99,
+          "source_frames": 1,
+          "referenced_ports": 1,
+          "max_port_consumers": 99
+        },
+        {
+          "component": 634,
+          "consumers": 80,
+          "source_frames": 8,
+          "referenced_ports": 12,
+          "max_port_consumers": 19
+        },
+        {
+          "component": 855,
+          "consumers": 68,
+          "source_frames": 2,
+          "referenced_ports": 3,
+          "max_port_consumers": 33
+        },
+        {
+          "component": 886,
+          "consumers": 57,
+          "source_frames": 2,
+          "referenced_ports": 3,
+          "max_port_consumers": 36
+        },
+        {
+          "component": 848,
+          "consumers": 48,
+          "source_frames": 2,
+          "referenced_ports": 3,
+          "max_port_consumers": 27
+        },
+        {
+          "component": 206,
+          "consumers": 47,
+          "source_frames": 3,
+          "referenced_ports": 2,
+          "max_port_consumers": 46
+        },
+        {
+          "component": 858,
+          "consumers": 33,
+          "source_frames": 2,
+          "referenced_ports": 2,
+          "max_port_consumers": 21
+        },
+        {
+          "component": 880,
+          "consumers": 32,
+          "source_frames": 2,
+          "referenced_ports": 1,
+          "max_port_consumers": 32
+        },
+        {
+          "component": 882,
+          "consumers": 32,
+          "source_frames": 2,
+          "referenced_ports": 2,
+          "max_port_consumers": 22
+        },
+        {
+          "component": 333,
+          "consumers": 31,
+          "source_frames": 10,
+          "referenced_ports": 2,
+          "max_port_consumers": 22
+        }
+      ]
+    },
+    {
+      "case": "dot-product",
+      "input_sha256": "2c6d522b54100dd851dbbe2b8d17d7e4f4d05156854579a09c6c2b95e9e0a671",
+      "program_sha256": "87cd3ebd2a989113728930ca6de925420e2e34ccc107b7db429cd5be4223c279",
+      "port_incidence": {
+        "counts": {
+          "non_owned_static_sites": 19,
+          "candidate_ports": 114,
+          "ports_without_owned_result_site": 4,
+          "ports_with_multiple_owned_result_sites": 1,
+          "ports_with_local_input_uses": 79,
+          "ports_touching_hidden_facts": 0,
+          "ports_touching_retained_sources": 27,
+          "ports_touching_lifecycle_exceptions": 40,
+          "live_site_visits": 290,
+          "distinct_live_fact_sites": 279,
+          "static_port_plans": 58
+        },
+        "live_sites_per_port": {
+          "1": 38,
+          "2": 43,
+          "3": 16,
+          "4": 4,
+          "6": 1,
+          "8": 12
+        },
+        "scope": "existing static incidences and current owned facts; no fact retirement or saturation proof"
+      },
+      "counts": {
+        "signal_slots": 7494,
+        "root_changed": 695,
+        "unknown_origin": 379,
+        "local_origin": 2898,
+        "cross_component_slots": 2977,
+        "cross_component_changed_roots": 103,
+        "unbound": 1240,
+        "components": 1308,
+        "distinct_cross_edges": 1877,
+        "referenced_producers": 142,
+        "shared_producers": 103,
+        "referenced_native_ports": 446,
+        "exclusively_referenced_ports": 114,
+        "shared_native_ports": 332,
+        "exclusive_producers": 39,
+        "exclusive_cycle_nodes": 0,
+        "candidate_regions": 1269,
+        "largest_candidate_region": 3
+      },
+      "port_consumer_degree_histogram": {
+        "1": 114,
+        "2": 82,
+        "3": 29,
+        "4": 19,
+        "5": 16,
+        "6": 35,
+        "7": 27,
+        "8": 16,
+        "9": 22,
+        "10": 25,
+        "11": 20,
+        "12": 6,
+        "13": 7,
+        "14": 2,
+        "15": 3,
+        "16": 6,
+        "17": 2,
+        "18": 2,
+        "20": 3,
+        "21": 1,
+        "30": 1,
+        "33": 1,
+        "37": 1,
+        "45": 1,
+        "47": 2,
+        "67": 1,
+        "110": 1,
+        "221": 1
+      },
+      "consumer_degree_histogram": {
+        "1": 39,
+        "2": 23,
+        "3": 9,
+        "4": 6,
+        "5": 9,
+        "6": 6,
+        "7": 6,
+        "8": 7,
+        "9": 5,
+        "10": 2,
+        "11": 11,
+        "12": 3,
+        "13": 1,
+        "14": 2,
+        "15": 1,
+        "16": 1,
+        "17": 2,
+        "18": 1,
+        "19": 1,
+        "20": 2,
+        "21": 1,
+        "31": 1,
+        "45": 1,
+        "110": 1,
+        "950": 1
+      },
+      "candidate_region_widths": {
+        "1": 1233,
+        "2": 33,
+        "3": 3
+      },
+      "largest_shared_producers": [
+        {
+          "component": 128,
+          "consumers": 950,
+          "source_frames": 1,
+          "referenced_ports": 170,
+          "max_port_consumers": 221
+        },
+        {
+          "component": 1025,
+          "consumers": 110,
+          "source_frames": 1,
+          "referenced_ports": 1,
+          "max_port_consumers": 110
+        },
+        {
+          "component": 1022,
+          "consumers": 45,
+          "source_frames": 8,
+          "referenced_ports": 10,
+          "max_port_consumers": 8
+        },
+        {
+          "component": 6,
+          "consumers": 31,
+          "source_frames": 7,
+          "referenced_ports": 3,
+          "max_port_consumers": 21
+        },
+        {
+          "component": 1009,
+          "consumers": 21,
+          "source_frames": 4,
+          "referenced_ports": 6,
+          "max_port_consumers": 11
+        },
+        {
+          "component": 1011,
+          "consumers": 20,
+          "source_frames": 4,
+          "referenced_ports": 6,
+          "max_port_consumers": 9
+        },
+        {
+          "component": 1244,
+          "consumers": 20,
+          "source_frames": 8,
+          "referenced_ports": 2,
+          "max_port_consumers": 20
+        },
+        {
+          "component": 1059,
+          "consumers": 19,
+          "source_frames": 3,
+          "referenced_ports": 6,
+          "max_port_consumers": 8
+        },
+        {
+          "component": 1245,
+          "consumers": 18,
+          "source_frames": 6,
+          "referenced_ports": 1,
+          "max_port_consumers": 18
+        },
+        {
+          "component": 191,
+          "consumers": 17,
+          "source_frames": 6,
+          "referenced_ports": 1,
+          "max_port_consumers": 17
+        },
+        {
+          "component": 345,
+          "consumers": 17,
+          "source_frames": 16,
+          "referenced_ports": 7,
+          "max_port_consumers": 9
+        },
+        {
+          "component": 226,
+          "consumers": 16,
+          "source_frames": 2,
+          "referenced_ports": 3,
+          "max_port_consumers": 10
+        }
+      ]
+    }
+  ]
+}

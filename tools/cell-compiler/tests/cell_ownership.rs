@@ -1939,6 +1939,36 @@ fn bake_retains_checked_constructor_prefix_before_an_uncovered_suffix() {
 }
 
 #[test]
+fn repeated_query_port_equality_proves_cross_stage_constructor_key() {
+    let p=program("(datatype E (N i64) (Start E) (Pair E E))
+        (ruleset a) (ruleset b) (ruleset u) (ruleset c)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((Pair s x)) ((union s x)) :ruleset u)
+        (rule ((Pair z z)) ((Start z)) :ruleset c)
+        (N 1) (run a 1) (run b 1) (run u 1) (run c 1)");
+    let mut g=Graph::new_with_local_congruence(p.clone()).unwrap();
+    g.trace_ownership_catalog(16).unwrap();
+    let mut control=Executor::new(g,true);control.execute().unwrap();
+    let trace=control.graph.ownership_catalog_trace().unwrap();
+    let mut raw=p.artifact.clone();
+    raw["ownership_witnesses"]=json!({"source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),
+        "recipes":trace["saturation"]["witness_recipes"]});
+    raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let mut candidate=Executor::new(Graph::new_with_local_congruence(Program::parse(raw).unwrap()).unwrap(),true);
+    candidate.execute().unwrap();
+    assert_eq!(candidate.graph.export().unwrap(),control.graph.export().unwrap());
+    assert_eq!(candidate.snapshots,control.snapshots);
+    assert_eq!(candidate.binding_audit,control.binding_audit);
+    let s=&candidate.graph.stats;
+    assert!(s.constructor_cell_route_key_proved>0,"repeated variable must prove the key");
+    assert!(s.constructor_cell_route_proof_admissions>0);
+    assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
+    eprintln!("repeated anchor: proved={}, admitted={}, key lookups {} -> {}",s.constructor_cell_route_key_proved,
+        s.constructor_cell_route_proof_admissions,control.graph.key_lookup_calls.get(),candidate.graph.key_lookup_calls.get());
+}
+
+#[test]
 fn one_entry_reuses_static_route_selection_for_multiple_constructor_results() {
     let p=program("(datatype E (N i64) (Start E) (Pair E E) (Wrap E E E) (G E))
         (ruleset a) (ruleset b) (ruleset c) (ruleset d)
