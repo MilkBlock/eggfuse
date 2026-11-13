@@ -131,6 +131,29 @@ are 5.514–5.608 s and 6.459–7.049 s. Sum ranges are 26.492–28.998 ms and
 scanning throughout both lanes and changing desktop activity. The guard excludes
 known compilers/experiment executables; it does not certify an idle machine.
 The measured slowdown therefore needs further isolation; neither dismiss it as
-noise nor attribute its full magnitude to the merge. No further timing campaign
-was run under this persistent background load. Full records are in
+noise nor attribute its full magnitude to the merge. No further trial was included in that checkpoint. Full records are in
 `timing-results.json`; the interrupted trial remains separate.
+
+
+## Independent retest of the same binaries
+
+The third trial reuses exactly the same frozen binaries, input files, four-worker
+arguments and semantic references. It starts again with all control workloads,
+then all candidate workloads; none of the earlier samples are reused or pooled.
+All 48 compiler/runtime boundary guards pass, as do every sample's final-state,
+source Run and effect checks. Repetition counts remain five for sum-bits and
+three for Raytrace, with one warmup per group.
+
+| Inference median | Control `7936e334` | Merge snapshot `d4b9fa2d` | Observed change |
+|---|---:|---:|---:|
+| sum-bits | 31.277 ms | 26.240 ms | -16.10% |
+| Raytrace | 6.522 s | 6.097 s | -6.51% |
+
+Raytrace ranges are 5.979–6.990 s and 6.043–6.167 s; sum ranges are
+26.182–32.035 ms and 25.895–28.884 ms. Both observed directions reverse the
+previous completed trial, while the binaries and inputs remain identical.
+System storage-scanning processes remain active at every group boundary.
+These trials do not establish stable speedup or a reproducible regression;
+the prior +16.03% Raytrace result should not be treated as an isolated causal
+estimate of the merge's cost. The earlier records remain intact, and the new
+records are in `timing-retest.json`.

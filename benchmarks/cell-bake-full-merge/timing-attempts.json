@@ -1,5 +1,5 @@
 {
-  "scope": "One interrupted trial and one completed independent trial; samples are never pooled",
+  "scope": "One interrupted trial and two independent completed trials; samples are never pooled",
   "attempts": [
     {
       "artifact_root": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-full-merge/timing",
@@ -291,6 +291,164 @@
       ],
       "result_sha256": "0af01764b07b8e1d4a4c0f9047daf9c078ac9c67e444b63cd4ef86a502b4365d",
       "performance_acceptance": "not accepted: both observed inference medians regressed; background system load prevents isolating the cause"
+    },
+    {
+      "artifact_root": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-full-merge/timing-3",
+      "status": "completed-with-boundary-guards",
+      "candidate_commit": "d4b9fa2d37c3dc32216114c1add7eb812cd95a49",
+      "completed_groups": [
+        {
+          "lane": "control",
+          "case": "sum",
+          "directory": "group-0000",
+          "execution_order": [
+            {
+              "iteration": -1,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 0,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 1,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 2,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 3,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 4,
+              "lanes": [
+                "control"
+              ]
+            }
+          ]
+        },
+        {
+          "lane": "control",
+          "case": "ray",
+          "directory": "group-0001",
+          "execution_order": [
+            {
+              "iteration": -1,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 0,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 1,
+              "lanes": [
+                "control"
+              ]
+            },
+            {
+              "iteration": 2,
+              "lanes": [
+                "control"
+              ]
+            }
+          ]
+        },
+        {
+          "lane": "candidate",
+          "case": "sum",
+          "directory": "group-0002",
+          "execution_order": [
+            {
+              "iteration": -1,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 0,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 1,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 2,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 3,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 4,
+              "lanes": [
+                "candidate"
+              ]
+            }
+          ]
+        },
+        {
+          "lane": "candidate",
+          "case": "ray",
+          "directory": "group-0003",
+          "execution_order": [
+            {
+              "iteration": -1,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 0,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 1,
+              "lanes": [
+                "candidate"
+              ]
+            },
+            {
+              "iteration": 2,
+              "lanes": [
+                "candidate"
+              ]
+            }
+          ]
+        }
+      ],
+      "result_file": "timing-retest.json",
+      "result_sha256": "24f3d6575a840073853bb849a9c5cc6f2ba63a335d14a9f9529579ce5b1c4620",
+      "performance_acceptance": "not established: this trial reverses the previous direction; grouped measurements under persistent background load do not establish stable speedup or regression"
     }
   ]
 }
