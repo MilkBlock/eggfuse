@@ -37,7 +37,7 @@ class CorpusRidge(unittest.TestCase):
     def test_deduplication_preserves_workload_split_and_observation_weight(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);r=rule([atom('F',0,1)],[make('G',2,1)],2)
-            program=root/'program.json';program.write_text(json.dumps(dict(sha256='p',recipe=dict(rules=[r]))))
+            program=root/'program.json';program.write_text(json.dumps(dict(sha256='p',recipe=dict(rules=[r],tables=[]))))
             sample=dict(consumer=0,source=[['F',[['input',0],['input',1]]]],binding=[[0,['input',0]],[1,['input',1]]],completion=dict(facts=[]),observations=3)
             targets=root/'targets.json';targets.write_text(json.dumps(dict(program_sha256='p',targets=[sample])))
             base=dict(status='complete',program=str(program),targets=str(targets),targets_sha256=digest(targets))

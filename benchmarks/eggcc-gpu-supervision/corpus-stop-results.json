@@ -1,0 +1,221 @@
+{
+  "baseline_repeat": {
+    "scope": "necessary fixed-binding local stop probe, not ruleset saturation",
+    "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "model_sha256": "9a5d9fecaef54033533042abcff2a18b21159d59545184eedea953bfcfe98ddf",
+    "numerical_audit": {
+      "passed": false,
+      "state_elements_outside_tolerance": 1,
+      "emission_disagreements": 0,
+      "max_absolute_state_difference": 0.02294921875,
+      "absolute_tolerance": 0.002,
+      "relative_tolerance": 0.004
+    },
+    "decoder_f64_disagreements": 0,
+    "rounds": 4,
+    "cases": 850,
+    "teacher_idempotent_cases": 850,
+    "oracle_completed_state_false_reemissions": 748,
+    "free_rollout": {
+      "emissions_per_round": [
+        778,
+        748,
+        656,
+        591
+      ],
+      "final_exact_catalog_target": 271,
+      "final_ambiguous": 0,
+      "stopped_at_final_round": 259,
+      "exact_target_and_stopped": 154,
+      "never_emitted_but_initially_novel": 8,
+      "final_body_rmse": 188.84011840820312
+    },
+    "intermediate_cpu_reads": 0,
+    "teacher_state_supplied_between_rounds": false,
+    "limitations": [
+      "Only repetition of the same fixed binding; not full successor or ruleset closure",
+      "Oracle-state test is separate and does not correct the free rollout",
+      "Request roles and port wiring are static for the original binding",
+      "Catalog includes held-out states and does not prove live identity or visibility",
+      "No lifetime, ownership-transfer or global novelty proof"
+    ]
+  },
+  "completed_controls_fit": {
+    "scope": "standalone corpus GPU whole-Cell proposal and known-catalog decoding; not a full runtime",
+    "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "completion_controls": true,
+    "backpropagation": false,
+    "positioned_roles": true,
+    "role_integration": "additional columns; original request retained",
+    "fit": {
+      "alpha": 1.0,
+      "validation_target_mse": 1.5871002005951595e-06
+    },
+    "training": "one row per unique partition input plus identity controls and optional completed-state controls; validation-only regularizer selection, balanced body/boundary/emission loss",
+    "state_floats": 34080,
+    "unique_partition_inputs": 3466,
+    "candidate_states": 3939,
+    "families": 296,
+    "excluded_workloads": [
+      "039-cordic",
+      "065-correlation",
+      "066-covariance",
+      "074-2mm",
+      "075-3mm",
+      "084-ludcmp",
+      "086-deriche",
+      "089-adi",
+      "090-fdtd-2d",
+      "091-heat-3d",
+      "095-raytrace"
+    ],
+    "reports": {
+      "train": {
+        "unique_inputs": 1880,
+        "represented_observations": 1604320,
+        "locally_novel": 1693,
+        "novel_exact_and_emitted": 1544,
+        "novel_wrong_emitted": 82,
+        "novel_ambiguous_emitted": 0,
+        "novel_not_emitted": 67,
+        "no_op_false_emissions": 3,
+        "identity_control_false_emissions": 0,
+        "completion_control_false_emissions": 35,
+        "exact_final_state": 1731,
+        "exact_state_and_emission_decision": 1728,
+        "body_rmse": 0.15633386373519897
+      },
+      "validation": {
+        "unique_inputs": 736,
+        "represented_observations": 170466,
+        "locally_novel": 675,
+        "novel_exact_and_emitted": 573,
+        "novel_wrong_emitted": 55,
+        "novel_ambiguous_emitted": 0,
+        "novel_not_emitted": 47,
+        "no_op_false_emissions": 1,
+        "identity_control_false_emissions": 0,
+        "completion_control_false_emissions": 27,
+        "exact_final_state": 634,
+        "exact_state_and_emission_decision": 633,
+        "body_rmse": 0.12866729497909546
+      },
+      "test": {
+        "unique_inputs": 850,
+        "represented_observations": 158078,
+        "locally_novel": 779,
+        "novel_exact_and_emitted": 650,
+        "novel_wrong_emitted": 73,
+        "novel_ambiguous_emitted": 0,
+        "novel_not_emitted": 56,
+        "no_op_false_emissions": 10,
+        "identity_control_false_emissions": 0,
+        "completion_control_false_emissions": 42,
+        "exact_final_state": 720,
+        "exact_state_and_emission_decision": 711,
+        "body_rmse": 0.15611723065376282
+      },
+      "test_seen_input": {
+        "unique_inputs": 711,
+        "represented_observations": 157588,
+        "locally_novel": 658,
+        "novel_exact_and_emitted": 555,
+        "novel_wrong_emitted": 58,
+        "novel_ambiguous_emitted": 0,
+        "novel_not_emitted": 45,
+        "no_op_false_emissions": 2,
+        "identity_control_false_emissions": 0,
+        "completion_control_false_emissions": 22,
+        "exact_final_state": 608,
+        "exact_state_and_emission_decision": 606,
+        "body_rmse": 0.10054057091474533
+      },
+      "test_new_input_known_family": {
+        "unique_inputs": 122,
+        "represented_observations": 442,
+        "locally_novel": 106,
+        "novel_exact_and_emitted": 82,
+        "novel_wrong_emitted": 15,
+        "novel_ambiguous_emitted": 0,
+        "novel_not_emitted": 9,
+        "no_op_false_emissions": 8,
+        "identity_control_false_emissions": 0,
+        "completion_control_false_emissions": 15,
+        "exact_final_state": 97,
+        "exact_state_and_emission_decision": 90,
+        "body_rmse": 0.13685733079910278
+      },
+      "test_uncovered_family": {
+        "unique_inputs": 17,
+        "represented_observations": 48,
+        "locally_novel": 15,
+        "novel_exact_and_emitted": 13,
+        "novel_wrong_emitted": 0,
+        "novel_ambiguous_emitted": 0,
+        "novel_not_emitted": 2,
+        "no_op_false_emissions": 0,
+        "identity_control_false_emissions": 0,
+        "completion_control_false_emissions": 5,
+        "exact_final_state": 15,
+        "exact_state_and_emission_decision": 15,
+        "body_rmse": 0.8132929801940918
+      }
+    },
+    "limitations": [
+      "CPU successful matches still supply initial states",
+      "Candidate catalog includes held-out symbolic states and is scoped by compiler family",
+      "Exact target is recorded body, quotient map and layout, not semantic alpha-equivalence",
+      "Reported first-step inference does not test successor closure, off-manifold recovery or stopping",
+      "No speedup, live constructor identity, Run visibility or ownership retirement proof",
+      "Uncovered-family predictions are diagnostic and require CPU fallback",
+      "Scalar values are encoded, not generally computed by this model"
+    ],
+    "model_artifact": {
+      "weights": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113/models/corpus-ridge-stop-controls.npz",
+      "weights_sha256": "8e89571d94ab23efc7a70e38699263f940eeff3ea1c2aea5efed01576f9bc2f0",
+      "metadata": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113/models/corpus-ridge-stop-controls.json.gz",
+      "metadata_sha256": "fe43b7a60d982e9fa891a6045476455e194d192b00ea26e36f0dbc9ff2503034"
+    }
+  },
+  "completed_controls_repeat": {
+    "scope": "necessary fixed-binding local stop probe, not ruleset saturation",
+    "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "model_sha256": "8e89571d94ab23efc7a70e38699263f940eeff3ea1c2aea5efed01576f9bc2f0",
+    "numerical_audit": {
+      "passed": true,
+      "state_elements_outside_tolerance": 0,
+      "emission_disagreements": 0,
+      "max_absolute_state_difference": 0.00020313262939453125,
+      "absolute_tolerance": 0.002,
+      "relative_tolerance": 0.004
+    },
+    "decoder_f64_disagreements": 0,
+    "rounds": 4,
+    "cases": 850,
+    "teacher_idempotent_cases": 850,
+    "oracle_completed_state_false_reemissions": 42,
+    "free_rollout": {
+      "emissions_per_round": [
+        733,
+        81,
+        23,
+        12
+      ],
+      "final_exact_catalog_target": 732,
+      "final_ambiguous": 0,
+      "stopped_at_final_round": 838,
+      "exact_target_and_stopped": 724,
+      "never_emitted_but_initially_novel": 56,
+      "final_body_rmse": 0.20649860799312592
+    },
+    "intermediate_cpu_reads": 0,
+    "teacher_state_supplied_between_rounds": false,
+    "limitations": [
+      "Only repetition of the same fixed binding; not full successor or ruleset closure",
+      "Oracle-state test is separate and does not correct the free rollout",
+      "Request roles and port wiring are static for the original binding",
+      "Catalog includes held-out states and does not prove live identity or visibility",
+      "No lifetime, ownership-transfer or global novelty proof"
+    ]
+  }
+}

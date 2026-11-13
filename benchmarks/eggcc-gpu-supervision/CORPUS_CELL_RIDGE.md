@@ -105,3 +105,7 @@ MODEL.json.gz stores family and exact candidate metadata with the manifest
 fingerprint. These generated binaries remain on the external SSD, outside Git.
 The experiment outputs and hashes are recorded in `corpus-cell-ridge-results.json`.
 Use the manifest at the external corpus path in `OBSERVED_CORPUS.md`.
+
+The subsequent [stopping probe](CORPUS_STOP_PROBE.md) shows that the first-step
+result does not survive repetition. Completed-state controls improve stopping
+but reduce first-step accuracy; both results remain explicit.

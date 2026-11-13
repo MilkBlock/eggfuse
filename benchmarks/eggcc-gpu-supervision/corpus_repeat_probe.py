@@ -1,0 +1,108 @@
+"""Probe local completion idempotence and repeated GPU emission.
+
+Repeated application of one fixed proven binding is a necessary stopping test,
+not ruleset saturation. The oracle-state diagnostic is separate from free rollout.
+"""
+import argparse
+import gzip
+import hashlib
+import json
+from pathlib import Path
+import numpy as np
+import mlx.core as mx
+from corpus_cell_ridge import load_records,features,slot_weights,distances
+from boundary_cell_ridge import D,B,state,output_layout,request_with_roles
+from dominator_completion import compose,freeze
+from collect_observed_corpus import read_bytes
+from decode_cell_completion import representation
+
+
+def wiring(ports,binding,width):
+    index={p:i for i,p in enumerate(ports)};indices=np.zeros(width,np.int32);mix=np.zeros((width,B,D),np.float32)
+    for i,(slot,symbol) in enumerate(binding):
+        indices[i]=index[freeze(symbol)];mix[i]=slot_weights(slot)/np.sqrt(max(1,len(binding)))
+    return indices,mix
+
+
+def attachment(states,indices,mix,xp):
+    channels=states[:,D:].reshape(len(states),-1,B)
+    picked=xp.take_along_axis(channels,indices[:,:,None],axis=1)
+    return xp.sum(xp.matmul(picked[:,:,None,:],mix)[:,:,0,:],axis=1)
+
+
+
+def numerical_audit(actual,reference,emissions,reference_emissions):
+    tolerance=.002+.004*np.abs(reference)
+    difference=np.abs(actual-reference)
+    violations=int(np.count_nonzero(difference>tolerance))
+    decisions=int(np.count_nonzero(emissions!=reference_emissions))
+    return dict(passed=bool(not violations and not decisions),state_elements_outside_tolerance=violations,
+                emission_disagreements=decisions,max_absolute_state_difference=float(difference.max()),
+                absolute_tolerance=.002,relative_tolerance=.004)
+
+
+def main():
+    p=argparse.ArgumentParser();p.add_argument('manifest',type=Path);p.add_argument('model',type=Path);p.add_argument('output',type=Path);p.add_argument('--rounds',type=int,default=4);args=p.parse_args()
+    if not 1<=args.rounds<=16:raise ValueError('rounds must be between 1 and 16')
+    metadata=json.loads(gzip.decompress(args.model.with_suffix('.json.gz').read_bytes()))
+    if metadata['manifest_sha256']!=hashlib.sha256(args.manifest.read_bytes()).hexdigest():raise ValueError('model manifest mismatch')
+    manifest=json.loads(args.manifest.read_text());records,_=load_records(manifest);records=[r for r in records if r['split']=='test']
+    tables={}
+    for row in manifest['cases']:
+        if row['status']=='complete' and row['split']=='test':
+            program=json.loads(read_bytes(Path(row['program'])))
+            for table in program['recipe']['tables']:
+                previous=tables.setdefault(table['name'],table)
+                if previous!=table:raise ValueError('inconsistent table definitions across workloads')
+    capacity=metadata['capacity'];family_ids={f:i for i,f in enumerate(metadata['family_names'])};catalog={tuple(v):i for i,v in enumerate(metadata['candidate_keys'])}
+    max_inputs=max(1,max(len(r['sample']['binding']) for r in records))
+    initial=[];completed=[];queries=[];roles=[];indices=[];mix=[];expected=[];families=[];novels=[];idempotent=[]
+    for r in records:
+        sample=r['sample'];done=sample['completion'];ports,mapping,_=output_layout(sample['source'],done)
+        initial.append(state(sample['source'],ports,capacity,allow_absent=True));completed.append(state(done['facts'],ports,capacity,mapping))
+        queries.append(request_with_roles(r['rule'],sample['binding'],False));roles.append(request_with_roles(r['rule'],sample['binding'],True) if metadata['positioned_roles'] else np.zeros(D,np.float32))
+        idx,weight=wiring(ports,sample['binding'],max_inputs);indices.append(idx);mix.append(weight)
+        family=family_ids[r['family']];families.append(family);expected.append(catalog[(family,repr(representation(done['facts'],done['source_map'])),repr(ports))]);novels.append(done['novel'])
+        quotient={freeze(a):freeze(b) for a,b in mapping};rebinding=[(slot,quotient[freeze(value)]) for slot,value in sample['binding']]
+        repeated,reason=compose(done['facts'],r['rule'],rebinding,tables)
+        if reason:raise ValueError('repeat premise missing: '+reason)
+        idempotent.append(not repeated['novel'])
+    if not all(idempotent):raise ValueError('local completion is not idempotent for every selected input')
+    arrays=[np.array(v,np.float32) for v in (initial,completed,queries,roles,mix)]
+    initial,completed,q,role,mix=arrays;indices=np.array(indices,np.int32);families=np.array(families,np.int32);novels=np.array(novels,bool)
+    with np.load(args.model) as saved:w=saved['w'];coef=saved['coef'];prototypes=saved['prototypes'];pf=saved['prototype_families']
+    if not mx.metal.is_available():raise RuntimeError('Metal required')
+    mx.set_default_device(mx.gpu);gw,gc,gidx,gm,gq,gr=[mx.array(v) for v in (w,coef,indices,mix,q,role)]
+    def one(s):
+        a=attachment(s,gidx,gm,mx);out=features(s,gq,a,gw,mx,gr)@gc;emit=out[:,-1]>=.5
+        return mx.where(emit[:,None],s+out[:,:-1],s),emit
+    # Separate oracle diagnostic: the same request on its true completed state.
+    oracle,oracle_emit=mx.compile(one)(mx.array(completed));mx.eval(oracle,oracle_emit)
+    print(json.dumps(dict(oracle_false_reemissions=int(np.array(oracle_emit).sum()),cases=len(records))),flush=True)
+    gp=mx.array(prototypes);gpf=mx.array(pf);gf=mx.array(families)
+    def rollout(s):
+        emissions=[]
+        for _ in range(args.rounds):s,emit=one(s);emissions.append(emit)
+        d=mx.where(gf[:,None]==gpf[None,:],distances(s,gp,mx),mx.inf)
+        return s,mx.stack(emissions),mx.argmin(d,axis=1)
+    final,emissions,selected=mx.compile(rollout)(mx.array(initial));mx.eval(final,emissions,selected)
+    final=np.array(final);emissions=np.array(emissions);selected=np.array(selected)
+    reference=initial.copy();reference_emissions=[]
+    for _ in range(args.rounds):
+        a=attachment(reference,indices,mix,np);out=features(reference,q,a,w,np,role)@coef;emit=out[:,-1]>=.5
+        reference=np.where(emit[:,None],reference+out[:,:-1],reference);reference_emissions.append(emit)
+    numeric=numerical_audit(final,reference,emissions,np.array(reference_emissions))
+    if not np.isfinite(final).all():raise ValueError('nonfinite recurrent state')
+    ambiguous=np.zeros(len(final),bool);invalid_decode=np.zeros(len(final),bool);dp=prototypes.astype(np.float64)
+    for start in range(0,len(final),128):
+        stop=min(start+128,len(final));d=distances(final[start:stop].astype(np.float64),dp,np);d[families[start:stop,None]!=pf[None,:]]=np.inf
+        best=d.min(1);chosen=d[np.arange(stop-start),selected[start:stop]]
+        invalid_decode[start:stop]=chosen>best+1e-5
+        ambiguous[start:stop]=((d<=best[:,None]+1e-7).sum(1)>1)|(chosen>best+1e-7)
+    correct=(selected==np.array(expected))&~ambiguous&~invalid_decode
+    stopped=~emissions[-1]
+    result=dict(scope='necessary fixed-binding local stop probe, not ruleset saturation',manifest_sha256=metadata['manifest_sha256'],model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),numerical_audit=numeric,decoder_f64_disagreements=int(invalid_decode.sum()),rounds=args.rounds,cases=len(records),teacher_idempotent_cases=sum(idempotent),oracle_completed_state_false_reemissions=int(np.array(oracle_emit).sum()),free_rollout=dict(emissions_per_round=emissions.sum(1).tolist(),final_exact_catalog_target=int(correct.sum()),final_ambiguous=int(ambiguous.sum()),stopped_at_final_round=int(stopped.sum()),exact_target_and_stopped=int((correct&stopped).sum()),never_emitted_but_initially_novel=int((~emissions.any(0)&novels).sum()),final_body_rmse=float(np.sqrt(np.mean((final[:,:D]-completed[:,:D])**2)))),intermediate_cpu_reads=0,teacher_state_supplied_between_rounds=False,limitations=['Only repetition of the same fixed binding; not full successor or ruleset closure','Oracle-state test is separate and does not correct the free rollout','Request roles and port wiring are static for the original binding','Catalog includes held-out states and does not prove live identity or visibility','No lifetime, ownership-transfer or global novelty proof'])
+    args.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
+    if not numeric['passed'] or invalid_decode.any():raise SystemExit(1)
+
+if __name__=='__main__':main()

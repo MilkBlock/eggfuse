@@ -16,7 +16,7 @@ from collect_observed_corpus import read_bytes,digest
 from profile_observed_corpus import template_key,key
 from boundary_cell_ridge import D,B,state,output_layout,request_with_roles
 from whole_cell_ridge import code,train
-from dominator_completion import freeze
+from dominator_completion import freeze,compose
 from decode_cell_completion import representation
 
 
@@ -46,13 +46,14 @@ def load_records(manifest):
         if digest(Path(entry['targets']))!=entry['targets_sha256']:raise ValueError('target fingerprint mismatch')
         program=json.loads(read_bytes(Path(entry['program'])));data=json.loads(read_bytes(Path(entry['targets'])))
         if program['sha256']!=data['program_sha256']:raise ValueError('program mismatch')
+        tables={t['name']:t for t in program['recipe']['tables']}
         for sample in data['targets']:
             rule=program['recipe']['rules'][sample['consumer']];family=template_key(rule)
             identity=key((family,sample['source'],sample['binding']));group=(entry['split'],identity)
             if group in records:
                 if records[group]['sample']['completion']!=sample['completion']:raise ValueError('same input has conflicting conditional targets')
                 records[group]['observations']+=sample['observations'];continue
-            records[group]=dict(split=entry['split'],identity=identity,family=family,rule=rule,sample=sample,observations=sample['observations'])
+            records[group]=dict(split=entry['split'],identity=identity,family=family,rule=rule,tables=tables,sample=sample,observations=sample['observations'])
         print(json.dumps(dict(loaded=entry['case'],unique_partition_inputs=len(records))),flush=True)
     return list(records.values()),failures
 
@@ -66,7 +67,7 @@ def distances(values,prototypes,xp):
 
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('manifest',type=Path);parser.add_argument('output',type=Path);parser.add_argument('--no-positioned-roles',action='store_true');parser.add_argument('--model-output',type=Path);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('manifest',type=Path);parser.add_argument('output',type=Path);parser.add_argument('--no-positioned-roles',action='store_true');parser.add_argument('--model-output',type=Path);parser.add_argument('--completion-controls',action='store_true');args=parser.parse_args()
     manifest=json.loads(args.manifest.read_text());records,failures=load_records(manifest)
     layouts=[output_layout(r['sample']['source'],r['sample']['completion']) for r in records]
     capacity=max(len(p) for p,_,_ in layouts);families={f:i for i,f in enumerate(sorted({r['family'] for r in records}))}
@@ -89,8 +90,20 @@ def main():
         role_columns.extend([role,np.zeros(D,np.float32)]);states.extend([initial,initial]);targets.extend([target,initial]);queries.extend([q,np.zeros(D,np.float32)]);attachments.extend([attachment,np.zeros(D,np.float32)])
         novels.extend([completion['novel'],False]);splits.extend([r['split']]*2);row_families.extend([family]*2);identities.extend([r['identity']]*2);weights.extend([r['observations'],0])
         if i%250==0:print(json.dumps(dict(encoded=i,total=len(records))),flush=True)
+    base_rows=len(states)
+    if args.completion_controls:
+        # Same legitimate request on its already-completed state, not the
+        # unrelated zero-request identity control. Preserve workload partitions.
+        for i,(record,(ports,_,_)) in enumerate(zip(records,layouts)):
+            source_index=2*i;completed=targets[source_index]
+            sample=record['sample'];mapping={freeze(a):freeze(b) for a,b in sample['completion']['source_map']}
+            repeated,reason=compose(sample['completion']['facts'],record['rule'],[(slot,mapping[freeze(v)]) for slot,v in sample['binding']],record['tables'])
+            if reason or repeated['novel']:raise ValueError('unproved completed-state negative example')
+            states.append(completed);targets.append(completed);queries.append(queries[source_index]);role_columns.append(role_columns[source_index])
+            attachments.append(initial_attachment(completed,ports,record['sample']['binding']))
+            novels.append(False);splits.append(record['split']);row_families.append(row_families[source_index]);identities.append(record['identity']+':completed');weights.append(0);expected.append(expected[source_index])
     role_columns=np.array(role_columns,np.float32);s=np.array(states,np.float32);q=np.array(queries,np.float32);a=np.array(attachments,np.float32);target=np.array(targets,np.float32);novel=np.array(novels,bool)
-    split=np.array(splits);rf=np.array(row_families,np.int32);weights=np.array(weights);expected=np.array(expected);real=np.arange(len(s))%2==0
+    split=np.array(splits);rf=np.array(row_families,np.int32);weights=np.array(weights);expected=np.array(expected);real=(np.arange(len(s))<base_rows)&(np.arange(len(s))%2==0);completion_control=np.arange(len(s))>=base_rows
     prototypes=np.array(prototypes,np.float32);pf=np.array(prototype_families,np.int32)
     train_mask=split=='train';val=split=='validation'
     w=np.random.default_rng(119).normal(0,1/16,(6*D,512)).astype(np.float32)
@@ -123,13 +136,13 @@ def main():
     masks=[(part,split==part) for part in ['train','validation','test']]+[('test_seen_input',(split=='test')&seen),('test_new_input_known_family',(split=='test')&~seen&known),('test_uncovered_family',(split=='test')&~known)]
     for name,mask in masks:
         actual=mask&real;positive=actual&novel
-        reports[name]=dict(unique_inputs=int(actual.sum()),represented_observations=int(weights[actual].sum()),locally_novel=int(positive.sum()),novel_exact_and_emitted=int((positive&correct&emit).sum()),novel_wrong_emitted=int((positive&~correct&emit&~ambiguous).sum()),novel_ambiguous_emitted=int((positive&emit&ambiguous).sum()),novel_not_emitted=int((positive&~emit).sum()),no_op_false_emissions=int((actual&~novel&emit).sum()),identity_control_false_emissions=int((mask&~real&emit).sum()),exact_final_state=int((actual&correct).sum()),exact_state_and_emission_decision=int((actual&correct&(emit==novel)).sum()),body_rmse=float(np.sqrt(np.mean((predicted[actual,:D]-target[actual,:D])**2))) if actual.any() else None)
-    result=dict(scope='standalone corpus GPU whole-Cell proposal and known-catalog decoding; not a full runtime',manifest_sha256=hashlib.sha256(args.manifest.read_bytes()).hexdigest(),backpropagation=False,positioned_roles=not args.no_positioned_roles,role_integration='additional columns; original request retained',fit=fit,training='one row per unique partition input plus identity control; validation-only regularizer selection, balanced body/boundary/emission loss',state_floats=s.shape[1],unique_partition_inputs=len(records),candidate_states=len(prototypes),families=len(families),excluded_workloads=failures,reports=reports,limitations=['CPU successful matches still supply initial states','Candidate catalog includes held-out symbolic states and is scoped by compiler family','Exact target is recorded body, quotient map and layout, not semantic alpha-equivalence','Reported first-step inference does not test successor closure, off-manifold recovery or stopping','No speedup, live constructor identity, Run visibility or ownership retirement proof','Uncovered-family predictions are diagnostic and require CPU fallback','Scalar values are encoded, not generally computed by this model'])
+        reports[name]=dict(unique_inputs=int(actual.sum()),represented_observations=int(weights[actual].sum()),locally_novel=int(positive.sum()),novel_exact_and_emitted=int((positive&correct&emit).sum()),novel_wrong_emitted=int((positive&~correct&emit&~ambiguous).sum()),novel_ambiguous_emitted=int((positive&emit&ambiguous).sum()),novel_not_emitted=int((positive&~emit).sum()),no_op_false_emissions=int((actual&~novel&emit).sum()),identity_control_false_emissions=int((mask&~real&~completion_control&emit).sum()),completion_control_false_emissions=int((mask&completion_control&emit).sum()),exact_final_state=int((actual&correct).sum()),exact_state_and_emission_decision=int((actual&correct&(emit==novel)).sum()),body_rmse=float(np.sqrt(np.mean((predicted[actual,:D]-target[actual,:D])**2))) if actual.any() else None)
+    result=dict(scope='standalone corpus GPU whole-Cell proposal and known-catalog decoding; not a full runtime',manifest_sha256=hashlib.sha256(args.manifest.read_bytes()).hexdigest(),completion_controls=args.completion_controls,backpropagation=False,positioned_roles=not args.no_positioned_roles,role_integration='additional columns; original request retained',fit=fit,training='one row per unique partition input plus identity controls and optional completed-state controls; validation-only regularizer selection, balanced body/boundary/emission loss',state_floats=s.shape[1],unique_partition_inputs=len(records),candidate_states=len(prototypes),families=len(families),excluded_workloads=failures,reports=reports,limitations=['CPU successful matches still supply initial states','Candidate catalog includes held-out symbolic states and is scoped by compiler family','Exact target is recorded body, quotient map and layout, not semantic alpha-equivalence','Reported first-step inference does not test successor closure, off-manifold recovery or stopping','No speedup, live constructor identity, Run visibility or ownership retirement proof','Uncovered-family predictions are diagnostic and require CPU fallback','Scalar values are encoded, not generally computed by this model'])
     if args.model_output:
         args.model_output.parent.mkdir(parents=True,exist_ok=True)
         with args.model_output.open('wb') as output:
             np.savez_compressed(output,w=w,coef=coef,prototypes=prototypes,prototype_families=pf)
-        metadata=dict(schema='corpus-cell-ridge/v1',manifest_sha256=result['manifest_sha256'],body_width=D,boundary_width=B,capacity=capacity,positioned_roles=result['positioned_roles'],family_names=sorted(families),candidate_keys=[signature for signature,index in sorted(dictionary.items(),key=lambda item:item[1])],limitations=result['limitations'])
+        metadata=dict(schema='corpus-cell-ridge/v1',manifest_sha256=result['manifest_sha256'],body_width=D,boundary_width=B,capacity=capacity,positioned_roles=result['positioned_roles'],completion_controls=args.completion_controls,family_names=sorted(families),candidate_keys=[signature for signature,index in sorted(dictionary.items(),key=lambda item:item[1])],limitations=result['limitations'])
         metadata_path=args.model_output.with_suffix('.json.gz');metadata_path.write_bytes(gzip.compress(json.dumps(metadata).encode(),mtime=0))
         result['model_artifact']=dict(weights=str(args.model_output),weights_sha256=hashlib.sha256(args.model_output.read_bytes()).hexdigest(),metadata=str(metadata_path),metadata_sha256=hashlib.sha256(metadata_path.read_bytes()).hexdigest())
     args.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
