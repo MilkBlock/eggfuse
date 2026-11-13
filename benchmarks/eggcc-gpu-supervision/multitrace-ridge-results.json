@@ -1,0 +1,779 @@
+{
+  "scope": "full-workload Cell Eq prediction; actual Metal floating inference; CPU matched-input replay",
+  "model": "alias_normalized_roles fixed architecture from preceding experiment",
+  "config": {
+    "positive_weight": 1.0,
+    "regularizer": 1000.0,
+    "threshold": 0.3,
+    "validation_f05": 0.8507462686567164
+  },
+  "backpropagation": false,
+  "workload_split_frozen_before_capture": true,
+  "cases": [
+    {
+      "case": "032-sum-bits",
+      "split": "train",
+      "program_sha256": "25776d5a8242b50bd90b686dd8dce79217800e642775693f60907dd96d2976a2",
+      "trace_sha256": "2545a0a4d6de5af3cebde6bf9fabcc682465daf4b4b525053e99d9c5f21b8254",
+      "metrics": {
+        "pairs": 16585,
+        "positive_pairs": 518,
+        "tp": 472,
+        "fp": 134,
+        "fn": 46,
+        "precision": 0.7788778877887789,
+        "recall": 0.9111969111969112,
+        "f2": 0.8812546676624347
+      },
+      "unsupported_pairs": 0,
+      "exact_feature_rows_seen_training": 16585,
+      "per_ruleset": {
+        "always-run": {
+          "pairs": 7798,
+          "positive_pairs": 9,
+          "tp": 3,
+          "fp": 0,
+          "fn": 6,
+          "precision": 1.0,
+          "recall": 0.3333333333333333,
+          "f2": 0.38461538461538464
+        },
+        "apply-drop-unions": {
+          "pairs": 270,
+          "positive_pairs": 90,
+          "tp": 90,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f2": 1.0
+        },
+        "boundary-analysis": {
+          "pairs": 24,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "boundary-analysis-prep": {
+          "pairs": 24,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "canon": {
+          "pairs": 54,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "cleanup-drop": {
+          "pairs": 113,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "context": {
+          "pairs": 2390,
+          "positive_pairs": 297,
+          "tp": 263,
+          "fp": 131,
+          "fn": 34,
+          "precision": 0.6675126903553299,
+          "recall": 0.8855218855218855,
+          "f2": 0.8312262958280657
+        },
+        "drop": {
+          "pairs": 748,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "is-resolved": {
+          "pairs": 570,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "loop-iters-analysis": {
+          "pairs": 3,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "non-weakly-linear": {
+          "pairs": 122,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "passthrough": {
+          "pairs": 332,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "peepholes": {
+          "pairs": 52,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "select_opt": {
+          "pairs": 172,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "state-edge-passthrough": {
+          "pairs": 67,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "subsume-after-helpers": {
+          "pairs": 19,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "term-subst": {
+          "pairs": 140,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms": {
+          "pairs": 558,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers": {
+          "pairs": 204,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers-helpers": {
+          "pairs": 721,
+          "positive_pairs": 103,
+          "tp": 98,
+          "fp": 3,
+          "fn": 5,
+          "precision": 0.9702970297029703,
+          "recall": 0.9514563106796117,
+          "f2": 0.9551656920077972
+        },
+        "type-analysis": {
+          "pairs": 1981,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "type-helpers": {
+          "pairs": 223,
+          "positive_pairs": 19,
+          "tp": 18,
+          "fp": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.9473684210526315,
+          "f2": 0.9574468085106383
+        }
+      }
+    },
+    {
+      "case": "020-loopfact",
+      "split": "train",
+      "program_sha256": "862938c2d8c1bf39c73a6817d5785b414ab24bffdef31f12a4c64445ae54b8c6",
+      "trace_sha256": "7f7067b21f9d0055f28878630ff565a781e064d0cd7eb4ec179b23f45669bde3",
+      "metrics": {
+        "pairs": 2435,
+        "positive_pairs": 42,
+        "tp": 41,
+        "fp": 0,
+        "fn": 1,
+        "precision": 1.0,
+        "recall": 0.9761904761904762,
+        "f2": 0.9808612440191388
+      },
+      "unsupported_pairs": 0,
+      "exact_feature_rows_seen_training": 2435,
+      "per_ruleset": {
+        "always-run": {
+          "pairs": 1364,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "boundary-analysis": {
+          "pairs": 18,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "boundary-analysis-prep": {
+          "pairs": 18,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "canon": {
+          "pairs": 6,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "is-resolved": {
+          "pairs": 144,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "loop-iters-analysis": {
+          "pairs": 3,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms": {
+          "pairs": 126,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers": {
+          "pairs": 60,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers-helpers": {
+          "pairs": 217,
+          "positive_pairs": 31,
+          "tp": 30,
+          "fp": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.967741935483871,
+          "f2": 0.974025974025974
+        },
+        "type-analysis": {
+          "pairs": 364,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "type-helpers": {
+          "pairs": 115,
+          "positive_pairs": 11,
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f2": 1.0
+        }
+      }
+    },
+    {
+      "case": "016-gcd",
+      "split": "validation",
+      "program_sha256": "d69445f3e96cf96a809340cc62376b7aa4527ce5607247b6c0073489cb07c590",
+      "trace_sha256": "e57c05e9754eec43f4f96e78d93095c30da898fd42d107ade8d6348599a13e28",
+      "metrics": {
+        "pairs": 12620,
+        "positive_pairs": 343,
+        "tp": 285,
+        "fp": 48,
+        "fn": 58,
+        "precision": 0.8558558558558559,
+        "recall": 0.8309037900874635,
+        "f2": 0.8357771260997068
+      },
+      "unsupported_pairs": 0,
+      "exact_feature_rows_seen_training": 187,
+      "per_ruleset": {
+        "always-run": {
+          "pairs": 6124,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "boundary-analysis": {
+          "pairs": 12,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "boundary-analysis-prep": {
+          "pairs": 12,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "canon": {
+          "pairs": 6,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "context": {
+          "pairs": 1542,
+          "positive_pairs": 216,
+          "tp": 171,
+          "fp": 47,
+          "fn": 45,
+          "precision": 0.7844036697247706,
+          "recall": 0.7916666666666666,
+          "f2": 0.7902033271719039
+        },
+        "interval-analysis": {
+          "pairs": 44,
+          "positive_pairs": 4,
+          "tp": 0,
+          "fp": 0,
+          "fn": 4,
+          "precision": null,
+          "recall": 0.0,
+          "f2": 0.0
+        },
+        "is-resolved": {
+          "pairs": 571,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "loop-iters-analysis": {
+          "pairs": 3,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "non-weakly-linear": {
+          "pairs": 204,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "passthrough": {
+          "pairs": 254,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "peepholes": {
+          "pairs": 12,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "select_opt": {
+          "pairs": 260,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "term-subst": {
+          "pairs": 114,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms": {
+          "pairs": 578,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers": {
+          "pairs": 230,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers-helpers": {
+          "pairs": 637,
+          "positive_pairs": 91,
+          "tp": 88,
+          "fp": 1,
+          "fn": 3,
+          "precision": 0.9887640449438202,
+          "recall": 0.967032967032967,
+          "f2": 0.9713024282560706
+        },
+        "type-analysis": {
+          "pairs": 1638,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "type-helpers": {
+          "pairs": 379,
+          "positive_pairs": 32,
+          "tp": 26,
+          "fp": 0,
+          "fn": 6,
+          "precision": 1.0,
+          "recall": 0.8125,
+          "f2": 0.8441558441558441
+        }
+      }
+    },
+    {
+      "case": "010-dot-product",
+      "split": "test",
+      "program_sha256": "d18c6a7303eea4bb9193dac5907f5368332b9823be2788b2bf5c4442d8310d8d",
+      "trace_sha256": "e66f20de4de8a356170b4bd3bf39d2817da1257ecd47aafcb0b568e894a6b6c7",
+      "metrics": {
+        "pairs": 14356,
+        "positive_pairs": 159,
+        "tp": 144,
+        "fp": 82,
+        "fn": 15,
+        "precision": 0.6371681415929203,
+        "recall": 0.9056603773584906,
+        "f2": 0.8352668213457076
+      },
+      "unsupported_pairs": 0,
+      "exact_feature_rows_seen_training": 212,
+      "per_ruleset": {
+        "always-run": {
+          "pairs": 7225,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 7,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "boundary-analysis": {
+          "pairs": 60,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "boundary-analysis-prep": {
+          "pairs": 60,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "canon": {
+          "pairs": 70,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "interval-analysis": {
+          "pairs": 108,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 40,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "is-resolved": {
+          "pairs": 785,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "loop-iters-analysis": {
+          "pairs": 6,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "mem-simple": {
+          "pairs": 760,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "non-weakly-linear": {
+          "pairs": 6,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "passthrough": {
+          "pairs": 128,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "peepholes": {
+          "pairs": 703,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 5,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms": {
+          "pairs": 523,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers": {
+          "pairs": 240,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers-helpers": {
+          "pairs": 931,
+          "positive_pairs": 133,
+          "tp": 118,
+          "fp": 9,
+          "fn": 15,
+          "precision": 0.9291338582677166,
+          "recall": 0.8872180451127819,
+          "f2": 0.8952959028831563
+        },
+        "type-analysis": {
+          "pairs": 2370,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 17,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "type-helpers": {
+          "pairs": 381,
+          "positive_pairs": 26,
+          "tp": 26,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f2": 1.0
+        }
+      }
+    }
+  ],
+  "cpu_prepare_seconds": 0.7972145000239834,
+  "upload_seconds": 0.0009440830326639116,
+  "gpu_encode_first_seconds": 0.06342899997252971,
+  "ridge_fit_seconds": 0.14659337501507252,
+  "gpu_fused_first_seconds": 0.007710542005952448,
+  "cells": 19179,
+  "ports": 81020,
+  "candidate_pairs": 45996,
+  "gpu_completed_bindings": 0,
+  "limitations": [
+    "Observed input-port Eq only, not scalar or new-node outputs",
+    "CPU provides matches and root routing; no autonomous GPU saturation",
+    "Test is one preselected workload, not a broad generalization result",
+    "Cold timings are diagnostics, not an end-to-end speed benchmark"
+  ]
+}

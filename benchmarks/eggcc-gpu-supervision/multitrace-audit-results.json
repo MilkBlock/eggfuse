@@ -1,0 +1,170 @@
+{
+  "scope": "native runtime checking of saved Metal predictions, not GPU commits",
+  "all_gpu_counts_match_native": true,
+  "cases": [
+    {
+      "scope": "actual CPU Cell runtime Eq-delta audit; saved proposal replay; no GPU takeover",
+      "proposal_source": "external replay",
+      "pass": false,
+      "setup_seconds": 0.500885583,
+      "audited_execution_seconds": 0.173739209,
+      "reference_execution_seconds": 0.160357583,
+      "check_seconds": 0.003932583,
+      "stats": {
+        "bindings": 6532,
+        "ports": 27837,
+        "missing_ports": 0,
+        "candidate_pairs": 16585,
+        "new_equalities": 518,
+        "root_reads": 21556,
+        "capture_seconds": 0.004850550999999993,
+        "finish_seconds": 0.005958294000000004,
+        "peak_pending_ports": 765
+      },
+      "run_boundaries_equal": true,
+      "final_graph_equal": true,
+      "saved_observer_outcomes_exact": true,
+      "source_runs": 882,
+      "counts": {
+        "checked_pairs": 16585,
+        "true_positives": 472,
+        "false_positives": 134,
+        "false_negatives": 46,
+        "invalid_claims": 0,
+        "wrong_pair_fraction": 0.010853180584865842
+      },
+      "timing_scope": "single dev/unoptimized run; serialization excluded; no speedup claim",
+      "limitations": [
+        "CPU executes original program in full; not a proof-only replacement for CPU execution",
+        "Only initially unequal same-sort matched input pairs; not scalar/new-node/mutable/visibility token validation",
+        "Saved GPU replay; no live asynchronous GPU queue or correction application",
+        "Same-runtime observer/reference checks do not establish native egglog semantic acceptance"
+      ],
+      "case": "032-sum-bits",
+      "split": "train"
+    },
+    {
+      "scope": "actual CPU Cell runtime Eq-delta audit; saved proposal replay; no GPU takeover",
+      "proposal_source": "external replay",
+      "pass": false,
+      "setup_seconds": 0.5358565,
+      "audited_execution_seconds": 0.040123917,
+      "reference_execution_seconds": 0.034071792,
+      "check_seconds": 0.000618584,
+      "stats": {
+        "bindings": 1239,
+        "ports": 4969,
+        "missing_ports": 0,
+        "candidate_pairs": 2435,
+        "new_equalities": 42,
+        "root_reads": 4908,
+        "capture_seconds": 0.0009837269999999963,
+        "finish_seconds": 0.001249912999999986,
+        "peak_pending_ports": 366
+      },
+      "run_boundaries_equal": true,
+      "final_graph_equal": true,
+      "saved_observer_outcomes_exact": true,
+      "source_runs": 398,
+      "counts": {
+        "checked_pairs": 2435,
+        "true_positives": 41,
+        "false_positives": 0,
+        "false_negatives": 1,
+        "invalid_claims": 0,
+        "wrong_pair_fraction": 0.0004106776180698152
+      },
+      "timing_scope": "single dev/unoptimized run; serialization excluded; no speedup claim",
+      "limitations": [
+        "CPU executes original program in full; not a proof-only replacement for CPU execution",
+        "Only initially unequal same-sort matched input pairs; not scalar/new-node/mutable/visibility token validation",
+        "Saved GPU replay; no live asynchronous GPU queue or correction application",
+        "Same-runtime observer/reference checks do not establish native egglog semantic acceptance"
+      ],
+      "case": "020-loopfact",
+      "split": "train"
+    },
+    {
+      "scope": "actual CPU Cell runtime Eq-delta audit; saved proposal replay; no GPU takeover",
+      "proposal_source": "external replay",
+      "pass": false,
+      "setup_seconds": 0.562144459,
+      "audited_execution_seconds": 0.158017542,
+      "reference_execution_seconds": 0.137787916,
+      "check_seconds": 0.002886792,
+      "stats": {
+        "bindings": 5473,
+        "ports": 22362,
+        "missing_ports": 0,
+        "candidate_pairs": 12620,
+        "new_equalities": 343,
+        "root_reads": 18482,
+        "capture_seconds": 0.004552835000000028,
+        "finish_seconds": 0.005241085000000009,
+        "peak_pending_ports": 1124
+      },
+      "run_boundaries_equal": true,
+      "final_graph_equal": true,
+      "saved_observer_outcomes_exact": true,
+      "source_runs": 788,
+      "counts": {
+        "checked_pairs": 12620,
+        "true_positives": 285,
+        "false_positives": 48,
+        "false_negatives": 58,
+        "invalid_claims": 0,
+        "wrong_pair_fraction": 0.008399366085578447
+      },
+      "timing_scope": "single dev/unoptimized run; serialization excluded; no speedup claim",
+      "limitations": [
+        "CPU executes original program in full; not a proof-only replacement for CPU execution",
+        "Only initially unequal same-sort matched input pairs; not scalar/new-node/mutable/visibility token validation",
+        "Saved GPU replay; no live asynchronous GPU queue or correction application",
+        "Same-runtime observer/reference checks do not establish native egglog semantic acceptance"
+      ],
+      "case": "016-gcd",
+      "split": "validation"
+    },
+    {
+      "scope": "actual CPU Cell runtime Eq-delta audit; saved proposal replay; no GPU takeover",
+      "proposal_source": "external replay",
+      "pass": false,
+      "setup_seconds": 0.527489542,
+      "audited_execution_seconds": 0.151956959,
+      "reference_execution_seconds": 0.140596958,
+      "check_seconds": 0.003124458,
+      "stats": {
+        "bindings": 5935,
+        "ports": 25852,
+        "missing_ports": 0,
+        "candidate_pairs": 14356,
+        "new_equalities": 159,
+        "root_reads": 22152,
+        "capture_seconds": 0.00478007800000003,
+        "finish_seconds": 0.005770818000000004,
+        "peak_pending_ports": 961
+      },
+      "run_boundaries_equal": true,
+      "final_graph_equal": true,
+      "saved_observer_outcomes_exact": true,
+      "source_runs": 954,
+      "counts": {
+        "checked_pairs": 14356,
+        "true_positives": 144,
+        "false_positives": 82,
+        "false_negatives": 15,
+        "invalid_claims": 0,
+        "wrong_pair_fraction": 0.006756756756756757
+      },
+      "timing_scope": "single dev/unoptimized run; serialization excluded; no speedup claim",
+      "limitations": [
+        "CPU executes original program in full; not a proof-only replacement for CPU execution",
+        "Only initially unequal same-sort matched input pairs; not scalar/new-node/mutable/visibility token validation",
+        "Saved GPU replay; no live asynchronous GPU queue or correction application",
+        "Same-runtime observer/reference checks do not establish native egglog semantic acceptance"
+      ],
+      "case": "010-dot-product",
+      "split": "test"
+    }
+  ]
+}

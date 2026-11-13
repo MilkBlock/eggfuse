@@ -1,0 +1,57 @@
+{
+  "scope": "CPU full source execution and Eq observer; no GPU takeover",
+  "cases": [
+    {
+      "split": "train",
+      "case": "032-sum-bits",
+      "source": "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/out/eggcc-suite/capture/032-sum-bits/pass-3-flat.egg",
+      "source_sha256": "29b8396e56c0a08bc11ca9e5d52afdc25c138e5e4731d2780484bb004b3686d1",
+      "trace": "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/out/eggcc-gpu-multitrace/032-sum-bits/relations.json",
+      "trace_sha256": "2545a0a4d6de5af3cebde6bf9fabcc682465daf4b4b525053e99d9c5f21b8254",
+      "program_sha256": "25776d5a8242b50bd90b686dd8dce79217800e642775693f60907dd96d2976a2",
+      "runs": 882,
+      "bindings": 6532,
+      "compile_seconds": 4.568694667017553,
+      "capture_command_seconds": 3.3891508749802597
+    },
+    {
+      "split": "train",
+      "case": "020-loopfact",
+      "source": "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/out/eggcc-suite/capture/020-loopfact/pass-3-flat.egg",
+      "source_sha256": "26c0d368e168673ed0925e10e42651c255cc7068fa33af96ee065371b88b2051",
+      "trace": "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/out/eggcc-gpu-multitrace/020-loopfact/relations.json",
+      "trace_sha256": "7f7067b21f9d0055f28878630ff565a781e064d0cd7eb4ec179b23f45669bde3",
+      "program_sha256": "862938c2d8c1bf39c73a6817d5785b414ab24bffdef31f12a4c64445ae54b8c6",
+      "runs": 398,
+      "bindings": 1239,
+      "compile_seconds": 4.003520665981341,
+      "capture_command_seconds": 1.9158306670142338
+    },
+    {
+      "split": "validation",
+      "case": "016-gcd",
+      "source": "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/out/eggcc-suite/capture/016-gcd/pass-3-flat.egg",
+      "source_sha256": "26dd6a67e431b87f2bac87341a04e7e68ccdd8fd2064a68685c9d99132624271",
+      "trace": "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/out/eggcc-gpu-multitrace/016-gcd/relations.json",
+      "trace_sha256": "e57c05e9754eec43f4f96e78d93095c30da898fd42d107ade8d6348599a13e28",
+      "program_sha256": "d69445f3e96cf96a809340cc62376b7aa4527ce5607247b6c0073489cb07c590",
+      "runs": 788,
+      "bindings": 5473,
+      "compile_seconds": 4.006712917005643,
+      "capture_command_seconds": 2.709420291997958
+    },
+    {
+      "split": "test",
+      "case": "010-dot-product",
+      "source": "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/out/eggcc-suite/capture/010-dot-product/pass-3-flat.egg",
+      "source_sha256": "02f301e6689c2ddfca4c8a01b431d031a3289c6bba98f141deecd71edacded68",
+      "trace": "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/out/eggcc-gpu-multitrace/010-dot-product/relations.json",
+      "trace_sha256": "e66f20de4de8a356170b4bd3bf39d2817da1257ecd47aafcb0b568e894a6b6c7",
+      "program_sha256": "d18c6a7303eea4bb9193dac5907f5368332b9823be2788b2bf5c4442d8310d8d",
+      "runs": 954,
+      "bindings": 5935,
+      "compile_seconds": 4.066687499987893,
+      "capture_command_seconds": 2.8458673339919187
+    }
+  ]
+}
