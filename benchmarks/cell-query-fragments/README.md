@@ -143,3 +143,47 @@ source Runs and effects, and checks the reviewed sum-bits contract. It validates
 that the four categories add to coordinator rows. The changed-root publication
 experiment remains disabled. `ACCEPTED` can be the frozen borrowed-instance
 candidate. This is a work audit, not another timing campaign.
+
+### Correct Bake branch integration and observed routing
+
+The requested `d0d8ee33` belongs to `codex/cell-parallel-admission`, not the old
+`codex/cell-structural-compression` tip. The integrated source is `28735c67`,
+including source-slot fields (`b9fda4c1`), their ordinary-feature compilation fix
+(`a304eb6d`) and removal of reverse scalar providers (`28735c67`). Integration
+initially exposed the missing `storage-metrics` guard; after incorporating the
+source branch's fix, all 14 ordinary query-worker integration tests pass (job 197).
+Source-slot fields remain opt-in; this diagnostic uses the ordinary parallel lane.
+
+Audit commit `905350d8`, frozen and executed in compute job 200, gives:
+
+| Remaining coordinator routing | sum-bits | Raytrace |
+| --- | ---: | ---: |
+| Point expansion | 3,267 | 41,331 |
+| Pooled mixed-rule range | 224 | 366,386 |
+| Pooled small single-rule range | 308 | 103,812 |
+| Inline range | 283 | 8,460 |
+| Total | 4,082 | 519,989 |
+
+Raytrace transfers a further 1,034,558 answers as 17,080 existing owned fragments.
+Mixed-rule ranges account for 70.5% of the remaining coordinator routing, or
+23.6% of all 1,554,547 residual answers. These are operation counts, not elapsed
+time shares. Fragment qualification depends on arrival order, so its exact count
+can vary between otherwise equivalent executions.
+
+The next transport opportunity is to let a range worker append directly into
+rule-owned result fragments, using the rule identity already in each compiled
+origin. This could remove the coordinator's per-row origin resolution and
+append for mixed results. It must retain the current Cell-local query order,
+per-rule dependency completion, stable source ties and error order. Worker-owned
+buffers need allocation/capacity accounting; creating many small buffers or
+merely moving the same repeated flattening elsewhere is not an established win.
+This is a within-Run transport opportunity, not an additional cross-Run proof or
+new saturation coverage. No takeover is implemented or credited by this audit.
+
+Both fresh exports exactly match the accepted states, all 1,428 / 16,883 source
+Run summaries and logical effect counts. The reviewed native sum-bits validator
+returns `pass`, and its CPU export hash matches the fresh sum state. Raytrace
+retains differential coverage only. `routing-results.json` records these checks,
+the runtime hash, features, queue job and the complete count breakdown. No speed
+comparison was performed for this merge; the source-field memory result is not
+treated as parallel acceleration.
