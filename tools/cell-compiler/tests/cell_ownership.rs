@@ -1967,3 +1967,84 @@ fn one_entry_reuses_static_route_selection_for_multiple_constructor_results() {
         s.constructor_cell_route_probes+s.constructor_cell_route_selection_reuses);
     assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
 }
+
+#[test]
+fn actual_rhs_result_composes_a_later_birth_across_runs() {
+    use eggfuse_cell_runtime::graph::cell_ownership::composition::select_profile;
+    let src="(datatype E (N i64) (Tick E) (F E) (G E))
+        (ruleset a) (ruleset b) (ruleset join)
+        (rule ((= x (N n))) ((F x)) :ruleset a)
+        (rule ((Tick x)) ((G (F x))) :ruleset b)
+        (rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset join)
+        (Tick (N 0)) (Tick (N 1))
+        (run a 1) (run b 1) (run join 1) (run b 1)
+        (check (= (G (F (N 0))) (G (F (N 1)))))";
+    let p=raw_program(src);
+    let mut control=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),true);
+    control.execute().unwrap();
+    let mut g=Graph::new_with_cell_ownership(p.clone()).unwrap();
+    g.train_ownership_fragments().unwrap();
+    let mut trained=Executor::new(g,true);trained.execute().unwrap();
+    assert_eq!(control.snapshots,trained.snapshots);
+    assert_eq!(control.binding_audit,trained.binding_audit);
+    let profile=trained.graph.ownership_fragment_profile().unwrap();
+    let selection=select_profile(&profile).unwrap();
+    let b=p.artifact["recipe"]["rules"].as_array().unwrap().iter()
+        .position(|r|r["metadata"]["source_set"]=="b").unwrap();
+    let query_entries=trained.graph.program.cell_ownership.entries[b].len();
+    assert!(selection["fragments"].as_array().unwrap().iter().any(|f|
+        f["hops"].as_array().unwrap().iter().any(|h|h["rule"]==b && h["entry"].as_u64().unwrap()>=query_entries as u64)),"{selection}");
+    let mut raw=p.artifact.clone();raw["ownership_fragments"]=selection;
+    let mut query_only=raw.clone();
+    let mut prefixes=Vec::new();
+    for fragment in raw["ownership_fragments"]["fragments"].as_array().unwrap() {
+        let mut prefix=fragment.clone();
+        let hops=prefix["hops"].as_array_mut().unwrap();
+        let end=hops.iter().position(|h|h["entry"].as_u64().unwrap() as usize>=
+            trained.graph.program.cell_ownership.entries[h["rule"].as_u64().unwrap() as usize].len()).unwrap_or(hops.len());
+        hops.truncate(end);
+        if !hops.is_empty() && !prefixes.contains(&prefix) {prefixes.push(prefix);}
+    }
+    query_only["ownership_fragments"]["fragments"]=json!(prefixes);
+    let mut query_control=Executor::new(Graph::new_with_cell_ownership(reparse(query_only)).unwrap(),true);
+    query_control.execute().unwrap();
+    assert_eq!(control.snapshots,query_control.snapshots);
+    for workers in [0,2] {
+    let mut candidate=Executor::new(Graph::new_with_cell_ownership(reparse(raw.clone())).unwrap(),true);
+    if workers>0 {candidate.use_entry_publications().unwrap();candidate.use_query_workers(workers,1).unwrap();}
+    candidate.execute().unwrap();
+    assert_eq!(control.snapshots,candidate.snapshots);
+    assert_eq!(control.binding_audit,candidate.binding_audit);
+    let before=query_control.graph.ownership_report();let after=candidate.graph.ownership_report();
+    assert!(after["stats"]["composition_result_writes"].as_u64().unwrap()>0);
+    assert!(after["stats"]["composition_result_joins"].as_u64().unwrap()>0);
+    assert!(after["stats"]["composition_baked_hits"].as_u64().unwrap()>0);
+    assert!(after["stats"]["signal_bindings_created"].as_u64().unwrap()
+        < before["stats"]["signal_bindings_created"].as_u64().unwrap(),"{before}\n{after}");
+    assert_eq!(after["stats"]["composition_shape_builds"],0,"production only uses baked wiring");
+    eprintln!("rhs-result-entry workers={workers} bindings={}->{} result_joins={} result_writes={}",
+        before["stats"]["signal_bindings_created"],after["stats"]["signal_bindings_created"],
+        after["stats"]["composition_result_joins"],after["stats"]["composition_result_writes"]);
+    }
+}
+
+#[test]
+fn rhs_result_entry_cannot_join_after_its_witness_is_hidden_or_deleted() {
+    for effect in ["subsume", "delete"] {
+        let source=format!("(datatype E (N i64) (Tick E) (F E) (G E))
+            (ruleset a) (ruleset b)
+            (rule ((= x (N n))) ((F x)) :ruleset a)
+            (rule ((Tick x)) ((let f (F x)) ({effect} (F x)) (G f)) :ruleset b)
+            (Tick (N 0)) (Tick (N 1)) (run a 1) (run b 1)");
+        let p=raw_program(&source);
+        let mut control=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),true);
+        let mut g=Graph::new_with_cell_ownership(p).unwrap();g.train_ownership_fragments().unwrap();
+        let mut candidate=Executor::new(g,true);
+        control.execute().unwrap();candidate.execute().unwrap();
+        assert_eq!(control.snapshots,candidate.snapshots,"{effect}");
+        assert_eq!(control.binding_audit,candidate.binding_audit,"{effect}");
+        let report=candidate.graph.ownership_report();
+        assert!(report["stats"]["composition_result_writes"].as_u64().unwrap()>0,"{effect}");
+        assert_eq!(report["stats"]["composition_result_joins"],0,"{effect}");
+    }
+}

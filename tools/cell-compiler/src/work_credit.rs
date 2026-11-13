@@ -588,6 +588,16 @@ impl Work {
                 else {report["local_union_cells"]["stats"][field].as_u64().ok_or_else(||format!("missing local completion work {field}"))?};
             work.insert(key, value);
         }
+        let result_entries=match report["cell_ownership"].get("result_entries") {
+            None=>false,
+            Some(J::String(v)) if v=="completed-rhs/v1"=>true,
+            _=>return Err("unknown completed RHS Entry work".into()),
+        };
+        let writes=if result_entries {
+            report["cell_ownership"]["stats"]["composition_result_writes"].as_u64()
+                .ok_or("missing completed RHS Entry writes")?
+        } else {0};
+        work.insert("cell_ownership/stats/composition_result_writes".into(),writes);
         for field in ["fallback_queries", "fallback_rows"] {
             let key=format!("local_union_cells/{field}");
             work.insert(key,report["local_union_cells"][field].as_u64().ok_or("missing coverage fallback work")?);
@@ -738,6 +748,13 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
     assert_eq!(report["query_workers"]["organization"], "cell-run-events/v6");
+    let mut result_entry=report.clone();
+    result_entry["cell_ownership"]["stats"]["composition_result_writes"]=json!(
+        report["cell_ownership"]["stats"]["composition_result_writes"].as_u64().unwrap()+1);
+    assert_eq!(work.savings(&Work::read(&result_entry).unwrap()).0,-1);
+    result_entry["cell_ownership"]["stats"]["composition_result_writes"]=J::Null;
+    assert!(Work::read(&result_entry).is_err());
+
     // A current report must charge the new paths and reject missing evidence.
     for (group, fields) in [
         ("query_workers/stats", &["event_waves", "final_merge_comparisons"][..]),

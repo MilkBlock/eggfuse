@@ -96,8 +96,9 @@ impl Shape {
     }
 }
 
-/// A marker route inside a bounded fragment. Its identity contains no eclass,
-/// instance address, or history preceding the fragment root.
+/// A checked Entry route inside a bounded fragment, without instance IDs.
+/// Query Entries keep their positions; a completed RHS operation uses the
+/// query-Entry count plus its source operation position.
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Hop {
     pub source_frame: usize,
@@ -119,6 +120,7 @@ pub struct Key {
 pub struct Plan {
     pub sources: Vec<Vec<Source>>,
     pub active_rules: Vec<bool>,
+    pub result_rules: Vec<bool>,
     #[serde(skip)]
     pub shapes: Vec<Arc<Shape>>,
     /// Re-derived from checked wiring, never trusted from a profile.
@@ -233,6 +235,7 @@ impl Plan {
         rows.push(("composition.sources", before - live_bytes()));
         let before = live_bytes();
         drop(self.active_rules);
+        drop(self.result_rules);
         rows.push(("composition.active_rules", before - live_bytes()));
         let before = live_bytes();
         drop(self.shapes);
@@ -281,6 +284,17 @@ impl Plan {
                         }
                     }
                 }
+                // A completed constructor establishes the same row relation
+                // as a matched Entry. Reserve an immutable Entry position per
+                // source operation; runtime keeps only one actual candidate.
+                for (op,instruction) in p.templates[r.template].ops.iter().enumerate() {
+                    if !matches!(instruction,Op::Let(_,Call::Table(t),_) if p.tables[*t].constructor) {continue;}
+                    for (column,symbol) in program.fields[op].iter().enumerate() {
+                        if let Some(symbol)=symbol {
+                            sources.push(Source{symbol:*symbol,entry:entries[rid].len()+op,column});
+                        }
+                    }
+                }
                 sources
             })
             .collect();
@@ -290,6 +304,7 @@ impl Plan {
             effects: vec![],
             queries: vec![],
             active_rules: vec![false; p.rules.len()],
+            result_rules: vec![false; p.rules.len()],
             shapes: programs
                 .iter()
                 .enumerate()
@@ -367,6 +382,7 @@ impl Plan {
         plan.transitions = transitions.into_iter().collect();
         for (key, _) in &plan.transitions {
             plan.active_rules[key.hop.rule] = true;
+            plan.result_rules[key.hop.rule] |= key.hop.entry>=entries[key.hop.rule].len();
         }
         Ok(plan)
     }
@@ -569,6 +585,7 @@ pub(crate) struct Entry {
     pub rule: usize,
     pub template: usize,
     pub anchors: smallvec::SmallVec<[Option<Dependency>; 4]>,
+    result:Option<(usize,FactRef)>,
 }
 pub(super) struct Runtime {
     pub components: crate::read_epoch::Slots<Option<Component>>,
@@ -780,7 +797,29 @@ impl Graph {
         let Some(m) = &mut self.ownership else { return };
         debug_assert!(m.composition.entry.is_none());
         m.composition.entry = Some(Entry { rule: rid,
-            template: self.program.rules[rid].template, anchors });
+            template: self.program.rules[rid].template, anchors, result:None });
+    }
+    /// Actual completed RHS evidence, held only until this source finishes.
+    /// No bindings, consumer lists or retained result history are added.
+    #[cfg(feature="sparse-cells")]
+    pub(crate) fn composition_result_entry(&mut self,cell:u32,op:usize,witness:Dependency,visible:bool) {
+        if !visible {return;}
+        let Some(m)=&mut self.ownership else {return;};
+        let Some(entry)=m.composition.entry.as_mut() else {return;};
+        m.stats.composition_entry_reads+=1;
+        if !self.program.cell_ownership.composition.result_rules[entry.rule]
+            && m.composition.training.is_none() && m.composition.catalog_trace.is_none() {return;}
+        let Dependency::Fact(f)=witness else {return;};
+        if f.cell==cell || m.composition.frames.contains_key(&cell)
+            || !m.composition.frames.contains_key(&f.cell) {return;}
+        let template=self.active_rhs.as_ref().filter(|(id,_)|*id==cell).map(|(_,c)|c.template)
+            .or_else(||self.cells.cell_metadata(cell).map(|c|c.template));
+        if template!=Some(entry.template) {return;}
+        let slot=self.program.cell_ownership.entries[entry.rule].len()+op;
+        let program=&self.program.cell_ownership.markers[entry.template].program;
+        if !program.fields.get(op).and_then(|f|f.last()).is_some_and(Option::is_some) {return;}
+        entry.result=Some((slot,f));
+        m.stats.composition_result_writes+=1;
     }
     pub(super) fn ensure_composition_frame(&mut self, cell: u32) {
         let template = self.cells.cell_metadata(cell).unwrap().template;
@@ -805,6 +844,7 @@ impl Graph {
             observe!("entry_template_mismatch");
         }
         let mut selected = None;
+        let mut result_join=false;
         let mut proposals = Vec::new(); // Allocates only in explicit trace mode.
         if let Some(source) = &m.composition.entry
             && source.template == template {
@@ -814,7 +854,8 @@ impl Graph {
             let prefer_catalog = m.composition.training.is_some()
                 && !self.program.cell_ownership.composition.transitions.is_empty();
             'candidate: for pass in 0..=usize::from(prefer_catalog) {
-                for (entry, anchor) in source.anchors.iter().copied().enumerate() {
+                for (entry, anchor) in source.result.iter().map(|&(entry,f)|(entry,Some(Dependency::Fact(f))))
+                    .chain(source.anchors.iter().copied().enumerate()) {
                     observe!("anchor_attempt");
                     m.stats.composition_entry_reads += 1;
                     let Some(Dependency::Fact(f)) = anchor else {
@@ -823,7 +864,7 @@ impl Graph {
                     };
                     if !self
                         .cells.fact_state(f)
-                        .is_some_and(|s| s.owned)
+                        .is_some_and(|s| s.owned && (entry<self.program.cell_ownership.entries[rid].len() || !s.hidden))
                     {
                         observe!("anchor_not_owned");
                         m.stats.composition_missing_sources += 1;
@@ -900,6 +941,7 @@ impl Graph {
                         m.stats.composition_unbaked_fallbacks += 1;
                         continue;
                     };
+                    result_join=entry>=self.program.cell_ownership.entries[rid].len();
                     selected = Some((
                         frame.component,
                         shape,
@@ -944,6 +986,7 @@ impl Graph {
                 None,
             );
             m.stats.composition_requests += 1;
+            m.stats.composition_result_joins+=u64::from(result_join);
             m.stats.composition_substituted_ports += m.composition.shapes[shape]
                 .as_ref()
                 .unwrap()

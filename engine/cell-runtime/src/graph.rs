@@ -2148,6 +2148,8 @@ impl Graph {
             if let Some(receipt) = receipt { *receipt = Some(point.witness); }
             if let Some(visible) = visible { *visible = true; }
             self.stats.constructor_reused += 1;
+            #[cfg(feature="sparse-cells")]
+            self.composition_result_entry(cell,op,point.witness,true);
             self.rhs_frame_mut(cell).unwrap().values.insert(dst, point.value.clone());
             return Ok(point.value);
         }
@@ -2169,6 +2171,7 @@ impl Graph {
                 self.stats.constructor_cell_route_compared_admissions+=1;
                 self.stats.constructor_cell_route_recheck_fields_avoided+=aa.len() as u64;
             }
+            self.composition_result_entry(cell,op,point.witness,true);
             self.rhs_frame_mut(cell).unwrap().values.insert(dst,point.value.clone());
             return Ok(point.value);
         }
@@ -2192,6 +2195,8 @@ impl Graph {
             self.stats.constructor_reused += 1;
 
             let value = row.values.last().unwrap().clone();
+            #[cfg(feature="sparse-cells")]
+            self.composition_result_entry(cell,op,row.witness,!row.hidden);
             self.rhs_frame_mut(cell)
                 .unwrap()
                 .values

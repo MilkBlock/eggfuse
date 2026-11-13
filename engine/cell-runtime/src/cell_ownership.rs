@@ -265,6 +265,8 @@ struct Stats {
     components_retired: u64,
     components_live: u64,
     composition_entry_reads: u64,
+    composition_result_writes:u64,
+    composition_result_joins:u64,
     composition_transition_probes: u64,
     composition_unbaked_fallbacks: u64,
     composition_cross_stage_joins: u64,
@@ -1029,7 +1031,7 @@ impl Graph {
             .map(|m| Arc::as_ptr(&m.program))
             .collect::<BTreeSet<_>>()
             .len();
-        json!({"routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":self.program.cell_ownership.format.marker_schema(),"port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},
+        json!({"result_entries":"completed-rhs/v1","routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":self.program.cell_ownership.format.marker_schema(),"port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"max_frames":self.program.cell_ownership.composition.max_frames},
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
             "barrier_history":self.ownership.as_ref().map(|m|json!({"enabled":m.keep_barrier_history,
                 "start_after_barriers":m.barrier_history_start,"retained_capacity_bytes":m.barriers.capacity()*std::mem::size_of::<Barrier>()})),
