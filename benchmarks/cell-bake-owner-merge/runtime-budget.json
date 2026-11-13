@@ -1,0 +1,115 @@
+{
+  "scope": "Offline accounting of existing standalone Cell runtime snapshots; no timing or new execution",
+  "target_note": "30% here is relative to each pooled snapshot, not a replacement for the original baseline target.",
+  "limitations": [
+    "Groups include useful live values and capacities; none is proved removable.",
+    "Graph self-owned teardown excludes retained Program, allocator metadata and process RSS.",
+    "No counter is a rule-skip proof; source identities may have live external users."
+  ],
+  "cases": {
+    "fact": {
+      "input_sha256": "f69fc713e9fd4cfc53dc365bef07a0af962c36ed93535744b243dade9d2e0f55",
+      "program_sha256": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "final_state_sha256": "d04728e6402e21992b9748a09ec99ace5f6639bc268ac5bcafbc24d0fd52f2f0",
+      "graph_bytes": 658935,
+      "groups": {
+        "instances": 135192,
+        "composition_addressing": 119040,
+        "boundary_routes": 70040,
+        "stable_fields": 107526,
+        "functions_and_writers": 73388,
+        "other_graph_state": 153749
+      },
+      "group_fraction": {
+        "instances": 0.20516742926085274,
+        "composition_addressing": 0.18065514807985614,
+        "boundary_routes": 0.1062927299354261,
+        "stable_fields": 0.16318149741628538,
+        "functions_and_writers": 0.11137365597517206,
+        "other_graph_state": 0.2333295393324076
+      },
+      "thirty_percent_of_this_snapshot_bytes": 197680,
+      "hypothetical_zero_instance_remainder_bytes": 523743,
+      "additional_bytes_outside_instances_required": 326063,
+      "observed_fact_records": 948
+    },
+    "loopfact": {
+      "input_sha256": "cf45e6b7b79188adb2d689d707e74526a8091e6784d4be44d3cdcf26664aea3a",
+      "program_sha256": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "final_state_sha256": "623c3b05d895a4200f8ea907ea4468a92a000c975f654483e54c42c96c90bf7a",
+      "graph_bytes": 585105,
+      "groups": {
+        "instances": 124552,
+        "composition_addressing": 114816,
+        "boundary_routes": 68264,
+        "stable_fields": 56438,
+        "functions_and_writers": 70528,
+        "other_graph_state": 150507
+      },
+      "group_fraction": {
+        "instances": 0.21287119405918595,
+        "composition_addressing": 0.1962314456379624,
+        "boundary_routes": 0.11666965758282702,
+        "stable_fields": 0.09645790071867442,
+        "functions_and_writers": 0.12053904854684203,
+        "other_graph_state": 0.2572307534545082
+      },
+      "thirty_percent_of_this_snapshot_bytes": 175531,
+      "hypothetical_zero_instance_remainder_bytes": 460553,
+      "additional_bytes_outside_instances_required": 285022,
+      "observed_fact_records": 892
+    },
+    "sum-bits": {
+      "input_sha256": "192cb941eb10f3278143b9912cfd6d592a208ab384a16400688f79bc75b17ccb",
+      "program_sha256": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "final_state_sha256": "3bae7a5ad756595f8c454b27baabbf7e830cf06b61d6aa69c0f7437ee747ab2a",
+      "graph_bytes": 1773131,
+      "groups": {
+        "instances": 449696,
+        "composition_addressing": 460160,
+        "boundary_routes": 215144,
+        "stable_fields": 224118,
+        "functions_and_writers": 155600,
+        "other_graph_state": 268413
+      },
+      "group_fraction": {
+        "instances": 0.2536169070418373,
+        "composition_addressing": 0.25951833226084253,
+        "boundary_routes": 0.12133564863509803,
+        "stable_fields": 0.12639675241141235,
+        "functions_and_writers": 0.08775437347832732,
+        "other_graph_state": 0.15137798617248246
+      },
+      "thirty_percent_of_this_snapshot_bytes": 531939,
+      "hypothetical_zero_instance_remainder_bytes": 1323435,
+      "additional_bytes_outside_instances_required": 791496,
+      "observed_fact_records": 2895
+    },
+    "dot-product": {
+      "input_sha256": "a7aa21cf4a9adb077e68f27df9ea5f201142032eaff9dba0b7594e96448c5b92",
+      "program_sha256": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "final_state_sha256": "191d2a4bd738e7afd0783d30b5d5c1f1219ac92887bb96b95239edfec27141d9",
+      "graph_bytes": 1720731,
+      "groups": {
+        "instances": 425280,
+        "composition_addressing": 447408,
+        "boundary_routes": 197792,
+        "stable_fields": 217702,
+        "functions_and_writers": 178328,
+        "other_graph_state": 254221
+      },
+      "group_fraction": {
+        "instances": 0.24715077487416684,
+        "composition_addressing": 0.26001042580159245,
+        "boundary_routes": 0.11494649657616443,
+        "stable_fields": 0.12651716043937142,
+        "functions_and_writers": 0.10363502488186707,
+        "other_graph_state": 0.1477401174268378
+      },
+      "thirty_percent_of_this_snapshot_bytes": 516219,
+      "hypothetical_zero_instance_remainder_bytes": 1295451,
+      "additional_bytes_outside_instances_required": 779232,
+      "observed_fact_records": 2825
+    }
+  }
+}
