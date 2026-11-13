@@ -72,7 +72,7 @@ def run_process(command, env, log, timeout):
     return process
 
 
-def measure(spec, output, repeat, warmups, timeout):
+def measure(spec, output, repeat, warmups, timeout, sample_boundary=None):
     output.mkdir()
     (output / 'binaries').mkdir()
     (output / 'inputs').mkdir()
@@ -107,6 +107,8 @@ def measure(spec, output, repeat, warmups, timeout):
             order.insert(0, first)
         result['execution_order'].append({'iteration': iteration, 'lanes': order})
         for label in order:
+            if sample_boundary is not None:
+                sample_boundary('before-sample', label, iteration)
             config = execution[label]
             directory = output / f'run-{iteration + warmups:04d}-{list(lanes).index(label):04d}'
             before_cpu = resource.getrusage(resource.RUSAGE_CHILDREN)
@@ -168,6 +170,8 @@ def measure(spec, output, repeat, warmups, timeout):
             (directory / 'report.json').unlink()
             directory.rmdir()
             print(label, iteration, f'inference={row["inference_seconds"]:.6f}', f'wall={elapsed:.6f}', flush=True)
+            if sample_boundary is not None:
+                sample_boundary('after-sample', label, iteration)
     result['finished_at_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     for lane in result['lanes'].values():
         if lane['samples']:

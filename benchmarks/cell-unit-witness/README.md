@@ -118,3 +118,25 @@ No interleaving or concurrent compilation, tests or profiler from this task.
 Every export, Run order and logical effect is checked. Retain all durations;
 grouped timing still allows thermal/background drift and is not a significance
 or full worker-utilization result.
+
+## Timing guard correction
+
+The first grouped trial is retained in `timing-contaminated.json` and must not
+be used as performance acceptance. Its raw boundaries show another workspace's
+`batch_cell_learning` consuming a CPU during candidate measurements. The old
+macOS `ps` format truncated the executable column, so even its
+`compiler_observed: false` was not a reliable exclusion of competing work.
+
+The timer now uses a full-width, final executable column and checks compilers
+and known Cell workloads before and after **every sample**, outside the timed
+process interval. On detection it saves the evidence, retains completed samples
+and stops; it does not retry or cherry-pick within the group. Full process lists
+are retained at group boundaries; sample boundaries retain active processes and
+all guarded executables. Three lightweight harness tests verify long paths,
+concurrent-work rejection and retention of an interrupted sample. They use a
+synthetic process, not a Cell performance measurement.
+
+The runtime remains `bc3e2d19`. A later clean attempt uses a fresh directory;
+the contaminated numbers and their raw samples are not erased or pooled with it.
+Boundary checks cannot detect work that starts and finishes wholly between
+checks, nor eliminate unrelated system load or grouped-order drift.

@@ -19,11 +19,43 @@ EFFECTS = ('constructor_requests', 'constructor_reused', 'logical_facts_created'
 
 
 def processes():
-    raw = subprocess.check_output(['ps', '-axo', 'pid,comm,pcpu'], text=True, errors='replace')
-    compiler = [line for line in raw.splitlines()[1:]
-                if Path(line.split(None, 1)[1].rsplit(None, 1)[0].strip()).name in ('cargo', 'rustc')]
+    # macOS truncates a non-final comm column, even when stdout is a pipe.
+    # Keep it last and request wide output so executable names remain usable.
+    raw = subprocess.check_output(['ps', '-axww', '-o', 'pid=,pcpu=,comm='], text=True, errors='replace')
+    compiler, workloads = [], []
+    for line in raw.splitlines():
+        fields = line.split(None, 2)
+        if len(fields) != 3:
+            continue
+        executable = Path(fields[2])
+        if executable.name in ('cargo', 'rustc'):
+            compiler.append(line)
+        elif (executable.name in ('batch_cell_learning', 'runtime_storage_peak',
+                'eggfuse-cell-runtime', 'eggfuse-cell-compiler', 'candidate-runtime',
+                'control-runtime', 'baseline-runtime')
+                or 'target/debug/examples/' in fields[2]
+                or 'target/release/examples/' in fields[2]
+                or (executable.parent.name == 'binaries' and executable.name.isdigit())):
+            workloads.append(line)
     return {'utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            'compilers': compiler, 'processes': raw}
+            'compilers': compiler, 'workloads': workloads, 'processes': raw}
+
+
+def guard(result, output, phase, lane, case, iteration=None):
+    observation = dict(processes(), phase=phase, lane=lane, case=case, iteration=iteration)
+    if phase.endswith('-sample'):
+        # Full snapshots remain at group boundaries. Keep active processes and
+        # every guarded executable at sample boundaries, including idle builds.
+        keep = set(observation['compilers'] + observation['workloads'])
+        observation['processes'] = '\n'.join(line for line in observation['processes'].splitlines()
+            if line in keep or (len(line.split(None, 2)) == 3 and float(line.split(None, 2)[1]) >= 1))
+        observation['process_scope'] = 'CPU >= 1 percent or guarded compiler/runtime'
+    result['observations'].append(observation)
+    if observation['compilers'] or observation['workloads']:
+        result['measurement_status'] = 'interrupted-by-concurrent-work'
+    timer['save'](output / 'progress.json', result)
+    if result.get('measurement_status') == 'interrupted-by-concurrent-work':
+        raise RuntimeError('Concurrent compiler/runtime detected; retained all samples and interrupted timing')
 
 
 def verify_frozen_references(result, control, candidate):
@@ -69,15 +101,12 @@ def run(control, candidate, output, result_path):
         runtime = root / 'candidate-runtime'
         assert timer['sha'](runtime) == configs[label]['runtime_sha256']
         for case, repeat in (('sum', 5), ('ray', 3)):
-            observation = processes()
-            result['observations'].append(observation)
-            timer['save'](output / 'progress.json', result)
-            if observation['compilers']:
-                raise RuntimeError('Compiler active before timing group; retained earlier groups without discarding samples')
+            guard(result, output, 'before-group', label, case)
             config = configs[label]['lanes'][case]
             lane = {'runtime': str(runtime), 'program': config['program'], 'args': config['args']}
             group = output / f'group-{len(result["groups"]):04d}'
-            timer['measure']({'lanes': {label: lane}}, group, repeat, 1, 180)
+            timer['measure']({'lanes': {label: lane}}, group, repeat, 1, 180,
+                sample_boundary=lambda phase, source, iteration: guard(result, output, phase, source, case, iteration))
             raw = json.loads((group / 'samples.json').read_text())
             assert all(order['lanes'] == [label] for order in raw['execution_order'])
             data = raw['lanes'][label]
@@ -104,8 +133,7 @@ def run(control, candidate, output, result_path):
             }
             result['groups'].append({'lane': label, 'case': case, 'directory': group.name,
                                      'execution_order': raw['execution_order']})
-            result['observations'].append(processes())
-            timer['save'](output / 'progress.json', result)
+            guard(result, output, 'after-group', label, case)
     for case, data in result['workloads'].items():
         before, after = (data[label]['medians']['inference_seconds'] for label in ('control', 'candidate'))
         data['inference_change_percent'] = (after / before - 1) * 100
@@ -114,9 +142,11 @@ def run(control, candidate, output, result_path):
                                     for label in ('control', 'candidate')}
         print(case, f'{before:.6f} -> {after:.6f}', f'{data["inference_change_percent"]:+.2f}%', flush=True)
     result['compiler_observed'] = any(o['compilers'] for o in result['observations'])
+    result['concurrent_workload_observed'] = any(o['workloads'] for o in result['observations'])
+    result['measurement_status'] = 'completed-with-boundary-guards'
     result['both_inference_medians_improved'] = all(
         case['inference_change_percent'] < 0 for case in result['workloads'].values())
-    result['interpretation'] = 'Short grouped measurements; order and thermal/background drift remain possible. No paired/interleaved or statistical-significance claim.'
+    result['interpretation'] = 'Short grouped measurements; full executable names checked before/after every sample, outside timed intervals. Activity wholly between checks, order and thermal/background drift remain possible. No paired/interleaved or statistical-significance claim.'
     verify_frozen_references(result, control, candidate)
     timer['save'](result_path, result)
 
