@@ -113,12 +113,12 @@ def step(states,queries,projections,w,coef,xp):
 
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('program',type=Path);parser.add_argument('targets',type=Path);parser.add_argument('output',type=Path);parser.add_argument('--predictions',type=Path);parser.add_argument('--boundary-rank',type=int);parser.add_argument('--generated-boundaries',action='store_true');parser.add_argument('--train-successors',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('program',type=Path);parser.add_argument('targets',type=Path);parser.add_argument('output',type=Path);parser.add_argument('--predictions',type=Path);parser.add_argument('--boundary-rank',type=int);parser.add_argument('--generated-boundaries',action='store_true');parser.add_argument('--train-successors',action='store_true');parser.add_argument('--audit-chains',action='store_true');args=parser.parse_args()
     program=json.loads(args.program.read_text());data=json.loads(args.targets.read_text())
     if program['sha256']!=data['program_sha256']:raise ValueError('program mismatch')
     recipe=program['recipe'];rules=recipe['rules'];tables={t['name']:t for t in recipe['tables']};catalog=compile_catalog(recipe) if any('binding' not in row for row in data['targets']) else None
     capacity=max(len(output_layout(r['source'],r['completion'])[0] if args.generated_boundaries else symbols(r['source'])) for r in data['targets'])
-    states=[];queries=[];projections=[];targets=[];novel=[];roots=[];chains=[];training_chains=[];training_rules={r['consumer'] for r in data['targets'] if r['producer']%5>=2};unrepresented=0;port_counts=[];inherited_counts=[]
+    states=[];queries=[];projections=[];targets=[];novel=[];roots=[];chains=[];chain_catalogs=[];chain_catalog_limits=[];training_chains=[];training_rules={r['consumer'] for r in data['targets'] if r['producer']%5>=2};unrepresented=0;port_counts=[];inherited_counts=[]
     for row in data['targets']:
         source=row['source'];completion=row['completion'];binding=row['binding'] if 'binding' in row else catalog['edges'][row['edge']]['inputs'];rule=rules[row['consumer']]
         ports,mapping,new_ports=output_layout(source,completion) if args.generated_boundaries else (symbols(source),completion['source_map'],[])
@@ -147,7 +147,12 @@ def main():
                     second_map={freeze(a):freeze(b) for a,b in second['source_map']}
                     composed=[(port,second_map[quotient[port]]) for port in ports]
                     gold2=state(second['facts'],ports,capacity,composed)
-                    if is_test:chains.append((s,q,p,q2,p2,gold2,row['producer'],len(ports),t,next_rid))
+                    if is_test:
+                        chains.append((s,q,p,q2,p2,gold2,row['producer'],len(ports),t,next_rid))
+                        if args.audit_chains:
+                            from chain_completion_audit import candidates
+                            values,expected,limits=candidates(facts,rules,tables,second,ports,mapping,state,capacity)
+                            chain_catalogs.append((values,expected,len(ports)*B));chain_catalog_limits.append(limits)
                     else:training_chains.append((t,q2,p2,gold2,row['producer'],len(ports),next_rid))
                     found=True;break
                 if found:break
@@ -189,13 +194,27 @@ def main():
         a,b,c,d,e,gold,origins,counts,gold_first,next_rules=zip(*chains);gold_first=np.array(gold_first,np.float32);a,b,c,d,e,gold=[np.array(v,np.float32) for v in (a,b,c,d,e,gold)]
         if basis is not None:
             a=compress_state(a,basis);c=compress_projection(c,basis);e=compress_projection(e,basis)
+        if args.audit_chains:
+            from chain_completion_audit import pack,decode,audit
+            cp,cv,cs=pack(chain_catalogs,D)
+            device_prototypes,device_valid,device_scale=mx.array(cp),mx.array(cv),mx.array(cs)
         def rollout(a,b,c,d,e):
             first,live1=gpu_step(a,b,c);last,live2=gpu_step(first,d,e);live2=live1&live2
-            return mx.where(live2[:,None],last,first),live1,live2
-        last,e1,e2=mx.compile(rollout)(*[mx.array(v) for v in (a,b,c,d,e)]);mx.eval(last,e1,e2)
+            final=mx.where(live2[:,None],last,first)
+            if args.audit_chains:
+                decoded=final if basis is None else mx.concatenate([final[:,:D],final[:,D:]@mx.array(basis.T)],axis=1)
+                choice,margin=decode(decoded,device_prototypes,device_valid,device_scale)
+                return final,live1,live2,choice
+            return final,live1,live2
+        outputs=mx.compile(rollout)(*[mx.array(v) for v in (a,b,c,d,e)]);mx.eval(*outputs)
+        last,e1,e2=outputs[:3]
         first,l1=step(a,b,c,w,coef,np);second,l2=step(first,d,e,w,coef,np);reference=np.where((l1&l2)[:,None],second,first)
         np.testing.assert_allclose(np.array(last),reference,rtol=2e-3,atol=8e-4)
         result['rollout']=dict(chains=len(chains),requests_new_first_step_output=args.generated_boundaries,initial_producers=len(set(origins)),excluded_new_boundary_requests=unrepresented,first_emissions=int(np.array(e1).sum()),second_emissions=int(np.array(e2).sum()),body_rmse=float(np.sqrt(np.mean((np.array(last)[:,:D]-gold[:,:D])**2))),live_boundary_rmse=float(np.sqrt(np.mean(((audit_boundary(np.array(last),basis)-gold[:,D:])**2)[np.repeat(np.arange(capacity)[None,:]<np.array(counts)[:,None],B,axis=1)]))),intermediate_cpu_reads=0,teacher_state_supplied_between_steps=False)
+        if args.audit_chains:
+            decoded=np.concatenate([np.array(last)[:,:D],audit_boundary(np.array(last),basis)],axis=1)
+            result['chain_candidate_audit']=audit(decoded,np.array(outputs[3]),np.array(e2),cp,cv,cs,[v[1] for v in chain_catalogs])
+            result['chain_candidate_audit'].update(candidate_counts=[len(v[0]) for v in chain_catalogs],enumeration_limits=chain_catalog_limits,scope='known conditional Bake catalog, exact body and quotient-map selection; not live semantic proof',decoder_inside_gpu_rollout=True)
         # Diagnostic only, separate from rollout: no oracle state is substituted
         # into the reported free-running path above.
         oracle_input=gold_first if basis is None else compress_state(gold_first,basis)

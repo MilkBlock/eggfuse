@@ -124,3 +124,50 @@ Omit `--train-successors` for the paired baseline. Both commands now include the
 separate oracle-input diagnostic. `successor-training-results.json` retains both
 runs and their common target fingerprint. Fifteen boundary/input tests pass, and
 both GPU runs match independent NumPy execution of their learned recurrence.
+
+## Decode the final Cell, rather than infer success from RMSE
+
+`--audit-chains` adds a finite-catalog decoder **inside the compiled Metal
+rollout**, after the second prediction. It does not read back or replace the
+intermediate state. Each chain's dictionary contains the unchanged first
+completion and all supported local completions enumerated from that first state,
+across all rule types, not just the requested second rule. Identity remains a
+candidate. Each candidate must preserve all first-completion facts under its
+explicit quotient. Candidate keys retain the exact body and boundary quotient
+map; distinct keys are not merged merely because their floating codes coincide.
+
+Body and live boundary squared distances are each normalized by their width;
+padding does not affect selection. The GPU selects a candidate using the actual
+predicted body and boundary vector. Exact target labels do not enter that
+selection. CPU f64 distance checks independently validate GPU choices and reject
+near ties. The test covers alternative completions, ambiguity, omitted emissions
+and padded-candidate exclusion.
+
+On the same 21 chains there are only 2–16 candidates per chain. Three unsupported
+rule matches remain excluded; no matching enumeration hit its limit. Thus this
+is a small **known conditional Bake catalog**, not arbitrary-state decoding or
+full-ruleset coverage. The catalog includes held-out structures, as in earlier
+decoding tests. It is constructed offline around the correct symbolic first
+completion, which does not itself prove the actual first prediction was correct.
+The decoder is not a proof of activation, physical identity, source Run ordering,
+visibility, global novelty or ownership retirement. Exact-key differences may
+also conservatively reject alpha-equivalent alternatives.
+
+| Final selection | Baseline | Added continuation training |
+|---|---:|---:|
+| Exact recorded target | 16 | 15 |
+| Different target | 4 | 3 |
+| No final emission | 1 | 3 |
+| Ambiguous emitted selection | 0 | 0 |
+
+This reverses the optimistic reading of the RMSE comparison: reducing latent
+error did not improve exact target completion in this paired check. Continuation
+training remains an optional experiment, not the default. Even the baseline's
+16/21 result is conditional catalog selection, not a general semantic accuracy
+claim. Wrong-target and missing-output rates remain unacceptable for unsupervised
+ownership takeover.
+
+Reproduce both earlier commands with `--audit-chains`. The paired results and
+per-chain candidate/coverage counts are in `chain-candidate-audit-results.json`.
+Nineteen related tests pass. Both Metal recurrences retain their NumPy numerical
+checks; final selection additionally passes independent f64 distance checks.
