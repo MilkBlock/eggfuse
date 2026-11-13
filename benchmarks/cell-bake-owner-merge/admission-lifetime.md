@@ -26,3 +26,14 @@ re-admission and unfiltered-policy cases, and the no-default runtime compile.
 Full frozen workload validation and sequential timing follow. The original
 witness catalog has only nine multi-anchor recipes out of 408, so changing
 anchor preference alone is not a plausible broad-coverage follow-up.
+
+## Rejected after measurement
+
+Job 340 passes frozen sum-bits/Raytrace validation and unchanged learned-catalog
+state, Run-summary and effect comparison. Job 341 runs five samples plus one
+warmup per workload/lane, all control before all candidate; 56 boundary guards
+are clear. Sum-bits is 22.074→22.854 ms (+3.54%) and Raytrace is
+4.758164→4.793599 s (+0.74%). This does not support the scratch-lifetime
+hypothesis or improve the regression. Restore exactly the merged Program code;
+retain the evidence rather than retaining an unhelpful implementation.
+The revert has no runtime difference from the already validated `437d1e7c`.

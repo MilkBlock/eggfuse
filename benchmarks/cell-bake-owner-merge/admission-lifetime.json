@@ -1,0 +1,64 @@
+{
+  "scope": "actual standalone Cell CPU; short sequential four-worker checkpoint",
+  "order_policy": "all control workloads complete before any candidate workload; never interleaved",
+  "control_commit": "437d1e7c5954b1b3d44ef7b798e861a9018cc219",
+  "candidate_commit": "3a7411c9ecd1f906a7b94702dfdaf69a0f898096",
+  "measurement_status": "completed-with-boundary-guards",
+  "both_inference_medians_improved": false,
+  "jobs": {
+    "validation": "340",
+    "timing": "341"
+  },
+  "decision": "Reject and restore the merged Program loading code; no demonstrated inference improvement.",
+  "artifacts": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-admission-lifetime",
+  "timing_sha256": "f84c19e577121b0f0e6765b3d5be900d942df8dc0665a12ff24648f3aa87394b",
+  "boundary_guards": 56,
+  "workloads": {
+    "sum": {
+      "control_medians": {
+        "inference_seconds": 0.022073792,
+        "process_wall_seconds": 0.13143462495645508,
+        "load_seconds": 0.067306541,
+        "setup_seconds": 0.004186834,
+        "export_seconds": 0.0057075,
+        "report_seconds": 0.008684125,
+        "process_unattributed_seconds": 0.033475000998471505,
+        "process_after_report_residual_seconds": 0.024790875998471504
+      },
+      "candidate_medians": {
+        "inference_seconds": 0.022854292,
+        "process_wall_seconds": 0.1332932089571841,
+        "load_seconds": 0.066796208,
+        "setup_seconds": 0.003963625,
+        "export_seconds": 0.005587792,
+        "report_seconds": 0.008784834,
+        "process_unattributed_seconds": 0.03293795895718411,
+        "process_after_report_residual_seconds": 0.023747791957184114
+      },
+      "inference_change_percent": 3.535867330814746
+    },
+    "ray": {
+      "control_medians": {
+        "inference_seconds": 4.758164292,
+        "process_wall_seconds": 7.81807108304929,
+        "load_seconds": 0.356880959,
+        "setup_seconds": 0.035688208,
+        "export_seconds": 2.111904791,
+        "report_seconds": 0.381790708,
+        "process_unattributed_seconds": 0.5893397490165029,
+        "process_after_report_residual_seconds": 0.20693366604929014
+      },
+      "candidate_medians": {
+        "inference_seconds": 4.793598875,
+        "process_wall_seconds": 7.9375116669689305,
+        "load_seconds": 0.354244167,
+        "setup_seconds": 0.03660825,
+        "export_seconds": 2.2050775,
+        "report_seconds": 0.375915958,
+        "process_unattributed_seconds": 0.5948173339571925,
+        "process_after_report_residual_seconds": 0.20197533396893025
+      },
+      "inference_change_percent": 0.7447112126745425
+    }
+  }
+}

@@ -627,8 +627,8 @@ impl Program {
         // General context execution requires admission. Unfiltered candidates
         // remain source selection certificates for Bake, not resident queries
         // that this runtime can never dispatch.
-        p.context_cuts = if let Some(allowed) = allowed.as_deref() {
-            crate::local_context::compile_cuts(&p, cuts, Some(allowed))?
+        p.context_cuts = if let Some(allowed) = allowed {
+            crate::local_context::compile_cuts(&p, cuts, Some(&allowed))?
         } else {
             vec![vec![]; p.rules.len()]
         };
