@@ -93,3 +93,45 @@ python3 benchmarks/cell-bake-owner-merge/singleton_results.py out/cell-pooled-ow
 `two-pass-pooling.patch` reconstructs the earlier duplicate-container strategy
 on top of this implementation for reproducing its rejected peak behavior; it
 passes `git apply --check` and is not applied to the final runtime.
+
+## Newly completed short compositions
+
+The original-workload composition experiment found a storage penalty when
+singletons became short logical compositions. The initial policy above admitted
+only singletons into shared physical batches. New two/three-frame components
+allocated independent arrays even if all their sources satisfied the same
+transfer contract. Pooling now admits newly completed components of up to 16
+sources into the same bounded batches. A batch still has at most 16 sources and
+uses the same 4,096-byte estimated threshold; an individually oversized component
+remains a separate batch. Existing transferred prefixes follow the original
+extension path and are not copied into these batches.
+
+Static component wiring, source IDs, fact identities, per-source layouts and
+restoration slices remain authoritative. The new regression constructs several
+composed components, requires fewer physical owners than multi-frame components,
+then performs union, deletion and regeneration. Every Run's exports, snapshots
+and binding audit agree with the unpooled control. All 67 ownership tests pass
+(jobs 295–296).
+
+Actual standalone runtime measurements use the unchanged round-one and round-two
+Programs from `original-composition.md`, with the same completed-owner,
+port-domain and Cell-field configuration:
+
+| Catalog | Graph before | Graph after | Saving |
+| --- | ---: | ---: | ---: |
+| Round one | 1,952,405 | 1,941,209 | 11,196 |
+| Round two | 1,949,501 | 1,949,485 | 16 |
+
+Both run 1,428 Runs. Final exports are byte-identical to the prior candidates;
+logical ownership structure and ownership-query counters are unchanged. This
+does not repeat a full-workload per-Run proof. The round-two maximum temporary
+takeover allocation rises from 15,732 to 16,580 bytes; whole-process high-water
+does not rise. The report includes that cost rather than treating final heap as
+a peak measurement. See `composed-slabs.json` for exact hashes and charges.
+
+The negligible round-two saving rules out new short-component batching as the
+main remaining compression mechanism. Deeper completion predominantly extends
+already-transferred prefixes, which this change deliberately leaves intact.
+Further work must examine suffix ownership and retained source state, not keep
+tuning this batch threshold. No timing or large-compression claim is made, and
+the 30% Graph target remains unmet.
