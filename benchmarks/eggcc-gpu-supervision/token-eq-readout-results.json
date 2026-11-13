@@ -1,0 +1,179 @@
+{
+  "scope": "dictionary-free Eq boundary decoder of whole-Cell tokens, not Eq-only inference",
+  "model_sha256": "40cc75ee385280ae931012aa6521239276ddb1868a7a36c00291eb3b6d30e454",
+  "decoder_sha256": "8c0567301c32084960e2672caf06fd5ffd63fab98c4098308bc45fc370b803df",
+  "provenance": {
+    "corpus_manifest": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+    "train": "da12c74fd33e248539e2e968d3a30f3471551f81050eed7c9c98c7103c35019e",
+    "validation": "1d0a3dbdf423b426cd7c68406f7a1807ba2c24e77c6e5583c4e7f84ae04bd1eb",
+    "test_trace": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38"
+  },
+  "fit": {
+    "alpha": 100.0,
+    "validation_target_mse": 0.02111564044092143
+  },
+  "unique_training_states": {
+    "train": 416,
+    "validation": 364
+  },
+  "training_pairs": 13056,
+  "validation_pairs": 29015,
+  "training_equal_pairs": 965,
+  "preparation_seconds": 1.6623490000492893,
+  "fit_seconds": 0.21422550000716,
+  "test_total_instances": 5935,
+  "test_complete_instances": 5553,
+  "incomplete_capture_marks": 382,
+  "results": {
+    "oracle": {
+      "subsets": {
+        "all": {
+          "instances": 5553,
+          "query_instances": 5454,
+          "no_comparable_pairs": 99,
+          "exact_partitions": 3430,
+          "pairs": 77684,
+          "true_equal": 8334,
+          "false_merges": 666,
+          "missed_equalities": 3562,
+          "nontransitive": 243,
+          "closure_false_merges": 933,
+          "marked_partitions": 2024,
+          "mark_rate": 0.3711037770443711
+        },
+        "new_template": {
+          "instances": 508,
+          "query_instances": 508,
+          "no_comparable_pairs": 0,
+          "exact_partitions": 46,
+          "pairs": 48058,
+          "true_equal": 1700,
+          "false_merges": 392,
+          "missed_equalities": 1296,
+          "nontransitive": 115,
+          "closure_false_merges": 571,
+          "marked_partitions": 462,
+          "mark_rate": 0.9094488188976378
+        },
+        "seen_state": {
+          "instances": 3855,
+          "query_instances": 3769,
+          "no_comparable_pairs": 86,
+          "exact_partitions": 2578,
+          "pairs": 21966,
+          "true_equal": 4657,
+          "false_merges": 189,
+          "missed_equalities": 1580,
+          "nontransitive": 40,
+          "closure_false_merges": 220,
+          "marked_partitions": 1191,
+          "mark_rate": 0.3159989387105333
+        },
+        "new_state_known_template": {
+          "instances": 1190,
+          "query_instances": 1177,
+          "no_comparable_pairs": 13,
+          "exact_partitions": 806,
+          "pairs": 7660,
+          "true_equal": 1977,
+          "false_merges": 85,
+          "missed_equalities": 686,
+          "nontransitive": 88,
+          "closure_false_merges": 142,
+          "marked_partitions": 371,
+          "mark_rate": 0.31520815632965166
+        }
+      },
+      "numerical_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 5.070293080111643e-07,
+        "threshold_disagreements": 0
+      },
+      "feature_encoding_seconds": 0.45245187502587214,
+      "gpu_readout_and_transfer_seconds": 0.05869575001997873,
+      "cpu_partition_audit_seconds": 0.06518020899966359
+    },
+    "predicted": {
+      "subsets": {
+        "all": {
+          "instances": 5553,
+          "query_instances": 5454,
+          "no_comparable_pairs": 99,
+          "exact_partitions": 3480,
+          "pairs": 77684,
+          "true_equal": 8334,
+          "false_merges": 967,
+          "missed_equalities": 3488,
+          "nontransitive": 256,
+          "closure_false_merges": 1421,
+          "marked_partitions": 1974,
+          "mark_rate": 0.3619361936193619
+        },
+        "new_template": {
+          "instances": 508,
+          "query_instances": 508,
+          "no_comparable_pairs": 0,
+          "exact_partitions": 75,
+          "pairs": 48058,
+          "true_equal": 1700,
+          "false_merges": 538,
+          "missed_equalities": 1213,
+          "nontransitive": 124,
+          "closure_false_merges": 847,
+          "marked_partitions": 433,
+          "mark_rate": 0.8523622047244095
+        },
+        "seen_state": {
+          "instances": 3855,
+          "query_instances": 3769,
+          "no_comparable_pairs": 86,
+          "exact_partitions": 2557,
+          "pairs": 21966,
+          "true_equal": 4657,
+          "false_merges": 314,
+          "missed_equalities": 1612,
+          "nontransitive": 61,
+          "closure_false_merges": 397,
+          "marked_partitions": 1212,
+          "mark_rate": 0.321570708410719
+        },
+        "new_state_known_template": {
+          "instances": 1190,
+          "query_instances": 1177,
+          "no_comparable_pairs": 13,
+          "exact_partitions": 848,
+          "pairs": 7660,
+          "true_equal": 1977,
+          "false_merges": 115,
+          "missed_equalities": 663,
+          "nontransitive": 71,
+          "closure_false_merges": 177,
+          "marked_partitions": 329,
+          "mark_rate": 0.27952421410365336
+        }
+      },
+      "numerical_audit": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 5.455713224244985e-07,
+        "threshold_disagreements": 0
+      },
+      "feature_encoding_seconds": 0.38968229200690985,
+      "gpu_readout_and_transfer_seconds": 0.026271540962625295,
+      "cpu_partition_audit_seconds": 0.06311716698110104
+    }
+  },
+  "backpropagation": false,
+  "threshold": 0.5,
+  "limitations": [
+    "Only local typed Eq partition is decoded; scalar results and external identities remain unverified",
+    "No proposed Eq is applied to a runtime; CPU captured labels are the audit reference",
+    "The main whole-Cell model and observed candidate routing remain unchanged",
+    "Boundary feature encoding is on CPU, not an integrated GPU-only decoder",
+    "No state dictionary or test labels enter decoder fit; validation selects ridge alpha",
+    "Timing is one diagnostic and excludes source matching and native graph proof"
+  ]
+}
