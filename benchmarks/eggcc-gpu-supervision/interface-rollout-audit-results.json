@@ -1,0 +1,110 @@
+{
+  "scope": "frozen validation-selected decoder, diagnostic oracle-context interventions",
+  "model_sha256": "b3b5ea3d56a9bb7f11956e079b3860895853f8f743f0a9c2ae1ca529079ec60e",
+  "readout_sha256": "9cc39d3487d71533712961e6224dde217a5c7e7256b993514a1e94bee1c46aa4",
+  "test_trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "encoding": "class-interface",
+  "alpha": 100.0,
+  "results": {
+    "oracle_state": {
+      "token_error": {
+        "cases": 5553,
+        "rmse": 0.0,
+        "max_abs": 0.0
+      },
+      "eq": {
+        "instances": 5553,
+        "query_instances": 5454,
+        "exact_partitions": 4248,
+        "false_merges": 300,
+        "missed_equalities": 2041,
+        "nontransitive": 13,
+        "closure_false_merges": 412
+      },
+      "numeric": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 4.711962190012686e-07,
+        "threshold_disagreements": 0
+      }
+    },
+    "oracle_providers": {
+      "token_error": {
+        "cases": 5553,
+        "rmse": 0.04048051783848927,
+        "max_abs": 1.0196995735168457
+      },
+      "eq": {
+        "instances": 5553,
+        "query_instances": 5454,
+        "exact_partitions": 4281,
+        "false_merges": 325,
+        "missed_equalities": 2042,
+        "nontransitive": 34,
+        "closure_false_merges": 533
+      },
+      "numeric": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 4.744571862613789e-07,
+        "threshold_disagreements": 0
+      }
+    },
+    "predicted_providers": {
+      "token_error": {
+        "cases": 5553,
+        "rmse": 0.04291577435265545,
+        "max_abs": 0.924713671207428
+      },
+      "eq": {
+        "instances": 5553,
+        "query_instances": 5454,
+        "exact_partitions": 4288,
+        "false_merges": 379,
+        "missed_equalities": 2038,
+        "nontransitive": 39,
+        "closure_false_merges": 596
+      },
+      "numeric": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 4.744571862613789e-07,
+        "threshold_disagreements": 0
+      }
+    },
+    "no_provider_refit": {
+      "token_error": {
+        "cases": 5553,
+        "rmse": 0.03473507443674059,
+        "max_abs": 0.759690523147583
+      },
+      "eq": {
+        "instances": 5553,
+        "query_instances": 5454,
+        "exact_partitions": 4240,
+        "false_merges": 373,
+        "missed_equalities": 2047,
+        "nontransitive": 49,
+        "closure_false_merges": 528
+      },
+      "numeric": {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 6.103997456236021e-07,
+        "threshold_disagreements": 0
+      }
+    }
+  },
+  "fitting": false,
+  "union_authorized": false,
+  "limitations": [
+    "Oracle provider/state modes are diagnostics, not executable GPU inputs",
+    "No-provider control was fitted previously; this script adds no fit",
+    "Eq-only boundary audit does not certify scalar results or graph semantics",
+    "No policy or threshold is selected from these test results"
+  ]
+}
