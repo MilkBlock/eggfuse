@@ -1459,14 +1459,16 @@ fn completed_short_components_share_slabs_across_union_and_delete() {
         (rule ((= x (N 1)) (= y (N 2))) ((union x y)) :ruleset join)
         (rule ((= x (N 3)) (= s (Start x))) ((delete (Pair s x))) :ruleset remove)
         {seeds} (run a 1) (run b 1) (run join 1) (run remove 1) (run b 1)"));
+    // One case transfers the prefix immediately, so the next stage must pool
+    // new suffixes without copying the prefix's unrelated physical siblings.
+    for transfer_start in [1,2] {
     let mut control=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
-    let mut actual=Executor::new(Graph::new_with_local_congruence(p).unwrap(),true);
+    let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
     control.use_completed_parent_takeover().unwrap();actual.use_completed_parent_takeover().unwrap();
     for run in 1..=5 {
         control.execute_until(Some(run)).unwrap();actual.execute_until(Some(run)).unwrap();
-        // Let the first two stages finish before admitting new multi-frame
-        // components; later stages exercise mutation of shared physical slabs.
-        if run>=2 {
+        // Later stages exercise union, deletion and re-creation in shared slabs.
+        if run>=transfer_start {
             control.graph.transfer_completed_unpooled_owners().unwrap();
             actual.graph.transfer_completed_owners().unwrap();
         }
@@ -1481,7 +1483,13 @@ fn completed_short_components_share_slabs_across_union_and_delete() {
             let owners=storage["completed_owners"]["owners"].as_u64().unwrap() as usize;
             assert!(multi>=4,"exercise multiple composed components");
             assert!(owners<multi,"short components must share physical slabs: {owners} owners, {multi} components");
+            if transfer_start==1 {
+                assert_eq!(actual.graph.stats.shared_owner_slot_entries_moved,0,
+                    "shared prefix slots must not move to make room for suffixes");
+                assert_eq!(actual.graph.stats.shared_owner_fact_entries_moved,0);
+            }
         }
+    }
     }
 }
 

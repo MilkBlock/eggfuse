@@ -63,19 +63,26 @@ impl Graph {
         let mut groups=Vec::new();let mut pending=Vec::new();let mut bytes=0;
         for id in candidates {
             let Some(component)=m.composition.components.get(id as usize).and_then(Option::as_ref) else {continue;};
-            let ids=component.frames.iter().copied().filter(|id| {
+            let mut ids=component.frames.iter().copied().filter(|id| {
                 self.cells.completed_meta(*id).is_some()
                     || self.cells.get(id).is_some_and(|c| c.completed && c.parent.is_none()
                         && !c.facts.is_empty() && c.values.is_unshared()
                         && c.facts.iter().all(|(&op,s)|s.owned && self.stable_node(FactRef{cell:*id,op}).is_some()))
             }).collect::<Vec<_>>();
             if ids.is_empty() || (!singletons && ids.len()==1) {continue;}
+            if POOL && self.cells.completed_owner_has_external_sources(&ids) {
+                // Keep shared prefix slices in place. Batch only the new
+                // sources, instead of allocating a separate owner per suffix.
+                // Logical component wiring and stable source IDs do not move.
+                ids.retain(|id|self.cells.completed_meta(*id).is_none());
+                if ids.is_empty() {continue;}
+            }
             if POOL && ids.len()<=16 && ids.iter().all(|id|self.cells.completed_meta(*id).is_none()) {
                 // Bound source count and estimated array payload while collecting
                 // groups once. Sources retain independent restoration slices.
                 // Logical composition is not a reason to allocate a separate
                 // physical slab. Pool newly completed short components too;
-                // already transferred prefixes keep the extension path below.
+                // complete unshared prefixes keep the extension path below.
                 let size=ids.iter().map(|id| {
                     let c=self.cells.get(id).unwrap();
                     c.values.len()*std::mem::size_of::<(usize,Value)>()
