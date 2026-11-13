@@ -38,6 +38,84 @@ fn same(a: &Executor, b: &Executor) {
         }
     }
 }
+
+#[test]
+fn one_run_keeps_heterogeneous_cell_owners_across_rule_groups() {
+    for size in [16, 96] {
+        let seed=(0..size).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
+        // The same F has different operation numbers and downstream users in
+        // these templates. A one-row rule can join an already open region.
+        let source=format!(r#"
+(datatype E (N i64) (F E) (G E) (H E) (Pair E E) (I E) (J E) (Seen E))
+(ruleset build) (ruleset observe)
+(rule ((= x (N n))) ((let a (F x)) (G a)) :ruleset build)
+(rule ((= x (N n))) ((let h (H x)) (Pair h h)) :ruleset build)
+(rule ((= x (N n))) ((let k (+ n 0)) (let a (F x)) (I a)) :ruleset build)
+(rule ((= x (N n)) (= n 0)) ((let a (J x)) (I a)) :ruleset build)
+(rule ((= x (I a))) ((Seen x)) :ruleset build)
+(rule ((= x (I a))) ((Seen x)) :ruleset observe)
+{seed}
+(run-schedule (run build))
+(run-schedule (run observe))
+(check (Seen (I (F (N 0)))))
+"#);
+        egglog::EGraph::default().parse_and_run_program(None,&source).unwrap();
+        let mut control=executor(&source,0);control.execute().unwrap();
+        for workers in [1,4] {
+            let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+            candidate.execute().unwrap();same(&control,&candidate);
+            let r=candidate.report();let counts=&r["cell_execution"]["runtime"]["stats"]["scheduler"];
+            if workers>1 {
+            assert!(counts["rule_group_carries"].as_u64().unwrap()>0,"{counts}");
+            assert!(counts["mixed_rule_batches"].as_u64().unwrap()>0,"{counts}");
+            assert!(counts["run_end_fences"].as_u64().unwrap()>0,"{counts}");
+            }
+            assert_eq!(candidate.graph.stats.constructor_requests,control.graph.stats.constructor_requests);
+            assert_eq!(candidate.graph.stats.constructor_reused,control.graph.stats.constructor_reused);
+        }
+    }
+}
+
+#[test]
+fn carried_cell_prefix_finishes_before_foreign_effects_and_source_errors() {
+    let seed=(0..48).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
+    for mode in [0,1,2] {
+        let fail=mode==2;
+        let suffix=if fail {
+            "(rule ((= x (N n))) ((let z (/ 10 (- n 4))) (H x z)) :ruleset build)"
+        } else if mode==1 {
+            "(rule ((= x (N n))) ((set (Stamp x) n)) :ruleset build)"
+        } else {
+            // Ordinary deletion must observe the earlier completed Cell; a
+            // later constructor may recreate it with a new actual witness.
+            "(rule ((= x (N n))) ((delete (F x))) :ruleset build)\n\
+             (rule ((= x (N n))) ((let f (F x)) (I f)) :ruleset build)"
+        };
+        let source=format!(r#"
+(datatype E (N i64) (F E) (G E) (H E i64) (I E))
+(function Stamp (E) i64 :merge old)
+(ruleset build)
+(rule ((= x (N n))) ((let f (F x)) (G f)) :ruleset build)
+{suffix}
+{seed}
+(run-schedule (run build))
+"#);
+        let mut control=executor(&source,0);let expected=control.execute();
+        assert_eq!(expected.is_err(),fail);
+        for workers in [1,4] {
+            let mut candidate=executor(&source,workers);candidate.use_cell_execution(1).unwrap();
+            let result=candidate.execute();assert_eq!(result.is_err(),fail);
+            if fail {assert_eq!(result.unwrap_err().to_string(),expected.as_ref().unwrap_err().to_string());}
+            same(&control,&candidate);
+            let r=candidate.report();let counts=&r["cell_execution"]["runtime"]["stats"]["scheduler"];
+            let fence=if fail {"error_fences"} else {"outside_group_fences"};
+            if workers>1 {assert!(counts[fence].as_u64().unwrap()>0,"{counts}");}
+            if workers>1 && mode==1 {
+                assert!(r["cell_execution"]["runtime"]["stats"]["writes"]["worker_rows"].as_u64().unwrap()>0);
+            }
+        }
+    }
+}
 fn initial() -> String {
     (0..64)
         .map(|i| format!("(Start (N {i})) (set (Input (N {i})) {i}) (set (Current (N {i})) 1)\n"))

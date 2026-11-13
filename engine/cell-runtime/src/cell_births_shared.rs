@@ -231,7 +231,10 @@ impl<'a> Batch<'a> {
                 }
                 let source = &self.jobs[previous];
                 let state = &self.results[previous];
-                debug_assert!(std::sync::Arc::ptr_eq(&owner.plan, &source.plan));
+                // Each candidate uses its own compiled operator/slot layout.
+                // A shared source Run may contain different Cell templates;
+                // neither matching operation numbers nor plan identity proves
+                // equality. The table and actual key below still must match.
                 counts.key_screens += 1;
                 if source.plan.steps[prior].table != step.table {
                     continue;

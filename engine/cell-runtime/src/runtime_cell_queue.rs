@@ -1,4 +1,4 @@
-//! Bounded ready batches for fresh constructor cones. A dependent Cell can use
+//! Run-owned ready batches for fresh constructor cones. A dependent Cell can use
 //! peer result slots or compute their pure nodes itself. Unproved dependencies
 //! retain source completion; shared effects and publication remain ordered.
 use super::*;
@@ -24,9 +24,32 @@ struct Ready {
     flying:Option<pipeline::Flying>,
     spare:Vec<Parked>,
 }
-impl Ready {fn is_empty(&self)->bool {self.owners.is_empty() && self.flying.is_none()}}
+impl Ready {
+    fn is_empty(&self)->bool {self.owners.is_empty() && self.flying.is_none()}
+    fn mixed_rules(&self)->bool {
+        let mut rules=self.owners.iter().filter(|p|p.job.is_some()).map(|p|p.execution.rule);
+        let Some(first)=rules.next() else {return false;};
+        rules.any(|r|r!=first)
+    }
+}
+/// The original owner buffers and pending addresses survive compatible rule
+/// groups. This scope still ends at the original sealed source Run boundary.
+#[derive(Default)]
+pub(super) struct RunQueue {ready:Ready,pending:Vec<u32>}
+impl RunQueue {pub(super) fn has_pending(&self)->bool {!self.ready.is_empty()}}
+pub(super) enum QueueBoundary {Outside,RunEnd,Error}
 
 impl Executor {
+    pub(super) fn finish_cell_queue(&mut self,queue:&mut RunQueue,boundary:QueueBoundary)->Result<()> {
+        if queue.ready.is_empty() {return Ok(());}
+        let stats=&mut self.cell_execution.as_mut().unwrap().counts.scheduler;
+        match boundary {
+            QueueBoundary::Outside=>stats.outside_group_fences+=1,
+            QueueBoundary::RunEnd=>stats.run_end_fences+=1,
+            QueueBoundary::Error=>stats.error_fences+=1,
+        }
+        self.drain_cell_queue(&mut queue.ready,&mut queue.pending)
+    }
     fn consume_cell_events(&mut self,completed:&mut Vec<Completed>,eligible:bool,pool:&rayon::ThreadPool,
         mut consume:impl FnMut(&mut Self,std::vec::Drain<'_,Completed>,
             Option<&mut crate::graph::cell_births::Registration>)->Result<()>)->Result<()> {
@@ -94,8 +117,8 @@ impl Executor {
         debug_assert!(result.is_err() || completed.is_empty(),"every ready Cell must be adopted");
         result
     }
-    pub(super) fn batch_cell_rule(&self, rid: usize, rows: usize) -> bool {
-        rows > 1
+    pub(super) fn batch_cell_rule(&self, rid: usize, rows: usize, pending:bool) -> bool {
+        rows != 0 && (rows > 1 || pending)
             && self.cell_execution.is_some()
             && self
                 .query_workers
@@ -201,6 +224,7 @@ impl Executor {
     }
     fn drain_ready_queue(&mut self, queue: &mut Ready, pending: &mut Vec<u32>) -> Result<()> {
         if queue.owners.is_empty() { return Ok(()); }
+        let mixed=queue.mixed_rules();
         let pool = self.query_workers.as_ref().unwrap().execution_pool_handle().unwrap();
         let mut tasks: Vec<_> = queue.owners.iter_mut().filter_map(|p| p.job.take()
             .map(|job| (job, std::mem::take(&mut p.execution.effects)))).collect();
@@ -220,6 +244,7 @@ impl Executor {
             stats.scheduler.queue_growths += 1;
             stats.scheduler.queue_bytes += (tasks.capacity() * std::mem::size_of::<(Job, crate::cell::Effects)>()) as u64;
             stats.scheduler.batches += 1;
+            stats.scheduler.mixed_rule_batches += u64::from(mixed);
             stats.scheduler.jobs += count as u64;
             stats.scheduler.max_ready = stats.scheduler.max_ready.max(count);
             let parallel = count > 1 && tasks.iter().map(|(job, _)| job.operations()).sum::<usize>() >= grain;
@@ -303,6 +328,7 @@ impl Executor {
         rid: usize,
         rows: Vec<Binding>,
         generation: u64,
+        run:&mut RunQueue,
     ) -> Result<()> {
         self.cell_execution
             .as_mut()
@@ -310,8 +336,8 @@ impl Executor {
             .counts
             .scheduler
             .rule_groups += 1;
-        let mut queue = Ready::default();
-        let mut pending = Vec::new();
+        let (queue,pending)=(&mut run.ready,&mut run.pending);
+        self.cell_execution.as_mut().unwrap().counts.scheduler.rule_group_carries+=u64::from(!queue.is_empty());
         let roots=self.graph.program.executions[rid].births.as_ref().is_some_and(|p|p.has_roots());
         let result = (|| {
             for binding in rows {
@@ -354,7 +380,7 @@ impl Executor {
                         if queue.is_empty() {
                             self.finish_attached_cell(execution)?;
                         } else {
-                            self.park_cell(&mut queue, execution, None);
+                            self.park_cell(queue, execution, None);
                         }
                         break;
                     }
@@ -379,7 +405,7 @@ impl Executor {
                             let stats=&mut self.cell_execution.as_mut().unwrap().counts.scheduler;
                             stats.queue_growths+=u64::from(before!=pending.capacity());
                             stats.queue_bytes+=((pending.capacity()-before)*std::mem::size_of::<u32>()) as u64;
-                            self.park_cell(&mut queue,execution,Some(job));break;
+                            self.park_cell(queue,execution,Some(job));break;
                         }
                     }
                     // Only an unresolved root key or value dependency requires
@@ -402,7 +428,7 @@ impl Executor {
                         };
                         if conflict {
                             let state=self.graph.suspend_rhs(execution.cell);
-                            self.drain_cell_queue(&mut queue,&mut pending)?;
+                            self.drain_cell_queue(queue,pending)?;
                             self.graph.restore_rhs(state);
                             if let Some(window)=&mut execution.births {window.after_ready_batch(&self.graph);}
                         }
@@ -456,7 +482,7 @@ impl Executor {
                                         .scheduler
                                         .budget_flushes += 1;
                                     let state = self.graph.suspend_rhs(execution.cell);
-                                    self.drain_cell_queue(&mut queue, &mut pending)?;
+                                    self.drain_cell_queue(queue, pending)?;
                                     self.graph.restore_rhs(state);
                                     if let Some(window) = &mut execution.births {
                                         window.after_ready_batch(&self.graph);
@@ -477,7 +503,7 @@ impl Executor {
                             stats.queue_growths += u64::from(before != pending.capacity());
                             stats.queue_bytes +=
                                 ((pending.capacity() - before) * std::mem::size_of::<u32>()) as u64;
-                            self.park_cell(&mut queue, execution, Some(job));
+                            self.park_cell(queue, execution, Some(job));
                             break;
                         }
                         if matches!(&execution.ops[position], Op::Let(_, Call::Table(_), _))
@@ -488,7 +514,7 @@ impl Executor {
                             // this one Cell; the queue must not replace it with replays.
                             if !queue.is_empty() {
                                 let state = self.graph.suspend_rhs(execution.cell);
-                                self.drain_cell_queue(&mut queue, &mut pending)?;
+                                self.drain_cell_queue(queue, pending)?;
                                 self.graph.restore_rhs(state);
                                 if let Some(window) = &mut execution.births {
                                     window.after_ready_batch(&self.graph);
@@ -529,7 +555,7 @@ impl Executor {
                             self.cell_execution.as_mut().unwrap().counts.scheduler.admission_dependency_waits+=1;
                             let state=self.graph.suspend_rhs(execution.cell);
                             while wave_dependency {
-                                self.poll_cell_queue(&mut queue,&mut pending,true)?;
+                                self.poll_cell_queue(queue,pending,true)?;
                                 wave_probes=0;
                                 wave_dependency=queue.flying.as_ref().is_some_and(|wave|wave.references(&key,&mut wave_probes));
                                 self.cell_execution.as_mut().unwrap().counts.scheduler.admission_dependency_probes+=wave_probes;
@@ -580,7 +606,7 @@ impl Executor {
                                 stats.queue_bytes += ((pending.capacity() - before)
                                     * std::mem::size_of::<u32>())
                                     as u64;
-                                self.park_cell(&mut queue, execution, Some(job));
+                                self.park_cell(queue, execution, Some(job));
                                 break;
                             }
                             self.cell_execution
@@ -590,7 +616,7 @@ impl Executor {
                                 .scheduler
                                 .dependency_flushes += 1;
                             let state = self.graph.suspend_rhs(execution.cell);
-                            self.drain_cell_queue(&mut queue, &mut pending)?;
+                            self.drain_cell_queue(queue, pending)?;
                             self.graph.restore_rhs(state);
                         }
                     }
@@ -604,14 +630,14 @@ impl Executor {
                             .scheduler
                             .effect_flushes += 1;
                         let state = self.graph.suspend_rhs(execution.cell);
-                        self.drain_cell_queue(&mut queue, &mut pending)?;
+                        self.drain_cell_queue(queue, pending)?;
                         self.graph.restore_rhs(state);
                     }
                     execution.phase = owned_cell::Phase::Boundary;
                     self.resolve_cell_boundary(&mut execution, position)?;
                 }
-                self.poll_cell_queue(&mut queue,&mut pending,false)?;
-                if queue.owners.len() >= READY_LIMIT {self.dispatch_cell_queue(&mut queue,&mut pending)?;}
+                self.poll_cell_queue(queue,pending,false)?;
+                if queue.owners.len() >= READY_LIMIT {self.dispatch_cell_queue(queue,pending)?;}
                 self.graph.sealed_input_cell = None;
                 self.graph.sealed_generation = None;
             }
@@ -622,7 +648,10 @@ impl Executor {
         if result.is_err() {
             self.graph.promote_active();
         }
-        self.drain_cell_queue(&mut queue, &mut pending)?;
+        if result.is_err() {
+            if !queue.is_empty() {self.cell_execution.as_mut().unwrap().counts.scheduler.error_fences+=1;}
+            self.drain_cell_queue(queue,pending)?;
+        }
         result
     }
     fn park_cell(&mut self, queue: &mut Ready, execution: owned_cell::Execution, job: Option<Job>) {

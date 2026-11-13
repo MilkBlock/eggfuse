@@ -37,6 +37,7 @@ impl Executor {
             self.cell_execution.as_mut().unwrap().counts.scheduler.admission_fence_fallbacks+=1;
             return self.drain_ready_queue(queue,pending);
         }
+        let mixed=queue.mixed_rules();
         let pool=self.query_workers.as_ref().unwrap().execution_pool_handle().unwrap();
         let mut tasks:Vec<_>=queue.owners.iter_mut().filter_map(|p|p.job.take()
             .map(|j|(j,std::mem::take(&mut p.execution.effects)))).collect();
@@ -49,6 +50,7 @@ impl Executor {
         let stats=&mut self.cell_execution.as_mut().unwrap().counts;
         stats.births.root_snapshots+=1;stats.births.worker_batches+=1;
         stats.scheduler.batches+=1;stats.scheduler.jobs+=count as u64;
+        stats.scheduler.mixed_rule_batches+=u64::from(mixed);
         stats.scheduler.max_ready=stats.scheduler.max_ready.max(count);
         stats.scheduler.queue_growths+=1;
         stats.scheduler.queue_bytes+=(tasks.capacity()*std::mem::size_of::<(Job,crate::cell::Effects)>()) as u64;

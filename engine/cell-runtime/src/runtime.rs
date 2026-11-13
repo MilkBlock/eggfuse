@@ -2827,74 +2827,90 @@ impl Executor {
         let groups = buffer.drain(..);
         #[cfg(not(feature = "sparse-cells"))]
         let groups = patch.groups.into_iter();
-        for (rid, rows) in groups {
-            #[cfg(feature = "cell-absorption")]
-            self.graph.reserve_absorbed_cells(self.neighbor.take_absorbed(rid))?;
-            #[cfg(feature="sparse-cells")]
-            let rows = if self.batch_write_rule(rid, &rows) {
-                match self.apply_worker_writes(rid, rows)? {
-                    Some(rows) => rows,
-                    None => continue,
-                }
-            } else { rows };
-            let profile = self.profile_queries.then(|| (Instant::now(), rows.len(),
-                rule_profile::Snapshot::new(&self.graph.stats, self.stage_spine.completed_step_count())));
-            #[cfg(feature="sparse-cells")]
-            if self.batch_cell_rule(rid,rows.len()) {
-                self.apply_cell_batch(rid,rows,binding_generation)?;
-                continue;
-            }
-            for binding in rows {
-                #[cfg(feature = "family-survey")]
-                let before = {
-                    if rhs_clock.as_ref().is_none_or(|(r, _)| *r != rid) {
-                        if let Some((prev, clock)) = rhs_clock.replace((rid, Instant::now())) {
-                            self.survey.rhs(prev, clock.elapsed().as_nanos() as u64);
-                        }
+        #[cfg(feature="sparse-cells")]
+        let mut cell_queue=cell_queue::RunQueue::default();
+        let rhs_result=(||->Result<()> {
+            for (rid, rows) in groups {
+                #[cfg(feature = "cell-absorption")]
+                self.graph.reserve_absorbed_cells(self.neighbor.take_absorbed(rid))?;
+                // Absorption-only groups reserve their source identities above;
+                // they have no executable effect requiring an owner handoff.
+                if rows.is_empty() {continue;}
+                #[cfg(feature="sparse-cells")]
+                let rows = if self.batch_write_rule(rid, &rows) {
+                    self.finish_cell_queue(&mut cell_queue,cell_queue::QueueBoundary::Outside)?;
+                    match self.apply_worker_writes(rid, rows)? {
+                        Some(rows) => rows,
+                        None => continue,
                     }
-                    self.stage_spine.survey_resumed()
-                };
-                #[cfg(feature = "rhs-work-audit")]
-                let sample = self.ledger.begin(&self.graph, rid, &binding.values)?;
-                #[cfg(all(feature = "rhs-work-audit", feature = "rhs-locals"))]
-                let local_sample = (
-                    self.local_counts.block_local_intermediates,
-                    self.local_counts.local_complete,
-                );
-                #[cfg(feature = "sparse-cells")]
-                { self.graph.sealed_generation = Some(binding_generation); }
-                let applied = self.apply(
-                    rid,
-                    binding,
-                    #[cfg(feature = "structural-depth")]
-                    evidence.as_mut().and_then(Iterator::next),
-                );
-                #[cfg(feature = "sparse-cells")]
-                {
-                    self.graph.sealed_input_cell = None;
-                    self.graph.sealed_generation = None;
+                } else { rows };
+                let profile = self.profile_queries.then(|| (Instant::now(), rows.len(),
+                    rule_profile::Snapshot::new(&self.graph.stats, self.stage_spine.completed_step_count())));
+                #[cfg(feature="sparse-cells")]
+                if self.batch_cell_rule(rid,rows.len(),cell_queue.has_pending()) {
+                    self.apply_cell_batch(rid,rows,binding_generation,&mut cell_queue)?;
+                    continue;
                 }
-                #[cfg(feature = "sparse-cells")]
-                if applied.is_err() {
-                    self.graph.promote_active();
+                #[cfg(feature="sparse-cells")]
+                self.finish_cell_queue(&mut cell_queue,cell_queue::QueueBoundary::Outside)?;
+                for binding in rows {
+                    #[cfg(feature = "family-survey")]
+                    let before = {
+                        if rhs_clock.as_ref().is_none_or(|(r, _)| *r != rid) {
+                            if let Some((prev, clock)) = rhs_clock.replace((rid, Instant::now())) {
+                                self.survey.rhs(prev, clock.elapsed().as_nanos() as u64);
+                            }
+                        }
+                        self.stage_spine.survey_resumed()
+                    };
+                    #[cfg(feature = "rhs-work-audit")]
+                    let sample = self.ledger.begin(&self.graph, rid, &binding.values)?;
+                    #[cfg(all(feature = "rhs-work-audit", feature = "rhs-locals"))]
+                    let local_sample = (
+                        self.local_counts.block_local_intermediates,
+                        self.local_counts.local_complete,
+                    );
+                    #[cfg(feature = "sparse-cells")]
+                    { self.graph.sealed_generation = Some(binding_generation); }
+                    let applied = self.apply(
+                        rid,
+                        binding,
+                        #[cfg(feature = "structural-depth")]
+                        evidence.as_mut().and_then(Iterator::next),
+                    );
+                    #[cfg(feature = "sparse-cells")]
+                    {
+                        self.graph.sealed_input_cell = None;
+                        self.graph.sealed_generation = None;
+                    }
+                    #[cfg(feature = "sparse-cells")]
+                    if applied.is_err() {
+                        self.graph.promote_active();
+                    }
+                    applied?;
+                    #[cfg(feature = "rhs-work-audit")]
+                    {
+                        #[cfg(feature = "rhs-locals")]
+                        self.ledger.locals(local_sample, &self.local_counts);
+                        self.ledger.end(&self.graph, sample)?;
+                    }
+                    #[cfg(feature = "family-survey")]
+                    self.survey
+                        .resumed(rid, self.stage_spine.survey_resumed() - before);
                 }
-                applied?;
-                #[cfg(feature = "rhs-work-audit")]
-                {
-                    #[cfg(feature = "rhs-locals")]
-                    self.ledger.locals(local_sample, &self.local_counts);
-                    self.ledger.end(&self.graph, sample)?;
+                if let Some((clock, bindings, before)) = profile {
+                    self.rhs_profile[rid].record(before,
+                        rule_profile::Snapshot::new(&self.graph.stats, self.stage_spine.completed_step_count()),
+                        bindings, clock.elapsed().as_secs_f64());
                 }
-                #[cfg(feature = "family-survey")]
-                self.survey
-                    .resumed(rid, self.stage_spine.survey_resumed() - before);
             }
-            if let Some((clock, bindings, before)) = profile {
-                self.rhs_profile[rid].record(before,
-                    rule_profile::Snapshot::new(&self.graph.stats, self.stage_spine.completed_step_count()),
-                    bindings, clock.elapsed().as_secs_f64());
-            }
-        }
+            Ok(())
+        })();
+        #[cfg(feature="sparse-cells")]
+        self.finish_cell_queue(&mut cell_queue,if rhs_result.is_err() {
+            cell_queue::QueueBoundary::Error
+        } else {cell_queue::QueueBoundary::RunEnd})?;
+        rhs_result?;
         #[cfg(feature = "sparse-cells")]
         {
             self.work_scratch = buffer;
