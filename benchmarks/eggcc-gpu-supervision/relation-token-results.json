@@ -1,0 +1,1785 @@
+{
+  "scope": "Full-program Eq relation observation and floating encoding diagnostic; no GPU graph takeover",
+  "trace_sha256": "6d456379a02b1502578f61d019ae75ea35a4f0756a52f3e3419d11732575ca75",
+  "program_sha256": "c9ce3a6fe289a86fe681592664e3148eec55b06b3c4d53bd8725de7ced3b949a",
+  "bindings": 7265,
+  "observed_root_changes": 735,
+  "local_partition_changes": 457,
+  "unchanged_partition_baseline_accuracy": 0.9370956641431522,
+  "same_run_ambiguous_groups": 38,
+  "same_run_conflicts": [
+    {
+      "instances": 3,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 16,
+          "binding": 3,
+          "rule": 577,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 16,
+          "binding": 4,
+          "rule": 577,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            0
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 3,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 816,
+          "binding": 29,
+          "rule": 90,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 816,
+          "binding": 33,
+          "rule": 90,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            0,
+            3
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 2,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1044,
+          "binding": 1,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1044,
+          "binding": 3,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            2
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 2,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1044,
+          "binding": 2,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            1,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3,
+            4
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1044,
+          "binding": 4,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            1,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 2,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1046,
+          "binding": 1,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1046,
+          "binding": 2,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 2,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1046,
+          "binding": 6,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1046,
+          "binding": 11,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 4,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1046,
+          "binding": 7,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1046,
+          "binding": 9,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 3,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1046,
+          "binding": 12,
+          "rule": 327,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1046,
+          "binding": 14,
+          "rule": 327,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 3,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1046,
+          "binding": 15,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1046,
+          "binding": 17,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            2
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 2,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1047,
+          "binding": 4,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1047,
+          "binding": 5,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 5,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1047,
+          "binding": 22,
+          "rule": 327,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1047,
+          "binding": 27,
+          "rule": 327,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 3,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1047,
+          "binding": 28,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            2
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1047,
+          "binding": 30,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "root_changed": false
+        }
+      ]
+    },
+    {
+      "instances": 3,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1048,
+          "binding": 4,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1048,
+          "binding": 5,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 4,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1048,
+          "binding": 67,
+          "rule": 327,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1048,
+          "binding": 71,
+          "rule": 327,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 3,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1048,
+          "binding": 73,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1048,
+          "binding": 79,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            2
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 4,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1049,
+          "binding": 8,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1049,
+          "binding": 17,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 8,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1049,
+          "binding": 31,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1049,
+          "binding": 57,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        }
+      ]
+    },
+    {
+      "instances": 2,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1049,
+          "binding": 37,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1049,
+          "binding": 66,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        }
+      ]
+    },
+    {
+      "instances": 4,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1049,
+          "binding": 38,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1049,
+          "binding": 67,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        }
+      ]
+    },
+    {
+      "instances": 13,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1049,
+          "binding": 107,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1049,
+          "binding": 109,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            2
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 3,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1049,
+          "binding": 117,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            1,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3,
+            1
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1049,
+          "binding": 119,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            1,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3,
+            4
+          ],
+          "root_changed": false
+        }
+      ]
+    },
+    {
+      "instances": 13,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1050,
+          "binding": 65,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            2
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1050,
+          "binding": 66,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "root_changed": false
+        }
+      ]
+    },
+    {
+      "instances": 2,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1050,
+          "binding": 70,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            1,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3,
+            4
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1050,
+          "binding": 73,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            1,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 8,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1051,
+          "binding": 0,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1051,
+          "binding": 20,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 11,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1051,
+          "binding": 12,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1051,
+          "binding": 15,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 10,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1051,
+          "binding": 34,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1051,
+          "binding": 40,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        }
+      ]
+    },
+    {
+      "instances": 3,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1051,
+          "binding": 35,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1051,
+          "binding": 42,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        }
+      ]
+    },
+    {
+      "instances": 11,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1051,
+          "binding": 58,
+          "rule": 327,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1051,
+          "binding": 64,
+          "rule": 327,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 7,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1051,
+          "binding": 71,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1051,
+          "binding": 80,
+          "rule": 328,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            2
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 7,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1052,
+          "binding": 4,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1052,
+          "binding": 8,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 8,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1052,
+          "binding": 12,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1052,
+          "binding": 13,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 10,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1052,
+          "binding": 37,
+          "rule": 322,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1052,
+          "binding": 40,
+          "rule": 322,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            3
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 10,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1052,
+          "binding": 50,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1052,
+          "binding": 62,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 5,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1052,
+          "binding": 53,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1052,
+          "binding": 60,
+          "rule": 324,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 7,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1052,
+          "binding": 85,
+          "rule": 327,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1052,
+          "binding": 90,
+          "rule": 327,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 5,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1053,
+          "binding": 6,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "root_changed": false
+        },
+        {
+          "run": 1053,
+          "binding": 19,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 5,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1053,
+          "binding": 10,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            3
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1053,
+          "binding": 23,
+          "rule": 317,
+          "before": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "after": [
+            0,
+            1,
+            1,
+            1
+          ],
+          "root_changed": true
+        }
+      ]
+    },
+    {
+      "instances": 12,
+      "outcomes": 2,
+      "examples": [
+        {
+          "run": 1053,
+          "binding": 28,
+          "rule": 322,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            3
+          ],
+          "root_changed": true
+        },
+        {
+          "run": 1053,
+          "binding": 38,
+          "rule": 322,
+          "before": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "after": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "root_changed": false
+        }
+      ]
+    }
+  ],
+  "boundary_context": {
+    "description": "Pre-Run shared-root incidence counts by neighboring rule and input slot; no post-Run information",
+    "registered_eq_port_occurrences": 30736,
+    "same_run_ambiguous_groups": 3,
+    "deterministic_minimum_errors": 3,
+    "cost": "CPU builds a per-Run incidence index for this diagnostic; not free static Bake wiring"
+  },
+  "deterministic_local_signature_minimum_errors": 110,
+  "local_signature_empirical_max_accuracy": 0.9848589125946318,
+  "cpu_normalization_and_audit_seconds": 0.10281200002646074,
+  "renaming_invariance": true,
+  "kernels": [
+    {
+      "eq_ports": 1,
+      "rows": 2,
+      "distinct_partitions": 1,
+      "device_request_seconds": 0.019514040963258594,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 2,
+      "rows": 2150,
+      "distinct_partitions": 2,
+      "device_request_seconds": 0.0016540830256417394,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 3,
+      "rows": 2046,
+      "distinct_partitions": 3,
+      "device_request_seconds": 0.0012470000074245036,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 4,
+      "rows": 5088,
+      "distinct_partitions": 8,
+      "device_request_seconds": 0.0008894999627955258,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 5,
+      "rows": 2972,
+      "distinct_partitions": 12,
+      "device_request_seconds": 0.0008618750143796206,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 6,
+      "rows": 1126,
+      "distinct_partitions": 6,
+      "device_request_seconds": 0.0007551669841632247,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 7,
+      "rows": 676,
+      "distinct_partitions": 9,
+      "device_request_seconds": 0.0010172919719479978,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 8,
+      "rows": 224,
+      "distinct_partitions": 3,
+      "device_request_seconds": 0.0007022080244496465,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 9,
+      "rows": 150,
+      "distinct_partitions": 5,
+      "device_request_seconds": 0.0006884580361656845,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 10,
+      "rows": 2,
+      "distinct_partitions": 1,
+      "device_request_seconds": 0.0006882500019855797,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 11,
+      "rows": 38,
+      "distinct_partitions": 3,
+      "device_request_seconds": 0.0006161249475553632,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 12,
+      "rows": 16,
+      "distinct_partitions": 4,
+      "device_request_seconds": 0.0005787080153822899,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 15,
+      "rows": 16,
+      "distinct_partitions": 4,
+      "device_request_seconds": 0.0005675830179825425,
+      "latent_width": 32
+    },
+    {
+      "eq_ports": 16,
+      "rows": 20,
+      "distinct_partitions": 4,
+      "device_request_seconds": 0.0010415830183774233,
+      "latent_width": 32
+    }
+  ],
+  "backpropagation": false,
+  "trained_model": false,
+  "gpu_completed_bindings": 0,
+  "limitations": [
+    "Only relationships among matched input ports are observed, not new RHS result ports",
+    "Run-end changes include other bindings, congruence and boundary effects, not just this Cell",
+    "Local normalization still reads exact CPU roots and has not been moved into static GPU wiring",
+    "The floating encoder has fixed random weights and is not a completion prediction model",
+    "Conflicting local inputs require boundary context or CPU correction; IDs alone do not supply that context"
+  ]
+}

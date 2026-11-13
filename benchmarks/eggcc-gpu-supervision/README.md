@@ -262,3 +262,43 @@ In particular, ordinary constructor/set/union operations are compiled ports,
 not yet device-executed graph semantics. The numeric interpreter is a broad
 exact-reference backend for the whole-program design, not the learned token
 completion model and not evidence of most-ruleset GPU support.
+
+## Stable identity versus local relation state
+
+The read-only binding observer now receives `&Graph`. Running the live collector
+with `--relations` captures each Eq input's stable identity and current root at
+the finalized match boundary, then resolves that identity after its source Run.
+Original Run controls and final graph still match ordinary execution. The Rust
+observer test confirms roots can change while references survive. This optional
+collector adds no relation graph to normal execution.
+
+`relation_tokens.py TRACE OUTPUT.json` normalizes Eq partitions by first local
+port occurrence, preserving sorts. Bijective renaming to IDs above 2^100 leaves
+the partition unchanged. Fixed dense floating codes for local representatives,
+a dense projection and tanh encode the partitions on Metal; NumPy agrees.
+This is a fixed-weight representation diagnostic, not trained ridge completion.
+
+Actual full sum-bits results (`relation-token-results.json`):
+
+- 7,265 bindings; 735 observe root changes, but only 457 see their local input
+  partition change. Representative changes alone are not new equality.
+- Predicting every partition unchanged already scores 93.71%. Overall 90%
+  accuracy is therefore an inadequate completion acceptance criterion here.
+- Within individual Runs, 38 groups have the same rule, local partition and
+  exact non-Eq inputs, but different post-Run partitions. Across the dataset,
+  any deterministic predictor on this signature disagrees on at least 110
+  bindings. This is empirical input ambiguity, not a test-set error estimate.
+- Adding pre-Run shared-root incidence counts by neighboring rule and input slot
+  reduces same-Run ambiguous groups to 3 and minimum disagreements to 3. These
+  features contain no post-Run information. One-hop context is still incomplete.
+- Context collection registers 30,736 Eq-port occurrences in a temporary CPU
+  index. Normalization, indexing and audit cost about 103 ms in this sample.
+  This is not free Bake wiring, nor a persistent reverse-index proposal. The
+  floating encoder above still encodes local partitions; context aggregation
+  has not moved onto GPU.
+
+The target includes other bindings' effects and congruence in the same Run,
+not just the observed Cell's own RHS. New result ports and unseen external
+nodes remain outside this observation. Seventeen Python tests and the Rust
+observer boundary test pass. This establishes representation evidence across
+the full program, not GPU ruleset coverage or new native semantic acceptance.

@@ -109,7 +109,7 @@ impl StagePatch {
 /// Slots are borrowed only for this call; this cannot authorize graph effects.
 pub struct CellBindingObserver {
     pub rules: Vec<bool>,
-    pub observe: Box<dyn FnMut(usize, usize, usize, &crate::slots::Slots)>,
+    pub observe: Box<dyn FnMut(usize, usize, usize, &crate::slots::Slots, &Graph)>,
 }
 
 pub struct Executor {
@@ -2628,7 +2628,7 @@ impl Executor {
             let ordinal = self.steps.len() + 1;
             for (index, (rid, binding)) in patch.iter().enumerate() {
                 if observer.rules.get(*rid).copied().unwrap_or(false) {
-                    (observer.observe)(ordinal, index, *rid, &binding.values);
+                    (observer.observe)(ordinal, index, *rid, &binding.values, &self.graph);
                 }
             }
         }
