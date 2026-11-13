@@ -1,0 +1,225 @@
+{
+  "scope": "observed port-interface witness-choice ablation; not autonomous execution or semantic accuracy",
+  "backpropagation": false,
+  "corpus_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "training_manifest_sha256": "e1e830c2d1beef561494bca8c53f3ee04f0c9d5360c3b538dff9a9f021395977",
+  "validation_manifest_sha256": "59164efc3eda87020a4e27a89112accd70c039df97e98e98c942c7324fd4ac87",
+  "validation_instances": 27386,
+  "validation_ambiguous_source_instances": 15316,
+  "validation_all_edges": 156972,
+  "validation_single_edges": 78773,
+  "reports": {
+    "baseline": {
+      "fit": {
+        "alpha": 100.0,
+        "validation_target_mse": 0.0006586459930986166
+      },
+      "modes": {
+        "all": {
+          "direct": {
+            "cases": 26637,
+            "rmse": 0.02162640764629866,
+            "max_abs": 0.6079512238502502
+          },
+          "rollout": {
+            "cases": 26637,
+            "rmse": 0.021593725365666654,
+            "max_abs": 0.6224514842033386
+          },
+          "gpu_direct_max_abs": 1.9222497940063477e-06,
+          "eq_direct": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 22916,
+            "false_merges": 6356,
+            "missed_equalities": 5460,
+            "nontransitive": 466,
+            "closure_false_merges": 24099
+          },
+          "eq_rollout": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 22955,
+            "false_merges": 6481,
+            "missed_equalities": 5447,
+            "nontransitive": 472,
+            "closure_false_merges": 24303
+          }
+        },
+        "first": {
+          "direct": {
+            "cases": 26637,
+            "rmse": 0.02194661090908261,
+            "max_abs": 0.6079512238502502
+          },
+          "rollout": {
+            "cases": 26637,
+            "rmse": 0.021868881225698307,
+            "max_abs": 0.6213402152061462
+          },
+          "gpu_direct_max_abs": 1.6689300537109375e-06,
+          "eq_direct": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 22899,
+            "false_merges": 6452,
+            "missed_equalities": 5460,
+            "nontransitive": 449,
+            "closure_false_merges": 24287
+          },
+          "eq_rollout": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 22959,
+            "false_merges": 6534,
+            "missed_equalities": 5445,
+            "nontransitive": 459,
+            "closure_false_merges": 24475
+          }
+        },
+        "last": {
+          "direct": {
+            "cases": 26637,
+            "rmse": 0.022058826652797164,
+            "max_abs": 0.6079512238502502
+          },
+          "rollout": {
+            "cases": 26637,
+            "rmse": 0.02200643249066024,
+            "max_abs": 0.6213402152061462
+          },
+          "gpu_direct_max_abs": 1.6689300537109375e-06,
+          "eq_direct": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 22922,
+            "false_merges": 6564,
+            "missed_equalities": 5358,
+            "nontransitive": 466,
+            "closure_false_merges": 24495
+          },
+          "eq_rollout": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 22944,
+            "false_merges": 6755,
+            "missed_equalities": 5338,
+            "nontransitive": 478,
+            "closure_false_merges": 24817
+          }
+        }
+      }
+    },
+    "augmented": {
+      "fit": {
+        "alpha": 100.0,
+        "validation_target_mse": 0.0006421552388928831
+      },
+      "modes": {
+        "all": {
+          "direct": {
+            "cases": 26637,
+            "rmse": 0.021486802264990584,
+            "max_abs": 0.6035083532333374
+          },
+          "rollout": {
+            "cases": 26637,
+            "rmse": 0.02149114569987451,
+            "max_abs": 0.6170923709869385
+          },
+          "gpu_direct_max_abs": 1.3113021850585938e-06,
+          "eq_direct": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 22957,
+            "false_merges": 5296,
+            "missed_equalities": 5351,
+            "nontransitive": 463,
+            "closure_false_merges": 14311
+          },
+          "eq_rollout": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 22997,
+            "false_merges": 5362,
+            "missed_equalities": 5314,
+            "nontransitive": 452,
+            "closure_false_merges": 14450
+          }
+        },
+        "first": {
+          "direct": {
+            "cases": 26637,
+            "rmse": 0.021605909878434453,
+            "max_abs": 0.6292719841003418
+          },
+          "rollout": {
+            "cases": 26637,
+            "rmse": 0.021571692357110758,
+            "max_abs": 0.6188241839408875
+          },
+          "gpu_direct_max_abs": 1.430511474609375e-06,
+          "eq_direct": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 23006,
+            "false_merges": 5240,
+            "missed_equalities": 5341,
+            "nontransitive": 436,
+            "closure_false_merges": 14275
+          },
+          "eq_rollout": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 23073,
+            "false_merges": 5251,
+            "missed_equalities": 5257,
+            "nontransitive": 429,
+            "closure_false_merges": 14355
+          }
+        },
+        "last": {
+          "direct": {
+            "cases": 26637,
+            "rmse": 0.021662216334094393,
+            "max_abs": 0.6173792481422424
+          },
+          "rollout": {
+            "cases": 26637,
+            "rmse": 0.021643820562932625,
+            "max_abs": 0.6185202598571777
+          },
+          "gpu_direct_max_abs": 1.5795230865478516e-06,
+          "eq_direct": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 23025,
+            "false_merges": 5370,
+            "missed_equalities": 5254,
+            "nontransitive": 415,
+            "closure_false_merges": 14395
+          },
+          "eq_rollout": {
+            "instances": 26637,
+            "query_instances": 26142,
+            "exact_partitions": 23040,
+            "false_merges": 5439,
+            "missed_equalities": 5230,
+            "nontransitive": 423,
+            "closure_false_merges": 14549
+          }
+        }
+      }
+    }
+  },
+  "model_sha256": "e06847c54d1e281bfe1b81c6844333be38bbb5bb4418933a6f16c0a4b86c7212",
+  "seconds": 60.7035302920267,
+  "additional_inference_features": 0,
+  "decoder_sha256": "3a3c00b256092a4d227bc55f3e64d024b460f3c7af203d9c81cba723c9d366e5",
+  "limitations": [
+    "Observed alternatives are not lifetime certificates or unique owners",
+    "Portwise choice need not be a jointly realizable GPU query witness",
+    "GPU runs floating rollout on supplied wiring, not the full ruleset controller",
+    "RMSE is not exact Eq accuracy; test partition not consulted; resident model unchanged"
+  ]
+}

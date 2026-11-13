@@ -27,9 +27,11 @@ class MultiEntryRidge(unittest.TestCase):
             with patch('historical_cell_sources.link_history',return_value=links):
                 return dataset(t,4,False,'class-history-neighborhood-input',True)
         before=make(trace)
+        self.assertEqual(before[1]['edge_interfaces'],[dict(input_slot=0,source_slot=0,source_rule=0,alternatives=1)])
         changed=deepcopy(trace);changed['runs'][1]['audit']['bindings'][0]['rhs']['slots'][0]['eq_port']['after_run']=99
         after=make(changed)
         np.testing.assert_array_equal(before[1]['q'],after[1]['q'])
+        self.assertEqual(before[1]['edge_interfaces'],after[1]['edge_interfaces'])
         self.assertEqual(before[1]['q'].shape,(384,))
         np.testing.assert_array_equal(before[0]['q'][-128:],np.zeros(128))
         self.assertGreater(np.max(abs(before[1]['q'][-128:])),.01)

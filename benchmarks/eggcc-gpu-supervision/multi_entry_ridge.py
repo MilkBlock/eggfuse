@@ -161,7 +161,7 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot",source_nei
     for run in trace['runs']:
         for ordinal,b in enumerate(run['audit']['bindings']):
             idx=len(nodes);address=(run['ordinal'],ordinal);roles,q=compiled[b['rule']]
-            incoming=[];routes=[];connected=set();source_context=[]
+            incoming=[];routes=[];connected=set();source_context=[];interfaces=[]
             if address in by_consumer:
                 w,c=by_consumer[address]
                 for port in c['ports']:
@@ -177,6 +177,7 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot",source_nei
                         if zero_role_channels:route[1:]=0
                         route=context_route(route,port.get('relation')=='historical_observed_identity',encoding)
                         incoming.append((source,edge/np.sqrt(len(g['providers']))));routes.append(route)
+                        interfaces.append(dict(input_slot=port['slot'],source_slot=p['slot'],source_rule=p['rule'],alternatives=len(g['providers'])))
                         if source_neighborhood or source_relations:
                             cr=neighborhoods[b['rule']][0][port['slot']]
                             sr=neighborhoods[p['rule']][0][p['slot']]
@@ -200,7 +201,7 @@ def dataset(trace,channels=1,zero_role_channels=False,encoding="slot",source_nei
             # A missing full local state is an explicit CPU boundary in this probe.
             depth=1+max((nodes[i]['depth'] for i,_ in incoming),default=-1)
             nodes.append(dict(seed=seed,q=q,target=target,edges=incoming,edge_routes=routes,edge_width=channels*WIDTH,depth=depth,valid=valid,
-                              linked=bool(incoming),multiple=len({i for i,_ in incoming})>1,state_key=state_key(output_rows(b)),family=families[b['rule']]))
+                              edge_interfaces=interfaces,linked=bool(incoming),multiple=len({i for i,_ in incoming})>1,state_key=state_key(output_rows(b)),family=families[b['rule']]))
             addresses[address]=idx
     return nodes
 
