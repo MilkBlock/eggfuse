@@ -1,0 +1,22 @@
+{
+  "scope": "Saved successful query inputs, GPU seed/neighborhood/scalar encoding audit, not runtime matching",
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "cases": 5935,
+  "templates": 154,
+  "batches": 198,
+  "gpu_numeric_scalar_occurrences": 6385,
+  "resident_fallback_scalar_occurrences": 374,
+  "blocked": 0,
+  "max_absolute_difference": 2.384185791015625e-07,
+  "outside_tolerance": 0,
+  "finite": true,
+  "gpu_seconds_including_compilation": 0.8734079611604102,
+  "passed": true,
+  "backpropagation": false,
+  "accuracy_gain_claimed": false,
+  "limitations": [
+    "CPU supplies saved query slots and exact typed equality classes for this audit",
+    "Non-f32-exact numeric values and categorical scalars use CPU prepared resident codes",
+    "Cold timings exclude packing, upload/readback and matching; no end-to-end speed claim"
+  ]
+}
