@@ -1,0 +1,503 @@
+{
+  "scope": "Actual saved Cell executor plus independent native egglog; bounded five-rule DAG contract",
+  "runner_sha256": "43626fa3706b106f7db6e7b45c1a552cb166dd5b9225d05cbc7514482e778f66",
+  "canonicalizer_sha256": "8f3f1b76abe6392dbe0fb699c0c391dfb0529b1575ef186be2cdfb28f876dcc6",
+  "rules_sha256": "6104a1e499764036cec635b6b82ef55200dece73ea8e748db8a6cae40c3fb8a8",
+  "cases": [
+    {
+      "id": "connected-6-0",
+      "status": "pass",
+      "wall_seconds": 0.7926021669991314,
+      "run_boundaries": 7,
+      "initial": {
+        "rows": 13,
+        "scalar_occurrences": 13,
+        "distinct_scalar_values": 8,
+        "reference_occurrences": 31,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 19,
+        "tables": {
+          "Concat": 6,
+          "Input": 1,
+          "SubTuple": 6
+        },
+        "visible_rows": 13
+      },
+      "final": {
+        "rows": 57,
+        "scalar_occurrences": 47,
+        "distinct_scalar_values": 10,
+        "reference_occurrences": 137,
+        "scalar_only_blocks": 2,
+        "scalar_only_padding": 17,
+        "tables": {
+          "Concat": 24,
+          "Get": 6,
+          "Input": 1,
+          "Single": 6,
+          "SubTuple": 20
+        },
+        "visible_rows": 57
+      },
+      "max_scalar_blocks": 2,
+      "scalar_block_growth_events": 1,
+      "native_canonical_equal": true,
+      "completion_sha256": "a2362479c45254090b691e8a403c07c5475b915a1a888a009a6842aa7bb28841"
+    },
+    {
+      "id": "connected-6-1",
+      "status": "pass",
+      "wall_seconds": 0.06545291602378711,
+      "run_boundaries": 7,
+      "initial": {
+        "rows": 14,
+        "scalar_occurrences": 12,
+        "distinct_scalar_values": 5,
+        "reference_occurrences": 33,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 20,
+        "tables": {
+          "Concat": 6,
+          "Get": 1,
+          "Input": 1,
+          "Single": 1,
+          "SubTuple": 5
+        },
+        "visible_rows": 14
+      },
+      "final": {
+        "rows": 57,
+        "scalar_occurrences": 47,
+        "distinct_scalar_values": 7,
+        "reference_occurrences": 137,
+        "scalar_only_blocks": 2,
+        "scalar_only_padding": 17,
+        "tables": {
+          "Concat": 24,
+          "Get": 6,
+          "Input": 1,
+          "Single": 6,
+          "SubTuple": 20
+        },
+        "visible_rows": 57
+      },
+      "max_scalar_blocks": 2,
+      "scalar_block_growth_events": 1,
+      "native_canonical_equal": true,
+      "completion_sha256": "c0279c5969dc15fe529a53ad08e14df3d51f1b0846a2b5a665d87a9549b8216a"
+    },
+    {
+      "id": "connected-6-2",
+      "status": "pass",
+      "wall_seconds": 0.06770983303431422,
+      "run_boundaries": 7,
+      "initial": {
+        "rows": 13,
+        "scalar_occurrences": 13,
+        "distinct_scalar_values": 10,
+        "reference_occurrences": 31,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 19,
+        "tables": {
+          "Concat": 6,
+          "Input": 1,
+          "SubTuple": 6
+        },
+        "visible_rows": 13
+      },
+      "final": {
+        "rows": 57,
+        "scalar_occurrences": 47,
+        "distinct_scalar_values": 13,
+        "reference_occurrences": 137,
+        "scalar_only_blocks": 2,
+        "scalar_only_padding": 17,
+        "tables": {
+          "Concat": 24,
+          "Get": 6,
+          "Input": 1,
+          "Single": 6,
+          "SubTuple": 20
+        },
+        "visible_rows": 57
+      },
+      "max_scalar_blocks": 2,
+      "scalar_block_growth_events": 1,
+      "native_canonical_equal": true,
+      "completion_sha256": "5567006e984556f8d3a35073a4b47b4fdbaca060b2029aadc2af9be971372910"
+    },
+    {
+      "id": "connected-8-0",
+      "status": "pass",
+      "wall_seconds": 0.07872737501747906,
+      "run_boundaries": 8,
+      "initial": {
+        "rows": 13,
+        "scalar_occurrences": 13,
+        "distinct_scalar_values": 9,
+        "reference_occurrences": 31,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 19,
+        "tables": {
+          "Concat": 6,
+          "Input": 1,
+          "SubTuple": 6
+        },
+        "visible_rows": 13
+      },
+      "final": {
+        "rows": 78,
+        "scalar_occurrences": 65,
+        "distinct_scalar_values": 12,
+        "reference_occurrences": 188,
+        "scalar_only_blocks": 3,
+        "scalar_only_padding": 31,
+        "tables": {
+          "Concat": 33,
+          "Get": 8,
+          "Input": 1,
+          "Single": 8,
+          "SubTuple": 28
+        },
+        "visible_rows": 78
+      },
+      "max_scalar_blocks": 3,
+      "scalar_block_growth_events": 2,
+      "native_canonical_equal": true,
+      "completion_sha256": "d2d18e69ec8449333a60fce25afe080b0874da65d822603d35235cf0d5aaefab"
+    },
+    {
+      "id": "connected-8-1",
+      "status": "pass",
+      "wall_seconds": 0.07699425000464544,
+      "run_boundaries": 8,
+      "initial": {
+        "rows": 14,
+        "scalar_occurrences": 12,
+        "distinct_scalar_values": 7,
+        "reference_occurrences": 33,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 20,
+        "tables": {
+          "Concat": 6,
+          "Get": 1,
+          "Input": 1,
+          "Single": 1,
+          "SubTuple": 5
+        },
+        "visible_rows": 14
+      },
+      "final": {
+        "rows": 78,
+        "scalar_occurrences": 65,
+        "distinct_scalar_values": 9,
+        "reference_occurrences": 188,
+        "scalar_only_blocks": 3,
+        "scalar_only_padding": 31,
+        "tables": {
+          "Concat": 33,
+          "Get": 8,
+          "Input": 1,
+          "Single": 8,
+          "SubTuple": 28
+        },
+        "visible_rows": 78
+      },
+      "max_scalar_blocks": 3,
+      "scalar_block_growth_events": 2,
+      "native_canonical_equal": true,
+      "completion_sha256": "8b7e14509b95ebcd631b7766ad3ebfe24b3ab6eadbf2fdcecd6a8981947979a7"
+    },
+    {
+      "id": "connected-8-2",
+      "status": "pass",
+      "wall_seconds": 0.07707916595973074,
+      "run_boundaries": 8,
+      "initial": {
+        "rows": 13,
+        "scalar_occurrences": 13,
+        "distinct_scalar_values": 11,
+        "reference_occurrences": 31,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 19,
+        "tables": {
+          "Concat": 6,
+          "Input": 1,
+          "SubTuple": 6
+        },
+        "visible_rows": 13
+      },
+      "final": {
+        "rows": 78,
+        "scalar_occurrences": 65,
+        "distinct_scalar_values": 15,
+        "reference_occurrences": 188,
+        "scalar_only_blocks": 3,
+        "scalar_only_padding": 31,
+        "tables": {
+          "Concat": 33,
+          "Get": 8,
+          "Input": 1,
+          "Single": 8,
+          "SubTuple": 28
+        },
+        "visible_rows": 78
+      },
+      "max_scalar_blocks": 3,
+      "scalar_block_growth_events": 2,
+      "native_canonical_equal": true,
+      "completion_sha256": "7a9314f0e07cdad89ac2100cb36e76e9a568954b3480a457a059b53c7bae3900"
+    },
+    {
+      "id": "connected-12-0",
+      "status": "pass",
+      "wall_seconds": 0.12367008300498128,
+      "run_boundaries": 12,
+      "initial": {
+        "rows": 13,
+        "scalar_occurrences": 13,
+        "distinct_scalar_values": 10,
+        "reference_occurrences": 31,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 19,
+        "tables": {
+          "Concat": 6,
+          "Input": 1,
+          "SubTuple": 6
+        },
+        "visible_rows": 13
+      },
+      "final": {
+        "rows": 133,
+        "scalar_occurrences": 107,
+        "distinct_scalar_values": 16,
+        "reference_occurrences": 326,
+        "scalar_only_blocks": 4,
+        "scalar_only_padding": 21,
+        "tables": {
+          "Concat": 61,
+          "Get": 12,
+          "Input": 1,
+          "Single": 12,
+          "SubTuple": 47
+        },
+        "visible_rows": 133
+      },
+      "max_scalar_blocks": 4,
+      "scalar_block_growth_events": 3,
+      "native_canonical_equal": true,
+      "completion_sha256": "d50f68f009217d6d4eb4d435a51ac415e4964e100a47afdf4507b421745f34eb"
+    },
+    {
+      "id": "connected-12-1",
+      "status": "pass",
+      "wall_seconds": 0.12272170901997015,
+      "run_boundaries": 12,
+      "initial": {
+        "rows": 14,
+        "scalar_occurrences": 12,
+        "distinct_scalar_values": 7,
+        "reference_occurrences": 33,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 20,
+        "tables": {
+          "Concat": 6,
+          "Get": 1,
+          "Input": 1,
+          "Single": 1,
+          "SubTuple": 5
+        },
+        "visible_rows": 14
+      },
+      "final": {
+        "rows": 133,
+        "scalar_occurrences": 107,
+        "distinct_scalar_values": 13,
+        "reference_occurrences": 326,
+        "scalar_only_blocks": 4,
+        "scalar_only_padding": 21,
+        "tables": {
+          "Concat": 61,
+          "Get": 12,
+          "Input": 1,
+          "Single": 12,
+          "SubTuple": 47
+        },
+        "visible_rows": 133
+      },
+      "max_scalar_blocks": 4,
+      "scalar_block_growth_events": 3,
+      "native_canonical_equal": true,
+      "completion_sha256": "333c1f44f43ab6aec33ca6e1efa81edb4e1b1565d40c2ed468a7fc58a93cef57"
+    },
+    {
+      "id": "connected-12-2",
+      "status": "pass",
+      "wall_seconds": 0.12208829197334126,
+      "run_boundaries": 12,
+      "initial": {
+        "rows": 13,
+        "scalar_occurrences": 13,
+        "distinct_scalar_values": 10,
+        "reference_occurrences": 31,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 19,
+        "tables": {
+          "Concat": 6,
+          "Input": 1,
+          "SubTuple": 6
+        },
+        "visible_rows": 13
+      },
+      "final": {
+        "rows": 133,
+        "scalar_occurrences": 107,
+        "distinct_scalar_values": 19,
+        "reference_occurrences": 326,
+        "scalar_only_blocks": 4,
+        "scalar_only_padding": 21,
+        "tables": {
+          "Concat": 61,
+          "Get": 12,
+          "Input": 1,
+          "Single": 12,
+          "SubTuple": 47
+        },
+        "visible_rows": 133
+      },
+      "max_scalar_blocks": 4,
+      "scalar_block_growth_events": 3,
+      "native_canonical_equal": true,
+      "completion_sha256": "5a2ff72a8b25ca212c8dd4bd4a75111b85a62d3b40204d99b4819218f0d97aff"
+    },
+    {
+      "id": "connected-16-0",
+      "status": "pass",
+      "wall_seconds": 0.1769774580025114,
+      "run_boundaries": 16,
+      "initial": {
+        "rows": 13,
+        "scalar_occurrences": 13,
+        "distinct_scalar_values": 10,
+        "reference_occurrences": 31,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 19,
+        "tables": {
+          "Concat": 6,
+          "Input": 1,
+          "SubTuple": 6
+        },
+        "visible_rows": 13
+      },
+      "final": {
+        "rows": 180,
+        "scalar_occurrences": 145,
+        "distinct_scalar_values": 20,
+        "reference_occurrences": 442,
+        "scalar_only_blocks": 5,
+        "scalar_only_padding": 15,
+        "tables": {
+          "Concat": 83,
+          "Get": 16,
+          "Input": 1,
+          "Single": 16,
+          "SubTuple": 64
+        },
+        "visible_rows": 180
+      },
+      "max_scalar_blocks": 5,
+      "scalar_block_growth_events": 4,
+      "native_canonical_equal": true,
+      "completion_sha256": "00dc352e106c48a95784338791e5d16e23f622ded1630d4aa66f2a2df23c3e1a"
+    },
+    {
+      "id": "connected-16-1",
+      "status": "pass",
+      "wall_seconds": 0.17686720797792077,
+      "run_boundaries": 16,
+      "initial": {
+        "rows": 14,
+        "scalar_occurrences": 12,
+        "distinct_scalar_values": 9,
+        "reference_occurrences": 33,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 20,
+        "tables": {
+          "Concat": 6,
+          "Get": 1,
+          "Input": 1,
+          "Single": 1,
+          "SubTuple": 5
+        },
+        "visible_rows": 14
+      },
+      "final": {
+        "rows": 180,
+        "scalar_occurrences": 145,
+        "distinct_scalar_values": 17,
+        "reference_occurrences": 442,
+        "scalar_only_blocks": 5,
+        "scalar_only_padding": 15,
+        "tables": {
+          "Concat": 83,
+          "Get": 16,
+          "Input": 1,
+          "Single": 16,
+          "SubTuple": 64
+        },
+        "visible_rows": 180
+      },
+      "max_scalar_blocks": 5,
+      "scalar_block_growth_events": 4,
+      "native_canonical_equal": true,
+      "completion_sha256": "57af6344b245ab46f52a188307fd34095d652676b72f519ce84713bad24ba0e1"
+    },
+    {
+      "id": "connected-16-2",
+      "status": "pass",
+      "wall_seconds": 0.17777170898625627,
+      "run_boundaries": 16,
+      "initial": {
+        "rows": 13,
+        "scalar_occurrences": 13,
+        "distinct_scalar_values": 11,
+        "reference_occurrences": 31,
+        "scalar_only_blocks": 1,
+        "scalar_only_padding": 19,
+        "tables": {
+          "Concat": 6,
+          "Input": 1,
+          "SubTuple": 6
+        },
+        "visible_rows": 13
+      },
+      "final": {
+        "rows": 180,
+        "scalar_occurrences": 145,
+        "distinct_scalar_values": 23,
+        "reference_occurrences": 442,
+        "scalar_only_blocks": 5,
+        "scalar_only_padding": 15,
+        "tables": {
+          "Concat": 83,
+          "Get": 16,
+          "Input": 1,
+          "Single": 16,
+          "SubTuple": 64
+        },
+        "visible_rows": 180
+      },
+      "max_scalar_blocks": 5,
+      "scalar_block_growth_events": 3,
+      "native_canonical_equal": true,
+      "completion_sha256": "eee23a1f85559990db78008449348cb64aab7e1d4cf511ecbf3a032a0c8d7d44"
+    }
+  ],
+  "all_requested_pass": true,
+  "timing_scope": "1-second timeout enforcement, not a performance comparison",
+  "limitations": [
+    "No GPU computation in this collection",
+    "Scalar blocks exclude identity, topology and hidden state",
+    "Final graph comparison does not independently verify every Run boundary"
+  ]
+}

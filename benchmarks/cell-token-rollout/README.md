@@ -100,3 +100,55 @@ Next dataset work must introduce genuinely larger interacting multi-entry
 regions, preserve short-case execution limits, and separately account for
 compiled structure versus necessary dynamic state. A variable-capacity runtime
 must not use future teacher snapshots to allocate or route its instances.
+
+## Larger interacting regions
+
+`larger.py` generates 12 connected entry forests at interval lengths 6, 8, 12
+and 16. Each has two different associations of the same tuple interval, an
+overlapping interior interval, and an additional existing whole interval,
+Single/Get, or prefix. All roots share Input 0. Three variants also vary scalar
+starts. These are overlapping real-rule inputs, not repeated independent rows.
+`source-rules.json` preserves the five original recipe rules and provenance from
+commit a24876d6. The newly imported `real_completion_dataset` Cargo example
+executes the current worktree's compiler/runtime with boundary snapshots and an
+independent native egglog final export; no runtime kernel is changed.
+
+All 12 requested cases passed the 1-second subprocess limit, the two unchanged
+fixed-point Runs, and exact canonical final DAG equality with native egglog.
+The supported contract remains the five positive constructor rules, no hidden
+rows or unsupported tables; canonicalization rejects cycles and missing producers.
+This does not independently prove each intermediate Run equals native execution.
+The first cold case took 0.793 s; others 0.065–0.178 s. These times enforce the
+user's short-test budget and are not benchmark speed claims.
+
+| Interval length | Final physical rows | Maximum 32-scalar blocks |
+|---:|---:|---:|
+| 6 | 57 | 2 |
+| 8 | 78 | 3 |
+| 12 | 133 | 4 |
+| 16 | 180 | 5 |
+
+Full per-case outcomes, including every requested attempt, are retained in
+`larger-results.json`. Block counts still exclude identities, structure and
+learned hidden state, and are reference materialization costs. No GPU token
+allocation or no-publication execution is claimed. This dataset makes capacity
+growth testable without reducing token width to manufacture growth.
+
+```
+CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_DEV_INCREMENTAL=false \
+  cargo build --locked -p eggfuse-cell-compiler --example real_completion_dataset
+python larger.py --runner ../../target/debug/examples/real_completion_dataset \
+  --reference-dir REFERENCE_DIR --output ../../out/cell-token-rollout/larger
+```
+
+Run the Python command from this directory. The reference directory is the same
+pinned canonicalizer dependency described above. The command preserves inputs,
+full runtime exports and results under the output directory. Timeouts and errors
+remain explicit and cannot establish a pass. Debug information/incremental build
+were disabled after the first build exhausted local disk space; only this
+worktree's newly generated target cache was removed before rebuilding.
+
+The next numerical experiment must use input/Bake-derived capacity, never future
+teacher layouts, and keep the token block directly consumable by its successor.
+These larger endpoints extend beyond the previous known completion catalog;
+reusing the old 24-class readout cannot establish successful larger completion.

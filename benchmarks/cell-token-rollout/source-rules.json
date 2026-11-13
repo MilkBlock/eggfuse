@@ -1,0 +1,28 @@
+{
+  "rules": [
+    {
+      "rule": 133,
+      "source": "(rewrite (Concat (Concat a b) c) (Concat a (Concat b c)) :ruleset always-run)"
+    },
+    {
+      "rule": 137,
+      "source": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)"
+    },
+    {
+      "rule": 138,
+      "source": "(rewrite (SubTuple expr a b) (Concat (Single (Get expr a)) (SubTuple expr (+ a 1) (- b 1))) :when ((> b 1)) :ruleset always-run)"
+    },
+    {
+      "rule": 143,
+      "source": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )"
+    },
+    {
+      "rule": 144,
+      "source": "(rewrite (Concat (SubTuple expr a b) (SubTuple expr (+ a b) c)) (SubTuple expr a (+ b c)) :ruleset always-run)"
+    }
+  ],
+  "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+  "program_sha256": "b367bead1102bef91ac875b50eae217ccf80787378736c3f84e8db8fc2f6a010",
+  "source_program_file_sha256": "a73133b304ac0231af99234d4751768454dbfe76c3bb21fa06dde19c1c67d795",
+  "scope": "Generated entry forests; unmodified actual eggcc rules in a restricted positive ruleset. Not a production trace distribution."
+}
