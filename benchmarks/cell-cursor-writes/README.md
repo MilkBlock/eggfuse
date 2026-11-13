@@ -202,3 +202,27 @@ semantics. Run it under a compute lease, then run the original quick harness
 under one timing lease (5 sum-bits and 3 Raytrace samples; all control first).
 It also compares coverage with `2d7ac486`, so a lower counter caused by losing
 continuations cannot count as a successful removal.
+
+Implementation `da4737c0` passed the 211 runtime tests and 73 relevant integration
+tests (Cell execution, query receipts, matched handoffs and Entry publication).
+Queue job 141 verified ordinary sum-bits/Raytrace states, source Runs, effects,
+native sum-bits acceptance and unchanged write coverage. Raytrace's temporary
+buffer capacity fell from 249,207,360 to 242,141,056 cumulative bytes, exactly the
+7,066,304-byte origin side array. Retained incoming source capacity was
+185,901,120 cumulative bytes; this longer lifetime is not a new allocation and
+does not establish a peak-memory reduction.
+
+Queue job 142 completed the declared ordinary comparison with 48 clear boundary
+guards. `source-results.json` retains all timing samples and frozen work counts.
+
+| Inference median | Original control `23d55e65` | Source instances `da4737c0` | Change |
+| --- | ---: | ---: | ---: |
+| sum-bits | 26.349 ms | 26.328 ms | -0.08% |
+| Raytrace | 5.287 s | 5.328 s | +0.76% |
+
+This is near parity, not a demonstrated speedup. The two-workload gate still
+fails; the branch remains unadopted. The source-owner change did delete its
+targeted handoff storage without losing coverage, but values still move from
+the instance into `WriteTask`. A next structural step is to let tasks borrow
+the original instances directly, measuring the resulting descriptor size,
+retained-buffer lifetime and access locality rather than assuming it is free.
