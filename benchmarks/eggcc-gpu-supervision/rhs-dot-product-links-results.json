@@ -1,0 +1,48 @@
+{
+  "schema": "observed-rhs-input-links/v1",
+  "program_sha256": "d18c6a7303eea4bb9193dac5907f5368332b9823be2788b2bf5c4442d8310d8d",
+  "counts": {
+    "eligible_windows": 413,
+    "constructor_results_requested": 7579,
+    "available_constructor_results": 7579,
+    "consumer_applications_examined": 5934,
+    "consumer_eq_slots_examined": 25852,
+    "linked_consumer_eq_slots": 5675,
+    "same_identity_slots": 5540,
+    "linked_consumer_applications": 2901,
+    "external_classes:2": 569,
+    "multi_entry_consumer_applications": 2391,
+    "linked_windows": 207,
+    "shared_provider_groups": 2459,
+    "stored_provider_references": 3962,
+    "external_classes:5": 149,
+    "external_classes:6": 58,
+    "external_classes:3": 445,
+    "external_classes:4": 345,
+    "external_classes:1": 742,
+    "cross_ruleset_consumer_applications": 496,
+    "requires_multiple_observed_providers": 1066,
+    "external_classes:0": 510,
+    "external_classes:8": 28,
+    "external_classes:7": 33,
+    "equivalent_identity_slots": 135,
+    "external_classes:9": 20,
+    "external_classes:10": 2
+  },
+  "causal_link_proven": false,
+  "takeover_authorized": false,
+  "limitations": [
+    "Actual equal identities are potential sources, not unique producers or causal links",
+    "Consumer match establishes its input occurrence, not producer fact lifetime or ownership",
+    "Only adjacent nonempty observed Runs with unchanged intervening Runs",
+    "No linkage by scalar equality; mutable effects and copied aliases are not producers",
+    "Consumer observations are future evidence, not producer prediction features"
+  ],
+  "corpus_partition": {
+    "case": "010-dot-product",
+    "split": "test",
+    "manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7"
+  },
+  "trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "links_sha256": "1a69307ebb25f849916161d4dcedde21118de52dc47331027a59d6ce708b6a22"
+}
