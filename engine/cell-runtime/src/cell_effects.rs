@@ -188,6 +188,13 @@ impl EffectPlan {
                 if executes(op) && cell.relation(Site::Effect(op)).is_some() { plan.require(op); }
             }
         }
+        // Composition reads the same actual-result array as worker preparation,
+        // RHS and publication. Demand only eligible prefix sites, never a full
+        // instruction history; existing export slots are reused by require().
+        #[cfg(feature = "sparse-cells")]
+        if let Some(prefix)=p.executions.get(rule).and_then(|execution|execution.constructor.as_ref()) {
+            for op in prefix.entry_operations() {plan.require(op);}
+        }
         #[cfg(feature = "sparse-cells")]
         if published != 0 && published <= 32
             && plan.registration.as_ref().is_some_and(|r| r.direct == published)

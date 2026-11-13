@@ -778,6 +778,56 @@ fn fragment_loading_validates_routes_even_before_enabling_ownership() {
 }
 
 #[test]
+fn ownership_catalog_headers_each_bind_to_the_current_source() {
+    use eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest;
+    let p = program(STAGES);
+    let mut raw = p.artifact.clone();
+    let source = source_digest(&raw);
+    raw["ownership_witnesses"] = json!({"source":source,"recipes":[]});
+    raw["ownership_dual_sources"] = json!({"source":source,"schema":"dual-source-patterns/v1","patterns":[]});
+    let load = |mut raw: serde_json::Value| {
+        raw.as_object_mut().unwrap().remove("sha256");
+        raw["sha256"] = eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+        Program::parse(raw).and_then(|mut p| { p.prepare_cell_ownership()?; Ok(p) })
+    };
+    load(raw.clone()).unwrap();
+    for (name, error) in [
+        ("ownership_fragments", "ownership fragments have a different source"),
+        ("ownership_dual_sources", "dual-source source/schema"),
+        ("ownership_witnesses", "constructor witness source mismatch"),
+    ] {
+        // A valid neighboring catalog must not vouch for this header. Also
+        // exercise catalogs alone, including lazy ownership preparation.
+        for alone in [false, true] {
+            let mut base = raw.clone();
+            if alone {
+                for other in ["ownership_fragments", "ownership_dual_sources", "ownership_witnesses"] {
+                    if other != name { base.as_object_mut().unwrap().remove(other); }
+                }
+            }
+            load(base.clone()).unwrap();
+            for invalid in [json!("stale"), json!(7), json!(null)] {
+                let mut changed = base.clone();
+                changed[name]["source"] = invalid;
+                assert!(load(changed).unwrap_err().contains(error), "{name}");
+            }
+            let mut missing = base;
+            missing[name].as_object_mut().unwrap().remove("source");
+            assert!(load(missing).unwrap_err().contains(error), "{name}");
+        }
+    }
+    // A second valid program must not reuse the first program's digest, even
+    // when all installed headers agree with each other.
+    let mut other = raw_program(&STAGES.replace("(N 0) (N 1)", "(N 7) (N 8)")).artifact.clone();
+    assert_ne!(source_digest(&other), source);
+    for name in ["ownership_fragments", "ownership_dual_sources", "ownership_witnesses"] {
+        other[name] = raw[name].clone();
+    }
+    assert!(load(other).unwrap_err().contains("ownership fragments have a different source"));
+    load(raw).unwrap();
+}
+
+#[test]
 fn different_entry_guards_share_identical_local_code() {
     let src = r#"
 (datatype E (N i64) (F E))
@@ -1684,13 +1734,14 @@ fn compiled_constructor_witness_replaces_cross_stage_lookup() {
     assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
     assert!(candidate.graph.stats.constructor_cell_route_key_proved>0);
     assert!(candidate.graph.stats.constructor_cell_route_key_fields_avoided>0);
-    for mutation in ["hide", "delete", "union"] {
+    for mutation in ["hide", "delete", "union"] {for workers in [0,4] {
         let mut plain=raw.clone();plain.as_object_mut().unwrap().remove("ownership_witnesses");
         plain.as_object_mut().unwrap().remove("sha256");
         plain["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&plain).into();
         let mut base=Executor::new(Graph::new_with_local_congruence(Program::parse(plain).unwrap()).unwrap(),true);
         let mut actual=Executor::new(Graph::new_with_local_congruence(Program::parse(raw.clone()).unwrap()).unwrap(),true);
         for e in [&mut base,&mut actual] {
+            if workers!=0 {e.use_query_workers(workers,1).unwrap();e.use_cell_execution(1).unwrap();}
             e.execute_until(Some(2)).unwrap();
             let table=e.graph.program.tables.iter().position(|t|t.name=="Start").unwrap();
             let witness=e.graph.witnesses(table)[0];
@@ -1706,7 +1757,8 @@ fn compiled_constructor_witness_replaces_cross_stage_lookup() {
         }
         assert_eq!(base.graph.export().unwrap(),actual.graph.export().unwrap(),"mutation={mutation}");
         assert_eq!(base.snapshots,actual.snapshots,"mutation={mutation}");
-    }
+        assert_eq!(base.binding_audit,actual.binding_audit,"mutation={mutation}");
+    }}
     raw["ownership_witnesses"]["recipes"][0]["frame_codes"][0]=json!(usize::MAX);
     raw.as_object_mut().unwrap().remove("sha256");
     raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
@@ -2109,6 +2161,156 @@ fn one_entry_reuses_static_route_selection_for_multiple_constructor_results() {
     assert_eq!(s.constructor_cell_route_anchor_reads+s.constructor_cell_route_address_reuses,
         s.constructor_cell_route_probes+s.constructor_cell_route_selection_reuses);
     assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
+}
+
+#[test]
+fn prepared_workers_use_baked_witnesses_and_check_unproved_keys() {
+    let seed=(0..48).map(|n|format!("(N {n})")).collect::<Vec<_>>().join("\n");
+    for delta in [0,1] {
+    let p=program(&format!(r#"
+        (datatype E (N i64) (Start E) (Pair E E) (Wrap E E E) (G E))
+        (ruleset a) (ruleset b) (ruleset c) (ruleset d) (ruleset u)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((= p (Pair s x))) ((Wrap p s x)) :ruleset c)
+        (rule ((Wrap p s x) (= x (N n))) ((Start x) (Pair s x) (Start (N (+ n {delta}))) (G x)) :ruleset d)
+        (rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset u)
+        {seed} (run a 1) (run b 1) (run c 1) (run u 1) (run d 1)
+    "#));
+    let mut observer=Graph::new_with_local_congruence(p.clone()).unwrap();
+    observer.trace_ownership_catalog(16).unwrap();
+    let mut observer=Executor::new(observer,true);observer.execute().unwrap();
+    let trace=observer.graph.ownership_catalog_trace().unwrap();
+    let mut raw=p.artifact.clone();
+    raw["ownership_witnesses"]=json!({"source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),
+        "recipes":trace["saturation"]["witness_recipes"]});
+    // The observer stops at the intervening N lookup. Deliberately offer the
+    // same genuine local Start as a hint for the later computed key: this is
+    // not a proof. The recipe compiler must withhold key_proved, and workers
+    // must reject it for unmerged n+1 inputs rather than trust the hint.
+    let start=p.tables.iter().position(|t|t.name=="Start").unwrap();
+    let mut hinted=0;
+    for recipe in raw["ownership_witnesses"]["recipes"].as_array_mut().unwrap() {
+        let rule=recipe["rule"].as_u64().unwrap() as usize;
+        let ops=&p.templates[p.rules[rule].template].ops;
+        let starts=ops.iter().enumerate().filter_map(|(op,i)|matches!(i,
+            eggfuse_cell_runtime::program::Op::Let(_,eggfuse_cell_runtime::program::Call::Table(t),_) if *t==start).then_some(op)).collect::<Vec<_>>();
+        if starts.len()<2 {continue;}
+        let sites=recipe["rhs_sites"].as_array_mut().unwrap();
+        if let Some(mut site)=sites.iter().find(|s|s[0].as_u64()==Some(starts[0] as u64)).cloned() {
+            site[0]=json!(starts[starts.len()-1]);sites.push(site);hinted+=1;
+        }
+    }
+    assert!(hinted>0);
+    raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let baked=Program::parse(raw).unwrap();
+    for stable in [false,true] {for workers in [1,4] {
+    let mut unbatched=None;
+    for grain in [1,16] {
+        let execute=|program| {
+            let g=if stable {Graph::new_with_local_congruence(program)}else{Graph::new_with_cell_ownership(program)}.unwrap();
+            let mut e=Executor::new(g,true);
+            e.use_query_workers(workers,grain).unwrap();e.use_cell_execution(grain).unwrap();e.execute().unwrap();e
+        };
+        let control=execute(p.clone());let candidate=execute(baked.clone());
+        assert_eq!(control.snapshots,candidate.snapshots);
+        assert_eq!(control.binding_audit,candidate.binding_audit);
+        assert_eq!(control.graph.export().unwrap(),candidate.graph.export().unwrap());
+        assert_eq!(control.graph.stats.constructor_requests,candidate.graph.stats.constructor_requests);
+        assert_eq!(control.graph.stats.logical_facts_created,candidate.graph.stats.logical_facts_created);
+        let report=candidate.report();let w=&report["query_workers"]["stats"]["execution"]["constructor"]["witnesses"];
+        assert!(w["proved_hits"].as_u64().unwrap()>=48,"{w}");
+        assert!(w["hits"].as_u64().unwrap()>w["proved_hits"].as_u64().unwrap(),"unproved keys must be compared: {w}");
+        assert!(w["selection_reuses"].as_u64().unwrap()>0,"{w}");
+        assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
+        let probes=w["probes"].as_u64().unwrap();
+        let result=(w["hits"].as_u64().unwrap(),candidate.graph.key_lookup_calls.get());
+        if let Some((previous,expected))=unbatched {
+            assert!(probes<previous,"neighbor instances should share static selection: {w}");
+            assert_eq!(result,expected,"batching cannot change actual witness acceptance");
+        } else {unbatched=Some((probes,result));}
+        if delta==1 {assert!(w["candidates"].as_u64().unwrap()>w["hits"].as_u64().unwrap(),"mismatched hinted keys must fall back: {w}");}
+        eprintln!("prepared witnesses delta={delta} stable={stable} workers={workers} grain={grain}: {w}; lookups {} -> {}",
+            control.graph.key_lookup_calls.get(),candidate.graph.key_lookup_calls.get());
+    }}}
+    }
+}
+
+#[test]
+fn baked_result_entry_survives_constructor_preparation() {
+    let seed=(0..48).map(|n|format!("(Tick (N {n}))")).collect::<Vec<_>>().join("\n");
+    for existing in [1,2] {
+    let producer=if existing==1 {"(F x)"} else {"(G (F x))"};
+    let source=format!(r#"
+        (datatype E (N i64) (Tick E) (F E) (G E) (H E))
+        (ruleset a) (ruleset b) (ruleset join)
+        (rule ((= x (N n))) ({producer}) :ruleset a)
+        (rule ((Tick x)) ((H (G (F x)))) :ruleset b)
+        (rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset join)
+        {seed}
+        (run a 1) (run b 1) (run join 1) (run b 1)
+        (check (= (H (G (F (N 0)))) (H (G (F (N 1))))))
+    "#);
+    let p=program(&source);
+    for stable in [false,true] {
+    let create=|| if stable {Graph::new_with_local_congruence(p.clone()).unwrap()}
+        else {Graph::new_with_cell_ownership(p.clone()).unwrap()};
+    let mut control=Executor::new(create(),true);
+    control.use_entry_publications().unwrap();control.execute().unwrap();
+    let before=control.graph.ownership_report();
+    assert!(before["stats"]["composition_result_joins"].as_u64().unwrap()>0,"{before}");
+    for workers in [1,4] {
+        let mut candidate=Executor::new(create(),true);
+        candidate.use_entry_publications().unwrap();
+        candidate.use_query_workers(workers,1).unwrap();candidate.use_cell_execution(1).unwrap();
+        candidate.execute().unwrap();
+        assert_eq!(control.snapshots,candidate.snapshots);
+        assert_eq!(control.binding_audit,candidate.binding_audit);
+        assert_eq!(control.graph.export().unwrap(),candidate.graph.export().unwrap());
+        let after=candidate.graph.ownership_report();
+        for key in ["composition_result_writes","composition_result_joins","composition_baked_hits",
+            "owned_births","owned_live","signal_bindings_created"] {
+            assert_eq!(before["stats"][key],after["stats"][key],"{key}");
+        }
+        assert!(candidate.graph.stats.constructor_prefix_entry_reads>=existing*48,
+            "the composition must consume the worker's actual result slots");
+        assert!(candidate.graph.stats.constructor_prefix_operations>=48);
+        assert_eq!(candidate.graph.stats.constructor_prefix_rejected,0);
+        let report=candidate.report();
+        assert!(report["stage_spine"]["stats"]["prepared_effect_buffer_moves"].as_u64().unwrap()>0,
+            "the same result allocation continues into RHS");
+        eprintln!("prepared owner existing={existing} stable={stable} workers={workers}: prefix={}, Entry reads={}, result joins={}",
+            candidate.graph.stats.constructor_prefix_operations,candidate.graph.stats.constructor_prefix_entry_reads,
+            after["stats"]["composition_result_joins"]);
+    }
+    }
+    }
+}
+
+#[test]
+fn late_observation_selects_captured_results_before_worker_execution() {
+    let source="(datatype E (N i64) (Tick E) (F E) (G E) (H E))
+        (ruleset a) (ruleset b)
+        (rule ((= x (N n))) ((F x)) :ruleset a)
+        (rule ((Tick x)) ((H (G (F x)))) :ruleset b)
+        (Tick (N 0)) (Tick (N 1)) (run a 1) (run b 1)";
+    let p=raw_program(source);
+    for trace in [false,true] {
+    let enable=|g:&mut Graph|if trace {g.trace_ownership_catalog(4)}else{g.train_ownership_fragments()};
+    let evidence=|g:&Graph|if trace {g.ownership_catalog_trace()}else{g.ownership_fragment_profile()};
+    let mut control=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),true);
+    enable(&mut control.graph).unwrap();control.execute().unwrap();
+    let mut candidate=Executor::new(Graph::new_with_cell_ownership(p.clone()).unwrap(),true);
+    candidate.use_query_workers(2,1).unwrap();candidate.use_cell_execution(1).unwrap();
+    enable(&mut candidate.graph).unwrap();candidate.execute().unwrap();
+    assert_eq!(control.snapshots,candidate.snapshots);
+    assert_eq!(control.binding_audit,candidate.binding_audit);
+    assert_eq!(evidence(&control.graph).unwrap(),evidence(&candidate.graph).unwrap());
+    assert!(candidate.graph.stats.constructor_prepared_inputs>0);
+    assert_eq!(candidate.graph.stats.constructor_prefix_rejected,0);
+    assert_eq!(candidate.graph.stats.constructor_prefix_operations,0);
+    assert_eq!(candidate.graph.stats.constructor_prefix_entry_reads,0);
+    }
 }
 
 #[test]

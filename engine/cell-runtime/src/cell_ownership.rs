@@ -25,7 +25,7 @@ pub(in crate::graph) mod query_read;
 #[path = "port_completion.rs"]
 pub(crate) mod completion;
 #[path = "ownership_witnesses.rs"]
-mod witnesses;
+pub(in crate::graph) mod witnesses;
 
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Plan {
@@ -63,7 +63,32 @@ pub struct Marker {
     #[serde(skip)]
     pub program: Arc<PortProgram>,
 }
+/// Every ownership catalog selects code from the same immutable source. Check
+/// its identity once per Plan construction, without retaining a digest/cache in
+/// Program or trusting one catalog's header on behalf of another. Subcompilers
+/// still re-prove their typed wiring, schema and resource bounds.
+fn validate_catalog_sources(artifact: &J) -> Result<()> {
+    let mut source = None;
+    for (name, error) in [
+        ("ownership_fragments", "ownership fragments have a different source or schema"),
+        ("ownership_dual_sources", "dual-source source/schema"),
+        ("ownership_witnesses", "constructor witness source mismatch"),
+    ] {
+        if let Some(catalog) = artifact.get(name) {
+            let expected = source.get_or_insert_with(|| composition::source_digest(artifact));
+            if catalog["source"].as_str() != Some(expected.as_str()) {
+                return Err(error.into());
+            }
+        }
+    }
+    Ok(())
+}
 impl Plan {
+    /// Whether typed witness routes exist for this rule.
+    /// Raw recipe presence alone is insufficient: a recipe may have no usable anchor.
+    pub fn has_witness_routes(&self, rule:usize)->bool {
+        self.witnesses.0.get(rule).is_some_and(|r|!r.is_empty())
+    }
     #[cfg(feature = "storage-metrics")]
     pub(crate) fn release_storage_by_field(self, live_bytes: &impl Fn() -> usize, rows: &mut Vec<(&'static str, usize)>) {
         assert!(rows.capacity() - rows.len() >= 32);
@@ -100,6 +125,7 @@ impl Plan {
         rows.push(("ownership.routes", before - live_bytes()));
     }
     pub(crate) fn derive(p: &Program) -> Result<Self> {
+        validate_catalog_sources(&p.artifact)?;
         let tables = p
             .repair_ports
             .key_eq_columns
@@ -421,6 +447,20 @@ impl Graph {
                     || self.program.cell_ownership.witnesses.0.get(rid).is_some_and(|r|!r.is_empty()))
         })
     }
+    pub(crate) fn needs_ownership_results(&self, rid: usize) -> bool {
+        self.ownership.as_ref().is_some_and(|m|
+            self.program.cell_ownership.composition.result_rules[rid]
+                || m.composition.training.is_some() || m.composition.catalog_trace.is_some())
+    }
+    pub(crate) fn reconcile_ownership_preparation(&mut self) {
+        #[cfg(feature="sparse-cells")]
+        for rid in 0..self.program.executions.len() {
+            if self.needs_ownership_results(rid)
+                && let Some(plan)=&mut self.program.executions[rid].constructor {
+                plan.require_owner_results();
+            }
+        }
+    }
     pub(super) fn ownership_settled(&self) -> bool {
         self.ownership.as_ref().is_none_or(|m| m.pending.is_empty())
     }
@@ -460,6 +500,7 @@ impl Graph {
             keep_barrier_history:false,
             barrier_history_start:0,
         });
+        self.reconcile_ownership_preparation();
         // Import is already settled. Adopt existing covered bodies, rather than
         // limiting ownership to rows born after activation.
         let facts = (0..self.program.tables.len())

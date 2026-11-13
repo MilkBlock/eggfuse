@@ -222,6 +222,8 @@ pub struct Stats {
     #[serde(default)]
     pub constructor_prefix_receipt_writes: u64,
     #[serde(default)]
+    pub constructor_prefix_entry_reads: u64,
+    #[serde(default)]
     pub rhs_context_suspends: u64,
     #[serde(default)]
     pub constructor_prepared_inputs: u64,

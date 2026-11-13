@@ -1,0 +1,343 @@
+{
+  "scope": "actual standalone Cell CPU; frozen sequential trials; not native runtime speed or historical-best comparison",
+  "first": {
+    "commits": {
+      "control": "022a5e20655c17762d736524bfbfd4bfae75eadc",
+      "candidate": "0a58f12bc004f12b9d34284cab268b0eb572d9c9"
+    },
+    "timing_job": "272",
+    "status": "completed-with-boundary-guards",
+    "all_boundary_guards_clear": true,
+    "order": [
+      [
+        "control",
+        "sum"
+      ],
+      [
+        "control",
+        "ray"
+      ],
+      [
+        "candidate",
+        "sum"
+      ],
+      [
+        "candidate",
+        "ray"
+      ]
+    ],
+    "artifact_root": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-owner-prefix-0a58f12b",
+    "work_sha256": "c6ce14362235f1b99e356030259c5c2d0ccff6bc498c505ac7b30f87f089502f",
+    "timing_sha256": "2436224304386e2af2b9ef8dd349a4403d31694876b3bd9e60654b3d93ea3221",
+    "validation": {
+      "sum": {
+        "exact_state_runs_effects": true,
+        "runs": 1428,
+        "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "ray": {
+        "exact_state_runs_effects": true,
+        "runs": 16883,
+        "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+      }
+    },
+    "native_sum_acceptance": "pass",
+    "native_proof_sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505",
+    "learned_validation": {
+      "scope": "unchanged saved Bake catalog; differential final state, Run summaries and effects; not native acceptance or timing",
+      "program_sha256": "252abc98d1cc3104ee2abcb367992983d03f5dcc99ba491026bbb05f93d80805",
+      "state_sha256": "606b2e1f1d508c85754ea1ccc339f21b5d0db629e849e9211c515108d74e1cb8",
+      "exact_state_runs_effects": true,
+      "runs": 882
+    },
+    "workloads": {
+      "sum": {
+        "change_percent": 8.316949298244602,
+        "ranges": {
+          "control": [
+            0.020844209,
+            0.022460583
+          ],
+          "candidate": [
+            0.021233708,
+            0.02411775
+          ]
+        },
+        "control": {
+          "median_seconds": 0.021811375,
+          "samples": [
+            0.020844209,
+            0.021811375,
+            0.021427667,
+            0.022400959,
+            0.022460583
+          ],
+          "runtime_sha256": "ed6025c65483c87243d975530d9d654088a8c82f8c27019f3d1e9dbbbf37f2c4",
+          "lookups": 14653,
+          "prefix_operations": 2478,
+          "prefix_entry_reads": 0
+        },
+        "candidate": {
+          "median_seconds": 0.023625416,
+          "samples": [
+            0.022415,
+            0.02411775,
+            0.021233708,
+            0.023625416,
+            0.024105125
+          ],
+          "runtime_sha256": "a770d6648ac8346a99a4ba5e9aabd80fac841c034c61919ecd89478b62f44aaf",
+          "lookups": 14653,
+          "prefix_operations": 2478,
+          "prefix_entry_reads": 0
+        }
+      },
+      "ray": {
+        "change_percent": 1.4542180074199829,
+        "ranges": {
+          "control": [
+            4.725716125,
+            4.744032917
+          ],
+          "candidate": [
+            4.7773175,
+            4.860420417
+          ]
+        },
+        "control": {
+          "median_seconds": 4.742334,
+          "samples": [
+            4.742334,
+            4.744032917,
+            4.725716125
+          ],
+          "runtime_sha256": "ed6025c65483c87243d975530d9d654088a8c82f8c27019f3d1e9dbbbf37f2c4",
+          "lookups": 4332972,
+          "prefix_operations": 535532,
+          "prefix_entry_reads": 0
+        },
+        "candidate": {
+          "median_seconds": 4.811297875,
+          "samples": [
+            4.7773175,
+            4.811297875,
+            4.860420417
+          ],
+          "runtime_sha256": "a770d6648ac8346a99a4ba5e9aabd80fac841c034c61919ecd89478b62f44aaf",
+          "lookups": 4332972,
+          "prefix_operations": 535532,
+          "prefix_entry_reads": 0
+        }
+      }
+    },
+    "learned_work": {
+      "control": {
+        "lookups": 14506,
+        "prefix_operations": 492,
+        "prefix_entry_reads": 0,
+        "composition_entry_reads": 8832,
+        "composition_result_joins": 0,
+        "baked_hits": 1099,
+        "cumulative_result_bytes": 1248,
+        "buffer_moves": 48
+      },
+      "candidate": {
+        "lookups": 14962,
+        "prefix_operations": 2540,
+        "prefix_entry_reads": 0,
+        "composition_entry_reads": 6784,
+        "composition_result_joins": 0,
+        "baked_hits": 1099,
+        "cumulative_result_bytes": 39200,
+        "buffer_moves": 876
+      }
+    }
+  },
+  "final": {
+    "commits": {
+      "control": "022a5e20655c17762d736524bfbfd4bfae75eadc",
+      "candidate": "aef891812fdea688848c4fc6909d77e8ac85154a"
+    },
+    "timing_job": "278",
+    "status": "completed-with-boundary-guards",
+    "all_boundary_guards_clear": true,
+    "order": [
+      [
+        "control",
+        "sum"
+      ],
+      [
+        "control",
+        "ray"
+      ],
+      [
+        "candidate",
+        "sum"
+      ],
+      [
+        "candidate",
+        "ray"
+      ]
+    ],
+    "artifact_root": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-owner-prefix-config",
+    "work_sha256": "f5bfa1522b697731ae801913f05ea39934f46772a2bf02cfa34d10ab6a0d45c4",
+    "timing_sha256": "1b6320985eab5e47965fd6bbc0fa274d0e8cdad35d3d7df4f05821622d951da9",
+    "validation": {
+      "sum": {
+        "exact_state_runs_effects": true,
+        "runs": 1428,
+        "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "ray": {
+        "exact_state_runs_effects": true,
+        "runs": 16883,
+        "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+      }
+    },
+    "native_sum_acceptance": "pass",
+    "native_proof_sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505",
+    "learned_validation": {
+      "scope": "unchanged saved Bake catalog; differential final state, Run summaries and effects; not native acceptance or timing",
+      "program_sha256": "252abc98d1cc3104ee2abcb367992983d03f5dcc99ba491026bbb05f93d80805",
+      "state_sha256": "606b2e1f1d508c85754ea1ccc339f21b5d0db629e849e9211c515108d74e1cb8",
+      "exact_state_runs_effects": true,
+      "runs": 882
+    },
+    "workloads": {
+      "sum": {
+        "change_percent": -0.32306434266228257,
+        "ranges": {
+          "control": [
+            0.020966375,
+            0.021932292
+          ],
+          "candidate": [
+            0.021017583,
+            0.021680917
+          ]
+        },
+        "control": {
+          "median_seconds": 0.021383666,
+          "samples": [
+            0.020966375,
+            0.021329291,
+            0.021383666,
+            0.02178525,
+            0.021932292
+          ],
+          "runtime_sha256": "ed6025c65483c87243d975530d9d654088a8c82f8c27019f3d1e9dbbbf37f2c4",
+          "lookups": 14653,
+          "prefix_operations": 2478,
+          "prefix_entry_reads": 0
+        },
+        "candidate": {
+          "median_seconds": 0.021314583,
+          "samples": [
+            0.021680917,
+            0.021017583,
+            0.021068583,
+            0.021314583,
+            0.021579875
+          ],
+          "runtime_sha256": "805dbe3293dd061179c1eab6048770b7839d9457c517cabae79ee1aa9268a136",
+          "lookups": 14653,
+          "prefix_operations": 2478,
+          "prefix_entry_reads": 0
+        }
+      },
+      "ray": {
+        "change_percent": 0.5653205779535098,
+        "ranges": {
+          "control": [
+            4.796541958,
+            4.800866708
+          ],
+          "candidate": [
+            4.821087041,
+            4.832395375
+          ]
+        },
+        "control": {
+          "median_seconds": 4.797830834,
+          "samples": [
+            4.797830834,
+            4.796541958,
+            4.800866708
+          ],
+          "runtime_sha256": "ed6025c65483c87243d975530d9d654088a8c82f8c27019f3d1e9dbbbf37f2c4",
+          "lookups": 4332972,
+          "prefix_operations": 535532,
+          "prefix_entry_reads": 0
+        },
+        "candidate": {
+          "median_seconds": 4.824953959,
+          "samples": [
+            4.832395375,
+            4.821087041,
+            4.824953959
+          ],
+          "runtime_sha256": "805dbe3293dd061179c1eab6048770b7839d9457c517cabae79ee1aa9268a136",
+          "lookups": 4332972,
+          "prefix_operations": 535532,
+          "prefix_entry_reads": 0
+        }
+      }
+    },
+    "learned_work": {
+      "control": {
+        "lookups": 14506,
+        "prefix_operations": 492,
+        "prefix_entry_reads": 0,
+        "composition_entry_reads": 8832,
+        "composition_result_joins": 0,
+        "baked_hits": 1099,
+        "cumulative_result_bytes": 1248,
+        "buffer_moves": 48
+      },
+      "candidate": {
+        "lookups": 14962,
+        "prefix_operations": 2540,
+        "prefix_entry_reads": 0,
+        "composition_entry_reads": 6784,
+        "composition_result_joins": 0,
+        "baked_hits": 1099,
+        "cumulative_result_bytes": 39200,
+        "buffer_moves": 876
+      }
+    }
+  },
+  "first_learned_timing": {
+    "sha256": "73ec409d423f70dc04cdd04c088bf227304167c2251fa155f15955fe6eb7c345",
+    "job": "274",
+    "commits": {
+      "control": "022a5e20655c17762d736524bfbfd4bfae75eadc",
+      "candidate": "0a58f12bc004f12b9d34284cab268b0eb572d9c9"
+    },
+    "change_percent": -3.6593859592694455,
+    "samples": {
+      "control": [
+        0.021032709,
+        0.021456916,
+        0.022510959,
+        0.020620125,
+        0.020704791,
+        0.021645792,
+        0.0199475
+      ],
+      "candidate": [
+        0.02107775,
+        0.021514708,
+        0.020417542,
+        0.0199635,
+        0.020263041,
+        0.020080125,
+        0.019962834
+      ]
+    },
+    "median_seconds": {
+      "control": 0.021032709,
+      "candidate": 0.020263041
+    }
+  },
+  "interpretation": "Final ordinary counters unchanged; no demonstrated overall speedup. Learned timing is for the first implementation, not the final adjustment. Result-Entry workload coverage is zero; only the targeted fixtures exercise that proof."
+}

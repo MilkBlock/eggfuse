@@ -1,0 +1,223 @@
+{
+  "scope": "actual standalone Cell CPU; sequential four-worker trial, not native runtime speed",
+  "commits": {
+    "control": "aef891812fdea688848c4fc6909d77e8ac85154a",
+    "candidate": "b8a113c8efb3952274de0ce28a05ec6bf7754a3e"
+  },
+  "validation_job": "297",
+  "timing_job": "298",
+  "artifact_root": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-worker-witness-b8a113c8",
+  "work_sha256": "6ef548651a0cc8d46d71c71620cdaef9e21360260f7193080ee8c3c30f2012c1",
+  "timing_sha256": "d2ddbfdd19ddc3bef4f009761766b16863233a2752344388fdf9928cb9bd52b5",
+  "order": [
+    [
+      "control",
+      "sum"
+    ],
+    [
+      "control",
+      "ray"
+    ],
+    [
+      "control",
+      "learned"
+    ],
+    [
+      "candidate",
+      "sum"
+    ],
+    [
+      "candidate",
+      "ray"
+    ],
+    [
+      "candidate",
+      "learned"
+    ]
+  ],
+  "guard_observations": 84,
+  "all_boundary_guards_clear": true,
+  "ordinary_validation": {
+    "sum": {
+      "exact_state_runs_effects": true,
+      "runs": 1428,
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+    },
+    "ray": {
+      "exact_state_runs_effects": true,
+      "runs": 16883,
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+    }
+  },
+  "native_sum_acceptance_sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505",
+  "learned_validation": {
+    "scope": "unchanged saved Bake catalog; differential final state, Run summaries and effects; not native acceptance or timing",
+    "program_sha256": "252abc98d1cc3104ee2abcb367992983d03f5dcc99ba491026bbb05f93d80805",
+    "state_sha256": "606b2e1f1d508c85754ea1ccc339f21b5d0db629e849e9211c515108d74e1cb8",
+    "exact_state_runs_effects": true,
+    "runs": 882
+  },
+  "workloads": {
+    "sum": {
+      "change_percent": 14.46534159720738,
+      "control": {
+        "median_seconds": 0.0210555,
+        "samples": [
+          0.019993417,
+          0.020498125,
+          0.021195208,
+          0.021315375,
+          0.0210555
+        ],
+        "runtime_sha256": "805dbe3293dd061179c1eab6048770b7839d9457c517cabae79ee1aa9268a136",
+        "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+        "lookups": 14653,
+        "key_fields": 12575,
+        "worker_lookups": 6514,
+        "prefix_operations": 2478,
+        "cumulative_result_bytes": 34288,
+        "buffer_moves": 706,
+        "baked_hits": 0,
+        "witnesses": {}
+      },
+      "candidate": {
+        "median_seconds": 0.02410125,
+        "samples": [
+          0.020997458,
+          0.02410125,
+          0.020999083,
+          0.024995416,
+          0.025165167
+        ],
+        "runtime_sha256": "47a1c81eb48909454a706e424c0325f4afcdcc9e4d958d4295d1545bbea3da03",
+        "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+        "lookups": 14653,
+        "key_fields": 12575,
+        "worker_lookups": 6514,
+        "prefix_operations": 2478,
+        "cumulative_result_bytes": 34288,
+        "buffer_moves": 706,
+        "baked_hits": 0,
+        "witnesses": {
+          "anchor_reads": 0,
+          "attempts": 0,
+          "candidates": 0,
+          "hits": 0,
+          "lifecycle_checks": 0,
+          "operation_checks": 0,
+          "probes": 0,
+          "proved_hits": 0,
+          "selection_reuses": 0
+        }
+      }
+    },
+    "ray": {
+      "change_percent": 2.1354762964314267,
+      "control": {
+        "median_seconds": 4.753640917,
+        "samples": [
+          4.732534375,
+          4.753640917,
+          4.767545791
+        ],
+        "runtime_sha256": "805dbe3293dd061179c1eab6048770b7839d9457c517cabae79ee1aa9268a136",
+        "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+        "lookups": 4332972,
+        "key_fields": 2551324,
+        "worker_lookups": 1265890,
+        "prefix_operations": 535532,
+        "cumulative_result_bytes": 5999408,
+        "buffer_moves": 199770,
+        "baked_hits": 0,
+        "witnesses": {}
+      },
+      "candidate": {
+        "median_seconds": 4.855153792,
+        "samples": [
+          4.819199417,
+          4.855854583,
+          4.855153792
+        ],
+        "runtime_sha256": "47a1c81eb48909454a706e424c0325f4afcdcc9e4d958d4295d1545bbea3da03",
+        "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+        "lookups": 4332972,
+        "key_fields": 2551324,
+        "worker_lookups": 1265890,
+        "prefix_operations": 535532,
+        "cumulative_result_bytes": 5999408,
+        "buffer_moves": 199770,
+        "baked_hits": 0,
+        "witnesses": {
+          "anchor_reads": 0,
+          "attempts": 0,
+          "candidates": 0,
+          "hits": 0,
+          "lifecycle_checks": 0,
+          "operation_checks": 0,
+          "probes": 0,
+          "proved_hits": 0,
+          "selection_reuses": 0
+        }
+      }
+    },
+    "learned": {
+      "change_percent": 2.4205039475406087,
+      "control": {
+        "median_seconds": 0.020908208,
+        "samples": [
+          0.020427334,
+          0.020387459,
+          0.020356166,
+          0.022992542,
+          0.022621917,
+          0.023235208,
+          0.020908208
+        ],
+        "runtime_sha256": "805dbe3293dd061179c1eab6048770b7839d9457c517cabae79ee1aa9268a136",
+        "program_sha256": "252abc98d1cc3104ee2abcb367992983d03f5dcc99ba491026bbb05f93d80805",
+        "lookups": 14962,
+        "key_fields": 13005,
+        "worker_lookups": 6729,
+        "prefix_operations": 2540,
+        "cumulative_result_bytes": 39200,
+        "buffer_moves": 876,
+        "baked_hits": 1099,
+        "witnesses": {}
+      },
+      "candidate": {
+        "median_seconds": 0.021414292,
+        "samples": [
+          0.020768916,
+          0.020793125,
+          0.020731333,
+          0.022620875,
+          0.021657333,
+          0.021414292,
+          0.022169583
+        ],
+        "runtime_sha256": "47a1c81eb48909454a706e424c0325f4afcdcc9e4d958d4295d1545bbea3da03",
+        "program_sha256": "252abc98d1cc3104ee2abcb367992983d03f5dcc99ba491026bbb05f93d80805",
+        "lookups": 14404,
+        "key_fields": 12988,
+        "worker_lookups": 6171,
+        "prefix_operations": 2540,
+        "cumulative_result_bytes": 39200,
+        "buffer_moves": 876,
+        "baked_hits": 1099,
+        "witnesses": {
+          "anchor_reads": 5029,
+          "attempts": 5162,
+          "candidates": 1335,
+          "hits": 558,
+          "lifecycle_checks": 1370,
+          "operation_checks": 1411,
+          "probes": 4676,
+          "proved_hits": 35,
+          "selection_reuses": 353
+        }
+      }
+    }
+  },
+  "performance_accepted": false,
+  "interpretation": "All three short grouped medians regress. Ordinary work is unchanged and takes no witness routes; do not attribute its regression to witness misses. Keep this as an experiment; baseline remains aef89181."
+}

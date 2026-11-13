@@ -1,0 +1,458 @@
+{
+  "scope": "actual standalone four-worker Cell runtime; source-storage takeover separately tested, not enabled in ordinary timing",
+  "merged_branch": "codex/cell-parallel-admission",
+  "anchor_commit": "d0d8ee33",
+  "merged_tip": "fc62a894",
+  "merge_commit": "4b7a9a4d07cd65806abd9254a60b8694dc1c936f",
+  "immediate_premerge": "219cf8c6",
+  "runtime_equivalent_control": "451058f363821d43f6a0210bedf7f00d75c6d958",
+  "jobs": {
+    "initial_interface_failure": 392,
+    "parallel_runtime_and_feature_setup": 394,
+    "final_checks": 396,
+    "full_validation": 399,
+    "timing": 400
+  },
+  "tests": [
+    {
+      "name": "runtime-parallel",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication",
+        "--lib"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "parallel-integration",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication",
+        "--test",
+        "cell_ownership",
+        "--test",
+        "compiler",
+        "--test",
+        "witness_sources",
+        "--test",
+        "query_workers",
+        "--test",
+        "parallel_publication",
+        "--test",
+        "cell_execution"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "runtime-storage",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication,storage-metrics",
+        "--lib"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "storage-integration",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "eggfuse-cell-compiler",
+        "--features",
+        "iterative-bake,cell-absorption,view-ports,parallel-publication,storage-metrics",
+        "--test",
+        "cell_ownership"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "minimal",
+      "command": [
+        "cargo",
+        "check",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--no-default-features"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "ordinary_validation": {
+    "sum": {
+      "exact_state_runs_effects": true,
+      "runs": 1428,
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+    },
+    "ray": {
+      "exact_state_runs_effects": true,
+      "runs": 16883,
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+    }
+  },
+  "learned_validation": {
+    "scope": "unchanged saved Bake catalog; differential final state, Run summaries and effects; not native acceptance or timing",
+    "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+    "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "exact_state_runs_effects": true,
+    "runs": 1428
+  },
+  "native_sum_status": "pass",
+  "timing": {
+    "order_policy": "whole control, optional previous experiment, then whole candidate; never interleaved",
+    "commits": {
+      "control": "451058f363821d43f6a0210bedf7f00d75c6d958",
+      "candidate": "4b7a9a4d07cd65806abd9254a60b8694dc1c936f"
+    },
+    "workloads": {
+      "sum": {
+        "control": {
+          "medians": {
+            "inference_seconds": 0.021204625,
+            "process_wall_seconds": 0.1480308750178665,
+            "load_seconds": 0.066246541,
+            "setup_seconds": 0.014164834,
+            "export_seconds": 0.005260625,
+            "report_seconds": 0.008158125,
+            "process_unattributed_seconds": 0.03598729103312527,
+            "process_after_report_residual_seconds": 0.026952916991801204
+          },
+          "inference_samples": [
+            0.022916584,
+            0.027514917,
+            0.021204625,
+            0.020785625,
+            0.02033425
+          ],
+          "runtime_sha256": "d86edcc3b0f6391132b3c5535484edece2e68d08fbf1879173731beeef87fb07",
+          "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "raw_samples_sha256": "679ba6d425b1051c0d74abc7186768f869d58a849cf86ff5298e9b667986518b"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 0.021511209,
+            "process_wall_seconds": 0.14562150003621355,
+            "load_seconds": 0.069250917,
+            "setup_seconds": 0.013661708,
+            "export_seconds": 0.00528925,
+            "report_seconds": 0.008921542,
+            "process_unattributed_seconds": 0.03585425000274181,
+            "process_after_report_residual_seconds": 0.026932708002741813
+          },
+          "inference_samples": [
+            0.021511209,
+            0.02395975,
+            0.022697167,
+            0.020985041,
+            0.021310208
+          ],
+          "runtime_sha256": "39c587df6ebb76700b73ea3318b2b9306c49877962ce40ff6b0934e021dfa211",
+          "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "raw_samples_sha256": "2bd27c93352e7c47579d04df6c5a85951c5ac7363ddca2ab68cf669c5d2d2584"
+        },
+        "inference_change_percent": 1.4458355193737171
+      },
+      "ray": {
+        "control": {
+          "medians": {
+            "inference_seconds": 4.724614208,
+            "process_wall_seconds": 7.147800625010859,
+            "load_seconds": 0.365038875,
+            "setup_seconds": 0.048036333,
+            "export_seconds": 1.177069167,
+            "report_seconds": 0.375783083,
+            "process_unattributed_seconds": 0.8445436680108589,
+            "process_after_report_residual_seconds": 0.4698364600108589
+          },
+          "inference_samples": [
+            4.724614208,
+            4.728589125,
+            4.648771791
+          ],
+          "runtime_sha256": "d86edcc3b0f6391132b3c5535484edece2e68d08fbf1879173731beeef87fb07",
+          "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "raw_samples_sha256": "8111524be93abe73284042e7a5d2cccb00140fc9858e8c5df7034debacc5c25c"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 4.71463425,
+            "process_wall_seconds": 7.187072750006337,
+            "load_seconds": 0.371401916,
+            "setup_seconds": 0.046660375,
+            "export_seconds": 1.192166334,
+            "report_seconds": 0.380667,
+            "process_unattributed_seconds": 0.863857875006337,
+            "process_after_report_residual_seconds": 0.47124175098902105
+          },
+          "inference_samples": [
+            4.71298625,
+            4.71463425,
+            4.7832215829999996
+          ],
+          "runtime_sha256": "39c587df6ebb76700b73ea3318b2b9306c49877962ce40ff6b0934e021dfa211",
+          "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "raw_samples_sha256": "fa25a183f71a26cb5b2861e7dce85f37645a20c1bb64d78251aa191f93193f7c"
+        },
+        "inference_change_percent": -0.2112332893361324
+      },
+      "learned": {
+        "control": {
+          "medians": {
+            "inference_seconds": 0.021571458,
+            "process_wall_seconds": 0.1744221670087427,
+            "load_seconds": 0.099229916,
+            "setup_seconds": 0.01259325,
+            "export_seconds": 0.005233,
+            "report_seconds": 0.008265166,
+            "process_unattributed_seconds": 0.03547662399818205,
+            "process_after_report_residual_seconds": 0.027026707998182048
+          },
+          "inference_samples": [
+            0.021571458,
+            0.022382,
+            0.022863709,
+            0.021313417,
+            0.021262042
+          ],
+          "runtime_sha256": "d86edcc3b0f6391132b3c5535484edece2e68d08fbf1879173731beeef87fb07",
+          "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+          "raw_samples_sha256": "6dd680c6ce7caee2c2769412077471f6d01de51937139c7926a6df040f4c90f8"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 0.02317775,
+            "process_wall_seconds": 0.18099737499142066,
+            "load_seconds": 0.10108275,
+            "setup_seconds": 0.012665041,
+            "export_seconds": 0.005305416,
+            "report_seconds": 0.008519791,
+            "process_unattributed_seconds": 0.036105459991420646,
+            "process_after_report_residual_seconds": 0.027585668991420648
+          },
+          "inference_samples": [
+            0.021767208,
+            0.023324708,
+            0.022341375,
+            0.023530625,
+            0.02317775
+          ],
+          "runtime_sha256": "39c587df6ebb76700b73ea3318b2b9306c49877962ce40ff6b0934e021dfa211",
+          "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+          "raw_samples_sha256": "a760f7bbdc98f26a8f7132d942b1f1f055840017beb65c15a857c976213c472a"
+        },
+        "inference_change_percent": 7.446376596333915
+      }
+    },
+    "groups": [
+      [
+        "control",
+        "sum"
+      ],
+      [
+        "control",
+        "ray"
+      ],
+      [
+        "control",
+        "learned"
+      ],
+      [
+        "candidate",
+        "sum"
+      ],
+      [
+        "candidate",
+        "ray"
+      ],
+      [
+        "candidate",
+        "learned"
+      ]
+    ],
+    "measurement_status": "completed-with-boundary-guards",
+    "interpretation": "Short grouped diagnostic; order, thermal drift and activity between guards remain possible."
+  },
+  "boundary_guards": 76,
+  "work_changes": {
+    "sum": {
+      "ownership": {
+        "component_lifetime_growths": {
+          "control": 11,
+          "candidate": 24
+        },
+        "component_slots_released": {
+          "control": 0,
+          "candidate": 511
+        },
+        "component_slots_reused": {
+          "control": 0,
+          "candidate": 511
+        },
+        "dispatch_comparisons": {
+          "control": 3986,
+          "candidate": 4047
+        }
+      },
+      "key_lookups": [
+        14653,
+        14653
+      ],
+      "lifetime_capacity_bytes": [
+        32768,
+        17408
+      ],
+      "new_component_slots": 2174
+    },
+    "ray": {
+      "ownership": {
+        "component_lifetime_growths": {
+          "control": 19,
+          "candidate": 3791
+        },
+        "component_slots_released": {
+          "control": 0,
+          "candidate": 102712
+        },
+        "component_slots_reused": {
+          "control": 0,
+          "candidate": 102712
+        },
+        "dispatch_comparisons": {
+          "control": 913642,
+          "candidate": 924120
+        }
+      },
+      "key_lookups": [
+        4332972,
+        4332972
+      ],
+      "lifetime_capacity_bytes": [
+        8388608,
+        3874816
+      ],
+      "new_component_slots": 484346
+    },
+    "learned": {
+      "ownership": {
+        "component_lifetime_growths": {
+          "control": 10,
+          "candidate": 20
+        },
+        "component_slots_released": {
+          "control": 0,
+          "candidate": 326
+        },
+        "component_slots_reused": {
+          "control": 0,
+          "candidate": 326
+        },
+        "dispatch_comparisons": {
+          "control": 3655,
+          "candidate": 3682
+        }
+      },
+      "key_lookups": [
+        14373,
+        14373
+      ],
+      "lifetime_capacity_bytes": [
+        16384,
+        13312
+      ],
+      "new_component_slots": 1650
+    }
+  },
+  "phase_medians_ms": {
+    "sum": {
+      "control": {
+        "delivery_gc": 0.175121,
+        "query_update": 3.121916,
+        "repair": 1.2184139999999999,
+        "rhs": 4.9445,
+        "search": 11.429897
+      },
+      "candidate": {
+        "delivery_gc": 0.177618,
+        "query_update": 3.167444,
+        "repair": 1.2366300000000001,
+        "rhs": 5.068213,
+        "search": 11.611112
+      }
+    },
+    "ray": {
+      "control": {
+        "delivery_gc": 21.403121000000002,
+        "query_update": 877.38527,
+        "repair": 433.254348,
+        "rhs": 1671.5504640000001,
+        "search": 1686.435817
+      },
+      "candidate": {
+        "delivery_gc": 21.170433999999997,
+        "query_update": 870.817395,
+        "repair": 433.657014,
+        "rhs": 1713.672906,
+        "search": 1676.051671
+      }
+    },
+    "learned": {
+      "control": {
+        "delivery_gc": 0.17379,
+        "query_update": 3.071784,
+        "repair": 1.174841,
+        "rhs": 5.367325,
+        "search": 11.449832
+      },
+      "candidate": {
+        "delivery_gc": 0.186417,
+        "query_update": 3.315338,
+        "repair": 1.2802449999999999,
+        "rhs": 5.713536,
+        "search": 12.301309999999999
+      }
+    }
+  },
+  "artifacts": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/fc62a894",
+  "hashes": {
+    "timing/control-sum/samples.json": "679ba6d425b1051c0d74abc7186768f869d58a849cf86ff5298e9b667986518b",
+    "timing/candidate-sum/samples.json": "2bd27c93352e7c47579d04df6c5a85951c5ac7363ddca2ab68cf669c5d2d2584",
+    "timing/control-ray/samples.json": "8111524be93abe73284042e7a5d2cccb00140fc9858e8c5df7034debacc5c25c",
+    "timing/candidate-ray/samples.json": "fa25a183f71a26cb5b2861e7dce85f37645a20c1bb64d78251aa191f93193f7c",
+    "timing/control-learned/samples.json": "6dd680c6ce7caee2c2769412077471f6d01de51937139c7926a6df040f4c90f8",
+    "timing/candidate-learned/samples.json": "a760f7bbdc98f26a8f7132d942b1f1f055840017beb65c15a857c976213c472a",
+    "tests.json": "01a92bb114219527e97cd5d08b50aa6e44cd5e10133de89144e5109899d4515f",
+    "tests-initial.json": "e1de68dc43754f21ac3100b3d50110698734c5b84d5ccc915c644c5e23515cd8",
+    "tests-second.json": "2c8e108cf192bd47b240127d09933a9c4dadba3d0f7596e1764448145e8f0366",
+    "validation/work.json": "ac46d28b8567b15bea876f14f2cca84b6de62b3324b13ecf378e99d353ec5e2c",
+    "validation/candidate/runtime": "39c587df6ebb76700b73ea3318b2b9306c49877962ce40ff6b0934e021dfa211",
+    "validation/control/runtime": "d86edcc3b0f6391132b3c5535484edece2e68d08fbf1879173731beeef87fb07",
+    "validation/candidate/checked/validation.json": "39b770fa5ce0e713a274ea016e0cd20d76bb5f00ac72806cf511d04de54a222b",
+    "validation/candidate/checked/semantic-acceptance.json": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505",
+    "timing/result.json": "5ad864cf710cefb28ec4de178f5c7ff5c8368abf244c296a7c3e0ff10030b739"
+  },
+  "remaining_obligations": [
+    "stable source identities and expired ports",
+    "actual foreign constructor results",
+    "residual matching and ordered effects",
+    "source Run visibility and frozen read epochs"
+  ],
+  "interpretation": "Ordinary Raytrace inference is approximately unchanged; learned-catalog regression retained, causal attribution unresolved. No general speedup or expanded worker mutation coverage claimed.",
+  "learned_prefix_work_unchanged": true
+}

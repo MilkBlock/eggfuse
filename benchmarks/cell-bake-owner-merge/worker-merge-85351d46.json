@@ -1,0 +1,188 @@
+{
+  "scope": "merge validation on actual standalone Cell runtime; no timing claim",
+  "parents": [
+    "85351d46",
+    "230b221a"
+  ],
+  "selected_program_unchanged": true,
+  "measurements": {
+    "graph_owned_teardown_bytes": {
+      "before": 1233775,
+      "after": 1233775
+    },
+    "retained_program_teardown_bytes": {
+      "before": 107935263,
+      "after": 107939647
+    },
+    "execution_and_takeover_peak_bytes": {
+      "before": 113744261,
+      "after": 113748647
+    },
+    "max_takeover_extra_bytes": {
+      "before": 17776,
+      "after": 17776
+    }
+  },
+  "same_final_graph_digest": true,
+  "same_source_lifecycles": true,
+  "same_source_layouts": true,
+  "same_logical_ownership": true,
+  "runs": 882,
+  "all_saved_run_graph_and_ordered_audits_equal": true,
+  "native_semantic_status": "pass",
+  "observer_final_inventory_equal": true,
+  "trace_proposals": 1484,
+  "trace_witness_recipes": 720,
+  "jobs": {
+    "combined_selector_tests": 410,
+    "runtime_integration_minimal_build_measurement": 411,
+    "run_checks_trace_and_native": 413,
+    "witness_batch": 414
+  },
+  "witness_experiments": [
+    {
+      "variant": "witness-all",
+      "selection": {
+        "source_program": "79cffa2edd4e6eadc0848d7b5ae58c09b428901c8ef0d0fef0fc879e2ad7a435",
+        "program_sha256": "144a90c849c57032dc546b53a7a40bbc531dc91e25c95e62ab01177a88363cca",
+        "source_file_sha256": "c3f72bdf3265664c2426658cc2f755eb94958fdff7115300cff1bcd2930502f4",
+        "trace_file_sha256": "8de552fe044a854a323cfb97952264ecaf5119306b91d644c84e14bd0ebd0644",
+        "source_core_unchanged": true,
+        "audited_runs": 882,
+        "existing_recipes": 0,
+        "selected_recipes": 720,
+        "activation_policy": null,
+        "composition_unchanged": true,
+        "contract": "observations select typed routes; residual queries, exact unproved keys, visibility, generation and ordered effects remain live"
+      },
+      "graph_bytes": 1233775,
+      "program_bytes": 109912023,
+      "final_digest_equal": true,
+      "run_sequence_equal": true,
+      "constructor_work": {
+        "constructor_cell_route_probes": 2929,
+        "constructor_cell_route_anchor_reads": 3299,
+        "constructor_cell_route_address_checks": 4195,
+        "constructor_cell_route_address_reuses": 896,
+        "constructor_cell_route_selection_reuses": 1266,
+        "constructor_cell_route_operation_checks": 1371,
+        "constructor_cell_route_alternative_checks": 546,
+        "constructor_cell_route_alternative_fields": 771,
+        "constructor_cell_route_static_candidate_checks_avoided": 0,
+        "constructor_cell_route_witnesses": 772,
+        "constructor_cell_route_accepted": 428,
+        "constructor_cell_route_key_proved": 29,
+        "constructor_cell_route_compared_admissions": 78,
+        "constructor_cell_route_recheck_fields_avoided": 162,
+        "constructor_cell_route_source_checks": 30,
+        "constructor_cell_route_proof_admissions": 108,
+        "constructor_cell_route_key_fields_avoided": 12,
+        "constructor_requests": 8181,
+        "constructor_reused": 5077,
+        "register_seeds": 3264,
+        "register_result_writes": 1166,
+        "transient_writes": 137,
+        "cells_created": 2688,
+        "rhs_frames_avoided": 3586
+      },
+      "domain_work": {
+        "domain_queries": 11015,
+        "domain_owner_visits": 0,
+        "domain_body_visits": 0,
+        "domain_legacy_visits": 0,
+        "domain_results": 22374,
+        "domain_planning_calls": 11015,
+        "domain_planning_signals": 0,
+        "domain_planning_slice_steps": 0,
+        "domain_signal_visits": 143673,
+        "domain_slice_steps": 147271,
+        "domain_route_probes": 143673,
+        "domain_column_checks": 0,
+        "domain_legacy_fact_probes": 0,
+        "domain_type_guards": 147271,
+        "domain_static_type_guards": 137880,
+        "domain_type_rejections": 108561
+      }
+    },
+    {
+      "variant": "witness-active",
+      "selection": {
+        "source_program": "79cffa2edd4e6eadc0848d7b5ae58c09b428901c8ef0d0fef0fc879e2ad7a435",
+        "program_sha256": "183c0986a8d0763a3d4ead0ac1880bb8f7503cf69ceda76ff7b3b97241756c76",
+        "source_file_sha256": "c3f72bdf3265664c2426658cc2f755eb94958fdff7115300cff1bcd2930502f4",
+        "trace_file_sha256": "8de552fe044a854a323cfb97952264ecaf5119306b91d644c84e14bd0ebd0644",
+        "source_core_unchanged": true,
+        "audited_runs": 882,
+        "existing_recipes": 0,
+        "selected_recipes": 567,
+        "activation_policy": {
+          "reuse_seed_activation": true,
+          "active_rules": 78,
+          "rejected_recipes": 153,
+          "typed_activation_unchanged": true,
+          "scope": "no new rule Entry or result-capture activation; route checks and storage remain charged"
+        },
+        "composition_unchanged": true,
+        "contract": "observations select typed routes; residual queries, exact unproved keys, visibility, generation and ordered effects remain live"
+      },
+      "graph_bytes": 1233775,
+      "program_bytes": 109505621,
+      "final_digest_equal": true,
+      "run_sequence_equal": true,
+      "constructor_work": {
+        "constructor_cell_route_probes": 2898,
+        "constructor_cell_route_anchor_reads": 3260,
+        "constructor_cell_route_address_checks": 4153,
+        "constructor_cell_route_address_reuses": 893,
+        "constructor_cell_route_selection_reuses": 1255,
+        "constructor_cell_route_operation_checks": 1342,
+        "constructor_cell_route_alternative_checks": 539,
+        "constructor_cell_route_alternative_fields": 756,
+        "constructor_cell_route_static_candidate_checks_avoided": 0,
+        "constructor_cell_route_witnesses": 743,
+        "constructor_cell_route_accepted": 404,
+        "constructor_cell_route_key_proved": 27,
+        "constructor_cell_route_compared_admissions": 74,
+        "constructor_cell_route_recheck_fields_avoided": 150,
+        "constructor_cell_route_source_checks": 28,
+        "constructor_cell_route_proof_admissions": 102,
+        "constructor_cell_route_key_fields_avoided": 10,
+        "constructor_requests": 8181,
+        "constructor_reused": 5077,
+        "register_seeds": 3264,
+        "register_result_writes": 1166,
+        "transient_writes": 137,
+        "cells_created": 2688,
+        "rhs_frames_avoided": 3586
+      },
+      "domain_work": {
+        "domain_queries": 11038,
+        "domain_owner_visits": 0,
+        "domain_body_visits": 0,
+        "domain_legacy_visits": 0,
+        "domain_results": 22563,
+        "domain_planning_calls": 11038,
+        "domain_planning_signals": 0,
+        "domain_planning_slice_steps": 0,
+        "domain_signal_visits": 144380,
+        "domain_slice_steps": 147837,
+        "domain_route_probes": 144380,
+        "domain_column_checks": 0,
+        "domain_legacy_fact_probes": 0,
+        "domain_type_guards": 147837,
+        "domain_static_type_guards": 138410,
+        "domain_type_rejections": 108924
+      }
+    }
+  ],
+  "experiment_decision": "Neither witness catalog adopted; final digest and Run sequence only, no candidate per-Run admission or speed claim",
+  "remaining_graph_bytes_to_historical_30_percent": 39964,
+  "sha256": {
+    "runtime_storage_peak": "d67e90a368ea6413d3275a50c0652eb393fa1a2440e6f74c8737af2dcee25684",
+    "runtime_storage_comparison": "e81ccc56a31cc9fee3e5f4224d37e0f81e6b688aca75f7779768a833bccf982b",
+    "memory.json": "1061255f95d5018e72def06f553ca3e8e1e3e0a667d0e621469597a3f0feda07",
+    "checked.json": "ccad526508a4a47657b80a879674ab8d1e6d52c347f0bdeb56cabb5367f580d6",
+    "trace.json": "8de552fe044a854a323cfb97952264ecaf5119306b91d644c84e14bd0ebd0644",
+    "semantic.json": "107438ef63ad7bb3b8c544c6619575a23813f6ab4c78aff186e93bd99d145976"
+  }
+}

@@ -168,7 +168,8 @@ fn closure(p:&Program,plan:&crate::graph::cell_ownership::Plan,join:&Compiled,
 }
 pub(in crate::graph::cell_ownership) fn install(p:&Program,plan:&mut crate::graph::cell_ownership::Plan)->Result<()> {
     let Some(raw)=p.artifact.get("ownership_dual_sources") else {return Ok(());};
-    if raw["source"]!=source_digest(&p.artifact) || raw["schema"]!="dual-source-patterns/v1" {return Err("dual-source source/schema".into());}
+    // Source identity was checked by the enclosing ownership Plan.
+    if raw["schema"]!="dual-source-patterns/v1" {return Err("dual-source source/schema".into());}
     let patterns:Vec<Pattern>=serde_json::from_value(raw["patterns"].clone()).map_err(|e|e.to_string())?;
     if patterns.len()>4096 {return Err("dual-source budget".into());}
     let mut joins=Vec::new();

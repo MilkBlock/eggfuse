@@ -15,6 +15,8 @@ pub(crate) struct Plan {
     // Compile once from the authoritative switch. Rules without a possible
     // result donor need no per-instance history admission checks.
     pub handoff: bool,
+    owner_entries: bool,
+    witness_rule:Option<std::num::NonZeroUsize>,
     keys: Vec<Arg>,
     prefix: Vec<prefix::Step>,
     // Slots established by the existing input-derived scalar program. Prefix
@@ -202,6 +204,7 @@ pub(crate) struct Counts {
     pub prefix_progress_writes: u64,
     pub prefix_scalar_checks: u64,
     pub prefix_scalar_stops: u64,
+    pub witnesses:crate::graph::query_reads::PreparedWork,
 }
 impl Counts {
     pub fn add(&mut self, other: &Self) {
@@ -211,13 +214,14 @@ impl Counts {
             prefix_witness_growths, prefix_witness_bytes);
         add!(prefix_layout_checks, prefix_result_initializations, prefix_progress_writes);
         add!(prefix_scalar_checks, prefix_scalar_stops);
+        self.witnesses.add(&other.witnesses);
     }
 }
 impl Plan {
     pub fn complete(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
-        counts: &mut super::execution::Counts) {
-        self.prepare(instance, reads, scratch, work, &mut counts.constructor);
+        counts: &mut super::execution::Counts, selection: &mut crate::graph::query_reads::PreparedSelection) {
+        self.prepare_selected(instance, reads, scratch, work, &mut counts.constructor, selection);
         self.prepare_units(instance, reads, &mut counts.units);
     }
     pub fn has_unit_tail(&self) -> bool { self.units.is_some() }
@@ -241,7 +245,9 @@ impl Plan {
                 Arg::Literal(_) => true,
                 Arg::Slot(s) => ready.contains(s) && cell.template.defs.get(s).is_none_or(|&at| at < operation),
             }) { return Some(Self { operation, table:*table,
-                handoff: p.iterative.supplies_operation(rule, operation), keys, prefix:vec![], scalar_ready:vec![], result_layout:None, units:None }); }
+                handoff: p.iterative.supplies_operation(rule, operation), owner_entries:false,
+                witness_rule:p.cell_ownership.has_witness_routes(rule).then(||std::num::NonZeroUsize::new(rule+1).unwrap()),
+                keys, prefix:vec![], scalar_ready:vec![], result_layout:None, units:None }); }
         }
         None
     }
@@ -250,33 +256,34 @@ impl Plan {
         + self.scalar_ready.capacity() * std::mem::size_of::<usize>()
         + self.prefix.iter().map(|s|s.keys.capacity()*std::mem::size_of::<Arg>()).sum::<usize>()
         + self.units.as_ref().map_or(0, |p|std::mem::size_of::<super::unit_prepare::Plan>()+p.storage_bytes()) }
+    #[cfg(test)]
     pub fn prepare(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
         scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
         counts: &mut Counts) {
+        self.prepare_selected(instance,reads,scratch,work,counts,&mut Default::default());
+    }
+    fn prepare_selected(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
+        scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
+        counts: &mut Counts, selection: &mut crate::graph::query_reads::PreparedSelection) {
+        // Select the execution variant once per Cell prefix. Catalog-free
+        // operations contain no witness routing or lazy-key state.
+        if self.witness_rule.is_some() { self.prepare_in::<true>(instance,reads,scratch,work,counts,selection); }
+        else { self.prepare_in::<false>(instance,reads,scratch,work,counts,selection); }
+    }
+    fn prepare_in<const ROUTES: bool>(&self, instance: &mut Instance, reads: Option<&crate::graph::query_reads::QueryReads<'_>>,
+        scratch: &mut crate::graph::query_reads::Scratch, work: &mut crate::graph::query_reads::Work,
+        counts: &mut Counts, selection: &mut crate::graph::query_reads::PreparedSelection) {
         if !instance.constructor.pending() { return; }
         instance.constructor = Prepared::Absent;
         counts.attempts += 1;
         if !self.prefix.is_empty() {
-            self.prepare_prefix(instance, reads, scratch, work, counts);
+            self.prepare_prefix::<ROUTES>(instance, reads, scratch, work, counts, selection);
             return;
         }
-        let Some(reads) = reads.filter(|r| r.constructor_available(self.table)) else {
+        let Some(reads) = reads else {
             counts.unavailable += 1; return;
         };
-        let mut key = smallvec::SmallVec::<[Value; 4]>::new();
-        for arg in &self.keys {
-            let value = match arg {
-                Arg::Literal(v) => v,
-                Arg::Slot(s) => match instance.values.get(s) {
-                    Some(v) => v, None => { counts.missing_inputs += 1; return; }
-                },
-            };
-            counts.key_fields += 1;
-            key.push(canon(value, reads.parents));
-        }
-        counts.key_spills += u64::from(key.spilled());
-        counts.lookups += 1;
-        match reads.point(self.table, &key, scratch, work) {
+        match self.probe::<ROUTES>(self.operation,self.table,&self.keys,instance,reads,scratch,work,counts,selection) {
             Ok(Some((_, _, Dependency::Fact(fact)))) => {
                 instance.constructor = Prepared::Found(fact);
                 counts.hits += 1;
@@ -287,5 +294,40 @@ impl Plan {
             // operation remains responsible at its original effect position.
             _ => counts.unavailable += 1,
         }
+    }
+    #[inline]
+    pub(super) fn probe<const ROUTES: bool>(&self,operation:usize,table:usize,args:&[Arg],instance:&Instance,
+        reads:&crate::graph::query_reads::QueryReads<'_>,scratch:&mut crate::graph::query_reads::Scratch,
+        work:&mut crate::graph::query_reads::Work,counts:&mut Counts,
+        selection:&mut crate::graph::query_reads::PreparedSelection)
+        ->std::result::Result<Option<(Value,u64,Dependency)>,()> {
+        let Counts{key_fields,key_spills,missing_inputs,witnesses,..}=counts;
+        let mut make_key=|| {
+            let mut values=smallvec::SmallVec::<[Value;4]>::new();
+            for arg in args {
+                let value=match arg {
+                    Arg::Literal(v)=>v,
+                    Arg::Slot(slot)=>match instance.values.get(slot) {
+                        Some(v)=>v,None=>{*missing_inputs+=1;return Err(());}
+                    },
+                };
+                *key_fields+=1;values.push(canon(value,reads.parents));
+            }
+            *key_spills+=u64::from(values.spilled());Ok(values)
+        };
+        if !ROUTES {
+            if !reads.constructor_available(table) {return Err(());}
+            let key=make_key()?;
+            counts.lookups+=1;
+            return reads.point(table,&key,scratch,work).map_err(|_|());
+        }
+        let rule=self.witness_rule.expect("compiled witness variant");
+        let mut key=None;
+        if let Some(result)=reads.prepared_witness(rule.get()-1,operation,table,&instance.known,
+                selection,witnesses,work,&mut key,&mut make_key) {return Ok(Some(result));}
+        if !reads.constructor_available(table) {return Err(());}
+        let key=key.get_or_insert_with(make_key).as_ref().map_err(|_|())?;
+        counts.lookups+=1;
+        reads.point(table,key,scratch,work).map_err(|_|())
     }
 }

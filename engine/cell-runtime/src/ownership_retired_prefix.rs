@@ -172,7 +172,7 @@ impl Graph {
     /// Opt-in Run-boundary takeover. Bootstrap once, then consume actual source
     /// retirement events. No per-producer consumer list is maintained.
     pub fn compact_retired_prefixes(&mut self) -> Result<usize> {
-        #[cfg(feature="sparse-cells")]
+        #[cfg(feature = "sparse-cells")]
         if self.active_rhs.is_some() {
             return Err("retired prefix takeover requires a settled boundary".into());
         }

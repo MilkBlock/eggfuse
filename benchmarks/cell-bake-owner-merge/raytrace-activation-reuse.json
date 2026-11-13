@@ -1,0 +1,261 @@
+{
+  "scope": "same-binary actual standalone four-worker Raytrace; bounded prefix and complete differential state/summary/effect validation",
+  "implementation_commit": "504bdeda",
+  "runtime_commit": "451058f3",
+  "runtime_sha256": "d86edcc3b0f6391132b3c5535484edece2e68d08fbf1879173731beeef87fb07",
+  "jobs": {
+    "selector_tests": 381,
+    "build_selection_prefix_and_full_validation": 382,
+    "timing": 385
+  },
+  "selection": {
+    "scope": "passive proposal selection; not measured savings",
+    "seed_fragments": 32,
+    "maximal_seed_fragments": 32,
+    "added_fragments": 32,
+    "replaced_prefixes": 20,
+    "capacity_rejections": 0,
+    "max_frames": 8,
+    "activation_rejections": 4,
+    "activation_policy": {
+      "reuse_seed_activation": true,
+      "active_rules": 18,
+      "result_capture_rules": 6,
+      "scope": "no newly activated rule Entry or result-capture class; dispatch and plan growth still charged"
+    },
+    "trace_catalog_sha256": "7ce87727814bbed1e0c3f69978b3ba8dc9740b62a9464451796d2d1e48ca920d",
+    "obligations": [
+      "typed Entry substitutions rechecked by Program loader",
+      "runtime source/visibility/lifetime checks unchanged",
+      "all seed paths retained through maximal prefix coverage; changed dispatch contexts require execution admission"
+    ],
+    "all_seed_transitions_preserved": true,
+    "typed_activation_unchanged": true
+  },
+  "maximal_paths": 44,
+  "validation": {
+    "status": "pass",
+    "prefix_runs": 128,
+    "full_runs": 16883,
+    "reference": {
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+      "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39"
+    }
+  },
+  "work_changes": {
+    "boundary_edges_created": {
+      "control": 1827856,
+      "candidate": 1824310
+    },
+    "boundary_edges_removed": {
+      "control": 538527,
+      "candidate": 535819
+    },
+    "boundary_insert_attempts": {
+      "control": 1827856,
+      "candidate": 1824310
+    },
+    "boundary_live": {
+      "control": 1289329,
+      "candidate": 1288491
+    },
+    "boundary_ports_seen": {
+      "control": 1443740,
+      "candidate": 1442876
+    },
+    "boundary_signal_routes": {
+      "control": 265007,
+      "candidate": 264306
+    },
+    "carried_components": {
+      "control": 2661032639,
+      "candidate": 2635082871
+    },
+    "component_signal_retire_visits": {
+      "control": 414504,
+      "candidate": 411752
+    },
+    "components_created": {
+      "control": 575863,
+      "candidate": 572508
+    },
+    "components_live": {
+      "control": 476145,
+      "candidate": 473405
+    },
+    "components_retired": {
+      "control": 99718,
+      "candidate": 99103
+    },
+    "composition_baked_hits": {
+      "control": 11195,
+      "candidate": 14550
+    },
+    "composition_cache_hits": {
+      "control": 11195,
+      "candidate": 14550
+    },
+    "composition_cross_stage_joins": {
+      "control": 10841,
+      "candidate": 14069
+    },
+    "composition_entry_reads": {
+      "control": 273448,
+      "candidate": 272276
+    },
+    "composition_requests": {
+      "control": 11195,
+      "candidate": 14550
+    },
+    "composition_result_joins": {
+      "control": 541,
+      "candidate": 796
+    },
+    "composition_substituted_ports": {
+      "control": 13029,
+      "candidate": 16696
+    },
+    "composition_transition_probes": {
+      "control": 143571,
+      "candidate": 142399
+    },
+    "composition_unbaked_fallbacks": {
+      "control": 132376,
+      "candidate": 127849
+    },
+    "dispatch_comparisons": {
+      "control": 907959,
+      "candidate": 903425
+    },
+    "inactive_slice_steps": {
+      "control": 134011,
+      "candidate": 134969
+    },
+    "internal_ports_seen": {
+      "control": 968515,
+      "candidate": 969379
+    },
+    "native_signal_routes": {
+      "control": 174357,
+      "candidate": 174921
+    },
+    "signal_activations": {
+      "control": 439364,
+      "candidate": 439227
+    },
+    "signal_bindings_created": {
+      "control": 2139542,
+      "candidate": 2136133
+    },
+    "signal_bindings_live": {
+      "control": 1811359,
+      "candidate": 1810589
+    },
+    "signal_bindings_retired": {
+      "control": 328183,
+      "candidate": 325544
+    },
+    "signal_parent_probes": {
+      "control": 545269,
+      "candidate": 541110
+    },
+    "signal_root_queries": {
+      "control": 328285,
+      "candidate": 325678
+    },
+    "slice_steps": {
+      "control": 587369,
+      "candidate": 588327
+    }
+  },
+  "unchanged_work": {
+    "marker_entries": 109985,
+    "composition_result_writes": 88235
+  },
+  "key_lookups": {
+    "control": 4332972,
+    "candidate": 4332972
+  },
+  "timing": {
+    "policy": "optional entire original, entire control, entire candidate; never interleaved",
+    "repeats": 3,
+    "warmups": 1,
+    "boundary_guards": 30,
+    "status": "completed-with-boundary-guards",
+    "lanes": {
+      "original": {
+        "medians": {
+          "inference_seconds": 5.166448334,
+          "process_wall_seconds": 7.72605499997735,
+          "load_seconds": 0.411560833,
+          "setup_seconds": 0.0477085,
+          "export_seconds": 1.413316292,
+          "report_seconds": 0.373539166,
+          "process_unattributed_seconds": 0.7294714180118236,
+          "process_after_report_residual_seconds": 0.2783794180118236
+        },
+        "inference_samples": [
+          5.649307083,
+          5.166448334,
+          4.764568084
+        ],
+        "raw_samples_sha256": "ec204fea8102fbcb08012b53468b0dda976ecc481b36a662563368482d40a3a8"
+      },
+      "control": {
+        "medians": {
+          "inference_seconds": 4.75794475,
+          "process_wall_seconds": 7.315489625034388,
+          "load_seconds": 0.475106667,
+          "setup_seconds": 0.033851167,
+          "export_seconds": 1.468792167,
+          "report_seconds": 0.378707625,
+          "process_unattributed_seconds": 0.6175129589969099,
+          "process_after_report_residual_seconds": 0.23880533399690995
+        },
+        "inference_samples": [
+          4.76785275,
+          4.694808125,
+          4.75794475
+        ],
+        "raw_samples_sha256": "8fce96bcb60cfc64f5989d0b1a84355359368349acc1b6b044cdd7d756d6e665"
+      },
+      "candidate": {
+        "medians": {
+          "inference_seconds": 4.732102417,
+          "process_wall_seconds": 7.291989625024144,
+          "load_seconds": 0.47448825,
+          "setup_seconds": 0.030776542,
+          "export_seconds": 1.215107209,
+          "report_seconds": 0.375820333,
+          "process_unattributed_seconds": 0.8434167499903706,
+          "process_after_report_residual_seconds": 0.4675676660241442
+        },
+        "inference_samples": [
+          4.755628375,
+          4.732102417,
+          4.725720375
+        ],
+        "raw_samples_sha256": "e41c4bd891d8fc4440330db64f136282206967508dc074bf4c7c54e2183fc1a1"
+      }
+    },
+    "change_from_seed_percent": -0.5431406701391417,
+    "arithmetic_change_from_unstable_original_percent": -8.407050432336716
+  },
+  "next_observations": {
+    "composition_proposals": 11337,
+    "witness_recipes": 2127,
+    "witness_recipes_for_already_active_rules": 1041
+  },
+  "performance_adoption": false,
+  "interpretation": "Activation is fixed and actual sharing grows. Inference median improves 0.54% against seed in this short trial; stable end-to-end gain is not established. Original lane visibly drifts down, so its arithmetic 8.41% difference is not a speedup claim.",
+  "artifacts": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/raytrace-prefix-learning",
+  "hashes": {
+    "round2/program.json": "010b96dad8f03e5bcf7f0c3986a211ba56fab89f1bf3a2c6883b3ef998bc88ca",
+    "round2/selection.json": "f9582f17580edfdae8e38b2b799bb0083138ab9730ac964e34fd862743366add",
+    "round2-prefix128/control.json": "6ff56c1f34e913e354126d6bd5876915d782319a70246db915fd81ab497c70e0",
+    "round2-prefix128/trace.json": "4c6097a02edf69cef3572ab56d5f224cf6209be9584a578e5dce9bea9279aec8",
+    "round2-full/validation.json": "85d1db0c6b24295d84350feda8fe2e67d989ae6145999e34bae972d51749c180",
+    "round2-timing/result.json": "49e3e7ab1a86ede9196f5606c4bdfa79b02301ea95a84d5668ebe9267f7f8fa1",
+    "round2-bin/extend_observed_owners": "5c8868627ef589c42653d966812a263595f260eec8ee2cc32d5992e358a7b65c"
+  }
+}
