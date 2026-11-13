@@ -1,0 +1,85 @@
+{
+  "scope": "actual standalone Cell CPU; result routing work audit, not timing or a takeover",
+  "commit": "905350d8423bc3b84d36c0657d54aa903169e9ca",
+  "accepted_commit": "e21acfa18c4703829d57514fe22f2a974b0e414e",
+  "build": {
+    "commands": [
+      [
+        "cargo",
+        "clean",
+        "--release",
+        "-p",
+        "eggfuse-cell-runtime"
+      ],
+      [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "-p",
+        "eggfuse-cell-runtime",
+        "--features",
+        "cell-absorption,view-ports,parallel-publication"
+      ]
+    ],
+    "checkout": "/private/tmp/eggfuse-cursor-writes",
+    "target": "/Volumes/Extreme SSD/eggfuse-build-cache/3063/target",
+    "runtime_sha256": "1e579bb994e8145b09c6ea248bf4d6906b43759ea07763f0fac1bded6acc205c",
+    "features": "cell-absorption,view-ports,parallel-publication",
+    "scheduler_job": "200"
+  },
+  "workloads": {
+    "sum": {
+      "result_coordinator_rows": 4082,
+      "result_point_rows": 3267,
+      "result_mixed_rule_rows": 224,
+      "result_small_rule_rows": 308,
+      "result_inline_rows": 283,
+      "result_fragment_rows": 0,
+      "result_fragment_batches": 0,
+      "result_fragment_spans": 0,
+      "entry_range_batches": 179,
+      "range_answer_span_bytes": 12608,
+      "range_answer_span_heap_bytes": 2048
+    },
+    "ray": {
+      "result_coordinator_rows": 519989,
+      "result_point_rows": 41331,
+      "result_mixed_rule_rows": 366386,
+      "result_small_rule_rows": 103812,
+      "result_inline_rows": 8460,
+      "result_fragment_rows": 1034558,
+      "result_fragment_batches": 17080,
+      "result_fragment_spans": 18317,
+      "entry_range_batches": 49563,
+      "range_answer_span_bytes": 3220352,
+      "range_answer_span_heap_bytes": 96000
+    }
+  },
+  "integration": {
+    "branch": "codex/cell-parallel-admission",
+    "requested_ancestor": "d0d8ee33",
+    "tip": "28735c67",
+    "ordinary_query_tests": 14,
+    "query_test_scheduler_job": "197",
+    "direct_changed_roots": false,
+    "cell_stable_fields": false
+  },
+  "validation": {
+    "sum": {
+      "exact_state_runs_effects": true,
+      "runs": 1428,
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+    },
+    "ray": {
+      "exact_state_runs_effects": true,
+      "runs": 16883,
+      "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+    }
+  },
+  "semantic_acceptance": {
+    "status": "pass",
+    "report_sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505",
+    "cpu_state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  }
+}

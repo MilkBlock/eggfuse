@@ -1,0 +1,93 @@
+{
+  "scope": "actual standalone Cell runtime; sampled diagnostic, not performance acceptance",
+  "reference_commit": "e21acfa18c4703829d57514fe22f2a974b0e414e",
+  "runtime_sha256": "1e579bb994e8145b09c6ea248bf4d6906b43759ea07763f0fac1bded6acc205c",
+  "program_sha256": "a4f19f9637ecac7067ecfef433af8bf01a2294cf76c2a0d441670e8f2b5868f2",
+  "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd",
+  "schedule_sha256": "a4b7f24f28628502e26bd5ec35ed8ed66a287fecd894b630e29cac7b223cdd39",
+  "exact_state_runs_effects": true,
+  "sample_delay_seconds": 1.0,
+  "sample_duration_seconds": 2,
+  "sample_interval_ms": 2,
+  "sample_sha256": "42491206d4fd48fa78dfd64693fa6b0eea1664f7edb01ae2e7e7864be9757c22",
+  "phases": {
+    "delivery_gc": 0.034150926,
+    "query_update": 1.021891318,
+    "repair": 0.453709354,
+    "rhs": 2.152124876,
+    "search": 1.890817865
+  },
+  "limits": "A bounded wall-residence sample, not CPU percentages or a full-run census. Inclusive stacks overlap; inlining limits attribution. No per-Run logging or query profiling was enabled.",
+  "profiled_runtime_source_commit": "905350d8423bc3b84d36c0657d54aa903169e9ca",
+  "reference_commit_meaning": "prior semantic comparison baseline from the frozen manifest, not the profiled runtime source",
+  "profile_report_sha256": "34fa5508601cc4f6289c36ec4dba6e2de56c60d92154518c16f2edb2fecbc61f",
+  "main_samples": 642,
+  "main_inference_samples": 641,
+  "main_condition_wait_samples": 154,
+  "main_selected_inclusive": {
+    "publish_finished_tables": 135,
+    "Workers::finish_queries": 108,
+    "Executor::matches": 105,
+    "Graph::repair_selected": 71,
+    "resolve_cell_boundary": 64,
+    "Graph::activate_fields": 48,
+    "Graph::replace_row_edges": 41,
+    "Programs::publish_impl": 39,
+    "Scheduler::batches": 39,
+    "complete_canonical_cell": 35,
+    "poll_cell_queue": 33
+  },
+  "workers": [
+    {
+      "thread": "Thread_26680550: cell-query-0",
+      "samples": 642,
+      "condition_wait_samples": 469,
+      "condition_wait_fraction": 0.7305295950155763
+    },
+    {
+      "thread": "Thread_26680551: cell-query-1",
+      "samples": 642,
+      "condition_wait_samples": 478,
+      "condition_wait_fraction": 0.7445482866043613
+    },
+    {
+      "thread": "Thread_26680552: cell-query-2",
+      "samples": 642,
+      "condition_wait_samples": 493,
+      "condition_wait_fraction": 0.7679127725856698
+    },
+    {
+      "thread": "Thread_26680553: cell-query-3",
+      "samples": 642,
+      "condition_wait_samples": 512,
+      "condition_wait_fraction": 0.7975077881619937
+    }
+  ],
+  "main_top_own": {
+    "__psynch_cvwait": 154,
+    "_platform_memmove": 28,
+    "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert": 18,
+    "hashbrown::raw::RawTable$LT$T$C$A$GT$::reserve_rehash": 14,
+    "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert": 13,
+    "eggfuse_cell_runtime::graph::Graph::slot_fields": 12,
+    "eggfuse_cell_runtime::stage_spine::Programs::publish_impl": 11,
+    "eggfuse_cell_runtime::value::parent_epoch::Parents::get": 9,
+    "mach_absolute_time": 9,
+    "eggfuse_cell_runtime::graph::Graph::replace_row_edges": 8,
+    "mi_free": 8,
+    "_$LT$smallvec..SmallVec$LT$A$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LT$A$u20$as$u20$smallvec..Array$GT$..Item$GT$$GT$::extend": 7,
+    "_$LT$eggfuse_cell_runtime..graph..arena..Cells$u20$as$u20$eggfuse_cell_runtime..graph..fact_states..FactStates$GT$::fact_state": 7,
+    "mi_malloc_aligned": 7,
+    "eggfuse_cell_runtime::sieve::Summary::allows": 7,
+    "eggfuse_cell_runtime::executor::Executor::run::_$u7b$$u7b$closure$u7d$$u7d$": 6,
+    "<deduplicated_symbol>": 6,
+    "eggfuse_cell_runtime::executor::Executor::start_cell_execution": 6,
+    "eggfuse_cell_runtime::executor::owned_cell::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::advance_cell": 6,
+    "hashbrown::rustc_entry::_$LT$impl$u20$hashbrown..map..HashMap$LT$K$C$V$C$S$C$A$GT$$GT$::rustc_entry": 6,
+    "eggfuse_cell_runtime::graph::Graph::union": 6,
+    "eggfuse_cell_runtime::graph::cell_births::roots::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::take_root_job": 5,
+    "eggfuse_cell_runtime::stage_spine::Programs::materialize_publication": 5,
+    "eggfuse_cell_runtime::entry_schedule::Scheduler::publish_except": 5,
+    "eggfuse_cell_runtime::ordered_run::OrderedRun$LT$T$GT$::remove": 5
+  }
+}
