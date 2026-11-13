@@ -1035,7 +1035,7 @@ impl Graph {
             .map(|m| Arc::as_ptr(&m.program))
             .collect::<BTreeSet<_>>()
             .len();
-        json!({"dual_source":"matched-takeover/v1","result_entries":"completed-rhs/v1","routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":self.program.cell_ownership.format.marker_schema(),"port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"dual_plans":self.program.cell_ownership.composition.joins.len(),"dual_closure_rejections":self.program.cell_ownership.composition.join_rejected,"max_frames":self.program.cell_ownership.composition.max_frames},
+        json!({"witness_addressing":"checked-component/v1","dual_source":"matched-takeover/v1","result_entries":"completed-rhs/v1","routing":"baked local fragments; unknown continuations retain external boundaries", "enabled":true,"plan_summary":{"schema":self.program.cell_ownership.format.marker_schema(),"port_programs":programs,"fragments":self.program.cell_ownership.composition.transitions.len(),"dual_plans":self.program.cell_ownership.composition.joins.len(),"dual_closure_rejections":self.program.cell_ownership.composition.join_rejected,"max_frames":self.program.cell_ownership.composition.max_frames},
             "barriers":self.ownership.as_ref().map(|m|&m.barriers),
             "barrier_history":self.ownership.as_ref().map(|m|json!({"enabled":m.keep_barrier_history,
                 "start_after_barriers":m.barrier_history_start,"retained_capacity_bytes":m.barriers.capacity()*std::mem::size_of::<Barrier>()})),

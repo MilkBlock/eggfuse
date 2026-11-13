@@ -91,6 +91,28 @@ impl Work {
             };
             work.insert(format!("stats/{field}"),count);
         }
+        // Route selection is real work, not an additional constructor lookup.
+        // Old reports compared catalog keys after resolving every source; the
+        // new path validates a selected component address first. Charge either
+        // selection check once and keep actual directory reads separate.
+        let direct_address=match report["cell_ownership"].get("witness_addressing") {
+            None=>false,
+            Some(J::String(v)) if v=="checked-component/v1"=>true,
+            _=>return Err("unknown Cell witness addressing".into()),
+        };
+        for field in ["constructor_cell_route_probes","constructor_cell_route_anchor_reads",
+            "constructor_cell_route_operation_checks","constructor_cell_route_alternative_checks",
+            "constructor_cell_route_alternative_fields","constructor_cell_route_source_checks",
+            "constructor_cell_route_address_checks"] {
+            let old_field=if field=="constructor_cell_route_address_checks" && !direct_address {
+                "constructor_cell_route_anchor_reads"
+            } else {field};
+            let value=match report["stats"].get(old_field) {
+                None if !direct_address=>0,
+                value=>value.and_then(J::as_u64).ok_or_else(||format!("missing Cell witness work {field}"))?,
+            };
+            work.insert(format!("stats/{field}"),value);
+        }
         // Constructor preparation replaces a source lookup only after checked
         // evidence. All speculative lookups already enter key_lookup_calls;
         // any required decoding remains in fact_decode_calls. Cached-row
@@ -767,6 +789,15 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
     let mut report = e.report();
     let work = Work::read(&report).unwrap();
     assert_eq!(report["query_workers"]["organization"], "cell-run-events/v6");
+    for field in ["constructor_cell_route_anchor_reads","constructor_cell_route_address_checks"] {
+        let mut extra=report.clone();extra["stats"][field]=json!(report["stats"][field].as_u64().unwrap()+1);
+        assert_eq!(work.savings(&Work::read(&extra).unwrap()).0,-1);
+        extra["stats"].as_object_mut().unwrap().remove(field);
+        assert!(Work::read(&extra).unwrap_err().contains("missing Cell witness work"));
+    }
+    let mut hit=report.clone();hit["stats"]["constructor_cell_route_address_reuses"]=json!(1000000);
+    assert_eq!(work.savings(&Work::read(&hit).unwrap()).0,0,"cache hits do not earn credit twice");
+
     let mut result_entry=report.clone();
     result_entry["cell_ownership"]["stats"]["composition_result_writes"]=json!(
         report["cell_ownership"]["stats"]["composition_result_writes"].as_u64().unwrap()+1);

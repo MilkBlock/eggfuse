@@ -1963,7 +1963,9 @@ fn one_entry_reuses_static_route_selection_for_multiple_constructor_results() {
     let s=&candidate.graph.stats;
     assert!(s.constructor_cell_route_selection_reuses>s.constructor_cell_route_probes,
         "distinct instances should share the static group without sharing actual values");
-    assert_eq!(s.constructor_cell_route_anchor_reads,
+    assert!(s.constructor_cell_route_address_reuses>0,
+        "one Entry must reuse its actual component address across RHS operations");
+    assert_eq!(s.constructor_cell_route_anchor_reads+s.constructor_cell_route_address_reuses,
         s.constructor_cell_route_probes+s.constructor_cell_route_selection_reuses);
     assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
 }

@@ -52,11 +52,27 @@ impl Rule {pub(super) fn is_empty(&self)->bool {self.entries.is_empty()}}
 #[derive(Clone,Debug,Default,PartialEq,Eq)]
 struct Group {operations:Box<[(usize,smallvec::SmallVec<[Target;1]>)]>}
 /// Coordinator scratch for a pure lookup in the immutable compiled catalog.
-/// The full key includes rule/Entry and source layout, not an instance address.
-/// It may cross Runs: every use resolves current facts and rechecks admission.
-/// Never place equality, visibility or returned-value evidence here.
+/// The catalog key includes rule/Entry and source layout. Its optional instance
+/// address is independently checked against current composition on every use.
+/// It may cross Runs; equality, visibility and returned values are never cached.
 #[derive(Clone,Copy)]
-pub(super) struct Selection {rule:usize,entry:usize,key:Key,group:Option<usize>}
+pub(super) struct Selection {
+    rule:usize,entry:usize,key:Key,group:Option<usize>,
+    // Only an address, never equality/liveness evidence. The current shape
+    // and source ordinal validate it; no mutation-side invalidation is needed.
+    address:Option<(FactRef,u32)>,
+}
+impl Selection {
+    fn component<'a>(&self,runtime:&'a composition::Runtime,anchor:FactRef)->Option<(u32,&'a composition::Component)> {
+        let (fact,id)=self.address?;
+        if fact!=anchor {return None;}
+        let component=runtime.components.get(id as usize)?.as_ref()?;
+        // Logical source identities and operator codes are immutable. A suffix
+        // changes shape; relocation changes the source position.
+        (component.shape==self.key.0 && component.frames.get(self.key.1)==Some(&anchor.cell))
+            .then_some((id,component))
+    }
+}
 impl Routes {
     fn group(operations:Vec<Vec<Option<Operation>>>)->Self {
         let mut rules=Vec::with_capacity(operations.len());let mut groups=Vec::<Vec<(usize,smallvec::SmallVec<[Target;1]>)>>::new();
@@ -162,19 +178,32 @@ impl Graph {
         let routes = plans.0.get(entry.rule)?;
         for &index in routes.operations.get(operation)? {
             let Some(Some(Dependency::Fact(anchor))) = entry.anchors.get(index) else { continue; };
-            let Some(source) = owner.composition.frames.get(&anchor.cell) else { continue; };
-            let Some(component) = owner.composition.components.get(source.component as usize).and_then(Option::as_ref) else { continue; };
-            self.stats.constructor_cell_route_anchor_reads += 1;
-            let key=(component.shape,source.ordinal,source.code,anchor.op);
-            let group=if let Some(cached)=owner.composition.witness_selection.get()
-                .filter(|s|s.rule==entry.rule && s.entry==index && s.key==key) {
+            self.stats.constructor_cell_route_address_checks+=1;
+            let previous=owner.composition.witness_selection.get()
+                .filter(|s|s.rule==entry.rule && s.entry==index);
+            let direct=previous.and_then(|cached| {
+                let (id,component)=cached.component(&owner.composition,*anchor)?;
+                Some((id,component,cached.group))
+            });
+            let (component_id,component,group)=if let Some(selected)=direct {
+                self.stats.constructor_cell_route_address_reuses+=1;
                 self.stats.constructor_cell_route_selection_reuses+=1;
-                cached.group
+                selected
             } else {
-                self.stats.constructor_cell_route_probes+=1;
-                let group=routes.entries[&index].get(&key).copied();
-                owner.composition.witness_selection.set(Some(Selection{rule:entry.rule,entry:index,key,group}));
-                group
+                let Some(source)=owner.composition.frames.get(&anchor.cell) else {continue;};
+                let Some(component)=owner.composition.components.get(source.component as usize).and_then(Option::as_ref) else {continue;};
+                self.stats.constructor_cell_route_anchor_reads+=1;
+                let key=(component.shape,source.ordinal,source.code,anchor.op);
+                let group=if let Some(cached)=previous.filter(|s|s.key==key) {
+                    self.stats.constructor_cell_route_selection_reuses+=1;
+                    cached.group
+                } else {
+                    self.stats.constructor_cell_route_probes+=1;
+                    routes.entries[&index].get(&key).copied()
+                };
+                owner.composition.witness_selection.set(Some(Selection{rule:entry.rule,entry:index,key,group,
+                    address:Some((*anchor,source.component))}));
+                (source.component,component,group)
             };
             let Some(group)=group else {continue;};
             self.stats.constructor_cell_route_operation_checks+=1;
@@ -183,7 +212,7 @@ impl Graph {
             let targets=&operations[position].1;
             for &Target{frame:target,code,op,key_proved} in targets {
             let Some(&cell) = component.frames.get(target) else { continue; };
-            if !owner.composition.frames.get(&cell).is_some_and(|f|f.code==code && f.component==source.component) { continue; }
+            if !owner.composition.frames.get(&cell).is_some_and(|f|f.code==code && f.component==component_id) { continue; }
             if key_proved {self.stats.constructor_cell_route_source_checks+=1;}
             let key_proved=key_proved && self.cells.fact_state(*anchor).is_some_and(|s|s.owned && !s.hidden);
             if targets.len()>1 && key_proved {
@@ -218,6 +247,22 @@ impl Graph {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn selected_address_rechecks_shape_source_position_and_retirement() {
+        let mut runtime=composition::Runtime::new(&composition::Plan::default());
+        runtime.components.push(Some(composition::Component{shape:4,frames:smallvec::smallvec![9],signals:vec![]}));
+        let anchor=FactRef{cell:9,op:3};
+        let selected=Selection{rule:0,entry:0,key:(4,0,2,3),group:Some(0),address:Some((anchor,0))};
+        assert!(selected.component(&runtime,anchor).is_some());
+        assert!(selected.component(&runtime,FactRef{cell:9,op:4}).is_none());
+        runtime.components.local_mut(0).as_mut().unwrap().shape=5;
+        assert!(selected.component(&runtime,anchor).is_none(),"new suffix needs a fresh catalog selection");
+        runtime.components.local_mut(0).as_mut().unwrap().shape=4;
+        runtime.components.local_mut(0).as_mut().unwrap().frames[0]=10;
+        assert!(selected.component(&runtime,anchor).is_none(),"same-shaped source cannot reuse another instance address");
+        runtime.components.retire(0);
+        assert!(selected.component(&runtime,anchor).is_none());
+    }
     #[test]
     fn constructor_key_proof_follows_copies_but_not_overwritten_bindings() {
         assert_eq!(std::mem::size_of::<Target>(),std::mem::size_of::<(usize,usize,u32)>());
