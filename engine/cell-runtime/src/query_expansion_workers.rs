@@ -27,6 +27,8 @@ struct Work {
     partitioned_expansion_rows:u64, partitioned_point_reads:u64,
     partitioned_worker_entries:Vec<u64>, partitioned_inline_entries:u64,
     column_prepares:u64, column_prepare_reuses:u64,
+    #[cfg(feature="cell-absorption")]
+    absorption_capacity_bytes:u64,
 }
 #[derive(Default)]
 pub(super) struct Output {
@@ -140,12 +142,12 @@ impl Plans {
         let rules=p.kernels.iter().enumerate().map(|(rid,ks)|ks.iter().enumerate().map(|(pivot,k)| {
             let k=k.as_ref()?;
             if k.routes.is_some() || k.sum_filter.is_some() {return None;}
-            #[cfg(feature="cell-absorption")]
-            if k.absorption.is_some() {return None;}
             let expanded=k.query.steps.iter().find(|s|s.expansion.is_some())?;
             if expanded.expansion.as_ref()?.bound.is_empty() || !p.physical.ranges[rid][expanded.atom].is_empty() {return None;}
             let mut layout=BTreeMap::<usize,BTreeSet<usize>>::new();
             let mut tables=BTreeSet::new();
+            #[cfg(feature="cell-absorption")]
+            if let Some(plan)=&k.absorption {tables.insert(plan.attribute());}
             for s in &k.query.steps {
                 if let Call::Table(t)=s.call {tables.insert(t);}
                 if let (Call::Table(t),Some(e))=(&s.call,&s.expansion) {
@@ -170,12 +172,17 @@ impl Plans {
         Self {enabled:true,rules,ready:vec![0;codes.len()],outputs:(0..p.rules.len()).map(|_|Output::default()).collect(),..Default::default()}
     }
     pub fn prepare<'a>(&mut self, index:&'a crate::query::QueryIndexes,
-        sieve:&'a crate::sieve::Sieve, entries:&'a crate::entry_join::Plan)->Vec<Prepared<'a>> {
+        sieve:&'a crate::sieve::Sieve, entries:&'a crate::entry_join::Plan,
+        #[cfg(feature="cell-absorption")] graph:&Graph,
+        #[cfg(feature="cell-absorption")] absorption:bool)->Vec<Prepared<'a>> {
         self.active.iter().enumerate().map(|(i,&(rid,pivot))| {
             let plan=self.rules[rid][pivot].as_ref().unwrap();
             self.ready[plan.code]=i;
             Prepared {index:index.read_columns(&plan.layout,plan.table),filter:sieve.entry_filter(rid,pivot),
                 steps:&entries.entries[rid][pivot],projections:&entries.projections,expanded:plan.expanded,
+                #[cfg(feature="cell-absorption")]
+                absorption:graph.program.kernels[rid][pivot].as_ref().unwrap().absorption.as_deref()
+                    .filter(|p|absorption && !graph.has_visibility_changes(p.attribute())).copied(),
                 partitioned:plan.partitioned}
         }).collect()
     }
@@ -275,8 +282,6 @@ impl Workers {
     pub(crate) fn expansion_ready(&self,g:&Graph,rid:usize,pivot:usize)->bool {
         if !self.expansion.enabled {return false;}
         let Some(plan)=&self.expansion.rules[rid][pivot] else {return false;};
-        #[cfg(feature="cell-absorption")]
-        if g.program.kernels[rid][pivot].as_ref().is_some_and(|k|k.absorption.is_some()) {return false;}
         g.query_reads(&plan.tables,&mut 0).is_some_and(|r|r.canonical_rows())
     }
     fn activate_expansion(&mut self,g:&Graph,index:&mut crate::query::QueryIndexes,rid:usize,pivot:usize)->Result<usize> {
@@ -335,7 +340,11 @@ impl Workers {
     }
     pub(super) fn record_expansion_chunk(&mut self,g:&mut Graph,sieve:&mut crate::sieve::Sieve,
         chunk:ChunkWork,worker:Option<usize>,seconds:f64,answer_capacity:usize) {
-        let ChunkWork {counts:c,work:w,filters}=chunk;
+        #[cfg(feature="cell-absorption")]
+        {self.expansion.work.absorption_capacity_bytes+=(chunk.absorption.capacity()
+            *std::mem::size_of::<(usize,crate::neighbor::WorkerAbsorption)>()) as u64;}
+        let ChunkWork {counts:c,work:w,filters,
+            #[cfg(feature="cell-absorption")] absorption:_,}=chunk;
         if w.input_rows==0 {return;}
         let t=&mut self.expansion.work;
         t.partitioned_entries+=w.partitioned_entries;
@@ -380,6 +389,8 @@ impl Workers {
 pub(super) struct Prepared<'a> {
     index:Read<'a>,filter:crate::sieve::EntryFilter<'a>,steps:&'a [crate::entry_join::Step],
     projections:&'a [crate::entry_join::Projection],expanded:usize,partitioned:bool,
+    #[cfg(feature="cell-absorption")]
+    absorption:Option<crate::neighbor::Absorption>,
 }
 #[derive(Default)]
 struct InputWork {
@@ -394,12 +405,22 @@ struct InputWork {
 pub(super) struct ChunkWork {
     pub counts:Counts,work:InputWork,
     filters:SmallVec<[(usize,u64,u64,u64,u64);4]>,
+    // Metrics only: no rejected bindings, result slots or row log cross back.
+    #[cfg(feature="cell-absorption")]
+    pub(super) absorption:Vec<(usize,crate::neighbor::WorkerAbsorption)>,
 }
-impl ChunkWork { pub(super) fn admitted_entries(&self)->u64 {self.counts.entries} }
+impl ChunkWork {
+    // Coverage uses the same admission boundary as source Free Join, before
+    // query guards or absorption. Empty domains cannot hide a residual match;
+    // an admitted Entry with no final answer still prevents complete coverage.
+    pub(super) fn coverage(&self)->(u64,u64) {(self.counts.entries,self.work.partitioned_admitted)}
+}
 impl Prepared<'_> {
     pub fn evaluate(&self,q:&QueryRead<'_>,reads:&crate::graph::query_reads::QueryReads<'_>,
         key_nodes:&J,known:&RuleRun,frame:&mut Frame,chunk:&mut ChunkWork,answers:&mut Vec<(usize,Binding)>,local:&crate::cell::execution::Plan,template:&Template)->Result<()> {
         let (c,w)=(&mut chunk.counts,&mut chunk.work);
+        #[cfg(feature="cell-absorption")]
+        let mut absorption_work=crate::neighbor::WorkerAbsorption::default();
         let entry=Entry {values:&q.row.values,epoch:q.row.epoch,witness:q.row.witness};
         let before=(w.filter_probes,w.filter_rejected,w.direct_entries,c.point_reads+w.row_reads);
         let partition_before=(w.admission_probes,w.expansion_rows,c.point_reads,c.answers);
@@ -435,9 +456,18 @@ impl Prepared<'_> {
             w.partitioned_admitted+=u64::from(self.partitioned);
             frame.witnesses.clear();frame.witnesses.push((q.code.pivot,entry.witness));
             Host {local,template,query:&q.code.query,entry:&entry,pivot:q.code.pivot,reads,index:&self.index,key_nodes,
+                #[cfg(feature="cell-absorption")]
+                absorption:self.absorption.as_ref().and_then(|p|p.activate_sealed(q.row,known.watermark)),
+                #[cfg(feature="cell-absorption")]
+                absorption_work:&mut absorption_work,
                 inputs:&q.code.inputs,known:&known.facts,frame,counts:c,work:w,answers,
                 source:q.source,watermark:known.watermark}.step(0,None,entry.epoch,domain.as_ref())
         })();
+        #[cfg(feature="cell-absorption")]
+        if absorption_work.candidates()!=0 {
+            if let Some((_,work))=chunk.absorption.iter_mut().find(|(rule,_)|*rule==q.code.rule) {work.add(absorption_work);}
+            else {chunk.absorption.push((q.code.rule,absorption_work));}
+        }
         if self.partitioned {
             w.partitioned_admission_probes+=w.admission_probes-partition_before.0;
             w.partitioned_expansion_rows+=w.expansion_rows-partition_before.1;
@@ -459,6 +489,10 @@ struct Host<'a,'g,'i> {
     reads:&'a crate::graph::query_reads::QueryReads<'g>, index:&'a Read<'i>, key_nodes:&'a J,
     inputs:&'a [usize], known:&'a QueryFacts, frame:&'a mut Frame,
     counts:&'a mut Counts, work:&'a mut InputWork, answers:&'a mut Vec<(usize,Binding)>, source:usize, watermark:u64,
+    #[cfg(feature="cell-absorption")]
+    absorption:Option<crate::neighbor::Activated<'a>>,
+    #[cfg(feature="cell-absorption")]
+    absorption_work:&'a mut crate::neighbor::WorkerAbsorption,
 }
 impl Host<'_, '_, '_> {
     fn step(&mut self, pc:usize, expanded:Option<(usize,&Row)>, mut epoch:u64,
@@ -484,6 +518,9 @@ impl Host<'_, '_, '_> {
                     self.work.expansion_rows+=1;
                     if !expansion.checks.iter().all(|(c,f)| f.operand_in(self.reads.parents,
                         |col|&self.entry.values[col],&self.frame.values,Some((position,&row))).as_ref()==&row.values[*c]) {continue;}
+                    #[cfg(feature="cell-absorption")]
+                    if let Some(active)=self.absorption
+                        && self.absorption_work.check(active,&row,self.reads) {continue;}
                     self.frame.witnesses.truncate(mark);
                     self.frame.witnesses.push((ins.atom,w));
                     self.step(position+1,Some((position,&row)),epoch.max(row.epoch),None)?;

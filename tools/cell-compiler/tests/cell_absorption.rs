@@ -62,7 +62,9 @@ fn completed_min_domains_survive_scalar_changes_and_reopen_on_structure_changes(
         let r = after.report();
         let stats = &r["neighbor_context"]["absorption"]["stats"];
         assert!(stats["matches_absorbed"].as_u64().unwrap() >= 4, "{stats}");
-        if std::env::var("CELL_CPU_HASH_BITS").ok().as_deref()==Some("0") {
+        if workers!=0 && cfg!(feature="parallel-residuals") {
+            assert!(stats["worker"]["absorbed"].as_u64().unwrap()>0,"the proof must run on the worker path: {stats}");
+        } else if std::env::var("CELL_CPU_HASH_BITS").ok().as_deref()==Some("0") {
             // All input keys share this candidate bucket. Exact per-row checks
             // may absorb members, but this fixture cannot certify one bound
             // for the whole mixed-key domain merely from its fingerprint.
@@ -106,8 +108,8 @@ fn singleton_absorption_keeps_later_scalar_updates_and_consumers() {
         }
         let report = after.report();
         let stats = &report["neighbor_context"]["absorption"]["stats"];
-        assert_eq!(stats["single_absorbed"],1,"{stats}");
-        assert_eq!(stats["single_output_probes"],2,"the later lower input must still execute");
+        assert_eq!(stats["single_absorbed"].as_u64().unwrap()+stats["worker"]["absorbed"].as_u64().unwrap(),1,"{stats}");
+        assert_eq!(stats["single_output_probes"].as_u64().unwrap()+stats["worker"]["probes"].as_u64().unwrap(),2,"the later lower input must still execute");
         assert_eq!(stats["single_candidates"],stats["single_checks"],"only the compiled Cell orientation enters the guard");
         assert_eq!(stats["groups_absorbed"],0,"singletons must not create a domain cache");
         assert_eq!(before.graph.stats.bindings-after.graph.stats.bindings,1);
@@ -131,14 +133,56 @@ fn mixed_domains_complete_absorbed_members_and_keep_required_updates() {
         }
         let report = after.report();
         let stats = &report["neighbor_context"]["absorption"]["stats"];
-        assert!(stats["mixed_absorbed"].as_u64().unwrap() >= 2, "{stats}");
-        assert!(stats["mixed_output_probes"].as_u64().unwrap() > stats["mixed_absorbed"].as_u64().unwrap(),
+        let absorbed=stats["mixed_absorbed"].as_u64().unwrap()+stats["worker"]["absorbed"].as_u64().unwrap();
+        assert!(absorbed >= 2, "{stats}");
+        assert!(stats["mixed_output_probes"].as_u64().unwrap()+stats["worker"]["probes"].as_u64().unwrap() > absorbed,
             "failed member proofs must still update their outputs");
         assert_eq!(before.graph.stats.bindings - after.graph.stats.bindings,
             stats["matches_absorbed"].as_u64().unwrap());
         for key in ["function_updates", "unions", "logical_facts_created"] {
             assert_eq!(before.report()["stats"][key], report["stats"][key], "{key}");
         }
+    }
+}
+
+#[cfg(feature="parallel-residuals")]
+#[test]
+fn worker_absorption_keeps_exact_source_reservations_and_mixed_rule_order() {
+    let mut source=String::from(r#"
+        (datatype E (N i64) (Get E i64) (Seen E i64))
+        (function Cost (E) i64 :merge (min old new))
+        (ruleset copy) (ruleset lower) (ruleset late) (ruleset join) (ruleset remove)
+        (rule ((= g (Get x i)) (= n (Cost x))) ((set (Cost g) n)) :ruleset copy)
+        (rule ((= g (Get x i)) (= n (Cost g))) ((Seen g n)) :ruleset copy)
+        (rule ((= x (N i))) ((set (Cost x) 2)) :ruleset lower)
+        (rule () ((Get (N 0) 3)) :ruleset late)
+        (rule () ((union (N 1) (N 2))) :ruleset join)
+        (rule () ((delete (Get (N 3) 0))) :ruleset remove)
+    "#);
+    for i in 0..128 {
+        source+=&format!("(set (Cost (N {i})) 10)\n");
+        for child in 0..3 {
+            source+=&format!("(set (Cost (Get (N {i}) {child})) {})\n",if child==2 {30} else {1});
+        }
+    }
+    source+="(run-schedule (seq (run copy) (run lower) (run copy) (run late) (run copy) (run join) (run copy) (run remove) (run copy)))\n";
+    let serial=run(&source,true,0);
+    for workers in [1,2,4] {
+        let parallel=run(&source,true,workers);
+        assert_eq!(serial.snapshots,parallel.snapshots,"all Run graph states and reserved identities");
+        assert_eq!(serial.binding_audit,parallel.binding_audit,"same actual RHS instances, excluding proved omissions");
+        for (a,b) in serial.steps.iter().zip(&parallel.steps) {
+            for k in ["ordinal","epoch","path","ruleset","iterations","logical_matches","executed_bindings","changed"] {assert_eq!(a[k],b[k],"{k}");}
+        }
+        let before=serial.report();let after=parallel.report();
+        let work=&after["neighbor_context"]["absorption"]["stats"];
+        assert_eq!(before["neighbor_context"]["absorption"]["stats"]["matches_absorbed"],work["matches_absorbed"]);
+        assert!(work["worker"]["absorbed"].as_u64().unwrap()>0);
+        let threaded=work["thread_absorbed"].as_array().unwrap().iter().map(|v|v.as_u64().unwrap()).sum::<u64>();
+        assert_eq!(threaded+work["inline_absorbed"].as_u64().unwrap(),work["worker"]["absorbed"].as_u64().unwrap());
+        assert_eq!(threaded>0,workers>1,"proof work must reach actual worker threads");
+        assert!(work["worker"]["fresh"].as_u64().unwrap()>0,"late constructors must retain ordinary winner selection");
+        for k in ["bindings","function_updates","logical_facts_created","union_requests","unions","merge_calls"] {assert_eq!(before["stats"][k],after["stats"][k],"{k}");}
     }
 }
 

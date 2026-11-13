@@ -187,15 +187,59 @@ pub(crate) struct Activated<'a> {
 #[cfg(feature = "cell-absorption")]
 impl Absorption {
     pub(crate) fn activate<'a>(&'a self, g: &Graph, seed: &Row, watermark: u64) -> Option<Activated<'a>> {
-        if seed.table != self.attribute || seed.hidden || seed.epoch < watermark
-            || g.has_visibility_changes(self.attribute) { return None; }
+        if g.has_visibility_changes(self.attribute) { return None; }
+        self.activate_sealed(seed,watermark)
+    }
+    pub(crate) fn attribute(&self)->usize {self.attribute}
+    /// The caller has proved a sealed, visible attribute table for this Run.
+    pub(crate) fn activate_sealed<'a>(&'a self,seed:&Row,watermark:u64)->Option<Activated<'a>> {
+        if seed.table != self.attribute || seed.hidden || seed.epoch < watermark {return None;}
         let [Value::Eq(key), Value::Int(value)] = seed.values.as_ref() else { return None; };
         Some(Activated { plan:self, key:*key, value:*value, watermark })
+    }
+}
+#[cfg(feature="cell-absorption")]
+pub(crate) enum RowProof { Outside, Fresh, Missing, Required, Absorbed }
+#[cfg(feature="cell-absorption")]
+impl Activated<'_> {
+    /// One typed Cell proof, shared by source neighborhoods and worker reads.
+    /// The proof never depends on a digest or cached row identity.
+    pub(crate) fn prove(&self,row:&Row,read:impl FnOnce(usize,&Value)->Option<i64>)->RowProof {
+        if row.hidden || row.values.get(self.plan.input_column)!=Some(&Value::Eq(self.key)) {return RowProof::Outside;}
+        if row.epoch>=self.watermark {return RowProof::Fresh;}
+        let Some(value)=read(self.plan.attribute,row.values.last().unwrap()) else {return RowProof::Missing;};
+        if value<=self.value {RowProof::Absorbed} else {RowProof::Required}
+    }
+}
+#[cfg(feature="cell-absorption")]
+#[derive(Default,Serialize)]
+pub(crate) struct WorkerAbsorption {
+    candidates:u64, fresh:u64, probes:u64, missing:u64, absorbed:u64,
+}
+#[cfg(feature="cell-absorption")]
+impl WorkerAbsorption {
+    pub(crate) fn check(&mut self,active:Activated<'_>,row:&Row,reads:&crate::graph::query_reads::QueryReads<'_>)->bool {
+        self.candidates+=1;
+        match active.prove(row,|table,key| {self.probes+=1;reads.absorption_value(table,key)}) {
+            RowProof::Fresh=>self.fresh+=1,
+            RowProof::Missing=>self.missing+=1,
+            RowProof::Absorbed=>{self.absorbed+=1;return true;}
+            RowProof::Outside|RowProof::Required=>{}
+        }
+        false
+    }
+    pub(crate) fn candidates(&self)->u64 {self.candidates}
+    pub(crate) fn add(&mut self,other:Self) {
+        self.candidates+=other.candidates;self.fresh+=other.fresh;self.probes+=other.probes;
+        self.missing+=other.missing;self.absorbed+=other.absorbed;
     }
 }
 #[cfg(feature = "cell-absorption")]
 #[derive(Default, Serialize)]
 struct AbsorptionStats {
+    worker: WorkerAbsorption,
+    thread_absorbed:Vec<u64>,
+    inline_absorbed:u64,
     checks: u64,
     reused_bounds: u64,
     bound_builds: u64,
@@ -365,7 +409,6 @@ impl Context {
     /// subscription, cached binding or extra instance state is introduced.
     #[cfg(feature = "cell-absorption")]
     pub(crate) fn absorbs_row(&mut self, g: &Graph, rid: usize, active: Activated<'_>, row: &Row, single: bool) -> bool {
-        let Activated { plan, key, value:candidate, watermark } = active;
         let stats = &mut self.absorption_stats;
         let (candidates, checks, fresh, probes, missing, absorbed) = if single {
             (&mut stats.single_candidates, &mut stats.single_checks, &mut stats.single_fresh_fallbacks,
@@ -375,22 +418,32 @@ impl Context {
                 &mut stats.mixed_output_probes, &mut stats.mixed_missing_outputs, &mut stats.mixed_absorbed)
         };
         *candidates += 1;
-        if row.hidden || row.values.get(plan.input_column) != Some(&Value::Eq(key)) { return false; }
+        let proof=active.prove(row,|table,key| {*probes+=1;g.absorption_value(table,key).map(|(_,value)|value)});
+        if matches!(proof,RowProof::Outside) {return false;}
         *checks += 1;
-        if row.epoch >= watermark {
+        if matches!(proof,RowProof::Fresh) {
             *fresh += 1;
             return false;
         }
-        *probes += 1;
-        let Some((_, value)) = g.absorption_value(plan.attribute, row.values.last().unwrap()) else {
+        if matches!(proof,RowProof::Missing) {
             *missing += 1;
             return false;
-        };
-        if value > candidate { return false; }
+        }
+        if matches!(proof,RowProof::Required) { return false; }
         *absorbed += 1;
         stats.matches_absorbed += 1;
         stats.pending[rid] += 1;
         true
+    }
+    #[cfg(feature="cell-absorption")]
+    pub(crate) fn record_worker_absorption(&mut self,rule:usize,work:WorkerAbsorption,worker:Option<usize>) {
+        self.absorption_stats.matches_absorbed+=work.absorbed;
+        self.absorption_stats.pending[rule]+=work.absorbed as usize;
+        if let Some(thread)=worker {
+            self.absorption_stats.thread_absorbed.resize(self.absorption_stats.thread_absorbed.len().max(thread+1),0);
+            self.absorption_stats.thread_absorbed[thread]+=work.absorbed;
+        } else {self.absorption_stats.inline_absorbed+=work.absorbed;}
+        self.absorption_stats.worker.add(work);
     }
     #[cfg(feature = "cell-absorption")]
     pub(crate) fn pending_absorbed(&self, rule: usize) -> usize { self.absorption_stats.pending[rule] }

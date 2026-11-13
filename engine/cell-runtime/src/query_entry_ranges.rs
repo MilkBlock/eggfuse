@@ -198,7 +198,7 @@ pub(super) struct Completed {
     // End position and compiled code for each nonempty answer span. No extra
     // code/source wrapper is copied into each successful instance.
     pub origins: smallvec::SmallVec<[(usize, usize); 4]>,
-    pub coverage: smallvec::SmallVec<[(usize,usize,u64);4]>,
+    pub coverage: smallvec::SmallVec<[(usize,usize,u64,u64);4]>,
     pub error: Option<((usize, bool, Dependency, usize), String)>,
     pub counts: Counts,
     pub worker: Option<usize>,
@@ -232,12 +232,12 @@ pub(super) fn run(
         let mut answers = Vec::new();
         let mut error = None;
         let mut origins = smallvec::SmallVec::<[(usize, usize); 4]>::new();
-        let mut coverage = smallvec::SmallVec::<[(usize,usize,u64);4]>::new();
+        let mut coverage = smallvec::SmallVec::<[(usize,usize,u64,u64);4]>::new();
         for job in jobs {
             let code = &codes[job.range.code];
             let known = facts[code.rule].as_ref().expect("active range");
             let first = answers.len();
-            let admitted = residual.admitted_entries();
+            let (admitted,supported) = residual.coverage();
             let mut visit = |i, witness| {
                 counts.entry_range_rows += 1;
                 counts.coverage_range_rows += u64::from(job.range.coverage);
@@ -307,10 +307,10 @@ pub(super) fn run(
                 }
             }
             if job.range.coverage {
-                let n=residual.admitted_entries()-admitted;
-                if let Some((_,_,count))=coverage.last_mut().filter(|(rid,pivot,_)|
-                    *rid==code.rule && *pivot==code.pivot) {*count+=n;}
-                else {coverage.push((code.rule,code.pivot,n));}
+                let (a,s)=residual.coverage();
+                if let Some((_,_,count,live))=coverage.last_mut().filter(|(rid,pivot,_,_)|
+                    *rid==code.rule && *pivot==code.pivot) {*count+=a-admitted;*live+=s-supported;}
+                else {coverage.push((code.rule,code.pivot,a-admitted,s-supported));}
             }
             if first != answers.len() {
                 if let Some((end, _)) = origins
@@ -331,7 +331,7 @@ pub(super) fn run(
             0
         };
         counts.coverage_event_heap_bytes=if coverage.spilled() {
-            (coverage.capacity()*std::mem::size_of::<(usize,usize,u64)>()) as u64
+            (coverage.capacity()*std::mem::size_of::<(usize,usize,u64,u64)>()) as u64
         } else {0};
         counts.completion_headers = answers.len() as u64;
         counts.output_buffer_capacity = answers.capacity() as u64;

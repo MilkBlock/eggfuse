@@ -2758,7 +2758,10 @@ impl Executor {
                 #[cfg(feature="parallel-residuals")] &self.query_indexes,
                 #[cfg(feature="parallel-residuals")] &mut self.sieve,
                 #[cfg(feature="parallel-residuals")] self.free_join.entry_plan(),
-                #[cfg(feature="parallel-residuals")] &self.entry_schedule)?;
+                #[cfg(feature="parallel-residuals")] &self.entry_schedule,
+                #[cfg(all(feature="parallel-residuals",feature="cell-absorption"))] &mut self.neighbor)?;
+            #[cfg(feature="cell-absorption")]
+            { absorbed_matches=work.iter().map(|(rid,_)|self.neighbor.pending_absorbed(*rid)).sum(); }
             // Query completion events already selected winners and assembled
             // the actual RHS instances. Only aggregate accounting waits here.
             let completed=std::mem::take(&mut workers.completed_rules);

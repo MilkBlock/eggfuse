@@ -55,6 +55,12 @@ impl Graph {
     }
 }
 impl QueryReads<'_> {
+    #[cfg(feature="cell-absorption")]
+    pub(crate) fn absorption_value(&self,table:usize,key:&Value)->Option<i64> {
+        let &index=self.keys[table].get(std::slice::from_ref(key),self.functions)?;
+        let row=self.functions.get(index).filter(|f|f.live && f.table==table)?;
+        match row.value() {Value::Int(v)=>Some(*v),_=>None}
+    }
     /// A typed Unit continuation can reuse this exact row at its source effect
     /// position if the original Run generation and row lifecycle still hold.
     pub(crate) fn unit_witness_projected<'a>(&self, table: usize, len: usize,

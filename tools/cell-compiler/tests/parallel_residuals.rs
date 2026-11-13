@@ -276,9 +276,10 @@ fn late_coverage_counts_filter_acceptance_even_when_the_query_has_no_answer() {
                 assert_eq!(q["coverage_admitted_entries"],0,"no phantom Entry after retirement");
             } else if has_pair {
                 assert!(q["coverage_admitted_entries"].as_u64().unwrap()>0,"{q}");
+                assert!(q["coverage_supported_entries"].as_u64().unwrap()>0,"a later guard rejection retains its residual Entry: {q}");
                 assert_eq!(q["coverage_complete_rules"],0,"no answers does not prove complete coverage");
-            } else if std::env::var_os("CELL_CPU_SIEVE_COLLISIONS").is_none() {
-                assert_eq!(q["coverage_admitted_entries"],0,"{q}");
+            } else if std::env::var("CELL_CPU_HASH_BITS").ok().as_deref()!=Some("0") {
+                assert_eq!(q["coverage_supported_entries"],0,"Free Join rejects missing support even on a Sieve false positive: {q}");
                 assert_eq!(q["coverage_complete_rules"],q["coverage_rules"],"all rejected Entries release complete coverage");
             }
         }

@@ -164,6 +164,7 @@ pub(super) struct Stats {
     pub coverage_range_descriptors:u64,
     pub coverage_range_rows:u64,
     pub coverage_admitted_entries:u64,
+    pub coverage_supported_entries:u64,
     pub coverage_events:u64,
     pub coverage_event_heap_bytes:u64,
     pub coverage_rules:u64,
@@ -910,12 +911,14 @@ impl Workers {
         #[cfg(feature="parallel-residuals")] indexes:&crate::query::QueryIndexes,
         #[cfg(feature="parallel-residuals")] sieve:&mut crate::sieve::Sieve,
         #[cfg(feature="parallel-residuals")] entries:&crate::entry_join::Plan,
-        #[cfg(feature="parallel-residuals")] schedule:&crate::entry_schedule::Scheduler) -> Result<()> {
+        #[cfg(feature="parallel-residuals")] schedule:&crate::entry_schedule::Scheduler,
+        #[cfg(all(feature="parallel-residuals",feature="cell-absorption"))] neighbor:&mut crate::neighbor::Context) -> Result<()> {
         let outcome = self.finish_queries(g, spine, matches,
             #[cfg(feature="parallel-residuals")] indexes,
             #[cfg(feature="parallel-residuals")] sieve,
             #[cfg(feature="parallel-residuals")] entries,
-            #[cfg(feature="parallel-residuals")] schedule);
+            #[cfg(feature="parallel-residuals")] schedule,
+            #[cfg(all(feature="parallel-residuals",feature="cell-absorption"))] neighbor);
         if outcome.is_err() {
             self.discard_queries(g, spine);
             spine.discard_query_candidates();
@@ -941,7 +944,8 @@ impl Workers {
         #[cfg(feature="parallel-residuals")] indexes:&crate::query::QueryIndexes,
         #[cfg(feature="parallel-residuals")] sieve:&mut crate::sieve::Sieve,
         #[cfg(feature="parallel-residuals")] entries:&crate::entry_join::Plan,
-        #[cfg(feature="parallel-residuals")] schedule:&crate::entry_schedule::Scheduler) -> Result<()> {
+        #[cfg(feature="parallel-residuals")] schedule:&crate::entry_schedule::Scheduler,
+        #[cfg(all(feature="parallel-residuals",feature="cell-absorption"))] neighbor:&mut crate::neighbor::Context) -> Result<()> {
         #[cfg(feature="cell-sync-diagnostics")]
         let mut diagnostic = crate::sync_diagnostics::Clock::new();
         let read_groups = self.matched.constructor_groups + self.matched.unit_groups;
@@ -957,7 +961,9 @@ impl Workers {
                 #[cfg(not(feature="parallel-residuals"))] {false}
             }) { return Ok(()); }
         #[cfg(feature="parallel-residuals")]
-        let prepared=self.expansion.prepare(indexes,sieve,entries);
+        let prepared=self.expansion.prepare(indexes,sieve,entries,
+            #[cfg(feature="cell-absorption")] g,
+            #[cfg(feature="cell-absorption")] neighbor.absorption_enabled);
         #[cfg(feature="parallel-residuals")]
         let residual_active=!prepared.is_empty();
         #[cfg(not(feature="parallel-residuals"))]
@@ -1246,10 +1252,11 @@ impl Workers {
                         }
                         #[cfg(feature="parallel-residuals")]
                         completion::Event::Range(mut done)=>{
-                            for (rid,pivot,count) in done.coverage.drain(..) {
-                                outputs[rid].coverage.as_mut().expect("pending rule coverage").residual+=count as usize;
+                            for (rid,pivot,count,supported) in done.coverage.drain(..) {
+                                outputs[rid].coverage.as_mut().expect("pending rule coverage").residual+=supported as usize;
                                 spine.record_worker_fallbacks(rid,pivot,count);
                                 self.stats.coverage_admitted_entries+=count;
+                                self.stats.coverage_supported_entries+=supported;
                                 self.stats.coverage_events+=1;
                             }
                             let mut origins=done.origins.iter();
@@ -1374,7 +1381,8 @@ impl Workers {
         for done in &mut self.completed_rules {if let Some(work)=done.merge.take() {self.expansion.record_event_merge(work);}}
         for chunk in chunks {
             #[cfg(feature="parallel-residuals")]
-            let (answers,_,counts,worker,residual,_seconds)=chunk;
+            #[allow(unused_mut)]
+            let (answers,_,counts,worker,mut residual,_seconds)=chunk;
             #[cfg(not(feature="parallel-residuals"))]
             let (answers,_,counts,worker,_seconds)=chunk;
             g.record_constructor_query_work(&counts.constructors);
@@ -1391,6 +1399,9 @@ impl Workers {
             g.stats.key_operations += counts.key_operations;
             self.absorb(&counts, worker);
             self.stats.completion_headers += counts.completion_headers;
+            #[cfg(feature="parallel-residuals")]
+            #[cfg(feature="cell-absorption")]
+            for (rule,work) in residual.absorption.drain(..) {neighbor.record_worker_absorption(rule,work,worker);}
             #[cfg(feature="parallel-residuals")]
             self.record_expansion_chunk(g,sieve,residual,worker,_seconds,answers.capacity());
 
