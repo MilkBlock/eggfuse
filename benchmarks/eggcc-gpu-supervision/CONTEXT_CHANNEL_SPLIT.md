@@ -59,3 +59,41 @@ inconsistent candidates using validation only. Neither is implemented here.
 `context-threshold-diagnosis.txt` records the failure and source locations.
 Thirteen focused tests pass, including mapping learned quotient-query indices
 back to the original Run/rule/slot pair without confusing static pairs.
+
+## Validation eligibility, without relaxing numerical acceptance
+
+The opt-in `--reject-unstable-candidates` policy now audits every candidate on
+all validation workloads and excludes any candidate with a numeric or threshold
+disagreement. It does not replace GPU scores with CPU values, alter threshold
+0.5, discard query rows or use test results to choose candidates. If none remain,
+selection fails. Default behavior remains fail-fast. Test evaluation retains the
+strict gate for all selected candidates and cannot reselect after test failure.
+Per-candidate numeric checks remain in the report, including rejected candidates.
+
+In the split experiment only alpha 1 fails validation; 0.1, 10 and 100 remain.
+MSE and false-merge policies select 100, partition policy selects 10. Test scores
+pass tolerance and have zero threshold disagreements:
+
+| Policy | Alpha | Exact / 5,454 | False Eq pairs | Missed Eq pairs |
+|---|---:|---:|---:|---:|
+| MSE / false merge | 100 | 4,273 | 383 | 1,982 |
+| Partition | 10 | 4,369 | 508 | 1,816 |
+
+Against the same-width repeat control at the same alpha 100, this improves
+4,231 exact partitions / 723 false pairs / 1,947 misses to 4,273 / 383 / 1,982.
+It trades 35 additional misses for fewer false merges and more complete exact
+partitions. Comparing partition-selected configurations is not a fixed-alpha
+ablation (repeat selects 0.1, split selects 10).
+
+The simpler four-channel interface-only model at alpha 100 still achieves
+4,288 / 379 / 2,038. Thus separating contexts helps relative to mixing the same
+history, but does not establish that broad historical expansion is worthwhile.
+It retains the larger history edge set, deeper schedule and eight-channel model
+costs. No runtime takeover or union authorization follows from numerical agreement.
+
+Reproduce the split selection command with fresh `context-eligible*` outputs and
+`--reject-unstable-candidates`. `context-eligible-results.json` retains provenance,
+per-workload candidate checks and every selected policy. Fourteen focused tests
+pass, including mandatory rejection of unstable candidates and failure when all
+candidates are ineligible. This implements candidate eligibility only; per-query
+runtime uncertainty/correction remains future work.

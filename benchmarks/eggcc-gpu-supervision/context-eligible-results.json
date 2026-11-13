@@ -1,0 +1,513 @@
+{
+  "scope": "validation-selected Eq boundary readout for frozen Cell model",
+  "provenance": {
+    "train": "e1e830c2d1beef561494bca8c53f3ee04f0c9d5360c3b538dff9a9f021395977",
+    "validation": "59164efc3eda87020a4e27a89112accd70c039df97e98e98c942c7324fd4ac87"
+  },
+  "model_sha256": "b61e49f8eabb438176026b3a6986061e73cfeab015ae64532fad0107790fecc3",
+  "test_trace_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "weights_sha256": "9cc39d3487d71533712961e6224dde217a5c7e7256b993514a1e94bee1c46aa4",
+  "candidates": [
+    {
+      "alpha": 0.1,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 2983,
+          "false_merges": 84,
+          "missed_equalities": 882,
+          "nontransitive": 3,
+          "closure_false_merges": 113,
+          "pairs": 47684
+        },
+        "000-ackermann": {
+          "instances": 4481,
+          "query_instances": 4372,
+          "exact_partitions": 3719,
+          "false_merges": 36,
+          "missed_equalities": 1009,
+          "nontransitive": 3,
+          "closure_false_merges": 79,
+          "pairs": 55741
+        },
+        "016-gcd": {
+          "instances": 5283,
+          "query_instances": 5189,
+          "exact_partitions": 4061,
+          "false_merges": 435,
+          "missed_equalities": 2167,
+          "nontransitive": 81,
+          "closure_false_merges": 713,
+          "pairs": 57946
+        },
+        "019-lcm": {
+          "instances": 5828,
+          "query_instances": 5742,
+          "exact_partitions": 4449,
+          "false_merges": 455,
+          "missed_equalities": 2382,
+          "nontransitive": 68,
+          "closure_false_merges": 671,
+          "pairs": 60252
+        },
+        "044-newton": {
+          "instances": 7396,
+          "query_instances": 7286,
+          "exact_partitions": 5436,
+          "false_merges": 820,
+          "missed_equalities": 3364,
+          "nontransitive": 125,
+          "closure_false_merges": 1319,
+          "pairs": 83924
+        }
+      },
+      "numerically_eligible": true,
+      "oracle_mse": 0.033204993568175446,
+      "macro_exact_rate": 0.798747046365847,
+      "macro_false_pair_rate": 0.005447358424608144
+    },
+    {
+      "alpha": 1.0,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 2971,
+          "false_merges": 74,
+          "missed_equalities": 910,
+          "nontransitive": 2,
+          "closure_false_merges": 86,
+          "pairs": 47684
+        },
+        "000-ackermann": {
+          "instances": 4481,
+          "query_instances": 4372,
+          "exact_partitions": 3695,
+          "false_merges": 22,
+          "missed_equalities": 1040,
+          "nontransitive": 1,
+          "closure_false_merges": 22,
+          "pairs": 55741
+        },
+        "016-gcd": {
+          "instances": 5283,
+          "query_instances": 5189,
+          "exact_partitions": 4031,
+          "false_merges": 414,
+          "missed_equalities": 2233,
+          "nontransitive": 82,
+          "closure_false_merges": 686,
+          "pairs": 57946
+        },
+        "019-lcm": {
+          "instances": 5828,
+          "query_instances": 5742,
+          "exact_partitions": 4438,
+          "false_merges": 433,
+          "missed_equalities": 2436,
+          "nontransitive": 69,
+          "closure_false_merges": 666,
+          "pairs": 60252
+        },
+        "044-newton": {
+          "instances": 7396,
+          "query_instances": 7286,
+          "exact_partitions": 5417,
+          "false_merges": 723,
+          "missed_equalities": 3470,
+          "nontransitive": 109,
+          "closure_false_merges": 1181,
+          "pairs": 83924
+        }
+      },
+      "numerically_eligible": false,
+      "oracle_mse": 0.03335925816542763,
+      "macro_exact_rate": 0.7949126830672133,
+      "macro_false_pair_rate": 0.004978513885783601
+    },
+    {
+      "alpha": 10.0,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 3011,
+          "false_merges": 54,
+          "missed_equalities": 850,
+          "nontransitive": 1,
+          "closure_false_merges": 76,
+          "pairs": 47684
+        },
+        "000-ackermann": {
+          "instances": 4481,
+          "query_instances": 4372,
+          "exact_partitions": 3737,
+          "false_merges": 24,
+          "missed_equalities": 964,
+          "nontransitive": 1,
+          "closure_false_merges": 24,
+          "pairs": 55741
+        },
+        "016-gcd": {
+          "instances": 5283,
+          "query_instances": 5189,
+          "exact_partitions": 4019,
+          "false_merges": 420,
+          "missed_equalities": 2227,
+          "nontransitive": 85,
+          "closure_false_merges": 719,
+          "pairs": 57946
+        },
+        "019-lcm": {
+          "instances": 5828,
+          "query_instances": 5742,
+          "exact_partitions": 4458,
+          "false_merges": 398,
+          "missed_equalities": 2431,
+          "nontransitive": 68,
+          "closure_false_merges": 640,
+          "pairs": 60252
+        },
+        "044-newton": {
+          "instances": 7396,
+          "query_instances": 7286,
+          "exact_partitions": 5440,
+          "false_merges": 545,
+          "missed_equalities": 3583,
+          "nontransitive": 91,
+          "closure_false_merges": 884,
+          "pairs": 83924
+        }
+      },
+      "numerically_eligible": true,
+      "oracle_mse": 0.02991948174425171,
+      "macro_exact_rate": 0.799951071206708,
+      "macro_false_pair_rate": 0.004382141254155009
+    },
+    {
+      "alpha": 100.0,
+      "workloads": {
+        "040-euler": {
+          "instances": 3649,
+          "query_instances": 3553,
+          "exact_partitions": 2869,
+          "false_merges": 31,
+          "missed_equalities": 1042,
+          "nontransitive": 1,
+          "closure_false_merges": 63,
+          "pairs": 47684
+        },
+        "000-ackermann": {
+          "instances": 4481,
+          "query_instances": 4372,
+          "exact_partitions": 3583,
+          "false_merges": 8,
+          "missed_equalities": 1165,
+          "nontransitive": 1,
+          "closure_false_merges": 11,
+          "pairs": 55741
+        },
+        "016-gcd": {
+          "instances": 5283,
+          "query_instances": 5189,
+          "exact_partitions": 3857,
+          "false_merges": 433,
+          "missed_equalities": 2562,
+          "nontransitive": 71,
+          "closure_false_merges": 743,
+          "pairs": 57946
+        },
+        "019-lcm": {
+          "instances": 5828,
+          "query_instances": 5742,
+          "exact_partitions": 4286,
+          "false_merges": 325,
+          "missed_equalities": 2825,
+          "nontransitive": 55,
+          "closure_false_merges": 541,
+          "pairs": 60252
+        },
+        "044-newton": {
+          "instances": 7396,
+          "query_instances": 7286,
+          "exact_partitions": 5326,
+          "false_merges": 413,
+          "missed_equalities": 4043,
+          "nontransitive": 57,
+          "closure_false_merges": 681,
+          "pairs": 83924
+        }
+      },
+      "numerically_eligible": true,
+      "oracle_mse": 0.02458265772979878,
+      "macro_exact_rate": 0.7695487847061955,
+      "macro_false_pair_rate": 0.003716247894033877
+    }
+  ],
+  "selected": {
+    "mse": 100.0,
+    "partition": 10.0,
+    "false_merge": 100.0
+  },
+  "test": {
+    "mse": {
+      "alpha": 100.0,
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4273,
+      "false_merges": 383,
+      "missed_equalities": 1982,
+      "nontransitive": 50,
+      "closure_false_merges": 589
+    },
+    "partition": {
+      "alpha": 10.0,
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4369,
+      "false_merges": 508,
+      "missed_equalities": 1816,
+      "nontransitive": 45,
+      "closure_false_merges": 692
+    },
+    "false_merge": {
+      "alpha": 100.0,
+      "instances": 5553,
+      "query_instances": 5454,
+      "exact_partitions": 4273,
+      "false_merges": 383,
+      "missed_equalities": 1982,
+      "nontransitive": 50,
+      "closure_false_merges": 589
+    }
+  },
+  "unique_train_states": 1153,
+  "unique_validation_states": 1361,
+  "fit_seconds": 0.12096762500004843,
+  "numerical_audits": {
+    "040-euler": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 9.715576699598216e-06,
+      "threshold_disagreements": 0,
+      "candidates": [
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 9.715576699598216e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 8.249718597270334e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 4.109628413531685e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 1.409433971422125e-06,
+          "threshold_disagreements": 0
+        }
+      ]
+    },
+    "000-ackermann": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 8.682697781647875e-06,
+      "threshold_disagreements": 2,
+      "candidates": [
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 8.682697781647875e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 8.475742229133165e-06,
+          "threshold_disagreements": 2
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 5.313617660013259e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 1.9778341942000566e-06,
+          "threshold_disagreements": 0
+        }
+      ]
+    },
+    "016-gcd": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 9.729424133752846e-06,
+      "threshold_disagreements": 0,
+      "candidates": [
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 9.729424133752846e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 9.647186910988204e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 5.558710898551089e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.2432863889809695e-06,
+          "threshold_disagreements": 0
+        }
+      ]
+    },
+    "019-lcm": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 9.557207185428851e-06,
+      "threshold_disagreements": 0,
+      "candidates": [
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 9.557207185428851e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 9.023826729607012e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 3.1784751650682647e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 2.0060728699866637e-06,
+          "threshold_disagreements": 0
+        }
+      ]
+    },
+    "044-newton": {
+      "passed": true,
+      "finite": true,
+      "outside": 0,
+      "max_abs": 8.604778162932258e-06,
+      "threshold_disagreements": 0,
+      "candidates": [
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 8.518069387945804e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 8.604778162932258e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 3.978993416534765e-06,
+          "threshold_disagreements": 0
+        },
+        {
+          "passed": true,
+          "finite": true,
+          "outside": 0,
+          "max_abs": 1.6996277404368598e-06,
+          "threshold_disagreements": 0
+        }
+      ]
+    }
+  },
+  "test_numerical_audit": {
+    "passed": true,
+    "finite": true,
+    "outside": 0,
+    "max_abs": 4.380391796399152e-06,
+    "threshold_disagreements": 0,
+    "candidates": [
+      {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 4.380391796399152e-06,
+        "threshold_disagreements": 0
+      },
+      {
+        "passed": true,
+        "finite": true,
+        "outside": 0,
+        "max_abs": 1.7828260465424517e-06,
+        "threshold_disagreements": 0
+      }
+    ]
+  },
+  "local_marks": 3447,
+  "marks_sha256": "32ef70c0a33fa78521228827bbbfa4c7235828aae9cb4758c2fdcdd35a8ed343",
+  "test_feature_encoding_seconds": 0.285734582983423,
+  "test_gpu_readout_seconds": 0.015515042003244162,
+  "test_audit_and_marks_seconds": 0.361831207992509,
+  "reject_unstable_candidates": true,
+  "threshold": 0.5,
+  "backpropagation": false,
+  "union_authorized": false,
+  "limitations": [
+    "Static class Eq audit only, not native correctness or full token state",
+    "Oracle-state MSE and predicted-state partition criteria are distinct explicit policies",
+    "One fixed token model; validation expansion does not refit its weights",
+    "Test outputs do not select policy; all validation-selected policies are reported"
+  ]
+}

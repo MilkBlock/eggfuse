@@ -11,6 +11,13 @@ class ReadoutSelection(unittest.TestCase):
         self.assertEqual(select(rows),dict(mse=0,partition=1,false_merge=2))
         self.assertEqual(select([rows[0],rows[0]]),dict(mse=0,partition=0,false_merge=0))
 
+    def test_unstable_candidate_cannot_win_and_empty_eligibility_fails(self):
+        rows=[dict(oracle_mse=0,macro_exact_rate=1,macro_false_pair_rate=0,numerically_eligible=False),
+              dict(oracle_mse=1,macro_exact_rate=.5,macro_false_pair_rate=.2,numerically_eligible=True)]
+        self.assertEqual(select(rows),dict(mse=1,partition=1,false_merge=1))
+        rows[1]['numerically_eligible']=False
+        with self.assertRaisesRegex(ValueError,'no numerically eligible'):select(rows)
+
     def test_diagnostic_query_maps_through_quotient_layout(self):
         rows=[dict(run=2,ordinal=3,rule=4,pairs=[(0,1),(0,2),(1,2)],quotient=dict(representatives=np.array([1]))),
               dict(run=5,ordinal=6,rule=7,pairs=[(3,4)],quotient=dict(representatives=np.array([0])))]
