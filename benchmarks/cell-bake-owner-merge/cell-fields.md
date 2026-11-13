@@ -120,3 +120,14 @@ is likewise conditional; the scalar-delegation guard remains active in both mode
 features `iterative-bake,sparse-cells` pass through the shared compute queue.
 This repairs availability of the representation outside measurement builds;
 it introduces no additional memory-saving claim or new timing campaign.
+
+## Remove the obsolete reverse-provider plan
+
+Cell-field mode now also removes `completed_scalar_slots` plans prepared before
+activation and skips generating them when parent takeover is configured later.
+The missing-slot fallback no longer searches stable facts for a scalar whose
+source is that same Cell. Literal/recipe resolution and inherited equality reads
+remain available; the materialized-field mode keeps its original provider path.
+The source-field fixture exercises both configuration orders through completed
+storage, union, deletion and worker reads. This is removal of redundant plans and
+lookup work, not a newly measured whole-graph compression percentage.

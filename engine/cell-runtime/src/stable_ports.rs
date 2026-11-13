@@ -211,9 +211,13 @@ impl Graph {
         }
         let runtime=self.stable_ports.as_mut().unwrap();
         runtime.nodes.compact();runtime.cell_fields=true;
+        // Configuration may follow parent-takeover preparation. Drop its old
+        // reverse-provider plans as well; future preparation must not recreate them.
+        #[cfg(feature="storage-metrics")]
+        for execution in &mut self.program.executions {execution.completed_scalar_slots=None;}
         Ok(())
     }
-    pub(in crate::graph) fn cell_stable_fields_enabled(&self)->bool {
+    pub(crate) fn cell_stable_fields_enabled(&self)->bool {
         self.stable_ports.as_ref().is_some_and(|p|p.cell_fields)
     }
     fn capture_cell_scalars(&mut self,f:FactRef,values:&[Value],symbols:&[Option<usize>]) {

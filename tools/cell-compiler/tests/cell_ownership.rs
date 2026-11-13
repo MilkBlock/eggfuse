@@ -2200,6 +2200,7 @@ fn cell_fields_keep_scalar_sources_through_completed_storage_and_union() {
     for workers in [0,2] {
         let mut control=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
         let mut actual=Executor::new(Graph::new_with_local_congruence(p.clone()).unwrap(),true);
+        if workers>0 {actual.use_completed_parent_takeover().unwrap();}
         actual.graph.use_cell_stable_fields().unwrap();
         actual.graph.use_cell_stable_fields().unwrap();
         control.use_completed_parent_takeover().unwrap();actual.use_completed_parent_takeover().unwrap();

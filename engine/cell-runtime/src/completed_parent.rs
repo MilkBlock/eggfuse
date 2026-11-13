@@ -109,6 +109,9 @@ impl Graph {
         self.program.executions[template].completed_scalar_slots.as_deref().unwrap_or(&[])
     }
     pub(super) fn completed_scalar_slot(&self,cell:u32,template:usize,slot:usize,excluding:Option<u32>)->Option<Value> {
+        // Cell slots are authoritative in this representation. A missing slot
+        // cannot be recovered by asking a fact to read that same slot again.
+        if self.cell_stable_fields_enabled() {return None;}
         let plan=self.scalar_plan(template);
         let start=plan.partition_point(|p|p.0<slot);
         plan[start..].iter().take_while(|p|p.0==slot).find_map(|&(_,op,col)| {
