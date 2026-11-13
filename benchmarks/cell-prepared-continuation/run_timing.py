@@ -11,7 +11,7 @@ import threading
 
 
 def snapshot():
-    processes = subprocess.check_output(['ps', '-axo', 'comm,pcpu'], text=True)
+    processes = subprocess.check_output(['ps', '-axo', 'comm,pcpu'], text=True, errors='replace')
     return {'utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
             'compiler_processes': [line for line in processes.splitlines()[1:]
                                    if Path(line.rsplit(None, 1)[0].strip()).name in ('rustc', 'cargo')],
@@ -19,7 +19,8 @@ def snapshot():
 
 
 def run(root):
-    subprocess.run(['git', 'diff', '--quiet', 'HEAD'], check=True)
+    changed = subprocess.check_output(['git', 'diff', '--name-only', 'HEAD'], text=True).splitlines()
+    assert all(p.startswith('benchmarks/') or p == 'README.md' for p in changed), 'commit runtime changes before timing'
     root = root.resolve()
     source = json.loads((root / 'manifest.json').read_text())
     assert source['control_commit'] == '64f022a8'

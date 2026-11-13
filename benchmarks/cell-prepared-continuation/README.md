@@ -98,6 +98,56 @@ not a latency benefit. The authorized periodic timing uses the frozen current
 control, previous `8df9de2a` checkpoint and historical `8335929d` baseline at
 one and four workers, with separate quiet stack profiles.
 
+## Periodic timing: no new speedup admitted
+
+Implementation `c7874855` is the fifth implementation/merge since the previous
+timing checkpoint. The immediate control is `64f022a8`; the older periodic
+checkpoint is `8df9de2a`, and the retained historical baseline is `8335929d`.
+All use the same source programs and runtime flags, with worker count changed
+only between 1 and 4. Each lane has one warmup, then five sum-bits or three
+Raytrace samples, interleaved in the saved seeded order. Every sample passes
+the state, ordered Run-summary and logical-effect checks.
+
+| Four-worker inference median | sum-bits | Raytrace |
+| --- | ---: | ---: |
+| Historical `8335929d` | 22.2995 ms | 5.923304 s |
+| Previous checkpoint `8df9de2a` | 26.0190 ms | 5.384932 s |
+| Current control `64f022a8` | 25.2148 ms | 5.138190 s |
+| Candidate `c7874855` | 25.8943 ms | 5.152187 s |
+| Candidate change against current control | +2.69% | +0.27% |
+
+The current-control paired medians are +0.80% / -0.68%, so Raytrace's direction
+is mixed while sum-bits regresses in both summaries. The gate requiring both
+workloads to improve against the current control fails. The work reduction
+above is real, but **this change is not admitted as a speedup**. The combined
+window is directionally lower than the older checkpoint (-0.48% / -4.32%),
+which must not be attributed to this last change alone.
+
+Variation remains material: current-control Raytrace spans 5.136–6.087 s and
+candidate spans 5.103–5.210 s; sum-bits spans 24.424–29.330 / 25.051–29.563 ms.
+No samples are discarded. Sixty-two ambient process snapshots find no compiler
+process, but cannot rule out other or shorter background activity.
+
+Candidate one-worker medians are 18.8342 ms / 5.944242 s. Four workers are slower
+on sum-bits and only 1.154× as fast on Raytrace. Whole-process CPU/wall is about
+1.34 cores for four-worker Raytrace, but includes parsing/export/teardown and
+must not be converted into an inference-only utilization percentage.
+
+Separate quiet 3-second Raytrace samples contain 878 main-thread inference
+samples in each lane. Main condition-wait samples are 192 → 205 (21.9% → 23.3%).
+The candidate's wait contexts are query 95, publication 68, scalar RHS writes
+26, other 16. Worker condition waits span 72.1%–79.7%, mostly thread-pool idle;
+only 13 worker samples are classified as waiting inside a job. These are partial
+sampled wall residence, not exact full-run wait time or CPU utilization.
+
+The candidate main stack also includes query preparation/matching, query-result
+completion, publication and repair. Those inclusive counts overlap and must not
+be added. The sample does not prove a causal regression in synchronization, but
+it gives no evidence that this cleanup fixed the synchronization problem. The
+next priority is deleting the remaining query-to-execution/ publication handoff
+and letting workers continue useful Cell work, rather than widening an admission
+shortcut based only on its counters.
+
 ## Validation and reproduction
 
 `results.json` records the frozen work executions, exact final-state hashes,
@@ -136,3 +186,11 @@ checks every sample's final state/Run summary, records ambient compiler activity
 and validates separate 3-second inference stack windows. Retain all samples and
 warmups; do not present sampled wall residence or whole-process CPU/wall as
 inference-only CPU utilization.
+
+The initial timing launcher stopped before any sample because macOS `ps`
+returned a truncated non-UTF-8 process name. The ambient observer now decodes
+such diagnostic text with replacement. Only benchmark/docs edits are permitted
+after the frozen implementation commit; historical and candidate binary hashes
+are checked before starting. The successful run and all warmups are retained in
+`timing-results.json`; a successful verifier is semantic/evidence validation,
+not a successful speed gate.

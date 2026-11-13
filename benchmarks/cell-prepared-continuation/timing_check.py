@@ -27,5 +27,10 @@ if __name__ == '__main__':
             'direction': 'improved' if faster else 'regressed' if slower else 'mixed',
             'limits': 'Median and paired-median direction across both workloads; not a significance test.',
         }
+    result['speedup_over_current_control'] = {
+        'admitted': result['four_worker_direction_checks']['control']['direction'] == 'improved',
+        'requirement': 'Both workload medians and iteration-paired medians must decrease against the current control.',
+        'limits': 'Passing this directional gate would still not establish statistical significance or full thread utilization.',
+    }
     Path(sys.argv[2]).write_text(json.dumps(result, indent=2) + '\n')
     print('All timing samples, warmups, state/Run checks and quiet profiles verified')
