@@ -6,7 +6,7 @@ use std::ops::Range;
 #[path="completed_fact_storage.rs"]
 mod fact_storage;
 use fact_storage::Facts;
-use crate::graph::fact_states::OwnedFact;
+use crate::graph::fact_states::{OwnedFact,RestoreCause};
 pub(super) const COMPLETED:u32=1<<31;
 use super::super::CellMetadata as Metadata;
 pub(super) struct Frame {
@@ -21,11 +21,24 @@ pub(super) struct Owner {
     pub slots:Box<[(usize,Value)]>,
     facts:Facts,
 }
+#[derive(Default,serde::Serialize)]
+struct Restoration {
+    events:u64,
+    requested_scalar_slots:u64,
+    restored_slots:u64,
+    restored_facts:u64,
+    restored_array_capacity_bytes:u64,
+    max_array_capacity_bytes:usize,
+    max_source_template:usize,
+    max_source_slots:usize,
+    max_source_facts:usize,
+}
 #[derive(Default)]
 pub(super) struct Completed {
     pub frames:Vec<Frame>,
     pub owners:Vec<Owner>,
     pub representation_fallbacks:u64,
+    restorations:[Restoration;3],
 }
 pub(crate) struct Slots<'a>(pub &'a [(usize,Value)]);
 impl ReadSlots for Slots<'_> {
@@ -190,7 +203,7 @@ impl Cells {
     }
     /// Boundary fallback: move the remaining fields/facts back before a
     /// component supplying delegated symbols disappears. Other slices stay put.
-    pub(crate) fn unseal_completed(&mut self,id:u32)->Option<Cell> {
+    pub(crate) fn unseal_completed(&mut self,id:u32,cause:RestoreCause)->Option<Cell> {
         let index=self.completed_index(id)?;
         let frame=&self.completed.frames[index];
         let meta=frame.meta;
@@ -201,17 +214,31 @@ impl Cells {
             Some((owner.facts.op(i),owner.facts.take_at(i,meta.started_epoch)?.restore()))
         }).collect();
         self.retire_completed(id);
-        Some(Cell{template:meta.template,started_epoch:meta.started_epoch,
+        let cell=Cell{template:meta.template,started_epoch:meta.started_epoch,
             completed_prefix:meta.completed_prefix,recipe_depth:meta.recipe_depth,
             completed:meta.completed,symbolic_slots:meta.symbolic_slots,
-            parent:None,values,facts})
+            parent:None,values,facts};
+        let (kind,requested)=match cause {
+            RestoreCause::ScalarProvider{slots}=>(0,slots),
+            RestoreCause::ComponentRetirement=>(1,0),RestoreCause::Representation=>(2,0),
+        };
+        let stats=&mut self.completed.restorations[kind];
+        let bytes=cell.values.capacity_bytes()+cell.facts.capacity_bytes();
+        stats.events+=1;stats.requested_scalar_slots+=requested as u64;
+        stats.restored_slots+=cell.values.len() as u64;stats.restored_facts+=cell.facts.len() as u64;
+        stats.restored_array_capacity_bytes+=bytes as u64;
+        if stats.events==1 || bytes>stats.max_array_capacity_bytes {
+            stats.max_array_capacity_bytes=bytes;stats.max_source_template=meta.template;
+            stats.max_source_slots=cell.values.len();stats.max_source_facts=cell.facts.len();
+        }
+        Some(cell)
     }
     pub(crate) fn write_completed_fact(&mut self,f:super::super::FactRef,state:super::super::FactState) {
         if let Some(compact)=OwnedFact::checked(&state) {
             let frame=&self.completed.frames[self.completed_index(f.cell).expect("live completed writer")];
             self.completed.owners[frame.owner].facts.write(frame.facts.clone(),frame.meta.started_epoch,f.op,compact);
         } else {
-            let mut cell=self.unseal_completed(f.cell).expect("exceptional completed writer");
+            let mut cell=self.unseal_completed(f.cell,RestoreCause::Representation).expect("exceptional completed writer");
             *cell.facts.get_mut(&f.op).expect("live completed fact")=state;
             self.insert(f.cell,cell);
             self.completed.representation_fallbacks+=1;
@@ -242,6 +269,9 @@ impl Cells {
         let slots=self.completed.owners.iter().map(|o|o.slots.len()).sum::<usize>();
         let live_slots=self.completed.frames.iter().map(|f|f.slots.len()).sum::<usize>();
         serde_json::json!({"source_records":self.records.len(),"owned_fact_bytes":std::mem::size_of::<OwnedFact>(),
+            "restoration":{"scalar_provider":self.completed.restorations[0],
+                "component_retirement":self.completed.restorations[1],"representation":self.completed.restorations[2],
+                "scope":"restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"},
             "fact_storage_encoding":"stage-inherited rows with per-fact lifecycle exceptions",
             "fact_storage_live_bytes":self.completed_live_fact_bytes(),
             "representation_fallbacks":self.completed.representation_fallbacks,"completed_frames":self.completed.frames.len(),

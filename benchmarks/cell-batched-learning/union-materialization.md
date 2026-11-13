@@ -82,3 +82,48 @@ The next missing measurements are cause-tagged restored slots/facts/bytes,
 maximum restoration per triggering event, component teardown scan work, and
 subsequent re-compaction of the same frame. Existing counts establish where
 amplification can occur, not that catastrophic expansion has already occurred.
+
+## Cause-tagged restoration measurements
+
+The follow-up runtime observation distinguishes scalar-provider loss, component
+retirement, and representation fallback at the actual `unseal_completed` entry.
+Counters record remaining slot/fact counts and the newly restored containers'
+capacity, plus the maximum event and its source template. They are fixed per-Graph
+counters, not per-fact history or another runtime index. The caller's subsequent
+insertion of lost scalar bindings and ordinary source arena growth are excluded;
+these figures are not total allocation traffic, net heap increase or peak memory.
+
+| case | scalar-driven unseals | requested scalar slots | existing slots restored | remaining facts restored | summed array capacity | maximum one event |
+|---|---:|---:|---:|---:|---:|---:|
+| fact | 2 | 2 | 4 | 2 | 672 | 336 |
+| loopfact | 0 | 0 | 0 | 0 | 0 | 0 |
+| sum-bits | 13 | 13 | 24 | 16 | 4,320 | 360 |
+| dot-product | 10 | 10 | 20 | 10 | 3,360 | 336 |
+
+Component-retirement and representation-driven unseals are zero in all four
+executions. This does not imply component teardown scans are absent: only the
+compressed-frame restoration branch was counted here. Nor are these counts proof
+that a future indivisible nested Cell has bounded materialization cost.
+
+The measurements do **not** justify prioritizing a residual-storage mechanism
+for the current small source frames. They do justify retaining those small
+restoration boundaries when composing templates: do not fuse their lifetime or
+fall back to expanding an entire ancestor solely to recover one field. Current
+prefix-copy costs remain separately charged to owner extension. Before changing
+storage granularity, bound the largest possible affected storage region using the
+compiled layout, and measure actual fallback amplification after that change.
+
+Validation: seven fact-state tests pass, including cause attribution, deleted facts,
+missing owners and restored capacity. All four final-state hashes and exact
+lifecycle snapshots equal the preceding stage-inherited executions. This is an
+observation-only change; the preceding storage implementation has the separate
+2,652-Run acceptance evidence. No performance campaign was run.
+
+Reproduce by building the existing `runtime_storage_peak` example, recording each
+unchanged seed into `candidate-restoration-audit-heap.json` with `inherited-owners
+--port-domains-only`, then:
+
+```
+python3 benchmarks/cell-batched-learning/restoration_cost_results.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/restoration-cost-results.json
+```

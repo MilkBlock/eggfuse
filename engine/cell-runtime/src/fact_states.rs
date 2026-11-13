@@ -8,6 +8,9 @@ pub(crate) use owned::{FactRead,FactWrite};
 pub(crate) use owned::{OwnedFact,FactLifecycle};
 #[cfg(not(feature="sparse-cells"))]
 use super::Cell;
+#[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+#[derive(Clone,Copy)]
+pub(crate) enum RestoreCause {ScalarProvider{slots:usize},ComponentRetirement,Representation}
 pub(crate) trait FactStates {
     fn cell_metadata(&self,cell:u32)->Option<super::CellMetadata>;
     fn fact_state(&self, fact:FactRef)->Option<FactRead<'_>>;
@@ -185,7 +188,7 @@ mod tests {
             assert_eq!(cells.completed_meta(id).unwrap().started_epoch,id as u64);
             assert_eq!(cells.completed_slots(id).unwrap().get(&0),Some(&Value::Int(id as i64)));
         }
-        let restored=cells.unseal_completed(10).unwrap();
+        let restored=cells.unseal_completed(10,RestoreCause::Representation).unwrap();
         assert_eq!(restored.values.get(&0),Some(&Value::Int(10)));
         assert_eq!(restored.facts.get(&7).unwrap().epoch,99);
         assert_eq!(cells.completed_slots(50).unwrap().get(&0),Some(&Value::Int(50)));
@@ -244,12 +247,36 @@ mod tests {
         assert_eq!(cells.completed_slots(30).unwrap().get(&0),Some(&Value::Int(30)));
         assert!(cells.extend_completed_segments(&[10,20,30]).is_none());
         cells.fact_state_mut(FactRef{cell:10,op:7}).unwrap().hidden=true;
-        let restored=cells.unseal_completed(10).unwrap();
+        let restored=cells.unseal_completed(10,RestoreCause::Representation).unwrap();
         assert!(restored.facts[&7].hidden);
         assert_eq!(cells.fact_state(FactRef{cell:20,op:7}).unwrap().epoch,20);
         assert_eq!(cells.fact_state(FactRef{cell:30,op:7}).unwrap().epoch,30);
         cells.remove_fact_state(FactRef{cell:20,op:7});cells.retire_completed(20);
         assert_eq!(cells.completed_slots(30).unwrap().get(&0),Some(&Value::Int(30)));
+    }
+
+    #[test]
+    #[cfg(feature="storage-metrics")]
+    fn restoration_work_is_attributed_to_actual_cause_and_remaining_payload() {
+        use crate::value::Value;
+        let mut cells=super::super::arena::Cells::default();
+        for id in [10,20,30] {
+            let mut c=cell();c.values.insert(0,Value::Int(7));c.values.insert(1,Value::Int(8));
+            cells.insert(id,c);cells.insert_fact_state(FactRef{cell:id,op:7},state(3));
+        }
+        assert!(cells.transfer_completed(&[10,20,30]));
+        let restored=cells.unseal_completed(10,RestoreCause::ScalarProvider{slots:1}).unwrap();
+        let bytes=restored.values.capacity_bytes()+restored.facts.capacity_bytes();
+        cells.remove_fact_state(FactRef{cell:20,op:7});
+        cells.unseal_completed(20,RestoreCause::ComponentRetirement).unwrap();
+        cells.unseal_completed(30,RestoreCause::Representation).unwrap();
+        assert!(cells.unseal_completed(30,RestoreCause::Representation).is_none());
+        let report=cells.completed_profile();let scalar=&report["restoration"]["scalar_provider"];
+        assert_eq!(scalar["events"],1);assert_eq!(scalar["requested_scalar_slots"],1);
+        assert_eq!(scalar["restored_slots"],2);assert_eq!(scalar["restored_facts"],1);
+        assert_eq!(scalar["restored_array_capacity_bytes"],bytes);
+        assert_eq!(report["restoration"]["component_retirement"]["restored_facts"],0);
+        assert_eq!(report["restoration"]["representation"]["events"],1);
     }
 
 }

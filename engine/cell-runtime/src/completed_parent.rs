@@ -146,7 +146,7 @@ impl Graph {
             }
         }
         if restore.is_empty() {return;}
-        if let Some(c)=self.cells.unseal_completed(f.cell) {
+        if let Some(c)=self.cells.unseal_completed(f.cell,crate::graph::fact_states::RestoreCause::ScalarProvider{slots:restore.len()}) {
             self.cells.insert(f.cell,c);self.stats.shared_owner_frames_restored+=1;
         }
         let c=self.cells.get_mut(&f.cell).expect("live scalar provider has a source frame");

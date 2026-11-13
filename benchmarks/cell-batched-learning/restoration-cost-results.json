@@ -1,0 +1,173 @@
+{
+  "scope": "actual standalone Cell runtime; completed-source restoration array capacities, not allocation peaks or timings",
+  "cases": [
+    {
+      "case": "fact",
+      "program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "restoration": {
+        "scalar_provider": {
+          "events": 2,
+          "requested_scalar_slots": 2,
+          "restored_slots": 4,
+          "restored_facts": 2,
+          "restored_array_capacity_bytes": 672,
+          "max_array_capacity_bytes": 336,
+          "max_source_template": 145,
+          "max_source_slots": 2,
+          "max_source_facts": 1
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "loopfact",
+      "program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "restoration": {
+        "scalar_provider": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "sum-bits",
+      "program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "restoration": {
+        "scalar_provider": {
+          "events": 13,
+          "requested_scalar_slots": 13,
+          "restored_slots": 24,
+          "restored_facts": 16,
+          "restored_array_capacity_bytes": 4320,
+          "max_array_capacity_bytes": 360,
+          "max_source_template": 59,
+          "max_source_slots": 3,
+          "max_source_facts": 1
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    },
+    {
+      "case": "dot-product",
+      "program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "restoration": {
+        "scalar_provider": {
+          "events": 10,
+          "requested_scalar_slots": 10,
+          "restored_slots": 20,
+          "restored_facts": 10,
+          "restored_array_capacity_bytes": 3360,
+          "max_array_capacity_bytes": 336,
+          "max_source_template": 145,
+          "max_source_slots": 2,
+          "max_source_facts": 1
+        },
+        "component_retirement": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "representation": {
+          "events": 0,
+          "requested_scalar_slots": 0,
+          "restored_slots": 0,
+          "restored_facts": 0,
+          "restored_array_capacity_bytes": 0,
+          "max_array_capacity_bytes": 0,
+          "max_source_template": 0,
+          "max_source_slots": 0,
+          "max_source_facts": 0
+        },
+        "scope": "restored frame array capacities before caller inserts lost bindings; excludes source arena growth, allocator overhead and Value payloads"
+      },
+      "exact_lifecycle_trace_equal": true,
+      "final_state_equal": true
+    }
+  ]
+}

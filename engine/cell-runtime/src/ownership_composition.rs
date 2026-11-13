@@ -995,7 +995,7 @@ impl Graph {
                 #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
                 if self.parent_users.get(id).copied().unwrap_or(0)>0
                     && self.cells.completed_meta(*id).is_some_and(|meta|meta.symbolic_slots) {
-                    let restored=self.cells.unseal_completed(*id).unwrap();
+                    let restored=self.cells.unseal_completed(*id,crate::graph::fact_states::RestoreCause::ComponentRetirement).unwrap();
                     self.cells.insert(*id,restored);
                     self.stats.shared_owner_frames_restored+=1;
                 }
