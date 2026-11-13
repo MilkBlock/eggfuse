@@ -3,6 +3,22 @@ import numpy as np
 from token_eq_readout import pair_layout,check_partition,features,static_equalities,materialize,quotient_layout,readout_rows,expand_scores
 
 class TokenEqReadout(unittest.TestCase):
+    def test_port_interactions_preserve_original_columns_and_execute_on_gpu(self):
+        import mlx.core as mx
+        rng=np.random.default_rng(71)
+        z=rng.normal(size=(5,128)).astype(np.float32)
+        q,s,d,p=[rng.normal(size=(5,64)).astype(np.float32) for _ in range(4)]
+        w=rng.normal(0,.01,(512,16)).astype(np.float32)
+        wide=np.concatenate([w,np.zeros((256,16),np.float32)])
+        original=features(z,q,s,d,p,w,np);extended=features(z,q,s,d,p,wide,np)
+        np.testing.assert_array_equal(original[:,:513],extended[:,:513])
+        np.testing.assert_allclose(original[:,513:],extended[:,769:],atol=2e-6)
+        np.testing.assert_array_equal(extended[:,513:577],z[:,:64]*p)
+        dw=mx.array(wide)
+        out=mx.compile(lambda z,q,s,d,p:features(z,q,s,d,p,dw,mx))(*map(mx.array,(z,q,s,d,p)))
+        mx.eval(out);np.testing.assert_allclose(np.array(out),extended,atol=2e-6)
+        with self.assertRaises(ValueError):features(z,q,s,d,p,np.zeros((513,16)),np)
+
     def test_pairs_are_typed_and_do_not_include_reflexive_labels(self):
         rule=dict(query=[],effects=[],slots=[dict(sort=dict(kind='eq',name='E')),
             dict(sort=dict(kind='eq',name='F')),dict(sort=dict(kind='eq',name='E')),

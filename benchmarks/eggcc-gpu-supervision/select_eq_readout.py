@@ -64,12 +64,14 @@ def gpu_read(matrix,coef,strict=True):
 def main():
     p=argparse.ArgumentParser();p.add_argument('training',type=Path);p.add_argument('validation',type=Path)
     p.add_argument('trace',type=Path);p.add_argument('model',type=Path);p.add_argument('model_report',type=Path)
-    p.add_argument('weights',type=Path);p.add_argument('output',type=Path);p.add_argument('--marks',type=Path,required=True);p.add_argument('--reject-unstable-candidates',action='store_true');a=p.parse_args()
+    p.add_argument('weights',type=Path);p.add_argument('output',type=Path);p.add_argument('--marks',type=Path,required=True);p.add_argument('--reject-unstable-candidates',action='store_true');p.add_argument('--port-interactions',action='store_true');a=p.parse_args()
     report=json.loads(a.model_report.read_text());model=verified(a.model,report,'model_sha256')
     source_neighborhood=bool(model.get('source_neighborhood',False))
     source_relations=bool(model.get('source_relations',False))
     encoding=str(model.get('encoding','slot'));channels=int(model['channels']);zero=bool(model['zero_role_channels'])
-    w=np.random.default_rng(208).normal(0,1/np.sqrt(512),(512,256)).astype(np.float32)
+    rng=np.random.default_rng(208)
+    w=rng.normal(0,1/np.sqrt(512),(512,256)).astype(np.float32)
+    if a.port_interactions:w=np.concatenate([w,rng.normal(0,1/np.sqrt(512),(256,256)).astype(np.float32)])
     provenance={};data={};binary=None
     for partition,path in [('train',a.training),('validation',a.validation)]:
         raw=path.read_bytes();manifest=json.loads(raw);provenance[partition]=hashlib.sha256(raw).hexdigest()
@@ -145,7 +147,7 @@ def main():
         unique_train_states=len(unique),unique_validation_states=len(unique_val),fit_seconds=fit_seconds,
         numerical_audits=numeric,test_numerical_audit=test_numeric,local_marks=marks,marks_sha256=hashlib.sha256(a.marks.read_bytes()).hexdigest(),
         test_feature_encoding_seconds=encoding_seconds,test_gpu_readout_seconds=read_seconds,test_audit_and_marks_seconds=audit_seconds,
-        reject_unstable_candidates=a.reject_unstable_candidates,threshold=.5,backpropagation=False,union_authorized=False,
+        port_interactions=a.port_interactions,raw_feature_width=int(w.shape[0]),inference_weight_floats=int(w.size+coef.shape[0]),reject_unstable_candidates=a.reject_unstable_candidates,threshold=.5,backpropagation=False,union_authorized=False,
         limitations=['Static class Eq audit only, not native correctness or full token state',
             'Oracle-state MSE and predicted-state partition criteria are distinct explicit policies',
             'One fixed token model; validation expansion does not refit its weights',
