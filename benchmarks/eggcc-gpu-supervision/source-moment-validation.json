@@ -1,0 +1,92 @@
+{
+  "scope": "train/validation observed-wiring ablation; not autonomous GPU runtime or semantic accuracy",
+  "backpropagation": false,
+  "corpus_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "training_manifest_sha256": "e1e830c2d1beef561494bca8c53f3ee04f0c9d5360c3b538dff9a9f021395977",
+  "validation_manifest_sha256": "59164efc3eda87020a4e27a89112accd70c039df97e98e98c942c7324fd4ac87",
+  "reports": {
+    "baseline": {
+      "fit": {
+        "alpha": 100.0,
+        "validation_target_mse": 0.0006498846923932433
+      },
+      "feature_columns": 1665,
+      "coefficient_bytes": 852480,
+      "validation_direct": {
+        "cases": 26637,
+        "rmse": 0.02162640764629866,
+        "max_abs": 0.6079512238502502
+      },
+      "validation_rollout": {
+        "cases": 26637,
+        "rmse": 0.021593725600417012,
+        "max_abs": 0.6224518418312073
+      },
+      "validation_multiple_direct": {
+        "cases": 18380,
+        "rmse": 0.021994541985830764,
+        "max_abs": 0.6079512238502502
+      },
+      "gpu_direct_max_abs": 1.9222497940063477e-06
+    },
+    "moments": {
+      "fit": {
+        "alpha": 100.0,
+        "validation_target_mse": 0.0006549925310537219
+      },
+      "feature_columns": 1793,
+      "coefficient_bytes": 918016,
+      "validation_direct": {
+        "cases": 26637,
+        "rmse": 0.02171140623513674,
+        "max_abs": 0.6066383719444275
+      },
+      "validation_rollout": {
+        "cases": 26637,
+        "rmse": 0.02171455812755661,
+        "max_abs": 0.6318134069442749
+      },
+      "validation_multiple_direct": {
+        "cases": 18380,
+        "rmse": 0.022103962666733364,
+        "max_abs": 0.6066383719444275
+      },
+      "gpu_direct_max_abs": 1.7881393432617188e-07
+    },
+    "seed_source_quadratics": {
+      "fit": {
+        "alpha": 100.0,
+        "validation_target_mse": 0.0006465077167376876
+      },
+      "feature_columns": 1921,
+      "coefficient_bytes": 983552,
+      "validation_direct": {
+        "cases": 26637,
+        "rmse": 0.02158101694636282,
+        "max_abs": 0.6240224838256836
+      },
+      "validation_rollout": {
+        "cases": 26637,
+        "rmse": 0.02157863929554946,
+        "max_abs": 0.6288173198699951
+      },
+      "validation_multiple_direct": {
+        "cases": 18380,
+        "rmse": 0.021992014537172703,
+        "max_abs": 0.6240224838256836
+      },
+      "gpu_direct_max_abs": 1.7881393432617188e-07
+    }
+  },
+  "seconds": 21.60582054196857,
+  "extra_dynamic_floats_per_cell": {
+    "moments": 128,
+    "seed_source_quadratics": 256
+  },
+  "limitations": [
+    "Observed provider wiring; historical visibility not proved",
+    "Token RMSE is not exact Eq accuracy",
+    "CPU prepares features; GPU readout checked separately",
+    "No held-out test consulted; no runtime model replaced"
+  ]
+}
