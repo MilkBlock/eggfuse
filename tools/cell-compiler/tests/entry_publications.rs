@@ -9,11 +9,17 @@ fn compare_mode(source: &str, audit: bool) -> (Executor, Executor) {
     compare_config(source, audit, 0)
 }
 fn compare_config(source: &str, audit: bool, workers: usize) -> (Executor, Executor) {
+    compare_root_control(source, audit, workers, false)
+}
+fn compare_root_control(source: &str, audit: bool, workers: usize, defer: bool) -> (Executor, Executor) {
     let core = eggfuse_bake::device_frontend::core("entry-publications", source).unwrap();
     let p = Program::parse(compiler::compile(core, &BTreeSet::new()).unwrap()).unwrap();
     let mut old = Executor::new(Graph::new_with_repair_ports(p.clone()).unwrap(), audit);
     let mut nodes = Executor::new(Graph::new_with_repair_ports(p).unwrap(), audit);
     nodes.use_entry_publications().unwrap();
+    assert_eq!(nodes.report()["stage_spine"]["direct_changed_roots"], false);
+    nodes.use_direct_changed_roots().unwrap();
+    if defer { nodes.use_deferred_changed_roots().unwrap(); }
     if workers > 0 {
         nodes.use_query_workers(workers, 8).unwrap();
         nodes.use_cell_execution(1).unwrap();
@@ -37,6 +43,9 @@ fn compare_config(source: &str, audit: bool, workers: usize) -> (Executor, Execu
         old.execute().unwrap();
         nodes.execute().unwrap();
     }
+    assert!(nodes.use_direct_changed_roots().is_err());
+    if defer { assert!(nodes.use_deferred_changed_roots().is_err()); }
+    assert_eq!(nodes.report()["stage_spine"]["direct_changed_roots"], !defer);
     assert_eq!(old.snapshots, nodes.snapshots);
     assert_eq!(old.binding_audit, nodes.binding_audit);
     assert_eq!(old.graph.export().unwrap(), nodes.graph.export().unwrap());
@@ -445,6 +454,42 @@ fn changed_worker_roots_publish_without_pending_completion_at_each_run_boundary(
                 assert_eq!(stage["inline_function_receipts"], 0);
                 assert_eq!(stage["inline_function_reads"], 0);
                 assert!(r["entry_schedule"]["stats"]["staged_root_redirects"].as_u64().unwrap() > 0);
+            }
+        }
+    }
+}
+
+#[test]
+fn deferred_changed_root_control_keeps_unchanged_roots_and_run_visibility() {
+    let seeds = (0..64).map(|n| format!("(N {n})")).collect::<Vec<_>>().join("\n");
+    for schedule in ["(run make)", "(run make) (run read)"] {
+        let source = format!(r#"
+(datatype E (N i64) (Seen E i64) (Early E))
+(function Cost (E) i64 :merge (min old new))
+(ruleset make) (ruleset read)
+(rule ((= x (N n))) ((set (Cost x) n)) :ruleset make)
+(rule ((= x (N n))) ((set (Cost x) (+ n 1))) :ruleset make)
+(rule ((= n (Cost x))) ((Early x)) :ruleset make)
+(rule ((= x (N 0)) (= y (N 1))) ((union x y)) :ruleset make)
+(rule ((= n (Cost x))) ((Seen x n)) :ruleset read)
+{seeds}
+(run-schedule (seq {schedule}))
+"#);
+        for workers in [0, 4] {
+            let (_, deferred) = compare_root_control(&source, false, workers, true);
+            let (_, direct) = compare_root_control(&source, false, workers, false);
+            let a = deferred.report(); let b = direct.report();
+            let old = &a["stage_spine"]["stats"]; let new = &b["stage_spine"]["stats"];
+            assert!(old["absorbed_root_completions"].as_u64().unwrap() >= 64, "unchanged roots remain direct");
+            assert!(old["inline_function_reads"].as_u64().unwrap() >= 64);
+            assert_eq!(new["inline_function_reads"], 0);
+            assert_eq!(old["completed_steps"], new["completed_steps"]);
+            assert_eq!(old["anchor_publications"], new["anchor_publications"]);
+            if workers > 0 {
+                for k in ["candidates", "rows", "invalidated"] {
+                    assert_eq!(a["cell_execution"]["runtime"]["stats"]["writes"][k],
+                               b["cell_execution"]["runtime"]["stats"]["writes"][k]);
+                }
             }
         }
     }

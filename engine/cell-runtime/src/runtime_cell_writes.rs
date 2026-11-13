@@ -153,6 +153,7 @@ impl Executor {
                     step,
                     &write,
                     task.index,
+                    task.changed,
                     &mut self.entry_schedule,
                 )? else {
                     continue;

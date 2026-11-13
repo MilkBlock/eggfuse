@@ -1,5 +1,9 @@
 # Direct publication of completed scalar roots
 
+Changed-root direct publication is opt-in (`--direct-changed-roots`). The
+ordinary and same-binary trials did not establish stable improvement on both
+workloads; the default retains the original changed-root publication decision.
+
 This experiment concerns the actual standalone Cell CPU runtime, not native
 egglog or a scheduling simulator. The committed control is `58057ef1`; its
 engine is identical to the previously frozen `e21acfa1` candidate.
@@ -110,3 +114,91 @@ reinterpret these timings as a merged-branch result.
 `results.json` retains all timing samples, binary hashes, raw-record hashes and
 charged work. Removing further coordinator work remains an open objective;
 this change does not establish worker saturation.
+
+## Same-binary changed-root control
+
+`--defer-changed-roots` restores the old deferred path only for writes that
+changed a row. Unchanged root publications, worker writes, query workers and
+Entry ownership remain enabled. It can be configured only before the first Run;
+the report exposes `stage_spine.direct_changed_roots`. This diagnostic adds no
+per-Cell clocks, trace records or second instance representation.
+
+The standalone runtime's existing `inference-cpu` feature captures process and
+coordinator CPU only at inference boundaries. The off/on trial uses one frozen
+binary from the current merged kernel, so executable layout and the integrated
+Bake code are identical. It tests the direct-publication decision in that kernel;
+it cannot retroactively prove that executable layout or background activity
+caused the earlier two-binary regression. The branch adds a small configuration
+check; this is a diagnostic, not a zero-overhead subtraction or speed acceptance.
+
+The selected path must reproduce the previous frozen experiment's exact pending
+completion/receipt counts in both modes before timing. The usual state, source
+Run, logical effect and reviewed sum-bits proofs remain required. Regression
+coverage includes serial and four-worker execution at each schedule prefix,
+unchanged writes remaining direct, key forwarding and rejection of configuration
+after execution begins.
+
+Predeclared trial at diagnostic commit `9680e1be`: 15 sum-bits and 3 Raytrace samples per mode, one warmup each,
+all control groups before all candidate groups. `ACCEPTED` is the previous
+`out/cell-direct-root-publication`; `DIAG` must be new.
+
+```sh
+eggfuse-job run --kind compute -- python3.14 benchmarks/cell-direct-root-publication/same_binary.py ACCEPTED TARGET DIAG
+eggfuse-job run --kind timing -- python3.14 benchmarks/raytrace-parallel/quick.py --sum-repeats 15 --ray-repeats 3 --same-runtime-control-flag=--defer-changed-roots DIAG/control DIAG/candidate DIAG/timing DIAG/timing.json
+python3.14 benchmarks/cell-inference-cpu/run.py summarize DIAG DIAG/timing DIAG/cpu-results.json
+```
+
+Use process CPU/wall as mean consumed cores, not a percentage of workers filled.
+Coordinator off-CPU includes scheduling and blocking. Existing event/scope times
+can overlap and are not pure synchronization costs.
+
+## Diagnostic outcome and default
+
+The diagnostic implementation is `9680e1be`. Job 173 passed 16 Entry publication
+and 5 matched-handoff tests, plus all-feature/no-default-feature checks. Job 174
+froze one CPU-instrumented binary and verified that both configurations reproduce
+the corresponding old/new pending-work counts, exact states, source Runs,
+logical effects and the reviewed sum-bits semantic contract.
+
+Job 175 was interrupted by the guard after candidate Raytrace sample 1: an
+unmanaged `capture_rhs_results` from another worktree was using 99.2% CPU. Its
+partial trial is retained and excluded from conclusions. Only after that
+process exited did job 176 rerun the entire predeclared trial in a fresh
+artifact directory, with no sample stitching or repeat-count changes. All 88
+guards in job 176 were clear; every measured sample matched its frozen reference.
+
+| Same-binary inference median | Changed roots deferred | Changed roots direct |
+| --- | ---: | ---: |
+| sum-bits, 15 samples | 29.054 ms | 28.027 ms |
+| Raytrace, 3 samples | 5.266 s | 5.564 s |
+| Raytrace process CPU | 9.438 s | 9.923 s |
+| Raytrace coordinator CPU | 3.958 s | 4.155 s |
+| Raytrace mean process cores | 1.792 | 1.784 |
+
+The direct mode did not reproduce the earlier sum-bits regression, but Raytrace
+wall time increased 5.65%, process CPU 5.13% and coordinator CPU 4.97%. This is
+not a pure-wait increase. The worker-write source-completion span grew from
+85.947 to 108.715 ms; search, RHS and query-update medians also increased. These
+scope times overlap other measurements and do not isolate a cause for all
+297 ms of median inference increase. Neither executable layout nor group-order
+drift is established as the explanation for the two trials' opposing results.
+
+Mean process cores is not worker occupancy. The current evidence does not prove
+stable speedup or saturation, and this diagnostic does not supersede the failed
+ordinary two-workload gate. All samples, including the 44.439 ms sum-bits sample,
+are retained in `control-results.json` and the referenced raw artifacts.
+
+Changed-root direct publication is therefore now **opt-in** via
+`--direct-changed-roots` / `use_direct_changed_roots()`. The default restores
+changed writes' pending completion, while unchanged roots remain direct. This
+restores the old publication decision; it is not a measurement of the new
+binary's ordinary speed. `--defer-changed-roots` overrides the experimental flag
+for same-binary diagnostics. The current `same_binary.py` explicitly enables
+the experiment for both lanes before adding the control override; reproducing
+the original diagnostic binary requires checking out `9680e1be`.
+
+Job 181 validated the opt-in default: 47 Cell execution, 16 Entry publication,
+5 matched-handoff and 2 parallel-publication tests (70 total), 212 runtime unit
+tests, and all-feature/no-default-feature compilation. The regression explicitly
+checks the default is deferred, enables direct publication for its existing
+coverage, and checks that neither configuration can change after the first Run.
