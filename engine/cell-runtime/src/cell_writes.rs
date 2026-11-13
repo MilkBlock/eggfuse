@@ -39,6 +39,8 @@ pub(crate) struct Counts {
     pub owner_completion_groups: u64,
     pub owner_completion_early_groups: u64,
     pub owner_completion_bytes: u64,
+    pub inherited_candidates: u64,
+    pub origin_token_bytes: u64,
 }
 
 #[cfg(test)]
