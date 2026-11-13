@@ -18,6 +18,27 @@ class MultiEntryRidge(unittest.TestCase):
         nodes=[dict(valid=True,target=encode(r,roles),state_key=state_key(r)) for r in (a,b)]
         self.assertEqual(encoding_audit(nodes)['conflicting_codes'],1)
 
+    def test_class_balancing_removes_duplicate_role_weight(self):
+        rng=np.random.default_rng(91)
+        roles=rng.normal(size=(3,64)).astype(np.float32);roles[1]=roles[0]
+        one=[(0,{},('E',10)),(2,{},('E',20))]
+        duplicate=[(0,{},('E',10)),(1,{},('E',10)),(2,{},('E',20))]
+        np.testing.assert_allclose(encode(one,roles,'class-balanced'),encode(duplicate,roles,'class-balanced'),atol=1e-7)
+        self.assertGreater(np.max(abs(encode(one,roles)-encode(duplicate,roles))),.01)
+        distinct=[(0,{},('E',10)),(1,{},('E',30)),(2,{},('E',20))]
+        self.assertGreater(np.max(abs(encode(duplicate,roles,'class-balanced')-encode(distinct,roles,'class-balanced'))),.01)
+        renamed=[(0,{},('E',99)),(1,{},('E',99)),(2,{},('E',33))]
+        np.testing.assert_array_equal(encode(duplicate,roles,'class-balanced'),encode(renamed,roles,'class-balanced'))
+
+    def test_balanced_scalars_remain_individual_dynamic_values(self):
+        roles=np.random.default_rng(92).normal(size=(2,64)).astype(np.float32)
+        a=[(0,dict(sort='i64',value=2),None),(1,dict(sort='i64',value=3),None)]
+        np.testing.assert_allclose(encode(a,roles),encode(a,roles,'class-balanced'),atol=1e-7,rtol=1e-6)
+        b=[(0,dict(sort='i64',value=3),None),(1,dict(sort='i64',value=2),None)]
+        self.assertFalse(np.array_equal(encode(a,roles,'class-balanced'),encode(b,roles,'class-balanced')))
+        np.testing.assert_array_equal(encode([],roles,'class-balanced'),np.zeros(WIDTH))
+        with self.assertRaises(ValueError):encode(a,roles,'unknown')
+
     def test_dynamic_scalar_changes_code(self):
         self.assertFalse(np.array_equal(scalar(dict(sort='i64',value=2)),scalar(dict(sort='i64',value=3))))
 

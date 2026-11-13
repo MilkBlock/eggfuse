@@ -90,8 +90,8 @@ def expand_scores(row,scores,skip_static,quotient):
     return result
 
 
-def examples(trace,channels,zero,quotient=False):
-    nodes=dataset(trace,channels,zero);layouts=[pair_layout(r) for r in trace['recipe']['rules']]
+def examples(trace,channels,zero,quotient=False,encoding="slot"):
+    nodes=dataset(trace,channels,zero,encoding);layouts=[pair_layout(r) for r in trace['recipe']['rules']]
     proofs=[static_equalities(r,layout[0]) for r,layout in zip(trace['recipe']['rules'],layouts)]
     plans=[quotient_layout(r,layout[0],proof) for r,layout,proof in zip(trace['recipe']['rules'],layouts,proofs)] if quotient else None
     out=[];index=0
@@ -151,7 +151,9 @@ def main():
     if a.quotient and not a.static_equalities:p.error('--quotient requires --static-equalities')
     report=json.loads(a.model_report.read_text())
     if hashlib.sha256(a.model.read_bytes()).hexdigest()!=report['model_sha256']:raise ValueError('model mismatch')
-    with np.load(a.model) as saved:mw=saved['w'];mc=saved['coef'];channels=int(saved['channels']);zero=bool(saved['zero_role_channels'])
+    with np.load(a.model) as saved:
+        mw=saved['w'];mc=saved['coef'];channels=int(saved['channels']);zero=bool(saved['zero_role_channels'])
+        encoding=str(saved['encoding']) if 'encoding' in saved else 'slot'
     w=np.random.default_rng(208).normal(0,1/np.sqrt(512),(512,256)).astype(np.float32)
     xs=[];ys=[];parts=[];seen=set();families=set();unique_counts={}
     preparation_started=time.monotonic()
@@ -164,7 +166,7 @@ def main():
             if entry['split']!=name:raise ValueError('case partition mismatch')
             data=read_bytes(Path(entry['trace']))
             if hashlib.sha256(data).hexdigest()!=entry['trace_sha256']:raise ValueError('trace mismatch')
-            nodes,rows=examples(json.loads(data),channels,zero,a.quotient);selected=[]
+            nodes,rows=examples(json.loads(data),channels,zero,a.quotient,encoding);selected=[]
             for r in rows:
                 n=r['node'];key=(n['family'],n['state_key'])
                 if name=='train':seen.add(key);families.add(n['family'])
@@ -181,7 +183,7 @@ def main():
     with a.decoder.open('wb') as f:np.savez_compressed(f,w=w,coef=coef,static_equalities=a.static_equalities,quotient=a.quotient)
     raw=read_bytes(a.test_trace)
     if hashlib.sha256(raw).hexdigest()!=report['provenance']['test_trace']:raise ValueError('test mismatch')
-    clock=time.monotonic();nodes,rows=examples(json.loads(raw),channels,zero,a.quotient)
+    clock=time.monotonic();nodes,rows=examples(json.loads(raw),channels,zero,a.quotient,encoding)
     test_preparation_seconds=time.monotonic()-clock
     plans={id(r['quotient']):r['quotient'] for r in rows if r['quotient'] is not None}
     quotient_layout_bytes=sum(v.nbytes for plan in plans.values() for v in plan.values())
@@ -192,7 +194,7 @@ def main():
     tokens={'oracle':np.array([n['target'] for n in nodes]),'predicted':predicted}
     results={};gc=mx.array(coef);mark_file=a.marks.open('w') if a.marks else None;mark_count=0
     for mode,state in tokens.items():
-        clock=time.monotonic();matrix,labels=materialize(readout_rows(rows,a.quotient),state,w,a.static_equalities);encoding=time.monotonic()-clock
+        clock=time.monotonic();matrix,labels=materialize(readout_rows(rows,a.quotient),state,w,a.static_equalities);encoding_seconds=time.monotonic()-clock
         clock=time.monotonic();chunks=[]
         for begin in range(0,len(matrix),4096):
             out=mx.array(matrix[begin:begin+4096])@gc;mx.eval(out);chunks.append(np.array(out[:,0]))
@@ -226,7 +228,7 @@ def main():
             summary['learned_positive_recall']=(positives-summary['missed_equalities'])/positives if positives else None
         audit_seconds=time.monotonic()-clock
         if offset!=len(scores):raise ValueError('query alignment error')
-        results[mode]=dict(boundary_feature_bytes=matrix.nbytes,subsets=dict(summaries),numerical_audit=numeric,feature_encoding_seconds=encoding,
+        results[mode]=dict(boundary_feature_bytes=matrix.nbytes,subsets=dict(summaries),numerical_audit=numeric,feature_encoding_seconds=encoding_seconds,
             gpu_readout_and_transfer_seconds=readout_seconds,cpu_partition_audit_seconds=audit_seconds)
     if mark_file is not None:mark_file.close()
     result=dict(local_marks=mark_count,marks_sha256=hashlib.sha256(a.marks.read_bytes()).hexdigest() if a.marks else None,
@@ -237,7 +239,7 @@ def main():
         training_equal_pairs=int(y[parts=='train'].sum()),preparation_seconds=preparation_seconds,fit_seconds=fit_seconds,
         test_preparation_seconds=test_preparation_seconds,quotient_layout_bytes=quotient_layout_bytes,
         test_total_instances=len(nodes),test_complete_instances=len(rows),incomplete_capture_marks=len(nodes)-len(rows),
-        results=results,static_equalities=a.static_equalities,quotient=a.quotient,backpropagation=False,threshold=.5,
+        results=results,token_encoding=encoding,static_equalities=a.static_equalities,quotient=a.quotient,backpropagation=False,threshold=.5,
         limitations=['Only local typed Eq partition is decoded; scalar results and external identities remain unverified',
             'No proposed Eq is applied to a runtime; CPU captured labels are the audit reference',
             'The main whole-Cell model and observed candidate routing remain unchanged',

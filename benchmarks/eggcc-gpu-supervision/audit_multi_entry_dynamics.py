@@ -79,6 +79,7 @@ def main():
     if hashlib.sha256(test_raw).hexdigest()!=report['provenance']['test_trace']:raise ValueError('test trace mismatch')
     if hashlib.sha256(a.model.read_bytes()).hexdigest()!=report['model_sha256']:raise ValueError('model mismatch')
     with np.load(a.model) as saved:
+        encoding=str(saved['encoding']) if 'encoding' in saved else 'slot'
         w=saved['w'];coef=saved['coef'];zero=saved['zero_provider_coef']
         channels=int(saved['channels']) if 'channels' in saved else 1
         zero_role_channels=bool(saved['zero_role_channels']) if 'zero_role_channels' in saved else False
@@ -88,8 +89,8 @@ def main():
         if entry['split']!='train':raise ValueError('non-train case')
         raw=read_bytes(Path(entry['trace']))
         if hashlib.sha256(raw).hexdigest()!=entry['trace_sha256']:raise ValueError('training trace mismatch')
-        train_nodes.extend(dataset(json.loads(raw),channels,zero_role_channels))
-    test=dataset(json.loads(test_raw),channels,zero_role_channels);seed,q,target=arrays(test)
+        train_nodes.extend(dataset(json.loads(raw),channels,zero_role_channels,encoding))
+    test=dataset(json.loads(test_raw),channels,zero_role_channels,encoding);seed,q,target=arrays(test)
     predictions=dict(gold_providers=np.tanh(features(seed,q,pooling(test,target),w,np)@coef),
         predicted_providers=replay(test,w,coef,False),
         no_provider_refit=np.tanh(features(seed,q,np.zeros((len(target),channels*128),np.float32),w,np)@zero))

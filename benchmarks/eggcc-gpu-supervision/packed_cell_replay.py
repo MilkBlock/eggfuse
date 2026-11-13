@@ -171,8 +171,10 @@ def main():
     if hashlib.sha256(raw).hexdigest()!=report['provenance']['test_trace']:raise ValueError('trace mismatch')
     if hashlib.sha256(manifest_raw).hexdigest()!=report['provenance']['train']:raise ValueError('training mismatch')
     if hashlib.sha256(a.model.read_bytes()).hexdigest()!=report['model_sha256']:raise ValueError('model mismatch')
-    with np.load(a.model) as saved:w=saved['w'];coef=saved['coef'];channels=int(saved['channels']);zero=bool(saved['zero_role_channels'])
-    nodes=dataset(json.loads(raw),channels,zero);predictions={};runs={}
+    with np.load(a.model) as saved:
+        w=saved['w'];coef=saved['coef'];channels=int(saved['channels']);zero=bool(saved['zero_role_channels'])
+        encoding=str(saved['encoding']) if 'encoding' in saved else 'slot'
+    nodes=dataset(json.loads(raw),channels,zero,encoding);predictions={};runs={}
     if not mx.metal.is_available():raise RuntimeError('Metal required')
     mx.set_default_device(mx.gpu)
     for name,packed in [('flat',False),('packed',True),('two_groups','two'),('shared','shared'),('broadcast','broadcast')]:
@@ -196,7 +198,7 @@ def main():
         if e['split']!='train':raise ValueError('case partition mismatch')
         data=read_bytes(Path(e['trace']))
         if hashlib.sha256(data).hexdigest()!=e['trace_sha256']:raise ValueError('training trace mismatch')
-        training.extend(dataset(json.loads(data),channels,zero))
+        training.extend(dataset(json.loads(data),channels,zero,encoding))
     predictions['original']=reference
     result=dict(scope='frozen-model packed GPU Cell replay; observed routing, no autonomous matching',
         model_sha256=report['model_sha256'],test_trace_sha256=report['provenance']['test_trace'],runs=runs,

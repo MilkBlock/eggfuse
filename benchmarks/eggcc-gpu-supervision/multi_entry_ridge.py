@@ -48,17 +48,26 @@ def scalar(value):
     return vec(('scalar',value))
 
 
-def encode(rows,roles):
+def encode(rows,roles,encoding="slot"):
+    if encoding not in ("slot","class-balanced"):raise ValueError("unknown token encoding")
     groups=defaultdict(list)
     for slot,value,key in rows:
         if key is not None:groups[key].append(slot)
-    context={k:roles[slots].sum(0)/np.sqrt(len(slots)) for k,slots in groups.items()}
+    context={k:roles[slots].sum(0)/(len(slots) if encoding=="class-balanced" else np.sqrt(len(slots))) for k,slots in groups.items()}
     messages=[]
     for slot,value,key in rows:
         messages.append(np.tanh(roles[slot]+(context[key] if key is not None else scalar(value))))
     if not messages:return np.zeros(WIDTH,np.float32)
     m=np.array(messages,np.float32)
-    return np.tanh(np.concatenate([m.sum(0)/np.sqrt(len(m)),(m*m).mean(0)])).astype(np.float32)
+    if encoding=="class-balanced":
+        # Each observed Eq class has unit total weight; scalars remain individual.
+        # Input groups use only input roots; output groups are training/audit labels.
+        weights=np.array([1/len(groups[key]) if key is not None else 1 for _,_,key in rows],np.float32)
+        count=weights.sum()
+        first=(m*weights[:,None]).sum(0)/np.sqrt(count)
+        second=(m*m*weights[:,None]).sum(0)/count
+    else:first=m.sum(0)/np.sqrt(len(m));second=(m*m).mean(0)
+    return np.tanh(np.concatenate([first,second])).astype(np.float32)
 
 
 def input_rows(binding):
@@ -95,7 +104,7 @@ def template_identity(rule):
     return hashlib.sha256(json.dumps(structural,sort_keys=True).encode()).hexdigest()
 
 
-def dataset(trace,channels=1,zero_role_channels=False):
+def dataset(trace,channels=1,zero_role_channels=False,encoding="slot"):
     if not 1<=channels<=8:raise ValueError("channel count outside experiment limits")
     routing=np.random.default_rng(777).normal(0,1/np.sqrt(128),(128,channels-1)).astype(np.float32)
     links=link(trace);compiled=[template(r) for r in trace['recipe']['rules']]
@@ -121,8 +130,8 @@ def dataset(trace,channels=1,zero_role_channels=False):
                         route=np.concatenate([np.ones(1,np.float32),np.tanh(3*np.concatenate([roles[port['slot']],pr[p['slot']]])@routing)])
                         if zero_role_channels:route[1:]=0
                         incoming.append((source,edge/np.sqrt(len(g['providers']))));routes.append(route)
-            rows=input_rows(b);seed=encode([r for r in rows if r[0] not in connected],roles)
-            target=encode(output_rows(b),roles)
+            rows=input_rows(b);seed=encode([r for r in rows if r[0] not in connected],roles,encoding)
+            target=encode(output_rows(b),roles,encoding)
             valid=b['rhs']['completed'] and all('unavailable' not in s for s in b['rhs']['slots'])
             # A missing full local state is an explicit CPU boundary in this probe.
             depth=1+max((nodes[i]['depth'] for i,_ in incoming),default=-1)
@@ -201,7 +210,7 @@ def metric(pred,target,mask):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('training',type=Path);p.add_argument('validation',type=Path)
-    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');a=p.parse_args()
+    p.add_argument('test_trace',type=Path);p.add_argument('model',type=Path);p.add_argument('report',type=Path);p.add_argument('--corpus-manifest',type=Path,required=True);p.add_argument('--channels',type=int,default=1);p.add_argument('--zero-role-channels',action='store_true');p.add_argument('--encoding',choices=['slot','class-balanced'],default='slot');a=p.parse_args()
     preparation_started=time.monotonic()
     corpus_raw=a.corpus_manifest.read_bytes();corpus=json.loads(corpus_raw);corpus_sha=hashlib.sha256(corpus_raw).hexdigest()
     all_nodes=[];partition=[];provenance=dict(corpus_manifest=corpus_sha)
@@ -213,7 +222,7 @@ def main():
             if entry['split']!=name:raise ValueError('case partition mismatch')
             raw=read_bytes(Path(entry['trace']))
             if hashlib.sha256(raw).hexdigest()!=entry['trace_sha256']:raise ValueError('trace hash mismatch')
-            nodes=dataset(json.loads(raw),a.channels,a.zero_role_channels);offset=len(all_nodes)
+            nodes=dataset(json.loads(raw),a.channels,a.zero_role_channels,a.encoding);offset=len(all_nodes)
             for n in nodes:n['edges']=[(i+offset,v) for i,v in n['edges']]
             all_nodes.extend(nodes);partition.extend([name]*len(nodes))
     raw=read_bytes(a.test_trace);test_trace=json.loads(raw)
@@ -221,7 +230,7 @@ def main():
     if len(cases)!=1 or cases[0]['split']!='test':raise ValueError('test partition mismatch')
     original=json.loads(read_bytes(Path(cases[0]['program'])))
     if original['recipe']!=test_trace['recipe']:raise ValueError('test recipe mismatch')
-    test=dataset(test_trace,a.channels,a.zero_role_channels);provenance['test_trace']=hashlib.sha256(raw).hexdigest()
+    test=dataset(test_trace,a.channels,a.zero_role_channels,a.encoding);provenance['test_trace']=hashlib.sha256(raw).hexdigest()
     seed,q,target=arrays(all_nodes);pool=pooling(all_nodes,target)
     raw_width=192+256*a.channels
     rng=np.random.default_rng(412);w=rng.normal(0,1/np.sqrt(raw_width),(raw_width,256)).astype(np.float32)
@@ -232,7 +241,7 @@ def main():
     zero_coef,zero_fit=train(features(seed,q,np.zeros_like(pool),w,np),np.arctanh(np.clip(target,-.999,.999)),
         (parts=='train')&valid,(parts=='validation')&valid)
     fitting_seconds=time.monotonic()-fitting_started
-    with a.model.open('wb') as f:np.savez_compressed(f,w=w,coef=coef,zero_provider_coef=zero_coef,channels=a.channels,zero_role_channels=a.zero_role_channels)
+    with a.model.open('wb') as f:np.savez_compressed(f,w=w,coef=coef,zero_provider_coef=zero_coef,channels=a.channels,zero_role_channels=a.zero_role_channels,encoding=a.encoding)
     if not mx.metal.is_available():raise RuntimeError('Metal required')
     mx.set_default_device(mx.gpu);seed,q,target=arrays(test);pool=pooling(test,target)
     oracle=mx.tanh(features(mx.array(seed),mx.array(q),mx.array(pool),mx.array(w),mx)@mx.array(coef));mx.eval(oracle)
@@ -247,7 +256,7 @@ def main():
     oracle_outside=int(np.count_nonzero(abs(np.array(oracle)-gold)>.002+.004*abs(gold)))
     result=dict(scope='observed-wiring multi-provider numeric Cell token replay, not autonomous egraph execution',
         provenance=provenance,fit=fit,backpropagation=False,state_width=WIDTH,train_valid=int(sum(n['valid'] and p=='train' for n,p in zip(all_nodes,partition))),
-        channels=a.channels,zero_role_channels=a.zero_role_channels,raw_feature_width=raw_width,
+        encoding=a.encoding,channels=a.channels,zero_role_channels=a.zero_role_channels,raw_feature_width=raw_width,
         edge_coefficient_floats=sum(v.size for n in test for _,v in n['edges']),
         route_coefficient_floats=sum(v.size for n in test for v in n['edge_routes']),
         expanded_edge_equivalent_floats=sum(v.size*a.channels for n in test for _,v in n['edges']),
