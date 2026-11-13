@@ -1,0 +1,175 @@
+{
+  "scope": "original-source cumulative retained Graph comparison; not a speed result or native semantic proof",
+  "program_sha256": "795f5d438ffd69517efd58bae3f534811892141135f5f40ecdf63618e90345e1",
+  "runs": 1428,
+  "inputs": {
+    "baseline_sha256": "84be94ff4d4b9fac27b84a6e11b42b3c0ebd5c6da0d2038f13fc9618ad4d2145",
+    "memory_sha256": "5da99138b1758afaf99836f9878ac33c621e919c6f24dc792c073b4052f7b600",
+    "checked_sha256": "5d9fe576220816b9e89ac49b910bde50fc51ad130b8c7ce7987488972758f6f8"
+  },
+  "original_graph_bytes": 3979373,
+  "current_graph_bytes": 2038485,
+  "fraction_of_original": 0.5122628615110973,
+  "target_graph_bytes": 1193811,
+  "remaining_bytes_to_target": 844674,
+  "current_same_binary_control_bytes": 3272085,
+  "current_same_binary_candidate_bytes": 2038485,
+  "all_run_graph_and_ordered_audits_equal": true,
+  "graph_fields": [
+    [
+      "cells",
+      379982
+    ],
+    [
+      "functions",
+      334920
+    ],
+    [
+      "parents",
+      35848
+    ],
+    [
+      "writer_dir",
+      28912
+    ],
+    [
+      "local_unions",
+      0
+    ],
+    [
+      "ownership.components",
+      372256
+    ],
+    [
+      "ownership.live_facts",
+      32768
+    ],
+    [
+      "ownership.frames",
+      163584
+    ],
+    [
+      "ownership.shapes",
+      0
+    ],
+    [
+      "ownership.transitions",
+      0
+    ],
+    [
+      "ownership.training",
+      0
+    ],
+    [
+      "ownership.catalog_trace",
+      0
+    ],
+    [
+      "ownership.entry",
+      0
+    ],
+    [
+      "ownership.heap",
+      2048
+    ],
+    [
+      "ownership.columns",
+      32
+    ],
+    [
+      "ownership.boundaries",
+      242264
+    ],
+    [
+      "ownership.port_completion",
+      0
+    ],
+    [
+      "ownership.pending",
+      104
+    ],
+    [
+      "ownership.tables",
+      3208
+    ],
+    [
+      "ownership.stats",
+      0
+    ],
+    [
+      "ownership.barriers",
+      0
+    ],
+    [
+      "stable_ports",
+      0
+    ],
+    [
+      "repair_ports",
+      3208
+    ],
+    [
+      "union_digest",
+      0
+    ],
+    [
+      "members",
+      83640
+    ],
+    [
+      "intern",
+      1608
+    ],
+    [
+      "function_keys",
+      70716
+    ],
+    [
+      "uses",
+      119468
+    ],
+    [
+      "changes",
+      63212
+    ],
+    [
+      "anchors",
+      10247
+    ],
+    [
+      "dirty",
+      192
+    ],
+    [
+      "dirty_markers",
+      0
+    ],
+    [
+      "dirty_facts",
+      12744
+    ],
+    [
+      "parent_users",
+      17416
+    ],
+    [
+      "garbage",
+      56
+    ],
+    [
+      "receipt_forwards",
+      4232
+    ]
+  ],
+  "limitations": [
+    "The original baseline was a working-tree observation, not a pristine isolated revision.",
+    "Final Graph requested heap excludes Program, Executor caches and allocator overhead.",
+    "This does not prove a Graph-only execution peak or a native final-state contract.",
+    "The 30% target and fast saturated-stage RHS generation are separate unfinished requirements."
+  ],
+  "runtime_commit": "2232ef9b",
+  "binary_sha256": {
+    "runtime_storage_peak": "11f12a4fd77f225901b81f931b84289a3b0a9686b5ea079e0c3e026548ad5488",
+    "runtime_storage_comparison": "e3c36fd2b4709568b6c1ff685add5e9b25db445a6e0a9506953b7fad1d5f707f"
+  }
+}
