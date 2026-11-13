@@ -579,3 +579,37 @@ Reproduce without execution:
 ```sh
 python3 benchmarks/cell-bake-owner-merge/owner_costs.py out/cell-witness-multi benchmarks/cell-bake-owner-merge/owner-costs.json
 ```
+
+### Address topology: reject small local packing as the main target
+
+The same saved exports contain authoritative component symbol bindings and
+current roots. `owner_costs.py` now checks their dimensions and summarizes them:
+
+| case | live components | single-frame components | symbolic slots | bound slots | repeated current roots within a component | trailing unbound slots |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| fact | 492 | 359 | 2,298 | 1,963 | 133 | 7 |
+| loopfact | 464 | 355 | 2,160 | 1,868 | 125 | 2 |
+| sum-bits | 1,344 | 860 | 8,232 | 6,761 | 784 | 62 |
+| dot-product | 1,308 | 960 | 7,494 | 6,254 | 581 | 2 |
+
+This rejects lazy *suffix* allocation as a major compression strategy: almost
+all unbound positions are internal holes. Avoiding their storage would require
+another layout/lookup mechanism, not merely delaying Vec growth. Root grouping
+also has limited coverage here (6.7%--11.6% of bound slots), and each symbol's
+static use sites must remain available after any grouping. Root equality alone
+is not proof of equivalent component states or permission to skip RHS effects.
+
+Single-frame components comprise 64.0%--76.5% of final components. This is not a
+measured missed-takeover rate: some represent independent work, some lack a legal
+cross-stage witness, and retired intermediate frames are not reconstructed by
+this final snapshot. It does show that optimizing only large combined owners
+cannot address most component records. The next history analysis must join these
+instances to actual successful Entry transitions, separating absent observed
+continuations, omitted compiled transitions, and rejected live substitutions.
+It must preserve external uses and source Run ordering; a matching root tuple
+must never be treated as a saturation certificate.
+
+Also retain the existing negative segment experiment in
+`benchmarks/cell-batched-learning/nested-owner-results.json`: suffix-only owner
+extension eliminated old-prefix moves but increased final Graph heap in all four
+cases. Do not enable it by default solely to make the movement counter zero.

@@ -4,7 +4,8 @@
     "Restoration causes do not identify the triggering union.",
     "Retired entry counts do not measure retained bytes or peak lifetime.",
     "Routing bytes are not all redundant; old-prefix moves are cumulative work.",
-    "Owner record bytes include capacities; not all are removable."
+    "Owner record bytes include capacities; not all are removable.",
+    "Equal current roots do not prove interchangeable symbol wiring or safe fact retirement."
   ],
   "cases": [
     {
@@ -12,6 +13,14 @@
       "input_sha256": "ea2d15577e6c977f56b60d420d3ed2f723c737c147f27417ae0f9f2d14871140",
       "program_sha256": "c94fa2da6d160a837efa1ac0b6d1332f1f23c63e3c31112f1984b0f7cab08676",
       "graph_owned_bytes": 705175,
+      "topology": {
+        "components": 492,
+        "single_frame_components": 359,
+        "symbolic_slots": 2298,
+        "bound_slots": 1963,
+        "repeated_current_roots": 133,
+        "trailing_unbound_slots": 7
+      },
       "restoration": {
         "events": 2,
         "slots": 4,
@@ -70,6 +79,14 @@
       "input_sha256": "5ff59d6b10c602606f4acbaf022313dd862da2cc3a34a8a8c3cd7cb7394228bb",
       "program_sha256": "fb56d5498f2f1b6b6a3f430af90df9008e4b3770758da0345463790c343feb8b",
       "graph_owned_bytes": 616289,
+      "topology": {
+        "components": 464,
+        "single_frame_components": 355,
+        "symbolic_slots": 2160,
+        "bound_slots": 1868,
+        "repeated_current_roots": 125,
+        "trailing_unbound_slots": 2
+      },
       "restoration": {
         "events": 0,
         "slots": 0,
@@ -128,6 +145,14 @@
       "input_sha256": "d18a85726735635c67caf294245933d54ff981833a7170b90a62a0aaa9d1cb0e",
       "program_sha256": "4c29b9f5d8d09d999cd1e64883170574a456d17788216868dede4f438f39feb3",
       "graph_owned_bytes": 1830387,
+      "topology": {
+        "components": 1344,
+        "single_frame_components": 860,
+        "symbolic_slots": 8232,
+        "bound_slots": 6761,
+        "repeated_current_roots": 784,
+        "trailing_unbound_slots": 62
+      },
       "restoration": {
         "events": 13,
         "slots": 24,
@@ -186,6 +211,14 @@
       "input_sha256": "b9d814cb01122017232286a36588a9e7bb21c52d6d6741d15cb6eadfa7664dec",
       "program_sha256": "821f999d16c0b17eabbdbf8c90a56bbe6a0fdc29d5cd754c70040ccf3c483fc9",
       "graph_owned_bytes": 1798019,
+      "topology": {
+        "components": 1308,
+        "single_frame_components": 960,
+        "symbolic_slots": 7494,
+        "bound_slots": 6254,
+        "repeated_current_roots": 581,
+        "trailing_unbound_slots": 2
+      },
       "restoration": {
         "events": 10,
         "slots": 20,

@@ -24,13 +24,29 @@ def collect(root):
         facts = owner['stored_fact_entries'] - owner['live_fact_entries']
         if slots != owner['retired_slot_entries'] or min(slots, facts) < 0:
             raise ValueError(f'{case}: inconsistent retired entries')
+        components = data['ownership_storage']['components']
+        topology = dict(components=len(components), single_frame_components=0,
+                        symbolic_slots=0, bound_slots=0, repeated_current_roots=0,
+                        trailing_unbound_slots=0)
+        for component in components:
+            signals, roots = component['signals'], component['roots']
+            if len(signals) != len(roots):
+                raise ValueError(f'{case}: inconsistent signal projection')
+            bound = [root for root in roots if root is not None]
+            topology['single_frame_components'] += len(component['frames']) == 1
+            topology['symbolic_slots'] += len(signals)
+            topology['bound_slots'] += len(bound)
+            topology['repeated_current_roots'] += len(bound) - len(set(bound))
+            end = next((i + 1 for i in range(len(signals) - 1, -1, -1)
+                        if signals[i] is not None), 0)
+            topology['trailing_unbound_slots'] += len(signals) - end
         restoration = owner['restoration']
         work = data['completion_work']
         routing = sum(fields[k] for k in ('ownership.components', 'ownership.frames',
                                           'ownership.boundaries', 'stable_ports'))
         rows.append(dict(case=case, input_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
             program_sha256=data['program_sha256'], graph_owned_bytes=total,
-            restoration=restoration, max_owner_frames=max(widths, default=0),
+            topology=topology, restoration=restoration, max_owner_frames=max(widths, default=0),
             retired_slot_entries=slots, retired_fact_entries=facts,
             old_slots_moved=work['shared_owner_slot_entries_moved'],
             old_facts_moved=work['shared_owner_fact_entries_moved'],
@@ -42,7 +58,8 @@ def collect(root):
         limitations=['Restoration causes do not identify the triggering union.',
                      'Retired entry counts do not measure retained bytes or peak lifetime.',
                      'Routing bytes are not all redundant; old-prefix moves are cumulative work.',
-                     'Owner record bytes include capacities; not all are removable.'], cases=rows)
+                     'Owner record bytes include capacities; not all are removable.',
+                     'Equal current roots do not prove interchangeable symbol wiring or safe fact retirement.'], cases=rows)
 
 
 if __name__ == '__main__':
