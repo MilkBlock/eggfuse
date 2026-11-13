@@ -14,6 +14,7 @@ struct Counts {
 #[derive(Default)]
 pub(super) struct Trace {
     rows: BTreeMap<(usize, Option<usize>, bool, &'static str), Counts>,
+    witness_paths: BTreeMap<(usize, usize, Vec<(usize, usize, u32)>), u64>,
     component_checks: u64,
     fact_checks: u64,
 }
@@ -27,7 +28,8 @@ impl Trace {
                 "outcome":reason,"counts":counts})
             })
             .collect::<Vec<_>>();
-        json!({"rows":rows,"component_checks":self.component_checks,"fact_checks":self.fact_checks,
+        let paths=self.witness_paths.iter().map(|((rule,shape,path),applications)|json!({"rule":rule,"shape":shape,"constructor_positions":path,"applications":applications})).collect::<Vec<_>>();
+        json!({"rows":rows,"witness_paths":paths,"witness_path_scope":"observed full RHS coverage; tuples are RHS operation, shape frame ordinal, source operation; no instance IDs or executable proof","component_checks":self.component_checks,"fact_checks":self.fact_checks,
             "scope":"one observation per actual apply entry; rhs_covered means current matched RHS effects already witnessed inside one live Cell component",
             "limitations":"not a saturation certificate for all matches; query elimination, delta ownership, audit replacement and future invalidation still require compilation; unsupported effects are not skippable; no saved work claimed"})
     }
@@ -65,6 +67,7 @@ impl Graph {
         let rule = &self.program.rules[rid];
         let ops = &self.program.templates[rule.template].ops;
         let mut best = (None, false, "no_local_component", 0);
+        let mut best_path=Vec::new();
         let mut checks = 0;
         let mut fact_checks = 0;
         if pending_peers || !owner.pending.is_empty() {
@@ -76,7 +79,7 @@ impl Graph {
                     frames: Default::default(),
                     signals: vec![],
                 };
-                let (prefix, reason, _) =
+                let (prefix, reason, _, _) =
                     self.covered_rhs(&empty, ops, &rule.inputs, &binding.values);
                 best.3 = prefix;
                 best.2 = if reason == "rhs_covered" {
@@ -97,7 +100,7 @@ impl Graph {
                     continue;
                 };
                 checks += 1;
-                let (prefix, reason, visited) =
+                let (prefix, reason, visited, path) =
                     self.covered_rhs(component, ops, &rule.inputs, &binding.values);
                 fact_checks += visited;
                 let cross = component.frames.iter().any(|id| {
@@ -107,6 +110,7 @@ impl Graph {
                 });
                 if best.0.is_none() || prefix > best.3 || reason == "rhs_covered" {
                     best = (Some(component.shape), cross, reason, prefix);
+                    best_path=path;
                 }
                 if reason == "rhs_covered" {
                     break;
@@ -122,6 +126,9 @@ impl Graph {
             .as_mut()
             .unwrap()
             .saturation;
+        if best.2=="rhs_covered" && !best_path.is_empty() {
+            *trace.witness_paths.entry((rid,best.0.expect("covered component"),best_path)).or_default()+=1;
+        }
         trace.component_checks += checks;
         trace.fact_checks += fact_checks;
         let counts = trace.rows.entry((rid, best.0, best.1, best.2)).or_default();
@@ -146,13 +153,14 @@ impl Graph {
         ops: &[Op],
         inputs: &[usize],
         input: &crate::slots::Slots,
-    ) -> (usize, &'static str, u64) {
+    ) -> (usize, &'static str, u64, Vec<(usize,usize,u32)>) {
+        let mut path=Vec::new();
         // Proof scratch only. Exclude prepared RHS outputs: those are not
         // evidence that their effects already existed before this application.
         let mut values = BTreeMap::new();
         for slot in inputs {
             let Some(value) = input.get(slot) else {
-                return (0, "missing_input", 0);
+                return (0, "missing_input", 0, path);
             };
             values.insert(*slot, canon(value, &self.parents));
         }
@@ -183,10 +191,10 @@ impl Graph {
                         .map(|a| argument(a, &values, &self.parents))
                         .collect::<Option<Vec<_>>>()
                     else {
-                        return (index, "unbound_operand", visits);
+                        return (index, "unbound_operand", visits, path);
                     };
                     let mut found = None;
-                    'frames: for id in &component.frames {
+                    'frames: for (ordinal,id) in component.frames.iter().enumerate() {
                         for (fact, state) in self.cells.fact_states(*id) {
                             if !state.owned || state.hidden {
                                 continue;
@@ -204,6 +212,7 @@ impl Graph {
                                     .all(|(a, b)| canon(a, &self.parents) == *b)
                             {
                                 found = row.values.last().map(|v| canon(v, &self.parents));
+                                path.push((index,ordinal,fact.op));
                                 break 'frames;
                             }
                         }
@@ -223,9 +232,9 @@ impl Graph {
                 Op::Panic => Some("failure_effect"),
             };
             if let Some(reason) = reason {
-                return (index, reason, visits);
+                return (index, reason, visits, path);
             }
         }
-        (ops.len(), "rhs_covered", visits)
+        (ops.len(), "rhs_covered", visits, path)
     }
 }

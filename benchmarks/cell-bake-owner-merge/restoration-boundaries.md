@@ -320,3 +320,27 @@ python3 benchmarks/cell-bake-owner-merge/overlap_projection_results.py out/cell-
 This closes the projected-overlap workload coverage gap. It does not reduce RHS
 logical work or establish the requested large compression target; static reuse of
 completed facts and stage transitions remain the structural next step.
+
+## Preserve constructor witness positions for Bake
+
+The old saturation observer discarded the location of constructors it found. Its
+aggregate `(rule, shape, covered)` outcome could rank opportunities but could not
+compile a result address. The explicit catalog trace now additionally aggregates
+fully covered constructor paths by `(rule, shape, positions)`. Each position is
+`(RHS operation, source frame ordinal within shape, source operation)`.
+No instance ID enters that key. Only the selected fully covering component is
+credited; partial matches and input-only union coverage create no constructor
+path. Positions identify observed source facts, not synthetic result addresses:
+execution must read the source fact's actual result, including foreign reuse.
+
+This is trace evidence, not an executable certificate. Bake must prove operand
+correspondence, visibility, mutable-read freshness and source-stage ordering before
+replacing queries/publications. Multiple observed paths for a rule/shape remain
+separate, so the trace does not silently select an arbitrary canonical path.
+Existing copies/static aliases still receive no new saved-operation credit.
+
+The observer remains gated by explicit catalog tracing; production does not
+collect these paths. Two saturation tests pass, preserving exports, snapshots and
+binding audits, checking relative source positions and rejecting partial/input-only
+paths. No runtime effect is skipped by this change. The next compilation step can
+now consume actual source positions instead of repeating a whole-component scan.

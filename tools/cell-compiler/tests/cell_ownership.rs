@@ -44,6 +44,19 @@ fn saturation_observer_sees_birth_free_effects_and_rejects_unproved_work() {
         assert!(rows.iter().any(|r|r["outcome"] == outcome), "{body}: {report}");
         let applications = rows.iter().map(|r|r["counts"]["applications"].as_u64().unwrap()).sum::<u64>();
         assert_eq!(applications, 2, "count applications, not anchor alternatives");
+        let paths=report["saturation"]["witness_paths"].as_array().unwrap();
+        if body=="(N n)" {
+            assert_eq!(paths.iter().map(|p|p["applications"].as_u64().unwrap()).sum::<u64>(),2);
+            for path in paths {
+                let positions=path["constructor_positions"].as_array().unwrap();
+                assert_eq!(positions.len(),1);
+                let position=positions[0].as_array().unwrap();
+                assert_eq!(position.len(),3);
+                assert_eq!(position[1],0,"single-frame component uses relative ordinal");
+                assert_eq!(position[2],0,"source constructor operation");
+            }
+        } else {assert!(paths.is_empty(),"partial or input-only coverage is not a constructor path");}
+
     }
 }
 
