@@ -1,0 +1,77 @@
+{
+  "scope": "standalone Cell runtime; explicit optional witness catalog; work and memory, not speed",
+  "cases": [
+    {
+      "case": "fact",
+      "baseline_program": "e78ecba95cb65b20aec247eeca48c9c841055348840e686a36cd92170d85c61c",
+      "candidate_program": "c94fa2da6d160a837efa1ac0b6d1332f1f23c63e3c31112f1984b0f7cab08676",
+      "graph_before": 747247,
+      "graph_after": 747247,
+      "program_bytes_added": 109360,
+      "work": {
+        "constructor_cell_route_probes": 258,
+        "constructor_cell_route_witnesses": 39,
+        "constructor_cell_route_accepted": 23,
+        "route_probes_before_operation_dispatch": 445,
+        "additional_prepared_field_checks": 72,
+        "port_key_lookups_before": 2452,
+        "port_key_lookups_after": 2429
+      },
+      "same_final_state": true
+    },
+    {
+      "case": "loopfact",
+      "baseline_program": "44853453c5d1780595453865b8c86312deae6a994a853773e634c8713909e61e",
+      "candidate_program": "fb56d5498f2f1b6b6a3f430af90df9008e4b3770758da0345463790c343feb8b",
+      "graph_before": 662041,
+      "graph_after": 662041,
+      "program_bytes_added": 91268,
+      "work": {
+        "constructor_cell_route_probes": 204,
+        "constructor_cell_route_witnesses": 23,
+        "constructor_cell_route_accepted": 14,
+        "route_probes_before_operation_dispatch": 364,
+        "additional_prepared_field_checks": 35,
+        "port_key_lookups_before": 1927,
+        "port_key_lookups_after": 1913
+      },
+      "same_final_state": true
+    },
+    {
+      "case": "sum-bits",
+      "baseline_program": "73e72b3bbb4696744cb370758c35c8090e1180161f28b52928e12f1b545ba3bd",
+      "candidate_program": "4c29b9f5d8d09d999cd1e64883170574a456d17788216868dede4f438f39feb3",
+      "graph_before": 1989427,
+      "graph_after": 1989427,
+      "program_bytes_added": 293468,
+      "work": {
+        "constructor_cell_route_probes": 1649,
+        "constructor_cell_route_witnesses": 277,
+        "constructor_cell_route_accepted": 115,
+        "route_probes_before_operation_dispatch": 2844,
+        "additional_prepared_field_checks": 392,
+        "port_key_lookups_before": 11455,
+        "port_key_lookups_after": 11340
+      },
+      "same_final_state": true
+    },
+    {
+      "case": "dot-product",
+      "baseline_program": "457ac6dc4073fd12ded5f6910b979bf94eee842aef7f00c522a54401b9979b4c",
+      "candidate_program": "821f999d16c0b17eabbdbf8c90a56bbe6a0fdc29d5cd754c70040ccf3c483fc9",
+      "graph_before": 1965147,
+      "graph_after": 1965147,
+      "program_bytes_added": 269776,
+      "work": {
+        "constructor_cell_route_probes": 1988,
+        "constructor_cell_route_witnesses": 402,
+        "constructor_cell_route_accepted": 148,
+        "route_probes_before_operation_dispatch": 3242,
+        "additional_prepared_field_checks": 532,
+        "port_key_lookups_before": 8299,
+        "port_key_lookups_after": 8151
+      },
+      "same_final_state": true
+    }
+  ]
+}

@@ -135,7 +135,7 @@ pub struct Plan {
 pub fn source_digest(raw: &J) -> String {
     crate::checksum::artifact_digest_excluding_root(
         raw,
-        &["sha256", "ownership_markers", "ownership_fragments"],
+        &["sha256", "ownership_markers", "ownership_fragments", "ownership_witnesses"],
     )
 }
 /// A bounded training/catalog policy, never evidence for an equality.

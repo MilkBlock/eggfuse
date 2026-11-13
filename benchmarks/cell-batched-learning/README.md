@@ -442,3 +442,57 @@ the other candidates require guards. Thus treating all 431 as unconditional
 saturated transitions would overstate the evidence. The large compression goal
 remains unmet; the next runtime change must consume these witnesses while removing
 an existing lookup and, where proven, its intermediate retained state.
+
+### Guarded constructor witness execution (explicit experiment)
+
+An optional `ownership_witnesses` catalog now lowers the observed addresses into
+operation-indexed routes. Loading checks source identity, shape/code compatibility,
+query and RHS operators, and constructor eligibility. It never trusts a trace to
+prove key equality. The runtime uses the existing current Entry, checks its source
+frame/code and the target frame/code, and passes that actual fact reference to the
+existing live prepared-result consumer. It constructs the key once; a valid witness
+returns its actual result and eliminates the ordinary constructor lookup. A dead,
+hidden or mismatching witness falls back using that same key. A Cell-route witness
+never receives the stronger Run certificate used by query-prepared results.
+
+No extra per-instance binding, result history, or reverse consumer list is added.
+Rules absent from the catalog have no witness Entry admission; operations without
+a plan do not probe routes. Entries are admitted for selected witness rules even
+when those rules have no birth-producing composition transition. Without this
+admission the first fixture had zero probes: collecting a catalog alone did not
+connect it to execution. The regression now requires both an accepted route and
+fewer actual key lookups, in addition to equal graphs, snapshots and binding audits.
+It also checks hidden/deleted witnesses and rejects invalid operator code.
+
+| pass3 | route probes | accepted / lookups removed | added field checks | Graph bytes delta |
+|---|---:|---:|---:|---:|
+| fact | 258 | 23 | 72 | 0 |
+| loopfact | 204 | 14 | 35 | 0 |
+| sum-bits | 1,649 | 115 | 392 | 0 |
+| dot-product | 1,988 | 148 | 532 | 0 |
+
+The initial rule-wide route map required 6,895 probes. Compiling per-operation
+admission and only the relevant Entry positions reduces that to 4,099, preserving
+all 300 acceptances. Measured port constructor index lookups decrease by exactly
+300 as well. Failed guards are charged, not counted as skipped work. Retained
+Program increases 91–293 KB per case (including artifact/catalog storage), reported
+separately. Final Graph remains unchanged. The catalog is **not installed in the
+shared seed**, and no speed or large compression result is claimed. Reusing an
+already-existing constructor does not by itself eliminate its retained fact state.
+
+48 ownership tests and 17 Python tests pass; the default runtime also compiles.
+The final dispatch implementation is checked against all 2,652 saved source Run
+checks and terminal effects. This is the same-source standalone Cell contract,
+not a new native egglog semantic admission for these unmarked inputs.
+
+```
+target/debug/examples/batch_cell_learning apply-witnesses \
+  out/cell-batched-learning owned-state witness-direct
+target/debug/examples/batch_cell_learning check-passive \
+  out/cell-batched-learning witness-direct
+# Measure each witness-direct/CASE/candidate.json in inherited-owners
+# --port-domains-only mode; heap.json is the first route implementation,
+# heap-dispatch.json is the final per-operation dispatch implementation.
+python3 benchmarks/cell-batched-learning/direct_witness_results.py \
+  out/cell-batched-learning benchmarks/cell-batched-learning/direct-witness-results.json
+```

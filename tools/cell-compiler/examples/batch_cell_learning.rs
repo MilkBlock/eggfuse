@@ -83,6 +83,24 @@ fn main()->Result<()> {
             write(dir.join("candidate.json"),&raw)?;
             eprintln!("compiled pooled catalog for {name}");
         }
+    } else if a[0]=="apply-witnesses" {
+        if a.len()!=4 {return Err("apply-witnesses ROOT OBSERVATION_VARIANT OUTPUT_VARIANT".into());}
+        let root=Path::new(&a[1]);let manifest=read(root.join("manifest.json"))?;
+        for case in manifest["cases"].as_array().unwrap() {
+            let name=case["case"].as_str().unwrap();
+            let mut raw=read(root.join(name).join("candidate.json"))?;
+            let observed=read(root.join(&a[2]).join(name).join("witness-observation.json"))?;
+            if observed["source_program"]!=raw["sha256"] || observed["all_saved_run_checks_equal"]!=true
+                || observed["terminal_check_equal"]!=true {return Err("unaudited witness observation".into());}
+            let original=raw["sha256"].clone();
+            raw["ownership_witnesses"]=json!({"source":source_digest(&raw),"recipes":observed["catalog_trace"]["saturation"]["witness_recipes"]});
+            raw.as_object_mut().unwrap().remove("sha256");raw["sha256"]=artifact_digest(&raw).into();
+            let mut checked=Program::parse(raw.clone())?;checked.prepare_cell_ownership()?;
+            let dir=root.join(&a[3]).join(name);fs::create_dir_all(&dir)?;
+            write(dir.join("selection.json"),&json!({"source_program":original,"selection":raw["ownership_fragments"]}))?;
+            write(dir.join("candidate.json"),&raw)?;
+            eprintln!("compiled witnesses {name}");
+        }
     } else if a[0]=="apply-passive" || a[0]=="check-passive" {
         if a.len()!=3 && !(a[0]=="check-passive" && a.len()==4 && a[3]=="witnesses") {return Err("apply-passive/check-passive ROOT VARIANT [witnesses]".into());}
         let root=Path::new(&a[1]);let variant=root.join(&a[2]);
@@ -153,6 +171,7 @@ fn main()->Result<()> {
                 }
                 reports.push(json!({"case":name,"runs":checks.len(),"all_saved_run_checks_equal":true,
                     "program":target.graph.program.artifact["sha256"],"source_storage":target.graph.retained_cell_storage(),
+                    "key_lookup_calls":target.graph.key_lookup_calls.get(),"runtime_stats":target.graph.stats,
                     "final_state":artifact_digest(&target.graph.export()?)}));
                 eprintln!("checked {name}: {} Runs",checks.len());
             }

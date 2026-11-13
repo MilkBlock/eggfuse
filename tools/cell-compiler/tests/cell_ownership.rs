@@ -1499,3 +1499,56 @@ fn saturated_observer_reads_cross_stage_age_from_transferred_frames() {
     assert!(recipes.iter().any(|r| !r["rhs_sites"].as_array().unwrap().is_empty()),
         "transferred predecessors must still export shape-relative witnesses: {trace}");
 }
+
+#[test]
+#[cfg(feature="sparse-cells")]
+fn compiled_constructor_witness_replaces_cross_stage_lookup() {
+    let p=program("(datatype E (N i64) (Start E) (Pair E E))
+        (ruleset a) (ruleset b) (ruleset c)
+        (rule ((= x (N n))) ((Start x)) :ruleset a)
+        (rule ((= s (Start x))) ((Pair s x)) :ruleset b)
+        (rule ((Pair s x)) ((Start x)) :ruleset c)
+        (N 1) (run a 1) (run b 1) (run c 1)");
+    let mut g=Graph::new_with_local_congruence(p.clone()).unwrap();
+    g.trace_ownership_catalog(16).unwrap();
+    let mut control=Executor::new(g,true);control.execute().unwrap();
+    let trace=control.graph.ownership_catalog_trace().unwrap();
+    let mut raw=p.artifact.clone();
+    raw["ownership_witnesses"]=json!({"source":eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw),
+        "recipes":trace["saturation"]["witness_recipes"]});
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let p=Program::parse(raw.clone()).unwrap();
+    let mut candidate=Executor::new(Graph::new_with_local_congruence(p).unwrap(),true);
+    candidate.execute().unwrap();
+    assert_eq!(control.graph.export().unwrap(),candidate.graph.export().unwrap());
+    assert_eq!(control.snapshots,candidate.snapshots);
+    assert_eq!(control.binding_audit,candidate.binding_audit);
+    assert!(candidate.graph.stats.constructor_cell_route_accepted>0,
+        "compiled routes must remove a lookup, not only populate a catalog: {} probes, {} witnesses",
+        candidate.graph.stats.constructor_cell_route_probes,candidate.graph.stats.constructor_cell_route_witnesses);
+    assert!(candidate.graph.key_lookup_calls.get()<control.graph.key_lookup_calls.get());
+    for delete in [false, true] {
+        let mut plain=raw.clone();plain.as_object_mut().unwrap().remove("ownership_witnesses");
+        plain.as_object_mut().unwrap().remove("sha256");
+        plain["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&plain).into();
+        let mut base=Executor::new(Graph::new_with_local_congruence(Program::parse(plain).unwrap()).unwrap(),true);
+        let mut actual=Executor::new(Graph::new_with_local_congruence(Program::parse(raw.clone()).unwrap()).unwrap(),true);
+        for e in [&mut base,&mut actual] {
+            e.execute_until(Some(2)).unwrap();
+            let table=e.graph.program.tables.iter().position(|t|t.name=="Start").unwrap();
+            let witness=e.graph.witnesses(table)[0];
+            let row=e.graph.row(witness).unwrap().unwrap();
+            e.graph.hide(table,&row.values[..row.values.len()-1],delete).unwrap();
+            e.graph.collect_garbage();
+            e.execute().unwrap();
+        }
+        assert_eq!(base.graph.export().unwrap(),actual.graph.export().unwrap(),"delete={delete}");
+        assert_eq!(base.snapshots,actual.snapshots,"delete={delete}");
+    }
+    raw["ownership_witnesses"]["recipes"][0]["frame_codes"][0]=json!(usize::MAX);
+    raw.as_object_mut().unwrap().remove("sha256");
+    raw["sha256"]=eggfuse_cell_runtime::checksum::artifact_digest(&raw).into();
+    let rejected=Program::parse(raw).and_then(Graph::new_with_local_congruence);
+    assert!(rejected.is_err(),"untrusted operator code must be rejected");
+}

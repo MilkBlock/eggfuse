@@ -22,11 +22,15 @@ mod ready;
 pub(in crate::graph) mod query_read;
 #[path = "port_completion.rs"]
 pub(crate) mod completion;
+#[path = "ownership_witnesses.rs"]
+mod witnesses;
 
 #[derive(Clone, Debug, Default, Serialize, PartialEq, Eq)]
 pub struct Plan {
     #[serde(skip)]
     format: wire::Format,
+    #[serde(skip)]
+    witnesses: witnesses::Routes,
     pub tables: Vec<bool>,
     pub markers: Vec<Marker>,
     pub programs: Vec<Arc<PortProgram>>,
@@ -75,6 +79,9 @@ impl Plan {
         let before = live_bytes();
         drop(self.query_classes);
         rows.push(("ownership.query_classes", before - live_bytes()));
+        let before = live_bytes();
+        drop(self.witnesses);
+        rows.push(("ownership.witnesses", before - live_bytes()));
         self.composition.release_storage_by_field(live_bytes, rows);
         let before = live_bytes();
         drop(self.entries);
@@ -141,6 +148,7 @@ impl Plan {
             code_programs: vec![],
             code_operators: vec![],
             query_classes: None,
+            witnesses: Default::default(),
             composition,
             tables,
             markers,
@@ -157,6 +165,10 @@ impl Plan {
             plan.query_classes = Some(Arc::new(if raw == &J::Bool(true) {
                 query_classes::Plan::bake(p,&plan)
             } else {query_classes::Plan::validate(raw,p,&plan)?}));
+        }
+        if p.artifact.get("ownership_witnesses").is_some() {
+            plan.prepare_codes(&p.templates);
+            plan.witnesses = witnesses::Routes::compile(p, &plan)?;
         }
         Ok(plan)
     }
@@ -346,7 +358,8 @@ impl Graph {
         self.ownership.as_ref().is_some_and(|m| {
             self.program.cell_ownership.markers[self.program.rules[rid].template].program.active()
                 && (m.composition.catalog_trace.is_some() || m.composition.training.is_some()
-                    || self.program.cell_ownership.composition.active_rules[rid])
+                    || self.program.cell_ownership.composition.active_rules[rid]
+                    || self.program.cell_ownership.witnesses.0.get(rid).is_some_and(|r|!r.is_empty()))
         })
     }
     pub(super) fn ownership_settled(&self) -> bool {

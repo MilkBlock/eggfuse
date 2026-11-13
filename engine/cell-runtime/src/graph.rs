@@ -201,6 +201,9 @@ pub struct Stats {
     #[serde(default)]
     pub constructor_prepared_inputs: u64,
     #[serde(default)]
+    pub constructor_cell_route_probes: u64,
+    pub constructor_cell_route_witnesses: u64,
+    pub constructor_cell_route_accepted: u64,
     pub constructor_prepared_checks: u64,
     #[serde(default)]
     pub constructor_prepared_fields: u64,
@@ -1953,7 +1956,14 @@ impl Graph {
             return Ok(point.value);
         }
         let key = self.inline_arguments(cell, aa)?;
-        let row = self.lookup_prepared_constructor(t, &key, witness)?;
+        // A Cell route has no Run certificate: always check its actual key.
+        #[cfg(feature = "sparse-cells")]
+        let direct = if witness.is_none() { self.cell_constructor_witness(cell, op) } else { None };
+        #[cfg(not(feature = "sparse-cells"))]
+        let direct = None;
+        let accepted = self.stats.constructor_prepared_accepted;
+        let row = self.lookup_prepared_constructor(t, &key, witness.or(direct))?;
+        if direct.is_some() { self.stats.constructor_cell_route_accepted += self.stats.constructor_prepared_accepted - accepted; }
         if let Some(row) = row {
             if let Some(receipt) = receipt {
                 *receipt = Some(row.witness);
