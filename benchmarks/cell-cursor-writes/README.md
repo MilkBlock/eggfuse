@@ -268,7 +268,7 @@ engine delta to contain only the two write implementation files, checks complete
 state/Run/effect equality, native sum-bits acceptance and unchanged write coverage.
 
 Implementation `e21acfa1` passed 212 runtime tests, 73 relevant integration tests
-and the all-feature compile check (queue jobs 148 and 149). Job 152 froze the
+and the all-feature compile check (queue jobs 148 and 150). Job 152 froze the
 current control and candidate; both passed exact state/Run/effect comparison and
 the reviewed native sum-bits validator. The binaries have distinct recorded
 hashes. Both retained 1,161,128 Raytrace write candidates, 302,679 inherited
@@ -293,3 +293,9 @@ grouped result, not a statistical-significance claim or evidence that all worker
 are saturated. It passes the declared two-workload checkpoint and justifies
 integrating this simplification on its tested base. Source completion, shared
 identity allocation and required visibility boundaries still remain.
+
+Queue job 157 fast-forwarded `codex/cell-parallel-admission` from `c1d99e67` to
+`3347d993` (implementation `e21acfa1` plus experiment records). It verified that
+the committed `engine`/`tools` tree equals the tested implementation and that
+all 13 unrelated modified/untracked source files retained their hashes. Those
+ongoing, uncommitted dual-source changes are outside this timing result.
