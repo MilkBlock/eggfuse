@@ -53,6 +53,9 @@ pub(crate) struct Counts {
     pub entry_range_row_borrows: u64,
     pub range_answer_span_bytes: u64,
     pub range_answer_span_heap_bytes: u64,
+    pub range_result_buffers: u64,
+    pub range_result_owner_probes: u64,
+    pub range_result_group_heap_bytes: u64,
     pub coverage_range_rows: u64,
     pub coverage_event_heap_bytes: u64,
     pub output_buffer_capacity: u64,
@@ -161,6 +164,9 @@ pub(super) struct Stats {
     pub entry_range_batches: u64,
     pub range_answer_span_bytes: u64,
     pub range_answer_span_heap_bytes: u64,
+    pub range_result_buffers: u64,
+    pub range_result_owner_probes: u64,
+    pub range_result_group_heap_bytes: u64,
     pub coverage_range_descriptors:u64,
     pub result_fragment_batches: u64,
     pub result_fragment_rows: u64,
@@ -1279,43 +1285,38 @@ impl Workers {
                                 self.stats.coverage_supported_entries+=supported;
                                 self.stats.coverage_events+=1;
                             }
-                            // Compiled origins prove one rule owns this entire
-                            // result array. Transfer its allocation, retaining
-                            // arrival order; the finishing worker opens rows.
-                            let owner=done.origins.first().filter(|_|pooled)
-                                .map(|(_,code)|codes[*code].rule)
-                                .filter(|rid|outputs[*rid].rows.reaches_grain(done.answers.len(),grain))
-                                .filter(|rid|done.origins.iter().all(|(_,code)|codes[*code].rule==*rid));
-                            if let Some(rid)=owner {
-                                self.stats.result_fragment_batches+=1;
-                                self.stats.result_fragment_rows+=done.answers.len() as u64;
-                                self.stats.result_fragment_spans+=done.origins.len() as u64;
-                                for (_,code) in &mut done.origins {
-                                    let origin=&codes[*code];
-                                    *code=plans.position(origin.rule,origin.pivot,0);
-                                }
-                                outputs[rid].rows.range(std::mem::take(&mut done.answers),
-                                    std::mem::take(&mut done.origins));
-                            } else {
-                                self.stats.result_coordinator_rows+=done.answers.len() as u64;
-                                // Diagnose the existing fallback without changing admission:
-                                // inline execution, mixed rule ownership, then a small rule.
-                                let rows=done.answers.len() as u64;
-                                if !pooled { self.stats.result_inline_rows+=rows; }
-                                else if done.origins.first().is_some_and(|(_,first)|
-                                    done.origins.iter().any(|(_,code)|codes[*code].rule!=codes[*first].rule)) {
-                                    self.stats.result_mixed_rule_rows+=rows;
-                                } else { self.stats.result_small_rule_rows+=rows; }
-                                let mut origins=done.origins.iter();
-                                let mut origin=origins.next();
-                                for (at,(source,answer)) in done.answers.drain(..).enumerate() {
-                                    while origin.is_some_and(|(end,_)|at>=*end) {origin=origins.next();}
-                                    let code=&codes[origin.expect("answer belongs to a compiled range").1];
-                                    let position=plans.position(code.rule,code.pivot,0);
-                                    outputs[code.rule].rows.push(((position,source),answer));
+                            for mut group in done.results {
+                                // The worker chose the owner once per compiled
+                                // range and wrote directly into this rule's array.
+                                // A finishing worker receives the original storage.
+                                let owner=group.rule.filter(|_|pooled)
+                                    .filter(|rid|outputs[*rid].rows.reaches_grain(group.answers.len(),grain));
+                                if let Some(rid)=owner {
+                                    self.stats.result_fragment_batches+=1;
+                                    self.stats.result_fragment_rows+=group.answers.len() as u64;
+                                    self.stats.result_fragment_spans+=group.origins.len() as u64;
+                                    for (_,code) in &mut group.origins {
+                                        let origin=&codes[*code];
+                                        debug_assert_eq!(origin.rule,rid);
+                                        *code=plans.position(origin.rule,origin.pivot,0);
+                                    }
+                                    outputs[rid].rows.range(group.answers,group.origins);
+                                } else {
+                                    self.stats.result_coordinator_rows+=group.answers.len() as u64;
+                                    let rows=group.answers.len() as u64;
+                                    if !pooled { self.stats.result_inline_rows+=rows; }
+                                    else { self.stats.result_small_rule_rows+=rows; }
+                                    let mut origins=group.origins.iter();
+                                    let mut origin=origins.next();
+                                    for (at,(source,answer)) in group.answers.into_iter().enumerate() {
+                                        while origin.is_some_and(|(end,_)|at>=*end) {origin=origins.next();}
+                                        let code=&codes[origin.expect("answer belongs to a compiled range").1];
+                                        let position=plans.position(code.rule,code.pivot,0);
+                                        outputs[code.rule].rows.push(((position,source),answer));
+                                    }
                                 }
                             }
-                            chunks.push((done.answers,done.error,done.counts,done.worker,done.residual,done.seconds));
+                            chunks.push((Vec::new(),done.error,done.counts,done.worker,done.residual,done.seconds));
                         }
                         #[cfg(feature="parallel-residuals")]
                         completion::Event::Owned(mut done)=>{
@@ -1438,6 +1439,9 @@ impl Workers {
             self.stats.entry_range_row_borrows += counts.entry_range_row_borrows;
             self.stats.range_answer_span_bytes += counts.range_answer_span_bytes;
             self.stats.range_answer_span_heap_bytes += counts.range_answer_span_heap_bytes;
+            self.stats.range_result_buffers += counts.range_result_buffers;
+            self.stats.range_result_owner_probes += counts.range_result_owner_probes;
+            self.stats.range_result_group_heap_bytes += counts.range_result_group_heap_bytes;
             self.stats.coverage_range_rows+=counts.coverage_range_rows;
             self.stats.coverage_event_heap_bytes+=counts.coverage_event_heap_bytes;
             self.stats.spine_entries += counts.entries;

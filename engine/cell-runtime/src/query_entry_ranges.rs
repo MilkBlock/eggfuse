@@ -193,11 +193,17 @@ pub(super) fn borrow<'a>(
     }
     out
 }
-pub(super) struct Completed {
+pub(super) struct ResultGroup {
+    // Pooled ranges append to their final rule owner. Inline ranges keep the
+    // original mixed buffer instead of allocating one array per small rule.
+    pub rule: Option<usize>,
     pub answers: Vec<(usize, Binding)>,
     // End position and compiled code for each nonempty answer span. No extra
     // code/source wrapper is copied into each successful instance.
     pub origins: smallvec::SmallVec<[(usize, usize); 4]>,
+}
+pub(super) struct Completed {
+    pub results: smallvec::SmallVec<[ResultGroup; 1]>,
     pub coverage: smallvec::SmallVec<[(usize,usize,u64,u64);4]>,
     pub error: Option<((usize, bool, Dependency, usize), String)>,
     pub counts: Counts,
@@ -229,13 +235,21 @@ pub(super) fn run(
         });
         frame.prepare(slots, reads_needed, &mut counts);
         let mut residual = expansion::ChunkWork::default();
-        let mut answers = Vec::new();
+        let mut results = smallvec::SmallVec::<[ResultGroup; 1]>::new();
         let mut error = None;
-        let mut origins = smallvec::SmallVec::<[(usize, usize); 4]>::new();
         let mut coverage = smallvec::SmallVec::<[(usize,usize,u64,u64);4]>::new();
         for job in jobs {
             let code = &codes[job.range.code];
             let known = facts[code.rule].as_ref().expect("active range");
+            let owner = pooled.then_some(code.rule);
+            let at = results.iter().position(|group| {
+                counts.range_result_owner_probes += 1;
+                group.rule == owner
+            }).unwrap_or_else(|| {
+                results.push(ResultGroup {rule: owner, answers: Vec::new(), origins: Default::default()});
+                results.len() - 1
+            });
+            let ResultGroup {answers, origins, ..} = &mut results[at];
             let first = answers.len();
             let (admitted,supported) = residual.coverage();
             let mut visit = |i, witness| {
@@ -271,7 +285,7 @@ pub(super) fn run(
                         known,
                         frame,
                         &mut residual,
-                        &mut answers,
+                        answers,
                         &local[code.rule],
                         &templates[code.template],
                     )
@@ -322,24 +336,31 @@ pub(super) fn run(
                     origins.push((answers.len(), job.range.code));
                 }
             }
+            if answers.is_empty() {
+                // This newly created owner produced no result. Retain neither
+                // an empty fragment nor its per-rule header across later jobs.
+                debug_assert_eq!(at + 1, results.len());
+                results.pop();
+            }
         }
-        counts.range_answer_span_bytes =
-            (origins.capacity() * std::mem::size_of::<(usize, usize)>()) as u64;
-        counts.range_answer_span_heap_bytes = if origins.spilled() {
-            counts.range_answer_span_bytes
-        } else {
-            0
-        };
+        counts.range_result_buffers = results.len() as u64;
+        counts.range_result_group_heap_bytes = if results.spilled() {
+            (results.capacity() * std::mem::size_of::<ResultGroup>()) as u64
+        } else { 0 };
+        for group in &results {
+            let span_bytes = (group.origins.capacity() * std::mem::size_of::<(usize, usize)>()) as u64;
+            counts.range_answer_span_bytes += span_bytes;
+            if group.origins.spilled() { counts.range_answer_span_heap_bytes += span_bytes; }
+            counts.completion_headers += group.answers.len() as u64;
+            counts.output_buffer_capacity += group.answers.capacity() as u64;
+        }
         counts.coverage_event_heap_bytes=if coverage.spilled() {
             (coverage.capacity()*std::mem::size_of::<(usize,usize,u64,u64)>()) as u64
         } else {0};
-        counts.completion_headers = answers.len() as u64;
-        counts.output_buffer_capacity = answers.capacity() as u64;
         counts.frame_capacity_bytes = frame.bytes();
         residual.counts.frame_capacity_bytes = frame.bytes();
         Completed {
-            answers,
-            origins,
+            results,
             coverage,
             error,
             counts,
