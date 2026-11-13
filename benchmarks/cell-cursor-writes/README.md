@@ -55,7 +55,7 @@ actual returned witnesses remain live obligations.
 
 ## Validation and reproduction
 
-`prepare.py CONTROL ACCEPTED TARGET OUTPUT` runs the existing ordered integration,
+At commit `2d7ac486`, `prepare.py CONTROL ACCEPTED TARGET OUTPUT` runs the existing ordered integration,
 runtime, legacy/all-feature and README checks through one compute lease, freezes
 the two binaries with `tools/freeze_runtime.py`, and compares exact source Runs,
 effects and final states. It also runs the reviewed native sum-bits acceptance
@@ -144,3 +144,33 @@ eggfuse-job run --kind compute -- python3.14 benchmarks/cell-cursor-writes/same_
 eggfuse-job run --kind timing -- python3.14 benchmarks/raytrace-parallel/quick.py --sum-repeats 15 --ray-repeats 3 --same-runtime-control-flag=--serial-cursor-writes DIAG/control DIAG/candidate DIAG/timing DIAG/timing.json
 python3.14 benchmarks/cell-inference-cpu/run.py summarize DIAG DIAG/timing SUMMARY.json
 ```
+
+The diagnostic implementation is `b8421e99`. Queue job 131 passed 47 Cell tests,
+211 runtime tests and the legacy compile check; job 132 passed eight harness
+tests. Job 133 froze and validated both modes; job 135 completed the declared
+trial with 88 clear boundary guards. `control-results.json` retains every CPU
+sample and the raw trial hash. This produced the following inference medians:
+
+| Raytrace, same binary | Cursor writes off | Cursor writes on |
+| --- | ---: | ---: |
+| Wall time | 5.465 s | 5.787 s |
+| Total process CPU | 9.670 s | 10.237 s |
+| Coordinator CPU | 4.149 s | 4.277 s |
+| Mean process cores | 1.771 | 1.781 |
+| Query event residence | 659 ms | 681 ms |
+
+Wall time increased 5.90% and process CPU increased 5.86%. The three enabled
+samples were 5.203, 5.788 and 5.787 seconds, with coordinator CPU of 3.885, 4.349
+and 4.277 seconds. The phase totals also changed beyond writes, so this trial
+does not isolate every source of variation. No sample was removed. The new path
+still has not earned adoption; extra worker coverage is not evidence of speed.
+
+Sum-bits, which enters neither scalar-write batch path, changed from 26.814 to
+26.249 ms (-2.10%). This comparison does not reproduce the previous +8.51%
+whole-binary regression; it also cannot identify whether the earlier difference
+came from binary layout or execution conditions. The same-binary control includes
+its eligibility check and is a diagnostic, not a zero-overhead subtraction.
+
+Off-CPU time and event residence are not pure synchronization costs. The measured
+process CPU increase prevents attributing this slowdown solely to waits. Mean
+process cores stayed near 1.8; four-worker saturation is still unproven.
