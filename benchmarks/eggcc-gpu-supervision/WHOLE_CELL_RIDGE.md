@@ -149,3 +149,8 @@ $PYTHON benchmarks/eggcc-gpu-supervision/whole_cell_ridge.py PROGRAM TARGETS RES
 $PYTHON benchmarks/eggcc-gpu-supervision/decode_cell_completion.py TARGETS PREDICTIONS DECODE_RESULTS
 $PYTHON -m unittest discover -s benchmarks/eggcc-gpu-supervision -p test_decode_cell_completion.py
 ```
+
+The follow-up [persistent boundary experiment](BOUNDARY_CELL_RIDGE.md) fixes the
+demonstrated attachment collision and consumes predicted channels on Metal, but
+its large representation and mixed accuracy results do not establish a useful
+runtime improvement.

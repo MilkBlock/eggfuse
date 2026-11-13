@@ -1,0 +1,108 @@
+{
+  "scope": "standalone learned whole-Cell and original-boundary Metal recurrence; no runtime takeover",
+  "program_sha256": "25776d5a8242b50bd90b686dd8dce79217800e642775693f60907dd96d2976a2",
+  "targets_sha256": "de67cb46076ff0523ff549d7686f1708bb4d515e10d32bcf7d7249ffb65555cb",
+  "backpropagation": false,
+  "capacity": 104,
+  "boundary_width": 16,
+  "state_float_count": 1728,
+  "request_projection_floats_per_row": 106496,
+  "fit": {
+    "alpha": 100.0,
+    "validation_target_mse": 0.0009263678221032023
+  },
+  "metrics": {
+    "train": {
+      "cases": 612,
+      "novel": 281,
+      "emitted": 285,
+      "false_emissions": 4,
+      "missed_emissions": 0,
+      "body_rmse": 0.041601091623306274,
+      "live_boundary_rmse": 0.023074422031641006,
+      "unchanged_body_rmse": 0.1221248060464859
+    },
+    "validation": {
+      "cases": 444,
+      "novel": 214,
+      "emitted": 211,
+      "false_emissions": 1,
+      "missed_emissions": 4,
+      "body_rmse": 0.1003403514623642,
+      "live_boundary_rmse": 0.02347310073673725,
+      "unchanged_body_rmse": 0.091122567653656
+    },
+    "test": {
+      "cases": 296,
+      "novel": 140,
+      "emitted": 139,
+      "false_emissions": 3,
+      "missed_emissions": 4,
+      "body_rmse": 0.08130303770303726,
+      "live_boundary_rmse": 0.03394825756549835,
+      "unchanged_body_rmse": 0.12089424580335617
+    }
+  },
+  "limitations": [
+    "Same finite producer-family split, not unseen workload",
+    "Only original boundary ports; new-port requests excluded explicitly",
+    "Request projections supplied by Bake; GPU match discovery not implemented",
+    "No exact semantic decoder or ownership retirement authorization",
+    "Dense per-request projections are expensive prototype storage, not a performance claim"
+  ],
+  "rollout": {
+    "chains": 64,
+    "initial_producers": 8,
+    "excluded_new_boundary_requests": 0,
+    "first_emissions": 62,
+    "second_emissions": 57,
+    "body_rmse": 0.18062524497509003,
+    "live_boundary_rmse": 0.0655173808336258,
+    "intermediate_cpu_reads": 0,
+    "teacher_state_supplied_between_steps": false
+  },
+  "exact_body_decode_audit": {
+    "scope": "finite known-Bake-catalog GPU decode and CPU exact-target audit; no ownership authorization",
+    "program_sha256": "25776d5a8242b50bd90b686dd8dce79217800e642775693f60907dd96d2976a2",
+    "candidates": 796,
+    "exact_code_collision_pairs": 0,
+    "collision_examples": [],
+    "reports": {
+      "train": {
+        "requests": 612,
+        "novel_completions": 281,
+        "emitted": 285,
+        "exact_catalog_target": 266,
+        "ambiguous_emissions": 0,
+        "wrong_or_spurious_emissions": 19,
+        "missed_emissions": 0
+      },
+      "validation": {
+        "requests": 444,
+        "novel_completions": 214,
+        "emitted": 211,
+        "exact_catalog_target": 94,
+        "ambiguous_emissions": 10,
+        "wrong_or_spurious_emissions": 107,
+        "missed_emissions": 4
+      },
+      "test": {
+        "requests": 296,
+        "novel_completions": 140,
+        "emitted": 139,
+        "exact_catalog_target": 98,
+        "ambiguous_emissions": 0,
+        "wrong_or_spurious_emissions": 41,
+        "missed_emissions": 4
+      }
+    },
+    "source_retention_checks_pass": true,
+    "limitations": [
+      "Dictionary includes all supported Bake targets, including test families",
+      "Exact target means exact recorded body plus quotient map; alternative alpha-equivalent targets conservatively differ",
+      "Candidate certificates are scoped by producer, not by the requested consumer",
+      "No live port generation, visibility, source Run order or activation-ownership proof",
+      "Decoding appends a candidate reference; it does not replace the generated latent with a teacher code"
+    ]
+  }
+}
