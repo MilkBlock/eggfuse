@@ -62,6 +62,11 @@ def commit(state, proposals, xp):
     if 'slots' in proposals:
         output['slots']=xp.where(written[:,None],proposals['slots'][pick],state['slots'])
         output['slot_valid']=xp.where(written[:,None],proposals['slot_valid'][pick],state['slot_valid'])
+    for column in ('scalar_numbers','scalar_numeric','scalar_codes','scalar_valid'):
+        if column in state:
+            if column not in proposals:raise ValueError('proposal lost scalar slot columns')
+            mask=written[:,None,None] if state[column].ndim==3 else written[:,None]
+            output[column]=xp.where(mask,proposals[column][pick],state[column])
     if 'effect_pc' in state:
         output['effect_pc']=xp.where(written,0,state['effect_pc'])
     if 'slot_roots' in state:
