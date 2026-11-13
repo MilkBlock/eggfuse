@@ -4,9 +4,14 @@ use super::Cell;
 #[cfg(feature="storage-metrics")]
 #[path="completed_owner_store.rs"]
 mod completed;
+#[cfg(feature="storage-metrics")]
+#[path="source_routing.rs"]
+mod routing;
 
 #[derive(Default)]
 pub struct Cells {
+    #[cfg(feature="storage-metrics")]
+    route_fallback: rustc_hash::FxHashMap<u32, super::cell_ownership::composition::Frame>,
     #[cfg(feature="storage-metrics")]
     completed:completed::Completed,
     records: Vec<(u32, Cell)>,

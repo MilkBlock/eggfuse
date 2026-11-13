@@ -395,7 +395,7 @@ impl Graph {
             Some(json!({"id":id,"shape":component.shape,"frames":component.frames.as_slice(),
                 "signals":component.signals,"live_facts":c.live_facts[id],
                 "roots":component.signals.iter().map(|v|v.map(|id|root(&self.parents,id))).collect::<Vec<_>>(),
-                "frame_codes":component.frames.iter().map(|id| c.frames[id].code).collect::<Vec<_>>()}))
+                "frame_codes":component.frames.iter().map(|id| c.frames.at(&self.cells,id).code).collect::<Vec<_>>()}))
         }).collect::<Vec<_>>();
         json!({"scope":"final live composition owners; diagnostic export after observation, not retained runtime state",
             "source_eq_bindings":self.cells.iter().map(|(&id,cell)| json!({
@@ -541,7 +541,7 @@ impl Graph {
         let cell = (id >> 32) as u32;
         let slot = (id as u32).checked_sub(1)? as usize;
         let m = self.ownership.as_ref()?;
-        let frame = m.composition.frames.get(&cell)?;
+        let frame = m.composition.frames.get(&self.cells, &cell)?;
         // Preserve the cheap foreign-component rejection before the local
         // native-slot map, as used by binding and union dispatch.
         if expected_component.is_some_and(|expected| frame.component != expected) {
@@ -565,7 +565,7 @@ impl Graph {
         if bound != id && m.stats.signal_root(&self.parents, bound) != id {
             return None;
         }
-        Some(m.composition.signal(&self.program.cell_ownership, port.component, port.symbol))
+        Some(m.composition.signal(&self.program.cell_ownership, &self.cells, port.component, port.symbol))
     }
     fn boundary(&mut self, root: u64, signal: Signal) {
         let m = self.ownership.as_mut().unwrap();
@@ -577,7 +577,7 @@ impl Graph {
     }
     fn bind_cell_port(&mut self, f: FactRef, local: usize, port: ports::ComponentPort, id: u64) {
         let signal = self.ownership.as_ref().unwrap().composition.signal(
-            &self.program.cell_ownership, port.component, port.symbol);
+            &self.program.cell_ownership, &self.cells, port.component, port.symbol);
         let native = self.signal_is_native(signal, id);
         let m = self.ownership.as_mut().unwrap();
         m.stats.internal_ports_seen += u64::from(native);
@@ -592,7 +592,7 @@ impl Graph {
             assert!(bound == id || m.stats.signal_root(&self.parents, bound) == id,
                 "symbolic alias disagrees with live port");
             if m.composition.training.is_some() {
-                let frame = m.composition.frames[&f.cell];
+                let frame = m.composition.frames.at(&self.cells, &f.cell);
                 let c = m.composition.components[signal.component as usize]
                     .as_ref()
                     .unwrap();
@@ -606,7 +606,7 @@ impl Graph {
                             .is_some_and(|fact| fact.owned)
                 }) {
                     m.composition
-                        .observe_shared_binding(f.cell, local, signal.symbol);
+                        .observe_shared_binding(&self.cells, f.cell, local, signal.symbol);
                 }
             }
         } else {
@@ -895,7 +895,7 @@ impl Graph {
                     s.domain_static_type_guards.set(s.domain_static_type_guards.get() + 1);
                     operator
                 } else {
-                    let frame = m.frames[&fact.cell];
+                    let frame = m.frames.at(&self.cells,&fact.cell);
                     self.program.cell_ownership.code_operators[frame.code][fact.op as usize]
                 };
                 s.domain_type_guards.set(s.domain_type_guards.get() + 1);
@@ -970,7 +970,7 @@ impl Graph {
                     .sum::<u64>()
             );
             assert_eq!(
-                m.composition.frames.len(),
+                m.composition.frames.len(&self.cells, ),
                 m.composition
                     .components
                     .iter()
@@ -1058,7 +1058,7 @@ impl Graph {
 impl Graph {
     pub(super) fn inherited_cell_slot(&self, cell: u32, template: usize, slot: usize) -> Option<Value> {
         let m = self.ownership.as_ref()?;
-        let frame = m.composition.frames.get(&cell)?;
+        let frame = m.composition.frames.get(&self.cells, &cell)?;
         let component = m.composition.components.get(frame.component as usize)?.as_ref()?;
         let local = self.program.cell_ownership.markers[template].program.slots.get(slot).copied().flatten()?;
         let symbol = m.composition.shapes[component.shape].as_ref().ports[frame.ordinal][local];
@@ -1072,9 +1072,9 @@ impl Graph {
         let mut saved = 0;
         let ids = self.cells.iter().map(|(&id,_)|id).collect::<Vec<_>>();
         for id in ids {
+            let Some(frame) = m.composition.frames.get(&self.cells, &id).copied() else { continue; };
             let c = self.cells.get_mut(&id).unwrap();
             if !c.completed { continue; }
-            let Some(frame) = m.composition.frames.get(&id) else { continue; };
             let component = m.composition.components[frame.component as usize].as_ref().unwrap();
             let ports = &m.composition.shapes[component.shape].ports[frame.ordinal];
             let slots = &self.program.cell_ownership.markers[c.template].program.slots;

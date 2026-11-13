@@ -535,24 +535,29 @@ pub(super) struct Component {
     pub signals: Vec<Option<u64>>,
 }
 #[derive(Clone, Copy)]
-pub(super) struct Frame {
+pub(crate) struct Frame {
     pub component: u32,
     pub ordinal: usize,
     /// Checked marker selecting shared native-port and operator code arrays.
     /// This occupies the former port-program ID slot, without growing a frame.
     pub code: usize,
 }
+// Completed-source builds keep routes in the source record. Other builds use
+// the legacy directory; callers use the same read interface in either case.
+#[cfg(not(all(feature="sparse-cells",feature="storage-metrics")))]
+mod legacy_frames {
+    use super::*;
 /// Stable frame addresses are normally dense. Retain outlier support for
 /// imported IDs without paying a hash lookup on every local port access.
 #[derive(Default)]
-pub(super) struct Frames {
+pub(super) struct LegacyFrames {
     // Logical Cell IDs never move. Only live frame records occupy the arena;
     // the directory keeps a four-byte position instead of an entire Option.
-    dense: Vec<u32>,
+    pub(super) dense: Vec<u32>,
     records: Vec<(u32, Frame)>,
     outliers: HashMap<u32, u32>,
 }
-impl Frames {
+impl LegacyFrames {
     fn position(&self, id: &u32) -> Option<usize> {
         let n = self.dense.get(*id as usize).copied().unwrap_or(0);
         let n = if n != 0 { n } else { *self.outliers.get(id)? };
@@ -587,10 +592,65 @@ impl Frames {
     }
     pub fn len(&self) -> usize { self.records.len() }
 }
-impl std::ops::Index<&u32> for Frames {
+impl std::ops::Index<&u32> for LegacyFrames {
     type Output = Frame;
     fn index(&self, id: &u32) -> &Frame {
         self.get(id).expect("missing composition frame")
+    }
+}
+}
+#[derive(Default)]
+pub(super) struct Frames {
+    #[cfg(not(all(feature="sparse-cells",feature="storage-metrics")))]
+    legacy:legacy_frames::LegacyFrames,
+}
+#[derive(Clone,Copy)]
+pub(super) struct FrameRead<'a> {
+    frames:&'a Frames,
+    #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+    cells:&'a SourceCells,
+}
+impl<'a> FrameRead<'a> {
+    pub fn get(&self,id:&u32)->Option<&'a Frame> {
+        #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+        {self.frames.get(self.cells,id)}
+        #[cfg(not(all(feature="sparse-cells",feature="storage-metrics")))]
+        {self.frames.legacy.get(id)}
+    }
+}
+impl Frames {
+    pub fn reader<'a>(&'a self,cells:&'a SourceCells)->FrameRead<'a> {
+        let _=cells;
+        FrameRead {frames:self,
+            #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+            cells,
+        }
+    }
+    pub fn get<'a>(&'a self, cells:&'a SourceCells, id:&u32)->Option<&'a Frame> {
+        #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+        {cells.source_route(id)}
+        #[cfg(not(all(feature="sparse-cells",feature="storage-metrics")))]
+        {let _=cells;self.legacy.get(id)}
+    }
+    pub fn at(&self,cells:&SourceCells,id:&u32)->Frame {*self.get(cells,id).expect("missing composition frame")}
+    pub fn contains_key(&self,cells:&SourceCells,id:&u32)->bool {self.get(cells,id).is_some()}
+    pub fn insert(&mut self,cells:&mut SourceCells,id:u32,frame:Frame) {
+        #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+        {cells.set_source_route(id,frame);}
+        #[cfg(not(all(feature="sparse-cells",feature="storage-metrics")))]
+        {let _=cells;self.legacy.insert(id,frame);}
+    }
+    pub fn remove(&mut self,cells:&mut SourceCells,id:&u32) {
+        #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+        {cells.remove_source_route(id);}
+        #[cfg(not(all(feature="sparse-cells",feature="storage-metrics")))]
+        {let _=cells;self.legacy.remove(id);}
+    }
+    pub fn len(&self,cells:&SourceCells)->usize {
+        #[cfg(all(feature="sparse-cells",feature="storage-metrics"))]
+        {cells.source_route_count()}
+        #[cfg(not(all(feature="sparse-cells",feature="storage-metrics")))]
+        {let _=cells;self.legacy.len()}
     }
 }
 #[derive(Clone, Copy)]
@@ -634,11 +694,11 @@ impl Runtime {
             symbol: self.shapes[shape].ports[frame.ordinal][local],
         }
     }
-    pub(super) fn signal(&self, plan: &super::Plan, component: u32, symbol: usize) -> Signal {
+    pub(super) fn signal(&self, plan: &super::Plan, cells:&SourceCells, component: u32, symbol: usize) -> Signal {
         let class = plan.query_classes.as_ref().map_or(0, |classes| {
             let c = self.components[component as usize].as_ref().unwrap();
             let (frame, local) = self.shapes[c.shape].origins[symbol];
-            classes.symbols[self.frames[&c.frames[frame]].code][local]
+            classes.symbols[self.frames.at(cells,&c.frames[frame]).code][local]
         });
         Signal { class, component, symbol }
     }
@@ -660,12 +720,12 @@ impl Runtime {
     }
     /// Diagnostic only: count actual first cross-frame binding reuse, not
     /// potential symbolic substitutions or repeated uses of one consumer slot.
-    pub fn observe_shared_binding(&mut self, cell: u32, local: usize, symbol: usize) {
+    pub fn observe_shared_binding(&mut self, cells:&SourceCells, cell: u32, local: usize, symbol: usize) {
         let Some(t) = &mut self.training else { return };
         let Some(&record) = t.joined.get(&cell) else {
             return;
         };
-        let frame = self.frames[&cell];
+        let frame = self.frames.at(cells,&cell);
         let shape = &self.shapes[record];
         if shape.ports[..frame.ordinal]
             .iter()
@@ -838,8 +898,8 @@ impl Graph {
         if !self.program.cell_ownership.composition.result_rules[entry.rule]
             && m.composition.training.is_none() && m.composition.catalog_trace.is_none() {return;}
         let Dependency::Fact(f)=witness else {return;};
-        if f.cell==cell || m.composition.frames.contains_key(&cell)
-            || !m.composition.frames.contains_key(&f.cell) {return;}
+        if f.cell==cell || m.composition.frames.contains_key(&self.cells, &cell)
+            || !m.composition.frames.contains_key(&self.cells, &f.cell) {return;}
         let template=self.active_rhs.as_ref().filter(|(id,_)|*id==cell).map(|(_,c)|c.template)
             .or_else(||self.cells.cell_metadata(cell).map(|c|c.template));
         if template!=Some(entry.template) {return;}
@@ -853,7 +913,7 @@ impl Graph {
         let template = self.cells.cell_metadata(cell).unwrap().template;
         let program = self.program.cell_ownership.markers[template].program_id;
         let m = self.ownership.as_mut().unwrap();
-        if m.composition.frames.contains_key(&cell) {
+        if m.composition.frames.contains_key(&self.cells, &cell) {
             return;
         }
         let source_rule = m.composition.entry.as_ref().map(|e| e.rule);
@@ -898,7 +958,7 @@ impl Graph {
                         m.stats.composition_missing_sources += 1;
                         continue;
                     }
-                    let Some(frame) = m.composition.frames.get(&f.cell).copied() else {
+                    let Some(frame) = m.composition.frames.get(&self.cells, &f.cell).copied() else {
                         observe!("anchor_missing_frame");
                         continue;
                     };
@@ -1049,7 +1109,7 @@ impl Graph {
             (id, 0)
         };
         m.stats.composition_frames += 1;
-        m.composition.frames.insert(
+        m.composition.frames.insert(&mut self.cells,
             cell,
             Frame {
                 component,
@@ -1061,15 +1121,15 @@ impl Graph {
     pub(super) fn composed_signal(&self, cell: u32, local: usize) -> Signal {
         let port = self.composed_port(cell, local);
         self.ownership.as_ref().unwrap().composition.signal(
-            &self.program.cell_ownership, port.component, port.symbol)
+            &self.program.cell_ownership, &self.cells, port.component, port.symbol)
     }
     pub(super) fn composed_port(&self, cell: u32, local: usize) -> ports::ComponentPort {
         let m = &self.ownership.as_ref().unwrap().composition;
-        m.port(m.frames[&cell], local)
+        m.port(m.frames.at(&self.cells,&cell), local)
     }
     pub(super) fn composition_retire_fact(&mut self, cell: u32) {
         let m = self.ownership.as_mut().unwrap();
-        let f = m.composition.frames[&cell];
+        let f = m.composition.frames.at(&self.cells, &cell);
         m.composition.live_facts[f.component as usize] -= 1;
         m.stats.component_lifetime_updates += 1;
         if m.composition.live_facts[f.component as usize] == 0 {
@@ -1080,7 +1140,7 @@ impl Graph {
                 m.stats.component_signal_retire_visits += 1;
                 let Some(id) = id else { continue };
                 let id = m.stats.signal_root(&self.parents, *id);
-                let signal = m.composition.signal(&self.program.cell_ownership, f.component, symbol);
+                let signal = m.composition.signal(&self.program.cell_ownership, &self.cells, f.component, symbol);
                 m.stats.signal_bindings_live -= 1;
                 m.stats.signal_bindings_retired += 1;
                 if let Some(set) = m.boundaries.get_mut(&id) {
@@ -1103,9 +1163,9 @@ impl Graph {
                     self.cells.insert(*id,restored);
                     self.stats.shared_owner_frames_restored+=1;
                 }
+                let frame = m.composition.frames.at(&self.cells, id);
                 if let Some(cell) = self.cells.get_mut(id) {
                     if cell.symbolic_slots {
-                        let frame = m.composition.frames[id];
                         let ports = &m.composition.shapes[c.shape].ports[frame.ordinal];
                         let program = &self.program.cell_ownership.markers[cell.template].program;
                         for (slot, local) in program.slots.iter().enumerate() {
@@ -1119,7 +1179,7 @@ impl Graph {
                         cell.symbolic_slots = false;
                     }
                 }
-                m.composition.frames.remove(id);
+                m.composition.frames.remove(&mut self.cells, id);
             }
             m.composition.components.retire(f.component as usize);
             m.stats.components_live -= 1;
@@ -1133,27 +1193,29 @@ mod tests {
     #[test]
     fn retained_frame_addresses_support_sparse_imports_and_dense_reuse() {
         let mut frames = Frames::default();
+        let mut cells=SourceCells::default();
         let frame = Frame {
             component: 1,
             ordinal: 2,
             code: 3,
         };
-        frames.insert(u32::MAX, frame);
-        frames.insert(4, frame);
-        frames.insert(
+        frames.insert(&mut cells, u32::MAX, frame);
+        frames.insert(&mut cells, 4, frame);
+        frames.insert(&mut cells,
             4,
             Frame {
                 code: 5,
                 ..frame
             },
         );
-        assert_eq!(frames.len(), 2);
-        assert_eq!(frames[&4].code, 5);
-        frames.remove(&4);
-        frames.remove(&4);
-        assert_eq!(frames.len(), 1);
-        assert_eq!(frames[&u32::MAX].ordinal, 2);
-        assert!(frames.dense.len() < 100);
+        assert_eq!(frames.len(&cells), 2);
+        assert_eq!(frames.at(&cells,&4).code, 5);
+        frames.remove(&mut cells, &4);
+        frames.remove(&mut cells, &4);
+        assert_eq!(frames.len(&cells), 1);
+        assert_eq!(frames.at(&cells,&u32::MAX).ordinal, 2);
+        #[cfg(not(all(feature="sparse-cells",feature="storage-metrics")))]
+        assert!(frames.legacy.dense.len() < 100);
     }
     #[test]
     fn appending_a_receiver_preserves_unrelated_program_storage() {

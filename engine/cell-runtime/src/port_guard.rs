@@ -98,7 +98,7 @@ pub struct Work {
 /// relation. It contains no Graph, Rc, interior counters, locks or copied rows.
 #[derive(Clone, Copy)]
 pub struct ReadView<'a> {
-    source_frames: Option<&'a composition::Frames>,
+    source_frames: Option<composition::FrameRead<'a>>,
     #[cfg(feature="sparse-cells")]
     projected: Option<Projection<'a>>,
     programs: &'a [Arc<PortProgram>],
@@ -186,7 +186,7 @@ impl<'a> ReadView<'a> {
         };
         let state = cells.fact_state(fact)?;
         if !state.owned || state.decoded.is_some() {return None;}
-        let frame = frames.get(&fact.cell)?;
+        let frame = frames.get(cells,&fact.cell)?;
         let component = self.components.get(frame.component as usize)?.as_ref()?;
         let shape = self.shapes.get(component.shape)?;
         let program = self.programs.get(*shape.programs.get(frame.ordinal)?)?;
@@ -393,7 +393,7 @@ impl Graph {
             return Err("stable fields disabled".into());
         }
         Ok(ReadView {
-            source_frames: Some(&self.ownership.as_ref().unwrap().composition.frames),
+            source_frames: Some(self.ownership.as_ref().unwrap().composition.frames.reader(&self.cells)),
             #[cfg(feature="sparse-cells")]
             projected: self.stable_ports.as_ref().unwrap().template_fields.then_some(Projection::Live {
                 cells: &self.cells, frames: &self.ownership.as_ref().unwrap().composition.frames,
@@ -465,10 +465,10 @@ mod tests {
 
     #[test]
     fn source_port_survives_component_and_symbol_relocation_but_not_retirement() {
-        fn read(frames:&composition::Frames,components:&[Option<composition::Component>],
+        fn read(cells:&SourceCells,frames:&composition::Frames,components:&[Option<composition::Component>],
                 shapes:&[Arc<composition::Shape>],parents:&Parents,port:PortRef)->Result<Value> {
             ReadView {
-                source_frames:Some(frames),
+                source_frames:Some(frames.reader(cells)),
                 #[cfg(feature="sparse-cells")]
                 projected:None,
                 programs:&[],shapes,parents:parents.reader(),
@@ -481,20 +481,21 @@ mod tests {
             Arc::new(composition::Shape{ports:vec![Arc::new(vec![0]),Arc::new(vec![1])],..Default::default()}),
         ];
         let mut frames=composition::Frames::default();
-        frames.insert(7,composition::Frame{component:0,ordinal:0,code:0});
+        let mut cells=SourceCells::default();
+        frames.insert(&mut cells,7,composition::Frame{component:0,ordinal:0,code:0});
         let mut components=vec![Some(composition::Component{shape:0,frames:smallvec::smallvec![7],signals:vec![Some(10)]})];
         let mut parents=Parents::default();let port=PortRef{cell:7,local:0};
-        assert_eq!(read(&frames,&components,&shapes,&parents,port).unwrap(),Value::Eq(10));
+        assert_eq!(read(&cells,&frames,&components,&shapes,&parents,port).unwrap(),Value::Eq(10));
         components.push(Some(composition::Component{shape:1,frames:smallvec::smallvec![8,7],signals:vec![Some(99),Some(10)]}));
-        frames.insert(7,composition::Frame{component:1,ordinal:1,code:0});
-        frames.insert(8,composition::Frame{component:1,ordinal:0,code:0});
+        frames.insert(&mut cells,7,composition::Frame{component:1,ordinal:1,code:0});
+        frames.insert(&mut cells,8,composition::Frame{component:1,ordinal:0,code:0});
         components[0]=None;
-        assert_eq!(read(&frames,&components,&shapes,&parents,port).unwrap(),Value::Eq(10));
+        assert_eq!(read(&cells,&frames,&components,&shapes,&parents,port).unwrap(),Value::Eq(10));
         parents.insert(10,5);
-        assert_eq!(read(&frames,&components,&shapes,&parents,port).unwrap(),Value::Eq(5));
-        frames.remove(&7);
-        assert!(read(&frames,&components,&shapes,&parents,port).is_err());
-        assert_eq!(read(&frames,&components,&shapes,&parents,PortRef{cell:8,local:0}).unwrap(),Value::Eq(99));
+        assert_eq!(read(&cells,&frames,&components,&shapes,&parents,port).unwrap(),Value::Eq(5));
+        frames.remove(&mut cells,&7);
+        assert!(read(&cells,&frames,&components,&shapes,&parents,port).is_err());
+        assert_eq!(read(&cells,&frames,&components,&shapes,&parents,PortRef{cell:8,local:0}).unwrap(),Value::Eq(99));
     }
 
     #[test]

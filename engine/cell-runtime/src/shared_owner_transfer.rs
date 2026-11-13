@@ -7,7 +7,7 @@ impl Graph {
     /// teardown path restores symbolic slots before retiring their provider.
     pub(in crate::graph) fn delegate_completed_slots(&mut self, cell:u32) {
         let Some(owner)=self.ownership.as_ref() else {return;};
-        let Some(frame)=owner.composition.frames.get(&cell) else {return;};
+        let Some(frame)=owner.composition.frames.get(&self.cells, &cell) else {return;};
         let component=owner.composition.components[frame.component as usize].as_ref().unwrap();
         let ports=&owner.composition.shapes[component.shape].ports[frame.ordinal];
         let Some(c)=self.cells.get_mut(&cell).filter(|c|c.completed) else {return;};
@@ -56,7 +56,7 @@ impl Graph {
         let mut candidates=Vec::new();
         for (&id,_) in self.cells.iter() {
             self.stats.shared_owner_admission_source_probes+=1;
-            if let Some(frame)=m.composition.frames.get(&id) {candidates.push(frame.component);}
+            if let Some(frame)=m.composition.frames.get(&self.cells, &id) {candidates.push(frame.component);}
         }
         // Preserve the original component order, including physical pooling.
         candidates.sort_unstable();candidates.dedup();
@@ -111,7 +111,7 @@ impl Graph {
             for &id in &ids {
                 if self.cells.completed_meta(id).is_some() {continue;}
                 let m=self.ownership.as_ref().unwrap();
-                let frame=m.composition.frames[&id];
+                let frame=m.composition.frames.at(&self.cells, &id);
                 let component=m.composition.components[frame.component as usize].as_ref().unwrap();
                 let ports=&m.composition.shapes[component.shape].ports[frame.ordinal];
                 let c=self.cells.get_mut(&id).unwrap();
@@ -161,7 +161,7 @@ impl Graph {
     pub(crate) fn trace_rhs_owner_links(&self, cell:u32, rule:usize, donor:Dependency, known:&crate::cell::QueryFacts)->J {
         let Some(m)=self.ownership.as_ref() else {return J::Null;};
         let locate=|id:u32| -> J {
-            let Some(frame)=m.composition.frames.get(&id) else {return J::Null;};
+            let Some(frame)=m.composition.frames.get(&self.cells, &id) else {return J::Null;};
             let Some(component)=m.composition.components.get(frame.component as usize).and_then(Option::as_ref) else {return J::Null;};
             json!({"cell":id,"component":frame.component,"ordinal":frame.ordinal,
                 "shape":component.shape,"frames":component.frames.len()})

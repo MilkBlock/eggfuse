@@ -554,6 +554,10 @@ pub struct Stats {
 #[cfg(feature = "sparse-cells")]
 #[path = "cell_arena.rs"]
 pub mod arena;
+#[cfg(feature = "sparse-cells")]
+pub(crate) type SourceCells = arena::Cells;
+#[cfg(not(feature = "sparse-cells"))]
+pub(crate) type SourceCells = rustc_hash::FxHashMap<u32, Cell>;
 #[path = "scoped_completion.rs"]
 mod scoped_completion;
 #[cfg(feature = "sparse-cells")]

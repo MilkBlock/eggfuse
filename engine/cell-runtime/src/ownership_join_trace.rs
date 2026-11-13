@@ -52,12 +52,12 @@ impl Graph {
             let Call::Table(table)=query.call else {continue;};
             if !self.program.tables[table].constructor || !self.program.tables[table].virtual_fact {continue;}
             if self.cells.fact_state(*f).is_none_or(|s|!s.owned || s.hidden) {continue;}
-            let Some(frame)=m.composition.frames.get(&f.cell) else {continue;};
+            let Some(frame)=m.composition.frames.get(&self.cells, &f.cell) else {continue;};
             let component=m.composition.components[frame.component as usize].as_ref().unwrap();
             let shape = &m.composition.shapes[component.shape];
             let ordinal=if let Some(i)=ids.iter().position(|&id|id==frame.component) {i} else {
                 let i=ids.len();ids.push(frame.component);
-                pattern.components.push((component.shape,component.frames.iter().map(|id|m.composition.frames[id].code).collect()));i
+                pattern.components.push((component.shape,component.frames.iter().map(|id|m.composition.frames.at(&self.cells, id).code).collect()));i
             };
             pattern.anchors.push((entry,ordinal,frame.ordinal,f.op));
             cross_epoch|=self.cells.cell_metadata(f.cell).is_some_and(|meta|meta.started_epoch<self.epoch);

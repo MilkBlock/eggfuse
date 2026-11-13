@@ -162,7 +162,7 @@ impl Graph {
         // Resolve the component later: a join can move a retired source.
         if let Some(m) = self.ownership.as_mut() {
             if let Some(pending) = m.composition.retired_prefix_sources.as_mut() {
-                if m.composition.frames.get(&cell).is_some() {
+                if m.composition.frames.get(&self.cells, &cell).is_some() {
                     pending.push(cell);
                     m.stats.retired_prefix_events += 1;
                 }
@@ -172,8 +172,11 @@ impl Graph {
     /// Opt-in Run-boundary takeover. Bootstrap once, then consume actual source
     /// retirement events. No per-producer consumer list is maintained.
     pub fn compact_retired_prefixes(&mut self) -> Result<usize> {
-        if self.active_rhs.is_some()
-            || !self.pending_unions.is_empty()
+        #[cfg(feature="sparse-cells")]
+        if self.active_rhs.is_some() {
+            return Err("retired prefix takeover requires a settled boundary".into());
+        }
+        if !self.pending_unions.is_empty()
             || !self.dirty.is_empty()
             || !self.dirty_markers.is_empty()
         {
@@ -206,7 +209,7 @@ impl Graph {
                 // A join may have changed the component since retirement;
                 // source identities remain stable. Removed frames need no work.
                 sources.retain_mut(|source| {
-                    if let Some(frame) = m.composition.frames.get(source) {
+                    if let Some(frame) = m.composition.frames.get(&self.cells, source) {
                         *source = frame.component;
                         true
                     } else {
@@ -273,7 +276,7 @@ impl Graph {
                 let value = m.stats.signal_root(&self.parents, *value);
                 let signal = m
                     .composition
-                    .signal(&self.program.cell_ownership, id as u32, symbol);
+                    .signal(&self.program.cell_ownership, &self.cells, id as u32, symbol);
                 if let Some(set) = m.boundaries.get_mut(&value) {
                     if set.remove(&signal) {
                         m.stats.boundary_live -= 1;
@@ -288,7 +291,7 @@ impl Graph {
             }
             let dead = c.frames.len() - frames;
             for source in &c.frames[frames..] {
-                m.composition.frames.remove(source);
+                m.composition.frames.remove(&mut self.cells, source);
             }
             m.stats.retired_prefix_takeovers += 1;
             m.stats.retired_prefix_frames += dead as u64;

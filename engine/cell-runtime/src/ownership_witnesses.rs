@@ -200,7 +200,7 @@ impl Graph {
                 self.stats.constructor_cell_route_selection_reuses+=1;
                 selected
             } else {
-                let Some(source)=owner.composition.frames.get(&anchor.cell) else {continue;};
+                let Some(source)=owner.composition.frames.get(&self.cells, &anchor.cell) else {continue;};
                 let Some(component)=owner.composition.components.get(source.component as usize).and_then(Option::as_ref) else {continue;};
                 self.stats.constructor_cell_route_anchor_reads+=1;
                 let key=(component.shape,source.ordinal,source.code,anchor.op);
@@ -222,7 +222,7 @@ impl Graph {
             let targets=&operations[position].1;
             for &Target{frame:target,code,op,key_proved} in targets {
             let Some(&cell) = component.frames.get(target) else { continue; };
-            if !owner.composition.frames.get(&cell).is_some_and(|f|f.code==code && f.component==component_id) { continue; }
+            if !owner.composition.frames.get(&self.cells, &cell).is_some_and(|f|f.code==code && f.component==component_id) { continue; }
             if key_proved {self.stats.constructor_cell_route_source_checks+=1;}
             let key_proved=key_proved && self.cells.fact_state(*anchor).is_some_and(|s|s.owned && !s.hidden);
             if targets.len()>1 && key_proved {

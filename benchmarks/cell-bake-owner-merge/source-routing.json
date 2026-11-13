@@ -1,0 +1,64 @@
+{
+  "scope": "actual standalone Cell runtime; colocated source and ownership addressing, not timing",
+  "base_commit": "fba15b23",
+  "program_sha256": "015a4363cf3da4fe354c25efe4032a5136529c67f9e8d96b7ecb0d0148d0e77c",
+  "binary_sha256": "514c0a690d2b529bfaaa391816719d4d2e75d9cb3f8355558701e79898c973e5",
+  "before_report_sha256": "b5736da5d2aa0618c9400bed4a048ce9154b2803e68e3dedb496b94ff1030798",
+  "after_report_sha256": "234e49e2bee56f7c068d82daee4dec36b096d3b645a3a114ce2a2242b192efcf",
+  "graph_bytes_before": 1386283,
+  "graph_bytes_after": 1297491,
+  "saved_bytes": 88792,
+  "resident_program_bytes": 107599014,
+  "process_peak_before": 113563300,
+  "process_peak_after": 113470380,
+  "extra_takeover_peak_before": 11376,
+  "extra_takeover_peak_after": 19568,
+  "field_changes": {
+    "cells": {
+      "before": 317262,
+      "after": 392054
+    },
+    "ownership.frames": {
+      "before": 163584,
+      "after": 0
+    }
+  },
+  "source_record_bytes_before": 48,
+  "source_record_bytes_after": 80,
+  "source_record_capacity": 2304,
+  "routing": {
+    "in_source_records": 2177,
+    "fallback_records": 10,
+    "fallback_capacity": 17
+  },
+  "run_sequence_inventory_query_work_lifecycles_and_final_state_equal": true,
+  "physical_layouts_source_slices_and_owner_counts_equal": true,
+  "historical_graph_denominator_bytes": 3979373,
+  "historical_denominator_scope": "working-tree observation, not isolated immutable baseline binary",
+  "remaining_to_30_percent_bytes": 103680,
+  "validation": {
+    "jobs": [
+      369,
+      370,
+      371
+    ],
+    "no_default_features": "pass",
+    "runtime_library_tests": 216,
+    "ownership_tests": 68,
+    "worker_feature_suites": {
+      "ownership": 68,
+      "compiler": 19,
+      "witness_sources": 13
+    },
+    "per_run": {
+      "status": "pass",
+      "runs": 882,
+      "report_sha256": "c723556dc1171df44dabdc727f6758a1be5cf083d957e2e867028ac30a0f56b6",
+      "same_as_saved_control_checks": true
+    },
+    "native_final_state": {
+      "status": "pass",
+      "report_sha256": "107438ef63ad7bb3b8c544c6619575a23813f6ab4c78aff186e93bd99d145976"
+    }
+  }
+}

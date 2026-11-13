@@ -86,7 +86,7 @@ impl Graph {
             return Ok(None);
         }
         self.local_condition_stats().attempts += 1;
-        let frame = self.ownership.as_ref().unwrap().composition.frames[&f.cell];
+        let frame = self.ownership.as_ref().unwrap().composition.frames.at(&self.cells, &f.cell);
         let shape = self.ownership.as_ref().unwrap().composition.components
             [frame.component as usize]
             .as_ref()
