@@ -17,6 +17,19 @@ Installation copies the implementation to `~/.local/share/eggfuse-jobs`, outside
 ephemeral worktrees. The daemon starts on demand. No shell configuration,
 system service or global Cargo executable is replaced.
 
+The shared build cache may live on an external disk: keep `target` as a symlink
+and keep other worktrees' `CARGO_TARGET_DIR` pointing at that same path. The
+repository ignores both a `target` directory and a `target` symlink. Cache
+relocation must itself hold a compute lease: copy and verify the files before
+replacing the old path, then verify a Cargo command through the symlink before
+removing the original copy. Keep frozen benchmark executables and reports in
+`out/`; relocating a build cache does not establish a runtime speed change.
+
+On this machine, worktree `3063/egg_layout/target` points to
+`/Volumes/Extreme SSD/eggfuse-build-cache/3063/target`. Migration job 121 verified
+13,181 files by size and SHA-256; job 122 passed both parallel-publication tests
+through the original target path. Existing build commands need no path changes.
+
 Every session running compute work should use the launcher:
 
 ```sh
