@@ -45,7 +45,8 @@ pub(crate) fn parent_layout(p:&Program,rid:usize)->Option<Box<[usize]>> {
     let ports=&p.cell_ownership.markers.get(rule.template)?.program.slots;
     let mut retained=Vec::new();
     for &slot in t.parent_columns.keys().filter(|s|used.binary_search(s).is_ok()) {
-        ports.get(slot).copied().flatten()?;
+        if ports.get(slot).copied().flatten().is_none()
+            && !p.executions[rid].completed_scalar_slots.as_ref()?.iter().any(|p|p.0==slot) {return None;}
         retained.push(slot);
     }
     Some(retained.into_boxed_slice())
@@ -57,4 +58,30 @@ pub(crate) fn dead_slots(p:&Program,rid:usize)->Option<Box<[usize]>> {
     let mut dead=(0..p.templates[p.rules[rid].template].sorts.len()).filter(|s|live.binary_search(s).is_err()).collect::<Vec<_>>();
     dead.sort_unstable();dead.dedup();
     (!dead.is_empty()).then(||dead.into_boxed_slice())
+}
+
+/// Stable constructor operands are the authoritative copies of completed scalar
+/// bindings. Keep all possible local providers: an RHS may reuse a foreign node.
+pub(crate) fn scalar_layout(p:&Program,rid:usize)->Box<[(usize,u32,usize)]> {
+    let rule=&p.rules[rid];
+    // Slot reads address a template; do not assume arbitrary rule/template IDs coincide.
+    if rule.template!=rid {return Box::default();}
+    let t=&p.templates[rule.template];
+    let mut fields=BTreeSet::new();
+    for (op,instruction) in t.ops.iter().enumerate() {
+        let Op::Let(_,crate::program::Call::Table(table),args)=instruction else {continue;};
+        if !p.tables[*table].constructor {continue;}
+        for (col,arg) in args.iter().enumerate() {
+            let mut arg=arg;
+            for _ in 0..t.sorts.len() {
+                let Arg::Slot(slot)=arg else {break;};
+                if !matches!(t.sorts[*slot]["kind"].as_str(),Some("i64"|"bool"|"f64"|"String")) {break;}
+                fields.insert((*slot,op as u32,col));
+                let source=p.known_results.static_slots[rule.template].get(*slot).and_then(Option::as_ref)
+                    .or_else(|| match t.ops.get(*t.defs.get(slot)?)? {Op::Copy(_,a)=>Some(a),_=>None});
+                let Some(source)=source else {break;};arg=source;
+            }
+        }
+    }
+    fields.into_iter().collect::<Vec<_>>().into_boxed_slice()
 }

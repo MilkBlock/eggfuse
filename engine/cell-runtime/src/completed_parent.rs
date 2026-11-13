@@ -1,5 +1,6 @@
 //! Discharge a completed instance's parent dependency through its existing
-//! composed symbols. Unknown/scalar projections retain the ordinary parent.
+//! composed symbols and immutable scalar operands. Unknown projections retain
+//! the ordinary parent.
 use super::*;
 fn retire_dead_values(values:&mut crate::slots::FrameSlots,dead:&[usize])->usize {
     let removed=values.retain_owned(|slot,_|dead.binary_search(slot).is_err());
@@ -31,6 +32,7 @@ impl Graph {
             self.stats.completed_dead_frames_compacted+=1;
         }
         self.delegate_completed_slots(cell);
+        self.delegate_completed_scalars(cell);
     }
     pub(crate) fn complete_parent_handoff(&mut self, cell: u32, rid: usize) -> Result<()> {
         let Some(layout)=self.program.executions[rid].parent_completion.as_ref() else {return Ok(());};
@@ -40,10 +42,10 @@ impl Graph {
         let template = c.template;
         self.stats.completed_parent_candidates += 1;
         // No partially copied bindings and no second ownership table. All
-        // retained parent projections must already be represented by this component.
+        // retained parent projections must already have a checked local provider.
         for &slot in layout.iter() {
             self.stats.completed_parent_slot_checks += 1;
-            let Some(value) = self.inherited_cell_slot(cell, template, slot) else { return Ok(()); };
+            let Some(value) = self.inherited_cell_slot(cell, template, slot).or_else(||self.completed_scalar_slot(cell,template,slot,None)) else { return Ok(()); };
             if self.slot(cell, slot)? != value { return Ok(()); }
         }
         let c = self.cells.get_mut(&cell).unwrap();
@@ -88,5 +90,57 @@ impl Graph {
                 source.facts.len(),source.values.len(),visible,cycle);
         }
         crate::receipt_trace::parent_scan(frames,parents);
+    }
+}
+
+impl Graph {
+    fn scalar_plan(&self,template:usize)->&[(usize,u32,usize)] {
+        if self.program.rules.get(template).is_none_or(|r|r.template!=template) {return &[];}
+        self.program.executions[template].completed_scalar_slots.as_deref().unwrap_or(&[])
+    }
+    pub(super) fn completed_scalar_slot(&self,cell:u32,template:usize,slot:usize,excluding:Option<u32>)->Option<Value> {
+        let plan=self.scalar_plan(template);
+        let start=plan.partition_point(|p|p.0<slot);
+        plan[start..].iter().take_while(|p|p.0==slot).find_map(|&(_,op,col)| {
+            if excluding==Some(op) {return None;}
+            let value=self.read_stable_column(self.stable_node(FactRef{cell,op})?,col).ok()?;
+            matches!(value,Value::Int(_)|Value::Float(_)|Value::Text(_)).then_some(value)
+        })
+    }
+    fn delegate_completed_scalars(&mut self,cell:u32) {
+        let Some(c)=self.cells.get(&cell).filter(|c|c.completed) else {return;};
+        let mut slots=self.scalar_plan(c.template).iter().filter_map(|&(slot,_,_)| {
+            let value=c.values.get(&slot)?;
+            (self.completed_scalar_slot(cell,c.template,slot,None).as_ref()==Some(value)).then_some(slot)
+        }).collect::<Vec<_>>();
+        slots.dedup();
+        if slots.is_empty() {return;}
+        let c=self.cells.get_mut(&cell).unwrap();
+        let removed=c.values.retain_owned(|slot,_|!slots.contains(slot));
+        if removed>0 {c.symbolic_slots=true;c.values.compact_capacity();}
+        self.stats.completed_scalar_slots_elided+=removed as u64;
+    }
+    /// Restore only bindings losing their last provider, before either stable
+    /// fields or the composed owner are retired. Fact identity stays unchanged.
+    pub(super) fn preserve_completed_scalars(&mut self,f:FactRef) {
+        use crate::slots::ReadSlots;
+        let Some(meta)=self.cells.cell_metadata(f.cell).filter(|m|m.symbolic_slots) else {return;};
+        let mut restore=Vec::new();
+        for &(slot,op,col) in self.scalar_plan(meta.template) {
+            if op!=f.op {continue;}
+            let present=if let Some(c)=self.cells.get(&f.cell) {c.values.get(&slot).is_some()}
+                else {self.cells.completed_slots(f.cell).is_some_and(|s|s.get(&slot).is_some())};
+            if present || self.completed_scalar_slot(f.cell,meta.template,slot,Some(op)).is_some() {continue;}
+            if let Some(value)=self.stable_node(f).and_then(|s|self.read_stable_column(s,col).ok()) {
+                if !restore.iter().any(|(s,_)|*s==slot) {restore.push((slot,value));}
+            }
+        }
+        if restore.is_empty() {return;}
+        if let Some(c)=self.cells.unseal_completed(f.cell) {
+            self.cells.insert(f.cell,c);self.stats.shared_owner_frames_restored+=1;
+        }
+        let c=self.cells.get_mut(&f.cell).expect("live scalar provider has a source frame");
+        self.stats.completed_scalar_slots_restored+=restore.len() as u64;
+        for (slot,value) in restore {c.values.insert(slot,value);}
     }
 }

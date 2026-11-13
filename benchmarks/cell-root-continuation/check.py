@@ -19,7 +19,7 @@ def work(report):
     return result
 
 
-def collect(control, candidate):
+def collect(control, candidate, *, control_commit='552db678', required_extra=()):
     keys = runpy.run_path(str(Path(__file__).parents[1] / 'raytrace-parallel/measure.py'))['KEYS']
     effects = ('constructor_requests', 'constructor_reused', 'logical_facts_created',
                'function_updates', 'union_requests', 'unions', 'bindings')
@@ -28,14 +28,15 @@ def collect(control, candidate):
                 'integration-cell_owner_pipeline', 'collisions', 'collision-registration',
                 'all-features', 'sparse', 'legacy', 'storage-root-trace',
                 'readme-compile', 'readme-run', 'readme-bench', 'release-build'}
+    required.update(required_extra)
     assert required <= {c['name'] for c in validation}
     assert all(c['exit_code'] == 0 for c in validation)
     manifest = read(candidate / 'manifest.json')
     assert manifest['runtime_sha256'] == sha(candidate / 'candidate-runtime')
-    assert manifest['control_commit'] == '552db678'
+    assert manifest['control_commit'] == control_commit
     result = {
         'scope': 'actual standalone Cell CPU; work/semantics, no speed claim or native Raytrace proof',
-        'control_commit': '552db678',
+        'control_commit': control_commit,
         'control_runtime_sha256': sha(control / 'candidate-runtime'),
         'candidate_runtime_sha256': manifest['runtime_sha256'],
         'validation': validation, 'workloads': {},
