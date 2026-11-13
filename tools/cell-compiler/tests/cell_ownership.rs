@@ -44,6 +44,17 @@ fn saturation_observer_sees_birth_free_effects_and_rejects_unproved_work() {
         assert!(rows.iter().any(|r|r["outcome"] == outcome), "{body}: {report}");
         let applications = rows.iter().map(|r|r["counts"]["applications"].as_u64().unwrap()).sum::<u64>();
         assert_eq!(applications, 2, "count applications, not anchor alternatives");
+        let recipes = report["saturation"]["witness_recipes"].as_array().unwrap();
+        if body == "(N n)" {
+            assert_eq!(recipes.len(), 1, "distinct instance values share one static recipe");
+            assert_eq!(recipes[0]["applications"], 2);
+            assert!(!recipes[0]["rhs_sites"].as_array().unwrap().is_empty());
+            for site in recipes[0]["rhs_sites"].as_array().unwrap() {
+                assert_eq!(site[1], 0, "frame position, never the actual Cell ID");
+            }
+        } else {
+            assert!(recipes.is_empty(), "partial or input-only coverage is not a constructor recipe");
+        }
     }
 }
 
@@ -1484,4 +1495,7 @@ fn saturated_observer_reads_cross_stage_age_from_transferred_frames() {
     let trace=e.graph.ownership_catalog_trace().unwrap();
     assert!(trace["saturation"]["rows"].as_array().unwrap().iter().any(|r|
         r["outcome"]=="rhs_covered" && r["cross_epoch"]==true),"{trace}");
+    let recipes=trace["saturation"]["witness_recipes"].as_array().unwrap();
+    assert!(recipes.iter().any(|r| !r["rhs_sites"].as_array().unwrap().is_empty()),
+        "transferred predecessors must still export shape-relative witnesses: {trace}");
 }

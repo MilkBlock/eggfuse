@@ -380,3 +380,65 @@ python3 benchmarks/cell-batched-learning/saturation_credit.py out/cell-batched-l
   benchmarks/cell-batched-learning/saturation-credit-results.json
 python3 -m unittest discover -s benchmarks/cell-batched-learning -p 'test_*.py'
 ```
+
+### Shape-relative constructor witness candidates
+
+The passive observer now exports `witness_recipes` for fully covered RHSs that
+have actual constructor witnesses. Each site is `[atom/effect, frame, operation]`;
+no runtime Cell ID, eclass ID or captured value enters its identity. Query sites
+list only retained receipts inside the selected component, not a replacement for
+the full query. Input-only unions and partial coverage emit no constructor recipe.
+These records exist only when catalog tracing is enabled.
+
+A critical distinction is preserved: port `shape.programs` identify shared wiring,
+while `frame_codes` identify typed operator programs. Two constructors may share
+one wiring layout. A witness recipe must include both; using the shape's program
+ID to address the operator directory is invalid. The new regression fixture uses
+identical F/G layouts and rejects an F code substituted at a G witness site.
+
+`witness_plans.py` checks operator names, arity, query-to-symbol projections, copies,
+RHS input symbols and union operands against the source definition. It separates
+external Eq checks, scalar checks and unproved Eq relations. It does not use trace
+values to discharge any obligation. Even exact wiring still requires live facts,
+visibility, correct instance generation, the original match/delta contract and
+Run/publication order. The emitted analysis is not executable authorization.
+
+The first usable path is a guarded direct witness, not an unconditional saturated
+jump: address the fact by checked frame/op, compare remaining inputs, and return
+its actual result reference. The runtime must then remove the corresponding
+constructor lookup; adding a speculative probe in front of unchanged work would
+not establish takeover. This runtime replacement remains to be implemented.
+
+To capture without rerunning the baseline, use the source-bound cached checker:
+
+```
+target/debug/examples/batch_cell_learning check-passive \
+  out/cell-batched-learning owned-state witnesses
+python3 benchmarks/cell-batched-learning/witness_plans.py \
+  out/cell-batched-learning/owned-state \
+  benchmarks/cell-batched-learning/witness-plan-results.json
+```
+
+The `owned-state` directory contains unchanged seed candidates and source-bound
+selections, as in the completed-owner checks. Capture writes a separate
+`witness-observation.json` only after all saved Run and terminal checks pass.
+Tests cover two distinct instances sharing one recipe, partial/input-only
+exclusion, and witnesses surviving completed-owner transfer. No new runtime
+compression or speed improvement is claimed from exporting these candidates.
+
+The audited batch yields 222 per-input witness recipes covering 431 actual applies:
+
+| pass3 | recipes | observed applies | exact-wiring applies |
+|---|---:|---:|---:|
+| fact | 29 | 57 | 0 |
+| loopfact | 24 | 30 | 0 |
+| sum-bits | 90 | 179 | 8 |
+| dot-product | 79 | 165 | 44 |
+
+All 2,652 saved Run checks and terminal checks pass. All 47 ownership tests and
+17 Python analysis tests pass. These per-input recipe counts are not deduplicated
+across workloads. Only 52 observed applies discharge all static key obligations;
+the other candidates require guards. Thus treating all 431 as unconditional
+saturated transitions would overstate the evidence. The large compression goal
+remains unmet; the next runtime change must consume these witnesses while removing
+an existing lookup and, where proven, its intermediate retained state.
