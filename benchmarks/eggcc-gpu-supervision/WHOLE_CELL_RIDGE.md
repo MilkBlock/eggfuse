@@ -96,3 +96,56 @@ no-op novelty, missing premises, duplicate/renaming invariance and independence
 from ruleset labels. `whole-cell-ridge-results.json` records the actual Metal run.
 Large targets are reproducible artifacts under ignored `out/`, not tracked data.
 No native runtime code or executor ownership optimization is included here.
+
+## Finite-catalog output audit
+
+`decode_cell_completion.py` decodes predicted vectors with a dense Metal distance
+matrix against known Bake candidates, masked only by the source producer. It does
+not receive the requested consumer or desired target. CPU f64 distances check
+numerical selection and reject near ties. Candidate validation requires every
+source fact to survive under a consistent, complete source-port quotient map.
+
+This is a **post-hoc standalone prototype audit**: exported predictions are loaded
+back onto GPU. The decoder is not yet attached to the resident two-step recurrence.
+The dictionary includes test-family structures, so this is known-catalog selection,
+not generalization to unseen completed structures or a live egglog runtime test.
+
+Of 140 novel test requests, 137 proposals were emitted. Only 95 select the exact
+recorded body and boundary map; 42 select a different candidate or emit without
+novelty, and 5 novel requests emit nothing. There are no ambiguous test emissions;
+validation has 13. Distinct exact candidates with alpha-equivalent structure are
+conservatively counted as different, so the 42 are failures of this exact-target
+contract, not 42 established semantic contradictions. No bit-identical code
+collisions were observed among the 796 candidates with the same producer; this
+does not prove injectivity. The result is recorded in `whole-cell-decode-results.json`.
+
+A separate counterexample establishes an actual input-information defect:
+
+```
+source: F(a,b), F(c,d), G(a,e)
+request: match F(x,y), construct G(y)
+entry 1: x=a, y=b
+entry 2: x=c, y=d
+```
+
+The current request encoder preserves only the binding's internal alias pattern.
+Both entries therefore produce identical request vectors, and the source code is
+also identical. Their correct completed-body vectors differ. Any deterministic
+ridge predictor with these inputs must give the same answer for both. This is
+not a fitting problem: increasing hidden width cannot recover the lost attachment.
+The regression test intentionally documents this limitation until a replacement
+representation carries source-relative boundary roles through GPU continuation.
+It does not imply that this counterexample explains all measured wrong selections.
+
+Next implementation work must retain that attachment without CPU re-encoding each
+predicted state. It must also distinguish proposal selection from proof that a
+live token's source-Run and activation responsibilities may be retired. Neither
+nearest-code selection nor source-fact retention alone establishes the latter.
+
+Reproduce the audit after generating TARGETS as above:
+
+```sh
+$PYTHON benchmarks/eggcc-gpu-supervision/whole_cell_ridge.py PROGRAM TARGETS RESULTS --predictions PREDICTIONS
+$PYTHON benchmarks/eggcc-gpu-supervision/decode_cell_completion.py TARGETS PREDICTIONS DECODE_RESULTS
+$PYTHON -m unittest discover -s benchmarks/eggcc-gpu-supervision -p test_decode_cell_completion.py
+```

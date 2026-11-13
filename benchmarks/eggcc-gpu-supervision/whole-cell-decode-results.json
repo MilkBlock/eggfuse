@@ -1,0 +1,44 @@
+{
+  "scope": "finite known-Bake-catalog GPU decode and CPU exact-target audit; no ownership authorization",
+  "program_sha256": "25776d5a8242b50bd90b686dd8dce79217800e642775693f60907dd96d2976a2",
+  "candidates": 796,
+  "exact_code_collision_pairs": 0,
+  "collision_examples": [],
+  "reports": {
+    "train": {
+      "requests": 612,
+      "novel_completions": 281,
+      "emitted": 284,
+      "exact_catalog_target": 248,
+      "ambiguous_emissions": 0,
+      "wrong_or_spurious_emissions": 36,
+      "missed_emissions": 2
+    },
+    "validation": {
+      "requests": 444,
+      "novel_completions": 214,
+      "emitted": 212,
+      "exact_catalog_target": 96,
+      "ambiguous_emissions": 13,
+      "wrong_or_spurious_emissions": 103,
+      "missed_emissions": 3
+    },
+    "test": {
+      "requests": 296,
+      "novel_completions": 140,
+      "emitted": 137,
+      "exact_catalog_target": 95,
+      "ambiguous_emissions": 0,
+      "wrong_or_spurious_emissions": 42,
+      "missed_emissions": 5
+    }
+  },
+  "source_retention_checks_pass": true,
+  "limitations": [
+    "Dictionary includes all supported Bake targets, including test families",
+    "Exact target means exact recorded body plus quotient map; alternative alpha-equivalent targets conservatively differ",
+    "Candidate certificates are scoped by producer, not by the requested consumer",
+    "No live port generation, visibility, source Run order or activation-ownership proof",
+    "Decoding appends a candidate reference; it does not replace the generated latent with a teacher code"
+  ]
+}

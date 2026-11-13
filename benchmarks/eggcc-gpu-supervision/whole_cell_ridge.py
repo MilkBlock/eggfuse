@@ -74,7 +74,7 @@ def metrics(pred,target,novel,emit):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('program',type=Path);p.add_argument('targets',type=Path);p.add_argument('output',type=Path);args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('program',type=Path);p.add_argument('targets',type=Path);p.add_argument('output',type=Path);p.add_argument('--predictions',type=Path);args=p.parse_args()
     program=json.loads(args.program.read_text());data=json.loads(args.targets.read_text())
     if data['program_sha256']!=program['sha256']:raise ValueError('program mismatch')
     rules=program['recipe']['rules'];tables={t['name']:t for t in program['recipe']['tables']}
@@ -129,6 +129,8 @@ def main():
         s2=np.where(l2[:,None],s1+r2[:,:D],s1)
         np.testing.assert_allclose(np.array(last),s2,rtol=1e-3,atol=5e-4)
         result['generated_state_consumption']=dict(chains=len(chains),distinct_initial_producers=len({r[0] for r in chain_origins}),selection='first 64 admissible two-step cases from test producer families',first_emissions=int(np.array(e1).sum()),second_emissions=int(np.array(e2).sum()),final_latent_rmse=float(np.sqrt(np.mean((np.array(last)-gold2)**2))),no_change_baseline_rmse=float(np.sqrt(np.mean((a-gold2)**2))),intermediate_cpu_reads=0,teacher_state_supplied_between_steps=False)
+    if args.predictions:
+        args.predictions.write_text(json.dumps(dict(program_sha256=program['sha256'],targets_sha256=result['targets_sha256'],predictions=pred.tolist(),emitted=emit.tolist(),producer_roots=roots.tolist(),order='each target followed by its identity control'))+'\n')
     args.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
 
 if __name__=='__main__':main()
