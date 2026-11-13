@@ -480,6 +480,7 @@ pub(super) struct CatalogTrace {
     max_frames: usize,
     records: BTreeMap<Key, (Fragment, u64, u64, usize)>,
     uncovered_births: u64,
+    admissions: BTreeMap<(usize, Option<usize>, &'static str), u64>,
     saturation: saturation::Trace,
 }
 #[derive(Default)]
@@ -661,6 +662,9 @@ impl Graph {
             "seed_transitions":self.program.cell_ownership.composition.transitions.len(),
             "uncovered_births":trace.uncovered_births,"alternatives_overlap":true,
             "scope":"observed unmatched owned births in installed catalog execution; proposed reuse is not saved work or committed mutations",
+            "admissions":trace.admissions.iter().map(|(&(template,rule,reason),&count)|
+                json!({"template":template,"rule":rule,"reason":reason,"count":count})).collect::<Vec<_>>(),
+            "admission_scope":"new composition frames only; birth/join/fallback count frames, anchor reasons count attempted alternatives; not final singleton attribution",
             "records":records,"saturation":trace.saturation.report()}))
     }
     pub fn train_ownership_fragments(&mut self) -> Result<()> {
@@ -783,6 +787,21 @@ impl Graph {
         if m.composition.frames.contains_key(&cell) {
             return;
         }
+        let source_rule = m.composition.entry.as_ref().map(|e| e.rule);
+        // Only explicit observation retains reasons; no instance IDs, bindings,
+        // or new producer/consumer dependencies are stored.
+        macro_rules! observe {
+            ($reason:literal) => {
+                if let Some(trace) = &mut m.composition.catalog_trace {
+                    *trace.admissions.entry((template, source_rule, $reason)).or_default() += 1;
+                }
+            };
+        }
+        observe!("birth");
+        if m.composition.entry.is_none() { observe!("no_entry"); }
+        else if m.composition.entry.as_ref().is_some_and(|e|e.template != template) {
+            observe!("entry_template_mismatch");
+        }
         let mut selected = None;
         let mut proposals = Vec::new(); // Allocates only in explicit trace mode.
         if let Some(source) = &m.composition.entry
@@ -794,18 +813,22 @@ impl Graph {
                 && !self.program.cell_ownership.composition.transitions.is_empty();
             'candidate: for pass in 0..=usize::from(prefer_catalog) {
                 for (entry, anchor) in source.anchors.iter().copied().enumerate() {
+                    observe!("anchor_attempt");
                     m.stats.composition_entry_reads += 1;
                     let Some(Dependency::Fact(f)) = anchor else {
+                        observe!("anchor_not_fact");
                         continue;
                     };
                     if !self
                         .cells.fact_state(f)
                         .is_some_and(|s| s.owned)
                     {
+                        observe!("anchor_not_owned");
                         m.stats.composition_missing_sources += 1;
                         continue;
                     }
                     let Some(frame) = m.composition.frames.get(&f.cell).copied() else {
+                        observe!("anchor_missing_frame");
                         continue;
                     };
                     let c = m.composition.components[frame.component as usize]
@@ -817,10 +840,12 @@ impl Graph {
                         }
                     }
                     if c.frames.len() >= self.program.cell_ownership.composition.max_frames {
+                        observe!("frame_limit");
                         m.stats.composition_capacity_cuts += 1;
                         continue;
                     }
                     if c.frames.last().is_some_and(|&last| last >= cell) {
+                        observe!("source_order");
                         continue;
                     }
                     let key = Key {
@@ -869,6 +894,7 @@ impl Graph {
                         m.stats.composition_shape_steps += steps as u64;
                         id
                     } else {
+                        observe!("transition_not_baked");
                         m.stats.composition_unbaked_fallbacks += 1;
                         continue;
                     };
@@ -881,6 +907,10 @@ impl Graph {
                 }
             }
         }
+        if let Some((_, _, cross_stage)) = selected {
+            observe!("joined");
+            if cross_stage { observe!("joined_cross_stage"); }
+        } else { observe!("fallback"); }
         if selected.is_none() && let Some(trace) = &mut m.composition.catalog_trace {
             trace.uncovered_births += 1;
             let plan = &self.program.cell_ownership.composition;

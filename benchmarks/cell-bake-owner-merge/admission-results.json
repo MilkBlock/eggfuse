@@ -1,0 +1,651 @@
+{
+  "scope": "Actual standalone Cell runtime; passive same-source Run/effect checks; no native acceptance or timing claim",
+  "counting": "birth/join/fallback count newly created composition frames; anchor reasons count alternatives and may overlap per frame; not attribution of final singletons",
+  "cases": [
+    {
+      "case": "fact",
+      "input_sha256": "e33cd75d117b85b9aaa636c90b05f797ced74be0cb2895547e31cb6b8f5f2025",
+      "program": "c94fa2da6d160a837efa1ac0b6d1332f1f23c63e3c31112f1984b0f7cab08676",
+      "runs": 418,
+      "all_saved_run_checks_equal": true,
+      "totals": {
+        "anchor_attempt": 1135,
+        "birth": 670,
+        "fallback": 379,
+        "transition_not_baked": 844,
+        "joined": 291,
+        "joined_cross_stage": 291,
+        "entry_template_mismatch": 23
+      },
+      "top_unbaked_rules": [
+        {
+          "rule": 519,
+          "template": 519,
+          "counts": {
+            "anchor_attempt": 55,
+            "birth": 22,
+            "fallback": 16,
+            "joined": 6,
+            "joined_cross_stage": 6,
+            "transition_not_baked": 49
+          }
+        },
+        {
+          "rule": 518,
+          "template": 518,
+          "counts": {
+            "anchor_attempt": 48,
+            "birth": 16,
+            "fallback": 16,
+            "transition_not_baked": 48
+          }
+        },
+        {
+          "rule": 520,
+          "template": 520,
+          "counts": {
+            "anchor_attempt": 35,
+            "birth": 7,
+            "fallback": 7,
+            "transition_not_baked": 35
+          }
+        },
+        {
+          "rule": 278,
+          "template": 278,
+          "counts": {
+            "anchor_attempt": 39,
+            "birth": 22,
+            "fallback": 17,
+            "joined": 5,
+            "joined_cross_stage": 5,
+            "transition_not_baked": 34
+          }
+        },
+        {
+          "rule": 90,
+          "template": 90,
+          "counts": {
+            "anchor_attempt": 51,
+            "birth": 29,
+            "fallback": 11,
+            "joined": 18,
+            "joined_cross_stage": 18,
+            "transition_not_baked": 33
+          }
+        },
+        {
+          "rule": 392,
+          "template": 392,
+          "counts": {
+            "anchor_attempt": 35,
+            "birth": 20,
+            "fallback": 15,
+            "joined": 5,
+            "joined_cross_stage": 5,
+            "transition_not_baked": 30
+          }
+        },
+        {
+          "rule": 390,
+          "template": 390,
+          "counts": {
+            "anchor_attempt": 28,
+            "birth": 14,
+            "fallback": 14,
+            "transition_not_baked": 28
+          }
+        },
+        {
+          "rule": 124,
+          "template": 124,
+          "counts": {
+            "anchor_attempt": 40,
+            "birth": 20,
+            "fallback": 8,
+            "joined": 12,
+            "joined_cross_stage": 12,
+            "transition_not_baked": 28
+          }
+        },
+        {
+          "rule": 487,
+          "template": 487,
+          "counts": {
+            "anchor_attempt": 37,
+            "birth": 21,
+            "fallback": 9,
+            "joined": 12,
+            "joined_cross_stage": 12,
+            "transition_not_baked": 25
+          }
+        },
+        {
+          "rule": 145,
+          "template": 145,
+          "counts": {
+            "anchor_attempt": 55,
+            "birth": 55,
+            "fallback": 24,
+            "joined": 31,
+            "joined_cross_stage": 31,
+            "transition_not_baked": 24
+          }
+        },
+        {
+          "rule": 484,
+          "template": 484,
+          "counts": {
+            "anchor_attempt": 32,
+            "birth": 16,
+            "fallback": 6,
+            "joined": 10,
+            "joined_cross_stage": 10,
+            "transition_not_baked": 22
+          }
+        },
+        {
+          "rule": 92,
+          "template": 92,
+          "counts": {
+            "anchor_attempt": 37,
+            "birth": 19,
+            "fallback": 4,
+            "joined": 15,
+            "joined_cross_stage": 15,
+            "transition_not_baked": 22
+          }
+        }
+      ]
+    },
+    {
+      "case": "loopfact",
+      "input_sha256": "eb88c58483d53cd90c32c0cdd825352cb1a1c886f59527c86498e57795039871",
+      "program": "fb56d5498f2f1b6b6a3f430af90df9008e4b3770758da0345463790c343feb8b",
+      "runs": 398,
+      "all_saved_run_checks_equal": true,
+      "totals": {
+        "anchor_attempt": 1021,
+        "birth": 581,
+        "fallback": 338,
+        "transition_not_baked": 778,
+        "joined": 243,
+        "joined_cross_stage": 243,
+        "entry_template_mismatch": 31
+      },
+      "top_unbaked_rules": [
+        {
+          "rule": 278,
+          "template": 278,
+          "counts": {
+            "anchor_attempt": 55,
+            "birth": 30,
+            "fallback": 21,
+            "joined": 9,
+            "joined_cross_stage": 9,
+            "transition_not_baked": 46
+          }
+        },
+        {
+          "rule": 520,
+          "template": 520,
+          "counts": {
+            "anchor_attempt": 44,
+            "birth": 9,
+            "fallback": 8,
+            "joined": 1,
+            "joined_cross_stage": 1,
+            "transition_not_baked": 43
+          }
+        },
+        {
+          "rule": 518,
+          "template": 518,
+          "counts": {
+            "anchor_attempt": 44,
+            "birth": 16,
+            "fallback": 14,
+            "joined": 2,
+            "joined_cross_stage": 2,
+            "transition_not_baked": 42
+          }
+        },
+        {
+          "rule": 519,
+          "template": 519,
+          "counts": {
+            "anchor_attempt": 42,
+            "birth": 16,
+            "fallback": 12,
+            "joined": 4,
+            "joined_cross_stage": 4,
+            "transition_not_baked": 38
+          }
+        },
+        {
+          "rule": 392,
+          "template": 392,
+          "counts": {
+            "anchor_attempt": 30,
+            "birth": 16,
+            "fallback": 14,
+            "joined": 2,
+            "joined_cross_stage": 2,
+            "transition_not_baked": 28
+          }
+        },
+        {
+          "rule": 391,
+          "template": 391,
+          "counts": {
+            "anchor_attempt": 24,
+            "birth": 8,
+            "fallback": 8,
+            "transition_not_baked": 24
+          }
+        },
+        {
+          "rule": 92,
+          "template": 92,
+          "counts": {
+            "anchor_attempt": 37,
+            "birth": 20,
+            "fallback": 6,
+            "joined": 14,
+            "joined_cross_stage": 14,
+            "transition_not_baked": 23
+          }
+        },
+        {
+          "rule": 390,
+          "template": 390,
+          "counts": {
+            "anchor_attempt": 22,
+            "birth": 11,
+            "fallback": 11,
+            "transition_not_baked": 22
+          }
+        },
+        {
+          "rule": 487,
+          "template": 487,
+          "counts": {
+            "anchor_attempt": 28,
+            "birth": 15,
+            "fallback": 9,
+            "joined": 6,
+            "joined_cross_stage": 6,
+            "transition_not_baked": 22
+          }
+        },
+        {
+          "rule": 469,
+          "template": 469,
+          "counts": {
+            "anchor_attempt": 35,
+            "birth": 21,
+            "fallback": 6,
+            "joined": 15,
+            "joined_cross_stage": 15,
+            "transition_not_baked": 20
+          }
+        },
+        {
+          "rule": 91,
+          "template": 91,
+          "counts": {
+            "anchor_attempt": 35,
+            "birth": 20,
+            "fallback": 5,
+            "joined": 15,
+            "joined_cross_stage": 15,
+            "transition_not_baked": 20
+          }
+        },
+        {
+          "rule": 265,
+          "template": 265,
+          "counts": {
+            "anchor_attempt": 20,
+            "birth": 4,
+            "fallback": 4,
+            "transition_not_baked": 20
+          }
+        }
+      ]
+    },
+    {
+      "case": "sum-bits",
+      "input_sha256": "3e98168543296bfa31fb909bc19a02581e8ef3e68541961a57755f10957adc0e",
+      "program": "4c29b9f5d8d09d999cd1e64883170574a456d17788216868dede4f438f39feb3",
+      "runs": 882,
+      "all_saved_run_checks_equal": true,
+      "totals": {
+        "anchor_attempt": 4623,
+        "birth": 2557,
+        "fallback": 1458,
+        "transition_not_baked": 3468,
+        "joined": 1099,
+        "joined_cross_stage": 1099,
+        "frame_limit": 56,
+        "no_entry": 1,
+        "entry_template_mismatch": 103
+      },
+      "top_unbaked_rules": [
+        {
+          "rule": 520,
+          "template": 520,
+          "counts": {
+            "anchor_attempt": 170,
+            "birth": 35,
+            "fallback": 32,
+            "joined": 3,
+            "joined_cross_stage": 3,
+            "transition_not_baked": 167
+          }
+        },
+        {
+          "rule": 290,
+          "template": 290,
+          "counts": {
+            "anchor_attempt": 219,
+            "birth": 126,
+            "fallback": 58,
+            "frame_limit": 2,
+            "joined": 68,
+            "joined_cross_stage": 68,
+            "transition_not_baked": 149
+          }
+        },
+        {
+          "rule": 278,
+          "template": 278,
+          "counts": {
+            "anchor_attempt": 174,
+            "birth": 98,
+            "fallback": 61,
+            "joined": 37,
+            "joined_cross_stage": 37,
+            "transition_not_baked": 137
+          }
+        },
+        {
+          "rule": 59,
+          "template": 59,
+          "counts": {
+            "anchor_attempt": 180,
+            "birth": 94,
+            "fallback": 25,
+            "frame_limit": 1,
+            "joined": 69,
+            "joined_cross_stage": 69,
+            "transition_not_baked": 110
+          }
+        },
+        {
+          "rule": 91,
+          "template": 91,
+          "counts": {
+            "anchor_attempt": 170,
+            "birth": 89,
+            "fallback": 26,
+            "joined": 63,
+            "joined_cross_stage": 63,
+            "transition_not_baked": 107
+          }
+        },
+        {
+          "rule": 519,
+          "template": 519,
+          "counts": {
+            "anchor_attempt": 113,
+            "birth": 41,
+            "fallback": 35,
+            "frame_limit": 1,
+            "joined": 6,
+            "joined_cross_stage": 6,
+            "transition_not_baked": 106
+          }
+        },
+        {
+          "rule": 518,
+          "template": 518,
+          "counts": {
+            "anchor_attempt": 109,
+            "birth": 39,
+            "fallback": 35,
+            "frame_limit": 5,
+            "joined": 4,
+            "joined_cross_stage": 4,
+            "transition_not_baked": 100
+          }
+        },
+        {
+          "rule": 469,
+          "template": 469,
+          "counts": {
+            "anchor_attempt": 149,
+            "birth": 89,
+            "fallback": 43,
+            "frame_limit": 6,
+            "joined": 46,
+            "joined_cross_stage": 46,
+            "transition_not_baked": 97
+          }
+        },
+        {
+          "rule": 308,
+          "template": 308,
+          "counts": {
+            "anchor_attempt": 115,
+            "birth": 45,
+            "fallback": 30,
+            "frame_limit": 3,
+            "joined": 15,
+            "joined_cross_stage": 15,
+            "transition_not_baked": 97
+          }
+        },
+        {
+          "rule": 145,
+          "template": 145,
+          "counts": {
+            "anchor_attempt": 175,
+            "birth": 175,
+            "fallback": 99,
+            "frame_limit": 7,
+            "joined": 76,
+            "joined_cross_stage": 76,
+            "transition_not_baked": 92
+          }
+        },
+        {
+          "rule": 294,
+          "template": 294,
+          "counts": {
+            "anchor_attempt": 132,
+            "birth": 77,
+            "fallback": 36,
+            "joined": 41,
+            "joined_cross_stage": 41,
+            "transition_not_baked": 91
+          }
+        },
+        {
+          "rule": 90,
+          "template": 90,
+          "counts": {
+            "anchor_attempt": 99,
+            "birth": 53,
+            "fallback": 45,
+            "frame_limit": 2,
+            "joined": 8,
+            "joined_cross_stage": 8,
+            "transition_not_baked": 89
+          }
+        }
+      ]
+    },
+    {
+      "case": "dot-product",
+      "input_sha256": "dd13542a589682076de26abbecc4e694377be77e0e9e8042195ad8a4c59e4df0",
+      "program": "821f999d16c0b17eabbdbf8c90a56bbe6a0fdc29d5cd754c70040ccf3c483fc9",
+      "runs": 954,
+      "all_saved_run_checks_equal": true,
+      "totals": {
+        "anchor_attempt": 4166,
+        "birth": 2240,
+        "fallback": 1267,
+        "transition_not_baked": 3114,
+        "joined": 973,
+        "joined_cross_stage": 973,
+        "frame_limit": 79,
+        "no_entry": 8,
+        "entry_template_mismatch": 136
+      },
+      "top_unbaked_rules": [
+        {
+          "rule": 265,
+          "template": 265,
+          "counts": {
+            "anchor_attempt": 256,
+            "birth": 56,
+            "fallback": 32,
+            "joined": 24,
+            "joined_cross_stage": 24,
+            "transition_not_baked": 232
+          }
+        },
+        {
+          "rule": 520,
+          "template": 520,
+          "counts": {
+            "anchor_attempt": 188,
+            "birth": 40,
+            "fallback": 34,
+            "joined": 6,
+            "joined_cross_stage": 6,
+            "transition_not_baked": 182
+          }
+        },
+        {
+          "rule": 518,
+          "template": 518,
+          "counts": {
+            "anchor_attempt": 161,
+            "birth": 63,
+            "fallback": 49,
+            "frame_limit": 5,
+            "joined": 14,
+            "joined_cross_stage": 14,
+            "transition_not_baked": 142
+          }
+        },
+        {
+          "rule": 278,
+          "template": 278,
+          "counts": {
+            "anchor_attempt": 184,
+            "birth": 111,
+            "fallback": 64,
+            "joined": 47,
+            "joined_cross_stage": 47,
+            "transition_not_baked": 137
+          }
+        },
+        {
+          "rule": 391,
+          "template": 391,
+          "counts": {
+            "anchor_attempt": 117,
+            "birth": 39,
+            "fallback": 39,
+            "transition_not_baked": 117
+          }
+        },
+        {
+          "rule": 519,
+          "template": 519,
+          "counts": {
+            "anchor_attempt": 126,
+            "birth": 50,
+            "fallback": 37,
+            "frame_limit": 1,
+            "joined": 13,
+            "joined_cross_stage": 13,
+            "transition_not_baked": 112
+          }
+        },
+        {
+          "rule": 515,
+          "template": 515,
+          "counts": {
+            "anchor_attempt": 96,
+            "birth": 12,
+            "fallback": 12,
+            "transition_not_baked": 96
+          }
+        },
+        {
+          "rule": 469,
+          "template": 469,
+          "counts": {
+            "anchor_attempt": 136,
+            "birth": 79,
+            "fallback": 41,
+            "frame_limit": 13,
+            "joined": 38,
+            "joined_cross_stage": 38,
+            "transition_not_baked": 85
+          }
+        },
+        {
+          "rule": 392,
+          "template": 392,
+          "counts": {
+            "anchor_attempt": 84,
+            "birth": 46,
+            "fallback": 38,
+            "frame_limit": 1,
+            "joined": 8,
+            "joined_cross_stage": 8,
+            "transition_not_baked": 75
+          }
+        },
+        {
+          "rule": 388,
+          "template": 388,
+          "counts": {
+            "anchor_attempt": 78,
+            "birth": 28,
+            "fallback": 25,
+            "joined": 3,
+            "joined_cross_stage": 3,
+            "transition_not_baked": 75
+          }
+        },
+        {
+          "rule": 390,
+          "template": 390,
+          "counts": {
+            "anchor_attempt": 72,
+            "birth": 36,
+            "fallback": 36,
+            "frame_limit": 2,
+            "transition_not_baked": 70
+          }
+        },
+        {
+          "rule": 513,
+          "template": 513,
+          "counts": {
+            "anchor_attempt": 70,
+            "birth": 10,
+            "fallback": 10,
+            "transition_not_baked": 70
+          }
+        }
+      ]
+    }
+  ]
+}

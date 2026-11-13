@@ -1039,6 +1039,20 @@ fn bounded_longer_catalog_preserves_cross_run_execution() {
             serde_json::to_value(observed.graph.cells.iter().collect::<Vec<_>>()).unwrap());
     }
     let trace = observed.graph.ownership_catalog_trace().unwrap();
+    let reasons = trace["admissions"].as_array().unwrap();
+    let count = |reason: &str| reasons.iter().filter(|r|r["reason"] == reason)
+        .map(|r|r["count"].as_u64().unwrap()).sum::<u64>();
+    assert_eq!(count("birth"), count("joined") + count("fallback"));
+    assert_eq!(count("fallback"), trace["uncovered_births"].as_u64().unwrap());
+    assert!(count("joined_cross_stage") > 0);
+    assert!(count("frame_limit") > 0);
+    assert!(count("joined") >= count("joined_cross_stage"));
+    assert_eq!(count("anchor_attempt"), ["anchor_not_fact", "anchor_not_owned",
+        "anchor_missing_frame", "frame_limit", "source_order", "transition_not_baked", "joined"]
+        .into_iter().map(count).sum::<u64>());
+    let stats = observed.graph.ownership_report();
+    assert_eq!(count("anchor_attempt"), stats["stats"]["composition_entry_reads"].as_u64().unwrap());
+    assert_eq!(count("transition_not_baked"), stats["stats"]["composition_unbaked_fallbacks"].as_u64().unwrap());
     assert_eq!(trace["executed_max_frames"], 4);
     assert_eq!(trace["seed_transitions"], seed_transitions);
     assert!(!trace["records"].as_array().unwrap().is_empty());
