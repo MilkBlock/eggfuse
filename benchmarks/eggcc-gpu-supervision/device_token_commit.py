@@ -106,6 +106,10 @@ def closed_entry_proposals(state, plan, stage, xp):
         ready=xp.all(state['slot_valid'][:,projection] | ~plan['projection_valid'][None,:,:],axis=2)
         missing=matched & ~ready
         matched=matched & ready
+    if 'completion_projection' in plan:
+        completion_ready=xp.all(state['slot_valid'][:,plan['completion_projection']] | ~plan['completion_valid'][None,:,:],axis=2)
+        missing=missing | (matched & ~completion_ready)
+        matched=matched & completion_ready
     if 'projection_valid' in plan:  # Static layout option, not a device predicate.
         payload_keys=xp.where(plan['projection_valid'][None,:,:],payload_keys,-1)
     target = xp.broadcast_to(plan['consumer'][None,:,None],(capacity,entries,1))
@@ -123,6 +127,10 @@ def closed_entry_proposals(state, plan, stage, xp):
         indices=xp.broadcast_to(plan['destination_projection'][None,:,:],(capacity,entries,plan['destination_projection'].shape[1]))
         values=xp.take_along_axis(payload_keys,indices,axis=2)
         valid=xp.broadcast_to(plan['destination_valid'][None,:,:],values.shape)
+        if 'completion_projection' in plan:
+            cv=plan['completion_valid'][None,:,:]
+            values=xp.where(cv,state['slots'][:,plan['completion_projection']],values)
+            valid=valid | cv
         proposals['slots']=xp.where(valid,values,-1).reshape(capacity*entries,-1)
         proposals['slot_valid']=valid.reshape(capacity*entries,-1)
     return proposals
