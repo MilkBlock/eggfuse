@@ -101,3 +101,34 @@ fn initial_membership_keeps_the_function_representation() {
     let q=compiler::specialize_unit_facts(&p).unwrap();
     assert!(q["unit_fact_specialization"]["tables"].as_array().unwrap().is_empty());
 }
+
+#[test]
+fn selected_membership_keeps_unselected_storage_and_run_semantics() {
+    let source=SOURCE.replace("(ruleset make)","(function Other (E) Unit :merge old) (ruleset make)")
+        .replace("((set (View x) ()))", "((set (View x) ()) (set (Other x) ()))");
+    let p=program(&source);
+    let table=p.tables.iter().position(|t|t.name=="View").unwrap();
+    let q=Program::parse(compiler::specialize_unit_facts_selected(&p,&[table]).unwrap()).unwrap();
+    compiler::validate_unit_fact_specialization(&p,&q).unwrap();
+    assert!(!q.tables.iter().find(|t|t.name=="Other").unwrap().virtual_fact);
+    let mut prepared=q.clone();prepared.prepare_cell_ownership().unwrap();
+    let plan=&prepared.cell_ownership.composition;
+    assert!(plan.supports_fragment(&prepared,&plan.fragments[0]));
+    let mut invalid=plan.fragments[0].clone();
+    invalid.root=usize::MAX;
+    assert!(!plan.supports_fragment(&prepared,&invalid));
+    invalid.root=0;
+    invalid.hops.push(eggfuse_cell_runtime::graph::cell_ownership::composition::Hop {
+        source_frame:usize::MAX,rule:0,entry:0,op:0});
+    assert!(!plan.supports_fragment(&prepared,&invalid));
+    let mut b=Executor::new(Graph::new(p.clone()).unwrap(),true);b.execute().unwrap();
+    let mut a=Executor::new(Graph::new(q).unwrap(),true);a.execute().unwrap();
+    assert_eq!(a.snapshots,b.snapshots);
+    assert!(compiler::specialize_unit_facts_selected(&p,&[table,table]).is_err());
+    assert!(compiler::specialize_unit_facts_selected(&p,&[p.tables.len()]).is_err());
+    let constructor=p.tables.iter().position(|t|t.constructor).unwrap();
+    assert!(compiler::specialize_unit_facts_selected(&p,&[constructor]).is_err());
+    let empty=Program::parse(compiler::specialize_unit_facts_selected(&p,&[]).unwrap()).unwrap();
+    compiler::validate_unit_fact_specialization(&p,&empty).unwrap();
+    assert!(!empty.tables.iter().find(|t|t.name=="View").unwrap().virtual_fact);
+}

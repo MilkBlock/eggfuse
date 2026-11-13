@@ -32,9 +32,21 @@ fn main()->Result<(),Box<dyn Error>> {
         let mut q=Program::parse(raw.clone())?;q.prepare_cell_ownership()?;
         let dir=format!("{}/frames{}",a[2],limit);fs::create_dir_all(&dir)?;
         fs::write(format!("{}/program.json",dir),serde_json::to_vec_pretty(&raw)?)?;
+        let mut unit_tables=std::collections::BTreeSet::new();
+        for fragment in selection["fragments"].as_array().unwrap() {
+            for hop in fragment["hops"].as_array().unwrap() {
+                let rule=hop["rule"].as_u64().unwrap() as usize;
+                let entry=hop["entry"].as_u64().unwrap() as usize;
+                let atom=q.cell_ownership.entries[rule][entry];
+                if let Call::Table(table)=q.rules[rule].query[atom].call {
+                    if q.tables[table].schema.last().unwrap()["kind"]=="Unit" {unit_tables.insert(table);}
+                }
+            }
+        }
+        fs::write(format!("{}/unit-tables.json",dir),serde_json::to_vec_pretty(&unit_tables)?)?;
         candidates.push(json!({"max_frames":limit,"program":raw["sha256"],"fragments":selection["fragments"].as_array().unwrap().len(),
             "shapes":q.cell_ownership.composition.shapes.len(),"transitions":q.cell_ownership.composition.transitions.len(),
-            "ranking":selection["ranking"]}));
+            "unit_entry_tables":unit_tables,"ranking":selection["ranking"]}));
     }
     let summary=json!({"source_program":p.artifact["sha256"],"records":records.len(),"records_with_unit_entry":unit_records,
         "hop_lengths":lengths,"candidates":candidates,"scope":"offline selections from one actual execution; candidates overlap; no runtime saving claimed"});

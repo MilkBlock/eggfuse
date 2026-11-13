@@ -35,22 +35,29 @@ fn eligible(p:&Program,table:usize)->bool {
     }
     writes>0
 }
-fn rewrite(p:&Program)->Result<(J,Vec<usize>)> {
-    let tables=(0..p.tables.len()).filter(|&t|eligible(p,t)).collect::<Vec<_>>();
+fn rewrite(p:&Program,tables:&[usize])->Result<J> {
+    if tables.windows(2).any(|w|w[0]>=w[1]) || tables.iter().any(|&t|t>=p.tables.len() || !eligible(p,t)) {
+        return Err("Unit selection must be sorted, unique and individually proved eligible".into());
+    }
     let mut core=p.artifact["source_core"].clone();
-    for &table in &tables {
+    for &table in tables {
         let t=core["tables"].as_array_mut().ok_or("core tables")?.iter_mut()
             .find(|t|t["name"]==p.tables[table].name).ok_or("source table")?;
         t["merge_expr"]=J::Null;t["merge"]=J::Null;
     }
     core.as_object_mut().ok_or("core")?.remove("sha256");
     core["sha256"]=crate::checksum::artifact_digest(&core).into();
-    Ok((core,tables))
+    Ok(core)
 }
 /// Recompile Unit membership as ordinary virtual Cell facts. No new runtime
 /// representation, approximate membership or independent producer index.
 pub fn specialize_unit_facts(p:&Program)->Result<J> {
-    let (core,tables)=rewrite(p)?;
+    let tables=(0..p.tables.len()).filter(|&t|eligible(p,t)).collect::<Vec<_>>();
+    specialize_unit_facts_selected(p,&tables)
+}
+/// Selection is a cost decision; every selected table still needs the full proof.
+pub fn specialize_unit_facts_selected(p:&Program,tables:&[usize])->Result<J> {
+    let core=rewrite(p,tables)?;
     let markers=p.marker_tables.iter().map(|&t|p.tables[t].name.clone()).collect();
     let mut result=compile(core,&markers)?;
     result.as_object_mut().unwrap().remove("sha256");
@@ -60,8 +67,9 @@ pub fn specialize_unit_facts(p:&Program)->Result<J> {
     Ok(result)
 }
 pub fn validate_unit_fact_specialization(source:&Program,target:&Program)->Result<()> {
-    let (core,tables)=rewrite(source)?;
     let proof=&target.artifact["unit_fact_specialization"];
+    let tables:Vec<usize>=serde_json::from_value(proof["tables"].clone()).map_err(|e|format!("invalid Unit selection: {e}"))?;
+    let core=rewrite(source,&tables)?;
     if target.artifact["source_core"]!=core || proof["source_program"]!=source.artifact["sha256"]
         || proof["tables"]!=json!(tables) {return Err("unproved Unit fact specialization".into());}
     Ok(())

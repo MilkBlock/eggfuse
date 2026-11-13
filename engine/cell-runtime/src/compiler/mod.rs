@@ -6,7 +6,7 @@ mod spine_blocks;
 pub use spine_blocks::{bake_spine_blocks, bake_stage_blocks};
 mod recipe;
 mod unit_facts;
-pub use unit_facts::{specialize_unit_facts,validate_unit_fact_specialization};
+pub use unit_facts::{specialize_unit_facts,specialize_unit_facts_selected,validate_unit_fact_specialization};
 use crate::{
     cell::{Definition, Site, bind_relation, project_rows, unique_projection},
     program::*,

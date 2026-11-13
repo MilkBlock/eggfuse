@@ -404,6 +404,21 @@ impl Plan {
             }).collect();
         }
     }
+    /// Check a migrated candidate using the same typed substitutions as derive.
+    /// This proves wiring availability, not observed frequency or net savings.
+    pub fn supports_fragment(&self, p:&Program, fragment:&Fragment)->bool {
+        let programs=&p.cell_ownership.programs;
+        if fragment.root>=programs.len() || fragment.hops.len()>=self.max_frames {return false;}
+        let Some(root)=self.shapes.get(fragment.root) else {return false;};
+        let mut shape=(**root).clone();
+        for hop in &fragment.hops {
+            let Some(rule)=p.rules.get(hop.rule) else {return false;};
+            let program=p.cell_ownership.markers[rule.template].program_id;
+            let Some(subst)=substitutions(&self.sources,programs,&shape,hop) else {return false;};
+            shape=shape.append(program,&programs[program],&subst).0;
+        }
+        true
+    }
     fn substitutions(
         &self,
         programs: &[Arc<PortProgram>],

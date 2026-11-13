@@ -1,0 +1,105 @@
+{
+  "scope": "actual standalone Cell runtime, requested allocation bytes; no timing claim",
+  "base_program": "fa9dc6539260f7f5440cdcff0266b6fca1ff527c5c0a204ddf80b0e97dd2df6a",
+  "candidate": "f0417499d1850595eb10c4353fc251e802c9d4e075790384279049ac1614092f",
+  "runs": 1428,
+  "tables": [
+    {
+      "id": 139,
+      "name": "CellSpineView11"
+    },
+    {
+      "id": 168,
+      "name": "CellSpineView8"
+    },
+    {
+      "id": 169,
+      "name": "CellSpineView9"
+    }
+  ],
+  "migration": {
+    "previous_source": "e2a0baf66e4f773000e3408037206855374423972111797a53abd9f72a5aa57f",
+    "expanded_fragments": 257,
+    "supported_fragments": 234,
+    "retained_fragments": 234,
+    "budget_policy": "short prefixes first, deterministic; unmeasured cost",
+    "new_observations": false,
+    "mapping": "source template implementations and original query atoms; checked target substitutions"
+  },
+  "control": {
+    "program": "55417575c80b01c22cc9e9177a8a68a008b03ef75d2fef9236ea58a62ea13aba",
+    "graph_owned_teardown_bytes": 2521494,
+    "retained_program_teardown_bytes": 119842359,
+    "graph_reduction_from_selected_tables": 95823,
+    "additional_graph_reduction_from_learned_catalog": 19224,
+    "scope": "same selected tables, old catalog; final-state equality only, no full Run audit"
+  },
+  "heap": {
+    "graph_owned_teardown_bytes": {
+      "before": 2617317,
+      "after": 2502270,
+      "delta": -115047
+    },
+    "retained_program_teardown_bytes": {
+      "before": 117318509,
+      "after": 119610132,
+      "delta": 2291623
+    },
+    "execution_and_takeover_peak_bytes": {
+      "before": 125400997,
+      "after": 127612142,
+      "delta": 2211145
+    },
+    "max_takeover_extra_bytes": {
+      "before": 50320,
+      "after": 41232,
+      "delta": -9088
+    }
+  },
+  "graph_reduction_fraction": 0.04395608174325083,
+  "net_graph_and_program_delta": 2176576,
+  "field_deltas": {
+    "graph_fields": {
+      "cells": 7104,
+      "dirty_facts": 312,
+      "function_keys": -10424,
+      "functions": -120032,
+      "intern": 11200,
+      "ownership.boundaries": 14712,
+      "ownership.components": 12288,
+      "ownership.shapes": -160,
+      "stable_ports": 9888,
+      "uses": -39932
+    },
+    "program_fields": {
+      "artifact": 2462011,
+      "composition.conditions": -66056,
+      "composition.fragments": -2752,
+      "composition.queries": -4680,
+      "composition.shapes": -31640,
+      "composition.sources": 1824,
+      "composition.transitions": -1008,
+      "merge_programs": -168,
+      "multi_stage": 1932,
+      "ownership.code_operators": 96,
+      "ownership.code_programs": 19712,
+      "ownership.entries": 288,
+      "ownership.programs": 24,
+      "ownership.query_classes": -80168,
+      "ownership.routes": 640,
+      "tables": -1086,
+      "templates": 192,
+      "view_blocks": -6818,
+      "writes": -720
+    }
+  },
+  "audit": {
+    "source_specialization_verified": true,
+    "baseline_saved_checks_equal": true,
+    "graph_rhs_writes_equal": true,
+    "resume_changed_runs": [],
+    "write_comparison": "ordered logical writes including Unit membership; no physical storage index"
+  },
+  "physical_write_changed_runs": 258,
+  "admission": "Graph compression only; retained Program and process peak regress; baseline unchanged"
+}

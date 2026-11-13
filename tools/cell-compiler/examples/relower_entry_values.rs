@@ -4,11 +4,14 @@ use serde_json::json;
 use std::{fs,error::Error};
 fn main()->Result<(),Box<dyn Error>> {
     let a=std::env::args().skip(1).collect::<Vec<_>>();
-    if a.len()<2 || a[2..].iter().any(|x|x!="--verify-only" && x!="--unit-facts" && x!="--unit-ownership") {
-        return Err("usage: relower_entry_values SOURCE OUTPUT [--verify-only] [--unit-facts] [--unit-ownership]".into());
+    if a.len()<2 || a[2..].iter().any(|x|x!="--verify-only" && x!="--unit-facts" && x!="--unit-ownership" && !x.starts_with("--unit-tables=") && !x.starts_with("--ownership-catalog=")) {
+        return Err("usage: relower_entry_values SOURCE OUTPUT [--verify-only] [--unit-facts] [--unit-ownership] [--unit-tables=JSON] [--ownership-catalog=PROGRAM]".into());
     }
     let owned=a[2..].iter().any(|x|x=="--unit-ownership");
-    let unit=owned || a[2..].iter().any(|x|x=="--unit-facts");
+    let catalog=a[2..].iter().find_map(|x|x.strip_prefix("--ownership-catalog="));
+    if catalog.is_some() && !owned {return Err("ownership catalog requires --unit-ownership".into());}
+    let selected=a[2..].iter().find_map(|x|x.strip_prefix("--unit-tables="));
+    let unit=selected.is_some() || owned || a[2..].iter().any(|x|x=="--unit-facts");
     let validate=if unit {compiler::validate_unit_fact_specialization} else {compiler::validate_entry_value_specialization};
     let source=Program::parse(serde_json::from_slice(&fs::read(&a[0])?)?)?;
     if a[2..].iter().any(|x|x=="--verify-only") {
@@ -17,7 +20,10 @@ fn main()->Result<(),Box<dyn Error>> {
         println!("{}",json!({"source_specialization_verified":true,"base":source.artifact["sha256"],"candidate":target.artifact["sha256"]}));
         return Ok(());
     }
-    let mut raw=if unit {compiler::specialize_unit_facts(&source)?} else {compiler::specialize_entry_values(&source)?};
+    let mut raw=if let Some(path)=selected {
+        let tables:Vec<usize>=serde_json::from_slice(&fs::read(path)?)?;
+        compiler::specialize_unit_facts_selected(&source,&tables)?
+    } else if unit {compiler::specialize_unit_facts(&source)?} else {compiler::specialize_entry_values(&source)?};
     if owned {raw["unit_fact_ownership"]=true.into();}
     let old=&source.artifact;
     // This finite migration requires stable rule/slot/query coordinates. Do not
@@ -60,7 +66,17 @@ fn main()->Result<(),Box<dyn Error>> {
     // validate them, and changed wiring is reported rather than called equal.
     raw["ownership_fragments"]=old["ownership_fragments"].clone();
     if owned {
-        let mut before=source.clone();before.prepare_cell_ownership()?;
+        let mut before=if let Some(path)=catalog {
+            Program::parse(serde_json::from_slice(&fs::read(path)?)?)?
+        } else {source.clone()};
+        let donor=&before.artifact["recipe"]["rules"];
+        if donor.as_array().map(|r|r.len())!=old["recipe"]["rules"].as_array().map(|r|r.len())
+            || donor.as_array().unwrap().iter().zip(old["recipe"]["rules"].as_array().unwrap()).any(|(b,a)|
+                ["metadata","query","slots"].iter().any(|k|b[k]!=a[k])) {
+            return Err("ownership catalog changed Cell coordinates".into());
+        }
+        before.prepare_cell_ownership()?;
+        raw["ownership_fragments"]=before.artifact["ownership_fragments"].clone();
         let mut without=raw.clone();without.as_object_mut().unwrap().remove("ownership_fragments");
         let mut target=Program::parse(without)?;target.prepare_cell_ownership()?;
         let mut roots=std::collections::BTreeMap::<usize,std::collections::BTreeSet<usize>>::new();
@@ -68,7 +84,7 @@ fn main()->Result<(),Box<dyn Error>> {
             roots.entry(old.program_id).or_default().insert(new.program_id);
         }
         let mut fragments=std::collections::BTreeSet::new();
-        for fragment in old["ownership_fragments"]["fragments"].as_array().ok_or("fragments")? {
+        for fragment in before.artifact["ownership_fragments"]["fragments"].as_array().ok_or("fragments")? {
             let f:eggfuse_cell_runtime::graph::cell_ownership::composition::Fragment=serde_json::from_value(fragment.clone())?;
             for &root in roots.get(&f.root).ok_or("missing root implementation")? {
                 let mut next=f.clone();next.root=root;
@@ -79,9 +95,20 @@ fn main()->Result<(),Box<dyn Error>> {
                 fragments.insert(next);
             }
         }
+        let expanded=fragments.len();
+        fragments.retain(|f|target.cell_ownership.composition.supports_fragment(&target,f));
+        let supported=fragments.len();
+        let mut fragments=fragments.into_iter().collect::<Vec<_>>();
+        // Representation changes can split a shared root implementation. Keep
+        // the existing finite budget and all prefixes of retained fragments.
+        fragments.sort_by(|a,b|a.hops.len().cmp(&b.hops.len()).then(a.cmp(b)));
+        fragments.truncate(256);
+        let retained=fragments.len();
         raw["ownership_fragments"]["fragments"]=serde_json::to_value(fragments)?;
+        raw["ownership_fragments"].as_object_mut().unwrap().remove("ranking");
         raw["ownership_fragments"].as_object_mut().unwrap().remove("query_classes");
-        raw["ownership_fragments"]["selection_provenance"]=json!({"previous_source":old["ownership_fragments"]["source"],
+        raw["ownership_fragments"]["selection_provenance"]=json!({"previous_source":before.artifact["ownership_fragments"]["source"],
+            "expanded_fragments":expanded,"supported_fragments":supported,"retained_fragments":retained,"budget_policy":"short prefixes first, deterministic; unmeasured cost",
             "new_observations":false,"mapping":"source template implementations and original query atoms; checked target substitutions"});
     }
     raw["ownership_fragments"]["source"]=eggfuse_cell_runtime::graph::cell_ownership::composition::source_digest(&raw).into();
