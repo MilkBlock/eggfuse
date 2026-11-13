@@ -302,3 +302,56 @@ not just the observed Cell's own RHS. New result ports and unseen external
 nodes remain outside this observation. Seventeen Python tests and the Rust
 observer boundary test pass. This establishes representation evidence across
 the full program, not GPU ruleset coverage or new native semantic acceptance.
+
+## GPU context messages and ridge Eq prediction: negative result
+
+`context_ridge.py RELATION_TRACE OUTPUT.json` sends pre-Run routing and scalar
+features to Metal once. Global IDs serve only to prepare dense routing indices;
+no identifier magnitude enters a float. Each input-port occurrence emits a
+fixed nonlinear dense vector. Device scatter-add aggregates vectors both within
+the Cell's local Eq groups and across Cells sharing a root in the same Run.
+Dense projections/tanh form port states and a pooled Cell token. Pair readouts
+consume the Cell state and the two endpoint states. Each pair is an output head
+of a Cell, not an independently dispatched graph node. All observed rulesets
+share the numerical implementation; no SubTuple selection occurs.
+
+Ridge is fitted without backpropagation on the first 60% of source Runs, with
+regularizer and threshold chosen only on the next 20%. The final 20% are test.
+Positive training labels have fixed weight 20. Both a local-only ablation and
+cross-Cell context model use the same pipeline. Post-Run roots enter labels
+only. Tests verify label changes cannot affect input arrays, identical IDs in
+separate Runs cannot communicate, large-i64 low bits survive input encoding,
+and a test without positives never reports perfect recall. Integers use sign-log
+and four exactly representable 16-bit input limbs; strings use fixed hashed
+features. These are representations, not replacement arithmetic or equality
+proofs; the dense encoding remains lossy. No unsupported scalar pairs occur in
+this observed trace. Twenty-one Python tests pass.
+
+The full trace supplies 7,265 Cells, 30,736 Eq ports and 17,526 candidate input
+pairs, of which 518 become equal. Existing Eq pairs are excluded from prediction.
+The final encoding includes local Eq-group aggregation even in the ablation.
+Results in `context-ridge-results.json`:
+
+| Model | Validation true / missed / false Eq | Test true / missed / false Eq |
+|---|---|---|
+| Local only | 120 / 195 / 989 | 6 / 0 / 312 |
+| With shared-root context | 201 / 114 / 1,754 | 6 / 0 / 617 |
+
+This model is not usable for authorizing unions. Context improves validation
+recall (38.1% to 63.8%) but has too many false positives, and does not improve the
+held-out false-positive count. Test contains only six positive pairs, so 100%
+recall is weak evidence. The earlier exact-context ambiguity audit does not
+imply that this dense random compression preserves its useful distinctions.
+The report also records exact feature overlap with training and per-ruleset
+held-out counts. These are one-program chronology results, not cross-program
+or unseen-structure generalization.
+
+GPU feature encoding agrees with independent NumPy evaluation. A fused GPU
+encoding-plus-ridge expression also agrees with the staged device version,
+with zero classification differences in this run. Offline training reads back
+features; the fused inference path needs no intermediate host read. CPU routing
+and scalar preparation took about 77 ms, with 702,088 routing bytes. Cold device
+timings include compilation and are not evidence of runtime speedup. GPU query
+completion, constructor/union commitment and autonomous whole-program execution
+remain absent; GPU-completed bindings remain zero. This result shows that the current pooled encoder and ridge readout are not
+reliable enough for completion. It does not disprove other ridge representations.

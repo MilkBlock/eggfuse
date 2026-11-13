@@ -1,0 +1,343 @@
+{
+  "scope": "Whole-program pre-Run port message encoding and ridge prediction of input-port Eq deltas; replay only",
+  "trace_sha256": "6d456379a02b1502578f61d019ae75ea35a4f0756a52f3e3419d11732575ca75",
+  "program_sha256": "c9ce3a6fe289a86fe681592664e3148eec55b06b3c4d53bd8725de7ced3b949a",
+  "cells": 7265,
+  "ports": 30736,
+  "root_groups": 12378,
+  "role_codes": 1103,
+  "candidate_pairs": 17526,
+  "positive_pairs": 518,
+  "cpu_prepare_seconds": 0.07687979098409414,
+  "upload_seconds": 0.0005938750109635293,
+  "routing_bytes": 702088,
+  "split": {
+    "kind": "chronological source Run",
+    "train_end": 856,
+    "validation_end": 1142,
+    "test_end": 1428
+  },
+  "scalar_encoding": "i64 sign-log plus four exact 16-bit limbs; String fixed hash features; exact typed values retained by CPU",
+  "unsupported_scalar_pairs": 0,
+  "renaming_invariance": true,
+  "backpropagation": false,
+  "variants": {
+    "local": {
+      "regularizer": 100.0,
+      "threshold": 0.2,
+      "validation": {
+        "pairs": 4643,
+        "positive_pairs": 315,
+        "tp": 120,
+        "fp": 989,
+        "fn": 195,
+        "precision": 0.10820559062218214,
+        "recall": 0.38095238095238093,
+        "f2": 0.2532714225411566
+      },
+      "test": {
+        "pairs": 1409,
+        "positive_pairs": 6,
+        "tp": 6,
+        "fp": 312,
+        "fn": 0,
+        "precision": 0.018867924528301886,
+        "recall": 1.0,
+        "f2": 0.08771929824561403
+      },
+      "train": {
+        "pairs": 11474,
+        "positive_pairs": 197,
+        "tp": 194,
+        "fp": 2303,
+        "fn": 3,
+        "precision": 0.0776932318782539,
+        "recall": 0.9847715736040609,
+        "f2": 0.2952815829528158
+      },
+      "test_exact_feature_rows_seen_in_train": 692,
+      "cpu_encode_seconds": 0.020726374990772456,
+      "gpu_encode_first_request_seconds": 0.06382387498160824,
+      "ridge_fit_seconds": 0.028602916980162263,
+      "gpu_readout_first_request_seconds": 0.0008232080144807696,
+      "fused_device_first_request_seconds": 0.0023566249874420464,
+      "fused_classification_disagreements": 0,
+      "per_ruleset_test": {
+        "all-optimizations": {
+          "pairs": 30,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 20,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "always-run": {
+          "pairs": 1064,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 150,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "canon": {
+          "pairs": 12,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "cell-spine-complete": {
+          "pairs": 30,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 6,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "context": {
+          "pairs": 10,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "is-resolved": {
+          "pairs": 8,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "non-weakly-linear": {
+          "pairs": 122,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 92,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms": {
+          "pairs": 53,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 10,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers": {
+          "pairs": 12,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers-helpers": {
+          "pairs": 42,
+          "positive_pairs": 6,
+          "tp": 6,
+          "fp": 24,
+          "fn": 0,
+          "precision": 0.2,
+          "recall": 1.0,
+          "f2": 0.5555555555555556
+        },
+        "type-analysis": {
+          "pairs": 26,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 8,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        }
+      }
+    },
+    "context": {
+      "regularizer": 0.01,
+      "threshold": 0.1,
+      "validation": {
+        "pairs": 4643,
+        "positive_pairs": 315,
+        "tp": 201,
+        "fp": 1754,
+        "fn": 114,
+        "precision": 0.10281329923273658,
+        "recall": 0.638095238095238,
+        "f2": 0.31259720062208396
+      },
+      "test": {
+        "pairs": 1409,
+        "positive_pairs": 6,
+        "tp": 6,
+        "fp": 617,
+        "fn": 0,
+        "precision": 0.009630818619582664,
+        "recall": 1.0,
+        "f2": 0.04636785162287481
+      },
+      "train": {
+        "pairs": 11474,
+        "positive_pairs": 197,
+        "tp": 197,
+        "fp": 3532,
+        "fn": 0,
+        "precision": 0.052829176722982034,
+        "recall": 1.0,
+        "f2": 0.21806508744742084
+      },
+      "test_exact_feature_rows_seen_in_train": 10,
+      "cpu_encode_seconds": 0.019775499997194856,
+      "gpu_encode_first_request_seconds": 0.0019327910267747939,
+      "ridge_fit_seconds": 0.021311916992999613,
+      "gpu_readout_first_request_seconds": 0.0003797090030275285,
+      "fused_device_first_request_seconds": 0.0019166659913025796,
+      "fused_classification_disagreements": 0,
+      "per_ruleset_test": {
+        "all-optimizations": {
+          "pairs": 30,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 14,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "always-run": {
+          "pairs": 1064,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 398,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "canon": {
+          "pairs": 12,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 12,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "cell-spine-complete": {
+          "pairs": 30,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 30,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "context": {
+          "pairs": 10,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "is-resolved": {
+          "pairs": 8,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null,
+          "f2": 0.0
+        },
+        "non-weakly-linear": {
+          "pairs": 122,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 88,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms": {
+          "pairs": 53,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 13,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers": {
+          "pairs": 12,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 8,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        },
+        "terms-helpers-helpers": {
+          "pairs": 42,
+          "positive_pairs": 6,
+          "tp": 6,
+          "fp": 36,
+          "fn": 0,
+          "precision": 0.14285714285714285,
+          "recall": 1.0,
+          "f2": 0.45454545454545453
+        },
+        "type-analysis": {
+          "pairs": 26,
+          "positive_pairs": 0,
+          "tp": 0,
+          "fp": 18,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f2": 0.0
+        }
+      }
+    }
+  },
+  "gpu_completed_bindings": 0,
+  "limitations": [
+    "Only observed input-port Eq changes; no new-node or query completion",
+    "CPU supplies matched instances, exact pre-Run root routing and scalar encoding",
+    "Within-Run messages never cross into another Run; post-Run roots are labels only",
+    "Chronological test has few positive changes; no generalization claim from high total accuracy",
+    "String feature hashing and dense pooling are lossy, not equality proofs",
+    "Fixed weights and all role layouts are compiler metadata; only ridge uses training targets",
+    "Feature arrays read back for offline fitting/validation only; no predicted union committed",
+    "Cold timings include compilation and cannot establish end-to-end speedup"
+  ]
+}
