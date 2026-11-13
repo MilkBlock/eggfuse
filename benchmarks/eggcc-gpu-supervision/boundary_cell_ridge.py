@@ -2,8 +2,9 @@
 
 One row is a whole Cell. Per-boundary channels are part of its state, not
 independently scheduled node tasks. Bake supplies fixed request projections.
-Only original boundary ports are represented in this experiment; newly created
-ports need a future layout extension and are explicitly excluded from rollout.
+By default only original boundary ports are represented. The optional generated
+boundary experiment reserves one generation of Bake output slots and makes the
+second request consume a newly predicted output; arbitrary growth remains absent.
 """
 import argparse
 import hashlib
@@ -22,7 +23,7 @@ def symbols(facts):
     return sorted({freeze(v) for _,args,*_ in facts for v in args},key=repr)
 
 
-def boundary(facts,ports,mapping=None):
+def boundary(facts,ports,mapping=None,allow_absent=False):
     """Teacher/bootstrap only; never called on the device's intermediate state."""
     facts=sorted({(n,tuple(freeze(v) for v in args)) for n,args,*_ in facts},key=repr)
     roles={v:np.zeros(B,np.float32) for v in symbols(facts)}
@@ -35,13 +36,32 @@ def boundary(facts,ports,mapping=None):
             for other,w in enumerate(args):
                 result[v]+=np.tanh(roles[w])*code(('boundary-edge',n,pos,other))[:B]
     aliases=dict((freeze(a),freeze(b)) for a,b in mapping) if mapping is not None else {v:v for v in ports}
-    return np.array([np.tanh(result[aliases[v]]+(code(aliases[v])[:B] if aliases[v][0]=='literal' else 0)) for v in ports],np.float32).reshape(-1,B)
+    rows=[]
+    for v in ports:
+        actual=aliases[v]
+        if actual not in result:
+            if not allow_absent:raise ValueError('boundary has no established fact')
+            rows.append(np.zeros(B,np.float32))
+        else:rows.append(np.tanh(result[actual]+(code(actual)[:B] if actual[0]=='literal' else 0)))
+    return np.array(rows,np.float32).reshape(-1,B)
 
 
-def state(facts,ports,capacity,mapping=None):
+def state(facts,ports,capacity,mapping=None,allow_absent=False):
     channels=np.zeros((capacity,B),np.float32)
-    channels[:len(ports)]=boundary(facts,ports,mapping)
+    channels[:len(ports)]=boundary(facts,ports,mapping,allow_absent)
     return np.concatenate([encode(facts),channels.reshape(-1)])
+
+
+
+def output_layout(source,completion):
+    """Reserve symbolic output interface slots, not physical constructor IDs."""
+    inherited=symbols(source)
+    quotient={freeze(a):freeze(b) for a,b in completion['source_map']}
+    new=sorted(set(symbols(completion['facts']))-set(quotient.values()),key=repr)
+    # Keep inherited handles; map added logical outputs to their exact target role.
+    ports=inherited+new
+    if len(set(ports))!=len(ports):raise ValueError('ambiguous generated boundary handle')
+    return ports,list(quotient.items())+[(v,v) for v in new],new
 
 
 def projection(binding,ports,capacity):
@@ -93,20 +113,22 @@ def step(states,queries,projections,w,coef,xp):
 
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('program',type=Path);parser.add_argument('targets',type=Path);parser.add_argument('output',type=Path);parser.add_argument('--predictions',type=Path);parser.add_argument('--boundary-rank',type=int);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('program',type=Path);parser.add_argument('targets',type=Path);parser.add_argument('output',type=Path);parser.add_argument('--predictions',type=Path);parser.add_argument('--boundary-rank',type=int);parser.add_argument('--generated-boundaries',action='store_true');args=parser.parse_args()
     program=json.loads(args.program.read_text());data=json.loads(args.targets.read_text())
     if program['sha256']!=data['program_sha256']:raise ValueError('program mismatch')
     recipe=program['recipe'];rules=recipe['rules'];tables={t['name']:t for t in recipe['tables']};catalog=compile_catalog(recipe)
-    capacity=max(len(symbols(r['source'])) for r in data['targets'])
-    states=[];queries=[];projections=[];targets=[];novel=[];roots=[];chains=[];unrepresented=0;port_counts=[]
+    capacity=max(len(output_layout(r['source'],r['completion'])[0] if args.generated_boundaries else symbols(r['source'])) for r in data['targets'])
+    states=[];queries=[];projections=[];targets=[];novel=[];roots=[];chains=[];unrepresented=0;port_counts=[];inherited_counts=[]
     for row in data['targets']:
-        source=row['source'];ports=symbols(source);port_counts.extend([len(ports)]*2);completion=row['completion'];binding=catalog['edges'][row['edge']]['inputs'];rule=rules[row['consumer']]
-        s=state(source,ports,capacity);t=state(completion['facts'],ports,capacity,completion['source_map']);q=request(rule,binding);p=projection(binding,ports,capacity)
+        source=row['source'];completion=row['completion'];binding=catalog['edges'][row['edge']]['inputs'];rule=rules[row['consumer']]
+        ports,mapping,new_ports=output_layout(source,completion) if args.generated_boundaries else (symbols(source),completion['source_map'],[])
+        port_counts.extend([len(ports)]*2);inherited_counts.extend([len(symbols(source))]*2)
+        s=state(source,ports,capacity,allow_absent=args.generated_boundaries);t=state(completion['facts'],ports,capacity,mapping);q=request(rule,binding);p=projection(binding,ports,capacity)
         states.extend([s,s]);targets.extend([t,s]);queries.extend([q,np.zeros(D,np.float32)]);projections.extend([p,np.zeros_like(p)]);novel.extend([completion['novel'],False]);roots.extend([row['producer']]*2)
         if row['producer']%5==0 and completion['novel'] and len(chains)<64:
             facts=[(n,tuple(freeze(v) for v in vs),True) for n,vs in completion['facts']]
             # Exact inverse maps are compile-time wiring, not inferred IDs.
-            quotient={freeze(a):freeze(b) for a,b in completion['source_map']};inverse={}
+            quotient={freeze(a):freeze(b) for a,b in mapping};inverse={}
             for port in ports:inverse.setdefault(quotient[port],port)
             found=False
             for consumer in rules:
@@ -115,6 +137,7 @@ def main():
                 for match in bindings:
                     second,reason=compose(facts,consumer,match['inputs'],tables)
                     if reason or not second['novel']:continue
+                    if args.generated_boundaries and not any(freeze(v) in new_ports for _,v in match['inputs']):continue
                     if any(freeze(v) not in inverse for _,v in match['inputs']):unrepresented+=1;continue
                     next_binding=[(slot,inverse[freeze(v)]) for slot,v in match['inputs']]
                     q2=request(consumer,match['inputs']);p2=projection(next_binding,ports,capacity)
@@ -146,7 +169,14 @@ def main():
         reconstructed=full_target[:,D:]@basis@basis.T
         for name,mask in [('train',roots%5>=2),('validation',roots%5==1),('test',roots%5==0)]:
             compression_reconstruction[name]=float(np.sqrt(np.mean(((reconstructed[mask]-full_target[mask,D:])**2)[live[mask]])))
-    result=dict(compression_target_live_reconstruction_rmse=compression_reconstruction,scope='standalone learned whole-Cell and original-boundary Metal recurrence; no runtime takeover',program_sha256=program['sha256'],targets_sha256=hashlib.sha256(args.targets.read_bytes()).hexdigest(),backpropagation=False,boundary_rank=args.boundary_rank,basis_training='training producer source and target states only; uncentered SVD',capacity=capacity,boundary_width=B,state_float_count=s.shape[1],request_projection_floats_per_row=int(np.prod(p.shape[1:])),fit=fit,metrics=metrics,limitations=['Same finite producer-family split, not unseen workload','Only original boundary ports; new-port requests excluded explicitly','Request projections supplied by Bake; GPU match discovery not implemented','No exact semantic decoder or ownership retirement authorization','Dense per-request projections are expensive prototype storage, not a performance claim'])
+    result=dict(compression_target_live_reconstruction_rmse=compression_reconstruction,scope='standalone learned whole-Cell and original-boundary Metal recurrence; no runtime takeover',program_sha256=program['sha256'],targets_sha256=hashlib.sha256(args.targets.read_bytes()).hexdigest(),backpropagation=False,generated_boundaries=args.generated_boundaries,boundary_rank=args.boundary_rank,basis_training='training producer source and target states only; uncentered SVD',capacity=capacity,boundary_width=B,state_float_count=s.shape[1],request_projection_floats_per_row=int(np.prod(p.shape[1:])),fit=fit,metrics=metrics,limitations=['Same finite producer-family split, not unseen workload',('One generation of output boundary slots reserved by Bake; arbitrary growth absent' if args.generated_boundaries else 'Only original boundary ports; new-port requests excluded explicitly'),'Request projections supplied by Bake; GPU match discovery not implemented','No exact semantic decoder or ownership retirement authorization','Dense per-request projections are expensive prototype storage, not a performance claim'])
+    if args.generated_boundaries:
+        added=np.repeat((np.arange(capacity)[None,:]>=np.array(inherited_counts)[:,None]) & (np.arange(capacity)[None,:]<np.array(port_counts)[:,None]),B,axis=1)
+        mask=(roots%5==0)&n
+        selected=added[mask]
+        result['new_output_channels']=dict(test_values=int(selected.sum()),
+            predicted_rmse=float(np.sqrt(np.mean(((decoded_boundary[mask]-full_target[mask,D:])**2)[selected]))),
+            zero_baseline_rmse=float(np.sqrt(np.mean((full_target[mask,D:]**2)[selected]))))
     if chains:
         a,b,c,d,e,gold,origins,counts=zip(*chains);a,b,c,d,e,gold=[np.array(v,np.float32) for v in (a,b,c,d,e,gold)]
         if basis is not None:
@@ -157,7 +187,7 @@ def main():
         last,e1,e2=mx.compile(rollout)(*[mx.array(v) for v in (a,b,c,d,e)]);mx.eval(last,e1,e2)
         first,l1=step(a,b,c,w,coef,np);second,l2=step(first,d,e,w,coef,np);reference=np.where((l1&l2)[:,None],second,first)
         np.testing.assert_allclose(np.array(last),reference,rtol=2e-3,atol=8e-4)
-        result['rollout']=dict(chains=len(chains),initial_producers=len(set(origins)),excluded_new_boundary_requests=unrepresented,first_emissions=int(np.array(e1).sum()),second_emissions=int(np.array(e2).sum()),body_rmse=float(np.sqrt(np.mean((np.array(last)[:,:D]-gold[:,:D])**2))),live_boundary_rmse=float(np.sqrt(np.mean(((audit_boundary(np.array(last),basis)-gold[:,D:])**2)[np.repeat(np.arange(capacity)[None,:]<np.array(counts)[:,None],B,axis=1)]))),intermediate_cpu_reads=0,teacher_state_supplied_between_steps=False)
+        result['rollout']=dict(chains=len(chains),requests_new_first_step_output=args.generated_boundaries,initial_producers=len(set(origins)),excluded_new_boundary_requests=unrepresented,first_emissions=int(np.array(e1).sum()),second_emissions=int(np.array(e2).sum()),body_rmse=float(np.sqrt(np.mean((np.array(last)[:,:D]-gold[:,:D])**2))),live_boundary_rmse=float(np.sqrt(np.mean(((audit_boundary(np.array(last),basis)-gold[:,D:])**2)[np.repeat(np.arange(capacity)[None,:]<np.array(counts)[:,None],B,axis=1)]))),intermediate_cpu_reads=0,teacher_state_supplied_between_steps=False)
     if args.predictions:
         args.predictions.write_text(json.dumps(dict(program_sha256=program['sha256'],targets_sha256=result['targets_sha256'],predictions=pred[:,:D].tolist(),emitted=emit.tolist(),producer_roots=roots.tolist(),order='each target followed by its identity control'))+'\n')
     args.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))

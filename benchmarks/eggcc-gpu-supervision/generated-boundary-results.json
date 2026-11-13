@@ -1,0 +1,74 @@
+{
+  "compression_target_live_reconstruction_rmse": {},
+  "scope": "standalone learned whole-Cell and original-boundary Metal recurrence; no runtime takeover",
+  "program_sha256": "25776d5a8242b50bd90b686dd8dce79217800e642775693f60907dd96d2976a2",
+  "targets_sha256": "de67cb46076ff0523ff549d7686f1708bb4d515e10d32bcf7d7249ffb65555cb",
+  "backpropagation": false,
+  "generated_boundaries": true,
+  "boundary_rank": null,
+  "basis_training": "training producer source and target states only; uncentered SVD",
+  "capacity": 109,
+  "boundary_width": 16,
+  "state_float_count": 1808,
+  "request_projection_floats_per_row": 111616,
+  "fit": {
+    "alpha": 100.0,
+    "validation_target_mse": 0.0012224351521581411
+  },
+  "metrics": {
+    "train": {
+      "cases": 612,
+      "novel": 281,
+      "emitted": 285,
+      "false_emissions": 4,
+      "missed_emissions": 0,
+      "body_rmse": 0.041601091623306274,
+      "live_boundary_rmse": 0.030464768409729004,
+      "unchanged_body_rmse": 0.1221248060464859
+    },
+    "validation": {
+      "cases": 444,
+      "novel": 214,
+      "emitted": 211,
+      "false_emissions": 1,
+      "missed_emissions": 4,
+      "body_rmse": 0.1003403514623642,
+      "live_boundary_rmse": 0.032700370997190475,
+      "unchanged_body_rmse": 0.091122567653656
+    },
+    "test": {
+      "cases": 296,
+      "novel": 140,
+      "emitted": 139,
+      "false_emissions": 3,
+      "missed_emissions": 4,
+      "body_rmse": 0.08130303770303726,
+      "live_boundary_rmse": 0.046822044998407364,
+      "unchanged_body_rmse": 0.12089424580335617
+    }
+  },
+  "limitations": [
+    "Same finite producer-family split, not unseen workload",
+    "One generation of output boundary slots reserved by Bake; arbitrary growth absent",
+    "Request projections supplied by Bake; GPU match discovery not implemented",
+    "No exact semantic decoder or ownership retirement authorization",
+    "Dense per-request projections are expensive prototype storage, not a performance claim"
+  ],
+  "new_output_channels": {
+    "test_values": 3952,
+    "predicted_rmse": 0.1425541490316391,
+    "zero_baseline_rmse": 0.14935769140720367
+  },
+  "rollout": {
+    "chains": 29,
+    "requests_new_first_step_output": true,
+    "initial_producers": 12,
+    "excluded_new_boundary_requests": 0,
+    "first_emissions": 28,
+    "second_emissions": 25,
+    "body_rmse": 0.1668558120727539,
+    "live_boundary_rmse": 0.08529067039489746,
+    "intermediate_cpu_reads": 0,
+    "teacher_state_supplied_between_steps": false
+  }
+}

@@ -138,3 +138,44 @@ Reproduce with the earlier commands, adding `--boundary-rank 64` to the model
 command. `boundary-rank64-results.json` includes model and exact-body audit
 results. The first 64 eligible chains still run entirely on Metal between steps;
 this remains an offline standalone prototype, not the complete eggcc GPU runtime.
+
+## Newly generated ports as inputs to the next GPU step
+
+`--generated-boundaries` extends each bounded Bake transition's interface with
+logical output ports not already covered by the source quotient. Initial values
+for these future slots are zero; the learned first transition predicts their
+values. A constructor reused under congruence does not receive a fresh port slot.
+The quotient still maps inherited handles to the actual logical result.
+
+This is a symbolic offline Bake layout, **not** a physical address of the form
+(producer, effect). Its layout comes from the already supported completion
+catalog, including test-family templates, just as the existing request catalog
+does. It is not a demonstration of discovering unknown layouts from live data.
+
+Rollout selection now explicitly requires the second consumer to read a newly
+created first-step port. Out of the existing test families the bounded search
+finds 29 such chains from 12 producers. All second requests use predicted channels
+on Metal; no teacher intermediate state or CPU rematch is supplied. Twenty-eight
+first-step and 25 second-step emission decisions are positive. These are not
+semantic success counts. Body RMSE after the second step is 0.16686, but these
+chains differ from the earlier 64-chain selection, so those RMSEs are not a paired
+improvement comparison.
+
+First-step new-output channels are checked separately from inherited channels and
+padding. Across 3,952 test target channel values for novel requests, prediction
+RMSE is **0.14255**, versus **0.14936** for leaving them zero. The small difference
+shows how weak these learned outputs still are. Connectivity is now executable,
+but useful semantic prediction and ownership takeover are not established.
+
+The new experiment uses the full boundary representation; the unsuccessful
+rank-64 variant is not enabled. It reserves one generation of output slots and
+cannot allocate arbitrary future token state or run to saturation. It also lacks
+an independently learned per-output validity proof: the whole transition's
+emission gates the second stage. A false emission can therefore activate an
+invalid successor, and the CPU audit still must reject it. No source-Run or
+lifecycle correctness claim follows.
+
+Two added tests check initially absent output channels becoming addressable to a
+next request and constructor reuse avoiding an extra boundary slot. Ten boundary
+representation tests pass in total. `generated-boundary-results.json` records the
+Metal run. Reproduce with `--generated-boundaries` on the model command above.

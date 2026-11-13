@@ -1,8 +1,9 @@
 import unittest
 import numpy as np
-from boundary_cell_ridge import B,D,state,symbols,projection,features,step,fit_boundary_basis,compress_state,compress_projection,audit_boundary
+from boundary_cell_ridge import B,D,state,symbols,projection,features,step,fit_boundary_basis,compress_state,compress_projection,audit_boundary,output_layout
 from whole_cell_ridge import request
-from test_cell_token_successors import rule,atom,make
+from test_cell_token_successors import rule,atom,make,TABLES
+from dominator_completion import compose
 
 
 class Boundary(unittest.TestCase):
@@ -70,6 +71,34 @@ class Boundary(unittest.TestCase):
         p=projection([(0,self.a)],self.ports,5)[None,:]
         q=np.zeros((1,D),np.float32);w=np.zeros((5*D,1),np.float32)
         np.testing.assert_array_equal(features(s,q,p,w,np),features(compressed,q,compress_projection(p,basis),w,np))
+
+    def test_generated_output_is_reserved_empty_then_available_to_next_request(self):
+        source=[('F',(self.a,self.b))]
+        first=rule([atom('F',0,1)],[make('G',2,1)],3)
+        completion,reason=compose(source,first,[(0,self.a),(1,self.b)],TABLES)
+        self.assertIsNone(reason)
+        ports,mapping,added=output_layout(source,completion)
+        self.assertEqual(len(added),1)
+        before=state(source,ports,len(ports),allow_absent=True)
+        after=state(completion['facts'],ports,len(ports),mapping)
+        index=ports.index(added[0]);start=D+index*B
+        np.testing.assert_array_equal(before[start:start+B],np.zeros(B))
+        self.assertGreater(float(np.linalg.norm(after[start:start+B])),0)
+        next_rule=rule([atom('G',0,1)],[make('F',2,1)],3)
+        next_binding=[(0,self.b),(1,added[0])]
+        second,reason=compose(completion['facts'],next_rule,next_binding,TABLES)
+        self.assertIsNone(reason);self.assertTrue(second['novel'])
+        p=projection(next_binding,ports,len(ports))[None,:]
+        q=request(next_rule,next_binding)[None,:];w=np.zeros((5*D,1),np.float32)
+        self.assertFalse(np.allclose(features(before[None,:],q,p,w,np),features(after[None,:],q,p,w,np)))
+
+    def test_constructor_reuse_does_not_allocate_new_boundary(self):
+        source=[('F',(self.a,self.b))]
+        consumer=rule([atom('F',0,1)],[make('F',2,0)],3)
+        completion,reason=compose(source,consumer,[(0,self.a),(1,self.b)],TABLES)
+        self.assertIsNone(reason)
+        ports,_,added=output_layout(source,completion)
+        self.assertEqual(ports,symbols(source));self.assertEqual(added,[])
 
     def test_unrepresented_boundary_is_explicit(self):
         with self.assertRaisesRegex(ValueError,'unrepresented'):
