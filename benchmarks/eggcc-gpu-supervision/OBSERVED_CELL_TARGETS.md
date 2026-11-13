@@ -77,3 +77,50 @@ program fingerprint and native reference/control checks. The committed
 `observed-boundary-results.json` records capture counts, fingerprints and model
 results; large reproducible input and target data remain under ignored `out/`.
 This is a standalone prototype, not the native sum-bits acceptance validator.
+
+## Second-step diagnosis and continuation training
+
+A separate oracle-input diagnostic supplies the *correct* first completion to
+second-step inference. This diagnostic is intentionally distinct from the
+free-running GPU recurrence: it does not replace or repair the actual predicted
+state. It helps separate second-transition difficulty from error introduced by
+using the first prediction. It is not a runtime solution.
+
+On the same 21 chains, baseline oracle-input body RMSE is 0.18093, versus 0.33244
+when consuming the predicted first state. Keeping the correct first state unchanged
+has RMSE 0.19622. Both transition generalization and recurrence errors remain.
+Of the 21 second requests, 13 use rule types represented in base training; there
+are four distinct second-rule types overall. These counts do not establish that
+their completed-state input distributions appeared in training.
+
+`--train-successors` adds completed-state examples without gradient descent.
+Only originating training families are eligible; the second rule must also appear
+among training consumers. Validation/test originating families and unseen second
+rules are not used as training augmentations. Candidates use the same exact local
+teacher, starting from observed inputs, not native full-graph completion labels.
+Each added transition also gets a no-request identity control. The collector
+selects at most the first 64 admissible training transitions, one per source row;
+39 are found for this workload, spanning eight second-rule types. The original
+family split and test-chain selection remain unchanged. Ridge is still fitted
+by closed-form solves with regularization selected on the base validation set.
+
+| Paired metric, same 21 chains | Baseline | Added continuations |
+|---|---:|---:|
+| Free-running body RMSE | 0.33244 | 0.29770 |
+| Oracle-input second-step body RMSE | 0.18093 | 0.16139 |
+| Free-running live-boundary RMSE | 0.19262 | 0.18472 |
+| First emissions | 20 | 20 |
+| Second emissions | 20 | 18 |
+
+The reduced RMSE does not prove higher semantic accuracy, especially as second
+emissions decrease. There is no exact final-completion decoder for these chains.
+It shows only that completed-state training examples improve this numerical
+comparison; the large recurrence gap remains. No runtime takeover, ownership
+transfer, speedup or source-stage legality is established. The existing expensive
+boundary representation remains unchanged.
+
+Run the earlier model command with `--generated-boundaries --train-successors`.
+Omit `--train-successors` for the paired baseline. Both commands now include the
+separate oracle-input diagnostic. `successor-training-results.json` retains both
+runs and their common target fingerprint. Fifteen boundary/input tests pass, and
+both GPU runs match independent NumPy execution of their learned recurrence.

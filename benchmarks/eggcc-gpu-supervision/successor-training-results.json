@@ -1,0 +1,181 @@
+{
+  "baseline": {
+    "compression_target_live_reconstruction_rmse": {},
+    "scope": "standalone learned whole-Cell and original-boundary Metal recurrence; no runtime takeover",
+    "program_sha256": "25776d5a8242b50bd90b686dd8dce79217800e642775693f60907dd96d2976a2",
+    "targets_sha256": "64cd46bb68a2c9b24cac0480fb34a3460ee24836e9a696a3136986137ca7194e",
+    "target_schema": "observed-local-cell-targets/v1",
+    "backpropagation": false,
+    "generated_boundaries": true,
+    "boundary_rank": null,
+    "basis_training": "training producer source and target states only; uncentered SVD",
+    "capacity": 104,
+    "boundary_width": 16,
+    "state_float_count": 1728,
+    "request_projection_floats_per_row": 106496,
+    "fit": {
+      "alpha": 100.0,
+      "validation_target_mse": 0.002288124058395624
+    },
+    "metrics": {
+      "train": {
+        "cases": 372,
+        "novel": 171,
+        "emitted": 171,
+        "false_emissions": 0,
+        "missed_emissions": 0,
+        "body_rmse": 0.041288867592811584,
+        "live_boundary_rmse": 0.02718369849026203,
+        "unchanged_body_rmse": 0.1753523349761963
+      },
+      "validation": {
+        "cases": 94,
+        "novel": 39,
+        "emitted": 33,
+        "false_emissions": 2,
+        "missed_emissions": 8,
+        "body_rmse": 0.17906838655471802,
+        "live_boundary_rmse": 0.1082141250371933,
+        "unchanged_body_rmse": 0.2030791938304901
+      },
+      "test": {
+        "cases": 156,
+        "novel": 76,
+        "emitted": 70,
+        "false_emissions": 1,
+        "missed_emissions": 7,
+        "body_rmse": 0.1533118188381195,
+        "live_boundary_rmse": 0.07701249420642853,
+        "unchanged_body_rmse": 0.16574402153491974
+      }
+    },
+    "limitations": [
+      "Same finite producer-family split, not unseen workload",
+      "One generation of output boundary slots reserved by Bake; arbitrary growth absent",
+      "Request projections supplied by Bake; GPU match discovery not implemented",
+      "No exact semantic decoder or ownership retirement authorization",
+      "Dense per-request projections are expensive prototype storage, not a performance claim"
+    ],
+    "new_output_channels": {
+      "test_values": 1456,
+      "predicted_rmse": 0.13798345625400543,
+      "zero_baseline_rmse": 0.15389348566532135
+    },
+    "rollout": {
+      "chains": 21,
+      "requests_new_first_step_output": true,
+      "initial_producers": 5,
+      "excluded_new_boundary_requests": 0,
+      "first_emissions": 20,
+      "second_emissions": 20,
+      "body_rmse": 0.3324417471885681,
+      "live_boundary_rmse": 0.19262100756168365,
+      "intermediate_cpu_reads": 0,
+      "teacher_state_supplied_between_steps": false
+    },
+    "second_step_diagnosis": {
+      "scope": "oracle intermediate supplied only to this separate diagnostic, not rollout",
+      "oracle_body_rmse": 0.18093250691890717,
+      "oracle_live_boundary_rmse": 0.13929064571857452,
+      "oracle_emissions": 21,
+      "unchanged_correct_first_body_rmse": 0.1962234526872635,
+      "second_requests_with_rule_seen_in_training": 13,
+      "distinct_second_rules": 4
+    }
+  },
+  "successor_training": {
+    "compression_target_live_reconstruction_rmse": {},
+    "scope": "standalone learned whole-Cell and original-boundary Metal recurrence; no runtime takeover",
+    "program_sha256": "25776d5a8242b50bd90b686dd8dce79217800e642775693f60907dd96d2976a2",
+    "targets_sha256": "64cd46bb68a2c9b24cac0480fb34a3460ee24836e9a696a3136986137ca7194e",
+    "training_successors": 39,
+    "training_successor_rules": [
+      58,
+      64,
+      67,
+      69,
+      112,
+      288,
+      293,
+      294
+    ],
+    "target_schema": "observed-local-cell-targets/v1",
+    "backpropagation": false,
+    "generated_boundaries": true,
+    "boundary_rank": null,
+    "basis_training": "training producer source and target states only; uncentered SVD",
+    "capacity": 104,
+    "boundary_width": 16,
+    "state_float_count": 1728,
+    "request_projection_floats_per_row": 106496,
+    "fit": {
+      "alpha": 100.0,
+      "validation_target_mse": 0.0022559086792171
+    },
+    "metrics": {
+      "train": {
+        "cases": 450,
+        "novel": 210,
+        "emitted": 210,
+        "false_emissions": 0,
+        "missed_emissions": 0,
+        "body_rmse": 0.04363962262868881,
+        "live_boundary_rmse": 0.029029687866568565,
+        "unchanged_body_rmse": 0.1694895327091217
+      },
+      "validation": {
+        "cases": 94,
+        "novel": 39,
+        "emitted": 33,
+        "false_emissions": 2,
+        "missed_emissions": 8,
+        "body_rmse": 0.17830073833465576,
+        "live_boundary_rmse": 0.10779298096895218,
+        "unchanged_body_rmse": 0.2030791938304901
+      },
+      "test": {
+        "cases": 156,
+        "novel": 76,
+        "emitted": 68,
+        "false_emissions": 1,
+        "missed_emissions": 9,
+        "body_rmse": 0.14996173977851868,
+        "live_boundary_rmse": 0.0760849118232727,
+        "unchanged_body_rmse": 0.16574402153491974
+      }
+    },
+    "limitations": [
+      "Same finite producer-family split, not unseen workload",
+      "One generation of output boundary slots reserved by Bake; arbitrary growth absent",
+      "Request projections supplied by Bake; GPU match discovery not implemented",
+      "No exact semantic decoder or ownership retirement authorization",
+      "Dense per-request projections are expensive prototype storage, not a performance claim"
+    ],
+    "new_output_channels": {
+      "test_values": 1456,
+      "predicted_rmse": 0.13872739672660828,
+      "zero_baseline_rmse": 0.15389348566532135
+    },
+    "rollout": {
+      "chains": 21,
+      "requests_new_first_step_output": true,
+      "initial_producers": 5,
+      "excluded_new_boundary_requests": 0,
+      "first_emissions": 20,
+      "second_emissions": 18,
+      "body_rmse": 0.2976980209350586,
+      "live_boundary_rmse": 0.18472421169281006,
+      "intermediate_cpu_reads": 0,
+      "teacher_state_supplied_between_steps": false
+    },
+    "second_step_diagnosis": {
+      "scope": "oracle intermediate supplied only to this separate diagnostic, not rollout",
+      "oracle_body_rmse": 0.16138839721679688,
+      "oracle_live_boundary_rmse": 0.1119169071316719,
+      "oracle_emissions": 21,
+      "unchanged_correct_first_body_rmse": 0.1962234526872635,
+      "second_requests_with_rule_seen_in_training": 13,
+      "distinct_second_rules": 4
+    }
+  }
+}

@@ -113,25 +113,28 @@ def step(states,queries,projections,w,coef,xp):
 
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('program',type=Path);parser.add_argument('targets',type=Path);parser.add_argument('output',type=Path);parser.add_argument('--predictions',type=Path);parser.add_argument('--boundary-rank',type=int);parser.add_argument('--generated-boundaries',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('program',type=Path);parser.add_argument('targets',type=Path);parser.add_argument('output',type=Path);parser.add_argument('--predictions',type=Path);parser.add_argument('--boundary-rank',type=int);parser.add_argument('--generated-boundaries',action='store_true');parser.add_argument('--train-successors',action='store_true');args=parser.parse_args()
     program=json.loads(args.program.read_text());data=json.loads(args.targets.read_text())
     if program['sha256']!=data['program_sha256']:raise ValueError('program mismatch')
     recipe=program['recipe'];rules=recipe['rules'];tables={t['name']:t for t in recipe['tables']};catalog=compile_catalog(recipe) if any('binding' not in row for row in data['targets']) else None
     capacity=max(len(output_layout(r['source'],r['completion'])[0] if args.generated_boundaries else symbols(r['source'])) for r in data['targets'])
-    states=[];queries=[];projections=[];targets=[];novel=[];roots=[];chains=[];unrepresented=0;port_counts=[];inherited_counts=[]
+    states=[];queries=[];projections=[];targets=[];novel=[];roots=[];chains=[];training_chains=[];training_rules={r['consumer'] for r in data['targets'] if r['producer']%5>=2};unrepresented=0;port_counts=[];inherited_counts=[]
     for row in data['targets']:
         source=row['source'];completion=row['completion'];binding=row['binding'] if 'binding' in row else catalog['edges'][row['edge']]['inputs'];rule=rules[row['consumer']]
         ports,mapping,new_ports=output_layout(source,completion) if args.generated_boundaries else (symbols(source),completion['source_map'],[])
         port_counts.extend([len(ports)]*2);inherited_counts.extend([len(symbols(source))]*2)
         s=state(source,ports,capacity,allow_absent=args.generated_boundaries);t=state(completion['facts'],ports,capacity,mapping);q=request(rule,binding);p=projection(binding,ports,capacity)
         states.extend([s,s]);targets.extend([t,s]);queries.extend([q,np.zeros(D,np.float32)]);projections.extend([p,np.zeros_like(p)]);novel.extend([completion['novel'],False]);roots.extend([row['producer']]*2)
-        if row['producer']%5==0 and completion['novel'] and len(chains)<64:
+        is_test=row['producer']%5==0
+        wants_successor=(is_test and len(chains)<64) or (args.train_successors and row['producer']%5>=2 and len(training_chains)<64)
+        if completion['novel'] and wants_successor:
             facts=[(n,tuple(freeze(v) for v in vs),True) for n,vs in completion['facts']]
             # Exact inverse maps are compile-time wiring, not inferred IDs.
             quotient={freeze(a):freeze(b) for a,b in mapping};inverse={}
             for port in ports:inverse.setdefault(quotient[port],port)
             found=False
-            for consumer in rules:
+            for next_rid,consumer in enumerate(rules):
+                if not is_test and next_rid not in training_rules:continue
                 bindings,exhausted=match_consumer(consumer,facts,limit=32)
                 if exhausted:continue
                 for match in bindings:
@@ -144,8 +147,13 @@ def main():
                     second_map={freeze(a):freeze(b) for a,b in second['source_map']}
                     composed=[(port,second_map[quotient[port]]) for port in ports]
                     gold2=state(second['facts'],ports,capacity,composed)
-                    chains.append((s,q,p,q2,p2,gold2,row['producer'],len(ports)));found=True;break
+                    if is_test:chains.append((s,q,p,q2,p2,gold2,row['producer'],len(ports),t,next_rid))
+                    else:training_chains.append((t,q2,p2,gold2,row['producer'],len(ports),next_rid))
+                    found=True;break
                 if found:break
+    for first,q2,p2,last,root,count,next_rid in training_chains:
+        if root%5<2 or next_rid not in training_rules:raise AssertionError('held-out successor leaked into training')
+        states.extend([first,first]);targets.extend([last,first]);queries.extend([q2,np.zeros(D,np.float32)]);projections.extend([p2,np.zeros_like(p2)]);novel.extend([True,False]);roots.extend([root,root]);port_counts.extend([count,count]);inherited_counts.extend([count,count])
     s=np.array(states,np.float32);q=np.array(queries,np.float32);p=np.array(projections,np.float32);t=np.array(targets,np.float32);n=np.array(novel,bool);roots=np.array(roots)
     full_target=t.copy();basis=None
     if args.boundary_rank is not None:
@@ -169,7 +177,7 @@ def main():
         reconstructed=full_target[:,D:]@basis@basis.T
         for name,mask in [('train',roots%5>=2),('validation',roots%5==1),('test',roots%5==0)]:
             compression_reconstruction[name]=float(np.sqrt(np.mean(((reconstructed[mask]-full_target[mask,D:])**2)[live[mask]])))
-    result=dict(compression_target_live_reconstruction_rmse=compression_reconstruction,scope='standalone learned whole-Cell and original-boundary Metal recurrence; no runtime takeover',program_sha256=program['sha256'],targets_sha256=hashlib.sha256(args.targets.read_bytes()).hexdigest(),target_schema=data.get('schema'),backpropagation=False,generated_boundaries=args.generated_boundaries,boundary_rank=args.boundary_rank,basis_training='training producer source and target states only; uncentered SVD',capacity=capacity,boundary_width=B,state_float_count=s.shape[1],request_projection_floats_per_row=int(np.prod(p.shape[1:])),fit=fit,metrics=metrics,limitations=['Same finite producer-family split, not unseen workload',('One generation of output boundary slots reserved by Bake; arbitrary growth absent' if args.generated_boundaries else 'Only original boundary ports; new-port requests excluded explicitly'),'Request projections supplied by Bake; GPU match discovery not implemented','No exact semantic decoder or ownership retirement authorization','Dense per-request projections are expensive prototype storage, not a performance claim'])
+    result=dict(compression_target_live_reconstruction_rmse=compression_reconstruction,scope='standalone learned whole-Cell and original-boundary Metal recurrence; no runtime takeover',program_sha256=program['sha256'],targets_sha256=hashlib.sha256(args.targets.read_bytes()).hexdigest(),training_successors=len(training_chains),training_successor_rules=sorted({r[-1] for r in training_chains}),target_schema=data.get('schema'),backpropagation=False,generated_boundaries=args.generated_boundaries,boundary_rank=args.boundary_rank,basis_training='training producer source and target states only; uncentered SVD',capacity=capacity,boundary_width=B,state_float_count=s.shape[1],request_projection_floats_per_row=int(np.prod(p.shape[1:])),fit=fit,metrics=metrics,limitations=['Same finite producer-family split, not unseen workload',('One generation of output boundary slots reserved by Bake; arbitrary growth absent' if args.generated_boundaries else 'Only original boundary ports; new-port requests excluded explicitly'),'Request projections supplied by Bake; GPU match discovery not implemented','No exact semantic decoder or ownership retirement authorization','Dense per-request projections are expensive prototype storage, not a performance claim'])
     if args.generated_boundaries:
         added=np.repeat((np.arange(capacity)[None,:]>=np.array(inherited_counts)[:,None]) & (np.arange(capacity)[None,:]<np.array(port_counts)[:,None]),B,axis=1)
         mask=(roots%5==0)&n
@@ -178,7 +186,7 @@ def main():
             predicted_rmse=float(np.sqrt(np.mean(((decoded_boundary[mask]-full_target[mask,D:])**2)[selected]))),
             zero_baseline_rmse=float(np.sqrt(np.mean((full_target[mask,D:]**2)[selected]))))
     if chains:
-        a,b,c,d,e,gold,origins,counts=zip(*chains);a,b,c,d,e,gold=[np.array(v,np.float32) for v in (a,b,c,d,e,gold)]
+        a,b,c,d,e,gold,origins,counts,gold_first,next_rules=zip(*chains);gold_first=np.array(gold_first,np.float32);a,b,c,d,e,gold=[np.array(v,np.float32) for v in (a,b,c,d,e,gold)]
         if basis is not None:
             a=compress_state(a,basis);c=compress_projection(c,basis);e=compress_projection(e,basis)
         def rollout(a,b,c,d,e):
@@ -188,8 +196,22 @@ def main():
         first,l1=step(a,b,c,w,coef,np);second,l2=step(first,d,e,w,coef,np);reference=np.where((l1&l2)[:,None],second,first)
         np.testing.assert_allclose(np.array(last),reference,rtol=2e-3,atol=8e-4)
         result['rollout']=dict(chains=len(chains),requests_new_first_step_output=args.generated_boundaries,initial_producers=len(set(origins)),excluded_new_boundary_requests=unrepresented,first_emissions=int(np.array(e1).sum()),second_emissions=int(np.array(e2).sum()),body_rmse=float(np.sqrt(np.mean((np.array(last)[:,:D]-gold[:,:D])**2))),live_boundary_rmse=float(np.sqrt(np.mean(((audit_boundary(np.array(last),basis)-gold[:,D:])**2)[np.repeat(np.arange(capacity)[None,:]<np.array(counts)[:,None],B,axis=1)]))),intermediate_cpu_reads=0,teacher_state_supplied_between_steps=False)
+        # Diagnostic only, separate from rollout: no oracle state is substituted
+        # into the reported free-running path above.
+        oracle_input=gold_first if basis is None else compress_state(gold_first,basis)
+        oracle,oracle_emit=mx.compile(gpu_step)(mx.array(oracle_input),mx.array(d),mx.array(e));mx.eval(oracle,oracle_emit)
+        oracle=np.array(oracle)
+        active=np.repeat(np.arange(capacity)[None,:]<np.array(counts)[:,None],B,axis=1)
+        train_consumers={r['consumer'] for r in data['targets'] if r['producer']%5>=2}
+        result['second_step_diagnosis']=dict(scope='oracle intermediate supplied only to this separate diagnostic, not rollout',
+            oracle_body_rmse=float(np.sqrt(np.mean((oracle[:,:D]-gold[:,:D])**2))),
+            oracle_live_boundary_rmse=float(np.sqrt(np.mean(((audit_boundary(oracle,basis)-gold[:,D:])**2)[active]))),
+            oracle_emissions=int(np.array(oracle_emit).sum()),
+            unchanged_correct_first_body_rmse=float(np.sqrt(np.mean((gold_first[:,:D]-gold[:,:D])**2))),
+            second_requests_with_rule_seen_in_training=sum(r in train_consumers for r in next_rules),
+            distinct_second_rules=len(set(next_rules)))
     if args.predictions:
-        args.predictions.write_text(json.dumps(dict(program_sha256=program['sha256'],targets_sha256=result['targets_sha256'],predictions=pred[:,:D].tolist(),emitted=emit.tolist(),producer_roots=roots.tolist(),order='each target followed by its identity control'))+'\n')
+        args.predictions.write_text(json.dumps(dict(program_sha256=program['sha256'],targets_sha256=result['targets_sha256'],predictions=pred[:2*len(data['targets']),:D].tolist(),emitted=emit[:2*len(data['targets'])].tolist(),producer_roots=roots[:2*len(data['targets'])].tolist(),order='each target followed by its identity control'))+'\n')
     args.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
 
 if __name__=='__main__':main()
