@@ -1,7 +1,7 @@
 import copy
 import unittest
 import numpy as np
-from context_ridge import prepare, metrics
+from context_ridge import prepare, metrics, proposal_packets
 
 
 def sample():
@@ -11,6 +11,15 @@ def sample():
 
 
 class ContextEncoding(unittest.TestCase):
+    def test_proposal_packets_include_empty_runs_and_ignore_after_labels(self):
+        t=sample();t['program_sha256']='test';t['steps']=[dict(ordinal=1,epoch=3),dict(ordinal=2,epoch=4)]
+        packets=proposal_packets(t,[.8],.5)
+        self.assertEqual(packets[0]['equalities'],[dict(binding=0,rule=0,left=0,right=1)])
+        self.assertEqual(packets[1]['equalities'],[])
+        t['runs'][0]['audit']['bindings'][0]['eq_ports'][1]['after']=999
+        self.assertEqual(packets,proposal_packets(t,[.8],.5))
+        with self.assertRaises(ValueError):proposal_packets(t,[.8,.9],.5)
+
     def test_post_run_labels_do_not_enter_features(self):
         trace=sample();a,_,_,_=prepare(trace)
         trace['runs'][0]['audit']['bindings'][0]['eq_ports'][1]['after']=101

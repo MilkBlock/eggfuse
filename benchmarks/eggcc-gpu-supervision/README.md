@@ -413,3 +413,5 @@ Five added tests cover constructor witnesses, ordered barriers, multi-input
 congruence, cross-stage constructor assignments, history invalidation and
 rejection when post-Run observations contradict a derived result. All 26 Python
 tests pass. Saved counts and residual examples are in `proven-union-results.json`.
+
+[Native Cell Eq supervisor](NATIVE_AUDIT.md): actual runtime boundary audit and Metal proposal replay; CPU execution and additional audit costs reported separately.

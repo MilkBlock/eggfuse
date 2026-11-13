@@ -32,6 +32,7 @@ pub mod known_results;
 pub mod merge_programs;
 pub mod multistage;
 pub mod program;
+pub mod proof_audit;
 pub mod query;
 
 pub mod schedule;

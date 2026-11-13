@@ -1,0 +1,66 @@
+{
+  "scope": "actual CPU Cell runtime Eq-delta audit; saved proposal replay; no GPU takeover",
+  "proposal_source": "external replay",
+  "pass": false,
+  "setup_seconds": 0.47451725,
+  "audited_execution_seconds": 0.190031042,
+  "reference_execution_seconds": 0.180678208,
+  "check_seconds": 0.006920458,
+  "stats": {
+    "bindings": 7265,
+    "ports": 30736,
+    "missing_ports": 0,
+    "candidate_pairs": 17526,
+    "new_equalities": 518,
+    "root_reads": 24756,
+    "capture_seconds": 0.005439083999999995,
+    "finish_seconds": 0.006694838000000016,
+    "peak_pending_ports": 765
+  },
+  "run_boundaries_equal": true,
+  "final_graph_equal": true,
+  "saved_observer_outcomes_exact": true,
+  "source_runs": 1428,
+  "counts": {
+    "all": {
+      "checked_pairs": 17526,
+      "true_positives": 404,
+      "false_positives": 5903,
+      "false_negatives": 114,
+      "invalid_claims": 0,
+      "wrong_pair_fraction": 0.34331849823119936
+    },
+    "train": {
+      "checked_pairs": 11474,
+      "true_positives": 197,
+      "false_positives": 3532,
+      "false_negatives": 0,
+      "invalid_claims": 0,
+      "wrong_pair_fraction": 0.3078263900993551
+    },
+    "validation": {
+      "checked_pairs": 4643,
+      "true_positives": 201,
+      "false_positives": 1754,
+      "false_negatives": 114,
+      "invalid_claims": 0,
+      "wrong_pair_fraction": 0.40232608227439154
+    },
+    "test": {
+      "checked_pairs": 1409,
+      "true_positives": 6,
+      "false_positives": 617,
+      "false_negatives": 0,
+      "invalid_claims": 0,
+      "wrong_pair_fraction": 0.43789921930447123
+    }
+  },
+  "timing_scope": "single dev/unoptimized run; serialization excluded; no speedup claim",
+  "limitations": [
+    "CPU executes original program in full; not a proof-only replacement for CPU execution",
+    "Only initially unequal same-sort matched input pairs; not scalar/new-node/mutable/visibility token validation",
+    "Saved GPU replay; no live asynchronous GPU queue or correction application",
+    "Same-runtime observer/reference checks do not establish native egglog semantic acceptance"
+  ],
+  "trace_sha256": "6d456379a02b1502578f61d019ae75ea35a4f0756a52f3e3419d11732575ca75"
+}

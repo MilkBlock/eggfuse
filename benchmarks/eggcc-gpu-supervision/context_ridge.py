@@ -117,8 +117,31 @@ def fit(x,y,regularizer):
     return np.linalg.solve(gram+penalty,xd.T@(y*weight)).astype(np.float32)
 
 
+def proposal_packets(trace, scores, threshold):
+    """Replay packets for native audit, including empty source Runs.
+
+    The order mirrors prepare(), but only pre-Run metadata defines claims.
+    execution=0 is an explicit saved replay tag, not live freshness evidence.
+    """
+    packets={s['ordinal']:dict(execution=0,program=trace['program_sha256'],
+        run=s['ordinal'],epoch=s['epoch'],equalities=[]) for s in trace['steps']}
+    cursor=0
+    for run in trace['runs']:
+        for index,binding in enumerate(run['audit']['bindings']):
+            ports=binding['eq_ports']
+            for i,a in enumerate(ports):
+                for b in ports[:i]:
+                    if a['sort']==b['sort'] and a['before']!=b['before']:
+                        if scores[cursor]>=threshold:
+                            packets[run['ordinal']]['equalities'].append(dict(binding=index,
+                                rule=binding['rule'],left=min(a['slot'],b['slot']),right=max(a['slot'],b['slot'])))
+                        cursor+=1
+    if cursor!=len(scores):raise ValueError('prediction count does not match candidate pairs')
+    return list(packets.values())
+
+
 def main():
-    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('output',type=Path);args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('output',type=Path);p.add_argument('--proposals',type=Path);args=p.parse_args()
     trace=json.loads(args.trace.read_text());assert trace.get('relations')
     started=time.perf_counter();a,records,nroots,nroles=prepare(trace);prepare_seconds=time.perf_counter()-started
     renamed,_,_,_=prepare(trace,lambda x:2**100+37*x)
@@ -157,6 +180,8 @@ def main():
         np.testing.assert_allclose(joint_scores,scores,rtol=1e-3,atol=2e-4)
         classification_disagreements=int(((joint_scores>=threshold)!=(scores>=threshold)).sum())
         scores=joint_scores
+        if context and args.proposals:
+            args.proposals.write_text(json.dumps(proposal_packets(trace,scores,threshold)))
         np.testing.assert_allclose(scores,cpu@coef,rtol=1e-3,atol=2e-4)
         observed=set(hashlib.sha256(row.tobytes()).digest() for row in cpu[train])
         overlap=sum(hashlib.sha256(row.tobytes()).digest() in observed for row in cpu[test])
