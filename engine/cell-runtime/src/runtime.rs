@@ -2149,16 +2149,19 @@ impl Executor {
         self.dedup_duplicates += n - found.len() as u64;
         Ok(found)
     }
+    fn begin_cell_entry(&mut self, rid: usize, b: &Binding) {
+        if self.graph.needs_ownership_entry(rid) {
+            let anchors=self.graph.program.cell_ownership.entries[rid].iter().map(|&a|b.known.receipt(a)).collect::<smallvec::SmallVec<[_;4]>>();
+            self.graph.begin_owner_entry(rid,anchors);
+        }
+    }
     fn apply(
         &mut self,
         rid: usize,
         b: Binding,
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
     ) -> Result<()> {
-        if self.graph.needs_ownership_entry(rid) {
-            let anchors=self.graph.program.cell_ownership.entries[rid].iter().map(|&a|b.known.receipt(a)).collect::<smallvec::SmallVec<[_;4]>>();
-            self.graph.begin_owner_entry(rid,anchors);
-        }
+        self.begin_cell_entry(rid, &b);
         let result = (|| {
             let Some(mut execution) = self.start_cell_execution(rid, b, &[], false,
                 #[cfg(feature="structural-depth")] evidence)? else { return Ok(()) };

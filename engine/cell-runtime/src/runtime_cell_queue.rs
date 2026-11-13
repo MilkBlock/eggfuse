@@ -135,7 +135,7 @@ impl Executor {
             && !cfg!(feature = "family-survey")
     }
     fn finish_attached_cell(&mut self, mut execution: owned_cell::Execution) -> Result<()> {
-        loop {
+        let result = (|| loop {
             match self.advance_cell(&mut execution)? {
                 owned_cell::Frontier::Boundary(op) => {
                     self.resolve_cell_boundary(&mut execution, op)?
@@ -144,7 +144,9 @@ impl Executor {
                     return self.finish_cell(execution);
                 }
             }
-        }
+        })();
+        self.graph.end_owner_entry();
+        result
     }
     /// The original read snapshot already proved this constructor's key. A
     /// live foreign witness cannot depend on a root still being born by a peer.
@@ -168,6 +170,7 @@ impl Executor {
         #[cfg(feature="storage-metrics")]
         let probe=crate::rhs_projection_trace::before(&self.graph,execution.rule,execution.cell,position,&execution.known);
         execution.effects.writer().record(position,point.witness);
+        self.graph.composition_result_entry(execution.cell,position,point.witness,true);
         let frame=self.graph.rhs_frame_mut(execution.cell).unwrap();
         frame.values.insert(*dst,point.value);
         frame.completed_prefix=position+1;
@@ -379,6 +382,7 @@ impl Executor {
                 // older tails are pending, start_cell_execution leaves early
                 // completion to this queue's source-ordered drain.
                 self.graph.sealed_generation = Some(generation);
+                self.begin_cell_entry(rid, &binding);
                 let started = self.start_cell_execution(
                     rid,
                     binding,
@@ -391,6 +395,7 @@ impl Executor {
                     None,
                 )?;
                 let Some(mut execution) = started else {
+                    self.graph.end_owner_entry();
                     self.graph.sealed_input_cell = None;
                     self.graph.sealed_generation = None;
                     continue;
@@ -680,6 +685,7 @@ impl Executor {
                     execution.phase = owned_cell::Phase::Boundary;
                     self.resolve_cell_boundary(&mut execution, position)?;
                 }
+                self.graph.end_owner_entry();
                 self.poll_cell_queue(queue,pending,false)?;
                 if queue.owners.len() >= READY_LIMIT {self.dispatch_cell_queue(queue,pending)?;}
                 self.graph.sealed_input_cell = None;
@@ -691,6 +697,7 @@ impl Executor {
         // source instance fails (for example, exhausted Cell identities).
         if result.is_err() {
             self.graph.promote_active();
+            self.graph.end_owner_entry();
         }
         if result.is_err() {
             if !queue.is_empty() {self.cell_execution.as_mut().unwrap().counts.scheduler.error_fences+=1;}

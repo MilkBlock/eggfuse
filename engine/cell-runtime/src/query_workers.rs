@@ -298,7 +298,12 @@ impl Executor {
             self.graph.program.executions[rule].units = crate::cell::unit_prepare::Plan::derive(
                 &self.graph.program, rule, |table|self.graph.prepares_unit_storage(table));
             let mut constructor = crate::cell::constructor_prepare::Plan::derive(&self.graph.program, rule);
-            if let Some(plan) = &mut constructor {
+            // The compact prepared prefix retains only downstream-exported
+            // witnesses. An ownership Entry may need an unexported actual
+            // result before its first birth. Keep the existing single-result
+            // preparation and source continuation for these rules; do not
+            // compute a prefix only to replay it after dropping its evidence.
+            if !self.graph.needs_ownership_entry(rule) && let Some(plan) = &mut constructor {
                 plan.compile_prefix(&self.graph.program,rule,self.stage_spine.permanent_tables(),
                     |table|self.graph.prepares_unit_storage(table));
             }

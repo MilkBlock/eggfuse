@@ -40,7 +40,11 @@ impl Graph {
         #[cfg(feature="storage-metrics")] known:&crate::cell::QueryFacts,
         unregistered:impl Fn(u64)->bool)->Result<(Counts,Option<Job>)> {
         let mut counts=Counts::default();
-        if !self.local_jobs_supported() || !self.pipelined_births_ready() {return Ok((counts,None));}
+        // A reused root can establish a composition Entry into another Cell.
+        // Keep that actual-result handoff on construct until worker completion
+        // carries the same evidence; a source-created anchor can still dispatch
+        // its isolated tail through take_local_job.
+        if self.ownership.is_some() || !self.local_jobs_supported() || !self.pipelined_births_ready() {return Ok((counts,None));}
         let position=self.rhs_frame(cell).unwrap().completed_prefix;
         let Some(plan)=self.program.executions[rule].births.as_ref() else {return Ok((counts,None));};
         let Ok(from)=plan.steps.binary_search_by_key(&position,|s|s.operation) else {return Ok((counts,None));};

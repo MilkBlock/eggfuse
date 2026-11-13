@@ -166,7 +166,9 @@ impl Graph {
     /// the structure event returns. A constructor-only Cell has no structure
     /// dependency. Source adoption always uses only its exact ready prefix.
     pub(crate) fn prepare_cell_registration(&mut self,done:&mut [Completed])->Option<PendingRegistration> {
-        if !self.pipelined_births_ready() {return None;}
+        // This registry installs legacy subscriptions, not Cell ownership.
+        // Private computation is eligible independently of shared registration.
+        if self.ownership.is_some() || !self.pipelined_births_ready() {return None;}
         let mut count=0;let mut first_table=None;let mut multiple_tables=false;
         for row in done.iter().flat_map(|d|&d.done.piece.units) {
             let table=row.function.table;if self.units.owned[table] {return None;}
