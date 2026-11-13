@@ -31,7 +31,8 @@ def run(control, candidate, checks, output):
         s=b['publication']['parallel']
         assert sum(s['worker_rows'])+s['inline_rows']==s['rows']
         assert sum(s['split_entry_worker_rows'])==s['split_entry_rows']
-        assert b['publication']['row_reads']-a['publication']['row_reads']==s['duplicate_current_row_reads']
+        before_duplicates=a['publication']['parallel'].get('duplicate_current_row_reads',0)
+        assert b['publication']['row_reads']-a['publication']['row_reads']==s['duplicate_current_row_reads']-before_duplicates
         before,after=[r['publication']['parallel'] for r in reports]
         keys=('batches','tables','rows','pool_calls','inline_rows','row_reads','task_capacity_bytes',
               'prepare_seconds','execute_seconds','restore_seconds','entry_order_headers')
@@ -42,6 +43,9 @@ def run(control, candidate, checks, output):
             split={k:s[k] for k in ('split_entry_tasks','split_entry_rows','split_entry_row_reads',
                 'duplicate_current_row_reads','single_table_split_batches','indexes_released_before_entries',
                 'split_entry_worker_rows','split_entry_worker_seconds','entry_order_capacity_bytes')})
+        if 'admission_bound_tables' in s:
+            result['workloads'][case]['admission']={k:s[k] for k in (
+                'admission_bound_tables','admission_bound_rejections','admission_owner_checks_avoided')}
     output.write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(result['workloads'],indent=2))
 

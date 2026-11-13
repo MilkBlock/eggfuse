@@ -1,0 +1,17 @@
+{
+  "scope": "independent publication experiment follow-up; not adopted into active runtime",
+  "control_commit": "e97ebde4f3bb6901efb6095dd8a836940ea67444",
+  "candidate_commit": "0dfdfb2a41038158ebcded7e5026f30a03f43759",
+  "experiment_branch": "codex/table-entry-admission",
+  "runtime_sources": {
+    "engine/cell-runtime/src/parallel_publication.rs": "17c594998bbbba563e1bc42e523fdd421aa37ac04b5d845874d1a4a3f21d801b"
+  },
+  "validation_job": "61",
+  "work_job": "63",
+  "codegen_job": "64",
+  "timing_job": "65",
+  "accounting_job": "66",
+  "adopted": false,
+  "control_runtime_sha256": "c1496d7a2ece0dcd8ec5c6aa07fb282973542bc62fbfb1ec7ec542664c97c15b",
+  "candidate_runtime_sha256": "d64d0cbe3b300173d669d098dd6ec4e6d6c8d59972c7f0273b3d2bf17598e330"
+}

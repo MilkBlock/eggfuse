@@ -154,3 +154,110 @@ with individual samples and checksums/locations of all full observations.
 No samples are discarded to obtain an improved median. These grouped trials
 are not an interleaved statistical-significance test, an overall CPU-utilization
 measurement or a comparison against every historical configuration.
+
+## Common-path and identical-binary diagnosis
+
+`codegen.py CONTROL CANDIDATE OUTPUT` inspects the frozen arm64 binaries through
+the compute queue, verifies their manifest hashes and saves the selected assembly.
+It does not run either workload. `codegen.json` records job 60's result:
+
+| Method | Control instructions / initial stack | Candidate instructions / initial stack |
+|---|---:|---:|
+| Publication::publish | 2,023 / 2,656 B | 2,315 / 2,736 B |
+| publish_finished_tables | 401 / 192 B | 401 / 208 B |
+| Executor::run | 3,539 / 1,264 B | 3,579 / 1,264 B |
+
+The instruction totals include every branch, including paths sum never enters.
+They are not executed instruction counts. The small owner-count loop still
+precedes rejection; the larger publication implementation is inlined into its
+caller. The additional 80-byte publisher frame and unchanged main Run frame do
+not establish the cause of the approximately one-millisecond sum difference.
+
+Timing job 58 used **the identical frozen control binary in both lanes**, with
+15 sum and 7 Raytrace samples per lane, one warmup, and the same complete-first-
+lane ordering. Counts and the diagnostic purpose were fixed before execution.
+All 104 guards, frozen states, Run summaries, effects and the existing native
+sum acceptance passed. The result is retained in `timing-aa.json`:
+
+| Same binary in both lanes | First lane | Second lane | Change |
+|---|---:|---:|---:|
+| sum-bits | 27.718 ms | 26.224 ms | -5.39% |
+| Raytrace | 5.704 s | 5.801 s | +1.70% |
+
+This demonstrates variation even without a code change. It does not prove the
+earlier candidate is regression-free, identify thermal or OS activity as the
+cause, or provide a correction to subtract from a different trial. In particular,
+the earlier 3.80% sum difference cannot responsibly be assigned entirely to the
+new synchronization. The candidate remains experimental, and its structural
+work reduction remains distinct from a stable whole-runtime speed claim.
+
+## Small-batch admission follow-up
+
+The actual sum execution rejects 657 publication attempts before constructing
+parallel tasks. Those attempts still inspect column/range/neighbor owners and
+Entry readiness to count eligible rows. The sealed change-map lengths provide
+an upper bound before any owner lookup: fewer total rows than the grain means
+fewer eligible rows than the grain. This is an exact subset argument over the
+existing notification storage, independent of mutable Entry readiness.
+
+The follow-up uses that bound, stopping when it can no longer prove rejection,
+and keeps the large task implementation in a separate non-inlined method.
+Covered small batches remove the owner tests; other batches retain the exact
+owner count, canonical-read proof and original publication path. New metrics
+charge bound table visits and record rejected batches and avoided owner tests.
+No new retained admission map, consumer list or binding representation is added.
+
+This uses work from the last catalog rather than adding another Bake catalog.
+Template facts still identify the real consumers; they do not prove mutable
+values, retirement or cross-Run readiness unchanged. No scheduled block switch
+can erase those remaining obligations. The bound does not authorize early
+visibility or change publication, repair, residual or delta semantics. This
+is a separate preparation optimization, not a claimed explanation of the
+earlier timing regression.
+
+Commit `0dfdfb2a` on `codex/table-entry-admission` passes the same 211 runtime
+and 111 integration tests, legacy/all-feature checks and three README commands.
+Fresh workload exports preserve exact states, all source Run summaries and
+logical effects; the unchanged native sum contract passes. Its control for
+this follow-up is experimental parent `e97ebde4`, not the independently moving
+active runtime branch. Reproduce exports with the existing `reference.py`, then
+run `check.py PARENT FOLLOW_UP CHECKS OUTPUT.json`; it now accounts for the
+duplicate-read delta when the parent already has independent Entry owners.
+
+| Admission work | sum-bits | Raytrace |
+|---|---:|---:|
+| New change-map length visits | 1,311 | 15,158 |
+| Batches rejected by the upper bound | 657 | 7,646 |
+| Table owner eligibility evaluations removed | 1,311 | 12,339 |
+| Existing total small-batch rejections | 657 | 7,878 |
+
+An owner evaluation is one original table predicate, with short-circuited
+index/range/neighbor/Entry checks; it is not four guaranteed saved probes.
+Raytrace still has 1,449 publication batches, 1,896 split Entry tasks and
+3,761,362 parallel row reads. The preparation change does not alter that work.
+The three diagnostic counters add 24 inline bytes to publication statistics.
+
+`admission-codegen.json` records that Publication::publish now has 546 static
+instructions and a 560-byte initial frame, versus 2,315 and 2,736 in its parent.
+Much of that code moved into the separate large-batch method; it was not deleted
+from the binary. Actual deleted work is the eligibility evaluation count above,
+with the new length visits, counters and large-batch call charged separately.
+
+Timing job 65 completed one fixed 15-sum/7-Ray comparison against `e97ebde4`,
+with all 104 boundary guards clear and the same state/Run/effect checks passing.
+All parent samples preceded every follow-up sample. `admission-timing.json`
+retains every sample and the raw observation checksum:
+
+| Inference median | Parent `e97ebde4` | Follow-up `0dfdfb2a` | Change |
+|---|---:|---:|---:|
+| sum-bits | 27.657 ms | 26.851 ms | -2.91% |
+| Raytrace | 5.432 s | 5.408 s | -0.45% |
+
+Both point estimates improve, but their magnitude does not establish a stable
+whole-runtime speedup in light of the separate identical-binary diagnostic.
+This change removes demonstrable preparation work; it does not solve the
+remaining serial RHS/repair work or establish full worker utilization. The
+candidate remains on its experimental branch. Integration with the moving
+active branch requires a fresh reference for that branch, not comparing these
+numbers to older runs or subtracting the A/A deltas. There was no repeat-until-
+green trial for this follow-up.

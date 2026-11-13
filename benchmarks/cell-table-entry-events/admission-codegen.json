@@ -1,0 +1,197 @@
+{
+  "scope": "static frozen arm64 code; not a performance or dynamic instruction measurement",
+  "lanes": {
+    "control": {
+      "runtime_sha256": "c1496d7a2ece0dcd8ec5c6aa07fb282973542bc62fbfb1ec7ec542664c97c15b",
+      "command": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-objdump",
+        "--disassemble",
+        "--demangle",
+        "--no-show-raw-insn",
+        "--disassemble-symbols=eggfuse_cell_runtime::change_batch::Publication::publish::hf8bbce3bd7ae14e7,eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables::h4cf4ef55e0949777,eggfuse_cell_runtime::executor::Executor::run::hc8d3c41a7a5585b1",
+        "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-table-entry-events/candidate/candidate-runtime"
+      ],
+      "functions": {
+        "publication": {
+          "symbol": "eggfuse_cell_runtime::change_batch::Publication::publish::hf8bbce3bd7ae14e7",
+          "instruction_count": 2315,
+          "initial_stack_bytes": 2736,
+          "prologue": [
+            "stp\tx28, x27, [sp, #-0x60]!",
+            "stp\tx26, x25, [sp, #0x10]",
+            "stp\tx24, x23, [sp, #0x20]",
+            "stp\tx22, x21, [sp, #0x30]",
+            "stp\tx20, x19, [sp, #0x40]",
+            "stp\tx29, x30, [sp, #0x50]",
+            "add\tx29, sp, #0x50",
+            "sub\tsp, sp, #0xa50",
+            "str\txzr, [sp]",
+            "mov\tx23, x4",
+            "str\tx3, [sp, #0xa8]",
+            "mov\tx25, x2",
+            "mov\tx26, x1",
+            "mov\tx20, x0",
+            "str\tx8, [sp, #0x18]",
+            "ldr\tx8, [x29, #0x18]",
+            "str\tx8, [sp, #0x58]",
+            "ldr\tx8, [x29, #0x10]",
+            "stp\tx4, x8, [sp, #0x48]",
+            "ldr\tw8, [x5]"
+          ]
+        },
+        "completion": {
+          "symbol": "eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables::h4cf4ef55e0949777",
+          "instruction_count": 401,
+          "initial_stack_bytes": 208,
+          "prologue": [
+            "sub\tsp, sp, #0xd0",
+            "stp\tx28, x27, [sp, #0x70]",
+            "stp\tx26, x25, [sp, #0x80]",
+            "stp\tx24, x23, [sp, #0x90]",
+            "stp\tx22, x21, [sp, #0xa0]",
+            "stp\tx20, x19, [sp, #0xb0]",
+            "stp\tx29, x30, [sp, #0xc0]",
+            "add\tx29, sp, #0xc0",
+            "mov\tx20, x1",
+            "mov\tx19, x0",
+            "mov\tw8, #0x53f8             ; =21496",
+            "add\tx28, x1, x8",
+            "ldr\tx8, [x1, #0x5390]",
+            "mov\tx21, #-0x8000000000000000 ; =-9223372036854775808",
+            "cmp\tx8, x21",
+            "b.eq\t0x1001b9a44 <eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables::h4cf4ef55e0949777+0xf0>",
+            "ldr\tx8, [x20, #0x2480]",
+            "ldr\tx9, [x20, #0x33b8]",
+            "ldr\tx10, [x20, #0x33d0]",
+            "ldr\tx11, [x20, #0xc08]"
+          ]
+        },
+        "run": {
+          "symbol": "eggfuse_cell_runtime::executor::Executor::run::hc8d3c41a7a5585b1",
+          "instruction_count": 3579,
+          "initial_stack_bytes": 1264,
+          "prologue": [
+            "stp\td11, d10, [sp, #-0x80]!",
+            "stp\td9, d8, [sp, #0x10]",
+            "stp\tx28, x27, [sp, #0x20]",
+            "stp\tx26, x25, [sp, #0x30]",
+            "stp\tx24, x23, [sp, #0x40]",
+            "stp\tx22, x21, [sp, #0x50]",
+            "stp\tx20, x19, [sp, #0x60]",
+            "stp\tx29, x30, [sp, #0x70]",
+            "add\tx29, sp, #0x70",
+            "sub\tsp, sp, #0x470",
+            "str\txzr, [sp]",
+            "mov\tx22, x3",
+            "mov\tx23, x2",
+            "mov\tx21, x1",
+            "mov\tx20, x0",
+            "stp\tx2, x3, [sp, #0xb0]",
+            "stp\tx4, x5, [sp, #0xc0]",
+            "stp\tx6, x7, [sp, #0xd0]",
+            "bl\t0x100410be0 <std::time::Instant::now::h04611b0a02cb9d4f>",
+            "mov\tx28, x0"
+          ]
+        }
+      },
+      "assembly_sha256": "0f48e6ac3a5ba898e457897c1cd838c822f1f7272a29972c3e7d1910b771ad2e"
+    },
+    "candidate": {
+      "runtime_sha256": "d64d0cbe3b300173d669d098dd6ec4e6d6c8d59972c7f0273b3d2bf17598e330",
+      "command": [
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-objdump",
+        "--disassemble",
+        "--demangle",
+        "--no-show-raw-insn",
+        "--disassemble-symbols=eggfuse_cell_runtime::change_batch::Publication::publish::hf8bbce3bd7ae14e7,eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables::h4cf4ef55e0949777,eggfuse_cell_runtime::executor::Executor::run::hc8d3c41a7a5585b1",
+        "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-table-entry-events/bound/candidate-runtime"
+      ],
+      "functions": {
+        "publication": {
+          "symbol": "eggfuse_cell_runtime::change_batch::Publication::publish::hf8bbce3bd7ae14e7",
+          "instruction_count": 546,
+          "initial_stack_bytes": 560,
+          "prologue": [
+            "stp\tx28, x27, [sp, #-0x60]!",
+            "stp\tx26, x25, [sp, #0x10]",
+            "stp\tx24, x23, [sp, #0x20]",
+            "stp\tx22, x21, [sp, #0x30]",
+            "stp\tx20, x19, [sp, #0x40]",
+            "stp\tx29, x30, [sp, #0x50]",
+            "add\tx29, sp, #0x50",
+            "sub\tsp, sp, #0x1d0",
+            "mov\tx22, x4",
+            "mov\tx23, x3",
+            "mov\tx20, x2",
+            "mov\tx25, x1",
+            "mov\tx24, x0",
+            "str\tx8, [sp, #0x58]",
+            "ldp\tx8, x26, [x29, #0x10]",
+            "str\tx8, [sp, #0x78]",
+            "ldr\tw8, [x5]",
+            "cmp\tw8, #0x1",
+            "b.ne\t0x10039b690 <eggfuse_cell_runtime::change_batch::Publication::publish::hf8bbce3bd7ae14e7+0xe4>",
+            "mov\tx10, #0x0               ; =0"
+          ]
+        },
+        "completion": {
+          "symbol": "eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables::h4cf4ef55e0949777",
+          "instruction_count": 401,
+          "initial_stack_bytes": 192,
+          "prologue": [
+            "sub\tsp, sp, #0xc0",
+            "stp\tx28, x27, [sp, #0x60]",
+            "stp\tx26, x25, [sp, #0x70]",
+            "stp\tx24, x23, [sp, #0x80]",
+            "stp\tx22, x21, [sp, #0x90]",
+            "stp\tx20, x19, [sp, #0xa0]",
+            "stp\tx29, x30, [sp, #0xb0]",
+            "add\tx29, sp, #0xb0",
+            "mov\tx20, x1",
+            "mov\tx19, x0",
+            "mov\tw8, #0x5609             ; =22025",
+            "add\tx27, x1, x8",
+            "ldr\tx8, [x1, #0x53a8]",
+            "mov\tx21, #-0x8000000000000000 ; =-9223372036854775808",
+            "cmp\tx8, x21",
+            "b.eq\t0x1001a4f00 <eggfuse_cell_runtime::executor::completion::_$LT$impl$u20$eggfuse_cell_runtime..executor..Executor$GT$::publish_finished_tables::h4cf4ef55e0949777+0xf0>",
+            "ldr\tx8, [x20, #0x2480]",
+            "ldr\tx9, [x20, #0x33b8]",
+            "ldr\tx10, [x20, #0x33d0]",
+            "ldr\tx11, [x20, #0xc08]"
+          ]
+        },
+        "run": {
+          "symbol": "eggfuse_cell_runtime::executor::Executor::run::hc8d3c41a7a5585b1",
+          "instruction_count": 3539,
+          "initial_stack_bytes": 1264,
+          "prologue": [
+            "stp\td11, d10, [sp, #-0x80]!",
+            "stp\td9, d8, [sp, #0x10]",
+            "stp\tx28, x27, [sp, #0x20]",
+            "stp\tx26, x25, [sp, #0x30]",
+            "stp\tx24, x23, [sp, #0x40]",
+            "stp\tx22, x21, [sp, #0x50]",
+            "stp\tx20, x19, [sp, #0x60]",
+            "stp\tx29, x30, [sp, #0x70]",
+            "add\tx29, sp, #0x70",
+            "sub\tsp, sp, #0x470",
+            "str\txzr, [sp]",
+            "mov\tx22, x3",
+            "mov\tx28, x2",
+            "mov\tx20, x1",
+            "mov\tx21, x0",
+            "stp\tx2, x3, [sp, #0xb0]",
+            "stp\tx4, x5, [sp, #0xc0]",
+            "stp\tx6, x7, [sp, #0xd0]",
+            "bl\t0x100411198 <std::time::Instant::now::h04611b0a02cb9d4f>",
+            "mov\tx24, x0"
+          ]
+        }
+      },
+      "assembly_sha256": "64063574d7fb5d8947a266cc0b4dec17499a4f2617c5fa3a4f94eb1478740718"
+    }
+  },
+  "source": "codegen.py",
+  "job": "64"
+}
