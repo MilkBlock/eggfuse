@@ -1,5 +1,5 @@
 import unittest
-from constructor_lifetimes import analyze, missing_membership
+from constructor_lifetimes import analyze, missing_membership, template_transitions
 
 
 def address(cell, op=0):
@@ -49,6 +49,44 @@ class LifetimeTests(unittest.TestCase):
         self.assertEqual(counts['created_locally_then_retired'], 1)
         self.assertEqual(counts['last_result_was_another_fact_or_function'], 1)
         self.assertEqual(counts['no_constructor_outcome_observed'], 1)
+
+    def test_template_edges_survive_source_retirement_without_joining_stale_births(self):
+        events = [constructor(1,10,10,True), constructor(2,20,10,False),
+                  retire(3,10), constructor(4,30,10,False)]
+        for item in events:
+            if item['event']['kind'] == 'constructor':
+                item['event'].update(template=4 if item['event']['created'] else 8,table=2)
+        data=archive(events)
+        data['constructor_identity']='source-template-operation/v1'
+        result=template_transitions(data)
+        self.assertEqual(result['transitions'], [dict(producer_template=4,producer_op=0,
+            consumer_template=8,consumer_op=0,table=2,stage='cross_run',uses=1)])
+        self.assertEqual(result['unknown'],{'unobserved_live_birth':1})
+        events[0]['event']['template']=None
+        self.assertEqual(template_transitions(data)['transitions'],[])
+        self.assertEqual(template_transitions(data)['unknown']['unobserved_source_template'],1)
+
+    def test_transition_identity_excludes_runtime_addresses_and_run_numbers(self):
+        events=[constructor(1,10,10,True),constructor(2,20,10,False),
+                constructor(9,100,100,True),constructor(12,200,100,False)]
+        for item in events:
+            item['event'].update(template=3 if item['event']['created'] else 6,table=2)
+        data=archive(events);data['constructor_identity']='source-template-operation/v1'
+        rows=template_transitions(data)['transitions']
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]['uses'],2)
+        events[-1]['event']['site']['op']=7
+        self.assertEqual(len(template_transitions(data)['transitions']),2)
+
+    def test_template_edges_require_new_trace_and_exact_table(self):
+        with self.assertRaises(ValueError):
+            template_transitions(archive([]))
+        events=[constructor(1,10,10,True),constructor(2,20,10,False)]
+        for i,item in enumerate(events):
+            item['event'].update(template=4,table=i)
+        data=archive(events);data['constructor_identity']='source-template-operation/v1'
+        with self.assertRaises(ValueError):
+            template_transitions(data)
 
     def test_reject_loss_old_observers_and_invalid_births(self):
         cases = [archive([]), archive([]), archive([constructor(1, 1, 2, True)])]

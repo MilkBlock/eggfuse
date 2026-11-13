@@ -1888,6 +1888,16 @@ fn receipt_observer_distinguishes_constructor_results_from_site_addresses() {
     assert!(events.iter().any(|e|e["event"]["kind"]=="constructor" && e["event"]["created"]==false),"{trace}");
     let birth=events.iter().find(|e|e["event"]["kind"]=="constructor" && e["event"]["created"]==true).unwrap();
     assert_eq!(birth["run"],1);
+    assert_eq!(trace["constructor_identity"],"source-template-operation/v1");
+    for item in events.iter().filter(|e|e["event"]["kind"]=="constructor") {
+        let event=&item["event"];
+        let template=event["template"].as_u64().expect("actual source template") as usize;
+        let op=event["site"]["op"].as_u64().unwrap() as usize;
+        assert!(matches!(&candidate.graph.program.templates[template].ops[op],
+            eggfuse_cell_runtime::program::Op::Let(_,eggfuse_cell_runtime::program::Call::Table(t),_)
+                if *t==event["table"].as_u64().unwrap() as usize));
+    }
+
     assert!(events.iter().any(|e|e["run"]==2 && e["event"]["kind"]=="retire"
         && e["event"]["fact"]==birth["event"]["witness"]),"{trace}");
     assert!(events.iter().any(|e|e["event"]["kind"]=="constructor" && e["event"]["created"]==false

@@ -7,7 +7,7 @@ use std::cell::RefCell;
 #[serde(tag="kind",rename_all="snake_case")]
 enum Kind {
     #[cfg(feature="storage-metrics")]
-    Constructor { site:crate::graph::FactRef,table:usize,witness:Dependency,created:bool,visible:bool },
+    Constructor { site:crate::graph::FactRef,template:Option<usize>,table:usize,witness:Dependency,created:bool,visible:bool },
     Forward { from:Dependency,to:Dependency,epoch:u64 },
     Clear { epoch:u64,edges:usize },
     ParentForward { child:u32,from:Dependency,to:Dependency,source_users:usize,
@@ -34,8 +34,8 @@ fn record(event:impl FnOnce()->Kind) {
     });
 }
 #[cfg(feature="storage-metrics")]
-pub(crate) fn constructor(site:crate::graph::FactRef,table:usize,witness:Dependency,created:bool,visible:bool) {
-    record(||Kind::Constructor{site,table,witness,created,visible});
+pub(crate) fn constructor(g:&Graph,site:crate::graph::FactRef,table:usize,witness:Dependency,created:bool,visible:bool) {
+    record(||Kind::Constructor{site,template:g.rhs_frame(site.cell).map(|c|c.template),table,witness,created,visible});
 }
 pub(crate) fn forward(from:Dependency,to:Dependency,epoch:u64){record(||Kind::Forward{from,to,epoch});}
 pub(crate) fn clear(epoch:u64,edges:usize){record(||Kind::Clear{epoch,edges});}
@@ -69,6 +69,7 @@ pub fn finish()->serde_json::Value {
     TRACE.with(|t|t.borrow_mut().take().map_or(serde_json::Value::Null,|t|serde_json::json!({
         "schema":"cell-receipt-lifetime-trace/v1","scope":"bounded coordinator observation, never used for execution or semantic proof",
         "constructor_coverage":if cfg!(feature="storage-metrics") {"generic RHS constructor paths and insert_constructor births; fast publication paths are not covered; missing events are unknown"} else {"constructor outcomes not instrumented in this build"},
+        "constructor_identity":"source-template-operation/v1",
         "complete_archive":t.dropped==0,"trace":t})))
 }
 #[cfg(test)]

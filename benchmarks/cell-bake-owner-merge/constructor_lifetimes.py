@@ -76,6 +76,53 @@ def analyze(archive):
                 ])
 
 
+def template_transitions(archive):
+    """Group actual live-birth reuse edges, never reconstruct retired templates."""
+    analyze(archive)  # Same ordering, loss and birth/retirement checks.
+    if archive.get('constructor_identity') != 'source-template-operation/v1':
+        raise ValueError('requires recorded source template identities')
+    births, groups = {}, Counter()
+    unknown = Counter()
+    for item in archive['trace']['events']:
+        event, run = item['event'], item['run']
+        if event['kind'] == 'retire':
+            receipt = event['fact']
+            if set(receipt) == {'Fact'}:
+                births.pop(fact(receipt['Fact']), None)
+            continue
+        if event['kind'] != 'constructor':
+            continue
+        template = event.get('template')
+        if template is not None and (type(template) is not int or template < 0):
+            raise ValueError('invalid recorded source template')
+        site, table = fact(event['site']), event['table']
+        if event['created']:
+            births[site] = (run, template, table)
+            continue
+        if not event['visible']:
+            unknown['hidden_result'] += 1
+            continue
+        witness = event['witness']
+        target = fact(witness['Fact']) if set(witness) == {'Fact'} else None
+        producer = births.get(target)
+        if producer is None:
+            unknown['unobserved_live_birth'] += 1
+            continue
+        born, source_template, source_table = producer
+        if source_table != table:
+            raise ValueError('constructor reuse changes table identity')
+        if template is None or source_template is None:
+            unknown['unobserved_source_template'] += 1
+            continue
+        groups[(source_template, target[1], template, site[1], table,
+                'cross_run' if born < run else 'same_run')] += 1
+    return dict(scope='actual visible constructor reuse with observed live birth; not a closure certificate',
+        transitions=[dict(producer_template=p, producer_op=po, consumer_template=c,
+                          consumer_op=co, table=t, stage=stage, uses=count)
+                     for (p,po,c,co,t,stage),count in sorted(groups.items())],
+        unknown=dict(unknown))
+
+
 def missing_membership(report):
     # Caller must first validate the complete, current observer archive.
     latest, retirements = {}, {}
@@ -131,6 +178,8 @@ def batch(report):
         observed.update(case=case['case'], program=case['program'], runs=case['runs'],
                         all_saved_run_checks_equal=True, terminal_check_equal=True,
                         missing_membership=missing_membership(case))
+        if case["receipt_trace"].get("constructor_identity") == "source-template-operation/v1":
+            observed["template_transitions"] = template_transitions(case["receipt_trace"])
         rows.append(observed)
     return dict(scope='Actual standalone Cell runtime with diagnostic trace; no speed/native acceptance claim', cases=rows)
 
