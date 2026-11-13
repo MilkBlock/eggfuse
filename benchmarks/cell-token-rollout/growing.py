@@ -16,7 +16,7 @@ def entries(case):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--training',type=Path,required=True);p.add_argument('--heldout',type=Path,required=True)
     p.add_argument('--reference-dir',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--proposals',type=Path);p.add_argument('--device-stages',action='store_true');a=p.parse_args()
+    p.add_argument('--proposals',type=Path);p.add_argument('--device-stages',action='store_true');p.add_argument('--async-supervision',action='store_true');a=p.parse_args()
     module('dataset',a.reference_dir/'dataset.py');tr=module('train',a.reference_dir/'train.py')
     train=json.loads(a.training.read_text())['cases'];held=json.loads(a.heldout.read_text())['cases']
     # Distinct observed scalar entrances; no heldout target states or capacities.
@@ -45,7 +45,7 @@ def main():
             raise ValueError('outside declared bounded family')
         # Known input lengths control capacity BEFORE any final-state access.
         cap=int(values[:,1].max());n=len(values);offset=mx.arange(cap,dtype=mx.float32)[None,:,None]
-        def program(inputs,certified,exact_consumer=False,device=False,suppress=False,ticks=6):
+        def program(inputs,certified,exact_consumer=False,device=False,suppress=False,ticks=6,checkpoint=False):
             z=inputs/16;token=mx.concatenate([z,mx.tanh(z@ge+geb)],axis=-1)
             broad=mx.broadcast_to(token[:,None,:],(n,cap,32))
             off=mx.broadcast_to(offset,(n,cap,1));features=mx.concatenate([broad,off/16],axis=-1)
@@ -61,6 +61,8 @@ def main():
                 raw=predicted[:,:,:2]*16
                 downstream=mx.concatenate([raw,mx.sum(raw,axis=-1,keepdims=True)],axis=-1)
             active=off[:,:,0]<inputs[:,1,None]
+            if checkpoint:
+                return predicted,active
             if device:
                 return complete(predicted,active,grw,grb,ticks=ticks,suppress=suppress)
             return downstream,active
@@ -74,6 +76,13 @@ def main():
         expected=np.zeros((n,cap,3),np.float32)
         for row,(av,bv) in enumerate(values):
             for k in range(cap):expected[row,k]=[av+k,bv-k,av+bv]
+        async_metrics=None
+        if a.async_supervision:
+            from async_completion import run as supervised_completion
+            proposal_kernel=mx.compile(lambda v:program(v,False,checkpoint=True))
+            proposals_gpu,eligible_gpu=proposal_kernel(mx.array(values))
+            async_metrics=[supervised_completion(proposals_gpu,eligible_gpu,values,enc,eb,rw,rb,fault=f,force_late=late)
+                           for f,late in [('none',False),('none',True),('omission',True),('value',True)]]
         device_metrics=None
         if a.device_stages:
             variants={}
@@ -126,7 +135,7 @@ def main():
                 tokens=len(truth),rejected_output_tokens=int(np.any(rounded!=truth,axis=1).sum()),
                 unseen_entrance_tokens=int(novel.sum()),unseen_entrance_correct=int(np.all(np.rint(output[novel])==expected[novel],axis=1).sum()),
                 max_abs_error=float(np.abs(output[mask]-truth).max())))
-        records.append(dict(id=case['id'],device_stages=device_metrics,entrance_cells=n,token_width=32,allocated_output_tokens=n*cap,
+        records.append(dict(id=case['id'],async_supervision=async_metrics,device_stages=device_metrics,entrance_cells=n,token_width=32,allocated_output_tokens=n*cap,
             active_output_tokens=int(valid.sum()),padding_tokens=int((~valid).sum()),
             token_buffer_bytes=n*cap*32*4,learned=metrics[0],certified_parameter_channels=metrics[1],compiled_parameter_continuation=metrics[2]))
     result=dict(scope='Standalone fixed GPU fanout and token continuation for bounded SubTuple Cells; not full saturation or runtime takeover',

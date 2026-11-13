@@ -7,12 +7,17 @@ their own compiled merge. No numerical convergence test establishes saturation.
 import mlx.core as mx
 
 
-def complete(proposed, eligible, readout, bias, *, ticks=6, suppress=False):
+def initial(proposed, eligible, readout):
     state = mx.zeros_like(proposed)
     live = mx.zeros_like(eligible)
     result = mx.zeros((*eligible.shape, readout.shape[-1]), dtype=proposed.dtype)
     exported = mx.zeros_like(eligible)
     stage = mx.array(0, dtype=mx.int32)
+    return state, live, result, exported, stage
+
+
+def advance(proposed, eligible, readout, bias, carry, *, ticks=6, suppress=False):
+    state, live, result, exported, stage = carry
     transitions = []
     for _ in range(ticks):
         # Both expressions have static wiring. Device masks select the stage;
@@ -31,4 +36,12 @@ def complete(proposed, eligible, readout, bias, *, ticks=6, suppress=False):
         stage = mx.where((stage < 2) & ~changed, stage + 1, stage)
         transitions.append(mx.stack([stage, mx.sum(fresh), mx.sum(outgoing)]))
     # Exhaustion is distinct from quiescence. Neither means CPU-confirmed.
-    return result, exported, stage, mx.stack(transitions), stage < 2
+    return (state, live, result, exported, stage), mx.stack(transitions)
+
+
+def complete(proposed, eligible, readout, bias, *, ticks=6, suppress=False):
+    carry, trace = advance(proposed, eligible, readout, bias,
+                           initial(proposed, eligible, readout),
+                           ticks=ticks, suppress=suppress)
+    _, _, result, exported, stage = carry
+    return result, exported, stage, trace, stage < 2

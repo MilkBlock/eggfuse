@@ -1,0 +1,81 @@
+{
+  "scope": "Bounded SubTuple scalar-contract GPU completion with asynchronous CPU verdict and whole-consumer replay; not full eggcc runtime",
+  "provenance": {
+    "out/cell-token-rollout/train-grid/runtime.json": "6d17c93c8280da0c040347db57f72b0026c39c20c69b5ecb949aeadd291c1d13",
+    "out/cell-token-rollout/fresh-grid/runtime.json": "458165233d3a09db7b5f29cddbf992257dffe87955c5d1d239383be39f2f7d2d",
+    "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/benchmarks/cell-multi-entry-ridge/train.py": "870cd70b4db3fb0b015f788174bea172d535ce8130d5fd1cb872e67ca8533bbf"
+  },
+  "cases": 36,
+  "training_entrances": 180,
+  "backpropagation": false,
+  "variants": {
+    "normal": {
+      "confirmed_cases": 36,
+      "expected_tokens": 822,
+      "cpu_discovered_issues": 0,
+      "device_reported_issues": 0,
+      "issues_per_expected_token": 0.0,
+      "cpu_only_share_of_detected_issues": null,
+      "stale_generations_rejected": 0,
+      "downstream_finished_before_verdict": 0,
+      "replayed_tokens": 0,
+      "checkpoint_bytes": 229104,
+      "cpu_check_seconds": 0.0034946652594953775,
+      "checkpoint_copy_seconds": 0.019318670209031552,
+      "correction_and_replay_seconds": 0.0004948328714817762,
+      "wall_seconds": 0.05906241695629433,
+      "required_token_checks_per_second": 470431.32258034643
+    },
+    "late_clean": {
+      "confirmed_cases": 36,
+      "expected_tokens": 822,
+      "cpu_discovered_issues": 0,
+      "device_reported_issues": 0,
+      "issues_per_expected_token": 0.0,
+      "cpu_only_share_of_detected_issues": null,
+      "stale_generations_rejected": 0,
+      "downstream_finished_before_verdict": 36,
+      "replayed_tokens": 0,
+      "checkpoint_bytes": 229104,
+      "cpu_check_seconds": 0.0026588374166749418,
+      "checkpoint_copy_seconds": 0.013439413858577609,
+      "correction_and_replay_seconds": 0.0004005800001323223,
+      "wall_seconds": 0.04499745718203485,
+      "required_token_checks_per_second": 618315.3545567049
+    },
+    "late_omission": {
+      "confirmed_cases": 36,
+      "expected_tokens": 822,
+      "cpu_discovered_issues": 204,
+      "device_reported_issues": 0,
+      "issues_per_expected_token": 0.24817518248175183,
+      "cpu_only_share_of_detected_issues": 1,
+      "stale_generations_rejected": 36,
+      "downstream_finished_before_verdict": 36,
+      "replayed_tokens": 822,
+      "checkpoint_bytes": 229104,
+      "cpu_check_seconds": 0.0027696668985299766,
+      "checkpoint_copy_seconds": 0.01424945518374443,
+      "correction_and_replay_seconds": 0.020916333131026477,
+      "wall_seconds": 0.06862312211887911,
+      "required_token_checks_per_second": 593573.1841516994
+    },
+    "late_value": {
+      "confirmed_cases": 36,
+      "expected_tokens": 822,
+      "cpu_discovered_issues": 204,
+      "device_reported_issues": 0,
+      "issues_per_expected_token": 0.24817518248175183,
+      "cpu_only_share_of_detected_issues": 1,
+      "stale_generations_rejected": 36,
+      "downstream_finished_before_verdict": 36,
+      "replayed_tokens": 822,
+      "checkpoint_bytes": 229104,
+      "cpu_check_seconds": 0.002856507897377014,
+      "checkpoint_copy_seconds": 0.018394207814708352,
+      "correction_and_replay_seconds": 0.01642487500794232,
+      "wall_seconds": 0.06571712216828018,
+      "required_token_checks_per_second": 575527.9029718775
+    }
+  }
+}

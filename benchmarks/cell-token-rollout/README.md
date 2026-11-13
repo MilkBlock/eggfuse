@@ -401,3 +401,52 @@ stages of the same execution, correction injection, checkpoint invalidation or
 replay. Nor does the device's finished flag prove complete ruleset saturation.
 Those remain necessary for the intended GPU-driven runtime. No engine operation
 has been removed by this experiment, and no gradient descent is used.
+
+## Delayed CPU verdict and GPU replay
+
+Add `--async-supervision` to the preceding command to exercise the checkpoint
+protocol in `async_completion.py`. Device state is now resumable: a two-tick
+producer checkpoint feeds four consumer ticks directly on GPU. The downstream
+work is submitted before the checkpoint is copied to CPU. A background CPU
+checker independently derives required occupancy and exact scalar triples from
+initial entrances, and compares the checkpoint's decoded triples. It does not
+accept the model's active mask as evidence that no outputs are missing.
+
+Four variants run per case: ordinary asynchronous checking, deliberately delayed
+clean checking, delayed silent omission, and delayed finite value corruption.
+The delayed controls hold the CPU verdict until the dependent GPU stage has
+finished. They demonstrate late-verdict handling, not natural CPU/GPU overlap.
+A faulty checkpoint advances the generation; the old downstream result cannot
+be accepted. CPU reconstructs only marked token rows under this bounded scalar
+contract, then conservatively clears and reruns the entire consumer fragment on
+GPU. The current adapter uploads a complete corrected checkpoint buffer; local
+repair does not yet imply sparse transfer. Final acceptance requires both the
+current generation and independent final scalar/occupancy checks. No per-token
+reverse dependency lists are maintained.
+
+`async-completion-results.json` records 36 cases and 822 required tokens in each
+variant. All final results pass. Each fault variant injects 204 problems (24.82%
+of required tokens), all discovered by CPU; all 36 old generations are rejected
+and 822 consumer tokens replayed. Clean execution has no discovered issues and
+no replay. The fraction discovered only by CPU is undefined for the clean run,
+not zero. Fault statistics are controlled injections, not natural model error.
+
+Normal CPU checks took 3.495 ms total, about 470,431 required-token checks/sec
+(counting checkpoint and final checks). This includes constructing the bounded
+scalar expectations, decoding checkpoint tokens, comparing values and masks,
+and constructing marks, but excludes copying, correction, and full egraph
+semantics. Checkpoint copy/wait took 19.319 ms for 229,104 bytes, and the helper
+wall time was 59.062 ms including thread setup and device dispatch. These are
+single-run diagnostic totals, not CPU-baseline speedup measurements; training,
+input encoding outside the helper, and native graph validation are not included.
+The overhead is already material and must not be hidden behind check throughput.
+Natural scheduling produced no observed cases where GPU completion preceded the
+CPU verdict; only the deliberately delayed controls guarantee that order.
+
+This replaces the earlier experiment's exit-only control with a tested delayed
+verdict and correction loop. It still does not supply full eggcc rule coverage,
+Eq/congruence checking, cross-entrance deduplication, mutable effects, dynamic
+capacity, sparse checkpoint transfer, or an unbounded device scheduler. The
+checker proves only the declared scalar outputs; hidden token channels are not
+a certified representation of general graph structure. A two-stage bounded
+family is evidence for the protocol, not proof of the full runtime objective.
