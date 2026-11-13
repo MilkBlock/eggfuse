@@ -111,3 +111,26 @@ sequentially, with no concurrent compilation, tests or profiler from this task.
 Every sample checks its state, source Run order and logical effects. Grouped
 timing still permits thermal/background drift; it is not an interleaved or
 statistical-significance result.
+
+## Sequential quick checkpoint
+
+Control `adfd0170`, candidate `149f7ff9`, four workers, identical inputs/flags:
+
+| Inference median | Control | Candidate | Change |
+| --- | ---: | ---: | ---: |
+| sum-bits, five samples | 27.746 ms | 26.511 ms | −4.45% |
+| Raytrace, three samples | 5.613394 s | 5.304304 s | −5.51% |
+
+The exact order is control sum-bits, control Raytrace, candidate sum-bits,
+candidate Raytrace; each group includes its own preceding warmup. No sample
+was discarded. Each timed/warmup export and source Run schedule matches its
+group, the other revision and the frozen work check. Logical effects match;
+sum-bits remains tied to the native choice proof. No compiler was observed at
+the group boundaries. All background snapshots and individual durations are
+retained in `timing-results.json`; the harness is also reusable for later rounds.
+
+Both medians improve in this short checkpoint, but the grouped order cannot
+isolate this change from thermal/background drift. In particular, the near-flat
+lookup count and limited mixed-tail coverage do not explain the entire elapsed
+time difference. This does not establish full worker utilization or remove the
+remaining shared-index and publication boundaries.

@@ -5,6 +5,8 @@ Each invocation of the established process timer contains exactly one lane.
 There is no lane interleaving, concurrent benchmark, sampler or compilation.
 """
 import datetime
+import gzip
+import hashlib
 import json
 from pathlib import Path
 import runpy
@@ -22,6 +24,28 @@ def processes():
                 if Path(line.split(None, 1)[1].rsplit(None, 1)[0].strip()).name in ('cargo', 'rustc')]
     return {'utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
             'compilers': compiler, 'processes': raw}
+
+
+def verify_frozen_references(result, control, candidate):
+    for label, root in (('control', control), ('candidate', candidate)):
+        for case in ('sum', 'ray'):
+            report = json.loads((root / f'candidate-{case}/report.json').read_text())
+            state = root / f'candidate-{case}/state.json'
+            if state.exists():
+                digest = timer['sha'](state)
+            else:
+                with gzip.open(str(state) + '.gz', 'rb') as stream:
+                    digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+            schedule = [[step[k] for k in timer['KEYS']] for step in report['steps']]
+            assert result['workloads'][case][label]['semantic_reference'] == {
+                'state_sha256': digest,
+                'schedule_sha256': hashlib.sha256(json.dumps(schedule, separators=(',', ':')).encode()).hexdigest(),
+            }
+    proof = json.loads((candidate / 'semantic-acceptance.json').read_text())
+    assert proof['status'] == 'pass'
+    assert proof['input_sha256']['cpu_values'] == result['workloads']['sum']['candidate']['semantic_reference']['state_sha256']
+    result['frozen_references_checked'] = True
+    result['native_sum_acceptance_sha256'] = timer['sha'](candidate / 'semantic-acceptance.json')
 
 
 def run(control, candidate, output, result_path):
@@ -93,6 +117,7 @@ def run(control, candidate, output, result_path):
     result['both_inference_medians_improved'] = all(
         case['inference_change_percent'] < 0 for case in result['workloads'].values())
     result['interpretation'] = 'Short grouped measurements; order and thermal/background drift remain possible. No paired/interleaved or statistical-significance claim.'
+    verify_frozen_references(result, control, candidate)
     timer['save'](result_path, result)
 
 
