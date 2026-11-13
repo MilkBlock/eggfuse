@@ -58,3 +58,51 @@ CARGO_INCREMENTAL=0 cargo test --locked -p eggfuse-cell-runtime --features spars
 The next comparison must replay identical installed catalogs and report both
 storage savings and restoration/extension work. Previously saved measurements
 from another branch are not measurements of this worktree.
+
+## Current-branch batch evidence
+
+Measured with runtime source at `09fe0691` plus the existing, unrelated query
+completion working-tree edits (neighbor/query/query snapshot/worker/runtime).
+Those edits were present before this audit and are not included in its commit.
+Inputs are the four frozen `out/cell-bake-owner-merge/batch/*/candidate.json`
+files; file hashes and full Graph teardown attribution are in
+`restoration-results.json`. No source/catalog retraining occurred.
+
+| case | Graph owned bytes | restoration events | restored container capacity | maximum event | old slots moved | old facts moved |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| fact | 779,975 | 0 | 0 | 0 | 154 | 186 |
+| loopfact | 678,385 | 0 | 0 | 0 | 110 | 159 |
+| sum-bits | 2,054,923 | 6 | 1,968 | 360 | 688 | 943 |
+| dot-product | 2,030,643 | 0 | 0 | 0 | 2,087 | 1,265 |
+
+All four final graph digests match the saved catalog executions, over respectively
+418, 398, 882 and 954 Runs. This run checked final hashes and Run counts, not each
+intermediate Run or native egglog semantic equivalence. Restoration is aggregate
+across causes. These results supersede neither other-branch results nor worst-case
+bounds for future large indivisible frames.
+
+Stable ports, components, boundary routing and frame directories together occupy
+41.7%, 37.1%, 46.2% and 44.9% of Graph heap. These are storage categories, not all
+redundant bytes. Cell storage occupies another roughly 26%–28%. This supports
+prioritizing duplicate instance/address representation while retaining small
+restoration boundaries; it does not support building a new fallback mechanism
+merely to eliminate the currently observed 1,968 bytes of restored containers.
+The ordinary barrier history alone retains 98,304 bytes in each of sum-bits and
+dot-product. The structural branch already has an explicit-observation version
+(`a3269a73`); its integration must preserve opt-in trace consumers.
+
+Do not skip scalar preservation solely because `parent_users == 0`. Already
+matched but not yet executed same-Run bindings can still read old source recipes;
+`release_empty` explicitly keeps ancestors until the Run boundary. A future
+skip requires an admission/visibility proof covering these pending readers.
+
+Reproduce the memory runs (one process per case, no latency comparison):
+
+```sh
+CARGO_INCREMENTAL=0 cargo build --locked -p eggfuse-cell-compiler --features iterative-bake,sparse-cells,storage-metrics --example runtime_storage_peak
+mkdir -p out/cell-restoration-boundaries
+for case in fact loopfact sum-bits dot-product; do
+  target/debug/examples/runtime_storage_peak out/cell-bake-owner-merge/batch/$case/candidate.json out/cell-restoration-boundaries/$case.json inherited-owners --port-domains-only
+done
+python3 benchmarks/cell-bake-owner-merge/restoration_results.py out/cell-restoration-boundaries out/cell-bake-owner-merge/batch benchmarks/cell-bake-owner-merge/restoration-results.json
+```
