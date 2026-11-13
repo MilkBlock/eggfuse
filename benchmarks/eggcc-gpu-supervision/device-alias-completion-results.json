@@ -1,0 +1,19 @@
+{
+  "source_sha256": "9cec5d6f16fc24db9863f84e704af0888ef2afc17aae041a2c00f57a20ba9b38",
+  "rules": 548,
+  "fully_covered": 0,
+  "covered_nonempty_effects": 0,
+  "boundaries": {
+    "new_constructor_or_unknown_witness": 338,
+    "literal_slot_value": 3,
+    "ordered_or_scalar_effect:panic": 49,
+    "new_equality": 32,
+    "ordered_or_scalar_effect:set": 83,
+    "ordered_or_scalar_effect:compute": 39,
+    "ordered_or_scalar_effect:subsume": 4
+  },
+  "static_projection_bytes": 1085588,
+  "scope": "Recipe-only existing-result effect coverage, not actual GPU Eggcc execution",
+  "allocations_supported": false,
+  "new_equality_supported": false
+}
