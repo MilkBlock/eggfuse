@@ -98,8 +98,8 @@ def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp):
 def install(state,payload,roots,batch,index,token,rule_id,inputs,ready,xp,dirty=False):
     kw=state['keys'].shape[1]
     if len(inputs)+1>kw:raise ValueError('key capacity')
-    keys=xp.concatenate([xp.array([[rule_id]],xp.int32),batch['binding_roots'][index:index+1],xp.full((1,kw-len(inputs)-1),-1,xp.int32)],axis=1)
-    p=dict(payload,keys=keys,tokens=token[None,:],matched=ready[None],completed=xp.ones(1,xp.bool_),source=xp.array([-1],xp.int32),generation=xp.array([0],xp.int32),transfer_covered=xp.zeros(1,xp.bool_),witness_sources=batch['sources'][index:index+1],witness_valid=batch['mask'][index:index+1],witness_generations=batch['generations'][index:index+1])
+    keys=xp.concatenate([xp.array([[rule_id]],xp.int32),batch['binding_roots'][index][None,:],xp.full((1,kw-len(inputs)-1),-1,xp.int32)],axis=1)
+    p=dict(payload,keys=keys,tokens=token[None,:],matched=ready[None],completed=xp.ones(1,xp.bool_),source=xp.array([-1],xp.int32),generation=xp.array([0],xp.int32),transfer_covered=xp.zeros(1,xp.bool_),witness_sources=batch['sources'][index][None,:],witness_valid=batch['mask'][index][None,:],witness_generations=batch['generations'][index][None,:])
     out,marks=commit(state,p,xp)
     accepted=xp.any(marks['accepted']);changed=out['present']&~state['present']
     if 'slot_owner' in out:

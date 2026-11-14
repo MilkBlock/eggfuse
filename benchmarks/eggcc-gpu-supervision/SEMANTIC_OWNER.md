@@ -846,3 +846,26 @@ unused capacity was collapsed by an earlier frame. It checks fresh identity
 separation, legal predicted merging, and preservation of prior identities.
 `canon-fresh-identity-results.json` records before/after evidence. Raw report
 and test logs: external SSD `neural-canon-fresh-identity-v26.tar.gz`.
+
+### Device-selected single admission for cumulative execution
+
+`device_neural_step.advance` computes candidates and floating outputs, forms
+an ephemeral Eq-aware key comparison, chooses the first novel valid candidate
+with GPU argmax, writes its frame, and returns the same evolving state, roots,
+and allocation cursor. No Python value conversion, intermediate host read,
+or CPU-selected binding occurs in the kernel. The frame writer now accepts
+a device-valued selected index rather than requiring a Python slice bound.
+
+The step admits at most one instance of one statically selected rule. It
+separates no-novel-proposal, capacity failure, invalid payload, dirty state,
+and audit-pending admission. No-novel-proposal is explicitly not a saturation
+certificate. Eq comparison does not rewrite resident stable keys. Any dirty
+resident token conservatively blocks the next admission.
+
+Eight tests pass, including two consecutive calls without intervening host
+materialization, exact keys/output identities, generated-token continuation,
+duplicate skipping, capacity exhaustion, disabled steps, and Eq-aware keys.
+These are synthetic execution fixtures with a deterministic test model, NOT
+a trained canon benchmark or evidence of broad neural correctness. The next
+step is to wire the existing trained stage model and final CPU audit around
+this primitive on one cumulative state. Native runtime is unchanged.
