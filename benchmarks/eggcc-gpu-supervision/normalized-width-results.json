@@ -1,0 +1,68 @@
+{
+  "scope": "selected three-rule standalone GPU ridge prototype; synthetic-only fitting; repeated real development evaluation; offline fixed captured inputs, not a closed-loop rollout",
+  "accepted": false,
+  "reason": "Both development cases regress; keep existing 256-column head",
+  "training_entries": 641,
+  "synthetic_only_training": true,
+  "backpropagation": false,
+  "normalized_width": 1024,
+  "head_sha256": "f3a09210a6b2da7652b99539a0af86df59b77dae7dd90d018301bb5fcdb40c2c",
+  "maximum_gpu_score_error": 1.9073486328125e-06,
+  "feature_projection_bytes": 29925900,
+  "coefficient_bytes": 442496,
+  "normalization_bytes": 83096,
+  "validation": [
+    {
+      "case": "016-gcd",
+      "groups": {
+        "all": {
+          "instances": 41,
+          "exact_partitions": 34
+        },
+        "direct": {
+          "instances": 26,
+          "exact_partitions": 20
+        },
+        "generated": {
+          "instances": 15,
+          "exact_partitions": 14
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "groups": {
+        "all": {
+          "instances": 99,
+          "exact_partitions": 84
+        },
+        "direct": {
+          "instances": 78,
+          "exact_partitions": 64
+        },
+        "generated": {
+          "instances": 21,
+          "exact_partitions": 20
+        }
+      }
+    }
+  ],
+  "reference_offline": {
+    "gcd": 36,
+    "lcm": 93
+  },
+  "reference_live_failures": {
+    "instances": 140,
+    "incorrect": 12,
+    "rule_290_incorrect": 11,
+    "direct_rule_290_incorrect": 9
+  },
+  "limitations": [
+    "No new actual feedback rollout for rejected head",
+    "Not full Eggcc or all Cell interactions",
+    "A single width trial does not establish representation insufficiency",
+    "No speedup measurement"
+  ],
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/normalized-width-1024-v1.tar.gz",
+  "archive_sha256": "55b71733040290af41f505e88d371380ec9a4f2f92fbe89d4431a46cb130a340"
+}

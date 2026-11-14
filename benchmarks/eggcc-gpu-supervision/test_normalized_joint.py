@@ -23,6 +23,16 @@ class NormalizedJoint(unittest.TestCase):
         np.testing.assert_allclose(actual,score_head(x,h,np),atol=5e-6)
         with self.assertRaises(ValueError):score_head(x[:,:-1],h,np)
 
+    def test_configurable_width_gpu_parity(self):
+        rng=np.random.default_rng(9);x=rng.normal(size=(16,7)).astype(np.float32)
+        y=np.eye(2,dtype=np.float32)[np.arange(16)%2]
+        h=fit_normalized_joint_head(x,y,hidden=1024)
+        self.assertEqual(h["feature_projection"].shape,(7,1024))
+        self.assertEqual(h["coef"].shape,(1031,2))
+        result=score_head(mx.array(x),device(h),mx);mx.eval(result)
+        np.testing.assert_allclose(result,score_head(x,h,np),atol=5e-6)
+        with self.assertRaises(ValueError):fit_normalized_joint_head(x,y,hidden=0)
+
     def test_live_raw_features_flow_directly_into_head(self):
         import test_live_completion_classifier as fixtures
         from device_completion_classifier import compile_classifier,load_head,input_width
