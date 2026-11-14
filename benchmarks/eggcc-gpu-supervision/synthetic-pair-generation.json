@@ -1,0 +1,77 @@
+{
+  "scope": "one initial Eq per pair, including mandatory constructor closure; not a one-row mutation",
+  "records": [
+    {
+      "case": "20261200-base",
+      "pair": 20261200,
+      "variant": "base",
+      "input_sha256": "0ab397081bf401e49c7a83143bf4591852993be4994d424b97d1fc7a4ec9c741",
+      "status": "complete",
+      "runs": 2,
+      "unions": 2
+    },
+    {
+      "case": "20261200-eq",
+      "pair": 20261200,
+      "variant": "eq",
+      "input_sha256": "c8aff6154dc706c2f22245cb55a3fa14f592934a96481b0ea7b4ed576540d317",
+      "status": "complete",
+      "runs": 4,
+      "unions": 3
+    },
+    {
+      "case": "20261201-base",
+      "pair": 20261201,
+      "variant": "base",
+      "input_sha256": "b03a8ea8efa5b80856785402552d8bc792b2a2e8cfadca506c54a136ba7dcd21",
+      "status": "complete",
+      "runs": 2,
+      "unions": 4
+    },
+    {
+      "case": "20261201-eq",
+      "pair": 20261201,
+      "variant": "eq",
+      "input_sha256": "9f68335b2132eaabc7b2c2d19230d8c22b8fdd1f4496d6f01250f66c9e0aa19b",
+      "status": "complete",
+      "runs": 2,
+      "unions": 4
+    },
+    {
+      "case": "20261202-base",
+      "pair": 20261202,
+      "variant": "base",
+      "input_sha256": "06386558cfd93d1458cea5e971cada755a75fadd1b72d14750117e9dc0a172c1",
+      "status": "complete",
+      "runs": 2,
+      "unions": 3
+    },
+    {
+      "case": "20261202-eq",
+      "pair": 20261202,
+      "variant": "eq",
+      "input_sha256": "53f86fe8015fb4f6fb4b1c9d912f28390bded63552715d6c54a372145d6ba847",
+      "status": "complete",
+      "runs": 2,
+      "unions": 3
+    },
+    {
+      "case": "20261203-base",
+      "pair": 20261203,
+      "variant": "base",
+      "input_sha256": "6fbacf4a977b29876f9bd1d1299678420cf4120ad5e9805a9438dddb49d1c187",
+      "status": "complete",
+      "runs": 2,
+      "unions": 1
+    },
+    {
+      "case": "20261203-eq",
+      "pair": 20261203,
+      "variant": "eq",
+      "input_sha256": "e70eedd4c993ccdedd154a97c8a61f14275c66c7afffc978068ed096367ae59c",
+      "status": "complete",
+      "runs": 5,
+      "unions": 2
+    }
+  ]
+}

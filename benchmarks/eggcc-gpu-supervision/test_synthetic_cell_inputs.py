@@ -1,5 +1,5 @@
 import copy,unittest
-from synthetic_cell_inputs import generate,oracle,validate,digest,select_recipe
+from synthetic_cell_inputs import generate,oracle,validate,digest,select_recipe,merge_input
 
 
 def recipe():
@@ -23,6 +23,20 @@ class SyntheticInputs(unittest.TestCase):
         with self.assertRaises(ValueError):validate(bad)
         bad=copy.deepcopy(doc);bad['snapshot']['rows'][0]['values'][0]['eq']='tampered'
         with self.assertRaises(ValueError):validate(bad)
+
+    def test_explicit_initial_merge_replay_and_type_checks(self):
+        r=recipe();base=generate(r,9,2,0.)
+        ports=[]
+        for row in base['rows']:
+            for v in row['values']:
+                if v not in ports:ports.append(v)
+        edge=ports[:2];merged=merge_input(r,base,*edge)
+        doc=dict(schema='synthetic-cell-input/v1',recipe=r,snapshot=merged,recipe_sha256=digest(r),input_sha256=digest(merged),generator=dict(seed=9,fragments=2,reuse=0.,initial_merge=edge))
+        self.assertEqual(validate(doc),(r,merged))
+        with self.assertRaises(ValueError):merge_input(r,base,edge[0],edge[0])
+        with self.assertRaises(ValueError):merge_input(r,base,edge[0],dict(sort='Other',eq='new'))
+        with self.assertRaises(ValueError):merge_input(r,base,edge[0],dict(sort='E',eq='missing'))
+        oracle(r,merged)
 
     def test_only_definitions_used_and_unsupported_types_rejected(self):
         r=recipe();source=dict(r,runs=['do not use'],boundaries=['do not use'])

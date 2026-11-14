@@ -43,6 +43,10 @@ def generate(recipe, seed, fragments=4, reuse=.35):
                     bindings[slot]=value
                 values.append(bindings[slot])
             rows.append(dict(table=atom['call']['table'],values=values,subsumed=False))
+    return canonical_seed(recipe,rows)
+
+
+def canonical_seed(recipe,rows):
     # Constructor congruence is a validity condition of the seed, not a label.
     ids={identity(v):i for i,v in enumerate({identity(v):v for r in rows for v in r['values']}.values())}
     ref=Reference(recipe,[],ids)
@@ -53,6 +57,15 @@ def generate(recipe, seed, fragments=4, reuse=.35):
     normalized=[dict(table=t,values=[values[ref.root(i)] for i in vs],subsumed=False) for t,vs in sorted(ref.normalized_facts())]
     # All used identities remain actual typed constructor inputs/results.
     return dict(rows=normalized)
+
+
+def merge_input(recipe,snapshot,left,right):
+    if left==right or left.get('sort')!=right.get('sort') or 'eq' not in left or 'eq' not in right:
+        raise ValueError('distinct same-sort Eq ports required')
+    used={identity(v) for row in snapshot['rows'] for v in row['values']}
+    if identity(left) not in used or identity(right) not in used:raise ValueError('unknown merge port')
+    rows=[dict(row,values=[left if v==right else v for v in row['values']]) for row in snapshot['rows']]
+    return canonical_seed(recipe,rows)
 
 
 def oracle(recipe,snapshot,budget=64):
@@ -69,7 +82,9 @@ def validate(document):
     if document.get('schema')!='synthetic-cell-input/v1':raise ValueError('synthetic schema')
     if digest(document['recipe'])!=document['recipe_sha256'] or digest(document['snapshot'])!=document['input_sha256']:raise ValueError('synthetic provenance')
     g=document['generator']
-    if generate(document['recipe'],g['seed'],g['fragments'],g['reuse'])!=document['snapshot']:raise ValueError('seed replay mismatch')
+    expected=generate(document['recipe'],g['seed'],g['fragments'],g['reuse'])
+    if 'initial_merge' in g:expected=merge_input(document['recipe'],expected,*g['initial_merge'])
+    if expected!=document['snapshot']:raise ValueError('seed replay mismatch')
     return document['recipe'],document['snapshot']
 
 
