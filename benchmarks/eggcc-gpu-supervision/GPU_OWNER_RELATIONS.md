@@ -49,3 +49,23 @@ prototype, not native Eggcc execution on GPU.
 
 Next: synthesize valid owner-sharing/detachment cases and fit the expanded
 feature interface using synthetic-only labels, retaining exact transfer guards.
+
+## Training capture replay and coverage
+
+Owner-aware GPU match capture now saves the requested source-owner map, owner
+epoch, physical generation/liveness and usable mask at inference time.
+`floating_inputs` reconstructs the same extra floating context from this snapshot,
+never from later state. The existing witness audit cross-checks each captured
+owner against the actual selected query witness; corrupt epochs are rejected.
+Missing owner context is an error for owner-aware replay. Other models keep the
+previous capture format. Eight owner/capture tests pass, including actual Metal
+capture -> NumPy input replay parity within 2e-6 and a corrupted-owner rejection.
+
+Before fitting, `audit_owner_sample_coverage.py DIRECTORY OUTPUT` checks synthetic
+input provenance and capture hashes and counts accepted query-atom witness pairs.
+The saved 11-case local synthetic corpus has 94 accepted samples, 22 logically
+shared pairs, **zero distinct-logical/same-physical pairs**. See
+`synthetic-owner-coverage.json`. This counts query-atom pairs, not port repetitions,
+transfer events or execution time. No expanded model was trained on this
+insufficient distribution. Next generation must deliberately exercise legal
+sharing and detachment; pure storage remapping must preserve semantic labels.

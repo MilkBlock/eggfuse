@@ -1,0 +1,88 @@
+{
+  "scope": "accepted query-atom witness pairs; not port multiplicity or transfer count",
+  "synthetic_only": true,
+  "cases": [
+    {
+      "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261120.json",
+      "capture_sha256": "011f0e155e8b406e07a9bf07b5430e4a1d8b74cf906caca32d5c6c9846cab5d0",
+      "samples": 17,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 3
+    },
+    {
+      "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261121.json",
+      "capture_sha256": "7544070bf2115492c4ae07ba9d960d612a2b12fef57ba528c6f64bbde8d51622",
+      "samples": 8,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 1
+    },
+    {
+      "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261122.json",
+      "capture_sha256": "5bddce53206e7a9040181257349bf2f954c14f2cb9b4a7f4675ea3d5409cc2a9",
+      "samples": 5,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 1
+    },
+    {
+      "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261124.json",
+      "capture_sha256": "58364ce0cbd18512995c5de9882647978cf84d313b447b7e4dfbaafa49d851b2",
+      "samples": 4,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 1
+    },
+    {
+      "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261125.json",
+      "capture_sha256": "b3d52f2eb42c8e988c424bbdf1ef8761c323382877191d406a20f1167cc1f02f",
+      "samples": 13,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 3
+    },
+    {
+      "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261126.json",
+      "capture_sha256": "0cde2e4fa499acf2b45f206fe97d801b2b4f358e48189705610ddd64b0dc4a82",
+      "samples": 5,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 0
+    },
+    {
+      "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261127.json",
+      "capture_sha256": "c5f82b4c260e33bc19140bad95d9e58f2abd9d25a75f71c10459c510f2237413",
+      "samples": 10,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 4
+    },
+    {
+      "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261128.json",
+      "capture_sha256": "ae1ebc37fb54ab52e05416d898f562b53ee5d251b8d49c13599823194b25d837",
+      "samples": 10,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 2
+    },
+    {
+      "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261129.json",
+      "capture_sha256": "0b30e95580ddf4ad9d30a014620d857ecc1365b708947f7f83cbbdb0d4c87fb0",
+      "samples": 7,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 2
+    },
+    {
+      "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261130.json",
+      "capture_sha256": "098fe5b30a871704ce391db88dc2e71749bd0830b8e7096e1d0a44ba7534bba3",
+      "samples": 9,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 3
+    },
+    {
+      "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261131.json",
+      "capture_sha256": "6b86aec0ba8bf697d0d6540ec6c98fcdcb2aa3f7b95edc8ae8167f6dedc18537",
+      "samples": 6,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 2
+    }
+  ],
+  "totals": {
+    "samples": 94,
+    "physical_alias_pairs": 0,
+    "logical_shared_pairs": 22
+  }
+}

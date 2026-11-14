@@ -21,6 +21,9 @@ def collect(state,bindings,request,tokens,numerical,plan,xp,boundary_capture=Non
         source_tokens=state['tokens'][src],source_rules=state['keys'][src,0],
         input_ports=xp.array(ports,xp.int32),source_ports=bindings['source_slots'][:,ports],
         predicted_tokens=tokens,numerical_ready=numerical['ready'],witness=witness)
+    if 'owner_relation' in request:
+        from device_owner_relations import snapshot as owner_snapshot
+        result['source_owner_context']=owner_snapshot(state,request['sources'],request['edge_valid'],xp)
     if boundary_capture is not None:
         result.update(boundary_capture)
     elif 'boundary_context' in plan:
@@ -59,6 +62,20 @@ def audit(recipe,capture):
     matched=np.flatnonzero(b['live'])
     for lane in matched:
         checked+=1
+        if 'owner_relation' in r:
+            owner=c.get('source_owner_context')
+            if owner is None:errors.append('missing_owner_context')
+            else:
+                for pi in np.flatnonzero(r['edge_valid'][lane]):
+                    matches=np.flatnonzero(b['witness_rows'][lane]==r['sources'][lane,pi])
+                    if not len(matches):errors.append('owner_source_not_witness');continue
+                    ai=int(matches[0])
+                    expected=w['physical_owner'][lane,ai] if 'physical_owner' in w else b['witness_rows'][lane,ai]
+                    epoch=w['owner_epoch'][lane,ai] if 'owner_epoch' in w else w['generation'][lane,ai]
+                    generation=w['physical_generation'][lane,ai] if 'physical_generation' in w else w['generation'][lane,ai]
+                    if (owner['owners'][lane,pi]!=expected or owner['owner_epoch'][lane,pi]!=epoch or
+                        owner['physical_generation'][lane,pi]!=generation or not owner['physical_live'][lane,pi] or
+                        not owner['usable'][lane,pi] or owner['missing'][lane]):errors.append('owner_context_mismatch')
         for slot,value in rule.get('query_literal_guards',{}).items():
             expected=recipe.get('literal_ids',{}).get(value,-1)
             if expected<0 or not b['slot_valid'][lane,int(slot)] or int(b['slots'][lane,int(slot)])!=expected:errors.append('literal_guard')
@@ -120,6 +137,11 @@ def floating_inputs(capture,model,xp):
     if 'source_relation' in r:
         from device_source_relations import encode
         q=xp.concatenate([q,encode(r['sources'],r['source_relation'],mask,xp)],axis=1)
+    if 'owner_relation' in r:
+        from device_source_relations import encode
+        if 'source_owner_context' not in c:raise ValueError('missing captured physical owner context')
+        owner=c['source_owner_context']
+        q=xp.concatenate([q,encode(owner['owners'],r['owner_relation'],owner['usable'],xp)],axis=1)
     x=features(r['seed'],q,pool,model['w'],xp)
     if 'boundary_features' in r:x=xp.concatenate([x,r['boundary_features']],axis=1)
     return x

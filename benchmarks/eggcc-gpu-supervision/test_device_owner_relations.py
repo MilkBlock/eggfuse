@@ -27,10 +27,21 @@ class OwnerRelations(unittest.TestCase):
         plan=compile_transition(recipe,2,owner_relations=True)
         rng=np.random.default_rng(112)
         model=dict(w=rng.normal(0,.01,(1536,16)).astype(np.float32),coef=rng.normal(0,.01,(1553,128)).astype(np.float32))
-        expected,em=step(s,plan,model,4,True,True,np)
+        expected,em=step(s,plan,model,4,True,True,np,capture=True)
         dp=jf.device_plan(plan);dm={k:mx.array(v) for k,v in model.items()}
-        out,marks=mx.compile(lambda state:step(state,dp,dm,4,mx.array(True),mx.array(True),mx))({k:mx.array(v) for k,v in s.items()});mx.eval(out,marks)
+        out,marks=mx.compile(lambda state:step(state,dp,dm,4,mx.array(True),mx.array(True),mx,capture=True))({k:mx.array(v) for k,v in s.items()});mx.eval(out,marks)
         self.assertEqual(int(mx.sum(marks['admission']['accepted'])),1)
+        from device_match_capture import floating_inputs,host
+        cap=host(marks['capture']);features=floating_inputs(cap,model,np)
+        live_features,_=encode_features(s,cap['request'],model,np)
+        np.testing.assert_allclose(features,live_features,atol=2e-6)
+        self.assertIn('owner_epoch',cap['source_owner_context'])
+        from device_match_capture import audit
+        self.assertTrue(audit(recipe,cap)['passed'])
+        cap['source_owner_context']['owner_epoch'][0,0]+=1
+        self.assertFalse(audit(recipe,cap)['passed'])
+        del cap['source_owner_context']
+        with self.assertRaises(ValueError):floating_inputs(cap,model,np)
         np.testing.assert_allclose(np.array(out['tokens']),expected['tokens'],atol=2e-6)
 
     def test_gpu_transfer_feeds_next_float_inference(self):
