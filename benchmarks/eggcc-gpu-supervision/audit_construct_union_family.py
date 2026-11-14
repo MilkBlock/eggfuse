@@ -14,6 +14,7 @@ from device_schedule import compile_schedule,initial
 from device_scheduled_runtime import run
 from device_match_capture import host,audit,flatten
 from reference_union_family import Reference,compare_graph
+from reference_family_schedule import execute as execute_reference_schedule
 from reference_cell_closure import facts_from_cells
 from audit_snapshot_queries import device
 
@@ -23,6 +24,7 @@ def main():
     for k in ('trace','model','output'):p.add_argument(k,type=Path)
     p.add_argument('--capture',type=Path)
     p.add_argument('--synthetic-input',action='store_true')
+    p.add_argument('--schedule',type=Path,help='explicit selected-family schedule; omitted stages are not covered')
     p.add_argument('--completion-decoder',type=Path);p.add_argument('--completion-decoder-report',type=Path)
     p.add_argument('--completion-classifier',type=Path);p.add_argument('--completion-classifier-report',type=Path)
     p.add_argument('--rules',default='283,293');p.add_argument('--snapshot-run',type=int,default=466)
@@ -41,13 +43,15 @@ def main():
         trace=dict(recipe=recipe,boundaries=[dict(ordinal=a.snapshot_run,graph=snapshot)])
     elif not all(trace.get(k) is True for k in ('strict_run_graphs_equal','strict_audit_reference_equal','run_control_counts_equal')):raise ValueError('unaudited trace')
     original=dict(trace['recipe'],rules=[trace['recipe']['rules'][i] for i in ids_rule])
-    stages={r['metadata']['source_set'] for r in original['rules']}
-    if len(stages)!=1:raise ValueError('single source stage required')
-    stage=next(iter(stages));lowered,sites=lower(original)
+    stages=list(dict.fromkeys(r['metadata']['source_set'] for r in original['rules']))
+    if len(stages)!=1 and not a.schedule:raise ValueError('multiple stages require an explicit schedule')
+    stage=stages[0] if len(stages)==1 else None
+    source_control=json.loads(a.schedule.read_text()) if a.schedule else dict(saturate=dict(run=stage))
+    lowered,sites=lower(original)
     boundary=[b['graph'] for b in trace['boundaries'] if b['ordinal']==a.snapshot_run]
     if len(boundary)!=1:raise ValueError('snapshot boundary')
     local,state,ids,rows=prepare_family(lowered,boundary[0],list(range(len(ids_rule))),a.capacity)
-    blocks=[(0,compile_transition(local,r)) for r in range(len(ids_rule))]
+    blocks=[(stages.index(original['rules'][r]['metadata']['source_set']),compile_transition(local,r)) for r in range(len(ids_rule))]
     if a.order_queries:
         from collections import Counter
         from device_query_join import order_query
@@ -76,6 +80,7 @@ def main():
     if a.completion_decoder:
         from device_completion_readout import compile_readout
         report=json.loads(a.completion_decoder_report.read_text())
+        if a.schedule and report.get('completion_control')!=source_control:raise ValueError('decoder not calibrated for explicit stage control')
         decoder_sha=hashlib.sha256(a.completion_decoder.read_bytes()).hexdigest()
         if report['weights_sha256']!=decoder_sha or report['model_sha256']!=hashlib.sha256(a.model.read_bytes()).hexdigest():raise ValueError('completion decoder provenance')
         with np.load(a.completion_decoder) as f:
@@ -88,6 +93,7 @@ def main():
     if a.completion_classifier:
         from device_completion_classifier import compile_classifier
         report=json.loads(a.completion_classifier_report.read_text())
+        if a.schedule and report.get('completion_control')!=source_control:raise ValueError('classifier not calibrated for explicit stage control')
         head_sha=hashlib.sha256(a.completion_classifier.read_bytes()).hexdigest()
         if report['head_sha256']!=head_sha or report['model_sha256']!=hashlib.sha256(a.model.read_bytes()).hexdigest():raise ValueError('classifier provenance')
         with np.load(a.completion_classifier) as f:
@@ -96,24 +102,24 @@ def main():
         dp=device(blocks)
         completion_metadata=dict(kind='direct_state_ridge',head_sha256=head_sha,decoder_sha256=report['decoder_sha256'],
             representation='direct whole-state ridge plus actual scalar moments',union_authorized=False)
-    schedule,meta=compile_schedule(dict(saturate=dict(run=stage)),[stage]);ds=device(schedule)
+    schedule,meta=compile_schedule(source_control,stages);ds=device(schedule)
     control=dict(control=initial(ds,meta['repeat_slots'],mx),open_run=mx.array(False),unreported_change=mx.array(False),failed_run=mx.array(False))
     ready=mx.array(True);next_id=mx.array(len(ids));logs=[];captures=[];frames=[]
     def query(s,b,m,st,xp,**kw):return run_round(s,b,m,st,xp,capacity=a.capacity,capture=True,**kw)
-    def step(s,n,c,e,r):return run(s,dp,model,cp,ds,meta['repeat_slots'],mx.array([True]),n,mx.array(len(ids)+reserve),mx.array(a.capacity),mx.array(True),r,1,mx,
+    def step(s,n,c,e,r):return run(s,dp,model,cp,ds,meta['repeat_slots'],mx.ones(len(stages),mx.bool_),n,mx.array(len(ids)+reserve),mx.array(a.capacity),mx.array(True),r,1,mx,
         eq_context=e,eq_rounds=8,continuation=c,query_kernel=query,takeover_catalog=catalog,takeover_budget=8)
     compiled=mx.compile(step);started=time.monotonic()
     for tick_index in range(a.ticks):
         current,next_id,m=compiled(current,next_id,control,ctx,ready);ctx=m['eq_context'];ready=m['eq_settled']
         control={k:m[k] for k in ('control','open_run','unreported_change','failed_run')}
         frames.append(dict(state={k:v for k,v in current.items() if k in ('keys','present','visible','settled','effect_pc','slot_owner','owner_projection','owner_live','owner_epoch','owner_generation','owner_slots','owner_slot_roots','owner_slot_valid')},roots=ctx['roots'],next_id=next_id))
-        logs.append({k:m[k] for k in ('run_done','run_changed','new_tokens','new_constructors','new_equivalences','takeover_released')});captures.append(m['query_captures'])
+        logs.append({k:m[k] for k in ('stage','run_done','run_changed','new_tokens','new_constructors','new_equivalences','takeover_released')});captures.append(m['query_captures'])
         if (tick_index+1)%a.flush_every==0:
             mx.eval(current,next_id,m,logs[-a.flush_every:],captures[-a.flush_every:],frames[-a.flush_every:])
             if a.progress:print(json.dumps(dict(event='execution_flush',tick=tick_index+1,budget=a.ticks,elapsed_seconds=time.monotonic()-started)),flush=True)
     mx.eval(current,next_id,m,logs,captures,frames);gpu_seconds=time.monotonic()-started
-    started=time.monotonic();ref=Reference(original,rows,ids);cpu_frames=[];cpu_runs=ref.saturate(original['rules'],observe=lambda r,_:cpu_frames.append(deepcopy(r)))
-    lowref=Reference(lowered,rows,ids);lowruns=lowref.saturate(lowered['rules'])
+    started=time.monotonic();ref=Reference(original,rows,ids);cpu_frames=[];cpu_runs=execute_reference_schedule(ref,source_control,observe=lambda r,_:cpu_frames.append(deepcopy(r)))
+    lowref=Reference(lowered,rows,ids);lowruns=execute_reference_schedule(lowref,source_control)
     lowfacts=[(t,v[:-1],v[-1]) for t,v in lowref.facts]
     lowering_check=compare_graph(ref,lowfacts,lowref.partition(),len(ids))
     final=host(current);observed,complete=facts_from_cells(local,final);roots=np.array(ctx['roots'])[:int(next_id)]
@@ -135,14 +141,15 @@ def main():
         check_run=compare_graph(cpu_frames[len(boundary_checks)],facts,frame['roots'][:int(frame['next_id'])],len(ids))
         check_run['passed'] &= covered;boundary_checks.append(check_run)
     source_counts=[r['applications'] for r in cpu_runs]
-    passed=bool(m['finished']) and not bool(m['failed_run']) and len(boundary_checks)==len(cpu_runs) and all(b['passed'] for b in boundary_checks) and check['passed'] and lowering_check['passed'] and complete and per_rule_matches==[r['per_rule_applications'] for r in cpu_runs] and matched==source_counts and len(cpu_runs)==int(log['run_done'].sum()) and all(c['passed'] and c['enumeration_complete'] for c in checks)
-    result=dict(scope=('synthetic selected construct/union family on GPU; not full Eggcc' if a.synthetic_input else 'real selected construct/union family on GPU; not full Eggcc'),rules=ids_rule,snapshot_run=a.snapshot_run,stage=stage,
+    stage_order=[stages[int(s)] for s in log['stage'][log['run_done']]]
+    passed=stage_order==[r['stage'] for r in cpu_runs] and bool(m['finished']) and not bool(m['failed_run']) and len(boundary_checks)==len(cpu_runs) and all(b['passed'] for b in boundary_checks) and check['passed'] and lowering_check['passed'] and complete and per_rule_matches==[r['per_rule_applications'] for r in cpu_runs] and matched==source_counts and len(cpu_runs)==int(log['run_done'].sum()) and all(c['passed'] and c['enumeration_complete'] for c in checks)
+    result=dict(scope=('synthetic selected construct/union family on GPU; not full Eggcc' if a.synthetic_input else 'real selected construct/union family on GPU; not full Eggcc'),rules=ids_rule,snapshot_run=a.snapshot_run,stage=stage,stages=stages,source_control=source_control,gpu_stage_order=stage_order,
         trace_sha256=hashlib.sha256(raw).hexdigest(),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),lowered_sets=sites,
         seed_rows=len(rows),experimental_boundary_model=boundary_model,source_tokens='predicted generated Cells, exact imported Cells' if a.predicted_source_feedback else 'exact completed states',boundary_context=a.boundary_context,query_order=query_orders,fixed_ticks=a.ticks,flush_every=a.flush_every,host_execution_flushes=a.ticks//a.flush_every,generated_cells=int(log['new_tokens'].sum()),fresh_ids=int(next_id)-len(ids),original_cpu_fresh_ids=len(ref.parent)-len(ids),lowered_cpu_fresh_ids=len(lowref.parent)-len(ids),released_owner_rows=int(log['takeover_released'].sum()),generated_source_consumers=continued,
         cpu_runs=cpu_runs,lowered_cpu_runs=lowruns,gpu_matches_per_run=matched,gpu_matches_per_rule=per_rule_matches,gpu_runs=int(log['run_done'].sum()),gpu_run_changes=log['run_changed'][log['run_done']].tolist(),
         graph_check=check,boundary_checks=boundary_checks,lowering_check=lowering_check,views_complete=complete,query_checks=checks,finished=bool(m['finished']),failed_run=bool(m['failed_run']),passed=passed,
         gpu_compile_upload_execute_seconds=gpu_seconds,cpu_reference_and_audit_seconds=time.monotonic()-started,
-        limitations=['One projected source ruleset, omitted external rules/tables remain uncovered','Lowering adds temporary slots and potentially fresh IDs/unions','Exact kernels authorize completion; ridge quality for lowered templates is not established','No claim of identical intermediate allocation or native full-graph execution'])
+        limitations=['Selected source rules and explicit control only; omitted external rules/tables remain uncovered','Lowering adds temporary slots and potentially fresh IDs/unions','Exact kernels authorize completion; ridge quality for lowered templates is not established','No claim of identical intermediate allocation or native full-graph execution'])
     if completion_metadata is not None:
         result['completion_readout']=completion_metadata
         result['source_tokens']='direct state ridge generated Cells, exact imported Cells' if a.completion_classifier else 'whole-state reconstructed generated Cells, exact imported Cells'
@@ -155,7 +162,7 @@ def main():
                     if bool(c['recorded']):payload.update(flatten(c,f'capture/{ti}/{inner}/{block}/'))
         np.savez_compressed(a.capture,**payload)
         result['capture']=dict(schema='device-composed-witness/v1',artifact_sha256=hashlib.sha256(a.capture.read_bytes()).hexdigest(),passed=True,target_labels_included=False,logical_array_bytes=sum(x.nbytes for x in payload.values()))
-        a.capture.with_suffix('.json').write_text(json.dumps(dict(recipe=local,original_recipe=original,source_token_mode=result['source_tokens'],completion_readout=completion_metadata,snapshot_run=a.snapshot_run,source_rules=ids_rule,model_sha256=result['model_sha256'],trace_sha256=result['trace_sha256'],capture=result['capture']),indent=2)+'\n')
+        a.capture.with_suffix('.json').write_text(json.dumps(dict(recipe=local,original_recipe=original,source_control=source_control,stages=stages,source_token_mode=result['source_tokens'],completion_readout=completion_metadata,snapshot_run=a.snapshot_run,source_rules=ids_rule,model_sha256=result['model_sha256'],trace_sha256=result['trace_sha256'],capture=result['capture']),indent=2)+'\n')
     a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
     if not passed:raise SystemExit(1)
 

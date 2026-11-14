@@ -1,0 +1,870 @@
+{
+  "schema": "synthetic-cell-input/v1",
+  "recipe": {
+    "tables": [
+      {
+        "can_subsume": true,
+        "internal": false,
+        "kind": "constructor",
+        "merge": null,
+        "merge_expr": null,
+        "name": "Add",
+        "schema": [
+          {
+            "kind": "eq",
+            "name": "BinaryOp"
+          }
+        ]
+      },
+      {
+        "can_subsume": true,
+        "internal": false,
+        "kind": "constructor",
+        "merge": null,
+        "merge_expr": null,
+        "name": "AddContext",
+        "schema": [
+          {
+            "kind": "eq",
+            "name": "Assumption"
+          },
+          {
+            "kind": "eq",
+            "name": "Expr"
+          },
+          {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        ]
+      },
+      {
+        "can_subsume": true,
+        "internal": false,
+        "kind": "constructor",
+        "merge": null,
+        "merge_expr": null,
+        "name": "Bop",
+        "schema": [
+          {
+            "kind": "eq",
+            "name": "BinaryOp"
+          },
+          {
+            "kind": "eq",
+            "name": "Expr"
+          },
+          {
+            "kind": "eq",
+            "name": "Expr"
+          },
+          {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "effects": [
+          {
+            "arg": {
+              "slot": 5
+            },
+            "dst": 6,
+            "kind": "copy",
+            "op": "copy",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "args": [
+              {
+                "slot": 4
+              },
+              {
+                "slot": 1
+              }
+            ],
+            "call": {
+              "table": "AddContext"
+            },
+            "dst": 7,
+            "kind": "construct",
+            "op": "let",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "args": [
+              {
+                "slot": 4
+              },
+              {
+                "slot": 2
+              }
+            ],
+            "call": {
+              "table": "AddContext"
+            },
+            "dst": 8,
+            "kind": "construct",
+            "op": "let",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "args": [
+              {
+                "slot": 0
+              },
+              {
+                "slot": 7
+              },
+              {
+                "slot": 8
+              }
+            ],
+            "call": {
+              "table": "Bop"
+            },
+            "kind": "set",
+            "op": "set",
+            "value": {
+              "slot": 6
+            }
+          }
+        ],
+        "footprint": {
+          "equality_invalidates": [
+            "Add-All-Gets",
+            "Add-Gets",
+            "AddContext",
+            "Alloc",
+            "Append",
+            "Arg",
+            "BodyContainsExpr",
+            "BodyContainsListExpr",
+            "Bop",
+            "Call",
+            "Concat",
+            "Cons",
+            "Const",
+            "ContextOf",
+            "DebugExpr",
+            "DelayedDropUnion",
+            "DelayedSubstUnion",
+            "DemandDontAlias",
+            "DoWhile",
+            "DontAlias",
+            "DropAt",
+            "DropAtInternal",
+            "ES",
+            "Empty",
+            "ExpectType",
+            "Expr-size",
+            "ExprIsPure",
+            "ExprIsResolved",
+            "ExprIsValid",
+            "ExprSet-insert",
+            "ExtractedExpr",
+            "ExtractedExprCache",
+            "Function",
+            "Get",
+            "HasArgType",
+            "HasType",
+            "IVTAnalysisRes",
+            "IVTNewInputsAnalysis",
+            "IVTNewInputsAnalysisDemand",
+            "IVTNewInputsAnalysisImpl",
+            "If",
+            "IfNode",
+            "IfSubst",
+            "InIf",
+            "InLoop",
+            "InSwitch",
+            "InlinedCall",
+            "InvCodeMotionCandidate",
+            "IsIsEven",
+            "ListExpr-ith",
+            "LoopIsFinite",
+            "LoopNumItersGuess",
+            "NTZIterations",
+            "NoAlias",
+            "Not-Just-Concat",
+            "PointsToCells",
+            "PointsToCellsAtIter",
+            "PointsToExpr",
+            "PotentialExtractedExpr",
+            "Program",
+            "Single",
+            "SubTuple",
+            "Subst",
+            "Switch",
+            "TermSubst",
+            "ToSubsumeIf",
+            "Top",
+            "TupleRemoveAt",
+            "Uop",
+            "___GeneratedFreshTable",
+            "___GeneratedFreshTable1",
+            "___GeneratedFreshTable2",
+            "___GeneratedFreshTable3",
+            "___GeneratedFreshTable4",
+            "___GeneratedFreshTable5",
+            "hi-bound",
+            "is-inv-Expr",
+            "is-inv-ListExpr",
+            "is-inv-ListExpr-helper",
+            "leading-Expr",
+            "lo-bound",
+            "lsr-inv",
+            "to-hoist",
+            "to-hoist-size",
+            "tuple-length"
+          ],
+          "operations": [
+            "construct",
+            "copy",
+            "set"
+          ],
+          "precision": "conservative direct/merge footprint; global rebuild may have further effects",
+          "read_tables": [
+            "AddContext",
+            "Bop"
+          ],
+          "union_sorts": [
+            "Expr"
+          ],
+          "write_tables": [
+            "AddContext",
+            "Bop"
+          ]
+        },
+        "interface": {
+          "correlation": "one complete binding row; slot equality and literals remain constraints",
+          "guaranteed_atoms": [],
+          "primitive_atoms": [],
+          "residual_atoms": [
+            0,
+            1
+          ],
+          "rows": [
+            {
+              "atom": 0,
+              "columns": [
+                {
+                  "slot": 0
+                },
+                {
+                  "slot": 1
+                },
+                {
+                  "slot": 2
+                },
+                {
+                  "slot": 3
+                }
+              ],
+              "key_columns": [
+                0,
+                1,
+                2
+              ],
+              "table": "Bop",
+              "witness": "complete visible row"
+            },
+            {
+              "atom": 1,
+              "columns": [
+                {
+                  "slot": 4
+                },
+                {
+                  "slot": 3
+                },
+                {
+                  "slot": 5
+                }
+              ],
+              "key_columns": [
+                0,
+                1
+              ],
+              "table": "AddContext",
+              "witness": "complete visible row"
+            }
+          ]
+        },
+        "metadata": {
+          "name": "(rewrite (AddContext ctx (Bop op c1 c2)) (Bop op (AddContext ctx c1) (AddContext ctx c2)) :ruleset context)",
+          "seminaive": true,
+          "source_set": "context"
+        },
+        "query": [
+          {
+            "args": [
+              {
+                "slot": 0
+              },
+              {
+                "slot": 1
+              },
+              {
+                "slot": 2
+              },
+              {
+                "slot": 3
+              }
+            ],
+            "call": {
+              "table": "Bop"
+            }
+          },
+          {
+            "args": [
+              {
+                "slot": 4
+              },
+              {
+                "slot": 3
+              },
+              {
+                "slot": 5
+              }
+            ],
+            "call": {
+              "table": "AddContext"
+            }
+          }
+        ],
+        "slots": [
+          {
+            "definition": "query",
+            "name": "op",
+            "sort": {
+              "kind": "eq",
+              "name": "BinaryOp"
+            }
+          },
+          {
+            "definition": "query",
+            "name": "c1",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "definition": "query",
+            "name": "c2",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "definition": "query",
+            "name": "@Bop46",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "definition": "query",
+            "name": "ctx",
+            "sort": {
+              "kind": "eq",
+              "name": "Assumption"
+            }
+          },
+          {
+            "definition": "query",
+            "name": "@AddContext21",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "definition": 0,
+            "name": "___rewrite_var__7",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "definition": 1,
+            "name": "@AddContext22",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "definition": 2,
+            "name": "@AddContext23",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          }
+        ]
+      },
+      {
+        "effects": [
+          {
+            "arg": {
+              "slot": 3
+            },
+            "dst": 4,
+            "kind": "copy",
+            "op": "copy",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "args": [],
+            "call": {
+              "table": "Add"
+            },
+            "dst": 5,
+            "kind": "construct",
+            "op": "let",
+            "sort": {
+              "kind": "eq",
+              "name": "BinaryOp"
+            }
+          },
+          {
+            "args": [
+              {
+                "slot": 5
+              },
+              {
+                "slot": 2
+              },
+              {
+                "slot": 1
+              }
+            ],
+            "call": {
+              "table": "Bop"
+            },
+            "kind": "set",
+            "op": "set",
+            "value": {
+              "slot": 4
+            }
+          }
+        ],
+        "footprint": {
+          "equality_invalidates": [
+            "Add-All-Gets",
+            "Add-Gets",
+            "AddContext",
+            "Alloc",
+            "Append",
+            "Arg",
+            "BodyContainsExpr",
+            "BodyContainsListExpr",
+            "Bop",
+            "Call",
+            "Concat",
+            "Cons",
+            "Const",
+            "ContextOf",
+            "DebugExpr",
+            "DelayedDropUnion",
+            "DelayedSubstUnion",
+            "DemandDontAlias",
+            "DoWhile",
+            "DontAlias",
+            "DropAt",
+            "DropAtInternal",
+            "ES",
+            "Empty",
+            "ExpectType",
+            "Expr-size",
+            "ExprIsPure",
+            "ExprIsResolved",
+            "ExprIsValid",
+            "ExprSet-insert",
+            "ExtractedExpr",
+            "ExtractedExprCache",
+            "Function",
+            "Get",
+            "HasArgType",
+            "HasType",
+            "IVTAnalysisRes",
+            "IVTNewInputsAnalysis",
+            "IVTNewInputsAnalysisDemand",
+            "IVTNewInputsAnalysisImpl",
+            "If",
+            "IfNode",
+            "IfSubst",
+            "InIf",
+            "InLoop",
+            "InSwitch",
+            "InlinedCall",
+            "InvCodeMotionCandidate",
+            "IsIsEven",
+            "ListExpr-ith",
+            "LoopIsFinite",
+            "LoopNumItersGuess",
+            "NTZIterations",
+            "NoAlias",
+            "Not-Just-Concat",
+            "PointsToCells",
+            "PointsToCellsAtIter",
+            "PointsToExpr",
+            "PotentialExtractedExpr",
+            "Program",
+            "Single",
+            "SubTuple",
+            "Subst",
+            "Switch",
+            "TermSubst",
+            "ToSubsumeIf",
+            "Top",
+            "TupleRemoveAt",
+            "Uop",
+            "___GeneratedFreshTable",
+            "___GeneratedFreshTable1",
+            "___GeneratedFreshTable2",
+            "___GeneratedFreshTable3",
+            "___GeneratedFreshTable4",
+            "___GeneratedFreshTable5",
+            "hi-bound",
+            "is-inv-Expr",
+            "is-inv-ListExpr",
+            "is-inv-ListExpr-helper",
+            "leading-Expr",
+            "lo-bound",
+            "lsr-inv",
+            "to-hoist",
+            "to-hoist-size",
+            "tuple-length"
+          ],
+          "operations": [
+            "construct",
+            "copy",
+            "set"
+          ],
+          "precision": "conservative direct/merge footprint; global rebuild may have further effects",
+          "read_tables": [
+            "Add",
+            "Bop"
+          ],
+          "union_sorts": [
+            "Expr"
+          ],
+          "write_tables": [
+            "Add",
+            "Bop"
+          ]
+        },
+        "interface": {
+          "correlation": "one complete binding row; slot equality and literals remain constraints",
+          "guaranteed_atoms": [],
+          "primitive_atoms": [],
+          "residual_atoms": [
+            0,
+            1
+          ],
+          "rows": [
+            {
+              "atom": 0,
+              "columns": [
+                {
+                  "slot": 0
+                }
+              ],
+              "key_columns": [],
+              "table": "Add",
+              "witness": "complete visible row"
+            },
+            {
+              "atom": 1,
+              "columns": [
+                {
+                  "slot": 0
+                },
+                {
+                  "slot": 1
+                },
+                {
+                  "slot": 2
+                },
+                {
+                  "slot": 3
+                }
+              ],
+              "key_columns": [
+                0,
+                1,
+                2
+              ],
+              "table": "Bop",
+              "witness": "complete visible row"
+            }
+          ]
+        },
+        "metadata": {
+          "name": "(rewrite (Bop (Add ) x y) (Bop (Add ) y x) :ruleset canon)",
+          "seminaive": true,
+          "source_set": "canon"
+        },
+        "query": [
+          {
+            "args": [
+              {
+                "slot": 0
+              }
+            ],
+            "call": {
+              "table": "Add"
+            }
+          },
+          {
+            "args": [
+              {
+                "slot": 0
+              },
+              {
+                "slot": 1
+              },
+              {
+                "slot": 2
+              },
+              {
+                "slot": 3
+              }
+            ],
+            "call": {
+              "table": "Bop"
+            }
+          }
+        ],
+        "slots": [
+          {
+            "definition": "query",
+            "name": "@Add8",
+            "sort": {
+              "kind": "eq",
+              "name": "BinaryOp"
+            }
+          },
+          {
+            "definition": "query",
+            "name": "x",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "definition": "query",
+            "name": "y",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "definition": "query",
+            "name": "@Bop64",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "definition": 0,
+            "name": "___rewrite_var__18",
+            "sort": {
+              "kind": "eq",
+              "name": "Expr"
+            }
+          },
+          {
+            "definition": 1,
+            "name": "@Add9",
+            "sort": {
+              "kind": "eq",
+              "name": "BinaryOp"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "snapshot": {
+    "rows": [
+      {
+        "table": "Add",
+        "values": [
+          {
+            "eq": "0",
+            "sort": "BinaryOp"
+          }
+        ],
+        "subsumed": false
+      },
+      {
+        "table": "AddContext",
+        "values": [
+          {
+            "eq": "5",
+            "sort": "Assumption"
+          },
+          {
+            "eq": "4",
+            "sort": "Expr"
+          },
+          {
+            "eq": "6",
+            "sort": "Expr"
+          }
+        ],
+        "subsumed": false
+      },
+      {
+        "table": "AddContext",
+        "values": [
+          {
+            "eq": "10",
+            "sort": "Assumption"
+          },
+          {
+            "eq": "9",
+            "sort": "Expr"
+          },
+          {
+            "eq": "11",
+            "sort": "Expr"
+          }
+        ],
+        "subsumed": false
+      },
+      {
+        "table": "Bop",
+        "values": [
+          {
+            "eq": "0",
+            "sort": "BinaryOp"
+          },
+          {
+            "eq": "1",
+            "sort": "Expr"
+          },
+          {
+            "eq": "1",
+            "sort": "Expr"
+          },
+          {
+            "eq": "2",
+            "sort": "Expr"
+          }
+        ],
+        "subsumed": false
+      },
+      {
+        "table": "Bop",
+        "values": [
+          {
+            "eq": "0",
+            "sort": "BinaryOp"
+          },
+          {
+            "eq": "13",
+            "sort": "Expr"
+          },
+          {
+            "eq": "14",
+            "sort": "Expr"
+          },
+          {
+            "eq": "6",
+            "sort": "Expr"
+          }
+        ],
+        "subsumed": false
+      },
+      {
+        "table": "Bop",
+        "values": [
+          {
+            "eq": "0",
+            "sort": "BinaryOp"
+          },
+          {
+            "eq": "8",
+            "sort": "Expr"
+          },
+          {
+            "eq": "1",
+            "sort": "Expr"
+          },
+          {
+            "eq": "9",
+            "sort": "Expr"
+          }
+        ],
+        "subsumed": false
+      },
+      {
+        "table": "Bop",
+        "values": [
+          {
+            "eq": "3",
+            "sort": "BinaryOp"
+          },
+          {
+            "eq": "1",
+            "sort": "Expr"
+          },
+          {
+            "eq": "1",
+            "sort": "Expr"
+          },
+          {
+            "eq": "4",
+            "sort": "Expr"
+          }
+        ],
+        "subsumed": false
+      }
+    ]
+  },
+  "recipe_sha256": "15edfeda0d25d2572e615ee406d4c1e737a6f88d44673a0665236540dfd75d92",
+  "input_sha256": "6b58d2603488b0d66cae22739e4be1e069056e5fd54a8844a8b2f0c923a688bc",
+  "generator": {
+    "seed": 20261400,
+    "fragments": 4,
+    "reuse": 0.35,
+    "initial_merge": [
+      {
+        "eq": "0",
+        "sort": "BinaryOp"
+      },
+      {
+        "eq": "7",
+        "sort": "BinaryOp"
+      }
+    ]
+  },
+  "source": "rule definitions only",
+  "reachability": "rule-valid; source-program reachability unproved"
+}

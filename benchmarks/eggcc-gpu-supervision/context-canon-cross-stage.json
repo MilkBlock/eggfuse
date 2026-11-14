@@ -1,0 +1,20 @@
+{
+  "context_to_canon_consumers": 1,
+  "records": [
+    {
+      "prefix": "capture/7/0/1/",
+      "lane": 3,
+      "consumer_rule": 1,
+      "producer_rules": [
+        2,
+        0,
+        0,
+        0
+      ],
+      "witness_rows": [
+        0,
+        8
+      ]
+    }
+  ]
+}

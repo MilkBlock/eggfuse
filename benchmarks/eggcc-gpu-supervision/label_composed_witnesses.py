@@ -127,7 +127,11 @@ def main():
         with np.load(a.completion_classifier) as f:
             completion_plans=[compile_classifier(r,{k:f[f'head_{rid}_{k}'] for k in ('mean','scale','coef','bias')})
                               for rid,r in enumerate(local['rules'][:len(original['rules'])])]
-    ref=Reference(original,rows,ids);runs=ref.saturate(original['rules'])
+    ref=Reference(original,rows,ids)
+    if 'source_control' in meta:
+        from reference_family_schedule import execute
+        runs=execute(ref,meta['source_control'])
+    else:runs=ref.saturate(original['rules'])
     with np.load(a.model) as f:model={k:f[k] for k in (('w',) if classifier else ('w','coef'))}
     captures=[];facts=[];saved={}
     with np.load(a.capture) as data:
@@ -194,7 +198,7 @@ def main():
         direct_with_generated_boundary_neighbors=int(np.count_nonzero(np.array(boundary_generated)&~np.array(continued))) if boundary_features else None,
         boundary_feature_columns=payload['boundary_features'].shape[1] if boundary_features else 0,boundary_feature_max_abs=boundary_error,
         feature_reconstruction_max_abs=numerical,cpu_label_and_capture_audit_seconds=time.monotonic()-start,
-        target_scope='original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared',backpropagation=False,
+        source_control=meta.get('source_control'),target_scope='original-rule CPU completion under captured control (legacy: family saturation); semantic Cell slots; compiler temporaries excluded where declared',backpropagation=False,
         limitations=['Labels are final family states, not every intermediate state','Selected context rules, not full Eggcc','Source token mode: '+meta.get('source_token_mode','exact completed states')+'; exact effects and matching remain authoritative'])
     a.output.with_suffix('.json').write_text(json.dumps(dict(meta,semantic_recipe=semantic_recipe,snapshot_run=a.snapshot_run,seed_scalars={str(i):v for i,v in seed_values.items() if 'eq' not in v},capture=result),indent=2)+'\n')
     a.report.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
