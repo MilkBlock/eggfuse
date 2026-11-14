@@ -79,8 +79,9 @@ For the same three rules with max-classes 11 and include-missing enabled:
 zero budget exclusions. Native direct compilation/execution labels passed for
 189 snapshots; two timed out and remain unresolved. The direct compiler skips
 Bake discovery. This is selected-family data generation, not a speed benchmark.
-GPU feedback captures for the 189 successes are being collected with the fixed
-joint-feature head. No accuracy-based case selection or new fit is performed yet.
+GPU feedback captures for all 189 successes passed with the fixed joint-feature
+head. The subsequent merged fit and actual feedback results are documented in
+`MATCHED_ENTRY_TRAINING.md`; no accuracy-based case selection was used.
 
 The fitter now independently reconstructs explicitly declared shared/joint
 columns in new feedback captures, validates them, and avoids appending them twice.

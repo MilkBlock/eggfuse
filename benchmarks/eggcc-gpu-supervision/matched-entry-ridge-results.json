@@ -1,0 +1,245 @@
+{
+  "scope": "synthetic completed and matched entries: offline fit and actual selected-family GCD/LCM predicted feedback; not full Eggcc",
+  "training_entries": 641,
+  "added_entries": 154,
+  "duplicates": 35,
+  "training_totals": {
+    "instances": 3109,
+    "exact_partitions": 3026,
+    "false_merges": 176,
+    "missed_equalities": 180
+  },
+  "alpha": 10.0,
+  "backpropagation": false,
+  "head_sha256": "a8dfe20930b4557e416520cad74c4e578f63d674e65c84ca6c2b7b28d299df08",
+  "report_sha256": "d38ff38ecb5817468960a20d1d7af95bd7c1fb735f35076bd318625c725b930a",
+  "coverage": [
+    {
+      "states": 2,
+      "observed_training_states": 2,
+      "training_instances": 1269,
+      "sampling": {
+        "captured": 1286,
+        "unique": 1269,
+        "duplicates": 17,
+        "ambiguous_inputs": 0
+      },
+      "exact_feature_conflicts": {
+        "unique_inputs": 1160,
+        "conflicting_groups": 0,
+        "includes_required_eq_mask": false
+      }
+    },
+    {
+      "states": 15,
+      "observed_training_states": 7,
+      "training_instances": 1028,
+      "sampling": {
+        "captured": 1044,
+        "unique": 1028,
+        "duplicates": 16,
+        "ambiguous_inputs": 0
+      },
+      "exact_feature_conflicts": {
+        "unique_inputs": 980,
+        "conflicting_groups": 0,
+        "includes_required_eq_mask": false
+      }
+    },
+    {
+      "states": 15,
+      "observed_training_states": 7,
+      "training_instances": 763,
+      "sampling": {
+        "captured": 779,
+        "unique": 763,
+        "duplicates": 16,
+        "ambiguous_inputs": 0
+      },
+      "exact_feature_conflicts": {
+        "unique_inputs": 712,
+        "conflicting_groups": 0,
+        "includes_required_eq_mask": false
+      }
+    }
+  ],
+  "validation": [
+    {
+      "case": "016-gcd",
+      "groups": {
+        "all": {
+          "instances": 41,
+          "query_instances": 41,
+          "exact_partitions": 26,
+          "false_merges": 42,
+          "missed_equalities": 3,
+          "nontransitive": 0,
+          "closure_false_merges": 42,
+          "dynamic_quotient": {
+            "queries": 206,
+            "positives": 18,
+            "true_positives": 16,
+            "false_positives": 26,
+            "false_negatives": 2,
+            "precision": 0.38095238095238093,
+            "recall": 0.8888888888888888
+          }
+        },
+        "direct": {
+          "instances": 26,
+          "query_instances": 26,
+          "exact_partitions": 14,
+          "false_merges": 33,
+          "missed_equalities": 3,
+          "nontransitive": 0,
+          "closure_false_merges": 33,
+          "dynamic_quotient": {
+            "queries": 146,
+            "positives": 7,
+            "true_positives": 5,
+            "false_positives": 20,
+            "false_negatives": 2,
+            "precision": 0.2,
+            "recall": 0.7142857142857143
+          }
+        },
+        "generated": {
+          "instances": 15,
+          "query_instances": 15,
+          "exact_partitions": 12,
+          "false_merges": 9,
+          "missed_equalities": 0,
+          "nontransitive": 0,
+          "closure_false_merges": 9,
+          "dynamic_quotient": {
+            "queries": 60,
+            "positives": 11,
+            "true_positives": 11,
+            "false_positives": 6,
+            "false_negatives": 0,
+            "precision": 0.6470588235294118,
+            "recall": 1.0
+          }
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "groups": {
+        "all": {
+          "instances": 99,
+          "query_instances": 99,
+          "exact_partitions": 65,
+          "false_merges": 85,
+          "missed_equalities": 1,
+          "nontransitive": 0,
+          "closure_false_merges": 85,
+          "dynamic_quotient": {
+            "queries": 524,
+            "positives": 37,
+            "true_positives": 36,
+            "false_positives": 50,
+            "false_negatives": 1,
+            "precision": 0.4186046511627907,
+            "recall": 0.972972972972973
+          }
+        },
+        "direct": {
+          "instances": 78,
+          "query_instances": 78,
+          "exact_partitions": 45,
+          "false_merges": 85,
+          "missed_equalities": 0,
+          "nontransitive": 0,
+          "closure_false_merges": 85,
+          "dynamic_quotient": {
+            "queries": 458,
+            "positives": 15,
+            "true_positives": 15,
+            "false_positives": 50,
+            "false_negatives": 0,
+            "precision": 0.23076923076923078,
+            "recall": 1.0
+          }
+        },
+        "generated": {
+          "instances": 21,
+          "query_instances": 21,
+          "exact_partitions": 20,
+          "false_merges": 0,
+          "missed_equalities": 1,
+          "nontransitive": 0,
+          "closure_false_merges": 0,
+          "dynamic_quotient": {
+            "queries": 66,
+            "positives": 22,
+            "true_positives": 21,
+            "false_positives": 0,
+            "false_negatives": 1,
+            "precision": 1.0,
+            "recall": 0.9545454545454546
+          }
+        }
+      }
+    }
+  ],
+  "promoted": false,
+  "gcd_rollout": {
+    "groups": {
+      "all": {
+        "instances": 41,
+        "exact_states": 25
+      },
+      "direct": {
+        "instances": 26,
+        "exact_states": 14
+      },
+      "generated": {
+        "instances": 15,
+        "exact_states": 11
+      }
+    },
+    "direct_by_scalar_values": {
+      "[]": {
+        "instances": 8,
+        "exact": 1
+      },
+      "[0]": {
+        "instances": 10,
+        "exact": 6
+      },
+      "[3]": {
+        "instances": 2,
+        "exact": 2
+      },
+      "[2]": {
+        "instances": 4,
+        "exact": 3
+      },
+      "[1]": {
+        "instances": 2,
+        "exact": 2
+      }
+    },
+    "execution_passed": true,
+    "labels_passed": true
+  },
+  "lcm_rollout": {
+    "groups": {
+      "all": {
+        "instances": 99,
+        "exact_states": 65
+      },
+      "direct": {
+        "instances": 78,
+        "exact_states": 45
+      },
+      "generated": {
+        "instances": 21,
+        "exact_states": 20
+      }
+    },
+    "execution_passed": true,
+    "labels_passed": true
+  }
+}

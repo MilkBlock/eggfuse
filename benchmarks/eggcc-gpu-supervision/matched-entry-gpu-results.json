@@ -1,0 +1,20 @@
+{
+  "scope": "enumerated terminating-boundary GPU feedback and CPU labels; no full Eggcc claim",
+  "complete": true,
+  "expected": 189,
+  "attempted": 189,
+  "statuses": {
+    "pass": 189
+  },
+  "samples": 851,
+  "generated_source_consumers": 368,
+  "released_owner_rows": 524,
+  "owner_witness_pairs": {
+    "accepted_samples": 851,
+    "logical_shared_pairs": 196,
+    "physical_alias_pairs": 12
+  },
+  "manifest_sha256": "baf394bd32c53447506f7b1876021d9b9a1d441e9f4a12755aeb7dc3edfd67b7",
+  "head_sha256": "bb890758fbbcb8fbfa6c66f437f19c5a1cac5c5d576cf1d52559927eca899f7d",
+  "training_performed": false
+}
