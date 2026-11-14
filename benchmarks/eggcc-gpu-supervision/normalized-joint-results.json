@@ -46,7 +46,8 @@
     "gcd": {
       "graph_passed": true,
       "label_passed": true,
-      "maximum_error": 4.798173904418945e-06,
+      "maximum_error": 3.814697265625e-06,
+      "feature_reference": "f64 base projection accumulation rounded to f32",
       "groups": {
         "all": {
           "correct": 36,
@@ -64,75 +65,228 @@
     },
     "lcm": {
       "graph_passed": true,
-      "label_passed": false,
-      "numerical_failure": {
-        "passed": false,
-        "failure": "floating reconstruction exceeds tolerance",
-        "maximum_error": 5.4836273193359375e-06,
-        "tolerance": 5e-06,
-        "audited_score_lanes": 262,
-        "failed_score_lanes": 6,
-        "score_failure_fraction": 0.022900763358778626,
-        "score_failures": [
-          {
-            "capture_index": 1,
-            "rule": 290,
-            "lane": 39,
-            "accepted": true,
-            "max_abs": 5.0067901611328125e-06,
-            "recorded_choice": 0,
-            "recomputed_choice": 0
-          },
-          {
-            "capture_index": 1,
-            "rule": 290,
-            "lane": 41,
-            "accepted": true,
-            "max_abs": 5.125999450683594e-06,
-            "recorded_choice": 0,
-            "recomputed_choice": 0
-          },
-          {
-            "capture_index": 1,
-            "rule": 290,
-            "lane": 44,
-            "accepted": true,
-            "max_abs": 5.4836273193359375e-06,
-            "recorded_choice": 0,
-            "recomputed_choice": 0
-          },
-          {
-            "capture_index": 1,
-            "rule": 290,
-            "lane": 52,
-            "accepted": true,
-            "max_abs": 5.334615707397461e-06,
-            "recorded_choice": 0,
-            "recomputed_choice": 0
-          },
-          {
-            "capture_index": 1,
-            "rule": 290,
-            "lane": 54,
-            "accepted": true,
-            "max_abs": 5.245208740234375e-06,
-            "recorded_choice": 0,
-            "recomputed_choice": 0
-          },
-          {
-            "capture_index": 1,
-            "rule": 290,
-            "lane": 55,
-            "accepted": true,
-            "max_abs": 5.066394805908203e-06,
-            "recorded_choice": 0,
-            "recomputed_choice": 0
-          }
-        ],
-        "source_capture_sha256": "36202e98c503d4e9b0aaced914204e8f6595fb6452a99f1dcd8b2ca0aa294d6e",
-        "training_output_written": false
+      "label_passed": true,
+      "maximum_error": 4.291534423828125e-06,
+      "feature_reference": "f64 base projection accumulation rounded to f32",
+      "groups": {
+        "all": {
+          "correct": 92,
+          "instances": 99
+        },
+        "direct": {
+          "correct": 72,
+          "instances": 78
+        },
+        "generated": {
+          "correct": 20,
+          "instances": 21
+        }
       }
     }
   },
-  "promoted_as_general_default": false
+  "promoted_as_general_default": false,
+  "previous_reference_failure": {
+    "passed": false,
+    "failure": "floating reconstruction exceeds tolerance",
+    "maximum_error": 5.4836273193359375e-06,
+    "tolerance": 5e-06,
+    "audited_score_lanes": 262,
+    "failed_score_lanes": 6,
+    "score_failure_fraction": 0.022900763358778626,
+    "score_failures": [
+      {
+        "capture_index": 1,
+        "rule": 290,
+        "lane": 39,
+        "accepted": true,
+        "max_abs": 5.0067901611328125e-06,
+        "recorded_choice": 0,
+        "recomputed_choice": 0
+      },
+      {
+        "capture_index": 1,
+        "rule": 290,
+        "lane": 41,
+        "accepted": true,
+        "max_abs": 5.125999450683594e-06,
+        "recorded_choice": 0,
+        "recomputed_choice": 0
+      },
+      {
+        "capture_index": 1,
+        "rule": 290,
+        "lane": 44,
+        "accepted": true,
+        "max_abs": 5.4836273193359375e-06,
+        "recorded_choice": 0,
+        "recomputed_choice": 0
+      },
+      {
+        "capture_index": 1,
+        "rule": 290,
+        "lane": 52,
+        "accepted": true,
+        "max_abs": 5.334615707397461e-06,
+        "recorded_choice": 0,
+        "recomputed_choice": 0
+      },
+      {
+        "capture_index": 1,
+        "rule": 290,
+        "lane": 54,
+        "accepted": true,
+        "max_abs": 5.245208740234375e-06,
+        "recorded_choice": 0,
+        "recomputed_choice": 0
+      },
+      {
+        "capture_index": 1,
+        "rule": 290,
+        "lane": 55,
+        "accepted": true,
+        "max_abs": 5.066394805908203e-06,
+        "recorded_choice": 0,
+        "recomputed_choice": 0
+      }
+    ],
+    "source_capture_sha256": "36202e98c503d4e9b0aaced914204e8f6595fb6452a99f1dcd8b2ca0aa294d6e",
+    "training_output_written": false
+  },
+  "numeric_diagnosis": {
+    "scope": "saved GPU numeric replay only; not semantic acceptance or speed",
+    "capture_sha256": "36202e98c503d4e9b0aaced914204e8f6595fb6452a99f1dcd8b2ca0aa294d6e",
+    "head_sha256": "6432d7cfc63553f8b79f37faf4fe1513f52697694cf682b9c80269f1fabd3c05",
+    "maxima": {
+      "features": 1.1324882507324219e-06,
+      "gpu_replay": 0.0,
+      "same_input_score": 1.0728836059570312e-06,
+      "encoding_contribution": 5.0961971282958984e-06,
+      "legacy_reference": 5.4836273193359375e-06,
+      "precise_reference": 4.291534423828125e-06
+    },
+    "results": [
+      {
+        "prefix": "capture/1/0/0/",
+        "rule": 283,
+        "lanes": 1,
+        "maximum_errors": {
+          "features": 8.940696716308594e-07,
+          "gpu_replay": 0.0,
+          "same_input_score": 5.960464477539063e-08,
+          "encoding_contribution": 2.086162567138672e-06,
+          "legacy_reference": 2.0265579223632812e-06,
+          "precise_reference": 0.0
+        }
+      },
+      {
+        "prefix": "capture/1/0/1/",
+        "rule": 290,
+        "lanes": 65,
+        "maximum_errors": {
+          "features": 1.1324882507324219e-06,
+          "gpu_replay": 0.0,
+          "same_input_score": 1.0728836059570312e-06,
+          "encoding_contribution": 5.0961971282958984e-06,
+          "legacy_reference": 5.4836273193359375e-06,
+          "precise_reference": 3.159046173095703e-06
+        }
+      },
+      {
+        "prefix": "capture/1/0/2/",
+        "rule": 293,
+        "lanes": 11,
+        "maximum_errors": {
+          "features": 7.152557373046875e-07,
+          "gpu_replay": 0.0,
+          "same_input_score": 7.152557373046875e-07,
+          "encoding_contribution": 2.115964889526367e-06,
+          "legacy_reference": 2.205371856689453e-06,
+          "precise_reference": 8.791685104370117e-07
+        }
+      },
+      {
+        "prefix": "capture/4/0/0/",
+        "rule": 283,
+        "lanes": 8,
+        "maximum_errors": {
+          "features": 8.940696716308594e-07,
+          "gpu_replay": 0.0,
+          "same_input_score": 7.152557373046875e-07,
+          "encoding_contribution": 1.0728836059570312e-06,
+          "legacy_reference": 1.430511474609375e-06,
+          "precise_reference": 1.9073486328125e-06
+        }
+      },
+      {
+        "prefix": "capture/4/0/1/",
+        "rule": 290,
+        "lanes": 72,
+        "maximum_errors": {
+          "features": 1.1324882507324219e-06,
+          "gpu_replay": 0.0,
+          "same_input_score": 1.0728836059570312e-06,
+          "encoding_contribution": 4.112720489501953e-06,
+          "legacy_reference": 4.291534423828125e-06,
+          "precise_reference": 4.291534423828125e-06
+        }
+      },
+      {
+        "prefix": "capture/4/0/2/",
+        "rule": 293,
+        "lanes": 13,
+        "maximum_errors": {
+          "features": 7.748603820800781e-07,
+          "gpu_replay": 0.0,
+          "same_input_score": 9.5367431640625e-07,
+          "encoding_contribution": 1.430511474609375e-06,
+          "legacy_reference": 2.2649765014648438e-06,
+          "precise_reference": 2.6226043701171875e-06
+        }
+      },
+      {
+        "prefix": "capture/7/0/0/",
+        "rule": 283,
+        "lanes": 14,
+        "maximum_errors": {
+          "features": 8.642673492431641e-07,
+          "gpu_replay": 0.0,
+          "same_input_score": 4.917383193969727e-07,
+          "encoding_contribution": 1.7285346984863281e-06,
+          "legacy_reference": 2.2202730178833008e-06,
+          "precise_reference": 1.430511474609375e-06
+        }
+      },
+      {
+        "prefix": "capture/7/0/1/",
+        "rule": 290,
+        "lanes": 65,
+        "maximum_errors": {
+          "features": 1.1324882507324219e-06,
+          "gpu_replay": 0.0,
+          "same_input_score": 1.0728836059570312e-06,
+          "encoding_contribution": 4.0531158447265625e-06,
+          "legacy_reference": 4.4405460357666016e-06,
+          "precise_reference": 4.0531158447265625e-06
+        }
+      },
+      {
+        "prefix": "capture/7/0/2/",
+        "rule": 293,
+        "lanes": 13,
+        "maximum_errors": {
+          "features": 7.748603820800781e-07,
+          "gpu_replay": 0.0,
+          "same_input_score": 7.152557373046875e-07,
+          "encoding_contribution": 1.430511474609375e-06,
+          "legacy_reference": 2.1457672119140625e-06,
+          "precise_reference": 2.9802322387695312e-06
+        }
+      }
+    ]
+  },
+  "combined_feedback": {
+    "correct": 128,
+    "instances": 140,
+    "accuracy": 0.9142857142857143
+  }
 }

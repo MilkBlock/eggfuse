@@ -125,9 +125,9 @@ def audit(recipe,capture):
         scope='selected snapshot witness soundness; not exhaustive enumeration, effects or future lifetime')
 
 
-def floating_inputs(capture,model,xp):
+def floating_inputs(capture,model,xp,reference=False):
     """Reconstruct exactly the selected-source floating inputs, no target labels."""
-    from multi_entry_ridge import features
+    from multi_entry_ridge import features,WIDTH
     c=capture;r=c['request'];mask=r['edge_valid']
     edge=xp.where(mask[:,:,None],r['edge'],0);route=xp.where(mask[:,:,None],r['route'],0)
     values=xp.where(mask[:,:,None],c['source_tokens'],0)
@@ -142,7 +142,15 @@ def floating_inputs(capture,model,xp):
         if 'source_owner_context' not in c:raise ValueError('missing captured physical owner context')
         owner=c['source_owner_context']
         q=xp.concatenate([q,encode(owner['owners'],r['owner_relation'],owner['usable'],xp)],axis=1)
-    x=features(r['seed'],q,pool,model['w'],xp)
+    if reference:
+        if xp is not np:raise ValueError('high precision reconstruction is CPU audit only')
+        # The independent CPU reference must not amplify BLAS f32 reduction error.
+        # Keep the f32 operation boundary and all raw input columns unchanged.
+        repeated=np.concatenate([r['seed']]*(pool.shape[1]//WIDTH),axis=1)
+        raw=np.concatenate([r['seed'],q,pool,repeated*pool],axis=1)
+        hidden=np.tanh((raw.astype(np.float64)@model['w'].astype(np.float64)).astype(np.float32))
+        x=np.concatenate([np.ones((len(raw),1),np.float32),raw,hidden],axis=1)
+    else:x=features(r['seed'],q,pool,model['w'],xp)
     if 'boundary_features' in r:x=xp.concatenate([x,r['boundary_features']],axis=1)
     if 'shared_boundary_features' in r:x=xp.concatenate([x,r['shared_boundary_features']],axis=1)
     if 'joint_features' in r:

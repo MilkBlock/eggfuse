@@ -48,19 +48,34 @@ Artifact root: `/Volumes/Extreme SSD/eggfuse-artifacts/21ee/matched-entry-gpu-v1
 `normalized-active-classifier.json` records the complete offline result. Original
 folded failure and intermediate normalized results remain separately preserved.
 
-Final-weight feedback: GCD passes graph and label audits at 36/41 complete states
-(23/26 direct and 13/15 generated-source), versus the previous feedback 25/41.
-LCM graph execution passes, but numerical reconstruction still fails at 5.48e-6:
-6/262 audited live score lanes exceed the unchanged 5e-6 tolerance. Those six
-recorded/recomputed choices agree, but this does not override the numerical gate
-or establish model semantic correctness. No accepted LCM feedback accuracy is
-reported. The audit now writes a structured `passed:false` report identifying
-these lanes and their fraction, and does not write a new training artifact.
+Final-weight feedback after correcting CPU base-projection reference arithmetic:
 
-The head remains explicitly selected experimental functionality, not a general
-default. Both runtime argv files and label commands are saved as
-`{gcd,lcm}-normalized-active-{argv,label-argv}.json`. The unresolved LCM failure
-is `lcm-normalized-active-labels.json`; the tracked summary is
-`normalized-joint-results.json`. Removing constant-column amplification did not
-resolve that failure. Full GPU matching/effect authority and full Eggcc coverage
-remain outstanding.
+| Complete-state prediction | Previous feedback | Normalized feedback | Direct | Generated source |
+|---|---:|---:|---:|---:|
+| GCD | 25/41 | 36/41 | 23/26 | 13/15 |
+| LCM | 65/99 | 92/99 | 72/78 | 20/21 |
+
+Both graph and label audits pass. Combined correctness is 128/140 (91.43%) for
+this three-rule family, not all Eggcc. LCM differs from its offline 93/99 result
+because downstream consumers use generated predictions. Model weights and GPU
+captures were unchanged during the reference correction; no expensive rerun was
+needed to resolve the numerical audit.
+
+The original LCM failure was 6/262 live score lanes above 5e-6. Saved-capture replay
+reproduces GPU scores exactly. On identical features, GPU-vs-reference score error
+is at most 1.07e-6. The old CPU base-feature f32 projection introduces up to
+1.13e-6 feature error, subsequently amplified by input scaling. Accumulating that
+independent CPU projection in f64, rounding to f32 before tanh, reduces end-to-end
+LCM error to 4.29e-6 and GCD to 3.81e-6. The same 5e-6 gate and exact choice tests
+remain in force. Raw inputs, the GPU operations, and labels are not changed.
+The optional precise reference performs one projection, not both old and new
+projections. Legacy reconstruction remains available and is used for old heads.
+
+`audit_projection_numerics.py` reproduces this decomposition from saved captures.
+Original failure is preserved as `lcm-normalized-active-f32-reference-failure.json`.
+Current `{gcd,lcm}-normalized-active-labels.json` contain passing independent
+audits. Both runtime argv files and label commands are saved as
+`{gcd,lcm}-normalized-active-{argv,label-argv}.json`. The tracked summary is
+`normalized-joint-results.json`. The head remains explicitly selected experimental
+functionality, not a general default. Full GPU matching/effect authority and full
+Eggcc coverage remain outstanding.

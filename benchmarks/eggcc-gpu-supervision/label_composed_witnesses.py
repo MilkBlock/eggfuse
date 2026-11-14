@@ -157,7 +157,7 @@ def main():
     boundary_generated=[];boundary_features=[];boundary_error=0.;xs=[];extra=[];ys=[];labels=[];pred=[];rules=[];continued=[];numerical=0.
     score_failures=[];audited_score_lanes=0
     for capture_index,c in enumerate(captures):
-        x=floating_inputs(c,model,np);z,_=relation_features(inputs(local,c),projection(),np);rid=int(c['rule']);rule=local['rules'][rid]
+        x=floating_inputs(c,model,np,reference=bool(info.get('normalized_joint',False)));z,_=relation_features(inputs(local,c),projection(),np);rid=int(c['rule']);rule=local['rules'][rid]
         if 'boundary' in c:
             from device_boundary_context import compile_context,encode as boundary_encode,masks as boundary_masks
             bp=compile_context(local,rid,state['slots'].shape[1])
@@ -225,7 +225,7 @@ def main():
         artifact_sha256=hashlib.sha256(a.output.read_bytes()).hexdigest(),source_capture_sha256=meta['capture']['artifact_sha256'],
         direct_with_generated_boundary_neighbors=int(np.count_nonzero(np.array(boundary_generated)&~np.array(continued))) if boundary_features else None,
         boundary_feature_columns=payload['boundary_features'].shape[1] if boundary_features else 0,boundary_feature_max_abs=boundary_error,
-        feature_reconstruction_max_abs=numerical,cpu_label_and_capture_audit_seconds=time.monotonic()-start,
+        feature_reference='f64 base projection accumulation rounded to f32' if info.get('normalized_joint',False) else 'legacy f32',feature_reconstruction_max_abs=numerical,cpu_label_and_capture_audit_seconds=time.monotonic()-start,
         source_control=meta.get('source_control'),target_scope='original-rule CPU completion under captured control (legacy: family saturation); semantic Cell slots; compiler temporaries excluded where declared',backpropagation=False,
         limitations=['Labels are final family states, not every intermediate state','Selected context rules, not full Eggcc','Source token mode: '+meta.get('source_token_mode','exact completed states')+'; exact effects and matching remain authoritative'])
     a.output.with_suffix('.json').write_text(json.dumps(dict(meta,semantic_recipe=semantic_recipe,snapshot_run=a.snapshot_run,seed_scalars={str(i):v for i,v in seed_values.items() if 'eq' not in v},capture=result),indent=2)+'\n')
