@@ -42,3 +42,23 @@ establish a finite sufficient state representation. Even exhaustive fitting
 cannot separate two semantically different inputs collapsed to the same encoded
 state; this requires an encoding collision audit. Closed-loop execution must
 also be checked separately from fitting exact reference inputs.
+
+## All canon rule pairs and encoding audit
+
+Add `--all-pairs` to the census command to consider every producer/consumer pair
+in the selected ruleset. `finite-all-pairs-results.json` records 61 represented
+pairs, 4,258 positives and 3,908 diagnostic negatives (8,166 total), compared
+with 400 positives using the legacy generator on the same source partitions.
+The 1,080 compiler-covered ownership opportunities are static candidates,
+not executed transfers. Three pairs produced no samples within this bounded
+domain; this does not prove they cannot interact in a larger context.
+
+The exact-input audit uses reference source tokens, boundary encoder inputs,
+edge features, masks, replacement selection, request, and ordered incidence.
+Unused boundary teacher tokens and owned seed inputs are zeroed before comparison.
+It found 4,426 distinct inputs and zero conflicting validity/Eq-label samples.
+Only overlapping supervised Eq labels are compared; this is not proof of
+injectivity, adequate numerical separation, accurate predicted tokens, or
+recurrent closure. Ten finite-domain/audit unit tests pass. No model is retrained
+or promoted by this result. The next training gate is fitting this covered
+domain, followed by actual cumulative admission and ownership audits.

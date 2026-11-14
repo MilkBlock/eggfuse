@@ -1,0 +1,95 @@
+{
+  "scope": "All typed source input partitions; bounded continuation census for all ruleset pairs",
+  "stage_manifest": {
+    "ruleset": "canon",
+    "source_rule_ids": [
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277
+    ],
+    "membership_authoritative": true,
+    "full_schedule_replaced_for_training": true
+  },
+  "rule": 0,
+  "source_samples": 40,
+  "valid_sources": 40,
+  "typed_input_partitions": {
+    "0": 5,
+    "1": 5,
+    "2": 5,
+    "3": 5,
+    "4": 5,
+    "5": 5,
+    "6": 5,
+    "7": 5
+  },
+  "legacy_positive": 400,
+  "encoding_audit": {
+    "samples": 8166,
+    "unique_inputs": 4426,
+    "duplicate_inputs": 3740,
+    "conflicting_samples": 0,
+    "examples": [],
+    "input_fields": [
+      "tokens",
+      "seed_x",
+      "edges",
+      "mask",
+      "replace",
+      "request",
+      "relations"
+    ],
+    "scope": "exact reference-token input collisions against validity and overlapping Eq labels; not near-collisions or recurrent closure"
+  },
+  "continuations": {
+    "samples": 8166,
+    "positive": 4258,
+    "transfer_records": 4258,
+    "coverage": {
+      "finite_boundary": true,
+      "boundary_domain": "fixed completed source plus consumer queries; prior source roots unchanged",
+      "combined_owner": false,
+      "combined_templates": 0,
+      "max_combined_slots": 0,
+      "chains": 8166,
+      "positive": 4258,
+      "negative": 3908,
+      "negative_unavailable": 350,
+      "producer_consumer_pairs": 61,
+      "producers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "consumers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "compiled_owner_opportunities": 1080,
+      "scope": "bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance"
+    }
+  },
+  "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+  "limitations": [
+    "No prior source-root changes in boundary domain",
+    "No unspecified external facts or scalar domains",
+    "Not arbitrary-depth closure",
+    "Compiled candidates are not runtime ownership transfers"
+  ]
+}
