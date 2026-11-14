@@ -10,6 +10,7 @@ from neural_device_candidates import candidates
 
 class PrefixRuntime:
     template_only=True
+    prefix_selection=True
 
     def __init__(self,network,capacity=32):
         self.network=network;self.capacity=capacity

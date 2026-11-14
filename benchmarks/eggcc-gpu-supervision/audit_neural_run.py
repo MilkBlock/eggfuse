@@ -38,6 +38,24 @@ def execute_and_audit(local,reference,rules,state,roots,next_id,frames,model,hea
     return verdict
 
 
+def audit_query_sets(local,reference,execution,mapping):
+    """Independent exact match sets for sealed query inputs, before effects."""
+    seen=set();rows=[]
+    for rid,event in execution['trace']:
+        if rid in seen or 'query_keys' not in event:continue
+        seen.add(rid);rule=local['rules'][rid]
+        inputs=[i for i,s in enumerate(rule['slots']) if s['definition']=='query']
+        expected={tuple(sorted(b.items())) for b in reference.matches(rule)}
+        actual=set();unknown=0
+        for key in np.array(event['query_keys'])[np.array(event['query_live'])]:
+            values=key[1:1+len(inputs)]
+            if any(int(v) not in mapping for v in values):unknown+=1;continue
+            actual.add(tuple((slot,reference.root(mapping[int(v)])) for slot,v in zip(inputs,values)))
+        rows.append(dict(rule_id=rid,expected=len(expected),generated=len(actual),
+                         missed=len(expected-actual),extra=len(actual-expected),unknown=unknown))
+    return dict(checked_rules=len(rows),passed=bool(rows) and all(not(r['missed'] or r['extra'] or r['unknown']) for r in rows),rules=rows)
+
+
 def diagnose(local,reference,execution,mapping,width,collector=None):
     from neural_cell_samples import apply_instance
     from neural_cell_chains import completed

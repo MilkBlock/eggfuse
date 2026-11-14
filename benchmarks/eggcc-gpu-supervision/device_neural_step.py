@@ -64,4 +64,6 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
         token_refresh_required=latent_refresh,
         current_state_inputs=xp.array(current_state_model))
     if capture:event.update(output_token=tokens[selected],request=batch['request'][selected],eq_scores=scores[selected],eq_scores_predicted=xp.array(not template_only),sources=batch['sources'][selected])
+    if capture and getattr(model,'prefix_selection',False):
+        event.update(query_keys=keys,query_live=eligible)
     return result,xp.where(accepted,proposed_roots,roots),xp.where(accepted,next_id+payload['slots'].shape[1],next_id),event

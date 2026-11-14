@@ -17,7 +17,7 @@ from neural_owner_handoff import handoff
 from neural_device_candidates import compile_frames,compile_candidates
 from device_neural_speculation import compile_frame
 from device_neural_run import execute
-from audit_neural_run import audit,diagnose
+from audit_neural_run import audit,diagnose,audit_query_sets
 from reference_cell_closure import facts_from_cells
 from reference_union_family import compare_graph
 from train_current_cell import CurrentCellModel
@@ -102,6 +102,10 @@ def main():
             state,roots,next_id,execution=execute(state,roots,next_id,frames,plans,model,head,a.attempts,mx,capture=True)
             expected,verdict=audit(local,reference,recipe['rules'],state,roots,next_id,seed_count,execution)
             verdict['admission_diagnosis']=diagnose(local,reference,execution,check['mapping'],slots)
+            if a.prefix_weights:
+                q=audit_query_sets(local,reference,execution,check['mapping']);verdict['query_sets']=q
+                if not q['passed'] or q['checked_rules']!=len(recipe['rules']):
+                    verdict.update(status='difference',run_done=False,run_changed=False)
             results.append(verdict)
             if verdict['status']!='pass':break
             reference=expected

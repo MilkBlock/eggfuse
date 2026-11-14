@@ -303,3 +303,30 @@ PREFIX_FIT.safetensors`. The current-fit checkpoint supplies legacy audit layout
 metadata; prefix weights drive actual selection. This real-state case passes two
 Runs and reaches a CPU-verified fixed point. Full-suite live prefix coverage and
 cross-stage support remain outstanding. Evidence: `prefix-runtime-results.json`.
+
+## Live suite and independent full-match-set diagnosis
+
+The completed live prefix suite passes all 61 first-Run graph audits and reaches
+59 CPU-verified fixed points within three Runs. Pair (5,7) remains productive at
+the budget; pair (6,7) fails its second Run with a fact-set difference. These
+results use the original full-graph acceptance gate, not the subsequently added
+strict query-set gate. They must not be presented as proof of complete matching.
+
+Prefix execution can now capture every proposed input key for each sealed query
+snapshot. `audit_query_sets` compares those sets with independent reference
+matches, before effects and independently of whether a missing match would add
+new information. Unknown identities are failures. The live audit additionally
+requires this check for all rules when prefix routing is enabled.
+
+Targeted reruns expose two different omissions: (1,6) misses one already-satisfied
+match in Run two while its final graph remains correct; (6,7) misses three bindings
+across two rules in Run two and its final graph differs. Both first Runs pass exact
+match-set comparison. The stricter diagnostic does not retroactively make the
+first graph semantically incorrect; it identifies a completeness gap in the
+learned selector, even when redundant effects mask that gap in the final graph.
+
+Evidence: `prefix-live-query-results.json`. The 87-Run graph-only suite spent
+about 0.398 seconds in CPU reference execution and graph comparison (about 4.57 ms
+per Run), excluding extra query-set diagnosis and GPU time. No end-to-end speed
+claim is made. Next training coverage needs current contexts after actual Cell
+creation, not recurrent latent targets or additional Eq prediction.
