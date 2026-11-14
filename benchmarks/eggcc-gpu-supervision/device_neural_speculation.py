@@ -9,7 +9,7 @@ from device_slot_owners import COLUMNS,read,shape
 from device_token_commit import commit
 
 
-def compile_frame(rule,width,eq_width,recipe=None):
+def compile_frame(rule,width,eq_width,recipe=None,reuse_witnesses=False):
     from typed_literal import compiled_id
     def operand(a):
         return "slot" in a or (recipe is not None and compiled_id(a,recipe)>=0)
@@ -31,7 +31,9 @@ def compile_frame(rule,width,eq_width,recipe=None):
     from multi_entry_ridge import scalar
     constants=[(i,json.loads(k)) for k,i in (recipe or {}).get('literal_ids',{}).items()]
     constants=[(i,v) for i,v in constants if v['sort']=='i64']
-    return dict(literal_inputs=[s['sort'].get('kind')=='i64' and s['sort'].get('name')=='i64' for s in rule['slots']],literal_ids=np.array([i for i,v in constants],np.int32),literal_codes=np.array([scalar(v) for i,v in constants],np.float32).reshape(-1,64),literal_numbers=np.array([v['value'] for i,v in constants],np.float32),operations=operations,inputs=[s for s,d in enumerate(rule['slots']) if d['definition']=='query'],pair_index=indices,allowed=allowed,slots=len(rule['slots']))
+    from device_source_witness import compile_sites
+    witness_sites=compile_sites(recipe,rule) if reuse_witnesses else {}
+    return dict(witness_sites=witness_sites,literal_inputs=[s['sort'].get('kind')=='i64' and s['sort'].get('name')=='i64' for s in rule['slots']],literal_ids=np.array([i for i,v in constants],np.int32),literal_codes=np.array([scalar(v) for i,v in constants],np.float32).reshape(-1,64),literal_numbers=np.array([v['value'] for i,v in constants],np.float32),operations=operations,inputs=[s for s,d in enumerate(rule['slots']) if d['definition']=='query'],pair_index=indices,allowed=allowed,slots=len(rule['slots']))
 
 
 def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp):
@@ -61,7 +63,12 @@ def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp):
     for kind,dst,src in plan['operations']:
         mask=(xp.arange(width)==dst)[None,:]
         if kind=='fresh':
-            for column in ('slots','slot_roots'):payload[column]=xp.where(mask,fresh_base+dst,payload[column])
+            identity=root=fresh_base+dst
+            if dst in plan['witness_sites']:
+                from device_source_witness import lookup
+                found,witness,witness_root=lookup(state,payload,batch,index,plan['witness_sites'][dst],xp)
+                identity=xp.where(found,witness,identity);root=xp.where(found,witness_root,root)
+            for column,value in (('slots',identity),('slot_roots',root)):payload[column]=xp.where(mask,value,payload[column])
             payload['slot_valid']=payload['slot_valid']|mask
         else:
             for column in COLUMNS:

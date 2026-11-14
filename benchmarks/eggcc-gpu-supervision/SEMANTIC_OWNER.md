@@ -713,3 +713,34 @@ correction-path wall time: 0.2339 s total. These are synchronous standalone
 measurements, not native CPU throughput or a GPU speedup claim.
 Six relevant tests pass (speculation + literal constructors). Raw report and
 test log archived as `neural-canon-speculative-v21.tar.gz` on external SSD.
+
+### Selected-source result witnesses repair the output identity interface
+
+`--reuse-witnesses --speculate` compiles constructor export sites from Cell
+templates. At installation each fresh RHS result checks only the already
+matched source Cell rows, using static operator sites and operand wiring.
+Matching operands return the actual stable result ID and current root; they
+need not belong to the logical producer. Visibility, settled state, source
+generation, effect lifetime, and owner projection validity remain required.
+No graph-wide row scan or reverse consumer registry is introduced.
+
+This is an exact GPU witness boundary alongside the floating transition, not
+a claim that neural weights now predict identities. Unmatched results retain
+the existing speculative fresh-handle behavior; absence in the selected
+sources is not a global absence proof. Selected rows can repeat, and current
+site arrays still test irrelevant template records. Record these comparisons
+as new work; no speedup is claimed.
+
+On the unchanged v20 model and 61-pair canon audit, 494 output slots reuse
+actual witnesses across 216 isolated installations. Full graph passes rise
+167 to 216; CPU corrections fall 49 to zero. All 27 oracle-novel frames pass;
+421 same-rule downstream bindings remain correct. No newly introduced
+latent-refresh flags occur, but the existing floating Eq readout still misses
+one pair. Therefore overall status deliberately remains `difference`.
+This does not prove recurrent token correctness or autonomous saturation.
+
+Run the v21 command with `--reuse-witnesses` and the same model checkpoint.
+Five tests cover witness ID/root distinction, selected-source scope, source
+generation/visibility, parameter mismatch, and existing speculative behavior.
+Results: `canon-witness-results.json`; raw artifact and tests on external SSD
+in `neural-canon-witness-v22.tar.gz`. Neighbor Bake remains f3321a3a.

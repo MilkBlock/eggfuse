@@ -13,8 +13,8 @@ from reference_union_family import compare_graph
 from audit_snapshot_queries import device
 
 
-def audit(state,local,frames,rule,rid,batch,index,token,scores,model,oracle,key,mapping,base_roots,fresh_base,seed_count,eq_width,query_atoms=2,query_fields=5):
-    width=shape(state)[1];plan=compile_frame(rule,width,eq_width,local)
+def audit(state,local,frames,rule,rid,batch,index,token,scores,model,oracle,key,mapping,base_roots,fresh_base,seed_count,eq_width,query_atoms=2,query_fields=5,reuse_witnesses=False):
+    width=shape(state)[1];plan=compile_frame(rule,width,eq_width,local,reuse_witnesses)
     payload,roots,ready=frame_payload(state,plan,batch,index,scores,mx.array(fresh_base),base_roots,mx)
     predicted,marks=install(state,payload,roots,batch,index,token,rid,plan['inputs'],ready,mx)
     mx.eval(predicted,roots,marks)
@@ -64,6 +64,6 @@ def audit(state,local,frames,rule,rid,batch,index,token,scores,model,oracle,key,
     resolved,verdict=resolve(predicted,predicted,corrected,mx.array(passed),mx.array(1),mx.array(1),mx);mx.eval(resolved,verdict)
     if not correction_pass:raise AssertionError('CPU correction did not restore exact graph')
     novel=(ref.constructions>oracle.constructions) or (ref.unions>oracle.unions)
-    return dict(gpu_installed=1,local_eq_pass=int(local_eq_ok),local_eq_pass_graph_fail=int(local_eq_ok and not passed),missing_union_failures=int('missing_union' in check['errors']),wrong_merge_failures=int('inconsistent_result_class' in check['errors']),constructor_failures=int('unexpected_constructor' in check['errors']),reference_new_constructors=ref.constructions-oracle.constructions,reference_new_unions=ref.unions-oracle.unions,reference_novel_frames=int(novel),prediction_pass_novel_frames=int(passed and novel),prediction_graph_pass=int(passed),cpu_corrected=int(not passed),corrected_graph_pass=int(correction_pass),token_refresh_required=int(refresh),
+    return dict(gpu_installed=1,witness_site_checks=sum(len(s['view']['rule'])*batch['sources'].shape[1] for s in plan['witness_sites'].values()),witness_argument_checks=sum(len(s['view']['rule'])*batch['sources'].shape[1]*len(s['slots']) for s in plan['witness_sites'].values()),reused_result_slots=sum(int(raw[dst])!=fresh_base+dst for kind,dst,src in plan["operations"] if kind=="fresh"),local_eq_pass=int(local_eq_ok),local_eq_pass_graph_fail=int(local_eq_ok and not passed),missing_union_failures=int('missing_union' in check['errors']),wrong_merge_failures=int('inconsistent_result_class' in check['errors']),constructor_failures=int('unexpected_constructor' in check['errors']),reference_new_constructors=ref.constructions-oracle.constructions,reference_new_unions=ref.unions-oracle.unions,reference_novel_frames=int(novel),prediction_pass_novel_frames=int(passed and novel),prediction_graph_pass=int(passed),cpu_corrected=int(not passed),corrected_graph_pass=int(correction_pass),token_refresh_required=int(refresh),
         downstream_expected=len(expected),downstream_observed=len(observed),downstream_false_positive=len(observed-expected)+unknown,downstream_missed=len(expected-observed),
         downstream_incomplete=int(not bool(downstream['complete'])),cpu_audit_seconds=cpu_seconds,correction_wall_seconds=time.perf_counter()-correction_started,rolled_back=int(bool(verdict['rolled_back'])))

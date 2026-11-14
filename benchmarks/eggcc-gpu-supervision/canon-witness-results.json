@@ -1,0 +1,40 @@
+{
+  "scope": "Standalone MLX GPU source-witness reuse in isolated third-frame installations",
+  "counts": {
+    "gpu_installed": 216,
+    "witness_site_checks": 19600,
+    "witness_argument_checks": 31024,
+    "reused_result_slots": 494,
+    "local_eq_pass": 215,
+    "local_eq_pass_graph_fail": 0,
+    "missing_union_failures": 0,
+    "wrong_merge_failures": 0,
+    "constructor_failures": 0,
+    "reference_new_constructors": 39,
+    "reference_new_unions": 0,
+    "reference_novel_frames": 27,
+    "prediction_pass_novel_frames": 27,
+    "prediction_graph_pass": 216,
+    "cpu_corrected": 0,
+    "corrected_graph_pass": 216,
+    "token_refresh_required": 0,
+    "downstream_expected": 421,
+    "downstream_observed": 421,
+    "downstream_false_positive": 0,
+    "downstream_missed": 0,
+    "downstream_incomplete": 0,
+    "cpu_audit_seconds": 0.8540680859005079,
+    "correction_wall_seconds": 0.08296280191279948,
+    "rolled_back": 0
+  },
+  "status": "difference",
+  "weights_sha256": "3c210591fd9539d3f9e908a9a53c0e2ffdee69be229644b700ba82aecf83285d",
+  "readout_weights_sha256": "f636ba3f1dc3f3b590b608c4a6d924a295bf7737b1eb832175831e1df53db6f0",
+  "remaining_float_state_errors": 1,
+  "limitations": [
+    "Selected source scope only; unmatched identity reuse outside those Cells remains uncovered",
+    "One latent Eq readout error remains despite graph equality",
+    "Not cumulative saturation or native Eggcc runtime",
+    "Static source-site checks add GPU comparisons and gather work; no speedup claim"
+  ]
+}
