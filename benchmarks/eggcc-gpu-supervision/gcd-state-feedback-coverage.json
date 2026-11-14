@@ -1,0 +1,289 @@
+{
+  "scope": "actual selected-family GPU token Eq readout; no fitting or union authorization",
+  "case": "016-gcd",
+  "partition": "validation",
+  "source_token_mode": "whole-state reconstructed generated Cells, exact imported Cells",
+  "completion_readout": {
+    "decoder_sha256": "cf9c22bbc95c2a04eca32565875bbce864bdad6038b5115e64b1162b2582b313",
+    "decoder_alpha": 10.0,
+    "representation": "static-compatible whole Eq state plus actual scalar moments",
+    "union_authorized": false
+  },
+  "selected_state_audit": {
+    "instances": 41,
+    "query_instances": 41,
+    "exact_partitions": 35,
+    "false_merges": 0,
+    "missed_equalities": 10,
+    "nontransitive": 0,
+    "closure_false_merges": 0,
+    "dynamic_quotient": {
+      "queries": 206,
+      "positives": 18,
+      "true_positives": 11,
+      "false_positives": 0,
+      "false_negatives": 7,
+      "precision": 1.0,
+      "recall": 0.6111111111111112
+    },
+    "decoded_token_disagreements": 0
+  },
+  "capture_sha256": "567cbf76b378851a89dc8fe42462232d29d5ed41dafff10a10eb2fbc514f43c0",
+  "adapter_sha256": null,
+  "inference_coefficients_sha256": null,
+  "decoder_sha256": "cf9c22bbc95c2a04eca32565875bbce864bdad6038b5115e64b1162b2582b313",
+  "label_statistics": {
+    "full_pair_queries": 410,
+    "static_equalities": 81,
+    "dynamic_quotient_queries": 206,
+    "dynamic_true_equalities": 18,
+    "distinct_rule_partitions": 6
+  },
+  "static_only_baseline": {
+    "instances": 41,
+    "query_instances": 41,
+    "exact_partitions": 30,
+    "false_merges": 0,
+    "missed_equalities": 37,
+    "nontransitive": 0,
+    "closure_false_merges": 0
+  },
+  "results": {
+    "cpu_target_token": {
+      "instances": 41,
+      "query_instances": 41,
+      "exact_partitions": 41,
+      "false_merges": 0,
+      "missed_equalities": 0,
+      "nontransitive": 0,
+      "closure_false_merges": 0,
+      "dynamic_quotient": {
+        "queries": 206,
+        "positives": 18,
+        "true_positives": 18,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      }
+    },
+    "gpu_predicted_token": {
+      "instances": 41,
+      "query_instances": 41,
+      "exact_partitions": 35,
+      "false_merges": 0,
+      "missed_equalities": 10,
+      "nontransitive": 0,
+      "closure_false_merges": 0,
+      "dynamic_quotient": {
+        "queries": 206,
+        "positives": 18,
+        "true_positives": 11,
+        "false_positives": 0,
+        "false_negatives": 7,
+        "precision": 1.0,
+        "recall": 0.6111111111111112
+      }
+    }
+  },
+  "groups": {
+    "rule_283": {
+      "cpu_target_token": {
+        "instances": 8,
+        "query_instances": 8,
+        "exact_partitions": 8,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 8,
+          "positives": 4,
+          "true_positives": 4,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 8,
+        "query_instances": 8,
+        "exact_partitions": 8,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 8,
+          "positives": 4,
+          "true_positives": 4,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      }
+    },
+    "rule_290": {
+      "cpu_target_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 26,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 156,
+          "positives": 12,
+          "true_positives": 12,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 20,
+        "false_merges": 0,
+        "missed_equalities": 10,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 156,
+          "positives": 12,
+          "true_positives": 5,
+          "false_positives": 0,
+          "false_negatives": 7,
+          "precision": 1.0,
+          "recall": 0.4166666666666667
+        }
+      }
+    },
+    "rule_293": {
+      "cpu_target_token": {
+        "instances": 7,
+        "query_instances": 7,
+        "exact_partitions": 7,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 42,
+          "positives": 2,
+          "true_positives": 2,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 7,
+        "query_instances": 7,
+        "exact_partitions": 7,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 42,
+          "positives": 2,
+          "true_positives": 2,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      }
+    },
+    "direct_source": {
+      "cpu_target_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 26,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 146,
+          "positives": 7,
+          "true_positives": 7,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 23,
+        "false_merges": 0,
+        "missed_equalities": 7,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 146,
+          "positives": 7,
+          "true_positives": 3,
+          "false_positives": 0,
+          "false_negatives": 4,
+          "precision": 1.0,
+          "recall": 0.42857142857142855
+        }
+      }
+    },
+    "generated_source": {
+      "cpu_target_token": {
+        "instances": 15,
+        "query_instances": 15,
+        "exact_partitions": 15,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 60,
+          "positives": 11,
+          "true_positives": 11,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 15,
+        "query_instances": 15,
+        "exact_partitions": 12,
+        "false_merges": 0,
+        "missed_equalities": 3,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 60,
+          "positives": 11,
+          "true_positives": 8,
+          "false_positives": 0,
+          "false_negatives": 3,
+          "precision": 1.0,
+          "recall": 0.7272727272727273
+        }
+      }
+    }
+  },
+  "cpu_readout_audit_seconds": 0.15110116702271625,
+  "backpropagation": false,
+  "union_authorized": false,
+  "limitations": [
+    "Small selected immutable Cell family, not full Eggcc",
+    "Exact execution establishes completion; ridge is audited separately",
+    "Test samples must not be used for fitting"
+  ]
+}

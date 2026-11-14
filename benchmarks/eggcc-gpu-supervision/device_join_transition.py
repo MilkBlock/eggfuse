@@ -97,10 +97,21 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=
             value=read_slot(state,key,rows,slots,xp);mask=bindings['slot_valid'][:,:,None] if value.ndim==3 else bindings['slot_valid']
             value=xp.where(mask,value,0);padding=(capacity,width-local)+value.shape[2:]
             p[key]=xp.concatenate([value,xp.zeros(padding,value.dtype)],axis=1)
+    completion_readout=None
+    if 'completion_readout' in plan:
+        from device_completion_readout import scalar_inputs,apply
+        codes,scalar_ready=scalar_inputs(p,plan['completion_readout'],xp)
+        tokens,completion_readout=apply(tokens,bindings,codes,scalar_ready,plan['completion_readout'],xp)
+        p['tokens']=tokens
+        p['missing_witness']=p['missing_witness']|(bindings['live']&~completion_readout['ready'])
+        p['matched']=p['matched']&completion_readout['ready']
+        numerical=dict(numerical,ready=numerical['ready']&completion_readout['ready'],
+                       needs_attention=numerical['needs_attention']|xp.any(bindings['live']&~completion_readout['ready']))
     marks=dict(query_complete=bindings['complete'],overflow=bindings['overflow'],candidate_lanes=bindings['candidate_lanes'],encoding=encoding,numerical=numerical)
     if capture:
         from device_match_capture import collect
         marks['capture']=collect(state,bindings,request,tokens,numerical,plan,xp,boundary_capture)
+        if completion_readout is not None:marks['capture']['completion_readout']=completion_readout
     return p,marks
 
 

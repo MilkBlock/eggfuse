@@ -1,0 +1,31 @@
+{
+  "scope": "one real selected-family predicted-source feedback comparison; exact matching and effects retained",
+  "passed": true,
+  "exact_capture_sha256": "d3024efdd65b7dcaff7c689f9577bfeecd9a18152677682f6187db77d1aba98d",
+  "feedback_capture_sha256": "567cbf76b378851a89dc8fe42462232d29d5ed41dafff10a10eb2fbc514f43c0",
+  "model_sha256": "b1da3a8f63fde01c77c1318e2fde8109df048c8bc6eb159e14dce32a66d17edf",
+  "identical_symbolic_arrays": 454,
+  "instances": 41,
+  "generated_source_consumers": 15,
+  "changed_inputs": 16,
+  "changed_generated_inputs": 15,
+  "changed_direct_inputs": 1,
+  "maximum_source_token_change": 0.34841176867485046,
+  "maximum_feature_change": 0.4533722698688507,
+  "maximum_predicted_token_change": 0.4581867754459381,
+  "same_cpu_targets": true,
+  "backpropagation": false,
+  "source_token_mode": "whole-state reconstructed generated Cells, exact imported Cells",
+  "completion_readout": {
+    "decoder_sha256": "cf9c22bbc95c2a04eca32565875bbce864bdad6038b5115e64b1162b2582b313",
+    "decoder_alpha": 10.0,
+    "representation": "static-compatible whole Eq state plus actual scalar moments",
+    "union_authorized": false
+  },
+  "limitations": [
+    "Symbolic equality here is capture comparison; full Run graphs are checked separately by execution audit",
+    "Same accuracy does not mean identical scores",
+    "Imported Cells still use exact encoding; generated Cells retain birth predictions rather than refreshing learned state after every union",
+    "No learned Eq is authorized by this experiment"
+  ]
+}

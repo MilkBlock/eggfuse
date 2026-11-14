@@ -83,6 +83,7 @@ def main():
     p=argparse.ArgumentParser()
     for k in ('capture','trace','model','corpus','output','report'):p.add_argument(k,type=Path)
     p.add_argument('--semantic-targets',action='store_true',help='project legacy captures onto original Cell semantics for a like-for-like audit')
+    p.add_argument('--completion-decoder',type=Path)
     p.add_argument('--snapshot-run',type=int,required=True);a=p.parse_args();start=time.monotonic()
     meta=json.loads(a.capture.with_suffix('.json').read_text());trace=json.loads(a.trace.read_bytes())
     if meta['capture']['schema']!='device-composed-witness/v1' or not meta['capture']['passed'] or hashlib.sha256(a.capture.read_bytes()).hexdigest()!=meta['capture']['artifact_sha256']:raise ValueError('capture provenance')
@@ -98,6 +99,16 @@ def main():
     if local!=meta['recipe']:raise ValueError('lowered recipe')
     if not a.semantic_targets:target_recipe=local
     semantic_recipe=dict(local,rules=[semantic(r)[0] for r in target_recipe['rules']])
+    completion_plans=None
+    if bool(meta.get('completion_readout'))!=bool(a.completion_decoder):raise ValueError('explicit completion decoder required exactly for reconstructed captures')
+    if a.completion_decoder:
+        from device_completion_readout import compile_readout
+        info=meta['completion_readout']
+        if hashlib.sha256(a.completion_decoder.read_bytes()).hexdigest()!=info['decoder_sha256']:raise ValueError('completion decoder identity')
+        with np.load(a.completion_decoder) as f:
+            chosen=np.flatnonzero(f['alphas']==info['decoder_alpha'])
+            if len(chosen)!=1:raise ValueError('completion alpha')
+            completion_plans=[compile_readout(r,f['w'],f['coef'][:,chosen]) for r in local['rules'][:len(original['rules'])]]
     ref=Reference(original,rows,ids);runs=ref.saturate(original['rules'])
     with np.load(a.model) as f:model={k:f[k] for k in ('w','coef')}
     captures=[];facts=[];saved={}
@@ -126,7 +137,24 @@ def main():
             generated=(c['boundary']['rule']>=0)&(c['boundary']['rule']<len(original['rules']))
             boundary_generated.extend(np.any(connections&generated[None,None,:,None],axis=(1,2,3))[c['accepted']])
         live=c['bindings']['live']
-        if live.any():numerical=max(numerical,float(np.max(abs(np.tanh(x@model['coef'])[live]-c['predicted_tokens'][live]))))
+        expected=np.tanh(x@model['coef'])
+        if completion_plans is not None:
+            from device_completion_readout import apply
+            from multi_entry_ridge import scalar
+            detail=c['completion_readout'];plan=completion_plans[rid]
+            if live.any():numerical=max(numerical,float(np.max(abs(expected[live]-detail['raw_tokens'][live]))))
+            # Independently recover scalar codes from actual input IDs, never final labels.
+            for lane in np.flatnonzero(live):
+                if not detail['scalar_ready'][lane]:raise ValueError('completion scalar not ready')
+                for j,s in enumerate(plan['scalar_slots']):
+                    value=seed_values[int(c['bindings']['slots'][lane,s])]
+                    if value['sort']!=rule['slots'][s]['sort']['name'] or 'eq' in value:raise ValueError('completion scalar identity')
+                    if np.max(abs(scalar(value)-detail['scalar_codes'][lane,j]))>5e-6:raise ValueError('completion scalar code')
+            expected,recomputed=apply(expected,c['bindings'],detail['scalar_codes'],detail['scalar_ready'],plan,np)
+            for key in ('chosen','required','selected','ready'):
+                if not np.array_equal(recomputed[key][live],detail[key][live]):raise ValueError('completion readout '+key)
+        elif 'completion_readout' in c:raise ValueError('unregistered completion readout')
+        if live.any():numerical=max(numerical,float(np.max(abs(expected[live]-c['predicted_tokens'][live]))))
         for lane in np.flatnonzero(c['accepted']):
             y,label=target(target_recipe['rules'][rid],c['bindings']['slots'][lane],mapping,ref,seed_values,state['slots'].shape[1])
             xs.append(x[lane]);extra.append(z[lane]);ys.append(y);labels.append(label);pred.append(c['predicted_tokens'][lane]);rules.append(meta['source_rules'][rid])

@@ -22,9 +22,12 @@ def main():
     p=argparse.ArgumentParser()
     for k in ('trace','model','output'):p.add_argument(k,type=Path)
     p.add_argument('--capture',type=Path)
+    p.add_argument('--completion-decoder',type=Path);p.add_argument('--completion-decoder-report',type=Path)
     p.add_argument('--rules',default='283,293');p.add_argument('--snapshot-run',type=int,default=466)
     p.add_argument('--progress',action='store_true');p.add_argument('--predicted-source-feedback',action='store_true');p.add_argument('--experimental-boundary-model',action='store_true');p.add_argument('--boundary-context',action='store_true');p.add_argument('--flush-every',type=int,default=4);p.add_argument('--order-queries',action='store_true');p.add_argument('--capacity',type=int,default=128);p.add_argument('--ticks',type=int,default=24);a=p.parse_args()
     if a.predicted_source_feedback and not a.experimental_boundary_model:raise ValueError('feedback requires explicit experimental model')
+    if bool(a.completion_decoder)!=bool(a.completion_decoder_report):raise ValueError('completion decoder and report required together')
+    if a.completion_decoder and not a.predicted_source_feedback:raise ValueError('completion readout requires actual predicted-source feedback')
     if a.flush_every<1 or a.ticks<1:raise ValueError('positive execution window required')
     raw=a.trace.read_bytes();trace=json.loads(raw);ids_rule=[int(x) for x in a.rules.split(',')]
     if not all(trace.get(k) is True for k in ('strict_run_graphs_equal','strict_audit_reference_equal','run_control_counts_equal')):raise ValueError('unaudited trace')
@@ -60,6 +63,19 @@ def main():
             family=[{k:r[k] for k in ('slots','query','effects')} for r in original['rules']]
             if json.loads(str(f['family_semantics']))!=family:raise ValueError('calibrated model family mismatch')
         model=device({k:f[k] for k in ('w','coef')})
+    completion_metadata=None
+    if a.completion_decoder:
+        from device_completion_readout import compile_readout
+        report=json.loads(a.completion_decoder_report.read_text())
+        decoder_sha=hashlib.sha256(a.completion_decoder.read_bytes()).hexdigest()
+        if report['weights_sha256']!=decoder_sha or report['model_sha256']!=hashlib.sha256(a.model.read_bytes()).hexdigest():raise ValueError('completion decoder provenance')
+        with np.load(a.completion_decoder) as f:
+            selected=np.flatnonzero(f['alphas']==report['selected']['partition'])
+            if len(selected)!=1:raise ValueError('completion decoder selection')
+            blocks=[(st,dict(p,completion_readout=compile_readout(local['rules'][p['query']['rule']],f['w'],f['coef'][:,selected]))) for st,p in blocks]
+        dp=device(blocks)
+        completion_metadata=dict(decoder_sha256=decoder_sha,decoder_alpha=report['selected']['partition'],
+            representation='static-compatible whole Eq state plus actual scalar moments',union_authorized=False)
     schedule,meta=compile_schedule(dict(saturate=dict(run=stage)),[stage]);ds=device(schedule)
     control=dict(control=initial(ds,meta['repeat_slots'],mx),open_run=mx.array(False),unreported_change=mx.array(False),failed_run=mx.array(False))
     ready=mx.array(True);next_id=mx.array(len(ids));logs=[];captures=[];frames=[]
@@ -107,6 +123,9 @@ def main():
         graph_check=check,boundary_checks=boundary_checks,lowering_check=lowering_check,views_complete=complete,query_checks=checks,finished=bool(m['finished']),failed_run=bool(m['failed_run']),passed=passed,
         gpu_compile_upload_execute_seconds=gpu_seconds,cpu_reference_and_audit_seconds=time.monotonic()-started,
         limitations=['One projected source ruleset, omitted external rules/tables remain uncovered','Lowering adds temporary slots and potentially fresh IDs/unions','Exact kernels authorize completion; ridge quality for lowered templates is not established','No claim of identical intermediate allocation or native full-graph execution'])
+    if completion_metadata is not None:
+        result['completion_readout']=completion_metadata
+        result['source_tokens']='whole-state reconstructed generated Cells, exact imported Cells'
     if a.capture and passed:
         payload={}
         for ti,batch in enumerate(captures):
@@ -116,7 +135,7 @@ def main():
                     if bool(c['recorded']):payload.update(flatten(c,f'capture/{ti}/{inner}/{block}/'))
         np.savez_compressed(a.capture,**payload)
         result['capture']=dict(schema='device-composed-witness/v1',artifact_sha256=hashlib.sha256(a.capture.read_bytes()).hexdigest(),passed=True,target_labels_included=False,logical_array_bytes=sum(x.nbytes for x in payload.values()))
-        a.capture.with_suffix('.json').write_text(json.dumps(dict(recipe=local,original_recipe=original,source_token_mode=result['source_tokens'],snapshot_run=a.snapshot_run,source_rules=ids_rule,model_sha256=result['model_sha256'],trace_sha256=result['trace_sha256'],capture=result['capture']),indent=2)+'\n')
+        a.capture.with_suffix('.json').write_text(json.dumps(dict(recipe=local,original_recipe=original,source_token_mode=result['source_tokens'],completion_readout=completion_metadata,snapshot_run=a.snapshot_run,source_rules=ids_rule,model_sha256=result['model_sha256'],trace_sha256=result['trace_sha256'],capture=result['capture']),indent=2)+'\n')
     a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
     if not passed:raise SystemExit(1)
 

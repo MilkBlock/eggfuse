@@ -36,6 +36,7 @@ def main():
     if meta['capture']['schema']=='device-joint-witness/v3' and 'semantic_recipe' not in meta:raise ValueError('semantic target definition missing')
     if hashlib.sha256(a.decoder.read_bytes()).hexdigest()!=report['weights_sha256']:raise ValueError('decoder hash')
     if meta['model_sha256']!=report['model_sha256']:raise ValueError('decoder parent model mismatch')
+    if meta.get('completion_readout') and meta['completion_readout']['decoder_sha256']!=report['weights_sha256']:raise ValueError('completion decoder mismatch')
     with np.load(a.capture) as data:
         ids=[meta['source_rules'].index(int(r)) for r in data['rules']]
         rows=rows_from_labels(meta.get('semantic_recipe',meta['recipe']),ids,data['target_eq_classes'])
@@ -53,6 +54,21 @@ def main():
         features,truth=materialize(readout_rows(rows,True),tokens,weights['w'],True)
         scores=(features@coef).reshape(-1)
         result[name]=dict(summarize(rows,scores),dynamic_quotient=dynamic_metrics(truth,scores))
+    selected_state_audit=None
+    if meta.get('completion_readout'):
+        from audit_input_relations import restore
+        chosen=[]
+        with np.load(a.capture) as data:
+            prefixes=[k[:-4] for k in data.files if k.startswith('capture/') and k.endswith('/rule') and '/witness/' not in k and '/boundary/' not in k]
+            prefixes.sort(key=lambda s:tuple(map(int,s.strip('/').split('/')[1:])))
+            for prefix in prefixes:
+                c=restore(data,prefix)
+                if bool(c['recorded']):chosen.extend(c['completion_readout']['selected'][c['accepted']])
+        if len(chosen)!=len(rows):raise ValueError('selected completion state alignment')
+        flat=np.concatenate(chosen)
+        if len(flat)!=len(scores):raise ValueError('selected completion pair layout')
+        selected_state_audit=dict(summarize(rows,flat),dynamic_quotient=dynamic_metrics(truth,flat),
+            decoded_token_disagreements=int(np.count_nonzero((scores>=.5)!=(flat>=.5))))
     groups={}
     selectors={('rule_'+str(int(r))):sample_rules==r for r in np.unique(sample_rules)}
     if generated is not None:selectors.update(direct_source=~generated,generated_source=generated)
@@ -65,6 +81,8 @@ def main():
             scores=(x@coef).reshape(-1)
             groups[group][name]=dict(summarize(selected,scores),dynamic_quotient=dynamic_metrics(truth,scores))
     out=dict(scope='actual selected-family GPU token Eq readout; no fitting or union authorization',case=meta['capture']['case'],partition=meta['capture']['partition'],
+        source_token_mode=meta.get('source_token_mode','exact completed states'),completion_readout=meta.get('completion_readout'),
+        selected_state_audit=selected_state_audit,
         capture_sha256=meta['capture']['artifact_sha256'],adapter_sha256=meta.get('adapter_sha256'),inference_coefficients_sha256=meta.get('inference_coefficients_sha256'),decoder_sha256=report['weights_sha256'],label_statistics=label_stats,static_only_baseline=summarize(rows,np.zeros(label_stats['dynamic_quotient_queries'],np.float32)),results=result,groups=groups,
         cpu_readout_audit_seconds=time.monotonic()-started,backpropagation=False,union_authorized=False,
         limitations=['Small selected immutable Cell family, not full Eggcc','Exact execution establishes completion; ridge is audited separately','Test samples must not be used for fitting'])
