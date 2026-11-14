@@ -71,3 +71,24 @@ mark ownership **unobserved**: common Eq classes do not certify a parent, actual
 constructor witness, liveness or legal retirement. A future native parent/witness
 export must provide those before training ownership transitions. No CPU executor
 changes were made, and no GPU correctness or speed improvement is claimed.
+
+## Passive source evidence
+
+Build `capture_rhs_results` with `--features slot-transfer-audit` to export
+existing instance parent/continuation and retained query witnesses alongside
+slot observations. `cell_observation` copies only the already retained witness
+projection; no extra lookup or history retention is introduced. Null/absent
+witnesses stay unknown. The sample exporter joins by exact Run/binding ordinal
+and checks rule identity. Evidence remains separate from input features and
+labels; it does not itself prove retirement or ownership transfer.
+
+On the context/canon fixture, both default and `sparse-cells` builds produced
+nine observations but **zero parents and zero retained query witnesses**.
+Their complete per-Run binding records and final graph equal the earlier capture.
+See `native-source-evidence-report.json`. This is evidence that this compiled
+fixture is insufficient for ownership training, not a successful ownership
+capture. Next input preparation must exercise a baked continuation catalog.
+These two builds used the current dirty workspace; unrelated native changes
+were preserved and are not part of this commit. No speed claim or performance
+campaign. Four Python extraction tests and a focused Rust witness projection
+test cover alignment and preservation of missing/actual evidence.

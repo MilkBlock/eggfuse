@@ -1,7 +1,7 @@
 //! Selected Run observation, compiled only with the existing transfer audit.
 //! Copies evidence for an offline diagnostic. Never supplies execution facts,
 //! performs a graph lookup, or changes matching/publication decisions.
-use crate::{cell::Instance, value::Value};
+use crate::{cell::{Instance, QueryFacts}, graph::Dependency, value::Value};
 use serde_json::{Value as Json, json};
 use std::{cell::RefCell, collections::{BTreeMap, BTreeSet}};
 
@@ -43,6 +43,18 @@ pub(crate) fn watermark(rule: usize, watermark: u64) {
     });
 }
 
+// Export only already retained evidence. Missing projections remain unknown.
+fn retained_witnesses(facts: &QueryFacts) -> Vec<(usize, Option<Dependency>)> {
+    match facts {
+        QueryFacts::None => vec![],
+        QueryFacts::One(atom, fact) => vec![(*atom, fact.map(Dependency::Fact))],
+        QueryFacts::All(rows) => rows.iter().enumerate().map(|(i, f)| (i, f.map(Dependency::Fact))).collect(),
+        QueryFacts::Ports(rows) => rows.iter().copied().enumerate().collect(),
+        #[cfg(feature = "structural-depth")]
+        QueryFacts::Tracked(_, rows, _) => rows.iter().copied().enumerate().collect(),
+    }
+}
+
 pub(crate) fn matched<'a>(epoch: u64, rows: impl Iterator<Item = (&'a usize, &'a Instance)>) {
     CAPTURE.with_borrow_mut(|c| {
         let Some(c) = c else { return };
@@ -59,7 +71,8 @@ pub(crate) fn matched<'a>(epoch: u64, rows: impl Iterator<Item = (&'a usize, &'a
             c.matches.push(json!({"ordinal":ordinal, "rule":rule,
                 "watermark":c.watermarks.get(rule), "epoch":row.epoch,
                 "values":row.values, "direct":direct,
-                "parent":row.parent, "continuation":row.continuation}));
+                "parent":row.parent, "continuation":row.continuation,
+                "retained_query_witnesses":retained_witnesses(&row.known)}));
         }
     });
 }
@@ -83,4 +96,17 @@ pub fn finish() -> Json {
     json!({"matches":c.matches, "effective_writes":c.writes,
         "watermarks":c.watermarks, "counts":c.counts.into_iter()
             .map(|((epoch, rule), counts)| (epoch, rule, counts)).collect::<Vec<_>>()})
+}
+
+#[cfg(test)]
+mod witness_tests {
+    use super::*;
+    use crate::graph::FactRef;
+    #[test]
+    fn export_preserves_missing_and_actual_returned_witnesses() {
+        assert!(retained_witnesses(&QueryFacts::None).is_empty());
+        let fact=FactRef {cell:7,op:3};
+        assert_eq!(retained_witnesses(&QueryFacts::One(2,Some(fact))),vec![(2,Some(Dependency::Fact(fact)))]);
+        assert_eq!(retained_witnesses(&QueryFacts::Ports(vec![None,Some(Dependency::Function(9))])),vec![(0,None),(1,Some(Dependency::Function(9)))]);
+    }
 }

@@ -29,6 +29,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let snapshot_runs = snapshot_runs(&args[2..])?;
     let mut boundaries = Vec::new();
+    let mut source_observations: Vec<Value> = Vec::new();
     let input = &args[0];
     let output = &args[1];
     let relations = true;
@@ -139,7 +140,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         while !executor.tasks.is_empty() {
             let next = executor.steps.len() + 1;
             let clock = Instant::now();
+            #[cfg(feature = "slot-transfer-audit")]
+            eggfuse_cell_runtime::transfer_audit::observation::begin(0..rules.len(), usize::MAX);
             executor.execute_until(Some(next)).map_err(err)?;
+            #[cfg(feature = "slot-transfer-audit")]
+            source_observations.push(json!({"ordinal":next,
+                "observation":eggfuse_cell_runtime::transfer_audit::observation::finish()}));
             observed_execution_seconds += clock.elapsed().as_secs_f64();
             let clock = Instant::now();
             reference.execute_until(Some(next)).map_err(err)?;
@@ -212,7 +218,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         serde_json::to_vec(
             &json!({"schema":"eggcc-gpu-supervision-rhs-trace/v1","recipe":artifact["recipe"],"steps":executor.steps,"all_slots":all_slots,"relations":relations,"program_sha256":artifact["sha256"],"runs":runs,
   "capture_and_audit_wall_seconds":execution_seconds,"audited_execution_seconds":observed_execution_seconds,"reference_execution_seconds":reference_seconds,"observer_seconds":*observer_seconds.borrow(),"result_observer_seconds":*result_time.borrow(),"run_graph_audit_seconds":run_graph_audit_seconds,"strict_run_graphs_equal":true,
-  "strict_audit_reference_equal":true,"run_control_counts_equal":true,"full_snapshots":boundaries.len(),"boundaries":boundaries,"final":final_graph,
+  "strict_audit_reference_equal":true,"run_control_counts_equal":true,"source_observations":source_observations,"source_observation_enabled":cfg!(feature="slot-transfer-audit"),"full_snapshots":boundaries.len(),"boundaries":boundaries,"final":final_graph,
   "scope":if all_slots{"actual CPU inputs and RHS slot reads before repair; missing results explicit; no GPU takeover"}else{"live read-only Cell observer; scalar slots only; no GPU writeback"}}),
         )?,
     )?;

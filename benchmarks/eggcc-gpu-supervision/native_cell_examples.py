@@ -18,6 +18,13 @@ def extract(trace):
         raise ValueError('capture requires --relations')
     if not all(trace.get(k) is True for k in ('strict_run_graphs_equal','strict_audit_reference_equal','run_control_counts_equal')):
         raise ValueError('native audit failed')
+    sources={}
+    if trace.get('source_observation_enabled'):
+        for run in trace['source_observations']:
+            for row in run['observation']['matches']:
+                key=(run['ordinal'],row['ordinal'])
+                if key in sources:raise ValueError('duplicate source observation')
+                sources[key]=row
     examples=[]
     for run in trace['runs']:
         for ordinal,row in enumerate(run['audit']['bindings']):
@@ -31,6 +38,9 @@ def extract(trace):
             if any('unavailable' in v for v in rhs):
                 raise ValueError('unavailable RHS slot')
             outputs=[dict(v['eq_port'],slot=v['slot']) for v in rhs if 'eq_port' in v]
+            source=sources.pop((run['ordinal'],ordinal),None)
+            if trace.get('source_observation_enabled') and (source is None or source['rule']!=row['rule']):
+                raise ValueError('missing or mismatched source observation')
             examples.append(dict(
                 address=dict(run=run['ordinal'],binding=ordinal,rule=row['rule']),
                 inputs=dict(eq_slots=[p['slot'] for p in ports],
@@ -40,7 +50,12 @@ def extract(trace):
                              rhs_eq_slots=[p['slot'] for p in outputs],
                              rhs_partition=partition(outputs,'after_run'),
                              rhs_scalars=[v for v in rhs if 'eq_port' not in v]),
-                ownership='unobserved'))
+                ownership='unobserved',
+                source_evidence=None if source is None else dict(
+                    parent=source['parent'],continuation=source['continuation'],
+                    direct=source['direct'],epoch=source['epoch'],
+                    retained_query_witnesses=source['retained_query_witnesses'])))
+    if sources:raise ValueError('unconsumed source observations')
     return dict(schema='native-cell-partitions/v1',program_sha256=trace['program_sha256'],
                 scope='actual native local input features and post-Run targets; no inferred ownership',
                 templates=trace['recipe']['rules'],examples=examples)

@@ -1,0 +1,18 @@
+{
+  "source": {
+    "examples": 9,
+    "same_final_and_run_bindings": true,
+    "parents": 0,
+    "retained_witnesses": 0,
+    "trace_sha256": "77a3a6b7e5ee2121daf33d65c03b0b1dbcb09e5bd2bae8c54eb62ad3aa631179"
+  },
+  "sparse-source": {
+    "examples": 9,
+    "same_final_and_run_bindings": true,
+    "parents": 0,
+    "retained_witnesses": 0,
+    "trace_sha256": "8e2f9dc2b8eaef43f313339d46438e748a4f9b04796ec37f1c7d0fc53eed918c"
+  },
+  "scope": "passive diagnostic on synthetic context/canon; no ownership training labels established",
+  "build": "current dirty workspace; unrelated changes excluded from commit; default+slot-transfer-audit and sparse-cells+slot-transfer-audit"
+}

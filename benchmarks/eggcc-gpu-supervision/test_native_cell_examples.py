@@ -18,6 +18,17 @@ class NativeExamplesTests(unittest.TestCase):
         self.assertEqual(a['targets']['input_partition'],[0,0])
         self.assertEqual(a['ownership'],'unobserved')
 
+    def test_source_evidence_alignment(self):
+        trace=self.trace()
+        source=dict(ordinal=0,rule=0,parent=dict(cell=8,op=2),continuation=None,
+                    direct=False,epoch=0,retained_query_witnesses=[[1,{'Fact':{'cell':8,'op':2}}]])
+        trace.update(source_observation_enabled=True,source_observations=[dict(ordinal=1,observation=dict(matches=[source]))])
+        result=extract(trace)['examples'][0]
+        self.assertEqual(result['source_evidence']['parent'],source['parent'])
+        self.assertEqual(result['ownership'],'unobserved')
+        source['rule']=1
+        with self.assertRaises(ValueError):extract(trace)
+
     def test_typed_partition(self):
         self.assertEqual(partition([dict(sort=s,before=v) for s,v in [('A',99),('B',99),('A',99)]],'before'),[0,1,0])
 
