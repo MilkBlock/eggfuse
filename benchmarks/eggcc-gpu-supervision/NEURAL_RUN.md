@@ -70,3 +70,38 @@ Its `run_done` remains false. The overall report remains `difference`.
 0.245 seconds across the 61 cases, a diagnostic measurement rather than a
 speedup comparison. Original full Eggcc schedule execution, asynchronous audit
 epochs/recovery and wider model coverage remain outstanding.
+
+## Captured floating-state readout calibration
+
+Admission diagnosis retains selected Eq scores and result roots, then labels
+legal admitted inputs by independent CPU effects after execution. It stops
+identity propagation at the first incorrect installed frame. The (5,7) failure
+starts at its third admission: rule 7 predicts slots (0,10), LessEq and Add,
+equal with score +0.644. Two other wrong pairs follow transitively. The first
+two admitted frames have correct local Eq relations.
+
+`--capture-sealed OUTPUT.npz` saves only synthetic post-run floating tokens,
+requests and independent Eq labels; it supplies no correction to execution.
+`fit_sealed_readout.py CAPTURE OLD_EQ_WEIGHTS OUTPUT.json --steps 300` freezes
+the token generator and fits the Eq head to this covered execution set. Input
+manifest and weight hashes are checked. This is training-set fitting, not a
+claim of held-out generalization. Binary datasets/weights live in the external
+artifact archive, not Git.
+
+The first captured set contains 215 states. Exact Eq states improve from
+207 to 215, with zero false or missed pairs on those captured inputs. Re-running
+all 61 first Runs with the resulting head passes all 61 and the complete
+first-Run audit reports `pass`, with 216 actual admissions. Subsequent recurrent
+and larger finite-domain checks are required before promoting this candidate.
+`audit_finite_readout.py` compares old and new heads on the same generated
+finite-domain tokens without retraining either head.
+
+The recurrent check retains 61 correct final graphs and 60 verified fixed
+points; (5,7) is still productive at the twelve-sweep boundary. However, the
+larger finite-domain regression rejects this head: exact states fall from
+4,170/4,258 to 3,809/4,258, and 411 states acquire false merges (previously zero).
+Therefore this candidate is **not promoted**, despite the 61/61 first-Run pass.
+The next fitting dataset must jointly retain finite-domain and resident-token
+states; this result demonstrates forgetting of already covered inputs, not a
+need to optimize for arbitrary unseen programs. See
+`sealed-calibration-results.json` for all three evaluation scopes and hashes.

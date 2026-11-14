@@ -79,10 +79,13 @@ def main():
     p.add_argument('--capture-cumulative',type=Path);p.add_argument('--sample-seed',type=int,default=93003);p.add_argument('--samples-per-rule',type=int,default=4);p.add_argument('--pool-capacity',action='append',default=[]);p.add_argument('--pair',nargs=2,type=int);p.add_argument('--cumulative-sweeps',type=int,default=0);p.add_argument('--install-follow-round',action='store_true');p.add_argument('--follow-round',action='store_true');p.add_argument('--reuse-witnesses',action='store_true');p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
     p.add_argument('--witness-context-depth',type=int,default=0,choices=(0,1,2))
     p.add_argument('--sealed-run-attempts',type=int,default=0)
+    p.add_argument('--capture-sealed',type=Path)
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
     if a.witness_context_depth and not (a.cumulative_sweeps or a.sealed_run_attempts):raise ValueError('witness context requires cumulative or sealed Run execution')
     if a.sealed_run_attempts<0 or (a.sealed_run_attempts and (not a.follow or not a.eq_readout or a.cumulative_sweeps or a.speculate or a.block_owner or a.semantic_owners)):
         raise ValueError('sealed Run requires ordinary follow and Eq readout, separate from cumulative/speculative modes')
+    if a.capture_sealed and not a.sealed_run_attempts:raise ValueError('sealed capture requires sealed Run execution')
+    sealed_collector=[] if a.capture_sealed else None
     if a.capture_cumulative and not a.cumulative_sweeps:raise ValueError('capture requires cumulative execution')
     if a.samples_per_rule<1:raise ValueError('positive sample count required')
     collector=[] if a.capture_cumulative else None
@@ -197,7 +200,7 @@ def main():
             report['cumulative']=run_cumulative(local,state,registry['roots'],next_id,frames,recipe['rules'],model,eq_head,a.cumulative_sweeps,oracle,check['mapping'],seed_count,pool_capacities,collector,a.witness_context_depth)
         if a.sealed_run_attempts and check['passed']:
             from audit_neural_run import execute_and_audit
-            report['sealed_run']=execute_and_audit(local,oracle,recipe['rules'],state,registry['roots'],next_id,frames,model,eq_head,seed_count,a.sealed_run_attempts,a.witness_context_depth)
+            report['sealed_run']=execute_and_audit(local,oracle,recipe['rules'],state,registry['roots'],next_id,frames,model,eq_head,seed_count,a.sealed_run_attempts,a.witness_context_depth,check['mapping'],sealed_collector)
         if a.follow and check['passed']:
             report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None,a.baked_eq,baked_proofs,owner if a.owner_aware else None,a.conditional_eq,a.reuse_witnesses,a.follow_round,a.install_follow_round)
         reports.append(report);print(json.dumps(report),flush=True)
@@ -211,6 +214,10 @@ def main():
     result['selected_pair']=a.pair
     result['cumulative_sweeps']=a.cumulative_sweeps
     result['sealed_run_attempts']=a.sealed_run_attempts
+    if a.capture_sealed:
+        if not sealed_collector:raise ValueError('empty sealed capture')
+        np.savez_compressed(a.capture_sealed,**{k:np.array([x[k] for x in sealed_collector]) for k in sealed_collector[0]})
+        result['sealed_capture']=dict(samples=len(sealed_collector),sha256=hashlib.sha256(a.capture_sealed.read_bytes()).hexdigest(),scope='synthetic post-run labels through first incorrect frame; no labels fed to GPU')
     result['install_follow_round']=a.install_follow_round
     result['follow_round']=a.follow_round
     result['reuse_witnesses']=a.reuse_witnesses

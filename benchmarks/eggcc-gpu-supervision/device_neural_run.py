@@ -6,7 +6,7 @@ caller still owes completion, boundary audit and original schedule handling.
 from device_neural_step import advance
 
 
-def execute(state,roots,next_id,frames,plans,model,head,attempts,xp,enabled=True):
+def execute(state,roots,next_id,frames,plans,model,head,attempts,xp,enabled=True,capture=False):
     if type(attempts)is not int or attempts<1:raise ValueError('positive static attempt budget required')
     snapshot=state;attention=xp.array(False);exhausted=xp.array(True);admitted=xp.array(0,xp.int32);trace=[]
     allowed=xp.array(enabled,dtype=xp.bool_)
@@ -14,7 +14,7 @@ def execute(state,roots,next_id,frames,plans,model,head,attempts,xp,enabled=True
         done=xp.array(False)
         for _ in range(attempts):
             state,roots,next_id,event=advance(state,roots,next_id,frames,query,frame,rule_id,model,head,
-                allowed&~attention&~done,xp,query_state=snapshot)
+                allowed&~attention&~done,xp,query_state=snapshot,capture=capture)
             done=done|event['no_novel_proposal'];attention=attention|event['needs_attention']
             admitted=admitted+event['admitted'].astype(xp.int32);trace.append((rule_id,event))
             xp.eval(state,roots,next_id,event,done,attention,admitted)

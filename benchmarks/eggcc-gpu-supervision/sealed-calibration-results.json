@@ -1,0 +1,170 @@
+{
+  "scope": "rejected Eq-only calibration on synthetic GPU Run tokens; standalone experiment",
+  "artifact_root": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/sealed-calibration-v33",
+  "calibration": {
+    "scope": "training-set fitting of detached synthetic sealed Run tokens; not runtime acceptance",
+    "before": {
+      "states": 215,
+      "pairs": 2497,
+      "false_positive_pairs": 1,
+      "false_negative_pairs": 12,
+      "nonfinite_states": 0,
+      "exact_states": 207,
+      "closed_false_positive_pairs": 1,
+      "closed_false_negative_pairs": 12,
+      "closed_exact_states": 207,
+      "states_with_false_merge": 1
+    },
+    "after": {
+      "states": 215,
+      "pairs": 2497,
+      "false_positive_pairs": 0,
+      "false_negative_pairs": 0,
+      "nonfinite_states": 0,
+      "exact_states": 215,
+      "closed_false_positive_pairs": 0,
+      "closed_false_negative_pairs": 0,
+      "closed_exact_states": 215,
+      "states_with_false_merge": 0
+    },
+    "steps": 300,
+    "transition_unchanged": true,
+    "transition_sha256": "ac77ef02ab3daac2f1cef0e77e29aea4125c19a505a743c175948e629cd47ba9",
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "capture_sha256": "69b866cd249f884a39e7bd4b81b44d6b97ffda1199458fbf73c4e75e840cb2a5",
+    "parent_sha256": "318c82348a80e194cddd28bcd282fd1d3074ad65f132bc019353c6504f540332",
+    "weights_sha256": "fb27df1bdb2c4aed01c0c491c45341695ffe7922bd5ace38d12a0c5053000d80",
+    "promoted_as_default": false
+  },
+  "sealed_run": {
+    "cases": 61,
+    "passed": 61,
+    "admitted": 216,
+    "status": "pass"
+  },
+  "cumulative": {
+    "cases": 61,
+    "passed": 60,
+    "graphs_passed": 61,
+    "admitted": 255,
+    "remaining": [
+      {
+        "producer": 5,
+        "consumer": 7,
+        "cumulative": {
+          "scope": "one cumulative GPU state; host fixed-order sweeps, final CPU audit",
+          "witness_context_depth": 1,
+          "witness_context_reference_bytes": 3780,
+          "witness_sources_per_lookup": 20,
+          "pool_capacity_overrides": {
+            "Bop": 64
+          },
+          "candidate_lanes_per_sweep": 33152,
+          "sweeps": 12,
+          "scheduled_steps": 96,
+          "admitted": 15,
+          "replayed": 15,
+          "capture_legal_entries": 15,
+          "capture_skipped_entries": 0,
+          "graph": {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 49,
+            "expected_facts": 49,
+            "mapped_classes": 25
+          },
+          "facts_decoded": true,
+          "cpu_fixedpoint": false,
+          "device_no_novel": false,
+          "semantic_events": [],
+          "boundary_alias_events": [],
+          "needs_attention": false,
+          "attention_reasons": {
+            "query_overflow": 0,
+            "query_incomplete": 0,
+            "dirty_input": 0,
+            "nonfinite": 0,
+            "invalid_keys": 0,
+            "rejected_proposal": 0,
+            "payload_invalid": 0,
+            "stale_witness_context": 0
+          },
+          "attention_events": [],
+          "capacity_steps": 0,
+          "refresh_steps": 0,
+          "cpu_audit_seconds": 0.028235333040356636,
+          "intermediate_host_value_reads": false,
+          "status": "difference"
+        }
+      }
+    ]
+  },
+  "finite_regression": {
+    "scope": "generated-token finite training-domain readout regression; not runtime or held-out generalization",
+    "coverage": {
+      "finite_boundary": true,
+      "boundary_domain": "fixed completed source plus consumer queries; prior source roots unchanged",
+      "combined_owner": false,
+      "combined_templates": 0,
+      "max_combined_slots": 0,
+      "chains": 8166,
+      "positive": 4258,
+      "negative": 3908,
+      "negative_unavailable": 350,
+      "producer_consumer_pairs": 61,
+      "producers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "consumers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "compiled_owner_opportunities": 1080,
+      "scope": "bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance"
+    },
+    "before": {
+      "states": 4258,
+      "pairs": 49198,
+      "false_positive_pairs": 0,
+      "false_negative_pairs": 231,
+      "nonfinite_states": 0,
+      "exact_states": 4170,
+      "closed_false_positive_pairs": 0,
+      "closed_false_negative_pairs": 231,
+      "closed_exact_states": 4170,
+      "states_with_false_merge": 0
+    },
+    "after": {
+      "states": 4258,
+      "pairs": 49198,
+      "false_positive_pairs": 580,
+      "false_negative_pairs": 459,
+      "nonfinite_states": 0,
+      "exact_states": 3809,
+      "closed_false_positive_pairs": 640,
+      "closed_false_negative_pairs": 433,
+      "closed_exact_states": 3809,
+      "states_with_false_merge": 411
+    },
+    "hashes": {
+      "transition": "ac77ef02ab3daac2f1cef0e77e29aea4125c19a505a743c175948e629cd47ba9",
+      "before": "318c82348a80e194cddd28bcd282fd1d3074ad65f132bc019353c6504f540332",
+      "after": "fb27df1bdb2c4aed01c0c491c45341695ffe7922bd5ace38d12a0c5053000d80"
+    }
+  },
+  "promoted_as_default": false,
+  "rejection_reason": "regression on the already covered finite domain; jointly fit both known domains next"
+}

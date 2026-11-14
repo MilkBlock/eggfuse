@@ -55,5 +55,5 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
         capacity=xp.any(marks['capacity'])|(requested&((next_id<0)|(next_id>len(roots)-payload['slots'].shape[1]))),
         payload_invalid=requested&~ready&(next_id>=0)&(next_id<=len(roots)-payload['slots'].shape[1]),
         token_refresh_required=marks['token_refresh_required'])
-    if capture:event.update(output_token=tokens[selected],request=batch['request'][selected])
+    if capture:event.update(output_token=tokens[selected],request=batch['request'][selected],eq_scores=scores[selected],sources=batch['sources'][selected])
     return result,xp.where(accepted,proposed_roots,roots),xp.where(accepted,next_id+payload['slots'].shape[1],next_id),event

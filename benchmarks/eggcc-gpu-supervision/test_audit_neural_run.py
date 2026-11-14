@@ -3,7 +3,7 @@ import mlx.core as mx
 import test_device_neural_run as fixtures
 from test_device_neural_step import Model
 from device_neural_run import execute
-from audit_neural_run import audit
+from audit_neural_run import audit,diagnose
 from reference_union_family import Reference
 from device_snapshot_import import identity
 from device_schedule import compile_schedule,initial,tick,current
@@ -11,6 +11,15 @@ from audit_snapshot_queries import device
 
 
 class RunAudit(unittest.TestCase):
+    def test_bad_installed_eq_is_labeled_independently_after_execution(self):
+        local,state,roots,n,frames,plans=fixtures.SourceRun().fixture();ref=self.reference(local)
+        _,_,_,result=execute(state,roots,n,frames,[plans[0]],Model(),lambda t,r:mx.ones((len(t),3)),2,mx,capture=True)
+        labels=[];report=diagnose(local,ref,result,{0:0,1:1},3,labels)
+        self.assertEqual(report['incomplete'],'first incorrect installed frame')
+        self.assertTrue(any(p['expected'] is False and p['observed'] is True for p in report['events'][0]['pairs']))
+        self.assertEqual(len(labels),1);self.assertEqual(labels[0]['eq_target'][0],0.)
+        self.assertEqual(ref.root(0),0);self.assertEqual(ref.root(1),1)
+
     def reference(self,local):
         values=[dict(sort='E',eq=str(i)) for i in range(2)]
         return Reference(local,[dict(table='F',values=values)],{identity(v):i for i,v in enumerate(values)})
