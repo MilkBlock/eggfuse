@@ -161,3 +161,21 @@ cases fail; one remains outside the fixed-point budget. This configuration chang
 both training duration and candidate capacity relative to the earlier 600-step,
 capacity-16 audit; the full-suite difference cannot be attributed solely to either.
 The model is not promoted. See `current-cell-all3000-results.json`.
+
+## Explicit union effects are template-owned
+
+The speculative installer previously skipped union instructions when compiling
+frame operations, relying entirely on learned Eq scores to reproduce them.
+`compile_frame` now records a static, typed required-Eq mask for explicit union
+instructions. In the current-state execution path, `frame_payload` installs
+these required edges even if the learned score is negative. Stable slot handles
+remain unchanged. Invalid union types/indices are rejected at compile time;
+nonfinite model output still fails readiness. The legacy speculative diagnostic
+keeps its old behavior unless `template_effects=True` is selected.
+
+This is a partial semantic takeover: the model can no longer omit an explicit
+union in this path, but it can still propose erroneous additional equalities.
+There is no claim of complete congruence or boundary coverage. The static mask
+uses existing closure machinery, not a new per-instance dependency registry.
+Thirteen relevant installer/Run tests pass. Earlier learned-model audit results
+predate this change and must not be presented as validation of the new behavior.

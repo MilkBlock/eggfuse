@@ -40,7 +40,7 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
     if context_depth:
         from device_witness_context import inspect
         context_invalid=inspect(state,batch['sources'][selected],batch['mask'][selected],batch['generations'][selected],context_depth,xp)[3]
-    payload,proposed_roots,ready=frame_payload(state,frame_plan,batch,selected,scores[selected],next_id,roots,xp)
+    payload,proposed_roots,ready=frame_payload(state,frame_plan,batch,selected,scores[selected],next_id,roots,xp,template_effects=current_state_model)
     result,marks=install(state,payload,proposed_roots,batch,selected,tokens[selected],rule_id,frame_plan['inputs'],ready&requested&~context_invalid,xp,current_state_inputs=current_state_model)
     accepted=xp.any(marks['accepted'])
     latent_refresh=marks['token_refresh_required']&xp.array(not current_state_model)

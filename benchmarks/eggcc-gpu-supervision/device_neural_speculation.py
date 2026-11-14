@@ -14,11 +14,16 @@ def compile_frame(rule,width,eq_width,recipe=None,reuse_witnesses=False):
     def operand(a):
         return "slot" in a or (recipe is not None and compiled_id(a,recipe)>=0)
     if len(rule['slots'])>min(width,eq_width):raise ValueError('semantic layout exceeds frame')
-    operations=[]
+    operations=[];required_eq=np.zeros((width,width),bool)
     for op in rule['effects']:
         if op['kind']=='copy' and 'slot' in op['arg']:operations.append(('copy',op['dst'],op['arg']['slot']))
         elif op['kind']=='construct' and all(operand(a) for a in op['args']) and op['sort']['kind']=='eq':operations.append(('fresh',op['dst'],0))
-        elif op['kind']=='union' and all('slot' in a for a in op['args']):continue
+        elif op['kind']=='union' and len(op['args'])==2 and all('slot' in a for a in op['args']):
+            a,b=(v['slot'] for v in op['args'])
+            if not (0<=a<len(rule['slots']) and 0<=b<len(rule['slots'])):raise ValueError('union slot outside template')
+            sa,sb=rule['slots'][a]['sort'],rule['slots'][b]['sort']
+            if sa['kind']!='eq' or sa!=sb:raise ValueError('ill-typed template union')
+            required_eq[a,b]=required_eq[b,a]=True
         elif op['kind']=='set' and 'slot' in op['value'] and all('slot' in a for a in op['args']):continue
         else:raise ValueError('unbaked speculative effect')
     indices=np.zeros((width,width),np.int32);allowed=np.zeros((width,width),bool)
@@ -33,10 +38,10 @@ def compile_frame(rule,width,eq_width,recipe=None,reuse_witnesses=False):
     constants=[(i,v) for i,v in constants if v['sort']=='i64']
     from device_source_witness import compile_sites
     witness_sites=compile_sites(recipe,rule) if reuse_witnesses else {}
-    return dict(witness_sites=witness_sites,literal_inputs=[s['sort'].get('kind')=='i64' and s['sort'].get('name')=='i64' for s in rule['slots']],literal_ids=np.array([i for i,v in constants],np.int32),literal_codes=np.array([scalar(v) for i,v in constants],np.float32).reshape(-1,64),literal_numbers=np.array([v['value'] for i,v in constants],np.float32),operations=operations,inputs=[s for s,d in enumerate(rule['slots']) if d['definition']=='query'],pair_index=indices,allowed=allowed,slots=len(rule['slots']))
+    return dict(required_eq=required_eq,witness_sites=witness_sites,literal_inputs=[s['sort'].get('kind')=='i64' and s['sort'].get('name')=='i64' for s in rule['slots']],literal_ids=np.array([i for i,v in constants],np.int32),literal_codes=np.array([scalar(v) for i,v in constants],np.float32).reshape(-1,64),literal_numbers=np.array([v['value'] for i,v in constants],np.float32),operations=operations,inputs=[s for s,d in enumerate(rule['slots']) if d['definition']=='query'],pair_index=indices,allowed=allowed,slots=len(rule['slots']))
 
 
-def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp):
+def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp,template_effects=False):
     _,width=shape(state);payload={}
     for column in COLUMNS:
         old=state['owner_'+column] if 'slot_owner' in state else state[column]
@@ -76,6 +81,8 @@ def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp):
     before=payload['slot_roots'][0];valid=payload['slot_valid'][0]
     allowed=xp.array(plan['allowed'])&valid[:,None]&valid[None,:]
     adjacency=allowed&((scores[xp.array(plan['pair_index'])]>=0)|(before[:,None]==before[None,:]))
+    if template_effects:
+        adjacency=adjacency|(allowed&xp.array(plan['required_eq']))
     adjacency=adjacency|xp.eye(width,dtype=xp.bool_)
     labels=before
     for _ in range(width):labels=xp.min(xp.where(adjacency,labels[None,:],xp.iinfo(labels.dtype).max),axis=1)
