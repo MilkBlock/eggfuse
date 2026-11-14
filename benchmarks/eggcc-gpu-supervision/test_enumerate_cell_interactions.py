@@ -40,6 +40,22 @@ class Enumeration(unittest.TestCase):
             bad=copy.deepcopy(c);mutate(bad)
             with self.assertRaises(ValueError):replay_case(r,bad)
 
+    def test_missing_boundary_support_is_replayed_not_assumed_negative(self):
+        r=recipe()
+        r['tables'].append(dict(name='G',kind='constructor',schema=r['tables'][0]['schema']))
+        r['rules'][0]['query'].append(dict(call=dict(table='G'),args=[dict(slot=1),dict(slot=2)]))
+        cases,report=enumerate_interfaces(r,10,include_missing=True)
+        missing=[c for c in cases if -2 in c['wiring']]
+        self.assertTrue(missing)
+        self.assertTrue(report['within_bound_complete'])
+        for c in missing:
+            self.assertEqual(replay_case(r,c),c['snapshot'])
+        base=Interface(r,0,0)
+        base.connect([0,-2])
+        self.assertEqual(len(base.facts),len(base.exports)+1)
+        # Producer support can still satisfy the omitted consumer atom.
+        self.assertTrue(any(name=='G' for name,_ in base.facts))
+
     def test_literal_conflicts_and_budget_are_explicit(self):
         _,report=enumerate_interfaces(recipe(True),10)
         self.assertEqual(report['contradictory_wirings'],2)

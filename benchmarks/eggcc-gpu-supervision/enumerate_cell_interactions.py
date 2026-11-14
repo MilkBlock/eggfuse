@@ -1,7 +1,8 @@
 """Exhaustive bounded two-Cell constructor interfaces, independent of labels.
 
 One completed producer, one consumer, at least one shared constructor fact.
-Consumer atoms not supplied by the producer are explicit boundary facts.
+Consumer atoms may have explicit boundary support or omit that support.
+Omitted support is not a negative label: other facts may still satisfy the query.
 No source-program reachability or whole-family closure claim.
 """
 import argparse,itertools,json
@@ -60,6 +61,8 @@ class Interface:
         self.parent[b]=a
 
     def connect(self,wiring):
+        # -2 omits boundary support; it does not assert semantic absence.
+        self.facts=list(self.exports)+[fact for fact,j in zip(self.inputs,wiring) if j!=-2]
         for i,j in enumerate(wiring):
             if j<0:continue
             name,values=self.inputs[i];other,args=self.exports[j]
@@ -99,8 +102,8 @@ def replay_case(recipe,case):
     p,c=case['producer'],case['consumer']
     if type(p)is not int or type(c)is not int or not 0<=p<len(recipe['rules']) or not 0<=c<len(recipe['rules']):raise ValueError('invalid rule index')
     bound=Interface(recipe,p,c);wiring=case['wiring']
-    if len(wiring)!=len(bound.inputs) or all(j==-1 for j in wiring):raise ValueError('invalid wiring arity')
-    if any(type(j)is not int or j < -1 or j>=len(bound.exports) for j in wiring):raise ValueError('invalid export index')
+    if len(wiring)!=len(bound.inputs) or all(j<0 for j in wiring):raise ValueError('invalid wiring arity')
+    if any(type(j)is not int or j < -2 or j>=len(bound.exports) for j in wiring):raise ValueError('invalid export index')
     bound.connect(wiring);bound.close();groups={}
     for key in bound.parent:
         root=bound.root(key);group=groups.setdefault(bound.sorts[root],[])
@@ -120,13 +123,13 @@ def replay_case(recipe,case):
     return result
 
 
-def enumerate_interfaces(recipe,max_classes=7):
+def enumerate_interfaces(recipe,max_classes=7,include_missing=False):
     from copy import deepcopy
     report=dict(wirings=0,contradictory_wirings=0,budget_exclusions=0,partitions=0,contradictory_partitions=0,unique_cases=0)
     cases=[]
     for p,c in itertools.product(range(len(recipe['rules'])),repeat=2):
         base=Interface(recipe,p,c)
-        choices=[[-1]+[j for j,(t,_) in enumerate(base.exports) if t==name] for name,_ in base.inputs]
+        choices=[([-2,-1] if include_missing else [-1])+[j for j,(t,_) in enumerate(base.exports) if t==name] for name,_ in base.inputs]
         for wiring in itertools.product(*choices):
             if all(j<0 for j in wiring):continue
             report['wirings']+=1;bound=deepcopy(base)
@@ -159,12 +162,12 @@ def enumerate_interfaces(recipe,max_classes=7):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('recipe',type=Path);p.add_argument('output',type=Path);p.add_argument('--rules',default='0,1,2');p.add_argument('--max-classes',type=int,default=7);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('recipe',type=Path);p.add_argument('output',type=Path);p.add_argument('--rules',default='0,1,2');p.add_argument('--max-classes',type=int,default=7);p.add_argument('--include-missing',action='store_true');a=p.parse_args()
     if a.max_classes<1:raise ValueError('positive bound required')
     source=json.loads(a.recipe.read_text());recipe=select_recipe(source.get('recipe',source),list(map(int,a.rules.split(','))))
-    cases,report=enumerate_interfaces(recipe,a.max_classes)
+    cases,report=enumerate_interfaces(recipe,a.max_classes,a.include_missing)
     a.output.mkdir(parents=True,exist_ok=False)
     (a.output/'cases.jsonl').write_text(''.join(json.dumps(c)+'\n' for c in cases))
-    result=dict(scope='one completed producer / one consumer; all consumer atoms have boundary support; i64 equality only',max_classes=a.max_classes,recipe=recipe,recipe_sha256=digest(recipe),counts=report,obligations=['No three-Cell or iterative interaction closure','No scalar arithmetic/ordering partition proof','No stage schedule or source-program reachability proof','Snapshots are completed-producer boundaries, not pre-RHS inputs','No ownership-retirement proof'])
+    result=dict(scope='one completed producer / one consumer; consumer boundary support controlled by includes_missing_support; i64 equality only',max_classes=a.max_classes,includes_missing_support=a.include_missing,recipe=recipe,recipe_sha256=digest(recipe),counts=report,obligations=['No three-Cell or iterative interaction closure','No scalar arithmetic/ordering partition proof','No stage schedule or source-program reachability proof','Snapshots are completed-producer boundaries, not pre-RHS inputs','No ownership-retirement proof'])
     (a.output/'manifest.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(report))
 if __name__=='__main__':main()
