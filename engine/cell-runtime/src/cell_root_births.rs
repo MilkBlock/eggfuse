@@ -106,20 +106,7 @@ impl Graph {
         let plan=plan.clone();counts.plan_handles+=1;
         // Keep any parent-projected inputs in the same instance. Results of
         // this region remain implicit addresses or actual peer result aliases.
-        for arg in plan.steps[from..].iter().flat_map(|s|&s.keys).chain(
-            plan.units.iter().flat_map(|u|u.sites.iter().flat_map(|s|&s.keys))) {
-            let Arg::Slot(slot)=arg else {continue;};
-            if !self.rhs_frame(cell).unwrap().values.contains_key(slot)
-                && plan.definitions.binary_search_by_key(slot,|&(s,_)|s).ok()
-                    .is_none_or(|i|plan.definitions[i].1<position) {
-                let value=self.slot(cell,*slot)?;
-                counts.captured_reads+=1;counts.captured_writes+=1;
-                let values=&mut self.rhs_frame_mut(cell).unwrap().values;
-                let before=values.capacity_bytes();values.insert(*slot,value);
-                let growth=values.capacity_bytes()-before;
-                counts.slot_growths+=u64::from(growth!=0);counts.slot_bytes+=growth as u64;
-            }
-        }
+        self.capture_worker_inputs(cell,&plan.inputs,from,position,plan.units.is_some(),&mut counts)?;
         self.promote_active();
         let (values,sealed)=self.rhs_frame_mut(cell).unwrap().values.lease();
         counts.slot_leases+=1;counts.slot_seals+=u64::from(sealed);

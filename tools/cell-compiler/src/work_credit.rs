@@ -265,6 +265,7 @@ impl Work {
             Some(v) if v["schema"]=="cell-local-births/v2"=>2,
             Some(v) if v["schema"]=="cell-local-births/v3"=>3,
             Some(v) if v["schema"]=="cell-local-births/v4"=>4,
+            Some(v) if v["schema"]=="cell-local-births/v5"=>5,
             _=>return Err("unknown Cell local construction accounting".into()),
         };
         for field in ["plan_checks","resume_checks","window_checks","attempts","anchor_checks","source_operand_reads","operand_reads",
@@ -298,6 +299,12 @@ impl Work {
             let key=format!("cell_execution/runtime/stats/births/{field}");
             let count=if local_births>=4 {report.pointer(&format!("/{key}")).and_then(J::as_u64)
                 .ok_or_else(||format!("missing current local construction work {key}"))?} else {0};
+            work.insert(key,count);
+        }
+        for field in ["capture_layout_reads", "capture_slot_checks"] {
+            let key=format!("cell_execution/runtime/stats/births/{field}");
+            let count=if local_births>=5 {report.pointer(&format!("/{key}")).and_then(J::as_u64)
+                .ok_or_else(||format!("missing local construction work {key}"))?} else {0};
             work.insert(key,count);
         }
         let scheduler=match report["cell_execution"].get("scheduler") {
@@ -922,6 +929,8 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         "cell_execution/runtime/stats/births/root_growths",
         "cell_execution/runtime/stats/births/root_merges",
         "cell_execution/runtime/stats/births/plan_handles",
+        "cell_execution/runtime/stats/births/capture_layout_reads",
+        "cell_execution/runtime/stats/births/capture_slot_checks",
         "cell_execution/runtime/stats/births/result_reads",
         "cell_execution/runtime/stats/births/evaluations",
         "cell_execution/runtime/stats/births/bloom_checks",
@@ -943,6 +952,12 @@ fn query_worker_credit_charges_buffers_and_never_rewards_answer_counts() {
         } else {"constructor preparation work"};
         assert!(Work::read(&changed).unwrap_err().contains(category));
     }
+    let mut legacy=report.clone();
+    legacy["cell_execution"]["local_construction"]["schema"]=json!("cell-local-births/v4");
+    for key in ["capture_layout_reads", "capture_slot_checks"] {
+        legacy["cell_execution"]["runtime"]["stats"]["births"].as_object_mut().unwrap().remove(key);
+    }
+    assert!(Work::read(&legacy).is_ok(), "older reports did not measure input capture checks");
     for field in ["rhs_context_suspends", "rhs_context_resumes", "rhs_suspend_holds", "rhs_suspend_releases"] {
         let mut changed = report.clone();
         changed["stats"][field] = json!(report["stats"][field].as_u64().unwrap() + 1);

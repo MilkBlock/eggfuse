@@ -112,12 +112,7 @@ impl<'a> Batch<'a> {
                 if let Some(v) = owner.frame.values.get(slot) {
                     return self.parents.canon(v);
                 }
-                let definition = owner
-                    .plan
-                    .definitions
-                    .binary_search_by_key(slot, |&(s, _)| s)
-                    .unwrap();
-                let operation = owner.plan.definitions[definition].1;
+                let operation=owner.plan.definitions[*slot].expect("admitted internal result");
                 if let Ok(prior) = owner
                     .plan
                     .steps
@@ -533,28 +528,7 @@ impl Graph {
             .operation;
         // Only external/preceding values are captured; internal dependencies
         // remain static slot references into this plan's shared result slots.
-        for arg in plan.steps[from..].iter().flat_map(|s| &s.keys).chain(
-            plan.units.iter().filter(|_|unit_epoch.is_some()).flat_map(|u|u.sites.iter().flat_map(|s|&s.keys))) {
-            let Arg::Slot(slot) = arg else {
-                continue;
-            };
-            let internal = plan
-                .definitions
-                .binary_search_by_key(slot, |&(s, _)| s)
-                .ok()
-                .is_some_and(|i| plan.definitions[i].1 >= position);
-            if !internal && !self.rhs_frame(cell).unwrap().values.contains_key(slot) {
-                let value = self.slot(cell, *slot)?;
-                counts.captured_reads += 1;
-                counts.captured_writes += 1;
-                let values = &mut self.rhs_frame_mut(cell).unwrap().values;
-                let before = values.capacity_bytes();
-                values.insert(*slot, value);
-                let growth = values.capacity_bytes() - before;
-                counts.slot_growths += u64::from(growth != 0);
-                counts.slot_bytes += growth as u64;
-            }
-        }
+        self.capture_worker_inputs(cell,&plan.inputs,from,position,unit_epoch.is_some(),&mut counts)?;
         let mut facts = smallvec::SmallVec::new();
         for (&op, fact) in self
             .rhs_frame(cell)

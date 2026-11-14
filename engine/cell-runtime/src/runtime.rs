@@ -3398,7 +3398,7 @@ impl Executor {
             "scope":"existing Cell handoffs or source-certified permanent constructor prefixes; invalid prefixes clear prepared Eq slots before ordinary allocation"}); }
         #[cfg(feature = "sparse-cells")]
         if let Some(execution) = &self.cell_execution {
-            report["cell_execution"]["local_construction"] = json!({"schema":"cell-local-births/v4",
+            report["cell_execution"]["local_construction"] = json!({"schema":"cell-local-births/v5",
                 "frame_slot_header_bytes":std::mem::size_of::<crate::slots::FrameSlots>(),
                 "unsealed_slot_header_bytes":std::mem::size_of::<crate::slots::Slots>(),
                 "sealed_prefix_allocation_bytes":crate::slots::FrameSlots::seal_bytes(),

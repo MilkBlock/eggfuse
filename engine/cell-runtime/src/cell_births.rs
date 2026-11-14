@@ -4,6 +4,9 @@
 use super::*;
 use crate::cell::{Definition, EffectWriter};
 use crate::value::parent_epoch::Read;
+#[path="cell_birth_inputs.rs"]
+mod inputs;
+use inputs::CapturePlan;
 #[path = "cell_births_shared.rs"]
 mod shared;
 #[path = "cell_root_births.rs"]
@@ -42,7 +45,7 @@ struct Step {
     skipped: usize,
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool>, definitions:Vec<(usize,usize)>, batch_rule:bool, no_unions:bool, isolated:Vec<bool>, lineage:Vec<Vec<usize>>, roots:Vec<bool>, units:Option<units::Tail> }
+pub(crate) struct Plan { steps:Vec<Step>, operators:Vec<Vec<usize>>, continues:Vec<bool>, definitions:Vec<Option<usize>>, batch_rule:bool, no_unions:bool, isolated:Vec<bool>, lineage:Vec<Vec<usize>>, roots:Vec<bool>, units:Option<units::Tail>, inputs:CapturePlan }
 impl Plan {
     pub(crate) fn batch_rule(&self)->bool {self.batch_rule}
     pub(crate) fn has_roots(&self)->bool {self.roots.iter().any(|&v|v)}
@@ -160,7 +163,9 @@ impl Plan {
             && (i+1==steps.len() || steps[i+1].region==step.region
                 && lineage[i+1].contains(&step.destination))).collect::<Vec<_>>();
         if !steps.iter().any(|s|!s.anchors.is_empty()) && !roots.iter().any(|&v|v) {return None;}
-        Some(Self{steps,operators,continues,definitions:cell.template.defs.iter().map(|(&slot,&op)|(slot,op)).collect(),batch_rule,no_unions,isolated,lineage,roots,units})
+        let inputs=CapturePlan::derive(&steps,units.as_ref(),&cell.template.defs,batch_rule);
+        let definitions=(0..cell.template.sorts.len()).map(|slot|cell.template.defs.get(&slot).copied()).collect();
+        Some(Self{steps,operators,continues,definitions,batch_rule,no_unions,isolated,lineage,roots,units,inputs})
     }
     pub(crate) fn storage_bytes(&self)->usize {
         std::mem::size_of::<Self>() + 2*std::mem::size_of::<usize>()
@@ -169,12 +174,13 @@ impl Plan {
             + self.operators.capacity()*std::mem::size_of::<Vec<usize>>()
             + self.operators.iter().map(|v|v.capacity()*std::mem::size_of::<usize>()).sum::<usize>()
             + self.continues.capacity()*std::mem::size_of::<bool>()
-            + self.definitions.capacity()*std::mem::size_of::<(usize,usize)>()
+            + self.definitions.capacity()*std::mem::size_of::<Option<usize>>()
             + self.isolated.capacity()*std::mem::size_of::<bool>()
             + self.roots.capacity()*std::mem::size_of::<bool>()
             + self.lineage.capacity()*std::mem::size_of::<Vec<usize>>()
             + self.lineage.iter().map(|s|s.capacity()*std::mem::size_of::<usize>()).sum::<usize>()
             + self.units.as_ref().map_or(0,units::Tail::storage_bytes)
+            + self.inputs.storage_bytes()
     }
     fn start(&self,position:usize)->Option<usize> {
         let i=self.steps.binary_search_by_key(&position,|s|s.operation).ok()?;
@@ -238,6 +244,7 @@ pub(crate) struct Counts {
     pub root_snapshots:u64, pub root_writes:u64, pub root_growths:u64, pub root_merges:u64,
     pub plan_handles:u64, pub prefix_growths:u64, pub prefix_bytes:u64,
     pub sealed_bytes:u64, pub captured_reads:u64, pub captured_writes:u64,
+    pub capture_layout_reads:u64, pub capture_slot_checks:u64,
     pub shared_slots:u64, pub shared_bytes:u64, pub shared_growths:u64,
     pub result_reads:u64, pub result_hits:u64, pub evaluations:u64, pub duplicate_evaluations:u64,
     pub bloom_checks:u64, pub bloom_skips:u64, pub bloom_writes:u64,
@@ -255,6 +262,7 @@ impl Counts {
             unit_candidates,unit_worker_rows,unit_inserts,unit_invalidated,unit_bytes,
             slot_seals,slot_leases,slot_reattachments,root_snapshots,root_writes,root_growths,root_merges,
             plan_handles,prefix_growths,prefix_bytes,sealed_bytes,captured_reads,captured_writes,
+            capture_layout_reads,capture_slot_checks,
             shared_slots,shared_bytes,shared_growths,result_reads,result_hits,evaluations,duplicate_evaluations,
             bloom_checks,bloom_skips,bloom_writes,result_handles,frame_handles,dependency_proofs,key_screens,directory_checks,
             owner_result_candidates,owner_result_bytes);
@@ -316,13 +324,13 @@ fn anchor(step:&Step,frame:&impl Frame,rows:&[Born],first:usize,cell:u32,parents
     }
     None
 }
-fn operand(frame:&impl Frame,definitions:&[(usize,usize)],rows:&[Born],first:usize,position:usize,
+fn operand(frame:&impl Frame,definitions:&[Option<usize>],rows:&[Born],first:usize,position:usize,
     arg:&Arg,parents:Read<'_>)->Option<Value> {
     match arg {
         Arg::Literal(v)=>Some(parents.canon(v)),
         Arg::Slot(s)=> {
             if let Some(v)=frame.values().get(s) {return Some(parents.canon(v));}
-            let op=definitions.get(definitions.binary_search_by_key(s,|&(slot,_)|slot).ok()?)?.1;
+            let op=definitions.get(*s).copied().flatten()?;
             if op<first || op>=position {return None;}
             Some(parents.canon(fields(frame,rows,op)?.last()?))
         }
@@ -465,20 +473,7 @@ impl Graph {
         // Capture only missing retained-parent operands, once, into this same
         // execution frame. Internal results remain implicit local row outputs.
         if queued {
-            for arg in plan.steps[from..limit].iter().flat_map(|s|&s.keys).chain(
-                plan.units.iter().filter(|_|unit_epoch.is_some()).flat_map(|u|u.sites.iter().flat_map(|s|&s.keys))) {
-                let Arg::Slot(slot)=arg else {continue;};
-                if !self.rhs_frame(cell).unwrap().values.contains_key(slot)
-                    && plan.definitions.binary_search_by_key(slot,|&(s,_)|s).ok()
-                        .is_none_or(|i|plan.definitions[i].1<cert.first) {
-                    let value=self.slot(cell,*slot)?;
-                    counts.captured_reads+=1;counts.captured_writes+=1;
-                    let values=&mut self.rhs_frame_mut(cell).unwrap().values;
-                    let before=values.capacity_bytes();values.insert(*slot,value);
-                    let growth=values.capacity_bytes()-before;
-                    counts.slot_growths+=u64::from(growth!=0);counts.slot_bytes+=growth as u64;
-                }
-            }
+            self.capture_worker_inputs(cell,&plan.inputs,from,cert.first,unit_epoch.is_some(),&mut counts)?;
         }
         let mut prefix=smallvec::SmallVec::new();
         for (&op,fact) in self.rhs_frame(cell).unwrap().facts.iter().filter(|(op,_)|**op as usize>=cert.first) {
