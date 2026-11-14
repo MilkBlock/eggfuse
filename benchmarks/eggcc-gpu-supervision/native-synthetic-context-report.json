@@ -1,0 +1,57 @@
+{
+  "scope": "native synthetic multistage capture; not GPU inference or ownership proof",
+  "comparison": {
+    "passed": true,
+    "errors": [],
+    "native_audits": true,
+    "expected_facts": 15,
+    "native_projected_facts": 15,
+    "seed_anchors": 13,
+    "reference_runs": 4,
+    "native_runs": 3
+  },
+  "examples": 9,
+  "captured_bindings_by_run": [
+    2,
+    4,
+    3
+  ],
+  "program_sha256": "944aed557fe323211f8ac46230d981d72e55b44231510e3f62977f990584acd8",
+  "artifacts": {
+    "synthetic_input": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-context-canon/input.json",
+      "sha256": "a0df5c7175df618655649377a88b6e7957f663e48043ca070c526c5b7f581804"
+    },
+    "source": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-context-canon/native.egg",
+      "sha256": "f1709373152d35e038976505ecca167f344070f50dcacb6d1e8e64aef7dfb016"
+    },
+    "schedule": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-context-canon/schedule.json",
+      "sha256": "c1bbc23992901ac05a8e4e06f734c0ce9b8daabb1b2b555cf20f4622a18cefcf"
+    },
+    "program": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/native-synthetic-context-canon/program.json",
+      "sha256": "d5f06e8177eab6e77c146561828ab2cba17667257e885d2adf8c661458bd1704"
+    },
+    "trace": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/native-synthetic-context-canon/trace.json",
+      "sha256": "055225ccf666908171c61ebe7d60ee264ef8057e2a1fc22a5bb7316422ba3800"
+    },
+    "compiler": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/cargo-target/debug/eggfuse-cell-compiler",
+      "sha256": "6bfad0efac141d22c77aa0f74539cce33994e253b0eccaa4a753c0180e361c86"
+    },
+    "observer": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/cargo-target/debug/examples/capture_rhs_results",
+      "sha256": "fb2a17992738db5850a902f3593fa21978eba3b40a8a7a67b6124bcc6d15c283"
+    }
+  },
+  "bake_reference": "afc6b4d8",
+  "limitations": [
+    "No runtime parent/owner evidence exported",
+    "Final graph agreement does not establish identical Python/native trajectories",
+    "Pre-existing native binaries, not rebuilt current dirty workspace",
+    "Extraction CLI alone does not certify synthetic provenance"
+  ]
+}

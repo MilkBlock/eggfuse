@@ -41,3 +41,33 @@ and binaries are not committed.
 The intended data flow is synthetic input -> Eggfuse actual execution/context
 capture -> training examples -> ridge fitting -> GPU inference. The local Python
 reference is a migration cross-check, not a second production execution engine.
+
+## Multi-stage capture and feature separation
+
+The synthetic context/canon input also passes final projected-graph comparison:
+15 facts, 13 input anchors. Native execution has three Runs and nine captured
+bindings; the independent Python interpreter has four Runs. This is final-state
+agreement, **not identical trajectories**. Use native executed boundaries for
+native labels. See `native-synthetic-context-report.json` for artifact and binary
+hashes. The compiler and observer agree on native Run control.
+
+Capture with `--relations` (which implies `--all-slots`) for Eq evidence.
+`native_cell_examples.py TRACE OUTPUT` exports local typed input Eq partitions,
+input scalars, and separately post-Run input/RHS partitions and scalar labels.
+Eq IDs are normalized to local class positions rather than used as numeric
+features. Three tests check target isolation, sort-sensitive normalization and
+missing evidence. The original scalar values retain exact types; this is a data
+export, not a floating encoding.
+
+The extractor alone does not certify synthetic provenance: use the validated
+synthetic generation/native execution pipeline and keep its artifact manifest.
+Do not feed arbitrary real Run captures to synthetic-only training. This output
+has not yet been connected to ridge fitting.
+
+Latest inspected Bake reference: `afc6b4d8` (passive capture attribution). It
+separates observed capture work from forced materialization and explicitly does
+not treat logical history as physical owner evidence. Accordingly these samples
+mark ownership **unobserved**: common Eq classes do not certify a parent, actual
+constructor witness, liveness or legal retirement. A future native parent/witness
+export must provide those before training ownership transitions. No CPU executor
+changes were made, and no GPU correctness or speed improvement is claimed.
