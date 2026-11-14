@@ -95,14 +95,14 @@ def validate(document):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('recipe',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--rules',default='283,290,293');p.add_argument('--seed',type=int,default=20261120);p.add_argument('--count',type=int,default=12);p.add_argument('--fragments',type=int,default=4);a=p.parse_args()
+    p.add_argument('--rules',default='283,290,293');p.add_argument('--seed',type=int,default=20261120);p.add_argument('--count',type=int,default=12);p.add_argument('--fragments',type=int,default=4);p.add_argument('--reuse',type=float,default=.35);a=p.parse_args()
     if a.count<1:raise ValueError('positive count')
     source=json.loads(a.recipe.read_text());recipe=select_recipe(source.get('recipe',source),list(map(int,a.rules.split(','))))
     a.output.mkdir(parents=True,exist_ok=True);records=[]
     for seed in range(a.seed,a.seed+a.count):
-        snapshot=generate(recipe,seed,a.fragments)
+        snapshot=generate(recipe,seed,a.fragments,a.reuse)
         doc=dict(schema='synthetic-cell-input/v1',recipe=recipe,snapshot=snapshot,recipe_sha256=digest(recipe),input_sha256=digest(snapshot),
-                 generator=dict(seed=seed,fragments=a.fragments,reuse=.35),source='rule definitions only; no real Run samples',reachability='rule-valid; source-program reachability unproved')
+                 generator=dict(seed=seed,fragments=a.fragments,reuse=a.reuse),source='rule definitions only; no real Run samples',reachability='rule-valid; source-program reachability unproved')
         path=a.output/(str(seed)+'.json');path.write_text(json.dumps(doc,indent=2)+'\n')
         try:label=oracle(recipe,snapshot)
         except ValueError as e:records.append(dict(seed=seed,status='rejected',reason=str(e)));continue

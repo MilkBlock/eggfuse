@@ -1,0 +1,244 @@
+{
+  "scope": "synthetic-only predicted-feedback data expansion; selected three-rule GPU prototype, no full Eggcc or speed claim",
+  "generator": {
+    "scope": "synthetic local constructor family; not full Eggcc",
+    "training_performed": false,
+    "backpropagation": false,
+    "records": [
+      {
+        "seed": 20261600,
+        "status": "complete",
+        "input_sha256": "75048eeea16d5df71f87acb404a2f5f246c82fad4c6d58d0f33ead79a21e69ac",
+        "rows": 3,
+        "runs": 4,
+        "unions": 1,
+        "applications": 19
+      },
+      {
+        "seed": 20261601,
+        "status": "rejected",
+        "reason": "oracle saturation budget exhausted"
+      },
+      {
+        "seed": 20261602,
+        "status": "complete",
+        "input_sha256": "ad9cb073eea9a717542bdbe2753a8fd6d0a498321b3d184149c061726deb876a",
+        "rows": 7,
+        "runs": 4,
+        "unions": 3,
+        "applications": 29
+      },
+      {
+        "seed": 20261603,
+        "status": "complete",
+        "input_sha256": "b298ee664c86082c986051dd14cb3e941f42d46fc2f5975085a92e016a3f1805",
+        "rows": 4,
+        "runs": 1,
+        "unions": 0,
+        "applications": 4
+      }
+    ]
+  },
+  "owner_coverage": {
+    "scope": "accepted query-atom witness pairs; not port multiplicity or transfer count",
+    "synthetic_only": true,
+    "cases": [
+      {
+        "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-dense-reuse/20261600.json",
+        "capture_sha256": "0d12b7042db17c47c0a002f75bc3c54df4fb8d01f4f118fb2d9b527fa75dac3c",
+        "samples": 7,
+        "physical_alias_pairs": 0,
+        "logical_shared_pairs": 2
+      },
+      {
+        "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-dense-reuse/20261602.json",
+        "capture_sha256": "826c467fd3fc0b18d2c35f33dd202b864abedabd0b385d108cb291d3da081eab",
+        "samples": 11,
+        "physical_alias_pairs": 0,
+        "logical_shared_pairs": 2
+      },
+      {
+        "source": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-dense-reuse/20261603.json",
+        "capture_sha256": "cfa325a01f5d295bfe21e289f5678db74a370372118658302acba7fa41fd3015",
+        "samples": 4,
+        "physical_alias_pairs": 0,
+        "logical_shared_pairs": 1
+      }
+    ],
+    "totals": {
+      "samples": 22,
+      "physical_alias_pairs": 0,
+      "logical_shared_pairs": 5
+    }
+  },
+  "executions": [
+    {
+      "passed": true,
+      "generated_cells": 7,
+      "generated_source_consumers": 4,
+      "released_owner_rows": 3
+    },
+    {
+      "passed": true,
+      "generated_cells": 11,
+      "generated_source_consumers": 4,
+      "released_owner_rows": 7
+    },
+    {
+      "passed": true,
+      "generated_cells": 4,
+      "generated_source_consumers": 0,
+      "released_owner_rows": 4
+    }
+  ],
+  "training_source_groups": 28,
+  "before": {
+    "016-gcd": {
+      "all": {
+        "instances": 41,
+        "exact_partitions": 25,
+        "false_merges": 67
+      },
+      "direct": {
+        "instances": 26,
+        "exact_partitions": 17,
+        "false_merges": 18
+      },
+      "generated": {
+        "instances": 15,
+        "exact_partitions": 8,
+        "false_merges": 49
+      }
+    },
+    "019-lcm": {
+      "all": {
+        "instances": 99,
+        "exact_partitions": 80,
+        "false_merges": 33
+      },
+      "direct": {
+        "instances": 78,
+        "exact_partitions": 60,
+        "false_merges": 33
+      },
+      "generated": {
+        "instances": 21,
+        "exact_partitions": 20,
+        "false_merges": 0
+      }
+    }
+  },
+  "after": {
+    "016-gcd": {
+      "all": {
+        "instances": 41,
+        "exact_partitions": 19,
+        "false_merges": 71
+      },
+      "direct": {
+        "instances": 26,
+        "exact_partitions": 13,
+        "false_merges": 26
+      },
+      "generated": {
+        "instances": 15,
+        "exact_partitions": 6,
+        "false_merges": 45
+      }
+    },
+    "019-lcm": {
+      "all": {
+        "instances": 99,
+        "exact_partitions": 30,
+        "false_merges": 133
+      },
+      "direct": {
+        "instances": 78,
+        "exact_partitions": 10,
+        "false_merges": 133
+      },
+      "generated": {
+        "instances": 21,
+        "exact_partitions": 20,
+        "false_merges": 0
+      }
+    }
+  },
+  "promoted": false,
+  "backpropagation": false,
+  "new_head_sha256": "898e16ae1378786031bcc4874c15df8387d795ceb2f270d719035c5d77b91b69",
+  "maximum_gpu_score_error": 1.5497207641601562e-06,
+  "maximum_gpu_token_error": 1.1920928955078125e-07,
+  "fit_command": [
+    "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+    "benchmarks/eggcc-gpu-supervision/fit_completion_classifier.py",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/five-program-boundary-model.npz",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/class-history-neighborhood-input.npz",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/five-program-boundary-decoder.npz",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/five-program-boundary-decoder.json",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-dense-reuse-feedback/classifier.json",
+    "--feedback-head",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-result-ownership/classifier.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261120.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261121.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261122.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261124.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261125.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261126.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261127.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261128.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261129.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261130.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-local-inputs/20261131.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-boundary-pairs/20261200-base.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-boundary-pairs/20261200-eq.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-boundary-pairs/20261201-base.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-boundary-pairs/20261201-eq.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-boundary-pairs/20261202-base.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-boundary-pairs/20261202-eq.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-boundary-pairs/20261203-base.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-boundary-pairs/20261203-eq.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-result-ownership/1-absent.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-result-ownership/1-distinct.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-result-ownership/1-equal.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-result-ownership/2-absent.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-result-ownership/2-distinct.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-result-ownership/2-equal.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-dense-reuse-feedback/20261600.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-dense-reuse-feedback/20261602.labeled.npz",
+    "--train",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/synthetic-dense-reuse-feedback/20261603.labeled.npz",
+    "--validation",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/gcd-live-boundary-labeled.npz",
+    "--validation",
+    "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/lcm-live-boundary-labeled.npz"
+  ],
+  "note": "GCD/LCM are repeatedly used development evaluations, not fresh held-out tests. Expanded owner features were not enabled because observed alias-pair coverage remains zero."
+}

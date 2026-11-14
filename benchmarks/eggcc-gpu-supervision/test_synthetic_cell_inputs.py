@@ -11,6 +11,16 @@ def recipe():
 
 
 class SyntheticInputs(unittest.TestCase):
+    def test_reuse_is_replayable_and_bounded(self):
+        r=recipe()
+        for reuse in (0.,.8,1.):
+            snap=generate(r,17,3,reuse)
+            doc=dict(schema='synthetic-cell-input/v1',recipe=r,snapshot=snap,recipe_sha256=digest(r),input_sha256=digest(snap),generator=dict(seed=17,fragments=3,reuse=reuse))
+            self.assertEqual(validate(doc),(r,snap))
+        self.assertNotEqual(generate(r,17,3,0.),generate(r,17,3,1.))
+        for reuse in (-.1,1.1,float('nan')):
+            with self.assertRaises(ValueError):generate(r,17,3,reuse)
+
     def test_replay_canonical_seed_and_oracle(self):
         r=recipe();snap=generate(r,17,3)
         self.assertEqual(snap,generate(r,17,3))

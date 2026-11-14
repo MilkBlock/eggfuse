@@ -5,10 +5,10 @@ import numpy as np
 from synthetic_cell_inputs import validate
 
 
-def audit(directory):
+def audit(directory,source_directory=None):
     rows=[]
     for path in sorted(directory.glob('*.capture.npz')):
-        source=path.with_name(path.name.replace('.capture.npz','.json'))
+        source=(source_directory or directory)/path.name.replace('.capture.npz','.json')
         validate(json.loads(source.read_text()))
         meta=json.loads(path.with_suffix('.json').read_text())
         sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
@@ -33,5 +33,5 @@ def audit(directory):
         synthetic_only=True,cases=rows,totals={k:sum(r[k] for r in rows) for k in ('samples','physical_alias_pairs','logical_shared_pairs')})
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('directory',type=Path);p.add_argument('output',type=Path);a=p.parse_args()
-    result=audit(a.directory);a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result['totals']))
+    p=argparse.ArgumentParser();p.add_argument('directory',type=Path);p.add_argument('output',type=Path);p.add_argument('--sources',type=Path);a=p.parse_args()
+    result=audit(a.directory,a.sources);a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result['totals']))
