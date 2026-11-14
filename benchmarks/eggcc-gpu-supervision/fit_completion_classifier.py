@@ -126,7 +126,7 @@ def feature_conflicts(x,y):
     return dict(unique_inputs=len(groups),conflicting_groups=sum(len(v)>1 for v in groups.values()),includes_required_eq_mask=False)
 
 
-def assemble_classifier_features(path,meta,data,model,shared_context=False,joint_features=False,mean_context=False,local_context=False):
+def assemble_classifier_features(path,meta,data,model,shared_context=False,joint_features=False,mean_context=False,local_context=False,role_transport=False):
     from condition_boundary import captured_bridges
     from device_joint_features import compile_projection,expand
     info=meta.get('completion_readout') or {}
@@ -135,15 +135,15 @@ def assemble_classifier_features(path,meta,data,model,shared_context=False,joint
     base=1+model['w'].shape[0]+model['w'].shape[1]+data['boundary_features'].shape[1]
     raw=data['features'];error=0.;extra=None
     if shared_context or captured_shared:
-        extra,error=captured_bridges(path,meta,shared_context=True,mean_context=mean_context if shared_context else bool(info.get('mean_shared_context',False)),local_context=local_context if shared_context else bool(info.get('local_shared_context',False)))
+        extra,error=captured_bridges(path,meta,shared_context=True,mean_context=mean_context if shared_context else bool(info.get('mean_shared_context',False)),local_context=local_context if shared_context else bool(info.get('local_shared_context',False)),role_transport=role_transport if shared_context else bool(info.get('role_transport',False)))
     expected=base+(extra.shape[1] if captured_shared else 0)+(256 if captured_joint else 0)
     if raw.shape[1]!=expected:raise ValueError('capture extension schema mismatch')
     prefix=raw[:,:base]
     check=prefix
     if captured_shared:
         captured_extra=extra
-        if shared_context and (mean_context!=bool(info.get('mean_shared_context',False)) or local_context!=bool(info.get('local_shared_context',False))):
-            captured_extra,captured_error=captured_bridges(path,meta,shared_context=True,mean_context=bool(info.get('mean_shared_context',False)),local_context=bool(info.get('local_shared_context',False)))
+        if shared_context and (mean_context!=bool(info.get('mean_shared_context',False)) or local_context!=bool(info.get('local_shared_context',False)) or role_transport!=bool(info.get('role_transport',False))):
+            captured_extra,captured_error=captured_bridges(path,meta,shared_context=True,mean_context=bool(info.get('mean_shared_context',False)),local_context=bool(info.get('local_shared_context',False)),role_transport=bool(info.get('role_transport',False)))
             error=max(error,captured_error)
         check=np.concatenate([check,captured_extra],axis=1)
     if captured_joint:check=expand(check,compile_projection(check.shape[1]),np)
@@ -191,6 +191,7 @@ def main():
     for key in ('model','source_model','decoder','decoder_report','output'):p.add_argument(key,type=Path)
     p.add_argument('--normalized-joint',action='store_true',help='training-input standardized fixed nonlinear projection; no gradients')
     p.add_argument('--normalized-width',type=int,default=256,help='fixed nonlinear columns for normalized joint ridge')
+    p.add_argument('--role-transport',action='store_true',help='Bake sender/receiver gates for within-Cell context')
     p.add_argument('--local-context',action='store_true',help='anchor shared context on constructor-result sorts')
     p.add_argument('--ambiguous-only',action='store_true',help='fit only rows whose input constraints permit multiple completion states')
     p.add_argument('--mean-context',action='store_true',help='mean rather than sqrt-count normalization in shared context')
@@ -202,7 +203,7 @@ def main():
     p.add_argument('--train',type=Path,action='append',required=True);p.add_argument('--validation',type=Path,action='append',required=True);a=p.parse_args()
     if a.normalized_width<1 or (a.normalized_width!=256 and not a.normalized_joint):raise ValueError('normalized width requires normalized joint and positive dimensions')
     if a.normalized_joint and a.joint_features:raise ValueError('choose one joint projection')
-    if (a.mean_context or a.local_context) and not a.shared_context:raise ValueError('mean/local context requires shared context')
+    if (a.mean_context or a.local_context or a.role_transport) and not a.shared_context:raise ValueError('mean/local context requires shared context')
     with np.load(a.model) as f:model={k:f[k] for k in f.files}
     with np.load(a.source_model) as f:
         for k in ('w','encoding','channels','zero_role_channels'):
@@ -228,7 +229,7 @@ def main():
             if family is not None and sf!=family:raise ValueError('semantic family mismatch')
             if plans is None:plans=[compile_states(r) for r in sf]
             family=sf
-            d['classifier_features'],error=assemble_classifier_features(path,m,d,model,a.shared_context,a.joint_features,a.mean_context,a.local_context)
+            d['classifier_features'],error=assemble_classifier_features(path,m,d,model,a.shared_context,a.joint_features,a.mean_context,a.local_context,a.role_transport)
             context_error=max(context_error,error)
             details=inputs_for_case(path,m,d,plans);cases.append((split,d,m,details))
     heads=[];coverage=[]
@@ -277,7 +278,7 @@ def main():
     if gpu_error>5e-6 or token_error>5e-6:raise ValueError(f'GPU numerical error: score={gpu_error}, token={token_error}')
     np.savez_compressed(a.output.with_suffix('.npz'),**{f'head_{i}_{k}':v for i,h in enumerate(heads) for k,v in h.items()})
     out=dict(scope='offline direct whole-state ridge and GPU token reconstruction on audited GPU captures; not installed',alpha=10.,backpropagation=False,
-        installed=False,union_authorized=False,normalized_joint=a.normalized_joint,normalized_width=a.normalized_width if a.normalized_joint else None,local_shared_context=a.local_context,ambiguous_only=a.ambiguous_only,mean_shared_context=a.mean_context,joint_features=a.joint_features,balanced_states=a.balanced_states,shared_boundary_context=a.shared_context,maximum_gpu_context_error=context_error,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
+        installed=False,union_authorized=False,role_transport=a.role_transport,normalized_joint=a.normalized_joint,normalized_width=a.normalized_width if a.normalized_joint else None,local_shared_context=a.local_context,ambiguous_only=a.ambiguous_only,mean_shared_context=a.mean_context,joint_features=a.joint_features,balanced_states=a.balanced_states,shared_boundary_context=a.shared_context,maximum_gpu_context_error=context_error,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
         head_sha256=hashlib.sha256(a.output.with_suffix('.npz').read_bytes()).hexdigest(),coefficient_bytes=sum(h['coef'].nbytes for h in heads),feature_projection_bytes=sum(h[k].nbytes for h in heads for k in ('feature_projection','feature_center') if k in h),normalization_bytes=sum(h[k].nbytes for h in heads for k in ('mean','scale','bias')),coverage=coverage,
         maximum_gpu_score_error=gpu_error,maximum_gpu_token_error=token_error,token_decode_disagreements=decoding_disagreements,cases=results,
         limitations=['All legal type-compatible states are included, but unseen states have no positive training evidence','No predicted-source rollout or native full-program acceptance','No learned equality is a proof','Current input Eq is retained; scalar effects outside query inputs are unsupported'])

@@ -42,8 +42,9 @@ def prepare(boundary,plan,xp,base=None):
     enriched=xp.where(valid[:,:,None],enriched,0)
     # All ports of a Cell contribute to its context, including ports that are
     # not themselves attached to the current query.
-    cell=enriched.sum(axis=1)/denominator(valid.sum(axis=1))[:,None]
-    h=xp.where(valid[:,:,None],xp.tanh(enriched+cell[:,None,:]),0).reshape(-1,d)
+    gate=plan['transport_gate'][safe] if plan.get('role_transport',False) else 1
+    cell=(enriched*gate).sum(axis=1)/denominator(valid.sum(axis=1))[:,None]
+    h=xp.where(valid[:,:,None],xp.tanh(enriched+cell[:,None,:]*gate),0).reshape(-1,d)
     return h
 
 
@@ -62,3 +63,9 @@ def encode(boundary,bindings,plan,pairs,xp,prepared=None):
     pooled=xp.tanh(pooled/denominator(count)[:,:,None])
     slots=xp.arange(plan['width'])[:,None]==plan['ports'][None,:]
     return (slots.astype(xp.float32)[None,:,:]@pooled).reshape(conn.shape[0],-1),count
+
+
+def with_role_transport(plan):
+    """Bake a fixed sender/receiver role gate; no dynamic lookup topology."""
+    gate=np.tanh(plan['roles']@plan['role_weight']).astype(np.float32)
+    return dict(plan,role_transport=True,transport_gate=gate)

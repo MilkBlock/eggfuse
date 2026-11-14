@@ -1,0 +1,53 @@
+{
+  "head_sha256": "2e4481e1cf6467cb9fcf70279fffdf30b162874547e90c033a7916498f4c3f4c",
+  "training_entries": 641,
+  "synthetic_only_training": true,
+  "maximum_gpu_score_error": 9.834766387939453e-07,
+  "maximum_gpu_context_error": 1.1215764931515881e-06,
+  "backpropagation": false,
+  "coefficient_bytes": 344192,
+  "feature_projection_bytes": 7503372,
+  "scope": "offline selected three-rule floating GPU encoder/ridge experiment; synthetic training, repeated real development evaluation",
+  "accepted": false,
+  "reason": "Direct-source prediction regression; keep current encoder and model",
+  "validation": [
+    {
+      "case": "016-gcd",
+      "groups": {
+        "all": {
+          "instances": 41,
+          "exact_partitions": 28
+        },
+        "direct": {
+          "instances": 26,
+          "exact_partitions": 15
+        },
+        "generated": {
+          "instances": 15,
+          "exact_partitions": 13
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "groups": {
+        "all": {
+          "instances": 99,
+          "exact_partitions": 47
+        },
+        "direct": {
+          "instances": 78,
+          "exact_partitions": 27
+        },
+        "generated": {
+          "instances": 21,
+          "exact_partitions": 20
+        }
+      }
+    }
+  ],
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/role-transport-v1.tar.gz",
+  "archive_sha256": "3b2ed7d6bd673737de594caeff0225de7320b9729d8d36fc954e629a39d20219",
+  "actual_feedback_rollout": false,
+  "speed_measured": false
+}

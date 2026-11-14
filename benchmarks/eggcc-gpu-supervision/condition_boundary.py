@@ -33,7 +33,7 @@ def fold(coef,static_gate,base_width):
 
 
 
-def captured_bridges(path,meta,shared_context=False,mean_context=False,local_context=False):
+def captured_bridges(path,meta,shared_context=False,mean_context=False,local_context=False,role_transport=False):
     from audit_input_relations import restore
     from device_boundary_context import compile_context
     from device_boundary_bridges import compile_pairs,encode
@@ -48,6 +48,10 @@ def captured_bridges(path,meta,shared_context=False,mean_context=False,local_con
             c=restore(f,prefix)
             if not bool(c['recorded']) or not c['accepted'].any():continue
             plan=compile_context(meta['recipe'],int(c['rule']),c['boundary']['slots'].shape[1]);plan['mean_context']=mean_context;plan['local_context']=local_context;pairs=compile_pairs(plan)
+            if role_transport:
+                if not shared_context:raise ValueError('role transport needs shared context')
+                from device_boundary_shared_context import with_role_transport
+                plan=with_role_transport(plan)
             out,count=encode(c['boundary'],c['bindings'],plan,pairs,np)
             values.extend(out[c['accepted']])
             if not checked:
