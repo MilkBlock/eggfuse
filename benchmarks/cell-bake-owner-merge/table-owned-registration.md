@@ -63,3 +63,78 @@ workload validation with `owner_workers.py`, reusing the verified `62c5f984`
 control. Time the entire original control, the entire `5bb451e3` registration
 candidate and the entire current candidate under one lease with
 `prepared_timing.py --include-ordinary --previous-experiment PREVIOUS`.
+
+## Full workload result and admission
+
+Implementation `843c1ca0` passes job 471. Native sum-bits choice acceptance is
+`pass`; original sum-bits and Raytrace preserve final state, all 1,428 / 16,883
+Run summaries and logical effect counts. The unchanged 408-recipe sum-bits
+catalog also preserves final state, all 1,428 Run summaries and effects. The
+Raytrace and learned-catalog checks are differential checks, not native proofs
+or full-program per-Run graph comparisons. The integration fixtures separately
+cover exact Run snapshots, actual foreign results and error/retirement ordering.
+
+Job 474 measures the actual standalone Cell CPU runtime with four workers and
+canonical ownership. It finishes the entire original control, then the entire
+preceding registration experiment, then the entire candidate under one timing
+lease. Each case has one warmup followed by five measured sum-bits samples or
+three Raytrace samples. All 114 process-boundary guards are clear.
+
+| Inference median | Control `62c5f984` | Previous `5bb451e3` | Candidate `843c1ca0` | vs. previous |
+| --- | ---: | ---: | ---: | ---: |
+| Sum-bits | 24.712 ms | 31.354 ms | 31.132 ms | -0.71% |
+| Raytrace | 4.576019 s | 5.012209 s | 5.059122 s | +0.94% |
+| Existing sum-bits catalog | 22.346 ms | 30.752 ms | 31.691 ms | +3.05% |
+
+Versus the original control, inference is 25.98%, 10.56% and 41.82% slower.
+**Speed admission fails; keep this experiment unmerged.** The Raytrace control
+samples are 6.839207, 4.571424 and 4.576019 seconds; the outlier is retained.
+Boundary guards do not exclude thermal/order effects or all OS activity. Small
+differences against the preceding experiment are not precise stable code-effect
+estimates. Absolute times from older timing leases are not reused.
+
+The work reports show substantial takeover without an overall speedup:
+
+| Raytrace work | Previous | Candidate |
+| --- | ---: | ---: |
+| Constructor rows registered on workers | 190,981 | 233,271 |
+| Rows registered within the producer continuation | 6,288 | 102,359 |
+| Cells registered within the producer continuation | 5,433 | 97,102 |
+| Cells using background construction plus registration | 0 | 91,637 |
+| Background construction plus registration regions | 0 | 1,567 |
+| Unresolved accesses waiting for a leased table | 0 | 1,552 |
+| Constructor registry bytes | 15,345,112 | 12,733,032 |
+| Returned frame bytes | 14,821,144 | 20,267,536 |
+| Registry event bytes | 5,903,872 | 4,318,080 |
+| Source instances admitted while a producer is outstanding | 64,905 | 24,196 |
+| Scheduler jobs | 216,390 | 216,434 |
+| Ownership signal bindings created | 2,151,665 | 2,151,665 |
+
+Byte counters are cumulative structural charges, not peak heap. The frame-byte
+increase offsets the decrease in registry input bytes; removing one handoff did
+not eliminate its entire storage cost. Table waits count encounters, not elapsed
+waiting or idle-core percentage. There are almost as many wait encounters as
+background regions, and fewer source instances overlap producers. This is
+evidence that table ownership is still too broad for this workload, not a
+measurement of its isolated time cost. Event grouping can also change counts.
+
+Neither sum-bits variant enters the new background fused path. Their timing
+changes cannot establish a benefit from it. Table index partitioning and
+background fusion changed together, so this experiment cannot attribute either
+workload's time difference solely to the removed second dispatch. Existing
+source port binding remains serial and all 216,434 short scheduler jobs remain.
+
+The requested Bake lineage is `codex/cell-result-routing`, containing
+`d0d8ee33` and ending at `98540661`; control `62c5f984` already includes it.
+Its activation-bounded catalog shows how to reuse compiled Entries and actual
+result witnesses without activating another population of runtime records.
+The next structural opportunity is to extend that actual-result coverage across
+construction and registration, so a source read does not require taking back an
+entire table. It must discharge an existing lookup or handoff with typed evidence
+and live results, rather than add another speculative route before the same
+fallback. Birth-time port binding, exact foreign result identity, unresolved
+same-table conflicts, source error order and Run visibility remain obligations.
+
+Exact samples, binary/input hashes, validation and work reports are indexed in
+`table-owned-registration.json`. This evidence does not justify promoting the
+worker experiment into the already-merged Bake branch.
