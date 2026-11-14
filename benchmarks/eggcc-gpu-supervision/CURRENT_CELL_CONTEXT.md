@@ -132,3 +132,32 @@ establish full-suite correctness of the new weights; they remain unpromoted.
 Reproduce targeted checks with `--pair 7 6 --candidate-capacity 32` on the old
 checkpoint, or `--pair 5 0` on the 3,000-step checkpoint. Text evidence is
 `current-cell-refinement-results.json`.
+
+## Capturing the whole current Cell context
+
+`neural_third_step.py --current-state --capture-context` additionally writes a
+`.context.npz` bank with all current rows per synthetic case: full floating fields,
+visibility/readability mask, exact roots and slot-valid flags, template IDs and
+roles. Every candidate records `case` and actual `source_rows` into this bank.
+There is no top-k neighbor truncation in the bank. Roots and row indices are
+connectivity metadata, not floating semantic embeddings. Model inputs remain
+explicitly allowlisted; capturing this bank does not silently train on labels.
+
+The 61-case bank has been generated and tests check that source features reproduce
+exactly the corresponding bank rows after ownership transfer. This is data
+preparation for whole-context computation. The current trained model still reads
+selected query sources; it has not yet learned or executed full-set context.
+The bank lives outside Git alongside other current-cell-v36 artifacts.
+
+Rechecking `neural_baked_eq.compile_rule` on these eight canon rules finds positive
+proof support for rules 0–5, with 6–7 rejected as unsupported sealed operations.
+These proofs establish some equalities, not a complete transition semantics or
+permission to treat every unproved pair as unequal. They must not be substituted
+for full constructor reuse and boundary completion checks.
+
+The completed 3,000-step checkpoint audit with explicit candidate capacity 32
+passes 54/61 first Runs and verifies 53/61 fixed points within three Runs. Seven
+cases fail; one remains outside the fixed-point budget. This configuration changes
+both training duration and candidate capacity relative to the earlier 600-step,
+capacity-16 audit; the full-suite difference cannot be attributed solely to either.
+The model is not promoted. See `current-cell-all3000-results.json`.

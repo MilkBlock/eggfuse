@@ -68,7 +68,8 @@ def fingerprints(data):
     return result
 
 
-def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,include_uncovered_transfers=False,entries_per_consumer=2,current_state=False):
+def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,include_uncovered_transfers=False,entries_per_consumer=2,current_state=False,context_collector=None):
+    if context_collector is not None and not current_state:raise ValueError('full context capture requires current-state inputs')
     if current_state and block_owner:raise ValueError('current-state block projection is not supported')
     if entries_per_consumer<1:raise ValueError("positive entry limit required")
     if block_owner and include_uncovered_transfers:raise ValueError("uncovered semantic owner replay is not proved")
@@ -110,6 +111,14 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,incl
             current=current_inputs(state,frames,mx);mx.eval(current)
             if not bool(current['complete']):raise ValueError('incomplete current Cell state')
             current_fields=np.array(current['fields'])
+            if context_collector is not None:
+                from device_slot_owners import read,shape
+                n,w=shape(state);rows=mx.arange(n)[:,None];ports=mx.arange(w)[None,:]
+                context_collector.append(dict(fields=current_fields,mask=np.array(current['mask']),
+                    roots=np.array(read(state,'slot_roots',rows,ports,mx)),
+                    slot_valid=np.array(read(state,'slot_valid',rows,ports,mx)),
+                    template_ids=np.array(state['keys'][:,0]),
+                    roles=np.array(frames['roles'][mx.clip(state['keys'][:,0],0,len(frames['roles'])-1)])))
 
         for rid,rule in enumerate(recipe['rules']):
             plan=compile_candidates(local,rule,atoms=base['x'].shape[1],fields=field_width,context_capacity=context_capacity,compact_constants=True)
@@ -133,7 +142,8 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,incl
                 if current_state:
                     # Actual resolved semantic owners, never logical producer addresses.
                     datum.pop('seed_x')
-                    datum['x']=current_fields[np.array(b['token_sources'][j])]
+                    datum['source_rows']=np.array(b['token_sources'][j])
+                    datum['x']=current_fields[datum['source_rows']]
                     items.append(datum)
                     continue
                 datum.update({'p_'+k:base[k][chain['parent'][i]] for k in ('x','edges','mask','request','relations')})
@@ -159,10 +169,16 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,incl
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--current-state',action='store_true');p.add_argument('--entries-per-consumer',type=int,default=2);p.add_argument('--ruleset',default='context');p.add_argument('trace',type=Path);p.add_argument('output',type=Path);p.add_argument('--seed',type=int,default=23001);p.add_argument('--count',type=int,default=4);p.add_argument('--per-pair',type=int,default=2);p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--block-owner',action='store_true');p.add_argument('--include-uncovered-transfers',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--capture-context',action='store_true');p.add_argument('--current-state',action='store_true');p.add_argument('--entries-per-consumer',type=int,default=2);p.add_argument('--ruleset',default='context');p.add_argument('trace',type=Path);p.add_argument('output',type=Path);p.add_argument('--seed',type=int,default=23001);p.add_argument('--count',type=int,default=4);p.add_argument('--per-pair',type=int,default=2);p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--block-owner',action='store_true');p.add_argument('--include-uncovered-transfers',action='store_true');a=p.parse_args()
     if min(a.count,a.per_pair)<1:raise ValueError('positive sample counts required')
     source=json.loads(a.trace.read_text());source=source.get('recipe',source);recipe,stage_manifest=select_ruleset(source,a.ruleset)
-    began=time.perf_counter();data,report=build(recipe,a.count,a.seed,a.per_pair,a.context_capacity,a.block_owner,a.include_uncovered_transfers,a.entries_per_consumer,a.current_state)
+    contexts=[] if a.capture_context else None
+    began=time.perf_counter();data,report=build(recipe,a.count,a.seed,a.per_pair,a.context_capacity,a.block_owner,a.include_uncovered_transfers,a.entries_per_consumer,a.current_state,contexts)
+    if contexts is not None:
+        path=a.output.with_suffix('.context.npz')
+        np.savez_compressed(path,**{f'case_{i}_{k}':v for i,c in enumerate(contexts) for k,v in c.items()})
+        report['context_bank']=dict(file=path.name,cases=len(contexts),sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+                                    scope='all current Cell rows with visibility mask; exact roots are connectivity metadata, not float inputs')
     report['stage_manifest']=stage_manifest
     np.savez_compressed(a.output,**data);report.update(wall_seconds=time.perf_counter()-began,recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),dataset_sha256=hashlib.sha256(a.output.read_bytes()).hexdigest())
     a.output.with_suffix('.json').write_text(json.dumps(report,indent=2)+'\n')

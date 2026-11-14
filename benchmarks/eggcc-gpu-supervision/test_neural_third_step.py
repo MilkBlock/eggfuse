@@ -14,7 +14,14 @@ class ThirdStep(unittest.TestCase):
     def test_current_state_samples_have_no_recurrent_inputs(self):
         from neural_third_step import build
         from train_current_cell import CurrentCellModel
-        raw,report=build(recipe(),1,23,per_pair=1,current_state=True,include_uncovered_transfers=True)
+        context=[]
+        raw,report=build(recipe(),1,23,per_pair=1,current_state=True,include_uncovered_transfers=True,context_collector=context)
+        self.assertEqual(len(context),report['cases'])
+        for i in range(len(raw['valid'])):
+            bank=context[int(raw['case'][i])]
+            selected=bank['fields'][raw['source_rows'][i]]
+            np.testing.assert_array_equal(raw['x'][i,:,:selected.shape[-1]],selected)
+            self.assertTrue(np.all(bank['mask'][raw['source_rows'][i]][raw['mask'][i]]))
         self.assertTrue(report['current_state_inputs'])
         self.assertFalse(report['recurrent_latent_inputs'])
         self.assertFalse(any(k.startswith(('p_', 'c_')) for k in raw))

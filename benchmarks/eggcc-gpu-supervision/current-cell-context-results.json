@@ -1,0 +1,45 @@
+{
+  "entries_per_consumer": 2,
+  "include_uncovered_transfers": true,
+  "observed_template_pairs": 61,
+  "block_owner": false,
+  "synthetic_only": true,
+  "seed": 23001,
+  "source_samples_per_rule": 1,
+  "per_pair": 1,
+  "context_capacity": 0,
+  "cases": 61,
+  "physical_transfers": 61,
+  "candidates": 717,
+  "valid": 233,
+  "generated_target_inputs": 602,
+  "token_targets_used_as_inputs": false,
+  "scope": "synthetic current-state Cell query features and exact effect labels; not autonomous saturation",
+  "current_state_inputs": true,
+  "recurrent_latent_inputs": false,
+  "input_width": 5376,
+  "context_bank": {
+    "file": "eggfuse-current-fullcontext.context.npz",
+    "cases": 61,
+    "sha256": "2e923259f77861a882ed5717120f2495db4e6ad76739811ebf8967956e543784",
+    "scope": "all current Cell rows with visibility mask; exact roots are connectivity metadata, not float inputs"
+  },
+  "stage_manifest": {
+    "ruleset": "canon",
+    "source_rule_ids": [
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277
+    ],
+    "membership_authoritative": true,
+    "full_schedule_replaced_for_training": true
+  },
+  "wall_seconds": 44.231720708019566,
+  "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+  "dataset_sha256": "e18d305098b8991b309c667fab58ad63cdc23141866eecd617ce0bf6ddbdff5f"
+}

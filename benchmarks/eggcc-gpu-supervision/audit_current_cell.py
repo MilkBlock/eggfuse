@@ -23,6 +23,20 @@ from reference_union_family import compare_graph
 from train_current_cell import CurrentCellModel
 
 
+def summarize(cases):
+    runs=[r for c in cases for r in c['runs']]
+    failed=[r for r in runs if r['status']!='pass']
+    eq_failed=sum(any(e['pairs'] for e in r.get('admission_diagnosis',{}).get('events',[])) for r in failed)
+    overflow=sum(any('query_overflow' in e['reasons'] for e in r['attention_events']) for r in failed)
+    seconds=sum(r['cpu_audit_seconds'] for r in runs)
+    return dict(cases=len(cases),audited_runs=len(runs),failed_runs=len(failed),
+                runs_with_diagnosed_eq_error=eq_failed,runs_with_query_overflow=overflow,
+                admitted_cells=sum(r['admitted'] for r in runs),
+                cpu_full_run_audit_seconds=seconds,
+                cpu_full_run_audit_mean_seconds=seconds/max(len(runs),1),
+                timing_scope='CPU reference ruleset and graph comparison; excludes GPU and admission diagnosis')
+
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path)
     p.add_argument('output',type=Path);p.add_argument('--runs',type=int,default=3)
@@ -86,6 +100,7 @@ def main():
     result=dict(scope='standalone synthetic canon multi-Run GPU audit; exact initial Cells, no CPU corrections',
         recipe_sha256=recipe_hash,weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),
         stage=stage,run_budget=a.runs,attempts=a.attempts,candidate_capacity=a.candidate_capacity,cases=reports,
+        summary=summarize(reports),
         first_run_pass=sum(x['runs'][0]['status']=='pass' for x in reports),
         verified_fixedpoints=sum(x['runs'][-1]['status']=='pass' and not x['runs'][-1]['run_changed'] for x in reports))
     a.output.write_text(json.dumps(result,indent=2)+'\n')
