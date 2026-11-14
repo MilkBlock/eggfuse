@@ -160,3 +160,64 @@ failed in 49/338 subsequent states, including 16 false-merge states. The audit
 returns `difference` / exit 1. No model is promoted. See `owner-block-results.json`.
 Next training must replay these updated block inputs through later consumers,
 not merely decode their state at the two-step boundary.
+
+## Actual third-step replay and frozen-base adaptation
+
+The next dataset is generated **after actual two-block device ownership**:
+`neural_third_step.py ... --block-owner --context-capacity 8`. Training uses seed
+23001, count 8 and per-pair 2 (475 scenes, 11,251 candidates, 1,378 positives).
+Evaluation uses seed 93003, count 4 and per-pair 1 (216 scenes, 5,033 candidates,
+625 positives). All scenes completed physical and block ownership transfer.
+Runtime-selected inputs distinguish boundary seeds, updated source blocks and
+destination blocks. Replay recomputes the first two transitions differentiably;
+no reference completion token is fed into the third transition.
+
+This follows the current Bake branch's admission-state lesson: observe states
+created by the **current** ownership catalog instead of adding more routes from
+an obsolete component distribution. `codex/cell-parallel-admission` remained at
+`f3321a3a`, containing `56e28b89`, during this experiment. This does not mean its
+native ownership compiler is integrated into the Python prototype.
+
+Use `train_neural_owner_blocks.py ... --third-train TRAIN.npz --third-test
+TEST.npz --steps 1200`. `--resume OWNER_WEIGHTS` continues the previous block
+checkpoint. Alternatively, `--freeze-base` starts from the supplied original
+transition/Eq checkpoints and freezes both, training source updates and cross
+readout only. A bytewise parameter comparison verifies frozen weights. Gradient
+tests verify that the third-step loss still reaches source updates through the
+frozen transition/readout. These two experiments have different starting points;
+they are not a single-variable controlled comparison.
+
+| Experiment | Held-out third states correct, before → after | False-merge states, before → after |
+| --- | ---: | ---: |
+| Continue unrestricted block training | 530 → 517 / 625 | 46 → 100 |
+| Frozen original transition and Eq | 541 → 562 / 625 | 10 → 11 |
+
+All correctness counts above use transitive Eq closure. Frozen-base raw pair
+prediction has 522/625 exact states; closure yields 89.92%, not a rounded claim
+of reaching 90%. Of 391 positive states whose exact inputs were absent from
+training, 330 are closure-correct. Disabling the trained source update under the
+same frozen checkpoint returns 541/625 overall and 322/391 unseen states, so the
+update contributes an observable benefit, but also adds a false-merge state.
+
+The independent 107-scene device audit still adopts all owners and has no missing
+or spurious matches. Unrestricted fine-tuning regresses to 72/338 wrong semantic
+states, including 70 false merges. The frozen model gives 41/338 wrong states,
+including 4 false merges (previous block model: 49 and 16). A replay audit with
+`--block-owner --case-limit 107` agrees exactly with those device state/error
+counts. These remain `difference` / exit 1, not trusted execution.
+
+Frozen adaptation preserves destination Eq at 578/578 and source Eq at 556/578,
+but its complete cross-block Eq audit is only 280/578. The unresolved cross-block
+representation is not hidden by improved downstream accuracy. Next separate
+relations already guaranteed by Bake's slot aliases/static wiring from genuinely
+dynamic predictions; do not train or score a neural re-derivation of known
+structural identities as if it were necessary work. General multi-block growth,
+new result reuse, correction-token transitions, asynchronous audit and full
+multi-stage saturation remain unfinished.
+
+`relational_edges` now contracts matched neighbor roles with a matrix multiply
+before multiplying local roles, avoiding the batch × ports × ports × 64 product
+tensor. A dense-reference test checks FP32 numerical equivalence. Data generation
+for this experiment used the previous implementation; device count parity above
+also checks the resulting replay against the new implementation. No timing
+speedup is claimed. Full text metrics are in `owner-block-third-results.json`.

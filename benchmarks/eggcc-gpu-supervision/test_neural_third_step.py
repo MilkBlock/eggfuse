@@ -11,6 +11,31 @@ from test_neural_cell_chains import recipe
 
 
 class ThirdStep(unittest.TestCase):
+    def test_block_replay_consumes_updated_source_and_has_no_label_input(self):
+        from neural_third_step import build,replay_blocks
+        from neural_owner_blocks import OwnerBlocks
+        raw,report=build(recipe(),1,23,per_pair=1,context_capacity=4,block_owner=True)
+        self.assertEqual(report['cases'],report['physical_transfers'])
+        self.assertTrue(report['block_owner'])
+        data={k:mx.array(v) for k,v in raw.items()}
+        model=OwnerBlocks(raw['p_x'].shape[-1],raw['relations'].shape[-1],3)
+        original=replay_blocks(model,data)
+        changed=replay_blocks(model,dict(data,eq_target=1-data['eq_target']))
+        for a,b in zip(original,changed):np.testing.assert_array_equal(a,b)
+        # No teacher tokens are present; third-step gradients reach the source
+        # residual through actual post-handoff source-kind selections.
+        _,g=nn.value_and_grad(model,lambda m:mx.mean(replay_blocks(m,data)[1]**2))(model)
+        mx.eval(g)
+        self.assertTrue(any(k.startswith('update_source.') and np.any(np.abs(np.array(v))>1e-8) for k,v in tree_flatten(g)))
+        model.update_source.layers[-1].bias=mx.ones(128)*0.5
+        updated=replay_blocks(model,data)
+        self.assertFalse(np.allclose(original[1],updated[1]))
+        model.cell.freeze();model.eq.freeze()
+        _,frozen_gradient=nn.value_and_grad(model,lambda m:mx.mean(m.eq(replay_blocks(m,data)[1],data['request'])**2))(model)
+        mx.eval(frozen_gradient);flat=dict(tree_flatten(frozen_gradient))
+        self.assertFalse(any(k.startswith(('cell.','eq.')) for k in flat))
+        self.assertTrue(any(k.startswith('update_source.') and np.any(np.abs(np.array(v))>1e-8) for k,v in flat.items()))
+
     def test_key_membership_does_not_override_inconsistent_repeated_slot(self):
         key=((0,3),(1,4));expected={key}
         self.assertFalse(valid_candidate(np.array([1,0,1,1]),key,expected))

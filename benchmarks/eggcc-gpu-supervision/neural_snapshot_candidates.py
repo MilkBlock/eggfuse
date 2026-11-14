@@ -90,8 +90,10 @@ def relational_edges(labels, roles, sources):
         row = []
         for b in range(sources.shape[1]):
             same = (values[:, a, :, None] == values[:, b, None, :]) & (values[:, a, :, None] >= 0) & (values[:, b, None, :] >= 0)
-            products = pr[:, a, :, None, :] * pr[:, b, None, :, :]
-            row.append(mx.sum(same[..., None] * products, axis=(1, 2)) / mx.sqrt(mx.maximum(mx.sum(same, axis=(1, 2)), 1))[:, None])
+            # Sum matching neighbor roles before multiplying by local roles.
+            # Avoid materializing batch x ports x ports x 64 products.
+            neighbors = same.astype(pr.dtype) @ pr[:, b]
+            row.append(mx.sum(pr[:, a] * neighbors, axis=1) / mx.sqrt(mx.maximum(mx.sum(same, axis=(1, 2)), 1))[:, None])
         edges.append(mx.stack(row, axis=1))
     return mx.stack(edges, axis=1)
 
