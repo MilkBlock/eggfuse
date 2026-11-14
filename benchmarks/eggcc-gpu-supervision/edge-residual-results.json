@@ -1,0 +1,523 @@
+{
+  "scope": "standalone synthetic canon GPU prototype; not native Eggcc",
+  "promoted_as_default": false,
+  "decision": "reject runtime replacement: local fitting improvement does not survive continuous consumption",
+  "sealed_run": {
+    "cases": 61,
+    "passed": 41,
+    "failed_pairs": [
+      [
+        0,
+        6
+      ],
+      [
+        0,
+        7
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        7
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        7
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        7,
+        0
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        6
+      ]
+    ]
+  },
+  "finite_training": {
+    "scope": "standalone GPU fitting of bounded synthetic two-step domain; no runtime commits or generalization claim",
+    "stage_manifest": {
+      "ruleset": "canon",
+      "source_rule_ids": [
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277
+      ],
+      "membership_authoritative": true,
+      "full_schedule_replaced_for_training": true
+    },
+    "coverage": {
+      "finite_boundary": true,
+      "boundary_domain": "fixed completed source plus consumer queries; prior source roots unchanged",
+      "combined_owner": false,
+      "combined_templates": 0,
+      "max_combined_slots": 0,
+      "chains": 8166,
+      "positive": 4258,
+      "negative": 3908,
+      "negative_unavailable": 350,
+      "producer_consumer_pairs": 61,
+      "producers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "consumers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "compiled_owner_opportunities": 1080,
+      "scope": "bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance"
+    },
+    "before": {
+      "eq": {
+        "states": 4258,
+        "pairs": 49198,
+        "false_positive_pairs": 0,
+        "false_negative_pairs": 231,
+        "nonfinite_states": 0,
+        "exact_states": 4170,
+        "closed_false_positive_pairs": 0,
+        "closed_false_negative_pairs": 231,
+        "closed_exact_states": 4170,
+        "states_with_false_merge": 0
+      },
+      "matching_errors": 0,
+      "by_consumer": {
+        "0": {
+          "states": 2583,
+          "pairs": 18081,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 2583,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 2583,
+          "states_with_false_merge": 0
+        },
+        "1": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "2": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "3": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "4": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "5": {
+          "states": 65,
+          "pairs": 455,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 65,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 65,
+          "states_with_false_merge": 0
+        },
+        "6": {
+          "states": 301,
+          "pairs": 11739,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 107,
+          "nonfinite_states": 0,
+          "exact_states": 257,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 107,
+          "closed_exact_states": 257,
+          "states_with_false_merge": 0
+        },
+        "7": {
+          "states": 305,
+          "pairs": 11895,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 124,
+          "nonfinite_states": 0,
+          "exact_states": 261,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 124,
+          "closed_exact_states": 261,
+          "states_with_false_merge": 0
+        }
+      }
+    },
+    "after": {
+      "eq": {
+        "states": 4258,
+        "pairs": 49198,
+        "false_positive_pairs": 0,
+        "false_negative_pairs": 5,
+        "nonfinite_states": 0,
+        "exact_states": 4253,
+        "closed_false_positive_pairs": 0,
+        "closed_false_negative_pairs": 5,
+        "closed_exact_states": 4253,
+        "states_with_false_merge": 0
+      },
+      "matching_errors": 0,
+      "by_consumer": {
+        "0": {
+          "states": 2583,
+          "pairs": 18081,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 2583,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 2583,
+          "states_with_false_merge": 0
+        },
+        "1": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "2": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "3": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "4": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "5": {
+          "states": 65,
+          "pairs": 455,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 65,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 65,
+          "states_with_false_merge": 0
+        },
+        "6": {
+          "states": 301,
+          "pairs": 11739,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 5,
+          "nonfinite_states": 0,
+          "exact_states": 296,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 5,
+          "closed_exact_states": 296,
+          "states_with_false_merge": 0
+        },
+        "7": {
+          "states": 305,
+          "pairs": 11895,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 305,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 305,
+          "states_with_false_merge": 0
+        }
+      }
+    },
+    "steps": 3000,
+    "source_samples": 40,
+    "backpropagation": true,
+    "generated_sources": true,
+    "promoted_as_default": false,
+    "interface_head_unchanged": true,
+    "edge_residual": true,
+    "base_transition_frozen": true,
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "parent_sha256": "3983f834822b565ba4d3397370438ef34f3382114314379bd9c7e5ab39323567",
+    "weights_sha256": "d8775afba20fd0fbcbe4e2cba4cd8f964bf67ff11e01c3d0b498e46cf44f2f81",
+    "wall_seconds": 53.21103870798834
+  },
+  "compression_trace": {
+    "scope": "unchanged trained model layer diagnostic; not accuracy or execution acceptance",
+    "layers": {
+      "source_tokens": {
+        "max_difference": 0.0,
+        "max_abs": 0.8911523818969727
+      },
+      "edges": {
+        "max_difference": 0.1875772476196289,
+        "max_abs": 0.5880326628684998
+      },
+      "source_projection": {
+        "max_difference": 0.0,
+        "max_abs": 1.2006099224090576
+      },
+      "attention_weights": {
+        "max_difference": 0.00012855231761932373,
+        "max_abs": 0.9999991655349731
+      },
+      "context": {
+        "max_difference": 0.004946965724229813,
+        "max_abs": 1.487830400466919
+      },
+      "first_norm": {
+        "max_difference": 0.0094156414270401,
+        "max_abs": 3.8021657466888428
+      },
+      "mixed_norm": {
+        "max_difference": 0.01771080493927002,
+        "max_abs": 4.9488091468811035
+      },
+      "pooled_hidden": {
+        "max_difference": 1.7136335372924805e-07,
+        "max_abs": 0.1696208268404007
+      },
+      "pre_tanh": {
+        "max_difference": 1.1920928955078125e-07,
+        "max_abs": 0.31920358538627625
+      },
+      "post_tanh": {
+        "max_difference": 1.1920928955078125e-07,
+        "max_abs": 0.3087866008281708
+      },
+      "pooled_token": {
+        "max_difference": 1.1920928955078125e-07,
+        "max_abs": 0.8584047555923462
+      },
+      "edge_residual": {
+        "max_difference": 0.054247818887233734,
+        "max_abs": 0.18869464099407196
+      },
+      "final_token": {
+        "max_difference": 0.05424775928258896,
+        "max_abs": 0.7981253862380981
+      }
+    },
+    "attention": [
+      [
+        [
+          0.08074165880680084,
+          0.10609718412160873,
+          0.3930615186691284,
+          0.4200996160507202
+        ],
+        [
+          0.9999991655349731,
+          3.132472841116396e-07,
+          3.018499228346627e-08,
+          4.4247934738450567e-07
+        ],
+        [
+          0.9949049949645996,
+          0.0012912998208776116,
+          0.0010764036560431123,
+          0.0027272063307464123
+        ],
+        [
+          0.0008619503933005035,
+          0.04352841526269913,
+          0.8119133114814758,
+          0.14369633793830872
+        ]
+      ],
+      [
+        [
+          0.08074165880680084,
+          0.10609718412160873,
+          0.3930615186691284,
+          0.4200996160507202
+        ],
+        [
+          0.9999991655349731,
+          3.132472841116396e-07,
+          3.167320272723373e-08,
+          4.438456642219535e-07
+        ],
+        [
+          0.9948417544364929,
+          0.001354879466816783,
+          0.001076335203833878,
+          0.002727033104747534
+        ],
+        [
+          0.0008618345018476248,
+          0.04365696758031845,
+          0.8118041753768921,
+          0.1436770260334015
+        ]
+      ]
+    ],
+    "pooling": [
+      [
+        5.217996204009978e-06,
+        0.9747591018676758,
+        0.02523055486381054,
+        5.090534159535309e-06
+      ],
+      [
+        5.217991656536469e-06,
+        0.9747582674026489,
+        0.0252316165715456,
+        4.874656042375136e-06
+      ]
+    ],
+    "mask": [
+      [
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        true,
+        true,
+        true,
+        true
+      ]
+    ],
+    "weights_sha256": "7de568a0c1843cdeaf4033d3f2b759bbfd0ad91a0cd872d80a47ebfc457ee326",
+    "pair_sha256": "797a5ac50eb0c9556d52f2989ce1c038770e8807419fbcacfc6850c60b343673"
+  },
+  "representation_check": "32 synthetic shared-root/repeated-source/padded fixtures agree between training pack_sources and GPU relational_edges; does not prove runtime ownership selection equivalence"
+}

@@ -17,8 +17,8 @@ from train_neural_cell_chains import build,chain_loss,rollout,fingerprints
 
 
 class CompletionReadout(nn.Module):
-    def __init__(self,input_width,relation_width,slot_width):
-        super().__init__();self.cell=ordered_model(input_width,relation_width,True);self.eq=EqReadout(slot_width)
+    def __init__(self,input_width,relation_width,slot_width,edge_residual=False):
+        super().__init__();self.cell=ordered_model(input_width,relation_width,True,edge_residual=edge_residual);self.eq=EqReadout(slot_width)
         self.cell.relation.freeze();self.cell.match_relation.freeze()
 
 

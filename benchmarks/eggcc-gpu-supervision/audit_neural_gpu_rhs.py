@@ -80,7 +80,9 @@ def main():
     p.add_argument('--witness-context-depth',type=int,default=0,choices=(0,1,2))
     p.add_argument('--sealed-run-attempts',type=int,default=0)
     p.add_argument('--capture-sealed',type=Path)
+    p.add_argument('--edge-residual',action='store_true')
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
+    if a.edge_residual and (not a.interface_only or a.block_owner):raise ValueError('edge residual requires ordinary interface-only model')
     if a.witness_context_depth and not (a.cumulative_sweeps or a.sealed_run_attempts):raise ValueError('witness context requires cumulative or sealed Run execution')
     if a.sealed_run_attempts<0 or (a.sealed_run_attempts and (not a.follow or not a.eq_readout or a.cumulative_sweeps or a.speculate or a.block_owner or a.semantic_owners)):
         raise ValueError('sealed Run requires ordinary follow and Eq readout, separate from cumulative/speculative modes')
@@ -120,7 +122,7 @@ def main():
         owner=OwnerBlocks(base['x'].shape[-1],base['relations'].shape[-1],max(len(r['slots']) for r in recipe['rules']),owner_aware=a.owner_aware,proof_token=a.proof_token)
         owner.load_weights(str(a.weights));owner.immutable_source=a.immutable_source;model=owner.cell
     else:
-        model=ordered_model(base['x'].shape[-1],base['relations'].shape[-1],a.interface_only);model.load_weights(str(a.weights))
+        model=ordered_model(base['x'].shape[-1],base['relations'].shape[-1],a.interface_only,edge_residual=a.edge_residual);model.load_weights(str(a.weights))
     eq_head=owner.eq if owner is not None else None
     if a.eq_readout:
         from neural_eq_readout import EqReadout
@@ -214,6 +216,7 @@ def main():
     result['selected_pair']=a.pair
     result['cumulative_sweeps']=a.cumulative_sweeps
     result['sealed_run_attempts']=a.sealed_run_attempts
+    result['edge_residual']=a.edge_residual
     if a.capture_sealed:
         if not sealed_collector:raise ValueError('empty sealed capture')
         np.savez_compressed(a.capture_sealed,**{k:np.array([x[k] for x in sealed_collector]) for k in sealed_collector[0]})

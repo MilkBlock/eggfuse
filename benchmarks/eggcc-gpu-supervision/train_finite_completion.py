@@ -19,16 +19,22 @@ from neural_eq_readout import metrics
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--ruleset',default='canon');p.add_argument('--steps',type=int,default=600);a=p.parse_args()
+    p.add_argument('--ruleset',default='canon');p.add_argument('--steps',type=int,default=600);p.add_argument('--edge-residual',action='store_true');a=p.parse_args()
     if a.steps<1:raise ValueError('positive steps required')
     started=time.perf_counter();source=json.loads(a.trace.read_text());recipe,manifest=select_ruleset(source.get('recipe',source),a.ruleset)
     records=[];cases={i:input_cases(r) for i,r in enumerate(recipe['rules'])}
     base=samples(recipe,1,0,records,ordered=True,eq_targets=True,input_cases=cases)
     chain,coverage=chains(recipe,records,ordered=True,eq_targets=True,finite_boundary=True)
     width=max(len(r['slots']) for r in recipe['rules'])
-    mx.random.seed(117);model=CompletionReadout(base['x'].shape[-1],base['relations'].shape[-1],width);model.load_weights(str(a.weights))
+    mx.random.seed(117);model=CompletionReadout(base['x'].shape[-1],base['relations'].shape[-1],width,edge_residual=a.edge_residual)
     from mlx.utils import tree_flatten
-    frozen={k:np.array(v).copy() for k,v in tree_flatten(model.cell.parameters()) if k.startswith(('relation.','match_relation.'))}
+    expected=set(dict(tree_flatten(model.parameters())));provided=set(mx.load(str(a.weights)))
+    missing=expected-provided
+    if provided-expected or missing-({'cell.edge_residual.weight'} if a.edge_residual else set()):raise ValueError('incompatible parent checkpoint')
+    model.load_weights(str(a.weights),strict=not bool(missing))
+    if a.edge_residual:
+        model.cell.freeze();model.cell.edge_residual.unfreeze()
+    frozen={k:np.array(v).copy() for k,v in tree_flatten(model.cell.parameters()) if (not k.startswith('edge_residual.') if a.edge_residual else k.startswith(('relation.','match_relation.')))}
     device=lambda d:{k:mx.array(v) for k,v in d.items()}
     db,dc=device(base),device(chain)
     def evaluate():
@@ -59,6 +65,8 @@ def main():
                 stage_manifest=manifest,coverage=coverage,before=before,after=after,steps=a.steps,
                 source_samples=len(base['valid']),backpropagation=True,generated_sources=True,promoted_as_default=False,
                 interface_head_unchanged=True,
+                edge_residual=a.edge_residual,base_transition_frozen=a.edge_residual,
+                residual_parameter_floats=int(model.cell.edge_residual.weight.size) if a.edge_residual else 0,
                 recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),
                 parent_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),
                 weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),wall_seconds=time.perf_counter()-started)

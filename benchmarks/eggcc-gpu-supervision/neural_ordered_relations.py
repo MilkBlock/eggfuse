@@ -67,6 +67,33 @@ class InterfaceCellTransition(OrderedCellTransition):
         return self.match_relation(h)[:,0]
 
 
-def ordered_model(input_width,relation_width,interface_only=False):
+class EdgeResidualCellTransition(InterfaceCellTransition):
+    """Template-ordered floating edges bypass attention pooling.
+
+    No semantic IDs are inputs. Zero initialization preserves the parent model;
+    training can retain relations suppressed by attention in a dense projection.
+    """
+    def __init__(self,input_width,relation_width,hidden=128):
+        import math
+        fields=input_width//128;ports=math.isqrt(relation_width//2)
+        if input_width%128 or fields<1 or 2*ports*ports!=relation_width or ports%fields:
+            raise ValueError('edge residual needs a rectangular compiled interface')
+        super().__init__(input_width,relation_width,hidden)
+        self.atoms=ports//fields
+        self.edge_residual=nn.Linear(self.atoms*self.atoms*64,128,bias=False)
+        self.edge_residual.weight=mx.zeros_like(self.edge_residual.weight)
+
+    def transition(self,source_tokens,edges,mask,request,relations):
+        logits,token=super().transition(source_tokens,edges,mask,request,relations)
+        if edges.shape[1:]!=(self.atoms,self.atoms,64):raise ValueError('edge residual layout mismatch')
+        valid=mask[:,:,None]&mask[:,None,:]
+        features=mx.where(valid[...,None],edges,0).reshape(len(edges),-1)
+        return logits,token+self.edge_residual(features)
+
+
+def ordered_model(input_width,relation_width,interface_only=False,edge_residual=False):
+    if edge_residual:
+        if not interface_only:raise ValueError('edge residual currently requires interface-only matching')
+        return EdgeResidualCellTransition(input_width,relation_width)
     cls=InterfaceCellTransition if interface_only else OrderedCellTransition
     return cls(input_width,relation_width)

@@ -8,10 +8,11 @@ from train_neural_cell_chains import incoming_tokens
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('pair',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('pair',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
+    p.add_argument('--edge-residual',action='store_true');a=p.parse_args()
     data=dict(np.load(a.pair,allow_pickle=False));parent={k[2:]:mx.array(v) for k,v in data.items() if k.startswith('p_')};chain={k[2:]:mx.array(v) for k,v in data.items() if k.startswith('c_')}
     if len(chain['valid'])!=2:raise ValueError('exactly two states required')
-    m=ordered_model(parent['x'].shape[-1],parent['relations'].shape[-1],True);m.load_weights(str(a.weights))
+    m=ordered_model(parent['x'].shape[-1],parent['relations'].shape[-1],True,edge_residual=a.edge_residual);m.load_weights(str(a.weights))
     _,generated=m(parent['x'],parent['edges'],parent['mask'],parent['request'],parent['relations'])
     source=incoming_tokens(m,chain,generated);edges=chain['edges'];mask=chain['mask'];request=chain['request'];layers={}
     def record(name,x):
@@ -26,7 +27,12 @@ def main():
     pooled_weights=mx.softmax(mx.where(mask,pool,-1e9),axis=-1)
     z=m.finish(mx.concatenate([mx.sum(pooled_weights[...,None]*h,axis=1),q],axis=1));record('pooled_hidden',z)
     raw=m.successor(z);record('pre_tanh',raw);token=mx.tanh(raw);record('post_tanh',token)
-    token=token+m.token_relation(m.relation(chain['relations']));record('final_token',token)
+    token=token+m.token_relation(m.relation(chain['relations']));record('pooled_token',token)
+    if a.edge_residual:
+        valid=mask[:,:,None]&mask[:,None,:]
+        residual=m.edge_residual(mx.where(valid[...,None],edges,0).reshape(len(edges),-1))
+        record('edge_residual',residual);token=token+residual
+    record('final_token',token)
     _,actual=m.transition(source,edges,mask,request,chain['relations']);mx.eval(actual)
     np.testing.assert_allclose(np.array(token),np.array(actual),atol=1e-6,rtol=1e-6)
     result=dict(scope='unchanged trained model layer diagnostic; not accuracy or execution acceptance',layers=layers,
