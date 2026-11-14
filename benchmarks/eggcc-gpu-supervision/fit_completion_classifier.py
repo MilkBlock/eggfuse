@@ -126,10 +126,11 @@ def feature_conflicts(x,y):
     return dict(unique_inputs=len(groups),conflicting_groups=sum(len(v)>1 for v in groups.values()),includes_required_eq_mask=False)
 
 
-def assemble_classifier_features(path,meta,data,model,shared_context=False,joint_features=False,mean_context=False,local_context=False,role_transport=False):
+def assemble_classifier_features(path,meta,data,model,shared_context=False,joint_features=False,mean_context=False,local_context=False,role_transport=False,bridge_context=False):
     from condition_boundary import captured_bridges
     from device_joint_features import compile_projection,expand
     info=meta.get('completion_readout') or {}
+    if info.get('bridge_context',False):raise ValueError('appended bridge captures require an explicit schema extension')
     captured_shared=bool(info.get('shared_boundary_context',False))
     captured_joint=bool(info.get('joint_features',False))
     base=1+model['w'].shape[0]+model['w'].shape[1]+data['boundary_features'].shape[1]
@@ -152,6 +153,9 @@ def assemble_classifier_features(path,meta,data,model,shared_context=False,joint
     data['features'],_=align_features(data,model,True)
     x=data['features']
     if shared_context:x=np.concatenate([x,extra],axis=1)
+    if bridge_context:
+        bridge,bridge_error=captured_bridges(path,meta)
+        error=max(error,bridge_error);x=np.concatenate([x,bridge],axis=1)
     if joint_features:x=expand(x,compile_projection(x.shape[1]),np)
     return x,error
 
@@ -191,6 +195,7 @@ def main():
     for key in ('model','source_model','decoder','decoder_report','output'):p.add_argument(key,type=Path)
     p.add_argument('--normalized-joint',action='store_true',help='training-input standardized fixed nonlinear projection; no gradients')
     p.add_argument('--normalized-width',type=int,default=256,help='fixed nonlinear columns for normalized joint ridge')
+    p.add_argument('--bridge-context',action='store_true',help='append floating same-neighbor port products')
     p.add_argument('--role-transport',action='store_true',help='Bake sender/receiver gates for within-Cell context')
     p.add_argument('--local-context',action='store_true',help='anchor shared context on constructor-result sorts')
     p.add_argument('--ambiguous-only',action='store_true',help='fit only rows whose input constraints permit multiple completion states')
@@ -229,7 +234,7 @@ def main():
             if family is not None and sf!=family:raise ValueError('semantic family mismatch')
             if plans is None:plans=[compile_states(r) for r in sf]
             family=sf
-            d['classifier_features'],error=assemble_classifier_features(path,m,d,model,a.shared_context,a.joint_features,a.mean_context,a.local_context,a.role_transport)
+            d['classifier_features'],error=assemble_classifier_features(path,m,d,model,a.shared_context,a.joint_features,a.mean_context,a.local_context,a.role_transport,a.bridge_context)
             context_error=max(context_error,error)
             details=inputs_for_case(path,m,d,plans);cases.append((split,d,m,details))
     heads=[];coverage=[]
@@ -278,7 +283,7 @@ def main():
     if gpu_error>5e-6 or token_error>5e-6:raise ValueError(f'GPU numerical error: score={gpu_error}, token={token_error}')
     np.savez_compressed(a.output.with_suffix('.npz'),**{f'head_{i}_{k}':v for i,h in enumerate(heads) for k,v in h.items()})
     out=dict(scope='offline direct whole-state ridge and GPU token reconstruction on audited GPU captures; not installed',alpha=10.,backpropagation=False,
-        installed=False,union_authorized=False,role_transport=a.role_transport,normalized_joint=a.normalized_joint,normalized_width=a.normalized_width if a.normalized_joint else None,local_shared_context=a.local_context,ambiguous_only=a.ambiguous_only,mean_shared_context=a.mean_context,joint_features=a.joint_features,balanced_states=a.balanced_states,shared_boundary_context=a.shared_context,maximum_gpu_context_error=context_error,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
+        installed=False,union_authorized=False,bridge_context=a.bridge_context,role_transport=a.role_transport,normalized_joint=a.normalized_joint,normalized_width=a.normalized_width if a.normalized_joint else None,local_shared_context=a.local_context,ambiguous_only=a.ambiguous_only,mean_shared_context=a.mean_context,joint_features=a.joint_features,balanced_states=a.balanced_states,shared_boundary_context=a.shared_context,maximum_gpu_context_error=context_error,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
         head_sha256=hashlib.sha256(a.output.with_suffix('.npz').read_bytes()).hexdigest(),coefficient_bytes=sum(h['coef'].nbytes for h in heads),feature_projection_bytes=sum(h[k].nbytes for h in heads for k in ('feature_projection','feature_center') if k in h),normalization_bytes=sum(h[k].nbytes for h in heads for k in ('mean','scale','bias')),coverage=coverage,
         maximum_gpu_score_error=gpu_error,maximum_gpu_token_error=token_error,token_decode_disagreements=decoding_disagreements,cases=results,
         limitations=['All legal type-compatible states are included, but unseen states have no positive training evidence','No predicted-source rollout or native full-program acceptance','No learned equality is a proof','Current input Eq is retained; scalar effects outside query inputs are unsupported'])
