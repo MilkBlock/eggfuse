@@ -4,9 +4,9 @@ import mlx.core as mx
 import mlx.nn as nn
 from mlx.utils import tree_flatten
 from neural_cell_samples import samples,apply_instance
-from neural_cell_chains import chains
+from neural_cell_chains import chains,pack_sources
 from neural_cell_transition import CellTransition
-from train_neural_cell_chains import rollout
+from train_neural_cell_chains import rollout,incoming_tokens
 from reference_union_family import Reference
 from device_snapshot_import import identity
 
@@ -17,6 +17,29 @@ def recipe():
     return dict(tables=[dict(name='F',kind='constructor',schema=[eq,eq])],rules=[rule])
 
 class NeuralChains(unittest.TestCase):
+    def test_boundary_uses_learned_encoder_and_generated_source_is_unchanged(self):
+        model=CellTransition(256,32)
+        c=dict(seed_x=mx.ones((1,2,256)),tokens=mx.full((1,2,128),999.),replace=mx.array([[True,False]]))
+        generated=mx.full((1,128),3.)
+        result=incoming_tokens(model,c,generated);mx.eval(result)
+        np.testing.assert_array_equal(result[:,0],generated)
+        np.testing.assert_allclose(result[:,1],model.encode(c['seed_x'])[:,1],atol=1e-6)
+        changed=incoming_tokens(model,dict(c,tokens=c['tokens']*-2),generated)
+        np.testing.assert_array_equal(result,changed)
+        _,g=nn.value_and_grad(model,lambda m:mx.mean(incoming_tokens(m,c,generated)[:,1]**2))(model)
+        mx.eval(g)
+        self.assertTrue(any(k.startswith('encode') and np.any(np.abs(np.array(v))>1e-8) for k,v in tree_flatten(g)))
+
+    def test_boundary_fields_match_real_seed_import(self):
+        from neural_snapshot_candidates import import_interfaces
+        r=recipe();seed=dict(r['rules'][0],slots=r['rules'][0]['slots'][:2],effects=[])
+        r=dict(r,rules=[seed]);value=dict(sort='E',eq='0')
+        snapshot=dict(rows=[dict(table='F',values=[value,value],subsumed=False)])
+        rows,ids,_,x,_,_=import_interfaces(r,snapshot)
+        ref=Reference(r,rows,ids)
+        packed=pack_sources([(seed,[0,0])],[False],ref,1,2)
+        np.testing.assert_array_equal(packed['seed_x'],x)
+
     def test_instance_labels_do_not_apply_other_bindings(self):
         r=recipe();ids={identity(dict(sort='E',eq=str(i))):i for i in range(3)};ref=Reference(r,[],ids)
         ref.construct('F',[0],1);ref.construct('F',[1],2)

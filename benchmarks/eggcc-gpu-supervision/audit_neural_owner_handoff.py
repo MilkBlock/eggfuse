@@ -40,7 +40,8 @@ def main():
     device=lambda d:{k:mx.array(v) for k,v in d.items()}
     parent=device({k:v[chain['parent']] for k,v in base.items()});dc=device(chain)
     first,source_tokens=model(parent['x'],parent['edges'],parent['mask'],parent['request'],parent['relations'])
-    incoming=mx.where(dc['replace'][...,None],source_tokens[:,None,:],dc['tokens'])
+    from train_neural_cell_chains import incoming_tokens
+    incoming=incoming_tokens(model,dc,source_tokens)
     logits,tokens=model.transition(incoming,dc['edges'],dc['mask'],dc['request'],dc['relations'])
     mx.eval(first,source_tokens,logits,tokens)
     # Each independent fixture is a sealed, audited pair, not one growing graph.

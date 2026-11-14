@@ -618,3 +618,42 @@ continuation correctness. Next work needs synthetic generated-source training
 coverage and explicit representation or marking of unavailable boundary context,
 not just more single-step fitting. Sources, hashes and aggregate failures are in
 `neural-semantic-typed-results.json`; full reports/weights are in its archive.
+
+
+### Boundary encoding parity and a rejected weight update
+
+Inspection found that synthetic chain boundary inputs used fixed reference
+codes while actual device seed Cells used the learned encoder. `seed_x` now
+stores only boundary input fields, and shared `incoming_tokens` encodes these
+through the same learned encoder. Generated source tokens pass through without
+re-encoding. Training gradients also reach boundary encoding. Both ownership
+audit entrypoints use this helper. Old chain datasets missing `seed_x` must be
+regenerated; silently falling back would restore the train/runtime mismatch.
+Reference codes remain target/teacher diagnostics only. Input fingerprints now
+use boundary fields, not the reference target vectors.
+
+An 800-step synthetic update from the previous positive-typed checkpoint gives
+577/578 closed exact two-step states (one false merge), 398/398 typed training
+states, and 40/40 GCD plus 109/109 LCM real seed states. However, ownership-follow
+semantic errors increase from 32 to 58 of 312 states, with 39 false-merge states;
+44 errors remain with a query-only oracle. All 312 matches and 107 exact graph
+checks still pass. **This weight update is rejected**, even though the encoding
+interface correction is retained. No semantic predictions are committed.
+
+The new diagnostic hashes all actual transition inputs inside each case/rule;
+it finds zero identical-input/different-label conflicts in these cases. This
+limited check does not prove representation sufficiency across graphs or unseen
+paths. The mismatch correction alone is insufficient: training must replay the
+actual generated-source/seed selections through a further differentiable step,
+rather than treating the current two-step score as a deployment proxy.
+
+Reproduction:
+
+```sh
+python train_neural_eq_readout.py GCD_TRACE POSITIVE.safetensors BOUNDARY.json --typed-patterns --resume --steps 800
+python audit_neural_gpu_rhs.py GCD_TRACE BOUNDARY.transition.safetensors FOLLOW.json --limit 107 --follow --interface-only --eq-readout BOUNDARY.eq.safetensors
+```
+
+`neural-boundary-encoding-results.json` records the rejected experiment and its
+archive. The follow audit exits 1 as required. These are correctness experiments,
+not throughput or speedup results.

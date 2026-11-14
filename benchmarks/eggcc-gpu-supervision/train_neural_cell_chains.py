@@ -10,9 +10,17 @@ from neural_cell_chains import chains
 from neural_cell_transition import CellTransition,loss
 
 
+def incoming_tokens(model,chain,generated,teacher=False):
+    # Reference codes are diagnostic targets only. Live boundary seeds use the
+    # same learned encoder as device encode_seeds; generated tokens pass through.
+    boundary=model.encode(chain['seed_x'])
+    source=chain['tokens'] if teacher else generated[:,None,:]
+    return mx.where(chain['replace'][...,None],source,boundary)
+
+
 def rollout(model,parent,chain,teacher=False):
     first,token=model(parent['x'],parent['edges'],parent['mask'],parent['request'],**({'relations':parent['relations']} if 'relations' in parent else {}))
-    incoming=chain['tokens'] if teacher else mx.where(chain['replace'][...,None],token[:,None,:],chain['tokens'])
+    incoming=incoming_tokens(model,chain,token,teacher)
     second,target=model.transition(incoming,chain['edges'],chain['mask'],chain['request'],**({'relations':chain['relations']} if 'relations' in chain else {}))
     return first,second,target
 
@@ -34,7 +42,7 @@ def fingerprints(base,data):
     for i,parent in enumerate(data['parent']):
         parts=[base[k][parent].tobytes() for k in (('x','edges','mask','request','relations') if 'relations' in base else ('x','edges','mask','request'))]
         # Ground-truth generated token is not part of the recurrent input.
-        fixed=np.where(data['replace'][i,:,None],0,data['tokens'][i])
+        fixed=np.where(data['replace'][i,:,None],0,data['seed_x'][i])
         parts += [fixed.tobytes()]+[data[k][i].tobytes() for k in (('edges','mask','replace','request','relations') if 'relations' in data else ('edges','mask','replace','request'))]
         result.append(hashlib.sha256(b''.join(parts)).hexdigest())
     return result

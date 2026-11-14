@@ -81,7 +81,8 @@ def main():
         eq_head=EqReadout(max(len(r['slots']) for r in recipe['rules']));eq_head.load_weights(str(a.eq_readout))
     parent=device({k:v[chain['parent']] for k,v in base.items()});dc=device(chain)
     first,source_tokens=model(parent['x'],parent['edges'],parent['mask'],parent['request'],parent['relations'])
-    incoming=mx.where(dc['replace'][...,None],source_tokens[:,None,:],dc['tokens'])
+    from train_neural_cell_chains import incoming_tokens
+    incoming=incoming_tokens(model,dc,source_tokens)
     logits,tokens=model.transition(incoming,dc['edges'],dc['mask'],dc['request'],dc['relations']);mx.eval(first,source_tokens,logits,tokens)
     seen=set();selected=[]
     for record in transfers:
@@ -149,14 +150,15 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
         from neural_cell_chains import completed
         from neural_eq_readout import targets,metrics
         width=max(len(r['slots']) for r in recipe['rules'])
-        counts.update(semantic_states=0,semantic_wrong_states=0,semantic_false_merge_states=0,semantic_local_wrong_states=0,semantic_external_eq_states=0)
+        counts.update(semantic_states=0,semantic_wrong_states=0,semantic_false_merge_states=0,semantic_local_wrong_states=0,semantic_external_eq_states=0,semantic_feature_conflicts=0,semantic_local_feature_conflicts=0)
     for rid,rule in enumerate(recipe['rules']):
         host_plan=compile_candidates(local,rule)
         batch=candidates(state,frames,device(host_plan),mx.array(True),mx.array(True),mx)
         logits,tokens=model.transition(batch['tokens'],batch['edges'],batch['mask'],batch['request'],batch['relations']);mx.eval(batch,logits,tokens)
         if eq_head is not None:
             semantic=eq_head(tokens,batch['request']);mx.eval(semantic)
-            eq_scores=[];eq_labels=[];eq_masks=[];eq_local=[]
+            eq_scores=[];eq_labels=[];eq_masks=[];eq_local=[];feature_labels={};conflicts=local_conflicts=0
+            features={k:np.array(batch[k]) for k in ('tokens','edges','mask','request','relations')}
         live=np.array(batch['live']);finite=np.isfinite(np.array(logits))&np.isfinite(np.array(tokens)).all(axis=1);pred=(np.array(logits)>=0)&live&finite
         roots=np.array(batch['binding_roots']);sources=np.array(batch['sources'])
         relations=np.array(batch['relations']);half=relations.shape[1]//2
@@ -174,6 +176,11 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
                 local_ref.facts=[(atom['call']['table'],tuple(local_bound[a['slot']] for a in atom['args'])) for atom in rule['query']]
                 apply_instance(local_ref,rule,local_bound)
                 eq_local.append(targets(rule,completed(rule,local_bound,local_ref),local_ref,width)['eq_target'])
+                signature=hashlib.sha256(b''.join(features[k][index].tobytes() for k in features)).digest()
+                value=(eq_labels[-1].tobytes(),eq_local[-1].tobytes())
+                if signature in feature_labels:
+                    conflicts+=value[0]!=feature_labels[signature][0];local_conflicts+=value[1]!=feature_labels[signature][1]
+                else:feature_labels[signature]=value
             from_generated+=bool((sources[index]==generated_row).any())
         group=dict(rule=rid,invalid_predictions=int((live&~finite).sum()),candidates=int(live.sum()),accepted=int(pred.sum()),false_positive=fp,expected=len(expected),recovered=len(recovered),missed=len(expected-recovered),incomplete_rules=int(not bool(batch['complete'])),accepted_from_generated=from_generated)
         if eq_head is not None:
@@ -181,7 +188,7 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
             loc=np.array(eq_local).reshape(-1,width*(width-1)//2);full=np.array(eq_labels).reshape(loc.shape);mask=np.array(eq_masks,dtype=bool).reshape(loc.shape)
             lm=metrics(np.array(eq_scores).reshape(loc.shape),loc,mask,width)
             group.update(semantic_states=m['states'],semantic_wrong_states=m['states']-m['closed_exact_states'],semantic_false_merge_states=m['states_with_false_merge'],
-                semantic_local_wrong_states=lm['states']-lm['closed_exact_states'],semantic_external_eq_states=int(((full>loc)&mask).any(axis=1).sum()))
+                semantic_feature_conflicts=conflicts,semantic_local_feature_conflicts=local_conflicts,semantic_local_wrong_states=lm['states']-lm['closed_exact_states'],semantic_external_eq_states=int(((full>loc)&mask).any(axis=1).sum()))
         groups.append(group)
         for key,value in group.items():
             if key!='rule':counts[key]+=value

@@ -6,7 +6,7 @@ opportunities, not permission to reclaim a live runtime row.
 """
 from copy import deepcopy
 import numpy as np
-from multi_entry_ridge import template,encode
+from multi_entry_ridge import template,encode,scalar
 from device_slot_owners import compile_transfer
 from neural_cell_samples import apply_instance
 
@@ -58,16 +58,24 @@ def candidate_contexts(base,consumer,exports):
             yield ref,{slot:ref.root(v) for slot,v in binding.items()}
 
 
-def pack_sources(sources,owners,ref,atoms):
+def pack_sources(sources,owners,ref,atoms,field_width):
     tokens=np.zeros((atoms,128),np.float32);edge=np.zeros((atoms,atoms,64),np.float32);mask=np.zeros(atoms,bool);replace=np.zeros(atoms,bool)
-    for ai,(source,vals) in enumerate(sources):tokens[ai]=code(source,vals,ref);mask[ai]=True;replace[ai]=owners[ai]
+    seed_x=np.zeros((atoms,field_width*128),np.float32)
+    for ai,(source,vals) in enumerate(sources):
+        tokens[ai]=code(source,vals,ref);mask[ai]=True;replace[ai]=owners[ai]
+        if owners[ai]:continue  # Generated sources are consumed, never re-encoded.
+        if len(vals)>field_width:raise ValueError('boundary seed exceeds encoder layout')
+        roles,_=template(source)
+        for fi,v in enumerate(vals):
+            context=sum((roles[j] for j,w in enumerate(vals) if ref.root(w)==ref.root(v)),np.zeros(64,np.float32)) if source['slots'][fi]['sort']['kind']=='eq' else scalar(ref.scalar_values[v])
+            seed_x[ai,fi*128:(fi+1)*128]=np.concatenate([roles[fi],np.tanh(context)])
     for ai,(source,vals) in enumerate(sources):
         ar,_=template(source)
         for bi,(other,vs) in enumerate(sources):
             br,_=template(other)
             terms=[ar[i]*br[j] for i,v in enumerate(vals) for j,w in enumerate(vs) if source['slots'][i]['sort']==other['slots'][j]['sort'] and ref.root(v)==ref.root(w)]
             if terms:edge[ai,bi]=np.sum(terms,axis=0)/np.sqrt(len(terms))
-    return dict(tokens=tokens,edges=edge,mask=mask,replace=replace)
+    return dict(tokens=tokens,seed_x=seed_x,edges=edge,mask=mask,replace=replace)
 
 
 def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_targets=False):
@@ -102,7 +110,7 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                         seed_rule=dict(slots=[dict(sort=s,definition='query') for s in schema],query=[dict(call=atom['call'],args=[dict(slot=i) for i in range(len(schema))])],effects=[])
                         sources.append((seed_rule,row));owners.append(False)
                 if not any(owners):continue
-                packed=pack_sources(sources,owners,ref,atoms)
+                packed=pack_sources(sources,owners,ref,atoms,interface_width)
                 if ordered:packed['relations']=projected(consumer,[[ref.root(binding[a['slot']]) for a in atom['args']] for atom in consumer['query']],atoms,interface_width)
                 after=deepcopy(ref);apply_instance(after,consumer,binding);target=code(consumer,completed(consumer,binding,after),after)
                 if eq_targets:
@@ -139,7 +147,7 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                     if agrees:continue  # E.g. nullary constructors cannot gain a fresh unequal result.
                     seed_rule=dict(slots=[dict(sort=t,definition='query') for t in schema],query=[dict(call=atom['call'],args=[dict(slot=i) for i in range(len(schema))])],effects=[])
                     ns=list(sources);ns[ai]=(seed_rule,fresh);no=list(owners);no[ai]=False
-                    negative=pack_sources(ns,no,nr,atoms)
+                    negative=pack_sources(ns,no,nr,atoms,interface_width)
                     if ordered:negative['relations']=projected(consumer,[[nr.root(v) for v in fresh] if bi==ai else [nr.root(binding[a['slot']]) for a in q['args']] for bi,q in enumerate(consumer['query'])],atoms,interface_width)
                     if eq_targets:negative.update(eq_target=np.zeros(width*(width-1)//2,np.float32),eq_mask=np.zeros(width*(width-1)//2,bool))
                     items.append(dict(parent=record['index'],producer=producer,consumer=rid,**negative,request=template(consumer)[1],target=np.zeros(128,np.float32),valid=False,owner_covered=False))
