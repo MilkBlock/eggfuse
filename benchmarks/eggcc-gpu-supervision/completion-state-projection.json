@@ -1,0 +1,810 @@
+{
+  "scope": "frozen Eq-readout projection diagnostic on actual GPU captures",
+  "backpropagation": false,
+  "refitting": false,
+  "installed": false,
+  "union_authorized": false,
+  "decoder_sha256": "cf9c22bbc95c2a04eca32565875bbce864bdad6038b5115e64b1162b2582b313",
+  "maximum_gpu_selection_error": 0.0,
+  "maximum_gpu_token_error": 1.1920928955078125e-07,
+  "maximum_oracle_token_error": 1.1920928955078125e-07,
+  "cases": [
+    {
+      "case": "016-gcd",
+      "capture_sha256": "d3024efdd65b7dcaff7c689f9577bfeecd9a18152677682f6187db77d1aba98d",
+      "source_token_mode": "exact completed states",
+      "plans": {
+        "283": {
+          "states": 2,
+          "quotient_pairs": 1,
+          "matrix_bytes": 8,
+          "token_moment_bytes": 1032
+        },
+        "290": {
+          "states": 15,
+          "quotient_pairs": 6,
+          "matrix_bytes": 360,
+          "token_moment_bytes": 7996
+        },
+        "293": {
+          "states": 15,
+          "quotient_pairs": 6,
+          "matrix_bytes": 360,
+          "token_moment_bytes": 7740
+        }
+      },
+      "targets_represented": 41,
+      "current_input_equalities": 7,
+      "groups": {
+        "all": {
+          "independent": {
+            "instances": 41,
+            "query_instances": 41,
+            "exact_partitions": 35,
+            "false_merges": 0,
+            "missed_equalities": 16,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 206,
+              "positives": 18,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 10,
+              "precision": 1.0,
+              "recall": 0.4444444444444444
+            }
+          },
+          "whole_state": {
+            "instances": 41,
+            "query_instances": 41,
+            "exact_partitions": 35,
+            "false_merges": 0,
+            "missed_equalities": 16,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 206,
+              "positives": 18,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 10,
+              "precision": 1.0,
+              "recall": 0.4444444444444444
+            }
+          },
+          "current_input_state": {
+            "instances": 41,
+            "query_instances": 41,
+            "exact_partitions": 35,
+            "false_merges": 0,
+            "missed_equalities": 10,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 206,
+              "positives": 18,
+              "true_positives": 11,
+              "false_positives": 0,
+              "false_negatives": 7,
+              "precision": 1.0,
+              "recall": 0.6111111111111112
+            }
+          }
+        },
+        "direct": {
+          "independent": {
+            "instances": 26,
+            "query_instances": 26,
+            "exact_partitions": 23,
+            "false_merges": 0,
+            "missed_equalities": 7,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 146,
+              "positives": 7,
+              "true_positives": 3,
+              "false_positives": 0,
+              "false_negatives": 4,
+              "precision": 1.0,
+              "recall": 0.42857142857142855
+            }
+          },
+          "whole_state": {
+            "instances": 26,
+            "query_instances": 26,
+            "exact_partitions": 23,
+            "false_merges": 0,
+            "missed_equalities": 7,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 146,
+              "positives": 7,
+              "true_positives": 3,
+              "false_positives": 0,
+              "false_negatives": 4,
+              "precision": 1.0,
+              "recall": 0.42857142857142855
+            }
+          },
+          "current_input_state": {
+            "instances": 26,
+            "query_instances": 26,
+            "exact_partitions": 23,
+            "false_merges": 0,
+            "missed_equalities": 7,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 146,
+              "positives": 7,
+              "true_positives": 3,
+              "false_positives": 0,
+              "false_negatives": 4,
+              "precision": 1.0,
+              "recall": 0.42857142857142855
+            }
+          }
+        },
+        "generated": {
+          "independent": {
+            "instances": 15,
+            "query_instances": 15,
+            "exact_partitions": 12,
+            "false_merges": 0,
+            "missed_equalities": 9,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 60,
+              "positives": 11,
+              "true_positives": 5,
+              "false_positives": 0,
+              "false_negatives": 6,
+              "precision": 1.0,
+              "recall": 0.45454545454545453
+            }
+          },
+          "whole_state": {
+            "instances": 15,
+            "query_instances": 15,
+            "exact_partitions": 12,
+            "false_merges": 0,
+            "missed_equalities": 9,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 60,
+              "positives": 11,
+              "true_positives": 5,
+              "false_positives": 0,
+              "false_negatives": 6,
+              "precision": 1.0,
+              "recall": 0.45454545454545453
+            }
+          },
+          "current_input_state": {
+            "instances": 15,
+            "query_instances": 15,
+            "exact_partitions": 12,
+            "false_merges": 0,
+            "missed_equalities": 3,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 60,
+              "positives": 11,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 3,
+              "precision": 1.0,
+              "recall": 0.7272727272727273
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "capture_sha256": "1edc61b644425c5f3f759a72bf013a5b5c3ce4f9efcd5867b788ef01f81d3c7f",
+      "source_token_mode": "exact completed states",
+      "plans": {
+        "283": {
+          "states": 2,
+          "quotient_pairs": 1,
+          "matrix_bytes": 8,
+          "token_moment_bytes": 1032
+        },
+        "290": {
+          "states": 15,
+          "quotient_pairs": 6,
+          "matrix_bytes": 360,
+          "token_moment_bytes": 7996
+        },
+        "293": {
+          "states": 15,
+          "quotient_pairs": 6,
+          "matrix_bytes": 360,
+          "token_moment_bytes": 7740
+        }
+      },
+      "targets_represented": 99,
+      "current_input_equalities": 14,
+      "groups": {
+        "all": {
+          "independent": {
+            "instances": 99,
+            "query_instances": 99,
+            "exact_partitions": 82,
+            "false_merges": 10,
+            "missed_equalities": 35,
+            "nontransitive": 1,
+            "closure_false_merges": 13,
+            "dynamic_quotient": {
+              "queries": 524,
+              "positives": 37,
+              "true_positives": 16,
+              "false_positives": 5,
+              "false_negatives": 21,
+              "precision": 0.7619047619047619,
+              "recall": 0.43243243243243246
+            }
+          },
+          "whole_state": {
+            "instances": 99,
+            "query_instances": 99,
+            "exact_partitions": 83,
+            "false_merges": 7,
+            "missed_equalities": 35,
+            "nontransitive": 0,
+            "closure_false_merges": 7,
+            "dynamic_quotient": {
+              "queries": 524,
+              "positives": 37,
+              "true_positives": 16,
+              "false_positives": 3,
+              "false_negatives": 21,
+              "precision": 0.8421052631578947,
+              "recall": 0.43243243243243246
+            }
+          },
+          "current_input_state": {
+            "instances": 99,
+            "query_instances": 99,
+            "exact_partitions": 83,
+            "false_merges": 7,
+            "missed_equalities": 21,
+            "nontransitive": 0,
+            "closure_false_merges": 7,
+            "dynamic_quotient": {
+              "queries": 524,
+              "positives": 37,
+              "true_positives": 23,
+              "false_positives": 3,
+              "false_negatives": 14,
+              "precision": 0.8846153846153846,
+              "recall": 0.6216216216216216
+            }
+          }
+        },
+        "direct": {
+          "independent": {
+            "instances": 78,
+            "query_instances": 78,
+            "exact_partitions": 71,
+            "false_merges": 0,
+            "missed_equalities": 14,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 458,
+              "positives": 15,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 7,
+              "precision": 1.0,
+              "recall": 0.5333333333333333
+            }
+          },
+          "whole_state": {
+            "instances": 78,
+            "query_instances": 78,
+            "exact_partitions": 71,
+            "false_merges": 0,
+            "missed_equalities": 14,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 458,
+              "positives": 15,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 7,
+              "precision": 1.0,
+              "recall": 0.5333333333333333
+            }
+          },
+          "current_input_state": {
+            "instances": 78,
+            "query_instances": 78,
+            "exact_partitions": 71,
+            "false_merges": 0,
+            "missed_equalities": 14,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 458,
+              "positives": 15,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 7,
+              "precision": 1.0,
+              "recall": 0.5333333333333333
+            }
+          }
+        },
+        "generated": {
+          "independent": {
+            "instances": 21,
+            "query_instances": 21,
+            "exact_partitions": 11,
+            "false_merges": 10,
+            "missed_equalities": 21,
+            "nontransitive": 1,
+            "closure_false_merges": 13,
+            "dynamic_quotient": {
+              "queries": 66,
+              "positives": 22,
+              "true_positives": 8,
+              "false_positives": 5,
+              "false_negatives": 14,
+              "precision": 0.6153846153846154,
+              "recall": 0.36363636363636365
+            }
+          },
+          "whole_state": {
+            "instances": 21,
+            "query_instances": 21,
+            "exact_partitions": 12,
+            "false_merges": 7,
+            "missed_equalities": 21,
+            "nontransitive": 0,
+            "closure_false_merges": 7,
+            "dynamic_quotient": {
+              "queries": 66,
+              "positives": 22,
+              "true_positives": 8,
+              "false_positives": 3,
+              "false_negatives": 14,
+              "precision": 0.7272727272727273,
+              "recall": 0.36363636363636365
+            }
+          },
+          "current_input_state": {
+            "instances": 21,
+            "query_instances": 21,
+            "exact_partitions": 12,
+            "false_merges": 7,
+            "missed_equalities": 7,
+            "nontransitive": 0,
+            "closure_false_merges": 7,
+            "dynamic_quotient": {
+              "queries": 66,
+              "positives": 22,
+              "true_positives": 15,
+              "false_positives": 3,
+              "false_negatives": 7,
+              "precision": 0.8333333333333334,
+              "recall": 0.6818181818181818
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "016-gcd",
+      "capture_sha256": "5770c8011feec925d3185c69d46e867df453d03167da12ee9251ee3c1ee5f01b",
+      "source_token_mode": "predicted generated Cells, exact imported Cells",
+      "plans": {
+        "283": {
+          "states": 2,
+          "quotient_pairs": 1,
+          "matrix_bytes": 8,
+          "token_moment_bytes": 1032
+        },
+        "290": {
+          "states": 15,
+          "quotient_pairs": 6,
+          "matrix_bytes": 360,
+          "token_moment_bytes": 7996
+        },
+        "293": {
+          "states": 15,
+          "quotient_pairs": 6,
+          "matrix_bytes": 360,
+          "token_moment_bytes": 7740
+        }
+      },
+      "targets_represented": 41,
+      "current_input_equalities": 7,
+      "groups": {
+        "all": {
+          "independent": {
+            "instances": 41,
+            "query_instances": 41,
+            "exact_partitions": 35,
+            "false_merges": 0,
+            "missed_equalities": 16,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 206,
+              "positives": 18,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 10,
+              "precision": 1.0,
+              "recall": 0.4444444444444444
+            }
+          },
+          "whole_state": {
+            "instances": 41,
+            "query_instances": 41,
+            "exact_partitions": 35,
+            "false_merges": 0,
+            "missed_equalities": 16,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 206,
+              "positives": 18,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 10,
+              "precision": 1.0,
+              "recall": 0.4444444444444444
+            }
+          },
+          "current_input_state": {
+            "instances": 41,
+            "query_instances": 41,
+            "exact_partitions": 35,
+            "false_merges": 0,
+            "missed_equalities": 10,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 206,
+              "positives": 18,
+              "true_positives": 11,
+              "false_positives": 0,
+              "false_negatives": 7,
+              "precision": 1.0,
+              "recall": 0.6111111111111112
+            }
+          }
+        },
+        "direct": {
+          "independent": {
+            "instances": 26,
+            "query_instances": 26,
+            "exact_partitions": 23,
+            "false_merges": 0,
+            "missed_equalities": 7,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 146,
+              "positives": 7,
+              "true_positives": 3,
+              "false_positives": 0,
+              "false_negatives": 4,
+              "precision": 1.0,
+              "recall": 0.42857142857142855
+            }
+          },
+          "whole_state": {
+            "instances": 26,
+            "query_instances": 26,
+            "exact_partitions": 23,
+            "false_merges": 0,
+            "missed_equalities": 7,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 146,
+              "positives": 7,
+              "true_positives": 3,
+              "false_positives": 0,
+              "false_negatives": 4,
+              "precision": 1.0,
+              "recall": 0.42857142857142855
+            }
+          },
+          "current_input_state": {
+            "instances": 26,
+            "query_instances": 26,
+            "exact_partitions": 23,
+            "false_merges": 0,
+            "missed_equalities": 7,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 146,
+              "positives": 7,
+              "true_positives": 3,
+              "false_positives": 0,
+              "false_negatives": 4,
+              "precision": 1.0,
+              "recall": 0.42857142857142855
+            }
+          }
+        },
+        "generated": {
+          "independent": {
+            "instances": 15,
+            "query_instances": 15,
+            "exact_partitions": 12,
+            "false_merges": 0,
+            "missed_equalities": 9,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 60,
+              "positives": 11,
+              "true_positives": 5,
+              "false_positives": 0,
+              "false_negatives": 6,
+              "precision": 1.0,
+              "recall": 0.45454545454545453
+            }
+          },
+          "whole_state": {
+            "instances": 15,
+            "query_instances": 15,
+            "exact_partitions": 12,
+            "false_merges": 0,
+            "missed_equalities": 9,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 60,
+              "positives": 11,
+              "true_positives": 5,
+              "false_positives": 0,
+              "false_negatives": 6,
+              "precision": 1.0,
+              "recall": 0.45454545454545453
+            }
+          },
+          "current_input_state": {
+            "instances": 15,
+            "query_instances": 15,
+            "exact_partitions": 12,
+            "false_merges": 0,
+            "missed_equalities": 3,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 60,
+              "positives": 11,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 3,
+              "precision": 1.0,
+              "recall": 0.7272727272727273
+            }
+          }
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "capture_sha256": "ecf119522c0c19e3a927009f05aa4bd86db3b0740d5ec0edcf943c988ab985ca",
+      "source_token_mode": "predicted generated Cells, exact imported Cells",
+      "plans": {
+        "283": {
+          "states": 2,
+          "quotient_pairs": 1,
+          "matrix_bytes": 8,
+          "token_moment_bytes": 1032
+        },
+        "290": {
+          "states": 15,
+          "quotient_pairs": 6,
+          "matrix_bytes": 360,
+          "token_moment_bytes": 7996
+        },
+        "293": {
+          "states": 15,
+          "quotient_pairs": 6,
+          "matrix_bytes": 360,
+          "token_moment_bytes": 7740
+        }
+      },
+      "targets_represented": 99,
+      "current_input_equalities": 14,
+      "groups": {
+        "all": {
+          "independent": {
+            "instances": 99,
+            "query_instances": 99,
+            "exact_partitions": 82,
+            "false_merges": 9,
+            "missed_equalities": 35,
+            "nontransitive": 1,
+            "closure_false_merges": 13,
+            "dynamic_quotient": {
+              "queries": 524,
+              "positives": 37,
+              "true_positives": 16,
+              "false_positives": 4,
+              "false_negatives": 21,
+              "precision": 0.8,
+              "recall": 0.43243243243243246
+            }
+          },
+          "whole_state": {
+            "instances": 99,
+            "query_instances": 99,
+            "exact_partitions": 83,
+            "false_merges": 7,
+            "missed_equalities": 35,
+            "nontransitive": 0,
+            "closure_false_merges": 7,
+            "dynamic_quotient": {
+              "queries": 524,
+              "positives": 37,
+              "true_positives": 16,
+              "false_positives": 3,
+              "false_negatives": 21,
+              "precision": 0.8421052631578947,
+              "recall": 0.43243243243243246
+            }
+          },
+          "current_input_state": {
+            "instances": 99,
+            "query_instances": 99,
+            "exact_partitions": 83,
+            "false_merges": 7,
+            "missed_equalities": 21,
+            "nontransitive": 0,
+            "closure_false_merges": 7,
+            "dynamic_quotient": {
+              "queries": 524,
+              "positives": 37,
+              "true_positives": 23,
+              "false_positives": 3,
+              "false_negatives": 14,
+              "precision": 0.8846153846153846,
+              "recall": 0.6216216216216216
+            }
+          }
+        },
+        "direct": {
+          "independent": {
+            "instances": 78,
+            "query_instances": 78,
+            "exact_partitions": 71,
+            "false_merges": 0,
+            "missed_equalities": 14,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 458,
+              "positives": 15,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 7,
+              "precision": 1.0,
+              "recall": 0.5333333333333333
+            }
+          },
+          "whole_state": {
+            "instances": 78,
+            "query_instances": 78,
+            "exact_partitions": 71,
+            "false_merges": 0,
+            "missed_equalities": 14,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 458,
+              "positives": 15,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 7,
+              "precision": 1.0,
+              "recall": 0.5333333333333333
+            }
+          },
+          "current_input_state": {
+            "instances": 78,
+            "query_instances": 78,
+            "exact_partitions": 71,
+            "false_merges": 0,
+            "missed_equalities": 14,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 458,
+              "positives": 15,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 7,
+              "precision": 1.0,
+              "recall": 0.5333333333333333
+            }
+          }
+        },
+        "generated": {
+          "independent": {
+            "instances": 21,
+            "query_instances": 21,
+            "exact_partitions": 11,
+            "false_merges": 9,
+            "missed_equalities": 21,
+            "nontransitive": 1,
+            "closure_false_merges": 13,
+            "dynamic_quotient": {
+              "queries": 66,
+              "positives": 22,
+              "true_positives": 8,
+              "false_positives": 4,
+              "false_negatives": 14,
+              "precision": 0.6666666666666666,
+              "recall": 0.36363636363636365
+            }
+          },
+          "whole_state": {
+            "instances": 21,
+            "query_instances": 21,
+            "exact_partitions": 12,
+            "false_merges": 7,
+            "missed_equalities": 21,
+            "nontransitive": 0,
+            "closure_false_merges": 7,
+            "dynamic_quotient": {
+              "queries": 66,
+              "positives": 22,
+              "true_positives": 8,
+              "false_positives": 3,
+              "false_negatives": 14,
+              "precision": 0.7272727272727273,
+              "recall": 0.36363636363636365
+            }
+          },
+          "current_input_state": {
+            "instances": 21,
+            "query_instances": 21,
+            "exact_partitions": 12,
+            "false_merges": 7,
+            "missed_equalities": 7,
+            "nontransitive": 0,
+            "closure_false_merges": 7,
+            "dynamic_quotient": {
+              "queries": 66,
+              "positives": 22,
+              "true_positives": 15,
+              "false_positives": 3,
+              "false_negatives": 7,
+              "precision": 0.8333333333333334,
+              "recall": 0.6818181818181818
+            }
+          }
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Local type-compatible states are not proven reachable completions",
+    "Enumeration is exponential and capped at 4096 states per Cell",
+    "Current-input variant also enforces captured proven input Eq; no future equality is injected",
+    "Full floating tokens are synthesized using actual query scalar values; new scalar effects need actual execution",
+    "Stable IDs and ownership remain in existing runtime; reconstructed predictions have not undergone feedback rollout",
+    "No CPU validation label participates in state compilation or selection",
+    "Validation cases are development data, not final held-out acceptance"
+  ]
+}
