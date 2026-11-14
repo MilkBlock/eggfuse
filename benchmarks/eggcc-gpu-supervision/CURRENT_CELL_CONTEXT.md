@@ -272,3 +272,34 @@ The training script still enumerates examples offline. No runtime candidate
 enumeration has yet been replaced, and missing-match/fixed-point proof remains
 outside this model. Text evidence: `cell-prefix-model-results.json`; binary
 artifacts remain under current-cell-v36 outside Git.
+
+## GPU prefix decoding and first live integration
+
+`device_prefix_match.expand` starts with one empty prefix and expands one query
+atom per fixed compiled step. A dense model scores every live-prefix/Entry choice.
+Stable compaction retains all predicted successors within capacity; overflow or
+nonfinite scores prevents a completeness claim. No host tensor values control
+expansion. The reported active choices differ from scheduled classifier rows:
+padded inactive prefixes still incur matrix work and are counted separately.
+
+`audit_prefix_match.py DATA WEIGHTS OUTPUT` reconstructs pools from all captured
+candidate tuples, including negatives, and compares generated complete matches
+against exact synthetic labels. All 139 observed case/rule groups pass, with zero
+extra/missed matches and no overflow. This does not cover absent groups or unseen
+states. Saved pool reconstruction is diagnostic preparation, not a live-runtime
+speed result.
+
+`PrefixRuntime` now connects the same decoder to live Entry projections. The
+existing candidate builder accepts opt-in selected pool lanes instead of allocating
+its full Cartesian ordinal array. Binding extraction, exact constraints, generation
+checks and template-only effects use those selected lanes. Historical latents are
+not inputs, and there is no second learned matching classifier. The initial
+integration still recomputes projections/context on admission attempts; no speedup
+is established.
+
+Reproduce the live audit with `audit_current_cell.py TRACE CURRENT_FIT.safetensors
+OUT --pair 1 6 --candidate-capacity 32 --template-only --prefix-weights
+PREFIX_FIT.safetensors`. The current-fit checkpoint supplies legacy audit layout
+metadata; prefix weights drive actual selection. This real-state case passes two
+Runs and reaches a CPU-verified fixed point. Full-suite live prefix coverage and
+cross-stage support remain outstanding. Evidence: `prefix-runtime-results.json`.

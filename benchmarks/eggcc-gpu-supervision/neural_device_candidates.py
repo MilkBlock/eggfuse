@@ -78,8 +78,8 @@ def compile_candidates(recipe,consumer,capacity=16,atoms=2,fields=5,context_capa
                 required=demand(consumer,atoms,fields),request=template(consumer)[1],source_tags=input_role_tags(atoms,context_capacity))
 
 
-def candidates(state,frames,plan,external_complete,eq_settled,xp,capture_entries=False):
-    capacities=plan.get('capacities',[plan['capacity']]*len(plan['views']));count=int(np.prod(capacities));ordinal=xp.arange(count)
+def candidates(state,frames,plan,external_complete,eq_settled,xp,capture_entries=False,select_entries=None):
+    capacities=plan.get('capacities',[plan['capacity']]*len(plan['views']));count=int(np.prod(capacities));ordinal=xp.arange(count) if select_entries is None else None
     from neural_semantic_owner import resolve
     token_sources,token_valid=resolve(state,xp)
     if 'owner_token_blocks' in state:
@@ -101,10 +101,17 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp,capture_entries
         views.append(dict(v,pick=pick,selected=order<n))
         pool_sizes.append(xp.sum(keep.astype(xp.int32)))
         overflow=overflow|(pool_sizes[-1]>cap);complete=complete&v['complete']
+    selection=None
+    if select_entries is not None:
+        selection=select_entries(state,frames,plan,views,xp)
+        count=len(selection['indices'])
+        complete=complete&selection['complete']
+        overflow=overflow|selection['overflow']
     entry_records=[]
-    sources=[];projected=[];raw=[];positions=[];alive=xp.ones(count,xp.bool_)
+    sources=[];projected=[];raw=[];positions=[];alive=xp.ones(count,xp.bool_) if selection is None else selection['live']
     for ai,v in enumerate(views):
-        lane=(ordinal//int(np.prod(capacities[ai+1:])))%capacities[ai];pick=v['pick'][lane]
+        lane=((ordinal//int(np.prod(capacities[ai+1:])))%capacities[ai] if selection is None else selection['indices'][:,ai])
+        pick=v['pick'][lane]
         if capture_entries:entry_records.append(v['record'][pick])
         sources.append(v['source'][pick]);alive=alive&v['selected'][lane]&state['settled'][v['source'][pick]]
         fields=v['value_roots'][pick];padding=plan['fields']-fields.shape[1]
