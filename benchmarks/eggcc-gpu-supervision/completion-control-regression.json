@@ -1,0 +1,9 @@
+{
+  "completion_control": {
+    "saturate": {
+      "run": "context"
+    }
+  },
+  "all_head_arrays_equal": true,
+  "synthetic_only_training": true
+}

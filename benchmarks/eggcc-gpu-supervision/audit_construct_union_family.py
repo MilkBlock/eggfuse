@@ -15,6 +15,7 @@ from device_scheduled_runtime import run
 from device_match_capture import host,audit,flatten
 from reference_union_family import Reference,compare_graph
 from reference_family_schedule import execute as execute_reference_schedule
+from completion_control import require_head_control
 from reference_cell_closure import facts_from_cells
 from audit_snapshot_queries import device
 
@@ -80,7 +81,7 @@ def main():
     if a.completion_decoder:
         from device_completion_readout import compile_readout
         report=json.loads(a.completion_decoder_report.read_text())
-        if a.schedule and report.get('completion_control')!=source_control:raise ValueError('decoder not calibrated for explicit stage control')
+        require_head_control(report,source_control,stages)
         decoder_sha=hashlib.sha256(a.completion_decoder.read_bytes()).hexdigest()
         if report['weights_sha256']!=decoder_sha or report['model_sha256']!=hashlib.sha256(a.model.read_bytes()).hexdigest():raise ValueError('completion decoder provenance')
         with np.load(a.completion_decoder) as f:
@@ -93,7 +94,7 @@ def main():
     if a.completion_classifier:
         from device_completion_classifier import compile_classifier
         report=json.loads(a.completion_classifier_report.read_text())
-        if a.schedule and report.get('completion_control')!=source_control:raise ValueError('classifier not calibrated for explicit stage control')
+        require_head_control(report,source_control,stages)
         head_sha=hashlib.sha256(a.completion_classifier.read_bytes()).hexdigest()
         if report['head_sha256']!=head_sha or report['model_sha256']!=hashlib.sha256(a.model.read_bytes()).hexdigest():raise ValueError('classifier provenance')
         with np.load(a.completion_classifier) as f:

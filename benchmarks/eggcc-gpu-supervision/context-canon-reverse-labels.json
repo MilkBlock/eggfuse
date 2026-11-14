@@ -1,0 +1,56 @@
+{
+  "schema": "device-joint-witness/v3",
+  "case": "synthetic-20261400",
+  "partition": "train",
+  "synthetic_input": true,
+  "input_sha256": "6b58d2603488b0d66cae22739e4be1e069056e5fd54a8844a8b2f0c923a688bc",
+  "generator": {
+    "seed": 20261400,
+    "fragments": 4,
+    "reuse": 0.35,
+    "initial_merge": [
+      {
+        "eq": "0",
+        "sort": "BinaryOp"
+      },
+      {
+        "eq": "7",
+        "sort": "BinaryOp"
+      }
+    ]
+  },
+  "reachability": "rule-valid; source-program reachability unproved",
+  "passed": true,
+  "samples": 8,
+  "continued_samples": 3,
+  "distinct_inputs": 6,
+  "distinct_targets": 4,
+  "dynamic_eq_queries": 65,
+  "dynamic_eq_positive": 8,
+  "artifact_sha256": "46bc560e134d0cc214f6eb82643f9120b7de342b93628263a32096afbef27009",
+  "source_capture_sha256": "1d12ee3b2e9b9614e7ed50be58b49d661428898544faffd1999b10e7d874728a",
+  "direct_with_generated_boundary_neighbors": null,
+  "boundary_feature_columns": 0,
+  "boundary_feature_max_abs": 0.0,
+  "feature_reconstruction_max_abs": 2.2151507437229156e-06,
+  "cpu_label_and_capture_audit_seconds": 0.11848416703287512,
+  "source_control": [
+    {
+      "saturate": {
+        "run": "canon"
+      }
+    },
+    {
+      "saturate": {
+        "run": "context"
+      }
+    }
+  ],
+  "target_scope": "original-rule CPU completion under captured control (legacy: family saturation); semantic Cell slots; compiler temporaries excluded where declared",
+  "backpropagation": false,
+  "limitations": [
+    "Labels are final family states, not every intermediate state",
+    "Selected context rules, not full Eggcc",
+    "Source token mode: exact completed states; exact effects and matching remain authoritative"
+  ]
+}

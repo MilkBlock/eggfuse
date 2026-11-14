@@ -16,6 +16,7 @@ from audit_training_expansion import summarize
 from audit_device_match_readout import dynamic_metrics
 from token_eq_readout import readout_rows,materialize
 from device_completion_classifier import score_head,choose
+from completion_control import capture_control
 
 
 def fit_head(x,y,alpha=10.):
@@ -130,12 +131,15 @@ def main():
         pick=np.flatnonzero(f['alphas']==dr['selected']['partition'])
         if len(pick)!=1:raise ValueError('decoder selection')
         dw=f['w'];dc=f['coef'][:,pick]
-    cases=[];programs={};entries=set();family=None;plans=None
+    cases=[];programs={};entries=set();family=None;plans=None;completion_control=None
     for split,paths in [('train',a.train),('validation',a.validation)]:
         for path in paths:
             d,m=load(path,split)
             if split=='train':training_policy(m,a.allow_historical_real_training)
             verify_source(m,allowed,feedback_heads)
+            contract=capture_control(m)
+            if completion_control is not None and contract!=completion_control:raise ValueError('mixed completion control contracts')
+            completion_control=contract
             register_entry(m,split,programs,entries);sf=semantic_family(m)
             if family is not None and sf!=family:raise ValueError('semantic family mismatch')
             if plans is None:plans=[compile_states(r) for r in sf]
@@ -179,7 +183,7 @@ def main():
     if gpu_error>5e-6 or token_error>5e-6:raise ValueError(f'GPU numerical error: score={gpu_error}, token={token_error}')
     np.savez_compressed(a.output.with_suffix('.npz'),**{f'head_{i}_{k}':v for i,h in enumerate(heads) for k,v in h.items()})
     out=dict(scope='offline direct whole-state ridge and GPU token reconstruction on audited GPU captures; not installed',alpha=10.,backpropagation=False,
-        installed=False,union_authorized=False,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
+        installed=False,union_authorized=False,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
         head_sha256=hashlib.sha256(a.output.with_suffix('.npz').read_bytes()).hexdigest(),coefficient_bytes=sum(h['coef'].nbytes for h in heads),normalization_bytes=sum(h[k].nbytes for h in heads for k in ('mean','scale','bias')),coverage=coverage,
         maximum_gpu_score_error=gpu_error,maximum_gpu_token_error=token_error,token_decode_disagreements=decoding_disagreements,cases=results,
         limitations=['All legal type-compatible states are included, but unseen states have no positive training evidence','No predicted-source rollout or native full-program acceptance','No learned equality is a proof','Current input Eq is retained; scalar effects outside query inputs are unsupported'])
