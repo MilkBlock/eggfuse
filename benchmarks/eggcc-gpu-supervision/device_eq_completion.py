@@ -20,8 +20,16 @@ def merge_round(roots,sorts,pairs,active,xp):
     allowed=active&in_range&typed&root_valid
     ends=safe_roots[safe];small=xp.minimum(ends[:,0],ends[:,1])
     labels=xp.arange(size,dtype=roots.dtype)
-    touching=(labels[:,None]==ends[:,0][None,:])|(labels[:,None]==ends[:,1][None,:])
-    mapping=xp.min(xp.where(touching&allowed[None,:],small[None,:],labels[:,None]),axis=1)
+    # Each accepted pair contributes its minimum to its two root addresses.
+    # Scatter is equivalent to dense identity-by-pair reduction without that
+    # O(identity capacity * pair capacity) temporary.
+    values=xp.where(allowed,small,size)
+    if xp.__name__=='numpy':
+        mapping=labels.copy()
+        xp.minimum.at(mapping,ends[:,0],values)
+        xp.minimum.at(mapping,ends[:,1],values)
+    else:
+        mapping=labels.at[ends[:,0]].minimum(values).at[ends[:,1]].minimum(values)
     updated=mapping[safe_roots];updated=updated[updated]
     # Invalid starting partitions cannot authorize any output roots.
     updated=xp.where(root_valid,updated,roots)
