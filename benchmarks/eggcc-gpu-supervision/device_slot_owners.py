@@ -143,21 +143,38 @@ def ensure_roots(state,xp):
     return out
 
 
+def sealed_copy_aliases(rule):
+    """Final value identities from ordered copies; union is never a value alias."""
+    values=list(range(len(rule['slots'])));fresh=len(values)
+    for op in rule['effects']:
+        if 'dst' not in op:continue
+        dst=op['dst'];src=op.get('arg',{}).get('slot')
+        if op['kind']=='copy' and src is not None and rule['slots'][src]['sort']==rule['slots'][dst]['sort']:
+            values[dst]=values[src]
+        else:values[dst]=fresh;fresh+=1
+    representatives={}
+    return [representatives.setdefault(value,slot) for slot,value in enumerate(values)]
+
+
 def compile_transfer(recipe,entry,width):
     source=recipe['rules'][entry['producer']];target=recipe['rules'][entry['consumer']]
     if width<max(len(source['slots']),len(target['slots'])):raise ValueError('owner width too small')
     inputs=[i for i,s in enumerate(target['slots']) if s['definition']=='query']
     overwritten={o['dst'] for o in target['effects'] if 'dst' in o}
+    aliases=sealed_copy_aliases(source)
     mapping={}
     for slot,origin,valid in zip(inputs,entry['projection'],entry['projection_valid']):
-        if valid and 0<=origin<len(source['slots']) and slot not in overwritten and target['slots'][slot]['sort']==source['slots'][origin]['sort']:mapping.setdefault(origin,slot)
-    copied=[];next_slot=len(target['slots'])
-    for slot in range(len(source['slots'])):
-        if slot not in mapping:
-            mapping[slot]=next_slot;next_slot+=1;copied.append(slot)
+        if valid and 0<=origin<len(source['slots']) and slot not in overwritten and target['slots'][slot]['sort']==source['slots'][origin]['sort']:mapping.setdefault(aliases[origin],slot)
+    next_slot=len(target['slots'])
+    copied_groups=set()
+    for representative in aliases:
+        if representative not in mapping:
+            mapping[representative]=next_slot;next_slot+=1;copied_groups.add(representative)
+    copied=[slot for slot,representative in enumerate(aliases) if representative in copied_groups]
     if next_slot>width:return dict(covered=False,reason='combined_payload_capacity')
     return dict(covered=True,producer=entry['producer'],consumer=entry['consumer'],
-                projection=np.array([mapping.get(i,0) for i in range(width)],np.int32),
+                projection=np.array([mapping[aliases[i]] if i<len(aliases) else 0 for i in range(width)],np.int32),
+                alias=np.array(aliases+list(range(len(aliases),width)),np.int32),
                 copied=np.array([i in copied for i in range(width)]),
                 required=np.array([i<len(source['slots']) for i in range(width)]))
 
@@ -180,6 +197,9 @@ def transfer(state,plan,source,target,source_generation,target_generation,quiesc
         same=(a==b)
         if same.ndim>1:same=xp.all(same,axis=-1)
         equal=equal&xp.all(~(required&~plan['copied'])|same)
+        alias_equal=a==a[plan['alias']]
+        if alias_equal.ndim>1:alias_equal=xp.all(alias_equal,axis=-1)
+        equal=equal&xp.all(~required|alias_equal)
     equal=equal&xp.all(~required|read(state,'slot_valid',s,slot,xp))
     # Map every old physical slot through the source's logical projection.
     old=state['owner_projection'][s];new=xp.where(plan['copied'],projection,state['owner_projection'][t,projection])
@@ -211,7 +231,7 @@ def transfer(state,plan,source,target,source_generation,target_generation,quiesc
     # Generation invalidates stale physical references before the row is reused.
     out['owner_generation']=state['owner_generation']+((xp.arange(owners)==so)&ok).astype(xp.int32)
     return out,dict(transferred=ok,released_rows=ok.astype(xp.int32),value_mismatch=~equal,
-                    uncovered_alias=~covered,stale=~(logical&owner_ok&alias_epochs),waiting_readers=~xp.array(quiescent,dtype=xp.bool_),occupied_destination=~spare,epoch_exhausted=~epoch_ok,copied_fields=xp.sum(plan['copied'].astype(xp.int32))*ok)
+                    uncovered_alias=~covered,stale=~(logical&owner_ok&alias_epochs),waiting_readers=~xp.array(quiescent,dtype=xp.bool_),occupied_destination=~spare,epoch_exhausted=~epoch_ok,copied_fields=xp.sum(copied.astype(xp.int32))*ok)
 
 
 def main():
@@ -229,8 +249,8 @@ def main():
     result=dict(scope='recipe-only sealed-slot composition coverage; not executed storage savings',
         trace_sha256=hashlib.sha256(raw).hexdigest(),entries=len(plans),covered_entries=len(covered),
         boundaries=dict(Counter(p['reason'] for p in plans if not p['covered'])),slot_width=layout['slot_width'],
-        static_shared_fields=sum(int((p['required']&~p['copied']).sum()) for p in covered),static_moved_fields=sum(int(p['copied'].sum()) for p in covered),
-        static_mapping_bytes=sum(p['projection'].nbytes+p['required'].nbytes+p['copied'].nbytes for p in covered),
+        static_shared_fields=sum(int((p['required']&~p['copied']).sum()) for p in covered),static_moved_fields=sum(len(np.unique(p['projection'][p['copied']])) for p in covered),
+        static_mapping_bytes=sum(p['projection'].nbytes+p['required'].nbytes+p['copied'].nbytes+p['alias'].nbytes for p in covered),
         added_directory_bytes_per_logical_cell=4*(layout['slot_width']+2),added_directory_bytes_per_physical_owner=5,
         source_logical_keys_retained=True,logical_activation_transfer=False,writable_owner_runtime=False,
         limitations=['Runtime exact values, scalar columns, generations, aliases and quiescence must still pass',

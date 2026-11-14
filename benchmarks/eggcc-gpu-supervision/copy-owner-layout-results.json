@@ -1,0 +1,86 @@
+{
+  "scope": "actual selected-family GPU owner-payload takeover with unchanged width and model; no speedup or full Eggcc claim",
+  "before": {
+    "scope": "enumerated terminating-boundary GPU feedback and CPU labels; no full Eggcc claim",
+    "producer_frames": true,
+    "prediction": {
+      "all": {
+        "instances": 75,
+        "correct": 62
+      },
+      "direct": {
+        "instances": 48,
+        "correct": 36
+      },
+      "generated": {
+        "instances": 27,
+        "correct": 26
+      }
+    },
+    "complete": true,
+    "expected": 12,
+    "attempted": 12,
+    "statuses": {
+      "pass": 12
+    },
+    "samples": 75,
+    "generated_source_consumers": 27,
+    "released_owner_rows": 0,
+    "owner_witness_pairs": {
+      "accepted_samples": 75,
+      "logical_shared_pairs": 29,
+      "physical_alias_pairs": 0
+    },
+    "manifest_sha256": "bfaa23099102a150815c691e0b5bfa9dacbd362adcea0451cb63caead31140a2",
+    "head_sha256": "6432d7cfc63553f8b79f37faf4fe1513f52697694cf682b9c80269f1fabd3c05",
+    "training_performed": false
+  },
+  "after": {
+    "scope": "enumerated terminating-boundary GPU feedback and CPU labels; no full Eggcc claim",
+    "producer_frames": true,
+    "prediction": {
+      "all": {
+        "instances": 75,
+        "correct": 62
+      },
+      "direct": {
+        "instances": 48,
+        "correct": 36
+      },
+      "generated": {
+        "instances": 27,
+        "correct": 26
+      }
+    },
+    "complete": true,
+    "expected": 12,
+    "attempted": 12,
+    "statuses": {
+      "pass": 12
+    },
+    "samples": 75,
+    "generated_source_consumers": 27,
+    "released_owner_rows": 9,
+    "owner_witness_pairs": {
+      "accepted_samples": 75,
+      "logical_shared_pairs": 29,
+      "physical_alias_pairs": 0
+    },
+    "manifest_sha256": "5397c1aac06f02508822460d487a311a77b8afba7cce3a1bdb78a3facc01e038",
+    "head_sha256": "6432d7cfc63553f8b79f37faf4fe1513f52697694cf682b9c80269f1fabd3c05",
+    "training_performed": false
+  },
+  "semantic_comparison": {
+    "inputs": 12,
+    "maximum_differences": {
+      "features": 1.7881393432617188e-07,
+      "predicted_tokens": 0.0,
+      "targets": 0.0
+    },
+    "rule_target_and_origin_arrays_equal": true
+  },
+  "added_plan_bytes_per_candidate": "4 * slot_width for static alias indices",
+  "added_runtime_work": "per-column alias equality checks; no new dynamic dependency index",
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/multi-frame-copy-owner-v1.tar.gz",
+  "archive_sha256": "943b98983e7fb6202f1ef37e01ea2e61bccd280270ea541739c277036b118dc4"
+}

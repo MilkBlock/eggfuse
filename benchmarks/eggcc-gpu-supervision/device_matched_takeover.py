@@ -52,7 +52,7 @@ def finish(state,catalog,boundary,xp,budget=None,diagnostics=False):
     eligible=quiescent&state['present']&state['settled']&xp.any(state['takeover_plan']>=0,axis=1)
     targets=xp.sort(xp.where(eligible,xp.arange(n),n))[:limit]
     consumed=xp.zeros(n,xp.bool_)
-    tables={k:xp.array(np.array([p[k] for p in catalog])) for k in ('producer','consumer','projection','required','copied')} if catalog else {}
+    tables={k:xp.array(np.array([p[k] for p in catalog])) for k in ('producer','consumer','projection','required','copied','alias')} if catalog else {}
     for lane in range(limit):
         address=targets[lane];target=xp.minimum(address,n-1)
         valid_target=address<n
