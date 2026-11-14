@@ -102,7 +102,7 @@ def main():
     with np.load(a.model) as f:model={k:f[k] for k in ('w','coef')}
     captures=[];facts=[];saved={}
     with np.load(a.capture) as data:
-        prefixes=[k[:-4] for k in data.files if k.startswith('capture/') and k.endswith('/rule') and '/witness/' not in k]
+        prefixes=[k[:-4] for k in data.files if k.startswith('capture/') and k.endswith('/rule') and '/witness/' not in k and '/boundary/' not in k]
         prefixes.sort(key=lambda s:tuple(map(int,s.strip('/').split('/')[1:])))
         for prefix in prefixes:
             c=restore(data,prefix)
@@ -112,9 +112,16 @@ def main():
             captures.append(c);facts.extend(source_facts(c,local))
         saved={k:data[k] for k in data.files}
     mapping=resolve_identities(ref,facts,len(ids));seed_values={i:json.loads(v) for v,i in ids.items()}
-    xs=[];extra=[];ys=[];labels=[];pred=[];rules=[];continued=[];numerical=0.
+    boundary_features=[];boundary_error=0.;xs=[];extra=[];ys=[];labels=[];pred=[];rules=[];continued=[];numerical=0.
     for c in captures:
         x=floating_inputs(c,model,np);z,_=relation_features(inputs(local,c),projection(),np);rid=int(c['rule']);rule=local['rules'][rid]
+        if 'boundary' in c:
+            from device_boundary_context import compile_context,encode as boundary_encode
+            bp=compile_context(local,rid,state['slots'].shape[1])
+            bf,bc=boundary_encode(c['boundary'],c['bindings'],bp,np)
+            boundary_error=max(boundary_error,float(np.max(abs(bf-c['boundary_features']))))
+            if boundary_error>5e-6 or not np.array_equal(bc,c['boundary_counts']):raise ValueError('boundary feature mismatch')
+            boundary_features.extend(c['boundary_features'][c['accepted']])
         live=c['bindings']['live']
         if live.any():numerical=max(numerical,float(np.max(abs(np.tanh(x@model['coef'])[live]-c['predicted_tokens'][live]))))
         for lane in np.flatnonzero(c['accepted']):
@@ -124,11 +131,15 @@ def main():
     if numerical>5e-6:raise ValueError('floating inputs changed')
     rr=rows_from_labels(semantic_recipe,[meta['source_rules'].index(r) for r in rules],labels)
     payload=dict(features=np.array(xs,np.float32),input_relations=np.array(extra,np.float32),targets=np.array(ys,np.float32),target_eq_classes=np.array(labels,np.int32),predicted_tokens=np.array(pred,np.float32),rules=np.array(rules,np.int32),generated_source=np.array(continued,bool),**saved)
+    if boundary_features:
+        if len(boundary_features)!=len(xs):raise ValueError('partial boundary capture')
+        payload['boundary_features']=np.array(boundary_features,np.float32)
     np.savez_compressed(a.output,**payload)
     result=dict(schema='device-joint-witness/v3' if a.semantic_targets or any('token_layout' in r for r in local['rules']) else 'device-joint-witness/v2',**provenance,passed=True,samples=len(xs),continued_samples=sum(continued),
         distinct_inputs=len(np.unique(payload['features'],axis=0)),distinct_targets=len(np.unique(payload['targets'],axis=0)),
         dynamic_eq_queries=sum(len(r['quotient']['representatives']) for r in rr),dynamic_eq_positive=sum(int(r['y'][r['quotient']['representatives']].sum()) for r in rr),
         artifact_sha256=hashlib.sha256(a.output.read_bytes()).hexdigest(),source_capture_sha256=meta['capture']['artifact_sha256'],
+        boundary_feature_columns=payload['boundary_features'].shape[1] if boundary_features else 0,boundary_feature_max_abs=boundary_error,
         feature_reconstruction_max_abs=numerical,cpu_label_and_capture_audit_seconds=time.monotonic()-start,
         target_scope='original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared',backpropagation=False,
         limitations=['Labels are final family states, not every intermediate state','Selected context rules, not full Eggcc','Source tokens come from exact completed GPU states; recursive predicted-source rollout not established'])

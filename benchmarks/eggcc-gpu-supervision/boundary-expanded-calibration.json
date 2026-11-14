@@ -1,0 +1,228 @@
+{
+  "scope": "program-separated semantic-family calibration; not full Eggcc or autonomous learned union",
+  "backpropagation": false,
+  "alpha": 10.0,
+  "boundary_context": true,
+  "feature_columns": 2177,
+  "training_sources": [
+    {
+      "case": "024-pascals-row",
+      "sha256": "65510ffa92061914c957c9c188fc6a879a761a55fd7fc02ec09c5b2eedb3c17f"
+    },
+    {
+      "case": "011-euclid",
+      "sha256": "b5bdf4950a8fc08e0e89d8af14e943178631abd67780ac19650607cb66ce041f"
+    }
+  ],
+  "training_case": "024-pascals-row",
+  "validation_case": "016-gcd",
+  "training_sha256": "65510ffa92061914c957c9c188fc6a879a761a55fd7fc02ec09c5b2eedb3c17f",
+  "validation_sha256": "0da68513c9ae111ab977792ac64875a20b52c13e1b776285d031a3bc1c662885",
+  "training_samples": 75,
+  "validation_samples": 41,
+  "training_distinct_inputs": 72,
+  "validation_distinct_inputs": 41,
+  "validation_inputs_unseen_in_training": 41,
+  "validation_generated_sources": 15,
+  "results": {
+    "cpu_target": {
+      "all": {
+        "resident": {
+          "instances": 41,
+          "query_instances": 41,
+          "exact_partitions": 40,
+          "false_merges": 0,
+          "missed_equalities": 1,
+          "nontransitive": 0,
+          "closure_false_merges": 0
+        },
+        "calibrated": {
+          "instances": 41,
+          "query_instances": 41,
+          "exact_partitions": 41,
+          "false_merges": 0,
+          "missed_equalities": 0,
+          "nontransitive": 0,
+          "closure_false_merges": 0
+        }
+      },
+      "direct": {
+        "resident": {
+          "instances": 26,
+          "query_instances": 26,
+          "exact_partitions": 26,
+          "false_merges": 0,
+          "missed_equalities": 0,
+          "nontransitive": 0,
+          "closure_false_merges": 0
+        },
+        "calibrated": {
+          "instances": 26,
+          "query_instances": 26,
+          "exact_partitions": 26,
+          "false_merges": 0,
+          "missed_equalities": 0,
+          "nontransitive": 0,
+          "closure_false_merges": 0
+        }
+      },
+      "generated": {
+        "resident": {
+          "instances": 15,
+          "query_instances": 15,
+          "exact_partitions": 14,
+          "false_merges": 0,
+          "missed_equalities": 1,
+          "nontransitive": 0,
+          "closure_false_merges": 0
+        },
+        "calibrated": {
+          "instances": 15,
+          "query_instances": 15,
+          "exact_partitions": 15,
+          "false_merges": 0,
+          "missed_equalities": 0,
+          "nontransitive": 0,
+          "closure_false_merges": 0
+        }
+      }
+    },
+    "resident": {
+      "all": {
+        "resident": {
+          "instances": 41,
+          "query_instances": 41,
+          "exact_partitions": 10,
+          "false_merges": 61,
+          "missed_equalities": 9,
+          "nontransitive": 0,
+          "closure_false_merges": 61
+        },
+        "calibrated": {
+          "instances": 41,
+          "query_instances": 41,
+          "exact_partitions": 17,
+          "false_merges": 76,
+          "missed_equalities": 0,
+          "nontransitive": 0,
+          "closure_false_merges": 76
+        }
+      },
+      "direct": {
+        "resident": {
+          "instances": 26,
+          "query_instances": 26,
+          "exact_partitions": 7,
+          "false_merges": 34,
+          "missed_equalities": 3,
+          "nontransitive": 0,
+          "closure_false_merges": 34
+        },
+        "calibrated": {
+          "instances": 26,
+          "query_instances": 26,
+          "exact_partitions": 10,
+          "false_merges": 49,
+          "missed_equalities": 0,
+          "nontransitive": 0,
+          "closure_false_merges": 49
+        }
+      },
+      "generated": {
+        "resident": {
+          "instances": 15,
+          "query_instances": 15,
+          "exact_partitions": 3,
+          "false_merges": 27,
+          "missed_equalities": 6,
+          "nontransitive": 0,
+          "closure_false_merges": 27
+        },
+        "calibrated": {
+          "instances": 15,
+          "query_instances": 15,
+          "exact_partitions": 7,
+          "false_merges": 27,
+          "missed_equalities": 0,
+          "nontransitive": 0,
+          "closure_false_merges": 27
+        }
+      }
+    },
+    "calibrated": {
+      "all": {
+        "resident": {
+          "instances": 41,
+          "query_instances": 41,
+          "exact_partitions": 16,
+          "false_merges": 39,
+          "missed_equalities": 14,
+          "nontransitive": 1,
+          "closure_false_merges": 41
+        },
+        "calibrated": {
+          "instances": 41,
+          "query_instances": 41,
+          "exact_partitions": 20,
+          "false_merges": 42,
+          "missed_equalities": 6,
+          "nontransitive": 0,
+          "closure_false_merges": 42
+        }
+      },
+      "direct": {
+        "resident": {
+          "instances": 26,
+          "query_instances": 26,
+          "exact_partitions": 11,
+          "false_merges": 24,
+          "missed_equalities": 4,
+          "nontransitive": 0,
+          "closure_false_merges": 24
+        },
+        "calibrated": {
+          "instances": 26,
+          "query_instances": 26,
+          "exact_partitions": 14,
+          "false_merges": 26,
+          "missed_equalities": 0,
+          "nontransitive": 0,
+          "closure_false_merges": 26
+        }
+      },
+      "generated": {
+        "resident": {
+          "instances": 15,
+          "query_instances": 15,
+          "exact_partitions": 5,
+          "false_merges": 15,
+          "missed_equalities": 10,
+          "nontransitive": 1,
+          "closure_false_merges": 17
+        },
+        "calibrated": {
+          "instances": 15,
+          "query_instances": 15,
+          "exact_partitions": 6,
+          "false_merges": 16,
+          "missed_equalities": 6,
+          "nontransitive": 0,
+          "closure_false_merges": 16
+        }
+      }
+    }
+  },
+  "gpu_readout_max_abs": 2.312312245233983e-06,
+  "gpu_prediction_max_abs": 2.8423964977264404e-06,
+  "gpu_threshold_disagreements": 0,
+  "model_sha256": "6f14b2f951d8a5a83148ff25cb610584f278a0db331e2a8dad1fbd22fc2f1c49",
+  "decoder_sha256": "4ee1a4a1f2d63629b85ed22cb79c984585d1a7ac19e5b6ac198daf48dab2541a",
+  "resident_model_sha256": "889bc82e215659316851ad88873c6d87e881ea4843d6f5a4a1c6600b7e502a0a",
+  "installed": false,
+  "limitations": [
+    "Only three context rules and one validation program",
+    "Validation is not held-out test acceptance",
+    "Source tokens are exact completed states; predicted-source recursive rollout is not established",
+    "Threshold fixed at 0.5; alpha fixed before reading validation results"
+  ]
+}

@@ -23,7 +23,7 @@ def main():
     if digest!=meta['capture']['artifact_sha256'] or not meta['capture']['passed']:raise ValueError('unverified capture')
     weight=projection();reports=[]
     with np.load(a.capture) as archive:
-        prefixes=sorted(k[:-len('rule')] for k in archive.files if k.startswith('capture/') and k.endswith('/rule') and '/witness/' not in k)
+        prefixes=sorted(k[:-len('rule')] for k in archive.files if k.startswith('capture/') and k.endswith('/rule') and '/witness/' not in k and '/boundary/' not in k)
         for prefix in prefixes:
             c=restore(archive,prefix)
             if not bool(c['recorded']):continue

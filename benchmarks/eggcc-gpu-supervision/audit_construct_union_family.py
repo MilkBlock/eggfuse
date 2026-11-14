@@ -23,7 +23,7 @@ def main():
     for k in ('trace','model','output'):p.add_argument(k,type=Path)
     p.add_argument('--capture',type=Path)
     p.add_argument('--rules',default='283,293');p.add_argument('--snapshot-run',type=int,default=466)
-    p.add_argument('--flush-every',type=int,default=4);p.add_argument('--order-queries',action='store_true');p.add_argument('--capacity',type=int,default=128);p.add_argument('--ticks',type=int,default=24);a=p.parse_args()
+    p.add_argument('--boundary-context',action='store_true');p.add_argument('--flush-every',type=int,default=4);p.add_argument('--order-queries',action='store_true');p.add_argument('--capacity',type=int,default=128);p.add_argument('--ticks',type=int,default=24);a=p.parse_args()
     if a.flush_every<1 or a.ticks<1:raise ValueError('positive execution window required')
     raw=a.trace.read_bytes();trace=json.loads(raw);ids_rule=[int(x) for x in a.rules.split(',')]
     if not all(trace.get(k) is True for k in ('strict_run_graphs_equal','strict_audit_reference_equal','run_control_counts_equal')):raise ValueError('unaudited trace')
@@ -40,6 +40,9 @@ def main():
         from device_query_join import order_query
         counts=Counter(r['table'] for r in rows);table_rows={i:int(counts[t['name']]) for i,t in enumerate(local['tables'])}
         blocks=[(st,dict(p,query=order_query(p['query'],table_rows))) for st,p in blocks]
+    if a.boundary_context:
+        from device_boundary_context import compile_context
+        blocks=[(st,dict(p,boundary_context=compile_context(local,p['query']['rule'],state['slots'].shape[1]))) for st,p in blocks]
     query_orders=[p['query'].get('order',list(range(len(p['query']['atoms'])))) for _,p in blocks]
     blocks,catalog,atoms=compile_catalog(local,blocks,state['slots'].shape[1]);current=device(initialize(pack(state),atoms))
     plan=compile_completion(local,state['slots'].shape[1],include_unions=True)
@@ -47,6 +50,7 @@ def main():
     reserve=a.capacity*sum(o['kind']=='construct' for r in lowered['rules'] for o in r['effects'])
     registry=eq_registry(ids,plan['eq_sort_names'],reserve);ctx=device(registry);cp=device(plan);dp=device(blocks)
     with np.load(a.model) as f:
+        if bool(f.get('boundary_context',False)):raise ValueError('experimental boundary predictor is not installed in autonomous execution')
         if str(f['encoding'])!='class-history-neighborhood-input' or int(f['channels'])!=4 or bool(f.get('source_neighborhood',False)) or bool(f.get('source_relations',False)):raise ValueError('model interface')
         if 'family_semantics' in f:
             family=[{k:r[k] for k in ('slots','query','effects')} for r in original['rules']]
@@ -92,7 +96,7 @@ def main():
     passed=bool(m['finished']) and not bool(m['failed_run']) and len(boundary_checks)==len(cpu_runs) and all(b['passed'] for b in boundary_checks) and check['passed'] and lowering_check['passed'] and complete and per_rule_matches==[r['per_rule_applications'] for r in cpu_runs] and matched==source_counts and len(cpu_runs)==int(log['run_done'].sum()) and all(c['passed'] and c['enumeration_complete'] for c in checks)
     result=dict(scope='real selected construct/union family on GPU; not full Eggcc',rules=ids_rule,snapshot_run=a.snapshot_run,stage=stage,
         trace_sha256=hashlib.sha256(raw).hexdigest(),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),lowered_sets=sites,
-        seed_rows=len(rows),query_order=query_orders,fixed_ticks=a.ticks,flush_every=a.flush_every,host_execution_flushes=a.ticks//a.flush_every,generated_cells=int(log['new_tokens'].sum()),fresh_ids=int(next_id)-len(ids),original_cpu_fresh_ids=len(ref.parent)-len(ids),lowered_cpu_fresh_ids=len(lowref.parent)-len(ids),released_owner_rows=int(log['takeover_released'].sum()),generated_source_consumers=continued,
+        seed_rows=len(rows),boundary_context=a.boundary_context,query_order=query_orders,fixed_ticks=a.ticks,flush_every=a.flush_every,host_execution_flushes=a.ticks//a.flush_every,generated_cells=int(log['new_tokens'].sum()),fresh_ids=int(next_id)-len(ids),original_cpu_fresh_ids=len(ref.parent)-len(ids),lowered_cpu_fresh_ids=len(lowref.parent)-len(ids),released_owner_rows=int(log['takeover_released'].sum()),generated_source_consumers=continued,
         cpu_runs=cpu_runs,lowered_cpu_runs=lowruns,gpu_matches_per_run=matched,gpu_matches_per_rule=per_rule_matches,gpu_runs=int(log['run_done'].sum()),gpu_run_changes=log['run_changed'][log['run_done']].tolist(),
         graph_check=check,boundary_checks=boundary_checks,lowering_check=lowering_check,views_complete=complete,query_checks=checks,finished=bool(m['finished']),failed_run=bool(m['failed_run']),passed=passed,
         gpu_compile_upload_execute_seconds=gpu_seconds,cpu_reference_and_audit_seconds=time.monotonic()-started,

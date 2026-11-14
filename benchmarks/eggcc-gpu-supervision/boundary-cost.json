@@ -1,0 +1,66 @@
+{
+  "scope": "first accepted block per rule, boundary encoding only",
+  "capture_sha256": "0da68513c9ae111ab977792ac64875a20b52c13e1b776285d031a3bc1c662885",
+  "blocks": [
+    {
+      "rule": 0,
+      "accepted": 1,
+      "padded_lanes": 128,
+      "cell_capacity": 309,
+      "slot_width": 8,
+      "ports": 4,
+      "feature_columns": 512,
+      "feature_bytes": 262144,
+      "static_bytes": 37088,
+      "captured_boundary_bytes": 183237,
+      "connectivity_elements": 1265664,
+      "cpu_encode_seconds": 0.005375290988013148,
+      "upload_seconds": 0.0013666669838130474,
+      "gpu_compile_first_seconds": 0.38107966602547094,
+      "gpu_warm_seconds": 0.0016131249722093344,
+      "readback_seconds": 3.716698847711086e-05
+    },
+    {
+      "rule": 1,
+      "accepted": 18,
+      "padded_lanes": 128,
+      "cell_capacity": 309,
+      "slot_width": 8,
+      "ports": 4,
+      "feature_columns": 512,
+      "feature_bytes": 262144,
+      "static_bytes": 37088,
+      "captured_boundary_bytes": 183237,
+      "connectivity_elements": 1265664,
+      "cpu_encode_seconds": 0.004880834021605551,
+      "upload_seconds": 0.00014812505105510354,
+      "gpu_compile_first_seconds": 0.0019203330157324672,
+      "gpu_warm_seconds": 0.001338500005658716,
+      "readback_seconds": 1.3541022781282663e-05
+    },
+    {
+      "rule": 2,
+      "accepted": 6,
+      "padded_lanes": 128,
+      "cell_capacity": 309,
+      "slot_width": 8,
+      "ports": 4,
+      "feature_columns": 512,
+      "feature_bytes": 262144,
+      "static_bytes": 37088,
+      "captured_boundary_bytes": 183237,
+      "connectivity_elements": 1265664,
+      "cpu_encode_seconds": 0.00478645897237584,
+      "upload_seconds": 5.891598993912339e-05,
+      "gpu_compile_first_seconds": 0.0015724999830126762,
+      "gpu_warm_seconds": 0.0012437920086085796,
+      "readback_seconds": 1.0083022061735392e-05
+    }
+  ],
+  "limitations": [
+    "No isolated speedup claim; warm launch excludes upload/compilation",
+    "Capture already projected owner slots; gather and lifecycle costs remain in end-to-end execution report",
+    "Connectivity is currently dense and must be charged, not described as a free token operation",
+    "Readback is diagnostic; production token flow should remain resident"
+  ]
+}

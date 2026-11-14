@@ -17,10 +17,16 @@ def collect(state,bindings,request,tokens,numerical,plan,xp):
             owner_epoch=state['owner_epoch'][safe],physical_generation=state['owner_generation'][physical],physical_live=state['owner_live'][physical])
     src=xp.clip(request['sources'],0,state['tokens'].shape[0]-1)
     ports=[p['slot'] for p in plan['ports']]
-    return dict(rule=xp.array(plan['query']['rule']),source_capacity=xp.array(state['tokens'].shape[0]),bindings=bindings,request=request,
+    result=dict(rule=xp.array(plan['query']['rule']),source_capacity=xp.array(state['tokens'].shape[0]),bindings=bindings,request=request,
         source_tokens=state['tokens'][src],source_rules=state['keys'][src,0],
         input_ports=xp.array(ports,xp.int32),source_ports=bindings['source_slots'][:,ports],
         predicted_tokens=tokens,numerical_ready=numerical['ready'],witness=witness)
+    if 'boundary_context' in plan:
+        from device_boundary_context import snapshot,encode
+        boundary=snapshot(state,xp)
+        features,counts=encode(boundary,bindings,plan['boundary_context'],xp)
+        result.update(boundary=boundary,boundary_features=features,boundary_counts=counts)
+    return result
 
 
 def host(value):

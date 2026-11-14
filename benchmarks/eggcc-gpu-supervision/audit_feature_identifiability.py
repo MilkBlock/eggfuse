@@ -49,7 +49,7 @@ def main():
         if sha!=meta['capture']['artifact_sha256'] or not meta['capture']['passed'] or 'semantic_recipe' not in meta:raise ValueError('unverified semantic capture')
         groups={k:defaultdict(Counter) for k in combined};contexts=[]
         with np.load(path) as f:
-            prefixes=[k[:-4] for k in f.files if k.startswith('capture/') and k.endswith('/rule') and '/witness/' not in k]
+            prefixes=[k[:-4] for k in f.files if k.startswith('capture/') and k.endswith('/rule') and '/witness/' not in k and '/boundary/' not in k]
             prefixes.sort(key=lambda s:tuple(map(int,s.strip('/').split('/')[1:])))
             for prefix in prefixes:
                 c=restore(f,prefix)

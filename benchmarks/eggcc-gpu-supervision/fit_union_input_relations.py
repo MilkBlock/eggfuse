@@ -22,7 +22,7 @@ def load(record):
     extra=[]
     with np.load(path) as f:
         # Match the writer's numeric tick/inner/block order, not string order.
-        prefixes=[k[:-len('rule')] for k in f.files if k.startswith('capture/') and k.endswith('/rule') and '/witness/' not in k]
+        prefixes=[k[:-len('rule')] for k in f.files if k.startswith('capture/') and k.endswith('/rule') and '/witness/' not in k and '/boundary/' not in k]
         prefixes.sort(key=lambda s:tuple(map(int,s.strip('/').split('/')[1:])))
         for prefix in prefixes:
             c=restore(f,prefix)
