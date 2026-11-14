@@ -24,7 +24,7 @@ def compile_frames(recipe,width):
     return dict(roles=roles,numeric=numeric,valid=valid,eq=eq,seed=seed,max_seed_width=max((len(r['slots']) for r in recipe['rules'] if r.get('metadata',{}).get('source_set')=='snapshot'),default=0))
 
 
-def encode_seeds(state,layout,model,xp,field_width=5):
+def seed_inputs(state,layout,xp,field_width=5):
     if layout['max_seed_width']>field_width:raise ValueError('seed interface exceeds encoder width')
     n,width=shape(state);rr=xp.arange(n)[:,None];ss=xp.arange(width)[None,:]
     rid=xp.clip(state['keys'][:,0],0,len(layout['roles'])-1)
@@ -41,8 +41,13 @@ def encode_seeds(state,layout,model,xp,field_width=5):
     fields=xp.concatenate([roles,dynamic],axis=-1)
     fields=xp.where(valid[:,:,None],fields,0)[:,:field_width]
     if width<field_width:fields=xp.concatenate([fields,xp.zeros((n,field_width-width,128),xp.float32)],axis=1)
-    token=model.encode(fields.reshape(n,field_width*128))
     update=state['present']&layout['seed'][rid]
+    return fields.reshape(n,field_width*128),update
+
+
+def encode_seeds(state,layout,model,xp,field_width=5):
+    fields,update=seed_inputs(state,layout,xp,field_width)
+    token=model.encode(fields)
     return dict(state,tokens=xp.where(update[:,None],token,state['tokens']))
 
 

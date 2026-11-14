@@ -21,19 +21,24 @@ class CompletionReadout(nn.Module):
         self.cell.relation.freeze();self.cell.match_relation.freeze()
 
 
-def objective(model,batch,parent,chain,typed=None):
+def objective(model,batch,parent,chain,typed=None,third=None):
     base=chain_loss(model.cell,batch,parent,chain)
     _,token=model.cell(batch['x'],batch['edges'],batch['mask'],batch['request'],batch['relations'])
     _,_,next_token=rollout(model.cell,parent,chain)
     if typed is not None:
         _,typed_token=model.cell(typed['x'],typed['edges'],typed['mask'],typed['request'],typed['relations'])
         base=base+masked_loss(model.eq(typed_token,typed['request']),typed['eq_target'],typed['eq_mask'])
+    if third is not None:
+        from neural_third_step import replay
+        _,third_token=replay(model.cell,third)
+        base=base+masked_loss(model.eq(third_token,third['request']),third['eq_target'],third['eq_mask'])
     return base+masked_loss(model.eq(token,batch['request']),batch['eq_target'],batch['eq_mask'])+masked_loss(model.eq(next_token,chain['request']),chain['eq_target'],chain['eq_mask'])
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path);p.add_argument('--steps',type=int,default=800);p.add_argument('--evaluate-only',action='store_true');p.add_argument('--typed-patterns',action='store_true');p.add_argument('--resume',action='store_true');p.add_argument('--typed-all-candidates',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path);p.add_argument('--steps',type=int,default=800);p.add_argument('--evaluate-only',action='store_true');p.add_argument('--typed-patterns',action='store_true');p.add_argument('--resume',action='store_true');p.add_argument('--typed-all-candidates',action='store_true');p.add_argument('--third-train',type=Path);p.add_argument('--third-test',type=Path);a=p.parse_args()
     if a.steps<1:raise ValueError('positive steps required')
+    if bool(a.third_train)!=bool(a.third_test):raise ValueError('both third-step datasets required')
     source=json.loads(a.trace.read_text());source=source.get('recipe',source)
     recipe=dict(source,rules=[r for r in source['rules'] if r['metadata']['source_set']=='context']);width=max(len(r['slots']) for r in recipe['rules']);started=time.perf_counter()
     base,chain,coverage=build(recipe,8,23001,ordered=True,eq_targets=True)
@@ -48,6 +53,10 @@ def main():
     db,dc,dd,dt,de=map(device,(base,chain,direct,test,tc))
     dp=device(typed_data) if typed_data is not None else None
     typed_positive=(np.arange(len(typed_data['valid'])) if a.typed_all_candidates else np.flatnonzero(typed_data['valid']>0)) if typed_data is not None else None
+    third_train=third_test=None;dg=None;third_positive=None
+    if a.third_train:
+        third_train=dict(np.load(a.third_train,allow_pickle=False));third_test=dict(np.load(a.third_test,allow_pickle=False))
+        dg=device(third_train);third_positive=np.flatnonzero(third_train['valid']>0)
     mx.random.seed(117);model=CompletionReadout(direct['x'].shape[-1],direct['relations'].shape[-1],width);(model.load_weights if (a.evaluate_only or a.resume) else model.cell.load_weights)(str(a.weights))
     from mlx.utils import tree_flatten
     frozen_before={k:np.array(v).copy() for k,v in tree_flatten(model.cell.parameters()) if k.startswith(('relation.','match_relation.'))}
@@ -62,7 +71,17 @@ def main():
         changed=pos&np.any((tc['eq_target'][perm]!=tc['eq_target'])&tc['eq_mask'],axis=1)
         novel=pos&~overlap
         return dict(unseen_states=int(novel.sum()),unseen_predicted_token=metrics(np.array(actual)[novel],tc['eq_target'][novel],tc['eq_mask'][novel],width),shuffled_within_template=metrics(np.array(shuffled)[pos],labels,mask,width),shuffled_semantically_changed_states=int(changed.sum()),predicted_token=metrics(np.array(actual)[pos],labels,mask,width),teacher_token=metrics(np.array(teacher)[pos],labels,mask,width),zero_token=metrics(np.array(zero)[pos],labels,mask,width),matching_errors=int((((np.array(first)>=0)&(np.array(second)>=0))!=pos).sum()))
-    before=evaluate();print(json.dumps(dict(before=before)),flush=True)
+    def evaluate_third(data):
+        from neural_third_step import replay
+        scores=[];matches=[]
+        for start in range(0,len(data['valid']),128):
+            b=device({k:v[start:start+128] for k,v in data.items()});logits,token=replay(model.cell,b)
+            out=model.eq(token,b['request']);mx.eval(out,logits);scores.append(np.array(out));matches.append(np.array(logits)>=0)
+        pos=data['valid']>0
+        return dict(eq=metrics(np.concatenate(scores)[pos],data['eq_target'][pos],data['eq_mask'][pos],width),matching_errors=int((np.concatenate(matches)!=pos).sum()))
+    before=evaluate()
+    if third_test is not None:before['third_step']=evaluate_third(third_test)
+    print(json.dumps(dict(before=before)),flush=True)
     grad=nn.value_and_grad(model,objective);optimizer=optim.Adam(learning_rate=5e-4);rng=np.random.default_rng(119)
     for step in range(0 if a.evaluate_only else a.steps):
         bi=mx.array(rng.integers(len(direct['valid']),size=128));ci=mx.array(rng.integers(len(chain['valid']),size=64))
@@ -70,9 +89,14 @@ def main():
         typed_batch=None
         if dp is not None:
             ti=mx.array(rng.choice(typed_positive,size=128));typed_batch={k:v[ti] for k,v in dp.items()}
-        value,g=grad(model,batch,parent,c,typed_batch);optimizer.update(model,g);mx.eval(value,model.parameters(),optimizer.state)
+        third_batch=None
+        if dg is not None:
+            gi=mx.array(rng.choice(third_positive,size=64));third_batch={k:v[gi] for k,v in dg.items()}
+        value,g=grad(model,batch,parent,c,typed_batch,third_batch);optimizer.update(model,g);mx.eval(value,model.parameters(),optimizer.state)
         if step%100==0:print(json.dumps(dict(step=step,loss=float(value))),flush=True)
     after=evaluate()
+    if third_test is not None:
+        after['third_step']=evaluate_third(third_test);after['third_training']=evaluate_third(third_train)
     if dp is not None:
         _,tt=model.cell(dp['x'],dp['edges'],dp['mask'],dp['request'],dp['relations']);tp=model.eq(tt,dp['request']);mx.eval(tp)
         pos=typed_data['valid']>0
@@ -86,7 +110,11 @@ def main():
     model.save_weights(str(a.output.with_suffix('.safetensors')))
     transition=a.output.with_suffix('.transition.safetensors');model.cell.save_weights(str(transition))
     readout=a.output.with_suffix('.eq.safetensors');model.eq.save_weights(str(readout))
-    report=dict(scope='semantic Eq readout from floating generated tokens; standalone synthetic two-step evaluation, no graph mutations',synthetic_only_training=True,slot_width=width,pair_outputs=width*(width-1)//2,training_direct_samples=len(direct['valid']),typed_training_coverage=typed_coverage,resumed_combined_weights=a.resume,typed_semantic_sampling=("all candidates" if a.typed_all_candidates else "positive states only") if a.typed_patterns else None,evaluation_chain_feature_overlap=int(overlap.sum()),training_coverage=coverage,test_coverage=test_coverage,before=before,after=after,steps=0 if a.evaluate_only else a.steps,evaluation_only=a.evaluate_only,interface_head_unchanged=frozen_unchanged,readout_receives_exact_ids=False,readout_receives_incidence=False,semantic_proposals_committed=False,promoted_as_default=False,wall_seconds=time.perf_counter()-started,parent_weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),transition_weights_sha256=hashlib.sha256(transition.read_bytes()).hexdigest(),readout_weights_sha256=hashlib.sha256(readout.read_bytes()).hexdigest(),limitations=['Known bounded synthetic chain family; not arbitrary graphs or new rulesets','Zero-token ablation removes both dynamic contents and the usual token distribution','Template request also carries information; readout is not token-only','False positive Eq proposals would corrupt semantics if committed without correction'])
+    report=dict(scope='semantic Eq readout from floating generated tokens; standalone synthetic two-step and optional third-step evaluation, no graph mutations',synthetic_only_training=True,slot_width=width,pair_outputs=width*(width-1)//2,training_direct_samples=len(direct['valid']),typed_training_coverage=typed_coverage,resumed_combined_weights=a.resume,typed_semantic_sampling=("all candidates" if a.typed_all_candidates else "positive states only") if a.typed_patterns else None,evaluation_chain_feature_overlap=int(overlap.sum()),training_coverage=coverage,test_coverage=test_coverage,before=before,after=after,steps=0 if a.evaluate_only else a.steps,evaluation_only=a.evaluate_only,interface_head_unchanged=frozen_unchanged,readout_receives_exact_ids=False,readout_receives_incidence=False,semantic_proposals_committed=False,promoted_as_default=False,wall_seconds=time.perf_counter()-started,parent_weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),transition_weights_sha256=hashlib.sha256(transition.read_bytes()).hexdigest(),readout_weights_sha256=hashlib.sha256(readout.read_bytes()).hexdigest(),limitations=['Known bounded synthetic chain family; not arbitrary graphs or new rulesets','Zero-token ablation removes both dynamic contents and the usual token distribution','Template request also carries information; readout is not token-only','False positive Eq proposals would corrupt semantics if committed without correction'])
+    if third_train is not None:
+        from neural_third_step import fingerprints as signatures
+        seen=set(signatures(third_train));test_signatures=signatures(third_test)
+        report['third_step_data']=dict(train_sha256=hashlib.sha256(a.third_train.read_bytes()).hexdigest(),test_sha256=hashlib.sha256(a.third_test.read_bytes()).hexdigest(),train_candidates=len(third_train['valid']),test_candidates=len(third_test['valid']),test_input_overlap=sum(v in seen for v in test_signatures),scope='synthetic device-routed lineage; fixed exact routing during differentiable replay')
     a.output.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(after))
 
 

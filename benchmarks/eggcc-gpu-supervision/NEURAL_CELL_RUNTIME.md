@@ -657,3 +657,54 @@ python audit_neural_gpu_rhs.py GCD_TRACE BOUNDARY.transition.safetensors FOLLOW.
 `neural-boundary-encoding-results.json` records the rejected experiment and its
 archive. The follow audit exits 1 as required. These are correctness experiments,
 not throughput or speedup results.
+
+
+### Differentiable replay of actual post-transfer source selection
+
+`neural_third_step.py` generates synthetic Cell instances, executes the existing
+exact device completion/ownership path, and records the resulting candidate
+routing. Each input is tagged as an initial seed, the first generated token, or
+the second generated token. It records raw seed fields and static/current
+connection features, never a checkpoint's floating token output. `replay`
+recomputes both predecessors and the third transition; gradients flow through
+both generated tokens and the encoder. A test forces every third-step input to
+come from the second generation and verifies a nonzero gradient at first-step
+raw inputs. Shared `seed_inputs` supplies the same seed fields as device encoding.
+
+This is fixed, exact routing during training: it does not backpropagate through
+constructor identity allocation, ownership decisions or candidate enumeration.
+The final executor still needs a token-driven stage loop and boundary correction.
+The dataset's targets come from independent exact completion of the selected
+rule; repeated query slots must agree as well as the input key belonging to the
+oracle's match set. Invalid matches have masked Eq labels.
+
+195 training cases contain 509 valid third-step candidates; 107 evaluation cases
+contain 312. Before training, replay exactly reproduces the actual GPU audit's
+58 wrong states and 39 false-merge states. After 1600 joint steps, both replay
+and the actual GPU ownership-follow audit have 21 wrong states and six false
+merges (291/312 exact). Matching remains 312/312. The training set is 507/509
+exact. Two-step evaluation remains 577/578, typed training 398/398, and real seed
+GCD/LCM checks remain 40/40 and 109/109.
+
+115 valid evaluation inputs overlap training. The remaining 197 have 176 exact
+states (89.34%); all 21 errors lie there. Fingerprints exclude labels and zero
+ignored seed fields for generated sources. Neither 291/312 nor the exact match
+count is a correctness certificate. The full audit exits 1; semantic predictions
+remain uncommitted. Query-only completion still has 12 wrong states, and 16
+states have external equalities; these are overlapping diagnostic categories.
+
+Reproduction, from this directory:
+
+```sh
+python neural_third_step.py GCD_TRACE TRAIN.npz --seed 23001 --count 4 --per-pair 2
+python neural_third_step.py GCD_TRACE TEST.npz --seed 93003 --count 4 --per-pair 1
+python train_neural_eq_readout.py GCD_TRACE BOUNDARY.safetensors THIRD.json --typed-patterns --resume --steps 1600 --third-train TRAIN.npz --third-test TEST.npz
+python audit_neural_third_step.py TEST.npz THIRD.safetensors HELDOUT.json --training-data TRAIN.npz
+python audit_neural_gpu_rhs.py GCD_TRACE THIRD.transition.safetensors FOLLOW.json --limit 107 --follow --interface-only --eq-readout THIRD.eq.safetensors
+```
+
+`neural-third-step-results.json` records input/weight hashes, the archive and
+results. NPZ datasets and weights stay outside Git. This measures standalone
+GPU prototype correctness, not egglog runtime performance. Next work must cover
+unseen generated-source contexts and unavailable boundaries before relying on
+these predictions to advance a complete stage.
