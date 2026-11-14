@@ -1,0 +1,111 @@
+{
+  "scope": "synthetic local constructor family; not full Eggcc",
+  "training_performed": false,
+  "backpropagation": false,
+  "records": [
+    {
+      "seed": 20261120,
+      "status": "complete",
+      "input_sha256": "cb30b5b5ff8a7af438b670fc65405b9e4f69ea6966703a7778327d7acd2fcef9",
+      "rows": 8,
+      "runs": 4,
+      "unions": 10,
+      "applications": 42
+    },
+    {
+      "seed": 20261121,
+      "status": "complete",
+      "input_sha256": "0152c64413165e9d6fcad00be81b85df396c9cace01773d800fc468e5b4a2981",
+      "rows": 7,
+      "runs": 3,
+      "unions": 0,
+      "applications": 22
+    },
+    {
+      "seed": 20261122,
+      "status": "complete",
+      "input_sha256": "d255d07287d7601e893f13f6e70289fe3a67249affcdf20e8de9ef49554bd4c3",
+      "rows": 8,
+      "runs": 2,
+      "unions": 0,
+      "applications": 10
+    },
+    {
+      "seed": 20261123,
+      "status": "rejected",
+      "reason": "oracle saturation budget exhausted"
+    },
+    {
+      "seed": 20261124,
+      "status": "complete",
+      "input_sha256": "cc7601b0fcb880c017ec971ed1f50da4818124094fe320f7cd66c46586751ab1",
+      "rows": 7,
+      "runs": 2,
+      "unions": 0,
+      "applications": 8
+    },
+    {
+      "seed": 20261125,
+      "status": "complete",
+      "input_sha256": "3e35eb39772126e970c223f1a6db4d985f10dbb4a70c58239ad09309b25a91ac",
+      "rows": 8,
+      "runs": 4,
+      "unions": 2,
+      "applications": 39
+    },
+    {
+      "seed": 20261126,
+      "status": "complete",
+      "input_sha256": "9f1b17dc65ea4eff05369380fe12c0db11c3a3ab13d8f0cf134fd2e358b41f5f",
+      "rows": 8,
+      "runs": 3,
+      "unions": 0,
+      "applications": 14
+    },
+    {
+      "seed": 20261127,
+      "status": "complete",
+      "input_sha256": "d040c0e6d6679e09566617ae5b1ff68501e330174c91221a3ec224188e9d39f9",
+      "rows": 7,
+      "runs": 4,
+      "unions": 2,
+      "applications": 30
+    },
+    {
+      "seed": 20261128,
+      "status": "complete",
+      "input_sha256": "3b111961c9ebcf6169adf4da2e1ef063140e6b94e6e728526a51dc3384d535e6",
+      "rows": 7,
+      "runs": 5,
+      "unions": 2,
+      "applications": 35
+    },
+    {
+      "seed": 20261129,
+      "status": "complete",
+      "input_sha256": "064baecf295a84b76ae989e2d9b38b39ab9fe1ea29639ea30338c5ebb55cfff5",
+      "rows": 7,
+      "runs": 2,
+      "unions": 2,
+      "applications": 11
+    },
+    {
+      "seed": 20261130,
+      "status": "complete",
+      "input_sha256": "3673f7feacf86c08774942503fbed6212aaf3c3b7d1e440d5fecdd3f6ddd9e84",
+      "rows": 8,
+      "runs": 2,
+      "unions": 1,
+      "applications": 16
+    },
+    {
+      "seed": 20261131,
+      "status": "complete",
+      "input_sha256": "5584034f2dc55d3c3ced8c4b0ecd726613da004bec40eeb4d45ec0ca1821281e",
+      "rows": 7,
+      "runs": 3,
+      "unions": 2,
+      "applications": 15
+    }
+  ]
+}

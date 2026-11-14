@@ -1,13 +1,18 @@
 import unittest
 import numpy as np
 import mlx.core as mx
-from fit_completion_classifier import fit_head,score_head,choose,register_entry,unique_training_rows
+from fit_completion_classifier import fit_head,score_head,choose,register_entry,unique_training_rows,training_policy
 from device_completion_states import compile_states
 from test_completion_states import rule
 from audit_snapshot_queries import device
 
 
 class CompletionClassifier(unittest.TestCase):
+    def test_synthetic_only_policy(self):
+        with self.assertRaises(ValueError):training_policy(dict(capture={}))
+        training_policy(dict(capture=dict(synthetic_input=True)))
+        training_policy(dict(capture={}),allow_historical=True)
+
     def test_entry_partition_and_duplicate_policy(self):
         programs={};entries=set()
         def meta(run):return dict(capture=dict(program_file_sha256='p'),snapshot_run=run)

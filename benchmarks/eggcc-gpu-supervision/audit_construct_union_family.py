@@ -22,10 +22,12 @@ def main():
     p=argparse.ArgumentParser()
     for k in ('trace','model','output'):p.add_argument(k,type=Path)
     p.add_argument('--capture',type=Path)
+    p.add_argument('--synthetic-input',action='store_true')
     p.add_argument('--completion-decoder',type=Path);p.add_argument('--completion-decoder-report',type=Path)
     p.add_argument('--completion-classifier',type=Path);p.add_argument('--completion-classifier-report',type=Path)
     p.add_argument('--rules',default='283,293');p.add_argument('--snapshot-run',type=int,default=466)
     p.add_argument('--progress',action='store_true');p.add_argument('--predicted-source-feedback',action='store_true');p.add_argument('--experimental-boundary-model',action='store_true');p.add_argument('--boundary-context',action='store_true');p.add_argument('--flush-every',type=int,default=4);p.add_argument('--order-queries',action='store_true');p.add_argument('--capacity',type=int,default=128);p.add_argument('--ticks',type=int,default=24);a=p.parse_args()
+    if a.capture and a.capture.with_suffix('.json').resolve()==a.output.resolve():raise ValueError('capture metadata and execution report must have different paths')
     if a.predicted_source_feedback and not a.experimental_boundary_model:raise ValueError('feedback requires explicit experimental model')
     if bool(a.completion_decoder)!=bool(a.completion_decoder_report):raise ValueError('completion decoder and report required together')
     if a.completion_decoder and not a.predicted_source_feedback:raise ValueError('completion readout requires actual predicted-source feedback')
@@ -33,7 +35,11 @@ def main():
     if a.completion_classifier and (a.completion_decoder or not a.predicted_source_feedback):raise ValueError('direct classifier requires exclusive predicted-source mode')
     if a.flush_every<1 or a.ticks<1:raise ValueError('positive execution window required')
     raw=a.trace.read_bytes();trace=json.loads(raw);ids_rule=[int(x) for x in a.rules.split(',')]
-    if not all(trace.get(k) is True for k in ('strict_run_graphs_equal','strict_audit_reference_equal','run_control_counts_equal')):raise ValueError('unaudited trace')
+    if a.synthetic_input:
+        from synthetic_cell_inputs import validate
+        recipe,snapshot=validate(trace)
+        trace=dict(recipe=recipe,boundaries=[dict(ordinal=a.snapshot_run,graph=snapshot)])
+    elif not all(trace.get(k) is True for k in ('strict_run_graphs_equal','strict_audit_reference_equal','run_control_counts_equal')):raise ValueError('unaudited trace')
     original=dict(trace['recipe'],rules=[trace['recipe']['rules'][i] for i in ids_rule])
     stages={r['metadata']['source_set'] for r in original['rules']}
     if len(stages)!=1:raise ValueError('single source stage required')
@@ -130,7 +136,7 @@ def main():
         check_run['passed'] &= covered;boundary_checks.append(check_run)
     source_counts=[r['applications'] for r in cpu_runs]
     passed=bool(m['finished']) and not bool(m['failed_run']) and len(boundary_checks)==len(cpu_runs) and all(b['passed'] for b in boundary_checks) and check['passed'] and lowering_check['passed'] and complete and per_rule_matches==[r['per_rule_applications'] for r in cpu_runs] and matched==source_counts and len(cpu_runs)==int(log['run_done'].sum()) and all(c['passed'] and c['enumeration_complete'] for c in checks)
-    result=dict(scope='real selected construct/union family on GPU; not full Eggcc',rules=ids_rule,snapshot_run=a.snapshot_run,stage=stage,
+    result=dict(scope=('synthetic selected construct/union family on GPU; not full Eggcc' if a.synthetic_input else 'real selected construct/union family on GPU; not full Eggcc'),rules=ids_rule,snapshot_run=a.snapshot_run,stage=stage,
         trace_sha256=hashlib.sha256(raw).hexdigest(),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),lowered_sets=sites,
         seed_rows=len(rows),experimental_boundary_model=boundary_model,source_tokens='predicted generated Cells, exact imported Cells' if a.predicted_source_feedback else 'exact completed states',boundary_context=a.boundary_context,query_order=query_orders,fixed_ticks=a.ticks,flush_every=a.flush_every,host_execution_flushes=a.ticks//a.flush_every,generated_cells=int(log['new_tokens'].sum()),fresh_ids=int(next_id)-len(ids),original_cpu_fresh_ids=len(ref.parent)-len(ids),lowered_cpu_fresh_ids=len(lowref.parent)-len(ids),released_owner_rows=int(log['takeover_released'].sum()),generated_source_consumers=continued,
         cpu_runs=cpu_runs,lowered_cpu_runs=lowruns,gpu_matches_per_run=matched,gpu_matches_per_rule=per_rule_matches,gpu_runs=int(log['run_done'].sum()),gpu_run_changes=log['run_changed'][log['run_done']].tolist(),

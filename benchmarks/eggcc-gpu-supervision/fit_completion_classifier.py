@@ -29,9 +29,19 @@ def fit_head(x,y,alpha=10.):
 
 
 
+def source_group(meta):
+    c=meta['capture']
+    return ('synthetic:'+c['input_sha256']) if c.get('synthetic_input') else c['program_file_sha256']
+
+
+def training_policy(meta, allow_historical=False):
+    if not meta['capture'].get('synthetic_input') and not allow_historical:
+        raise ValueError('real Run training disabled; use rule-generated synthetic inputs')
+
+
 def register_entry(meta, split, programs, entries):
     """Allow distinct training snapshots, never cross-program-split leakage."""
-    program=meta['capture']['program_file_sha256']
+    program=source_group(meta)
     if program in programs and (programs[program]!=split or split!='train'):
         raise ValueError('duplicate validation or leaked program')
     entry=(program,meta['snapshot_run'],meta.get('source_token_mode','exact completed states'))
@@ -87,6 +97,7 @@ def inputs_for_case(path,meta,data,plans):
 def main():
     p=argparse.ArgumentParser()
     for key in ('model','source_model','decoder','decoder_report','output'):p.add_argument(key,type=Path)
+    p.add_argument('--allow-historical-real-training',action='store_true',help='explicit historical experiment reproduction only')
     p.add_argument('--train',type=Path,action='append',required=True);p.add_argument('--validation',type=Path,action='append',required=True);a=p.parse_args()
     with np.load(a.model) as f:model={k:f[k] for k in f.files}
     with np.load(a.source_model) as f:
@@ -103,6 +114,7 @@ def main():
     for split,paths in [('train',a.train),('validation',a.validation)]:
         for path in paths:
             d,m=load(path,split)
+            if split=='train':training_policy(m,a.allow_historical_real_training)
             if m['model_sha256'] not in allowed or m.get('source_token_mode','exact completed states')!='exact completed states':raise ValueError('unverified exact-source basis')
             register_entry(m,split,programs,entries);sf=semantic_family(m)
             if family is not None and sf!=family:raise ValueError('semantic family mismatch')
@@ -111,7 +123,7 @@ def main():
             details=inputs_for_case(path,m,d,plans);cases.append((split,d,m,details))
     heads=[];coverage=[]
     for rid,plan in enumerate(plans):
-        source=[(d,v[rid],m['capture']['program_file_sha256']) for s,d,m,v in cases if s=='train' and rid in v]
+        source=[(d,v[rid],source_group(m)) for s,d,m,v in cases if s=='train' and rid in v]
         x=np.concatenate([d['features'][v['ids']] for d,v,_ in source]);y=np.concatenate([v['target'] for _,v,_ in source])
         x,y,duplicates=unique_training_rows(x,y,[p for _,v,p in source for _ in v['ids']])
         heads.append(fit_head(x,y,10.))
@@ -146,8 +158,8 @@ def main():
         results.append(dict(case=m['capture']['case'],partition=split,snapshot_run=m['snapshot_run'],sha256=m['capture']['artifact_sha256'],groups=groups,token_decode_disagreements=disagree))
     if gpu_error>5e-6 or token_error>5e-6:raise ValueError(f'GPU numerical error: score={gpu_error}, token={token_error}')
     np.savez_compressed(a.output.with_suffix('.npz'),**{f'head_{i}_{k}':v for i,h in enumerate(heads) for k,v in h.items()})
-    out=dict(scope='offline direct whole-state ridge and GPU token reconstruction on real captures; not installed',alpha=10.,backpropagation=False,
-        installed=False,union_authorized=False,training_programs=sum(v=='train' for v in programs.values()),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
+    out=dict(scope='offline direct whole-state ridge and GPU token reconstruction on audited GPU captures; not installed',alpha=10.,backpropagation=False,
+        installed=False,union_authorized=False,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
         head_sha256=hashlib.sha256(a.output.with_suffix('.npz').read_bytes()).hexdigest(),coefficient_bytes=sum(h['coef'].nbytes for h in heads),normalization_bytes=sum(h[k].nbytes for h in heads for k in ('mean','scale','bias')),coverage=coverage,
         maximum_gpu_score_error=gpu_error,maximum_gpu_token_error=token_error,token_decode_disagreements=decoding_disagreements,cases=results,
         limitations=['All legal type-compatible states are included, but unseen states have no positive training evidence','No predicted-source rollout or native full-program acceptance','No learned equality is a proof','Current input Eq is retained; scalar effects outside query inputs are unsupported'])

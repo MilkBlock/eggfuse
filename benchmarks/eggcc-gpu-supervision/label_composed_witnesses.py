@@ -82,6 +82,7 @@ def target(rule,binding,mapping,reference,seed_values,width):
 def main():
     p=argparse.ArgumentParser()
     for k in ('capture','trace','model','corpus','output','report'):p.add_argument(k,type=Path)
+    p.add_argument('--synthetic-input',action='store_true')
     p.add_argument('--semantic-targets',action='store_true',help='project legacy captures onto original Cell semantics for a like-for-like audit')
     p.add_argument('--completion-decoder',type=Path)
     p.add_argument('--completion-classifier',type=Path)
@@ -89,7 +90,14 @@ def main():
     meta=json.loads(a.capture.with_suffix('.json').read_text());trace=json.loads(a.trace.read_bytes())
     if meta['capture']['schema']!='device-composed-witness/v1' or not meta['capture']['passed'] or hashlib.sha256(a.capture.read_bytes()).hexdigest()!=meta['capture']['artifact_sha256']:raise ValueError('capture provenance')
     if hashlib.sha256(a.trace.read_bytes()).hexdigest()!=meta['trace_sha256'] or hashlib.sha256(a.model.read_bytes()).hexdigest()!=meta['model_sha256']:raise ValueError('source provenance')
-    provenance=partition(trace,a.corpus);original=dict(trace['recipe'],rules=[trace['recipe']['rules'][i] for i in meta['source_rules']])
+    if a.synthetic_input:
+        from synthetic_cell_inputs import validate
+        recipe,snapshot=validate(trace)
+        provenance=dict(case='synthetic-'+str(trace['generator']['seed']),partition='train',synthetic_input=True,
+            input_sha256=trace['input_sha256'],generator=trace['generator'],reachability=trace['reachability'])
+        trace=dict(recipe=recipe,boundaries=[dict(ordinal=a.snapshot_run,graph=snapshot)])
+    else:provenance=partition(trace,a.corpus)
+    original=dict(trace['recipe'],rules=[trace['recipe']['rules'][i] for i in meta['source_rules']])
     if original!=meta['original_recipe']:raise ValueError('original rule definitions')
     lowered,_=lower(original);snapshots=[b['graph'] for b in trace['boundaries'] if b['ordinal']==a.snapshot_run]
     if len(snapshots)!=1:raise ValueError('snapshot ordinal')

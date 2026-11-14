@@ -1,0 +1,1040 @@
+{
+  "scope": "synthetic three-rule GPU family, exact effects and ownership; not full Eggcc",
+  "records": [
+    {
+      "seed": 20261120,
+      "execution": {
+        "passed": true,
+        "graph_check": {
+          "passed": true,
+          "errors": [],
+          "actual_facts": 9,
+          "expected_facts": 9,
+          "mapped_classes": 9
+        },
+        "boundary_checks": [
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 14,
+            "expected_facts": 14,
+            "mapped_classes": 15
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 10,
+            "expected_facts": 10,
+            "mapped_classes": 10
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 9,
+            "expected_facts": 9,
+            "mapped_classes": 9
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 9,
+            "expected_facts": 9,
+            "mapped_classes": 9
+          }
+        ],
+        "gpu_matches_per_rule": [
+          [
+            1,
+            2,
+            1
+          ],
+          [
+            5,
+            6,
+            2
+          ],
+          [
+            5,
+            6,
+            2
+          ],
+          [
+            6,
+            4,
+            2
+          ]
+        ],
+        "generated_cells": 17,
+        "generated_source_consumers": 12,
+        "released_owner_rows": 8,
+        "gpu_runs": 4,
+        "gpu_compile_upload_execute_seconds": 1.4691287499736063,
+        "cpu_reference_and_audit_seconds": 0.017286332964431494
+      },
+      "labels": {
+        "schema": "device-joint-witness/v3",
+        "case": "synthetic-20261120",
+        "partition": "train",
+        "synthetic_input": true,
+        "input_sha256": "cb30b5b5ff8a7af438b670fc65405b9e4f69ea6966703a7778327d7acd2fcef9",
+        "generator": {
+          "seed": 20261120,
+          "fragments": 4,
+          "reuse": 0.35
+        },
+        "reachability": "rule-valid; source-program reachability unproved",
+        "passed": true,
+        "samples": 17,
+        "continued_samples": 12,
+        "distinct_inputs": 16,
+        "distinct_targets": 5,
+        "dynamic_eq_queries": 72,
+        "dynamic_eq_positive": 39,
+        "artifact_sha256": "80a9dfca7857b7a2f92234c201911a3c6c7af68cc7120d368ed1c38048c5d607",
+        "source_capture_sha256": "011f0e155e8b406e07a9bf07b5430e4a1d8b74cf906caca32d5c6c9846cab5d0",
+        "direct_with_generated_boundary_neighbors": 1,
+        "boundary_feature_columns": 512,
+        "boundary_feature_max_abs": 2.980232238769531e-07,
+        "feature_reconstruction_max_abs": 2.3245811462402344e-06,
+        "cpu_label_and_capture_audit_seconds": 0.12949370796559379,
+        "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+        "backpropagation": false,
+        "limitations": [
+          "Labels are final family states, not every intermediate state",
+          "Selected context rules, not full Eggcc",
+          "Source token mode: exact completed states; exact effects and matching remain authoritative"
+        ]
+      }
+    },
+    {
+      "seed": 20261121,
+      "execution": {
+        "passed": true,
+        "graph_check": {
+          "passed": true,
+          "errors": [],
+          "actual_facts": 12,
+          "expected_facts": 12,
+          "mapped_classes": 11
+        },
+        "boundary_checks": [
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 11,
+            "expected_facts": 11,
+            "mapped_classes": 11
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 12,
+            "expected_facts": 12,
+            "mapped_classes": 11
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 12,
+            "expected_facts": 12,
+            "mapped_classes": 11
+          }
+        ],
+        "gpu_matches_per_rule": [
+          [
+            2,
+            3,
+            1
+          ],
+          [
+            2,
+            3,
+            3
+          ],
+          [
+            2,
+            3,
+            3
+          ]
+        ],
+        "generated_cells": 8,
+        "generated_source_consumers": 2,
+        "released_owner_rows": 6,
+        "gpu_runs": 3,
+        "gpu_compile_upload_execute_seconds": 1.444535333022941,
+        "cpu_reference_and_audit_seconds": 0.011988374986685812
+      },
+      "labels": {
+        "schema": "device-joint-witness/v3",
+        "case": "synthetic-20261121",
+        "partition": "train",
+        "synthetic_input": true,
+        "input_sha256": "0152c64413165e9d6fcad00be81b85df396c9cace01773d800fc468e5b4a2981",
+        "generator": {
+          "seed": 20261121,
+          "fragments": 4,
+          "reuse": 0.35
+        },
+        "reachability": "rule-valid; source-program reachability unproved",
+        "passed": true,
+        "samples": 8,
+        "continued_samples": 2,
+        "distinct_inputs": 8,
+        "distinct_targets": 7,
+        "dynamic_eq_queries": 38,
+        "dynamic_eq_positive": 19,
+        "artifact_sha256": "c7064338c679737223b4165d00abaef60675f37ea8429a3093eef6318b4bbaa3",
+        "source_capture_sha256": "7544070bf2115492c4ae07ba9d960d612a2b12fef57ba528c6f64bbde8d51622",
+        "direct_with_generated_boundary_neighbors": 0,
+        "boundary_feature_columns": 512,
+        "boundary_feature_max_abs": 2.384185791015625e-07,
+        "feature_reconstruction_max_abs": 2.205371856689453e-06,
+        "cpu_label_and_capture_audit_seconds": 0.09978341701207682,
+        "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+        "backpropagation": false,
+        "limitations": [
+          "Labels are final family states, not every intermediate state",
+          "Selected context rules, not full Eggcc",
+          "Source token mode: exact completed states; exact effects and matching remain authoritative"
+        ]
+      }
+    },
+    {
+      "seed": 20261122,
+      "execution": {
+        "passed": true,
+        "graph_check": {
+          "passed": true,
+          "errors": [],
+          "actual_facts": 14,
+          "expected_facts": 14,
+          "mapped_classes": 15
+        },
+        "boundary_checks": [
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 14,
+            "expected_facts": 14,
+            "mapped_classes": 15
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 14,
+            "expected_facts": 14,
+            "mapped_classes": 15
+          }
+        ],
+        "gpu_matches_per_rule": [
+          [
+            1,
+            0,
+            4
+          ],
+          [
+            1,
+            0,
+            4
+          ]
+        ],
+        "generated_cells": 5,
+        "generated_source_consumers": 0,
+        "released_owner_rows": 8,
+        "gpu_runs": 2,
+        "gpu_compile_upload_execute_seconds": 1.3525343330111355,
+        "cpu_reference_and_audit_seconds": 0.010079582978505641
+      },
+      "labels": {
+        "schema": "device-joint-witness/v3",
+        "case": "synthetic-20261122",
+        "partition": "train",
+        "synthetic_input": true,
+        "input_sha256": "d255d07287d7601e893f13f6e70289fe3a67249affcdf20e8de9ef49554bd4c3",
+        "generator": {
+          "seed": 20261122,
+          "fragments": 4,
+          "reuse": 0.35
+        },
+        "reachability": "rule-valid; source-program reachability unproved",
+        "passed": true,
+        "samples": 5,
+        "continued_samples": 0,
+        "distinct_inputs": 3,
+        "distinct_targets": 3,
+        "dynamic_eq_queries": 25,
+        "dynamic_eq_positive": 7,
+        "artifact_sha256": "cebb5674aaf3ca1149235a9fe373a329c074a734c5b985190bc4b9a7249b8e76",
+        "source_capture_sha256": "5bddce53206e7a9040181257349bf2f954c14f2cb9b4a7f4675ea3d5409cc2a9",
+        "direct_with_generated_boundary_neighbors": 0,
+        "boundary_feature_columns": 512,
+        "boundary_feature_max_abs": 3.5762786865234375e-07,
+        "feature_reconstruction_max_abs": 1.6689300537109375e-06,
+        "cpu_label_and_capture_audit_seconds": 0.07660125003894791,
+        "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+        "backpropagation": false,
+        "limitations": [
+          "Labels are final family states, not every intermediate state",
+          "Selected context rules, not full Eggcc",
+          "Source token mode: exact completed states; exact effects and matching remain authoritative"
+        ]
+      }
+    },
+    {
+      "seed": 20261124,
+      "execution": {
+        "passed": true,
+        "graph_check": {
+          "passed": true,
+          "errors": [],
+          "actual_facts": 13,
+          "expected_facts": 13,
+          "mapped_classes": 16
+        },
+        "boundary_checks": [
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 13,
+            "expected_facts": 13,
+            "mapped_classes": 16
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 13,
+            "expected_facts": 13,
+            "mapped_classes": 16
+          }
+        ],
+        "gpu_matches_per_rule": [
+          [
+            1,
+            0,
+            3
+          ],
+          [
+            1,
+            0,
+            3
+          ]
+        ],
+        "generated_cells": 4,
+        "generated_source_consumers": 0,
+        "released_owner_rows": 7,
+        "gpu_runs": 2,
+        "gpu_compile_upload_execute_seconds": 1.253617917012889,
+        "cpu_reference_and_audit_seconds": 0.008913707977626473
+      },
+      "labels": {
+        "schema": "device-joint-witness/v3",
+        "case": "synthetic-20261124",
+        "partition": "train",
+        "synthetic_input": true,
+        "input_sha256": "cc7601b0fcb880c017ec971ed1f50da4818124094fe320f7cd66c46586751ab1",
+        "generator": {
+          "seed": 20261124,
+          "fragments": 4,
+          "reuse": 0.35
+        },
+        "reachability": "rule-valid; source-program reachability unproved",
+        "passed": true,
+        "samples": 4,
+        "continued_samples": 0,
+        "distinct_inputs": 2,
+        "distinct_targets": 2,
+        "dynamic_eq_queries": 19,
+        "dynamic_eq_positive": 1,
+        "artifact_sha256": "5165758f6540370ef6ca16d09dfa76f32357da1537ce1c6a4b189aa825d0d114",
+        "source_capture_sha256": "58364ce0cbd18512995c5de9882647978cf84d313b447b7e4dfbaafa49d851b2",
+        "direct_with_generated_boundary_neighbors": 0,
+        "boundary_feature_columns": 512,
+        "boundary_feature_max_abs": 2.980232238769531e-07,
+        "feature_reconstruction_max_abs": 1.3113021850585938e-06,
+        "cpu_label_and_capture_audit_seconds": 0.07492154202191159,
+        "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+        "backpropagation": false,
+        "limitations": [
+          "Labels are final family states, not every intermediate state",
+          "Selected context rules, not full Eggcc",
+          "Source token mode: exact completed states; exact effects and matching remain authoritative"
+        ]
+      }
+    },
+    {
+      "seed": 20261125,
+      "execution": {
+        "passed": true,
+        "graph_check": {
+          "passed": true,
+          "errors": [],
+          "actual_facts": 11,
+          "expected_facts": 11,
+          "mapped_classes": 10
+        },
+        "boundary_checks": [
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 10,
+            "expected_facts": 10,
+            "mapped_classes": 10
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 12,
+            "expected_facts": 12,
+            "mapped_classes": 11
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 11,
+            "expected_facts": 11,
+            "mapped_classes": 10
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 11,
+            "expected_facts": 11,
+            "mapped_classes": 10
+          }
+        ],
+        "gpu_matches_per_rule": [
+          [
+            5,
+            0,
+            3
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            5,
+            0,
+            6
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "generated_cells": 13,
+        "generated_source_consumers": 5,
+        "released_owner_rows": 8,
+        "gpu_runs": 4,
+        "gpu_compile_upload_execute_seconds": 2.315515458001755,
+        "cpu_reference_and_audit_seconds": 0.015187625016551465
+      },
+      "labels": {
+        "schema": "device-joint-witness/v3",
+        "case": "synthetic-20261125",
+        "partition": "train",
+        "synthetic_input": true,
+        "input_sha256": "3e35eb39772126e970c223f1a6db4d985f10dbb4a70c58239ad09309b25a91ac",
+        "generator": {
+          "seed": 20261125,
+          "fragments": 4,
+          "reuse": 0.35
+        },
+        "reachability": "rule-valid; source-program reachability unproved",
+        "passed": true,
+        "samples": 13,
+        "continued_samples": 5,
+        "distinct_inputs": 10,
+        "distinct_targets": 6,
+        "dynamic_eq_queries": 43,
+        "dynamic_eq_positive": 24,
+        "artifact_sha256": "ea54d5d5900c9b1fcd34e83fb088f6e95e56784b4d1bac218e3aa520c98f3c15",
+        "source_capture_sha256": "b3d52f2eb42c8e988c424bbdf1ef8761c323382877191d406a20f1167cc1f02f",
+        "direct_with_generated_boundary_neighbors": 0,
+        "boundary_feature_columns": 512,
+        "boundary_feature_max_abs": 2.980232238769531e-07,
+        "feature_reconstruction_max_abs": 1.996755599975586e-06,
+        "cpu_label_and_capture_audit_seconds": 0.12618162500439212,
+        "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+        "backpropagation": false,
+        "limitations": [
+          "Labels are final family states, not every intermediate state",
+          "Selected context rules, not full Eggcc",
+          "Source token mode: exact completed states; exact effects and matching remain authoritative"
+        ]
+      }
+    },
+    {
+      "seed": 20261126,
+      "execution": {
+        "passed": true,
+        "graph_check": {
+          "passed": true,
+          "errors": [],
+          "actual_facts": 17,
+          "expected_facts": 17,
+          "mapped_classes": 18
+        },
+        "boundary_checks": [
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 15,
+            "expected_facts": 15,
+            "mapped_classes": 17
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 17,
+            "expected_facts": 17,
+            "mapped_classes": 18
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 17,
+            "expected_facts": 17,
+            "mapped_classes": 18
+          }
+        ],
+        "gpu_matches_per_rule": [
+          [
+            0,
+            3,
+            1
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            0,
+            3,
+            2
+          ]
+        ],
+        "generated_cells": 5,
+        "generated_source_consumers": 1,
+        "released_owner_rows": 5,
+        "gpu_runs": 3,
+        "gpu_compile_upload_execute_seconds": 2.3591517079621553,
+        "cpu_reference_and_audit_seconds": 0.010891209007240832
+      },
+      "labels": {
+        "schema": "device-joint-witness/v3",
+        "case": "synthetic-20261126",
+        "partition": "train",
+        "synthetic_input": true,
+        "input_sha256": "9f1b17dc65ea4eff05369380fe12c0db11c3a3ab13d8f0cf134fd2e358b41f5f",
+        "generator": {
+          "seed": 20261126,
+          "fragments": 4,
+          "reuse": 0.35
+        },
+        "reachability": "rule-valid; source-program reachability unproved",
+        "passed": true,
+        "samples": 5,
+        "continued_samples": 1,
+        "distinct_inputs": 5,
+        "distinct_targets": 4,
+        "dynamic_eq_queries": 30,
+        "dynamic_eq_positive": 2,
+        "artifact_sha256": "3d335526442d48363811b9b0979cb6a7a765346743e8d005b3a6aedcde5de819",
+        "source_capture_sha256": "0cde2e4fa499acf2b45f206fe97d801b2b4f358e48189705610ddd64b0dc4a82",
+        "direct_with_generated_boundary_neighbors": 0,
+        "boundary_feature_columns": 512,
+        "boundary_feature_max_abs": 2.980232238769531e-07,
+        "feature_reconstruction_max_abs": 3.337860107421875e-06,
+        "cpu_label_and_capture_audit_seconds": 0.09689024998806417,
+        "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+        "backpropagation": false,
+        "limitations": [
+          "Labels are final family states, not every intermediate state",
+          "Selected context rules, not full Eggcc",
+          "Source token mode: exact completed states; exact effects and matching remain authoritative"
+        ]
+      }
+    },
+    {
+      "seed": 20261127,
+      "execution": {
+        "passed": true,
+        "graph_check": {
+          "passed": true,
+          "errors": [],
+          "actual_facts": 11,
+          "expected_facts": 11,
+          "mapped_classes": 10
+        },
+        "boundary_checks": [
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 10,
+            "expected_facts": 10,
+            "mapped_classes": 10
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 12,
+            "expected_facts": 12,
+            "mapped_classes": 11
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 11,
+            "expected_facts": 11,
+            "mapped_classes": 10
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 11,
+            "expected_facts": 11,
+            "mapped_classes": 10
+          }
+        ],
+        "gpu_matches_per_rule": [
+          [
+            3,
+            0,
+            2
+          ],
+          [
+            4,
+            0,
+            3
+          ],
+          [
+            5,
+            0,
+            4
+          ],
+          [
+            6,
+            0,
+            3
+          ]
+        ],
+        "generated_cells": 10,
+        "generated_source_consumers": 4,
+        "released_owner_rows": 7,
+        "gpu_runs": 4,
+        "gpu_compile_upload_execute_seconds": 1.282164333970286,
+        "cpu_reference_and_audit_seconds": 0.013127250014804304
+      },
+      "labels": {
+        "schema": "device-joint-witness/v3",
+        "case": "synthetic-20261127",
+        "partition": "train",
+        "synthetic_input": true,
+        "input_sha256": "d040c0e6d6679e09566617ae5b1ff68501e330174c91221a3ec224188e9d39f9",
+        "generator": {
+          "seed": 20261127,
+          "fragments": 4,
+          "reuse": 0.35
+        },
+        "reachability": "rule-valid; source-program reachability unproved",
+        "passed": true,
+        "samples": 10,
+        "continued_samples": 4,
+        "distinct_inputs": 8,
+        "distinct_targets": 5,
+        "dynamic_eq_queries": 30,
+        "dynamic_eq_positive": 11,
+        "artifact_sha256": "9694a94fdaaa8228c80dc056fbf1f7892931a6be64ac70a5d2de6e21471a4c7d",
+        "source_capture_sha256": "c5f82b4c260e33bc19140bad95d9e58f2abd9d25a75f71c10459c510f2237413",
+        "direct_with_generated_boundary_neighbors": 1,
+        "boundary_feature_columns": 512,
+        "boundary_feature_max_abs": 2.384185791015625e-07,
+        "feature_reconstruction_max_abs": 1.996755599975586e-06,
+        "cpu_label_and_capture_audit_seconds": 0.12155495904153213,
+        "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+        "backpropagation": false,
+        "limitations": [
+          "Labels are final family states, not every intermediate state",
+          "Selected context rules, not full Eggcc",
+          "Source token mode: exact completed states; exact effects and matching remain authoritative"
+        ]
+      }
+    },
+    {
+      "seed": 20261128,
+      "execution": {
+        "passed": true,
+        "graph_check": {
+          "passed": true,
+          "errors": [],
+          "actual_facts": 14,
+          "expected_facts": 14,
+          "mapped_classes": 14
+        },
+        "boundary_checks": [
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 11,
+            "expected_facts": 11,
+            "mapped_classes": 13
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 13,
+            "expected_facts": 13,
+            "mapped_classes": 14
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 15,
+            "expected_facts": 15,
+            "mapped_classes": 15
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 14,
+            "expected_facts": 14,
+            "mapped_classes": 14
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 14,
+            "expected_facts": 14,
+            "mapped_classes": 14
+          }
+        ],
+        "gpu_matches_per_rule": [
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            2,
+            1
+          ],
+          [
+            3,
+            3,
+            1
+          ],
+          [
+            4,
+            4,
+            1
+          ],
+          [
+            5,
+            3,
+            1
+          ]
+        ],
+        "generated_cells": 10,
+        "generated_source_consumers": 5,
+        "released_owner_rows": 6,
+        "gpu_runs": 5,
+        "gpu_compile_upload_execute_seconds": 5.850739750021603,
+        "cpu_reference_and_audit_seconds": 0.015084707993082702
+      },
+      "labels": {
+        "schema": "device-joint-witness/v3",
+        "case": "synthetic-20261128",
+        "partition": "train",
+        "synthetic_input": true,
+        "input_sha256": "3b111961c9ebcf6169adf4da2e1ef063140e6b94e6e728526a51dc3384d535e6",
+        "generator": {
+          "seed": 20261128,
+          "fragments": 4,
+          "reuse": 0.35
+        },
+        "reachability": "rule-valid; source-program reachability unproved",
+        "passed": true,
+        "samples": 10,
+        "continued_samples": 5,
+        "distinct_inputs": 8,
+        "distinct_targets": 6,
+        "dynamic_eq_queries": 35,
+        "dynamic_eq_positive": 7,
+        "artifact_sha256": "930d4649ae3bc24a07e8aeed23f39b0f19e5ec3fad0c1f9367733e12e16b455f",
+        "source_capture_sha256": "ae1ebc37fb54ab52e05416d898f562b53ee5d251b8d49c13599823194b25d837",
+        "direct_with_generated_boundary_neighbors": 1,
+        "boundary_feature_columns": 512,
+        "boundary_feature_max_abs": 3.2782554626464844e-07,
+        "feature_reconstruction_max_abs": 3.159046173095703e-06,
+        "cpu_label_and_capture_audit_seconds": 0.1432935000048019,
+        "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+        "backpropagation": false,
+        "limitations": [
+          "Labels are final family states, not every intermediate state",
+          "Selected context rules, not full Eggcc",
+          "Source token mode: exact completed states; exact effects and matching remain authoritative"
+        ]
+      }
+    },
+    {
+      "seed": 20261129,
+      "execution": {
+        "passed": true,
+        "graph_check": {
+          "passed": true,
+          "errors": [],
+          "actual_facts": 8,
+          "expected_facts": 8,
+          "mapped_classes": 10
+        },
+        "boundary_checks": [
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 8,
+            "expected_facts": 8,
+            "mapped_classes": 10
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 8,
+            "expected_facts": 8,
+            "mapped_classes": 10
+          }
+        ],
+        "gpu_matches_per_rule": [
+          [
+            3,
+            1,
+            1
+          ],
+          [
+            3,
+            2,
+            1
+          ]
+        ],
+        "generated_cells": 7,
+        "generated_source_consumers": 0,
+        "released_owner_rows": 7,
+        "gpu_runs": 2,
+        "gpu_compile_upload_execute_seconds": 2.277139083016664,
+        "cpu_reference_and_audit_seconds": 0.009574708004947752
+      },
+      "labels": {
+        "schema": "device-joint-witness/v3",
+        "case": "synthetic-20261129",
+        "partition": "train",
+        "synthetic_input": true,
+        "input_sha256": "064baecf295a84b76ae989e2d9b38b39ab9fe1ea29639ea30338c5ebb55cfff5",
+        "generator": {
+          "seed": 20261129,
+          "fragments": 4,
+          "reuse": 0.35
+        },
+        "reachability": "rule-valid; source-program reachability unproved",
+        "passed": true,
+        "samples": 7,
+        "continued_samples": 0,
+        "distinct_inputs": 7,
+        "distinct_targets": 4,
+        "dynamic_eq_queries": 22,
+        "dynamic_eq_positive": 15,
+        "artifact_sha256": "4eff3d47f0ae3c4a3ed8390ae378665242e62c358c7831f86cec4d01a87d64ef",
+        "source_capture_sha256": "0b30e95580ddf4ad9d30a014620d857ecc1365b708947f7f83cbbdb0d4c87fb0",
+        "direct_with_generated_boundary_neighbors": 2,
+        "boundary_feature_columns": 512,
+        "boundary_feature_max_abs": 2.980232238769531e-07,
+        "feature_reconstruction_max_abs": 1.9073486328125e-06,
+        "cpu_label_and_capture_audit_seconds": 0.08495129103539512,
+        "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+        "backpropagation": false,
+        "limitations": [
+          "Labels are final family states, not every intermediate state",
+          "Selected context rules, not full Eggcc",
+          "Source token mode: exact completed states; exact effects and matching remain authoritative"
+        ]
+      }
+    },
+    {
+      "seed": 20261130,
+      "execution": {
+        "passed": true,
+        "graph_check": {
+          "passed": true,
+          "errors": [],
+          "actual_facts": 7,
+          "expected_facts": 7,
+          "mapped_classes": 7
+        },
+        "boundary_checks": [
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 7,
+            "expected_facts": 7,
+            "mapped_classes": 7
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 7,
+            "expected_facts": 7,
+            "mapped_classes": 7
+          }
+        ],
+        "gpu_matches_per_rule": [
+          [
+            4,
+            3,
+            1
+          ],
+          [
+            4,
+            3,
+            1
+          ]
+        ],
+        "generated_cells": 9,
+        "generated_source_consumers": 0,
+        "released_owner_rows": 8,
+        "gpu_runs": 2,
+        "gpu_compile_upload_execute_seconds": 2.4543689169804566,
+        "cpu_reference_and_audit_seconds": 0.010650000011082739
+      },
+      "labels": {
+        "schema": "device-joint-witness/v3",
+        "case": "synthetic-20261130",
+        "partition": "train",
+        "synthetic_input": true,
+        "input_sha256": "3673f7feacf86c08774942503fbed6212aaf3c3b7d1e440d5fecdd3f6ddd9e84",
+        "generator": {
+          "seed": 20261130,
+          "fragments": 4,
+          "reuse": 0.35
+        },
+        "reachability": "rule-valid; source-program reachability unproved",
+        "passed": true,
+        "samples": 9,
+        "continued_samples": 0,
+        "distinct_inputs": 6,
+        "distinct_targets": 4,
+        "dynamic_eq_queries": 29,
+        "dynamic_eq_positive": 25,
+        "artifact_sha256": "b496d0c18def53bae31b539346f4e63415315e4664971d47a96aca62a83e5313",
+        "source_capture_sha256": "098fe5b30a871704ce391db88dc2e71749bd0830b8e7096e1d0a44ba7534bba3",
+        "direct_with_generated_boundary_neighbors": 1,
+        "boundary_feature_columns": 512,
+        "boundary_feature_max_abs": 3.5762786865234375e-07,
+        "feature_reconstruction_max_abs": 1.6689300537109375e-06,
+        "cpu_label_and_capture_audit_seconds": 0.08156645903363824,
+        "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+        "backpropagation": false,
+        "limitations": [
+          "Labels are final family states, not every intermediate state",
+          "Selected context rules, not full Eggcc",
+          "Source token mode: exact completed states; exact effects and matching remain authoritative"
+        ]
+      }
+    },
+    {
+      "seed": 20261131,
+      "execution": {
+        "passed": true,
+        "graph_check": {
+          "passed": true,
+          "errors": [],
+          "actual_facts": 11,
+          "expected_facts": 11,
+          "mapped_classes": 13
+        },
+        "boundary_checks": [
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 13,
+            "expected_facts": 13,
+            "mapped_classes": 15
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 11,
+            "expected_facts": 11,
+            "mapped_classes": 13
+          },
+          {
+            "passed": true,
+            "errors": [],
+            "actual_facts": 11,
+            "expected_facts": 11,
+            "mapped_classes": 13
+          }
+        ],
+        "gpu_matches_per_rule": [
+          [
+            1,
+            3,
+            0
+          ],
+          [
+            2,
+            4,
+            0
+          ],
+          [
+            2,
+            3,
+            0
+          ]
+        ],
+        "generated_cells": 6,
+        "generated_source_consumers": 2,
+        "released_owner_rows": 5,
+        "gpu_runs": 3,
+        "gpu_compile_upload_execute_seconds": 1.3317933339858428,
+        "cpu_reference_and_audit_seconds": 0.011008957982994616
+      },
+      "labels": {
+        "schema": "device-joint-witness/v3",
+        "case": "synthetic-20261131",
+        "partition": "train",
+        "synthetic_input": true,
+        "input_sha256": "5584034f2dc55d3c3ced8c4b0ecd726613da004bec40eeb4d45ec0ca1821281e",
+        "generator": {
+          "seed": 20261131,
+          "fragments": 4,
+          "reuse": 0.35
+        },
+        "reachability": "rule-valid; source-program reachability unproved",
+        "passed": true,
+        "samples": 6,
+        "continued_samples": 2,
+        "distinct_inputs": 6,
+        "distinct_targets": 4,
+        "dynamic_eq_queries": 26,
+        "dynamic_eq_positive": 14,
+        "artifact_sha256": "3043a7914b95623c5dd4c707742ac276029de3c5b2a542dcbcb481e6daaf20f8",
+        "source_capture_sha256": "6b86aec0ba8bf697d0d6540ec6c98fcdcb2aa3f7b95edc8ae8167f6dedc18537",
+        "direct_with_generated_boundary_neighbors": 0,
+        "boundary_feature_columns": 512,
+        "boundary_feature_max_abs": 2.384185791015625e-07,
+        "feature_reconstruction_max_abs": 1.9073486328125e-06,
+        "cpu_label_and_capture_audit_seconds": 0.10046995896846056,
+        "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+        "backpropagation": false,
+        "limitations": [
+          "Labels are final family states, not every intermediate state",
+          "Selected context rules, not full Eggcc",
+          "Source token mode: exact completed states; exact effects and matching remain authoritative"
+        ]
+      }
+    }
+  ]
+}
