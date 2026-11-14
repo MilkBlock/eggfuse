@@ -1,0 +1,823 @@
+{
+  "scope": "Actual standalone Cell CPU runtime, four workers with canonical ownership; not the native egglog runtime.",
+  "implementation": "1f1ce92f689c08ebd5eb705f48049a3e4957b30c",
+  "source_branch": "codex/owned-worker-births",
+  "flags": [
+    "--repair-ports",
+    "--entry-publications",
+    "--cell-absorption",
+    "--query-workers",
+    "4",
+    "--parallel-residuals",
+    "--parallel-publication",
+    "--cell-execution-grain",
+    "1",
+    "--cell-ownership"
+  ],
+  "tests": {
+    "485": {
+      "runtime": 222,
+      "compiler_runtime_integration": 119,
+      "ownership_storage": 76,
+      "default_backend_runtime": 100,
+      "no_default_compile": "pass",
+      "status": "pass"
+    }
+  },
+  "validation": {
+    "job": 487,
+    "ordinary": {
+      "sum": {
+        "exact_state_runs_effects": true,
+        "runs": 1428,
+        "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "ray": {
+        "exact_state_runs_effects": true,
+        "runs": 16883,
+        "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+      }
+    },
+    "native_sum_status": "pass",
+    "learned": {
+      "scope": "unchanged saved Bake catalog; differential final state, Run summaries and effects; not native acceptance or timing",
+      "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "exact_state_runs_effects": true,
+      "runs": 1428
+    },
+    "limitations": [
+      "Native acceptance covers only the reviewed ordinary sum-bits final-state contract.",
+      "Complete Raytrace and learned-catalog checks compare final state, all Run summaries and logical effects; they are differential checks, not native proofs or full-program per-Run graph snapshots.",
+      "Relevant integration fixtures compare exact Run snapshots, ordered bindings, actual foreign returns, deletion/recreation, union and first-error behavior."
+    ]
+  },
+  "timing": {
+    "job": 491,
+    "order_policy": "whole control, optional previous experiment, then whole candidate; never interleaved",
+    "commits": {
+      "control": "62c5f9848f262a81cec8a7acfbba095de533dfa5",
+      "candidate": "1f1ce92f689c08ebd5eb705f48049a3e4957b30c",
+      "previous": "843c1ca0be75c267891fc75e876961c90178f8c9"
+    },
+    "groups": [
+      [
+        "control",
+        "sum"
+      ],
+      [
+        "control",
+        "ray"
+      ],
+      [
+        "control",
+        "learned"
+      ],
+      [
+        "previous",
+        "sum"
+      ],
+      [
+        "previous",
+        "ray"
+      ],
+      [
+        "previous",
+        "learned"
+      ],
+      [
+        "candidate",
+        "sum"
+      ],
+      [
+        "candidate",
+        "ray"
+      ],
+      [
+        "candidate",
+        "learned"
+      ]
+    ],
+    "warmups_per_group": 1,
+    "samples_per_lane": {
+      "sum": 5,
+      "ray": 3,
+      "learned": 5
+    },
+    "boundary_guards": {
+      "count": 114,
+      "all_clear": true
+    },
+    "workloads": {
+      "sum": {
+        "control": {
+          "medians": {
+            "inference_seconds": 0.0243165,
+            "process_wall_seconds": 0.14357608300633729,
+            "load_seconds": 0.065830458,
+            "setup_seconds": 0.013577834,
+            "export_seconds": 0.005403833,
+            "report_seconds": 0.007735459,
+            "process_unattributed_seconds": 0.03456791602604238,
+            "process_after_report_residual_seconds": 0.02639412402604238
+          },
+          "inference_samples": [
+            0.0243165,
+            0.025843875,
+            0.022673084,
+            0.024822416,
+            0.022935083
+          ],
+          "runtime_sha256": "6f34f0d3671ac2aa122cd03ab58bcffafa5bf5479435c3769d56b0492ca18957",
+          "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "raw_samples_sha256": "5f173c436c0b1022092ee98fe26622520c8d81d5b0ac343c48c6a6e0d364827d"
+        },
+        "previous": {
+          "medians": {
+            "inference_seconds": 0.0327005,
+            "process_wall_seconds": 0.15024858404649422,
+            "load_seconds": 0.0647775,
+            "setup_seconds": 0.013253375,
+            "export_seconds": 0.005457042,
+            "report_seconds": 0.007691167,
+            "process_unattributed_seconds": 0.03423916602605839,
+            "process_after_report_residual_seconds": 0.02644537496664691
+          },
+          "inference_samples": [
+            0.034953292,
+            0.0327005,
+            0.0306945,
+            0.034580917,
+            0.031355125
+          ],
+          "runtime_sha256": "41bb8429fb67b11e50cc29f3283e6967e266d65e7abac1133c1e73579f71648c",
+          "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "raw_samples_sha256": "fb2685782789ec266c442bac556b75b85b245449ece9cdddc7de2592fe110f43"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 0.030681375,
+            "process_wall_seconds": 0.15055991598637775,
+            "load_seconds": 0.065793167,
+            "setup_seconds": 0.013383042,
+            "export_seconds": 0.005495959,
+            "report_seconds": 0.007564041,
+            "process_unattributed_seconds": 0.034411789985900915,
+            "process_after_report_residual_seconds": 0.026847748985900914
+          },
+          "inference_samples": [
+            0.03312675,
+            0.033941083,
+            0.029866125,
+            0.03065025,
+            0.030681375
+          ],
+          "runtime_sha256": "e4cde4da190bc9e117cf9d1f9f07d9c3d5050f24f54c5e8b0b6ac1304f661b35",
+          "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "raw_samples_sha256": "bfe2a145cf3678fe3dafe8fa5a8a6fc7fcc3f0cce0a7fe664f756243aa910182"
+        },
+        "inference_change_percent": 26.175127999506497,
+        "change_from_previous_percent": -6.174599776761824
+      },
+      "ray": {
+        "control": {
+          "medians": {
+            "inference_seconds": 4.882278958,
+            "process_wall_seconds": 7.326073332980741,
+            "load_seconds": 0.380398333,
+            "setup_seconds": 0.046775292,
+            "export_seconds": 1.215968125,
+            "report_seconds": 0.357580166,
+            "process_unattributed_seconds": 0.8221674579807416,
+            "process_after_report_residual_seconds": 0.46458729198074167
+          },
+          "inference_samples": [
+            4.8507539170000005,
+            4.882278958,
+            4.935925375
+          ],
+          "runtime_sha256": "6f34f0d3671ac2aa122cd03ab58bcffafa5bf5479435c3769d56b0492ca18957",
+          "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "raw_samples_sha256": "23bd3b1a4053860811dc219eb29693628646ebd82da5428e9bcbde9429b5055c"
+        },
+        "previous": {
+          "medians": {
+            "inference_seconds": 5.4799904999999995,
+            "process_wall_seconds": 7.951645374996588,
+            "load_seconds": 0.3606995,
+            "setup_seconds": 0.046728541,
+            "export_seconds": 1.20472975,
+            "report_seconds": 0.3680625,
+            "process_unattributed_seconds": 0.8435917509801847,
+            "process_after_report_residual_seconds": 0.47552925098018467
+          },
+          "inference_samples": [
+            5.325462583,
+            5.4799904999999995,
+            5.693961958
+          ],
+          "runtime_sha256": "41bb8429fb67b11e50cc29f3283e6967e266d65e7abac1133c1e73579f71648c",
+          "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "raw_samples_sha256": "e261fd2b645bb3a1f486f978c1708803e4b3ae27f5675adae429a9187eb1a1f9"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 5.35268325,
+            "process_wall_seconds": 7.7792837909655645,
+            "load_seconds": 0.363961834,
+            "setup_seconds": 0.047161875,
+            "export_seconds": 1.190056625,
+            "report_seconds": 0.355074875,
+            "process_unattributed_seconds": 0.8254207069922037,
+            "process_after_report_residual_seconds": 0.47077341596556477
+          },
+          "inference_samples": [
+            5.339204292,
+            5.366570625,
+            5.35268325
+          ],
+          "runtime_sha256": "e4cde4da190bc9e117cf9d1f9f07d9c3d5050f24f54c5e8b0b6ac1304f661b35",
+          "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "raw_samples_sha256": "da7ed05d356c70f8393306687cf2d2abc16ac1523f5b60f17b3ccedb63afd443"
+        },
+        "inference_change_percent": 9.634932703490984,
+        "change_from_previous_percent": -2.3231290273222127
+      },
+      "learned": {
+        "control": {
+          "medians": {
+            "inference_seconds": 0.023867167,
+            "process_wall_seconds": 0.17478220799239352,
+            "load_seconds": 0.099455625,
+            "setup_seconds": 0.011940834,
+            "export_seconds": 0.005518083,
+            "report_seconds": 0.007896417,
+            "process_unattributed_seconds": 0.03394912599267291,
+            "process_after_report_residual_seconds": 0.026079583991685147
+          },
+          "inference_samples": [
+            0.023374875,
+            0.024621833,
+            0.023867167,
+            0.022794958,
+            0.024554125
+          ],
+          "runtime_sha256": "6f34f0d3671ac2aa122cd03ab58bcffafa5bf5479435c3769d56b0492ca18957",
+          "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+          "raw_samples_sha256": "9e18598732f5cb2f86aecf92441403be828d2e45b077fcd50ac58693388ad9e5"
+        },
+        "previous": {
+          "medians": {
+            "inference_seconds": 0.032807458,
+            "process_wall_seconds": 0.1861995829967782,
+            "load_seconds": 0.098115917,
+            "setup_seconds": 0.011959292,
+            "export_seconds": 0.005756125,
+            "report_seconds": 0.007543792,
+            "process_unattributed_seconds": 0.034439790971245055,
+            "process_after_report_residual_seconds": 0.026880748971245053
+          },
+          "inference_samples": [
+            0.039655375,
+            0.032807458,
+            0.031977167,
+            0.031304708,
+            0.035851125
+          ],
+          "runtime_sha256": "41bb8429fb67b11e50cc29f3283e6967e266d65e7abac1133c1e73579f71648c",
+          "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+          "raw_samples_sha256": "cb8c91144bab3463912f1308a01757c1bd4a07d23a1afe4e1e5f68c02c078b53"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 0.032349583,
+            "process_wall_seconds": 0.18220358301186934,
+            "load_seconds": 0.097921167,
+            "setup_seconds": 0.011896,
+            "export_seconds": 0.0054915,
+            "report_seconds": 0.00755425,
+            "process_unattributed_seconds": 0.03461175102808012,
+            "process_after_report_residual_seconds": 0.026871916033584062
+          },
+          "inference_samples": [
+            0.040436625,
+            0.031566833,
+            0.032720667,
+            0.032349583,
+            0.031213459
+          ],
+          "runtime_sha256": "e4cde4da190bc9e117cf9d1f9f07d9c3d5050f24f54c5e8b0b6ac1304f661b35",
+          "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+          "raw_samples_sha256": "1304981ab1e403aa24843ded6fbc585337dd2248863e0d579cad66ad3c77c616"
+        },
+        "inference_change_percent": 35.54010411038728,
+        "change_from_previous_percent": -1.3956430272653142
+      }
+    },
+    "limitations": [
+      "Short grouped diagnostic; order, thermal drift and activity between guards remain possible.",
+      "Previous Raytrace samples rise from 5.325462583 to 5.693961958 seconds and overlap the candidate range. The arithmetic median improvement does not isolate a stable code effect. No sample is removed."
+    ]
+  },
+  "work": {
+    "control": {
+      "sum": {
+        "artifact": {
+          "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/shared-root-admission/control/checked/candidate-sum/report.json",
+          "sha256": "4da58b615caf2d50d83ece8354f56f6a5550a166aab2eef6e45bef0d95a19eb5"
+        },
+        "key_lookup_calls": 14653,
+        "registration": {
+          "constructor_registry_rows": 0,
+          "constructor_registry_worker_rows": 0,
+          "constructor_registry_owned_rows": 0,
+          "constructor_registry_bytes": 0,
+          "constructor_registry_frame_bytes": 0,
+          "constructor_registry_frame_transfers": 0,
+          "constructor_fused_rows": 0,
+          "constructor_fused_cells": 0,
+          "constructor_pipeline_cells": 0,
+          "constructor_pipeline_regions": 0,
+          "constructor_pipeline_table_waits": 0,
+          "unit_registry_event_bytes": 0,
+          "unit_registry_event_wait_ns": 0,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0
+        },
+        "scheduler": {
+          "jobs": 0,
+          "batches": 0,
+          "event_wait_ns": 0,
+          "wait_ns": 0,
+          "event_bytes": 0,
+          "queue_bytes": 0,
+          "admission_overlap_instances": 0,
+          "admission_empty_polls": 0,
+          "worker_jobs": []
+        },
+        "births": {
+          "local_births": 0,
+          "local_reuses": 0,
+          "worker_operations": 0,
+          "root_jobs": 0,
+          "slot_leases": 0,
+          "slot_reattachments": 0,
+          "pending_bytes": 0,
+          "worker_wait_ns": 0
+        },
+        "signal_bindings_created": 8909
+      },
+      "ray": {
+        "artifact": {
+          "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/shared-root-admission/control/checked/candidate-ray/report.json",
+          "sha256": "a9917d14a7d252a3f11230bd1aa2e62624a257df48d0bab5b2f79cab65e537a8"
+        },
+        "key_lookup_calls": 4332972,
+        "registration": {
+          "constructor_registry_rows": 0,
+          "constructor_registry_worker_rows": 0,
+          "constructor_registry_owned_rows": 0,
+          "constructor_registry_bytes": 0,
+          "constructor_registry_frame_bytes": 0,
+          "constructor_registry_frame_transfers": 0,
+          "constructor_fused_rows": 0,
+          "constructor_fused_cells": 0,
+          "constructor_pipeline_cells": 0,
+          "constructor_pipeline_regions": 0,
+          "constructor_pipeline_table_waits": 0,
+          "unit_registry_event_bytes": 0,
+          "unit_registry_event_wait_ns": 0,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0
+        },
+        "scheduler": {
+          "jobs": 0,
+          "batches": 0,
+          "event_wait_ns": 0,
+          "wait_ns": 0,
+          "event_bytes": 0,
+          "queue_bytes": 0,
+          "admission_overlap_instances": 0,
+          "admission_empty_polls": 0,
+          "worker_jobs": []
+        },
+        "births": {
+          "local_births": 0,
+          "local_reuses": 0,
+          "worker_operations": 0,
+          "root_jobs": 0,
+          "slot_leases": 0,
+          "slot_reattachments": 0,
+          "pending_bytes": 0,
+          "worker_wait_ns": 0
+        },
+        "signal_bindings_created": 2151665
+      },
+      "learned": {
+        "artifact": {
+          "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/shared-root-admission/control/learned/report.json",
+          "sha256": "64d0326cd99ff4fb996028a5e7ea1db813028a73a1200e7e998d834e30573c2e"
+        },
+        "key_lookup_calls": 14373,
+        "registration": {
+          "constructor_registry_rows": 0,
+          "constructor_registry_worker_rows": 0,
+          "constructor_registry_owned_rows": 0,
+          "constructor_registry_bytes": 0,
+          "constructor_registry_frame_bytes": 0,
+          "constructor_registry_frame_transfers": 0,
+          "constructor_fused_rows": 0,
+          "constructor_fused_cells": 0,
+          "constructor_pipeline_cells": 0,
+          "constructor_pipeline_regions": 0,
+          "constructor_pipeline_table_waits": 0,
+          "unit_registry_event_bytes": 0,
+          "unit_registry_event_wait_ns": 0,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0
+        },
+        "scheduler": {
+          "jobs": 0,
+          "batches": 0,
+          "event_wait_ns": 0,
+          "wait_ns": 0,
+          "event_bytes": 0,
+          "queue_bytes": 0,
+          "admission_overlap_instances": 0,
+          "admission_empty_polls": 0,
+          "worker_jobs": []
+        },
+        "births": {
+          "local_births": 0,
+          "local_reuses": 0,
+          "worker_operations": 0,
+          "root_jobs": 0,
+          "slot_leases": 0,
+          "slot_reattachments": 0,
+          "pending_bytes": 0,
+          "worker_wait_ns": 0
+        },
+        "signal_bindings_created": 8108
+      }
+    },
+    "previous": {
+      "sum": {
+        "artifact": {
+          "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/table-owned-registration/candidate/checked/candidate-sum/report.json",
+          "sha256": "bf4737ff47fc97279d8e474db1cf853666d8e390c9eebc0b9f1e74e91da574af"
+        },
+        "key_lookup_calls": 12984,
+        "registration": {
+          "constructor_registry_rows": 319,
+          "constructor_registry_worker_rows": 319,
+          "constructor_registry_owned_rows": 319,
+          "constructor_registry_bytes": 22312,
+          "constructor_registry_frame_bytes": 34000,
+          "constructor_registry_frame_transfers": 250,
+          "constructor_fused_rows": 174,
+          "constructor_fused_cells": 167,
+          "constructor_pipeline_cells": 0,
+          "constructor_pipeline_regions": 0,
+          "constructor_pipeline_table_waits": 0,
+          "unit_registry_event_bytes": 16640,
+          "unit_registry_event_wait_ns": 143373,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0
+        },
+        "scheduler": {
+          "jobs": 1101,
+          "batches": 135,
+          "event_wait_ns": 1447745,
+          "wait_ns": 3519336,
+          "event_bytes": 1085888,
+          "queue_bytes": 2688896,
+          "admission_overlap_instances": 31,
+          "admission_empty_polls": 31,
+          "worker_jobs": [
+            628,
+            229,
+            125,
+            103
+          ]
+        },
+        "births": {
+          "local_births": 1563,
+          "local_reuses": 106,
+          "worker_operations": 1502,
+          "root_jobs": 1101,
+          "slot_leases": 1101,
+          "slot_reattachments": 1101,
+          "pending_bytes": 4480,
+          "worker_wait_ns": 3474585
+        },
+        "signal_bindings_created": 8909
+      },
+      "ray": {
+        "artifact": {
+          "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/table-owned-registration/candidate/checked/candidate-ray/report.json",
+          "sha256": "06dd5530702ab4f6e56af547bd3003558e7f7559e1af746a38983af76ab48364"
+        },
+        "key_lookup_calls": 3974623,
+        "registration": {
+          "constructor_registry_rows": 233271,
+          "constructor_registry_worker_rows": 233271,
+          "constructor_registry_owned_rows": 233271,
+          "constructor_registry_bytes": 12733032,
+          "constructor_registry_frame_bytes": 20267536,
+          "constructor_registry_frame_transfers": 149026,
+          "constructor_fused_rows": 102359,
+          "constructor_fused_cells": 97102,
+          "constructor_pipeline_cells": 91637,
+          "constructor_pipeline_regions": 1567,
+          "constructor_pipeline_table_waits": 1552,
+          "unit_registry_event_bytes": 4318080,
+          "unit_registry_event_wait_ns": 47303057,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0
+        },
+        "scheduler": {
+          "jobs": 216434,
+          "batches": 6512,
+          "event_wait_ns": 85527076,
+          "wait_ns": 468487027,
+          "event_bytes": 214729096,
+          "queue_bytes": 195059024,
+          "admission_overlap_instances": 24196,
+          "admission_empty_polls": 19832,
+          "worker_jobs": [
+            69159,
+            58115,
+            46762,
+            42000
+          ]
+        },
+        "births": {
+          "local_births": 353001,
+          "local_reuses": 5348,
+          "worker_operations": 329949,
+          "root_jobs": 203624,
+          "slot_leases": 216434,
+          "slot_reattachments": 216434,
+          "pending_bytes": 780160,
+          "worker_wait_ns": 467186577
+        },
+        "signal_bindings_created": 2151665
+      },
+      "learned": {
+        "artifact": {
+          "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/table-owned-registration/candidate/learned/report.json",
+          "sha256": "bf2520fbaffa457d4870af64717431cca36776b76f8ff7684b980d0768cbda32"
+        },
+        "key_lookup_calls": 12716,
+        "registration": {
+          "constructor_registry_rows": 359,
+          "constructor_registry_worker_rows": 359,
+          "constructor_registry_owned_rows": 359,
+          "constructor_registry_bytes": 26592,
+          "constructor_registry_frame_bytes": 36040,
+          "constructor_registry_frame_transfers": 265,
+          "constructor_fused_rows": 174,
+          "constructor_fused_cells": 167,
+          "constructor_pipeline_cells": 0,
+          "constructor_pipeline_regions": 0,
+          "constructor_pipeline_table_waits": 0,
+          "unit_registry_event_bytes": 16640,
+          "unit_registry_event_wait_ns": 131338,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0
+        },
+        "scheduler": {
+          "jobs": 1101,
+          "batches": 135,
+          "event_wait_ns": 1345381,
+          "wait_ns": 3354161,
+          "event_bytes": 1098256,
+          "queue_bytes": 2688896,
+          "admission_overlap_instances": 26,
+          "admission_empty_polls": 24,
+          "worker_jobs": [
+            606,
+            292,
+            112,
+            75
+          ]
+        },
+        "births": {
+          "local_births": 1563,
+          "local_reuses": 106,
+          "worker_operations": 1502,
+          "root_jobs": 1101,
+          "slot_leases": 1101,
+          "slot_reattachments": 1101,
+          "pending_bytes": 4480,
+          "worker_wait_ns": 3319746
+        },
+        "signal_bindings_created": 8108
+      }
+    },
+    "candidate": {
+      "sum": {
+        "artifact": {
+          "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/shared-root-admission/candidate/checked/candidate-sum/report.json",
+          "sha256": "33e512eed12eb72b4bfc7e6c315c52ebd76428fd1f3974668805cc521929768e"
+        },
+        "key_lookup_calls": 12984,
+        "registration": {
+          "constructor_registry_rows": 365,
+          "constructor_registry_worker_rows": 365,
+          "constructor_registry_owned_rows": 365,
+          "constructor_registry_bytes": 25144,
+          "constructor_registry_frame_bytes": 37672,
+          "constructor_registry_frame_transfers": 277,
+          "constructor_fused_rows": 174,
+          "constructor_fused_cells": 167,
+          "constructor_pipeline_cells": 0,
+          "constructor_pipeline_regions": 0,
+          "constructor_pipeline_table_waits": 0,
+          "unit_registry_event_bytes": 16640,
+          "unit_registry_event_wait_ns": 431753,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0
+        },
+        "scheduler": {
+          "jobs": 1101,
+          "batches": 135,
+          "event_wait_ns": 4664253,
+          "wait_ns": 8722370,
+          "event_bytes": 1105480,
+          "queue_bytes": 2688896,
+          "admission_overlap_instances": 31,
+          "admission_empty_polls": 31,
+          "worker_jobs": [
+            484,
+            270,
+            224,
+            107
+          ]
+        },
+        "births": {
+          "local_births": 1563,
+          "local_reuses": 106,
+          "worker_operations": 1502,
+          "root_jobs": 1101,
+          "slot_leases": 1101,
+          "slot_reattachments": 1101,
+          "pending_bytes": 4480,
+          "worker_wait_ns": 8680495
+        },
+        "signal_bindings_created": 8909
+      },
+      "ray": {
+        "artifact": {
+          "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/shared-root-admission/candidate/checked/candidate-ray/report.json",
+          "sha256": "cc588e3623ad4c7d6d6889fc5f39b485c0bfd8b21ba08fb3fcefaf3f5c4a31dd"
+        },
+        "key_lookup_calls": 3974601,
+        "registration": {
+          "constructor_registry_rows": 232553,
+          "constructor_registry_worker_rows": 232553,
+          "constructor_registry_owned_rows": 232553,
+          "constructor_registry_bytes": 12758704,
+          "constructor_registry_frame_bytes": 20290656,
+          "constructor_registry_frame_transfers": 149196,
+          "constructor_fused_rows": 102444,
+          "constructor_fused_cells": 97136,
+          "constructor_pipeline_cells": 91541,
+          "constructor_pipeline_regions": 1565,
+          "constructor_pipeline_table_waits": 99,
+          "unit_registry_event_bytes": 4505280,
+          "unit_registry_event_wait_ns": 77728930,
+          "constructor_pipeline_root_reads": 69135,
+          "constructor_pipeline_root_hits": 684,
+          "constructor_pipeline_root_jobs": 68451
+        },
+        "scheduler": {
+          "jobs": 216430,
+          "batches": 6518,
+          "event_wait_ns": 186491090,
+          "wait_ns": 737095133,
+          "event_bytes": 215993632,
+          "queue_bytes": 200345800,
+          "admission_overlap_instances": 106823,
+          "admission_empty_polls": 100827,
+          "worker_jobs": [
+            60441,
+            65799,
+            49615,
+            40174
+          ]
+        },
+        "births": {
+          "local_births": 353001,
+          "local_reuses": 5370,
+          "worker_operations": 329966,
+          "root_jobs": 203620,
+          "slot_leases": 216430,
+          "slot_reattachments": 216430,
+          "pending_bytes": 780160,
+          "worker_wait_ns": 735766507
+        },
+        "signal_bindings_created": 2151665
+      },
+      "learned": {
+        "artifact": {
+          "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/shared-root-admission/candidate/learned/report.json",
+          "sha256": "2338703435ea927018bc5e66db97c9c41f74bbb9a13c11d13fea632f8f8158e1"
+        },
+        "key_lookup_calls": 12716,
+        "registration": {
+          "constructor_registry_rows": 393,
+          "constructor_registry_worker_rows": 393,
+          "constructor_registry_owned_rows": 393,
+          "constructor_registry_bytes": 27952,
+          "constructor_registry_frame_bytes": 35632,
+          "constructor_registry_frame_transfers": 262,
+          "constructor_fused_rows": 174,
+          "constructor_fused_cells": 167,
+          "constructor_pipeline_cells": 0,
+          "constructor_pipeline_regions": 0,
+          "constructor_pipeline_table_waits": 0,
+          "unit_registry_event_bytes": 19968,
+          "unit_registry_event_wait_ns": 188917,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0
+        },
+        "scheduler": {
+          "jobs": 1101,
+          "batches": 135,
+          "event_wait_ns": 3116835,
+          "wait_ns": 5743411,
+          "event_bytes": 1114520,
+          "queue_bytes": 2688896,
+          "admission_overlap_instances": 24,
+          "admission_empty_polls": 24,
+          "worker_jobs": [
+            461,
+            252,
+            232,
+            140
+          ]
+        },
+        "births": {
+          "local_births": 1563,
+          "local_reuses": 106,
+          "worker_operations": 1502,
+          "root_jobs": 1101,
+          "slot_leases": 1101,
+          "slot_reattachments": 1101,
+          "pending_bytes": 4480,
+          "worker_wait_ns": 5712535
+        },
+        "signal_bindings_created": 8108
+      }
+    }
+  },
+  "counter_interpretation": [
+    "Registration and frame bytes are cumulative structural charges, not peak heap.",
+    "Whole-table waits count encounters, not elapsed waiting or idle-core percentage.",
+    "The work reports are separate validation executions; their nanosecond counters are not timing-lane medians.",
+    "New root read/hit/job counters were absent in earlier code; the corresponding path did not exist.",
+    "Neither sum-bits variant enters the new background shared-root path.",
+    "Empty event polls already have an atomic readiness fast path; their count alone does not establish lock contention.",
+    "The worker owns the sole mutating index, with short source read/worker write locks. This is not independent concurrent mutation of all graph state.",
+    "Lookup guard order, index sharing and source overlap changed together; their individual effects are not isolated."
+  ],
+  "artifacts": {
+    "work": {
+      "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/shared-root-admission/work.json",
+      "sha256": "f0a105602c185a1a1e0c101b12a6b2bf8e2e29d5350ee989e7ff3611776b1568"
+    },
+    "previous_work": {
+      "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/table-owned-registration/work.json",
+      "sha256": "62b4f6a4ec9c9875a6ad57d1ce5698eaf76e7191abe395393aba455fca5dd257"
+    },
+    "timing": {
+      "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/shared-root-admission-timing/result.json",
+      "sha256": "79acbd73def56a37d26a5e2ad9bbee51afe2927f5ee0106327a41f576657af22"
+    },
+    "validation": {
+      "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/shared-root-admission/candidate/checked/validation.json",
+      "sha256": "39b770fa5ce0e713a274ea016e0cd20d76bb5f00ac72806cf511d04de54a222b"
+    },
+    "native_sum_acceptance": {
+      "path": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/shared-root-admission/candidate/checked/semantic-acceptance.json",
+      "sha256": "d7ff40d9daf4f3de1fb1a6b9620738d2e947d3a78ef6490fc53a30ef9bf77505"
+    }
+  },
+  "decision": "All three medians improve relative to the prior experiment in this grouped trial, but remain slower than the original merged-Bake control. Speed admission fails; keep this implementation experimental and unmerged into codex/cell-parallel-admission.",
+  "remaining_obligations": [
+    "Source root queries, per-Cell preparation, ownership port binding and component selection remain.",
+    "The two-buffer queue, dependent roots and ordered shared effects can still require owner return.",
+    "Existing and already-adopted wave Cell IDs must both remain in the fresh-cone exclusion until the wave closes.",
+    "Actual foreign witnesses, exact keys, liveness, error ordering, equality epochs and Run visibility remain authoritative."
+  ],
+  "next_opportunity": "Use the existing typed Cell root plan to compile only external slot demands for worker admission, removing repeated per-instance scans of every tail operand and definition. This remains proposed, not implemented or counted as a saving."
+}
