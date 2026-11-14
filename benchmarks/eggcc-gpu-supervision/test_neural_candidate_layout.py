@@ -25,6 +25,20 @@ class CandidateLayout(unittest.TestCase):
             accept=np.array(batch['live']&batch['constraints_satisfied'])
             keys={tuple([0]+list(x)) for x in np.array(batch['binding_roots'])[accept]}
             selected.append(keys)
+        small=compile_candidates(local,rule,capacity=2,atoms=4,fields=2,compact_constants=True)
+        small_batch=candidates(ds,frames,device(small),mx.array(True),mx.array(True),mx)
+        self.assertTrue(bool(small_batch['overflow']));self.assertFalse(bool(small_batch['complete']))
+        np.testing.assert_array_equal(small_batch['pool_sizes'],[1,3,3,3])
+        enlarged=compile_candidates(local,rule,capacity=2,atoms=4,fields=2,compact_constants=True,table_capacities={'F':4,'N':99})
+        self.assertEqual(enlarged['capacities'],[1,4,4,4])
+        expanded=candidates(ds,frames,device(enlarged),mx.array(True),mx.array(True),mx)
+        self.assertTrue(bool(expanded['complete']))
+        accepted=np.array(expanded['live']&expanded['constraints_satisfied'])
+        keys={tuple([0]+list(x)) for x in np.array(expanded['binding_roots'])[accepted]}
+        self.assertEqual(keys,selected[0])
+        for overrides in ({'unknown':4},{'F':0},{'F':2.5}):
+            with self.assertRaisesRegex(ValueError,'invalid table capacity'):
+                compile_candidates(local,rule,atoms=4,fields=2,table_capacities=overrides)
         self.assertEqual(selected[0],selected[1]);self.assertEqual(selected[0],reference_keys(rule,rows,ids,5));self.assertEqual(len(selected[0]),1)
 
 

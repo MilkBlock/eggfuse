@@ -62,16 +62,18 @@ def input_role_tags(atoms,context_capacity):
     return np.array([np.concatenate([vec(('cell-input-role',role,j)) for j in (0,1)]) for role in roles],np.float32)
 
 
-def compile_candidates(recipe,consumer,capacity=16,atoms=2,fields=5,context_capacity=0,compact_constants=False):
+def compile_candidates(recipe,consumer,capacity=16,atoms=2,fields=5,context_capacity=0,compact_constants=False,table_capacities=None):
     if not 1<=len(consumer['query'])<=atoms or capacity<1 or context_capacity<0:raise ValueError('candidate shape')
     tables={t['name']:i for i,t in enumerate(recipe['tables'])};views=[];origins={}
+    table_capacities=table_capacities or {}
+    if any(t not in tables or type(c) is not int or c<1 for t,c in table_capacities.items()):raise ValueError('invalid table capacity')
     for ai,a in enumerate(consumer['query']):
         if len(a['args'])>fields or any('slot' not in x for x in a['args']):raise ValueError('unsupported query projection')
         views.append(compile_view(recipe,tables[a['call']['table']],len(a['args'])-1))
         for fi,arg in enumerate(a['args']):origins.setdefault(arg['slot'],(ai,fi))
     inputs=[s for s,d in enumerate(consumer['slots']) if d['definition']=='query']
     if set(inputs)!=set(origins):raise ValueError('incomplete input projection')
-    capacities=[1 if compact_constants and recipe['tables'][tables[a['call']['table']]]['kind']=='constructor' and len(a['args'])==1 else capacity for a in consumer['query']]
+    capacities=[1 if compact_constants and recipe['tables'][tables[a['call']['table']]]['kind']=='constructor' and len(a['args'])==1 else table_capacities.get(a['call']['table'],capacity) for a in consumer['query']]
     return dict(views=views,capacity=capacity,capacities=capacities,atoms=atoms,fields=fields,inputs=inputs,origins=origins,context_capacity=context_capacity,
                 required=demand(consumer,atoms,fields),request=template(consumer)[1],source_tags=input_role_tags(atoms,context_capacity))
 
@@ -84,7 +86,7 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp):
         block=state['token_block']
         token_valid=token_valid&(block>=0)&(block<state['owner_token_blocks'].shape[1])&(block<state['owner_block_count'][token_sources])
     ready=state['settled']&token_valid
-    views=[];complete=xp.array(True);overflow=xp.array(False)
+    views=[];pool_sizes=[];complete=xp.array(True);overflow=xp.array(False)
     for cap,view_plan in zip(capacities,plan['views']):
         v=project(state,view_plan,external_complete,eq_settled,xp,include_fields=True);n=len(v['live'])
         # Prefer the later producer for duplicate facts, retaining generated tokens.
@@ -97,7 +99,8 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp):
         if len(order)<cap:order=xp.concatenate([order,xp.full((cap-len(order),),n,xp.int32)])
         pick=xp.clip(n-1-order,0,n-1)
         views.append(dict(v,pick=pick,selected=order<n))
-        overflow=overflow|(xp.sum(keep.astype(xp.int32))>cap);complete=complete&v['complete']
+        pool_sizes.append(xp.sum(keep.astype(xp.int32)))
+        overflow=overflow|(pool_sizes[-1]>cap);complete=complete&v['complete']
     sources=[];projected=[];raw=[];positions=[];alive=xp.ones(count,xp.bool_)
     for ai,v in enumerate(views):
         lane=(ordinal//int(np.prod(capacities[ai+1:])))%capacities[ai];pick=v['pick'][lane]
@@ -140,6 +143,6 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp):
         extra['owner_features']=encode_owner(semantic_sources,state['token_block'][sources],state['owner_completion_code'][semantic_sources],(state['owner_block_count'][semantic_sources]>1)&ready[sources],mask,xp)
     relations=incidence(projected,plan['required'],xp);half=relations.shape[1]//2
     constraints_satisfied=xp.all((relations[:,half:]==0)|(relations[:,:half]>0),axis=1)
-    return dict(**extra,constraints_satisfied=constraints_satisfied,tokens=token_values+plan['source_tags'][None,:,:],source_tags=xp.broadcast_to(plan['source_tags'],(count,sources.shape[1],128)),edges=edges,mask=mask,request=xp.broadcast_to(plan['request'],(count,64)),
+    return dict(**extra,pool_sizes=xp.stack(pool_sizes),constraints_satisfied=constraints_satisfied,tokens=token_values+plan['source_tags'][None,:,:],source_tags=xp.broadcast_to(plan['source_tags'],(count,sources.shape[1],128)),edges=edges,mask=mask,request=xp.broadcast_to(plan['request'],(count,64)),
                 relations=relations,sources=sources,token_sources=semantic_sources,generations=state['generation'][sources],binding_roots=binding,binding_sources=binding_sources,binding_slots=binding_slots,
                 live=alive,complete=complete&~overflow&~context_overflow,overflow=overflow,context_overflow=context_overflow)

@@ -1,0 +1,108 @@
+{
+  "scope": "Targeted cumulative canon pair (7,6), unchanged v20 model; standalone prototype",
+  "before": {
+    "scope": "one cumulative GPU state; host fixed-order sweeps, final CPU audit",
+    "sweeps": 6,
+    "scheduled_steps": 48,
+    "admitted": 5,
+    "replayed": 5,
+    "graph": {
+      "passed": true,
+      "errors": [],
+      "actual_facts": 33,
+      "expected_facts": 33,
+      "mapped_classes": 29
+    },
+    "facts_decoded": true,
+    "cpu_fixedpoint": false,
+    "device_no_novel": false,
+    "needs_attention": true,
+    "attention_reasons": {
+      "query_overflow": 1,
+      "query_incomplete": 1,
+      "dirty_input": 0,
+      "nonfinite": 0,
+      "invalid_keys": 0,
+      "rejected_proposal": 0,
+      "payload_invalid": 0
+    },
+    "attention_events": [
+      {
+        "rule": 7,
+        "pools": {
+          "LessEq": 1,
+          "Bop": 19,
+          "HasArgType": 2,
+          "ContextOf": 2
+        }
+      }
+    ],
+    "capacity_steps": 0,
+    "refresh_steps": 0,
+    "cpu_audit_seconds": 0.05037816701224074,
+    "intermediate_host_value_reads": false,
+    "status": "difference"
+  },
+  "after": {
+    "scope": "one cumulative GPU state; host fixed-order sweeps, final CPU audit",
+    "pool_capacity_overrides": {
+      "Bop": 32
+    },
+    "candidate_lanes_per_sweep": 16576,
+    "sweeps": 6,
+    "scheduled_steps": 48,
+    "admitted": 6,
+    "replayed": 6,
+    "graph": {
+      "passed": false,
+      "errors": [
+        "inconsistent_result_class",
+        "inconsistent_result_class",
+        "unexpected_constructor",
+        "missing_union",
+        "fact_set_difference"
+      ],
+      "actual_facts": 33,
+      "expected_facts": 33,
+      "mapped_classes": 31
+    },
+    "facts_decoded": true,
+    "cpu_fixedpoint": false,
+    "device_no_novel": false,
+    "needs_attention": true,
+    "attention_reasons": {
+      "query_overflow": 0,
+      "query_incomplete": 0,
+      "dirty_input": 0,
+      "nonfinite": 0,
+      "invalid_keys": 0,
+      "rejected_proposal": 0,
+      "payload_invalid": 0
+    },
+    "attention_events": [
+      {
+        "rule": 7,
+        "pools": {
+          "LessEq": 1,
+          "Bop": 19,
+          "HasArgType": 2,
+          "ContextOf": 2
+        }
+      }
+    ],
+    "capacity_steps": 0,
+    "refresh_steps": 1,
+    "cpu_audit_seconds": 0.056491041963454336,
+    "intermediate_host_value_reads": false,
+    "status": "difference"
+  },
+  "baseline_candidate_lanes_per_sweep": 8288,
+  "weights_sha256": "3c210591fd9539d3f9e908a9a53c0e2ffdee69be229644b700ba82aecf83285d",
+  "readout_weights_sha256": "f636ba3f1dc3f3b590b608c4a6d924a295bf7737b1eb832175831e1df53db6f0",
+  "conclusion": "Bop pool 19 exceeded default 16. Capacity 32 admits one further transition and exposes graph error; no correctness improvement claimed.",
+  "limitations": [
+    "Only affected pair rerun with override; default remains 16",
+    "Candidate lane count doubles for this compiled ruleset; no speedup claim",
+    "Graph error after admission still requires investigation/training; not saturation"
+  ]
+}

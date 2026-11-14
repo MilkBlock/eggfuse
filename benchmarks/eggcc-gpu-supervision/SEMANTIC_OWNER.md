@@ -903,3 +903,29 @@ multi-stage execution, corrected latent states, asynchronous supervision, or
 performance improvement. Eleven targeted tests pass. Text results:
 `canon-cumulative-results.json`; external archive:
 `neural-canon-cumulative-v27.tar.gz`.
+
+### Table-specific candidate capacity and cumulative coverage diagnosis
+
+Cumulative attention now reports pool sizes and the consuming rule, separating
+query overflow from other incomplete views. The remaining coverage failure
+on entry pair (7,6) occurs in rule 7 with pools: LessEq=1, Bop=19,
+HasArgType=2, ContextOf=2. Bop alone exceeds the default 16.
+
+`--pool-capacity Bop=32` compiles a larger Bop axis without changing other
+axes. Overrides are validated; immutable nullary constructors retain capacity
+one. Candidate work increases from 8,288 to 16,576 lanes per full rule sweep.
+The default remains 16, and overflow always remains an explicit failure.
+`--pair 7 6` selects the targeted synthetic pair without regenerating a
+different source distribution.
+
+With six sweeps and the unchanged v20 model, the override removes query
+overflow and permits a sixth cumulative admission. That admission triggers
+root-change attention and the final graph fails. Thus the prior bound masked
+an additional unsupported learned continuation; increasing capacity is not
+a correctness improvement. This targeted experiment does not remeasure the
+other 60 cases or establish performance.
+
+Seven tests cover mixed-radix layouts, exact reference joins after expansion,
+overflow telemetry, invalid overrides, device-step admission, and independent
+fixedpoint rejection. Text results: `canon-pool-capacity-results.json`;
+external SSD archive: `neural-canon-pool-capacity-v28.tar.gz`.

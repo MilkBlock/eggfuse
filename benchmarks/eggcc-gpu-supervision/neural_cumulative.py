@@ -18,11 +18,11 @@ from reference_cell_closure import facts_from_cells
 from reference_union_family import compare_graph
 
 
-def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,seed_count):
+def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,seed_count,table_capacities=None):
     width=shape(state)[1];eq_width=max(len(r['slots']) for r in rules)
     atoms=max(len(r['query']) for r in rules);fields=max(len(a['args']) for r in rules for a in r['query'])
     offset=len(local['rules'])-len(rules)
-    plans=[(device(compile_candidates(local,r,atoms=atoms,fields=fields,compact_constants=True)),
+    plans=[(device(compile_candidates(local,r,atoms=atoms,fields=fields,compact_constants=True,table_capacities=table_capacities)),
             compile_frame(r,width,eq_width,local,True)) for r in rules]
     attention=mx.array(False);idle=mx.array(False);trace=[]
     for _ in range(sweeps):
@@ -37,8 +37,10 @@ def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,
     mx.eval(state,roots,next_id,attention,idle)
     started=time.perf_counter();ref=deepcopy(oracle);identities=dict(mapping)
     errors=[];admitted=0;capacity=0;refresh=0;replayed=0
-    reasons={k:0 for k in ('query_incomplete','dirty_input','nonfinite','invalid_keys','rejected_proposal','payload_invalid')}
+    reasons={k:0 for k in ('query_overflow','query_incomplete','dirty_input','nonfinite','invalid_keys','rejected_proposal','payload_invalid')}
+    attention_events=[]
     for ri,event in trace:
+        if bool(event["needs_attention"]):attention_events.append(dict(rule=ri,pools={a["call"]["table"]:int(n) for a,n in zip(rules[ri]["query"],np.array(event["pool_sizes"]))}))
         for k in reasons:reasons[k]+=bool(event[k])
         capacity+=bool(event['capacity']);refresh+=bool(event['token_refresh_required'])
         if not bool(event['admitted']):continue
@@ -67,8 +69,9 @@ def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,
             for binding in bindings:apply_instance(probe,rule,binding)
         fixedpoint=probe.constructions==ref.constructions and probe.unions==ref.unions
     return dict(scope='one cumulative GPU state; host fixed-order sweeps, final CPU audit',
+                pool_capacity_overrides=table_capacities or {},candidate_lanes_per_sweep=sum(int(np.prod(q['capacities'])) for q,f in plans),
                 sweeps=sweeps,scheduled_steps=len(trace),admitted=admitted,replayed=replayed,
                 graph=graph,facts_decoded=covered,cpu_fixedpoint=fixedpoint,device_no_novel=bool(idle),
-                needs_attention=bool(attention),attention_reasons=reasons,capacity_steps=capacity,refresh_steps=refresh,
+                needs_attention=bool(attention),attention_reasons=reasons,attention_events=attention_events,capacity_steps=capacity,refresh_steps=refresh,
                 cpu_audit_seconds=time.perf_counter()-started,intermediate_host_value_reads=False,
                 status='pass' if covered and graph['passed'] and fixedpoint and bool(idle) and not bool(attention) else 'difference')

@@ -38,6 +38,7 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
         duplicate_candidates=xp.sum((eligible&known).astype(xp.int32)),
         no_novel_proposal=enabled&~blocked&~xp.any(novel),
         needs_attention=enabled&(blocked|(requested&~accepted)|marks['token_refresh_required']),
+        query_overflow=enabled&batch['overflow'],pool_sizes=batch['pool_sizes'],
         query_incomplete=enabled&~batch['complete'],dirty_input=enabled&dirty,
         nonfinite=enabled&xp.any(batch['live']&~finite),
         invalid_keys=enabled&(xp.any(state['present']&~resident_valid)|xp.any(eligible&~valid)),
