@@ -56,6 +56,30 @@ class Enumeration(unittest.TestCase):
         # Producer support can still satisfy the omitted consumer atom.
         self.assertTrue(any(name=='G' for name,_ in base.facts))
 
+    def test_two_distinct_producers_and_replay(self):
+        r=recipe();r['rules'][0]['effects']=[]
+        r['tables'].append(dict(name='G',kind='constructor',schema=r['tables'][0]['schema']))
+        r['rules'][0]['query'].append(dict(call=dict(table='G'),args=[dict(slot=1),dict(slot=2)]))
+        cases,report=enumerate_interfaces(r,10,producer_count=2)
+        self.assertTrue(cases);self.assertTrue(report['within_bound_complete'])
+        self.assertEqual(report['wirings'],2)
+        for c in cases:
+            self.assertEqual(c['producer'],[0,0])
+            self.assertEqual(replay_case(r,c),c['snapshot'])
+            bound=Interface(r,c['producer'],c['consumer'])
+            self.assertEqual({bound.export_owners[j] for j in c['wiring']},{0,1})
+        from synthetic_cell_inputs import validate,provenance,digest
+        c=cases[0];doc=dict(schema='enumerated-cell-input/v1',recipe=r,recipe_sha256=digest(r),case=c,snapshot=c['snapshot'],input_sha256=c['input_sha256'])
+        self.assertEqual(validate(doc),(r,c['snapshot']))
+        self.assertEqual(provenance(doc)['generator']['producer'],[0,0])
+        bound=Interface(r,[0,0],0)
+        self.assertNotEqual(bound.root(('p0',0)),bound.root(('p1',0)))
+        bad=copy.deepcopy(cases[0]);bad['wiring']=[0,1]
+        with self.assertRaisesRegex(ValueError,'unused producer'):replay_case(r,bad)
+        with self.assertRaises(ValueError):enumerate_interfaces(r,producer_count=0)
+        _,limited=enumerate_interfaces(r,1,producer_count=2)
+        self.assertFalse(limited['within_bound_complete'])
+
     def test_literal_conflicts_and_budget_are_explicit(self):
         _,report=enumerate_interfaces(recipe(True),10)
         self.assertEqual(report['contradictory_wirings'],2)

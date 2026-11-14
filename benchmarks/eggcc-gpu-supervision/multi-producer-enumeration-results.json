@@ -1,0 +1,28 @@
+{
+  "scope": "completed producer instances / one consumer; every producer supplies a query atom; consumer boundary support controlled by includes_missing_support; i64 equality only",
+  "producer_count": 2,
+  "max_classes": 11,
+  "counts": {
+    "wirings": 120,
+    "contradictory_wirings": 0,
+    "budget_exclusions": 0,
+    "partitions": 106576,
+    "contradictory_partitions": 0,
+    "unique_cases": 25670,
+    "within_bound_complete": true
+  },
+  "distinct_snapshots": 10096,
+  "not_in_single_producer_snapshot_hashes": 9974,
+  "obligations": [
+    "No unbounded producer count or iterative interaction closure",
+    "No scalar arithmetic/ordering partition proof",
+    "No stage schedule or source-program reachability proof",
+    "Snapshots are completed-producer boundaries, not pre-RHS inputs",
+    "No ownership-retirement proof"
+  ],
+  "recipe_sha256": "19e4142342dea30aed720bbe0d41d870bd1dde6d444b12439798b39998df7c1c",
+  "cases_sha256": "d7d83ccbcae15af0273b0939b70f0c862a16d2ab5c230c58dd14b3c294401c14",
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/enumerated-multi-producer-v2.tar.gz",
+  "archive_sha256": "f2810029d8fa4dd35e814339a124f8043e7bf8e830c58b826764e9d22ea334e2",
+  "training_performed": false
+}

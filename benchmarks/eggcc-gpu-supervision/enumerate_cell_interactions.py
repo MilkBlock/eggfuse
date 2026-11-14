@@ -1,6 +1,6 @@
-"""Exhaustive bounded two-Cell constructor interfaces, independent of labels.
+"""Exhaustive bounded producer/consumer constructor interfaces, independent of labels.
 
-One completed producer, one consumer, at least one shared constructor fact.
+Completed producer instances and one consumer; every producer supplies a fact.
 Consumer atoms may have explicit boundary support or omit that support.
 Omitted support is not a negative label: other facts may still satisfy the query.
 No source-program reachability or whole-family closure claim.
@@ -30,19 +30,25 @@ class Interface:
                 v=literal(a);key=('literal',v['sort'],v['value']);sort=dict(kind='i64',name=v['sort']);self.constants[key]=v['value']
             self.parent.setdefault(key,key);self.sorts[key]=(sort['kind'],sort['name'])
             return key
-        p=recipe['rules'][producer];c=recipe['rules'][consumer]
-        for atom in p['query']:
-            fact=(atom['call']['table'],tuple(arg('p',p,a) for a in atom['args']))
-            self.exports.append(fact);self.facts.append(fact)
-        for op in p['effects']:
-            kind=op['kind']
-            if kind=='copy':self.union(arg('p',p,dict(slot=op['dst'])),arg('p',p,op['arg']))
-            elif kind=='union':self.union(*(arg('p',p,a) for a in op['args']))
-            elif kind in ('construct','set'):
-                result=dict(slot=op['dst']) if kind=='construct' else op['value']
-                fact=(op['call']['table'],tuple(arg('p',p,a) for a in [*op['args'],result]))
+        producers=producer if isinstance(producer,list) else [producer]
+        self.export_owners=[];self.producer_count=len(producers)
+        c=recipe['rules'][consumer]
+        for owner,rid in enumerate(producers):
+            p=recipe['rules'][rid];side='p' if len(producers)==1 else 'p'+str(owner)
+            start=len(self.exports)
+            for atom in p['query']:
+                fact=(atom['call']['table'],tuple(arg(side,p,a) for a in atom['args']))
                 self.exports.append(fact);self.facts.append(fact)
-            else:raise ValueError('unsupported producer effect: '+kind)
+            for op in p['effects']:
+                kind=op['kind']
+                if kind=='copy':self.union(arg(side,p,dict(slot=op['dst'])),arg(side,p,op['arg']))
+                elif kind=='union':self.union(*(arg(side,p,a) for a in op['args']))
+                elif kind in ('construct','set'):
+                    result=dict(slot=op['dst']) if kind=='construct' else op['value']
+                    fact=(op['call']['table'],tuple(arg(side,p,a) for a in [*op['args'],result]))
+                    self.exports.append(fact);self.facts.append(fact)
+                else:raise ValueError('unsupported producer effect: '+kind)
+            self.export_owners.extend([owner]*(len(self.exports)-start))
         for atom in c['query']:
             fact=(atom['call']['table'],tuple(arg('c',c,a) for a in atom['args']))
             self.inputs.append(fact);self.facts.append(fact)
@@ -100,10 +106,12 @@ class Interface:
 def replay_case(recipe,case):
     """Validate a recorded representative without trusting its snapshot."""
     p,c=case['producer'],case['consumer']
-    if type(p)is not int or type(c)is not int or not 0<=p<len(recipe['rules']) or not 0<=c<len(recipe['rules']):raise ValueError('invalid rule index')
+    producers=p if isinstance(p,list) else [p]
+    if not producers or any(type(r)is not int or not 0<=r<len(recipe['rules']) for r in [*producers,c]):raise ValueError('invalid rule index')
     bound=Interface(recipe,p,c);wiring=case['wiring']
     if len(wiring)!=len(bound.inputs) or all(j<0 for j in wiring):raise ValueError('invalid wiring arity')
     if any(type(j)is not int or j < -2 or j>=len(bound.exports) for j in wiring):raise ValueError('invalid export index')
+    if {bound.export_owners[j] for j in wiring if j>=0}!=set(range(bound.producer_count)):raise ValueError('unused producer instance')
     bound.connect(wiring);bound.close();groups={}
     for key in bound.parent:
         root=bound.root(key);group=groups.setdefault(bound.sorts[root],[])
@@ -123,15 +131,17 @@ def replay_case(recipe,case):
     return result
 
 
-def enumerate_interfaces(recipe,max_classes=7,include_missing=False):
+def enumerate_interfaces(recipe,max_classes=7,include_missing=False,producer_count=1):
     from copy import deepcopy
     report=dict(wirings=0,contradictory_wirings=0,budget_exclusions=0,partitions=0,contradictory_partitions=0,unique_cases=0)
+    if type(producer_count)is not int or producer_count<1:raise ValueError('positive producer count required')
     cases=[]
-    for p,c in itertools.product(range(len(recipe['rules'])),repeat=2):
+    for assignment in itertools.product(range(len(recipe['rules'])),repeat=producer_count+1):
+        p=assignment[0] if producer_count==1 else list(assignment[:-1]);c=assignment[-1]
         base=Interface(recipe,p,c)
         choices=[([-2,-1] if include_missing else [-1])+[j for j,(t,_) in enumerate(base.exports) if t==name] for name,_ in base.inputs]
         for wiring in itertools.product(*choices):
-            if all(j<0 for j in wiring):continue
+            if {base.export_owners[j] for j in wiring if j>=0}!=set(range(producer_count)):continue
             report['wirings']+=1;bound=deepcopy(base)
             try:bound.connect(wiring);bound.close()
             except ValueError:report['contradictory_wirings']+=1;continue
@@ -162,12 +172,12 @@ def enumerate_interfaces(recipe,max_classes=7,include_missing=False):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('recipe',type=Path);p.add_argument('output',type=Path);p.add_argument('--rules',default='0,1,2');p.add_argument('--max-classes',type=int,default=7);p.add_argument('--include-missing',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('recipe',type=Path);p.add_argument('output',type=Path);p.add_argument('--rules',default='0,1,2');p.add_argument('--max-classes',type=int,default=7);p.add_argument('--include-missing',action='store_true');p.add_argument('--producers',type=int,default=1);a=p.parse_args()
     if a.max_classes<1:raise ValueError('positive bound required')
     source=json.loads(a.recipe.read_text());recipe=select_recipe(source.get('recipe',source),list(map(int,a.rules.split(','))))
-    cases,report=enumerate_interfaces(recipe,a.max_classes,a.include_missing)
+    cases,report=enumerate_interfaces(recipe,a.max_classes,a.include_missing,a.producers)
     a.output.mkdir(parents=True,exist_ok=False)
     (a.output/'cases.jsonl').write_text(''.join(json.dumps(c)+'\n' for c in cases))
-    result=dict(scope='one completed producer / one consumer; consumer boundary support controlled by includes_missing_support; i64 equality only',max_classes=a.max_classes,includes_missing_support=a.include_missing,recipe=recipe,recipe_sha256=digest(recipe),counts=report,obligations=['No three-Cell or iterative interaction closure','No scalar arithmetic/ordering partition proof','No stage schedule or source-program reachability proof','Snapshots are completed-producer boundaries, not pre-RHS inputs','No ownership-retirement proof'])
+    result=dict(scope='completed producer instances / one consumer; every producer supplies a query atom; consumer boundary support controlled by includes_missing_support; i64 equality only',producer_count=a.producers,max_classes=a.max_classes,includes_missing_support=a.include_missing,recipe=recipe,recipe_sha256=digest(recipe),counts=report,obligations=['No unbounded producer count or iterative interaction closure','No scalar arithmetic/ordering partition proof','No stage schedule or source-program reachability proof','Snapshots are completed-producer boundaries, not pre-RHS inputs','No ownership-retirement proof'])
     (a.output/'manifest.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(report))
 if __name__=='__main__':main()

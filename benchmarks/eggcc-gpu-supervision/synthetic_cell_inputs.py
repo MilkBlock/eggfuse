@@ -103,7 +103,7 @@ def provenance(document):
     validate(document)
     if document['schema']=='enumerated-cell-input/v1':
         return dict(case='enumerated-'+document['input_sha256'],partition='train',synthetic_input=True,
-            input_sha256=document['input_sha256'],generator=dict(kind='typed-two-cell-enumeration',
+            input_sha256=document['input_sha256'],generator=dict(kind=('typed-multi-producer-enumeration' if isinstance(document['case']['producer'],list) else 'typed-two-cell-enumeration'),
                 producer=document['case']['producer'],consumer=document['case']['consumer'],
                 wiring=document['case']['wiring'],partition=document['case']['partition']),
             reachability='completed-producer boundary; source-program reachability unproved')
