@@ -110,6 +110,31 @@ def feature_conflicts(x,y):
     return dict(unique_inputs=len(groups),conflicting_groups=sum(len(v)>1 for v in groups.values()),includes_required_eq_mask=False)
 
 
+def assemble_classifier_features(path,meta,data,model,shared_context=False,joint_features=False):
+    from condition_boundary import captured_bridges
+    from device_joint_features import compile_projection,expand
+    info=meta.get('completion_readout') or {}
+    captured_shared=bool(info.get('shared_boundary_context',False))
+    captured_joint=bool(info.get('joint_features',False))
+    base=1+model['w'].shape[0]+model['w'].shape[1]+data['boundary_features'].shape[1]
+    raw=data['features'];error=0.;extra=None
+    if shared_context or captured_shared:
+        extra,error=captured_bridges(path,meta,shared_context=True)
+    expected=base+(extra.shape[1] if captured_shared else 0)+(256 if captured_joint else 0)
+    if raw.shape[1]!=expected:raise ValueError('capture extension schema mismatch')
+    prefix=raw[:,:base]
+    check=prefix
+    if captured_shared:check=np.concatenate([check,extra],axis=1)
+    if captured_joint:check=expand(check,compile_projection(check.shape[1]),np)
+    if not np.allclose(raw,check,atol=5e-6,rtol=0):raise ValueError('captured feature extension mismatch')
+    data['features']=prefix
+    data['features'],_=align_features(data,model,True)
+    x=data['features']
+    if shared_context:x=np.concatenate([x,extra],axis=1)
+    if joint_features:x=expand(x,compile_projection(x.shape[1]),np)
+    return x,error
+
+
 def inputs_for_case(path,meta,data,plans):
     captures=captured_inputs(path,meta);out={}
     if len(captures)!=len(data['rules']):raise ValueError('capture alignment')
@@ -173,16 +198,9 @@ def main():
             register_entry(m,split,programs,entries);sf=semantic_family(m)
             if family is not None and sf!=family:raise ValueError('semantic family mismatch')
             if plans is None:plans=[compile_states(r) for r in sf]
-            family=sf;d['features'],_=align_features(d,model,True)
-            d['classifier_features']=d['features']
-            if a.shared_context:
-                from condition_boundary import captured_bridges
-                extra,error=captured_bridges(path,m,shared_context=True);context_error=max(context_error,error)
-                d['classifier_features']=np.concatenate([d['features'],extra],axis=1)
-            if a.joint_features:
-                from device_joint_features import compile_projection,expand
-                joint=compile_projection(d['classifier_features'].shape[1])
-                d['classifier_features']=expand(d['classifier_features'],joint,np)
+            family=sf
+            d['classifier_features'],error=assemble_classifier_features(path,m,d,model,a.shared_context,a.joint_features)
+            context_error=max(context_error,error)
             details=inputs_for_case(path,m,d,plans);cases.append((split,d,m,details))
     heads=[];coverage=[]
     for rid,plan in enumerate(plans):

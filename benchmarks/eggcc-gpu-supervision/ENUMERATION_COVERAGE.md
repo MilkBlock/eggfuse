@@ -64,3 +64,25 @@ python enumerate_cell_interactions.py RECIPE_MANIFEST OUTPUT \
 The source archive is one gzip file on the external SSD to avoid per-file block
 allocation overhead. No native-label or training campaign has yet been run for
 these 10,096 snapshots; the report must not be read as a prediction result.
+
+## Matched input without completed effects
+
+`--producer-phase matched` exports only producer query facts. It does not apply
+producer copy/construct/set/union effects. This tests entrance distributions
+before RHS execution, which the completed-producer enumeration excluded.
+Replay and provenance preserve the phase. The completed-frame importer rejects
+matched-phase inputs instead of falsely marking their effects complete. The
+existing completed-phase default is unchanged. Mixed phases are not yet covered.
+
+For the same three rules with max-classes 11 and include-missing enabled:
+44 wirings, 644 partition combinations, 341 route cases, 191 snapshot hashes,
+zero budget exclusions. Native direct compilation/execution labels passed for
+189 snapshots; two timed out and remain unresolved. The direct compiler skips
+Bake discovery. This is selected-family data generation, not a speed benchmark.
+GPU feedback captures for the 189 successes are being collected with the fixed
+joint-feature head. No accuracy-based case selection or new fit is performed yet.
+
+The fitter now independently reconstructs explicitly declared shared/joint
+columns in new feedback captures, validates them, and avoids appending them twice.
+A schema/mismatch regression test covers this path. Historical base captures
+continue to work. New training data still require complete provenance and audits.

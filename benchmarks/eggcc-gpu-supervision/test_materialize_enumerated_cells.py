@@ -11,6 +11,14 @@ from device_snapshot_import import prepare_family
 from audit_snapshot_queries import device
 
 class ProducerFrames(unittest.TestCase):
+    def test_matched_inputs_cannot_be_declared_completed(self):
+        r,_=fixture()
+        for t in r['tables']:t['schema']=[dict(kind='eq',name='E')]*2
+        cases,_=enumerate_interfaces(r,6,producer_phase='matched')
+        c=cases[0]
+        doc=dict(schema='enumerated-cell-input/v1',recipe=r,recipe_sha256=digest(r),case=c,snapshot=c['snapshot'],input_sha256=c['input_sha256'])
+        with self.assertRaisesRegex(ValueError,'completed phase'):prepare(doc,4)
+
     def test_sources_survive_import_and_gpu_match(self):
         r,_=fixture()
         for t in r['tables']:t['schema']=[dict(kind='eq',name='E')]*2

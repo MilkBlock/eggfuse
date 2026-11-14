@@ -272,5 +272,23 @@
     "labels_passed": true,
     "generated_cells": 41,
     "generated_source_consumers": 15
+  },
+  "lcm_rollout": {
+    "groups": {
+      "all": {
+        "instances": 99,
+        "exact_states": 34
+      },
+      "direct": {
+        "instances": 78,
+        "exact_states": 15
+      },
+      "generated": {
+        "instances": 21,
+        "exact_states": 19
+      }
+    },
+    "execution_passed": true,
+    "labels_passed": true
   }
 }

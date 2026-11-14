@@ -104,9 +104,9 @@ def provenance(document):
     if document['schema']=='enumerated-cell-input/v1':
         return dict(case='enumerated-'+document['input_sha256'],partition='train',synthetic_input=True,
             input_sha256=document['input_sha256'],generator=dict(kind=('typed-multi-producer-enumeration' if isinstance(document['case']['producer'],list) else 'typed-two-cell-enumeration'),
-                producer=document['case']['producer'],consumer=document['case']['consumer'],
+                producer_phase=document['case'].get('producer_phase','completed'),producer=document['case']['producer'],consumer=document['case']['consumer'],
                 wiring=document['case']['wiring'],partition=document['case']['partition']),
-            reachability='completed-producer boundary; source-program reachability unproved')
+            reachability=document['case'].get('producer_phase','completed')+'-producer boundary; source-program reachability unproved')
     return dict(case='synthetic-'+str(document['generator']['seed']),partition='train',synthetic_input=True,
         input_sha256=document['input_sha256'],generator=document['generator'],reachability=document['reachability'])
 

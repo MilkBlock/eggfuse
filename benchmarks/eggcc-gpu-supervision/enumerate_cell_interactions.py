@@ -21,7 +21,8 @@ def partitions(n):
 
 
 class Interface:
-    def __init__(self,recipe,producer,consumer):
+    def __init__(self,recipe,producer,consumer,phase='completed'):
+        if phase not in ('matched','completed'):raise ValueError('invalid producer phase')
         self.recipe=recipe;self.parent={};self.sorts={};self.constants={};self.facts=[];self.exports=[];self.inputs=[]
         def arg(side,rule,a):
             if 'slot' in a:
@@ -39,7 +40,7 @@ class Interface:
             for atom in p['query']:
                 fact=(atom['call']['table'],tuple(arg(side,p,a) for a in atom['args']))
                 self.exports.append(fact);self.facts.append(fact)
-            for op in p['effects']:
+            for op in (p['effects'] if phase=='completed' else []):
                 kind=op['kind']
                 if kind=='copy':self.union(arg(side,p,dict(slot=op['dst'])),arg(side,p,op['arg']))
                 elif kind=='union':self.union(*(arg(side,p,a) for a in op['args']))
@@ -109,7 +110,7 @@ def replay_case(recipe,case,with_interface=False):
     p,c=case['producer'],case['consumer']
     producers=p if isinstance(p,list) else [p]
     if not producers or any(type(r)is not int or not 0<=r<len(recipe['rules']) for r in [*producers,c]):raise ValueError('invalid rule index')
-    bound=Interface(recipe,p,c);wiring=case['wiring']
+    bound=Interface(recipe,p,c,case.get('producer_phase','completed'));wiring=case['wiring']
     if len(wiring)!=len(bound.inputs) or all(j<0 for j in wiring):raise ValueError('invalid wiring arity')
     if any(type(j)is not int or j < -2 or j>=len(bound.exports) for j in wiring):raise ValueError('invalid export index')
     if {bound.export_owners[j] for j in wiring if j>=0}!=set(range(bound.producer_count)):raise ValueError('unused producer instance')
@@ -132,14 +133,14 @@ def replay_case(recipe,case,with_interface=False):
     return (result,bound) if with_interface else result
 
 
-def enumerate_interfaces(recipe,max_classes=7,include_missing=False,producer_count=1):
+def enumerate_interfaces(recipe,max_classes=7,include_missing=False,producer_count=1,producer_phase='completed'):
     from copy import deepcopy
     report=dict(wirings=0,contradictory_wirings=0,budget_exclusions=0,partitions=0,contradictory_partitions=0,unique_cases=0)
     if type(producer_count)is not int or producer_count<1:raise ValueError('positive producer count required')
     cases=[]
     for assignment in itertools.product(range(len(recipe['rules'])),repeat=producer_count+1):
         p=assignment[0] if producer_count==1 else list(assignment[:-1]);c=assignment[-1]
-        base=Interface(recipe,p,c)
+        base=Interface(recipe,p,c,producer_phase)
         choices=[([-2,-1] if include_missing else [-1])+[j for j,(t,_) in enumerate(base.exports) if t==name] for name,_ in base.inputs]
         for wiring in itertools.product(*choices):
             if {base.export_owners[j] for j in wiring if j>=0}!=set(range(producer_count)):continue
@@ -166,19 +167,19 @@ def enumerate_interfaces(recipe,max_classes=7,include_missing=False,producer_cou
                 except ValueError:report['contradictory_partitions']+=1;continue
                 key=digest(snapshot)
                 if key in seen:continue
-                seen.add(key);cases.append(dict(producer=p,consumer=c,wiring=list(wiring),partition=[list(x) for x in parts],snapshot=snapshot,input_sha256=key))
+                seen.add(key);cases.append(dict(**({'producer_phase':producer_phase} if producer_phase!='completed' else {}),producer=p,consumer=c,wiring=list(wiring),partition=[list(x) for x in parts],snapshot=snapshot,input_sha256=key))
     report['unique_cases']=len(cases)
     report['within_bound_complete']=report['budget_exclusions']==0
     return cases,report
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('recipe',type=Path);p.add_argument('output',type=Path);p.add_argument('--rules',default='0,1,2');p.add_argument('--max-classes',type=int,default=7);p.add_argument('--include-missing',action='store_true');p.add_argument('--producers',type=int,default=1);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('recipe',type=Path);p.add_argument('output',type=Path);p.add_argument('--rules',default='0,1,2');p.add_argument('--max-classes',type=int,default=7);p.add_argument('--include-missing',action='store_true');p.add_argument('--producers',type=int,default=1);p.add_argument('--producer-phase',choices=['matched','completed'],default='completed');a=p.parse_args()
     if a.max_classes<1:raise ValueError('positive bound required')
     source=json.loads(a.recipe.read_text());recipe=select_recipe(source.get('recipe',source),list(map(int,a.rules.split(','))))
-    cases,report=enumerate_interfaces(recipe,a.max_classes,a.include_missing,a.producers)
+    cases,report=enumerate_interfaces(recipe,a.max_classes,a.include_missing,a.producers,a.producer_phase)
     a.output.mkdir(parents=True,exist_ok=False)
     (a.output/'cases.jsonl').write_text(''.join(json.dumps(c)+'\n' for c in cases))
-    result=dict(scope='completed producer instances / one consumer; every producer supplies a query atom; consumer boundary support controlled by includes_missing_support; i64 equality only',producer_count=a.producers,max_classes=a.max_classes,includes_missing_support=a.include_missing,recipe=recipe,recipe_sha256=digest(recipe),counts=report,obligations=['No unbounded producer count or iterative interaction closure','No scalar arithmetic/ordering partition proof','No stage schedule or source-program reachability proof','Snapshots are completed-producer boundaries, not pre-RHS inputs','No ownership-retirement proof'])
+    result=dict(scope='phase-qualified producer instances / one consumer; every producer supplies a query atom; consumer boundary support controlled by includes_missing_support; i64 equality only',producer_phase=a.producer_phase,producer_count=a.producers,max_classes=a.max_classes,includes_missing_support=a.include_missing,recipe=recipe,recipe_sha256=digest(recipe),counts=report,obligations=['No unbounded producer count or iterative interaction closure','No scalar arithmetic/ordering partition proof','No stage schedule or source-program reachability proof','Only the selected producer phase is covered; mixed-phase interactions are not enumerated','No ownership-retirement proof'])
     (a.output/'manifest.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(report))
 if __name__=='__main__':main()

@@ -80,6 +80,18 @@ class Enumeration(unittest.TestCase):
         _,limited=enumerate_interfaces(r,1,producer_count=2)
         self.assertFalse(limited['within_bound_complete'])
 
+    def test_matched_phase_does_not_assume_rhs(self):
+        r=recipe();base=Interface(r,0,0,'matched')
+        self.assertEqual(len(base.exports),1)
+        self.assertNotIn(('p',2),base.parent)
+        cases,report=enumerate_interfaces(r,10,producer_phase='matched')
+        self.assertEqual(report['wirings'],1)
+        for c in cases:
+            self.assertEqual(c['producer_phase'],'matched')
+            self.assertEqual(replay_case(r,c),c['snapshot'])
+        bad=copy.deepcopy(cases[0]);bad['producer_phase']='future'
+        with self.assertRaises(ValueError):replay_case(r,bad)
+
     def test_literal_conflicts_and_budget_are_explicit(self):
         _,report=enumerate_interfaces(recipe(True),10)
         self.assertEqual(report['contradictory_wirings'],2)

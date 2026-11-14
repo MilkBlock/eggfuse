@@ -16,6 +16,7 @@ from multi_entry_ridge import encode,scalar
 def prepare(document,spare):
     recipe,snapshot=validate(document)
     if document['schema']!='enumerated-cell-input/v1':raise ValueError('enumeration required')
+    if document['case'].get('producer_phase','completed')!='completed':raise ValueError('completed producer frames require completed phase')
     _,interface=replay_case(recipe,document['case'],with_interface=True)
     lowered,_=lower(lower_literals(recipe))
     if any(r.get('query_literal_guards') for r in lowered['rules']):raise ValueError('producer literal slots need explicit binding support')

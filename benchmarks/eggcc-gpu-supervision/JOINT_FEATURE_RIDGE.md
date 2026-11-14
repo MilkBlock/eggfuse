@@ -28,8 +28,9 @@ consumes generated sources 15 times. CPU graph and independent label audits pass
 exact kernels still authorize semantic effects. The reported improvement is
 prediction accuracy, not proof that learned execution can replace those checks.
 The historical original head's offline LCM result (80/99) remains substantially
-better than these new heads; no global model promotion is claimed. LCM has not
-yet been rerun in feedback mode with the joint head.
+better than these new heads; no global model promotion is claimed. LCM feedback has now completed: **34/99**, direct **15/78**, generated-source
+**19/21**. CPU graph and label audits pass, but this remains below the old head
+on this development workload.
 
 One extra fixed dense matmul and tanh is added to GPU inference. No runtime
 speedup is claimed and encoding costs still need measurement. No ownership-slack

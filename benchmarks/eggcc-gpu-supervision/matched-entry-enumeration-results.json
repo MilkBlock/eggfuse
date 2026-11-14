@@ -1,0 +1,32 @@
+{
+  "scope": "matched-only producer inputs, no assumed RHS facts/unions; native label collection, GPU collection not yet complete",
+  "counts": {
+    "wirings": 44,
+    "contradictory_wirings": 0,
+    "budget_exclusions": 0,
+    "partitions": 644,
+    "contradictory_partitions": 0,
+    "unique_cases": 341,
+    "within_bound_complete": true
+  },
+  "distinct_inputs": 191,
+  "native_statuses": {
+    "pass": 189,
+    "timeout": 2
+  },
+  "unresolved": [
+    {
+      "index": 113,
+      "status": "timeout",
+      "phase": 1
+    },
+    {
+      "index": 185,
+      "status": "timeout",
+      "phase": 1
+    }
+  ],
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/matched-entry-enumeration-v1.tar.gz",
+  "archive_sha256": "38e25c9c5769c9c748ccbeaacae293ec7c2ef0215d39cd20e0872a65dbe20e51",
+  "training_performed": false
+}
