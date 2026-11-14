@@ -208,7 +208,7 @@ def audit_failed(reports,follow=False,speculate=False):
 def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None,context_capacity=0,speculation=None,baked_eq=False,baked_proofs=None,consumer_owner=None,conditional_eq=False):
     from neural_device_candidates import compile_candidates,candidates
     counts=dict(constraint_rejected_predictions=0,candidates=0,accepted=0,false_positive=0,expected=0,recovered=0,missed=0,incomplete_rules=0,accepted_from_generated=0,invalid_predictions=0,context_overflow_rules=0,context_inputs=0)
-    groups=[];spec_reports=[]
+    groups=[];spec_reports=[];semantic_errors=[]
     if speculation is not None:
         from neural_speculation_audit import audit as audit_speculation
     if eq_head is not None:
@@ -266,6 +266,11 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
                 local_ref.facts=[(atom['call']['table'],tuple(local_bound[a['slot']] for a in atom['args'])) for atom in rule['query']]
                 apply_instance(local_ref,rule,local_bound)
                 eq_local.append(targets(rule,completed(rule,local_bound,local_ref),local_ref,width)['eq_target'])
+                from neural_eq_diagnosis import diagnose
+                error=diagnose(eq_scores[-1],truth['eq_target'],truth['eq_mask'],eq_local[-1],width)
+                if error is not None:
+                    error.update(rule=rid,candidate=int(index),binding=[[int(s),int(v)] for s,v in key],sources=sources[index].tolist())
+                    semantic_errors.append(error)
                 if speculation is not None:
                     spec_reports.append(audit_speculation(state,local,frames,rule,len(local['rules'])-len(recipe['rules'])+rid,batch,index,tokens[index],semantic[index],model,oracle,key,mapping,*speculation,width))
                 signature=hashlib.sha256(b''.join(features[k][index].tobytes() for k in features)).digest()
@@ -285,7 +290,7 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
         groups.append(group)
         for key,value in group.items():
             if key!='rule':counts[key]+=value
-    return dict(counts=counts,groups=groups,cpu_supplied_follow_bindings=False,speculation={k:sum(r[k] for r in spec_reports) for k in spec_reports[0]} if spec_reports else None)
+    return dict(counts=counts,groups=groups,semantic_errors=semantic_errors,cpu_supplied_follow_bindings=False,speculation={k:sum(r[k] for r in spec_reports) for k in spec_reports[0]} if spec_reports else None)
 
 
 if __name__=='__main__':main()

@@ -630,3 +630,27 @@ closed exact states improve only 76 to 79, and false-merge states 5 to 4. Thus
 most improvement is on covered/repeated inputs, not evidence of broad
 generalization. No third RHS is installed by this audit. Model and dataset
 binaries are archived outside Git in `neural-canon-third-v18.tar.gz`.
+
+### Remaining canon errors: inspect before changing representation
+
+`canon-error-diagnosis.json` contains per-slot mistakes from the actual GPU
+audit. Four false-merge states appear on local rules 6/7 after producers 2/4;
+four missing-Eq states appear on rules 6/7 after producer 5. All four query
+views in each failure come from the same generated Cell. Missing pairs are
+absent when re-executing against only query facts, but present with the full
+local oracle context. This diagnoses external constructor congruence, not
+a general proof that the token cannot express it.
+
+`audit_neural_input_collisions.py WEIGHTS OUT TRAIN.npz TEST.npz` compares exact
+floating transition inputs (generated source tokens, edges, masks, requests,
+and incidence) against masked Eq labels. The current 692 positive examples
+produce 321 distinct inputs and no contradictory identical-input groups.
+Thus missing information has not been proved; broaden synthetic four-atom
+export-view and external-congruence coverage before adding a new runtime
+representation. This test cannot establish sufficiency for unseen states.
+
+The CPU diagnostic uses labels only after inference; it does not correct tokens
+or feed labels into GPU inputs. Two unit tests cover transitive false merges,
+external missing pairs, masked pairs, and nonfinite outputs. The actual GPU
+audit remains `difference`. Neighbor Bake head remains f3321a3a; no new
+ownership admission methodology was observed.

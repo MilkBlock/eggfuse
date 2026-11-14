@@ -1,0 +1,607 @@
+{
+  "scope": "Standalone GPU canon error diagnosis, not corrected execution",
+  "errors": [
+    {
+      "producer": 2,
+      "consumer": 6,
+      "pairs": [
+        {
+          "slots": [
+            0,
+            9
+          ],
+          "predicted": true,
+          "expected": false,
+          "local_expected": false,
+          "raw_score": 1.3169056177139282,
+          "external_equality": false
+        },
+        {
+          "slots": [
+            0,
+            14
+          ],
+          "predicted": true,
+          "expected": false,
+          "local_expected": false,
+          "raw_score": 1.4879735708236694,
+          "external_equality": false
+        }
+      ],
+      "has_false_merge": true,
+      "has_external_missing": false,
+      "rule": 6,
+      "candidate": 1024,
+      "binding": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          7,
+          4
+        ]
+      ],
+      "sources": [
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "producer": 2,
+      "consumer": 7,
+      "pairs": [
+        {
+          "slots": [
+            0,
+            9
+          ],
+          "predicted": true,
+          "expected": false,
+          "local_expected": false,
+          "raw_score": -0.0984053760766983,
+          "external_equality": false
+        },
+        {
+          "slots": [
+            0,
+            14
+          ],
+          "predicted": true,
+          "expected": false,
+          "local_expected": false,
+          "raw_score": 0.10473655164241791,
+          "external_equality": false
+        }
+      ],
+      "has_false_merge": true,
+      "has_external_missing": false,
+      "rule": 7,
+      "candidate": 1024,
+      "binding": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          7,
+          4
+        ]
+      ],
+      "sources": [
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "producer": 4,
+      "consumer": 6,
+      "pairs": [
+        {
+          "slots": [
+            0,
+            9
+          ],
+          "predicted": true,
+          "expected": false,
+          "local_expected": false,
+          "raw_score": 2.0329368114471436,
+          "external_equality": false
+        },
+        {
+          "slots": [
+            0,
+            14
+          ],
+          "predicted": true,
+          "expected": false,
+          "local_expected": false,
+          "raw_score": 2.1896891593933105,
+          "external_equality": false
+        }
+      ],
+      "has_false_merge": true,
+      "has_external_missing": false,
+      "rule": 6,
+      "candidate": 1024,
+      "binding": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          7,
+          4
+        ]
+      ],
+      "sources": [
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "producer": 4,
+      "consumer": 7,
+      "pairs": [
+        {
+          "slots": [
+            0,
+            9
+          ],
+          "predicted": true,
+          "expected": false,
+          "local_expected": false,
+          "raw_score": 0.22505098581314087,
+          "external_equality": false
+        },
+        {
+          "slots": [
+            0,
+            14
+          ],
+          "predicted": true,
+          "expected": false,
+          "local_expected": false,
+          "raw_score": 0.422078013420105,
+          "external_equality": false
+        }
+      ],
+      "has_false_merge": true,
+      "has_external_missing": false,
+      "rule": 7,
+      "candidate": 1024,
+      "binding": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          7,
+          4
+        ]
+      ],
+      "sources": [
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "producer": 5,
+      "consumer": 6,
+      "pairs": [
+        {
+          "slots": [
+            0,
+            9
+          ],
+          "predicted": false,
+          "expected": true,
+          "local_expected": false,
+          "raw_score": -11.479089736938477,
+          "external_equality": true
+        },
+        {
+          "slots": [
+            0,
+            14
+          ],
+          "predicted": false,
+          "expected": true,
+          "local_expected": false,
+          "raw_score": -11.226397514343262,
+          "external_equality": true
+        },
+        {
+          "slots": [
+            2,
+            13
+          ],
+          "predicted": false,
+          "expected": true,
+          "local_expected": false,
+          "raw_score": -26.526798248291016,
+          "external_equality": true
+        }
+      ],
+      "has_false_merge": false,
+      "has_external_missing": true,
+      "rule": 6,
+      "candidate": 512,
+      "binding": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          11
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          7,
+          4
+        ]
+      ],
+      "sources": [
+        8,
+        8,
+        8,
+        8
+      ]
+    },
+    {
+      "producer": 5,
+      "consumer": 6,
+      "pairs": [
+        {
+          "slots": [
+            0,
+            9
+          ],
+          "predicted": false,
+          "expected": true,
+          "local_expected": false,
+          "raw_score": -12.661133766174316,
+          "external_equality": true
+        },
+        {
+          "slots": [
+            0,
+            14
+          ],
+          "predicted": false,
+          "expected": true,
+          "local_expected": false,
+          "raw_score": -12.603256225585938,
+          "external_equality": true
+        }
+      ],
+      "has_false_merge": false,
+      "has_external_missing": true,
+      "rule": 6,
+      "candidate": 1024,
+      "binding": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          7,
+          4
+        ]
+      ],
+      "sources": [
+        8,
+        8,
+        8,
+        8
+      ]
+    },
+    {
+      "producer": 5,
+      "consumer": 7,
+      "pairs": [
+        {
+          "slots": [
+            0,
+            9
+          ],
+          "predicted": false,
+          "expected": true,
+          "local_expected": false,
+          "raw_score": -16.028873443603516,
+          "external_equality": true
+        },
+        {
+          "slots": [
+            0,
+            14
+          ],
+          "predicted": false,
+          "expected": true,
+          "local_expected": false,
+          "raw_score": -16.259424209594727,
+          "external_equality": true
+        }
+      ],
+      "has_false_merge": false,
+      "has_external_missing": true,
+      "rule": 7,
+      "candidate": 0,
+      "binding": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          13
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          7,
+          4
+        ]
+      ],
+      "sources": [
+        8,
+        8,
+        8,
+        8
+      ]
+    },
+    {
+      "producer": 5,
+      "consumer": 7,
+      "pairs": [
+        {
+          "slots": [
+            0,
+            9
+          ],
+          "predicted": false,
+          "expected": true,
+          "local_expected": false,
+          "raw_score": -13.354668617248535,
+          "external_equality": true
+        },
+        {
+          "slots": [
+            0,
+            14
+          ],
+          "predicted": false,
+          "expected": true,
+          "local_expected": false,
+          "raw_score": -13.305749893188477,
+          "external_equality": true
+        }
+      ],
+      "has_false_merge": false,
+      "has_external_missing": true,
+      "rule": 7,
+      "candidate": 1024,
+      "binding": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          7,
+          4
+        ]
+      ],
+      "sources": [
+        8,
+        8,
+        8,
+        8
+      ]
+    }
+  ],
+  "input_collisions": {
+    "scope": "Exact floating transition input collisions across synthetic train/test positives",
+    "positive_states": 692,
+    "unique_inputs": 321,
+    "conflicting_groups": 0,
+    "conflicts": [],
+    "weights_sha256": "902855324366dd7d0d40570187c71bb117f9bb76efb8da308a0b436aa16c2c3a",
+    "dataset_sha256": {
+      "eggfuse-canon-third-train.npz": "8ac5a3d98e2f8725e420bfe7fcc439c65fc42f7ed4c04bc82bf261dbb4a8fa29",
+      "eggfuse-canon-third-test.npz": "be93b653db0a1f9414d657256de16c5e30505ad509d3221512eb6e4f1bdc142d"
+    }
+  },
+  "interpretation": "Four false-merge states and four missing-external-equality states. No observed exact input collision proves insufficiency; zero collisions does not prove sufficient representation.",
+  "bake_branch": "codex/cell-parallel-admission",
+  "bake_head": "f3321a3a"
+}
