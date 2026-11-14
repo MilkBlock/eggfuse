@@ -14,8 +14,10 @@ def key_view(keys,roots,xp):
     return xp.concatenate([keys[:,:1],mapped],axis=1),valid
 
 
-def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_head,enabled,xp,capture=False):
-    batch=candidates(state,frames,query_plan,xp.array(True),xp.array(True),xp)
+def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_head,enabled,xp,capture=False,query_state=None):
+    # A source Run can seal its matching input while effects accumulate in
+    # state. RHS witness/lifetime checks still use the current write state.
+    batch=candidates(state if query_state is None else query_state,frames,query_plan,xp.array(True),xp.array(True),xp)
     logits,tokens=model.transition(batch['tokens'],batch['edges'],batch['mask'],batch['request'],batch['relations'])
     scores=eq_head(tokens,batch['request'])
     finite=xp.isfinite(logits)&xp.all(xp.isfinite(tokens),axis=1)&xp.all(xp.isfinite(scores),axis=1)

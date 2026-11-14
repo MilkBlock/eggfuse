@@ -25,6 +25,20 @@ def fixture(spare):
 
 
 class DeviceStep(unittest.TestCase):
+    def test_sealed_run_cannot_match_its_new_facts_until_next_run(self):
+        state,roots,next_id,frames,query,frame=fixture(3)
+        head=lambda token,request:mx.full((len(token),3),-1.)
+        first,r1,n1,event=advance(state,roots,next_id,frames,query,frame,0,Model(),head,mx.array(True),mx,query_state=state)
+        self.assertTrue(bool(event['admitted']))
+        same,r2,n2,done=advance(first,r1,n1,frames,query,frame,0,Model(),head,mx.array(True),mx,query_state=state)
+        self.assertFalse(bool(done['admitted']));self.assertTrue(bool(done['no_novel_proposal']))
+        self.assertFalse(bool(done['needs_attention']))
+        np.testing.assert_array_equal(same['keys'],first['keys']);self.assertEqual(int(n2),int(n1))
+        later,r3,n3,next_event=advance(same,r2,n2,frames,query,frame,0,Model(),head,mx.array(True),mx,query_state=same)
+        self.assertTrue(bool(next_event['admitted']))
+        np.testing.assert_array_equal(later['keys'][2],[0,1,4])
+        self.assertGreater(int(n3),int(n2))
+
     def test_stale_ancestor_blocks_fresh_allocation_and_requests_audit(self):
         from device_witness_context import initialize
         state,roots,next_id,frames,query,frame=fixture(3)
