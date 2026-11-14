@@ -1,0 +1,263 @@
+{
+  "scope": "actual selected-family GPU token Eq readout; no fitting or union authorization",
+  "case": "019-lcm",
+  "partition": "validation",
+  "capture_sha256": "1edc61b644425c5f3f759a72bf013a5b5c3ce4f9efcd5867b788ef01f81d3c7f",
+  "adapter_sha256": null,
+  "inference_coefficients_sha256": null,
+  "decoder_sha256": "cf9c22bbc95c2a04eca32565875bbce864bdad6038b5115e64b1162b2582b313",
+  "label_statistics": {
+    "full_pair_queries": 990,
+    "static_equalities": 169,
+    "dynamic_quotient_queries": 524,
+    "dynamic_true_equalities": 37,
+    "distinct_rule_partitions": 6
+  },
+  "static_only_baseline": {
+    "instances": 99,
+    "query_instances": 99,
+    "exact_partitions": 77,
+    "false_merges": 0,
+    "missed_equalities": 73,
+    "nontransitive": 0,
+    "closure_false_merges": 0
+  },
+  "results": {
+    "cpu_target_token": {
+      "instances": 99,
+      "query_instances": 99,
+      "exact_partitions": 99,
+      "false_merges": 0,
+      "missed_equalities": 0,
+      "nontransitive": 0,
+      "closure_false_merges": 0,
+      "dynamic_quotient": {
+        "queries": 524,
+        "positives": 37,
+        "true_positives": 37,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      }
+    },
+    "gpu_predicted_token": {
+      "instances": 99,
+      "query_instances": 99,
+      "exact_partitions": 82,
+      "false_merges": 10,
+      "missed_equalities": 35,
+      "nontransitive": 1,
+      "closure_false_merges": 13,
+      "dynamic_quotient": {
+        "queries": 524,
+        "positives": 37,
+        "true_positives": 16,
+        "false_positives": 5,
+        "false_negatives": 21,
+        "precision": 0.7619047619047619,
+        "recall": 0.43243243243243246
+      }
+    }
+  },
+  "groups": {
+    "rule_283": {
+      "cpu_target_token": {
+        "instances": 14,
+        "query_instances": 14,
+        "exact_partitions": 14,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 14,
+          "positives": 7,
+          "true_positives": 7,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 14,
+        "query_instances": 14,
+        "exact_partitions": 13,
+        "false_merges": 4,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 4,
+        "dynamic_quotient": {
+          "queries": 14,
+          "positives": 7,
+          "true_positives": 7,
+          "false_positives": 1,
+          "false_negatives": 0,
+          "precision": 0.875,
+          "recall": 1.0
+        }
+      }
+    },
+    "rule_290": {
+      "cpu_target_token": {
+        "instances": 72,
+        "query_instances": 72,
+        "exact_partitions": 72,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 432,
+          "positives": 28,
+          "true_positives": 28,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 72,
+        "query_instances": 72,
+        "exact_partitions": 58,
+        "false_merges": 0,
+        "missed_equalities": 35,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 432,
+          "positives": 28,
+          "true_positives": 7,
+          "false_positives": 0,
+          "false_negatives": 21,
+          "precision": 1.0,
+          "recall": 0.25
+        }
+      }
+    },
+    "rule_293": {
+      "cpu_target_token": {
+        "instances": 13,
+        "query_instances": 13,
+        "exact_partitions": 13,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 78,
+          "positives": 2,
+          "true_positives": 2,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 13,
+        "query_instances": 13,
+        "exact_partitions": 11,
+        "false_merges": 6,
+        "missed_equalities": 0,
+        "nontransitive": 1,
+        "closure_false_merges": 9,
+        "dynamic_quotient": {
+          "queries": 78,
+          "positives": 2,
+          "true_positives": 2,
+          "false_positives": 4,
+          "false_negatives": 0,
+          "precision": 0.3333333333333333,
+          "recall": 1.0
+        }
+      }
+    },
+    "direct_source": {
+      "cpu_target_token": {
+        "instances": 78,
+        "query_instances": 78,
+        "exact_partitions": 78,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 458,
+          "positives": 15,
+          "true_positives": 15,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 78,
+        "query_instances": 78,
+        "exact_partitions": 71,
+        "false_merges": 0,
+        "missed_equalities": 14,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 458,
+          "positives": 15,
+          "true_positives": 8,
+          "false_positives": 0,
+          "false_negatives": 7,
+          "precision": 1.0,
+          "recall": 0.5333333333333333
+        }
+      }
+    },
+    "generated_source": {
+      "cpu_target_token": {
+        "instances": 21,
+        "query_instances": 21,
+        "exact_partitions": 21,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 66,
+          "positives": 22,
+          "true_positives": 22,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 21,
+        "query_instances": 21,
+        "exact_partitions": 11,
+        "false_merges": 10,
+        "missed_equalities": 21,
+        "nontransitive": 1,
+        "closure_false_merges": 13,
+        "dynamic_quotient": {
+          "queries": 66,
+          "positives": 22,
+          "true_positives": 8,
+          "false_positives": 5,
+          "false_negatives": 14,
+          "precision": 0.6153846153846154,
+          "recall": 0.36363636363636365
+        }
+      }
+    }
+  },
+  "cpu_readout_audit_seconds": 0.10899741703178734,
+  "backpropagation": false,
+  "union_authorized": false,
+  "limitations": [
+    "Small selected immutable Cell family, not full Eggcc",
+    "Exact execution establishes completion; ridge is audited separately",
+    "Test samples must not be used for fitting"
+  ]
+}

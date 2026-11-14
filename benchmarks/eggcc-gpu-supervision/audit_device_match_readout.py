@@ -18,6 +18,15 @@ def rows_from_labels(recipe,rules,labels):
     return rows
 
 
+
+def dynamic_metrics(truth,scores):
+    truth=np.asarray(truth,bool);scores=np.asarray(scores).reshape(-1)
+    if truth.shape!=scores.shape or not np.isfinite(scores).all():raise ValueError('dynamic score alignment')
+    predicted=scores>=.5;tp=int(np.count_nonzero(predicted&truth));fp=int(np.count_nonzero(predicted&~truth));fn=int(np.count_nonzero(~predicted&truth))
+    return dict(queries=len(truth),positives=int(truth.sum()),true_positives=tp,false_positives=fp,false_negatives=fn,
+        precision=tp/(tp+fp) if tp+fp else None,recall=tp/(tp+fn) if tp+fn else None)
+
+
 def main():
     p=argparse.ArgumentParser()
     for key in ('capture','decoder','decoder_report','output'):p.add_argument(key,type=Path)
@@ -41,8 +50,9 @@ def main():
     if len(index)!=1:raise ValueError('decoder selection')
     coef=weights['coef'][:,index];result={}
     for name,tokens in [('cpu_target_token',targets),('gpu_predicted_token',predicted)]:
-        features,_=materialize(readout_rows(rows,True),tokens,weights['w'],True)
-        result[name]=summarize(rows,(features@coef).reshape(-1))
+        features,truth=materialize(readout_rows(rows,True),tokens,weights['w'],True)
+        scores=(features@coef).reshape(-1)
+        result[name]=dict(summarize(rows,scores),dynamic_quotient=dynamic_metrics(truth,scores))
     groups={}
     selectors={('rule_'+str(int(r))):sample_rules==r for r in np.unique(sample_rules)}
     if generated is not None:selectors.update(direct_source=~generated,generated_source=generated)
@@ -51,10 +61,11 @@ def main():
         if not selected:continue
         groups[group]={}
         for name,tokens in [('cpu_target_token',targets),('gpu_predicted_token',predicted)]:
-            x,_=materialize(readout_rows(selected,True),tokens,weights['w'],True)
-            groups[group][name]=summarize(selected,(x@coef).reshape(-1))
+            x,truth=materialize(readout_rows(selected,True),tokens,weights['w'],True)
+            scores=(x@coef).reshape(-1)
+            groups[group][name]=dict(summarize(selected,scores),dynamic_quotient=dynamic_metrics(truth,scores))
     out=dict(scope='actual selected-family GPU token Eq readout; no fitting or union authorization',case=meta['capture']['case'],partition=meta['capture']['partition'],
-        capture_sha256=meta['capture']['artifact_sha256'],adapter_sha256=meta.get('adapter_sha256'),inference_coefficients_sha256=meta.get('inference_coefficients_sha256'),decoder_sha256=report['weights_sha256'],label_statistics=label_stats,results=result,groups=groups,
+        capture_sha256=meta['capture']['artifact_sha256'],adapter_sha256=meta.get('adapter_sha256'),inference_coefficients_sha256=meta.get('inference_coefficients_sha256'),decoder_sha256=report['weights_sha256'],label_statistics=label_stats,static_only_baseline=summarize(rows,np.zeros(label_stats['dynamic_quotient_queries'],np.float32)),results=result,groups=groups,
         cpu_readout_audit_seconds=time.monotonic()-started,backpropagation=False,union_authorized=False,
         limitations=['Small selected immutable Cell family, not full Eggcc','Exact execution establishes completion; ridge is audited separately','Test samples must not be used for fitting'])
     a.output.write_text(json.dumps(out,indent=2)+'\n');print(json.dumps(out,indent=2))

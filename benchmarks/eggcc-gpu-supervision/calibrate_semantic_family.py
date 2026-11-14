@@ -36,6 +36,27 @@ def semantic_family(meta):
     return [{k:r[k] for k in ('slots','query','effects')} for r in meta['semantic_recipe']['rules'][:len(meta['source_rules'])]]
 
 
+
+def align_features(data,model,with_boundary):
+    """Accept offline base columns or already assembled live columns once."""
+    base=1+model['w'].shape[0]+model['w'].shape[1]
+    x=data['features'];coef=model['coef']
+    if x.ndim!=2 or not np.isfinite(x).all():raise ValueError('invalid input features')
+    if with_boundary:
+        extra=data.get('boundary_features')
+        if extra is None or extra.ndim!=2 or len(extra)!=len(x) or not extra.shape[1] or not np.isfinite(extra).all():raise ValueError('invalid boundary columns')
+        width=base+extra.shape[1]
+        if x.shape[1]==base:x=np.concatenate([x,extra],axis=1)
+        elif x.shape[1]!=width or not np.array_equal(x[:,base:],extra):raise ValueError('live boundary columns disagree')
+        if coef.shape[0]==base:
+            if bool(model.get('boundary_context',False)):raise ValueError('boundary model lost coefficients')
+            coef=np.concatenate([coef,np.zeros((extra.shape[1],coef.shape[1]),coef.dtype)],axis=0)
+        elif coef.shape[0]!=width or not bool(model.get('boundary_context',False)):raise ValueError('model boundary schema')
+    elif x.shape[1]!=base or coef.shape[0]!=base or bool(model.get('boundary_context',False)):
+        raise ValueError('explicit boundary mode required for live boundary inputs')
+    return x,coef
+
+
 def main():
     p=argparse.ArgumentParser()
     for k in ('training','validation','model','decoder','decoder_report','output_model','output_decoder','output'):p.add_argument(k,type=Path)
@@ -46,7 +67,7 @@ def main():
     if family!=semantic_family(vm):raise ValueError('different semantic family')
     sha=hashlib.sha256(a.model.read_bytes()).hexdigest();dr=json.loads(a.decoder_report.read_text())
     if any(m['model_sha256']!=sha for m in (tm,vm)) or dr['model_sha256']!=sha or hashlib.sha256(a.decoder.read_bytes()).hexdigest()!=dr['weights_sha256']:raise ValueError('model provenance')
-    training_sources=[dict(case=tm['capture']['case'],sha256=tm['capture']['artifact_sha256'])]
+    training_sources=[dict(case=tm['capture']['case'],sha256=tm['capture']['artifact_sha256'],source_token_mode=tm.get('source_token_mode','exact completed states'))]
     seen_programs={tm['capture']['program_file_sha256'],vm['capture']['program_file_sha256']}
     for path in a.extra_training:
         extra,em=load(path,'train')
@@ -56,16 +77,15 @@ def main():
         if set(extra)!=set(train):raise ValueError('training feature schema mismatch')
         train={k:np.concatenate([train[k],extra[k]],axis=0) for k in train if k!='rows'}
         train['rows']=rows_from_labels(tm['semantic_recipe'],[tm['source_rules'].index(int(r)) for r in train['rules']],train['target_eq_classes'])
-        training_sources.append(dict(case=em['capture']['case'],sha256=em['capture']['artifact_sha256']))
+        training_sources.append(dict(case=em['capture']['case'],sha256=em['capture']['artifact_sha256'],source_token_mode=em.get('source_token_mode','exact completed states')))
     with np.load(a.model) as f:model={k:f[k] for k in f.files}
     with np.load(a.decoder) as f:decoder={k:f[k] for k in f.files}
     selected=np.flatnonzero(decoder['alphas']==dr['selected']['partition'])
     if len(selected)!=1:raise ValueError('decoder column')
     base_decoder=decoder['coef'][:,selected]
-    base_predictor=model['coef']
-    if a.boundary_context:
-        for part in (train,val):part['features']=np.concatenate([part['features'],part['boundary_features']],axis=1)
-        base_predictor=np.concatenate([base_predictor,np.zeros((train['boundary_features'].shape[1],base_predictor.shape[1]),np.float32)],axis=0)
+    train['features'],base_predictor=align_features(train,model,a.boundary_context)
+    val['features'],validation_base=align_features(val,model,a.boundary_context)
+    if validation_base.shape!=base_predictor.shape:raise ValueError('training/validation feature width')
     predictor=corrected(train['features'],np.arctanh(np.clip(train['targets'],-.999,.999)),base_predictor,a.alpha)
     dx,dy=materialize(readout_rows(train['rows'],True),train['targets'],decoder['w'],True)
     readout=corrected(dx,dy.astype(np.float32)[:,None],base_decoder,a.alpha)
@@ -104,10 +124,10 @@ def main():
     output=dict(scope='program-separated semantic-family calibration; not full Eggcc or autonomous learned union',backpropagation=False,alpha=a.alpha,boundary_context=a.boundary_context,feature_columns=train['features'].shape[1],
         training_sources=training_sources,training_case=tm['capture']['case'],validation_case=vm['capture']['case'],training_sha256=tm['capture']['artifact_sha256'],validation_sha256=vm['capture']['artifact_sha256'],
         training_generated_sources=int(train['generated_source'].sum()),training_prediction=training_prediction,training_samples=len(train['features']),validation_samples=len(val['features']),training_distinct_inputs=len(np.unique(train['features'],axis=0)),validation_distinct_inputs=len(np.unique(val['features'],axis=0)),
-        validation_inputs_unseen_in_training=int(np.count_nonzero(nearest>1e-5)),validation_generated_sources=int(val['generated_source'].sum()),results=results,
+        validation_inputs_unseen_in_training=int(np.count_nonzero(nearest>1e-5)),validation_generated_sources=int(val['generated_source'].sum()),validation_source_token_mode=vm.get('source_token_mode','exact completed states'),results=results,
         gpu_readout_max_abs=gpu_error,gpu_prediction_max_abs=prediction_error,gpu_threshold_disagreements=threshold_disagreements,
         model_sha256=model_sha,decoder_sha256=decoder_sha,resident_model_sha256=sha,installed=False,
-        limitations=['Only three context rules and one validation program','Validation is not held-out test acceptance','Source tokens are exact completed states; predicted-source recursive rollout is not established','Threshold fixed at 0.5; alpha fixed before reading validation results'])
+        limitations=['Only three context rules and one validation program','Validation is not held-out test acceptance','Source mode recorded per training program and validation; a newly fitted model still needs its own live feedback replay','Threshold fixed at 0.5; alpha fixed before reading validation results'])
     a.output.write_text(json.dumps(output,indent=2)+'\n');print(json.dumps(output,indent=2))
 
 if __name__=='__main__':main()

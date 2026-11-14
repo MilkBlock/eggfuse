@@ -57,11 +57,16 @@ def main():
                 if not bool(c['recorded']):continue
                 for lane in np.flatnonzero(c['accepted']):signatures.append(signature(c,lane,meta['recipe'],meta['seed_scalars']))
             if len(signatures)!=len(f['features']):raise ValueError('sample alignment')
+            base_features=f['features']
+            if any('/request/boundary_features' in k for k in f.files):
+                width=f['boundary_features'].shape[1]
+                if base_features.shape[1]<=width or not np.array_equal(base_features[:,-width:],f['boundary_features']):raise ValueError('live feature schema mismatch')
+                base_features=base_features[:,:-width]
             for i,rid in enumerate(f['rules']):
                 rule=meta['semantic_recipe']['rules'][meta['source_rules'].index(int(rid))]
                 static=json.dumps({k:rule[k] for k in ('slots','query','effects')},sort_keys=True)
                 target=tuple(f['target_eq_classes'][i,:len(rule['slots'])].tolist())
-                x=f['features'][i].tobytes()
+                x=base_features[i].tobytes()
                 keys=dict(resident=(static,x),plus_boundary_float=(static,x,f['boundary_features'][i].tobytes()),one_hop_structure=(static,signatures[i]))
                 for k,v in keys.items():groups[k][v][target]+=1;combined[k][v][target]+=1
         parts.append(dict(case=meta['capture']['case'],partition=meta['capture']['partition'],sha256=meta['capture']['artifact_sha256'],ceilings={k:ceiling(v) for k,v in groups.items()}))

@@ -23,7 +23,7 @@ def main():
     for k in ('trace','model','output'):p.add_argument(k,type=Path)
     p.add_argument('--capture',type=Path)
     p.add_argument('--rules',default='283,293');p.add_argument('--snapshot-run',type=int,default=466)
-    p.add_argument('--predicted-source-feedback',action='store_true');p.add_argument('--experimental-boundary-model',action='store_true');p.add_argument('--boundary-context',action='store_true');p.add_argument('--flush-every',type=int,default=4);p.add_argument('--order-queries',action='store_true');p.add_argument('--capacity',type=int,default=128);p.add_argument('--ticks',type=int,default=24);a=p.parse_args()
+    p.add_argument('--progress',action='store_true');p.add_argument('--predicted-source-feedback',action='store_true');p.add_argument('--experimental-boundary-model',action='store_true');p.add_argument('--boundary-context',action='store_true');p.add_argument('--flush-every',type=int,default=4);p.add_argument('--order-queries',action='store_true');p.add_argument('--capacity',type=int,default=128);p.add_argument('--ticks',type=int,default=24);a=p.parse_args()
     if a.predicted_source_feedback and not a.experimental_boundary_model:raise ValueError('feedback requires explicit experimental model')
     if a.flush_every<1 or a.ticks<1:raise ValueError('positive execution window required')
     raw=a.trace.read_bytes();trace=json.loads(raw);ids_rule=[int(x) for x in a.rules.split(',')]
@@ -72,7 +72,9 @@ def main():
         control={k:m[k] for k in ('control','open_run','unreported_change','failed_run')}
         frames.append(dict(state={k:v for k,v in current.items() if k in ('keys','present','visible','settled','effect_pc','slot_owner','owner_projection','owner_live','owner_epoch','owner_generation','owner_slots','owner_slot_roots','owner_slot_valid')},roots=ctx['roots'],next_id=next_id))
         logs.append({k:m[k] for k in ('run_done','run_changed','new_tokens','new_constructors','new_equivalences','takeover_released')});captures.append(m['query_captures'])
-        if (tick_index+1)%a.flush_every==0:mx.eval(current,next_id,m,logs[-a.flush_every:],captures[-a.flush_every:],frames[-a.flush_every:])
+        if (tick_index+1)%a.flush_every==0:
+            mx.eval(current,next_id,m,logs[-a.flush_every:],captures[-a.flush_every:],frames[-a.flush_every:])
+            if a.progress:print(json.dumps(dict(event='execution_flush',tick=tick_index+1,budget=a.ticks,elapsed_seconds=time.monotonic()-started)),flush=True)
     mx.eval(current,next_id,m,logs,captures,frames);gpu_seconds=time.monotonic()-started
     started=time.monotonic();ref=Reference(original,rows,ids);cpu_frames=[];cpu_runs=ref.saturate(original['rules'],observe=lambda r,_:cpu_frames.append(deepcopy(r)))
     lowref=Reference(lowered,rows,ids);lowruns=lowref.saturate(lowered['rules'])
