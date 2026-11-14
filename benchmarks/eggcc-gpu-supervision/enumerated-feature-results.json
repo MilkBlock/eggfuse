@@ -142,6 +142,18 @@
             "sample": 1,
             "target": 4
           }
+        ],
+        [
+          {
+            "case": "enumerated-1bdfcb9aef343714c4f1974ebe8756c16858608562c0b1c8f69aa085e8995106",
+            "sample": 0,
+            "target": 7
+          },
+          {
+            "case": "enumerated-944abfa1d3f436d320576ce2d152e043949ce934a98a49919073dd106833b47c",
+            "sample": 0,
+            "target": 0
+          }
         ]
       ],
       "training_states": {

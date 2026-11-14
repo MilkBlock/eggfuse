@@ -20,8 +20,8 @@ def diagnose(train,validation):
     for r in train:groups.setdefault(feature_key(r['x'],r['required']),[]).append(r)
     conflicts=[g for g in groups.values() if len({r['target'] for r in g})>1]
     examples=[]
-    for g in conflicts[:10]:
-        examples.append([dict(case=r['case'],sample=r['sample'],target=r['target']) for r in g[:8]])
+    for g in conflicts:
+        examples.append([dict(case=r['case'],sample=r['sample'],target=r['target']) for r in g])
     val=[]
     for r in validation:
         same=groups.get(feature_key(r['x'],r['required']),[])

@@ -1,0 +1,370 @@
+{
+  "scope": "boundary encoder on synthetic collision counterexamples; no training or rollout",
+  "audit_sha256": "a69cafe49f21e5a2937a23f190601277736e03753c4017443ea59da34d167382",
+  "groups": 19,
+  "remaining_collisions": 19,
+  "maximum_gpu_error": 1.7881393432617188e-07,
+  "results": [
+    {
+      "rule": 1,
+      "examples": [
+        {
+          "case": "enumerated-baefc6e9ab2ff49ef9cb76e7ea3f25f8394cac73241e7b6edc9b6eb4ba081bb9",
+          "sample": 1,
+          "target": 1
+        },
+        {
+          "case": "enumerated-ed26b362d8a69f9914c9041a3ac57cff636fd1716188cdbc55363eb5f0d72cd8",
+          "sample": 1,
+          "target": 0
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 1,
+      "examples": [
+        {
+          "case": "enumerated-9c370896ba53f11d4d6807f58a3c73b4759e6d8c4fbcdbb9b6741f6faa4504be",
+          "sample": 3,
+          "target": 10
+        },
+        {
+          "case": "enumerated-3f7ae705719785f26951651e1b2380e4190060ee9cd084f69c0212ed5d41d700",
+          "sample": 2,
+          "target": 4
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 1,
+      "examples": [
+        {
+          "case": "enumerated-62a9e81a883f3e72cd420b7912bba973e95f7e3b5309cbc64207852c1858876b",
+          "sample": 2,
+          "target": 10
+        },
+        {
+          "case": "enumerated-7161edbb28aec6d2db2308cb29946091aacdc49979d63f2f6c05975611239815",
+          "sample": 1,
+          "target": 4
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 1,
+      "examples": [
+        {
+          "case": "enumerated-e18a580b29c66bdecb3dd5140725720c0c696cece95856afc0bad2e6287c9d25",
+          "sample": 0,
+          "target": 4
+        },
+        {
+          "case": "enumerated-d2aa068ebc30713a508175fe7d9321d197a48ca0e8bb25342b06d84ecd4fff86",
+          "sample": 0,
+          "target": 0
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 1,
+      "examples": [
+        {
+          "case": "enumerated-f225e9c217d92a1324bd665ebf8df93d761c40da1b04d3425414ba189a65041e",
+          "sample": 2,
+          "target": 7
+        },
+        {
+          "case": "enumerated-d2878264d1500704282ded234c8eef20d9a7ff50098b2be86cd87a2ef7a08688",
+          "sample": 2,
+          "target": 4
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 1,
+      "examples": [
+        {
+          "case": "enumerated-dd4fcffec4b96814b21be8de3742bc3618f6330139d541cc6b68b4cf6e596d08",
+          "sample": 1,
+          "target": 7
+        },
+        {
+          "case": "enumerated-4d044e922e805b46d191916f51c1bb99fa95d913ae368ed0e7aa5dc3336d2a78",
+          "sample": 1,
+          "target": 0
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 1,
+      "examples": [
+        {
+          "case": "enumerated-efa3916534aad0ef3b1fd8bcbc155bee26eee8199a252a351d597704cf6fcc36",
+          "sample": 3,
+          "target": 14
+        },
+        {
+          "case": "enumerated-bc99c7780b26807f19a59b9f775f9a8ee956089e58da31c579c74d23a1ecb93f",
+          "sample": 3,
+          "target": 7
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 1,
+      "examples": [
+        {
+          "case": "enumerated-54982c768af4ccba8042fa9ffcf99875ff21b7f104c1975f17c9ade00af36b8b",
+          "sample": 0,
+          "target": 1
+        },
+        {
+          "case": "enumerated-5b577d2595f53cffbbc343183e57f8319bf30050ad15ba50794ca76e2797d3ac",
+          "sample": 0,
+          "target": 0
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 1,
+      "examples": [
+        {
+          "case": "enumerated-32fbd48bc6c5f0e6fd61e675b16803810de1335b59211106f0b96775f045c954",
+          "sample": 0,
+          "target": 4
+        },
+        {
+          "case": "enumerated-6850bcfd96aa118ad7ce570e4d6ead9edf05a3478a068c4ad58eb2cdd040db51",
+          "sample": 0,
+          "target": 0
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 1,
+      "examples": [
+        {
+          "case": "enumerated-1649f43e38cc918b5b1680a724c09d9a03cbec078c22eee711541b28f1398716",
+          "sample": 1,
+          "target": 7
+        },
+        {
+          "case": "enumerated-e05e0806574074b0895a634bc3a66d086d9a7b0db9c8f1718f2abcce295bd8c1",
+          "sample": 1,
+          "target": 4
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 1,
+      "examples": [
+        {
+          "case": "enumerated-1bdfcb9aef343714c4f1974ebe8756c16858608562c0b1c8f69aa085e8995106",
+          "sample": 0,
+          "target": 7
+        },
+        {
+          "case": "enumerated-944abfa1d3f436d320576ce2d152e043949ce934a98a49919073dd106833b47c",
+          "sample": 0,
+          "target": 0
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 2,
+      "examples": [
+        {
+          "case": "enumerated-68c0ce7f11adf98515c2759abb66df3baaad6f4bb163cb0aaee565f31dda7f32",
+          "sample": 1,
+          "target": 1
+        },
+        {
+          "case": "enumerated-6f23dd6693ad1a1992cf843f2423e09e8617655c8e048db1742d5dbd1eb7fb1b",
+          "sample": 1,
+          "target": 0
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 2,
+      "examples": [
+        {
+          "case": "enumerated-f6bb03e6a290245f907cf145cb9ccc16d5d4c0d65987bb83a757ecf4dc83d554",
+          "sample": 3,
+          "target": 10
+        },
+        {
+          "case": "enumerated-7fe0979b5bdce0719d06f973a63107eb9e1add34d5c60a4336afb744ddf04505",
+          "sample": 2,
+          "target": 4
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 2,
+      "examples": [
+        {
+          "case": "enumerated-43bc8c6ba68a30549555898207e44add612179621ba144970efc482a047a18f5",
+          "sample": 2,
+          "target": 10
+        },
+        {
+          "case": "enumerated-9fa877a8987125ea42a459afba5a9c2d82db9afba1cc432d5afb7dae1b09f938",
+          "sample": 1,
+          "target": 4
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 2,
+      "examples": [
+        {
+          "case": "enumerated-b4cdc9a6e0214f0aa2870a381932fe4a0bacbf4990f61624f26cf582eab4cd76",
+          "sample": 1,
+          "target": 4
+        },
+        {
+          "case": "enumerated-addc60ac214b5f4937794ae73d88ba4761ff72543df28285eb9decebeb61a972",
+          "sample": 1,
+          "target": 0
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 2,
+      "examples": [
+        {
+          "case": "enumerated-f5f60c0d7aa730135e2981c74f65c5ab37773cd08537733170fb406bebc95425",
+          "sample": 2,
+          "target": 7
+        },
+        {
+          "case": "enumerated-723aaeb43080b670334b1963ba1ab2bc078e344978d45210421451e315e6cd1a",
+          "sample": 2,
+          "target": 4
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 2,
+      "examples": [
+        {
+          "case": "enumerated-a44b6386a1b8fbdc06bef9d8241d27c43ebd63093cd48431c0ecf9e9db1f81a6",
+          "sample": 1,
+          "target": 7
+        },
+        {
+          "case": "enumerated-72d9dc758ccb10fbb433a78d08e53b50873330da6081b853d728bbeabf8a784b",
+          "sample": 1,
+          "target": 0
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 2,
+      "examples": [
+        {
+          "case": "enumerated-65a7b06a0a93606f4e5e14bd4709553c585d7af39427d3cdbd1ba6cb9b92012c",
+          "sample": 3,
+          "target": 14
+        },
+        {
+          "case": "enumerated-8379d05b2212cf50b2cdff878f869bcda9a8c36024e630d1a0b0737ab668c0be",
+          "sample": 3,
+          "target": 7
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    },
+    {
+      "rule": 2,
+      "examples": [
+        {
+          "case": "enumerated-56227a19791a4ed771d0a8a2df57d3d558072b88e43c09d29d58eba7917d2272",
+          "sample": 0,
+          "target": 1
+        },
+        {
+          "case": "enumerated-4e619383c0de667269290efd191478ccef4a562b6c18d39c72e15c992d3a63d9",
+          "sample": 0,
+          "target": 0
+        }
+      ],
+      "remaining_collision": true,
+      "opposing_target_l2": [
+        0.0
+      ]
+    }
+  ]
+}

@@ -33,10 +33,12 @@ def fold(coef,static_gate,base_width):
 
 
 
-def captured_bridges(path,meta):
+def captured_bridges(path,meta,shared_context=False):
     from audit_input_relations import restore
     from device_boundary_context import compile_context
     from device_boundary_bridges import compile_pairs,encode
+    if shared_context:
+        from device_boundary_shared_context import encode
     from audit_snapshot_queries import device
     values=[];max_error=0.;checked=False
     with np.load(path) as f:
