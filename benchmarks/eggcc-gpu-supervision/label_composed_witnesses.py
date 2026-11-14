@@ -155,6 +155,15 @@ def main():
             bf,bc=boundary_encode(c['boundary'],c['bindings'],bp,np)
             boundary_error=max(boundary_error,float(np.max(abs(bf-c['boundary_features']))))
             if boundary_error>5e-6 or not np.array_equal(bc,c['boundary_counts']):raise ValueError('boundary feature mismatch')
+            if 'shared_boundary_features' in c['request']:
+                from device_boundary_shared_context import encode as shared_encode
+                sp=dict(bp)
+                if 'shared_root_capacity' in c['request']:
+                    sp.update(root_capacity=int(c['request']['shared_root_capacity']),sort_capacity=int(c['request']['shared_sort_capacity']))
+                shared,_=shared_encode(c['boundary'],c['bindings'],sp,None,np)
+                error=float(np.max(abs(shared-c['request']['shared_boundary_features'])))
+                if not np.isfinite(error) or error>5e-6:raise ValueError('shared boundary feature mismatch')
+                boundary_error=max(boundary_error,error)
             boundary_features.extend(c['boundary_features'][c['accepted']])
             connections=boundary_masks(c['boundary'],c['bindings'],bp,np)[0]
             generated=(c['boundary']['rule']>=0)&(c['boundary']['rule']<len(original['rules']))

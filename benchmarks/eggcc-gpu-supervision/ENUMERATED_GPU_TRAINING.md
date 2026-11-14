@@ -102,3 +102,35 @@ with output `shared-classifier.json` and `--shared-context`; exact arguments,
 weights and logs are saved beside the original enumeration artifacts. Tracked
 `shared-context-ridge-results.json` contains all validation groups, provenance,
 training counts and numerical parity results.
+
+## Resident shared-context execution
+
+The selected-family runner now reads `shared_boundary_context` from the head
+report, computes the additional columns on the GPU, and consumes them directly
+in the classifier. Captures preserve the columns and bounded-root configuration;
+the CPU label audit recomputes them and classifier outputs independently.
+Historical base-only captures remain supported. Fitting directly from these new
+augmented captures still requires schema alignment work; the current fit uses
+base captures and recomputes additional columns once.
+
+A bounded scatter-sum implementation groups floating messages by exact typed Eq
+root, avoiding the dense slot-by-slot adjacency matrix. Its root bound comes
+from the existing registry allocation. Invalid live roots cause nonfinite
+prediction rejection rather than clipped aliasing. Floating aggregation then
+continues through Cell and query matrices. This introduces indexed reductions,
+not runtime data-dependent branching; it is not a pure GEMM-only implementation.
+Tests cover dense/scatter parity, GPU parity, invalid bounds, retired NaNs,
+renaming, online classifier integration and capture replay (8 test executions).
+
+Actual GCD predicted-source feedback at the historical capacity 128 finished
+3 GPU Runs, generated 41 Cells, consumed 15 generated sources, and released 30
+owner rows. CPU graph and labeling audits pass. Predicted complete-state counts
+are **14/41**, direct **4/26**, generated **10/15** (offline exact-source was
+17/41, 4/26, 13/15). The head remains unpromoted. Exact execution checks still
+authorize effects; learned outputs are not proofs.
+
+Two attempts at capacity 256 failed with the same 59,012,200,320-byte Metal
+allocation, both before and after replacing dense adjacency. The full allocation
+cause remains unlocalized; it cannot be attributed solely to the new encoder.
+Failure logs are retained beside `gcd-shared-argv.json`, execution, capture and
+label artifacts. No speedup claim follows from this run.

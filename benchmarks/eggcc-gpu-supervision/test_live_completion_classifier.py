@@ -34,6 +34,26 @@ class LiveClassifier(unittest.TestCase):
         np.testing.assert_array_equal(gm['capture']['completion_readout']['chosen'],marks['capture']['completion_readout']['chosen'])
         self.assertGreater(np.max(abs(out['tokens']-baseline['tokens'])),.01)
 
+    def test_shared_context_gpu_and_capture_replay(self):
+        from device_boundary_context import compile_context
+        from device_match_capture import floating_inputs
+        s,p,m,r,h=self.fixture();recipe,_=query_fixture()
+        width=s['slots'].shape[1]
+        p['boundary_context']=compile_context(recipe,2,width)
+        p['shared_boundary_context']=True
+        extra=width*32*3
+        h=dict(h,mean=np.pad(h['mean'],(0,extra)),scale=np.pad(h['scale'],(0,extra),constant_values=1),coef=np.pad(h['coef'],((0,extra),(0,0))))
+        h['coef'][-width*32:]=.01
+        p['completion_classifier']=compile_classifier(r,h)
+        out,marks=proposals(s,p,dict(w=m['w']),4,True,True,np,True)
+        captured=floating_inputs(marks['capture'],m,np)
+        self.assertEqual(captured.shape[1],h['coef'].shape[0])
+        from device_completion_classifier import score_head
+        np.testing.assert_allclose(score_head(captured,h,np),marks['capture']['completion_readout']['scores'],atol=2e-6)
+        gpu,gm=mx.compile(lambda state:proposals(state,device(p),device(dict(w=m['w'])),4,mx.array(True),mx.array(True),mx,True))(device(s));mx.eval(gpu,gm)
+        np.testing.assert_allclose(gpu['tokens'],out['tokens'],atol=2e-6)
+        np.testing.assert_allclose(gm['capture']['request']['shared_boundary_features'],marks['capture']['request']['shared_boundary_features'],atol=2e-6)
+
     def test_invalid_layout_nonfinite_inputs_and_source_lifetime(self):
         s,p,m,r,h=self.fixture();bad=dict(h,scale=np.zeros_like(h['scale']))
         with self.assertRaises(ValueError):compile_classifier(r,bad)

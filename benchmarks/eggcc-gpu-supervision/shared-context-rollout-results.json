@@ -1,0 +1,29 @@
+{
+  "scope": "GCD selected context family with actual predicted-source GPU feedback; not full Eggcc",
+  "groups": {
+    "all": {
+      "instances": 41,
+      "exact_states": 14
+    },
+    "direct": {
+      "instances": 26,
+      "exact_states": 4
+    },
+    "generated": {
+      "instances": 15,
+      "exact_states": 10
+    }
+  },
+  "execution": {
+    "passed": true,
+    "finished": true,
+    "generated_cells": 41,
+    "generated_source_consumers": 15,
+    "released_owner_rows": 30,
+    "gpu_runs": 3
+  },
+  "labels_passed": true,
+  "capacity": 128,
+  "promoted": false,
+  "failed_capacity_256": "Both dense and scatter configurations hit the same 59012200320-byte allocation; cause not localized"
+}

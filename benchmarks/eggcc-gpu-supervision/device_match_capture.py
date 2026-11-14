@@ -144,6 +144,7 @@ def floating_inputs(capture,model,xp):
         q=xp.concatenate([q,encode(owner['owners'],r['owner_relation'],owner['usable'],xp)],axis=1)
     x=features(r['seed'],q,pool,model['w'],xp)
     if 'boundary_features' in r:x=xp.concatenate([x,r['boundary_features']],axis=1)
+    if 'shared_boundary_features' in r:x=xp.concatenate([x,r['shared_boundary_features']],axis=1)
     return x
 
 

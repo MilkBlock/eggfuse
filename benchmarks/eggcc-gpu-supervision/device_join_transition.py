@@ -70,12 +70,23 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=
         from device_boundary_context import snapshot,encode
         boundary=snapshot(state,xp)
         extra,counts=encode(boundary,bindings,plan['boundary_context'],xp)
-        if expected_width!=base_width+extra.shape[1]:raise ValueError('boundary model width mismatch')
+        context_width=0
+        if plan.get('shared_boundary_context',False):
+            if classifier is None:raise ValueError('shared context requires classifier')
+            from device_boundary_shared_context import encode as shared_encode
+            shared,_=shared_encode(boundary,bindings,plan['boundary_context'],None,xp)
+            request['shared_boundary_features']=shared;context_width=shared.shape[1]
+            if 'root_capacity' in plan['boundary_context']:
+                request['shared_root_capacity']=xp.array(plan['boundary_context']['root_capacity'])
+                request['shared_sort_capacity']=xp.array(plan['boundary_context']['sort_capacity'])
+        if expected_width!=base_width+extra.shape[1]+context_width:raise ValueError('boundary model width mismatch')
         request['boundary_features']=extra
         boundary_capture=dict(boundary=boundary,boundary_features=extra,boundary_counts=counts)
     if classifier is not None:
         if 'completion_readout' in plan:raise ValueError('choose one completion predictor')
         classifier_features,numerical=encode_features(state,request,model,xp)
+        if 'shared_boundary_features' in request:
+            classifier_features=xp.concatenate([classifier_features,request['shared_boundary_features']],axis=1)
         tokens=None  # Filled directly by the state head after scalar slots are available.
     else:tokens,numerical=infer(state,request,model,xp)
     width=slot_shape(state)[1];local=bindings['slots'].shape[1];key_width=state['keys'].shape[1]

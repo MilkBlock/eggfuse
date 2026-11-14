@@ -6,6 +6,17 @@ from test_boundary_bridges import BoundaryBridges
 from audit_snapshot_queries import device
 
 class SharedContext(unittest.TestCase):
+    def test_bounded_scatter_equals_dense_and_rejects_overflow(self):
+        a,b,p,pairs=BoundaryBridges().fixture()
+        expected=encode(a,b,p,pairs,np)
+        bounded=dict(p,root_capacity=8,sort_capacity=1)
+        for x,y in zip(encode(a,b,bounded,pairs,np),expected):np.testing.assert_allclose(x,y,atol=2e-6)
+        da,db,dp,dq=map(device,(a,b,bounded,pairs))
+        result=mx.compile(lambda x:encode(x,db,dp,dq,mx))(da);mx.eval(result)
+        np.testing.assert_allclose(result[0],expected[0],atol=2e-6)
+        a['slot_roots'][0,0]=8
+        self.assertFalse(np.isfinite(encode(a,b,bounded,pairs,np)[0]).all())
+
     def test_gpu_renaming_and_retired_nan(self):
         a,b,p,pairs=BoundaryBridges().fixture()
         expected=encode(a,b,p,pairs,np)
