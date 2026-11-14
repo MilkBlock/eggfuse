@@ -1,6 +1,6 @@
 import copy
 import unittest
-from native_cell_examples import extract,partition
+from native_cell_examples import extract,partition,owner_features
 
 class NativeExamplesTests(unittest.TestCase):
     def trace(self):
@@ -28,6 +28,14 @@ class NativeExamplesTests(unittest.TestCase):
         self.assertEqual(result['ownership'],'unobserved')
         source['rule']=1
         with self.assertRaises(ValueError):extract(trace)
+
+    def test_owner_features_ignore_ids_but_preserve_sharing(self):
+        def item(atom,cell):
+            return dict(atom=atom,visible=True,owner=dict(cell=cell,template=2,op=4,completed=True))
+        self.assertEqual(owner_features([item(0,99),item(1,99)]),owner_features([item(0,700),item(1,700)]))
+        self.assertNotEqual(owner_features([item(0,99),item(1,99)]),owner_features([item(0,99),item(1,100)]))
+        self.assertIsNone(owner_features(None))
+        self.assertEqual(owner_features([dict(atom=0,missing=True)])[0]['owner_group'],None)
 
     def test_typed_partition(self):
         self.assertEqual(partition([dict(sort=s,before=v) for s,v in [('A',99),('B',99),('A',99)]],'before'),[0,1,0])

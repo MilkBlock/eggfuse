@@ -91,6 +91,16 @@ pub(crate) fn write(epoch: u64, source: Option<(u64, usize)>, table: usize,
     });
 }
 
+/// Borrowed execution evidence copied only for an explicit offline observer.
+/// Ordinals are the original match order, including unselected rules.
+pub fn retained_source(ordinal: usize) -> Option<Json> {
+    CAPTURE.with_borrow(|capture| {
+        let capture=capture.as_ref()?;
+        let i=capture.matches.binary_search_by_key(&ordinal, |r| r["ordinal"].as_u64().unwrap() as usize).ok()?;
+        Some(capture.matches[i].clone())
+    })
+}
+
 pub fn finish() -> Json {
     let c = CAPTURE.take().expect("missing Cell observation");
     json!({"matches":c.matches, "effective_writes":c.writes,

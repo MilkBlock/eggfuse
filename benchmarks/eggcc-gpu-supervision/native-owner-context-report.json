@@ -1,0 +1,23 @@
+{
+  "scope": "query-boundary physical source context; not retirement permission",
+  "witnesses": 14,
+  "visible": 14,
+  "completed_owner": 4,
+  "baseline_run_bindings_and_final_graph_equal": true,
+  "artifacts": {
+    "owners-trace.json": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/native-synthetic-context-canon/owners-trace.json",
+      "sha256": "73c9e28f8807a5a10936346012beb0a1ea60eac1eae8b3195c7336cb8d02f046"
+    },
+    "owners-examples.json": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/native-synthetic-context-canon/owners-examples.json",
+      "sha256": "72a45a18a40c0e005937c999faf7f76f17a25e011f8c1d92f74a7bacdb74a43d"
+    }
+  },
+  "limitations": [
+    "No completed binding-to-frame map",
+    "No remaining-consumer or retirement proof",
+    "Not yet fitted with ridge",
+    "Current dirty workspace native build"
+  ]
+}

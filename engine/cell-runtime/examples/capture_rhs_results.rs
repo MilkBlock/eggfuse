@@ -88,7 +88,26 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             } else {
                 vec![]
             };
-            rows.push(json!({"rule":rid,"values":values,"eq_ports":ports}));
+            let mut row=json!({"rule":rid,"values":values,"eq_ports":ports});
+            #[cfg(feature = "slot-transfer-audit")]
+            if let Some(source)=eggfuse_cell_runtime::transfer_audit::observation::retained_source(index) {
+                let evidence=source["retained_query_witnesses"].as_array().unwrap().iter().map(|item| {
+                    let witness:Option<eggfuse_cell_runtime::graph::Dependency>=serde_json::from_value(item[1].clone()).unwrap();
+                    let Some(witness)=witness else {return json!({"atom":item[0],"missing":true})};
+                    let resolved=graph.resolve_receipt(witness);
+                    let table=graph.live_table(resolved);
+                    let owner=match resolved {
+                        eggfuse_cell_runtime::graph::Dependency::Fact(f)=>graph.cells.get(&f.cell).map(|c|
+                            json!({"cell":f.cell,"op":f.op,"template":c.template,
+                                "completed":c.completed,"started_epoch":c.started_epoch,"parent":c.parent})),
+                        _=>None,
+                    };
+                    json!({"atom":item[0],"witness":witness,"resolved":resolved,"table":table,
+                        "visible":table.is_some_and(|t|graph.receipt_visible(resolved,t)),"owner":owner})
+                }).collect::<Vec<_>>();
+                row["query_source_owners"]=json!(evidence);
+            }
+            rows.push(row);
             *timer.borrow_mut() += start.elapsed().as_secs_f64();
         }),
     });

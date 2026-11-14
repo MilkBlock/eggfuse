@@ -119,3 +119,27 @@ why cursor parents cannot substitute for actual constructor owners. Our exported
 FactRefs are actual retained query evidence, but we still need completed source
 execution mapping and current liveness/ownership checks before labelling token
 retirement. No ownership transfer labels or model accuracy gains claimed here.
+
+## Query-time physical owner context
+
+The diagnostic binding callback now resolves *retained* witnesses before RHS
+execution and exports their current visibility and physical source Cell metadata.
+It uses existing forwarding, Cell storage and visibility APIs, not key searches
+or Eq-based owner inference. These are offline capture costs. The ordinary
+execution path remains unchanged. Mutable function witnesses have no guessed
+Cell owner.
+
+`native_cell_examples` adds input `owner_context`: local owner sharing groups,
+source template/operation roles, the existing completed flag and visibility.
+Raw Cell numbers remain in evidence only; bijective Cell renaming leaves these
+features unchanged. Missing projections remain missing. Template IDs are local
+categorical roles, not globally comparable numeric model inputs. A false
+completed flag on an initial fact does not mean it is invalid.
+
+For the baked context/canon fixture: 14 retained witnesses, all visible, 4 owned
+by completed RHS Cells. Original per-Run bindings and final state are unchanged.
+See `native-owner-context-report.json`. Five Python tests cover source alignment,
+label separation, typed partitions and owner-sharing/renaming behavior. This has
+not yet been fitted with ridge. A completed owner and a direct continuation do
+not establish that the source has no other consumers or may be retired; no
+ownership-transfer labels are asserted.

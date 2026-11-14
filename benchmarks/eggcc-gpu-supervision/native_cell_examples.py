@@ -13,6 +13,20 @@ def partition(ports, field):
     return [classes.setdefault((p['sort'],p[field]),len(classes)) for p in ports]
 
 
+def owner_features(evidence):
+    """Template roles plus local owner sharing; never float-encode Cell IDs."""
+    if evidence is None:return None
+    groups={};features=[]
+    for row in sorted(evidence,key=lambda r:r['atom']):
+        owner=row.get('owner')
+        if owner is None:
+            features.append(dict(atom=row['atom'],owner_group=None,visible=row.get('visible'),missing=row.get('missing',False)))
+        else:
+            features.append(dict(atom=row['atom'],owner_group=groups.setdefault(owner['cell'],len(groups)),
+                template=owner['template'],operation=owner['op'],completed=owner['completed'],visible=row['visible']))
+    return features
+
+
 def extract(trace):
     if not trace.get('relations') or not trace.get('all_slots'):
         raise ValueError('capture requires --relations')
@@ -45,6 +59,7 @@ def extract(trace):
                 address=dict(run=run['ordinal'],binding=ordinal,rule=row['rule']),
                 inputs=dict(eq_slots=[p['slot'] for p in ports],
                             eq_partition=partition(ports,'before'),
+                            owner_context=owner_features(row.get('query_source_owners')),
                             scalars=[v for v in values if 'eq' not in v['value']]),
                 targets=dict(input_partition=partition(ports,'after'),
                              rhs_eq_slots=[p['slot'] for p in outputs],
@@ -54,7 +69,8 @@ def extract(trace):
                 source_evidence=None if source is None else dict(
                     parent=source['parent'],continuation=source['continuation'],
                     direct=source['direct'],epoch=source['epoch'],
-                    retained_query_witnesses=source['retained_query_witnesses'])))
+                    retained_query_witnesses=source['retained_query_witnesses'],
+                    query_source_owners=row.get('query_source_owners'))))
     if sources:raise ValueError('unconsumed source observations')
     return dict(schema='native-cell-partitions/v1',program_sha256=trace['program_sha256'],
                 scope='actual native local input features and post-Run targets; no inferred ownership',
