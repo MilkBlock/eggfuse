@@ -63,7 +63,7 @@ class Reference:
                         b[slot]=v
                     else:following.append(b)
             bindings=list({tuple(sorted(b.items())):b for b in following}.values())
-        return bindings
+        return [b for b in bindings if all(identity(self.scalar_values.get(b.get(int(s))))==v for s,v in rule.get('query_literal_guards',{}).items())]
 
     def construct(self,table,args,value=None):
         schema=self.tables[table]['schema']

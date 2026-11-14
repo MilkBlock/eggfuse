@@ -59,6 +59,9 @@ def audit(recipe,capture):
     matched=np.flatnonzero(b['live'])
     for lane in matched:
         checked+=1
+        for slot,value in rule.get('query_literal_guards',{}).items():
+            expected=recipe.get('literal_ids',{}).get(value,-1)
+            if expected<0 or not b['slot_valid'][lane,int(slot)] or int(b['slots'][lane,int(slot)])!=expected:errors.append('literal_guard')
         for ai,atom in enumerate(rule['query']):
             row=int(b['witness_rows'][lane,ai]);sr=int(w['rule'][lane,ai])
             if not 0<=row<int(c['source_capacity']) or not 0<=sr<len(recipe['rules']):errors.append('source_address');continue

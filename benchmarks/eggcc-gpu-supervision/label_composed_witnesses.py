@@ -11,6 +11,7 @@ from device_match_capture import audit,floating_inputs,partition
 from device_input_relations import inputs,encode as relation_features,projection
 from device_snapshot_import import prepare_family
 from lower_constructor_sets import lower
+from lower_query_literals import lower as lower_query_literals
 from reference_union_family import Reference
 from reference_cell_closure import facts_from_cells
 from multi_entry_ridge import template,encode
@@ -99,7 +100,7 @@ def main():
     else:provenance=partition(trace,a.corpus)
     original=dict(trace['recipe'],rules=[trace['recipe']['rules'][i] for i in meta['source_rules']])
     if original!=meta['original_recipe']:raise ValueError('original rule definitions')
-    lowered,_=lower(original);snapshots=[b['graph'] for b in trace['boundaries'] if b['ordinal']==a.snapshot_run]
+    lowered,_=lower(lower_query_literals(original));snapshots=[b['graph'] for b in trace['boundaries'] if b['ordinal']==a.snapshot_run]
     if len(snapshots)!=1:raise ValueError('snapshot ordinal')
     local,state,ids,rows=prepare_family(lowered,snapshots[0],list(range(len(original['rules']))),1)
     target_recipe=deepcopy(local)

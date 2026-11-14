@@ -73,6 +73,8 @@ def prepare_family(recipe,snapshot,rules,spare,include_effects=True):
                 if numeric:state['scalar_numbers'][i,j]=v;state['scalar_numeric'][i,j]=True
                 else:state['scalar_codes'][i,j]=scalar(value);state['scalar_valid'][i,j]=True
         roles,_=template(local['rules'][sr]);state['tokens'][i]=encode(encoded,roles,'class-balanced')
+    if any(r.get('query_literal_guards') for r in local['rules']):
+        local['literal_ids']={k:v for k,v in ids.items() if 'eq' not in json.loads(k)}
     return local,state,ids,rows
 
 
@@ -92,6 +94,7 @@ def reference_keys(rule,rows,ids,key_width,limit=100000):
                 if ok:following.append(value)
         bindings=list({tuple(sorted(b.items())):b for b in following}.values())
         if len(bindings)>limit:raise ValueError('CPU reference budget exceeded')
+    bindings=[b for b in bindings if all(b.get(int(s))==v for s,v in rule.get('query_literal_guards',{}).items())]
     inputs=[i for i,s in enumerate(rule['slots']) if s['definition']=='query']
     return {tuple([0]+[ids[b[i]] for i in inputs]+[-1]*(key_width-1-len(inputs))) for b in bindings}
 

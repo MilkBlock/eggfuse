@@ -19,7 +19,8 @@ def compile_query(recipe,rid,views=None):
         if any(not 0<=s<len(rule['slots']) for s in slots):raise ValueError('invalid query slot')
         key=(table[0],len(slots)-1)
         if key not in views:views[key]=compile_view(recipe,*key)
-        atoms.append(dict(slots=slots,eq=[rule['slots'][s]['sort']['kind']=='eq' for s in slots],view=views[key]))
+        guards={int(s):recipe.get('literal_ids',{}).get(v,-1) for s,v in rule.get('query_literal_guards',{}).items() if int(s) in slots}
+        atoms.append(dict(slots=slots,literal_guards=guards,eq=[rule['slots'][s]['sort']['kind']=='eq' for s in slots],view=views[key]))
         bound.update(slots)
     required={i for i,s in enumerate(rule['slots']) if s['definition']=='query'}
     if not required<=bound:reasons.append('unbound_query_slots')
@@ -63,6 +64,7 @@ def match(state,plan,capacity,external_complete,eq_settled,xp):
         keep=live[:,None]&first_fact[None,:];first={}
         for field,(slot,eq) in enumerate(zip(atom['slots'],atom['eq'])):
             current=view['value_roots'][:,field] if eq else view['values'][:,field]
+            if slot in atom.get('literal_guards',{}):keep=keep&(current[None,:]==atom['literal_guards'][slot])
             if slot in bound:
                 old=roots[:,slot] if eq else values[:,slot];keep=keep&(old[:,None]==current[None,:])
             if slot in first:

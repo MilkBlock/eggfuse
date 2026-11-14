@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 import mlx.core as mx
 from lower_constructor_sets import lower
+from lower_query_literals import lower as lower_query_literals
 from device_snapshot_import import prepare_family,eq_registry
 from device_join_transition import compile_transition,run_round
 from device_constructor_completion import compile_completion
@@ -48,7 +49,7 @@ def main():
     if len(stages)!=1 and not a.schedule:raise ValueError('multiple stages require an explicit schedule')
     stage=stages[0] if len(stages)==1 else None
     source_control=json.loads(a.schedule.read_text()) if a.schedule else dict(saturate=dict(run=stage))
-    lowered,sites=lower(original)
+    lowered,sites=lower(lower_query_literals(original))
     boundary=[b['graph'] for b in trace['boundaries'] if b['ordinal']==a.snapshot_run]
     if len(boundary)!=1:raise ValueError('snapshot boundary')
     local,state,ids,rows=prepare_family(lowered,boundary[0],list(range(len(ids_rule))),a.capacity)
