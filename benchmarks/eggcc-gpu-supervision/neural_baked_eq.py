@@ -8,7 +8,7 @@ import numpy as np
 from neural_semantic_owner import _sealed
 
 
-def partition(recipe,rule):
+def partition(recipe,rule,assumptions=()):
     facts=_sealed(rule)
     if facts is None:raise ValueError('unsupported sealed operations')
     tables={t['name']:t['kind'] for t in recipe['tables']}
@@ -22,7 +22,7 @@ def partition(recipe,rule):
         a,b=root(a),root(b)
         if a==b:return False
         parents[max(a,b)]=min(a,b);return True
-    for pair in facts[1]:
+    for pair in list(facts[1])+list(assumptions):
         if len(pair)!=2:raise ValueError('binary equality required')
         merge(*pair)
     changed=True

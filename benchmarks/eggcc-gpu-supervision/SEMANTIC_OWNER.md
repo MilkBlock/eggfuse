@@ -336,3 +336,50 @@ current ownership. The next unresolved obligation is a consumer representation
 of specific compiled completion relations; adding a dense owner layout code to
 the existing incidence edges is insufficient in this experiment. This result
 does not justify refreshing old tokens or promoting this learned adapter.
+
+## Conditional input-partition completion proofs (2026-11-14)
+
+The additive owner adapter is still rejected. The next change uses a concrete
+missing fact: successful consumer inputs may already be equal, but unconditional
+Bake proofs previously ignored that input partition. `neural_conditional_eq.py`
+enumerates typed query-input partitions and compiles the positive consequences
+of each sealed Cell, including all-argument and multilevel constructor
+congruence. GPU selection uses the existing exact query incidence, not CPU
+matched bindings or reference answers. No handle magnitude enters inference.
+
+The 17 context rules compile to 374 cases, occupying 25,956 bytes of NumPy proof
+arrays (not total GPU memory). Cases are uploaded once and shared across all
+107 scenarios. Selection is a fixed-shape batch comparison and reduction;
+there is no device congruence loop. This is an exact proof side channel, not
+learned floating computation or a claimed acceleration. The catalog has a
+4096-partition budget per rule; unsupported operations or overflow retain only
+unconditional proof and report unsupported coverage. No omitted case proves
+inequality. Query-incidence shape is checked explicitly.
+
+With the same immutable-source model, weights and 107 device transfers:
+
+| Measurement | Unconditional proof | Conditional proof |
+|---|---:|---:|
+| Whole next-state Eq correct | 272/338 | 314/338 |
+| Wrong next states | 66 | 24 |
+| False-merge states | 9 | 9 |
+| Missed / false query matches | 0 / 0 | 0 / 0 |
+
+All positive proofs for accepted matches are checked against independent Python
+reference execution. The full semantic audit remains `difference`; no typed
+pair obligation was excluded. The 3,843 added proof occurrences include rejected
+query candidates and are NOT a count of saved operations or committed facts.
+The audit has 10 local-state disagreements and 17 states whose target includes
+external Eq. These overlapping statistics are not a partition of the 24 errors.
+Wrong states occur in rules 0 (14), 4 (1), 5 (8), and 8 (1); rules 4/5 account for
+the nine false-merge states. See `conditional-eq-results.json`.
+
+Reproduce with `audit_neural_gpu_rhs.py TRACE FROZEN_OWNER_WEIGHTS OUT
+--immutable-source --block-owner --baked-eq --conditional-eq --interface-only
+--follow --context-capacity 8 --limit 107`. This adds no backpropagation and does
+not modify token vectors. The current audit consumes the proof at Eq readout;
+it has NOT yet made that proof available as a generated token's subsequent
+floating state. Carrying these particular relations through token completion,
+resolving external constructor identity, and eliminating false merges remain
+live obligations. Do not confuse the 92.90% next-state result with full Eggcc
+saturation correctness or a complete ownership-transfer runtime.

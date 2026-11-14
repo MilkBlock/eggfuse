@@ -1,0 +1,142 @@
+{
+  "scope": "Standalone GPU matching and two-block ownership audit, not full native Eggcc runtime or autonomous saturation",
+  "bake_branch": "codex/cell-parallel-admission",
+  "bake_commit": "f3321a3a",
+  "baseline": {
+    "semantic_states": 338,
+    "semantic_wrong_states": 66,
+    "semantic_false_merge_states": 9,
+    "semantic_local_wrong_states": 52,
+    "semantic_external_eq_states": 17,
+    "false_positive": 0,
+    "missed": 0,
+    "invalid_predictions": 0
+  },
+  "conditional": {
+    "semantic_states": 338,
+    "semantic_wrong_states": 24,
+    "semantic_false_merge_states": 9,
+    "semantic_local_wrong_states": 10,
+    "semantic_external_eq_states": 17,
+    "false_positive": 0,
+    "missed": 0,
+    "invalid_predictions": 0
+  },
+  "cases": 107,
+  "transfers": 107,
+  "catalog": [
+    {
+      "rule": 0,
+      "cases": 5,
+      "supported": true,
+      "host_array_bytes": 357
+    },
+    {
+      "rule": 1,
+      "cases": 4,
+      "supported": true,
+      "host_array_bytes": 291
+    },
+    {
+      "rule": 2,
+      "cases": 4,
+      "supported": true,
+      "host_array_bytes": 291
+    },
+    {
+      "rule": 3,
+      "cases": 4,
+      "supported": true,
+      "host_array_bytes": 291
+    },
+    {
+      "rule": 4,
+      "cases": 52,
+      "supported": true,
+      "host_array_bytes": 3475
+    },
+    {
+      "rule": 5,
+      "cases": 15,
+      "supported": true,
+      "host_array_bytes": 994
+    },
+    {
+      "rule": 6,
+      "cases": 5,
+      "supported": true,
+      "host_array_bytes": 357
+    },
+    {
+      "rule": 7,
+      "cases": 5,
+      "supported": true,
+      "host_array_bytes": 357
+    },
+    {
+      "rule": 8,
+      "cases": 15,
+      "supported": true,
+      "host_array_bytes": 994
+    },
+    {
+      "rule": 9,
+      "cases": 5,
+      "supported": true,
+      "host_array_bytes": 357
+    },
+    {
+      "rule": 10,
+      "cases": 5,
+      "supported": true,
+      "host_array_bytes": 357
+    },
+    {
+      "rule": 11,
+      "cases": 15,
+      "supported": true,
+      "host_array_bytes": 994
+    },
+    {
+      "rule": 12,
+      "cases": 2,
+      "supported": true,
+      "host_array_bytes": 171
+    },
+    {
+      "rule": 13,
+      "cases": 5,
+      "supported": true,
+      "host_array_bytes": 357
+    },
+    {
+      "rule": 14,
+      "cases": 15,
+      "supported": true,
+      "host_array_bytes": 994
+    },
+    {
+      "rule": 15,
+      "cases": 203,
+      "supported": true,
+      "host_array_bytes": 14325
+    },
+    {
+      "rule": 16,
+      "cases": 15,
+      "supported": true,
+      "host_array_bytes": 994
+    }
+  ],
+  "catalog_compile_seconds": 0.02995720802573487,
+  "catalog_bytes": 25956,
+  "catalog_cases": 374,
+  "candidate_added_pair_occurrences": 3843,
+  "candidate_covered": 2465,
+  "weights_sha256": "ff750b17ebf65491ed32b1712662d28e9b01900201e5c8b30dd7d635316c3cf8",
+  "status": "difference",
+  "promoted": false,
+  "token_vectors_changed": false,
+  "remaining": "Positive proof output is not yet carried into subsequent latent tokens; missing external equalities and false merges remain",
+  "archive": "neural-conditional-eq-v13.tar.gz"
+}

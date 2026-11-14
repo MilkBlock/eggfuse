@@ -71,9 +71,10 @@ def initial_case(recipe,record,spare=0,payload_width=None):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--owner-aware',action='store_true');p.add_argument('--semantic-owners',action='store_true');p.add_argument('--block-owner',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--immutable-source',action='store_true')
+    p.add_argument('--conditional-eq',action='store_true');p.add_argument('--owner-aware',action='store_true');p.add_argument('--semantic-owners',action='store_true');p.add_argument('--block-owner',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--immutable-source',action='store_true')
     p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
+    if a.conditional_eq and not a.baked_eq:raise ValueError('conditional proofs require baked Eq')
     if a.owner_aware and not (a.block_owner and a.immutable_source):raise ValueError('owner-aware consumption requires immutable block owners')
     if a.immutable_source and not a.block_owner:raise ValueError('immutable source requires block ownership')
     if a.baked_eq and not (a.eq_readout or a.block_owner):raise ValueError('baked Eq requires semantic readout')
@@ -100,7 +101,13 @@ def main():
     if a.baked_eq:
         from neural_baked_eq import compile_rule
         baked_proofs=[compile_rule(recipe,r,max(len(q['slots']) for q in recipe['rules'])) for r in recipe['rules']]
-        for proof in baked_proofs:proof['device_known']=mx.array(proof['known'])[None,:]
+        for r,proof in zip(recipe['rules'],baked_proofs):
+            proof['device_known']=mx.array(proof['known'])[None,:]
+            if a.conditional_eq:
+                from neural_conditional_eq import compile_cases
+                cp=compile_cases(recipe,r,max(len(q['slots']) for q in recipe['rules']))
+                proof['conditional']=cp
+                proof['device_conditional']=dict(relation_width=cp['relation_width'],**{k:mx.array(v) for k,v in cp.items() if isinstance(v,np.ndarray)})
     parent=device({k:v[chain['parent']] for k,v in base.items()});dc=device(chain)
     first,source_tokens=model(parent['x'],parent['edges'],parent['mask'],parent['request'],parent['relations'])
     from train_neural_cell_chains import incoming_tokens
@@ -159,9 +166,9 @@ def main():
         if a.semantic_owners:
             report['semantic_owner']=dict(semantic_proof,adopted=bool(move.get('semantic_adopted',False)))
         if a.follow and check['passed']:
-            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None,a.baked_eq,baked_proofs,owner if a.owner_aware else None)
+            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None,a.baked_eq,baked_proofs,owner if a.owner_aware else None,a.conditional_eq)
         reports.append(report);print(json.dumps(report),flush=True)
-    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,semantic_owners=a.semantic_owners,block_owner=a.block_owner,immutable_source=a.immutable_source,owner_aware=a.owner_aware,baked_eq=a.baked_eq,speculative_frames=a.speculate,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,semantic_owners=a.semantic_owners,block_owner=a.block_owner,immutable_source=a.immutable_source,owner_aware=a.owner_aware,baked_eq=a.baked_eq,conditional_eq=a.conditional_eq,speculative_frames=a.speculate,wall_seconds=time.perf_counter()-started,speedup_claim=False)
     if a.eq_readout:result['readout_weights_sha256']=hashlib.sha256(a.eq_readout.read_bytes()).hexdigest()
     failed=audit_failed(reports,a.follow,a.speculate)
     result['status']='difference' if failed else 'pass'
@@ -186,7 +193,7 @@ def audit_failed(reports,follow=False,speculate=False):
     return not reports
 
 
-def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None,context_capacity=0,speculation=None,baked_eq=False,baked_proofs=None,consumer_owner=None):
+def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None,context_capacity=0,speculation=None,baked_eq=False,baked_proofs=None,consumer_owner=None,conditional_eq=False):
     from neural_device_candidates import compile_candidates,candidates
     counts=dict(candidates=0,accepted=0,false_positive=0,expected=0,recovered=0,missed=0,incomplete_rules=0,accepted_from_generated=0,invalid_predictions=0,context_overflow_rules=0,context_inputs=0)
     groups=[];spec_reports=[]
@@ -198,7 +205,7 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
         from neural_cell_chains import completed
         from neural_eq_readout import targets,metrics
         width=max(len(r['slots']) for r in recipe['rules'])
-        counts.update(baked_eq_pairs=0,baked_eq_unsupported_rules=0,raw_semantic_wrong_states=0,semantic_states=0,semantic_wrong_states=0,semantic_false_merge_states=0,semantic_local_wrong_states=0,semantic_external_eq_states=0,semantic_feature_conflicts=0,semantic_local_feature_conflicts=0)
+        counts.update(conditional_cases=0,conditional_covered=0,conditional_added_pairs=0,baked_eq_pairs=0,baked_eq_unsupported_rules=0,raw_semantic_wrong_states=0,semantic_states=0,semantic_wrong_states=0,semantic_false_merge_states=0,semantic_local_wrong_states=0,semantic_external_eq_states=0,semantic_feature_conflicts=0,semantic_local_feature_conflicts=0)
     for rid,rule in enumerate(recipe['rules']):
         host_plan=compile_candidates(local,rule,context_capacity=context_capacity)
         batch=candidates(state,frames,device(host_plan),mx.array(True),mx.array(True),mx)
@@ -212,6 +219,17 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
                 from neural_baked_eq import compile_rule,apply as apply_proof
                 proof=baked_proofs[rid] if baked_proofs is not None else compile_rule(recipe,rule,width)
                 device_known=proof['device_known'] if 'device_known' in proof else mx.array(proof['known'])[None,:]
+                if conditional_eq:
+                    from neural_conditional_eq import compile_cases,select
+                    cp=proof['conditional'] if 'conditional' in proof else compile_cases(recipe,rule,width)
+                    dp=proof['device_conditional'] if 'device_conditional' in proof else dict(relation_width=cp['relation_width'],**{k:mx.array(v) for k,v in cp.items() if isinstance(v,np.ndarray)})
+                    conditional,covered=select(dp,batch['relations'],mx)
+                    mx.eval(conditional,covered)
+                    live_candidates=batch['live']
+                    counts['conditional_cases']+=len(cp['known'])
+                    counts['conditional_covered']+=int(mx.sum(covered&live_candidates))
+                    counts['conditional_added_pairs']+=int(mx.sum((conditional&~device_known)&live_candidates[:,None]))
+                    device_known=conditional
                 semantic=apply_proof(raw_semantic,device_known,mx)
             mx.eval(raw_semantic,semantic)
             raw_eq_scores=[];eq_scores=[];eq_labels=[];eq_masks=[];eq_local=[];feature_labels={};conflicts=local_conflicts=0
@@ -228,7 +246,7 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
             if eq_head is not None:
                 ref=deepcopy(oracle);bound=dict(key);apply_instance(ref,rule,bound)
                 truth=targets(rule,completed(rule,bound,ref),ref,width)
-                if proof is not None and np.any(proof['known']&((truth['eq_target']==0)|~truth['eq_mask'])):raise AssertionError('Bake proof contradicts independent rule execution')
+                if proof is not None and np.any(np.array(device_known[index if conditional_eq else 0])&((truth['eq_target']==0)|~truth['eq_mask'])):raise AssertionError('Bake proof contradicts independent rule execution')
                 raw_eq_scores.append(np.array(raw_semantic[index]));eq_scores.append(np.array(semantic[index]));eq_labels.append(truth['eq_target']);eq_masks.append(truth['eq_mask'])
                 local_ref=deepcopy(oracle);local_bound=dict(key)
                 local_ref.facts=[(atom['call']['table'],tuple(local_bound[a['slot']] for a in atom['args'])) for atom in rule['query']]
