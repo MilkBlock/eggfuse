@@ -1,0 +1,28 @@
+{
+  "schema": "device-joint-witness/v3",
+  "case": "019-lcm",
+  "partition": "validation",
+  "corpus_manifest_sha256": "b9092da6ea6242284691e0468b0e2148204b35da87054ee611594aa29cca75b7",
+  "program_file_sha256": "29491d56a3ffde6de51ff1a335048116a7605d4be7b040be834e51ba23065b6b",
+  "passed": true,
+  "samples": 99,
+  "continued_samples": 21,
+  "distinct_inputs": 90,
+  "distinct_targets": 12,
+  "dynamic_eq_queries": 524,
+  "dynamic_eq_positive": 37,
+  "artifact_sha256": "ed4b02448adb0ed70e55eac79e9bc84131e633899df350d815cb4deaeaceb479",
+  "source_capture_sha256": "2251fb1155f6e32505f669e6213c0bb2094af5c0821a15276a53a76dcbea7e0b",
+  "direct_with_generated_boundary_neighbors": 1,
+  "boundary_feature_columns": 512,
+  "boundary_feature_max_abs": 2.384185791015625e-07,
+  "feature_reconstruction_max_abs": 2.384185791015625e-06,
+  "cpu_label_and_capture_audit_seconds": 0.6483902499894612,
+  "target_scope": "original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared",
+  "backpropagation": false,
+  "limitations": [
+    "Labels are final family states, not every intermediate state",
+    "Selected context rules, not full Eggcc",
+    "Source token mode: direct state ridge generated Cells, exact imported Cells; exact effects and matching remain authoritative"
+  ]
+}

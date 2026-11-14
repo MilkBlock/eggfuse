@@ -7,7 +7,7 @@ ownership coverage, scalar computation or a completion proof.
 from device_token_commit import closed_entry_proposals
 
 
-def infer(state, request, model, xp, layout=None):
+def encode_features(state, request, model, xp, layout=None):
     sources=request['sources']
     mask=request['edge_valid']
     capacity=state['tokens'].shape[0]
@@ -45,13 +45,20 @@ def infer(state, request, model, xp, layout=None):
     features=xp.concatenate([xp.ones((seed.shape[0],1),dtype=xp.float32),raw,xp.tanh(raw@model['w'])],axis=1)
     if 'boundary_features' in request:
         features=xp.concatenate([features,request['boundary_features']],axis=1)
+    missing=xp.any(mask&~live,axis=1)
+    nonfinite=xp.any(mask&~finite_source,axis=1)|~xp.all(xp.isfinite(features),axis=1)
+    ready=request['input_ready']&layout_ready&~missing&~nonfinite
+    return features,dict(ready=ready,missing_source=missing,nonfinite=nonfinite,
+                       missing_layout=~layout_ready,missing_input=~request['input_ready'],needs_attention=xp.any(~ready))
+
+
+def infer(state, request, model, xp, layout=None):
+    features,marks=encode_features(state,request,model,xp,layout)
     if features.shape[1]!=model['coef'].shape[0]:raise ValueError('ridge feature/model width mismatch')
     tokens=xp.tanh(features@model['coef'])
-    missing=xp.any(mask&~live,axis=1)
-    nonfinite=xp.any(mask&~finite_source,axis=1)|~xp.all(xp.isfinite(tokens),axis=1)
-    ready=request['input_ready']&layout_ready&~missing&~nonfinite
-    return tokens,dict(ready=ready,missing_source=missing,nonfinite=nonfinite,
-                       missing_layout=~layout_ready,missing_input=~request['input_ready'],needs_attention=xp.any(~ready))
+    nonfinite=marks['nonfinite']|~xp.all(xp.isfinite(tokens),axis=1)
+    ready=marks['ready']&~nonfinite
+    return tokens,dict(marks,ready=ready,nonfinite=nonfinite,needs_attention=xp.any(~ready))
 
 
 def proposals(state,plan,stage,request,model,xp,layout=None):

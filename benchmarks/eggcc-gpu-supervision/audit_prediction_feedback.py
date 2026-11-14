@@ -16,9 +16,9 @@ def main():
     a=p.parse_args();left=checked(a.exact_sources);right=checked(a.predicted_sources)
     for k in ('recipe','original_recipe','source_rules','model_sha256','trace_sha256','snapshot_run','semantic_recipe'):
         if left[k]!=right[k]:raise ValueError('incompatible comparison: '+k)
-    modes=('predicted generated Cells, exact imported Cells','whole-state reconstructed generated Cells, exact imported Cells')
+    modes=('predicted generated Cells, exact imported Cells','whole-state reconstructed generated Cells, exact imported Cells','direct state ridge generated Cells, exact imported Cells')
     if left.get('source_token_mode','exact completed states')!='exact completed states' or right['source_token_mode'] not in modes:raise ValueError('feedback mode mismatch')
-    reconstructed=right['source_token_mode']==modes[1]
+    reconstructed=right['source_token_mode'] in modes[1:]
     if reconstructed and not right.get('completion_readout'):raise ValueError('missing completion readout provenance')
     with np.load(a.exact_sources) as x,np.load(a.predicted_sources) as y:
         shared=set(x.files)&set(y.files);symbolic=0

@@ -84,6 +84,7 @@ def main():
     for k in ('capture','trace','model','corpus','output','report'):p.add_argument(k,type=Path)
     p.add_argument('--semantic-targets',action='store_true',help='project legacy captures onto original Cell semantics for a like-for-like audit')
     p.add_argument('--completion-decoder',type=Path)
+    p.add_argument('--completion-classifier',type=Path)
     p.add_argument('--snapshot-run',type=int,required=True);a=p.parse_args();start=time.monotonic()
     meta=json.loads(a.capture.with_suffix('.json').read_text());trace=json.loads(a.trace.read_bytes())
     if meta['capture']['schema']!='device-composed-witness/v1' or not meta['capture']['passed'] or hashlib.sha256(a.capture.read_bytes()).hexdigest()!=meta['capture']['artifact_sha256']:raise ValueError('capture provenance')
@@ -100,7 +101,10 @@ def main():
     if not a.semantic_targets:target_recipe=local
     semantic_recipe=dict(local,rules=[semantic(r)[0] for r in target_recipe['rules']])
     completion_plans=None
-    if bool(meta.get('completion_readout'))!=bool(a.completion_decoder):raise ValueError('explicit completion decoder required exactly for reconstructed captures')
+    info=meta.get('completion_readout') or {}
+    classifier=info.get('kind')=='direct_state_ridge'
+    if bool(a.completion_classifier)!=classifier or (a.completion_classifier and a.completion_decoder):raise ValueError('classifier capture mode mismatch')
+    if bool(info)!=bool(a.completion_decoder or a.completion_classifier):raise ValueError('explicit completion weights required')
     if a.completion_decoder:
         from device_completion_readout import compile_readout
         info=meta['completion_readout']
@@ -109,8 +113,14 @@ def main():
             chosen=np.flatnonzero(f['alphas']==info['decoder_alpha'])
             if len(chosen)!=1:raise ValueError('completion alpha')
             completion_plans=[compile_readout(r,f['w'],f['coef'][:,chosen]) for r in local['rules'][:len(original['rules'])]]
+    if a.completion_classifier:
+        from device_completion_classifier import compile_classifier
+        if hashlib.sha256(a.completion_classifier.read_bytes()).hexdigest()!=info['head_sha256']:raise ValueError('classifier identity')
+        with np.load(a.completion_classifier) as f:
+            completion_plans=[compile_classifier(r,{k:f[f'head_{rid}_{k}'] for k in ('mean','scale','coef','bias')})
+                              for rid,r in enumerate(local['rules'][:len(original['rules'])])]
     ref=Reference(original,rows,ids);runs=ref.saturate(original['rules'])
-    with np.load(a.model) as f:model={k:f[k] for k in ('w','coef')}
+    with np.load(a.model) as f:model={k:f[k] for k in (('w',) if classifier else ('w','coef'))}
     captures=[];facts=[];saved={}
     with np.load(a.capture) as data:
         prefixes=[k[:-4] for k in data.files if k.startswith('capture/') and k.endswith('/rule') and '/witness/' not in k and '/boundary/' not in k]
@@ -137,12 +147,13 @@ def main():
             generated=(c['boundary']['rule']>=0)&(c['boundary']['rule']<len(original['rules']))
             boundary_generated.extend(np.any(connections&generated[None,None,:,None],axis=(1,2,3))[c['accepted']])
         live=c['bindings']['live']
-        expected=np.tanh(x@model['coef'])
+        expected=x if classifier else np.tanh(x@model['coef'])
         if completion_plans is not None:
-            from device_completion_readout import apply
+            if classifier:from device_completion_classifier import apply
+            else:from device_completion_readout import apply
             from multi_entry_ridge import scalar
             detail=c['completion_readout'];plan=completion_plans[rid]
-            if live.any():numerical=max(numerical,float(np.max(abs(expected[live]-detail['raw_tokens'][live]))))
+            if not classifier and live.any():numerical=max(numerical,float(np.max(abs(expected[live]-detail['raw_tokens'][live]))))
             # Independently recover scalar codes from actual input IDs, never final labels.
             for lane in np.flatnonzero(live):
                 if not detail['scalar_ready'][lane]:raise ValueError('completion scalar not ready')
@@ -151,6 +162,7 @@ def main():
                     if value['sort']!=rule['slots'][s]['sort']['name'] or 'eq' in value:raise ValueError('completion scalar identity')
                     if np.max(abs(scalar(value)-detail['scalar_codes'][lane,j]))>5e-6:raise ValueError('completion scalar code')
             expected,recomputed=apply(expected,c['bindings'],detail['scalar_codes'],detail['scalar_ready'],plan,np)
+            if classifier and live.any():numerical=max(numerical,float(np.max(abs(recomputed['scores'][live]-detail['scores'][live]))))
             for key in ('chosen','required','selected','ready'):
                 if not np.array_equal(recomputed[key][live],detail[key][live]):raise ValueError('completion readout '+key)
         elif 'completion_readout' in c:raise ValueError('unregistered completion readout')

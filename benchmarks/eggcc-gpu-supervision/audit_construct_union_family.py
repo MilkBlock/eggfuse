@@ -23,11 +23,14 @@ def main():
     for k in ('trace','model','output'):p.add_argument(k,type=Path)
     p.add_argument('--capture',type=Path)
     p.add_argument('--completion-decoder',type=Path);p.add_argument('--completion-decoder-report',type=Path)
+    p.add_argument('--completion-classifier',type=Path);p.add_argument('--completion-classifier-report',type=Path)
     p.add_argument('--rules',default='283,293');p.add_argument('--snapshot-run',type=int,default=466)
     p.add_argument('--progress',action='store_true');p.add_argument('--predicted-source-feedback',action='store_true');p.add_argument('--experimental-boundary-model',action='store_true');p.add_argument('--boundary-context',action='store_true');p.add_argument('--flush-every',type=int,default=4);p.add_argument('--order-queries',action='store_true');p.add_argument('--capacity',type=int,default=128);p.add_argument('--ticks',type=int,default=24);a=p.parse_args()
     if a.predicted_source_feedback and not a.experimental_boundary_model:raise ValueError('feedback requires explicit experimental model')
     if bool(a.completion_decoder)!=bool(a.completion_decoder_report):raise ValueError('completion decoder and report required together')
     if a.completion_decoder and not a.predicted_source_feedback:raise ValueError('completion readout requires actual predicted-source feedback')
+    if bool(a.completion_classifier)!=bool(a.completion_classifier_report):raise ValueError('classifier and report required together')
+    if a.completion_classifier and (a.completion_decoder or not a.predicted_source_feedback):raise ValueError('direct classifier requires exclusive predicted-source mode')
     if a.flush_every<1 or a.ticks<1:raise ValueError('positive execution window required')
     raw=a.trace.read_bytes();trace=json.loads(raw);ids_rule=[int(x) for x in a.rules.split(',')]
     if not all(trace.get(k) is True for k in ('strict_run_graphs_equal','strict_audit_reference_equal','run_control_counts_equal')):raise ValueError('unaudited trace')
@@ -62,7 +65,7 @@ def main():
         if 'family_semantics' in f:
             family=[{k:r[k] for k in ('slots','query','effects')} for r in original['rules']]
             if json.loads(str(f['family_semantics']))!=family:raise ValueError('calibrated model family mismatch')
-        model=device({k:f[k] for k in ('w','coef')})
+        model=device({k:f[k] for k in (('w',) if a.completion_classifier else ('w','coef'))})
     completion_metadata=None
     if a.completion_decoder:
         from device_completion_readout import compile_readout
@@ -76,6 +79,17 @@ def main():
         dp=device(blocks)
         completion_metadata=dict(decoder_sha256=decoder_sha,decoder_alpha=report['selected']['partition'],
             representation='static-compatible whole Eq state plus actual scalar moments',union_authorized=False)
+    if a.completion_classifier:
+        from device_completion_classifier import compile_classifier
+        report=json.loads(a.completion_classifier_report.read_text())
+        head_sha=hashlib.sha256(a.completion_classifier.read_bytes()).hexdigest()
+        if report['head_sha256']!=head_sha or report['model_sha256']!=hashlib.sha256(a.model.read_bytes()).hexdigest():raise ValueError('classifier provenance')
+        with np.load(a.completion_classifier) as f:
+            blocks=[(st,dict(p,completion_classifier=compile_classifier(local['rules'][p['query']['rule']],
+                {k:f[f"head_{p['query']['rule']}_{k}"] for k in ('mean','scale','coef','bias')}))) for st,p in blocks]
+        dp=device(blocks)
+        completion_metadata=dict(kind='direct_state_ridge',head_sha256=head_sha,decoder_sha256=report['decoder_sha256'],
+            representation='direct whole-state ridge plus actual scalar moments',union_authorized=False)
     schedule,meta=compile_schedule(dict(saturate=dict(run=stage)),[stage]);ds=device(schedule)
     control=dict(control=initial(ds,meta['repeat_slots'],mx),open_run=mx.array(False),unreported_change=mx.array(False),failed_run=mx.array(False))
     ready=mx.array(True);next_id=mx.array(len(ids));logs=[];captures=[];frames=[]
@@ -125,7 +139,7 @@ def main():
         limitations=['One projected source ruleset, omitted external rules/tables remain uncovered','Lowering adds temporary slots and potentially fresh IDs/unions','Exact kernels authorize completion; ridge quality for lowered templates is not established','No claim of identical intermediate allocation or native full-graph execution'])
     if completion_metadata is not None:
         result['completion_readout']=completion_metadata
-        result['source_tokens']='whole-state reconstructed generated Cells, exact imported Cells'
+        result['source_tokens']='direct state ridge generated Cells, exact imported Cells' if a.completion_classifier else 'whole-state reconstructed generated Cells, exact imported Cells'
     if a.capture and passed:
         payload={}
         for ti,batch in enumerate(captures):

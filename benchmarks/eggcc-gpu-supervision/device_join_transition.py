@@ -6,7 +6,7 @@ import numpy as np
 from device_query_join import compile_query,match_inputs
 from device_input_features import compile_inputs
 from device_semantic_template import template,neighborhood_template
-from device_ridge_transition import infer
+from device_ridge_transition import infer,encode_features
 from device_token_commit import commit
 from device_slot_owners import shape as slot_shape,has as has_slot,read as read_slot
 
@@ -61,15 +61,21 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=
         request['source_relation']=xp.stack(relations,axis=1) if relations else xp.zeros((capacity,1,128),xp.float32)
     boundary_capture=None
     base_width=1+model['w'].shape[0]+model['w'].shape[1]
-    if model['coef'].shape[0]!=base_width:
+    classifier=plan.get('completion_classifier')
+    expected_width=classifier['head']['coef'].shape[0] if classifier is not None else model['coef'].shape[0]
+    if expected_width!=base_width:
         if 'boundary_context' not in plan:raise ValueError('boundary model requires compiled context')
         from device_boundary_context import snapshot,encode
         boundary=snapshot(state,xp)
         extra,counts=encode(boundary,bindings,plan['boundary_context'],xp)
-        if model['coef'].shape[0]!=base_width+extra.shape[1]:raise ValueError('boundary model width mismatch')
+        if expected_width!=base_width+extra.shape[1]:raise ValueError('boundary model width mismatch')
         request['boundary_features']=extra
         boundary_capture=dict(boundary=boundary,boundary_features=extra,boundary_counts=counts)
-    tokens,numerical=infer(state,request,model,xp)
+    if classifier is not None:
+        if 'completion_readout' in plan:raise ValueError('choose one completion predictor')
+        classifier_features,numerical=encode_features(state,request,model,xp)
+        tokens=None  # Filled directly by the state head after scalar slots are available.
+    else:tokens,numerical=infer(state,request,model,xp)
     width=slot_shape(state)[1];local=bindings['slots'].shape[1];key_width=state['keys'].shape[1]
     required=plan['query']['required']
     if local>width or len(required)+1>key_width:raise ValueError('instance layout too small')
@@ -98,10 +104,16 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=
             value=xp.where(mask,value,0);padding=(capacity,width-local)+value.shape[2:]
             p[key]=xp.concatenate([value,xp.zeros(padding,value.dtype)],axis=1)
     completion_readout=None
-    if 'completion_readout' in plan:
-        from device_completion_readout import scalar_inputs,apply
-        codes,scalar_ready=scalar_inputs(p,plan['completion_readout'],xp)
-        tokens,completion_readout=apply(tokens,bindings,codes,scalar_ready,plan['completion_readout'],xp)
+    if classifier is not None or 'completion_readout' in plan:
+        from device_completion_readout import scalar_inputs
+        if classifier is not None:
+            from device_completion_classifier import apply
+            codes,scalar_ready=scalar_inputs(p,classifier,xp)
+            tokens,completion_readout=apply(classifier_features,bindings,codes,scalar_ready,classifier,xp)
+        else:
+            from device_completion_readout import apply
+            codes,scalar_ready=scalar_inputs(p,plan['completion_readout'],xp)
+            tokens,completion_readout=apply(tokens,bindings,codes,scalar_ready,plan['completion_readout'],xp)
         p['tokens']=tokens
         p['missing_witness']=p['missing_witness']|(bindings['live']&~completion_readout['ready'])
         p['matched']=p['matched']&completion_readout['ready']

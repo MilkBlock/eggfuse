@@ -10,12 +10,12 @@ from token_eq_readout import pair_layout, quotient_layout, static_equalities, fe
 from multi_entry_ridge import vec
 
 
-def compile_readout(rule, decoder_w, decoder_coef):
+def compile_state_layout(rule):
     rule,_=semantic(rule)
     plan=compile_states(rule);tp=compile_tokens(rule,plan)
     if any(rule['slots'][s]['definition']!='query' for s in tp['scalar_slots']):
         raise ValueError('completion token requires executed scalar result; unsupported template')
-    pairs,q,_,_,_=pair_layout(rule);quotient=quotient_layout(rule,pairs,static_equalities(rule,pairs))
+    pairs=plan['pairs'];quotient=plan['quotient']
     if not len(plan['states'][0]):raise ValueError('completion readout needs a dynamic Eq query')
     edges=[];mapping=[]
     for (a,b),out in zip(pairs,quotient['expansion']):
@@ -24,13 +24,18 @@ def compile_readout(rule, decoder_w, decoder_coef):
     incidence=np.zeros((len(edges),plan['states'].shape[1]),np.float32)
     for i,j in enumerate(mapping):incidence[i,j]=1
     scalar_slots=tp['scalar_slots']
-    return dict(states=plan['states'],token=tp,q=q,s=quotient['s'],d=quotient['d'],p=quotient['p'],
-        w=decoder_w,coef=decoder_coef,edges=np.array(edges,np.int32).reshape(-1,2),incidence=incidence,
+    return dict(states=plan['states'],token=tp,edges=np.array(edges,np.int32).reshape(-1,2),incidence=incidence,
         scalar_slots=scalar_slots,numeric_roles=np.array([vec(('numeric',rule['slots'][s]['sort']['name'])) for s in scalar_slots],np.float32).reshape(-1,64))
 
 
+def compile_readout(rule, decoder_w, decoder_coef):
+    source,_=semantic(rule);pairs,q,_,_,_=pair_layout(source)
+    quotient=quotient_layout(source,pairs,static_equalities(source,pairs))
+    return dict(compile_state_layout(rule),q=q,s=quotient['s'],d=quotient['d'],p=quotient['p'],w=decoder_w,coef=decoder_coef)
+
+
 def scalar_inputs(proposal,plan,xp):
-    slots=plan['scalar_slots'];batch=len(proposal['tokens'])
+    slots=plan['scalar_slots'];batch=len(proposal['slot_valid'])
     if not len(slots):return xp.zeros((batch,0,64),xp.float32),xp.ones(batch,xp.bool_)
     number=proposal['scalar_numbers'][:,slots];numeric=proposal['scalar_numeric'][:,slots]
     finite=xp.isfinite(number);safe=xp.where(finite,number,0)

@@ -15,6 +15,7 @@ from multi_entry_ridge import scalar
 from audit_training_expansion import summarize
 from audit_device_match_readout import dynamic_metrics
 from token_eq_readout import readout_rows,materialize
+from device_completion_classifier import score_head,choose
 
 
 def fit_head(x,y,alpha=10.):
@@ -26,14 +27,6 @@ def fit_head(x,y,alpha=10.):
     return dict(mean=mean,scale=scale,coef=(z.T@dual).astype(np.float32),bias=bias)
 
 
-def score_head(x,head,xp):
-    return ((x-head['mean'])/head['scale'])@head['coef']+head['bias']
-
-
-def choose(scores,required,states,xp):
-    conflict=required.astype(xp.float32)@xp.swapaxes(1-states,-1,-2)
-    index=xp.argmax(xp.where(conflict==0,scores,-float('inf')),axis=1)
-    return index,states[index]
 
 
 def inputs_for_case(path,meta,data,plans):

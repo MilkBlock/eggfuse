@@ -1,0 +1,32 @@
+{
+  "scope": "one real selected-family predicted-source feedback comparison; exact matching and effects retained",
+  "passed": true,
+  "exact_capture_sha256": "d3024efdd65b7dcaff7c689f9577bfeecd9a18152677682f6187db77d1aba98d",
+  "feedback_capture_sha256": "f55b29bdec3770acababa60056ae07deba276e455ff9af43fdc95c60b26503c3",
+  "model_sha256": "b1da3a8f63fde01c77c1318e2fde8109df048c8bc6eb159e14dce32a66d17edf",
+  "identical_symbolic_arrays": 454,
+  "instances": 41,
+  "generated_source_consumers": 15,
+  "changed_inputs": 16,
+  "changed_generated_inputs": 15,
+  "changed_direct_inputs": 1,
+  "maximum_source_token_change": 0.34841176867485046,
+  "maximum_feature_change": 0.2264951467514038,
+  "maximum_predicted_token_change": 0.4581867754459381,
+  "same_cpu_targets": true,
+  "backpropagation": false,
+  "source_token_mode": "direct state ridge generated Cells, exact imported Cells",
+  "completion_readout": {
+    "kind": "direct_state_ridge",
+    "head_sha256": "085ac47bb1add62d6d69a5b3a389b3f640304413f1f172d183896a105001fd8e",
+    "decoder_sha256": "cf9c22bbc95c2a04eca32565875bbce864bdad6038b5115e64b1162b2582b313",
+    "representation": "direct whole-state ridge plus actual scalar moments",
+    "union_authorized": false
+  },
+  "limitations": [
+    "Symbolic equality here is capture comparison; full Run graphs are checked separately by execution audit",
+    "Same accuracy does not mean identical scores",
+    "Imported Cells still use exact encoding; generated Cells retain birth predictions rather than refreshing learned state after every union",
+    "No learned Eq is authorized by this experiment"
+  ]
+}

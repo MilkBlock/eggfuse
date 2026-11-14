@@ -57,18 +57,33 @@ def main():
     selected_state_audit=None
     if meta.get('completion_readout'):
         from audit_input_relations import restore
-        chosen=[]
+        chosen=[];locations=[]
         with np.load(a.capture) as data:
             prefixes=[k[:-4] for k in data.files if k.startswith('capture/') and k.endswith('/rule') and '/witness/' not in k and '/boundary/' not in k]
             prefixes.sort(key=lambda s:tuple(map(int,s.strip('/').split('/')[1:])))
             for prefix in prefixes:
                 c=restore(data,prefix)
-                if bool(c['recorded']):chosen.extend(c['completion_readout']['selected'][c['accepted']])
+                if bool(c['recorded']):
+                    chosen.extend(c['completion_readout']['selected'][c['accepted']])
+                    for lane in np.flatnonzero(c['accepted']):
+                        locations.append(dict(capture_prefix=prefix,lane=int(lane),rule=int(meta['source_rules'][int(c['rule'])]),
+                            witness_rows=c['bindings']['witness_rows'][lane].tolist(),
+                            witness_generations=c['bindings']['witness_generations'][lane].tolist()))
         if len(chosen)!=len(rows):raise ValueError('selected completion state alignment')
         flat=np.concatenate(chosen)
         if len(flat)!=len(scores):raise ValueError('selected completion pair layout')
+        rejected=[]
+        for i,(row,value) in enumerate(zip(rows,chosen)):
+            ids=row['quotient']['representatives'];wanted=row['y'][ids];actual=value>=.5
+            if np.array_equal(wanted,actual):continue
+            pairs=[row['pairs'][j] for j in ids]
+            rejected.append(dict(locations[i],sample=i,generated_source=bool(generated[i]) if generated is not None else None,
+                false_quotient_pairs=[list(pair) for pair,yes in zip(pairs,actual&~wanted) if yes],
+                missed_quotient_pairs=[list(pair) for pair,yes in zip(pairs,~actual&wanted) if yes]))
         selected_state_audit=dict(summarize(rows,flat),dynamic_quotient=dynamic_metrics(truth,flat),
-            decoded_token_disagreements=int(np.count_nonzero((scores>=.5)!=(flat>=.5))))
+            decoded_token_disagreements=int(np.count_nonzero((scores>=.5)!=(flat>=.5))),
+            rejected_instances=len(rejected),rejected_fraction=len(rejected)/len(rows),local_diagnostics=rejected,
+            diagnostic_scope='post-execution CPU label rejection at captured inputs; not a repair ticket or an applied correction')
     groups={}
     selectors={('rule_'+str(int(r))):sample_rules==r for r in np.unique(sample_rules)}
     if generated is not None:selectors.update(direct_source=~generated,generated_source=generated)
