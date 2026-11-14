@@ -496,7 +496,8 @@ mod tests {
                         if !released {
                             assert_eq!(n,16);assert!(pending.constructor_directories_pending());
                             assert_eq!(layout(&g),before,"partial acceptance never relocates sibling instances");
-                            assert!(g.members.is_empty() && g.uses.is_empty(),"source completion cannot borrow the leased directories");
+                            assert!(g.intern.leased(0) && g.members[0].len()==0 && g.uses.is_empty(),
+                                "source completion cannot borrow the leased constructor/subscription owners");
                             row_tx.send(()).unwrap();sub_tx.send(()).unwrap();released=true;
                         }
                     }

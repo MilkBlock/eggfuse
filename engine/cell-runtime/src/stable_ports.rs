@@ -503,7 +503,7 @@ impl Graph {
         let publish = unique
             || (!key
                 && (port_key
-                    || self.intern.get(&state.hash)
+                    || self.intern.get(table, &state.hash)
                         .is_some_and(|b| b.len() == 1 && b.first() == Some(&f)))
                 && !m.pending.contains(table, &f));
         if publish {

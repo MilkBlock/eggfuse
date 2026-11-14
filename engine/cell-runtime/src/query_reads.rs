@@ -21,7 +21,7 @@ enum Constructors<'a> {
 }
 struct Canonical<'a> {
     cells: &'a arena::Cells,
-    intern: &'a HashMap<u64, crate::tiny_set::TinySet<FactRef>>,
+    intern: &'a constructor_index::Index,
     members: &'a [TableRows<u64>],
     hash_mask: u64,
 }
@@ -190,6 +190,7 @@ impl Canonical<'_> {
         work.canonical_lookups += 1;
         // Preserve the ordinary nullary lookup's direct member access.
         if key.is_empty() && self.members[table].len() <= 1 {
+            self.intern.require_available(table);
             let Some(&word) = self.members[table].iter().next() else { return Ok(None); };
             return Ok(self.candidate(FactRef::from_ordered_id(word), table, key, work)?
                 .and_then(|(v, epoch, witness, hidden)| (!hidden).then_some((v, epoch, witness))));
@@ -197,7 +198,7 @@ impl Canonical<'_> {
         // The existing intern bucket retains FactRef order, including forced
         // hash collisions. Test visibility only after choosing the first exact
         // candidate, like lookup_canonical followed by the query's row check.
-        for &fact in self.intern.get(&(hashkey(table, key) & self.hash_mask)).into_iter().flatten() {
+        for &fact in self.intern.get(table, &(hashkey(table, key) & self.hash_mask)).into_iter().flatten() {
             if let Some((v, epoch, witness, hidden)) = self.candidate(fact, table, key, work)? {
                 return Ok((!hidden).then_some((v, epoch, witness)));
             }

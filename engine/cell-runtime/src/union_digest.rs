@@ -165,7 +165,7 @@ impl Graph {
             // duplicate import needs another pass; later equality events will
             // independently enqueue genuinely changed rows. The bucket is a
             // publication hint, never a premise for a congruence proposal.
-            if self.intern[&state.hash].len() > 1 {
+            if self.intern.get(*table, &state.hash).unwrap().len() > 1 {
                 matcher.publication.insert(f);
                 matcher.stats.expression_publication_births += 1;
             }
@@ -187,7 +187,7 @@ impl Graph {
         let key = &fields[..fields.len() - 1];
         let mut found = None;
         let matcher = self.union_digest.as_mut().unwrap();
-        for &other in self.intern.get(&state.hash).into_iter().flatten() {
+        for &other in self.intern.get(*table, &state.hash).into_iter().flatten() {
             if other == f {
                 continue;
             }
@@ -304,10 +304,10 @@ impl Graph {
             if changed_key {
                 matcher.stats.key_packets_updated += 1;
                 let old = state.hash;
-                if let Some(bucket) = self.intern.get_mut(&old) {
+                if let Some(bucket) = self.intern.get_mut(*table, &old) {
                     bucket.remove(&f);
                     if bucket.is_empty() {
-                        self.intern.remove(&old);
+                        self.intern.remove(*table, &old);
                     }
                 }
                 state.hash = hashkey(*table, &values[..result_column]) & matcher.hash_mask;
@@ -325,8 +325,9 @@ impl Graph {
         rekeyed.sort_unstable();
         for f in rekeyed {
             self.join_digest(f)?;
-            let h = self.cells.fact_state(f).unwrap().hash;
-            self.intern.entry(h).or_default().insert(f);
+            let state = self.cells.fact_state(f).unwrap();
+            let (table,h)=(state.decoded.as_ref().unwrap().0,state.hash);
+            self.intern.entry(table,h).or_default().insert(f);
         }
         Ok(())
     }
@@ -343,7 +344,7 @@ impl Graph {
             let (table, fields) = state.decoded.as_ref().ok_or("missing duplicate fields")?;
             let table = *table;
             let key = &fields[..fields.len() - 1];
-            let keep = self.intern[&state.hash]
+            let keep = self.intern.get(table, &state.hash).unwrap()
                 .iter()
                 .copied()
                 .find(|other| {
@@ -436,10 +437,10 @@ impl Graph {
                 values[col] = canon(&values[col], &self.parents);
             }
             let old = state.hash;
-            if let Some(bucket) = self.intern.get_mut(&old) {
+            if let Some(bucket) = self.intern.get_mut(*table, &old) {
                 bucket.remove(&f);
                 if bucket.is_empty() {
-                    self.intern.remove(&old);
+                    self.intern.remove(*table, &old);
                 }
             }
             state.hash = hashkey(*table, &values[..values.len() - 1]) & m.hash_mask;
@@ -451,8 +452,9 @@ impl Graph {
         }
         for f in pending {
             self.join_digest(f)?;
-            let h = self.cells.fact_state(f).unwrap().hash;
-            self.intern.entry(h).or_default().insert(f);
+            let state = self.cells.fact_state(f).unwrap();
+            let (table,h)=(state.decoded.as_ref().unwrap().0,state.hash);
+            self.intern.entry(table,h).or_default().insert(f);
         }
         self.retire_digest_duplicates()?;
         self.publish_unit_digests()

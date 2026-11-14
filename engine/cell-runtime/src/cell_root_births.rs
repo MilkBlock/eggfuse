@@ -58,7 +58,7 @@ impl Graph {
         // The authoritative lookup consumes the already canonical key/hash.
         // A nonempty hash bucket alone proves neither presence nor absence.
         // This sealed region excludes union, deletion and mutable effects.
-        if self.intern.contains_key(&hash) {
+        if self.intern.contains_key(step.table, &hash) {
             counts.root_bucket_fallbacks+=1;
             if let Some(row)=self.lookup_canonical_hashed(step.table,&key,Some(hash))? {
                 let destination=step.destination;
@@ -269,15 +269,15 @@ mod tests {
         // Inject an unrelated candidate exactly as a hash collision would.
         // The original bucket remains intact; remove this test incidence
         // after admission so later index maintenance has its normal topology.
-        assert!(!g.intern.contains_key(&hash));
-        g.intern.entry(hash).or_default().insert(candidate);
+        assert!(!g.intern.contains_key(0, &hash));
+        g.intern.entry(0, hash).or_default().insert(candidate);
         let cell=g.begin_transient(0,[(0,key[0].clone())].into_iter().collect(),None).unwrap();
         let mut effects=Effects::default();
         let (mut counts,job)=g.take_root_job(0,cell,4,&[],0,&mut effects.writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
         assert_eq!(counts.root_existing_reuses,0);
         assert_eq!(counts.root_collision_misses,1);
         let job=job.expect("exact miss admits the existing compiled worker cone");
-        g.intern.remove(&hash);
+        g.intern.remove(0, &hash);
         let done=job.run(g.parents.reader(),&mut effects.writer(),&mut counts);
         counts.add(g.commit_local_job(done,&mut effects.writer()).unwrap());
         assert_eq!(counts.root_births,1);

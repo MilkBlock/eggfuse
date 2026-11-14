@@ -137,7 +137,7 @@ impl Graph {
             .iter()
             .map(scalar_keys::FunctionKeys::storage_payload)
             .sum::<usize>();
-        let intern = self.intern.capacity()
+        let intern = self.intern.header_bytes() + self.intern.capacity()
             * std::mem::size_of::<(u64, crate::tiny_set::TinySet<FactRef>)>();
         let mut member_arrays = self.members.capacity() * std::mem::size_of::<TableRows<u64>>();
         let mut member_tree_entries = 0;

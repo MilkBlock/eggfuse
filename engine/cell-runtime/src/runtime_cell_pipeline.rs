@@ -6,14 +6,22 @@ use std::collections::VecDeque;
 
 pub(super) struct Flying {
     owners:VecDeque<Parked>,
-    producer:Background<Completed,cell_births::Counts>,
-    ready:Vec<Completed>,
+    producer:Producer,
     clock:Instant,
     root_hashes:Vec<u64>,
     #[cfg(feature="cell-sync-diagnostics")] diagnostic:crate::sync_diagnostics::Clock,
 }
+enum Producer {
+    Ordinary {wave:Background<Completed,cell_births::Counts>,ready:Vec<Completed>},
+    Registered {wave:cell_births::fused::Wave,ready:Vec<cell_births::fused::Ready>,acceptance:cell_births::fused::Acceptance},
+}
+impl Producer {
+    fn unfinished(&self)->usize {match self {Self::Ordinary {wave,..}=>wave.unfinished(),Self::Registered {wave,..}=>wave.unfinished()}}
+    fn finished(&self)->bool {match self {Self::Ordinary {wave,..}=>wave.finished(),Self::Registered {wave,..}=>wave.finished()}}
+}
 impl Flying {
     pub fn unfinished(&self)->usize {self.producer.unfinished()}
+    pub fn registered(&self)->bool {matches!(self.producer,Producer::Registered {..})}
     pub fn has_roots(&self)->bool {!self.root_hashes.is_empty()}
     pub fn contains_root(&self,hash:u64)->bool {self.root_hashes.binary_search(&hash).is_ok()}
     pub fn references(&self,key:&[Value],probes:&mut u64)->bool {
@@ -46,6 +54,7 @@ impl Executor {
         let (root_hashes,counts)=cell_births::isolate_roots(&mut tasks);
         self.cell_execution.as_mut().unwrap().counts.births.add(counts);
         let shared=tasks.iter().any(|(job,_)|job.dependent());
+        let registration=self.graph.prepare_pipelined_constructors(&tasks);
         let parents=self.graph.parents.freeze();
         let stats=&mut self.cell_execution.as_mut().unwrap().counts;
         stats.births.root_snapshots+=1;stats.births.worker_batches+=1;
@@ -59,7 +68,9 @@ impl Executor {
         let mut diagnostic=crate::sync_diagnostics::Clock::new();
         #[cfg(feature="cell-sync-diagnostics")] diagnostic.enter();
         let clock=Instant::now();
-        let producer=Background::start(count,&pool,move |out| {
+        let producer=if let Some(owner)=registration {
+            Producer::Registered {wave:owner.start(tasks,parents,&pool),ready:Vec::new(),acceptance:Default::default()}
+        } else {Producer::Ordinary {wave:Background::start(count,&pool,move |out| {
             let read=crate::value::parent_epoch::Read {base:&parents,delta:None};
             if shared {cell_births::produce_shared(tasks,read,|i,done|out.send(i,done))}
             else {
@@ -70,43 +81,77 @@ impl Executor {
                         let done=job.run(read,&mut effects.writer(),&mut counts);out.send(i,Completed {done,effects});counts
                     }).reduce(cell_births::Counts::default,|mut a,b| {a.add(b);a})
             }
-        });
+        }),ready:Vec::new()}};
         let owners=std::mem::replace(&mut queue.owners,std::mem::take(&mut queue.spare));
         queue.flying=Some(Flying {owners:owners.into(),producer,
-            ready:Vec::new(),clock,root_hashes,#[cfg(feature="cell-sync-diagnostics")] diagnostic});
+            clock,root_hashes,#[cfg(feature="cell-sync-diagnostics")] diagnostic});
         queue.operations=0;queue.shared=false;queue.roots=false;Ok(())
+    }
+
+    fn adopt_background_cell(&mut self,owners:&mut VecDeque<Parked>,done:Completed,
+        publication:Option<cell_births::Publication>,early:bool)->Result<()> {
+        loop {
+            let parked=owners.pop_front().expect("source owner for completed job");
+            if parked.execution.cell==done.done.cell() {
+                self.adopt_cell_event(parked,Some(done),publication)?;
+                self.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early+=u64::from(early);
+                return Ok(());
+            }
+            self.adopt_cell_event(parked,None,None)?;
+        }
     }
 
     pub(super) fn poll_cell_queue(&mut self,queue:&mut Ready,pending:&mut Vec<u32>,wait:bool)->Result<()> {
         let Some(mut wave)=queue.flying.take() else {return Ok(());};
         self.cell_execution.as_mut().unwrap().counts.scheduler.admission_polls+=1;
-        wave.producer.poll(wait,&mut wave.ready);
-        self.cell_execution.as_mut().unwrap().counts.scheduler.admission_empty_polls+=u64::from(wave.ready.is_empty());
-        let count=wave.ready.len();
-        let pool=self.query_workers.as_ref().unwrap().execution_pool_handle().unwrap();
-        let eligible=!wave.ready.is_empty() && wave.ready.iter().zip(wave.owners.iter()).all(|(done,owner)|
-            done.done.cell()==owner.execution.cell && done.done.complete_at(owner.execution.ops.len()));
-        let result=self.consume_cell_events(&mut wave.ready,eligible,&pool,|host,completed,mut registration| {
-            for done in completed {
-                loop {
-                    let parked=wave.owners.pop_front().expect("source owner for completed job");
-                    if parked.execution.cell==done.done.cell() {
+        let (result,count)=match &mut wave.producer {
+            Producer::Ordinary {wave:producer,ready}=> {
+                producer.poll(wait,ready);
+                let count=ready.len();
+                let pool=self.query_workers.as_ref().unwrap().execution_pool_handle().unwrap();
+                let eligible=!ready.is_empty() && ready.iter().zip(wave.owners.iter()).all(|(done,owner)|
+                    done.done.cell()==owner.execution.cell && done.done.complete_at(owner.execution.ops.len()));
+                let result=self.consume_cell_events(ready,eligible,&pool,|host,completed,mut registration| {
+                    for done in completed {
                         let publication=registration.as_deref_mut().and_then(|r|r.take_births(done.done.cell()));
-                        host.adopt_cell_event(parked,Some(done),publication)?;
-                        host.cell_execution.as_mut().unwrap().counts.scheduler.event_completed_early+=
-                            u64::from(wave.producer.unfinished()!=0);
-                        break;
+                        host.adopt_background_cell(&mut wave.owners,done,publication,producer.unfinished()!=0)?;
                     }
-                    host.adopt_cell_event(parked,None,None)?;
-                }
+                    Ok(())
+                });
+                (result,count)
             }
-            Ok(())
-        });
+            Producer::Registered {wave:producer,ready,acceptance}=> {
+                producer.poll(wait,ready);
+                let count=ready.len();let mut result=Ok(());
+                loop {
+                    for event in ready.drain(..) {
+                        let (done,publication)=acceptance.accept(&mut self.graph,event,result.is_ok());
+                        if result.is_ok() {
+                            result=self.adopt_background_cell(&mut wave.owners,done,publication,producer.unfinished()!=0);
+                        }
+                    }
+                    if result.is_ok() || producer.finished() {break;}
+                    // Every leased table/fact owner must return after a source
+                    // error. Later rows are restored only so they can invalidate.
+                    producer.poll(true,ready);
+                }
+                (result,count)
+            }
+        };
+        self.cell_execution.as_mut().unwrap().counts.scheduler.admission_empty_polls+=u64::from(count==0);
         if result.is_ok() {pending.drain(..count);}
         if result.is_ok() && !wave.producer.finished() {queue.flying=Some(wave);return Ok(());}
         // Completion of the producer also joins its peer readers. A source
         // error waits for those private readers but never adopts later rows.
-        let (shared,events)=wave.producer.finish();
+        let (shared,events)=match wave.producer {
+            Producer::Ordinary {wave,..}=>wave.finish(),
+            Producer::Registered {wave,acceptance,..}=> {
+                let ((owner,counts,prefix),events)=wave.finish();
+                self.graph.stats.constructor_fused_early_cells+=prefix.early;
+                owner.restore(&mut self.graph);acceptance.finish(&mut self.graph);
+                (counts,events)
+            }
+        };
         let work=self.graph.parents.thaw();
         let elapsed=wave.clock.elapsed().as_nanos() as u64;
         let stats=&mut self.cell_execution.as_mut().unwrap().counts;

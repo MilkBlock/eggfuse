@@ -65,6 +65,8 @@ fn worker_births_preserve_composed_entries_foreign_returns_and_run_lifetimes() {
             assert!(births["worker_operations"].as_u64().unwrap()>0,"{births}");
             assert!(report["stats"]["constructor_registry_owned_rows"].as_u64().unwrap()>0,
                 "owned physical registration must leave the source executor");
+            assert!(report["stats"]["constructor_pipeline_cells"].as_u64().unwrap()>0,
+                "background construction must continue into registration: {report}");
         }
         let ownership=candidate.graph.ownership_report();
         let previous=control.graph.ownership_report();

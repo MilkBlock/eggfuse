@@ -17,12 +17,12 @@ impl Graph {
         }
         let retired=self.cells.cell_ids().flat_map(|cell|self.cells.fact_states(cell))
             .filter_map(|(fact,state)|self.live_table(Dependency::Fact(fact))
-                .filter(|&t|self.port_keys_enabled(t)).map(|_|(fact,state.hash))).collect::<Vec<_>>();
-        for (fact,hash) in retired {
+                .filter(|&t|self.port_keys_enabled(t)).map(|t|(fact,t,state.hash))).collect::<Vec<_>>();
+        for (fact,table,hash) in retired {
             self.cells.fact_state_mut(fact).unwrap().hash=0;
-            if let Some(bucket)=self.intern.get_mut(&hash) {
+            if let Some(bucket)=self.intern.get_mut(table,&hash) {
                 bucket.remove(&fact);
-                if bucket.is_empty() {self.intern.remove(&hash);}
+                if bucket.is_empty() {self.intern.remove(table,&hash);}
             }
         }
         self.intern.shrink_to_fit();
@@ -107,7 +107,7 @@ impl Graph {
                 .birth_hint_probes
                 .set(stats.birth_hint_probes.get() + 1);
             let hint = self.constructor_hash(table, key);
-            for &f in self.intern.get(&hint).into_iter().flatten() {
+            for &f in self.intern.get(table,&hint).into_iter().flatten() {
                 if let Some(row) = self.exact_port_candidate(f, table, key)? {
                     stats.birth_hint_hits.set(stats.birth_hint_hits.get() + 1);
                     return Ok(Some(row));

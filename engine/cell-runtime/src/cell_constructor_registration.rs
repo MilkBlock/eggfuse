@@ -33,9 +33,17 @@ pub(super) struct Registration {
 /// Only the original fact slots leave the instance. Its values, parent and
 /// physical arena position stay in place while registration fills those slots.
 pub(crate) struct Owned {
-    frames:Vec<Vec<CellReady>>,intern:HashMap<u64,crate::tiny_set::TinySet<FactRef>>,
-    members:Vec<TableRows<u64>>,changes:BTreeMap<usize,HashMap<Dependency,crate::change_batch::Change>>,
+    frames:Vec<Vec<CellReady>>,directory:Vec<Directory>,
     epoch:u64,input:std::sync::Arc<Input>,
+}
+struct Directory {table:usize,index:constructor_index::Table,members:TableRows<u64>,
+    changes:HashMap<Dependency,crate::change_batch::Change>}
+impl Directory {
+    fn take(graph:&mut Graph,tables:impl Iterator<Item=usize>)->Vec<Self> {
+        tables.map(|table|Self {table,index:graph.intern.take(table),
+            members:std::mem::take(&mut graph.members[table]),
+            changes:graph.changes.take_new_row_table(table)}).collect()
+    }
 }
 pub(crate) struct Subscriptions {
     uses:HashMap<u64,UseSet>,
@@ -55,8 +63,7 @@ impl Owned {
             OwnedGroup {cell:d.done.cell,rows:first..rows.len()}
         }).collect();
         let input=std::sync::Arc::new(Input {groups,rows,owned});
-        let changes=input.rows.iter().map(|r|r.table).collect::<BTreeSet<_>>().into_iter()
-            .map(|table|(table,graph.changes.take_new_row_table(table))).collect();
+        let directory=Directory::take(graph,input.rows.iter().map(|r|r.table).collect::<BTreeSet<_>>().into_iter());
         // Lease only the slots this worker writes. The original arena layout
         // and all Cell input/continuation state stay in place.
         let frames=input.groups.chunks(16).enumerate().map(|(chunk,groups)|groups.iter().enumerate().map(|(i,g)| {
@@ -68,8 +75,7 @@ impl Owned {
         let subscriptions=subscriptions.then(||Subscriptions {uses:std::mem::take(&mut graph.uses),
             metrics:std::mem::take(&mut graph.maintenance),
             columns:graph.program.repair_ports.key_eq_columns.clone(),input:input.clone()});
-        let rows=Self {frames,intern:std::mem::take(&mut graph.intern),members:std::mem::take(&mut graph.members),
-            changes,epoch:graph.epoch,input};
+        let rows=Self {frames,directory,epoch:graph.epoch,input};
         graph.stats.constructor_registry_bytes+=rows.storage_bytes() as u64;
         (rows,subscriptions,Registration::default())
     }
@@ -78,13 +84,8 @@ impl Owned {
         for mut ready in std::mem::take(&mut self.frames) {
             for cell in &mut ready {
                 let group=&self.input.groups[i];i+=1;assert_eq!(cell.installed.cell,group.cell);
-                let changes=&mut self.changes;
                 cell.installed.publication=install_cell(cell.installed.cell,&mut cell.facts,
-                    &self.input.rows[group.rows.clone()],self.epoch,&mut self.intern,&mut self.members,
-                    |table,witness| {
-                        let rows=changes.get_mut(&table).unwrap();let activate=rows.is_empty();
-                        assert!(rows.insert(witness,crate::change_batch::Change::Wake).is_none());activate
-                    });
+                    &self.input.rows[group.rows.clone()],self.epoch,&mut self.directory);
                 if self.input.owned {
                     cell.installed.publication.owned=true;
                     cell.installed.publication.owner_rows=Some((self.input.clone(),group.rows.clone()));
@@ -98,11 +99,14 @@ impl Owned {
             +2*std::mem::size_of::<usize>()+self.input.groups.capacity()*std::mem::size_of::<OwnedGroup>()
             +self.input.rows.capacity()*std::mem::size_of::<Born>()
             +self.frames.capacity()*std::mem::size_of::<Vec<CellReady>>()
+            +self.directory.capacity()*std::mem::size_of::<Directory>()
     }
     pub fn restore(self,graph:&mut Graph) {
-        assert!(graph.members.is_empty() && graph.intern.is_empty(),"no constructor lookup inside terminal registration");
-        graph.intern=self.intern;graph.members=self.members;
-        for (table,rows) in self.changes {graph.changes.restore_new_row_table(table,rows);}
+        for part in self.directory {
+            assert_eq!(graph.members[part.table].len(),0,"leased table is not source writable");
+            graph.intern.restore(part.table,part.index);graph.members[part.table]=part.members;
+            graph.changes.restore_new_row_table(part.table,part.changes);
+        }
     }
 }
 impl Subscriptions {
@@ -124,8 +128,7 @@ impl Subscriptions {
     }
 }
 fn install_cell(cell:u32,facts:&mut crate::slots::FrameMap<u32,FactState>,rows:&[Born],epoch:u64,
-    intern:&mut HashMap<u64,crate::tiny_set::TinySet<FactRef>>,members:&mut [TableRows<u64>],
-    mut prepare:impl FnMut(usize,Dependency)->bool)->Publication {
+    directory:&mut [Directory])->Publication {
     let mut publication=Publication::default();
     for row in rows {
         let f=FactRef {cell,op:row.operation as u32};
@@ -133,8 +136,11 @@ fn install_cell(cell:u32,facts:&mut crate::slots::FrameMap<u32,FactState>,rows:&
             #[cfg(feature="receipt-slots")] port_slot:0,
             decoded:Some((row.table,row.fields.clone())),entry:None,hidden:false,epoch,born:epoch,hash:row.hash,
         }).is_none(),"fresh constructor operation");
-        intern.entry(row.hash).or_default().insert(f);members[row.table].insert(f.ordered_id());
-        let activate=prepare(row.table,Dependency::Fact(f));
+        let part=directory.binary_search_by_key(&row.table,|p|p.table).unwrap();
+        let part=&mut directory[part];
+        part.index.entry(row.hash).or_default().insert(f);part.members.insert(f.ordered_id());
+        let activate=part.changes.is_empty();
+        assert!(part.changes.insert(Dependency::Fact(f),crate::change_batch::Change::Wake).is_none());
         if let Some((_,count,_))=publication.tables.iter_mut().find(|r|r.0==row.table) {*count+=1;}
         else {publication.tables.push((row.table,1,activate));}
     }
@@ -190,8 +196,8 @@ impl Registration {
             for (f,hash,table) in discarded {
                 let state=graph.cells.get_mut(&f.cell).unwrap().facts.remove(&f.op).unwrap();
                 let fields=state.decoded.unwrap().1;
-                let bucket=graph.intern.get_mut(&hash).unwrap();bucket.remove(&f);
-                if bucket.is_empty() {graph.intern.remove(&hash);}
+                let bucket=graph.intern.get_mut(table,&hash).unwrap();bucket.remove(&f);
+                if bucket.is_empty() {graph.intern.remove(table,&hash);}
                 assert!(graph.members[table].remove(&f.ordered_id()));
                 graph.changes.discard_prepared_row(table,Dependency::Fact(f));
                 if !installed.owned {graph.replace_row_edges(Dependency::Fact(f),&fields,&[]);}

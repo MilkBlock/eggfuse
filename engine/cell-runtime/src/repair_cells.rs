@@ -328,7 +328,7 @@ impl Graph {
             && !self.dirty_markers.contains(&f)
             && self
                 .intern
-                .get(&state.hash)
+                .get(*table, &state.hash)
                 .is_some_and(|b| b.len() == 1 && b.first() == Some(&f))
         {
             state.epoch = self.epoch;

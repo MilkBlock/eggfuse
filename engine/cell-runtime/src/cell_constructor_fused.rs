@@ -12,6 +12,18 @@ pub(crate) struct Ready {pub completed:Completed,frame:CellReady}
 pub(crate) type Wave=Continued<Completed,Ready,Owner,Counts>;
 
 impl Graph {
+    pub(crate) fn constructor_table_leased(&self,table:usize)->bool {self.intern.leased(table)}
+    pub(crate) fn prepare_pipelined_constructors(&mut self,tasks:&[(Job,crate::cell::Effects)])->Option<Owner> {
+        // Source admission may still read any previously visible fact. Only
+        // new frames can leave here; existing prefixes stay source-readable.
+        // Ownership uses static ports, so no global reverse directory is leased.
+        if self.ownership.is_none() || tasks.iter().any(|(j,_)|
+            self.cells.get(&j.cell).is_none_or(|c|!c.facts.is_empty())) {return None;}
+        let owner=self.prepare_fused_constructors(tasks)?;
+        self.stats.constructor_pipeline_regions+=1;
+        self.stats.constructor_pipeline_cells+=tasks.len() as u64;
+        Some(owner)
+    }
     pub(crate) fn prepare_fused_constructors(&mut self,tasks:&[(Job,crate::cell::Effects)])->Option<Owner> {
         if !self.local_registration_supported() || !self.pipelined_births_ready()
             || crate::sync_diagnostics::registry_inline() || tasks.len()<2 {return None;}
@@ -41,9 +53,8 @@ impl Graph {
         // The existing owners share this empty input header. Rows stay in each
         // producer's Piece; there is no flattened Input row buffer to refill.
         let input=std::sync::Arc::new(Input {groups:Vec::new(),rows:Vec::new(),owned});
-        let directory=Owned {frames:Vec::new(),intern:std::mem::take(&mut self.intern),
-            members:std::mem::take(&mut self.members),changes:tables.into_iter()
-                .map(|t|(t,self.changes.take_new_row_table(t))).collect(),epoch:self.epoch,input:input.clone()};
+        let directory=Owned {frames:Vec::new(),directory:Directory::take(self,tables.into_iter()),
+            epoch:self.epoch,input:input.clone()};
         let subscriptions=(!owned).then(||Subscriptions {uses:std::mem::take(&mut self.uses),
             metrics:std::mem::take(&mut self.maintenance),
             columns:self.program.repair_ports.key_eq_columns.clone(),input});
@@ -66,11 +77,7 @@ impl Owner {
         assert_eq!(completed.done.piece.end,frame.installed.end,"compiled terminal region must complete");
         assert!(completed.done.piece.units.is_empty());
         let directory=&mut self.directory;let rows=&completed.done.piece.rows;
-        frame.installed.publication=install_cell(cell,&mut frame.facts,rows,directory.epoch,
-            &mut directory.intern,&mut directory.members,|table,witness| {
-                let changes=directory.changes.get_mut(&table).unwrap();let activate=changes.is_empty();
-                assert!(changes.insert(witness,crate::change_batch::Change::Wake).is_none());activate
-            });
+        frame.installed.publication=install_cell(cell,&mut frame.facts,rows,directory.epoch,&mut directory.directory);
         if let Some(subscriptions)=&mut self.subscriptions {for row in rows {
             maintenance::subscribe_fresh(&mut subscriptions.uses,&mut subscriptions.metrics,
                 Dependency::Fact(FactRef {cell,op:row.operation as u32}),&row.fields,
@@ -229,5 +236,53 @@ mod tests {
         }
         let ((owner,_,_),_)=wave.finish();owner.restore(&mut g);accept.finish(&mut g);
         drop(parents);g.parents.thaw();assert_eq!(g.stats.constructor_registry_discarded,93);
+    }
+    #[test]
+    fn source_can_construct_in_another_table_while_registration_is_paused() {
+        use std::{sync::{mpsc,Mutex},time::Duration};
+        let mut p=super::super::super::tests::graph().program;
+        let mut table=p.tables[0].clone();table.name="Other".into();p.tables.push(table);
+        let mut template=p.templates[0].clone();template.name="other".into();
+        for op in std::sync::Arc::make_mut(&mut template.ops) {if let Op::Let(_,Call::Table(t),_)=op {*t=1;}}
+        p.templates.push(template);p.table_templates.push(1);
+        let mut g=Graph::new(p).unwrap();
+        g.program.repair_ports=repair_ports::Plan::derive(&g.program);g.use_cell_ownership().unwrap();
+        let mut tasks=Vec::new();
+        for i in 0..64 {
+            let cell=g.begin_transient(0,[(0,Value::Eq(100+i))].into_iter().collect(),None).unwrap();
+            let (_,job)=g.take_root_job(0,cell,4,&[],tasks.len()*4,&mut crate::cell::Effects::default().writer(),
+                #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+            tasks.push((job.unwrap(),crate::cell::Effects::default()));
+        }
+        let owner=g.prepare_pipelined_constructors(&tasks).unwrap();
+        assert!(g.intern.leased(0));assert!(!g.intern.leased(1));
+        let pool=rayon::ThreadPoolBuilder::new().num_threads(1).build().unwrap();
+        let parents=g.parents.freeze();let read=parents.clone();
+        let (tx,rx)=mpsc::channel();let rx=Mutex::new(rx);
+        let mut wave=Wave::start_continued(tasks.len(),&pool,owner,move |out|Owner::produce(tasks,Read {base:&read,delta:None},|index,done| {
+            out.complete(index,done,Owner::complete);
+            if index==0 {rx.lock().unwrap().recv_timeout(Duration::from_secs(5)).unwrap();}
+        }));
+        let mut ready=Vec::new();wave.poll(true,&mut ready);
+        assert_eq!(ready.len(),1);assert_eq!(wave.unfinished(),63);
+        let cell=g.begin_transient(1,[(0,Value::Eq(900))].into_iter().collect(),None).unwrap();
+        let result=g.construct(cell,0,1,&[Arg::Slot(0)],1).unwrap();
+        assert_eq!(g.lookup(1,&[Value::Eq(900)]).unwrap().unwrap().values.last(),Some(&result));
+        assert_eq!(g.members[1].len(),1);assert!(g.intern.leased(0));
+        let mut acceptance=Acceptance::default();
+        for event in ready.drain(..) {let (mut done,publication)=acceptance.accept(&mut g,event,true);
+            g.commit_registered_local_job(done.done,&mut done.effects.writer(),publication).unwrap();}
+        tx.send(()).unwrap();
+        loop {
+            wave.poll(true,&mut ready);
+            for event in ready.drain(..) {acceptance.accept(&mut g,event,false);}
+            if wave.finished() {break;}
+        }
+        let ((owner,_,_),_)=wave.finish();owner.restore(&mut g);acceptance.finish(&mut g);
+        drop(parents);g.parents.thaw();
+        assert!(!g.intern.leased(0));assert_eq!(g.members[0].len(),3);assert_eq!(g.members[1].len(),1);
+        assert_eq!(g.lookup(1,&[Value::Eq(900)]).unwrap().unwrap().values.last(),Some(&result));
+        g.union(100,900).unwrap();g.repair().unwrap();
+        assert!(g.lookup(1,&[Value::Eq(100)]).unwrap().is_some());
     }
 }

@@ -391,7 +391,7 @@ impl Executor {
                     // Preserve the existing all-hit source prefix when no
                     // peer roots are outstanding. Once a group is open, its
                     // remaining instances can start on workers themselves.
-                    roots && !pending.is_empty(),
+                    roots && !pending.is_empty() || queue.flying.as_ref().is_some_and(|w|w.registered()),
                     #[cfg(feature = "structural-depth")]
                     None,
                 )?;
@@ -440,6 +440,17 @@ impl Executor {
                         continue;
                     }
                     if self.resume_prepared_cell(&mut execution,position)? {continue;}
+                    if let Op::Let(_,Call::Table(table),_)=&execution.ops[position]
+                        && self.graph.constructor_table_leased(*table) {
+                        let table=*table;
+                        self.graph.stats.constructor_pipeline_table_waits+=1;
+                        let state=self.graph.suspend_rhs(execution.cell);
+                        while self.graph.constructor_table_leased(table) {
+                            self.poll_cell_queue(queue,pending,true)?;
+                        }
+                        self.graph.restore_rhs(state);
+                        if let Some(window)=&mut execution.births {window.after_ready_batch(&self.graph);}
+                    }
                     let prepared_root=execution.constructor.is_some() && self.graph.program.executions[rid]
                         .constructor.as_ref().is_some_and(|plan|plan.operation==position);
                     if roots && execution.births.is_none() && !prepared_root {

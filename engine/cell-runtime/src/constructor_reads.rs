@@ -61,7 +61,7 @@ pub(in crate::graph) struct Read<'a> {
     owned_counts: &'a [usize],
     members: &'a [TableRows<u64>],
     cells: &'a arena::Cells,
-    intern: &'a HashMap<u64, crate::tiny_set::TinySet<FactRef>>,
+    intern: &'a constructor_index::Index,
     hash_mask: u64,
     plan: &'a Plan,
     frames: &'a composition::Frames,
@@ -165,7 +165,7 @@ impl Read<'_> {
         w.port_lookups += u64::from(port_key);
         if !port_key || self.birth_hints {
             w.hint_probes += u64::from(port_key);
-            for &fact in self.intern.get(&(hashkey(table, key) & self.hash_mask)).into_iter().flatten() {
+            for &fact in self.intern.get(table, &(hashkey(table, key) & self.hash_mask)).into_iter().flatten() {
                 if let Some((value, epoch, fact, hidden)) = self.candidate(fact, table, key, w)? {
                     w.hint_hits += u64::from(port_key);
                     // The ordinary query filters visibility after selecting its

@@ -96,7 +96,7 @@ impl Graph {
         }
         if !self
             .intern
-            .get(&state.hash)
+            .get(*table, &state.hash)
             .is_some_and(|b| b.len() == 1 && b.first() == Some(&f))
         {
             stats.ambiguous_bucket += 1;

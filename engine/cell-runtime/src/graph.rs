@@ -14,6 +14,8 @@ pub mod local_union_cells;
 pub mod cell_ownership;
 #[path="fact_states.rs"]
 mod fact_states;
+#[path="constructor_index.rs"]
+mod constructor_index;
 pub(crate) use fact_states::FactStates;
 use crate::program::*;
 use crate::value::{self, Parents, Value, canon, exported, root};
@@ -311,6 +313,12 @@ pub struct Stats {
     pub constructor_registry_functionless_batches:u64,
     #[serde(default)]
     pub constructor_fused_regions:u64,
+    #[serde(default)]
+    pub constructor_pipeline_regions:u64,
+    #[serde(default)]
+    pub constructor_pipeline_cells:u64,
+    #[serde(default)]
+    pub constructor_pipeline_table_waits:u64,
     #[serde(default)]
     pub constructor_fused_cells:u64,
     #[serde(default)]
@@ -637,10 +645,7 @@ pub struct Graph {
 
     // A table's kind supplies the witness tag for every member.
     members: Vec<TableRows<u64>>,
-    #[cfg(not(feature = "sparse-cells"))]
-    intern: HashMap<u64, BTreeSet<FactRef>>,
-    #[cfg(feature = "sparse-cells")]
-    intern: HashMap<u64, crate::tiny_set::TinySet<FactRef>>,
+    intern: constructor_index::Index,
     #[cfg(not(feature = "sparse-cells"))]
     function_keys: Vec<HashMap<Vec<Value>, usize>>,
     #[cfg(feature = "sparse-cells")]
@@ -880,7 +885,7 @@ impl Graph {
             port_birth_hints: true,
 
             members: vec![TableRows::default(); n],
-            intern: HashMap::default(),
+            intern: constructor_index::Index::new(n),
             #[cfg(not(feature = "sparse-cells"))]
             function_keys: vec![Default::default(); n],
             #[cfg(feature = "sparse-cells")]
@@ -1671,6 +1676,7 @@ impl Graph {
             return self.lookup_port_key(table, key, None);
         }
         if key.is_empty() && self.program.tables[table].schema.len() == 1 {
+            self.intern.require_available(table);
             let members = &self.members[table];
             if members.len() <= 1 {
                 let Some(&word) = members.iter().next() else { return Ok(None); };
@@ -1688,7 +1694,7 @@ impl Graph {
         if self.dirty_facts[table].is_empty() {
             // Matching observes a repaired snapshot. Avoid allocating/copying
             // a set on every keyed read; retain the original FactRef order.
-            for &f in self.intern.get(&h).into_iter().flatten() {
+            for &f in self.intern.get(table, &h).into_iter().flatten() {
                 if let Some(r) = self.fact(f)? {
                     if r.table == table && r.values[..key.len()] == *key {
                         return Ok(Some(r));
@@ -1698,9 +1704,9 @@ impl Graph {
             return Ok(None);
         }
         #[cfg(not(feature = "sparse-cells"))]
-        let mut refs = self.intern.get(&h).cloned().unwrap_or_default();
+        let mut refs = self.intern.get(table, &h).cloned().unwrap_or_default();
         #[cfg(feature = "sparse-cells")]
-        let mut refs: BTreeSet<_> = self.intern.get(&h).into_iter().flatten().copied().collect();
+        let mut refs: BTreeSet<_> = self.intern.get(table, &h).into_iter().flatten().copied().collect();
         // A merge callback may request a constructor whose old key is dirty. Include
         // only affected references until repair catches up, not all graph rows.
         refs.extend(self.dirty_facts[table].iter().copied());
@@ -1885,7 +1891,7 @@ impl Graph {
             },
         );
         self.members[t].insert(f.ordered_id());
-        if self.constructor_hint_enabled(t) {self.intern.entry(h).or_default().insert(f);}
+        if self.constructor_hint_enabled(t) {self.intern.entry(t, h).or_default().insert(f);}
         if owned { self.query_versions[t] += 1; self.publish_owned_birth(f,t,&vs); }
         else if local_union_owned { self.query_versions[t] += 1; }
         else { self.subscribe_rows(t, Dependency::Fact(f), &[], &vs); }
@@ -2787,11 +2793,11 @@ impl Graph {
                     .insert(Dependency::Fact(f), s.port_slot);
             }
             self.members[r.table].remove(&f.ordered_id());
-            if self.constructor_hint_enabled(r.table) && let Some(b) = self.intern.get_mut(&s.hash) {
+            if self.constructor_hint_enabled(r.table) && let Some(b) = self.intern.get_mut(r.table, &s.hash) {
                 b.remove(&f);
                 #[cfg(feature = "sparse-cells")]
                 if b.is_empty() {
-                    self.intern.remove(&s.hash);
+                    self.intern.remove(r.table, &s.hash);
                 }
             }
             if local || owned { self.query_versions[r.table] += 1; }
@@ -2896,7 +2902,7 @@ impl Graph {
     fn find_repair_collision(&mut self, f: FactRef, r: &Row, h: u64) -> Result<Option<Row>> {
         self.maintenance.repair_key_probes += 1;
         let key = &r.values[..r.values.len() - 1];
-        for &other in self.intern.get(&h).into_iter().flatten() {
+        for &other in self.intern.get(r.table, &h).into_iter().flatten() {
             if other == f { continue; }
             self.maintenance.repair_candidate_checks += 1;
             if let Some(row) = self.fact(other)? {
@@ -2940,10 +2946,10 @@ impl Graph {
         let d = Dependency::Fact(f);
         let old = self.cells.fact_state(f).unwrap().hash;
         self.stats.repair_key_hash_changes += u64::from(h.is_some_and(|h|h != old));
-        if h.is_some() && let Some(bucket) = self.intern.get_mut(&old) {
+        if h.is_some() && let Some(bucket) = self.intern.get_mut(r.table, &old) {
             bucket.remove(&f);
             #[cfg(feature = "sparse-cells")]
-            if bucket.is_empty() { self.intern.remove(&old); }
+            if bucket.is_empty() { self.intern.remove(r.table, &old); }
         }
         if let Some(other) = found {
             self.note_local_collision(f);
@@ -2976,7 +2982,7 @@ impl Graph {
         } else {
             let was_local = self.cells.fact_state(f).unwrap().local_union_owned;
             self.end_local_ownership(f, r.table, false);
-            if let Some(h) = h { self.intern.entry(h).or_default().insert(f); }
+            if let Some(h) = h { self.intern.entry(r.table, h).or_default().insert(f); }
             let mut s_guard = self
                 .cells.fact_state_mut(f)
                 .unwrap();

@@ -338,7 +338,7 @@ impl Graph {
             let m = self.local_unions.as_mut().unwrap();
             let singleton = self
                 .intern
-                .get(&hash)
+                .get(table, &hash)
                 .is_some_and(|b| b.len() == 1 && b.first() == Some(&f));
             if changed && (key_changed || !singleton) {
                 // No cache or reverse edges while waiting for the original
