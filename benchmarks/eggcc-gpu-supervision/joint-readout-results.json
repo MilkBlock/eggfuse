@@ -1,0 +1,378 @@
+{
+  "scope": "joint known-domain readout fitting and compression diagnosis; standalone GPU prototype",
+  "artifact_root": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/joint-readout-v34",
+  "short_fit": {
+    "scope": "training-set fitting of detached synthetic sealed Run tokens; not runtime acceptance",
+    "before": {
+      "states": 215,
+      "pairs": 2497,
+      "false_positive_pairs": 1,
+      "false_negative_pairs": 12,
+      "nonfinite_states": 0,
+      "exact_states": 207,
+      "closed_false_positive_pairs": 1,
+      "closed_false_negative_pairs": 12,
+      "closed_exact_states": 207,
+      "states_with_false_merge": 1
+    },
+    "after": {
+      "states": 215,
+      "pairs": 2497,
+      "false_positive_pairs": 0,
+      "false_negative_pairs": 0,
+      "nonfinite_states": 0,
+      "exact_states": 215,
+      "closed_false_positive_pairs": 0,
+      "closed_false_negative_pairs": 0,
+      "closed_exact_states": 215,
+      "states_with_false_merge": 0
+    },
+    "steps": 3000,
+    "transition_unchanged": true,
+    "transition_sha256": "ac77ef02ab3daac2f1cef0e77e29aea4125c19a505a743c175948e629cd47ba9",
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "capture_sha256": "69b866cd249f884a39e7bd4b81b44d6b97ffda1199458fbf73c4e75e840cb2a5",
+    "parent_sha256": "318c82348a80e194cddd28bcd282fd1d3074ad65f132bc019353c6504f540332",
+    "weights_sha256": "d8e57a5272efd269a611e5f02b0e15ed8329d12e48f3a9c42d0c499643ce6b43",
+    "promoted_as_default": false,
+    "anchor_before": {
+      "states": 4258,
+      "pairs": 49198,
+      "false_positive_pairs": 0,
+      "false_negative_pairs": 231,
+      "nonfinite_states": 0,
+      "exact_states": 4170,
+      "closed_false_positive_pairs": 0,
+      "closed_false_negative_pairs": 231,
+      "closed_exact_states": 4170,
+      "states_with_false_merge": 0
+    },
+    "anchor_after": {
+      "states": 4258,
+      "pairs": 49198,
+      "false_positive_pairs": 3,
+      "false_negative_pairs": 227,
+      "nonfinite_states": 0,
+      "exact_states": 4171,
+      "closed_false_positive_pairs": 3,
+      "closed_false_negative_pairs": 227,
+      "closed_exact_states": 4171,
+      "states_with_false_merge": 3
+    },
+    "anchor_sha256": "5c54c9fd6349beb8782430e79f68ae932a328c82b4ac088a61a1cc5b79ba99a7"
+  },
+  "long_fit": {
+    "scope": "training-set fitting of detached synthetic sealed Run tokens; not runtime acceptance",
+    "before": {
+      "states": 215,
+      "pairs": 2497,
+      "false_positive_pairs": 1,
+      "false_negative_pairs": 12,
+      "nonfinite_states": 0,
+      "exact_states": 207,
+      "closed_false_positive_pairs": 1,
+      "closed_false_negative_pairs": 12,
+      "closed_exact_states": 207,
+      "states_with_false_merge": 1
+    },
+    "after": {
+      "states": 215,
+      "pairs": 2497,
+      "false_positive_pairs": 0,
+      "false_negative_pairs": 0,
+      "nonfinite_states": 0,
+      "exact_states": 215,
+      "closed_false_positive_pairs": 0,
+      "closed_false_negative_pairs": 0,
+      "closed_exact_states": 215,
+      "states_with_false_merge": 0
+    },
+    "steps": 30000,
+    "transition_unchanged": true,
+    "transition_sha256": "ac77ef02ab3daac2f1cef0e77e29aea4125c19a505a743c175948e629cd47ba9",
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "capture_sha256": "69b866cd249f884a39e7bd4b81b44d6b97ffda1199458fbf73c4e75e840cb2a5",
+    "parent_sha256": "318c82348a80e194cddd28bcd282fd1d3074ad65f132bc019353c6504f540332",
+    "weights_sha256": "3f5b72007a8e77cdeb865b17cfb53a10ea03c166e24ba81fb7d97c0a26b7a818",
+    "promoted_as_default": false,
+    "anchor_before": {
+      "states": 4258,
+      "pairs": 49198,
+      "false_positive_pairs": 0,
+      "false_negative_pairs": 231,
+      "nonfinite_states": 0,
+      "exact_states": 4170,
+      "closed_false_positive_pairs": 0,
+      "closed_false_negative_pairs": 231,
+      "closed_exact_states": 4170,
+      "states_with_false_merge": 0
+    },
+    "anchor_after": {
+      "states": 4258,
+      "pairs": 49198,
+      "false_positive_pairs": 0,
+      "false_negative_pairs": 222,
+      "nonfinite_states": 0,
+      "exact_states": 4179,
+      "closed_false_positive_pairs": 0,
+      "closed_false_negative_pairs": 222,
+      "closed_exact_states": 4179,
+      "states_with_false_merge": 0
+    },
+    "anchor_sha256": "5c54c9fd6349beb8782430e79f68ae932a328c82b4ac088a61a1cc5b79ba99a7"
+  },
+  "sealed_run": {
+    "cases": 61,
+    "passed": 61,
+    "top_level_status": "pass"
+  },
+  "input_pair": {
+    "scope": "finite synthetic transition input diagnostic, not learned-output equivalence proof",
+    "positive_indices": [
+      3176,
+      3203
+    ],
+    "producers": [
+      7,
+      7
+    ],
+    "consumers": [
+      6,
+      6
+    ],
+    "parent_indices": [
+      36,
+      36
+    ],
+    "inputs": {
+      "parent_x": {
+        "shape": [
+          4,
+          512
+        ],
+        "different_elements": 0,
+        "max_abs": 0.0
+      },
+      "parent_edges": {
+        "shape": [
+          4,
+          4,
+          64
+        ],
+        "different_elements": 0,
+        "max_abs": 0.0
+      },
+      "parent_mask": {
+        "shape": [
+          4
+        ],
+        "different_elements": 0,
+        "max_abs": 0.0
+      },
+      "parent_request": {
+        "shape": [
+          64
+        ],
+        "different_elements": 0,
+        "max_abs": 0.0
+      },
+      "parent_relations": {
+        "shape": [
+          512
+        ],
+        "different_elements": 0,
+        "max_abs": 0.0
+      },
+      "seed_x": {
+        "shape": [
+          4,
+          512
+        ],
+        "different_elements": 0,
+        "max_abs": 0.0
+      },
+      "edges": {
+        "shape": [
+          4,
+          4,
+          64
+        ],
+        "different_elements": 256,
+        "max_abs": 0.1875772476196289
+      },
+      "mask": {
+        "shape": [
+          4
+        ],
+        "different_elements": 0,
+        "max_abs": 0.0
+      },
+      "replace": {
+        "shape": [
+          4
+        ],
+        "different_elements": 0,
+        "max_abs": 0.0
+      },
+      "request": {
+        "shape": [
+          64
+        ],
+        "different_elements": 0,
+        "max_abs": 0.0
+      },
+      "relations": {
+        "shape": [
+          512
+        ],
+        "different_elements": 0,
+        "max_abs": 0.0
+      }
+    },
+    "differing_labels": [
+      {
+        "slots": [
+          2,
+          13
+        ],
+        "left": 1.0,
+        "right": 0.0
+      }
+    ]
+  },
+  "compression": {
+    "scope": "unchanged trained model layer diagnostic; not accuracy or execution acceptance",
+    "layers": {
+      "source_tokens": {
+        "max_difference": 0.0,
+        "max_abs": 0.896140456199646
+      },
+      "edges": {
+        "max_difference": 0.1875772476196289,
+        "max_abs": 0.5880326628684998
+      },
+      "source_projection": {
+        "max_difference": 0.0,
+        "max_abs": 1.2654539346694946
+      },
+      "attention_weights": {
+        "max_difference": 0.00010361149907112122,
+        "max_abs": 0.9999991655349731
+      },
+      "context": {
+        "max_difference": 0.003948764875531197,
+        "max_abs": 1.4863638877868652
+      },
+      "first_norm": {
+        "max_difference": 0.007526889443397522,
+        "max_abs": 3.802126169204712
+      },
+      "mixed_norm": {
+        "max_difference": 0.014161348342895508,
+        "max_abs": 4.948809623718262
+      },
+      "pooled_hidden": {
+        "max_difference": 1.341104507446289e-07,
+        "max_abs": 0.1699710339307785
+      },
+      "pre_tanh": {
+        "max_difference": 8.940696716308594e-08,
+        "max_abs": 0.319561243057251
+      },
+      "post_tanh": {
+        "max_difference": 8.940696716308594e-08,
+        "max_abs": 0.3091101348400116
+      },
+      "final_token": {
+        "max_difference": 8.940696716308594e-08,
+        "max_abs": 0.8584482073783875
+      }
+    },
+    "attention": [
+      [
+        [
+          0.0813528373837471,
+          0.09933075308799744,
+          0.396036833524704,
+          0.4232795834541321
+        ],
+        [
+          0.9999991655349731,
+          3.610892065353255e-07,
+          3.386684710449117e-08,
+          4.962171260558534e-07
+        ],
+        [
+          0.9948551654815674,
+          0.001341274124570191,
+          0.0010763497557491064,
+          0.002727069891989231
+        ],
+        [
+          0.0008698474848642945,
+          0.034765370190143585,
+          0.8193519711494446,
+          0.14501287043094635
+        ]
+      ],
+      [
+        [
+          0.0813528373837471,
+          0.09933075308799744,
+          0.396036833524704,
+          0.4232795834541321
+        ],
+        [
+          0.9999991655349731,
+          3.610892065353255e-07,
+          3.553667937694627e-08,
+          4.977493972546654e-07
+        ],
+        [
+          0.9947894811630249,
+          0.0014073110651224852,
+          0.001076278742402792,
+          0.002726889681071043
+        ],
+        [
+          0.0008697540615685284,
+          0.034868981689214706,
+          0.8192639946937561,
+          0.14499729871749878
+        ]
+      ]
+    ],
+    "pooling": [
+      [
+        5.697277174476767e-06,
+        0.9722744822502136,
+        0.027714325115084648,
+        5.586248335021082e-06
+      ],
+      [
+        5.697271717508556e-06,
+        0.9722735285758972,
+        0.027715304866433144,
+        5.394867002905812e-06
+      ]
+    ],
+    "mask": [
+      [
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        true,
+        true,
+        true,
+        true
+      ]
+    ],
+    "weights_sha256": "ac77ef02ab3daac2f1cef0e77e29aea4125c19a505a743c175948e629cd47ba9",
+    "pair_sha256": "797a5ac50eb0c9556d52f2989ce1c038770e8807419fbcacfc6850c60b343673"
+  },
+  "promoted_as_default": false,
+  "remaining": "79 finite-domain states remain wrong; recurrent audit of joint candidate and representation repair outstanding"
+}

@@ -105,3 +105,36 @@ The next fitting dataset must jointly retain finite-domain and resident-token
 states; this result demonstrates forgetting of already covered inputs, not a
 need to optimize for arbitrary unseen programs. See
 `sealed-calibration-results.json` for all three evaluation scopes and hashes.
+
+## Joint fitting and location of information loss
+
+`audit_finite_readout.py --capture ANCHORS.npz` retains the generated finite
+tokens with exact reference labels. `fit_sealed_readout.py --anchors ANCHORS.npz`
+trains equal-sized batches from that domain and the sealed-Run capture, checks
+both recipe and token-generator hashes, and reports both domains separately.
+The token generator remains frozen. Use a matching `.json` manifest basename
+for the anchor capture. These remain training-domain measurements.
+
+After 30,000 steps, the joint head correctly reads 215/215 captured Run states
+and 4,179/4,258 finite states, with zero false-merge states in either domain.
+The 61 first-Run GPU checks all pass. This recovers the prior forgetting, but
+79 finite states still miss equalities; the new joint head's recurrent audit
+has not yet been completed. No default model is replaced.
+
+`inspect_finite_pair.py --pair 3176 3203 --capture PAIR.npz` traces a remaining
+ambiguity back to the transition inputs. Both entries have the same producer
+7, consumer 6 and parent sample 36. Parent inputs, boundary seeds, masks,
+requests and ordered incidence agree; floating edge features differ by up to
+0.187577. The required Eq answer for slots (2,13) differs.
+
+`trace_token_compression.py PAIR.npz TRANSITION_WEIGHTS OUTPUT.json` reproduces
+the actual transition and checks its traced output against the model call.
+The mixed hidden state still differs by 0.014161, but pooling/finish reduces
+that to 1.34e-7 and the final token differs by only 8.94e-8. Pre-tanh magnitude
+is only 0.320, so tanh saturation does not explain this pair. Attention pooling
+largely ignores the informative position. The next representation experiment
+should preserve ordered floating edge features through a residual path rather
+than ask the Eq head to separate numerical noise. This is a finding about the
+trained model, not proof that every such architecture is non-injective.
+
+`joint-readout-results.json` preserves fit, Run checks and layer diagnostics.
