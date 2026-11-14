@@ -28,6 +28,16 @@ def compile_catalog(recipe,blocks,width):
                     owns=origin is not None and origin[0]==ai
                     projection.append(int(view['slots'][record,origin[1]]) if owns else 0);valid.append(owns)
                 candidate=compile_transfer(recipe,dict(producer=int(producer),consumer=rid,projection=projection,projection_valid=valid),width)
+                if not candidate['covered']:
+                    # Every atom witnesses its shared query variables, even when
+                    # another atom supplies the binding's preferred value origin.
+                    # Keep an already-fitting plan: Eq roots may match while raw
+                    # identities differ, in which case copying is still necessary.
+                    fields={}
+                    for field,slot in enumerate(atom['slots']):fields.setdefault(slot,field)
+                    projection=[int(view['slots'][record,fields[slot]]) if slot in fields else 0 for slot in inputs]
+                    valid=[slot in fields for slot in inputs]
+                    candidate=compile_transfer(recipe,dict(producer=int(producer),consumer=rid,projection=projection,projection_valid=valid),width)
                 if candidate['covered']:
                     index[record]=len(catalog);catalog.append(candidate)
             indices.append(index)

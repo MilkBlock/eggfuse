@@ -1,0 +1,79 @@
+{
+  "scope": "actual selected-family GPU takeover; unchanged weights and payload capacity; not full Eggcc or speed",
+  "catalog": {
+    "width": 8,
+    "prior_plans": 7,
+    "new_plans": 12,
+    "prior_mapping_array_bytes": 560,
+    "new_mapping_array_bytes": 960
+  },
+  "gcd": {
+    "copy-only": {
+      "graph_passed": true,
+      "label_passed": true,
+      "released_owner_rows": 30,
+      "generated_cells": 41,
+      "generated_source_consumers": 15,
+      "run_changes": [
+        true,
+        true,
+        false
+      ],
+      "label_sha256": "202a2a26cd0e0bf1d258795fc2bf16c67c70627b03ca846acbf537c09cec86fe"
+    },
+    "shared-atom": {
+      "graph_passed": true,
+      "label_passed": true,
+      "released_owner_rows": 33,
+      "generated_cells": 41,
+      "generated_source_consumers": 15,
+      "run_changes": [
+        true,
+        true,
+        false
+      ],
+      "label_sha256": "b7d92593dee41e3e47e5576dfe4bfe066b163b79acd02bd417a597a036366420"
+    }
+  },
+  "gcd_comparison": {
+    "predicted_target_rule_origin_arrays_identical": true,
+    "maximum_feature_difference": 3.5762786865234375e-07
+  },
+  "synthetic": {
+    "scope": "enumerated terminating-boundary GPU feedback and CPU labels; no full Eggcc claim",
+    "producer_frames": true,
+    "prediction": {
+      "all": {
+        "instances": 75,
+        "correct": 62
+      },
+      "direct": {
+        "instances": 48,
+        "correct": 36
+      },
+      "generated": {
+        "instances": 27,
+        "correct": 26
+      }
+    },
+    "complete": true,
+    "expected": 12,
+    "attempted": 12,
+    "statuses": {
+      "pass": 12
+    },
+    "samples": 75,
+    "generated_source_consumers": 27,
+    "released_owner_rows": 9,
+    "owner_witness_pairs": {
+      "accepted_samples": 75,
+      "logical_shared_pairs": 29,
+      "physical_alias_pairs": 0
+    },
+    "manifest_sha256": "a80c26ec75064d771ac88a5ac9daaf3bed4977117526302c61bbb3927b223ebf",
+    "head_sha256": "6432d7cfc63553f8b79f37faf4fe1513f52697694cf682b9c80269f1fabd3c05",
+    "training_performed": false
+  },
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/shared-atom-owner-v1.tar.gz",
+  "archive_sha256": "93c596cd534a0555d64e1d23568303c86eb8aecf8eff17fba812b3a759421cf3"
+}
