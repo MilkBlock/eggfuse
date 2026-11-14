@@ -8,15 +8,10 @@ import numpy as np
 from device_boundary_context import masks
 
 
-def encode(boundary,bindings,plan,pairs,xp):
-    conn,_,safe,valid=masks(boundary,bindings,plan,xp)
-    if plan.get('local_context',False):
-        port_flow=plan['flow_sorts'][plan['port_sorts']]
-        attached=xp.any(conn&port_flow[None,:,None,None],axis=(1,3))
-        conn=conn&attached[:,None,:,None]
-    tokens=xp.where(boundary['live'][:,None],boundary['tokens'],0)
-    h=xp.tanh((tokens@plan['token_weight'])[:,None,:]+plan['roles'][safe]@plan['role_weight'])
-    h=xp.where(valid[:,:,None],h,0)
+def prepare(boundary,plan,xp,base=None):
+    from device_boundary_context import prepare as prepare_base
+    base=prepare_base(boundary,plan,xp) if base is None else base
+    safe,valid,h=base['safe'],base['valid'],base['messages']
     n,w,d=h.shape
     def denominator(count):
         count=xp.maximum(count,1)
@@ -49,6 +44,19 @@ def encode(boundary,bindings,plan,pairs,xp):
     # not themselves attached to the current query.
     cell=enriched.sum(axis=1)/denominator(valid.sum(axis=1))[:,None]
     h=xp.where(valid[:,:,None],xp.tanh(enriched+cell[:,None,:]),0).reshape(-1,d)
+    return h
+
+
+def encode(boundary,bindings,plan,pairs,xp,prepared=None):
+    conn,_,safe,valid=masks(boundary,bindings,plan,xp)
+    if plan.get('local_context',False):
+        port_flow=plan['flow_sorts'][plan['port_sorts']]
+        attached=xp.any(conn&port_flow[None,:,None,None],axis=(1,3))
+        conn=conn&attached[:,None,:,None]
+    h=prepare(boundary,plan,xp) if prepared is None else prepared
+    def denominator(count):
+        count=xp.maximum(count,1)
+        return count.astype(xp.float32) if plan.get('mean_context',False) else xp.sqrt(count)
     count=conn.astype(xp.float32).sum(axis=(-2,-1))
     pooled=conn.reshape(conn.shape[0],conn.shape[1],-1).astype(xp.float32)@h
     pooled=xp.tanh(pooled/denominator(count)[:,:,None])

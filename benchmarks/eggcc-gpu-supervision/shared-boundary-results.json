@@ -1,0 +1,41 @@
+{
+  "scope": "selected-family actual GPU boundary encoding sharing; no speed claim",
+  "tests": {
+    "context": 29,
+    "classifier": 10,
+    "normalized": 2,
+    "grouping": 2
+  },
+  "plans": 3,
+  "encoder_groups": 1,
+  "comparison": {
+    "predicted_target_rule_origin_arrays_identical": true,
+    "maximum_feature_difference": 3.5762786865234375e-07
+  },
+  "before": {
+    "graph_passed": true,
+    "label_passed": true,
+    "generated_cells": 41,
+    "released_owner_rows": 33,
+    "run_changes": [
+      true,
+      true,
+      false
+    ],
+    "source_capture_sha256": "60d1d47678044bbd006636447216c36dfc555b7b4a63f60cb6a583558a6a663f",
+    "labeled_sha256": "b7d92593dee41e3e47e5576dfe4bfe066b163b79acd02bd417a597a036366420"
+  },
+  "after": {
+    "graph_passed": true,
+    "label_passed": true,
+    "generated_cells": 41,
+    "released_owner_rows": 33,
+    "run_changes": [
+      true,
+      true,
+      false
+    ],
+    "source_capture_sha256": "4f0ed3522371f0e8feade2f7070e36089cbd1870f44d7cebd2c60895aa999dc2",
+    "labeled_sha256": "8e112cfc2135b5464abf8ebdf0bc085a602af698de3fc0c41ec39e0e97909a5c"
+  }
+}

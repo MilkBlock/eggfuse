@@ -76,7 +76,7 @@ def main():
     if plan['marks']:raise ValueError(plan['marks'])
     if a.predicted_source_feedback:plan['retain_predicted_rules']=tuple(range(len(ids_rule)))
     reserve=a.capacity*sum(o['kind']=='construct' for r in lowered['rules'] for o in r['effects'])
-    registry=eq_registry(ids,plan['eq_sort_names'],reserve);ctx=device(registry);cp=device(plan);dp=device(blocks)
+    registry=eq_registry(ids,plan['eq_sort_names'],reserve);ctx=device(registry);cp=device(plan)
     with np.load(a.model) as f:
         boundary_model=bool(f.get('boundary_context',False))
         if boundary_model and not (a.experimental_boundary_model and a.boundary_context):raise ValueError('boundary predictor requires explicit experimental model and context flags')
@@ -97,7 +97,6 @@ def main():
             selected=np.flatnonzero(f['alphas']==report['selected']['partition'])
             if len(selected)!=1:raise ValueError('completion decoder selection')
             blocks=[(st,dict(p,completion_readout=compile_readout(local['rules'][p['query']['rule']],f['w'],f['coef'][:,selected]))) for st,p in blocks]
-        dp=device(blocks)
         completion_metadata=dict(decoder_sha256=decoder_sha,decoder_alpha=report['selected']['partition'],
             representation='static-compatible whole Eq state plus actual scalar moments',union_authorized=False)
     if a.completion_classifier:
@@ -115,9 +114,11 @@ def main():
             blocks=[(st,dict(p,joint_projection=compile_projection(p['completion_classifier']['head']['coef'].shape[0]-256))) for st,p in blocks]
         if report.get('shared_boundary_context',False):
             blocks=[(st,dict(p,boundary_context=dict(p['boundary_context'],root_capacity=len(ids)+reserve,sort_capacity=len(plan['eq_sort_names']),mean_context=bool(report.get('mean_shared_context',False))))) for st,p in blocks]
-        dp=device(blocks)
         completion_metadata=dict(kind='direct_state_ridge',normalized_joint=bool(report.get('normalized_joint',False)),mean_shared_context=bool(report.get('mean_shared_context',False)),joint_features=bool(report.get('joint_features',False)),shared_boundary_context=bool(report.get('shared_boundary_context',False)),head_sha256=head_sha,decoder_sha256=report['decoder_sha256'],
             representation='direct whole-state ridge plus actual scalar moments',union_authorized=False)
+    from bake_boundary_groups import group_boundary_plans
+    blocks=group_boundary_plans(blocks);dp=device(blocks)
+    boundary_group_count=len({p['boundary_group'] for _,p in blocks if 'boundary_group' in p})
     schedule,meta=compile_schedule(source_control,stages);ds=device(schedule)
     control=dict(control=initial(ds,meta['repeat_slots'],mx),open_run=mx.array(False),unreported_change=mx.array(False),failed_run=mx.array(False))
     ready=mx.array(True);next_id=mx.array(len(ids));logs=[];captures=[];frames=[]
@@ -161,7 +162,7 @@ def main():
     passed=stage_order==[r['stage'] for r in cpu_runs] and bool(m['finished']) and not bool(m['failed_run']) and len(boundary_checks)==len(cpu_runs) and all(b['passed'] for b in boundary_checks) and check['passed'] and lowering_check['passed'] and complete and per_rule_matches==[r['per_rule_applications'] for r in cpu_runs] and matched==source_counts and len(cpu_runs)==int(log['run_done'].sum()) and all(c['passed'] and c['enumeration_complete'] for c in checks)
     result=dict(scope=('synthetic selected construct/union family on GPU; not full Eggcc' if a.synthetic_input else 'real selected construct/union family on GPU; not full Eggcc'),rules=ids_rule,snapshot_run=a.snapshot_run,stage=stage,stages=stages,source_control=source_control,gpu_stage_order=stage_order,
         trace_sha256=hashlib.sha256(raw).hexdigest(),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),lowered_sets=sites,
-        seed_rows=len(rows),initial_instances=initial_sources,producer_frame_import=frame_import,experimental_boundary_model=boundary_model,source_tokens='predicted generated Cells, exact imported Cells' if a.predicted_source_feedback else 'exact completed states',boundary_context=a.boundary_context,query_order=query_orders,fixed_ticks=a.ticks,flush_every=a.flush_every,host_execution_flushes=a.ticks//a.flush_every,generated_cells=int(log['new_tokens'].sum()),fresh_ids=int(next_id)-len(ids),original_cpu_fresh_ids=len(ref.parent)-len(ids),lowered_cpu_fresh_ids=len(lowref.parent)-len(ids),released_owner_rows=int(log['takeover_released'].sum()),generated_source_consumers=continued,
+        compiled_boundary_encoder_groups=boundary_group_count,seed_rows=len(rows),initial_instances=initial_sources,producer_frame_import=frame_import,experimental_boundary_model=boundary_model,source_tokens='predicted generated Cells, exact imported Cells' if a.predicted_source_feedback else 'exact completed states',boundary_context=a.boundary_context,query_order=query_orders,fixed_ticks=a.ticks,flush_every=a.flush_every,host_execution_flushes=a.ticks//a.flush_every,generated_cells=int(log['new_tokens'].sum()),fresh_ids=int(next_id)-len(ids),original_cpu_fresh_ids=len(ref.parent)-len(ids),lowered_cpu_fresh_ids=len(lowref.parent)-len(ids),released_owner_rows=int(log['takeover_released'].sum()),generated_source_consumers=continued,
         cpu_runs=cpu_runs,lowered_cpu_runs=lowruns,gpu_matches_per_run=matched,gpu_matches_per_rule=per_rule_matches,gpu_runs=int(log['run_done'].sum()),gpu_run_changes=log['run_changed'][log['run_done']].tolist(),
         graph_check=check,boundary_checks=boundary_checks,lowering_check=lowering_check,views_complete=complete,query_checks=checks,finished=bool(m['finished']),failed_run=bool(m['failed_run']),passed=passed,
         gpu_compile_upload_execute_seconds=gpu_seconds,cpu_reference_and_audit_seconds=time.monotonic()-started,

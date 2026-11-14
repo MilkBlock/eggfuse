@@ -41,7 +41,7 @@ def compile_transition(recipe,rid,channels=4,views=None,source_relations=False,o
                 completed=not recipe['rules'][rid]['effects'],source_relations=source_relations,owner_relations=owner_relations)
 
 
-def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=False):
+def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=False,boundary_cache=None):
     bindings,features,encoding=match_inputs(state,plan['query'],plan['inputs'],capacity,external_complete,eq_settled,xp)
     sources=[];edges=[];routes=[];generations=[];relations=[]
     for port in plan['ports']:
@@ -69,14 +69,24 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=
     if 'joint_projection' in plan:expected_width-=plan['joint_projection'].shape[1]
     if expected_width!=base_width:
         if 'boundary_context' not in plan:raise ValueError('boundary model requires compiled context')
-        from device_boundary_context import snapshot,encode
-        boundary=snapshot(state,xp)
-        extra,counts=encode(boundary,bindings,plan['boundary_context'],xp)
+        from device_boundary_context import snapshot,encode,prepare
+        group=plan.get('boundary_group')
+        cached=boundary_cache.get(group) if boundary_cache is not None and group is not None else None
+        if cached is None:
+            boundary=snapshot(state,xp)
+            raw=prepare(boundary,plan['boundary_context'],xp)
+            cached=dict(boundary=boundary,raw=raw)
+            if plan.get('shared_boundary_context',False):
+                from device_boundary_shared_context import prepare as prepare_shared
+                cached['shared']=prepare_shared(boundary,plan['boundary_context'],xp,raw)
+            if boundary_cache is not None and group is not None:boundary_cache[group]=cached
+        boundary=cached['boundary']
+        extra,counts=encode(boundary,bindings,plan['boundary_context'],xp,prepared=cached['raw'])
         context_width=0
         if plan.get('shared_boundary_context',False):
             if classifier is None:raise ValueError('shared context requires classifier')
             from device_boundary_shared_context import encode as shared_encode
-            shared,_=shared_encode(boundary,bindings,plan['boundary_context'],None,xp)
+            shared,_=shared_encode(boundary,bindings,plan['boundary_context'],None,xp,prepared=cached['shared'])
             request['shared_boundary_features']=shared;context_width=shared.shape[1]
             if 'root_capacity' in plan['boundary_context']:
                 request['shared_root_capacity']=xp.array(plan['boundary_context']['root_capacity'])
@@ -155,10 +165,10 @@ def step(state,plan,model,capacity,external_complete,eq_settled,xp,key_context=N
 
 def run_round(state,blocks,model,stage,xp,capacity=16,external_complete=False,eq_settled=False,key_context=None,capture=False):
     if not blocks:raise ValueError('empty query catalog is not coverage')
-    candidates=[];complete=xp.array(True);captures=[]
+    candidates=[];complete=xp.array(True);captures=[];boundary_cache={}
     max_atoms=max(len(plan['query']['atoms']) for _,plan in blocks)
     for stage_id,plan in blocks:
-        p,marks=proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture)
+        p,marks=proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture,boundary_cache=boundary_cache)
         enabled=stage==stage_id
         p['matched']=p['matched']&enabled;p['missing_witness']=p['missing_witness']&enabled
         complete=complete&(~enabled|marks['query_complete'])

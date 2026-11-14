@@ -37,6 +37,15 @@ def snapshot(state,xp):
     return out
 
 
+def prepare(boundary,plan,xp):
+    sr=boundary['rule'];safe=xp.clip(sr,0,plan['sorts'].shape[0]-1)
+    valid=boundary['live'][:,None]&boundary['slot_valid']&(sr[:,None]>=0)&(sr[:,None]<plan['sorts'].shape[0])
+    valid=valid&(plan['sorts'][safe]>=0)
+    tokens=xp.where(boundary['live'][:,None],boundary['tokens'],0)
+    h=xp.tanh((tokens@plan['token_weight'])[:,None,:]+plan['roles'][safe]@plan['role_weight'])
+    return dict(safe=safe,valid=valid,messages=xp.where(valid[:,:,None],h,0))
+
+
 def masks(boundary,bindings,plan,xp):
     sr=boundary['rule'];safe=xp.clip(sr,0,plan['sorts'].shape[0]-1)
     valid=boundary['live'][:,None]&boundary['slot_valid']&(sr[:,None]>=0)&(sr[:,None]<plan['sorts'].shape[0])
@@ -48,12 +57,10 @@ def masks(boundary,bindings,plan,xp):
     return conn,conn&~selected[:,None,:,None],safe,valid
 
 
-def encode(boundary,bindings,plan,xp):
+def encode(boundary,bindings,plan,xp,prepared=None):
     all_mask,other_mask,safe,valid=masks(boundary,bindings,plan,xp)
-    # Mask before matmul: retired/padding tokens may contain NaNs.
-    tokens=xp.where(boundary['live'][:,None],boundary['tokens'],0)
-    h=xp.tanh((tokens@plan['token_weight'])[:,None,:]+plan['roles'][safe]@plan['role_weight'])
-    h=xp.where(valid[:,:,None],h,0).reshape(-1,h.shape[-1])
+    prepared=prepare(boundary,plan,xp) if prepared is None else prepared
+    h=prepared['messages'];h=h.reshape(-1,h.shape[-1])
     outputs=[];counts=[]
     for mask in (all_mask,other_mask):
         count=xp.sum(mask.astype(xp.float32),axis=(-2,-1))
