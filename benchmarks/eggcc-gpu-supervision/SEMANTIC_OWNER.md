@@ -654,3 +654,33 @@ or feed labels into GPU inputs. Two unit tests cover transitive false merges,
 external missing pairs, masked pairs, and nonfinite outputs. The actual GPU
 audit remains `difference`. Neighbor Bake head remains f3321a3a; no new
 ownership admission methodology was observed.
+
+### Expanded randomized canon continuation coverage
+
+`canon-expanded-results.json` records continuation from the v18 checkpoint,
+using the same model and 600 additional optimizer steps. Generate training
+with `neural_third_step.py ... --ruleset canon --include-uncovered-transfers
+--count 32 --per-pair 8 --seed 47017`; evaluation uses `--count 8 --per-pair 2
+--seed 88031`. All other replay options remain zero/default. The default
+`--entries-per-consumer 2` limit is now explicit and recorded in new manifests;
+these two datasets were generated immediately before exposing that existing
+limit. No exhaustive coverage claim is made.
+
+Train with `train_neural_eq_readout.py TRACE V18_COMBINED OUT --ruleset canon
+--resume --steps 600 --third-train TRAIN.npz --third-test TEST.npz`. The training
+set contains 488 audited physical transfers. New evaluation improves from
+456/476 to 475/476 closed Eq states, false-merge states 19 to 1. Only 28
+positive inputs are unseen relative to this training set: 26 to 27 correct,
+with one false-merge state unchanged. Original two-step closure improves
+156/160 to 160/160 (raw pair-exact 159/160).
+
+The unchanged actual GPU audit improves from 208/216 to 215/216, false-merge
+states 4 to 0. All 61 graphs/transfers pass; matching remains exact after the
+GPU constraint guard rejects nine raw model predictions. The remaining error
+is producer 5 / consumer 6 / follow rule 6, candidate 512, slots (2,13), a
+missing external-congruence equality with score -0.805. The audit remains
+`difference`; do not merge it into a claim that the runtime is correct.
+
+Artifacts and weights: external SSD `neural-canon-expanded-v20.tar.gz`. Four
+replay tests pass, including the explicit entry-limit contract. No native
+runtime or CPU execution optimization was performed.

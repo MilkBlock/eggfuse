@@ -11,12 +11,18 @@ from test_neural_cell_chains import recipe
 
 
 class ThirdStep(unittest.TestCase):
+    def test_entry_limit_is_explicit(self):
+        from neural_third_step import build
+        with self.assertRaisesRegex(ValueError,"positive entry limit"):
+            build(recipe(),1,23,entries_per_consumer=0)
+
     def test_block_replay_consumes_updated_source_and_has_no_label_input(self):
         from neural_third_step import build,replay_blocks
         from neural_owner_blocks import OwnerBlocks
         raw,report=build(recipe(),1,23,per_pair=1,context_capacity=4,block_owner=True)
         self.assertEqual(report['cases'],report['physical_transfers'])
         self.assertTrue(report['block_owner'])
+        self.assertEqual(report['entries_per_consumer'],2)
         data={k:mx.array(v) for k,v in raw.items()}
         model=OwnerBlocks(raw['p_x'].shape[-1],raw['relations'].shape[-1],3)
         original=replay_blocks(model,data)
