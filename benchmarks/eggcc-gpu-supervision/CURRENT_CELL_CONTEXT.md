@@ -112,3 +112,23 @@ this sample set only; it does not establish global representation sufficiency.
 Full evidence and CPU audit timing are in `current-cell-run-results.json`.
 Timing includes CPU full ruleset execution and graph comparison, but excludes
 separate admission diagnosis and GPU time; it is not an end-to-end speed claim.
+
+## Separating capacity failures from learned Eq errors
+
+Run attention reports now retain `query_overflow` and actual per-atom pool sizes.
+The second-Run failure in pair (7,6) has pool sizes [1,19], exceeding the default
+16-slot candidate pool. With the same 600-step weights and an explicit
+`--candidate-capacity 32`, all three Runs pass (6,4,2 admissions respectively),
+and the third Run changes no reference facts or equalities: a verified fixed
+point. The larger diagnostic capacity costs additional enumeration; it is not
+a scalable-routing optimization. The default remains 16 and overflow remains a
+failure, not a saturation signal.
+
+Separately, training the same current-state dataset for 3,000 steps produces
+224/233 exact Eq states (225 after Eq closure), zero matching errors, seven
+false-positive and five false-negative pairs. The formerly failing pair (5,0)
+now passes its full Run and fixed-point audit. This targeted result does not
+establish full-suite correctness of the new weights; they remain unpromoted.
+Reproduce targeted checks with `--pair 7 6 --candidate-capacity 32` on the old
+checkpoint, or `--pair 5 0` on the 3,000-step checkpoint. Text evidence is
+`current-cell-refinement-results.json`.

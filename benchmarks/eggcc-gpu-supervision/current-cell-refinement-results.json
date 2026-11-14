@@ -1,0 +1,1047 @@
+{
+  "eggfuse-current-fit3000": {
+    "scope": "training-domain fit of synthetic current-Cell inputs; not a Run audit",
+    "dataset_sha256": "81fa9707bf9ed4229fab3d9dc395c58c14175928749248ae3582f678992e7628",
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "steps": 3000,
+    "before": {
+      "matching_errors": 484,
+      "eq": {
+        "states": 233,
+        "pairs": 2623,
+        "false_positive_pairs": 958,
+        "false_negative_pairs": 437,
+        "nonfinite_states": 0,
+        "exact_states": 0,
+        "closed_false_positive_pairs": 1426,
+        "closed_false_negative_pairs": 207,
+        "closed_exact_states": 7,
+        "states_with_false_merge": 221
+      }
+    },
+    "after": {
+      "matching_errors": 0,
+      "eq": {
+        "states": 233,
+        "pairs": 2623,
+        "false_positive_pairs": 7,
+        "false_negative_pairs": 5,
+        "nonfinite_states": 0,
+        "exact_states": 224,
+        "closed_false_positive_pairs": 7,
+        "closed_false_negative_pairs": 4,
+        "closed_exact_states": 225,
+        "states_with_false_merge": 7
+      }
+    },
+    "input_census": {
+      "unique_inputs": 98,
+      "conflicting_duplicate_samples": 0
+    },
+    "recurrent_latent_inputs": false,
+    "backpropagation": true,
+    "promoted_as_default": false,
+    "input_width": 5376
+  },
+  "eggfuse-current-76": {
+    "scope": "standalone synthetic canon multi-Run GPU audit; exact initial Cells, no CPU corrections",
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "weights_sha256": "8ffb12796bbf17181c966a917774d1b53ba3e5b771cf0b8dedac5624078c6a90",
+    "stage": {
+      "ruleset": "canon",
+      "source_rule_ids": [
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277
+      ],
+      "membership_authoritative": true,
+      "full_schedule_replaced_for_training": true
+    },
+    "run_budget": 3,
+    "attempts": 8,
+    "cases": [
+      {
+        "pair": [
+          7,
+          6
+        ],
+        "runs": [
+          {
+            "scope": "independent CPU source-Run semantic audit; no GPU corrections",
+            "status": "pass",
+            "run_done": true,
+            "run_changed": true,
+            "reference_matches": 6,
+            "reference_new_constructors": 12,
+            "reference_new_unions": 0,
+            "admitted": 6,
+            "graph": {
+              "passed": true,
+              "errors": [],
+              "actual_facts": 33,
+              "expected_facts": 33,
+              "mapped_classes": 28
+            },
+            "facts_decoded": true,
+            "query_exhausted": true,
+            "needs_attention": false,
+            "attention_events": [],
+            "attempt_budget_exhausted": false,
+            "cpu_audit_seconds": 0.007688166981097311,
+            "admission_diagnosis": {
+              "events": [
+                {
+                  "rule_id": 12,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      19
+                    ],
+                    [
+                      3,
+                      20
+                    ]
+                  ],
+                  "sources": [
+                    17,
+                    17,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 12,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      7
+                    ],
+                    [
+                      3,
+                      5
+                    ]
+                  ],
+                  "sources": [
+                    17,
+                    17,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 18,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      7
+                    ],
+                    [
+                      3,
+                      5
+                    ],
+                    [
+                      4,
+                      16
+                    ],
+                    [
+                      5,
+                      17
+                    ],
+                    [
+                      6,
+                      13
+                    ],
+                    [
+                      7,
+                      14
+                    ]
+                  ],
+                  "sources": [
+                    17,
+                    17,
+                    17,
+                    17
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 18,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      7
+                    ],
+                    [
+                      3,
+                      5
+                    ],
+                    [
+                      4,
+                      10
+                    ],
+                    [
+                      5,
+                      15
+                    ],
+                    [
+                      6,
+                      13
+                    ],
+                    [
+                      7,
+                      14
+                    ]
+                  ],
+                  "sources": [
+                    17,
+                    17,
+                    16,
+                    17
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 19,
+                  "binding": [
+                    [
+                      0,
+                      1
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      2
+                    ],
+                    [
+                      3,
+                      3
+                    ],
+                    [
+                      4,
+                      16
+                    ],
+                    [
+                      5,
+                      17
+                    ],
+                    [
+                      6,
+                      11
+                    ],
+                    [
+                      7,
+                      12
+                    ]
+                  ],
+                  "sources": [
+                    16,
+                    16,
+                    17,
+                    16
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 19,
+                  "binding": [
+                    [
+                      0,
+                      1
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      2
+                    ],
+                    [
+                      3,
+                      3
+                    ],
+                    [
+                      4,
+                      10
+                    ],
+                    [
+                      5,
+                      15
+                    ],
+                    [
+                      6,
+                      11
+                    ],
+                    [
+                      7,
+                      12
+                    ]
+                  ],
+                  "sources": [
+                    16,
+                    16,
+                    16,
+                    16
+                  ],
+                  "pairs": []
+                }
+              ],
+              "incomplete": null
+            }
+          },
+          {
+            "scope": "independent CPU source-Run semantic audit; no GPU corrections",
+            "status": "difference",
+            "run_done": false,
+            "run_changed": false,
+            "reference_matches": 10,
+            "reference_new_constructors": 2,
+            "reference_new_unions": 0,
+            "admitted": 0,
+            "graph": {
+              "passed": false,
+              "errors": [
+                "fact_set_difference"
+              ],
+              "actual_facts": 33,
+              "expected_facts": 35,
+              "mapped_classes": 28
+            },
+            "facts_decoded": true,
+            "query_exhausted": false,
+            "needs_attention": true,
+            "attention_events": [
+              {
+                "rule_id": 12,
+                "reasons": [
+                  "query_overflow",
+                  "query_incomplete"
+                ],
+                "pool_sizes": [
+                  1,
+                  19
+                ]
+              }
+            ],
+            "attempt_budget_exhausted": false,
+            "cpu_audit_seconds": 0.008626749971881509,
+            "admission_diagnosis": {
+              "events": [],
+              "incomplete": null
+            }
+          }
+        ]
+      }
+    ],
+    "first_run_pass": 1,
+    "verified_fixedpoints": 0
+  },
+  "eggfuse-current-76-cap32": {
+    "scope": "standalone synthetic canon multi-Run GPU audit; exact initial Cells, no CPU corrections",
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "weights_sha256": "8ffb12796bbf17181c966a917774d1b53ba3e5b771cf0b8dedac5624078c6a90",
+    "stage": {
+      "ruleset": "canon",
+      "source_rule_ids": [
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277
+      ],
+      "membership_authoritative": true,
+      "full_schedule_replaced_for_training": true
+    },
+    "run_budget": 3,
+    "attempts": 8,
+    "candidate_capacity": 32,
+    "cases": [
+      {
+        "pair": [
+          7,
+          6
+        ],
+        "runs": [
+          {
+            "scope": "independent CPU source-Run semantic audit; no GPU corrections",
+            "status": "pass",
+            "run_done": true,
+            "run_changed": true,
+            "reference_matches": 6,
+            "reference_new_constructors": 12,
+            "reference_new_unions": 0,
+            "admitted": 6,
+            "graph": {
+              "passed": true,
+              "errors": [],
+              "actual_facts": 33,
+              "expected_facts": 33,
+              "mapped_classes": 28
+            },
+            "facts_decoded": true,
+            "query_exhausted": true,
+            "needs_attention": false,
+            "attention_events": [],
+            "attempt_budget_exhausted": false,
+            "cpu_audit_seconds": 0.00945854198653251,
+            "admission_diagnosis": {
+              "events": [
+                {
+                  "rule_id": 12,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      19
+                    ],
+                    [
+                      3,
+                      20
+                    ]
+                  ],
+                  "sources": [
+                    17,
+                    17,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 12,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      7
+                    ],
+                    [
+                      3,
+                      5
+                    ]
+                  ],
+                  "sources": [
+                    17,
+                    17,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 18,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      7
+                    ],
+                    [
+                      3,
+                      5
+                    ],
+                    [
+                      4,
+                      16
+                    ],
+                    [
+                      5,
+                      17
+                    ],
+                    [
+                      6,
+                      13
+                    ],
+                    [
+                      7,
+                      14
+                    ]
+                  ],
+                  "sources": [
+                    17,
+                    17,
+                    17,
+                    17
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 18,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      7
+                    ],
+                    [
+                      3,
+                      5
+                    ],
+                    [
+                      4,
+                      10
+                    ],
+                    [
+                      5,
+                      15
+                    ],
+                    [
+                      6,
+                      13
+                    ],
+                    [
+                      7,
+                      14
+                    ]
+                  ],
+                  "sources": [
+                    17,
+                    17,
+                    16,
+                    17
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 19,
+                  "binding": [
+                    [
+                      0,
+                      1
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      2
+                    ],
+                    [
+                      3,
+                      3
+                    ],
+                    [
+                      4,
+                      16
+                    ],
+                    [
+                      5,
+                      17
+                    ],
+                    [
+                      6,
+                      11
+                    ],
+                    [
+                      7,
+                      12
+                    ]
+                  ],
+                  "sources": [
+                    16,
+                    16,
+                    17,
+                    16
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 19,
+                  "binding": [
+                    [
+                      0,
+                      1
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      2
+                    ],
+                    [
+                      3,
+                      3
+                    ],
+                    [
+                      4,
+                      10
+                    ],
+                    [
+                      5,
+                      15
+                    ],
+                    [
+                      6,
+                      11
+                    ],
+                    [
+                      7,
+                      12
+                    ]
+                  ],
+                  "sources": [
+                    16,
+                    16,
+                    16,
+                    16
+                  ],
+                  "pairs": []
+                }
+              ],
+              "incomplete": null
+            }
+          },
+          {
+            "scope": "independent CPU source-Run semantic audit; no GPU corrections",
+            "status": "pass",
+            "run_done": true,
+            "run_changed": true,
+            "reference_matches": 10,
+            "reference_new_constructors": 2,
+            "reference_new_unions": 0,
+            "admitted": 4,
+            "graph": {
+              "passed": true,
+              "errors": [],
+              "actual_facts": 35,
+              "expected_facts": 35,
+              "mapped_classes": 28
+            },
+            "facts_decoded": true,
+            "query_exhausted": true,
+            "needs_attention": false,
+            "attention_events": [],
+            "attempt_budget_exhausted": false,
+            "cpu_audit_seconds": 0.009613458008971065,
+            "admission_diagnosis": {
+              "events": [
+                {
+                  "rule_id": 12,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      25
+                    ],
+                    [
+                      3,
+                      26
+                    ]
+                  ],
+                  "sources": [
+                    23,
+                    22,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 12,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      22
+                    ],
+                    [
+                      3,
+                      23
+                    ]
+                  ],
+                  "sources": [
+                    23,
+                    21,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 12,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      7
+                    ],
+                    [
+                      2,
+                      2
+                    ],
+                    [
+                      3,
+                      5
+                    ]
+                  ],
+                  "sources": [
+                    23,
+                    19,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 12,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      19
+                    ],
+                    [
+                      2,
+                      2
+                    ],
+                    [
+                      3,
+                      20
+                    ]
+                  ],
+                  "sources": [
+                    23,
+                    18,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                }
+              ],
+              "incomplete": null
+            }
+          },
+          {
+            "scope": "independent CPU source-Run semantic audit; no GPU corrections",
+            "status": "pass",
+            "run_done": true,
+            "run_changed": false,
+            "reference_matches": 12,
+            "reference_new_constructors": 0,
+            "reference_new_unions": 0,
+            "admitted": 2,
+            "graph": {
+              "passed": true,
+              "errors": [],
+              "actual_facts": 35,
+              "expected_facts": 35,
+              "mapped_classes": 28
+            },
+            "facts_decoded": true,
+            "query_exhausted": true,
+            "needs_attention": false,
+            "attention_events": [],
+            "attempt_budget_exhausted": false,
+            "cpu_audit_seconds": 0.008605832990724593,
+            "admission_diagnosis": {
+              "events": [
+                {
+                  "rule_id": 12,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      22
+                    ],
+                    [
+                      2,
+                      2
+                    ],
+                    [
+                      3,
+                      23
+                    ]
+                  ],
+                  "sources": [
+                    27,
+                    25,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 12,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      25
+                    ],
+                    [
+                      2,
+                      2
+                    ],
+                    [
+                      3,
+                      26
+                    ]
+                  ],
+                  "sources": [
+                    27,
+                    24,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                }
+              ],
+              "incomplete": null
+            }
+          }
+        ]
+      }
+    ],
+    "first_run_pass": 1,
+    "verified_fixedpoints": 1
+  },
+  "eggfuse-current-50-trained": {
+    "scope": "standalone synthetic canon multi-Run GPU audit; exact initial Cells, no CPU corrections",
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "weights_sha256": "ff166d46c61bea2a52f4e3112ed691367c82875616611fb52157b8c756cadf58",
+    "stage": {
+      "ruleset": "canon",
+      "source_rule_ids": [
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277
+      ],
+      "membership_authoritative": true,
+      "full_schedule_replaced_for_training": true
+    },
+    "run_budget": 3,
+    "attempts": 8,
+    "candidate_capacity": 16,
+    "cases": [
+      {
+        "pair": [
+          5,
+          0
+        ],
+        "runs": [
+          {
+            "scope": "independent CPU source-Run semantic audit; no GPU corrections",
+            "status": "pass",
+            "run_done": true,
+            "run_changed": false,
+            "reference_matches": 3,
+            "reference_new_constructors": 0,
+            "reference_new_unions": 0,
+            "admitted": 3,
+            "graph": {
+              "passed": true,
+              "errors": [],
+              "actual_facts": 6,
+              "expected_facts": 6,
+              "mapped_classes": 5
+            },
+            "facts_decoded": true,
+            "query_exhausted": true,
+            "needs_attention": false,
+            "attention_events": [],
+            "attempt_budget_exhausted": false,
+            "cpu_audit_seconds": 0.003510958980768919,
+            "admission_diagnosis": {
+              "events": [
+                {
+                  "rule_id": 6,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      3
+                    ],
+                    [
+                      3,
+                      3
+                    ]
+                  ],
+                  "sources": [
+                    6,
+                    6,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 6,
+                  "binding": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      3
+                    ],
+                    [
+                      2,
+                      2
+                    ],
+                    [
+                      3,
+                      3
+                    ]
+                  ],
+                  "sources": [
+                    6,
+                    6,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                },
+                {
+                  "rule_id": 11,
+                  "binding": [
+                    [
+                      0,
+                      1
+                    ],
+                    [
+                      1,
+                      2
+                    ],
+                    [
+                      2,
+                      3
+                    ],
+                    [
+                      3,
+                      3
+                    ]
+                  ],
+                  "sources": [
+                    5,
+                    5,
+                    0,
+                    0
+                  ],
+                  "pairs": []
+                }
+              ],
+              "incomplete": null
+            }
+          }
+        ]
+      }
+    ],
+    "first_run_pass": 1,
+    "verified_fixedpoints": 1
+  }
+}

@@ -82,8 +82,9 @@ def audit(local,reference,rules,state,roots,next_id,seed_count,execution):
     attention_events=[]
     for rid,event in execution['trace']:
         if bool(event['needs_attention']):
-            flags=('query_incomplete','dirty_input','nonfinite','invalid_keys','rejected_proposal','capacity','payload_invalid','token_refresh_required','stale_witness_context')
-            attention_events.append(dict(rule_id=rid,reasons=[k for k in flags if bool(event[k])]))
+            flags=('query_overflow','query_incomplete','dirty_input','nonfinite','invalid_keys','rejected_proposal','capacity','payload_invalid','token_refresh_required','stale_witness_context')
+            attention_events.append(dict(rule_id=rid,reasons=[k for k in flags if bool(event.get(k,False))],
+                                         pool_sizes=np.array(event.get('pool_sizes',[])).tolist()))
     return expected,dict(scope='independent CPU source-Run semantic audit; no GPU corrections',
         status='pass' if passed else 'difference',run_done=passed,
         run_changed=passed and (expected.constructions!=constructions or expected.unions!=unions),
