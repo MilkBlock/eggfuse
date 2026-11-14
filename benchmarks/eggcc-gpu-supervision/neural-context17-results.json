@@ -1,0 +1,225 @@
+{
+  "scope": "standalone GPU learned candidate matching and immediate-effect token prediction; not runtime candidate enumeration, recurrent rollout or ownership acceptance",
+  "backpropagation": true,
+  "synthetic_only_training": true,
+  "source_rule_ids": [
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298,
+    299
+  ],
+  "steps": 400,
+  "training_samples": 2176,
+  "evaluation_samples": 544,
+  "evaluation_training_feature_overlap": 481,
+  "matching_correct": 543,
+  "false_positive": 1,
+  "false_negative": 0,
+  "groups": [
+    {
+      "rule": 283,
+      "samples": 32,
+      "matching_correct": 31,
+      "positive": 16,
+      "token_mse": 0.003077518427744508,
+      "unseen_features": 0,
+      "unseen_matching_correct": 0
+    },
+    {
+      "rule": 284,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.006934793666005135,
+      "unseen_features": 0,
+      "unseen_matching_correct": 0
+    },
+    {
+      "rule": 285,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.004106801934540272,
+      "unseen_features": 0,
+      "unseen_matching_correct": 0
+    },
+    {
+      "rule": 286,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.005446317605674267,
+      "unseen_features": 0,
+      "unseen_matching_correct": 0
+    },
+    {
+      "rule": 287,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.006004646420478821,
+      "unseen_features": 5,
+      "unseen_matching_correct": 5
+    },
+    {
+      "rule": 288,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.005595879629254341,
+      "unseen_features": 1,
+      "unseen_matching_correct": 1
+    },
+    {
+      "rule": 289,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.007036296185106039,
+      "unseen_features": 0,
+      "unseen_matching_correct": 0
+    },
+    {
+      "rule": 290,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.007980380207300186,
+      "unseen_features": 12,
+      "unseen_matching_correct": 12
+    },
+    {
+      "rule": 291,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.006027222611010075,
+      "unseen_features": 22,
+      "unseen_matching_correct": 22
+    },
+    {
+      "rule": 292,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.008323147892951965,
+      "unseen_features": 9,
+      "unseen_matching_correct": 9
+    },
+    {
+      "rule": 293,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.005580306984484196,
+      "unseen_features": 0,
+      "unseen_matching_correct": 0
+    },
+    {
+      "rule": 294,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.008404899388551712,
+      "unseen_features": 5,
+      "unseen_matching_correct": 5
+    },
+    {
+      "rule": 295,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.0005520381382666528,
+      "unseen_features": 0,
+      "unseen_matching_correct": 0
+    },
+    {
+      "rule": 296,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.003552960930392146,
+      "unseen_features": 0,
+      "unseen_matching_correct": 0
+    },
+    {
+      "rule": 297,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.00704321451485157,
+      "unseen_features": 5,
+      "unseen_matching_correct": 5
+    },
+    {
+      "rule": 298,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.006955087650567293,
+      "unseen_features": 4,
+      "unseen_matching_correct": 4
+    },
+    {
+      "rule": 299,
+      "samples": 32,
+      "matching_correct": 32,
+      "positive": 16,
+      "token_mse": 0.005664505995810032,
+      "unseen_features": 0,
+      "unseen_matching_correct": 0
+    }
+  ],
+  "history": [
+    {
+      "step": 0,
+      "loss": 0.8737147450447083
+    },
+    {
+      "step": 100,
+      "loss": 0.19289642572402954
+    },
+    {
+      "step": 200,
+      "loss": 0.05615907907485962
+    },
+    {
+      "step": 300,
+      "loss": 0.0482620969414711
+    }
+  ],
+  "wall_seconds": 15.987805040960666,
+  "recipe_sha256": "1e8aa8d798be90a1d8cba63c79bf52ba27d8318fbbe480bb88601e4296189b29",
+  "weights_sha256": "2ca7b91cbd7796c64afcdd0574c0f26593673d2203a1e30f2813dbffc7b61fa1",
+  "limitations": [
+    "Negatives are corrupted candidate bindings, not a full missed-match audit",
+    "Output targets are immediate local effects, not saturated family states",
+    "Exact typed connectivity is supplied alongside floating interface features",
+    "No ownership classifier or transfer is trained yet",
+    "Synthetic feature overlap is reported; aggregate accuracy is not unseen-structure generalization"
+  ],
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/neural-context17-v1.tar.gz",
+  "archive_sha256": "870d66501d608d190e14d182520979bb0a357ab181caf773823f98a214c49668",
+  "unseen_feature_samples": 63,
+  "unseen_feature_matching_correct": 63,
+  "source_alignment_loss": true,
+  "generated_token_input_interface": true,
+  "recurrent_rollout_validated": false,
+  "ownership_training": false,
+  "tests_passed": 3,
+  "speedup_claim": false,
+  "command": "python benchmarks/eggcc-gpu-supervision/train_neural_cell_transition.py TRACE.json OUTPUT.json --ruleset context --samples-per-rule 128 --steps 400"
+}
