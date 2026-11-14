@@ -79,7 +79,7 @@ def pack_sources(sources,owners,ref,atoms,field_width):
     return dict(tokens=tokens,seed_x=seed_x,edges=edge,mask=mask,replace=replace)
 
 
-def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_targets=False,combined_owner=False,ordered_owner_request=True,block_owner=False):
+def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_targets=False,combined_owner=False,ordered_owner_request=True,block_owner=False,include_uncovered_transfers=False):
     if block_owner and (combined_owner or not eq_targets):raise ValueError('block owners require separate templates and Eq supervision')
     atoms=max(len(r['query']) for r in recipe['rules']);width=max(len(r['slots']) for r in recipe['rules']);items=[];coverage=set()
     combined_ids=set();max_combined_slots=0
@@ -145,8 +145,8 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                 items.append(dict(parent=record['index'],producer=producer,consumer=rid,**packed,request=request,target=target,valid=True,owner_covered=any(p['covered'] for p in projections)))
                 if transfers is not None:
                     for plan in projections:
-                        if plan['covered']:
-                            transfers.append(dict(chain=len(items)-1,plan=plan,initial_reference=ref,initial_binding=dict(binding),source_binding=dict(record['binding']),source_values=[after.root(v) for v in values],target_values=completed(consumer,binding,after),reference=after))
+                        if plan['covered'] or include_uncovered_transfers:
+                            transfers.append(dict(chain=len(items)-1,plan=dict(plan,producer=producer,consumer=rid),initial_reference=ref,initial_binding=dict(binding),source_binding=dict(record['binding']),source_values=[after.root(v) for v in values],target_values=completed(consumer,binding,after),reference=after))
                             break
                 # Independent, well-typed boundary fact breaks a cross-atom
                 # binding while retaining at least one actual generated source.

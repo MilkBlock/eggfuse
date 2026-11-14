@@ -31,12 +31,14 @@ def initial_case(recipe,record,spare=0,payload_width=None):
         v=ref.root(v)
         return dict(sort=ref.types[v],eq=str(v)) if ref.types[v] is not None else ref.scalar_values[v]
     snapshot=dict(rows=[dict(table=t,values=[value(v) for v in vs],subsumed=False) for t,vs in sorted(ref.normalized_facts())])
-    local,state,ids,rows=prepare_family(lowered,snapshot,[0,1],2+spare)
+    local,state,ids,rows=prepare_family(lowered,snapshot,[0,1],2+spare,include_effects=True)
+    from device_literal_namespace import bind_effect_literals
+    local,ids=bind_effect_literals(local,ids)
     full_lowered,_=lower(recipe);width=max(len(r['slots']) for r in full_lowered['rules'])
     if spare:
         kw=1+max(sum(s['definition']=='query' for s in r['slots']) for r in recipe['rules'])
         state['keys']=np.pad(state['keys'],((0,0),(0,max(0,kw-state['keys'].shape[1]))),constant_values=-1)
-    if payload_width is not None:width=max(width,payload_width)
+    if payload_width is not None:width=max(width,payload_width,len(local['rules'][0]['slots'])+len(local['rules'][1]['slots']))
     current=state['slots'].shape[1]
     for column in COLUMNS:
         if column not in state:continue
@@ -59,7 +61,7 @@ def initial_case(recipe,record,spare=0,payload_width=None):
         for i,s in enumerate(inputs):state['keys'][address,i+1]=values[s]
     target_effect_slots=[s for s,d in enumerate(local['rules'][1]['slots']) if d['definition']!='query']
     if state['slot_valid'][target,target_effect_slots].any():raise AssertionError('CPU prefilled a target RHS slot')
-    inverse={int(dst):int(src) for src,dst in enumerate(oldplan['projection']) if oldplan['required'][src] and not oldplan['copied'][src]}
+    inverse={int(dst):int(src) for src,dst in enumerate(oldplan['projection']) if oldplan['required'][src] and not oldplan['copied'][src]} if oldplan['covered'] else {}
     inputs=[s for s,d in enumerate(local['rules'][1]['slots']) if d['definition']=='query']
     transfer_plan=compile_transfer(local,dict(producer=0,consumer=1,projection=[inverse.get(s,0) for s in inputs],projection_valid=[s in inverse for s in inputs]),width)
     completion=compile_completion(local,width,include_unions=True);completion['retain_predicted_rules']=(0,1)
@@ -71,10 +73,11 @@ def initial_case(recipe,record,spare=0,payload_width=None):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--ruleset',default='context');p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
+    p=argparse.ArgumentParser();p.add_argument('--ruleset',default='context');p.add_argument('--include-uncovered-transfers',action='store_true');p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
     p.add_argument('--proof-token',action='store_true');p.add_argument('--conditional-eq',action='store_true');p.add_argument('--owner-aware',action='store_true');p.add_argument('--semantic-owners',action='store_true');p.add_argument('--block-owner',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--immutable-source',action='store_true')
     p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
+    if a.include_uncovered_transfers and (a.block_owner or a.semantic_owners):raise ValueError('uncovered frames must retain their separate token ownership')
     if a.proof_token and not (a.block_owner and a.immutable_source):raise ValueError('proof token requires immutable block owner')
     if a.proof_token and a.owner_aware:raise ValueError('separate adapter experiments')
     if a.conditional_eq and not a.baked_eq:raise ValueError('conditional proofs require baked Eq')
@@ -88,7 +91,7 @@ def main():
     if a.eq_readout and not (a.follow and a.interface_only):raise ValueError('Eq audit requires interface-only following candidates')
     raw=json.loads(a.trace.read_text());source=raw.get('recipe',raw);recipe,stage_manifest=select_ruleset(source,a.ruleset)
     started=time.perf_counter();records=[];base=samples(recipe,4,93003,records,ordered=True);transfers=[]
-    chain,_=chains(recipe,records,ordered=True,transfers=transfers,eq_targets=a.block_owner,block_owner=a.block_owner)
+    chain,_=chains(recipe,records,ordered=True,transfers=transfers,eq_targets=a.block_owner,block_owner=a.block_owner,include_uncovered_transfers=a.include_uncovered_transfers)
     if a.proof_token:
         catalog={k:chain[k] for k in ('source_request','request','owner_request','owner_proof_code')}
         catalog['valid']=np.ones(len(chain['valid']),bool)
@@ -112,7 +115,7 @@ def main():
             proof['device_known']=mx.array(proof['known'])[None,:]
             if a.conditional_eq:
                 from neural_conditional_eq import compile_cases
-                cp=compile_cases(recipe,r,max(len(q['slots']) for q in recipe['rules']))
+                cp=compile_cases(recipe,r,max(len(q['slots']) for q in recipe['rules']),atoms=base['x'].shape[1],fields=base['x'].shape[-1]//128)
                 proof['conditional']=cp
                 proof['device_conditional']=dict(relation_width=cp['relation_width'],**{k:mx.array(v) for k,v in cp.items() if isinstance(v,np.ndarray)})
     parent=device({k:v[chain['parent']] for k,v in base.items()});dc=device(chain)
@@ -130,13 +133,13 @@ def main():
         if pair not in seen:seen.add(pair);selected.append(record)
     available=len(selected);selected=selected[:a.limit];reports=[]
     for record in selected:
-        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record,spare=int(a.speculate),payload_width=2*max(len(r['slots']) for r in recipe['rules']) if a.block_owner else None)
+        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record,spare=int(a.speculate),payload_width=2*max(len(r['slots']) for r in recipe['rules']) if (a.block_owner or a.include_uncovered_transfers) else None)
         if a.speculate:local=dict(local,rules=local['rules']+recipe['rules'])
         state=device(host);state['tokens']=state['tokens'].at[src].add(source_tokens[i]);state['tokens']=state['tokens'].at[dst].add(tokens[i])
         if a.follow:
             from neural_device_candidates import compile_frames,encode_seeds
             frames=device(compile_frames(local,host['owner_projection'].shape[1]))
-            state=encode_seeds(state,frames,model,mx)
+            state=encode_seeds(state,frames,model,mx,field_width=base['x'].shape[-1]//128)
             cp['retain_predicted_rules']=tuple(range(len(local['rules'])))
         admitted=(first[i]>=0)&(logits[i]>=0)&mx.all(mx.isfinite(tokens[i]))
         state['active']=state['active']&admitted
@@ -168,7 +171,7 @@ def main():
         for column in COLUMNS:
             if 'owner_'+column in final:preserved &= np.array_equal(read(before_host,column,rr,ss,np),read(final,column,rr,ss,np))
         retained=np.array_equal(np.array(state['owner_token_blocks'][dst]),np.array(owner_blocks[i])) if a.block_owner else np.array_equal(np.array(state['tokens'][dst]),np.array(tokens[i]))
-        report=dict(producer=int(chain['producer'][i]),consumer=int(chain['consumer'][i]),executed=int(executed),new_constructors=int(created),new_equivalences=int(merged),pending=bool(marks['needs_attention']),graph=check,facts_decoded=covered,transfer_covered=tp['covered'],transferred=bool(move['transferred']),copied_fields=int(move['copied_fields']),interfaces_preserved=bool(preserved),token_retained=bool(retained))
+        report=dict(physical_slot_width=int(host['owner_projection'].shape[1]),compiled_literal_sites=sum('literal_ids' in s for s in cp['sites']),producer=int(chain['producer'][i]),consumer=int(chain['consumer'][i]),executed=int(executed),new_constructors=int(created),new_equivalences=int(merged),pending=bool(marks['needs_attention']),graph=check,facts_decoded=covered,transfer_covered=tp['covered'],transferred=bool(move['transferred']),copied_fields=int(move['copied_fields']),interfaces_preserved=bool(preserved),token_retained=bool(retained))
         if a.block_owner:report['block_owner_adopted']=bool(move.get('semantic_blocks_adopted',False))
         if a.semantic_owners:
             report['semantic_owner']=dict(semantic_proof,adopted=bool(move.get('semantic_adopted',False)))
@@ -176,6 +179,7 @@ def main():
             report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None,a.baked_eq,baked_proofs,owner if a.owner_aware else None,a.conditional_eq)
         reports.append(report);print(json.dumps(report),flush=True)
     result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,semantic_owners=a.semantic_owners,block_owner=a.block_owner,immutable_source=a.immutable_source,owner_aware=a.owner_aware,proof_token=a.proof_token,baked_eq=a.baked_eq,conditional_eq=a.conditional_eq,speculative_frames=a.speculate,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    result['include_uncovered_transfers']=a.include_uncovered_transfers
     result['stage_manifest']=stage_manifest
     if a.eq_readout:result['readout_weights_sha256']=hashlib.sha256(a.eq_readout.read_bytes()).hexdigest()
     failed=audit_failed(reports,a.follow,a.speculate)
@@ -203,7 +207,7 @@ def audit_failed(reports,follow=False,speculate=False):
 
 def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None,context_capacity=0,speculation=None,baked_eq=False,baked_proofs=None,consumer_owner=None,conditional_eq=False):
     from neural_device_candidates import compile_candidates,candidates
-    counts=dict(candidates=0,accepted=0,false_positive=0,expected=0,recovered=0,missed=0,incomplete_rules=0,accepted_from_generated=0,invalid_predictions=0,context_overflow_rules=0,context_inputs=0)
+    counts=dict(constraint_rejected_predictions=0,candidates=0,accepted=0,false_positive=0,expected=0,recovered=0,missed=0,incomplete_rules=0,accepted_from_generated=0,invalid_predictions=0,context_overflow_rules=0,context_inputs=0)
     groups=[];spec_reports=[]
     if speculation is not None:
         from neural_speculation_audit import audit as audit_speculation
@@ -214,8 +218,9 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
         from neural_eq_readout import targets,metrics
         width=max(len(r['slots']) for r in recipe['rules'])
         counts.update(conditional_cases=0,conditional_covered=0,conditional_added_pairs=0,baked_eq_pairs=0,baked_eq_unsupported_rules=0,raw_semantic_wrong_states=0,semantic_states=0,semantic_wrong_states=0,semantic_false_merge_states=0,semantic_local_wrong_states=0,semantic_external_eq_states=0,semantic_feature_conflicts=0,semantic_local_feature_conflicts=0)
+    query_atoms=max(len(r['query']) for r in recipe['rules']);query_fields=max(len(a['args']) for r in recipe['rules'] for a in r['query'])
     for rid,rule in enumerate(recipe['rules']):
-        host_plan=compile_candidates(local,rule,context_capacity=context_capacity)
+        host_plan=compile_candidates(local,rule,atoms=query_atoms,fields=query_fields,context_capacity=context_capacity,compact_constants=True)
         batch=candidates(state,frames,device(host_plan),mx.array(True),mx.array(True),mx)
         args=(batch['tokens'],batch['edges'],batch['mask'],batch['request'],batch['relations'])
         logits,tokens=consumer_owner.consume(*args,batch['owner_features']) if consumer_owner is not None else model.transition(*args)
@@ -229,7 +234,7 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
                 device_known=proof['device_known'] if 'device_known' in proof else mx.array(proof['known'])[None,:]
                 if conditional_eq:
                     from neural_conditional_eq import compile_cases,select
-                    cp=proof['conditional'] if 'conditional' in proof else compile_cases(recipe,rule,width)
+                    cp=proof['conditional'] if 'conditional' in proof else compile_cases(recipe,rule,width,atoms=query_atoms,fields=query_fields)
                     dp=proof['device_conditional'] if 'device_conditional' in proof else dict(relation_width=cp['relation_width'],**{k:mx.array(v) for k,v in cp.items() if isinstance(v,np.ndarray)})
                     conditional,covered=select(dp,batch['relations'],mx)
                     mx.eval(conditional,covered)
@@ -242,7 +247,8 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
             mx.eval(raw_semantic,semantic)
             raw_eq_scores=[];eq_scores=[];eq_labels=[];eq_masks=[];eq_local=[];feature_labels={};conflicts=local_conflicts=0
             features={k:np.array(batch[k]) for k in ('tokens','edges','mask','request','relations')}
-        live=np.array(batch['live']);finite=np.isfinite(np.array(logits))&np.isfinite(np.array(tokens)).all(axis=1);pred=(np.array(logits)>=0)&live&finite
+        live=np.array(batch['live']);finite=np.isfinite(np.array(logits))&np.isfinite(np.array(tokens)).all(axis=1);raw_pred=(logits>=0)&batch['live']&mx.isfinite(logits)&mx.all(mx.isfinite(tokens),axis=1)
+        pred=np.array(raw_pred&batch['constraints_satisfied']);counts['constraint_rejected_predictions']+=int(mx.sum(raw_pred&~batch['constraints_satisfied']))
         roots=np.array(batch['binding_roots']);sources=np.array(batch['sources'])
         relations=np.array(batch['relations']);half=relations.shape[1]//2
         valid=np.all((relations[:,half:]==0)|(relations[:,:half]>0),axis=1)

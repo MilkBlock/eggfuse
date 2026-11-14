@@ -24,7 +24,10 @@ def prepare_family(recipe,snapshot,rules,spare,include_effects=True):
         for op in (op for original in originals for op in original['effects']):
             if op['kind']=='copy' and 'slot' in op.get('arg',{}):continue
             if op['kind']=='union' and len(op['args'])==2 and all('slot' in a for a in op['args']):continue
-            if op['kind']=='construct' and all('slot' in a for a in op['args']):
+            if op['kind']=='construct':
+                from typed_literal import value as literal_value
+                for arg in op['args']:
+                    if 'slot' not in arg:literal_value(arg)
                 required.append(op['call']['table']);continue
             raise ValueError('unsupported snapshot effect')
         required=sorted(set(required))

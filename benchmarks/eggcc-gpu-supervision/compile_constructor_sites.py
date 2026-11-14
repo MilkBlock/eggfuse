@@ -17,12 +17,18 @@ def compile_sites(recipe):
             table=tables.get(op.get('call',{}).get('table'))
             if op['kind']!='construct':reason='effect:'+op['kind']
             elif table is None or table[1]['kind']!='constructor':reason='not_immutable_constructor'
-            elif any('slot' not in a for a in op['args']):reason='literal_argument'
+            else:
+                from typed_literal import compiled_id
+                for arg,sort in zip(op['args'],table[1].get('schema',[])):
+                    if 'slot' not in arg and arg.get('sort')!=sort:raise ValueError('constructor literal sort mismatch')
+                try:literal_ids=[-1 if 'slot' in a else compiled_id(a,recipe) for a in op['args']]
+                except ValueError:reason='literal_argument'
             if reason:
                 marks.append(dict(rule=rid,operation=oi,reason=reason));blocked=True;continue
-            args=[a['slot'] for a in op['args']]
+            args=[a.get('slot',0) for a in op['args']]
             if any(not 0<=s<len(rule['slots']) for s in [*args,op['dst']]):raise ValueError('invalid source slot')
             sites.append(dict(rule=rid,operation=oi,table=table[0],args=args,dst=op['dst'],last_effect=oi==len(rule['effects'])-1))
+            if any(i>=0 for i in literal_ids):sites[-1]['literal_ids']=literal_ids
             if not blocked:prefix+=1
         prefixes.append(prefix)
     return dict(sites=sites,marks=marks,prefixes=prefixes,

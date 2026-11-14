@@ -20,16 +20,19 @@ def compile_view(recipe,table_id,arity):
                 occurrences.append((oi,op['args'],dict(slot=op['dst']) if op['kind']=='construct' else op['value']))
         for oi,args,result in occurrences:
             operands=[*args,result]
-            supported=len(args)==arity and all('slot' in a for a in operands)
+            from typed_literal import compiled_id
+            try:literal_ids=[-1 if 'slot' in a else compiled_id(a,recipe) for a in operands]
+            except ValueError:literal_ids=[-1]*len(operands)
+            supported=len(args)==arity and all('slot' in a or i>=0 for a,i in zip(operands,literal_ids))
             refs=[a['slot'] for a in operands if 'slot' in a]
             overwritten=[j for j,op in enumerate(rule['effects']) if j>oi and op.get('dst') in refs]
             records.append(dict(rule=rid,after=oi+1,expires=min(overwritten)+1 if overwritten else len(rule['effects'])+1,
                 effect_count=len(rule['effects']),supported=supported,
-                slots=[a['slot'] for a in operands] if supported else [0]*(arity+1)))
+                slots=[a.get('slot',0) for a in operands] if supported else [0]*(arity+1),literal_ids=literal_ids if supported else [-1]*(arity+1)))
     if not records:
-        records=[dict(rule=-1,after=0,expires=1,effect_count=0,supported=False,slots=[0]*(arity+1))]
+        records=[dict(rule=-1,after=0,expires=1,effect_count=0,supported=False,slots=[0]*(arity+1),literal_ids=[-1]*(arity+1))]
     return dict(table=table_id,arity=arity,
-        **{k:np.array([r[k] for r in records],np.int32) for k in ('rule','after','expires','effect_count','slots')},
+        **{k:np.array([r[k] for r in records],np.int32) for k in ('rule','after','expires','effect_count','slots','literal_ids')},
         supported=np.array([r['supported'] for r in records],bool))
 
 
@@ -43,7 +46,11 @@ def project(state,plan,external_complete,eq_settled,xp,include_fields=False):
     row=xp.arange(rows)[:,None,None];positions=plan['slots'][None,:,:]
     slots=read_slot(state,'slots',row,positions,xp)
     roots=read_slot(state,'slot_roots' if has_slot(state,'slot_roots') else 'slots',row,positions,xp)
-    available=xp.all(read_slot(state,'slot_valid',row,positions,xp),axis=2)
+    valid=read_slot(state,'slot_valid',row,positions,xp)
+    if 'literal_ids' in plan:
+        literals=plan['literal_ids'][None,:,:];constant=literals>=0
+        slots=xp.where(constant,literals,slots);roots=xp.where(constant,literals,roots);valid=valid|constant
+    available=xp.all(valid,axis=2)
     live=exists & not_overwritten & available & plan['supported'][None,:]
     lost=exists & ~live
     # Missing observed data is unknown, not evidence the constructor is absent.
@@ -57,7 +64,7 @@ def project(state,plan,external_complete,eq_settled,xp,include_fields=False):
         result.update(values=slots.reshape(rows*records,plan['arity']+1),value_roots=roots.reshape(rows*records,plan['arity']+1),
             source=xp.broadcast_to(xp.arange(rows)[:,None],(rows,records)).reshape(-1),
             record=xp.broadcast_to(xp.arange(records)[None,:],(rows,records)).reshape(-1),
-            source_slots=xp.broadcast_to(plan['slots'][None,:,:],(rows,records,plan['arity']+1)).reshape(rows*records,plan['arity']+1))
+            source_slots=xp.broadcast_to(xp.where(plan['literal_ids']>=0,-1,plan['slots'])[None,:,:] if 'literal_ids' in plan else plan['slots'][None,:,:],(rows,records,plan['arity']+1)).reshape(rows*records,plan['arity']+1))
     return result
 
 

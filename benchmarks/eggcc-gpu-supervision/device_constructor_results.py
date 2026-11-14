@@ -69,6 +69,11 @@ def execute_site(state,site,witness,next_id,limit,quota,xp):
               & (state['keys'][:,0]==site['rule']) & (state['effect_pc']==site['operation']))
     args=read(state,'slot_roots' if has(state,'slot_roots') else 'slots',row[:,None],xp.array(site['args'],dtype=xp.int32)[None,:],xp)
     available=xp.all(read(state,'slot_valid',row[:,None],xp.array(site['args'],dtype=xp.int32)[None,:],xp),axis=1)
+    if 'literal_ids' in site:
+        literals=xp.array(site['literal_ids'],dtype=xp.int32);constant=literals>=0
+        args=xp.where(constant[None,:],literals[None,:],args)
+        slot_live=read(state,'slot_valid',row[:,None],xp.array(site['args'],dtype=xp.int32)[None,:],xp)
+        available=xp.all(slot_live|constant[None,:],axis=1)&xp.all(~constant|(literals<next_id))
     keys=xp.concatenate([xp.full((rows,1),site['table'],dtype=dtype(state)),args],axis=1)
     view_complete=xp.array(witness.get('complete',True),dtype=xp.bool_)
     storage=prepare_write(state,selected&available&view_complete,xp)

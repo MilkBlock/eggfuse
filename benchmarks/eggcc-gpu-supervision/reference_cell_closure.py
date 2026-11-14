@@ -100,10 +100,18 @@ def facts_from_cells(recipe,state):
         operations += [(i,o['call']['table'],[*o['args'],o['value']]) for i,o in enumerate(rule['effects']) if o['kind']=='set']
         for after,table,operands in operations:
             if pc<after+1:continue
-            if any('slot' not in a for a in operands):complete=False;continue
-            slots=np.array([a['slot'] for a in operands],np.int32)
+            slots=np.array([a['slot'] for a in operands if 'slot' in a],np.int32)
             overwritten=any(op.get('dst') in slots for op in rule['effects'][after+1:pc])
             if overwritten or not read(state,'slot_valid',np.array(row),slots,np).all():complete=False;continue
-            values=read(state,'slots',np.array(row),slots,np)
+            values=[];valid=True
+            for arg in operands:
+                if 'slot' in arg:values.append(int(read(state,'slots',np.array(row),np.array(arg['slot']),np)))
+                else:
+                    from typed_literal import value
+                    try:key=identity(value(arg))
+                    except ValueError:valid=False;break
+                    if key not in recipe.get('literal_ids',{}):valid=False;break
+                    values.append(recipe['literal_ids'][key])
+            if not valid:complete=False;continue
             result.append((table,tuple(map(int,values[:-1])),int(values[-1])))
     return result,complete

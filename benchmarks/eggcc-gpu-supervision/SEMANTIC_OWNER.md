@@ -534,3 +534,67 @@ The next concrete execution gaps are literal operand projections and the
 four-atom candidate layout; neither may be silently omitted to claim coverage.
 No runtime speedup is claimed. The existing context one-case GPU handoff smoke
 also passes with the new authoritative stage selection.
+
+## Canon executes literals and four-atom follow queries on GPU (2026-11-14)
+
+The constant-argument boundary is now implemented for exact i64 constructor
+arguments. Source constants are reserved in the scalar identity namespace before
+result allocation. Bake places their integer handles directly in constructor
+site/view parameters; no per-instance constant slot or extra fact relation is
+created. Constructor execution, deduplication and later witness projections use
+these exact handles. Missing constants remain compiler boundaries, and handles
+outside the reserved allocation prefix cannot execute. Tests distinguish
+2^60+7 from 2^60+8 on GPU and verify result reuse. This is exact operand metadata,
+not floating-number equality or a claim that scalar arithmetic is implemented.
+Literal copy effects remain a separate unsupported site kind.
+
+The independent graph decoder now reads literal values from the source operation
+and its reserved scalar registry; it does not use compiled GPU view records.
+Snapshot setup includes effect-table witnesses as well as query-table witnesses,
+so externally existing constructor results are not accidentally omitted from the
+oracle or device views. Plans are tied to their identity namespace and must be
+rebound if that namespace changes.
+
+Follow queries derive atom/field dimensions from the selected ruleset. Canon
+uses four atoms and four fields. A known nullary constructor uses one candidate
+lane instead of 16; four-atom canon queries therefore use at most 4096 combinations
+rather than 65536. Overflow or conflicting resident nullary results still reports
+incomplete coverage. This remains a bounded Cartesian diagnostic, not a scalable
+join implementation or a measured speed improvement. A GPU test compares compact
+and uncompressed four-atom joins against an independent reference.
+
+Exact shared-slot constraints are now enforced on GPU candidate admission.
+Candidate features are not filtered before model inference; raw model mistakes
+remain counted as `constraint_rejected_predictions`. This removes nine false
+admissions without claiming the learned matching head improved. Predicted tokens
+remain floating model outputs; the guard does not prove their Eq contents.
+
+The audit can now include pairs previously excluded by transfer-plan capacity
+(`--include-uncovered-transfers`). Initial matching/bindings remain synthetic
+CPU-provided inputs; subsequent candidate enumeration and constraints execute on
+GPU. Per-pair payload capacity accounts for both lowered Cell layouts; physical
+width is 38 or 42 slots here. Wider payloads and copied fields are costs, not free
+compression. An uncovered prior plan does not authorize transfer: the local
+physical plan is recompiled and checked. Two pairs needing 42 slots previously
+retained separate ownership; all 61 now transfer successfully.
+
+Actual standalone GPU results cover all eight canon rules as both producers and
+consumers, across 61 observed template pairs (not every possible graph):
+
+* 61/61 complete local graph checks pass; 61/61 physical ownership transfers pass.
+  Interfaces and generated tokens are retained. No pending exact completion.
+* 26 scenarios contain compiled constant constructor sites. Across independent
+  scenarios, kernels create 141 constructors and 50 new equivalences.
+* Subsequent matching: zero misses, zero false admissions, zero incomplete rules.
+  The nine raw model false admissions are explicitly rejected by slot guards.
+* Floating next-state Eq: 186/216 exact; 30 wrong states, including 24 false-merge
+  states. Therefore overall status remains `difference`, with no promotion.
+
+Reproduce using `audit_neural_gpu_rhs.py TRACE CANON.transition.safetensors OUT
+--ruleset canon --include-uncovered-transfers --interface-only --follow
+--eq-readout CANON.eq.safetensors --limit 64`.
+`canon-device-results.json` records counts and hashes. This closes real execution
+gaps beyond the earlier CPU-routed training experiment. It still does not prove
+multi-stage saturation, asynchronous audit/repair or trustworthy generated-token
+rollout. The next training/evaluation input must reflect this actual device
+follow distribution rather than only the preceding two-step synthetic bindings.

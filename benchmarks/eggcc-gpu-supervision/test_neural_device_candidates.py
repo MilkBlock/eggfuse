@@ -50,6 +50,7 @@ class DeviceCandidates(unittest.TestCase):
         relation=np.array(batch['relations'])[live];half=relation.shape[1]//2
         valid=np.all((relation[:,half:]==0)|(relation[:,:half]>0),axis=1)
         self.assertEqual(int(valid.sum()),3)
+        np.testing.assert_array_equal(np.array(batch['constraints_satisfied'])[live],valid)
 
     def test_follow_errors_fail_the_audit_even_if_rhs_passes(self):
         good=dict(pending=False,graph=dict(passed=True),facts_decoded=True,interfaces_preserved=True,token_retained=True)
