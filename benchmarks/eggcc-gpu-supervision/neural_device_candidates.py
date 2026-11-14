@@ -78,7 +78,7 @@ def compile_candidates(recipe,consumer,capacity=16,atoms=2,fields=5,context_capa
                 required=demand(consumer,atoms,fields),request=template(consumer)[1],source_tags=input_role_tags(atoms,context_capacity))
 
 
-def candidates(state,frames,plan,external_complete,eq_settled,xp):
+def candidates(state,frames,plan,external_complete,eq_settled,xp,capture_entries=False):
     capacities=plan.get('capacities',[plan['capacity']]*len(plan['views']));count=int(np.prod(capacities));ordinal=xp.arange(count)
     from neural_semantic_owner import resolve
     token_sources,token_valid=resolve(state,xp)
@@ -101,9 +101,11 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp):
         views.append(dict(v,pick=pick,selected=order<n))
         pool_sizes.append(xp.sum(keep.astype(xp.int32)))
         overflow=overflow|(pool_sizes[-1]>cap);complete=complete&v['complete']
+    entry_records=[]
     sources=[];projected=[];raw=[];positions=[];alive=xp.ones(count,xp.bool_)
     for ai,v in enumerate(views):
         lane=(ordinal//int(np.prod(capacities[ai+1:])))%capacities[ai];pick=v['pick'][lane]
+        if capture_entries:entry_records.append(v['record'][pick])
         sources.append(v['source'][pick]);alive=alive&v['selected'][lane]&state['settled'][v['source'][pick]]
         fields=v['value_roots'][pick];padding=plan['fields']-fields.shape[1]
         projected.append(xp.concatenate([fields,xp.full((count,padding),-1,xp.int32)],axis=1));raw.append(v['values'][pick]);positions.append(v['source_slots'][pick])
@@ -138,6 +140,7 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp):
     binding_sources=xp.stack([sources[:,plan['origins'][s][0]] for s in plan['inputs']],axis=1)
     binding_slots=xp.stack([positions[plan['origins'][s][0]][:,plan['origins'][s][1]] for s in plan['inputs']],axis=1)
     extra={}
+    if capture_entries:extra['entry_records']=xp.stack(entry_records,axis=1)
     if 'owner_token_blocks' in state:
         from neural_owner_context import encode as encode_owner
         extra['owner_features']=encode_owner(semantic_sources,state['token_block'][sources],state['owner_completion_code'][semantic_sources],(state['owner_block_count'][semantic_sources]>1)&ready[sources],mask,xp)

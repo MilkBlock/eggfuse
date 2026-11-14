@@ -122,7 +122,7 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,incl
 
         for rid,rule in enumerate(recipe['rules']):
             plan=compile_candidates(local,rule,atoms=base['x'].shape[1],fields=field_width,context_capacity=context_capacity,compact_constants=True)
-            b=candidates(state,frames,device(plan),mx.array(True),mx.array(True),mx);mx.eval(b)
+            b=candidates(state,frames,device(plan),mx.array(True),mx.array(True),mx,capture_entries=current_state);mx.eval(b)
             if not bool(b['complete']):raise ValueError('incomplete synthetic candidate enumeration')
             expected={tuple(sorted(v.items())) for v in oracle.matches(rule)}
             for j in np.flatnonzero(np.array(b['live'])):
@@ -142,6 +142,9 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,incl
                 if current_state:
                     # Actual resolved semantic owners, never logical producer addresses.
                     datum.pop('seed_x')
+                    datum['entry_sources']=np.array(b['sources'][j])
+                    entry=np.array(b['entry_records'][j])
+                    datum['entry_records']=np.pad(entry,(0,len(b['mask'][j])-len(entry)),constant_values=-1)
                     datum['source_rows']=np.array(b['token_sources'][j])
                     datum['x']=current_fields[datum['source_rows']]
                     items.append(datum)

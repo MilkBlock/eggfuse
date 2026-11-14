@@ -224,3 +224,26 @@ No speedup is claimed from this targeted check. Evidence is in
 a successful dense floating context engine: the classifier still reads exact
 incidence and candidate enumeration still precedes it. The intended useful
 floating work must address candidate search/matching, not dead content features.
+
+## Supervise candidate construction instead of post-enumeration Eq prediction
+
+`cell_prefix_targets.py DATA.npz TARGETS.json` transforms current-state captures
+into next-Entry selection labels. An Entry is addressed by actual source Cell row
+and a compiled constructor-view record; selecting only a Cell row is ambiguous
+when it exports several facts of the same constructor. Capture is opt-in in
+`candidates`, so the ordinary runtime does not allocate these label arrays.
+
+Each sample names its context case, rule, selected Entry prefix, offered next
+Entries and *all* legal continuations. Negative prefixes retain empty answer sets;
+multiple matches are not collapsed to a single arbitrary winner. The generator
+rejects contradictory labels for one complete Entry tuple and checks that walking
+its prefix labels reproduces acceptance for every distinct captured tuple.
+
+The existing 61-case synthetic corpus yields 674 prefix states, of which 81 have
+multiple legal choices and 336 have no legal continuation. Dataset and context
+bank hashes are verified. Evidence: `cell-prefix-results.json`. This is supervision
+for a future current-context selection model, not a runtime candidate reduction
+or a complete interaction census. It does not reinstate recurrent latent inputs.
+Generate the input using `--current-state --capture-context`; newly generated
+captures include exact `entry_sources` and `entry_records` alongside semantic
+source rows, keeping physical witness identity separate from semantic ownership.

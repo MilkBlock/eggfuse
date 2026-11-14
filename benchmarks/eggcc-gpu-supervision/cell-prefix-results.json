@@ -1,0 +1,14 @@
+{
+  "scope": "bounded synthetic prefix-selection labels; no runtime candidate reduction yet",
+  "dataset_sha256": "dd9fc82341611b17afad1a8f54ed977b4ca38b8211a22ef1b43c2a52c3674378",
+  "context_bank": {
+    "file": "eggfuse-current-prefix.context.npz",
+    "cases": 61,
+    "sha256": "2e923259f77861a882ed5717120f2495db4e6ad76739811ebf8967956e543784",
+    "scope": "all current Cell rows with visibility mask; exact roots are connectivity metadata, not float inputs"
+  },
+  "states": 674,
+  "multiple_choices": 81,
+  "dead_prefixes": 336,
+  "candidate_acceptance_reconstruction": "checked for every distinct observed Entry tuple"
+}
