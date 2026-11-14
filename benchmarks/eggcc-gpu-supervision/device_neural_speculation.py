@@ -81,7 +81,12 @@ def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp):
     for _ in range(width):labels=xp.min(xp.where(adjacency,labels[None,:],xp.iinfo(labels.dtype).max),axis=1)
     # Preserve the base snapshot's exact identities; the overlay aliases their
     # current roots and the new frame's handles without rewriting stable slots.
-    live=(xp.arange(len(roots))<fresh_base)|xp.any((xp.arange(len(roots))[:,None]==before[None,:])&valid[None,:],axis=1)
+    handles=xp.arange(len(roots))
+    allocated=xp.any((handles[:,None]==before[None,:])&valid[None,:],axis=1)
+    # Earlier speculative frames collapse unused capacity to root zero. A
+    # newly allocated handle must regain its own identity before aliasing.
+    roots=xp.where(allocated&(handles>=fresh_base),handles,roots)
+    live=(handles<fresh_base)|allocated
     roots=xp.where(live,roots,roots[0])
     alias=xp.where((roots[:,None]==before[None,:])&valid[None,:],labels[None,:],roots[:,None])
     proposed=xp.min(alias,axis=1)

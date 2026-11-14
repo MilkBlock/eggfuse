@@ -38,6 +38,22 @@ class Speculation(unittest.TestCase):
         self.assertFalse(bool(ready))
         with self.assertRaises(ValueError):compile_frame(rule,2,2,{})
 
+    def test_fresh_handle_reinitialized_after_prior_frame_collapsed_unused_capacity(self):
+        eq=dict(kind='eq',name='E')
+        rule=dict(slots=[dict(sort=eq,definition='query'),dict(sort=eq,definition=0)],
+                  effects=[dict(kind='construct',call=dict(table='F'),args=[dict(slot=0)],dst=1,sort=eq)])
+        plan=compile_frame(rule,2,2)
+        state=dict(slots=mx.array([[1,2]]),slot_roots=mx.array([[1,2]]),slot_valid=mx.ones((1,2),mx.bool_),scalar_numbers=mx.zeros((1,2)),scalar_numeric=mx.zeros((1,2),mx.bool_),scalar_codes=mx.zeros((1,2,64)),scalar_valid=mx.zeros((1,2),mx.bool_))
+        batch=dict(binding_sources=mx.array([[0]]),binding_slots=mx.array([[0]]))
+        old=mx.array([0,1,2,0,0,0,0,0])
+        payload,roots,ready=frame_payload(state,plan,batch,0,mx.array([-1.]),mx.array(4),old,mx)
+        self.assertTrue(bool(ready));self.assertEqual(int(roots[5]),5)
+        self.assertEqual(int(payload['slot_roots'][0,1]),5)
+        np.testing.assert_array_equal(roots[:4],old[:4])
+        np.testing.assert_array_equal(old,[0,1,2,0,0,0,0,0])
+        _,merged,_=frame_payload(state,plan,batch,0,mx.array([1.]),mx.array(4),old,mx)
+        self.assertEqual(int(merged[5]),1)
+
     def test_original_set_is_a_constructor_fact_in_cpu_audit(self):
         from reference_cell_closure import facts_from_cells
         rule=dict(query=[dict(call=dict(table='F'),args=[dict(slot=0),dict(slot=1)])],effects=[dict(kind='set',call=dict(table='G'),args=[dict(slot=0)],value=dict(slot=1))])

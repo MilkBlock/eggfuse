@@ -823,3 +823,26 @@ whole-graph oracle; 14 have correct local Eq. The legacy `wrong_merge` counter
 names this verifier category; it does not by itself prove the floating model
 caused every failure. Cross-generation witness identity and root propagation
 need investigation before attributing the gap to model accuracy.
+
+### Cross-generation fresh identity initialization bug
+
+The first speculative payload maps unused identity capacity to root zero so
+its whole-graph export has no unexplained allocations. The next payload was
+reusing that root array without initializing its newly allocated handles.
+Thus a new constructor result could incorrectly inherit root zero even when
+the model proposed no such Eq. `frame_payload` now restores only this frame's
+newly allocated handles to their own identities before applying Eq aliases.
+Existing handles and unused capacity keep their prior semantics.
+
+With unchanged v20 weights and the same v25 command, fourth graph passes
+improve 621/642 to 638/642; corrections 21 to 4. The 14 failures with correct
+local Eq disappear entirely. All per-case graph pass counts are nondecreasing;
+858 matches, 216 duplicate instances, 642 admissions and all floating state
+metrics are unchanged. Four remaining inconsistent-result-class failures
+coincide with incorrect local Eq, so audit status remains `difference`.
+
+Nine tests pass, including a regression starting from an identity array whose
+unused capacity was collapsed by an earlier frame. It checks fresh identity
+separation, legal predicted merging, and preservation of prior identities.
+`canon-fresh-identity-results.json` records before/after evidence. Raw report
+and test logs: external SSD `neural-canon-fresh-identity-v26.tar.gz`.
