@@ -1,0 +1,817 @@
+{
+  "scope": "Actual standalone Cell CPU runtime, four workers with canonical ownership; not the native egglog runtime.",
+  "implementation": "25f2b1c211beb75fe07f6fa8c3b46cd417a8c6fc",
+  "source_branch": "codex/owned-worker-births",
+  "requested_bake_branch": {
+    "contains": "d0d8ee33",
+    "branch": "codex/cell-result-routing",
+    "tip": "98540661",
+    "merged_by": "62c5f984"
+  },
+  "flags": [
+    "--repair-ports",
+    "--entry-publications",
+    "--cell-absorption",
+    "--query-workers",
+    "4",
+    "--parallel-residuals",
+    "--parallel-publication",
+    "--cell-execution-grain",
+    "1",
+    "--cell-ownership"
+  ],
+  "tests": {
+    "510": {
+      "runtime": 225,
+      "compiler_runtime_integration": 119,
+      "status": "pass"
+    },
+    "505": {
+      "work_credit": 6,
+      "status": "pass"
+    },
+    "501": {
+      "scope": "initial capture implementation before eligibility bound",
+      "runtime": 224,
+      "compiler_runtime_integration": 119,
+      "ownership_storage": 76,
+      "status": "pass"
+    }
+  },
+  "validation": {
+    "job": 512,
+    "ordinary": {
+      "sum": {
+        "exact_state_runs_effects": true,
+        "runs": 1428,
+        "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "ray": {
+        "exact_state_runs_effects": true,
+        "runs": 16883,
+        "state_sha256": "38aaeea197bdc060e9294034c8e49ec0f2e55f610f93515b51f00c3fdbe8aacd"
+      }
+    },
+    "native_sum_status": "pass",
+    "learned": {
+      "scope": "unchanged saved Bake catalog; differential final state, Run summaries and effects; not native acceptance or timing",
+      "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+      "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "exact_state_runs_effects": true,
+      "runs": 1428
+    },
+    "limitations": [
+      "Native acceptance covers only the reviewed ordinary sum-bits final-state contract.",
+      "Complete Raytrace and learned-catalog checks compare final state, ordered Run summaries and effects, not full-program per-Run graph snapshots or native equivalence.",
+      "Integration fixtures retain Run graph, ordered binding, actual foreign result, retirement, union, visibility and first-error checks."
+    ]
+  },
+  "rejected_first_layout": {
+    "implementation": "831acacc",
+    "validation_job": 506,
+    "status": "semantic pass; excessive compiled storage",
+    "ray_plan_bytes": 71855024,
+    "cancelled_timing_job": 508,
+    "cancelled_before_start": true
+  },
+  "timing": {
+    "job": 513,
+    "order_policy": "whole control, optional previous experiment, then whole candidate; never interleaved",
+    "commits": {
+      "control": "62c5f9848f262a81cec8a7acfbba095de533dfa5",
+      "candidate": "25f2b1c211beb75fe07f6fa8c3b46cd417a8c6fc",
+      "previous": "1f1ce92f689c08ebd5eb705f48049a3e4957b30c"
+    },
+    "groups": [
+      [
+        "control",
+        "sum"
+      ],
+      [
+        "control",
+        "ray"
+      ],
+      [
+        "control",
+        "learned"
+      ],
+      [
+        "previous",
+        "sum"
+      ],
+      [
+        "previous",
+        "ray"
+      ],
+      [
+        "previous",
+        "learned"
+      ],
+      [
+        "candidate",
+        "sum"
+      ],
+      [
+        "candidate",
+        "ray"
+      ],
+      [
+        "candidate",
+        "learned"
+      ]
+    ],
+    "warmups_per_group": 1,
+    "samples_per_lane": {
+      "sum": 5,
+      "ray": 3,
+      "learned": 5
+    },
+    "boundary_guards": {
+      "count": 114,
+      "all_clear": true
+    },
+    "workloads": {
+      "sum": {
+        "control": {
+          "medians": {
+            "inference_seconds": 0.025895917,
+            "process_wall_seconds": 0.1493802920449525,
+            "load_seconds": 0.067159083,
+            "setup_seconds": 0.014304084,
+            "export_seconds": 0.005724791,
+            "report_seconds": 0.008404708,
+            "process_unattributed_seconds": 0.03644920800243634,
+            "process_after_report_residual_seconds": 0.028010375044952514
+          },
+          "inference_samples": [
+            0.026445459,
+            0.025895917,
+            0.0261205,
+            0.023981959,
+            0.025390916
+          ],
+          "runtime_sha256": "6f34f0d3671ac2aa122cd03ab58bcffafa5bf5479435c3769d56b0492ca18957",
+          "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "raw_samples_sha256": "00a408c4ee269ad67b9ed3be196f1eef636b73baf931863d985462630f072472"
+        },
+        "previous": {
+          "medians": {
+            "inference_seconds": 0.033832791,
+            "process_wall_seconds": 0.16263958299532533,
+            "load_seconds": 0.070377167,
+            "setup_seconds": 0.0146275,
+            "export_seconds": 0.005926583,
+            "report_seconds": 0.008525792,
+            "process_unattributed_seconds": 0.038258416967709735,
+            "process_after_report_residual_seconds": 0.028783499012696365
+          },
+          "inference_samples": [
+            0.033832791,
+            0.034345375,
+            0.0321235,
+            0.033381708,
+            0.03519925
+          ],
+          "runtime_sha256": "e4cde4da190bc9e117cf9d1f9f07d9c3d5050f24f54c5e8b0b6ac1304f661b35",
+          "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "raw_samples_sha256": "9df712d8893de50e9f7965c1966df11ce7fbdd0fde5cef2c1772709ae2f6103b"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 0.034751083,
+            "process_wall_seconds": 0.15905325004132465,
+            "load_seconds": 0.068422084,
+            "setup_seconds": 0.014073583,
+            "export_seconds": 0.005816875,
+            "report_seconds": 0.009020792,
+            "process_unattributed_seconds": 0.03662137602234429,
+            "process_after_report_residual_seconds": 0.02779583402234429
+          },
+          "inference_samples": [
+            0.033420667,
+            0.034751083,
+            0.035563083,
+            0.034649083,
+            0.034773958
+          ],
+          "runtime_sha256": "6a9a27d731490448c671f4d9dab391dba49493f629af0bd97884573338e63e37",
+          "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+          "raw_samples_sha256": "3ed2e106676981c49f4a5a50342b8cd2e5c4255fde4d8d62476354cc3dd70ec9"
+        },
+        "inference_change_percent": 34.19522081415383,
+        "change_from_previous_percent": 2.7142070543337615
+      },
+      "ray": {
+        "control": {
+          "medians": {
+            "inference_seconds": 5.53573675,
+            "process_wall_seconds": 8.115088124992326,
+            "load_seconds": 0.381488125,
+            "setup_seconds": 0.048908334,
+            "export_seconds": 1.230991333,
+            "report_seconds": 0.426919458,
+            "process_unattributed_seconds": 0.8988748739721615,
+            "process_after_report_residual_seconds": 0.4714619579721615
+          },
+          "inference_samples": [
+            5.53573675,
+            6.216560583,
+            5.5276645
+          ],
+          "runtime_sha256": "6f34f0d3671ac2aa122cd03ab58bcffafa5bf5479435c3769d56b0492ca18957",
+          "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "raw_samples_sha256": "a9a2eafd09cbfc7ae174eb1041971cadcaafcc4fb93ddb1440aec8157fbc8e57"
+        },
+        "previous": {
+          "medians": {
+            "inference_seconds": 6.199530833,
+            "process_wall_seconds": 8.742367708997335,
+            "load_seconds": 0.362598125,
+            "setup_seconds": 0.047633167,
+            "export_seconds": 1.237124833,
+            "report_seconds": 0.447265541,
+            "process_unattributed_seconds": 0.9283264169664092,
+            "process_after_report_residual_seconds": 0.4810608759664092
+          },
+          "inference_samples": [
+            6.235484125,
+            6.199530833,
+            6.164759166
+          ],
+          "runtime_sha256": "e4cde4da190bc9e117cf9d1f9f07d9c3d5050f24f54c5e8b0b6ac1304f661b35",
+          "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "raw_samples_sha256": "ccbb2cd0f69bab2f2e3cb1f63ce308d5211171e3ea3140ff9c3e2504ac25b275"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 6.2205785,
+            "process_wall_seconds": 8.795409166952595,
+            "load_seconds": 0.373682625,
+            "setup_seconds": 0.049331,
+            "export_seconds": 1.2208415,
+            "report_seconds": 0.439914,
+            "process_unattributed_seconds": 0.9238747489525956,
+            "process_after_report_residual_seconds": 0.48476891698604385
+          },
+          "inference_samples": [
+            6.2264025,
+            6.194953583,
+            6.2205785
+          ],
+          "runtime_sha256": "6a9a27d731490448c671f4d9dab391dba49493f629af0bd97884573338e63e37",
+          "program_sha256": "5e13030aa16e60b76a62b1db154f2533c055ee5e65f0f035bb2ef3c5e91fe0a1",
+          "raw_samples_sha256": "1209031ce0cf08101298c5e1a645b4a80bf4b1baaccf4b13f41007f3ae4c628c"
+        },
+        "inference_change_percent": 12.371284635238489,
+        "change_from_previous_percent": 0.339504190994
+      },
+      "learned": {
+        "control": {
+          "medians": {
+            "inference_seconds": 0.027480958,
+            "process_wall_seconds": 0.1866298340028152,
+            "load_seconds": 0.103046875,
+            "setup_seconds": 0.013066375,
+            "export_seconds": 0.005511416,
+            "report_seconds": 0.008879416,
+            "process_unattributed_seconds": 0.03798750002313833,
+            "process_after_report_residual_seconds": 0.02833045802785457
+          },
+          "inference_samples": [
+            0.026628791,
+            0.027698333,
+            0.028849083,
+            0.026825625,
+            0.027480958
+          ],
+          "runtime_sha256": "6f34f0d3671ac2aa122cd03ab58bcffafa5bf5479435c3769d56b0492ca18957",
+          "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+          "raw_samples_sha256": "d0cba7e7aee1c6fceae85114191026af336823bf3aec72235428692560ca80a6"
+        },
+        "previous": {
+          "medians": {
+            "inference_seconds": 0.035634875,
+            "process_wall_seconds": 0.19564354099566117,
+            "load_seconds": 0.104550125,
+            "setup_seconds": 0.01248675,
+            "export_seconds": 0.005841125,
+            "report_seconds": 0.009309334,
+            "process_unattributed_seconds": 0.03700962499146479,
+            "process_after_report_residual_seconds": 0.027946374020548698
+          },
+          "inference_samples": [
+            0.035627334,
+            0.036241541,
+            0.035634875,
+            0.035660833,
+            0.035061416
+          ],
+          "runtime_sha256": "e4cde4da190bc9e117cf9d1f9f07d9c3d5050f24f54c5e8b0b6ac1304f661b35",
+          "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+          "raw_samples_sha256": "2d7b2d13d384eb4ea8a19a730795bb65a8b6bf398da4ff2a509e17dc6e5c0f41"
+        },
+        "candidate": {
+          "medians": {
+            "inference_seconds": 0.035564625,
+            "process_wall_seconds": 0.19445487501798198,
+            "load_seconds": 0.104344,
+            "setup_seconds": 0.012473792,
+            "export_seconds": 0.005803041,
+            "report_seconds": 0.008912541,
+            "process_unattributed_seconds": 0.036889666009528144,
+            "process_after_report_residual_seconds": 0.02799899996272419
+          },
+          "inference_samples": [
+            0.033907292,
+            0.035414333,
+            0.035564625,
+            0.035675292,
+            0.036200084
+          ],
+          "runtime_sha256": "6a9a27d731490448c671f4d9dab391dba49493f629af0bd97884573338e63e37",
+          "program_sha256": "b83f004a8c24daf0173a159bf394cf37a7667d30a204e07e37e65b2c98cea2bf",
+          "raw_samples_sha256": "a00b666b3dbbb5d6324076ff31a4b40a09290b9ae8029eb2c1419f9c97074778"
+        },
+        "inference_change_percent": 29.415521103740282,
+        "change_from_previous_percent": -0.19713833709252837
+      }
+    },
+    "measurement_status": "completed-with-boundary-guards",
+    "limitations": "Short grouped diagnostic; order, thermal drift and activity between guards remain possible."
+  },
+  "work": {
+    "sum": {
+      "previous": {
+        "compiled_payload_bytes": 338854,
+        "births": {
+          "capture_layout_reads": null,
+          "capture_slot_checks": null,
+          "captured_reads": 198,
+          "captured_writes": 198,
+          "source_operand_reads": 3557,
+          "operand_reads": 1030,
+          "plan_handles": 1101,
+          "root_jobs": 1101,
+          "prefix_reads": 0,
+          "worker_operations": 1502,
+          "slot_growths": 95,
+          "slot_bytes": 11616,
+          "pending_growths": 10,
+          "pending_bytes": 4480,
+          "result_reads": 964,
+          "evaluations": 641
+        },
+        "scheduler": {
+          "admission_dependency_early": 0,
+          "admission_dependency_probes": 0,
+          "admission_dependency_waits": 0,
+          "admission_empty_polls": 31,
+          "admission_fence_fallbacks": 0,
+          "admission_jobs": 78,
+          "admission_overlap_instances": 31,
+          "admission_polls": 36,
+          "admission_waves": 2,
+          "batches": 135,
+          "budget_checks": 0,
+          "budget_flushes": 0,
+          "completed_without_queue": 18,
+          "dependency_admissions": 0,
+          "dependency_flushes": 0,
+          "effect_flushes": 0,
+          "error_fences": 0,
+          "event_bytes": 1105480,
+          "event_completed_early": 119,
+          "event_early_cells": 287,
+          "event_wait_ns": 4664253,
+          "event_waves": 203,
+          "instances": 2895,
+          "jobs": 1101,
+          "max_ready": 58,
+          "mixed_rule_batches": 73,
+          "operand_reads": 820,
+          "outside_group_fences": 37,
+          "prepared_key_fallbacks": 0,
+          "prepared_resumptions": 703,
+          "queue_bytes": 2688896,
+          "queue_growths": 884,
+          "revalidations": 8,
+          "rule_group_carries": 253,
+          "rule_groups": 679,
+          "run_end_fences": 74,
+          "wait_ns": 8722370,
+          "worker_jobs": [
+            484,
+            270,
+            224,
+            107
+          ]
+        },
+        "lookups": 12984,
+        "signal_bindings_created": 8909,
+        "source_registration": {
+          "constructor_pipeline_cells": 0,
+          "constructor_pipeline_regions": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_table_waits": 0
+        }
+      },
+      "candidate": {
+        "compiled_payload_bytes": 421590,
+        "births": {
+          "capture_layout_reads": 1101,
+          "capture_slot_checks": 2701,
+          "captured_reads": 198,
+          "captured_writes": 198,
+          "source_operand_reads": 3557,
+          "operand_reads": 1036,
+          "plan_handles": 1101,
+          "root_jobs": 1101,
+          "prefix_reads": 0,
+          "worker_operations": 1502,
+          "slot_growths": 95,
+          "slot_bytes": 11616,
+          "pending_growths": 10,
+          "pending_bytes": 4480,
+          "result_reads": 983,
+          "evaluations": 645
+        },
+        "scheduler": {
+          "admission_dependency_early": 0,
+          "admission_dependency_probes": 0,
+          "admission_dependency_waits": 0,
+          "admission_empty_polls": 31,
+          "admission_fence_fallbacks": 0,
+          "admission_jobs": 78,
+          "admission_overlap_instances": 31,
+          "admission_polls": 41,
+          "admission_waves": 2,
+          "batches": 135,
+          "budget_checks": 0,
+          "budget_flushes": 0,
+          "completed_without_queue": 18,
+          "dependency_admissions": 0,
+          "dependency_flushes": 0,
+          "effect_flushes": 0,
+          "error_fences": 0,
+          "event_bytes": 1081832,
+          "event_completed_early": 181,
+          "event_early_cells": 370,
+          "event_wait_ns": 2268869,
+          "event_waves": 227,
+          "instances": 2895,
+          "jobs": 1101,
+          "max_ready": 58,
+          "mixed_rule_batches": 73,
+          "operand_reads": 820,
+          "outside_group_fences": 37,
+          "prepared_key_fallbacks": 0,
+          "prepared_resumptions": 703,
+          "queue_bytes": 2688896,
+          "queue_growths": 884,
+          "revalidations": 8,
+          "rule_group_carries": 253,
+          "rule_groups": 679,
+          "run_end_fences": 74,
+          "wait_ns": 5185333,
+          "worker_jobs": [
+            487,
+            276,
+            177,
+            145
+          ]
+        },
+        "lookups": 12984,
+        "signal_bindings_created": 8909,
+        "source_registration": {
+          "constructor_pipeline_cells": 0,
+          "constructor_pipeline_regions": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_table_waits": 0
+        }
+      }
+    },
+    "ray": {
+      "previous": {
+        "compiled_payload_bytes": 4347184,
+        "births": {
+          "capture_layout_reads": null,
+          "capture_slot_checks": null,
+          "captured_reads": 32328,
+          "captured_writes": 32328,
+          "source_operand_reads": 561542,
+          "operand_reads": 265943,
+          "plan_handles": 216431,
+          "root_jobs": 203620,
+          "prefix_reads": 1118,
+          "worker_operations": 329966,
+          "slot_growths": 7364,
+          "slot_bytes": 1860408,
+          "pending_growths": 166,
+          "pending_bytes": 780160,
+          "result_reads": 64497,
+          "evaluations": 41371
+        },
+        "scheduler": {
+          "admission_dependency_early": 0,
+          "admission_dependency_probes": 0,
+          "admission_dependency_waits": 0,
+          "admission_empty_polls": 100827,
+          "admission_fence_fallbacks": 301,
+          "admission_jobs": 157005,
+          "admission_overlap_instances": 106823,
+          "admission_polls": 116293,
+          "admission_waves": 2907,
+          "batches": 6518,
+          "budget_checks": 1999,
+          "budget_flushes": 0,
+          "completed_without_queue": 4924,
+          "dependency_admissions": 11693,
+          "dependency_flushes": 0,
+          "effect_flushes": 3,
+          "error_fences": 0,
+          "event_bytes": 215993632,
+          "event_completed_early": 56778,
+          "event_early_cells": 92292,
+          "event_wait_ns": 186491090,
+          "event_waves": 21606,
+          "instances": 552455,
+          "jobs": 216430,
+          "max_ready": 64,
+          "mixed_rule_batches": 1833,
+          "operand_reads": 189483,
+          "outside_group_fences": 415,
+          "prepared_key_fallbacks": 0,
+          "prepared_resumptions": 71435,
+          "queue_bytes": 200345800,
+          "queue_growths": 26046,
+          "revalidations": 4,
+          "rule_group_carries": 4589,
+          "rule_groups": 8803,
+          "run_end_fences": 1356,
+          "wait_ns": 737095133,
+          "worker_jobs": [
+            60441,
+            65799,
+            49615,
+            40174
+          ]
+        },
+        "lookups": 3974601,
+        "signal_bindings_created": 2151665,
+        "source_registration": {
+          "constructor_pipeline_cells": 91541,
+          "constructor_pipeline_regions": 1565,
+          "constructor_pipeline_root_hits": 684,
+          "constructor_pipeline_root_jobs": 68451,
+          "constructor_pipeline_root_reads": 69135,
+          "constructor_pipeline_table_waits": 99
+        }
+      },
+      "candidate": {
+        "compiled_payload_bytes": 4868384,
+        "births": {
+          "capture_layout_reads": 216421,
+          "capture_slot_checks": 610809,
+          "captured_reads": 32315,
+          "captured_writes": 32315,
+          "source_operand_reads": 561621,
+          "operand_reads": 266417,
+          "plan_handles": 216421,
+          "root_jobs": 203610,
+          "prefix_reads": 1118,
+          "worker_operations": 329935,
+          "slot_growths": 7343,
+          "slot_bytes": 1858392,
+          "pending_growths": 166,
+          "pending_bytes": 780160,
+          "result_reads": 64831,
+          "evaluations": 41753
+        },
+        "scheduler": {
+          "admission_dependency_early": 0,
+          "admission_dependency_probes": 0,
+          "admission_dependency_waits": 0,
+          "admission_empty_polls": 78271,
+          "admission_fence_fallbacks": 301,
+          "admission_jobs": 157373,
+          "admission_overlap_instances": 89155,
+          "admission_polls": 94178,
+          "admission_waves": 2915,
+          "batches": 6517,
+          "budget_checks": 1999,
+          "budget_flushes": 0,
+          "completed_without_queue": 4880,
+          "dependency_admissions": 11693,
+          "dependency_flushes": 0,
+          "effect_flushes": 3,
+          "error_fences": 0,
+          "event_bytes": 213440408,
+          "event_completed_early": 54363,
+          "event_early_cells": 99056,
+          "event_wait_ns": 71460157,
+          "event_waves": 22509,
+          "instances": 552411,
+          "jobs": 216420,
+          "max_ready": 64,
+          "mixed_rule_batches": 1835,
+          "operand_reads": 189555,
+          "outside_group_fences": 414,
+          "prepared_key_fallbacks": 0,
+          "prepared_resumptions": 71391,
+          "queue_bytes": 200291016,
+          "queue_growths": 26039,
+          "revalidations": 4,
+          "rule_group_carries": 4590,
+          "rule_groups": 8803,
+          "run_end_fences": 1356,
+          "wait_ns": 634210691,
+          "worker_jobs": [
+            58538,
+            60293,
+            50845,
+            46344
+          ]
+        },
+        "lookups": 3974633,
+        "signal_bindings_created": 2151665,
+        "source_registration": {
+          "constructor_pipeline_cells": 91650,
+          "constructor_pipeline_regions": 1567,
+          "constructor_pipeline_root_hits": 585,
+          "constructor_pipeline_root_jobs": 56061,
+          "constructor_pipeline_root_reads": 56646,
+          "constructor_pipeline_table_waits": 95
+        }
+      }
+    },
+    "learned": {
+      "previous": {
+        "compiled_payload_bytes": 338854,
+        "births": {
+          "capture_layout_reads": null,
+          "capture_slot_checks": null,
+          "captured_reads": 198,
+          "captured_writes": 198,
+          "source_operand_reads": 3557,
+          "operand_reads": 1030,
+          "plan_handles": 1101,
+          "root_jobs": 1101,
+          "prefix_reads": 0,
+          "worker_operations": 1502,
+          "slot_growths": 95,
+          "slot_bytes": 11616,
+          "pending_growths": 10,
+          "pending_bytes": 4480,
+          "result_reads": 960,
+          "evaluations": 642
+        },
+        "scheduler": {
+          "admission_dependency_early": 0,
+          "admission_dependency_probes": 0,
+          "admission_dependency_waits": 0,
+          "admission_empty_polls": 24,
+          "admission_fence_fallbacks": 0,
+          "admission_jobs": 78,
+          "admission_overlap_instances": 24,
+          "admission_polls": 32,
+          "admission_waves": 2,
+          "batches": 135,
+          "budget_checks": 0,
+          "budget_flushes": 0,
+          "completed_without_queue": 18,
+          "dependency_admissions": 0,
+          "dependency_flushes": 0,
+          "effect_flushes": 0,
+          "error_fences": 0,
+          "event_bytes": 1114520,
+          "event_completed_early": 103,
+          "event_early_cells": 218,
+          "event_wait_ns": 3116835,
+          "event_waves": 186,
+          "instances": 2895,
+          "jobs": 1101,
+          "max_ready": 58,
+          "mixed_rule_batches": 73,
+          "operand_reads": 820,
+          "outside_group_fences": 37,
+          "prepared_key_fallbacks": 0,
+          "prepared_resumptions": 703,
+          "queue_bytes": 2688896,
+          "queue_growths": 884,
+          "revalidations": 8,
+          "rule_group_carries": 253,
+          "rule_groups": 679,
+          "run_end_fences": 74,
+          "wait_ns": 5743411,
+          "worker_jobs": [
+            461,
+            252,
+            232,
+            140
+          ]
+        },
+        "lookups": 12716,
+        "signal_bindings_created": 8108,
+        "source_registration": {
+          "constructor_pipeline_cells": 0,
+          "constructor_pipeline_regions": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_table_waits": 0
+        }
+      },
+      "candidate": {
+        "compiled_payload_bytes": 421590,
+        "births": {
+          "capture_layout_reads": 1101,
+          "capture_slot_checks": 2701,
+          "captured_reads": 198,
+          "captured_writes": 198,
+          "source_operand_reads": 3557,
+          "operand_reads": 1018,
+          "plan_handles": 1101,
+          "root_jobs": 1101,
+          "prefix_reads": 0,
+          "worker_operations": 1502,
+          "slot_growths": 95,
+          "slot_bytes": 11616,
+          "pending_growths": 10,
+          "pending_bytes": 4480,
+          "result_reads": 958,
+          "evaluations": 635
+        },
+        "scheduler": {
+          "admission_dependency_early": 0,
+          "admission_dependency_probes": 0,
+          "admission_dependency_waits": 0,
+          "admission_empty_polls": 31,
+          "admission_fence_fallbacks": 0,
+          "admission_jobs": 78,
+          "admission_overlap_instances": 31,
+          "admission_polls": 36,
+          "admission_waves": 2,
+          "batches": 135,
+          "budget_checks": 0,
+          "budget_flushes": 0,
+          "completed_without_queue": 18,
+          "dependency_admissions": 0,
+          "dependency_flushes": 0,
+          "effect_flushes": 0,
+          "error_fences": 0,
+          "event_bytes": 1073960,
+          "event_completed_early": 127,
+          "event_early_cells": 412,
+          "event_wait_ns": 2203291,
+          "event_waves": 216,
+          "instances": 2895,
+          "jobs": 1101,
+          "max_ready": 58,
+          "mixed_rule_batches": 73,
+          "operand_reads": 820,
+          "outside_group_fences": 37,
+          "prepared_key_fallbacks": 0,
+          "prepared_resumptions": 703,
+          "queue_bytes": 2688896,
+          "queue_growths": 884,
+          "revalidations": 8,
+          "rule_group_carries": 253,
+          "rule_groups": 679,
+          "run_end_fences": 74,
+          "wait_ns": 5080908,
+          "worker_jobs": [
+            487,
+            249,
+            209,
+            140
+          ]
+        },
+        "lookups": 12716,
+        "signal_bindings_created": 8108,
+        "source_registration": {
+          "constructor_pipeline_cells": 0,
+          "constructor_pipeline_regions": 0,
+          "constructor_pipeline_root_hits": 0,
+          "constructor_pipeline_root_jobs": 0,
+          "constructor_pipeline_root_reads": 0,
+          "constructor_pipeline_table_waits": 0
+        }
+      }
+    }
+  },
+  "admission": {
+    "status": "failed",
+    "merged_into_performance_baseline": false,
+    "reason": "No repeatable inference benefit over the prior implementation; all three cases remain slower than the original merged-Bake control. Layout derivation is correct but is not a demonstrated speedup."
+  },
+  "artifacts": {
+    "experiment": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/compiled-worker-inputs-bounded",
+    "timing": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-bake-routing-refresh/compiled-worker-inputs-bounded-timing",
+    "timing_result_sha256": "4511319ca100bd7744cf6675ec690d823d037080ec9763e0d8cdc94369d11a02",
+    "work_sha256": "9a997be22026589edba67820ed017709391d3377a2f2987cf40cfeea3a291676"
+  }
+}
