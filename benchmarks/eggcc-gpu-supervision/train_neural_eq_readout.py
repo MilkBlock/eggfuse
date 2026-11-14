@@ -54,10 +54,13 @@ def main():
     db,dc,dd,dt,de=map(device,(base,chain,direct,test,tc))
     dp=device(typed_data) if typed_data is not None else None
     typed_positive=(np.arange(len(typed_data['valid'])) if a.typed_all_candidates else np.flatnonzero(typed_data['valid']>0)) if typed_data is not None else None
-    third_train=third_test=None;dg=None;third_positive=None
+    third_train=third_test=None;dg=None;third_positive=None;third_novel=None
     if a.third_train:
         third_train=dict(np.load(a.third_train,allow_pickle=False));third_test=dict(np.load(a.third_test,allow_pickle=False))
         dg=device(third_train);third_positive=np.flatnonzero(third_train['valid']>0)
+        from neural_third_step import fingerprints as third_signatures
+        seen_third=set(third_signatures(third_train))
+        third_novel=np.array([v not in seen_third for v in third_signatures(third_test)])
     mx.random.seed(117);model=CompletionReadout(direct['x'].shape[-1],direct['relations'].shape[-1],width);(model.load_weights if (a.evaluate_only or a.resume) else model.cell.load_weights)(str(a.weights))
     from mlx.utils import tree_flatten
     frozen_before={k:np.array(v).copy() for k,v in tree_flatten(model.cell.parameters()) if k.startswith(('relation.','match_relation.'))}
@@ -72,16 +75,19 @@ def main():
         changed=pos&np.any((tc['eq_target'][perm]!=tc['eq_target'])&tc['eq_mask'],axis=1)
         novel=pos&~overlap
         return dict(unseen_states=int(novel.sum()),unseen_predicted_token=metrics(np.array(actual)[novel],tc['eq_target'][novel],tc['eq_mask'][novel],width),shuffled_within_template=metrics(np.array(shuffled)[pos],labels,mask,width),shuffled_semantically_changed_states=int(changed.sum()),predicted_token=metrics(np.array(actual)[pos],labels,mask,width),teacher_token=metrics(np.array(teacher)[pos],labels,mask,width),zero_token=metrics(np.array(zero)[pos],labels,mask,width),matching_errors=int((((np.array(first)>=0)&(np.array(second)>=0))!=pos).sum()))
-    def evaluate_third(data):
+    def evaluate_third(data,selected=None):
         from neural_third_step import replay
         scores=[];matches=[]
         for start in range(0,len(data['valid']),128):
             b=device({k:v[start:start+128] for k,v in data.items()});logits,token=replay(model.cell,b)
             out=model.eq(token,b['request']);mx.eval(out,logits);scores.append(np.array(out));matches.append(np.array(logits)>=0)
-        pos=data['valid']>0
-        return dict(eq=metrics(np.concatenate(scores)[pos],data['eq_target'][pos],data['eq_mask'][pos],width),matching_errors=int((np.concatenate(matches)!=pos).sum()))
+        selected=np.ones(len(data['valid']),bool) if selected is None else selected
+        pos=(data['valid']>0)&selected
+        return dict(eq=metrics(np.concatenate(scores)[pos],data['eq_target'][pos],data['eq_mask'][pos],width),matching_errors=int(((np.concatenate(matches)!=(data['valid']>0))&selected).sum()))
     before=evaluate()
-    if third_test is not None:before['third_step']=evaluate_third(third_test)
+    if third_test is not None:
+        before['third_step']=evaluate_third(third_test)
+        before['third_step_unseen']=evaluate_third(third_test,third_novel)
     print(json.dumps(dict(before=before)),flush=True)
     grad=nn.value_and_grad(model,objective);optimizer=optim.Adam(learning_rate=5e-4);rng=np.random.default_rng(119)
     for step in range(0 if a.evaluate_only else a.steps):
@@ -98,6 +104,7 @@ def main():
     after=evaluate()
     if third_test is not None:
         after['third_step']=evaluate_third(third_test);after['third_training']=evaluate_third(third_train)
+        after['third_step_unseen']=evaluate_third(third_test,third_novel)
     if dp is not None:
         _,tt=model.cell(dp['x'],dp['edges'],dp['mask'],dp['request'],dp['relations']);tp=model.eq(tt,dp['request']);mx.eval(tp)
         pos=typed_data['valid']>0

@@ -1,0 +1,436 @@
+{
+  "scope": "Standalone MLX GPU synthetic canon three-step replay and actual device audit; not native runtime or saturation",
+  "training": {
+    "include_uncovered_transfers": true,
+    "observed_template_pairs": 61,
+    "block_owner": false,
+    "synthetic_only": true,
+    "seed": 23001,
+    "source_samples_per_rule": 8,
+    "per_pair": 2,
+    "context_capacity": 0,
+    "cases": 122,
+    "physical_transfers": 122,
+    "candidates": 1436,
+    "valid": 476,
+    "generated_target_inputs": 1205,
+    "token_targets_used_as_inputs": false,
+    "scope": "bounded synthetic exact-completion routing, differentiable three-step token replay; not autonomous saturation",
+    "stage_manifest": {
+      "ruleset": "canon",
+      "source_rule_ids": [
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277
+      ],
+      "membership_authoritative": true,
+      "full_schedule_replaced_for_training": true
+    },
+    "wall_seconds": 38.278248040995095,
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "dataset_sha256": "8ac5a3d98e2f8725e420bfe7fcc439c65fc42f7ed4c04bc82bf261dbb4a8fa29"
+  },
+  "test": {
+    "include_uncovered_transfers": true,
+    "observed_template_pairs": 61,
+    "block_owner": false,
+    "synthetic_only": true,
+    "seed": 93003,
+    "source_samples_per_rule": 4,
+    "per_pair": 1,
+    "context_capacity": 0,
+    "cases": 61,
+    "physical_transfers": 61,
+    "candidates": 690,
+    "valid": 216,
+    "generated_target_inputs": 578,
+    "token_targets_used_as_inputs": false,
+    "scope": "bounded synthetic exact-completion routing, differentiable three-step token replay; not autonomous saturation",
+    "stage_manifest": {
+      "ruleset": "canon",
+      "source_rule_ids": [
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277
+      ],
+      "membership_authoritative": true,
+      "full_schedule_replaced_for_training": true
+    },
+    "wall_seconds": 20.568497041007504,
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "dataset_sha256": "be93b653db0a1f9414d657256de16c5e30505ad509d3221512eb6e4f1bdc142d"
+  },
+  "model": {
+    "scope": "semantic Eq readout from floating generated tokens; standalone synthetic two-step and optional third-step evaluation, no graph mutations",
+    "synthetic_only_training": true,
+    "slot_width": 19,
+    "pair_outputs": 171,
+    "training_direct_samples": 1024,
+    "typed_training_coverage": null,
+    "resumed_combined_weights": true,
+    "typed_semantic_sampling": null,
+    "evaluation_chain_feature_overlap": 136,
+    "training_coverage": {
+      "combined_owner": false,
+      "combined_templates": 0,
+      "max_combined_slots": 0,
+      "chains": 440,
+      "positive": 320,
+      "negative": 120,
+      "negative_unavailable": 200,
+      "producer_consumer_pairs": 61,
+      "producers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "consumers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "compiled_owner_opportunities": 160,
+      "scope": "bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance"
+    },
+    "test_coverage": {
+      "combined_owner": false,
+      "combined_templates": 0,
+      "max_combined_slots": 0,
+      "chains": 220,
+      "positive": 160,
+      "negative": 60,
+      "negative_unavailable": 100,
+      "producer_consumer_pairs": 61,
+      "producers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "consumers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "compiled_owner_opportunities": 80,
+      "scope": "bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance"
+    },
+    "before": {
+      "unseen_states": 62,
+      "unseen_predicted_token": {
+        "states": 62,
+        "pairs": 818,
+        "false_positive_pairs": 2,
+        "false_negative_pairs": 12,
+        "nonfinite_states": 0,
+        "exact_states": 58,
+        "closed_false_positive_pairs": 2,
+        "closed_false_negative_pairs": 8,
+        "closed_exact_states": 58,
+        "states_with_false_merge": 2
+      },
+      "shuffled_within_template": {
+        "states": 160,
+        "pairs": 2144,
+        "false_positive_pairs": 107,
+        "false_negative_pairs": 117,
+        "nonfinite_states": 0,
+        "exact_states": 69,
+        "closed_false_positive_pairs": 111,
+        "closed_false_negative_pairs": 117,
+        "closed_exact_states": 69,
+        "states_with_false_merge": 55
+      },
+      "shuffled_semantically_changed_states": 91,
+      "predicted_token": {
+        "states": 160,
+        "pairs": 2144,
+        "false_positive_pairs": 2,
+        "false_negative_pairs": 12,
+        "nonfinite_states": 0,
+        "exact_states": 156,
+        "closed_false_positive_pairs": 2,
+        "closed_false_negative_pairs": 8,
+        "closed_exact_states": 156,
+        "states_with_false_merge": 2
+      },
+      "teacher_token": {
+        "states": 160,
+        "pairs": 2144,
+        "false_positive_pairs": 0,
+        "false_negative_pairs": 103,
+        "nonfinite_states": 0,
+        "exact_states": 106,
+        "closed_false_positive_pairs": 0,
+        "closed_false_negative_pairs": 103,
+        "closed_exact_states": 106,
+        "states_with_false_merge": 0
+      },
+      "zero_token": {
+        "states": 160,
+        "pairs": 2144,
+        "false_positive_pairs": 697,
+        "false_negative_pairs": 30,
+        "nonfinite_states": 0,
+        "exact_states": 5,
+        "closed_false_positive_pairs": 723,
+        "closed_false_negative_pairs": 24,
+        "closed_exact_states": 5,
+        "states_with_false_merge": 153
+      },
+      "matching_errors": 0,
+      "third_step": {
+        "eq": {
+          "states": 216,
+          "pairs": 2536,
+          "false_positive_pairs": 25,
+          "false_negative_pairs": 26,
+          "nonfinite_states": 0,
+          "exact_states": 179,
+          "closed_false_positive_pairs": 25,
+          "closed_false_negative_pairs": 17,
+          "closed_exact_states": 186,
+          "states_with_false_merge": 24
+        },
+        "matching_errors": 9
+      },
+      "third_step_unseen": {
+        "eq": {
+          "states": 87,
+          "pairs": 1121,
+          "false_positive_pairs": 6,
+          "false_negative_pairs": 26,
+          "nonfinite_states": 0,
+          "exact_states": 69,
+          "closed_false_positive_pairs": 6,
+          "closed_false_negative_pairs": 17,
+          "closed_exact_states": 76,
+          "states_with_false_merge": 5
+        },
+        "matching_errors": 3
+      }
+    },
+    "after": {
+      "unseen_states": 62,
+      "unseen_predicted_token": {
+        "states": 62,
+        "pairs": 818,
+        "false_positive_pairs": 2,
+        "false_negative_pairs": 12,
+        "nonfinite_states": 0,
+        "exact_states": 58,
+        "closed_false_positive_pairs": 2,
+        "closed_false_negative_pairs": 12,
+        "closed_exact_states": 58,
+        "states_with_false_merge": 2
+      },
+      "shuffled_within_template": {
+        "states": 160,
+        "pairs": 2144,
+        "false_positive_pairs": 107,
+        "false_negative_pairs": 117,
+        "nonfinite_states": 0,
+        "exact_states": 69,
+        "closed_false_positive_pairs": 107,
+        "closed_false_negative_pairs": 117,
+        "closed_exact_states": 69,
+        "states_with_false_merge": 55
+      },
+      "shuffled_semantically_changed_states": 91,
+      "predicted_token": {
+        "states": 160,
+        "pairs": 2144,
+        "false_positive_pairs": 2,
+        "false_negative_pairs": 12,
+        "nonfinite_states": 0,
+        "exact_states": 156,
+        "closed_false_positive_pairs": 2,
+        "closed_false_negative_pairs": 12,
+        "closed_exact_states": 156,
+        "states_with_false_merge": 2
+      },
+      "teacher_token": {
+        "states": 160,
+        "pairs": 2144,
+        "false_positive_pairs": 0,
+        "false_negative_pairs": 105,
+        "nonfinite_states": 0,
+        "exact_states": 105,
+        "closed_false_positive_pairs": 0,
+        "closed_false_negative_pairs": 105,
+        "closed_exact_states": 105,
+        "states_with_false_merge": 0
+      },
+      "zero_token": {
+        "states": 160,
+        "pairs": 2144,
+        "false_positive_pairs": 450,
+        "false_negative_pairs": 55,
+        "nonfinite_states": 0,
+        "exact_states": 0,
+        "closed_false_positive_pairs": 723,
+        "closed_false_negative_pairs": 24,
+        "closed_exact_states": 5,
+        "states_with_false_merge": 153
+      },
+      "matching_errors": 0,
+      "third_step": {
+        "eq": {
+          "states": 216,
+          "pairs": 2536,
+          "false_positive_pairs": 7,
+          "false_negative_pairs": 9,
+          "nonfinite_states": 0,
+          "exact_states": 208,
+          "closed_false_positive_pairs": 8,
+          "closed_false_negative_pairs": 9,
+          "closed_exact_states": 208,
+          "states_with_false_merge": 4
+        },
+        "matching_errors": 9
+      },
+      "third_training": {
+        "eq": {
+          "states": 476,
+          "pairs": 5508,
+          "false_positive_pairs": 4,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 474,
+          "closed_false_positive_pairs": 4,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 474,
+          "states_with_false_merge": 2
+        },
+        "matching_errors": 27
+      },
+      "third_step_unseen": {
+        "eq": {
+          "states": 87,
+          "pairs": 1121,
+          "false_positive_pairs": 7,
+          "false_negative_pairs": 9,
+          "nonfinite_states": 0,
+          "exact_states": 79,
+          "closed_false_positive_pairs": 8,
+          "closed_false_negative_pairs": 9,
+          "closed_exact_states": 79,
+          "states_with_false_merge": 4
+        },
+        "matching_errors": 3
+      }
+    },
+    "steps": 600,
+    "evaluation_only": false,
+    "interface_head_unchanged": true,
+    "readout_receives_exact_ids": false,
+    "readout_receives_incidence": false,
+    "semantic_proposals_committed": false,
+    "promoted_as_default": false,
+    "wall_seconds": 10.77789558301447,
+    "parent_weights_sha256": "c34be80beafadff134751070987eacd836873468c470f4295c3df807572193c7",
+    "weights_sha256": "0f2bdc32177642ced8cc4731847b6970d2a9c6c63ef29428a416335582003647",
+    "transition_weights_sha256": "902855324366dd7d0d40570187c71bb117f9bb76efb8da308a0b436aa16c2c3a",
+    "readout_weights_sha256": "00b3c3214b6672f1912de2819448cf843008ad861405b0f6e8d0a95ce91d94fc",
+    "limitations": [
+      "Known bounded synthetic chain family; not arbitrary graphs or new rulesets",
+      "Zero-token ablation removes both dynamic contents and the usual token distribution",
+      "Template request also carries information; readout is not token-only",
+      "False positive Eq proposals would corrupt semantics if committed without correction"
+    ],
+    "stage_manifest": {
+      "ruleset": "canon",
+      "source_rule_ids": [
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277
+      ],
+      "membership_authoritative": true,
+      "full_schedule_replaced_for_training": true
+    },
+    "third_step_data": {
+      "train_sha256": "8ac5a3d98e2f8725e420bfe7fcc439c65fc42f7ed4c04bc82bf261dbb4a8fa29",
+      "test_sha256": "be93b653db0a1f9414d657256de16c5e30505ad509d3221512eb6e4f1bdc142d",
+      "train_candidates": 1436,
+      "test_candidates": 690,
+      "test_input_overlap": 359,
+      "scope": "synthetic device-routed lineage; fixed exact routing during differentiable replay"
+    }
+  },
+  "device": {
+    "status": "difference",
+    "cases": 61,
+    "graphs_passed": 61,
+    "physical_transfers": 61,
+    "counts": {
+      "constraint_rejected_predictions": 9,
+      "candidates": 690,
+      "accepted": 216,
+      "false_positive": 0,
+      "expected": 216,
+      "recovered": 216,
+      "missed": 0,
+      "incomplete_rules": 0,
+      "accepted_from_generated": 188,
+      "invalid_predictions": 0,
+      "context_overflow_rules": 0,
+      "context_inputs": 0,
+      "conditional_cases": 0,
+      "conditional_covered": 0,
+      "conditional_added_pairs": 0,
+      "baked_eq_pairs": 0,
+      "baked_eq_unsupported_rules": 0,
+      "raw_semantic_wrong_states": 8,
+      "semantic_states": 216,
+      "semantic_wrong_states": 8,
+      "semantic_false_merge_states": 4,
+      "semantic_local_wrong_states": 9,
+      "semantic_external_eq_states": 9,
+      "semantic_feature_conflicts": 0,
+      "semantic_local_feature_conflicts": 0
+    },
+    "weights_sha256": "902855324366dd7d0d40570187c71bb117f9bb76efb8da308a0b436aa16c2c3a",
+    "readout_weights_sha256": "00b3c3214b6672f1912de2819448cf843008ad861405b0f6e8d0a95ce91d94fc"
+  },
+  "limitations": [
+    "Fixed exact routing from synthetic first two applications; no teacher tokens, no real Run training",
+    "129 of 216 positive test inputs overlap training; unseen-positive results reported separately",
+    "Third token predictions audited but third RHS not committed; no autonomous saturation",
+    "False Eq proposals remain; candidate GPU guards do not validate predicted Eq",
+    "No speedup claim"
+  ]
+}

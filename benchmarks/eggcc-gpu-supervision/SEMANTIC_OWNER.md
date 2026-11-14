@@ -598,3 +598,35 @@ gaps beyond the earlier CPU-routed training experiment. It still does not prove
 multi-stage saturation, asynchronous audit/repair or trustworthy generated-token
 rollout. The next training/evaluation input must reflect this actual device
 follow distribution rather than only the preceding two-step synthetic bindings.
+
+### Canon actual-lineage third-step training
+
+`canon-third-step-results.json` records standalone MLX GPU results. The replay
+generator now admits all observed synthetic template pairs, compiles physical
+capacity as in the RHS audit, and uses compact nullary query capacities. It does
+not grant uncovered semantic-owner plans permission to transfer.
+
+Generate with `neural_third_step.py TRACE DATA.npz --ruleset canon
+--include-uncovered-transfers`: training uses `--count 8 --per-pair 2 --seed 23001`;
+evaluation uses `--count 4 --per-pair 1 --seed 93003`. Resume the previous combined
+canon checkpoint with `train_neural_eq_readout.py TRACE WEIGHTS OUT --ruleset canon
+--resume --steps 600 --third-train TRAIN.npz --third-test TEST.npz`. Re-run the
+full-width RHS audit with its emitted transition and Eq weights (same invocation
+as the preceding canon device experiment).
+
+The training set has 122 physical transfers and 476 positive third inputs; test
+has 61 transfers and 216 positives. Tokens are recomputed through all three
+steps, with gradients reaching prior transitions; reference labels are used
+only in the loss. Exact synthetic routing remains fixed during training.
+
+Full Eq closure accuracy improves from 186/216 to 208/216; false-merge states
+fall from 24 to 4. Actual GPU audit reproduces 208/216, with all 61 graph checks
+and transfers passing, and zero missed/false admissions after the same GPU
+slot guards (9 raw match errors rejected). The unchanged two-step test remains
+156/160. This is still `difference`, not successful saturation.
+
+129 positive test inputs overlap training. Among the 87 unseen positives,
+closed exact states improve only 76 to 79, and false-merge states 5 to 4. Thus
+most improvement is on covered/repeated inputs, not evidence of broad
+generalization. No third RHS is installed by this audit. Model and dataset
+binaries are archived outside Git in `neural-canon-third-v18.tar.gz`.

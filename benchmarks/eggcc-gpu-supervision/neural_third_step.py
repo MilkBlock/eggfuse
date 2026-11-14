@@ -68,16 +68,17 @@ def fingerprints(data):
     return result
 
 
-def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False):
+def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,include_uncovered_transfers=False):
+    if block_owner and include_uncovered_transfers:raise ValueError("uncovered semantic owner replay is not proved")
     records=[];base=samples(recipe,count,seed,records,ordered=True);transfers=[]
-    chain,_=chains(recipe,records,ordered=True,transfers=transfers,eq_targets=block_owner,block_owner=block_owner)
+    chain,_=chains(recipe,records,ordered=True,transfers=transfers,eq_targets=block_owner,block_owner=block_owner,include_uncovered_transfers=include_uncovered_transfers)
     selected=[];pairs=Counter()
     for record in transfers:
         i=record['chain'];pair=(int(chain['producer'][i]),int(chain['consumer'][i]))
         if pairs[pair]<per_pair:selected.append(record);pairs[pair]+=1
     items=[];moved=0;width=max(len(r['slots']) for r in recipe['rules']);field_width=base['x'].shape[-1]//128
     for case,record in enumerate(selected):
-        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record,payload_width=width*2 if block_owner else None)
+        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record,payload_width=width*2 if (block_owner or include_uncovered_transfers) else None)
         state=device(host);frames=device(compile_frames(local,host['owner_projection'].shape[1]))
         raw,_=seed_inputs(state,frames,mx,field_width);mx.eval(raw)
         registry=device(ctx);next_id=mx.array(seed_count);settled=mx.array(True)
@@ -102,7 +103,7 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False):
         if not covered or not check['passed']:raise ValueError('synthetic device/oracle mismatch')
         mapping=check['mapping']
         for rid,rule in enumerate(recipe['rules']):
-            plan=compile_candidates(local,rule,atoms=base['x'].shape[1],fields=field_width,context_capacity=context_capacity)
+            plan=compile_candidates(local,rule,atoms=base['x'].shape[1],fields=field_width,context_capacity=context_capacity,compact_constants=True)
             b=candidates(state,frames,device(plan),mx.array(True),mx.array(True),mx);mx.eval(b)
             if not bool(b['complete']):raise ValueError('incomplete synthetic candidate enumeration')
             expected={tuple(sorted(v.items())) for v in oracle.matches(rule)}
@@ -131,15 +132,15 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False):
         print(json.dumps(dict(case=case+1,total_cases=len(selected),candidates=len(items))),flush=True)
     if not items:raise ValueError('empty replay dataset')
     data={k:np.array([v[k] for v in items]) for k in items[0]}
-    report=dict(block_owner=block_owner,synthetic_only=True,seed=seed,source_samples_per_rule=count,per_pair=per_pair,context_capacity=context_capacity,cases=len(selected),physical_transfers=moved,candidates=len(items),valid=int(data['valid'].sum()),generated_target_inputs=int(((data['source_kind']==2)&data['mask']).any(axis=1).sum()),token_targets_used_as_inputs=False,scope='bounded synthetic exact-completion routing, differentiable three-step token replay; not autonomous saturation')
+    report=dict(include_uncovered_transfers=include_uncovered_transfers,observed_template_pairs=len(pairs),block_owner=block_owner,synthetic_only=True,seed=seed,source_samples_per_rule=count,per_pair=per_pair,context_capacity=context_capacity,cases=len(selected),physical_transfers=moved,candidates=len(items),valid=int(data['valid'].sum()),generated_target_inputs=int(((data['source_kind']==2)&data['mask']).any(axis=1).sum()),token_targets_used_as_inputs=False,scope='bounded synthetic exact-completion routing, differentiable three-step token replay; not autonomous saturation')
     return data,report
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--ruleset',default='context');p.add_argument('trace',type=Path);p.add_argument('output',type=Path);p.add_argument('--seed',type=int,default=23001);p.add_argument('--count',type=int,default=4);p.add_argument('--per-pair',type=int,default=2);p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--block-owner',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--ruleset',default='context');p.add_argument('trace',type=Path);p.add_argument('output',type=Path);p.add_argument('--seed',type=int,default=23001);p.add_argument('--count',type=int,default=4);p.add_argument('--per-pair',type=int,default=2);p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--block-owner',action='store_true');p.add_argument('--include-uncovered-transfers',action='store_true');a=p.parse_args()
     if min(a.count,a.per_pair)<1:raise ValueError('positive sample counts required')
     source=json.loads(a.trace.read_text());source=source.get('recipe',source);recipe,stage_manifest=select_ruleset(source,a.ruleset)
-    began=time.perf_counter();data,report=build(recipe,a.count,a.seed,a.per_pair,a.context_capacity,a.block_owner)
+    began=time.perf_counter();data,report=build(recipe,a.count,a.seed,a.per_pair,a.context_capacity,a.block_owner,a.include_uncovered_transfers)
     report['stage_manifest']=stage_manifest
     np.savez_compressed(a.output,**data);report.update(wall_seconds=time.perf_counter()-began,recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),dataset_sha256=hashlib.sha256(a.output.read_bytes()).hexdigest())
     a.output.with_suffix('.json').write_text(json.dumps(report,indent=2)+'\n')
