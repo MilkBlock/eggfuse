@@ -21,12 +21,18 @@ class CurrentCellModel(nn.Module):
 
     def current_candidate_batch(self, state, frames, plan, xp):
         from device_current_cell_inputs import current_candidates
-        return current_candidates(state, frames, plan, self.cell.encode,
+        encoder=(lambda x:xp.zeros((len(x),128),xp.float32)) if getattr(self,'template_only',False) else self.cell.encode
+        return current_candidates(state, frames, plan, encoder,
                                   xp.array(True), xp.array(True), xp,
                                   field_capacity=self.field_capacity)
 
-    def transition(self, *args):
-        return self.cell.transition(*args)
+    def transition(self, source_tokens, edges, mask, request, relations):
+        if getattr(self,'template_only',False):
+            # This head depends only on incidence. Dense content cannot affect
+            # matching, and template-only effects never consume predicted Eq.
+            logits=self.cell.match_relation(self.cell.relation(relations))[:,0]
+            return logits,mx.zeros((len(logits),128),mx.float32)
+        return self.cell.transition(source_tokens,edges,mask,request,relations)
 
     def __call__(self, batch):
         # Explicit allowlist: CPU labels, provenance and history never enter.

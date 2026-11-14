@@ -205,3 +205,22 @@ Runs and reaches a CPU-verified fixed point with this mode (capacity 32). Eviden
 computation, not merely its outputs. Installer, condition, admission and audit
 unit checks pass. This targeted result does not establish all-workload correctness
 or any speedup.
+
+## Remove dead dense computation in the template-effect control
+
+`InterfaceCellTransition.match_logit` uses only `relation(relations)` and
+`match_relation`; its score is independent of encoded Cell content. With Eq
+prediction removed, the content encoder, attention transition and successor
+latent no longer affect semantic execution in this particular mode. The current
+model therefore bypasses these computations when `template_only=True`, retaining
+the same incidence classifier and a zero placeholder for unused latent storage.
+The explicit Cell slots remain the persistent semantic state. Other modes and
+training are unchanged.
+
+A test verifies bit-identical matching logits, including with NaN content inputs.
+Pair (1,6) still passes both Runs with identical graph/admission verdict fields.
+No speedup is claimed from this targeted check. Evidence is in
+`template-matcher-results.json`. This path is a semantic execution control, not
+a successful dense floating context engine: the classifier still reads exact
+incidence and candidate enumeration still precedes it. The intended useful
+floating work must address candidate search/matching, not dead content features.
