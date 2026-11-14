@@ -112,16 +112,19 @@ def main():
             captures.append(c);facts.extend(source_facts(c,local))
         saved={k:data[k] for k in data.files}
     mapping=resolve_identities(ref,facts,len(ids));seed_values={i:json.loads(v) for v,i in ids.items()}
-    boundary_features=[];boundary_error=0.;xs=[];extra=[];ys=[];labels=[];pred=[];rules=[];continued=[];numerical=0.
+    boundary_generated=[];boundary_features=[];boundary_error=0.;xs=[];extra=[];ys=[];labels=[];pred=[];rules=[];continued=[];numerical=0.
     for c in captures:
         x=floating_inputs(c,model,np);z,_=relation_features(inputs(local,c),projection(),np);rid=int(c['rule']);rule=local['rules'][rid]
         if 'boundary' in c:
-            from device_boundary_context import compile_context,encode as boundary_encode
+            from device_boundary_context import compile_context,encode as boundary_encode,masks as boundary_masks
             bp=compile_context(local,rid,state['slots'].shape[1])
             bf,bc=boundary_encode(c['boundary'],c['bindings'],bp,np)
             boundary_error=max(boundary_error,float(np.max(abs(bf-c['boundary_features']))))
             if boundary_error>5e-6 or not np.array_equal(bc,c['boundary_counts']):raise ValueError('boundary feature mismatch')
             boundary_features.extend(c['boundary_features'][c['accepted']])
+            connections=boundary_masks(c['boundary'],c['bindings'],bp,np)[0]
+            generated=(c['boundary']['rule']>=0)&(c['boundary']['rule']<len(original['rules']))
+            boundary_generated.extend(np.any(connections&generated[None,None,:,None],axis=(1,2,3))[c['accepted']])
         live=c['bindings']['live']
         if live.any():numerical=max(numerical,float(np.max(abs(np.tanh(x@model['coef'])[live]-c['predicted_tokens'][live]))))
         for lane in np.flatnonzero(c['accepted']):
@@ -134,15 +137,17 @@ def main():
     if boundary_features:
         if len(boundary_features)!=len(xs):raise ValueError('partial boundary capture')
         payload['boundary_features']=np.array(boundary_features,np.float32)
+        payload['generated_boundary_neighbor']=np.array(boundary_generated,bool)
     np.savez_compressed(a.output,**payload)
     result=dict(schema='device-joint-witness/v3' if a.semantic_targets or any('token_layout' in r for r in local['rules']) else 'device-joint-witness/v2',**provenance,passed=True,samples=len(xs),continued_samples=sum(continued),
         distinct_inputs=len(np.unique(payload['features'],axis=0)),distinct_targets=len(np.unique(payload['targets'],axis=0)),
         dynamic_eq_queries=sum(len(r['quotient']['representatives']) for r in rr),dynamic_eq_positive=sum(int(r['y'][r['quotient']['representatives']].sum()) for r in rr),
         artifact_sha256=hashlib.sha256(a.output.read_bytes()).hexdigest(),source_capture_sha256=meta['capture']['artifact_sha256'],
+        direct_with_generated_boundary_neighbors=int(np.count_nonzero(np.array(boundary_generated)&~np.array(continued))) if boundary_features else None,
         boundary_feature_columns=payload['boundary_features'].shape[1] if boundary_features else 0,boundary_feature_max_abs=boundary_error,
         feature_reconstruction_max_abs=numerical,cpu_label_and_capture_audit_seconds=time.monotonic()-start,
         target_scope='original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared',backpropagation=False,
-        limitations=['Labels are final family states, not every intermediate state','Selected context rules, not full Eggcc','Source tokens come from exact completed GPU states; recursive predicted-source rollout not established'])
+        limitations=['Labels are final family states, not every intermediate state','Selected context rules, not full Eggcc','Source token mode: '+meta.get('source_token_mode','exact completed states')+'; exact effects and matching remain authoritative'])
     a.output.with_suffix('.json').write_text(json.dumps(dict(meta,semantic_recipe=semantic_recipe,snapshot_run=a.snapshot_run,seed_scalars={str(i):v for i,v in seed_values.items() if 'eq' not in v},capture=result),indent=2)+'\n')
     a.report.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
 

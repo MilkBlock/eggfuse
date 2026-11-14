@@ -1,0 +1,146 @@
+{
+  "scope": "actual selected-family GPU token Eq readout; no fitting or union authorization",
+  "case": "016-gcd",
+  "partition": "validation",
+  "capture_sha256": "d3024efdd65b7dcaff7c689f9577bfeecd9a18152677682f6187db77d1aba98d",
+  "adapter_sha256": null,
+  "inference_coefficients_sha256": null,
+  "decoder_sha256": "cf9c22bbc95c2a04eca32565875bbce864bdad6038b5115e64b1162b2582b313",
+  "label_statistics": {
+    "full_pair_queries": 410,
+    "static_equalities": 81,
+    "dynamic_quotient_queries": 206,
+    "dynamic_true_equalities": 18,
+    "distinct_rule_partitions": 6
+  },
+  "results": {
+    "cpu_target_token": {
+      "instances": 41,
+      "query_instances": 41,
+      "exact_partitions": 41,
+      "false_merges": 0,
+      "missed_equalities": 0,
+      "nontransitive": 0,
+      "closure_false_merges": 0
+    },
+    "gpu_predicted_token": {
+      "instances": 41,
+      "query_instances": 41,
+      "exact_partitions": 35,
+      "false_merges": 0,
+      "missed_equalities": 16,
+      "nontransitive": 0,
+      "closure_false_merges": 0
+    }
+  },
+  "groups": {
+    "rule_283": {
+      "cpu_target_token": {
+        "instances": 8,
+        "query_instances": 8,
+        "exact_partitions": 8,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 8,
+        "query_instances": 8,
+        "exact_partitions": 8,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      }
+    },
+    "rule_290": {
+      "cpu_target_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 26,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 20,
+        "false_merges": 0,
+        "missed_equalities": 16,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      }
+    },
+    "rule_293": {
+      "cpu_target_token": {
+        "instances": 7,
+        "query_instances": 7,
+        "exact_partitions": 7,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 7,
+        "query_instances": 7,
+        "exact_partitions": 7,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      }
+    },
+    "direct_source": {
+      "cpu_target_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 26,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 23,
+        "false_merges": 0,
+        "missed_equalities": 7,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      }
+    },
+    "generated_source": {
+      "cpu_target_token": {
+        "instances": 15,
+        "query_instances": 15,
+        "exact_partitions": 15,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "gpu_predicted_token": {
+        "instances": 15,
+        "query_instances": 15,
+        "exact_partitions": 12,
+        "false_merges": 0,
+        "missed_equalities": 9,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      }
+    }
+  },
+  "cpu_readout_audit_seconds": 0.06435237498953938,
+  "backpropagation": false,
+  "union_authorized": false,
+  "limitations": [
+    "Small selected immutable Cell family, not full Eggcc",
+    "Exact execution establishes completion; ridge is audited separately",
+    "Test samples must not be used for fitting"
+  ]
+}

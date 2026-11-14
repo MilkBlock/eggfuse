@@ -59,6 +59,16 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=
                      edge=xp.zeros((capacity,1,128),xp.float32),route=xp.zeros((capacity,1,plan['channels']),xp.float32),edge_valid=xp.zeros((capacity,1),xp.bool_))
     if plan.get('source_relations',False):
         request['source_relation']=xp.stack(relations,axis=1) if relations else xp.zeros((capacity,1,128),xp.float32)
+    boundary_capture=None
+    base_width=1+model['w'].shape[0]+model['w'].shape[1]
+    if model['coef'].shape[0]!=base_width:
+        if 'boundary_context' not in plan:raise ValueError('boundary model requires compiled context')
+        from device_boundary_context import snapshot,encode
+        boundary=snapshot(state,xp)
+        extra,counts=encode(boundary,bindings,plan['boundary_context'],xp)
+        if model['coef'].shape[0]!=base_width+extra.shape[1]:raise ValueError('boundary model width mismatch')
+        request['boundary_features']=extra
+        boundary_capture=dict(boundary=boundary,boundary_features=extra,boundary_counts=counts)
     tokens,numerical=infer(state,request,model,xp)
     width=slot_shape(state)[1];local=bindings['slots'].shape[1];key_width=state['keys'].shape[1]
     required=plan['query']['required']
@@ -90,7 +100,7 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=
     marks=dict(query_complete=bindings['complete'],overflow=bindings['overflow'],candidate_lanes=bindings['candidate_lanes'],encoding=encoding,numerical=numerical)
     if capture:
         from device_match_capture import collect
-        marks['capture']=collect(state,bindings,request,tokens,numerical,plan,xp)
+        marks['capture']=collect(state,bindings,request,tokens,numerical,plan,xp,boundary_capture)
     return p,marks
 
 

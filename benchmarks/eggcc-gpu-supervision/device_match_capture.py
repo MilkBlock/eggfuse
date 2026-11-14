@@ -3,7 +3,7 @@ import numpy as np
 from device_slot_owners import shape,read,live as owner_live
 
 
-def collect(state,bindings,request,tokens,numerical,plan,xp):
+def collect(state,bindings,request,tokens,numerical,plan,xp,boundary_capture=None):
     rows=bindings['witness_rows'];safe=xp.clip(rows,0,state['tokens'].shape[0]-1)
     fields=xp.arange(shape(state)[1])[None,None,:]
     witness={k:read(state,k,safe[:,:,None],fields,xp) for k in ('slots','slot_roots','slot_valid')}
@@ -21,7 +21,9 @@ def collect(state,bindings,request,tokens,numerical,plan,xp):
         source_tokens=state['tokens'][src],source_rules=state['keys'][src,0],
         input_ports=xp.array(ports,xp.int32),source_ports=bindings['source_slots'][:,ports],
         predicted_tokens=tokens,numerical_ready=numerical['ready'],witness=witness)
-    if 'boundary_context' in plan:
+    if boundary_capture is not None:
+        result.update(boundary_capture)
+    elif 'boundary_context' in plan:
         from device_boundary_context import snapshot,encode
         boundary=snapshot(state,xp)
         features,counts=encode(boundary,bindings,plan['boundary_context'],xp)
@@ -115,7 +117,9 @@ def floating_inputs(capture,model,xp):
     if 'source_relation' in r:
         from device_source_relations import encode
         q=xp.concatenate([q,encode(r['sources'],r['source_relation'],mask,xp)],axis=1)
-    return features(r['seed'],q,pool,model['w'],xp)
+    x=features(r['seed'],q,pool,model['w'],xp)
+    if 'boundary_features' in r:x=xp.concatenate([x,r['boundary_features']],axis=1)
+    return x
 
 
 def flatten(value,prefix=''):

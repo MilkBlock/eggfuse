@@ -43,6 +43,9 @@ def infer(state, request, model, xp, layout=None):
     repeated=xp.concatenate([seed]*coefficients['route'].shape[2],axis=1)
     raw=xp.concatenate([seed,q,pool,repeated*pool],axis=1)
     features=xp.concatenate([xp.ones((seed.shape[0],1),dtype=xp.float32),raw,xp.tanh(raw@model['w'])],axis=1)
+    if 'boundary_features' in request:
+        features=xp.concatenate([features,request['boundary_features']],axis=1)
+    if features.shape[1]!=model['coef'].shape[0]:raise ValueError('ridge feature/model width mismatch')
     tokens=xp.tanh(features@model['coef'])
     missing=xp.any(mask&~live,axis=1)
     nonfinite=xp.any(mask&~finite_source,axis=1)|~xp.all(xp.isfinite(tokens),axis=1)

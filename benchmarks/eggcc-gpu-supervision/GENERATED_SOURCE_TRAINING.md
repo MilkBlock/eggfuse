@@ -110,7 +110,7 @@ four `--extra-training` arguments: Euclid plus the three `.labeled.npz` paths in
 the collection manifest. Repeat without the boundary flag for the controlled
 ablation. No alpha sweep, threshold search or partition reassignment is performed.
 
-Next: evaluate the retained candidate in the live GPU inference path using these
-same current inputs, while preserving exact effect authority and checking that
-source consumption and ownership remain unchanged. Then test predicted-source
-feedback explicitly; the present teacher-completed sources do not establish it.
+The candidate is now connected to live GPU inference, with a separate nonvacuous
+predicted-source feedback experiment documented in `LIVE_PREDICTION_FEEDBACK.md`.
+Exact matching and effects remain authoritative; neither experiment establishes
+complete learned execution or broad held-out correctness.

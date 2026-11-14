@@ -20,7 +20,7 @@ def encode_batch(roots,sorts,eq_slots,valid,roles,scalar_codes,xp):
     return xp.tanh(xp.concatenate([first,second],axis=1))
 
 
-def refresh(state,sorts,eq_slots,required,roles,scalar_codes,scalar_valid,eq_settled,xp):
+def refresh(state,sorts,eq_slots,required,roles,scalar_codes,scalar_valid,eq_settled,xp,retain_prediction=False):
     dirty=state.get('token_dirty',xp.zeros_like(state['present']))
     wanted=state['present']&state['visible']&dirty
     from device_slot_owners import shape,read,has
@@ -31,7 +31,9 @@ def refresh(state,sorts,eq_slots,required,roles,scalar_codes,scalar_valid,eq_set
     bad_scalar=required&~eq_slots&(~scalar_valid|~xp.all(xp.isfinite(scalar_codes),axis=2))
     invalid_eq=required&eq_slots&((roots<0)|(sorts<0))
     valid=available&required
-    token=encode_batch(roots,sorts,eq_slots,valid,roles,scalar_codes,xp)
+    # Experimental feedback keeps the birth prediction; it does not certify Eq.
+    # Effects, visibility, typed slots and finite values must still be ready.
+    token=state['tokens'] if retain_prediction else encode_batch(roots,sorts,eq_slots,valid,roles,scalar_codes,xp)
     finite=xp.all(xp.isfinite(token),axis=1)
     ready=(wanted & state['settled'] & eq_settled & ~missing & ~xp.any(bad_scalar|invalid_eq,axis=1) & finite)
     output=dict(state)

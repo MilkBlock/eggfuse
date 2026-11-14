@@ -56,6 +56,19 @@ class TokenRefresh(unittest.TestCase):
         self.assertEqual(np.array(a['accepted']).sum(),1);self.assertFalse(np.array(out['token_dirty']).any())
         self.assertGreater(float(np.linalg.norm(np.array(out['tokens'])[1])),.01)
 
+    def test_experimental_feedback_preserves_prediction_but_not_readiness_bypasses(self):
+        for mode in ('ready','slot','eq','nonfinite','unsettled','hidden'):
+            state=self.setup_state();state['token_dirty']=np.array([True,False])
+            state['tokens'][0]=.123
+            if mode=='slot':state['slot_valid'][0,1]=False
+            if mode=='nonfinite':state['tokens'][0,0]=np.nan
+            if mode=='unsettled':state['settled'][0]=False
+            if mode=='hidden':state['visible'][0]=False
+            out,marks=refresh(state,np.zeros((2,2),np.int32),np.ones((2,2),bool),np.ones((2,2),bool),np.zeros((2,2,64),np.float32),np.zeros((2,2,64),np.float32),np.ones((2,2),bool),mode!='eq',np,retain_prediction=True)
+            np.testing.assert_array_equal(out['tokens'],state['tokens'])
+            self.assertEqual(bool(marks['refreshed'][0]),mode=='ready')
+            self.assertEqual(bool(out['token_dirty'][0]),mode!='ready')
+
     def test_missing_fields_or_unsettled_eq_cannot_clear_dirty(self):
         roles=np.zeros((2,2,64),np.float32)
         for mode in ('slot','scalar','eq'):

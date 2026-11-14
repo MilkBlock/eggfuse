@@ -1,0 +1,24 @@
+{
+  "scope": "one real selected-family predicted-source feedback comparison; exact matching and effects retained",
+  "passed": true,
+  "exact_capture_sha256": "d3024efdd65b7dcaff7c689f9577bfeecd9a18152677682f6187db77d1aba98d",
+  "feedback_capture_sha256": "5770c8011feec925d3185c69d46e867df453d03167da12ee9251ee3c1ee5f01b",
+  "model_sha256": "b1da3a8f63fde01c77c1318e2fde8109df048c8bc6eb159e14dce32a66d17edf",
+  "identical_symbolic_arrays": 454,
+  "instances": 41,
+  "generated_source_consumers": 15,
+  "changed_inputs": 16,
+  "changed_generated_inputs": 15,
+  "changed_direct_inputs": 1,
+  "maximum_source_token_change": 0.34057939052581787,
+  "maximum_feature_change": 0.3732529282569885,
+  "maximum_predicted_token_change": 0.07711294293403625,
+  "same_cpu_targets": true,
+  "backpropagation": false,
+  "limitations": [
+    "Symbolic equality here is capture comparison; full Run graphs are checked separately by execution audit",
+    "Same accuracy does not mean identical scores",
+    "Imported Cells still use exact encoding; generated Cells retain birth predictions rather than refreshing learned state after every union",
+    "No learned Eq is authorized by this experiment"
+  ]
+}

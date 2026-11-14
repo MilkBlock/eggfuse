@@ -118,7 +118,7 @@ def complete(state,plan,next_id,limit,quota,external_complete,eq_settled,xp,eq_c
             numeric=xp.tanh((xp.sign(safe)*xp.log1p(xp.abs(safe)))[:,:,None]*layout['numeric_roles'])
             codes=xp.where(read_slot(state,'scalar_numeric',rr,ss,xp)[:,:,None],numeric,codes)
             valid=xp.where(read_slot(state,'scalar_numeric',rr,ss,xp),finite,valid)
-        updated,marks=refresh(selected,layout['sorts'],layout['eq'],layout['required'],layout['roles'],codes,valid,eq_settled,xp)
+        updated,marks=refresh(selected,layout['sorts'],layout['eq'],layout['required'],layout['roles'],codes,valid,eq_settled,xp,retain_prediction=rid in plan.get('retain_predicted_rules',()))
         updated['present']=state['present'];state=updated
         refreshed=refreshed+xp.sum(marks['refreshed'].astype(xp.int32))
         attention=attention|marks['needs_attention']
