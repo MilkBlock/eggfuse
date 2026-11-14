@@ -146,9 +146,13 @@ def closed_entry_proposals(state, plan, stage, xp, token_values=None):
     from device_slot_owners import read as read_slot,has as has_slot
     capacity = state['keys'].shape[0]; entries = plan['producer'].shape[0]
     # Candidate shape is fixed; success is computed from live token metadata.
+    if 'stage_membership' in plan:
+        nstages=plan['stage_membership'].shape[1]
+        stage_allowed=(stage>=0)&(stage<nstages)&plan['stage_membership'][:,xp.clip(stage,0,nstages-1)]
+    else:stage_allowed=stage==plan['stage']
     matched = (state['present'][:,None] & state['active'][:,None]
                & (state['keys'][:,0,None] == plan['producer'][None,:])
-               & (stage == plan['stage'][None,:])
+               & (stage_allowed[None,:])
                & plan['query_covered'][None,:])
     projection = plan['projection']
     use_slots='destination_projection' in plan

@@ -10,7 +10,7 @@ from device_entry_round import run_round
 from device_constructor_completion import complete
 
 
-def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_id,limit,quota,external_complete,eq_settled,ticks,xp,eq_context=None,eq_rounds=4,continuation=None,query_kernel=None,takeover_catalog=None,takeover_budget=None):
+def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_id,limit,quota,external_complete,eq_settled,ticks,xp,eq_context=None,eq_rounds=4,continuation=None,query_kernel=None,takeover_catalog=None,takeover_budget=None,stage_models=None):
     if ticks<1:raise ValueError('positive tick budget required')
     if query_covered.shape[0]<1:raise ValueError('stage coverage array required')
     state=ensure_roots(state,xp)
@@ -22,18 +22,25 @@ def run(state,blocks,model,completion,schedule,repeat_slots,query_covered,next_i
     logs={k:[] for k in ('stage','query_started','query_failed','run_done','run_changed','new_tokens','new_constructors','new_equivalences')}
     if takeover_catalog is not None:
         for key in ('takeover_attempted','takeover_released','takeover_copied_fields','takeover_blocked'):logs[key]=[]
+    if stage_models is not None:logs['missing_stage_model']=[]
     for _ in range(ticks):
         stage,_=current(machine,schedule,xp);in_run=stage>=0;begin=in_run&~opened
         # Only the first tick of a Run takes a query snapshot. Waiting ticks
         # finish its effects without rematching against newly produced facts.
+        active_model=model;model_ready=xp.array(True)
+        if stage_models is not None:
+            from device_stage_models import select
+            active_model,model_ready=select(stage_models,stage,xp)
+        query_stage=xp.where(begin&model_ready,stage,-1)
         key_context=None if eq_context is None else dict(eq_context,types=completion['key_types'],settled=eq_settled)
         if query_kernel is None:
-            queried,q=run_round(state,blocks,model,xp.where(begin,stage,-1),xp,key_context=key_context)
+            queried,q=run_round(state,blocks,active_model,query_stage,xp,key_context=key_context)
         else:
-            queried,q=query_kernel(state,blocks,model,xp.where(begin,stage,-1),xp,external_complete=external_complete,eq_settled=eq_settled,key_context=key_context)
+            queried,q=query_kernel(state,blocks,active_model,query_stage,xp,external_complete=external_complete,eq_settled=eq_settled,key_context=key_context)
         if 'captures' in q:
             captures.append(tuple(dict(c,recorded=begin&c['enabled'],stage=stage) for c in q['captures']))
-        error=xp.array(False)
+        error=~model_ready
+        if stage_models is not None:logs['missing_stage_model'].append(begin&~model_ready)
         for key in ('stale_source','nonfinite','unsettled_source','capacity','missing_witness','transfer_blocked'):
             error=error|xp.any(q[key])
         error=error|xp.any(q['invalid_key'])|q['key_context_pending']

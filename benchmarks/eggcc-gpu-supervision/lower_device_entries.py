@@ -15,7 +15,8 @@ def lower(recipe, catalog, source_slots=False, context_completion=False):
     inputs=[[i for i,s in enumerate(r['slots']) if s['definition']=='query'] for r in rules]
     positions=[{slot:i+1 for i,slot in enumerate(slots)} for slots in inputs]
     width=max(map(len,inputs),default=0)
-    stages=sorted({r['metadata'].get('source_set') for r in rules},key=lambda x:json.dumps(x,sort_keys=True))
+    from device_stage_models import membership
+    stages,stage_membership,authoritative_stages=membership(recipe)
     entries=[];marks=[];context_proofs=[]
     tables={t['name']:t for t in recipe['tables']}
     facts=[complete_template(r,tables)[0] for r in rules]
@@ -27,6 +28,7 @@ def lower(recipe, catalog, source_slots=False, context_completion=False):
         if contract!=edge.get('contract'):raise ValueError('catalog contract mismatch')
         reasons=[]
         if contract['boundary']!='same_ruleset':reasons.append('source_run_boundary')
+        if not stage_membership[target].any():reasons.append('no_ruleset_membership')
         mapping=dict(edge['inputs']);projection=[]
         for slot in inputs[target]:
             ref=mapping[slot]
@@ -56,7 +58,8 @@ def lower(recipe, catalog, source_slots=False, context_completion=False):
             context=compile_context(recipe,edge);context_proofs.append(dict(entry=eid,**context))
             completed=context['covered']
         entries.append(dict(entry=eid,producer=source,consumer=target,
-            stage=stages.index(c['metadata'].get('source_set')),
+            stage=int(np.flatnonzero(stage_membership[target])[0]),
+            stage_membership=stage_membership[target].tolist(),
             projection=projection+[0]*(width-len(projection)),
             projection_valid=[True]*len(projection)+[False]*(width-len(projection)),
             completed=completed,query_covered=True,transfer_covered=False,
@@ -67,7 +70,7 @@ def lower(recipe, catalog, source_slots=False, context_completion=False):
             entries[-1]['completion_projection']=[mapping.get(i,0) for i in range(slot_width)]
             entries[-1]['completion_valid']=[i in mapping for i in range(slot_width)]
     return dict(schema='device-cell-entry-layout/v1',input_slots=inputs,key_width=width+1,stages=stages,
-        entries=entries,marks=marks,context_completion=context_completion,context_proofs=context_proofs,source_slots=source_slots,slot_width=slot_width,
+        entries=entries,marks=marks,authoritative_stages=authoritative_stages,context_completion=context_completion,context_proofs=context_proofs,source_slots=source_slots,slot_width=slot_width,
         uncovered_catalog_boundaries=catalog['boundaries'],
         missing_coverage='multi-source and late/union-enabled matches are not covered by this single-source catalog',
         closure_authorized=False,ownership_transfer_authorized=False)
@@ -81,6 +84,7 @@ def tensors(layout,weights,bias):
         raise ValueError('float transition layout mismatch')
     if not np.isfinite(weights).all() or not np.isfinite(bias).all():raise ValueError('nonfinite transition coefficients')
     out={k:np.array([e[k] for e in entries],dtype=np.int32) for k in ('producer','consumer','stage','projection')}
+    if layout.get('authoritative_stages',False):out['stage_membership']=np.array([e['stage_membership'] for e in entries],bool)
     out.update({k:np.array([e[k] for e in entries],dtype=bool) for k in ('projection_valid','completed','query_covered','transfer_covered')})
     if layout['source_slots']:
         out['destination_projection']=np.array([e['destination_projection'] for e in entries],np.int32)

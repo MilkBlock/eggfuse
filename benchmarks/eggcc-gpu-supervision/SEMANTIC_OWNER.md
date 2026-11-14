@@ -433,3 +433,53 @@ block path retains that argument. This does not change earlier block metrics.
 Remaining obligations include separating established proof from undecided
 relations in training and token representation, consuming dynamic conditional
 proofs, arbitrary owner growth, and a genuine multi-stage saturation loop.
+
+## Stage-specific execution boundary (2026-11-14)
+
+Following the user's correction, pause universal-adapter tuning and use the
+compiler's real stage structure. The captured Eggcc recipe has 548 rules,
+30 declared and scheduled rulesets, 145 Run sites, 108 saturation scopes, and
+nine repeat scopes (380 control instructions). Thirty-one rules occur in more
+than one ruleset. A ruleset is a reusable module boundary, not necessarily one
+unique lexical Run: the nested source control remains authoritative.
+
+`lower_device_entries.py` previously assigned stages from rule `source_set`
+annotations. Those are provenance and do not describe composed ruleset
+membership. It now uses compiler `rulesets[].rule_ids` when present, emits a
+static membership mask per Entry, and checks that mask during device proposals.
+Rules without membership are marked instead of assigned an invented stage. Legacy
+fixtures without formal rulesets retain their previous annotation-based layout.
+Existing conservative cross-source Run boundaries remain; this change does not
+authorize new cross-stage effects or claim complete query enumeration.
+
+`device_stage_models.py` supplies a bank of compatible parameter tensors and
+selects one stage's tensors at a batch boundary, using a device stage index.
+It introduces no per-token learned router. `compile_program` derives schedule,
+model-bank ordering and Entry stage numbering from the same ruleset ordering.
+Missing stage models are explicit boundaries: `device_scheduled_runtime.run`
+records `missing_stage_model`, admits no tokens/effects for that Run, and keeps
+the control position pending. Existing completion and saturation requirements
+remain unchanged. Finite parameters and matching tensor shapes are required;
+different layouts need separate compiled batch families.
+
+The compiled MLX GPU test runs two successive stages with distinct parameter
+sets. Stage A creates a Cell; stage B consumes that Cell and creates the next
+one. Stage B retains the existing token bitwise, and does not recode the graph.
+Other tests cover composed membership, shared rule membership, unknown models,
+compiler ordering and failure to advance an uncovered stage. This validates the
+execution mechanism using the existing ridge Entry fixture, NOT trained
+stage-specific neural accuracy or the complete Eggcc workload. Neural prototype
+checkpoints remain scoped to the 17-rule context experiment. No accuracy or
+speedup improvement is claimed for this change.
+
+Costs remain explicit: compatible stage parameter tensors are stacked in memory,
+and the batch chooses a slice. All stages' parameters remain resident; shared
+weights are not yet deduplicated. Existing fixed query-block computation is not
+pruned by this change. Full ownership composition, trained stage/family modules,
+and multi-stage neural saturation remain unfinished.
+
+Reproduce the structural audit with `audit_stage_modules.py TRACE OUTPUT`.
+`stage-module-results.json` records the real compiler membership and control
+structure; it uses no real Run as training data. The checked iterative Bake
+branch remains `codex/cell-parallel-admission` at `f3321a3a`, containing
+`56e28b89`. This work modifies the GPU prototype, not the native CPU executor.
