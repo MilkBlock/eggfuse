@@ -788,3 +788,38 @@ audit rejects fourth semantic errors even when corrected third graphs pass.
 Nine targeted tests pass. `canon-fourth-round-results.json` records totals;
 raw artifact/tests are archived on external SSD as
 `neural-canon-fourth-v24.tar.gz`. Model weights remain unchanged from v20.
+
+### Install a fourth frame from the actual third GPU state
+
+`--install-follow-round --follow-round` retains the GPU candidate batches and
+fourth tokens and submits each proposal through the existing frame writer and
+commit path. Each attempt starts from its actual third-frame state; no CPU
+corrected graph or teacher token becomes its input. The selected-source
+witness plan remains enabled. Frame and identity capacity are reserved for
+both generations. Duplicates are reported separately from capacity and other
+rejections, and none of these counters alone certifies saturation.
+
+Across the 61-pair canon audit, 858 fourth proposals yield 216 duplicate
+instances and 642 installations. No capacity or other admission failure is
+observed. Of the installations, 621 directly pass whole-graph comparison and
+21 require CPU correction, leaving 21 dirty token states. This is 3.27%
+correction among installed proposals. The latent third/fourth errors remain
+reported independently from these actual mutation checks.
+
+This is two successive GPU installations per fork, not one cumulative graph
+containing all 642 effects; fourth proposals remain independent forks of
+each third state. CPU controls the diagnostic enumeration and audits results.
+It is not autonomous saturation, asynchronous CPU supervision, or the native
+Eggcc runtime. Failed third parents are counted as blocking fourth audits;
+none occurred here. All graph corrections must pass or the audit raises.
+
+Reproduce the v24 command adding `--install-follow-round`; weights remain
+v20. Eight targeted tests cover audit gates, two-frame capacity, and existing
+write behavior. Results: `canon-fourth-install-results.json`; raw report and
+tests: external SSD `neural-canon-fourth-install-v25.tar.gz`.
+
+All 21 fourth failures are classified `inconsistent_result_class` by the
+whole-graph oracle; 14 have correct local Eq. The legacy `wrong_merge` counter
+names this verifier category; it does not by itself prove the floating model
+caused every failure. Cross-generation witness identity and root propagation
+need investigation before attributing the gap to model accuracy.

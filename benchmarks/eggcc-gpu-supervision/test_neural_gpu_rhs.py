@@ -22,6 +22,13 @@ def fixture():
 
 
 class NeuralGPURhs(unittest.TestCase):
+    def test_two_follow_frames_have_separate_reserved_capacity(self):
+        recipe,record=fixture()
+        _,state,_,ctx,_,_,_,n,_=initial_case(recipe,record,spare=2,payload_width=30)
+        self.assertEqual(int((~state['present']).sum()),2)
+        self.assertGreaterEqual(len(ctx['roots']),n+90)
+
+
     def test_rhs_starts_empty_and_gpu_constructs_result(self):
         recipe,record=fixture()
         local,state,plan,ctx,tp,src,dst,n,oracle=initial_case(recipe,record)

@@ -67,7 +67,7 @@ def initial_case(recipe,record,spare=0,payload_width=None):
     transfer_plan=compile_transfer(local,dict(producer=0,consumer=1,projection=[inverse.get(s,0) for s in inputs],projection_valid=[s in inverse for s in inputs]),width)
     completion=compile_completion(local,width,include_unions=True);completion['retain_predicted_rules']=(0,1)
     if completion['marks']:raise ValueError(completion['marks'])
-    registry=eq_registry(ids,completion['eq_sort_names'],reserve=64)
+    registry=eq_registry(ids,completion['eq_sort_names'],reserve=max(64,width*(spare+1)))
     # Independent source operations execute only in the CPU audit oracle.
     oracle=Reference(original,rows,ids);apply_instance(oracle,original['rules'][1],binding)
     return local,pack(state),completion,registry,transfer_plan,source,target,len(ids),oracle
@@ -76,8 +76,9 @@ def initial_case(recipe,record,spare=0,payload_width=None):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--ruleset',default='context');p.add_argument('--include-uncovered-transfers',action='store_true');p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
     p.add_argument('--proof-token',action='store_true');p.add_argument('--conditional-eq',action='store_true');p.add_argument('--owner-aware',action='store_true');p.add_argument('--semantic-owners',action='store_true');p.add_argument('--block-owner',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--immutable-source',action='store_true')
-    p.add_argument('--follow-round',action='store_true');p.add_argument('--reuse-witnesses',action='store_true');p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
+    p.add_argument('--install-follow-round',action='store_true');p.add_argument('--follow-round',action='store_true');p.add_argument('--reuse-witnesses',action='store_true');p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
+    if a.install_follow_round and not a.follow_round:raise ValueError('install-follow requires follow round')
     if a.follow_round and not a.speculate:raise ValueError('follow round requires installed frame')
     if a.reuse_witnesses and not a.speculate:raise ValueError('witness reuse requires speculative installation')
     if a.include_uncovered_transfers and (a.block_owner or a.semantic_owners):raise ValueError('uncovered frames must retain their separate token ownership')
@@ -136,7 +137,7 @@ def main():
         if pair not in seen:seen.add(pair);selected.append(record)
     available=len(selected);selected=selected[:a.limit];reports=[]
     for record in selected:
-        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record,spare=int(a.speculate),payload_width=2*max(len(r['slots']) for r in recipe['rules']) if (a.block_owner or a.include_uncovered_transfers) else None)
+        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record,spare=int(a.speculate)+int(a.install_follow_round),payload_width=2*max(len(r['slots']) for r in recipe['rules']) if (a.block_owner or a.include_uncovered_transfers) else None)
         if a.speculate:local=dict(local,rules=local['rules']+recipe['rules'])
         state=device(host);state['tokens']=state['tokens'].at[src].add(source_tokens[i]);state['tokens']=state['tokens'].at[dst].add(tokens[i])
         if a.follow:
@@ -179,9 +180,10 @@ def main():
         if a.semantic_owners:
             report['semantic_owner']=dict(semantic_proof,adopted=bool(move.get('semantic_adopted',False)))
         if a.follow and check['passed']:
-            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None,a.baked_eq,baked_proofs,owner if a.owner_aware else None,a.conditional_eq,a.reuse_witnesses,a.follow_round)
+            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None,a.baked_eq,baked_proofs,owner if a.owner_aware else None,a.conditional_eq,a.reuse_witnesses,a.follow_round,a.install_follow_round)
         reports.append(report);print(json.dumps(report),flush=True)
     result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,semantic_owners=a.semantic_owners,block_owner=a.block_owner,immutable_source=a.immutable_source,owner_aware=a.owner_aware,proof_token=a.proof_token,baked_eq=a.baked_eq,conditional_eq=a.conditional_eq,speculative_frames=a.speculate,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    result['install_follow_round']=a.install_follow_round
     result['follow_round']=a.follow_round
     result['reuse_witnesses']=a.reuse_witnesses
     result['include_uncovered_transfers']=a.include_uncovered_transfers
@@ -206,12 +208,12 @@ def audit_failed(reports,follow=False,speculate=False):
             s=r.get('follow',{}).get('speculation')
             required=('gpu_installed','corrected_graph_pass','token_refresh_required','downstream_false_positive','downstream_missed','downstream_incomplete')
             if not s or any(k not in s for k in required):return True
-            if any(s.get(k,0) for k in ('fourth_missed','fourth_false_positive','fourth_incomplete','fourth_nonfinite','fourth_wrong_states')):return True
+            if any(s.get(k,0) for k in ('fourth_missed','fourth_false_positive','fourth_incomplete','fourth_nonfinite','fourth_wrong_states','fourth_capacity','fourth_other_rejections','fourth_corrected','fourth_refresh','fourth_blocked_by_parent')):return True
             if s['corrected_graph_pass']!=s['gpu_installed'] or any(s[k] for k in required[2:]):return True
     return not reports
 
 
-def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None,context_capacity=0,speculation=None,baked_eq=False,baked_proofs=None,consumer_owner=None,conditional_eq=False,reuse_witnesses=False,follow_round=False):
+def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None,context_capacity=0,speculation=None,baked_eq=False,baked_proofs=None,consumer_owner=None,conditional_eq=False,reuse_witnesses=False,follow_round=False,install_follow=False):
     from neural_device_candidates import compile_candidates,candidates
     counts=dict(constraint_rejected_predictions=0,candidates=0,accepted=0,false_positive=0,expected=0,recovered=0,missed=0,incomplete_rules=0,accepted_from_generated=0,invalid_predictions=0,context_overflow_rules=0,context_inputs=0)
     groups=[];spec_reports=[];semantic_errors=[]
@@ -278,7 +280,7 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
                     error.update(rule=rid,candidate=int(index),binding=[[int(s),int(v)] for s,v in key],sources=sources[index].tolist())
                     semantic_errors.append(error)
                 if speculation is not None:
-                    spec_reports.append(audit_speculation(state,local,frames,rule,len(local['rules'])-len(recipe['rules'])+rid,batch,index,tokens[index],semantic[index],model,oracle,key,mapping,*speculation,width,query_atoms=query_atoms,query_fields=query_fields,reuse_witnesses=reuse_witnesses,follow_rules=recipe['rules'] if follow_round else None,eq_head=eq_head))
+                    spec_reports.append(audit_speculation(state,local,frames,rule,len(local['rules'])-len(recipe['rules'])+rid,batch,index,tokens[index],semantic[index],model,oracle,key,mapping,*speculation,width,query_atoms=query_atoms,query_fields=query_fields,reuse_witnesses=reuse_witnesses,follow_rules=recipe['rules'] if follow_round else None,eq_head=eq_head,install_follow=install_follow))
                 signature=hashlib.sha256(b''.join(features[k][index].tobytes() for k in features)).digest()
                 value=(eq_labels[-1].tobytes(),eq_local[-1].tobytes())
                 if signature in feature_labels:

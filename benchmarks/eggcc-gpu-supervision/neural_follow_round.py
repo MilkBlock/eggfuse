@@ -13,7 +13,7 @@ from neural_cell_chains import completed
 from neural_eq_readout import targets,metrics
 
 
-def evaluate(local,state,frames,rules,model,eq_head,atoms,fields):
+def evaluate(local,state,frames,rules,model,eq_head,atoms,fields,retained=None):
     outputs=[]
     for rule in rules:
         plan=compile_candidates(local,rule,atoms=atoms,fields=fields,compact_constants=True)
@@ -23,6 +23,7 @@ def evaluate(local,state,frames,rules,model,eq_head,atoms,fields):
         finite=mx.isfinite(logits)&mx.all(mx.isfinite(tokens),axis=-1)&mx.all(mx.isfinite(scores),axis=-1)
         accepted=batch['live']&batch['constraints_satisfied']&(logits>=0)&finite
         mx.eval(batch,accepted,scores,finite)
+        if retained is not None:retained.append((batch,tokens,scores))
         # This standalone audit materializes results, never teacher inputs.
         outputs.append((plan,np.array(accepted),np.array(batch['binding_roots']),np.array(scores),
                         bool(batch['complete']),int(mx.sum(batch['live']&~finite)),

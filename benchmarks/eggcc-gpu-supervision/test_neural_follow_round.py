@@ -14,6 +14,10 @@ class FollowRound(unittest.TestCase):
         self.assertTrue(audit_failed([report],speculate=True))
         report['follow']['speculation']['fourth_wrong_states']=0
         self.assertFalse(audit_failed([report],speculate=True))
+        for reason in ('fourth_capacity','fourth_other_rejections','fourth_corrected','fourth_refresh','fourth_blocked_by_parent'):
+            report['follow']['speculation'][reason]=1
+            self.assertTrue(audit_failed([report],speculate=True))
+            report['follow']['speculation'][reason]=0
 
     def test_next_token_errors_and_new_frame_use_are_separate_from_matches(self):
         eq=dict(kind='eq',name='E')
