@@ -99,11 +99,12 @@ class Interface:
                 if not constants:used_constants.add(number);next_scalar+=1
                 value=dict(sort=name,value=number)
             values[root]=value
+        self.slot_values={key:values[self.root(key)] for key in self.parent}
         rows=[dict(table=name,values=[values[self.root(a)] for a in args],subsumed=False) for name,args in self.facts]
         return canonical_seed(self.recipe,rows)
 
 
-def replay_case(recipe,case):
+def replay_case(recipe,case,with_interface=False):
     """Validate a recorded representative without trusting its snapshot."""
     p,c=case['producer'],case['consumer']
     producers=p if isinstance(p,list) else [p]
@@ -128,7 +129,7 @@ def replay_case(recipe,case):
             else:first[label]=var
     result=bound.snapshot()
     if result!=case['snapshot'] or digest(result)!=case['input_sha256']:raise ValueError('enumerated snapshot replay mismatch')
-    return result
+    return (result,bound) if with_interface else result
 
 
 def enumerate_interfaces(recipe,max_classes=7,include_missing=False,producer_count=1):

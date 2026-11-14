@@ -1,0 +1,11 @@
+{
+  "scope": "all enumerated routes materialized as synthetic producer frames; exact projected facts preserved; not a rollout or ownership transfer benchmark",
+  "counts": {
+    "cases": 25670,
+    "producer_instances": 51340,
+    "distinct_frames": 51204,
+    "retained_boundary_rows": 0
+  },
+  "cases_sha256": "d7d83ccbcae15af0273b0939b70f0c862a16d2ab5c230c58dd14b3c294401c14",
+  "passed": true
+}
