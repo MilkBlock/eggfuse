@@ -70,7 +70,7 @@ def pack_sources(sources,owners,ref,atoms):
     return dict(tokens=tokens,edges=edge,mask=mask,replace=replace)
 
 
-def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None):
+def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_targets=False):
     atoms=max(len(r['query']) for r in recipe['rules']);width=max(len(r['slots']) for r in recipe['rules']);items=[];coverage=set()
     interface_width=max(len(a['args']) for r in recipe['rules'] for a in r['query'])
     from neural_ordered_relations import projected
@@ -105,6 +105,9 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None):
                 packed=pack_sources(sources,owners,ref,atoms)
                 if ordered:packed['relations']=projected(consumer,[[ref.root(binding[a['slot']]) for a in atom['args']] for atom in consumer['query']],atoms,interface_width)
                 after=deepcopy(ref);apply_instance(after,consumer,binding);target=code(consumer,completed(consumer,binding,after),after)
+                if eq_targets:
+                    from neural_eq_readout import targets
+                    packed.update(targets(consumer,completed(consumer,binding,after),after,width))
                 items.append(dict(parent=record['index'],producer=producer,consumer=rid,**packed,request=template(consumer)[1],target=target,valid=True,owner_covered=any(p['covered'] for p in projections)))
                 if transfers is not None:
                     for plan in projections:
@@ -138,6 +141,7 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None):
                     ns=list(sources);ns[ai]=(seed_rule,fresh);no=list(owners);no[ai]=False
                     negative=pack_sources(ns,no,nr,atoms)
                     if ordered:negative['relations']=projected(consumer,[[nr.root(v) for v in fresh] if bi==ai else [nr.root(binding[a['slot']]) for a in q['args']] for bi,q in enumerate(consumer['query'])],atoms,interface_width)
+                    if eq_targets:negative.update(eq_target=np.zeros(width*(width-1)//2,np.float32),eq_mask=np.zeros(width*(width-1)//2,bool))
                     items.append(dict(parent=record['index'],producer=producer,consumer=rid,**negative,request=template(consumer)[1],target=np.zeros(128,np.float32),valid=False,owner_covered=False))
                     break
                 coverage.add((producer,rid));accepted+=1

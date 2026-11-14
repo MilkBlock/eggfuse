@@ -24,18 +24,18 @@ def chain_loss(model,batch,parent,chain):
     return loss(model,batch)+matching+mx.sum(error*chain['valid'])/mx.maximum(mx.sum(chain['valid']),1)
 
 
-def build(recipe,count,seed,ordered=False):
-    records=[];base=samples(recipe,count,seed,records,ordered=ordered);data,coverage=chains(recipe,records,ordered=ordered)
+def build(recipe,count,seed,ordered=False,eq_targets=False):
+    records=[];base=samples(recipe,count,seed,records,ordered=ordered,eq_targets=eq_targets);data,coverage=chains(recipe,records,ordered=ordered,eq_targets=eq_targets)
     return base,data,coverage
 
 
 def fingerprints(base,data):
     result=[]
     for i,parent in enumerate(data['parent']):
-        parts=[base[k][parent].tobytes() for k in ('x','edges','mask','request')]
+        parts=[base[k][parent].tobytes() for k in (('x','edges','mask','request','relations') if 'relations' in base else ('x','edges','mask','request'))]
         # Ground-truth generated token is not part of the recurrent input.
         fixed=np.where(data['replace'][i,:,None],0,data['tokens'][i])
-        parts += [fixed.tobytes()]+[data[k][i].tobytes() for k in ('edges','mask','replace','request')]
+        parts += [fixed.tobytes()]+[data[k][i].tobytes() for k in (('edges','mask','replace','request','relations') if 'relations' in data else ('edges','mask','replace','request'))]
         result.append(hashlib.sha256(b''.join(parts)).hexdigest())
     return result
 

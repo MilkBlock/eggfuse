@@ -526,3 +526,48 @@ Twenty-nine neural tests pass. Details, hashes and reproduction commands are in
 full-runtime performance or multi-stage saturation claim. The next step is
 committing these device-produced following bindings and iterating at original
 Run boundaries with semantic deduplication and explicit capacity obligations.
+
+
+### Semantic token readout (synthetic training, real evaluation)
+
+`train_neural_eq_readout.py` jointly trains the encoder, Cell transition and
+`neural_eq_readout.py` through two generated-token steps. The previously trained
+interface matching layers are frozen. The readout receives only a 128-float
+successor token and the 64-float template request, never exact IDs or incidence.
+Targets are same-sort Eq pairs in the completed local Cell; scalar/cross-sort
+pairs and invalid matches are masked. Adam updates use direct and chained Eq
+losses plus the existing token/alignment losses. Real snapshots are evaluation
+only. This remains a standalone prototype: Eq predictions do not mutate graphs.
+
+The 800-step run produces 576/578 exact synthetic states after closure, with no
+false merges; 324/326 states with unseen chain input fingerprints are exact.
+There are 503 overlapping chain fingerprints (including negative examples), so
+this is not an entirely unseen evaluation set. Within-template token permutation
+reduces exact states to 410/578 and creates 86 states with false merges, supporting
+that dynamic token contents affect semantics. Fixed reference codes are not an
+upper bound after decoder/encoder co-adaptation.
+
+Real first-Run evaluations are **not accepted for semantic execution**: GCD has
+36/40 exact states and LCM 104/109; each has two states with false merges. All
+errors occur in source rule 287. An independent oracle restricted to the supplied
+query facts gives exactly the same Eq labels as the full imported oracle on these
+cases, so missing external context does not explain these failures. The full
+oracle remains the target; this diagnostic never excludes boundary errors.
+Matching remains exact on these selected candidates. Neither these counts nor
+the earlier exact RHS kernel prove a floating-token saturation runtime.
+
+Reproduction (use the MLX environment and artifact paths in the result manifest):
+
+```sh
+python train_neural_eq_readout.py GCD_TRACE INTERFACE_WEIGHTS OUTPUT.json
+python train_neural_eq_readout.py GCD_TRACE OUTPUT.safetensors ABLATION.json --evaluate-only
+python neural_snapshot_candidates.py GCD_TRACE OUTPUT.transition.safetensors GCD.json --snapshot-run 437 --ordered --interface-only --eq-readout OUTPUT.eq.safetensors
+python neural_snapshot_candidates.py LCM_TRACE OUTPUT.transition.safetensors LCM.json --snapshot-run 514 --ordered --interface-only --eq-readout OUTPUT.eq.safetensors
+```
+
+Weights and full logs are archived outside Git; `neural-semantic-eq-results.json`
+records hashes, metrics, CPU audit times and the archive location. CPU audit times
+include per-candidate oracle cloning/completion and are not a production auditor
+throughput claim. Next work must address rule 287 using synthetic counterexamples,
+then connect accepted semantic state to subsequent GPU computation; do not merely
+loop the exact RHS path and call the floating token an executor.

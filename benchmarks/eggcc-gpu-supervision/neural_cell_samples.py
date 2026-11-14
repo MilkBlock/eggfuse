@@ -26,9 +26,9 @@ def apply_instance(ref,rule,binding):
     return slots
 
 
-def samples(recipe,count,seed,records=None,ordered=False):
+def samples(recipe,count,seed,records=None,ordered=False,eq_targets=False):
     rng=np.random.default_rng(seed);rules=recipe['rules'];width=max(len(a['args']) for r in rules for a in r['query']);atoms=max(len(r['query']) for r in rules)
-    relations=[]
+    relations=[];eq_labels=[];eq_masks=[];eq_width=max(len(r['slots']) for r in rules)
     xs=[];edges=[];masks=[];requests=[];ys=[];targets=[];rids=[];source_targets=[]
     for rid,rule in enumerate(rules):
         roles,request=template(rule)
@@ -95,8 +95,14 @@ def samples(recipe,count,seed,records=None,ordered=False):
                 if records is not None:
                     from copy import deepcopy
                     records.append(dict(eq_changed=ref.unions>unions_before,index=len(xs),rule=rid,binding=dict(binding),reference=deepcopy(ref),target=out.copy()))
+            if eq_targets:
+                from neural_eq_readout import targets as state_eq_targets
+                from neural_cell_chains import completed
+                eq=state_eq_targets(rule,completed(rule,binding,ref),ref,eq_width) if valid else dict(eq_target=np.zeros(eq_width*(eq_width-1)//2,np.float32),eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool))
+                eq_labels.append(eq['eq_target']);eq_masks.append(eq['eq_mask'])
             source_targets.append(source_code);xs.append(x);edges.append(edge);masks.append(mask);requests.append(request);ys.append(valid);targets.append(out);rids.append(rid)
     result=dict(source_target=np.array(source_targets),x=np.array(xs),edges=np.array(edges),mask=np.array(masks),request=np.array(requests),valid=np.array(ys,np.float32),target=np.array(targets),rule=np.array(rids,np.int32))
 
     if ordered:result['relations']=np.array(relations)
+    if eq_targets:result.update(eq_target=np.array(eq_labels),eq_mask=np.array(eq_masks))
     return result
