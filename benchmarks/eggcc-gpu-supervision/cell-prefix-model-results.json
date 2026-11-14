@@ -1,0 +1,16 @@
+{
+  "scope": "synthetic training-domain next-Entry classification; no runtime candidate reduction",
+  "examples": 1252,
+  "prefix_states": 674,
+  "input_width": 1412,
+  "steps": 2000,
+  "correct_prefix_states": 674,
+  "false_positive": 0,
+  "false_negative": 0,
+  "exact_feature_label_conflicts": 0,
+  "dataset_sha256": "b7c396095eb40cc91ebb7a36bd6849604795b69f433bd3ad2254c248547590da",
+  "context_sha256": "2e923259f77861a882ed5717120f2495db4e6ad76739811ebf8967956e543784",
+  "recurrent_latent_inputs": false,
+  "numeric_identity_inputs": false,
+  "promoted_as_default": false
+}

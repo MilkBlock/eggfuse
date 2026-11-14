@@ -145,6 +145,8 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,incl
                     datum['entry_sources']=np.array(b['sources'][j])
                     entry=np.array(b['entry_records'][j])
                     datum['entry_records']=np.pad(entry,(0,len(b['mask'][j])-len(entry)),constant_values=-1)
+                    for key in ('entry_roots','entry_slots'):
+                        value=np.array(b[key][j]);datum[key]=np.pad(value,((0,len(b['mask'][j])-len(entry)),(0,0)),constant_values=-1)
                     datum['source_rows']=np.array(b['token_sources'][j])
                     datum['x']=current_fields[datum['source_rows']]
                     items.append(datum)

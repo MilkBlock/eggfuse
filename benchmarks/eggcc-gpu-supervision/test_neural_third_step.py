@@ -22,6 +22,10 @@ class ThirdStep(unittest.TestCase):
             selected=bank['fields'][raw['source_rows'][i]]
             np.testing.assert_array_equal(raw['x'][i,:,:selected.shape[-1]],selected)
             self.assertTrue(np.all(bank['mask'][raw['source_rows'][i]][raw['mask'][i]]))
+            for row,slots,roots,record in zip(raw['entry_sources'][i],raw['entry_slots'][i],raw['entry_roots'][i],raw['entry_records'][i]):
+                if record<0:continue
+                present=slots>=0
+                np.testing.assert_array_equal(bank['roots'][row,slots[present]],roots[present])
         self.assertTrue(report['current_state_inputs'])
         self.assertFalse(report['recurrent_latent_inputs'])
         self.assertFalse(any(k.startswith(('p_', 'c_')) for k in raw))

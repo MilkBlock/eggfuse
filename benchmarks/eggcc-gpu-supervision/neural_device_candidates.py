@@ -140,7 +140,10 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp,capture_entries
     binding_sources=xp.stack([sources[:,plan['origins'][s][0]] for s in plan['inputs']],axis=1)
     binding_slots=xp.stack([positions[plan['origins'][s][0]][:,plan['origins'][s][1]] for s in plan['inputs']],axis=1)
     extra={}
-    if capture_entries:extra['entry_records']=xp.stack(entry_records,axis=1)
+    if capture_entries:
+        extra['entry_records']=xp.stack(entry_records,axis=1)
+        extra['entry_roots']=projected[:,:len(views)]
+        extra['entry_slots']=xp.stack([xp.concatenate([v,xp.full((count,plan['fields']-v.shape[1]),-1,xp.int32)],axis=1) for v in positions],axis=1)
     if 'owner_token_blocks' in state:
         from neural_owner_context import encode as encode_owner
         extra['owner_features']=encode_owner(semantic_sources,state['token_block'][sources],state['owner_completion_code'][semantic_sources],(state['owner_block_count'][semantic_sources]>1)&ready[sources],mask,xp)

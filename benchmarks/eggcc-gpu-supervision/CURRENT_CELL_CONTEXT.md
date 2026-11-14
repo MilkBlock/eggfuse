@@ -247,3 +247,28 @@ or a complete interaction census. It does not reinstate recurrent latent inputs.
 Generate the input using `--current-state --capture-context`; newly generated
 captures include exact `entry_sources` and `entry_records` alongside semantic
 source rows, keeping physical witness identity separate from semantic ownership.
+
+## First current-context next-Entry model
+
+Captures now also retain exact Entry roots and source slot projections, verified
+against the current ownership-resolved context bank. `cell_context_features`
+forms dense floating port messages by summing role vectors of all visible valid
+ports sharing a root, normalizing and applying tanh. Root magnitudes never enter
+the network. Tests check invariance to representative renaming, hidden-row
+exclusion, actual shared-context dependence, and NumPy/MLX agreement.
+
+`train_cell_prefix.py DATA.npz FIT.json --steps 2000` trains a dense network on
+current candidate-port messages, selected-prefix messages, query request/depth,
+and exact prefix-candidate incidence features. It predicts next-Entry validity,
+not Eq effects. All legal continuations and dead prefixes remain supervised.
+The network has no recurrent latent input. Feature extraction is charged work,
+not demonstrated free or faster than exact indexing.
+
+On the 61-case synthetic corpus: 1,252 next-Entry examples, 674 prefix states,
+1,412 floating input dimensions. After 2,000 steps all 674 training prefix answer
+sets are exact, with zero false-positive/false-negative choices and no exact
+feature-label conflicts. This is fitting, not held-out or closed-loop correctness.
+The training script still enumerates examples offline. No runtime candidate
+enumeration has yet been replaced, and missing-match/fixed-point proof remains
+outside this model. Text evidence: `cell-prefix-model-results.json`; binary
+artifacts remain under current-cell-v36 outside Git.
