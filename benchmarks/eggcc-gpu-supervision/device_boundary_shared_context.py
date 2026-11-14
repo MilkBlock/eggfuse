@@ -14,6 +14,9 @@ def encode(boundary,bindings,plan,pairs,xp):
     h=xp.tanh((tokens@plan['token_weight'])[:,None,:]+plan['roles'][safe]@plan['role_weight'])
     h=xp.where(valid[:,:,None],h,0)
     n,w,d=h.shape
+    def denominator(count):
+        count=xp.maximum(count,1)
+        return count.astype(xp.float32) if plan.get('mean_context',False) else xp.sqrt(count)
     roots=boundary['slot_roots'].reshape(-1);sorts=plan['sorts'][safe].reshape(-1);live=valid.reshape(-1)
     if 'root_capacity' in plan:
         capacity=plan['root_capacity'];sort_count=plan['sort_capacity']
@@ -27,21 +30,21 @@ def encode(boundary,bindings,plan,pairs,xp):
         else:
             total=xp.zeros((capacity*sort_count,d),xp.float32).at[address].add(values)
             number=xp.zeros(capacity*sort_count,xp.float32).at[address].add(counts)
-        shared=total[address]/xp.sqrt(xp.maximum(number[address],1))[:,None]
+        shared=total[address]/denominator(number[address])[:,None]
         # Out-of-range live roots must reject the numeric prediction, not alias.
         shared=xp.where(xp.any(live&~usable),float('nan'),shared)
     else:
         links=(roots[:,None]==roots[None,:])&(sorts[:,None]==sorts[None,:])&live[:,None]&live[None,:]
         weight=links.astype(xp.float32)
-        shared=(weight@h.reshape(-1,d))/xp.sqrt(xp.maximum(weight.sum(axis=1),1))[:,None]
+        shared=(weight@h.reshape(-1,d))/denominator(weight.sum(axis=1))[:,None]
     enriched=xp.tanh(h+shared.reshape(n,w,d))
     enriched=xp.where(valid[:,:,None],enriched,0)
     # All ports of a Cell contribute to its context, including ports that are
     # not themselves attached to the current query.
-    cell=enriched.sum(axis=1)/xp.sqrt(xp.maximum(valid.sum(axis=1),1))[:,None]
+    cell=enriched.sum(axis=1)/denominator(valid.sum(axis=1))[:,None]
     h=xp.where(valid[:,:,None],xp.tanh(enriched+cell[:,None,:]),0).reshape(-1,d)
     count=conn.astype(xp.float32).sum(axis=(-2,-1))
     pooled=conn.reshape(conn.shape[0],conn.shape[1],-1).astype(xp.float32)@h
-    pooled=xp.tanh(pooled/xp.sqrt(xp.maximum(count,1))[:,:,None])
+    pooled=xp.tanh(pooled/denominator(count)[:,:,None])
     slots=xp.arange(plan['width'])[:,None]==plan['ports'][None,:]
     return (slots.astype(xp.float32)[None,:,:]@pooled).reshape(conn.shape[0],-1),count

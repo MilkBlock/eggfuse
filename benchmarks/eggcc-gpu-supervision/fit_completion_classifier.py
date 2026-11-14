@@ -101,6 +101,12 @@ def unique_training_rows(x,y,programs):
     return x[keep],y[keep],dict(captured=len(x),unique=len(keep),duplicates=len(x)-len(keep),ambiguous_inputs=conflicts)
 
 
+def ambiguous_rows(required,states):
+    allowed=~np.any(required[:,None,:]&~states.astype(bool)[None,:,:],axis=2)
+    if np.any(allowed.sum(axis=1)==0):raise ValueError('input constraints have no legal completion')
+    return allowed.sum(axis=1)>1
+
+
 def feature_conflicts(x,y):
     # Cross-source information check, unlike per-program weighting deduplication.
     groups={}
@@ -110,7 +116,7 @@ def feature_conflicts(x,y):
     return dict(unique_inputs=len(groups),conflicting_groups=sum(len(v)>1 for v in groups.values()),includes_required_eq_mask=False)
 
 
-def assemble_classifier_features(path,meta,data,model,shared_context=False,joint_features=False):
+def assemble_classifier_features(path,meta,data,model,shared_context=False,joint_features=False,mean_context=False):
     from condition_boundary import captured_bridges
     from device_joint_features import compile_projection,expand
     info=meta.get('completion_readout') or {}
@@ -119,12 +125,17 @@ def assemble_classifier_features(path,meta,data,model,shared_context=False,joint
     base=1+model['w'].shape[0]+model['w'].shape[1]+data['boundary_features'].shape[1]
     raw=data['features'];error=0.;extra=None
     if shared_context or captured_shared:
-        extra,error=captured_bridges(path,meta,shared_context=True)
+        extra,error=captured_bridges(path,meta,shared_context=True,mean_context=mean_context if shared_context else bool(info.get('mean_shared_context',False)))
     expected=base+(extra.shape[1] if captured_shared else 0)+(256 if captured_joint else 0)
     if raw.shape[1]!=expected:raise ValueError('capture extension schema mismatch')
     prefix=raw[:,:base]
     check=prefix
-    if captured_shared:check=np.concatenate([check,extra],axis=1)
+    if captured_shared:
+        captured_extra=extra
+        if shared_context and mean_context!=bool(info.get('mean_shared_context',False)):
+            captured_extra,captured_error=captured_bridges(path,meta,shared_context=True,mean_context=bool(info.get('mean_shared_context',False)))
+            error=max(error,captured_error)
+        check=np.concatenate([check,captured_extra],axis=1)
     if captured_joint:check=expand(check,compile_projection(check.shape[1]),np)
     if not np.allclose(raw,check,atol=5e-6,rtol=0):raise ValueError('captured feature extension mismatch')
     data['features']=prefix
@@ -168,12 +179,15 @@ def inputs_for_case(path,meta,data,plans):
 def main():
     p=argparse.ArgumentParser()
     for key in ('model','source_model','decoder','decoder_report','output'):p.add_argument(key,type=Path)
+    p.add_argument('--ambiguous-only',action='store_true',help='fit only rows whose input constraints permit multiple completion states')
+    p.add_argument('--mean-context',action='store_true',help='mean rather than sqrt-count normalization in shared context')
     p.add_argument('--joint-features',action='store_true',help='fixed 256-column nonlinear input/context mixing')
     p.add_argument('--balanced-states',action='store_true',help='equal total training weight per observed completion state')
     p.add_argument('--shared-context',action='store_true',help='append current-boundary floating shared context; offline experimental head')
     p.add_argument('--feedback-head',type=Path,action='append',default=[],help='explicit parent weights for audited synthetic feedback')
     p.add_argument('--allow-historical-real-training',action='store_true',help='explicit historical experiment reproduction only')
     p.add_argument('--train',type=Path,action='append',required=True);p.add_argument('--validation',type=Path,action='append',required=True);a=p.parse_args()
+    if a.mean_context and not a.shared_context:raise ValueError('mean context requires shared context')
     with np.load(a.model) as f:model={k:f[k] for k in f.files}
     with np.load(a.source_model) as f:
         for k in ('w','encoding','channels','zero_role_channels'):
@@ -199,17 +213,24 @@ def main():
             if family is not None and sf!=family:raise ValueError('semantic family mismatch')
             if plans is None:plans=[compile_states(r) for r in sf]
             family=sf
-            d['classifier_features'],error=assemble_classifier_features(path,m,d,model,a.shared_context,a.joint_features)
+            d['classifier_features'],error=assemble_classifier_features(path,m,d,model,a.shared_context,a.joint_features,a.mean_context)
             context_error=max(context_error,error)
             details=inputs_for_case(path,m,d,plans);cases.append((split,d,m,details))
     heads=[];coverage=[]
     for rid,plan in enumerate(plans):
         source=[(d,v[rid],source_group(m)) for s,d,m,v in cases if s=='train' and rid in v]
         x=np.concatenate([d['classifier_features'][v['ids']] for d,v,_ in source]);y=np.concatenate([v['target'] for _,v,_ in source])
-        x,y,duplicates=unique_training_rows(x,y,[p for _,v,p in source for _ in v['ids']])
+        programs_for_rows=[p for _,v,p in source for _ in v['ids']]
+        forced=0
+        if a.ambiguous_only:
+            required=np.concatenate([v['required'] for _,v,_ in source])
+            keep=ambiguous_rows(required,plan['states']);forced=int((~keep).sum())
+            x=x[keep];y=y[keep];programs_for_rows=[p for p,k in zip(programs_for_rows,keep) if k]
+            if not len(x):raise ValueError('no ambiguous examples for this head')
+        x,y,duplicates=unique_training_rows(x,y,programs_for_rows)
         weights=balanced_state_weights(y) if a.balanced_states else None
         heads.append(fit_head(x,y,10.,weights=weights))
-        coverage.append(dict(states=y.shape[1],observed_training_states=int(np.any(y,axis=0).sum()),training_instances=len(y),sampling=duplicates,exact_feature_conflicts=feature_conflicts(x,y)))
+        coverage.append(dict(input_determined_rows_excluded=forced,states=y.shape[1],observed_training_states=int(np.any(y,axis=0).sum()),training_instances=len(y),sampling=duplicates,exact_feature_conflicts=feature_conflicts(x,y)))
     results=[];gpu_error=0.;token_error=0.;decoding_disagreements=0
     for split,d,m,details in cases:
         rebuilt=np.zeros_like(d['targets']);baseline_tokens=np.tanh(d['features']@model['coef']);selected_rows={}
@@ -241,7 +262,7 @@ def main():
     if gpu_error>5e-6 or token_error>5e-6:raise ValueError(f'GPU numerical error: score={gpu_error}, token={token_error}')
     np.savez_compressed(a.output.with_suffix('.npz'),**{f'head_{i}_{k}':v for i,h in enumerate(heads) for k,v in h.items()})
     out=dict(scope='offline direct whole-state ridge and GPU token reconstruction on audited GPU captures; not installed',alpha=10.,backpropagation=False,
-        installed=False,union_authorized=False,joint_features=a.joint_features,balanced_states=a.balanced_states,shared_boundary_context=a.shared_context,maximum_gpu_context_error=context_error,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
+        installed=False,union_authorized=False,ambiguous_only=a.ambiguous_only,mean_shared_context=a.mean_context,joint_features=a.joint_features,balanced_states=a.balanced_states,shared_boundary_context=a.shared_context,maximum_gpu_context_error=context_error,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
         head_sha256=hashlib.sha256(a.output.with_suffix('.npz').read_bytes()).hexdigest(),coefficient_bytes=sum(h['coef'].nbytes for h in heads),normalization_bytes=sum(h[k].nbytes for h in heads for k in ('mean','scale','bias')),coverage=coverage,
         maximum_gpu_score_error=gpu_error,maximum_gpu_token_error=token_error,token_decode_disagreements=decoding_disagreements,cases=results,
         limitations=['All legal type-compatible states are included, but unseen states have no positive training evidence','No predicted-source rollout or native full-program acceptance','No learned equality is a proof','Current input Eq is retained; scalar effects outside query inputs are unsupported'])

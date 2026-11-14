@@ -165,7 +165,7 @@ def main():
             if boundary_error>5e-6 or not np.array_equal(bc,c['boundary_counts']):raise ValueError('boundary feature mismatch')
             if 'shared_boundary_features' in c['request']:
                 from device_boundary_shared_context import encode as shared_encode
-                sp=dict(bp)
+                sp=dict(bp,mean_context=bool(info.get('mean_shared_context',False)))
                 if 'shared_root_capacity' in c['request']:
                     sp.update(root_capacity=int(c['request']['shared_root_capacity']),sort_capacity=int(c['request']['shared_sort_capacity']))
                 shared,_=shared_encode(c['boundary'],c['bindings'],sp,None,np)

@@ -1,0 +1,360 @@
+{
+  "scope": "two fixed synthetic-only offline ablations; no additional feedback rollout or model promotion",
+  "alpha": 10,
+  "training_inputs": 641,
+  "backpropagation": false,
+  "promoted": false,
+  "experiments": {
+    "mean": {
+      "head_sha256": "28bd2a118663532adfe6c45c915550af46fa25bf698bc37e50de2b1267c201c3",
+      "report_sha256": "33edc2e4d46cbb1bfb0630157e059710e002c43e44c6c9cb1b21ff46f4aaade8",
+      "coverage": [
+        {
+          "states": 2,
+          "observed_training_states": 2,
+          "training_instances": 1269,
+          "sampling": {
+            "captured": 1286,
+            "unique": 1269,
+            "duplicates": 17,
+            "ambiguous_inputs": 0
+          },
+          "exact_feature_conflicts": {
+            "unique_inputs": 1167,
+            "conflicting_groups": 0,
+            "includes_required_eq_mask": false
+          }
+        },
+        {
+          "states": 15,
+          "observed_training_states": 7,
+          "training_instances": 1028,
+          "sampling": {
+            "captured": 1044,
+            "unique": 1028,
+            "duplicates": 16,
+            "ambiguous_inputs": 0
+          },
+          "exact_feature_conflicts": {
+            "unique_inputs": 985,
+            "conflicting_groups": 0,
+            "includes_required_eq_mask": false
+          }
+        },
+        {
+          "states": 15,
+          "observed_training_states": 7,
+          "training_instances": 763,
+          "sampling": {
+            "captured": 779,
+            "unique": 763,
+            "duplicates": 16,
+            "ambiguous_inputs": 0
+          },
+          "exact_feature_conflicts": {
+            "unique_inputs": 714,
+            "conflicting_groups": 0,
+            "includes_required_eq_mask": false
+          }
+        }
+      ],
+      "validation": [
+        {
+          "case": "016-gcd",
+          "groups": {
+            "all": {
+              "instances": 41,
+              "query_instances": 41,
+              "exact_partitions": 10,
+              "false_merges": 250,
+              "missed_equalities": 0,
+              "nontransitive": 0,
+              "closure_false_merges": 250,
+              "dynamic_quotient": {
+                "queries": 206,
+                "positives": 18,
+                "true_positives": 18,
+                "false_positives": 165,
+                "false_negatives": 0,
+                "precision": 0.09836065573770492,
+                "recall": 1.0
+              }
+            },
+            "direct": {
+              "instances": 26,
+              "query_instances": 26,
+              "exact_partitions": 1,
+              "false_merges": 199,
+              "missed_equalities": 0,
+              "nontransitive": 0,
+              "closure_false_merges": 199,
+              "dynamic_quotient": {
+                "queries": 146,
+                "positives": 7,
+                "true_positives": 7,
+                "false_positives": 131,
+                "false_negatives": 0,
+                "precision": 0.050724637681159424,
+                "recall": 1.0
+              }
+            },
+            "generated": {
+              "instances": 15,
+              "query_instances": 15,
+              "exact_partitions": 9,
+              "false_merges": 51,
+              "missed_equalities": 0,
+              "nontransitive": 0,
+              "closure_false_merges": 51,
+              "dynamic_quotient": {
+                "queries": 60,
+                "positives": 11,
+                "true_positives": 11,
+                "false_positives": 34,
+                "false_negatives": 0,
+                "precision": 0.24444444444444444,
+                "recall": 1.0
+              }
+            }
+          }
+        },
+        {
+          "case": "019-lcm",
+          "groups": {
+            "all": {
+              "instances": 99,
+              "query_instances": 99,
+              "exact_partitions": 20,
+              "false_merges": 652,
+              "missed_equalities": 0,
+              "nontransitive": 0,
+              "closure_false_merges": 652,
+              "dynamic_quotient": {
+                "queries": 524,
+                "positives": 37,
+                "true_positives": 37,
+                "false_positives": 433,
+                "false_negatives": 0,
+                "precision": 0.07872340425531915,
+                "recall": 1.0
+              }
+            },
+            "direct": {
+              "instances": 78,
+              "query_instances": 78,
+              "exact_partitions": 1,
+              "false_merges": 637,
+              "missed_equalities": 0,
+              "nontransitive": 0,
+              "closure_false_merges": 637,
+              "dynamic_quotient": {
+                "queries": 458,
+                "positives": 15,
+                "true_positives": 15,
+                "false_positives": 423,
+                "false_negatives": 0,
+                "precision": 0.03424657534246575,
+                "recall": 1.0
+              }
+            },
+            "generated": {
+              "instances": 21,
+              "query_instances": 21,
+              "exact_partitions": 19,
+              "false_merges": 15,
+              "missed_equalities": 0,
+              "nontransitive": 0,
+              "closure_false_merges": 15,
+              "dynamic_quotient": {
+                "queries": 66,
+                "positives": 22,
+                "true_positives": 22,
+                "false_positives": 10,
+                "false_negatives": 0,
+                "precision": 0.6875,
+                "recall": 1.0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ambiguous-stable": {
+      "head_sha256": "feb1b2138be069ec16a5888c63592ec2cba14ae6b608e45dbdb533e0b0eae253",
+      "report_sha256": "f9303c25fc8d612b724fae2172d7d04b81dbcb10597b6b7d68bebd33d99b7406",
+      "coverage": [
+        {
+          "input_determined_rows_excluded": 712,
+          "states": 2,
+          "observed_training_states": 2,
+          "training_instances": 566,
+          "sampling": {
+            "captured": 574,
+            "unique": 566,
+            "duplicates": 8,
+            "ambiguous_inputs": 0
+          },
+          "exact_feature_conflicts": {
+            "unique_inputs": 525,
+            "conflicting_groups": 0,
+            "includes_required_eq_mask": false
+          }
+        },
+        {
+          "input_determined_rows_excluded": 0,
+          "states": 15,
+          "observed_training_states": 7,
+          "training_instances": 1028,
+          "sampling": {
+            "captured": 1044,
+            "unique": 1028,
+            "duplicates": 16,
+            "ambiguous_inputs": 0
+          },
+          "exact_feature_conflicts": {
+            "unique_inputs": 980,
+            "conflicting_groups": 0,
+            "includes_required_eq_mask": false
+          }
+        },
+        {
+          "input_determined_rows_excluded": 0,
+          "states": 15,
+          "observed_training_states": 7,
+          "training_instances": 763,
+          "sampling": {
+            "captured": 779,
+            "unique": 763,
+            "duplicates": 16,
+            "ambiguous_inputs": 0
+          },
+          "exact_feature_conflicts": {
+            "unique_inputs": 712,
+            "conflicting_groups": 0,
+            "includes_required_eq_mask": false
+          }
+        }
+      ],
+      "validation": [
+        {
+          "case": "016-gcd",
+          "groups": {
+            "all": {
+              "instances": 41,
+              "query_instances": 41,
+              "exact_partitions": 26,
+              "false_merges": 42,
+              "missed_equalities": 3,
+              "nontransitive": 0,
+              "closure_false_merges": 42,
+              "dynamic_quotient": {
+                "queries": 206,
+                "positives": 18,
+                "true_positives": 16,
+                "false_positives": 26,
+                "false_negatives": 2,
+                "precision": 0.38095238095238093,
+                "recall": 0.8888888888888888
+              }
+            },
+            "direct": {
+              "instances": 26,
+              "query_instances": 26,
+              "exact_partitions": 14,
+              "false_merges": 33,
+              "missed_equalities": 3,
+              "nontransitive": 0,
+              "closure_false_merges": 33,
+              "dynamic_quotient": {
+                "queries": 146,
+                "positives": 7,
+                "true_positives": 5,
+                "false_positives": 20,
+                "false_negatives": 2,
+                "precision": 0.2,
+                "recall": 0.7142857142857143
+              }
+            },
+            "generated": {
+              "instances": 15,
+              "query_instances": 15,
+              "exact_partitions": 12,
+              "false_merges": 9,
+              "missed_equalities": 0,
+              "nontransitive": 0,
+              "closure_false_merges": 9,
+              "dynamic_quotient": {
+                "queries": 60,
+                "positives": 11,
+                "true_positives": 11,
+                "false_positives": 6,
+                "false_negatives": 0,
+                "precision": 0.6470588235294118,
+                "recall": 1.0
+              }
+            }
+          }
+        },
+        {
+          "case": "019-lcm",
+          "groups": {
+            "all": {
+              "instances": 99,
+              "query_instances": 99,
+              "exact_partitions": 65,
+              "false_merges": 85,
+              "missed_equalities": 1,
+              "nontransitive": 0,
+              "closure_false_merges": 85,
+              "dynamic_quotient": {
+                "queries": 524,
+                "positives": 37,
+                "true_positives": 36,
+                "false_positives": 50,
+                "false_negatives": 1,
+                "precision": 0.4186046511627907,
+                "recall": 0.972972972972973
+              }
+            },
+            "direct": {
+              "instances": 78,
+              "query_instances": 78,
+              "exact_partitions": 45,
+              "false_merges": 85,
+              "missed_equalities": 0,
+              "nontransitive": 0,
+              "closure_false_merges": 85,
+              "dynamic_quotient": {
+                "queries": 458,
+                "positives": 15,
+                "true_positives": 15,
+                "false_positives": 50,
+                "false_negatives": 0,
+                "precision": 0.23076923076923078,
+                "recall": 1.0
+              }
+            },
+            "generated": {
+              "instances": 21,
+              "query_instances": 21,
+              "exact_partitions": 20,
+              "false_merges": 0,
+              "missed_equalities": 1,
+              "nontransitive": 0,
+              "closure_false_merges": 0,
+              "dynamic_quotient": {
+                "queries": 66,
+                "positives": 22,
+                "true_positives": 21,
+                "false_positives": 0,
+                "false_negatives": 1,
+                "precision": 1.0,
+                "recall": 0.9545454545454546
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
