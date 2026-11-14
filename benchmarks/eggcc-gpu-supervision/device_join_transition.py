@@ -65,6 +65,7 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=
     base_width=1+model['w'].shape[0]+model['w'].shape[1]
     classifier=plan.get('completion_classifier')
     expected_width=classifier['head']['coef'].shape[0] if classifier is not None else model['coef'].shape[0]
+    if 'joint_projection' in plan:expected_width-=plan['joint_projection'].shape[1]
     if expected_width!=base_width:
         if 'boundary_context' not in plan:raise ValueError('boundary model requires compiled context')
         from device_boundary_context import snapshot,encode
@@ -87,6 +88,10 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=
         classifier_features,numerical=encode_features(state,request,model,xp)
         if 'shared_boundary_features' in request:
             classifier_features=xp.concatenate([classifier_features,request['shared_boundary_features']],axis=1)
+        if 'joint_projection' in plan:
+            from device_joint_features import expand
+            classifier_features=expand(classifier_features,plan['joint_projection'],xp)
+            request['joint_features']=xp.array(True)
         tokens=None  # Filled directly by the state head after scalar slots are available.
     else:tokens,numerical=infer(state,request,model,xp)
     width=slot_shape(state)[1];local=bindings['slots'].shape[1];key_width=state['keys'].shape[1]

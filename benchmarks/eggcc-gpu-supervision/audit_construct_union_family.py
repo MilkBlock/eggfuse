@@ -109,10 +109,13 @@ def main():
         with np.load(a.completion_classifier) as f:
             blocks=[(st,dict(p,shared_boundary_context=bool(report.get('shared_boundary_context',False)),completion_classifier=compile_classifier(local['rules'][p['query']['rule']],
                 {k:f[f"head_{p['query']['rule']}_{k}"] for k in ('mean','scale','coef','bias')}))) for st,p in blocks]
+        if report.get('joint_features',False):
+            from device_joint_features import compile_projection
+            blocks=[(st,dict(p,joint_projection=compile_projection(p['completion_classifier']['head']['coef'].shape[0]-256))) for st,p in blocks]
         if report.get('shared_boundary_context',False):
             blocks=[(st,dict(p,boundary_context=dict(p['boundary_context'],root_capacity=len(ids)+reserve,sort_capacity=len(plan['eq_sort_names'])))) for st,p in blocks]
         dp=device(blocks)
-        completion_metadata=dict(kind='direct_state_ridge',shared_boundary_context=bool(report.get('shared_boundary_context',False)),head_sha256=head_sha,decoder_sha256=report['decoder_sha256'],
+        completion_metadata=dict(kind='direct_state_ridge',joint_features=bool(report.get('joint_features',False)),shared_boundary_context=bool(report.get('shared_boundary_context',False)),head_sha256=head_sha,decoder_sha256=report['decoder_sha256'],
             representation='direct whole-state ridge plus actual scalar moments',union_authorized=False)
     schedule,meta=compile_schedule(source_control,stages);ds=device(schedule)
     control=dict(control=initial(ds,meta['repeat_slots'],mx),open_run=mx.array(False),unreported_change=mx.array(False),failed_run=mx.array(False))

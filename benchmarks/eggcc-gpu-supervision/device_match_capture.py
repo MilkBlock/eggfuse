@@ -145,6 +145,9 @@ def floating_inputs(capture,model,xp):
     x=features(r['seed'],q,pool,model['w'],xp)
     if 'boundary_features' in r:x=xp.concatenate([x,r['boundary_features']],axis=1)
     if 'shared_boundary_features' in r:x=xp.concatenate([x,r['shared_boundary_features']],axis=1)
+    if 'joint_features' in r:
+        from device_joint_features import compile_projection,expand
+        x=expand(x,xp.array(compile_projection(x.shape[1])),xp)
     return x
 
 

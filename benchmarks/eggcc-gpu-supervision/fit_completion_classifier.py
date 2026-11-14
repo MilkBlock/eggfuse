@@ -19,15 +19,33 @@ from device_completion_classifier import score_head,choose
 from completion_control import capture_control
 
 
-def fit_head(x,y,alpha=10.):
+def fit_head(x,y,alpha=10.,weights=None):
     # Keep standardization explicit to avoid a large folded intercept cancelling
     # the dense dot product in f32. This is the same closed-form ridge objective.
+    if weights is not None:
+        weights=np.asarray(weights,np.float64)
+        if weights.shape!=(len(x),) or not np.isfinite(weights).all() or np.any(weights<=0):raise ValueError('positive finite row weights required')
+        weights=weights/weights.mean()
+        mean=np.average(x,axis=0,weights=weights).astype(np.float32)
+        scale=np.maximum(np.sqrt(np.average((x-mean).astype(np.float64)**2,axis=0,weights=weights)),.02).astype(np.float32)
+        bias=np.average(y,axis=0,weights=weights).astype(np.float32)
+        z=(x-mean)/scale;root=np.sqrt(weights)
+        a=z.astype(np.float64)*root[:,None];b=(y-bias)*root[:,None]
+        dual=np.linalg.solve(a@a.T+alpha*np.eye(len(a)),b)
+        return dict(mean=mean,scale=scale,coef=(a.T@dual).astype(np.float32),bias=bias)
     mean=x.mean(axis=0);scale=np.maximum(x.std(axis=0),.02)
     z=(x-mean)/scale;bias=y.mean(axis=0)
     dual=np.linalg.solve(z.astype(np.float64)@z.T+alpha*np.eye(len(z)),y-bias)
     return dict(mean=mean,scale=scale,coef=(z.T@dual).astype(np.float32),bias=bias)
 
 
+
+
+def balanced_state_weights(y):
+    if y.ndim!=2 or not np.all((y==0)|(y==1)) or not np.all(y.sum(axis=1)==1):raise ValueError('one-hot states required')
+    counts=y.sum(axis=0);labels=y.argmax(axis=1)
+    w=1/counts[labels]
+    return w/w.mean()
 
 
 def source_group(meta):
@@ -125,6 +143,8 @@ def inputs_for_case(path,meta,data,plans):
 def main():
     p=argparse.ArgumentParser()
     for key in ('model','source_model','decoder','decoder_report','output'):p.add_argument(key,type=Path)
+    p.add_argument('--joint-features',action='store_true',help='fixed 256-column nonlinear input/context mixing')
+    p.add_argument('--balanced-states',action='store_true',help='equal total training weight per observed completion state')
     p.add_argument('--shared-context',action='store_true',help='append current-boundary floating shared context; offline experimental head')
     p.add_argument('--feedback-head',type=Path,action='append',default=[],help='explicit parent weights for audited synthetic feedback')
     p.add_argument('--allow-historical-real-training',action='store_true',help='explicit historical experiment reproduction only')
@@ -159,13 +179,18 @@ def main():
                 from condition_boundary import captured_bridges
                 extra,error=captured_bridges(path,m,shared_context=True);context_error=max(context_error,error)
                 d['classifier_features']=np.concatenate([d['features'],extra],axis=1)
+            if a.joint_features:
+                from device_joint_features import compile_projection,expand
+                joint=compile_projection(d['classifier_features'].shape[1])
+                d['classifier_features']=expand(d['classifier_features'],joint,np)
             details=inputs_for_case(path,m,d,plans);cases.append((split,d,m,details))
     heads=[];coverage=[]
     for rid,plan in enumerate(plans):
         source=[(d,v[rid],source_group(m)) for s,d,m,v in cases if s=='train' and rid in v]
         x=np.concatenate([d['classifier_features'][v['ids']] for d,v,_ in source]);y=np.concatenate([v['target'] for _,v,_ in source])
         x,y,duplicates=unique_training_rows(x,y,[p for _,v,p in source for _ in v['ids']])
-        heads.append(fit_head(x,y,10.))
+        weights=balanced_state_weights(y) if a.balanced_states else None
+        heads.append(fit_head(x,y,10.,weights=weights))
         coverage.append(dict(states=y.shape[1],observed_training_states=int(np.any(y,axis=0).sum()),training_instances=len(y),sampling=duplicates,exact_feature_conflicts=feature_conflicts(x,y)))
     results=[];gpu_error=0.;token_error=0.;decoding_disagreements=0
     for split,d,m,details in cases:
@@ -198,7 +223,7 @@ def main():
     if gpu_error>5e-6 or token_error>5e-6:raise ValueError(f'GPU numerical error: score={gpu_error}, token={token_error}')
     np.savez_compressed(a.output.with_suffix('.npz'),**{f'head_{i}_{k}':v for i,h in enumerate(heads) for k,v in h.items()})
     out=dict(scope='offline direct whole-state ridge and GPU token reconstruction on audited GPU captures; not installed',alpha=10.,backpropagation=False,
-        installed=False,union_authorized=False,shared_boundary_context=a.shared_context,maximum_gpu_context_error=context_error,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
+        installed=False,union_authorized=False,joint_features=a.joint_features,balanced_states=a.balanced_states,shared_boundary_context=a.shared_context,maximum_gpu_context_error=context_error,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
         head_sha256=hashlib.sha256(a.output.with_suffix('.npz').read_bytes()).hexdigest(),coefficient_bytes=sum(h['coef'].nbytes for h in heads),normalization_bytes=sum(h[k].nbytes for h in heads for k in ('mean','scale','bias')),coverage=coverage,
         maximum_gpu_score_error=gpu_error,maximum_gpu_token_error=token_error,token_decode_disagreements=decoding_disagreements,cases=results,
         limitations=['All legal type-compatible states are included, but unseen states have no positive training evidence','No predicted-source rollout or native full-program acceptance','No learned equality is a proof','Current input Eq is retained; scalar effects outside query inputs are unsupported'])
