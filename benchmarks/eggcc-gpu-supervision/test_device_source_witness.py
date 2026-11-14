@@ -1,10 +1,18 @@
 import unittest
 import numpy as np
 import mlx.core as mx
-from device_source_witness import compile_sites,lookup
+from device_source_witness import compile_sites,lookup,group_view
 
 
 class Witness(unittest.TestCase):
+    def test_grouping_preserves_site_order_and_disables_padding(self):
+        view=dict(rule=np.array([2,0,2]),supported=np.ones(3,bool),slots=np.array([[4,5],[1,2],[6,7]]),literal_ids=np.full((3,2),-1))
+        grouped,width=group_view(view,4)
+        self.assertEqual(width,2)
+        np.testing.assert_array_equal(grouped['slots'][2],[[4,5],[6,7]])
+        np.testing.assert_array_equal(grouped['supported'],[[True,False],[False,False],[True,True],[False,False]])
+        np.testing.assert_array_equal(grouped['rule'][3],[-1,-1])
+
     def test_selected_source_and_generation_are_authoritative(self):
         eq=dict(kind='eq',name='E')
         source=dict(query=[dict(call=dict(table='F'),args=[dict(slot=0),dict(slot=1)])],effects=[])
@@ -21,6 +29,9 @@ class Witness(unittest.TestCase):
         for bad in [dict(batch,generations=mx.array([[1]])),dict(batch,mask=mx.array([[False]]))]:
             self.assertFalse(bool(lookup(state,payload,bad,0,site,mx)[0]))
         # An unselected live matching row does not rescue a retired source.
+        for rid in (-1,2,999):
+            unknown=dict(state,keys=mx.array([[rid],[0]]))
+            self.assertFalse(bool(lookup(unknown,payload,batch,0,site,mx)[0]))
         hidden=dict(state,visible=mx.array([False,True]))
         self.assertFalse(bool(lookup(hidden,payload,batch,0,site,mx)[0]))
         mismatch=dict(payload,slot_roots=mx.array([[9,-1]]))

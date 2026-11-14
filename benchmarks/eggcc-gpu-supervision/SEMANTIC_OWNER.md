@@ -744,3 +744,24 @@ Five tests cover witness ID/root distinction, selected-source scope, source
 generation/visibility, parameter mismatch, and existing speculative behavior.
 Results: `canon-witness-results.json`; raw artifact and tests on external SSD
 in `neural-canon-witness-v22.tar.gz`. Neighbor Bake remains f3321a3a.
+
+### Template-indexed witness selection
+
+Bake now packs each constructor view by source template, with a fixed padded
+number of sites per source. Runtime gathers that template's sites before
+reading slot values, rather than reading every template's sites and rejecting
+them afterward. Unknown template IDs and padded records are invalid. Site
+order is preserved, including first-witness selection. Repeated RHS uses of
+one constructor share the compiled view arrays within a plan.
+
+The v22 invocation with unchanged weights now performs 4,672 site checks
+(previously 19,600) and 5,888 operand comparisons (previously 31,024). All
+61 cases preserve reuse counts and semantic/query outcomes individually:
+494 reused slots, 216 full graph passes, no CPU corrections, 421 expected
+downstream bindings. Six tests pass. No end-to-end speedup is inferred.
+
+`canon-grouped-witness-results.json` records the comparison. Dense grouping
+adds padding; compiled view bytes summed across independently compiled plans
+are 485,624, not a peak resident memory measurement. Overall audit remains
+`difference` because the floating Eq output still has its one known miss.
+Archive: external SSD `neural-canon-grouped-witness-v23.tar.gz`.
