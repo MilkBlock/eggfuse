@@ -1,0 +1,1455 @@
+{
+  "scope": "offline direct-source failure support audit on fixed validation inputs",
+  "model_sha256": "b1da3a8f63fde01c77c1318e2fde8109df048c8bc6eb159e14dce32a66d17edf",
+  "decoder_sha256": "cf9c22bbc95c2a04eca32565875bbce864bdad6038b5115e64b1162b2582b313",
+  "training_samples": 129,
+  "direct_validation_samples": 104,
+  "failed_samples": 10,
+  "failures_with_observed_training_target": 10,
+  "failures_whose_nearest_full_input_has_same_target": 8,
+  "neighbor_selection_uses_labels": false,
+  "training_capture_sha256": [
+    "0c9a5a417a9c9e77d3345838f24443e48d7080959a866762d3f85deae9900463",
+    "65510ffa92061914c957c9c188fc6a879a761a55fd7fc02ec09c5b2eedb3c17f",
+    "827a0c35232de0667b1844f2281180455c38d39dc3de2ff0aebf272b9154ccba",
+    "b5bdf4950a8fc08e0e89d8af14e943178631abd67780ac19650607cb66ce041f",
+    "dcc1ed1993dab63a2796a9821512cb760384654c854be986e4939df1aee15d64"
+  ],
+  "results": [
+    {
+      "case": "016-gcd",
+      "sample": 4,
+      "rule": 290,
+      "capture_sha256": "d3024efdd65b7dcaff7c689f9577bfeecd9a18152677682f6187db77d1aba98d",
+      "metrics": {
+        "instances": 1,
+        "query_instances": 1,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 3,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "quotient_truth": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "quotient_scores": [
+        -0.007069212695414348,
+        -0.012980912359400548,
+        0.4860668688477512,
+        0.3276263906040731,
+        -0.01211708043243596,
+        -0.013417805496109419
+      ],
+      "same_template_training_samples": 77,
+      "same_target_training_samples": 41,
+      "distances": {
+        "full": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.04137514531612396,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 21,
+              "generated": false,
+              "rms_distance": 0.041614748537540436,
+              "same_target": false
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 27,
+              "generated": false,
+              "rms_distance": 0.04361530393362045,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.045196179300546646,
+          "nearest_other_target_distance": 0.04137514531612396
+        },
+        "seed_and_query": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 18,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "049-dead-branch",
+              "sample": 11,
+              "generated": true,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 23,
+              "generated": false,
+              "rms_distance": 0.005894614849239588,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.008707670494914055,
+          "nearest_other_target_distance": 0.0
+        },
+        "source_pool_and_interaction": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 18,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 23,
+              "generated": false,
+              "rms_distance": 0.0012858443660661578,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0012858443660661578,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0019027255475521088,
+          "nearest_other_target_distance": 0.0
+        },
+        "boundary": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.08511564880609512,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 21,
+              "generated": false,
+              "rms_distance": 0.08520125597715378,
+              "same_target": false
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 27,
+              "generated": false,
+              "rms_distance": 0.08935458958148956,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.09279482066631317,
+          "nearest_other_target_distance": 0.08511564880609512
+        }
+      }
+    },
+    {
+      "case": "016-gcd",
+      "sample": 5,
+      "rule": 290,
+      "capture_sha256": "d3024efdd65b7dcaff7c689f9577bfeecd9a18152677682f6187db77d1aba98d",
+      "metrics": {
+        "instances": 1,
+        "query_instances": 1,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 2,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "quotient_truth": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "quotient_scores": [
+        -0.056120682809631145,
+        -0.059624564293571145,
+        1.1815566263216568,
+        0.2328973627412616,
+        -0.10829504051760297,
+        -0.007703469294702673
+      ],
+      "same_template_training_samples": 77,
+      "same_target_training_samples": 41,
+      "distances": {
+        "full": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.045974984765052795,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.048342518508434296,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 22,
+              "generated": false,
+              "rms_distance": 0.049000419676303864,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.045974984765052795,
+          "nearest_other_target_distance": 0.049000419676303864
+        },
+        "seed_and_query": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 17,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "source_pool_and_interaction": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 17,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "boundary": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0948016345500946,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.0984787791967392,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 22,
+              "generated": false,
+              "rms_distance": 0.10104016214609146,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0948016345500946,
+          "nearest_other_target_distance": 0.10104016214609146
+        }
+      }
+    },
+    {
+      "case": "016-gcd",
+      "sample": 6,
+      "rule": 290,
+      "capture_sha256": "d3024efdd65b7dcaff7c689f9577bfeecd9a18152677682f6187db77d1aba98d",
+      "metrics": {
+        "instances": 1,
+        "query_instances": 1,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 2,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "quotient_truth": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "quotient_scores": [
+        0.005573532690568806,
+        -0.013247104262903323,
+        0.804108770619597,
+        0.35901325998629724,
+        -0.012670302957432397,
+        0.01828033631785336
+      ],
+      "same_template_training_samples": 77,
+      "same_target_training_samples": 41,
+      "distances": {
+        "full": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.043614692986011505,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.048222243785858154,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 21,
+              "generated": false,
+              "rms_distance": 0.04826648533344269,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.043614692986011505,
+          "nearest_other_target_distance": 0.048222243785858154
+        },
+        "seed_and_query": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 23,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 26,
+              "generated": false,
+              "rms_distance": 0.004385107196867466,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.004385107196867466,
+          "nearest_other_target_distance": 0.0
+        },
+        "source_pool_and_interaction": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 23,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 26,
+              "generated": false,
+              "rms_distance": 0.0009565590880811214,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0031875954009592533,
+          "nearest_other_target_distance": 0.0
+        },
+        "boundary": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.08876127004623413,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.09614068269729614,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 21,
+              "generated": false,
+              "rms_distance": 0.09943126142024994,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.08876127004623413,
+          "nearest_other_target_distance": 0.09943126142024994
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "sample": 20,
+      "rule": 290,
+      "capture_sha256": "1edc61b644425c5f3f759a72bf013a5b5c3ce4f9efcd5867b788ef01f81d3c7f",
+      "metrics": {
+        "instances": 1,
+        "query_instances": 1,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 2,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "quotient_truth": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "quotient_scores": [
+        -0.10052517032666981,
+        -0.07287520313059481,
+        0.6428251286607246,
+        0.23613747863096965,
+        -0.10322349843068697,
+        -0.071553998369104
+      ],
+      "same_template_training_samples": 77,
+      "same_target_training_samples": 41,
+      "distances": {
+        "full": {
+          "nearest": [
+            {
+              "case": "035-sum-sq-diff",
+              "sample": 7,
+              "generated": false,
+              "rms_distance": 0.04912425950169563,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.049373481422662735,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 27,
+              "generated": false,
+              "rms_distance": 0.05108163133263588,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.049373481422662735,
+          "nearest_other_target_distance": 0.04912425950169563
+        },
+        "seed_and_query": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 17,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "source_pool_and_interaction": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 17,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "boundary": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 27,
+              "generated": false,
+              "rms_distance": 0.09963162243366241,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.10063011944293976,
+              "same_target": true
+            },
+            {
+              "case": "035-sum-sq-diff",
+              "sample": 7,
+              "generated": false,
+              "rms_distance": 0.10129551589488983,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.10063011944293976,
+          "nearest_other_target_distance": 0.09963162243366241
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "sample": 21,
+      "rule": 290,
+      "capture_sha256": "1edc61b644425c5f3f759a72bf013a5b5c3ce4f9efcd5867b788ef01f81d3c7f",
+      "metrics": {
+        "instances": 1,
+        "query_instances": 1,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 2,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "quotient_truth": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "quotient_scores": [
+        -0.11725180362844637,
+        -0.08162150824062933,
+        0.6233296622997239,
+        0.27510935506286455,
+        -0.09629040415112493,
+        -0.061937949635286926
+      ],
+      "same_template_training_samples": 77,
+      "same_target_training_samples": 41,
+      "distances": {
+        "full": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.048589710146188736,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 27,
+              "generated": false,
+              "rms_distance": 0.04926418513059616,
+              "same_target": false
+            },
+            {
+              "case": "035-sum-sq-diff",
+              "sample": 7,
+              "generated": false,
+              "rms_distance": 0.049764443188905716,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.048589710146188736,
+          "nearest_other_target_distance": 0.04926418513059616
+        },
+        "seed_and_query": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "049-dead-branch",
+              "sample": 10,
+              "generated": true,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "033-sum-check",
+              "sample": 3,
+              "generated": true,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "source_pool_and_interaction": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "035-sum-sq-diff",
+              "sample": 0,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "035-sum-sq-diff",
+              "sample": 4,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "boundary": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 27,
+              "generated": false,
+              "rms_distance": 0.09982418268918991,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.10019326955080032,
+              "same_target": true
+            },
+            {
+              "case": "035-sum-sq-diff",
+              "sample": 7,
+              "generated": false,
+              "rms_distance": 0.10144565254449844,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.10019326955080032,
+          "nearest_other_target_distance": 0.09982418268918991
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "sample": 22,
+      "rule": 290,
+      "capture_sha256": "1edc61b644425c5f3f759a72bf013a5b5c3ce4f9efcd5867b788ef01f81d3c7f",
+      "metrics": {
+        "instances": 1,
+        "query_instances": 1,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 2,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "quotient_truth": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "quotient_scores": [
+        -0.13682663661506894,
+        -0.0979914395476533,
+        1.1753644257164473,
+        0.29349013719295336,
+        -0.11711824292041703,
+        -0.011835885845172443
+      ],
+      "same_template_training_samples": 77,
+      "same_target_training_samples": 41,
+      "distances": {
+        "full": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.04919292405247688,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.05282360315322876,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.05375594645738602,
+              "same_target": true
+            }
+          ],
+          "nearest_same_target_distance": 0.04919292405247688,
+          "nearest_other_target_distance": 0.05459022521972656
+        },
+        "seed_and_query": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "049-dead-branch",
+              "sample": 10,
+              "generated": true,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "033-sum-check",
+              "sample": 3,
+              "generated": true,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "source_pool_and_interaction": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "035-sum-sq-diff",
+              "sample": 0,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "035-sum-sq-diff",
+              "sample": 4,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "boundary": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.10025341808795929,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.10892367362976074,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.10976400226354599,
+              "same_target": true
+            }
+          ],
+          "nearest_same_target_distance": 0.10025341808795929,
+          "nearest_other_target_distance": 0.11150101572275162
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "sample": 23,
+      "rule": 290,
+      "capture_sha256": "1edc61b644425c5f3f759a72bf013a5b5c3ce4f9efcd5867b788ef01f81d3c7f",
+      "metrics": {
+        "instances": 1,
+        "query_instances": 1,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 2,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "quotient_truth": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "quotient_scores": [
+        -0.1131150853889039,
+        -0.081378505573098,
+        0.8093401086914023,
+        0.2395773118764715,
+        -0.11172774106113773,
+        -0.06277523567609254
+      ],
+      "same_template_training_samples": 77,
+      "same_target_training_samples": 41,
+      "distances": {
+        "full": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.046870846301317215,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 22,
+              "generated": false,
+              "rms_distance": 0.04783329740166664,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 20,
+              "generated": false,
+              "rms_distance": 0.04793461412191391,
+              "same_target": true
+            }
+          ],
+          "nearest_same_target_distance": 0.046870846301317215,
+          "nearest_other_target_distance": 0.04783329740166664
+        },
+        "seed_and_query": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 17,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "source_pool_and_interaction": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 17,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "boundary": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.0966489240527153,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 22,
+              "generated": false,
+              "rms_distance": 0.0986335277557373,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 20,
+              "generated": false,
+              "rms_distance": 0.09884244203567505,
+              "same_target": true
+            }
+          ],
+          "nearest_same_target_distance": 0.0966489240527153,
+          "nearest_other_target_distance": 0.0986335277557373
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "sample": 24,
+      "rule": 290,
+      "capture_sha256": "1edc61b644425c5f3f759a72bf013a5b5c3ce4f9efcd5867b788ef01f81d3c7f",
+      "metrics": {
+        "instances": 1,
+        "query_instances": 1,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 2,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "quotient_truth": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "quotient_scores": [
+        -0.13682663661506894,
+        -0.0979914395476533,
+        1.1753644257164473,
+        0.29349013719295336,
+        -0.11711824292041703,
+        -0.011835885845172443
+      ],
+      "same_template_training_samples": 77,
+      "same_target_training_samples": 41,
+      "distances": {
+        "full": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.04919292405247688,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.05282360315322876,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.05375594645738602,
+              "same_target": true
+            }
+          ],
+          "nearest_same_target_distance": 0.04919292405247688,
+          "nearest_other_target_distance": 0.05459022521972656
+        },
+        "seed_and_query": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "049-dead-branch",
+              "sample": 10,
+              "generated": true,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "033-sum-check",
+              "sample": 3,
+              "generated": true,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "source_pool_and_interaction": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": true
+            },
+            {
+              "case": "035-sum-sq-diff",
+              "sample": 0,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "035-sum-sq-diff",
+              "sample": 4,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0,
+          "nearest_other_target_distance": 0.0
+        },
+        "boundary": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.10025341808795929,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.10892367362976074,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.10976400226354599,
+              "same_target": true
+            }
+          ],
+          "nearest_same_target_distance": 0.10025341808795929,
+          "nearest_other_target_distance": 0.11150101572275162
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "sample": 25,
+      "rule": 290,
+      "capture_sha256": "1edc61b644425c5f3f759a72bf013a5b5c3ce4f9efcd5867b788ef01f81d3c7f",
+      "metrics": {
+        "instances": 1,
+        "query_instances": 1,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 2,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "quotient_truth": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "quotient_scores": [
+        -0.1206342627333803,
+        -0.09270851966809823,
+        1.1609888998970843,
+        0.3266365396944121,
+        -0.10378727601964036,
+        0.0015051816750672672
+      ],
+      "same_template_training_samples": 77,
+      "same_target_training_samples": 41,
+      "distances": {
+        "full": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.05004913732409477,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.05292496830224991,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.05459984391927719,
+              "same_target": true
+            }
+          ],
+          "nearest_same_target_distance": 0.05004913732409477,
+          "nearest_other_target_distance": 0.05541696771979332
+        },
+        "seed_and_query": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 18,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "049-dead-branch",
+              "sample": 11,
+              "generated": true,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 23,
+              "generated": false,
+              "rms_distance": 0.005894614849239588,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.008707670494914055,
+          "nearest_other_target_distance": 0.0
+        },
+        "source_pool_and_interaction": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 18,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 23,
+              "generated": false,
+              "rms_distance": 0.0012858443660661578,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0012858443660661578,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0019027255475521088,
+          "nearest_other_target_distance": 0.0
+        },
+        "boundary": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.1003601923584938,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.10879053920507431,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.10998664796352386,
+              "same_target": true
+            }
+          ],
+          "nearest_same_target_distance": 0.1003601923584938,
+          "nearest_other_target_distance": 0.11171078681945801
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "sample": 26,
+      "rule": 290,
+      "capture_sha256": "1edc61b644425c5f3f759a72bf013a5b5c3ce4f9efcd5867b788ef01f81d3c7f",
+      "metrics": {
+        "instances": 1,
+        "query_instances": 1,
+        "exact_partitions": 0,
+        "false_merges": 0,
+        "missed_equalities": 2,
+        "nontransitive": 0,
+        "closure_false_merges": 0
+      },
+      "quotient_truth": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "quotient_scores": [
+        -0.12063429767845195,
+        -0.09270851942130748,
+        1.160988806395247,
+        0.3266364716251941,
+        -0.10378736954656739,
+        0.0015051629893162687
+      ],
+      "same_template_training_samples": 77,
+      "same_target_training_samples": 41,
+      "distances": {
+        "full": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.05004913732409477,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.05292496830224991,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.05459984391927719,
+              "same_target": true
+            }
+          ],
+          "nearest_same_target_distance": 0.05004913732409477,
+          "nearest_other_target_distance": 0.05541696771979332
+        },
+        "seed_and_query": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 18,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "049-dead-branch",
+              "sample": 11,
+              "generated": true,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 23,
+              "generated": false,
+              "rms_distance": 0.005894614849239588,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.008707670494914055,
+          "nearest_other_target_distance": 0.0
+        },
+        "source_pool_and_interaction": {
+          "nearest": [
+            {
+              "case": "011-euclid",
+              "sample": 18,
+              "generated": false,
+              "rms_distance": 0.0,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 23,
+              "generated": false,
+              "rms_distance": 0.0012858443660661578,
+              "same_target": false
+            },
+            {
+              "case": "011-euclid",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.0012858443660661578,
+              "same_target": false
+            }
+          ],
+          "nearest_same_target_distance": 0.0019027255475521088,
+          "nearest_other_target_distance": 0.0
+        },
+        "boundary": {
+          "nearest": [
+            {
+              "case": "024-pascals-row",
+              "sample": 24,
+              "generated": false,
+              "rms_distance": 0.1003601923584938,
+              "same_target": true
+            },
+            {
+              "case": "011-euclid",
+              "sample": 19,
+              "generated": false,
+              "rms_distance": 0.10879053920507431,
+              "same_target": true
+            },
+            {
+              "case": "024-pascals-row",
+              "sample": 25,
+              "generated": false,
+              "rms_distance": 0.10998664796352386,
+              "same_target": true
+            }
+          ],
+          "nearest_same_target_distance": 0.1003601923584938,
+          "nearest_other_target_distance": 0.11171078681945801
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Raw RMS distances are descriptive, not a semantic equivalence or relevance proof",
+    "No feature weights, threshold or model are fitted",
+    "All instances of the same template are eligible neighbors, including generated-source training samples"
+  ]
+}
