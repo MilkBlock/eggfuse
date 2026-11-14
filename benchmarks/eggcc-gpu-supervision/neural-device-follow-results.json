@@ -1,0 +1,7430 @@
+{
+  "scope": "GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation",
+  "cases": [
+    {
+      "producer": 0,
+      "consumer": 0,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 0,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 3,
+        "expected_facts": 3,
+        "mapped_classes": 4
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 9,
+          "accepted": 7,
+          "false_positive": 4,
+          "expected": 3,
+          "recovered": 3,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 7,
+            "false_positive": 4,
+            "expected": 3,
+            "recovered": 3,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 3
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 5
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 8,
+          "accepted": 7,
+          "false_positive": 3,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 1,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 2,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 8,
+          "accepted": 6,
+          "false_positive": 2,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 1,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 1,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 5
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 8,
+          "accepted": 7,
+          "false_positive": 3,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 1,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 5,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 24,
+          "accepted": 20,
+          "false_positive": 16,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 13,
+            "false_positive": 11,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 5,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 7,
+            "false_positive": 5,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 6,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 15,
+          "accepted": 13,
+          "false_positive": 9,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 7,
+            "false_positive": 5,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 7,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 15,
+          "accepted": 13,
+          "false_positive": 9,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 7,
+            "false_positive": 5,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 8,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 24,
+          "accepted": 15,
+          "false_positive": 11,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 13,
+            "false_positive": 11,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 8,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 2,
+            "false_positive": 0,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 9,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 15,
+          "accepted": 13,
+          "false_positive": 9,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 7,
+            "false_positive": 5,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 10,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 5
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 15,
+          "accepted": 13,
+          "false_positive": 9,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 7,
+            "false_positive": 5,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 11,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 24,
+          "accepted": 21,
+          "false_positive": 17,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 13,
+            "false_positive": 11,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 6,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 14,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 24,
+          "accepted": 19,
+          "false_positive": 15,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 13,
+            "false_positive": 11,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 14,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 15,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 24,
+          "accepted": 15,
+          "false_positive": 11,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 13,
+            "false_positive": 11,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 15,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 2,
+            "false_positive": 0,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 0,
+      "consumer": 16,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 15,
+          "accepted": 13,
+          "false_positive": 9,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 7,
+            "false_positive": 5,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 1,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 7,
+          "false_positive": 2,
+          "expected": 5,
+          "recovered": 5,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 2,
+            "expected": 4,
+            "recovered": 4,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 3
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 2,
+      "consumer": 0,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 0,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 3,
+        "expected_facts": 3,
+        "mapped_classes": 5
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 6,
+          "accepted": 4,
+          "false_positive": 1,
+          "expected": 3,
+          "recovered": 3,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 1,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 2,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 4,
+          "accepted": 4,
+          "false_positive": 0,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 0,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 2,
+      "consumer": 2,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 8,
+          "accepted": 4,
+          "false_positive": 1,
+          "expected": 3,
+          "recovered": 3,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 2,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 1,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 2,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 4,
+          "accepted": 4,
+          "false_positive": 0,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 0,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 2,
+      "consumer": 6,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 8,
+          "false_positive": 4,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 2,
+      "consumer": 7,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 8,
+          "false_positive": 4,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 2,
+      "consumer": 9,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 8,
+          "false_positive": 4,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 2,
+      "consumer": 10,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 8,
+          "false_positive": 4,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 2,
+      "consumer": 11,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 18,
+          "accepted": 14,
+          "false_positive": 10,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 7,
+            "false_positive": 6,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 3,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 2,
+      "consumer": 16,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 8,
+          "false_positive": 4,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 3,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 6,
+          "false_positive": 4,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 0,
+            "false_positive": 0,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 5,
+      "consumer": 0,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 3,
+        "expected_facts": 3,
+        "mapped_classes": 4
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 6,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 6,
+          "accepted": 5,
+          "false_positive": 2,
+          "expected": 3,
+          "recovered": 3,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 1,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 5,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 5,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 5,
+          "accepted": 4,
+          "false_positive": 2,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 2,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 0,
+            "false_positive": 0,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 5,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 5,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 5,
+          "accepted": 4,
+          "false_positive": 2,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 2,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 0,
+            "false_positive": 0,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 5,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 5,
+      "consumer": 10,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 2,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 5,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 6,
+      "consumer": 0,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 2,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 3,
+        "expected_facts": 3,
+        "mapped_classes": 4
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 6,
+          "accepted": 5,
+          "false_positive": 2,
+          "expected": 3,
+          "recovered": 3,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 1,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 6,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 6,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 6,
+      "consumer": 2,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 8,
+          "false_positive": 4,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 6,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 6,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 6,
+      "consumer": 6,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 14,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 12,
+            "accepted": 12,
+            "false_positive": 9,
+            "expected": 3,
+            "recovered": 3,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 6,
+      "consumer": 7,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 14,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 6,
+      "consumer": 9,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 14,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 6,
+      "consumer": 10,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 14,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 6,
+      "consumer": 11,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 32,
+          "accepted": 28,
+          "false_positive": 24,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 12,
+            "false_positive": 11,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 6,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 6,
+      "consumer": 16,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 14,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 7,
+      "consumer": 0,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 2,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 5
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 6,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 2,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 8,
+            "false_positive": 5,
+            "expected": 3,
+            "recovered": 3,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 3,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 7,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 7,
+      "consumer": 2,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 8,
+          "false_positive": 6,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 7,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 7,
+      "consumer": 6,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 7,
+      "consumer": 7,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 12,
+            "accepted": 12,
+            "false_positive": 10,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 7,
+      "consumer": 9,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 7,
+      "consumer": 10,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 7,
+      "consumer": 11,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 32,
+          "accepted": 28,
+          "false_positive": 26,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 12,
+            "false_positive": 12,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 7,
+      "consumer": 16,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 9,
+      "consumer": 0,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 0,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 3,
+        "expected_facts": 3,
+        "mapped_classes": 4
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 6,
+          "accepted": 5,
+          "false_positive": 2,
+          "expected": 3,
+          "recovered": 3,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 1,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 9,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 5
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 4,
+          "accepted": 4,
+          "false_positive": 0,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 0,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 9,
+      "consumer": 2,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 4,
+          "accepted": 4,
+          "false_positive": 0,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 0,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 9,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 5
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 4,
+          "accepted": 4,
+          "false_positive": 0,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 0,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 9,
+      "consumer": 6,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 9,
+          "false_positive": 5,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 9,
+      "consumer": 7,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 9,
+          "false_positive": 5,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 9,
+      "consumer": 9,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 9,
+          "false_positive": 5,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 3,
+            "expected": 3,
+            "recovered": 3,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 3
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 9,
+      "consumer": 10,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 5
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 9,
+          "false_positive": 5,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 9,
+      "consumer": 11,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 18,
+          "accepted": 16,
+          "false_positive": 12,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 7,
+            "false_positive": 6,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 3,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 4,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 9,
+      "consumer": 16,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 5,
+        "expected_facts": 5,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 10,
+          "accepted": 9,
+          "false_positive": 5,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 4,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 0,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 2,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 4
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 11,
+          "false_positive": 7,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 2,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 8,
+            "false_positive": 5,
+            "expected": 3,
+            "recovered": 3,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 3,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 2,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 8,
+          "false_positive": 6,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 5,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 32,
+          "accepted": 27,
+          "false_positive": 25,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 12,
+            "false_positive": 12,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 5,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 7,
+            "false_positive": 6,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 6,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 7,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 9,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 10,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 12,
+            "accepted": 12,
+            "false_positive": 10,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 11,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 32,
+          "accepted": 28,
+          "false_positive": 26,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 12,
+            "false_positive": 12,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 14,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 32,
+          "accepted": 26,
+          "false_positive": 24,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 12,
+            "false_positive": 12,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 14,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 10,
+      "consumer": 16,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 11,
+      "consumer": 0,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 5,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 24,
+          "accepted": 19,
+          "false_positive": 16,
+          "expected": 3,
+          "recovered": 3,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 2,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 13,
+            "false_positive": 11,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 11,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 5,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 11,
+      "consumer": 2,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 15,
+          "false_positive": 13,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 11,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 5,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 11,
+      "consumer": 6,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 32,
+          "accepted": 28,
+          "false_positive": 26,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 12,
+            "false_positive": 12,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 11,
+      "consumer": 7,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 32,
+          "accepted": 28,
+          "false_positive": 26,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 12,
+            "false_positive": 12,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 11,
+      "consumer": 9,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 32,
+          "accepted": 28,
+          "false_positive": 26,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 12,
+            "false_positive": 12,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 11,
+      "consumer": 10,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 5,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 32,
+          "accepted": 28,
+          "false_positive": 26,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 12,
+            "false_positive": 12,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 11,
+      "consumer": 16,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 32,
+          "accepted": 28,
+          "false_positive": 26,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 12,
+            "false_positive": 12,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 12,
+      "consumer": 12,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 3,
+        "expected_facts": 3,
+        "mapped_classes": 3
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 3,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 2,
+          "accepted": 2,
+          "false_positive": 0,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 2,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 12,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 0,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 12,
+      "consumer": 13,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 1,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 7,
+          "accepted": 6,
+          "false_positive": 3,
+          "expected": 3,
+          "recovered": 3,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 3,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 0,
+            "false_positive": 0,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 12,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 13,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 2,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 13,
+      "consumer": 0,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 7
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 5,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 8,
+          "accepted": 7,
+          "false_positive": 4,
+          "expected": 3,
+          "recovered": 3,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 2,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 1,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 13,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 13,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 5,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 7,
+          "accepted": 6,
+          "false_positive": 4,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 0,
+            "false_positive": 0,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 13,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 13,
+      "consumer": 2,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 7,
+          "accepted": 5,
+          "false_positive": 3,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 0,
+            "false_positive": 0,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 1,
+            "false_positive": 0,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 13,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 13,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 5,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 7,
+          "accepted": 6,
+          "false_positive": 4,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 0,
+            "false_positive": 0,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 13,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 13,
+      "consumer": 6,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 13,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 13,
+      "consumer": 7,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 13,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 13,
+      "consumer": 9,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 13,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 13,
+      "consumer": 10,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 5,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 13,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 13,
+      "consumer": 12,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 6
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 5,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 7,
+          "accepted": 6,
+          "false_positive": 4,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 1,
+            "accepted": 0,
+            "false_positive": 0,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 12,
+            "invalid_predictions": 0,
+            "candidates": 2,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 13,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 13,
+      "consumer": 16,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 13,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 14,
+      "consumer": 0,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 2,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 5
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 6,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 6,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 2,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 8,
+            "false_positive": 5,
+            "expected": 3,
+            "recovered": 3,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 14,
+            "invalid_predictions": 0,
+            "candidates": 3,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 14,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 9,
+          "false_positive": 7,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 14,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 14,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 9,
+          "false_positive": 7,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 14,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 3,
+            "false_positive": 2,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 14,
+      "consumer": 10,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 17,
+          "false_positive": 15,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 14,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 5,
+            "false_positive": 4,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 16,
+      "consumer": 0,
+      "executed": 3,
+      "new_constructors": 0,
+      "new_equivalences": 2,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 4,
+        "expected_facts": 4,
+        "mapped_classes": 5
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 6,
+          "expected": 4,
+          "recovered": 4,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 2,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 8,
+            "false_positive": 5,
+            "expected": 3,
+            "recovered": 3,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 2
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 3,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 16,
+      "consumer": 1,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 1,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 16,
+      "consumer": 2,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 8,
+          "false_positive": 6,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 2,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 1,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 16,
+      "consumer": 3,
+      "executed": 3,
+      "new_constructors": 1,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 6,
+        "expected_facts": 6,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 12,
+          "accepted": 10,
+          "false_positive": 8,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 2,
+            "false_positive": 2,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 3,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 4,
+            "accepted": 4,
+            "false_positive": 3,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 16,
+      "consumer": 6,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 6,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 16,
+      "consumer": 7,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 7,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 16,
+      "consumer": 9,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 9,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 16,
+      "consumer": 10,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 8
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 10,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 6,
+            "accepted": 6,
+            "false_positive": 5,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 16,
+      "consumer": 11,
+      "executed": 5,
+      "new_constructors": 3,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 8,
+        "expected_facts": 8,
+        "mapped_classes": 10
+      },
+      "facts_decoded": true,
+      "transfer_covered": false,
+      "transferred": false,
+      "copied_fields": 0,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 32,
+          "accepted": 28,
+          "false_positive": 26,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 16,
+            "accepted": 12,
+            "false_positive": 12,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 11,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 8,
+            "accepted": 8,
+            "false_positive": 7,
+            "expected": 1,
+            "recovered": 1,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    },
+    {
+      "producer": 16,
+      "consumer": 16,
+      "executed": 4,
+      "new_constructors": 2,
+      "new_equivalences": 1,
+      "pending": false,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 7,
+        "expected_facts": 7,
+        "mapped_classes": 9
+      },
+      "facts_decoded": true,
+      "transfer_covered": true,
+      "transferred": true,
+      "copied_fields": 4,
+      "interfaces_preserved": true,
+      "token_retained": true,
+      "follow": {
+        "counts": {
+          "candidates": 21,
+          "accepted": 18,
+          "false_positive": 16,
+          "expected": 2,
+          "recovered": 2,
+          "missed": 0,
+          "incomplete_rules": 0,
+          "accepted_from_generated": 1,
+          "invalid_predictions": 0
+        },
+        "groups": [
+          {
+            "rule": 0,
+            "invalid_predictions": 0,
+            "candidates": 9,
+            "accepted": 6,
+            "false_positive": 6,
+            "expected": 0,
+            "recovered": 0,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 0
+          },
+          {
+            "rule": 16,
+            "invalid_predictions": 0,
+            "candidates": 12,
+            "accepted": 12,
+            "false_positive": 10,
+            "expected": 2,
+            "recovered": 2,
+            "missed": 0,
+            "incomplete_rules": 0,
+            "accepted_from_generated": 1
+          }
+        ],
+        "cpu_supplied_follow_bindings": false
+      }
+    }
+  ],
+  "available_template_pairs": 107,
+  "selected_pairs": 107,
+  "weights_sha256": "71d3dbc92a4c2692ed3c3ba4ca9f2dd14245ba34529670d8a559cf2351a37669",
+  "cpu_prefilled_target_rhs": false,
+  "cpu_supplied_initial_bindings": true,
+  "device_follow_candidates": true,
+  "wall_seconds": 40.239828791003674,
+  "speedup_claim": false,
+  "status": "difference",
+  "follow_totals": {
+    "candidates": 1659,
+    "accepted": 1382,
+    "false_positive": 1070,
+    "expected": 312,
+    "recovered": 312,
+    "missed": 0,
+    "incomplete_rules": 0,
+    "accepted_from_generated": 240,
+    "invalid_predictions": 0
+  },
+  "tests_passed": 27,
+  "audit_exit_code": 1,
+  "following_effects_committed": false,
+  "bake_branch_head": "f3321a3a",
+  "command": "python audit_neural_gpu_rhs.py TRACE.json WEIGHTS.safetensors OUTPUT.json --limit 107 --follow",
+  "limitations": [
+    "Synthetic local states, not complete real Eggcc runs",
+    "No CPU-supplied follow-up bindings; first consumer binding remains supplied at initialization",
+    "Bounded Cartesian device candidate construction is diagnostic, not an efficient final routing implementation",
+    "Initial exact RHS checks pass, but neural follow-up matching fails acceptance",
+    "No false follow-up prediction is committed as an effect"
+  ],
+  "empty_rule_groups_omitted": true,
+  "recipe_sha256": "1e8aa8d798be90a1d8cba63c79bf52ba27d8318fbbe480bb88601e4296189b29"
+}

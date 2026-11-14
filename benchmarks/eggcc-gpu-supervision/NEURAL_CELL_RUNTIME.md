@@ -410,3 +410,64 @@ The remaining execution gap is constructing the next consumer's inputs from
 these device-produced interfaces, repeatedly applying learned continuation and
 handling boundaries without CPU-supplied successful bindings. Full Run/stage
 fixed points and dynamic ownership conflicts are still unverified.
+
+## Device-produced interfaces feeding another learned query
+
+`neural_device_candidates.py` compiles query interface routes against the current
+Cell templates. On GPU it projects through the ownership directory, removes
+same-fact duplicates (preferring later producers), compacts a bounded per-atom
+pool, and constructs type-compatible candidate tuples. It does **not** filter
+those tuples by successful query bindings. Whole generated source tokens and
+current ordered interface relations enter the learned transition directly.
+Seed tokens are encoded once; source and target predictions are preserved across
+exact completion and ownership changes. No CPU successful bindings are supplied
+for this following query round.
+
+The `--follow` audit evaluates all 17 context queries on each of the 107 local
+post-completion states, then independently checks candidate consistency and
+complete match sets on CPU. Runtime constructor identities are mapped to the
+CPU oracle only after exact whole-local-graph comparison passes. Missing mapping,
+incomplete routing, nonfinite predictions, false acceptance and omissions cannot
+establish acceptance. The command returns exit 1 when following matches fail,
+even if the preceding RHS graph comparison passed.
+
+Observed result (`neural-device-follow-results.json`):
+
+| Following-query measurement | Count |
+| --- | ---: |
+| Live type-compatible candidates | 1,659 |
+| Model accepted | 1,382 |
+| Accepted invalid candidates | 1,070 |
+| Legal matches / recovered | 312 / 312 |
+| Recovered candidate tuples using the generated target Cell | 240 |
+| Incomplete query enumerations / nonfinite predictions | 0 / 0 |
+
+The audit status is **difference**, exit 1. No following prediction was committed
+as an effect. This demonstrates device-to-device data delivery, but contradicts
+reliable learned continuation. These results must not be combined with the
+seed-snapshot 40/40 and 109/109 results to claim a correct recurrent runtime.
+
+The current ordered model adds a relation correction to a token-conditioned
+match logit. Consequently, the same required interface conditions can receive
+different acceptance decisions when the source token/layout changes. For the
+current slot-only constructor queries, exact interface incidence determines
+binding consistency independently of latent token content. The next architecture
+change should enforce that separation rather than train a residual to cancel an
+unbounded token-dependent match score. Future scalar guards need their actual
+predicate inputs; they are not covered by this slot-only conclusion.
+
+The bounded Cartesian device pool is a diagnostic. It is not the final efficient
+routing mechanism or a full multi-stage saturation loop. Source token semantics
+also remain independently unproven; moving a vector without CPU reconstruction
+does not prove it encodes a correct completed Cell.
+
+Twenty-seven neural tests pass. New checks cover initial seed-encoder parity,
+reading a GPU-created result through transferred storage, retaining invalid
+candidate tuples for the classifier, explicit overflow, and rejecting an audit
+with failed or missing following-query evidence.
+
+```sh
+python benchmarks/eggcc-gpu-supervision/audit_neural_gpu_rhs.py \
+  TRACE.json WEIGHTS.safetensors OUTPUT.json --limit 107 --follow
+# Current trained model: expected semantic audit exit is 1, not 0.
+```

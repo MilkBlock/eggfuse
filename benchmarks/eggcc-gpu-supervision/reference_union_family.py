@@ -114,7 +114,7 @@ class Reference:
     def normalized_facts(self):return {(t,tuple(self.root(v) for v in values)) for t,values in self.facts}
 
 
-def compare_graph(reference,observed,roots,seed_count):
+def compare_graph(reference,observed,roots,seed_count,include_mapping=False):
     """Anchor imported IDs, then map constructed results through complete facts.
 
     Independent of allocation order. Injectivity detects missing unions as well
@@ -142,4 +142,6 @@ def compare_graph(reference,observed,roots,seed_count):
     if any(int(r) not in mapping for r in roots):errors.append('unexplained_allocation')
     actual={(t,tuple(mapping[int(roots[v])] for v in (*args,result))) for t,args,result in observed if all(int(roots[v]) in mapping for v in (*args,result))}
     if actual!=expected:errors.append('fact_set_difference')
-    return dict(passed=not errors,errors=errors,actual_facts=len(actual),expected_facts=len(expected),mapped_classes=len(mapping))
+    result=dict(passed=not errors,errors=errors,actual_facts=len(actual),expected_facts=len(expected),mapped_classes=len(mapping))
+    if include_mapping and not errors:result['mapping']=mapping
+    return result

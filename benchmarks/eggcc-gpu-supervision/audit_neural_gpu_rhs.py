@@ -67,7 +67,7 @@ def initial_case(recipe,record):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--limit',type=int,default=8);a=p.parse_args()
+    p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
     if a.limit<1:raise ValueError('positive case budget required')
     raw=json.loads(a.trace.read_text());source=raw.get('recipe',raw);recipe=dict(source,rules=[r for r in source['rules'] if r['metadata']['source_set']=='context'])
     started=time.perf_counter();records=[];base=samples(recipe,4,93003,records,ordered=True);transfers=[]
@@ -85,6 +85,11 @@ def main():
     for record in selected:
         i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record)
         state=device(host);state['tokens']=state['tokens'].at[src].add(source_tokens[i]);state['tokens']=state['tokens'].at[dst].add(tokens[i])
+        if a.follow:
+            from neural_device_candidates import compile_frames,encode_seeds
+            frames=device(compile_frames(local,host['owner_projection'].shape[1]))
+            state=encode_seeds(state,frames,model,mx)
+            cp['retain_predicted_rules']=tuple(range(len(local['rules'])))
         admitted=(first[i]>=0)&(logits[i]>=0)&mx.all(mx.isfinite(tokens[i]))
         state['active']=state['active']&admitted
         plan=device(cp);registry=device(ctx);next_id=mx.array(seed_count);settled=mx.array(True)
@@ -99,16 +104,56 @@ def main():
         else:move=dict(transferred=mx.array(False),copied_fields=mx.array(0))
         mx.eval(state,next_id,marks,move,executed,created,merged)
         final={k:np.array(v) for k,v in state.items()};facts,covered=facts_from_cells(local,final)
-        check=compare_graph(oracle,facts,np.array(registry['roots'])[:int(next_id)],seed_count)
+        check=compare_graph(oracle,facts,np.array(registry['roots'])[:int(next_id)],seed_count,include_mapping=a.follow)
         preserved=True;rr=np.arange(len(host['present']))[:,None];ss=np.arange(host['owner_projection'].shape[1])[None,:]
         before_host={k:np.array(v) for k,v in before.items()}
         for column in COLUMNS:
             if 'owner_'+column in final:preserved &= np.array_equal(read(before_host,column,rr,ss,np),read(final,column,rr,ss,np))
         report=dict(producer=int(chain['producer'][i]),consumer=int(chain['consumer'][i]),executed=int(executed),new_constructors=int(created),new_equivalences=int(merged),pending=bool(marks['needs_attention']),graph=check,facts_decoded=covered,transfer_covered=tp['covered'],transferred=bool(move['transferred']),copied_fields=int(move['copied_fields']),interfaces_preserved=bool(preserved),token_retained=bool(np.array_equal(np.array(state['tokens'][dst]),np.array(tokens[i]))))
+        if a.follow and check['passed']:
+            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst)
         reports.append(report);print(json.dumps(report),flush=True)
-    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    failed=audit_failed(reports,a.follow)
+    result['status']='difference' if failed else 'pass'
     a.output.write_text(json.dumps(result,indent=2)+'\n')
-    if any(r['pending'] or not r['graph']['passed'] or not r['facts_decoded'] or not r['interfaces_preserved'] or not r['token_retained'] for r in reports):raise SystemExit(1)
+    if failed:raise SystemExit(1)
+
+
+def audit_failed(reports,follow=False):
+    for r in reports:
+        if r['pending'] or not r['graph']['passed'] or not r['facts_decoded'] or not r['interfaces_preserved'] or not r['token_retained']:return True
+        if follow:
+            if 'follow' not in r:return True
+            c=r['follow']['counts']
+            required=('false_positive','missed','incomplete_rules','invalid_predictions')
+            if any(k not in c for k in required) or any(c[k] for k in required):return True
+    return not reports
+
+
+def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row):
+    from neural_device_candidates import compile_candidates,candidates
+    counts=dict(candidates=0,accepted=0,false_positive=0,expected=0,recovered=0,missed=0,incomplete_rules=0,accepted_from_generated=0,invalid_predictions=0)
+    groups=[]
+    for rid,rule in enumerate(recipe['rules']):
+        host_plan=compile_candidates(local,rule)
+        batch=candidates(state,frames,device(host_plan),mx.array(True),mx.array(True),mx)
+        logits,tokens=model.transition(batch['tokens'],batch['edges'],batch['mask'],batch['request'],batch['relations']);mx.eval(batch,logits,tokens)
+        live=np.array(batch['live']);finite=np.isfinite(np.array(logits))&np.isfinite(np.array(tokens)).all(axis=1);pred=(np.array(logits)>=0)&live&finite
+        roots=np.array(batch['binding_roots']);sources=np.array(batch['sources'])
+        relations=np.array(batch['relations']);half=relations.shape[1]//2
+        valid=np.all((relations[:,half:]==0)|(relations[:,:half]>0),axis=1)
+        expected={tuple(sorted(b.items())) for b in oracle.matches(rule)};recovered=set();fp=0;from_generated=0
+        for index in np.flatnonzero(pred):
+            key=tuple((slot,mapping.get(int(root),-1)) for slot,root in zip(host_plan['inputs'],roots[index]))
+            if not valid[index] or key not in expected:fp+=1;continue
+            recovered.add(key)
+            from_generated+=bool((sources[index]==generated_row).any())
+        group=dict(rule=rid,invalid_predictions=int((live&~finite).sum()),candidates=int(live.sum()),accepted=int(pred.sum()),false_positive=fp,expected=len(expected),recovered=len(recovered),missed=len(expected-recovered),incomplete_rules=int(not bool(batch['complete'])),accepted_from_generated=from_generated)
+        groups.append(group)
+        for key,value in group.items():
+            if key!='rule':counts[key]+=value
+    return dict(counts=counts,groups=groups,cpu_supplied_follow_bindings=False)
 
 
 if __name__=='__main__':main()
