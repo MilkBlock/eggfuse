@@ -12,11 +12,12 @@ from neural_cell_samples import apply_instance
 
 
 def completed(rule,binding,ref):
+    from typed_literal import resolved
     values={s:ref.root(v) for s,v in binding.items()}
     facts={(t,vs[:-1]):vs[-1] for t,vs in ref.normalized_facts()}
     for op in rule['effects']:
-        if op['kind']=='copy':values[op['dst']]=values[op['arg']['slot']]
-        elif op['kind']=='construct':values[op['dst']]=facts[(op['call']['table'],tuple(values[a['slot']] for a in op['args']))]
+        if op['kind']=='copy':values[op['dst']]=resolved(op['arg'],values,ref)
+        elif op['kind']=='construct':values[op['dst']]=facts[(op['call']['table'],tuple(resolved(a,values,ref) for a in op['args']))]
         elif op['kind'] not in ('set','union'):raise ValueError('unsupported chain effect')
     if set(values)!=set(range(len(rule['slots']))):raise ValueError('incomplete Cell result layout')
     return [values[i] for i in range(len(rule['slots']))]
@@ -85,14 +86,16 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
     eq_width=width*2 if combined_owner else width
     interface_width=max(len(a['args']) for r in recipe['rules'] for a in r['query'])
     from neural_ordered_relations import projected
+    from typed_literal import resolved
     for record in records:
         producer=record['rule'];rule=recipe['rules'][producer];ref=record['reference'];values=completed(rule,record['binding'],ref)
         np.testing.assert_allclose(code(rule,values,ref),record['target'],atol=2e-6)
         exports={}
         for op in rule['effects']:
             if op['kind'] not in ('construct','set'):continue
-            ports=[a['slot'] for a in op['args']]+[op['dst'] if op['kind']=='construct' else op['value']['slot']]
-            exports[(op['call']['table'],tuple(values[s] for s in ports))]=ports
+            operands=[*op['args'],dict(slot=op['dst']) if op['kind']=='construct' else op['value']]
+            ports=[a.get('slot') for a in operands]
+            exports[(op['call']['table'],tuple(resolved(a,dict(enumerate(values)),ref) for a in operands))]=ports
         if record.get('eq_changed',False):
             for atom in rule['query']:
                 ports=[a['slot'] for a in atom['args']]
@@ -105,7 +108,7 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                     row=[binding[a['slot']] for a in atom['args']];key=(atom['call']['table'],tuple(row));ports=exports.get(key)
                     if ports is not None:
                         sources.append((rule,values));owners.append(True)
-                        mapping={a['slot']:p for a,p in zip(atom['args'],ports)}
+                        mapping={a['slot']:p for a,p in zip(atom['args'],ports) if p is not None}
                         inputs=[i for i,s in enumerate(consumer['slots']) if s['definition']=='query']
                         projections.append(compile_transfer(recipe,dict(producer=producer,consumer=rid,projection=[mapping.get(i,0) for i in inputs],projection_valid=[i in mapping for i in inputs]),width*2 if (combined_owner or block_owner) else width))
                     else:

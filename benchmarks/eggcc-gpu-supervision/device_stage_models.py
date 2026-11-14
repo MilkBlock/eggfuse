@@ -59,3 +59,22 @@ def compile_program(recipe,models):
     if not authoritative:raise ValueError('scheduled stage models need compiler rulesets')
     schedule,meta=compile_schedule(recipe['control'],names)
     return schedule,compile_bank(names,models),meta
+
+
+def select_ruleset(recipe,name):
+    """Create an isolated training recipe from declared membership, with provenance.
+
+    Its one-Run control is an explicit training scope, never a replacement for
+    the full source schedule. Global IDs remain available in the manifest.
+    """
+    names,matrix,authority=membership(recipe)
+    if not authority:raise ValueError('training requires compiler ruleset membership')
+    if name not in names:raise ValueError('unknown ruleset '+str(name))
+    ids=list(recipe['rulesets'][names.index(name)]['rule_ids'])
+    if not ids:raise ValueError('empty ruleset '+str(name))
+    local=dict(recipe,rules=[recipe['rules'][i] for i in ids],rulesets=[dict(name=name,rule_ids=list(range(len(ids))))],control=dict(run=name),event_routes=[])
+    # A subset is not the original content-addressed recipe.
+    local.pop('sha256',None)
+    local['authorization']=dict(live_substitution_authorized=False,guarantee='isolated training recipe; not full schedule replacement')
+    local['scope']='isolated ruleset training recipe; not original source schedule'
+    return local,dict(ruleset=name,source_rule_ids=ids,membership_authoritative=True,full_schedule_replaced_for_training=True)

@@ -1,4 +1,5 @@
 """Synthetic two-block ownership learning; full joint Eq audit on MLX GPU."""
+from device_stage_models import select_ruleset
 import argparse
 import hashlib
 import json
@@ -58,7 +59,7 @@ def signatures(base,data,with_proof=False):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('transition',type=Path);p.add_argument('eq',type=Path);p.add_argument('output',type=Path)
+    p=argparse.ArgumentParser();p.add_argument('--ruleset',default='context');p.add_argument('trace',type=Path);p.add_argument('transition',type=Path);p.add_argument('eq',type=Path);p.add_argument('output',type=Path)
     p.add_argument('--proof-token',action='store_true');p.add_argument('--owner-aware',action='store_true');p.add_argument('--steps',type=int,default=1200);p.add_argument('--resume',type=Path);p.add_argument('--freeze-base',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--evaluate-only',action='store_true');p.add_argument('--omit-cross-predictions',action='store_true');p.add_argument('--identity-source',action='store_true');p.add_argument('--third-train',type=Path);p.add_argument('--third-test',type=Path);a=p.parse_args()
     if a.identity_source and not (a.evaluate_only or a.owner_aware or a.proof_token):raise ValueError('identity-source is an evaluation ablation')
     if a.owner_aware and a.proof_token:raise ValueError('separate owner edge and proof token experiments')
@@ -68,7 +69,7 @@ def main():
     if bool(a.third_train)!=bool(a.third_test):raise ValueError('both training and held-out replay data required')
     if a.steps<1:raise ValueError('positive training steps')
     source=json.loads(a.trace.read_text());source=source.get('recipe',source)
-    recipe=dict(source,rules=[r for r in source['rules'] if r['metadata']['source_set']=='context'])
+    recipe,stage_manifest=select_ruleset(source,a.ruleset)
     began=time.perf_counter();base,chain,coverage=build(recipe,8,23001);test,tc,test_coverage=build(recipe,4,93003)
     width=max(len(r['slots']) for r in recipe['rules'])
     seen=set(signatures(base,chain,a.baked_eq));overlap=np.array([sig in seen for sig in signatures(test,tc,a.baked_eq)])
@@ -161,6 +162,7 @@ def main():
     if not unchanged or not eq_unchanged:raise AssertionError('frozen model weights changed')
     model.save_weights(str(a.output.with_suffix('.safetensors')))
     report=dict(scope='standalone GPU two-block semantic-owner learning; no runtime commits or saturation',synthetic_only_training=True,backpropagation=True,slot_width=width,token_blocks=2,floats_per_owner=256,train=coverage,test=test_coverage,test_input_overlap=int(overlap.sum()),before=before,after=after,training=training,steps=0 if a.evaluate_only else a.steps,evaluate_only=a.evaluate_only,baked_eq=a.baked_eq,omit_cross_predictions=a.omit_cross_predictions,identity_source=a.identity_source,interface_head_unchanged=unchanged,wall_seconds=time.perf_counter()-began,parent_transition_sha256=hashlib.sha256(a.transition.read_bytes()).hexdigest(),parent_eq_sha256=hashlib.sha256(a.eq.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),promoted_for_execution=False,limitations=['Fixed synthetic routing during differentiable training; independent device audit required','Two-block cost doubles resident floats versus a single token','No stable identity or incidence is supplied to the Eq readouts','No CPU audit rollback or full-stage scheduling integration'])
+    report['stage_manifest']=stage_manifest
     report['proof_token']=a.proof_token
     report['owner_aware']=a.owner_aware
     report['base_frozen']=a.freeze_base

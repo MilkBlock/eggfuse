@@ -483,3 +483,54 @@ Reproduce the structural audit with `audit_stage_modules.py TRACE OUTPUT`.
 structure; it uses no real Run as training data. The checked iterative Bake
 branch remains `codex/cell-parallel-admission` at `f3321a3a`, containing
 `56e28b89`. This work modifies the GPU prototype, not the native CPU executor.
+
+## Train an actual second ruleset module: canon (2026-11-14)
+
+The primary direct trainer, Eq trainer, owner trainer, replay builder and device
+handoff audit now accept `--ruleset` and select compiler-declared membership via
+`select_ruleset`. Source annotations no longer select their training rules.
+The helper preserves declared rule order, remaps local IDs, discards stale event
+routes/content hashes, and marks the single-Run control as an isolated training
+scope with no substitution authorization. It does not replace the real schedule.
+Each report retains original rule IDs and the stage manifest.
+
+`train_neural_cell_transition.py --semantic` trains both ordered matching and
+floating token Eq readout for a stage, from scratch. All eight canon rules
+(global IDs 270–277) participated, including the two four-atom queries. Its batch
+layout is four atoms, four fields, a 512-float input encoding and 512 incidence
+features, with the existing 128-float token interface. Context checkpoints have
+a different input layout and cannot simply be substituted for these weights.
+
+The first real blocker was label reconstruction of constructor/copy literals.
+`typed_literal.resolved` now reads exact executed i64 identities without creating
+new reference identities. Labels support literal operands and scalar results;
+large-i64 tests explicitly preserve values above 2^53. Generated constant facts
+can participate in chain samples, but a literal has no producer payload slot.
+Its projection is left uncovered instead of fabricating ownership of slot zero.
+This is not GPU literal execution support: the device constructor compiler still
+marks those sites, and only 80/160 positive evaluation chains have *compiled*
+owner opportunities. No actual transfer is implied by that count.
+
+Results (synthetic only; no real execution trained the model):
+
+* Direct: 1024 training candidates, 256 evaluation candidates; matching 256/256
+  and Eq 128/128. However 253/256 evaluation inputs overlap training, including
+  every positive state. This is not evidence of unseen completion generalization.
+* Two-step generated-token replay: 61 producer/consumer template pairs, all eight
+  rules represented as producers and consumers. Train 320 positive + 120 negative
+  chains; test 160 positive + 60 negative. Matching errors: zero. Whole Eq state
+  correctness: 156/160, with two false-merge states. Of 62 unseen positive inputs,
+  58 are exact. Zero-token readout is only 5/160; shuffled-within-template tokens
+  are 69/160. This experiment actually consumes generated floating state rather
+  than a teacher completion token, but CPU-generated routing is still supplied.
+
+Reproduce direct training with `train_neural_cell_transition.py TRACE OUT
+--ruleset canon --semantic --samples-per-rule 128 --steps 600`, followed by
+`train_neural_eq_readout.py TRACE DIRECT.transition.safetensors OUT
+--ruleset canon --steps 600`. `canon-stage-results.json` records full metrics and
+checkpoint hashes. These results do not establish closed-loop GPU execution of
+canon, cross-stage token compatibility, saturation or all 30 trained modules.
+The next concrete execution gaps are literal operand projections and the
+four-atom candidate layout; neither may be silently omitted to claim coverage.
+No runtime speedup is claimed. The existing context one-case GPU handoff smoke
+also passes with the new authoritative stage selection.

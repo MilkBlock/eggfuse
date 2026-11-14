@@ -55,16 +55,17 @@ def resolve_identities(reference,facts,seed_count):
 
 
 def target(rule,binding,mapping,reference,seed_values,width):
+    from typed_literal import resolved
     values={i:mapping[int(binding[i])] for i,s in enumerate(rule['slots']) if s['definition']=='query'}
     facts={(t,v[:-1]):v[-1] for t,v in reference.normalized_facts()}
     for op in rule['effects']:
-        if op['kind']=='copy':values[op['dst']]=values[op['arg']['slot']]
+        if op['kind']=='copy':values[op['dst']]=resolved(op['arg'],values,reference)
         elif op['kind']=='construct':
-            key=(op['call']['table'],tuple(values[a['slot']] for a in op['args']))
+            key=(op['call']['table'],tuple(resolved(a,values,reference) for a in op['args']))
             if key not in facts:raise ValueError('CPU completion constructor missing')
             values[op['dst']]=facts[key]
         elif op['kind']=='union':
-            if values[op['args'][0]['slot']]!=values[op['args'][1]['slot']]:raise ValueError('CPU union target disagrees')
+            if resolved(op['args'][0],values,reference)!=resolved(op['args'][1],values,reference):raise ValueError('CPU union target disagrees')
         else:raise ValueError('unsupported target effect')
     if set(values)!=set(range(len(rule['slots']))):raise ValueError('incomplete target slots')
     semantic_rule,_=semantic(rule)
@@ -75,8 +76,9 @@ def target(rule,binding,mapping,reference,seed_values,width):
         if sort['kind']=='eq':
             key=(sort['name'],value);encoded.append((slot,{},key));labels[slot]=classes.setdefault(key,len(classes))
         else:
-            if value not in seed_values or seed_values[value]['sort']!=sort['name'] or 'eq' in seed_values[value]:raise ValueError('unsupported scalar result')
-            encoded.append((slot,seed_values[value],None))
+            scalar_value=reference.scalar_values.get(value,seed_values.get(value))
+            if scalar_value is None or scalar_value['sort']!=sort['name'] or 'eq' in scalar_value:raise ValueError('unsupported scalar result')
+            encoded.append((slot,scalar_value,None))
     return encode(encoded,template(semantic_rule)[0],'class-balanced'),labels
 
 

@@ -3,6 +3,7 @@
 Synthetic instances only. Exact completion builds routing and independent labels;
 no reference token or Eq label is an input to the learned third transition.
 """
+from device_stage_models import select_ruleset
 import argparse,json,time,hashlib
 from pathlib import Path
 from copy import deepcopy
@@ -135,10 +136,11 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('output',type=Path);p.add_argument('--seed',type=int,default=23001);p.add_argument('--count',type=int,default=4);p.add_argument('--per-pair',type=int,default=2);p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--block-owner',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--ruleset',default='context');p.add_argument('trace',type=Path);p.add_argument('output',type=Path);p.add_argument('--seed',type=int,default=23001);p.add_argument('--count',type=int,default=4);p.add_argument('--per-pair',type=int,default=2);p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--block-owner',action='store_true');a=p.parse_args()
     if min(a.count,a.per_pair)<1:raise ValueError('positive sample counts required')
-    source=json.loads(a.trace.read_text());source=source.get('recipe',source);recipe=dict(source,rules=[r for r in source['rules'] if r['metadata']['source_set']=='context'])
+    source=json.loads(a.trace.read_text());source=source.get('recipe',source);recipe,stage_manifest=select_ruleset(source,a.ruleset)
     began=time.perf_counter();data,report=build(recipe,a.count,a.seed,a.per_pair,a.context_capacity,a.block_owner)
+    report['stage_manifest']=stage_manifest
     np.savez_compressed(a.output,**data);report.update(wall_seconds=time.perf_counter()-began,recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),dataset_sha256=hashlib.sha256(a.output.read_bytes()).hexdigest())
     a.output.with_suffix('.json').write_text(json.dumps(report,indent=2)+'\n')
 

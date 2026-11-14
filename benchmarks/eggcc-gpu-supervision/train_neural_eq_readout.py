@@ -3,6 +3,7 @@
 The finite interface matching head is frozen. Eq proposals are not committed;
 raw and transitively closed mistakes, plus zero-token ablation, are reported.
 """
+from device_stage_models import select_ruleset
 import argparse,hashlib,json,time
 from pathlib import Path
 import numpy as np
@@ -36,11 +37,11 @@ def objective(model,batch,parent,chain,typed=None,third=None):
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path);p.add_argument('--steps',type=int,default=800);p.add_argument('--evaluate-only',action='store_true');p.add_argument('--typed-patterns',action='store_true');p.add_argument('--resume',action='store_true');p.add_argument('--typed-all-candidates',action='store_true');p.add_argument('--third-train',type=Path);p.add_argument('--third-test',type=Path);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--ruleset',default='context');p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path);p.add_argument('--steps',type=int,default=800);p.add_argument('--evaluate-only',action='store_true');p.add_argument('--typed-patterns',action='store_true');p.add_argument('--resume',action='store_true');p.add_argument('--typed-all-candidates',action='store_true');p.add_argument('--third-train',type=Path);p.add_argument('--third-test',type=Path);a=p.parse_args()
     if a.steps<1:raise ValueError('positive steps required')
     if bool(a.third_train)!=bool(a.third_test):raise ValueError('both third-step datasets required')
     source=json.loads(a.trace.read_text());source=source.get('recipe',source)
-    recipe=dict(source,rules=[r for r in source['rules'] if r['metadata']['source_set']=='context']);width=max(len(r['slots']) for r in recipe['rules']);started=time.perf_counter()
+    recipe,stage_manifest=select_ruleset(source,a.ruleset);width=max(len(r['slots']) for r in recipe['rules']);started=time.perf_counter()
     base,chain,coverage=build(recipe,8,23001,ordered=True,eq_targets=True)
     test,tc,test_coverage=build(recipe,4,93003,ordered=True,eq_targets=True)
     direct=samples(recipe,128,77717,ordered=True,eq_targets=True)
@@ -111,6 +112,7 @@ def main():
     transition=a.output.with_suffix('.transition.safetensors');model.cell.save_weights(str(transition))
     readout=a.output.with_suffix('.eq.safetensors');model.eq.save_weights(str(readout))
     report=dict(scope='semantic Eq readout from floating generated tokens; standalone synthetic two-step and optional third-step evaluation, no graph mutations',synthetic_only_training=True,slot_width=width,pair_outputs=width*(width-1)//2,training_direct_samples=len(direct['valid']),typed_training_coverage=typed_coverage,resumed_combined_weights=a.resume,typed_semantic_sampling=("all candidates" if a.typed_all_candidates else "positive states only") if a.typed_patterns else None,evaluation_chain_feature_overlap=int(overlap.sum()),training_coverage=coverage,test_coverage=test_coverage,before=before,after=after,steps=0 if a.evaluate_only else a.steps,evaluation_only=a.evaluate_only,interface_head_unchanged=frozen_unchanged,readout_receives_exact_ids=False,readout_receives_incidence=False,semantic_proposals_committed=False,promoted_as_default=False,wall_seconds=time.perf_counter()-started,parent_weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),transition_weights_sha256=hashlib.sha256(transition.read_bytes()).hexdigest(),readout_weights_sha256=hashlib.sha256(readout.read_bytes()).hexdigest(),limitations=['Known bounded synthetic chain family; not arbitrary graphs or new rulesets','Zero-token ablation removes both dynamic contents and the usual token distribution','Template request also carries information; readout is not token-only','False positive Eq proposals would corrupt semantics if committed without correction'])
+    report['stage_manifest']=stage_manifest
     if third_train is not None:
         from neural_third_step import fingerprints as signatures
         seen=set(signatures(third_train));test_signatures=signatures(third_test)
