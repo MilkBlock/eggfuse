@@ -869,3 +869,37 @@ These are synthetic execution fixtures with a deterministic test model, NOT
 a trained canon benchmark or evidence of broad neural correctness. The next
 step is to wire the existing trained stage model and final CPU audit around
 this primitive on one cumulative state. Native runtime is unchanged.
+
+### Trained canon model on one cumulative GPU state
+
+`--cumulative-sweeps N` appends the stage's templates, reserves N times the
+rule count in frame capacity, and repeatedly invokes the device-selected
+admission kernel in a fixed rule order. Each admitted frame is retained in
+the same state, with generated floating tokens, actual result witnesses and
+updated roots available to later steps. Host synchronizes each step to bound
+MLX allocation lifetimes, but reads no intermediate candidate/token values.
+There is one cumulative run per initial pair, not a fork per proposal.
+
+At the end, CPU independently replays the device-selected keys and actual
+returned identities against source rules. Final full-graph equality and an
+exhaustive additional CPU ruleset Run establish the scoped fixedpoint check.
+GPU no-novel-proposal alone is insufficient: a silent wrong model is covered
+by a regression test that must fail this check. Budget exhaustion also cannot
+pass as GPU saturation. CPU labels or corrections never feed this run.
+
+Use the v20 transition/Eq weights with the audit command, `--ruleset canon
+--include-uncovered-transfers --interface-only --follow --cumulative-sweeps 6
+--limit 64`. No speculative-fork flag is needed. Four sweeps submit 232
+instances, yield 59 correct final graphs, 58 CPU fixedpoints and 51 combined
+passes. Six sweeps submit the same 232 instances and reach 58 combined passes
+out of 61. Thus seven cases needed a later empty scheduling sweep, not new
+facts. Remaining cases (5,7) and (6,7) have incorrect final graphs and trigger
+old-token refresh attention; (7,6) has a correct graph but incomplete query
+coverage and is not saturated. None is silently accepted.
+
+This is a bounded single immutable-constructor ruleset from the actual
+compiler recipe, using synthetic inputs. It does not claim general Eggcc
+multi-stage execution, corrected latent states, asynchronous supervision, or
+performance improvement. Eleven targeted tests pass. Text results:
+`canon-cumulative-results.json`; external archive:
+`neural-canon-cumulative-v27.tar.gz`.

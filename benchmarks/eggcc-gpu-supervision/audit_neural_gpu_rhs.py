@@ -76,8 +76,9 @@ def initial_case(recipe,record,spare=0,payload_width=None):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--ruleset',default='context');p.add_argument('--include-uncovered-transfers',action='store_true');p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
     p.add_argument('--proof-token',action='store_true');p.add_argument('--conditional-eq',action='store_true');p.add_argument('--owner-aware',action='store_true');p.add_argument('--semantic-owners',action='store_true');p.add_argument('--block-owner',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--immutable-source',action='store_true')
-    p.add_argument('--install-follow-round',action='store_true');p.add_argument('--follow-round',action='store_true');p.add_argument('--reuse-witnesses',action='store_true');p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
+    p.add_argument('--cumulative-sweeps',type=int,default=0);p.add_argument('--install-follow-round',action='store_true');p.add_argument('--follow-round',action='store_true');p.add_argument('--reuse-witnesses',action='store_true');p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
+    if a.cumulative_sweeps<0 or (a.cumulative_sweeps and (not a.eq_readout or not a.follow or a.block_owner or a.semantic_owners)):raise ValueError('cumulative sweeps require ordinary token follow with Eq readout')
     if a.install_follow_round and not a.follow_round:raise ValueError('install-follow requires follow round')
     if a.follow_round and not a.speculate:raise ValueError('follow round requires installed frame')
     if a.reuse_witnesses and not a.speculate:raise ValueError('witness reuse requires speculative installation')
@@ -137,8 +138,8 @@ def main():
         if pair not in seen:seen.add(pair);selected.append(record)
     available=len(selected);selected=selected[:a.limit];reports=[]
     for record in selected:
-        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record,spare=int(a.speculate)+int(a.install_follow_round),payload_width=2*max(len(r['slots']) for r in recipe['rules']) if (a.block_owner or a.include_uncovered_transfers) else None)
-        if a.speculate:local=dict(local,rules=local['rules']+recipe['rules'])
+        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record,spare=int(a.speculate)+int(a.install_follow_round)+a.cumulative_sweeps*len(recipe["rules"]),payload_width=2*max(len(r['slots']) for r in recipe['rules']) if (a.block_owner or a.include_uncovered_transfers) else None)
+        if a.speculate or a.cumulative_sweeps:local=dict(local,rules=local['rules']+recipe['rules'])
         state=device(host);state['tokens']=state['tokens'].at[src].add(source_tokens[i]);state['tokens']=state['tokens'].at[dst].add(tokens[i])
         if a.follow:
             from neural_device_candidates import compile_frames,encode_seeds
@@ -179,17 +180,21 @@ def main():
         if a.block_owner:report['block_owner_adopted']=bool(move.get('semantic_blocks_adopted',False))
         if a.semantic_owners:
             report['semantic_owner']=dict(semantic_proof,adopted=bool(move.get('semantic_adopted',False)))
+        if a.cumulative_sweeps and check['passed']:
+            from neural_cumulative import run as run_cumulative
+            report['cumulative']=run_cumulative(local,state,registry['roots'],next_id,frames,recipe['rules'],model,eq_head,a.cumulative_sweeps,oracle,check['mapping'],seed_count)
         if a.follow and check['passed']:
             report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None,a.baked_eq,baked_proofs,owner if a.owner_aware else None,a.conditional_eq,a.reuse_witnesses,a.follow_round,a.install_follow_round)
         reports.append(report);print(json.dumps(report),flush=True)
     result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,semantic_owners=a.semantic_owners,block_owner=a.block_owner,immutable_source=a.immutable_source,owner_aware=a.owner_aware,proof_token=a.proof_token,baked_eq=a.baked_eq,conditional_eq=a.conditional_eq,speculative_frames=a.speculate,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    result['cumulative_sweeps']=a.cumulative_sweeps
     result['install_follow_round']=a.install_follow_round
     result['follow_round']=a.follow_round
     result['reuse_witnesses']=a.reuse_witnesses
     result['include_uncovered_transfers']=a.include_uncovered_transfers
     result['stage_manifest']=stage_manifest
     if a.eq_readout:result['readout_weights_sha256']=hashlib.sha256(a.eq_readout.read_bytes()).hexdigest()
-    failed=audit_failed(reports,a.follow,a.speculate)
+    failed=audit_failed(reports,a.follow,a.speculate) or (a.cumulative_sweeps>0 and any(r.get('cumulative',{}).get('status')!='pass' for r in reports))
     result['status']='difference' if failed else 'pass'
     a.output.write_text(json.dumps(result,indent=2)+'\n')
     if failed:raise SystemExit(1)

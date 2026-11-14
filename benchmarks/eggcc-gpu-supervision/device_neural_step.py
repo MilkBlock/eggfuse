@@ -34,9 +34,14 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
     accepted=xp.any(marks['accepted'])
     return result,xp.where(accepted,proposed_roots,roots),xp.where(accepted,next_id+payload['slots'].shape[1],next_id),dict(
         admitted=accepted,audit_pending=accepted,selected=selected,
+        key=keys[selected],result_slots=payload["slots"][0],result_valid=payload["slot_valid"][0],
         duplicate_candidates=xp.sum((eligible&known).astype(xp.int32)),
         no_novel_proposal=enabled&~blocked&~xp.any(novel),
         needs_attention=enabled&(blocked|(requested&~accepted)|marks['token_refresh_required']),
+        query_incomplete=enabled&~batch['complete'],dirty_input=enabled&dirty,
+        nonfinite=enabled&xp.any(batch['live']&~finite),
+        invalid_keys=enabled&(xp.any(state['present']&~resident_valid)|xp.any(eligible&~valid)),
+        rejected_proposal=requested&~accepted,
         capacity=xp.any(marks['capacity'])|(requested&((next_id<0)|(next_id>len(roots)-payload['slots'].shape[1]))),
         payload_invalid=requested&~ready&(next_id>=0)&(next_id<=len(roots)-payload['slots'].shape[1]),
         token_refresh_required=marks['token_refresh_required'])
