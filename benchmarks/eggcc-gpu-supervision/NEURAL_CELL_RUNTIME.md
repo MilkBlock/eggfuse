@@ -571,3 +571,50 @@ include per-candidate oracle cloning/completion and are not a production auditor
 throughput claim. Next work must address rule 287 using synthetic counterexamples,
 then connect accepted semantic state to subsequent GPU computation; do not merely
 loop the exact RHS path and call the floating token an executor.
+
+
+### Typed semantic coverage and post-transfer consumption
+
+The typed partition generator now optionally labels the completed Eq state,
+including aliases introduced by RHS constructor reuse. `--typed-patterns` adds
+this supervision to the floating-token loss. Invalid matches have no Eq labels;
+semantic batches sample valid states by default. `--typed-all-candidates` retains
+the initial ablation, and `--resume` loads the combined transition/readout weights
+(the Adam optimizer is restarted). Both still use synthetic states only.
+
+Reproduce the two updates from the previous semantic checkpoint:
+
+```sh
+python train_neural_eq_readout.py GCD_TRACE PREVIOUS.safetensors TYPED.json --typed-patterns --typed-all-candidates --resume --steps 800
+python train_neural_eq_readout.py GCD_TRACE TYPED.safetensors POSITIVE.json --typed-patterns --resume --steps 2400
+python audit_neural_gpu_rhs.py GCD_TRACE POSITIVE.transition.safetensors FOLLOW.json --limit 107 --follow --interface-only --eq-readout POSITIVE.eq.safetensors
+```
+
+The second update fits all 398 valid enumerated training states. Real seed
+snapshots reach 40/40 GCD and 109/109 LCM completed Eq states with zero false
+merges. These are finite first-Run checks, not real saturation runs. The synthetic
+two-step set regresses from 577/578 to 574/578 closed exact states, with two
+false-merge states. No model is promoted on the strength of the seed results.
+
+The optional Eq readout in the GPU ownership audit evaluates the next generated
+token after device candidate gathering. It uses the existing token directly;
+CPU completion labels are computed afterwards and never enter inference.
+Matching, exact RHS correctness, physical ownership transfer, and learned
+semantic correctness are separate checks. A semantic mismatch makes the audit
+exit 1 even when exact RHS and matching pass. Nonfinite Eq scores cannot count
+as correct negative predictions. The exact RHS path is still an oracle-backed
+prototype scaffold, not the final floating semantic executor.
+
+Across 107 local snapshots, all exact graphs/interfaces/tokens pass; 84 physical
+transfers execute. Following device queries recover all 312 expected matches
+(240 accepted tuples read the generated target), but 32 completed states are
+wrong and 12 have false merges. Restricting the oracle to the actual query facts
+still leaves 18 wrong states; 16 states have additional equalities induced by
+external facts. These counts overlap and must not be subtracted as disjoint
+error categories. Full-context audit status is `difference` / exit 1.
+
+Thus matching/ownership correctness does not establish semantic token
+continuation correctness. Next work needs synthetic generated-source training
+coverage and explicit representation or marking of unavailable boundary context,
+not just more single-step fitting. Sources, hashes and aggregate failures are in
+`neural-semantic-typed-results.json`; full reports/weights are in its archive.

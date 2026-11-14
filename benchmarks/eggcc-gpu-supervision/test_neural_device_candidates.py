@@ -60,6 +60,7 @@ class DeviceCandidates(unittest.TestCase):
         self.assertTrue(audit_failed([dict(good,follow=dict(counts={}))],True))
         counts={k:0 for k in ('false_positive','missed','incomplete_rules','invalid_predictions')}
         self.assertFalse(audit_failed([dict(good,follow=dict(counts=counts))],True))
+        self.assertTrue(audit_failed([dict(good,follow=dict(counts=dict(counts,semantic_wrong_states=1)))],True))
 
     def test_overflow_blocks_complete_enumeration_claim(self):
         recipe,local,state,frames,_=self.prepared()

@@ -67,13 +67,18 @@ def initial_case(recipe,record):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--interface-only',action='store_true')
+    p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
     if a.limit<1:raise ValueError('positive case budget required')
+    if a.eq_readout and not (a.follow and a.interface_only):raise ValueError('Eq audit requires interface-only following candidates')
     raw=json.loads(a.trace.read_text());source=raw.get('recipe',raw);recipe=dict(source,rules=[r for r in source['rules'] if r['metadata']['source_set']=='context'])
     started=time.perf_counter();records=[];base=samples(recipe,4,93003,records,ordered=True);transfers=[]
     chain,_=chains(recipe,records,ordered=True,transfers=transfers)
     model=ordered_model(base['x'].shape[-1],base['relations'].shape[-1],a.interface_only);model.load_weights(str(a.weights))
+    eq_head=None
+    if a.eq_readout:
+        from neural_eq_readout import EqReadout
+        eq_head=EqReadout(max(len(r['slots']) for r in recipe['rules']));eq_head.load_weights(str(a.eq_readout))
     parent=device({k:v[chain['parent']] for k,v in base.items()});dc=device(chain)
     first,source_tokens=model(parent['x'],parent['edges'],parent['mask'],parent['request'],parent['relations'])
     incoming=mx.where(dc['replace'][...,None],source_tokens[:,None,:],dc['tokens'])
@@ -112,9 +117,10 @@ def main():
             if 'owner_'+column in final:preserved &= np.array_equal(read(before_host,column,rr,ss,np),read(final,column,rr,ss,np))
         report=dict(producer=int(chain['producer'][i]),consumer=int(chain['consumer'][i]),executed=int(executed),new_constructors=int(created),new_equivalences=int(merged),pending=bool(marks['needs_attention']),graph=check,facts_decoded=covered,transfer_covered=tp['covered'],transferred=bool(move['transferred']),copied_fields=int(move['copied_fields']),interfaces_preserved=bool(preserved),token_retained=bool(np.array_equal(np.array(state['tokens'][dst]),np.array(tokens[i]))))
         if a.follow and check['passed']:
-            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst)
+            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head)
         reports.append(report);print(json.dumps(report),flush=True)
     result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    if a.eq_readout:result['readout_weights_sha256']=hashlib.sha256(a.eq_readout.read_bytes()).hexdigest()
     failed=audit_failed(reports,a.follow)
     result['status']='difference' if failed else 'pass'
     a.output.write_text(json.dumps(result,indent=2)+'\n')
@@ -129,17 +135,28 @@ def audit_failed(reports,follow=False):
             c=r['follow']['counts']
             required=('false_positive','missed','incomplete_rules','invalid_predictions')
             if any(k not in c for k in required) or any(c[k] for k in required):return True
+            if c.get('semantic_wrong_states',0):return True
     return not reports
 
 
-def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row):
+def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None):
     from neural_device_candidates import compile_candidates,candidates
     counts=dict(candidates=0,accepted=0,false_positive=0,expected=0,recovered=0,missed=0,incomplete_rules=0,accepted_from_generated=0,invalid_predictions=0)
     groups=[]
+    if eq_head is not None:
+        from copy import deepcopy
+        from neural_cell_samples import apply_instance
+        from neural_cell_chains import completed
+        from neural_eq_readout import targets,metrics
+        width=max(len(r['slots']) for r in recipe['rules'])
+        counts.update(semantic_states=0,semantic_wrong_states=0,semantic_false_merge_states=0,semantic_local_wrong_states=0,semantic_external_eq_states=0)
     for rid,rule in enumerate(recipe['rules']):
         host_plan=compile_candidates(local,rule)
         batch=candidates(state,frames,device(host_plan),mx.array(True),mx.array(True),mx)
         logits,tokens=model.transition(batch['tokens'],batch['edges'],batch['mask'],batch['request'],batch['relations']);mx.eval(batch,logits,tokens)
+        if eq_head is not None:
+            semantic=eq_head(tokens,batch['request']);mx.eval(semantic)
+            eq_scores=[];eq_labels=[];eq_masks=[];eq_local=[]
         live=np.array(batch['live']);finite=np.isfinite(np.array(logits))&np.isfinite(np.array(tokens)).all(axis=1);pred=(np.array(logits)>=0)&live&finite
         roots=np.array(batch['binding_roots']);sources=np.array(batch['sources'])
         relations=np.array(batch['relations']);half=relations.shape[1]//2
@@ -149,8 +166,22 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
             key=tuple((slot,mapping.get(int(root),-1)) for slot,root in zip(host_plan['inputs'],roots[index]))
             if not valid[index] or key not in expected:fp+=1;continue
             recovered.add(key)
+            if eq_head is not None:
+                ref=deepcopy(oracle);bound=dict(key);apply_instance(ref,rule,bound)
+                truth=targets(rule,completed(rule,bound,ref),ref,width)
+                eq_scores.append(np.array(semantic[index]));eq_labels.append(truth['eq_target']);eq_masks.append(truth['eq_mask'])
+                local_ref=deepcopy(oracle);local_bound=dict(key)
+                local_ref.facts=[(atom['call']['table'],tuple(local_bound[a['slot']] for a in atom['args'])) for atom in rule['query']]
+                apply_instance(local_ref,rule,local_bound)
+                eq_local.append(targets(rule,completed(rule,local_bound,local_ref),local_ref,width)['eq_target'])
             from_generated+=bool((sources[index]==generated_row).any())
         group=dict(rule=rid,invalid_predictions=int((live&~finite).sum()),candidates=int(live.sum()),accepted=int(pred.sum()),false_positive=fp,expected=len(expected),recovered=len(recovered),missed=len(expected-recovered),incomplete_rules=int(not bool(batch['complete'])),accepted_from_generated=from_generated)
+        if eq_head is not None:
+            m=metrics(np.array(eq_scores).reshape(-1,width*(width-1)//2),np.array(eq_labels).reshape(-1,width*(width-1)//2),np.array(eq_masks).reshape(-1,width*(width-1)//2),width)
+            loc=np.array(eq_local).reshape(-1,width*(width-1)//2);full=np.array(eq_labels).reshape(loc.shape);mask=np.array(eq_masks,dtype=bool).reshape(loc.shape)
+            lm=metrics(np.array(eq_scores).reshape(loc.shape),loc,mask,width)
+            group.update(semantic_states=m['states'],semantic_wrong_states=m['states']-m['closed_exact_states'],semantic_false_merge_states=m['states_with_false_merge'],
+                semantic_local_wrong_states=lm['states']-lm['closed_exact_states'],semantic_external_eq_states=int(((full>loc)&mask).any(axis=1).sum()))
         groups.append(group)
         for key,value in group.items():
             if key!='rule':counts[key]+=value

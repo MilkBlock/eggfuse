@@ -26,6 +26,12 @@ class SemanticReadout(unittest.TestCase):
         local_target=targets(r['rules'][0],completed(r['rules'][0],local_binding,local),local,3)
         np.testing.assert_array_equal(local_target['eq_target'],[0,0,0])
 
+    def test_nonfinite_score_cannot_count_as_correct_negative(self):
+        m=metrics(np.array([[float('nan')]]),np.zeros((1,1)),np.ones((1,1),bool),2)
+        self.assertEqual(m['nonfinite_states'],1)
+        self.assertEqual(m['exact_states'],0)
+        self.assertEqual(m['closed_exact_states'],0)
+
     def test_closure_distinguishes_missing_edge_from_false_merge(self):
         logits=np.array([[1,-1,1],[1,-1,1]])
         labels=np.array([[1,1,1],[1,0,0]])

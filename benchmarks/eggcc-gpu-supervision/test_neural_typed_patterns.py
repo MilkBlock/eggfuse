@@ -36,6 +36,15 @@ class TypedPatterns(unittest.TestCase):
             labels.append(key is not None)
         self.assertIn(True,labels);self.assertIn(False,labels)
 
+    def test_semantic_targets_include_new_constructor_aliases(self):
+        from test_neural_cell_chains import recipe
+        data,_=typed_candidates(recipe(),(0,),eq_targets=True)
+        self.assertEqual(len(data['valid']),2)
+        self.assertTrue(data['eq_mask'].all())
+        self.assertEqual(set(map(tuple,data['eq_target'])),{(0.,0.,0.),(1.,1.,1.)})
+        plain,_=typed_candidates(recipe(),(0,))
+        for k in plain:np.testing.assert_array_equal(data[k],plain[k])
+
     def test_enumeration_keeps_both_labels_and_deduplicates(self):
         data,coverage=typed_candidates(fixtures.PooledTraining().family(),(0,3))
         self.assertEqual(coverage[0]['enumerated_patterns_with_scalar_variants'],30)

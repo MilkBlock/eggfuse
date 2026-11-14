@@ -64,10 +64,12 @@ def typed_snapshots(recipe,rule,scalar_base,pattern_limit=200000):
         yield dict(rows=rows)
 
 
-def typed_candidates(recipe,scalar_bases=(0,3),ordered=True):
+def typed_candidates(recipe,scalar_bases=(0,3),ordered=True,eq_targets=False):
     atoms=max(len(r['query']) for r in recipe['rules'])
     result={k:[] for k in ('x','edges','mask','request','valid','rule')}
     if ordered:result['relations']=[]
+    if eq_targets:result.update(eq_target=[],eq_mask=[])
+    eq_width=max(len(r['slots']) for r in recipe['rules'])
     coverage=[]
     for rid,rule in enumerate(recipe['rules']):
         seen=set();enumerated=positive=0
@@ -83,13 +85,24 @@ def typed_candidates(recipe,scalar_bases=(0,3),ordered=True):
                 relation=incidence(actual,demand(rule,atoms,labels.shape[1]))[0]
                 edge=np.array(relational_edges(mx.array(labels),mx.array(roles),mx.array(indices)))[0]
                 _,request=template(rule)
-                value=binding_key(rule,selected,rows,ids) is not None
+                binding=binding_key(rule,selected,rows,ids)
+                value=binding is not None
                 features=x[indices][0]
                 fingerprint=b''.join(v.tobytes() for v in (features,edge,mask[0],request,relation))
                 if fingerprint in seen:continue
                 seen.add(fingerprint);positive+=value
                 for k,v in dict(x=features,edges=edge,mask=mask[0],request=request,valid=value,rule=rid).items():result[k].append(v)
                 if ordered:result['relations'].append(relation)
+                if eq_targets:
+                    from neural_eq_readout import targets
+                    from neural_cell_samples import apply_instance
+                    from neural_cell_chains import completed
+                    if value:
+                        ref=Reference(recipe,rows,ids);bound=dict(binding);apply_instance(ref,rule,bound)
+                        target=targets(rule,completed(rule,bound,ref),ref,eq_width)
+                    else:
+                        target=dict(eq_target=np.zeros(eq_width*(eq_width-1)//2,np.float32),eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool))
+                    for k,v in target.items():result[k].append(v)
         coverage.append(dict(rule=rid,complete_typed_partition_enumeration=True,enumerated_patterns_with_scalar_variants=enumerated,distinct_features=len(seen),positive=positive,negative=len(seen)-positive))
     data={k:np.array(v) for k,v in result.items()};data['valid']=data['valid'].astype(np.float32)
     return data,coverage

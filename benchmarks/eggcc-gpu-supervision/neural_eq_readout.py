@@ -35,6 +35,7 @@ def masked_loss(logits,labels,mask):
 
 def metrics(logits,labels,mask,width):
     pred=np.asarray(logits)>=0;truth=np.asarray(labels)>0;mask=np.asarray(mask,bool)
+    invalid=(~np.isfinite(np.asarray(logits))&mask).any(axis=1)
     fp=pred&~truth&mask;fn=~pred&truth&mask
     closed=pred.copy();a,b=np.triu_indices(width,1)
     for row in range(len(pred)):
@@ -47,6 +48,6 @@ def metrics(logits,labels,mask,width):
         closed[row]=[root(int(i))==root(int(j)) for i,j in zip(a,b)]
     cf=closed&~truth&mask;cn=~closed&truth&mask
     return dict(states=len(pred),pairs=int(mask.sum()),false_positive_pairs=int(fp.sum()),false_negative_pairs=int(fn.sum()),
-                exact_states=int((~(fp|fn).any(axis=1)).sum()),closed_false_positive_pairs=int(cf.sum()),
-                closed_false_negative_pairs=int(cn.sum()),closed_exact_states=int((~(cf|cn).any(axis=1)).sum()),
+                nonfinite_states=int(invalid.sum()),exact_states=int((~(fp|fn).any(axis=1)&~invalid).sum()),closed_false_positive_pairs=int(cf.sum()),
+                closed_false_negative_pairs=int(cn.sum()),closed_exact_states=int((~(cf|cn).any(axis=1)&~invalid).sum()),
                 states_with_false_merge=int(cf.any(axis=1).sum()))
