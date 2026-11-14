@@ -87,6 +87,13 @@ def main():
     gpu=mx.tanh(mx.array(val['features'])@mx.array(predictor));mx.eval(gpu)
     prediction_error=float(np.max(abs(np.array(gpu)-np.tanh(val['features']@predictor))))
     if threshold_disagreements or prediction_error>5e-6:raise ValueError('GPU numerical mismatch')
+    training_tokens=np.tanh(train['features']@predictor)
+    training_prediction={}
+    for name,mask in dict(all=np.ones(len(training_tokens),bool),direct=~train['generated_source'],generated=train['generated_source']).items():
+        rows=[r for r,yes in zip(train['rows'],mask) if yes]
+        if not rows:continue
+        tx,_=materialize(readout_rows(rows,True),training_tokens,decoder['w'],True)
+        training_prediction[name]=dict(partition_metrics=summarize(rows,(tx@readout).reshape(-1)),latent_mae=float(np.mean(abs(training_tokens[mask]-train['targets'][mask]))))
     newmodel=dict(model,coef=predictor,boundary_context=a.boundary_context,calibration_training_sources=json.dumps(training_sources,sort_keys=True),family_semantics=json.dumps(family,sort_keys=True),calibration_training_sha256=tm['capture']['artifact_sha256'],calibration_alpha=a.alpha)
     np.savez_compressed(a.output_model,**newmodel)
     newdecoder=dict(decoder,coef=readout,alphas=np.array([a.alpha],np.float32))
@@ -96,7 +103,7 @@ def main():
     nearest=np.array([np.min(np.max(abs(train['features']-x),axis=1)) for x in val['features']])
     output=dict(scope='program-separated semantic-family calibration; not full Eggcc or autonomous learned union',backpropagation=False,alpha=a.alpha,boundary_context=a.boundary_context,feature_columns=train['features'].shape[1],
         training_sources=training_sources,training_case=tm['capture']['case'],validation_case=vm['capture']['case'],training_sha256=tm['capture']['artifact_sha256'],validation_sha256=vm['capture']['artifact_sha256'],
-        training_samples=len(train['features']),validation_samples=len(val['features']),training_distinct_inputs=len(np.unique(train['features'],axis=0)),validation_distinct_inputs=len(np.unique(val['features'],axis=0)),
+        training_generated_sources=int(train['generated_source'].sum()),training_prediction=training_prediction,training_samples=len(train['features']),validation_samples=len(val['features']),training_distinct_inputs=len(np.unique(train['features'],axis=0)),validation_distinct_inputs=len(np.unique(val['features'],axis=0)),
         validation_inputs_unseen_in_training=int(np.count_nonzero(nearest>1e-5)),validation_generated_sources=int(val['generated_source'].sum()),results=results,
         gpu_readout_max_abs=gpu_error,gpu_prediction_max_abs=prediction_error,gpu_threshold_disagreements=threshold_disagreements,
         model_sha256=model_sha,decoder_sha256=decoder_sha,resident_model_sha256=sha,installed=False,

@@ -1,0 +1,163 @@
+{
+  "scope": "real GPU boundary-context training collection, not full Eggcc",
+  "records": [
+    {
+      "case": "049-dead-branch",
+      "partition": "train",
+      "snapshot_run": 415,
+      "reference_seconds": 0.11023642600000005,
+      "source_trace_sha256": "ad1b0515f9827120261f82d4992a52e1d2f205e498a976160d81f69a70045b95",
+      "status": "passed",
+      "commands": [
+        [
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/cargo-target/debug/examples/capture_rhs_results",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/049-dead-branch.program.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/049-dead-branch.trace.json",
+          "--snapshot-runs=415"
+        ],
+        [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+          "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/audit_construct_union_family.py",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/049-dead-branch.trace.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/class-history-neighborhood-input.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/049-dead-branch.execution.json",
+          "--rules",
+          "283,290,293",
+          "--snapshot-run",
+          "415",
+          "--ticks",
+          "24",
+          "--flush-every",
+          "1",
+          "--order-queries",
+          "--boundary-context",
+          "--capture",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/049-dead-branch.npz"
+        ],
+        [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+          "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/label_composed_witnesses.py",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/049-dead-branch.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/049-dead-branch.trace.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/class-history-neighborhood-input.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113/manifest.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/049-dead-branch.labeled.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/049-dead-branch.labels.json",
+          "--snapshot-run",
+          "415"
+        ]
+      ],
+      "samples": 34,
+      "generated_sources": 24,
+      "labeled": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/049-dead-branch.labeled.npz",
+      "sha256": "827a0c35232de0667b1844f2281180455c38d39dc3de2ff0aebf272b9154ccba",
+      "execution": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/049-dead-branch.execution.json"
+    },
+    {
+      "case": "033-sum-check",
+      "partition": "train",
+      "snapshot_run": 484,
+      "reference_seconds": 0.11036771299999983,
+      "source_trace_sha256": "a868628b30585effce94d4ecc34780f5af563a3a745a54d576d91427b70ecbcc",
+      "status": "passed",
+      "commands": [
+        [
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/cargo-target/debug/examples/capture_rhs_results",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/033-sum-check.program.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/033-sum-check.trace.json",
+          "--snapshot-runs=484"
+        ],
+        [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+          "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/audit_construct_union_family.py",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/033-sum-check.trace.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/class-history-neighborhood-input.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/033-sum-check.execution.json",
+          "--rules",
+          "283,290,293",
+          "--snapshot-run",
+          "484",
+          "--ticks",
+          "24",
+          "--flush-every",
+          "1",
+          "--order-queries",
+          "--boundary-context",
+          "--capture",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/033-sum-check.npz"
+        ],
+        [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+          "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/label_composed_witnesses.py",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/033-sum-check.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/033-sum-check.trace.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/class-history-neighborhood-input.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113/manifest.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/033-sum-check.labeled.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/033-sum-check.labels.json",
+          "--snapshot-run",
+          "484"
+        ]
+      ],
+      "samples": 6,
+      "generated_sources": 3,
+      "labeled": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/033-sum-check.labeled.npz",
+      "sha256": "0c9a5a417a9c9e77d3345838f24443e48d7080959a866762d3f85deae9900463",
+      "execution": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/033-sum-check.execution.json"
+    },
+    {
+      "case": "035-sum-sq-diff",
+      "partition": "train",
+      "snapshot_run": 489,
+      "reference_seconds": 0.11945580299999989,
+      "source_trace_sha256": "c46c9851141c972846f20a76c09dd585e9eff39dc1115ddbdd413f0fe4f4f632",
+      "status": "passed",
+      "commands": [
+        [
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/cargo-target/debug/examples/capture_rhs_results",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/035-sum-sq-diff.program.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/035-sum-sq-diff.trace.json",
+          "--snapshot-runs=489"
+        ],
+        [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+          "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/audit_construct_union_family.py",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/035-sum-sq-diff.trace.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/class-history-neighborhood-input.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/035-sum-sq-diff.execution.json",
+          "--rules",
+          "283,290,293",
+          "--snapshot-run",
+          "489",
+          "--ticks",
+          "24",
+          "--flush-every",
+          "1",
+          "--order-queries",
+          "--boundary-context",
+          "--capture",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/035-sum-sq-diff.npz"
+        ],
+        [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+          "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/label_composed_witnesses.py",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/035-sum-sq-diff.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/035-sum-sq-diff.trace.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/class-history-neighborhood-input.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113/manifest.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/035-sum-sq-diff.labeled.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/035-sum-sq-diff.labels.json",
+          "--snapshot-run",
+          "489"
+        ]
+      ],
+      "samples": 14,
+      "generated_sources": 3,
+      "labeled": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/035-sum-sq-diff.labeled.npz",
+      "sha256": "dcc1ed1993dab63a2796a9821512cb760384654c854be986e4939df1aee15d64",
+      "execution": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/boundary-training/035-sum-sq-diff.execution.json"
+    }
+  ],
+  "passed": true,
+  "binary_sha256": "fb2a17992738db5850a902f3593fa21978eba3b40a8a7a67b6124bcc6d15c283"
+}

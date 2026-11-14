@@ -1,0 +1,223 @@
+{
+  "scope": "empirical boundary-context ambiguity; not fitted accuracy",
+  "parts": [
+    {
+      "case": "024-pascals-row",
+      "partition": "train",
+      "sha256": "65510ffa92061914c957c9c188fc6a879a761a55fd7fc02ec09c5b2eedb3c17f",
+      "ceilings": {
+        "resident": {
+          "samples": 40,
+          "distinct_inputs": 15,
+          "conflicting_input_groups": 5,
+          "samples_in_conflicting_groups": 17,
+          "maximum_exact_samples": 35,
+          "maximum_fraction": 0.875
+        },
+        "plus_boundary_float": {
+          "samples": 40,
+          "distinct_inputs": 38,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 40,
+          "maximum_fraction": 1.0
+        },
+        "one_hop_structure": {
+          "samples": 40,
+          "distinct_inputs": 38,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 40,
+          "maximum_fraction": 1.0
+        }
+      }
+    },
+    {
+      "case": "011-euclid",
+      "partition": "train",
+      "sha256": "b5bdf4950a8fc08e0e89d8af14e943178631abd67780ac19650607cb66ce041f",
+      "ceilings": {
+        "resident": {
+          "samples": 35,
+          "distinct_inputs": 14,
+          "conflicting_input_groups": 4,
+          "samples_in_conflicting_groups": 15,
+          "maximum_exact_samples": 31,
+          "maximum_fraction": 0.8857142857142857
+        },
+        "plus_boundary_float": {
+          "samples": 35,
+          "distinct_inputs": 34,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 35,
+          "maximum_fraction": 1.0
+        },
+        "one_hop_structure": {
+          "samples": 35,
+          "distinct_inputs": 34,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 35,
+          "maximum_fraction": 1.0
+        }
+      }
+    },
+    {
+      "case": "049-dead-branch",
+      "partition": "train",
+      "sha256": "827a0c35232de0667b1844f2281180455c38d39dc3de2ff0aebf272b9154ccba",
+      "ceilings": {
+        "resident": {
+          "samples": 34,
+          "distinct_inputs": 25,
+          "conflicting_input_groups": 2,
+          "samples_in_conflicting_groups": 5,
+          "maximum_exact_samples": 32,
+          "maximum_fraction": 0.9411764705882353
+        },
+        "plus_boundary_float": {
+          "samples": 34,
+          "distinct_inputs": 34,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 34,
+          "maximum_fraction": 1.0
+        },
+        "one_hop_structure": {
+          "samples": 34,
+          "distinct_inputs": 34,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 34,
+          "maximum_fraction": 1.0
+        }
+      }
+    },
+    {
+      "case": "033-sum-check",
+      "partition": "train",
+      "sha256": "0c9a5a417a9c9e77d3345838f24443e48d7080959a866762d3f85deae9900463",
+      "ceilings": {
+        "resident": {
+          "samples": 6,
+          "distinct_inputs": 4,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 6,
+          "maximum_fraction": 1.0
+        },
+        "plus_boundary_float": {
+          "samples": 6,
+          "distinct_inputs": 6,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 6,
+          "maximum_fraction": 1.0
+        },
+        "one_hop_structure": {
+          "samples": 6,
+          "distinct_inputs": 6,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 6,
+          "maximum_fraction": 1.0
+        }
+      }
+    },
+    {
+      "case": "035-sum-sq-diff",
+      "partition": "train",
+      "sha256": "dcc1ed1993dab63a2796a9821512cb760384654c854be986e4939df1aee15d64",
+      "ceilings": {
+        "resident": {
+          "samples": 14,
+          "distinct_inputs": 5,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 14,
+          "maximum_fraction": 1.0
+        },
+        "plus_boundary_float": {
+          "samples": 14,
+          "distinct_inputs": 13,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 14,
+          "maximum_fraction": 1.0
+        },
+        "one_hop_structure": {
+          "samples": 14,
+          "distinct_inputs": 12,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 14,
+          "maximum_fraction": 1.0
+        }
+      }
+    },
+    {
+      "case": "016-gcd",
+      "partition": "validation",
+      "sha256": "0da68513c9ae111ab977792ac64875a20b52c13e1b776285d031a3bc1c662885",
+      "ceilings": {
+        "resident": {
+          "samples": 41,
+          "distinct_inputs": 19,
+          "conflicting_input_groups": 3,
+          "samples_in_conflicting_groups": 16,
+          "maximum_exact_samples": 38,
+          "maximum_fraction": 0.926829268292683
+        },
+        "plus_boundary_float": {
+          "samples": 41,
+          "distinct_inputs": 41,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 41,
+          "maximum_fraction": 1.0
+        },
+        "one_hop_structure": {
+          "samples": 41,
+          "distinct_inputs": 41,
+          "conflicting_input_groups": 0,
+          "samples_in_conflicting_groups": 0,
+          "maximum_exact_samples": 41,
+          "maximum_fraction": 1.0
+        }
+      }
+    }
+  ],
+  "combined": {
+    "resident": {
+      "samples": 170,
+      "distinct_inputs": 43,
+      "conflicting_input_groups": 13,
+      "samples_in_conflicting_groups": 101,
+      "maximum_exact_samples": 147,
+      "maximum_fraction": 0.8647058823529412
+    },
+    "plus_boundary_float": {
+      "samples": 170,
+      "distinct_inputs": 166,
+      "conflicting_input_groups": 0,
+      "samples_in_conflicting_groups": 0,
+      "maximum_exact_samples": 170,
+      "maximum_fraction": 1.0
+    },
+    "one_hop_structure": {
+      "samples": 170,
+      "distinct_inputs": 165,
+      "conflicting_input_groups": 0,
+      "samples_in_conflicting_groups": 0,
+      "maximum_exact_samples": 170,
+      "maximum_fraction": 1.0
+    }
+  },
+  "grouping_uses_labels": false,
+  "limitations": [
+    "One-hop signature omits sharing between non-boundary neighbor ports",
+    "Floating equality is bitwise, not a robustness or generalization guarantee",
+    "Final completion targets are never features"
+  ]
+}
