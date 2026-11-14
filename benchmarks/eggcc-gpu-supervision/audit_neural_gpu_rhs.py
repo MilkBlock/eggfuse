@@ -78,8 +78,11 @@ def main():
     p.add_argument('--proof-token',action='store_true');p.add_argument('--conditional-eq',action='store_true');p.add_argument('--owner-aware',action='store_true');p.add_argument('--semantic-owners',action='store_true');p.add_argument('--block-owner',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--immutable-source',action='store_true')
     p.add_argument('--capture-cumulative',type=Path);p.add_argument('--sample-seed',type=int,default=93003);p.add_argument('--samples-per-rule',type=int,default=4);p.add_argument('--pool-capacity',action='append',default=[]);p.add_argument('--pair',nargs=2,type=int);p.add_argument('--cumulative-sweeps',type=int,default=0);p.add_argument('--install-follow-round',action='store_true');p.add_argument('--follow-round',action='store_true');p.add_argument('--reuse-witnesses',action='store_true');p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
     p.add_argument('--witness-context-depth',type=int,default=0,choices=(0,1,2))
+    p.add_argument('--sealed-run-attempts',type=int,default=0)
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
-    if a.witness_context_depth and not a.cumulative_sweeps:raise ValueError('witness context requires cumulative execution')
+    if a.witness_context_depth and not (a.cumulative_sweeps or a.sealed_run_attempts):raise ValueError('witness context requires cumulative or sealed Run execution')
+    if a.sealed_run_attempts<0 or (a.sealed_run_attempts and (not a.follow or not a.eq_readout or a.cumulative_sweeps or a.speculate or a.block_owner or a.semantic_owners)):
+        raise ValueError('sealed Run requires ordinary follow and Eq readout, separate from cumulative/speculative modes')
     if a.capture_cumulative and not a.cumulative_sweeps:raise ValueError('capture requires cumulative execution')
     if a.samples_per_rule<1:raise ValueError('positive sample count required')
     collector=[] if a.capture_cumulative else None
@@ -147,8 +150,8 @@ def main():
     if a.pair is not None:selected=[r for r in selected if (int(chain['producer'][r['chain']]),int(chain['consumer'][r['chain']]))==tuple(a.pair)]
     selected=selected[:a.limit];reports=[]
     for record in selected:
-        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record,spare=int(a.speculate)+int(a.install_follow_round)+a.cumulative_sweeps*len(recipe["rules"]),payload_width=2*max(len(r['slots']) for r in recipe['rules']) if (a.block_owner or a.include_uncovered_transfers) else None)
-        if a.speculate or a.cumulative_sweeps:local=dict(local,rules=local['rules']+recipe['rules'])
+        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record,spare=int(a.speculate)+int(a.install_follow_round)+(a.cumulative_sweeps+a.sealed_run_attempts)*len(recipe["rules"]),payload_width=2*max(len(r['slots']) for r in recipe['rules']) if (a.block_owner or a.include_uncovered_transfers) else None)
+        if a.speculate or a.cumulative_sweeps or a.sealed_run_attempts:local=dict(local,rules=local['rules']+recipe['rules'])
         state=device(host);state['tokens']=state['tokens'].at[src].add(source_tokens[i]);state['tokens']=state['tokens'].at[dst].add(tokens[i])
         if a.follow:
             from neural_device_candidates import compile_frames,encode_seeds
@@ -192,6 +195,9 @@ def main():
         if a.cumulative_sweeps and check['passed']:
             from neural_cumulative import run as run_cumulative
             report['cumulative']=run_cumulative(local,state,registry['roots'],next_id,frames,recipe['rules'],model,eq_head,a.cumulative_sweeps,oracle,check['mapping'],seed_count,pool_capacities,collector,a.witness_context_depth)
+        if a.sealed_run_attempts and check['passed']:
+            from audit_neural_run import execute_and_audit
+            report['sealed_run']=execute_and_audit(local,oracle,recipe['rules'],state,registry['roots'],next_id,frames,model,eq_head,seed_count,a.sealed_run_attempts,a.witness_context_depth)
         if a.follow and check['passed']:
             report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None,a.baked_eq,baked_proofs,owner if a.owner_aware else None,a.conditional_eq,a.reuse_witnesses,a.follow_round,a.install_follow_round)
         reports.append(report);print(json.dumps(report),flush=True)
@@ -204,13 +210,14 @@ def main():
         result['capture']=dict(samples=len(collector),sha256=hashlib.sha256(a.capture_cumulative.read_bytes()).hexdigest(),synthetic_only=True,scope='post-run labels for legal replay entries; generated token inputs frozen')
     result['selected_pair']=a.pair
     result['cumulative_sweeps']=a.cumulative_sweeps
+    result['sealed_run_attempts']=a.sealed_run_attempts
     result['install_follow_round']=a.install_follow_round
     result['follow_round']=a.follow_round
     result['reuse_witnesses']=a.reuse_witnesses
     result['include_uncovered_transfers']=a.include_uncovered_transfers
     result['stage_manifest']=stage_manifest
     if a.eq_readout:result['readout_weights_sha256']=hashlib.sha256(a.eq_readout.read_bytes()).hexdigest()
-    failed=audit_failed(reports,a.follow,a.speculate) or (a.cumulative_sweeps>0 and any(r.get('cumulative',{}).get('status')!='pass' for r in reports))
+    failed=audit_failed(reports,a.follow,a.speculate) or (a.cumulative_sweeps>0 and any(r.get('cumulative',{}).get('status')!='pass' for r in reports)) or (a.sealed_run_attempts>0 and any(r.get('sealed_run',{}).get('status')!='pass' for r in reports))
     result['status']='difference' if failed else 'pass'
     a.output.write_text(json.dumps(result,indent=2)+'\n')
     if failed:raise SystemExit(1)
