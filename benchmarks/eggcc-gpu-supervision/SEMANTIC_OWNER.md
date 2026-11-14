@@ -55,3 +55,47 @@ states including two false-merge states (`difference`, exit 1). These reproduce
 the old model's behavior; they do not measure a trained combined-owner token.
 See `semantic-owner-results.json`. This rejects promoting destination-only tokens
 as semantic dominators and motivates combined template output supervision.
+
+## Combined semantic layouts and training
+
+`neural_combined_cell.compose` now forms a sealed descriptor containing both
+producer and consumer facts. It preserves destination port positions and appends
+unshared producer positions using the ownership plan. Original source/destination
+projections are exported together. The descriptor is **not executable code** and
+must not bypass the original effect/Run boundaries. Its hash identifies the exact
+serialized layout, not arbitrary graph-isomorphism classes.
+
+`neural_cell_chains.chains(combined_owner=True)` uses this whole descriptor as
+the prediction target. Source and destination Eq readouts are evaluated separately
+as projections of the same generated token. The target labels use synthetic exact
+completion only; generated source tokens are consumed directly during training.
+No teacher completion tokens enter the recurrent input. The frozen interface
+matching head remains unchanged.
+
+Reproduce the two experiments with `train_neural_combined_owner.py TRACE
+TRANSITION_WEIGHTS OUTPUT.json --steps 1200`, adding `--unordered-request` for the
+pooled request control. The ordered request encodes static slot positions and
+source/destination projections, never dynamic object IDs. Both experiments start
+from the same preceding transition checkpoint, not from each other's result.
+
+The synthetic training corpus contains 1,261 positive / 1,257 negative chains,
+244 producer-consumer rule pairs and 393 combined layouts (up to 18 semantic
+ports), within the same 17 context rules. This is bounded observed synthetic
+composition coverage, not all possible interactions. On 578 positive test chains:
+
+| Request | Whole owner exact | Source projection exact | Destination projection exact | States with false merges |
+| --- | ---: | ---: | ---: | ---: |
+| Pooled roles | 261 | 260 | 569 | 130 |
+| Ordered static layout | 240 | 244 | 565 | 137 |
+
+Counts use transitive Eq closure; detailed raw counts, input overlap and unseen
+subsets are in `combined-owner-results.json`. Neither checkpoint is suitable for
+execution. A completed training process is not semantic acceptance. The larger
+joint-state task is not directly comparable with earlier destination-only Eq
+accuracy. Ordered static mapping alone did not fix source-state retention.
+
+Next: preserve multiple token blocks under one semantic owner and learn their
+union-conditioned update, rather than reconstructing the whole ancestry into
+one 128-float vector. These measurements motivate that experiment; they do not
+prove an intrinsic dimensional lower bound. Runtime combined-owner publication,
+third-step consumption, correction transitions and saturation remain unfinished.

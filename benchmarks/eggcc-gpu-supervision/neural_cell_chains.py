@@ -78,8 +78,10 @@ def pack_sources(sources,owners,ref,atoms,field_width):
     return dict(tokens=tokens,seed_x=seed_x,edges=edge,mask=mask,replace=replace)
 
 
-def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_targets=False):
+def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_targets=False,combined_owner=False,ordered_owner_request=True):
     atoms=max(len(r['query']) for r in recipe['rules']);width=max(len(r['slots']) for r in recipe['rules']);items=[];coverage=set()
+    combined_ids=set();max_combined_slots=0
+    eq_width=width*2 if combined_owner else width
     interface_width=max(len(a['args']) for r in recipe['rules'] for a in r['query'])
     from neural_ordered_relations import projected
     for record in records:
@@ -104,7 +106,7 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                         sources.append((rule,values));owners.append(True)
                         mapping={a['slot']:p for a,p in zip(atom['args'],ports)}
                         inputs=[i for i,s in enumerate(consumer['slots']) if s['definition']=='query']
-                        projections.append(compile_transfer(recipe,dict(producer=producer,consumer=rid,projection=[mapping.get(i,0) for i in inputs],projection_valid=[i in mapping for i in inputs]),width))
+                        projections.append(compile_transfer(recipe,dict(producer=producer,consumer=rid,projection=[mapping.get(i,0) for i in inputs],projection_valid=[i in mapping for i in inputs]),width*2 if combined_owner else width))
                     else:
                         schema=next(t['schema'] for t in recipe['tables'] if t['name']==key[0])
                         seed_rule=dict(slots=[dict(sort=s,definition='query') for s in schema],query=[dict(call=atom['call'],args=[dict(slot=i) for i in range(len(schema))])],effects=[])
@@ -112,11 +114,27 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                 if not any(owners):continue
                 packed=pack_sources(sources,owners,ref,atoms,interface_width)
                 if ordered:packed['relations']=projected(consumer,[[ref.root(binding[a['slot']]) for a in atom['args']] for atom in consumer['query']],atoms,interface_width)
-                after=deepcopy(ref);apply_instance(after,consumer,binding);target=code(consumer,completed(consumer,binding,after),after)
+                after=deepcopy(ref);apply_instance(after,consumer,binding)
+                target_rule=consumer;target_values=completed(consumer,binding,after);combined=None
+                if combined_owner:
+                    from neural_combined_cell import compose,values as combined_values
+                    combined=compose(recipe,projections[0]);target_rule=combined['rule']
+                    target_values=combined_values(combined,values,target_values,after)
+                    combined_ids.add(combined['identity']);max_combined_slots=max(max_combined_slots,len(target_rule['slots']))
+                target=code(target_rule,target_values,after)
+                request=template(target_rule)[1]
+                if combined_owner and ordered_owner_request:
+                    from neural_combined_cell import request as owner_request
+                    request=owner_request(combined)
                 if eq_targets:
                     from neural_eq_readout import targets
-                    packed.update(targets(consumer,completed(consumer,binding,after),after,width))
-                items.append(dict(parent=record['index'],producer=producer,consumer=rid,**packed,request=template(consumer)[1],target=target,valid=True,owner_covered=any(p['covered'] for p in projections)))
+                    packed.update(targets(target_rule,target_values,after,eq_width))
+                    if combined_owner:
+                        a,b=np.triu_indices(eq_width,1)
+                        source_slots=set(combined['source_projection']);target_slots=set(combined['target_projection'])
+                        packed['source_eq_mask']=packed['eq_mask']&np.array([i in source_slots and j in source_slots for i,j in zip(a,b)])
+                        packed['target_eq_mask']=packed['eq_mask']&np.array([i in target_slots and j in target_slots for i,j in zip(a,b)])
+                items.append(dict(parent=record['index'],producer=producer,consumer=rid,**packed,request=request,target=target,valid=True,owner_covered=any(p['covered'] for p in projections)))
                 if transfers is not None:
                     for plan in projections:
                         if plan['covered']:
@@ -149,10 +167,12 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                     ns=list(sources);ns[ai]=(seed_rule,fresh);no=list(owners);no[ai]=False
                     negative=pack_sources(ns,no,nr,atoms,interface_width)
                     if ordered:negative['relations']=projected(consumer,[[nr.root(v) for v in fresh] if bi==ai else [nr.root(binding[a['slot']]) for a in q['args']] for bi,q in enumerate(consumer['query'])],atoms,interface_width)
-                    if eq_targets:negative.update(eq_target=np.zeros(width*(width-1)//2,np.float32),eq_mask=np.zeros(width*(width-1)//2,bool))
-                    items.append(dict(parent=record['index'],producer=producer,consumer=rid,**negative,request=template(consumer)[1],target=np.zeros(128,np.float32),valid=False,owner_covered=False))
+                    if eq_targets:negative.update(eq_target=np.zeros(eq_width*(eq_width-1)//2,np.float32),eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool))
+                    if eq_targets and combined_owner:
+                        negative.update(source_eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool),target_eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool))
+                    items.append(dict(parent=record['index'],producer=producer,consumer=rid,**negative,request=request,target=np.zeros(128,np.float32),valid=False,owner_covered=False))
                     break
                 coverage.add((producer,rid));accepted+=1
                 if accepted>=limit_per_consumer:break
     if not items:raise ValueError('no effect-backed chains')
-    return {key:np.array([i[key] for i in items]) for key in items[0]},dict(chains=len(items),positive=sum(i['valid'] for i in items),negative=sum(not i['valid'] for i in items),negative_unavailable=sum(i['valid'] for i in items)-sum(not i['valid'] for i in items),producer_consumer_pairs=len(coverage),producers=sorted({p for p,_ in coverage}),consumers=sorted({c for _,c in coverage}),compiled_owner_opportunities=sum(i['owner_covered'] for i in items),scope='bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance')
+    return {key:np.array([i[key] for i in items]) for key in items[0]},dict(combined_owner=combined_owner,combined_templates=len(combined_ids),max_combined_slots=max_combined_slots,chains=len(items),positive=sum(i['valid'] for i in items),negative=sum(not i['valid'] for i in items),negative_unavailable=sum(i['valid'] for i in items)-sum(not i['valid'] for i in items),producer_consumer_pairs=len(coverage),producers=sorted({p for p,_ in coverage}),consumers=sorted({c for _,c in coverage}),compiled_owner_opportunities=sum(i['owner_covered'] for i in items),scope='bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance')
