@@ -758,3 +758,61 @@ python audit_neural_gpu_rhs.py GCD_TRACE CONTEXT.transition.safetensors FOLLOW.j
 The next execution integration must make speculative token state affect later
 computation with explicit incomplete/error marks and CPU audit/correction;
 continued offline accuracy fitting alone does not close the runtime goal.
+
+
+### Actual speculative Cell insertion and CPU rollback
+
+`--speculate` now creates isolated third-step Cell frames through the existing
+physical-owner allocator and token admission kernel. Template wiring supplies
+input/copy slots and fresh stable constructor handles. The neural Eq output
+changes actual query-visible roots in the fork. No exact RHS union or congruence
+repair is run for this third frame. Original constructor `set` facts are decoded
+by the independent CPU graph auditor. The prior two steps remain exact startup
+scaffolding; this is not yet a completely neural execution from the initial graph.
+
+The proposed frame is followed by an actual GPU query of the same consumer rule
+before the CPU computes its selected-instance completion. CPU correction starts
+from the unchanged base snapshot, installs the correct identity overlay, and
+checks the entire local graph. This can undo wrong merges; it does not try to
+subtract a union from a mutated shared graph. Atomic snapshot selection rejects
+stale audit epochs. The harness uses synchronous audits and independent forks;
+it does not implement an asynchronous multi-Run ancestry/rollback queue.
+
+Changed old token payloads and CPU-corrected new tokens are marked dirty. Query
+and context gathering exclude dirty tokens and report incomplete coverage.
+Awaiting-audit and refresh marks prevent a closure claim. A CPU-corrected graph
+is not treated as a refreshed neural state. No reference code is substituted for
+a generated token to hide that gap.
+
+With the unchanged context-token checkpoint, 312 tentative frames are installed
+across 107 local snapshots. 180 complete graphs pass directly; 132 require CPU
+correction (42.31%). All 312 corrected graph checks pass, but 132 frames still
+require token refresh. Before correction, the next-query audit observes two
+extra matches, two missing matches and 11 incomplete query scopes. Global graph
+acceptance is stricter than the earlier 296/312 local-port Eq score: external
+constructor result identities are now part of what must be correct.
+
+Frame admission is **not** counted as new semantic work. The reference reports
+only 41 frames with actual new information (72 constructor allocations and 18
+nontrivial unions across independent reference executions); 32 of those 41
+novel frames pass the speculative full-graph check directly. The remaining
+frames mostly describe already-known consequences. Canonical semantic-template
+identity and cross-Cell result reuse remain essential to reliable token novelty
+and saturation detection.
+
+The Python CPU audit takes 3.5403 seconds for 312 frames (about 88.1 frames/s).
+Correction/selection adds 0.3273 seconds of wall time, including GPU installation
+and checking. These are prototype diagnostic costs, not native eggfuse auditor
+throughput or an end-to-end speedup. Timing excludes GPU proposal/inference and
+the initial two-step setup. Results and hashes are in
+`neural-speculative-results.json`; full logs are archived outside Git.
+
+```sh
+python audit_neural_gpu_rhs.py GCD_TRACE CONTEXT.transition.safetensors SPECULATIVE.json --limit 107 --follow --interface-only --context-capacity 8 --eq-readout CONTEXT.eq.safetensors --speculate
+```
+
+The expected audit status remains `difference` / exit 1. The next model/runtime
+interface must express an external constructor result witness (or an explicit
+unresolved boundary), not merely local Eq plus fresh handles. Corrected-token
+refresh, batching, canonical Cell identity and the full multi-stage saturation
+loop remain unfinished.

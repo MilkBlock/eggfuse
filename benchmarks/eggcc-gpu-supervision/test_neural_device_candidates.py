@@ -60,6 +60,7 @@ class DeviceCandidates(unittest.TestCase):
         self.assertTrue(audit_failed([dict(good,follow=dict(counts={}))],True))
         counts={k:0 for k in ('false_positive','missed','incomplete_rules','invalid_predictions')}
         self.assertFalse(audit_failed([dict(good,follow=dict(counts=counts))],True))
+        self.assertTrue(audit_failed([dict(good,follow=dict(counts=counts))],True,True))
         self.assertTrue(audit_failed([dict(good,follow=dict(counts=dict(counts,semantic_wrong_states=1)))],True))
 
     def test_context_tokens_cover_resident_cells_without_changing_query_incidence(self):
@@ -81,6 +82,13 @@ class DeviceCandidates(unittest.TestCase):
         narrow=candidates(state,frames,device(compile_candidates(local,recipe['rules'][0],context_capacity=1)),mx.array(True),mx.array(True),mx)
         self.assertTrue(bool(narrow['context_overflow']))
         self.assertFalse(bool(narrow['complete']))
+
+    def test_dirty_token_blocks_consumption_and_completion(self):
+        recipe,local,state,frames,_=self.prepared()
+        dirty=dict(state,token_dirty=state['present'])
+        batch=candidates(dirty,frames,device(compile_candidates(local,recipe['rules'][0],context_capacity=8)),mx.array(True),mx.array(True),mx)
+        self.assertFalse(bool(mx.any(batch['live'])))
+        self.assertFalse(bool(batch['complete']))
 
     def test_overflow_blocks_complete_enumeration_claim(self):
         recipe,local,state,frames,_=self.prepared()

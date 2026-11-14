@@ -97,6 +97,7 @@ def facts_from_cells(recipe,state):
         rule=recipe['rules'][rid];pc=len(rule['effects']) if state['settled'][row] else int(state['effect_pc'][row])
         operations=[(-1,a['call']['table'],a['args']) for a in rule['query']]
         operations += [(i,o['call']['table'],[*o['args'],dict(slot=o['dst'])]) for i,o in enumerate(rule['effects']) if o['kind']=='construct']
+        operations += [(i,o['call']['table'],[*o['args'],o['value']]) for i,o in enumerate(rule['effects']) if o['kind']=='set']
         for after,table,operands in operations:
             if pc<after+1:continue
             if any('slot' not in a for a in operands):complete=False;continue

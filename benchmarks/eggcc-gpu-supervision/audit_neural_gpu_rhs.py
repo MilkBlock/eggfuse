@@ -22,7 +22,7 @@ from audit_snapshot_queries import device
 from multi_entry_ridge import scalar
 
 
-def initial_case(recipe,record):
+def initial_case(recipe,record,spare=0):
     oldplan=record['plan'];ref=record['initial_reference']
     original=dict(recipe,rules=[recipe['rules'][oldplan['producer']],recipe['rules'][oldplan['consumer']]])
     lowered,_=lower(original)
@@ -30,8 +30,11 @@ def initial_case(recipe,record):
         v=ref.root(v)
         return dict(sort=ref.types[v],eq=str(v)) if ref.types[v] is not None else ref.scalar_values[v]
     snapshot=dict(rows=[dict(table=t,values=[value(v) for v in vs],subsumed=False) for t,vs in sorted(ref.normalized_facts())])
-    local,state,ids,rows=prepare_family(lowered,snapshot,[0,1],2)
+    local,state,ids,rows=prepare_family(lowered,snapshot,[0,1],2+spare)
     full_lowered,_=lower(recipe);width=max(len(r['slots']) for r in full_lowered['rules'])
+    if spare:
+        kw=1+max(sum(s['definition']=='query' for s in r['slots']) for r in recipe['rules'])
+        state['keys']=np.pad(state['keys'],((0,0),(0,max(0,kw-state['keys'].shape[1]))),constant_values=-1)
     current=state['slots'].shape[1]
     for column in COLUMNS:
         if column not in state:continue
@@ -67,9 +70,10 @@ def initial_case(recipe,record):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
+    p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
     if a.limit<1:raise ValueError('positive case budget required')
+    if a.speculate and not a.eq_readout:raise ValueError('speculation requires semantic readout')
     if a.eq_readout and not (a.follow and a.interface_only):raise ValueError('Eq audit requires interface-only following candidates')
     raw=json.loads(a.trace.read_text());source=raw.get('recipe',raw);recipe=dict(source,rules=[r for r in source['rules'] if r['metadata']['source_set']=='context'])
     started=time.perf_counter();records=[];base=samples(recipe,4,93003,records,ordered=True);transfers=[]
@@ -90,7 +94,8 @@ def main():
         if pair not in seen:seen.add(pair);selected.append(record)
     available=len(selected);selected=selected[:a.limit];reports=[]
     for record in selected:
-        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record)
+        i=record['chain'];local,host,cp,ctx,tp,src,dst,seed_count,oracle=initial_case(recipe,record,spare=int(a.speculate))
+        if a.speculate:local=dict(local,rules=local['rules']+recipe['rules'])
         state=device(host);state['tokens']=state['tokens'].at[src].add(source_tokens[i]);state['tokens']=state['tokens'].at[dst].add(tokens[i])
         if a.follow:
             from neural_device_candidates import compile_frames,encode_seeds
@@ -118,17 +123,17 @@ def main():
             if 'owner_'+column in final:preserved &= np.array_equal(read(before_host,column,rr,ss,np),read(final,column,rr,ss,np))
         report=dict(producer=int(chain['producer'][i]),consumer=int(chain['consumer'][i]),executed=int(executed),new_constructors=int(created),new_equivalences=int(merged),pending=bool(marks['needs_attention']),graph=check,facts_decoded=covered,transfer_covered=tp['covered'],transferred=bool(move['transferred']),copied_fields=int(move['copied_fields']),interfaces_preserved=bool(preserved),token_retained=bool(np.array_equal(np.array(state['tokens'][dst]),np.array(tokens[i]))))
         if a.follow and check['passed']:
-            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity)
+            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None)
         reports.append(report);print(json.dumps(report),flush=True)
-    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,speculative_frames=a.speculate,wall_seconds=time.perf_counter()-started,speedup_claim=False)
     if a.eq_readout:result['readout_weights_sha256']=hashlib.sha256(a.eq_readout.read_bytes()).hexdigest()
-    failed=audit_failed(reports,a.follow)
+    failed=audit_failed(reports,a.follow,a.speculate)
     result['status']='difference' if failed else 'pass'
     a.output.write_text(json.dumps(result,indent=2)+'\n')
     if failed:raise SystemExit(1)
 
 
-def audit_failed(reports,follow=False):
+def audit_failed(reports,follow=False,speculate=False):
     for r in reports:
         if r['pending'] or not r['graph']['passed'] or not r['facts_decoded'] or not r['interfaces_preserved'] or not r['token_retained']:return True
         if follow:
@@ -137,13 +142,20 @@ def audit_failed(reports,follow=False):
             required=('false_positive','missed','incomplete_rules','invalid_predictions')
             if any(k not in c for k in required) or any(c[k] for k in required):return True
             if c.get('semantic_wrong_states',0):return True
+        if speculate:
+            s=r.get('follow',{}).get('speculation')
+            required=('gpu_installed','corrected_graph_pass','token_refresh_required','downstream_false_positive','downstream_missed','downstream_incomplete')
+            if not s or any(k not in s for k in required):return True
+            if s['corrected_graph_pass']!=s['gpu_installed'] or any(s[k] for k in required[2:]):return True
     return not reports
 
 
-def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None,context_capacity=0):
+def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None,context_capacity=0,speculation=None):
     from neural_device_candidates import compile_candidates,candidates
     counts=dict(candidates=0,accepted=0,false_positive=0,expected=0,recovered=0,missed=0,incomplete_rules=0,accepted_from_generated=0,invalid_predictions=0,context_overflow_rules=0,context_inputs=0)
-    groups=[]
+    groups=[];spec_reports=[]
+    if speculation is not None:
+        from neural_speculation_audit import audit as audit_speculation
     if eq_head is not None:
         from copy import deepcopy
         from neural_cell_samples import apply_instance
@@ -176,6 +188,8 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
                 local_ref.facts=[(atom['call']['table'],tuple(local_bound[a['slot']] for a in atom['args'])) for atom in rule['query']]
                 apply_instance(local_ref,rule,local_bound)
                 eq_local.append(targets(rule,completed(rule,local_bound,local_ref),local_ref,width)['eq_target'])
+                if speculation is not None:
+                    spec_reports.append(audit_speculation(state,local,frames,rule,len(local['rules'])-len(recipe['rules'])+rid,batch,index,tokens[index],semantic[index],model,oracle,key,mapping,*speculation,width))
                 signature=hashlib.sha256(b''.join(features[k][index].tobytes() for k in features)).digest()
                 value=(eq_labels[-1].tobytes(),eq_local[-1].tobytes())
                 if signature in feature_labels:
@@ -192,7 +206,7 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
         groups.append(group)
         for key,value in group.items():
             if key!='rule':counts[key]+=value
-    return dict(counts=counts,groups=groups,cpu_supplied_follow_bindings=False)
+    return dict(counts=counts,groups=groups,cpu_supplied_follow_bindings=False,speculation={k:sum(r[k] for r in spec_reports) for k in spec_reports[0]} if spec_reports else None)
 
 
 if __name__=='__main__':main()
