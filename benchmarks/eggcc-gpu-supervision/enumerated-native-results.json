@@ -1,0 +1,142 @@
+{
+  "scope": "native final boundary Eq labels for enumerated two-Cell inputs; no ridge training",
+  "expected_inputs": 507,
+  "attempted": 507,
+  "statuses": {
+    "pass": 487,
+    "timeout": 20
+  },
+  "labeled": 487,
+  "label_coverage": 0.960552268244576,
+  "sum_boundary_class_reductions": 366,
+  "native_execution_examples": 3217,
+  "unresolved": [
+    {
+      "index": 187,
+      "input_sha256": "343f775b51271810624f8a5eaa8886de734bbe259fcd0850d11de1e2b4d8e762",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 190,
+      "input_sha256": "a5a9e08d0f65e956e290f64bf2f87ddae39e2a7e2e443ccdb4e04f33509e2a68",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 193,
+      "input_sha256": "630f4e9d50598c72e735eb7ae29aef969ba7ecb6da832afb6ebe52b9a10977ea",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 194,
+      "input_sha256": "61a4a13d97243870528895e9d97fb1ab35d9e33162821600c15f5690fc15a5ed",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 197,
+      "input_sha256": "4995fc88484d80a63b99bf138735e032a0da7cae3fbf9b31f1ec659d175ece2a",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 198,
+      "input_sha256": "95cbb511ab7a364ce9a404f0deb26a2b6e9291ffc50994ab1aaab10e79f688e4",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 220,
+      "input_sha256": "b088b961571a7ac59cfc09c631e2203ca85b0bcb15a6b4b7f107dc5f04c6bcd0",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 221,
+      "input_sha256": "6944d43b8709f2ad036a0e8983a09b019c657de7961d20c7a94dc6058638fbad",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 227,
+      "input_sha256": "b080c2994ded40820381ef3352117fe1f9c87ae0457bfd9f27c8c48c5e2809d1",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 228,
+      "input_sha256": "80a4f8959e0f60dbef1043a9307cd68c232621456ec29f3abc3674806720eb0e",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 462,
+      "input_sha256": "f1aa05aca1af9dc6eda22b8a041b090252303aaff71125897a9d38820ba8b36c",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 465,
+      "input_sha256": "5716ecb368b8fb9d14a930227f48a82123af914c53a4c6c274aa1e438f722276",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 468,
+      "input_sha256": "3a7b863ed6f7ea48d46208af45472611eb3eac210780c622fa3d32a410d3ded5",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 469,
+      "input_sha256": "78ca44a3857569297dbb7b67dae56b31c3ba02fb68dd8c42d0b78a1b3d2a3aa6",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 472,
+      "input_sha256": "47b118c047901699092d18404d024c06a36be698333133d395628990e8073142",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 473,
+      "input_sha256": "f61464410e1149f213fc7e07ffdda206f6f2aa512f7b795ba62fb0b30097811e",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 495,
+      "input_sha256": "d5dabff7adb6a9d5e3e62b0df67f96abc008605b874767777332744afd630a86",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 496,
+      "input_sha256": "589bf185ba6fb22dc616d2ffdc10cebe7ed4505379ec70394b923ac053c2a7c3",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 502,
+      "input_sha256": "cc0b22002ce498cc59d3b0787c9662360883225817cff8b975f3bf8f0b22dcda",
+      "status": "timeout",
+      "phase": 0
+    },
+    {
+      "index": 503,
+      "input_sha256": "af8846a25941ddf6b46c32cd27c671b075f5be73868ce2553b2b8c04a60ab812",
+      "status": "timeout",
+      "phase": 0
+    }
+  ],
+  "compiler_sha256": "6bfad0efac141d22c77aa0f74539cce33994e253b0eccaa4a753c0180e361c86",
+  "observer_sha256": "b4d1694f0a78dd8d53e768cec76e4f93353ba1b3bad59118cdcee16004b32896",
+  "labels_sha256": "808721db2fd3b1906f6484adfbf54d453bee1f65fb6b6c700b48de342af899ab",
+  "manifest_sha256": "27e713e11e6ba61b8eb9ac8c8cd81f2bc13528708de5e166e6a4541cb506c279",
+  "artifact_directory": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/enumerated-native-v1",
+  "complete": false,
+  "training_performed": false
+}

@@ -94,6 +94,32 @@ class Interface:
         return canonical_seed(self.recipe,rows)
 
 
+def replay_case(recipe,case):
+    """Validate a recorded representative without trusting its snapshot."""
+    p,c=case['producer'],case['consumer']
+    if type(p)is not int or type(c)is not int or not 0<=p<len(recipe['rules']) or not 0<=c<len(recipe['rules']):raise ValueError('invalid rule index')
+    bound=Interface(recipe,p,c);wiring=case['wiring']
+    if len(wiring)!=len(bound.inputs) or all(j==-1 for j in wiring):raise ValueError('invalid wiring arity')
+    if any(type(j)is not int or j < -1 or j>=len(bound.exports) for j in wiring):raise ValueError('invalid export index')
+    bound.connect(wiring);bound.close();groups={}
+    for key in bound.parent:
+        root=bound.root(key);group=groups.setdefault(bound.sorts[root],[])
+        if root not in group:group.append(root)
+    parts=case['partition']
+    if len(parts)!=len(groups):raise ValueError('partition sort count')
+    for group,part in zip(groups.values(),parts):
+        if len(part)!=len(group):raise ValueError('partition width')
+        first={};largest=-1
+        for var,label in zip(group,part):
+            if type(label)is not int or not 0<=label<=largest+1:raise ValueError('invalid restricted growth partition')
+            largest=max(largest,label)
+            if label in first:bound.union(first[label],var)
+            else:first[label]=var
+    result=bound.snapshot()
+    if result!=case['snapshot'] or digest(result)!=case['input_sha256']:raise ValueError('enumerated snapshot replay mismatch')
+    return result
+
+
 def enumerate_interfaces(recipe,max_classes=7):
     from copy import deepcopy
     report=dict(wirings=0,contradictory_wirings=0,budget_exclusions=0,partitions=0,contradictory_partitions=0,unique_cases=0)

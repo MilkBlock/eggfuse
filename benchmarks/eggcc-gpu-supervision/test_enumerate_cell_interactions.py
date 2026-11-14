@@ -1,5 +1,5 @@
-import unittest
-from enumerate_cell_interactions import partitions,Interface,enumerate_interfaces
+import copy,unittest
+from enumerate_cell_interactions import partitions,Interface,enumerate_interfaces,replay_case
 
 
 def recipe(literals=False):
@@ -26,6 +26,16 @@ class Enumeration(unittest.TestCase):
                 key=str(row['values'][:-1]);value=row['values'][-1]
                 self.assertTrue(key not in keys or keys[key]==value);keys[key]=value
         self.assertEqual(enumerate_interfaces(recipe(),10),(cases,report))
+
+    def test_case_replay_rejects_changed_wiring_partition_and_facts(self):
+        from synthetic_cell_inputs import validate,digest
+        r=recipe();cases,_=enumerate_interfaces(r,10)
+        for c in cases:self.assertEqual(replay_case(r,c),c['snapshot'])
+        c=cases[0];doc=dict(schema='enumerated-cell-input/v1',recipe=r,recipe_sha256=digest(r),case=c,snapshot=c['snapshot'],input_sha256=c['input_sha256'])
+        self.assertEqual(validate(doc),(r,c['snapshot']))
+        for mutate in [lambda c:c.update(wiring=[-1]),lambda c:c.update(partition=[[99]]),lambda c:c.update(input_sha256='bad')]:
+            bad=copy.deepcopy(c);mutate(bad)
+            with self.assertRaises(ValueError):replay_case(r,bad)
 
     def test_literal_conflicts_and_budget_are_explicit(self):
         _,report=enumerate_interfaces(recipe(True),10)

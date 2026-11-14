@@ -81,6 +81,12 @@ def oracle(recipe,snapshot,budget=64):
 
 
 def validate(document):
+    if document.get('schema')=='enumerated-cell-input/v1':
+        from enumerate_cell_interactions import replay_case
+        if digest(document['recipe'])!=document['recipe_sha256']:raise ValueError('enumerated recipe provenance')
+        snapshot=replay_case(document['recipe'],document['case'])
+        if snapshot!=document['snapshot'] or digest(snapshot)!=document['input_sha256']:raise ValueError('enumerated input provenance')
+        return document['recipe'],snapshot
     if document.get('schema')!='synthetic-cell-input/v1':raise ValueError('synthetic schema')
     if digest(document['recipe'])!=document['recipe_sha256'] or digest(document['snapshot'])!=document['input_sha256']:raise ValueError('synthetic provenance')
     g=document['generator']
