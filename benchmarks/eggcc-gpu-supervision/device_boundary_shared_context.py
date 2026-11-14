@@ -10,6 +10,10 @@ from device_boundary_context import masks
 
 def encode(boundary,bindings,plan,pairs,xp):
     conn,_,safe,valid=masks(boundary,bindings,plan,xp)
+    if plan.get('local_context',False):
+        port_flow=plan['flow_sorts'][plan['port_sorts']]
+        attached=xp.any(conn&port_flow[None,:,None,None],axis=(1,3))
+        conn=conn&attached[:,None,:,None]
     tokens=xp.where(boundary['live'][:,None],boundary['tokens'],0)
     h=xp.tanh((tokens@plan['token_weight'])[:,None,:]+plan['roles'][safe]@plan['role_weight'])
     h=xp.where(valid[:,:,None],h,0)
@@ -18,9 +22,11 @@ def encode(boundary,bindings,plan,pairs,xp):
         count=xp.maximum(count,1)
         return count.astype(xp.float32) if plan.get('mean_context',False) else xp.sqrt(count)
     roots=boundary['slot_roots'].reshape(-1);sorts=plan['sorts'][safe].reshape(-1);live=valid.reshape(-1)
+    flow=plan['flow_sorts'][xp.clip(sorts,0,len(plan['flow_sorts'])-1)] if plan.get('local_context',False) else xp.ones_like(live)
     if 'root_capacity' in plan:
         capacity=plan['root_capacity'];sort_count=plan['sort_capacity']
-        usable=live&(roots>=0)&(roots<capacity)&(sorts>=0)&(sorts<sort_count)
+        in_range=(roots>=0)&(roots<capacity)&(sorts>=0)&(sorts<sort_count)
+        usable=live&flow&in_range
         address=xp.clip(roots,0,capacity-1)*sort_count+xp.clip(sorts,0,sort_count-1)
         values=xp.where(usable[:,None],h.reshape(-1,d),0)
         counts=usable.astype(xp.float32)
@@ -32,9 +38,9 @@ def encode(boundary,bindings,plan,pairs,xp):
             number=xp.zeros(capacity*sort_count,xp.float32).at[address].add(counts)
         shared=total[address]/denominator(number[address])[:,None]
         # Out-of-range live roots must reject the numeric prediction, not alias.
-        shared=xp.where(xp.any(live&~usable),float('nan'),shared)
+        shared=xp.where(xp.any(live&~in_range),float('nan'),shared)
     else:
-        links=(roots[:,None]==roots[None,:])&(sorts[:,None]==sorts[None,:])&live[:,None]&live[None,:]
+        links=(roots[:,None]==roots[None,:])&(sorts[:,None]==sorts[None,:])&live[:,None]&live[None,:]&flow[:,None]&flow[None,:]
         weight=links.astype(xp.float32)
         shared=(weight@h.reshape(-1,d))/denominator(weight.sum(axis=1))[:,None]
     enriched=xp.tanh(h+shared.reshape(n,w,d))

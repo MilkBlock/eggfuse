@@ -19,8 +19,11 @@ def compile_context(recipe, rid, width, hidden=32):
         for j,s in enumerate(r['slots']):
             if s['sort']['kind']=='eq':sorts[i,j]=names.index(s['sort']['name'])
     r,_=semantic(recipe['rules'][rid]);ports=[i for i,s in enumerate(r['slots']) if s['definition']=='query' and s['sort']['kind']=='eq']
+    used={op.get('call',{}).get('table') for rule in recipe['rules'] for op in [*rule['query'],*rule['effects']]}
+    outputs={t['schema'][-1]['name'] for t in recipe.get('tables',[]) if t['name'] in used and t['kind']=='constructor' and t.get('schema') and t['schema'][-1]['kind']=='eq'}
+    flow_sorts=np.array([name in outputs for name in names],bool)
     rng=np.random.default_rng(20261116)
-    return dict(roles=roles,sorts=sorts,ports=np.array(ports,np.int32),
+    return dict(flow_sorts=flow_sorts,roles=roles,sorts=sorts,ports=np.array(ports,np.int32),
         port_sorts=sorts[rid,ports],width=width,
         token_weight=rng.normal(0,1/np.sqrt(128),(128,hidden)).astype(np.float32),
         role_weight=rng.normal(0,1/8,(64,hidden)).astype(np.float32))

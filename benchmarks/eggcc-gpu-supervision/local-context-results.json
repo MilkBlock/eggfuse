@@ -1,0 +1,88 @@
+{
+  "scope": "Offline selected-family prototype; not runtime speed or feedback accuracy",
+  "promoted": false,
+  "results": {
+    "merged": {
+      "head_sha256": "a8dfe20930b4557e416520cad74c4e578f63d674e65c84ca6c2b7b28d299df08",
+      "maximum_gpu_context_error": 1.1394483825366564e-06,
+      "training_entries": 641,
+      "validation": [
+        {
+          "case": "016-gcd",
+          "groups": {
+            "all": {
+              "instances": 41,
+              "exact_partitions": 26
+            },
+            "direct": {
+              "instances": 26,
+              "exact_partitions": 14
+            },
+            "generated": {
+              "instances": 15,
+              "exact_partitions": 12
+            }
+          }
+        },
+        {
+          "case": "019-lcm",
+          "groups": {
+            "all": {
+              "instances": 99,
+              "exact_partitions": 65
+            },
+            "direct": {
+              "instances": 78,
+              "exact_partitions": 45
+            },
+            "generated": {
+              "instances": 21,
+              "exact_partitions": 20
+            }
+          }
+        }
+      ]
+    },
+    "local": {
+      "head_sha256": "5d1bd6b48154832f031e0da8d259d02a3092dce03bbf610b625f1e1264fbdb11",
+      "maximum_gpu_context_error": 1.1579572102016211e-06,
+      "training_entries": 641,
+      "validation": [
+        {
+          "case": "016-gcd",
+          "groups": {
+            "all": {
+              "instances": 41,
+              "exact_partitions": 27
+            },
+            "direct": {
+              "instances": 26,
+              "exact_partitions": 16
+            },
+            "generated": {
+              "instances": 15,
+              "exact_partitions": 11
+            }
+          }
+        },
+        {
+          "case": "019-lcm",
+          "groups": {
+            "all": {
+              "instances": 99,
+              "exact_partitions": 42
+            },
+            "direct": {
+              "instances": 78,
+              "exact_partitions": 29
+            },
+            "generated": {
+              "instances": 21,
+              "exact_partitions": 13
+            }
+          }
+        }
+      ]
+    }
+  }
+}

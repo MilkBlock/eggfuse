@@ -38,3 +38,30 @@ comparison. The tracked result JSON identifies the reports actually used.
 The current feedback result remains GCD 25/41 and LCM 65/99 from matched-entry
 training. These ablations do not resolve the outstanding full GPU Cell-runtime
 or correctness goals.
+
+## Constructor-result-sort locality (rejected)
+
+`--local-context --shared-context` uses constructor result sorts from the
+compiled family to anchor context. Pooling includes only boundary Cells touching
+a query port of such a sort; cross-Cell propagation uses only those sorts.
+Within each included Cell all valid ports still contribute. This is a feature
+heuristic, not proof that omitted neighbors are irrelevant to matching. Missing
+table schemas yield no flow sorts; legacy feature modes do not use that mask.
+The old base-context columns are unchanged.
+
+On the same 641 synthetic inputs, alpha 10 and fixed joint projection:
+
+| Offline complete-state accuracy | Existing | Local |
+|---|---:|---:|
+| GCD | 26/41 | 27/41 |
+| LCM | 65/99 | 42/99 |
+
+LCM direct-source accuracy drops 45/78 to 29/78; generated-source accuracy drops
+20/21 to 13/21. This does not support removing shared Assumption context using
+this type-only heuristic. No feedback rollout or speed measurement was run.
+Runtime loading explicitly rejects this offline head to avoid applying weights
+to the original feature schema. Tests verify exclusion of an Assumption-only
+distractor, sensitivity to an Expr-connected neighbor, dense/scatter and compiled
+GPU parity. All 29 context tests pass. Exact argv and model reports are
+`local-fit-argv.json` and `local-classifier.json` alongside the earlier artifacts.
+Tracked summary: `local-context-results.json`.

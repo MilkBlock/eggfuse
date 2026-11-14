@@ -103,6 +103,7 @@ def main():
     if a.completion_classifier:
         from device_completion_classifier import compile_classifier
         report=json.loads(a.completion_classifier_report.read_text())
+        if report.get('local_shared_context',False):raise ValueError('local context is an offline ablation, not an installed runtime head')
         require_head_control(report,source_control,stages)
         head_sha=hashlib.sha256(a.completion_classifier.read_bytes()).hexdigest()
         if report['head_sha256']!=head_sha or report['model_sha256']!=hashlib.sha256(a.model.read_bytes()).hexdigest():raise ValueError('classifier provenance')
