@@ -159,11 +159,12 @@ impl Plan {
         // and the region must finish without an ordered/fallible suffix.
         let terminal=last_constructor+1==cell.template.ops.len() || units.as_ref()
             .is_some_and(|u|u.ends_at(cell.template.ops.len()));
-        let roots=steps.iter().enumerate().map(|(i,step)|!cfg!(feature="rhs-locals") && batch_rule && no_unions && terminal
+        let roots:Vec<_>=steps.iter().enumerate().map(|(i,step)|!cfg!(feature="rhs-locals") && batch_rule && no_unions && terminal
             && (i+1==steps.len() || steps[i+1].region==step.region
                 && lineage[i+1].contains(&step.destination))).collect::<Vec<_>>();
         if !steps.iter().any(|s|!s.anchors.is_empty()) && !roots.iter().any(|&v|v) {return None;}
-        let inputs=CapturePlan::derive(&steps,units.as_ref(),&cell.template.defs,batch_rule);
+        let inputs=CapturePlan::derive(&steps,units.as_ref(),&cell.template.defs,batch_rule,
+            |i|roots[i] || isolated[i] || lineage.get(i).is_some_and(|v|!v.is_empty()));
         let definitions=(0..cell.template.sorts.len()).map(|slot|cell.template.defs.get(&slot).copied()).collect();
         Some(Self{steps,operators,continues,definitions,batch_rule,no_unions,isolated,lineage,roots,units,inputs})
     }
@@ -465,7 +466,8 @@ impl Graph {
         }
         let region=plan.steps[from].region;
         let limit=from+plan.steps[from..].iter().take_while(|s|s.region==region && s.operation<stop).count();
-        if queued && (!plan.batch_rule || limit!=plan.steps.len()) {return Ok((counts,None));}
+        if queued && (!plan.batch_rule || limit!=plan.steps.len()
+            || !plan.isolated[from] && plan.lineage[from].is_empty()) {return Ok((counts,None));}
         let plan=plan.clone();counts.plan_handles+=1;
         let unit_epoch=(queued && limit==plan.steps.len() && plan.units.as_ref().is_some_and(|u|
             u.sites.iter().all(|s|!self.units.owned[s.table] || self.pending_unions.is_empty())))

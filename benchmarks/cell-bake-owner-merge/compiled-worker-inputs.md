@@ -16,6 +16,9 @@ performed that classification again. A local prefix also used an earlier
 freshness boundary than the current instruction position.
 
 The existing worker Plan now compiles one input span per eligible terminal entry.
+Eligibility comes from the same root, isolated-tail and dependent-cone proofs
+used by admission. An impossible local continuation is rejected before input
+capture; noneligible positions carry no input span.
 It preserves first-use order, eliminates duplicate slot demands, and excludes
 results produced at or after that entry. Unit-only demands follow constructor
 demands, with a separate end position so a constructor-only continuation does
@@ -73,3 +76,12 @@ Validation before the workload experiment: queue job 501 passed 224 runtime
 tests, 119 integration tests and 76 ownership tests with storage metrics. The
 work-credit checks additionally require each new counter and verify that an
 extra read/check costs one operation, while accepting historical v4 reports.
+
+The first frozen version, `831acacc`, passed full ordinary sum-bits, Raytrace
+and learned-catalog validation (job 506, including native sum-bits acceptance).
+It compiled a span for every terminal-region position, however, and grew
+Raytrace's worker Plan payload from 4,347,184 to 71,855,024 bytes. Job 508 was
+cancelled while still queued, before any timing sample. Applying the existing
+admission proofs during layout derivation removes unreachable suffix layouts;
+a 512-operation independent-prefix regression checks that only its final
+eligible entry retains a demand. The first version is not a performance result.

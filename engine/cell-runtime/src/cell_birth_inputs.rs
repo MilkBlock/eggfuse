@@ -7,14 +7,17 @@ struct Demand {slot:usize,available:usize}
 #[derive(Clone,Copy,Debug,Default,PartialEq,Eq)]
 struct Span {start:usize,constructors:usize,end:usize}
 #[derive(Clone,Debug,Default,PartialEq,Eq)]
-pub(super) struct CapturePlan {spans:Vec<Span>,slots:Vec<Demand>}
+pub(super) struct CapturePlan {spans:Vec<Option<Span>>,slots:Vec<Demand>}
 impl CapturePlan {
-    pub(super) fn derive(steps:&[Step],units:Option<&units::Tail>,defs:&BTreeMap<usize,usize>,queued:bool)->Self {
+    pub(super) fn derive(steps:&[Step],units:Option<&units::Tail>,defs:&BTreeMap<usize,usize>,queued:bool,
+        eligible:impl Fn(usize)->bool)->Self {
         if !queued {return Self::default();}
-        let mut result=Self {spans:vec![Span::default();steps.len()],slots:Vec::new()};
+        let mut result=Self {spans:vec![None;steps.len()],slots:Vec::new()};
         let mut layouts=HashMap::default();
         let last=steps.last().unwrap().region;
-        for (from,first) in steps.iter().enumerate().filter(|(_,s)|s.region==last) {
+        // Admission already requires a root, isolated tail or dependent cone.
+        // Ineligible starts must not materialize quadratic suffix layouts.
+        for (from,first) in steps.iter().enumerate().filter(|(i,s)|s.region==last && eligible(*i)) {
             let mut demands=Vec::new();let mut seen=BTreeSet::new();
             let mut add=|arg:&Arg| {
                 let Arg::Slot(slot)=arg else {return false;};
@@ -36,18 +39,18 @@ impl CapturePlan {
                 let span=Span {start,constructors:start+constructors,end:result.slots.len()};
                 layouts.insert(key,span);span
             };
-            result.spans[from]=span;
+            result.spans[from]=Some(span);
         }
         result
     }
     pub(super) fn storage_bytes(&self)->usize {
-        self.spans.capacity()*std::mem::size_of::<Span>()+self.slots.capacity()*std::mem::size_of::<Demand>()
+        self.spans.capacity()*std::mem::size_of::<Option<Span>>()+self.slots.capacity()*std::mem::size_of::<Demand>()
     }
 }
 impl Graph {
     pub(super) fn capture_worker_inputs(&mut self,cell:u32,plan:&CapturePlan,from:usize,first:usize,
         units:bool,counts:&mut Counts)->Result<()> {
-        let span=plan.spans[from];counts.capture_layout_reads+=1;
+        let span=plan.spans[from].expect("compiled worker input boundary");counts.capture_layout_reads+=1;
         for demand in &plan.slots[span.start..if units {span.end}else{span.constructors}] {
             counts.capture_slot_checks+=1;
             // A local prefix may already own results before this entry. Keep
@@ -130,5 +133,21 @@ mod tests {
         assert_eq!(counts.captured_reads,1);assert!(!g.rhs_frame(cell).unwrap().values.contains_key(&5));
         g.capture_worker_inputs(cell,&plan.inputs,0,0,true,&mut counts).unwrap();
         assert_eq!(counts.captured_reads,2);assert_eq!(g.rhs_frame(cell).unwrap().values.get(&5),Some(&Value::Eq(100)));
+    }
+    #[test]
+    fn independent_constructor_prefix_does_not_duplicate_suffix_inputs() {
+        let mut p=super::super::tests::graph().program;
+        let n=512;let eq=p.tables[0].schema[0].clone();
+        let t=&mut p.templates[0];
+        t.sorts=vec![eq;2*n];
+        t.ops=(0..n).map(|i|Op::Let(n+i,Call::Table(0),vec![Arg::Slot(i)])).collect::<Vec<_>>().into();
+        t.defs=(0..n).map(|i|(n+i,i)).collect();
+        p.rules[0].inputs=(0..n).collect::<Vec<_>>().into();
+        p.known_results.static_skip=vec![Rc::new(vec![false;n])];
+        let plan=Plan::derive(&p,0).unwrap();
+        assert_eq!(plan.inputs.spans.iter().flatten().count(),1);
+        assert_eq!(plan.inputs.slots.len(),1,
+            "independent source operations cannot become worker suffix entries");
+        assert!(plan.inputs.storage_bytes()<n*64);
     }
 }
