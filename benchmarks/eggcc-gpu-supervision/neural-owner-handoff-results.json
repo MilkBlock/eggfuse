@@ -1,0 +1,1462 @@
+{
+  "scope": "standalone neural-to-owner integration on CPU-initialized sealed snapshots; not GPU RHS execution",
+  "counts": {
+    "attempted": 276,
+    "transferred": 276,
+    "copied_fields": 770,
+    "interface_failures": 0,
+    "token_failures": 0,
+    "blocked": 0,
+    "value_mismatch": 0,
+    "stale": 0,
+    "occupied_destination": 0
+  },
+  "compiled_coverage": {
+    "chains": 1154,
+    "positive": 578,
+    "negative": 576,
+    "negative_unavailable": 2,
+    "producer_consumer_pairs": 216,
+    "producers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "consumers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "compiled_owner_opportunities": 276,
+    "scope": "bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance"
+  },
+  "cases": [
+    {
+      "producer": 0,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 5,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 5,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 8,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 8,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 14,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 14,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 15,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 15,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 5,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 5,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 8,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 8,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 14,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 14,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 15,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 15,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 0,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 1,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 1,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 2,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 3,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 3,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 5,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 6,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 7,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 9,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 5,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 14,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 5,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 14,
+      "transferred": true
+    },
+    {
+      "producer": 10,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 11,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 12,
+      "consumer": 12,
+      "transferred": true
+    },
+    {
+      "producer": 12,
+      "consumer": 12,
+      "transferred": true
+    },
+    {
+      "producer": 12,
+      "consumer": 13,
+      "transferred": true
+    },
+    {
+      "producer": 12,
+      "consumer": 12,
+      "transferred": true
+    },
+    {
+      "producer": 12,
+      "consumer": 12,
+      "transferred": true
+    },
+    {
+      "producer": 12,
+      "consumer": 13,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 12,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 12,
+      "transferred": true
+    },
+    {
+      "producer": 13,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 14,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 14,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 14,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 14,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 14,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 14,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 14,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 14,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 14,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 14,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 0,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 1,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 2,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 3,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 6,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 7,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 9,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 10,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 11,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 16,
+      "transferred": true
+    },
+    {
+      "producer": 16,
+      "consumer": 16,
+      "transferred": true
+    }
+  ],
+  "wall_seconds": 23.298324584029615,
+  "weights_sha256": "71d3dbc92a4c2692ed3c3ba4ca9f2dd14245ba34529670d8a559cf2351a37669",
+  "token_outputs_from_gpu": true,
+  "exact_rhs_values_from_cpu_fixture": true,
+  "semantic_saturation_proved": false,
+  "speedup_claim": false,
+  "tests_passed": {
+    "neural": 21,
+    "existing_owner": 7
+  },
+  "bake_branch_head": "f3321a3a",
+  "command": "python audit_neural_owner_handoff.py TRACE.json WEIGHTS.safetensors OUTPUT.json",
+  "limitations": [
+    "Each case is an independent sealed pair initialized from CPU exact execution",
+    "No neural authorization of RHS effects or logical retirement",
+    "Released rows are reusable arena capacity, not allocated process memory savings",
+    "Token identity preservation does not establish correct predicted token semantics",
+    "No full GPU fixed point or multi-stage runtime"
+  ]
+}
