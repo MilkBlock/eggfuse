@@ -89,7 +89,7 @@ def main():
     p.add_argument('--completion-classifier',type=Path)
     p.add_argument('--snapshot-run',type=int,required=True);a=p.parse_args();start=time.monotonic()
     if a.report.resolve()==a.output.with_suffix('.json').resolve():raise ValueError('label report must not overwrite training metadata')
-    meta=json.loads(a.capture.with_suffix('.json').read_text());trace=json.loads(a.trace.read_bytes())
+    meta=json.loads(a.capture.with_suffix('.json').read_text());trace=json.loads(a.trace.read_bytes());source_document=trace
     if meta['capture']['schema']!='device-composed-witness/v1' or not meta['capture']['passed'] or hashlib.sha256(a.capture.read_bytes()).hexdigest()!=meta['capture']['artifact_sha256']:raise ValueError('capture provenance')
     if hashlib.sha256(a.trace.read_bytes()).hexdigest()!=meta['trace_sha256'] or hashlib.sha256(a.model.read_bytes()).hexdigest()!=meta['model_sha256']:raise ValueError('source provenance')
     if a.synthetic_input:
@@ -103,6 +103,14 @@ def main():
     lowered,_=lower(lower_query_literals(original));snapshots=[b['graph'] for b in trace['boundaries'] if b['ordinal']==a.snapshot_run]
     if len(snapshots)!=1:raise ValueError('snapshot ordinal')
     local,state,ids,rows=prepare_family(lowered,snapshots[0],list(range(len(original['rules']))),1)
+    if meta.get('producer_frame_import'):
+        if not a.synthetic_input:raise ValueError('producer frame capture requires synthetic source')
+        from materialize_enumerated_cells import prepare as prepare_frames
+        local,state,ids,rows,frame_import=prepare_frames(source_document,1)
+        if frame_import!=meta['producer_frame_import']:raise ValueError('producer frame import mismatch')
+    from cell_source_origin import initial_instances,generated as generated_origin
+    initial_sources=meta.get('initial_instances')
+    if initial_sources is not None and initial_sources!=initial_instances(state):raise ValueError('initial instance identities mismatch')
     target_recipe=deepcopy(local)
     if not any('token_layout' in r for r in meta['recipe']['rules']):
         for r in local['rules']:r.pop('token_layout',None)
@@ -167,6 +175,7 @@ def main():
             boundary_features.extend(c['boundary_features'][c['accepted']])
             connections=boundary_masks(c['boundary'],c['bindings'],bp,np)[0]
             generated=(c['boundary']['rule']>=0)&(c['boundary']['rule']<len(original['rules']))
+            if initial_sources is not None:generated=generated_origin(np.arange(len(c['boundary']['rule'])),c['boundary']['generation'],initial_sources)
             boundary_generated.extend(np.any(connections&generated[None,None,:,None],axis=(1,2,3))[c['accepted']])
         live=c['bindings']['live']
         expected=x if classifier else np.tanh(x@model['coef'])
@@ -192,7 +201,8 @@ def main():
         for lane in np.flatnonzero(c['accepted']):
             y,label=target(target_recipe['rules'][rid],c['bindings']['slots'][lane],mapping,ref,seed_values,state['slots'].shape[1])
             xs.append(x[lane]);extra.append(z[lane]);ys.append(y);labels.append(label);pred.append(c['predicted_tokens'][lane]);rules.append(meta['source_rules'][rid])
-            continued.append(bool(np.any(c['request']['edge_valid'][lane]&(c['source_rules'][lane]<len(original['rules'])))))
+            source_generated=(c['source_rules'][lane]<len(original['rules'])) if initial_sources is None else generated_origin(c['request']['sources'][lane],c['request']['generations'][lane],initial_sources)
+            continued.append(bool(np.any(c['request']['edge_valid'][lane]&source_generated)))
     if numerical>5e-6:raise ValueError('floating inputs changed')
     rr=rows_from_labels(semantic_recipe,[meta['source_rules'].index(r) for r in rules],labels)
     payload=dict(features=np.array(xs,np.float32),input_relations=np.array(extra,np.float32),targets=np.array(ys,np.float32),target_eq_classes=np.array(labels,np.int32),predicted_tokens=np.array(pred,np.float32),rules=np.array(rules,np.int32),generated_source=np.array(continued,bool),**saved)

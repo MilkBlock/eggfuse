@@ -34,11 +34,31 @@ contents, but do not prove source-program reachability, an actual apply history,
 or a particular physical creator of a reused result. Runtime ownership transfer
 must still follow the existing catalog and lifetime checks.
 
-The full selected-family runner has not yet switched to this importer. Before
-collecting its training data, source accounting must distinguish seeded completed
-producer frames from tokens newly generated during the GPU run. Rule identity
-alone is insufficient for that distinction. Likewise, no full multi-stage or
-whole-Eggcc coverage is claimed.
+The selected-family runner supports opt-in `--synthetic-input --producer-frames`
+for the full enumerated family. Capture metadata records the initial logical row
+and generation identities; CPU auditing reconstructs and verifies that map.
+Source accounting compares both row and generation, so a reused row is a new
+instance, while an initialized original-rule frame is not a generated token.
+No per-step GPU provenance registry is introduced. Historical captures without
+this metadata retain their legacy seed-rule interpretation.
+
+Two actual GPU rollouts with the shared-context head and exact effect authority
+were tested. The first is already complete (zero generated Cells, one Run). The
+second generates seven Cells over four Runs; six consume generated sources.
+The old rule-ID heuristic would report seven, demonstrating the corrected bias.
+CPU graph checks, feature reconstruction and final labels pass. Both runs report
+zero owner releases: this validates instance-preserving execution and accounting,
+NOT successful ownership transfer in this new input mode. Takeover eligibility
+for these compound initial frames remains to be investigated. No accuracy or
+speedup claim follows from these two examples.
+
+Reproduction uses `audit_construct_union_family.py` with rules 0,1,2, snapshot 0,
+capacity 32, ticks 20, flush-every 1, order-queries, boundary-context, experimental
+boundary-model, predicted-source-feedback and the enumerated shared-classifier
+weights/report, plus the two flags above. Then run `label_composed_witnesses.py`
+with synthetic-input and the same head. Input documents and verified captures,
+execution reports and labels are in the archive identified by
+`producer-frame-rollout-results.json`. No whole-Eggcc coverage is claimed.
 
 Reproduce the fact audit with:
 
