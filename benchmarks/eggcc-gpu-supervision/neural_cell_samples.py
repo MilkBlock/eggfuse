@@ -13,7 +13,20 @@ from lower_constructor_sets import lower
 from label_composed_witnesses import target
 
 
-def samples(recipe,count,seed):
+def apply_instance(ref,rule,binding):
+    """Label only the selected instance, not every match of the same rule."""
+    slots=dict(binding)
+    for op in rule['effects']:
+        if op['kind']=='copy':slots[op['dst']]=ref.operand(op['arg'],slots)
+        elif op['kind']=='construct':slots[op['dst']]=ref.construct(op['call']['table'],[ref.operand(a,slots) for a in op['args']])
+        elif op['kind']=='set':ref.construct(op['call']['table'],[ref.operand(a,slots) for a in op['args']],ref.operand(op['value'],slots))
+        elif op['kind']=='union':ref.merge(*(ref.operand(a,slots) for a in op['args']))
+        else:raise ValueError('unsupported instance effect')
+    ref.close()
+    return slots
+
+
+def samples(recipe,count,seed,records=None):
     rng=np.random.default_rng(seed);rules=recipe['rules'];width=max(len(a['args']) for r in rules for a in r['query']);atoms=max(len(r['query']) for r in rules)
     xs=[];edges=[];masks=[];requests=[];ys=[];targets=[];rids=[];source_targets=[]
     for rid,rule in enumerate(rules):
@@ -70,9 +83,13 @@ def samples(recipe,count,seed):
                     if terms:edge[ai,bi]=np.sum(terms,axis=0)/np.sqrt(len(terms))
             out=np.zeros(128,np.float32)
             if valid:
-                ref.apply([rule]);lowered,_=lower(dict(recipe,rules=[rule]));lr=lowered['rules'][0]
+                unions_before=ref.unions
+                apply_instance(ref,rule,binding);lowered,_=lower(dict(recipe,rules=[rule]));lr=lowered['rules'][0]
                 slots=np.full(len(lr['slots']),-1,np.int32)
                 for s,v in binding.items():slots[s]=v
                 out,_=target(lr,slots,{i:ref.root(i) for i in range(len(ids))},ref,seed_values,len(lr['slots']))
+                if records is not None:
+                    from copy import deepcopy
+                    records.append(dict(eq_changed=ref.unions>unions_before,index=len(xs),rule=rid,binding=dict(binding),reference=deepcopy(ref),target=out.copy()))
             source_targets.append(source_code);xs.append(x);edges.append(edge);masks.append(mask);requests.append(request);ys.append(valid);targets.append(out);rids.append(rid)
     return dict(source_target=np.array(source_targets),x=np.array(xs),edges=np.array(edges),mask=np.array(masks),request=np.array(requests),valid=np.array(ys,np.float32),target=np.array(targets),rule=np.array(rids,np.int32))
