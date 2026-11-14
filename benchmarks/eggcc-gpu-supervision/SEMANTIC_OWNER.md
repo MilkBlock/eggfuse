@@ -765,3 +765,26 @@ adds padding; compiled view bytes summed across independently compiled plans
 are 485,624, not a peak resident memory measurement. Overall audit remains
 `difference` because the floating Eq output still has its one known miss.
 Archive: external SSD `neural-canon-grouped-witness-v23.tar.gz`.
+
+### Consume the installed third frame with all canon rules
+
+`--follow-round` extends the speculative audit to the full selected ruleset.
+GPU enumerates candidates and computes fourth tokens and Eq outputs before
+CPU label construction. The CPU then independently executes each accepted
+match to audit semantic states; these labels do not become model inputs.
+The third frame retains its generated token, actual witness IDs, and existing
+source lifetime information. Fourth outputs are not installed yet.
+
+Run the v23 audit with `--follow-round`. Across 216 isolated third-frame
+installations, all eight rules are evaluated (1,728 rule evaluations). The
+GPU recovers all 858 expected matches without extras, missing candidates,
+nonfinite outputs, or capacity overflow. Of 858 fourth states, 11 are wrong
+and five include false merges; 732 consume the newly installed frame and
+nine of those are wrong. Third-frame graph checks remain 216/216.
+
+This extends actual generated-state consumption beyond the earlier same-rule
+query check, but does not establish closed-loop saturation. The top-level
+audit rejects fourth semantic errors even when corrected third graphs pass.
+Nine targeted tests pass. `canon-fourth-round-results.json` records totals;
+raw artifact/tests are archived on external SSD as
+`neural-canon-fourth-v24.tar.gz`. Model weights remain unchanged from v20.
