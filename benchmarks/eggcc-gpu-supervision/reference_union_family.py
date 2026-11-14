@@ -4,15 +4,17 @@ All matches precede a Run's effects. Explicit union and full constructor
 congruence change the fixed point even when no constructor is allocated.
 """
 from device_snapshot_import import identity
+from typed_literal import value as literal_value
 
 
 class Reference:
     def __init__(self,recipe,rows,ids):
         import json
-        self.recipe=recipe;self.parent=list(range(len(ids)));self.types=[None]*len(ids)
+        self.recipe=recipe;self.parent=list(range(len(ids)));self.types=[None]*len(ids);self.scalar_values={};self.scalar_ids={}
         for value,i in ids.items():
             v=json.loads(value)
             if 'eq' in v:self.types[i]=v['sort']
+            else:self.scalar_values[i]=v;self.scalar_ids[identity(v)]=i
         self.facts=[(r['table'],tuple(ids[identity(v)] for v in r['values'])) for r in rows]
         self.unions=0;self.constructions=0
         self.tables={t['name']:t for t in recipe.get('tables',[])}
@@ -43,14 +45,20 @@ class Reference:
         bindings=[{}]
         for atom in rule['query']:
             following=[]
-            if 'table' not in atom['call'] or any('slot' not in a for a in atom['args']):raise ValueError('unsupported oracle query')
+            if 'table' not in atom['call']:raise ValueError('unsupported oracle query')
+            for a in atom['args']:
+                if 'slot' not in a:literal_value(a)
             for binding in bindings:
                 for table,values in self.facts:
                     if table!=atom['call']['table']:continue
                     if len(values)!=len(atom['args']):raise ValueError('oracle arity')
                     b=dict(binding)
                     for a,v in zip(atom['args'],values):
-                        slot=a['slot'];v=self.root(v)
+                        v=self.root(v)
+                        if 'slot' not in a:
+                            if self.scalar_values.get(v)!=literal_value(a):break
+                            continue
+                        slot=a['slot']
                         if slot in b and b[slot]!=v:break
                         b[slot]=v
                     else:following.append(b)
@@ -69,16 +77,24 @@ class Reference:
         self.facts.append((table,(*args,value)));self.constructions+=1
         return value
 
+    def operand(self,arg,slots):
+        if 'slot' in arg:return slots[arg['slot']]
+        value=literal_value(arg);key=identity(value)
+        if key not in self.scalar_ids:
+            index=len(self.parent);self.parent.append(index);self.types.append(None)
+            self.scalar_ids[key]=index;self.scalar_values[index]=value
+        return self.scalar_ids[key]
+
     def apply(self,rules):
         matches=[self.matches(r) for r in rules];self.last_match_counts=list(map(len,matches));before=self.unions+self.constructions
         for rule,bindings in zip(rules,matches):
             for b in bindings:
                 slots=dict(b)
                 for op in rule['effects']:
-                    if op['kind']=='copy':slots[op['dst']]=slots[op['arg']['slot']]
-                    elif op['kind']=='union':self.merge(*(slots[a['slot']] for a in op['args']))
-                    elif op['kind']=='construct':slots[op['dst']]=self.construct(op['call']['table'],[slots[a['slot']] for a in op['args']])
-                    elif op['kind']=='set':self.construct(op['call']['table'],[slots[a['slot']] for a in op['args']],slots[op['value']['slot']])
+                    if op['kind']=='copy':slots[op['dst']]=self.operand(op['arg'],slots)
+                    elif op['kind']=='union':self.merge(*(self.operand(a,slots) for a in op['args']))
+                    elif op['kind']=='construct':slots[op['dst']]=self.construct(op['call']['table'],[self.operand(a,slots) for a in op['args']])
+                    elif op['kind']=='set':self.construct(op['call']['table'],[self.operand(a,slots) for a in op['args']],self.operand(op['value'],slots))
                     else:raise ValueError('unsupported reference effect')
         self.close()
         return self.unions+self.constructions-before,sum(map(len,matches))

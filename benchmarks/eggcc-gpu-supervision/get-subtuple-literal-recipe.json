@@ -1,0 +1,626 @@
+{
+  "tables": [
+    {
+      "can_subsume": true,
+      "internal": false,
+      "kind": "constructor",
+      "merge": null,
+      "merge_expr": null,
+      "name": "Get",
+      "schema": [
+        {
+          "kind": "eq",
+          "name": "Expr"
+        },
+        {
+          "kind": "i64",
+          "name": "i64"
+        },
+        {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      ]
+    },
+    {
+      "can_subsume": true,
+      "internal": false,
+      "kind": "constructor",
+      "merge": null,
+      "merge_expr": null,
+      "name": "Single",
+      "schema": [
+        {
+          "kind": "eq",
+          "name": "Expr"
+        },
+        {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      ]
+    },
+    {
+      "can_subsume": true,
+      "internal": false,
+      "kind": "constructor",
+      "merge": null,
+      "merge_expr": null,
+      "name": "SubTuple",
+      "schema": [
+        {
+          "kind": "eq",
+          "name": "Expr"
+        },
+        {
+          "kind": "i64",
+          "name": "i64"
+        },
+        {
+          "kind": "i64",
+          "name": "i64"
+        },
+        {
+          "kind": "eq",
+          "name": "Expr"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "effects": [
+        {
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "call": {
+            "table": "Get"
+          },
+          "dst": 3,
+          "kind": "construct",
+          "op": "let",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "args": [
+            {
+              "slot": 3
+            }
+          ],
+          "call": {
+            "table": "Single"
+          },
+          "dst": 4,
+          "kind": "construct",
+          "op": "let",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "literal": 1,
+              "sort": {
+                "kind": "i64",
+                "name": "i64"
+              }
+            }
+          ],
+          "call": {
+            "table": "SubTuple"
+          },
+          "dst": 5,
+          "kind": "construct",
+          "op": "let",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "args": [
+            {
+              "slot": 4
+            },
+            {
+              "slot": 5
+            }
+          ],
+          "kind": "union",
+          "op": "union"
+        }
+      ],
+      "footprint": {
+        "equality_invalidates": [
+          "Add-All-Gets",
+          "Add-Gets",
+          "AddContext",
+          "Alloc",
+          "Append",
+          "Arg",
+          "BodyContainsExpr",
+          "BodyContainsListExpr",
+          "Bop",
+          "Call",
+          "Concat",
+          "Cons",
+          "Const",
+          "ContextOf",
+          "DebugExpr",
+          "DelayedDropUnion",
+          "DelayedSubstUnion",
+          "DemandDontAlias",
+          "DoWhile",
+          "DontAlias",
+          "DropAt",
+          "DropAtInternal",
+          "ES",
+          "Empty",
+          "ExpectType",
+          "Expr-size",
+          "ExprIsPure",
+          "ExprIsResolved",
+          "ExprIsValid",
+          "ExprSet-insert",
+          "ExtractedExpr",
+          "ExtractedExprCache",
+          "Function",
+          "Get",
+          "HasArgType",
+          "HasType",
+          "IVTAnalysisRes",
+          "IVTNewInputsAnalysis",
+          "IVTNewInputsAnalysisDemand",
+          "IVTNewInputsAnalysisImpl",
+          "If",
+          "IfNode",
+          "IfSubst",
+          "InIf",
+          "InLoop",
+          "InSwitch",
+          "InlinedCall",
+          "InvCodeMotionCandidate",
+          "IsIsEven",
+          "ListExpr-ith",
+          "LoopIsFinite",
+          "LoopNumItersGuess",
+          "NTZIterations",
+          "NoAlias",
+          "Not-Just-Concat",
+          "PointsToCells",
+          "PointsToCellsAtIter",
+          "PointsToExpr",
+          "PotentialExtractedExpr",
+          "Program",
+          "Single",
+          "SubTuple",
+          "Subst",
+          "Switch",
+          "TermSubst",
+          "ToSubsumeIf",
+          "Top",
+          "TupleRemoveAt",
+          "Uop",
+          "___GeneratedFreshTable",
+          "___GeneratedFreshTable1",
+          "___GeneratedFreshTable2",
+          "___GeneratedFreshTable3",
+          "___GeneratedFreshTable4",
+          "___GeneratedFreshTable5",
+          "hi-bound",
+          "is-inv-Expr",
+          "is-inv-ListExpr",
+          "is-inv-ListExpr-helper",
+          "leading-Expr",
+          "lo-bound",
+          "lsr-inv",
+          "to-hoist",
+          "to-hoist-size",
+          "tuple-length"
+        ],
+        "operations": [
+          "construct",
+          "union"
+        ],
+        "precision": "conservative direct/merge footprint; global rebuild may have further effects",
+        "read_tables": [
+          "Get"
+        ],
+        "union_sorts": [
+          "Expr"
+        ],
+        "write_tables": [
+          "Get",
+          "Single",
+          "SubTuple"
+        ]
+      },
+      "interface": {
+        "correlation": "one complete binding row; slot equality and literals remain constraints",
+        "guaranteed_atoms": [],
+        "primitive_atoms": [],
+        "residual_atoms": [
+          0
+        ],
+        "rows": [
+          {
+            "atom": 0,
+            "columns": [
+              {
+                "slot": 0
+              },
+              {
+                "slot": 1
+              },
+              {
+                "slot": 2
+              }
+            ],
+            "key_columns": [
+              0,
+              1
+            ],
+            "table": "Get",
+            "witness": "complete visible row"
+          }
+        ]
+      },
+      "metadata": {
+        "name": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+        "seminaive": true,
+        "source_set": "always-run"
+      },
+      "query": [
+        {
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            }
+          ],
+          "call": {
+            "table": "Get"
+          }
+        }
+      ],
+      "slots": [
+        {
+          "definition": "query",
+          "name": "expr",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "definition": "query",
+          "name": "i",
+          "sort": {
+            "kind": "i64",
+            "name": "i64"
+          }
+        },
+        {
+          "definition": "query",
+          "name": "@Get60",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "definition": 0,
+          "name": "@Get61",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "definition": 1,
+          "name": "@Single43",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "definition": 2,
+          "name": "@SubTuple17",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        }
+      ]
+    },
+    {
+      "effects": [
+        {
+          "arg": {
+            "slot": 2
+          },
+          "dst": 3,
+          "kind": "copy",
+          "op": "copy",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            }
+          ],
+          "call": {
+            "table": "Get"
+          },
+          "dst": 4,
+          "kind": "construct",
+          "op": "let",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "args": [
+            {
+              "slot": 4
+            }
+          ],
+          "call": {
+            "table": "Single"
+          },
+          "kind": "set",
+          "op": "set",
+          "value": {
+            "slot": 3
+          }
+        }
+      ],
+      "footprint": {
+        "equality_invalidates": [
+          "Add-All-Gets",
+          "Add-Gets",
+          "AddContext",
+          "Alloc",
+          "Append",
+          "Arg",
+          "BodyContainsExpr",
+          "BodyContainsListExpr",
+          "Bop",
+          "Call",
+          "Concat",
+          "Cons",
+          "Const",
+          "ContextOf",
+          "DebugExpr",
+          "DelayedDropUnion",
+          "DelayedSubstUnion",
+          "DemandDontAlias",
+          "DoWhile",
+          "DontAlias",
+          "DropAt",
+          "DropAtInternal",
+          "ES",
+          "Empty",
+          "ExpectType",
+          "Expr-size",
+          "ExprIsPure",
+          "ExprIsResolved",
+          "ExprIsValid",
+          "ExprSet-insert",
+          "ExtractedExpr",
+          "ExtractedExprCache",
+          "Function",
+          "Get",
+          "HasArgType",
+          "HasType",
+          "IVTAnalysisRes",
+          "IVTNewInputsAnalysis",
+          "IVTNewInputsAnalysisDemand",
+          "IVTNewInputsAnalysisImpl",
+          "If",
+          "IfNode",
+          "IfSubst",
+          "InIf",
+          "InLoop",
+          "InSwitch",
+          "InlinedCall",
+          "InvCodeMotionCandidate",
+          "IsIsEven",
+          "ListExpr-ith",
+          "LoopIsFinite",
+          "LoopNumItersGuess",
+          "NTZIterations",
+          "NoAlias",
+          "Not-Just-Concat",
+          "PointsToCells",
+          "PointsToCellsAtIter",
+          "PointsToExpr",
+          "PotentialExtractedExpr",
+          "Program",
+          "Single",
+          "SubTuple",
+          "Subst",
+          "Switch",
+          "TermSubst",
+          "ToSubsumeIf",
+          "Top",
+          "TupleRemoveAt",
+          "Uop",
+          "___GeneratedFreshTable",
+          "___GeneratedFreshTable1",
+          "___GeneratedFreshTable2",
+          "___GeneratedFreshTable3",
+          "___GeneratedFreshTable4",
+          "___GeneratedFreshTable5",
+          "hi-bound",
+          "is-inv-Expr",
+          "is-inv-ListExpr",
+          "is-inv-ListExpr-helper",
+          "leading-Expr",
+          "lo-bound",
+          "lsr-inv",
+          "to-hoist",
+          "to-hoist-size",
+          "tuple-length"
+        ],
+        "operations": [
+          "construct",
+          "copy",
+          "set"
+        ],
+        "precision": "conservative direct/merge footprint; global rebuild may have further effects",
+        "read_tables": [
+          "SubTuple"
+        ],
+        "union_sorts": [
+          "Expr"
+        ],
+        "write_tables": [
+          "Get",
+          "Single"
+        ]
+      },
+      "interface": {
+        "correlation": "one complete binding row; slot equality and literals remain constraints",
+        "guaranteed_atoms": [],
+        "primitive_atoms": [],
+        "residual_atoms": [
+          0
+        ],
+        "rows": [
+          {
+            "atom": 0,
+            "columns": [
+              {
+                "slot": 0
+              },
+              {
+                "slot": 1
+              },
+              {
+                "literal": 1,
+                "sort": {
+                  "kind": "i64",
+                  "name": "i64"
+                }
+              },
+              {
+                "slot": 2
+              }
+            ],
+            "key_columns": [
+              0,
+              1,
+              2
+            ],
+            "table": "SubTuple",
+            "witness": "complete visible row"
+          }
+        ]
+      },
+      "metadata": {
+        "name": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+        "seminaive": true,
+        "source_set": "always-run"
+      },
+      "query": [
+        {
+          "args": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "literal": 1,
+              "sort": {
+                "kind": "i64",
+                "name": "i64"
+              }
+            },
+            {
+              "slot": 2
+            }
+          ],
+          "call": {
+            "table": "SubTuple"
+          }
+        }
+      ],
+      "slots": [
+        {
+          "definition": "query",
+          "name": "expr",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "definition": "query",
+          "name": "x",
+          "sort": {
+            "kind": "i64",
+            "name": "i64"
+          }
+        },
+        {
+          "definition": "query",
+          "name": "@SubTuple3",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "definition": 0,
+          "name": "___rewrite_var__28",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        },
+        {
+          "definition": 1,
+          "name": "@Get55",
+          "sort": {
+            "kind": "eq",
+            "name": "Expr"
+          }
+        }
+      ]
+    }
+  ]
+}

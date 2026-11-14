@@ -7,6 +7,7 @@ import argparse, hashlib, json, random
 from pathlib import Path
 from device_snapshot_import import identity
 from reference_union_family import Reference
+from typed_literal import value as literal_value
 
 
 def digest(value):return hashlib.sha256(identity(value).encode()).hexdigest()
@@ -30,7 +31,8 @@ def generate(recipe, seed, fragments=4, reuse=.35):
             if 'table' not in atom['call']:raise ValueError('unsupported primitive query')
             values=[]
             for arg in atom['args']:
-                if 'slot' not in arg:raise ValueError('unsupported literal query')
+                if 'slot' not in arg:
+                    values.append(literal_value(arg));continue
                 slot=arg['slot'];sort=rule['slots'][slot]['sort'];name=sort['name']
                 if slot not in bindings:
                     if sort['kind']=='eq':

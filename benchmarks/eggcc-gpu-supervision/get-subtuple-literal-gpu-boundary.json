@@ -1,0 +1,24 @@
+{
+  "queries": [
+    {
+      "rule": 0,
+      "covered": true,
+      "reasons": []
+    },
+    {
+      "rule": 1,
+      "covered": false,
+      "reasons": [
+        "literal_atom",
+        "unbound_query_slots"
+      ]
+    }
+  ],
+  "completion_marks": [
+    {
+      "rule": 0,
+      "operation": 2,
+      "reason": "literal_argument"
+    }
+  ]
+}
