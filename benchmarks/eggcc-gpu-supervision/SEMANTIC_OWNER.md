@@ -99,3 +99,64 @@ union-conditioned update, rather than reconstructing the whole ancestry into
 one 128-float vector. These measurements motivate that experiment; they do not
 prove an intrinsic dimensional lower bound. Runtime combined-owner publication,
 third-step consumption, correction transitions and saturation remain unfinished.
+
+## Two-block owner experiment
+
+`neural_owner_blocks.OwnerBlocks` keeps original source and destination port
+layouts. It generates the destination block, then adds a learned residual to the
+source block using both tokens and the static template/projection requests. The
+source residual starts at zero. The shared Eq decoder reads each block in its
+original template; a floating cross-block decoder predicts their remaining Eq
+relations. Both blocks and their cross edges are audited as one Eq graph, so a
+cross-edge false merge cannot be hidden by separate per-block scores.
+
+The training entrypoint is `train_neural_owner_blocks.py TRACE TRANSITION EQ
+OUTPUT.json --steps 1200`. Source updates are trained against the source's state
+**after** consumer effects. The same synthetic seeds and 17-rule family are used;
+no actual Eggcc run is used as training data. All Eq readouts receive floats and
+static template information, not exact runtime object identities. Backpropagation
+updates source/destination token generation and readouts; matching layers remain
+frozen.
+
+`neural_block_handoff` connects these outputs to the existing physical ownership
+transfer in the standalone GPU audit. An Entry retains its original port roles
+and selects a block of the new semantic owner. `neural_device_candidates` reads
+these blocks directly, rather than regenerating source tokens. Generation,
+liveness and block bounds are checked. Rejected transfers leave state unchanged.
+The old independent `tokens` array is removed on block-mode initialization.
+
+The initial device handoff joins two singleton owners only. Further composition
+reports a block-capacity boundary; it does not truncate an inherited owner. The
+arena reserves two 128-float blocks per logical row, including initially unused
+blocks. This doubles the floating arena allocation versus the old one-token
+array, plus 16 bytes/row for owner reference, generation, block selector and block
+count. Released logical block storage is not compacted; no memory/speed saving
+is claimed.
+
+Run `audit_neural_gpu_rhs.py TRACE BLOCK_WEIGHTS OUTPUT.json --limit 107 --follow
+--interface-only --context-capacity 8 --block-owner` for actual handoff and
+subsequent GPU candidate consumption. This mode uses its bundled Eq weights,
+expands the initial payload budget for composed pairs, and cannot be combined
+with the single-token speculative rollback experiment. Its first two RHS steps
+still use exact GPU completion and initial bindings supplied by the synthetic
+harness. Following candidates are enumerated on GPU. It is not full Eggcc
+execution or autonomous saturation, and this different pair selection must not
+be compared with earlier 107-case audits as an identical workload.
+
+The 1,200-step block experiment obtained 301/578 fully correct joint states,
+391/578 source projections and 574/578 destination projections after transitive
+closure. There were still 203 joint states with false merges. Among 23 states
+where the consumer actually changed source Eq, the updated source answered 12
+correctly versus 1 without its residual update. These are evidence of a learned
+update, not sufficient accuracy for trusted execution. Joint pair counts differ
+from the deduplicated single-token layout, so pair-level errors are not directly
+comparable across representations.
+
+The subsequent actual GPU handoff audit adopted both blocks in all 107 selected
+cases. All exact setup graphs, slot interfaces and retained blocks passed their
+checks. GPU enumeration recovered 338 subsequent matches without missing or
+spurious matches; 274 consumed generated query sources. Floating semantics still
+failed in 49/338 subsequent states, including 16 false-merge states. The audit
+returns `difference` / exit 1. No model is promoted. See `owner-block-results.json`.
+Next training must replay these updated block inputs through later consumers,
+not merely decode their state at the two-step boundary.

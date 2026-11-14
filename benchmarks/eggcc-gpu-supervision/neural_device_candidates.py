@@ -48,6 +48,11 @@ def seed_inputs(state,layout,xp,field_width=5):
 def encode_seeds(state,layout,model,xp,field_width=5):
     fields,update=seed_inputs(state,layout,xp,field_width)
     token=model.encode(fields)
+    if 'owner_token_blocks' in state:
+        row=xp.arange(len(state['present']))
+        update=update&(state['token_source']==row)&(state['owner_block_count']==1)&(state['token_block']==0)
+        mask=update[:,None]&(xp.arange(state['owner_token_blocks'].shape[1])[None,:]==0)
+        return dict(state,owner_token_blocks=xp.where(mask[:,:,None],token[:,None,:],state['owner_token_blocks']))
     return dict(state,tokens=xp.where(update[:,None],token,state['tokens']))
 
 
@@ -74,6 +79,9 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp):
     cap=plan['capacity'];count=cap**len(plan['views']);ordinal=xp.arange(count)
     from neural_semantic_owner import resolve
     token_sources,token_valid=resolve(state,xp)
+    if 'owner_token_blocks' in state:
+        block=state['token_block']
+        token_valid=token_valid&(block>=0)&(block<state['owner_token_blocks'].shape[1])&(block<state['owner_block_count'][token_sources])
     ready=state['settled']&token_valid
     views=[];complete=xp.array(True);overflow=xp.array(False)
     for view_plan in plan['views']:
@@ -117,10 +125,14 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp):
     valid=read(state,'slot_valid',rr,ss,xp)&frames['valid'][rid]
     labels=xp.where(valid,read(state,'slot_roots',rr,ss,xp),-1)
     semantic_sources=token_sources[sources]
-    edges=relational_edges(labels,frames['roles'][rid],semantic_sources)
+    # Block owners retain the source Entry's original template/port roles.
+    role_sources=sources if 'owner_token_blocks' in state else semantic_sources
+    edges=relational_edges(labels,frames['roles'][rid],role_sources)
+    token_values=(state['owner_token_blocks'][semantic_sources,xp.clip(state['token_block'][sources],0,state['owner_token_blocks'].shape[1]-1)]
+                  if 'owner_token_blocks' in state else state['tokens'][semantic_sources])
     binding=xp.stack([projected[:,plan['origins'][s][0],plan['origins'][s][1]] for s in plan['inputs']],axis=1)
     binding_sources=xp.stack([sources[:,plan['origins'][s][0]] for s in plan['inputs']],axis=1)
     binding_slots=xp.stack([positions[plan['origins'][s][0]][:,plan['origins'][s][1]] for s in plan['inputs']],axis=1)
-    return dict(tokens=state['tokens'][semantic_sources]+plan['source_tags'][None,:,:],source_tags=xp.broadcast_to(plan['source_tags'],(count,sources.shape[1],128)),edges=edges,mask=mask,request=xp.broadcast_to(plan['request'],(count,64)),
+    return dict(tokens=token_values+plan['source_tags'][None,:,:],source_tags=xp.broadcast_to(plan['source_tags'],(count,sources.shape[1],128)),edges=edges,mask=mask,request=xp.broadcast_to(plan['request'],(count,64)),
                 relations=incidence(projected,plan['required'],xp),sources=sources,token_sources=semantic_sources,generations=state['generation'][sources],binding_roots=binding,binding_sources=binding_sources,binding_slots=binding_slots,
                 live=alive,complete=complete&~overflow&~context_overflow,overflow=overflow,context_overflow=context_overflow)

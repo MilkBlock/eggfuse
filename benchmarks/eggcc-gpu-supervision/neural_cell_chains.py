@@ -78,7 +78,8 @@ def pack_sources(sources,owners,ref,atoms,field_width):
     return dict(tokens=tokens,seed_x=seed_x,edges=edge,mask=mask,replace=replace)
 
 
-def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_targets=False,combined_owner=False,ordered_owner_request=True):
+def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_targets=False,combined_owner=False,ordered_owner_request=True,block_owner=False):
+    if block_owner and (combined_owner or not eq_targets):raise ValueError('block owners require separate templates and Eq supervision')
     atoms=max(len(r['query']) for r in recipe['rules']);width=max(len(r['slots']) for r in recipe['rules']);items=[];coverage=set()
     combined_ids=set();max_combined_slots=0
     eq_width=width*2 if combined_owner else width
@@ -106,7 +107,7 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                         sources.append((rule,values));owners.append(True)
                         mapping={a['slot']:p for a,p in zip(atom['args'],ports)}
                         inputs=[i for i,s in enumerate(consumer['slots']) if s['definition']=='query']
-                        projections.append(compile_transfer(recipe,dict(producer=producer,consumer=rid,projection=[mapping.get(i,0) for i in inputs],projection_valid=[i in mapping for i in inputs]),width*2 if combined_owner else width))
+                        projections.append(compile_transfer(recipe,dict(producer=producer,consumer=rid,projection=[mapping.get(i,0) for i in inputs],projection_valid=[i in mapping for i in inputs]),width*2 if (combined_owner or block_owner) else width))
                     else:
                         schema=next(t['schema'] for t in recipe['tables'] if t['name']==key[0])
                         seed_rule=dict(slots=[dict(sort=s,definition='query') for s in schema],query=[dict(call=atom['call'],args=[dict(slot=i) for i in range(len(schema))])],effects=[])
@@ -134,6 +135,9 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                         source_slots=set(combined['source_projection']);target_slots=set(combined['target_projection'])
                         packed['source_eq_mask']=packed['eq_mask']&np.array([i in source_slots and j in source_slots for i,j in zip(a,b)])
                         packed['target_eq_mask']=packed['eq_mask']&np.array([i in target_slots and j in target_slots for i,j in zip(a,b)])
+                if block_owner:
+                    from neural_owner_blocks import supervision
+                    packed.update(supervision(recipe,projections[0],values,target_values,ref,after,width))
                 items.append(dict(parent=record['index'],producer=producer,consumer=rid,**packed,request=request,target=target,valid=True,owner_covered=any(p['covered'] for p in projections)))
                 if transfers is not None:
                     for plan in projections:
@@ -170,6 +174,9 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                     if eq_targets:negative.update(eq_target=np.zeros(eq_width*(eq_width-1)//2,np.float32),eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool))
                     if eq_targets and combined_owner:
                         negative.update(source_eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool),target_eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool))
+                    if block_owner:
+                        for key in ('source_request','owner_request'):negative[key]=packed[key]
+                        for key in ('source_target','source_eq_target','source_eq_before','source_eq_mask','cross_eq_target','cross_eq_mask'):negative[key]=np.zeros_like(packed[key])
                     items.append(dict(parent=record['index'],producer=producer,consumer=rid,**negative,request=request,target=np.zeros(128,np.float32),valid=False,owner_covered=False))
                     break
                 coverage.add((producer,rid));accepted+=1
