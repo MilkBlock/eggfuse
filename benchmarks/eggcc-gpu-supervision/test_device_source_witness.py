@@ -36,6 +36,20 @@ class Witness(unittest.TestCase):
         self.assertFalse(bool(lookup(hidden,payload,batch,0,site,mx)[0]))
         mismatch=dict(payload,slot_roots=mx.array([[9,-1]]))
         self.assertFalse(bool(lookup(state,mismatch,batch,0,site,mx)[0]))
+        # The continuation's direct source lacks F(0), but its retained source
+        # exports the actual existing witness. No unrelated row is searched.
+        from device_witness_context import initialize
+        context=initialize(dict(state,slot_roots=mx.array([[0,1],[9,2]])),1,mx)
+        context['context_sources']=mx.array([[-1],[0]])
+        context['context_generations']=mx.array([[-1],[2]])
+        context['context_valid']=mx.array([[False],[True]])
+        continuation=dict(sources=mx.array([[1]]),mask=mx.array([[True]]),generations=mx.array([[3]]))
+        self.assertFalse(bool(lookup(context,payload,continuation,0,site,mx)[0]))
+        expanded=dict(site,context_depth=1)
+        found,identity,root=lookup(context,payload,continuation,0,expanded,mx)
+        self.assertTrue(bool(found));self.assertEqual(int(identity),5);self.assertEqual(int(root),1)
+        stale=dict(context,generation=mx.array([4,3]))
+        self.assertFalse(bool(lookup(stale,payload,continuation,0,expanded,mx)[0]))
 
 
 if __name__=='__main__':unittest.main()

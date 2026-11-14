@@ -109,3 +109,41 @@ witness through Bake's ownership/export context, preserving actual returned
 identity and lifetime. Training local Eq alone cannot recover an external
 identity absent from its interface. No graph-wide runtime scan or weakened
 acceptance was introduced to hide the failure.
+
+## Bounded source-export context
+
+The cumulative prototype now accepts `--witness-context-depth 1` (default zero).
+Each admitted Cell retains fixed-width references to the actual matched source
+rows and their generations. It does not copy their bindings or slot payloads.
+Constructor witness lookup follows these forward references with a fixed
+number of tensor gathers, then reads the same template export sites and owned
+slots used for direct sources. Visibility, settlement, physical owner validity,
+and generation are checked on every link. New references are recorded only
+for accepted admissions. This is not a reverse consumer index.
+
+At four query atoms, depth one visits at most 20 source positions per lookup
+instead of four, including duplicates. Stored context costs 36 bytes per
+reserved logical Cell row (two int32 arrays and a Boolean array). These costs
+are real; no speedup is claimed. The depth is currently an explicit compiled
+budget, not a Bake proof of full constructor coverage. It is not a replacement
+for layout-directed selective context extraction, nor proof of global freshness
+when lookup misses. No reclamation or full ownership lifecycle is established.
+
+With unchanged trained weights, the (7,6) counterexample passes its twelve-sweep
+cumulative audit at Bop capacity 32: correct complete graph, CPU fixed point,
+device idleness, and no remaining cross-Cell alias errors. It admits 12 instances
+instead of the failing run's 14. This demonstrates actual result reuse on the
+GPU; the final CPU audit supplies no corrections to execution.
+
+The full 61-entry cumulative check with depth one, twelve sweeps and Bop
+capacity 64 gives 61 correct final graphs and 60 verified fixed points.
+It executes 255 admissions; CPU audit totals about 0.349 seconds (diagnostic
+timing, not a performance comparison). Context storage is 3,636–4,104 bytes
+per case. The overall audit still reports `difference`; neither raw follow
+prediction checks nor fixed-point requirements are waived.
+
+Pair (5,7) remains productive. At 24 sweeps it reaches 24 admissions and 76
+correct facts, then overflows at 67 Bop candidates. Its lack of saturation is
+unresolved, not proof of infinite growth. Raising capacity again without
+examining this expansion is not the next correctness fix. See
+`witness-context-results.json` for the retained results and artifact location.

@@ -77,7 +77,9 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--ruleset',default='context');p.add_argument('--include-uncovered-transfers',action='store_true');p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
     p.add_argument('--proof-token',action='store_true');p.add_argument('--conditional-eq',action='store_true');p.add_argument('--owner-aware',action='store_true');p.add_argument('--semantic-owners',action='store_true');p.add_argument('--block-owner',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--immutable-source',action='store_true')
     p.add_argument('--capture-cumulative',type=Path);p.add_argument('--sample-seed',type=int,default=93003);p.add_argument('--samples-per-rule',type=int,default=4);p.add_argument('--pool-capacity',action='append',default=[]);p.add_argument('--pair',nargs=2,type=int);p.add_argument('--cumulative-sweeps',type=int,default=0);p.add_argument('--install-follow-round',action='store_true');p.add_argument('--follow-round',action='store_true');p.add_argument('--reuse-witnesses',action='store_true');p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
+    p.add_argument('--witness-context-depth',type=int,default=0,choices=(0,1,2))
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
+    if a.witness_context_depth and not a.cumulative_sweeps:raise ValueError('witness context requires cumulative execution')
     if a.capture_cumulative and not a.cumulative_sweeps:raise ValueError('capture requires cumulative execution')
     if a.samples_per_rule<1:raise ValueError('positive sample count required')
     collector=[] if a.capture_cumulative else None
@@ -189,7 +191,7 @@ def main():
             report['semantic_owner']=dict(semantic_proof,adopted=bool(move.get('semantic_adopted',False)))
         if a.cumulative_sweeps and check['passed']:
             from neural_cumulative import run as run_cumulative
-            report['cumulative']=run_cumulative(local,state,registry['roots'],next_id,frames,recipe['rules'],model,eq_head,a.cumulative_sweeps,oracle,check['mapping'],seed_count,pool_capacities,collector)
+            report['cumulative']=run_cumulative(local,state,registry['roots'],next_id,frames,recipe['rules'],model,eq_head,a.cumulative_sweeps,oracle,check['mapping'],seed_count,pool_capacities,collector,a.witness_context_depth)
         if a.follow and check['passed']:
             report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None,a.baked_eq,baked_proofs,owner if a.owner_aware else None,a.conditional_eq,a.reuse_witnesses,a.follow_round,a.install_follow_round)
         reports.append(report);print(json.dumps(report),flush=True)

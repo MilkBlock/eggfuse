@@ -1,0 +1,119 @@
+{
+  "scope": "standalone synthetic cumulative GPU source-context witness reuse; not full native/multistage runtime",
+  "artifact_root": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/witness-context-v31",
+  "weights_sha256": "ac77ef02ab3daac2f1cef0e77e29aea4125c19a505a743c175948e629cd47ba9",
+  "readout_weights_sha256": "318c82348a80e194cddd28bcd282fd1d3074ad65f132bc019353c6504f540332",
+  "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+  "targeted_same_capacity": {
+    "scope": "one cumulative GPU state; host fixed-order sweeps, final CPU audit",
+    "witness_context_depth": 1,
+    "witness_context_reference_bytes": 4104,
+    "pool_capacity_overrides": {
+      "Bop": 32
+    },
+    "candidate_lanes_per_sweep": 16576,
+    "sweeps": 12,
+    "scheduled_steps": 96,
+    "admitted": 12,
+    "replayed": 12,
+    "capture_legal_entries": 12,
+    "capture_skipped_entries": 0,
+    "graph": {
+      "passed": true,
+      "errors": [],
+      "actual_facts": 35,
+      "expected_facts": 35,
+      "mapped_classes": 29
+    },
+    "facts_decoded": true,
+    "cpu_fixedpoint": true,
+    "device_no_novel": true,
+    "semantic_events": [],
+    "boundary_alias_events": [],
+    "needs_attention": false,
+    "attention_reasons": {
+      "query_overflow": 0,
+      "query_incomplete": 0,
+      "dirty_input": 0,
+      "nonfinite": 0,
+      "invalid_keys": 0,
+      "rejected_proposal": 0,
+      "payload_invalid": 0
+    },
+    "attention_events": [],
+    "capacity_steps": 0,
+    "refresh_steps": 0,
+    "cpu_audit_seconds": 0.05027179204626009,
+    "intermediate_host_value_reads": false,
+    "status": "pass"
+  },
+  "all_cases": {
+    "cases": 61,
+    "passed": 60,
+    "graphs_passed": 61,
+    "admitted": 255,
+    "cpu_audit_seconds": 0.34940775734139606,
+    "sweeps": 12,
+    "Bop_capacity": 64,
+    "top_level_status": "difference",
+    "max_source_positions_per_lookup": 20,
+    "context_bytes_range": [
+      3636,
+      4104
+    ]
+  },
+  "remaining_case": {
+    "scope": "one cumulative GPU state; host fixed-order sweeps, final CPU audit",
+    "witness_context_depth": 1,
+    "witness_context_reference_bytes": 7236,
+    "witness_sources_per_lookup": 20,
+    "pool_capacity_overrides": {
+      "Bop": 64
+    },
+    "candidate_lanes_per_sweep": 33152,
+    "sweeps": 24,
+    "scheduled_steps": 192,
+    "admitted": 24,
+    "replayed": 24,
+    "capture_legal_entries": 24,
+    "capture_skipped_entries": 0,
+    "graph": {
+      "passed": true,
+      "errors": [],
+      "actual_facts": 76,
+      "expected_facts": 76,
+      "mapped_classes": 34
+    },
+    "facts_decoded": true,
+    "cpu_fixedpoint": false,
+    "device_no_novel": false,
+    "semantic_events": [],
+    "boundary_alias_events": [],
+    "needs_attention": true,
+    "attention_reasons": {
+      "query_overflow": 1,
+      "query_incomplete": 1,
+      "dirty_input": 0,
+      "nonfinite": 0,
+      "invalid_keys": 0,
+      "rejected_proposal": 0,
+      "payload_invalid": 0
+    },
+    "attention_events": [
+      {
+        "rule": 0,
+        "pools": {
+          "Add": 1,
+          "Bop": 67
+        }
+      }
+    ],
+    "capacity_steps": 0,
+    "refresh_steps": 0,
+    "cpu_audit_seconds": 0.10923283395823091,
+    "intermediate_host_value_reads": false,
+    "status": "difference"
+  },
+  "default_enabled": false,
+  "speedup_claim": false
+}

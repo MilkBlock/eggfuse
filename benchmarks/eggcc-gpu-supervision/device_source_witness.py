@@ -1,4 +1,4 @@
-"""Reuse constructor witnesses only from the already matched source Cells.
+"""Reuse constructor witnesses from matched Cells and bounded source context.
 
 Bake enumerates possible export sites; GPU compares their operands against the
 new frame. No graph-wide table lookup or producer consumer lists are created.
@@ -40,8 +40,12 @@ def compile_sites(recipe, rule):
 
 
 def lookup(state, payload, batch, index, site, xp):
-    """Inspect fixed export sites of selected inputs, preserving stable IDs."""
-    sources=batch['sources'][index];row=sources[:,None,None]
+    """Inspect fixed export sites of selected inputs/context, preserving IDs."""
+    sources=batch['sources'][index];source_valid=batch['mask'][index];generations=batch['generations'][index]
+    if site.get('context_depth',0):
+        from device_witness_context import sources as context_sources
+        sources,source_valid,generations=context_sources(state,sources,source_valid,generations,site['context_depth'],xp)
+    row=sources[:,None,None]
     template=state['keys'][sources,0]
     rule_count=site['view']['rule'].shape[0]
     known=(template>=0)&(template<rule_count)
@@ -52,8 +56,8 @@ def lookup(state, payload, batch, index, site, xp):
     roots=xp.where(constant,v['literal_ids'],read(state,'slot_roots',row,positions,xp))
     valid=constant|read(state,'slot_valid',row,positions,xp)
     pc=xp.where(state['settled'][sources,None],v['effect_count'],state['effect_pc'][sources,None])
-    live=(batch['mask'][index,:,None]&state['present'][sources,None]&state['visible'][sources,None]
-          &state['settled'][sources,None]&(state['generation'][sources,None]==batch['generations'][index,:,None])
+    live=(source_valid[:,None]&state['present'][sources,None]&state['visible'][sources,None]
+          &state['settled'][sources,None]&(state['generation'][sources,None]==generations[:,None])
           &known[:,None]&(template[:,None]==v['rule'])&v['supported']
           &(pc>=v['after'])&(pc<v['expires'])&xp.all(valid,axis=-1))
     args=xp.where(xp.array(site['literals'])>=0,xp.array(site['literals']),payload['slot_roots'][0,xp.array(site['slots'])])

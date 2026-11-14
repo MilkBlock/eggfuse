@@ -18,12 +18,18 @@ from reference_cell_closure import facts_from_cells
 from reference_union_family import compare_graph
 
 
-def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,seed_count,table_capacities=None,collector=None):
+def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,seed_count,table_capacities=None,collector=None,witness_context_depth=0):
     width=shape(state)[1];eq_width=max(len(r['slots']) for r in rules)
     atoms=max(len(r['query']) for r in rules);fields=max(len(a['args']) for r in rules for a in r['query'])
     offset=len(local['rules'])-len(rules)
     plans=[(device(compile_candidates(local,r,atoms=atoms,fields=fields,compact_constants=True,table_capacities=table_capacities)),
             compile_frame(r,width,eq_width,local,True)) for r in rules]
+    if witness_context_depth:
+        if not 1<=witness_context_depth<=2:raise ValueError('bounded witness context supports depth 1 or 2')
+        from device_witness_context import initialize
+        state=initialize(state,atoms,mx)
+        for _,frame in plans:
+            for site in frame['witness_sites'].values():site['context_depth']=witness_context_depth
     attention=mx.array(False);idle=mx.array(False);trace=[]
     for _ in range(sweeps):
         all_idle=mx.array(True)
@@ -84,6 +90,9 @@ def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,
             for binding in bindings:apply_instance(probe,rule,binding)
         fixedpoint=probe.constructions==ref.constructions and probe.unions==ref.unions
     return dict(scope='one cumulative GPU state; host fixed-order sweeps, final CPU audit',
+                witness_context_depth=witness_context_depth,
+                witness_context_reference_bytes=len(state['present'])*atoms*9 if witness_context_depth else 0,
+                witness_sources_per_lookup=sum(atoms**(d+1) for d in range(witness_context_depth+1)),
                 pool_capacity_overrides=table_capacities or {},candidate_lanes_per_sweep=sum(int(np.prod(q['capacities'])) for q,f in plans),
                 sweeps=sweeps,scheduled_steps=len(trace),admitted=admitted,replayed=replayed,
                 capture_legal_entries=replayed,capture_skipped_entries=admitted-replayed,

@@ -101,6 +101,8 @@ def install(state,payload,roots,batch,index,token,rule_id,inputs,ready,xp,dirty=
     keys=xp.concatenate([xp.array([[rule_id]],xp.int32),batch['binding_roots'][index][None,:],xp.full((1,kw-len(inputs)-1),-1,xp.int32)],axis=1)
     p=dict(payload,keys=keys,tokens=token[None,:],matched=ready[None],completed=xp.ones(1,xp.bool_),source=xp.array([-1],xp.int32),generation=xp.array([0],xp.int32),transfer_covered=xp.zeros(1,xp.bool_),witness_sources=batch['sources'][index][None,:],witness_valid=batch['mask'][index][None,:],witness_generations=batch['generations'][index][None,:])
     out,marks=commit(state,p,xp)
+    from device_witness_context import retain
+    out=retain(state,out,batch,index,xp)
     accepted=xp.any(marks['accepted']);changed=out['present']&~state['present']
     if 'slot_owner' in out:
         old=out['owner_slot_roots'];out['owner_slot_roots']=xp.where(accepted&out['owner_slot_valid'],roots[xp.clip(old,0,len(roots)-1)],old)
