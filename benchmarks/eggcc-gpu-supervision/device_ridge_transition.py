@@ -40,6 +40,14 @@ def encode_features(state, request, model, xp, layout=None):
         if 'layout_index' in request:relation=relation[index]
         relation=xp.broadcast_to(relation,(*sources.shape,relation.shape[-1]))
         q=xp.concatenate([q,encode_relations(sources,relation,usable,xp)],axis=1)
+    missing_owner=xp.zeros(sources.shape[0],dtype=xp.bool_)
+    if 'owner_relation' in coefficients:
+        from device_owner_relations import context as owner_context
+        owner_role=coefficients['owner_relation']
+        if 'layout_index' in request:owner_role=owner_role[index]
+        owner_role=xp.broadcast_to(owner_role,(*sources.shape,owner_role.shape[-1]))
+        owner_features,missing_owner=owner_context(state,sources,mask,owner_role,xp)
+        q=xp.concatenate([q,owner_features],axis=1)
     repeated=xp.concatenate([seed]*coefficients['route'].shape[2],axis=1)
     raw=xp.concatenate([seed,q,pool,repeated*pool],axis=1)
     features=xp.concatenate([xp.ones((seed.shape[0],1),dtype=xp.float32),raw,xp.tanh(raw@model['w'])],axis=1)
@@ -47,8 +55,8 @@ def encode_features(state, request, model, xp, layout=None):
         features=xp.concatenate([features,request['boundary_features']],axis=1)
     missing=xp.any(mask&~live,axis=1)
     nonfinite=xp.any(mask&~finite_source,axis=1)|~xp.all(xp.isfinite(features),axis=1)
-    ready=request['input_ready']&layout_ready&~missing&~nonfinite
-    return features,dict(ready=ready,missing_source=missing,nonfinite=nonfinite,
+    ready=request['input_ready']&layout_ready&~missing&~missing_owner&~nonfinite
+    return features,dict(ready=ready,missing_source=missing,missing_owner=missing_owner,nonfinite=nonfinite,
                        missing_layout=~layout_ready,missing_input=~request['input_ready'],needs_attention=xp.any(~ready))
 
 
