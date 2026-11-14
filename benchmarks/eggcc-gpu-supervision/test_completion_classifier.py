@@ -1,13 +1,25 @@
 import unittest
 import numpy as np
 import mlx.core as mx
-from fit_completion_classifier import fit_head,score_head,choose
+from fit_completion_classifier import fit_head,score_head,choose,register_entry,unique_training_rows
 from device_completion_states import compile_states
 from test_completion_states import rule
 from audit_snapshot_queries import device
 
 
 class CompletionClassifier(unittest.TestCase):
+    def test_entry_partition_and_duplicate_policy(self):
+        programs={};entries=set()
+        def meta(run):return dict(capture=dict(program_file_sha256='p'),snapshot_run=run)
+        register_entry(meta(1),'train',programs,entries)
+        register_entry(meta(2),'train',programs,entries)
+        with self.assertRaises(ValueError):register_entry(meta(2),'train',programs,entries)
+        with self.assertRaises(ValueError):register_entry(meta(3),'validation',programs,entries)
+        x=np.ones((4,2),np.float32);y=np.array([[1,0],[1,0],[0,1],[1,0]],np.float32)
+        xx,yy,counts=unique_training_rows(x,y,['p','p','p','q'])
+        self.assertEqual(counts,dict(captured=4,unique=3,duplicates=1,ambiguous_inputs=1))
+        np.testing.assert_array_equal(yy,y[[0,2,3]])
+
     def test_centered_head_preserves_ridge_objective_and_gpu_choice(self):
         rng=np.random.default_rng(5)
         x=np.concatenate([np.ones((32,1)),rng.normal(10,.1,(32,19))],axis=1).astype(np.float32)

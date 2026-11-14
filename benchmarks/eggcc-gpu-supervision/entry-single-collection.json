@@ -1,0 +1,119 @@
+{
+  "scope": "real GPU boundary-context training collection, not full Eggcc",
+  "records": [
+    {
+      "case": "013-factors",
+      "partition": "train",
+      "snapshot_run": 470,
+      "boundary_rule": 293,
+      "reference_seconds": 0.13994625,
+      "source_trace_sha256": "48da8f275f612bdcbe70da8dc7b0944936a93b62296dc674fc56e3799b6fc480",
+      "status": "passed",
+      "commands": [
+        [
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/cargo-target/debug/examples/capture_rhs_results",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/013-factors.program.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/013-factors.trace.json",
+          "--snapshot-runs=470"
+        ],
+        [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+          "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/audit_construct_union_family.py",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/013-factors.trace.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/class-history-neighborhood-input.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/013-factors.execution.json",
+          "--rules",
+          "283,290,293",
+          "--snapshot-run",
+          "470",
+          "--ticks",
+          "24",
+          "--flush-every",
+          "1",
+          "--order-queries",
+          "--boundary-context",
+          "--capture",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/013-factors.npz",
+          "--progress"
+        ],
+        [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+          "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/label_composed_witnesses.py",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/013-factors.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/013-factors.trace.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/class-history-neighborhood-input.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113/manifest.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/013-factors.labeled.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/013-factors.labels.json",
+          "--snapshot-run",
+          "470"
+        ]
+      ],
+      "samples": 8,
+      "generated_sources": 6,
+      "labeled": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/013-factors.labeled.npz",
+      "sha256": "a40a71d7a2212b75a0424bd2b8e43affc42d66b8ce3949f41f33bb434640e40e",
+      "execution": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/013-factors.execution.json"
+    },
+    {
+      "case": "041-leibniz",
+      "partition": "train",
+      "snapshot_run": 459,
+      "boundary_rule": 293,
+      "reference_seconds": 0.12718275,
+      "source_trace_sha256": "623e16fe69c8b1dbb34ac0695fafe545cc95a713d34fddd3743d1f2d7bbe5e23",
+      "status": "passed",
+      "commands": [
+        [
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/cargo-target/debug/examples/capture_rhs_results",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/041-leibniz.program.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/041-leibniz.trace.json",
+          "--snapshot-runs=459"
+        ],
+        [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+          "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/audit_construct_union_family.py",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/041-leibniz.trace.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/class-history-neighborhood-input.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/041-leibniz.execution.json",
+          "--rules",
+          "283,290,293",
+          "--snapshot-run",
+          "459",
+          "--ticks",
+          "24",
+          "--flush-every",
+          "1",
+          "--order-queries",
+          "--boundary-context",
+          "--capture",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/041-leibniz.npz",
+          "--progress"
+        ],
+        [
+          "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+          "/Users/mineralsteins/.codex-minato/worktrees/21ee/egg_layout/benchmarks/eggcc-gpu-supervision/label_composed_witnesses.py",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/041-leibniz.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/041-leibniz.trace.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/class-history-neighborhood-input.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/observed-corpus-20261113/manifest.json",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/041-leibniz.labeled.npz",
+          "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/041-leibniz.labels.json",
+          "--snapshot-run",
+          "459"
+        ]
+      ],
+      "samples": 8,
+      "generated_sources": 6,
+      "labeled": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/041-leibniz.labeled.npz",
+      "sha256": "af32a1d049afee1d5ae0a1a81fd129c40d184d0a3d677d53c44a4d35da7127ed",
+      "execution": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/completion-training-expansion/041-leibniz.execution.json"
+    }
+  ],
+  "expected_cases": [
+    "013-factors",
+    "041-leibniz"
+  ],
+  "passed": true,
+  "binary_sha256": "fb2a17992738db5850a902f3593fa21978eba3b40a8a7a67b6124bcc6d15c283"
+}

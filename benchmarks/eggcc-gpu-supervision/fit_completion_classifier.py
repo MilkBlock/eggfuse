@@ -29,6 +29,31 @@ def fit_head(x,y,alpha=10.):
 
 
 
+def register_entry(meta, split, programs, entries):
+    """Allow distinct training snapshots, never cross-program-split leakage."""
+    program=meta['capture']['program_file_sha256']
+    if program in programs and (programs[program]!=split or split!='train'):
+        raise ValueError('duplicate validation or leaked program')
+    entry=(program,meta['snapshot_run'],meta.get('source_token_mode','exact completed states'))
+    if entry in entries:raise ValueError('duplicate program entry')
+    programs[program]=split;entries.add(entry)
+
+
+def unique_training_rows(x,y,programs):
+    # Same input in different programs remains independent evidence. Within a
+    # program, repeated entries must not increase its weight by recapture alone.
+    seen={};keep=[];conflicts=0
+    for i,(row,target,program) in enumerate(zip(x,y,programs)):
+        key=(program,row.tobytes());label=target.tobytes()
+        if key in seen:
+            old=seen[key]
+            if label in old:continue
+            conflicts+=1;old.add(label)
+        else:seen[key]={label}
+        keep.append(i)
+    return x[keep],y[keep],dict(captured=len(x),unique=len(keep),duplicates=len(x)-len(keep),ambiguous_inputs=conflicts)
+
+
 def inputs_for_case(path,meta,data,plans):
     captures=captured_inputs(path,meta);out={}
     if len(captures)!=len(data['rules']):raise ValueError('capture alignment')
@@ -74,24 +99,23 @@ def main():
         pick=np.flatnonzero(f['alphas']==dr['selected']['partition'])
         if len(pick)!=1:raise ValueError('decoder selection')
         dw=f['w'];dc=f['coef'][:,pick]
-    cases=[];seen=set();family=None;plans=None
+    cases=[];programs={};entries=set();family=None;plans=None
     for split,paths in [('train',a.train),('validation',a.validation)]:
         for path in paths:
             d,m=load(path,split)
             if m['model_sha256'] not in allowed or m.get('source_token_mode','exact completed states')!='exact completed states':raise ValueError('unverified exact-source basis')
-            sha=m['capture']['program_file_sha256']
-            if sha in seen:raise ValueError('duplicate or leaked program')
-            seen.add(sha);sf=semantic_family(m)
+            register_entry(m,split,programs,entries);sf=semantic_family(m)
             if family is not None and sf!=family:raise ValueError('semantic family mismatch')
             if plans is None:plans=[compile_states(r) for r in sf]
             family=sf;d['features'],_=align_features(d,model,True)
             details=inputs_for_case(path,m,d,plans);cases.append((split,d,m,details))
     heads=[];coverage=[]
     for rid,plan in enumerate(plans):
-        source=[(d,v[rid]) for s,d,_,v in cases if s=='train' and rid in v]
-        x=np.concatenate([d['features'][v['ids']] for d,v in source]);y=np.concatenate([v['target'] for _,v in source])
+        source=[(d,v[rid],m['capture']['program_file_sha256']) for s,d,m,v in cases if s=='train' and rid in v]
+        x=np.concatenate([d['features'][v['ids']] for d,v,_ in source]);y=np.concatenate([v['target'] for _,v,_ in source])
+        x,y,duplicates=unique_training_rows(x,y,[p for _,v,p in source for _ in v['ids']])
         heads.append(fit_head(x,y,10.))
-        coverage.append(dict(states=y.shape[1],observed_training_states=int(np.any(y,axis=0).sum()),training_instances=len(y)))
+        coverage.append(dict(states=y.shape[1],observed_training_states=int(np.any(y,axis=0).sum()),training_instances=len(y),sampling=duplicates))
     results=[];gpu_error=0.;token_error=0.;decoding_disagreements=0
     for split,d,m,details in cases:
         rebuilt=np.zeros_like(d['targets']);baseline_tokens=np.tanh(d['features']@model['coef']);selected_rows={}
@@ -119,11 +143,11 @@ def main():
             bx,by=materialize(readout_rows(rows,True),baseline_tokens,dw,True);bs=(bx@dc).ravel()
             groups[group]=dict(baseline=dict(summarize(rows,bs),dynamic_quotient=dynamic_metrics(by,bs)),
                 classifier=dict(summarize(rows,all_scores[ids]),dynamic_quotient=dynamic_metrics(truth[ids],all_scores[ids])))
-        results.append(dict(case=m['capture']['case'],partition=split,sha256=m['capture']['artifact_sha256'],groups=groups,token_decode_disagreements=disagree))
+        results.append(dict(case=m['capture']['case'],partition=split,snapshot_run=m['snapshot_run'],sha256=m['capture']['artifact_sha256'],groups=groups,token_decode_disagreements=disagree))
     if gpu_error>5e-6 or token_error>5e-6:raise ValueError(f'GPU numerical error: score={gpu_error}, token={token_error}')
     np.savez_compressed(a.output.with_suffix('.npz'),**{f'head_{i}_{k}':v for i,h in enumerate(heads) for k,v in h.items()})
     out=dict(scope='offline direct whole-state ridge and GPU token reconstruction on real captures; not installed',alpha=10.,backpropagation=False,
-        installed=False,union_authorized=False,model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
+        installed=False,union_authorized=False,training_programs=sum(v=='train' for v in programs.values()),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
         head_sha256=hashlib.sha256(a.output.with_suffix('.npz').read_bytes()).hexdigest(),coefficient_bytes=sum(h['coef'].nbytes for h in heads),normalization_bytes=sum(h[k].nbytes for h in heads for k in ('mean','scale','bias')),coverage=coverage,
         maximum_gpu_score_error=gpu_error,maximum_gpu_token_error=token_error,token_decode_disagreements=decoding_disagreements,cases=results,
         limitations=['All legal type-compatible states are included, but unseen states have no positive training evidence','No predicted-source rollout or native full-program acceptance','No learned equality is a proof','Current input Eq is retained; scalar effects outside query inputs are unsupported'])
