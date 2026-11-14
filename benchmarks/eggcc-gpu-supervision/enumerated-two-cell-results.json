@@ -1,0 +1,36 @@
+{
+  "scope": "one completed producer / one consumer; all consumer atoms have boundary support; i64 equality only",
+  "counts": {
+    "wirings": 48,
+    "contradictory_wirings": 0,
+    "budget_exclusions": 0,
+    "partitions": 1480,
+    "contradictory_partitions": 0,
+    "unique_cases": 792,
+    "within_bound_complete": true
+  },
+  "distinct_snapshots": 507,
+  "cases_by_pair": {
+    "(0, 0)": 16,
+    "(0, 1)": 10,
+    "(0, 2)": 10,
+    "(1, 0)": 104,
+    "(1, 1)": 239,
+    "(1, 2)": 70,
+    "(2, 0)": 104,
+    "(2, 1)": 70,
+    "(2, 2)": 169
+  },
+  "recipe_sha256": "19e4142342dea30aed720bbe0d41d870bd1dde6d444b12439798b39998df7c1c",
+  "case_file_sha256": "34dae0f458d12bc0382ecb44b8f18f0138b27ec2b1030d61e3f1566ee2fdf80c",
+  "artifact_directory": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/enumerated-two-cell-v2",
+  "obligations": [
+    "No three-Cell or iterative interaction closure",
+    "No scalar arithmetic/ordering partition proof",
+    "No stage schedule or source-program reachability proof",
+    "Snapshots are completed-producer boundaries, not pre-RHS inputs",
+    "No ownership-retirement proof"
+  ],
+  "labels_generated": false,
+  "training_performed": false
+}
