@@ -1,0 +1,894 @@
+{
+  "scope": "offline direct whole-state ridge and GPU token reconstruction on real captures; not installed",
+  "alpha": 10.0,
+  "backpropagation": false,
+  "installed": false,
+  "union_authorized": false,
+  "model_sha256": "b1da3a8f63fde01c77c1318e2fde8109df048c8bc6eb159e14dce32a66d17edf",
+  "decoder_sha256": "cf9c22bbc95c2a04eca32565875bbce864bdad6038b5115e64b1162b2582b313",
+  "head_sha256": "085ac47bb1add62d6d69a5b3a389b3f640304413f1f172d183896a105001fd8e",
+  "coefficient_bytes": 278656,
+  "normalization_bytes": 52376,
+  "coverage": [
+    {
+      "states": 2,
+      "observed_training_states": 2,
+      "training_instances": 34
+    },
+    {
+      "states": 15,
+      "observed_training_states": 3,
+      "training_instances": 77
+    },
+    {
+      "states": 15,
+      "observed_training_states": 2,
+      "training_instances": 18
+    }
+  ],
+  "maximum_gpu_score_error": 2.0265579223632812e-06,
+  "maximum_gpu_token_error": 1.1920928955078125e-07,
+  "token_decode_disagreements": 0,
+  "cases": [
+    {
+      "case": "024-pascals-row",
+      "partition": "train",
+      "sha256": "65510ffa92061914c957c9c188fc6a879a761a55fd7fc02ec09c5b2eedb3c17f",
+      "groups": {
+        "all": {
+          "baseline": {
+            "instances": 40,
+            "query_instances": 40,
+            "exact_partitions": 39,
+            "false_merges": 0,
+            "missed_equalities": 1,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 175,
+              "positives": 59,
+              "true_positives": 58,
+              "false_positives": 0,
+              "false_negatives": 1,
+              "precision": 1.0,
+              "recall": 0.9830508474576272
+            }
+          },
+          "classifier": {
+            "instances": 40,
+            "query_instances": 40,
+            "exact_partitions": 40,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 175,
+              "positives": 59,
+              "true_positives": 59,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          }
+        },
+        "direct": {
+          "baseline": {
+            "instances": 36,
+            "query_instances": 36,
+            "exact_partitions": 35,
+            "false_merges": 0,
+            "missed_equalities": 1,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 161,
+              "positives": 54,
+              "true_positives": 53,
+              "false_positives": 0,
+              "false_negatives": 1,
+              "precision": 1.0,
+              "recall": 0.9814814814814815
+            }
+          },
+          "classifier": {
+            "instances": 36,
+            "query_instances": 36,
+            "exact_partitions": 36,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 161,
+              "positives": 54,
+              "true_positives": 54,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          }
+        },
+        "generated": {
+          "baseline": {
+            "instances": 4,
+            "query_instances": 4,
+            "exact_partitions": 4,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 14,
+              "positives": 5,
+              "true_positives": 5,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          },
+          "classifier": {
+            "instances": 4,
+            "query_instances": 4,
+            "exact_partitions": 4,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 14,
+              "positives": 5,
+              "true_positives": 5,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          }
+        }
+      },
+      "token_decode_disagreements": 0
+    },
+    {
+      "case": "011-euclid",
+      "partition": "train",
+      "sha256": "b5bdf4950a8fc08e0e89d8af14e943178631abd67780ac19650607cb66ce041f",
+      "groups": {
+        "all": {
+          "baseline": {
+            "instances": 35,
+            "query_instances": 35,
+            "exact_partitions": 32,
+            "false_merges": 2,
+            "missed_equalities": 6,
+            "nontransitive": 0,
+            "closure_false_merges": 2,
+            "dynamic_quotient": {
+              "queries": 155,
+              "positives": 40,
+              "true_positives": 36,
+              "false_positives": 1,
+              "false_negatives": 4,
+              "precision": 0.972972972972973,
+              "recall": 0.9
+            }
+          },
+          "classifier": {
+            "instances": 35,
+            "query_instances": 35,
+            "exact_partitions": 33,
+            "false_merges": 0,
+            "missed_equalities": 6,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 155,
+              "positives": 40,
+              "true_positives": 36,
+              "false_positives": 0,
+              "false_negatives": 4,
+              "precision": 1.0,
+              "recall": 0.9
+            }
+          }
+        },
+        "direct": {
+          "baseline": {
+            "instances": 34,
+            "query_instances": 34,
+            "exact_partitions": 31,
+            "false_merges": 2,
+            "missed_equalities": 6,
+            "nontransitive": 0,
+            "closure_false_merges": 2,
+            "dynamic_quotient": {
+              "queries": 149,
+              "positives": 38,
+              "true_positives": 34,
+              "false_positives": 1,
+              "false_negatives": 4,
+              "precision": 0.9714285714285714,
+              "recall": 0.8947368421052632
+            }
+          },
+          "classifier": {
+            "instances": 34,
+            "query_instances": 34,
+            "exact_partitions": 32,
+            "false_merges": 0,
+            "missed_equalities": 6,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 149,
+              "positives": 38,
+              "true_positives": 34,
+              "false_positives": 0,
+              "false_negatives": 4,
+              "precision": 1.0,
+              "recall": 0.8947368421052632
+            }
+          }
+        },
+        "generated": {
+          "baseline": {
+            "instances": 1,
+            "query_instances": 1,
+            "exact_partitions": 1,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 6,
+              "positives": 2,
+              "true_positives": 2,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          },
+          "classifier": {
+            "instances": 1,
+            "query_instances": 1,
+            "exact_partitions": 1,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 6,
+              "positives": 2,
+              "true_positives": 2,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          }
+        }
+      },
+      "token_decode_disagreements": 0
+    },
+    {
+      "case": "049-dead-branch",
+      "partition": "train",
+      "sha256": "827a0c35232de0667b1844f2281180455c38d39dc3de2ff0aebf272b9154ccba",
+      "groups": {
+        "all": {
+          "baseline": {
+            "instances": 34,
+            "query_instances": 34,
+            "exact_partitions": 31,
+            "false_merges": 0,
+            "missed_equalities": 6,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 154,
+              "positives": 48,
+              "true_positives": 45,
+              "false_positives": 0,
+              "false_negatives": 3,
+              "precision": 1.0,
+              "recall": 0.9375
+            }
+          },
+          "classifier": {
+            "instances": 34,
+            "query_instances": 34,
+            "exact_partitions": 34,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 154,
+              "positives": 48,
+              "true_positives": 48,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          }
+        },
+        "direct": {
+          "baseline": {
+            "instances": 10,
+            "query_instances": 10,
+            "exact_partitions": 7,
+            "false_merges": 0,
+            "missed_equalities": 6,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 45,
+              "positives": 15,
+              "true_positives": 12,
+              "false_positives": 0,
+              "false_negatives": 3,
+              "precision": 1.0,
+              "recall": 0.8
+            }
+          },
+          "classifier": {
+            "instances": 10,
+            "query_instances": 10,
+            "exact_partitions": 10,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 45,
+              "positives": 15,
+              "true_positives": 15,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          }
+        },
+        "generated": {
+          "baseline": {
+            "instances": 24,
+            "query_instances": 24,
+            "exact_partitions": 24,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 109,
+              "positives": 33,
+              "true_positives": 33,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          },
+          "classifier": {
+            "instances": 24,
+            "query_instances": 24,
+            "exact_partitions": 24,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 109,
+              "positives": 33,
+              "true_positives": 33,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          }
+        }
+      },
+      "token_decode_disagreements": 0
+    },
+    {
+      "case": "033-sum-check",
+      "partition": "train",
+      "sha256": "0c9a5a417a9c9e77d3345838f24443e48d7080959a866762d3f85deae9900463",
+      "groups": {
+        "all": {
+          "baseline": {
+            "instances": 6,
+            "query_instances": 6,
+            "exact_partitions": 6,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 36,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          },
+          "classifier": {
+            "instances": 6,
+            "query_instances": 6,
+            "exact_partitions": 6,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 36,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          }
+        },
+        "direct": {
+          "baseline": {
+            "instances": 3,
+            "query_instances": 3,
+            "exact_partitions": 3,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 18,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          },
+          "classifier": {
+            "instances": 3,
+            "query_instances": 3,
+            "exact_partitions": 3,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 18,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          }
+        },
+        "generated": {
+          "baseline": {
+            "instances": 3,
+            "query_instances": 3,
+            "exact_partitions": 3,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 18,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          },
+          "classifier": {
+            "instances": 3,
+            "query_instances": 3,
+            "exact_partitions": 3,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 18,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          }
+        }
+      },
+      "token_decode_disagreements": 0
+    },
+    {
+      "case": "035-sum-sq-diff",
+      "partition": "train",
+      "sha256": "dcc1ed1993dab63a2796a9821512cb760384654c854be986e4939df1aee15d64",
+      "groups": {
+        "all": {
+          "baseline": {
+            "instances": 14,
+            "query_instances": 14,
+            "exact_partitions": 14,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 84,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          },
+          "classifier": {
+            "instances": 14,
+            "query_instances": 14,
+            "exact_partitions": 14,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 84,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          }
+        },
+        "direct": {
+          "baseline": {
+            "instances": 11,
+            "query_instances": 11,
+            "exact_partitions": 11,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 66,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          },
+          "classifier": {
+            "instances": 11,
+            "query_instances": 11,
+            "exact_partitions": 11,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 66,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          }
+        },
+        "generated": {
+          "baseline": {
+            "instances": 3,
+            "query_instances": 3,
+            "exact_partitions": 3,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 18,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          },
+          "classifier": {
+            "instances": 3,
+            "query_instances": 3,
+            "exact_partitions": 3,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 18,
+              "positives": 0,
+              "true_positives": 0,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": null,
+              "recall": null
+            }
+          }
+        }
+      },
+      "token_decode_disagreements": 0
+    },
+    {
+      "case": "016-gcd",
+      "partition": "validation",
+      "sha256": "d3024efdd65b7dcaff7c689f9577bfeecd9a18152677682f6187db77d1aba98d",
+      "groups": {
+        "all": {
+          "baseline": {
+            "instances": 41,
+            "query_instances": 41,
+            "exact_partitions": 35,
+            "false_merges": 0,
+            "missed_equalities": 16,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 206,
+              "positives": 18,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 10,
+              "precision": 1.0,
+              "recall": 0.4444444444444444
+            }
+          },
+          "classifier": {
+            "instances": 41,
+            "query_instances": 41,
+            "exact_partitions": 39,
+            "false_merges": 3,
+            "missed_equalities": 3,
+            "nontransitive": 0,
+            "closure_false_merges": 3,
+            "dynamic_quotient": {
+              "queries": 206,
+              "positives": 18,
+              "true_positives": 16,
+              "false_positives": 2,
+              "false_negatives": 2,
+              "precision": 0.8888888888888888,
+              "recall": 0.8888888888888888
+            }
+          }
+        },
+        "direct": {
+          "baseline": {
+            "instances": 26,
+            "query_instances": 26,
+            "exact_partitions": 23,
+            "false_merges": 0,
+            "missed_equalities": 7,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 146,
+              "positives": 7,
+              "true_positives": 3,
+              "false_positives": 0,
+              "false_negatives": 4,
+              "precision": 1.0,
+              "recall": 0.42857142857142855
+            }
+          },
+          "classifier": {
+            "instances": 26,
+            "query_instances": 26,
+            "exact_partitions": 24,
+            "false_merges": 3,
+            "missed_equalities": 3,
+            "nontransitive": 0,
+            "closure_false_merges": 3,
+            "dynamic_quotient": {
+              "queries": 146,
+              "positives": 7,
+              "true_positives": 5,
+              "false_positives": 2,
+              "false_negatives": 2,
+              "precision": 0.7142857142857143,
+              "recall": 0.7142857142857143
+            }
+          }
+        },
+        "generated": {
+          "baseline": {
+            "instances": 15,
+            "query_instances": 15,
+            "exact_partitions": 12,
+            "false_merges": 0,
+            "missed_equalities": 9,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 60,
+              "positives": 11,
+              "true_positives": 5,
+              "false_positives": 0,
+              "false_negatives": 6,
+              "precision": 1.0,
+              "recall": 0.45454545454545453
+            }
+          },
+          "classifier": {
+            "instances": 15,
+            "query_instances": 15,
+            "exact_partitions": 15,
+            "false_merges": 0,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 60,
+              "positives": 11,
+              "true_positives": 11,
+              "false_positives": 0,
+              "false_negatives": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            }
+          }
+        }
+      },
+      "token_decode_disagreements": 0
+    },
+    {
+      "case": "019-lcm",
+      "partition": "validation",
+      "sha256": "1edc61b644425c5f3f759a72bf013a5b5c3ce4f9efcd5867b788ef01f81d3c7f",
+      "groups": {
+        "all": {
+          "baseline": {
+            "instances": 99,
+            "query_instances": 99,
+            "exact_partitions": 82,
+            "false_merges": 10,
+            "missed_equalities": 35,
+            "nontransitive": 1,
+            "closure_false_merges": 13,
+            "dynamic_quotient": {
+              "queries": 524,
+              "positives": 37,
+              "true_positives": 16,
+              "false_positives": 5,
+              "false_negatives": 21,
+              "precision": 0.7619047619047619,
+              "recall": 0.43243243243243246
+            }
+          },
+          "classifier": {
+            "instances": 99,
+            "query_instances": 99,
+            "exact_partitions": 96,
+            "false_merges": 9,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 9,
+            "dynamic_quotient": {
+              "queries": 524,
+              "positives": 37,
+              "true_positives": 37,
+              "false_positives": 6,
+              "false_negatives": 0,
+              "precision": 0.8604651162790697,
+              "recall": 1.0
+            }
+          }
+        },
+        "direct": {
+          "baseline": {
+            "instances": 78,
+            "query_instances": 78,
+            "exact_partitions": 71,
+            "false_merges": 0,
+            "missed_equalities": 14,
+            "nontransitive": 0,
+            "closure_false_merges": 0,
+            "dynamic_quotient": {
+              "queries": 458,
+              "positives": 15,
+              "true_positives": 8,
+              "false_positives": 0,
+              "false_negatives": 7,
+              "precision": 1.0,
+              "recall": 0.5333333333333333
+            }
+          },
+          "classifier": {
+            "instances": 78,
+            "query_instances": 78,
+            "exact_partitions": 76,
+            "false_merges": 6,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 6,
+            "dynamic_quotient": {
+              "queries": 458,
+              "positives": 15,
+              "true_positives": 15,
+              "false_positives": 4,
+              "false_negatives": 0,
+              "precision": 0.7894736842105263,
+              "recall": 1.0
+            }
+          }
+        },
+        "generated": {
+          "baseline": {
+            "instances": 21,
+            "query_instances": 21,
+            "exact_partitions": 11,
+            "false_merges": 10,
+            "missed_equalities": 21,
+            "nontransitive": 1,
+            "closure_false_merges": 13,
+            "dynamic_quotient": {
+              "queries": 66,
+              "positives": 22,
+              "true_positives": 8,
+              "false_positives": 5,
+              "false_negatives": 14,
+              "precision": 0.6153846153846154,
+              "recall": 0.36363636363636365
+            }
+          },
+          "classifier": {
+            "instances": 21,
+            "query_instances": 21,
+            "exact_partitions": 20,
+            "false_merges": 3,
+            "missed_equalities": 0,
+            "nontransitive": 0,
+            "closure_false_merges": 3,
+            "dynamic_quotient": {
+              "queries": 66,
+              "positives": 22,
+              "true_positives": 22,
+              "false_positives": 2,
+              "false_negatives": 0,
+              "precision": 0.9166666666666666,
+              "recall": 1.0
+            }
+          }
+        }
+      },
+      "token_decode_disagreements": 0
+    }
+  ],
+  "limitations": [
+    "All legal type-compatible states are included, but unseen states have no positive training evidence",
+    "No predicted-source rollout or native full-program acceptance",
+    "No learned equality is a proof",
+    "Current input Eq is retained; scalar effects outside query inputs are unsupported"
+  ]
+}
