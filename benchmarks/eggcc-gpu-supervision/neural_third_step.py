@@ -43,7 +43,9 @@ def replay_blocks(model,batch):
     incoming=mx.where((batch['source_kind']==1)[...,None],blocks[:,0,None,:],boundary)
     incoming=mx.where((batch['source_kind']==2)[...,None],blocks[:,1,None,:],incoming)
     incoming=incoming+batch['source_tags']
-    return model.cell.transition(incoming,batch['edges'],batch['mask'],batch['request'],batch['relations'])
+    from neural_owner_context import replay_features
+    features=replay_features(batch,mx) if model.owner_aware else None
+    return model.consume(incoming,batch['edges'],batch['mask'],batch['request'],batch['relations'],features)
 
 
 def valid_candidate(relation,key,expected):
@@ -87,7 +89,7 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False):
             from neural_block_handoff import initialize as initialize_blocks,handoff as block_handoff
             state=initialize_blocks(state,mx)
         if tp['covered'] and block_owner:
-            state,move=block_handoff(state,device(tp),mx.array(src),mx.array(dst),mx.array(1),mx.array(1),mx.array(1.),mx.zeros((2,128)),mx.array(True),mx.array(True),mx)
+            state,move=block_handoff(state,device(tp),mx.array(src),mx.array(dst),mx.array(1),mx.array(1),mx.array(1.),mx.zeros((2,128)),mx.array(True),mx.array(True),mx,layout_code=mx.array(chain['owner_request'][i]))
             if not bool(move['semantic_blocks_adopted']):raise ValueError('block routing requires actual semantic handoff')
             moved+=1
         elif tp['covered']:
@@ -121,6 +123,9 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False):
                 datum.update({'c_'+k:chain[k][i] for k in ('seed_x','replace','edges','mask','request','relations')})
                 if block_owner:
                     datum.update({'c_'+k:chain[k][i] for k in ('source_request','owner_request')})
+                    from neural_owner_context import replay_features
+                    replay_input={k:datum[k][None,...] for k in ('source_kind','mask','c_owner_request')}
+                    np.testing.assert_allclose(replay_features(replay_input,np)[0],np.array(b['owner_features'][j]),atol=1e-6)
                 items.append(datum)
         print(json.dumps(dict(case=case+1,total_cases=len(selected),candidates=len(items))),flush=True)
     if not items:raise ValueError('empty replay dataset')

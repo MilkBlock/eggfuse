@@ -34,14 +34,17 @@ def supervision(recipe,plan,source_values,target_values,before,after,width):
 
 
 class OwnerBlocks(nn.Module):
-    def __init__(self,input_width,relation_width,width):
-        super().__init__();self.width=width;self.immutable_source=False
+    def __init__(self,input_width,relation_width,width,owner_aware=False):
+        super().__init__();self.width=width;self.immutable_source=False;self.owner_aware=owner_aware
         self.cell=ordered_model(input_width,relation_width,True)
         self.cell.relation.freeze();self.cell.match_relation.freeze()
         self.eq=EqReadout(width)
         self.update_source=nn.Sequential(nn.Linear(448,128),nn.GELU(),nn.Linear(128,128))
         self.update_source.layers[-1].weight=mx.zeros_like(self.update_source.layers[-1].weight)
         self.update_source.layers[-1].bias=mx.zeros_like(self.update_source.layers[-1].bias)
+        if owner_aware:
+            self.owner_edges=nn.Linear(64,64,bias=False)
+            self.owner_edges.weight=mx.zeros_like(self.owner_edges.weight)
         self.cross=nn.Sequential(nn.Linear(448,128),nn.GELU(),nn.Linear(128,128),nn.GELU(),nn.Linear(128,width*width))
 
     def advance(self,source,inputs,edges,mask,source_request,target_request,owner_request,relations):
@@ -51,6 +54,12 @@ class OwnerBlocks(nn.Module):
             features=mx.concatenate([source,target,source_request,target_request,owner_request],axis=-1)
             updated=source+self.update_source(features)
         return accepted,mx.stack([updated,target],axis=1)
+
+    def consume(self,tokens,edges,mask,request,relations,owner_features=None):
+        if self.owner_aware:
+            if owner_features is None:raise ValueError('missing ownership-edge evidence')
+            edges=edges+self.owner_edges(owner_features)
+        return self.cell.transition(tokens,edges,mask,request,relations)
 
     def readout(self,blocks,source_request,target_request,owner_request,include_cross=True):
         a=self.eq(blocks[:,0],source_request);b=self.eq(blocks[:,1],target_request)

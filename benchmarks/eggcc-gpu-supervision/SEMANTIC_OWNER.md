@@ -287,3 +287,52 @@ FROZEN_WEIGHTS --freeze-base --baked-eq --evaluate-only`, adding
 Use `audit_neural_gpu_rhs.py ... --block-owner --baked-eq` with or without
 `--immutable-source` for actual handoff/next-query checks. See
 `baked-owner-eq-results.json`. No speed or native-runtime result is claimed.
+
+## Ownership-aware consumer adapter (rejected, 2026-11-14)
+
+The next experiment retains immutable source tokens and supplies consumer edges
+with shared-owner connectivity, ordered block positions, and the compiled
+64-float completion layout. Owner handles participate only in equality tests;
+renumbering them leaves floating features unchanged. Masked, unsettled and stale
+sources cannot supply these features. The physical handoff stores the layout
+code atomically with its target owner. The replay builder verifies its lineage
+reconstruction against actual device candidate features.
+
+An opt-in `--owner-aware` path trains a zero-initialized 64x64 additive edge
+adapter for 600 steps. Cell encoder/transition, Eq readout, source update and
+cross readout are frozen; source updates and cross prediction are bypassed.
+Backpropagation reaches the adapter through the frozen consumer. The zero adapter
+is bitwise equivalent to the original consumer. Training uses the existing
+synthetic block replay dataset, with no oracle token or label used as input.
+
+This does NOT improve acceptance. Held-out next-state Eq falls from 541/625 to
+521/625; false-merge states rise from 10 to 37. Internal owner Eq remains
+571/578 with zero false merges. Actual GPU candidate enumeration after 107
+successful transfers yields 273/338 correct next states and 23 false-merge
+states, exactly matching the corresponding replay prefix. Match false positives,
+misses and invalid predictions are zero. Both semantic audits return
+`difference`. Context makes both owner blocks available in all 338 prefix cases;
+this split does not establish behavior when only one block is available.
+
+Costs are explicit: 4096 learned adapter parameters, 64 floats (256 bytes) of
+layout code per allocated arena row, and temporary [batch, inputs, inputs, 64]
+features plus their matrix projection. Codes are copied into destination rows;
+this is not zero-copy or measured acceleration. Legacy prediction remains the
+default. The prototype still allocates this metadata in block-owner mode.
+
+Reproduce training with `train_neural_owner_blocks.py TRACE TRANSITION EQ OUT
+--resume FROZEN_OWNER --owner-aware --identity-source --freeze-base --baked-eq
+--omit-cross-predictions --third-train TRAIN_NPZ --third-test TEST_NPZ --steps 600`.
+Audit with `audit_neural_gpu_rhs.py TRACE WEIGHTS OUT --owner-aware
+--immutable-source --block-owner --baked-eq --interface-only --follow
+--context-capacity 8 --limit 107`; compare `audit_neural_third_step.py TEST_NPZ
+WEIGHTS OUT --owner-aware --block-owner --case-limit 107`.
+
+`owner-context-results.json` records checkpoint/data hashes and rejection.
+The checked Bake branch remains `codex/cell-parallel-admission` at `f3321a3a`,
+a descendant of `56e28b89`. Its current-owner admission methodology motivates
+using actual post-transfer directories, not interpreting old producer paths as
+current ownership. The next unresolved obligation is a consumer representation
+of specific compiled completion relations; adding a dense owner layout code to
+the existing incidence edges is insufficient in this experiment. This result
+does not justify refreshing old tokens or promoting this learned adapter.

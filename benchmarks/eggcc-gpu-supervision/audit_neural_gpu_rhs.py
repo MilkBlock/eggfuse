@@ -71,9 +71,10 @@ def initial_case(recipe,record,spare=0,payload_width=None):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--semantic-owners',action='store_true');p.add_argument('--block-owner',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--immutable-source',action='store_true')
+    p.add_argument('--owner-aware',action='store_true');p.add_argument('--semantic-owners',action='store_true');p.add_argument('--block-owner',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--immutable-source',action='store_true')
     p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
+    if a.owner_aware and not (a.block_owner and a.immutable_source):raise ValueError('owner-aware consumption requires immutable block owners')
     if a.immutable_source and not a.block_owner:raise ValueError('immutable source requires block ownership')
     if a.baked_eq and not (a.eq_readout or a.block_owner):raise ValueError('baked Eq requires semantic readout')
     if a.block_owner and (a.speculate or a.semantic_owners or a.eq_readout):raise ValueError('block-owner audit uses its bundled readout and a separate non-speculative directory')
@@ -87,7 +88,7 @@ def main():
     owner=None
     if a.block_owner:
         from neural_owner_blocks import OwnerBlocks
-        owner=OwnerBlocks(base['x'].shape[-1],base['relations'].shape[-1],max(len(r['slots']) for r in recipe['rules']))
+        owner=OwnerBlocks(base['x'].shape[-1],base['relations'].shape[-1],max(len(r['slots']) for r in recipe['rules']),owner_aware=a.owner_aware)
         owner.load_weights(str(a.weights));owner.immutable_source=a.immutable_source;model=owner.cell
     else:
         model=ordered_model(base['x'].shape[-1],base['relations'].shape[-1],a.interface_only);model.load_weights(str(a.weights))
@@ -141,9 +142,9 @@ def main():
             state=initialize_blocks(state,mx)
         before=state
         if tp['covered'] and a.block_owner:
-            state,move=block_handoff(state,device(tp),mx.array(src),mx.array(dst),mx.array(1),mx.array(1),logits[i],owner_blocks[i],~marks['needs_attention']&(first[i]>=0),mx.array(True),mx)
+            state,move=block_handoff(state,device(tp),mx.array(src),mx.array(dst),mx.array(1),mx.array(1),logits[i],owner_blocks[i],~marks['needs_attention']&(first[i]>=0),mx.array(True),mx,layout_code=mx.array(chain['owner_request'][i]))
         elif tp['covered']:
-            state,move=handoff(state,device(tp),mx.array(src),mx.array(dst),mx.array(1),mx.array(1),logits[i],tokens[i],~marks['needs_attention']&(first[i]>=0),mx.array(True),mx)
+            state,move=handoff(state,device(tp),mx.array(src),mx.array(dst),mx.array(1),mx.array(1),logits[i],tokens[i],~marks['needs_attention']&(first[i]>=0),mx.array(True),mx,layout_code=mx.array(chain['owner_request'][i]))
         else:move=dict(transferred=mx.array(False),copied_fields=mx.array(0))
         mx.eval(state,next_id,marks,move,executed,created,merged)
         final={k:np.array(v) for k,v in state.items()};facts,covered=facts_from_cells(local,final)
@@ -158,9 +159,9 @@ def main():
         if a.semantic_owners:
             report['semantic_owner']=dict(semantic_proof,adopted=bool(move.get('semantic_adopted',False)))
         if a.follow and check['passed']:
-            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None,a.baked_eq,baked_proofs)
+            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None,a.baked_eq,baked_proofs,owner if a.owner_aware else None)
         reports.append(report);print(json.dumps(report),flush=True)
-    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,semantic_owners=a.semantic_owners,block_owner=a.block_owner,immutable_source=a.immutable_source,baked_eq=a.baked_eq,speculative_frames=a.speculate,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,semantic_owners=a.semantic_owners,block_owner=a.block_owner,immutable_source=a.immutable_source,owner_aware=a.owner_aware,baked_eq=a.baked_eq,speculative_frames=a.speculate,wall_seconds=time.perf_counter()-started,speedup_claim=False)
     if a.eq_readout:result['readout_weights_sha256']=hashlib.sha256(a.eq_readout.read_bytes()).hexdigest()
     failed=audit_failed(reports,a.follow,a.speculate)
     result['status']='difference' if failed else 'pass'
@@ -185,7 +186,7 @@ def audit_failed(reports,follow=False,speculate=False):
     return not reports
 
 
-def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None,context_capacity=0,speculation=None,baked_eq=False,baked_proofs=None):
+def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None,context_capacity=0,speculation=None,baked_eq=False,baked_proofs=None,consumer_owner=None):
     from neural_device_candidates import compile_candidates,candidates
     counts=dict(candidates=0,accepted=0,false_positive=0,expected=0,recovered=0,missed=0,incomplete_rules=0,accepted_from_generated=0,invalid_predictions=0,context_overflow_rules=0,context_inputs=0)
     groups=[];spec_reports=[]
@@ -201,7 +202,9 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
     for rid,rule in enumerate(recipe['rules']):
         host_plan=compile_candidates(local,rule,context_capacity=context_capacity)
         batch=candidates(state,frames,device(host_plan),mx.array(True),mx.array(True),mx)
-        logits,tokens=model.transition(batch['tokens'],batch['edges'],batch['mask'],batch['request'],batch['relations']);mx.eval(batch,logits,tokens)
+        args=(batch['tokens'],batch['edges'],batch['mask'],batch['request'],batch['relations'])
+        logits,tokens=consumer_owner.consume(*args,batch['owner_features']) if consumer_owner is not None else model.transition(*args)
+        mx.eval(batch,logits,tokens)
         if eq_head is not None:
             raw_semantic=eq_head(tokens,batch['request']);semantic=raw_semantic
             proof=None

@@ -24,6 +24,11 @@ def build(recipe,count,seed):
 
 
 def objective(model,batch,parent,chain,third=None,baked_eq=False,omit_cross=False):
+    if model.owner_aware:
+        if third is None:raise ValueError('owner adapter requires consumer training')
+        from neural_third_step import replay_blocks
+        _,token=replay_blocks(model,third)
+        return masked_loss(model.eq(token,third['request']),third['eq_target'],third['eq_mask'])
     _,_,blocks=replay(model,parent,chain)
     source,target,cross=model.readout(blocks,chain['source_request'],chain['request'],chain['owner_request'],include_cross=not omit_cross)
     align=mx.mean((blocks[:,0]-chain['source_target'])**2+(blocks[:,1]-chain['target'])**2,axis=1)
@@ -51,8 +56,9 @@ def signatures(base,data,with_proof=False):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('transition',type=Path);p.add_argument('eq',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--steps',type=int,default=1200);p.add_argument('--resume',type=Path);p.add_argument('--freeze-base',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--evaluate-only',action='store_true');p.add_argument('--omit-cross-predictions',action='store_true');p.add_argument('--identity-source',action='store_true');p.add_argument('--third-train',type=Path);p.add_argument('--third-test',type=Path);a=p.parse_args()
-    if a.identity_source and not a.evaluate_only:raise ValueError('identity-source is an evaluation ablation')
+    p.add_argument('--owner-aware',action='store_true');p.add_argument('--steps',type=int,default=1200);p.add_argument('--resume',type=Path);p.add_argument('--freeze-base',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--evaluate-only',action='store_true');p.add_argument('--omit-cross-predictions',action='store_true');p.add_argument('--identity-source',action='store_true');p.add_argument('--third-train',type=Path);p.add_argument('--third-test',type=Path);a=p.parse_args()
+    if a.identity_source and not (a.evaluate_only or a.owner_aware):raise ValueError('identity-source is an evaluation ablation')
+    if a.owner_aware and not (a.identity_source and a.freeze_base and a.omit_cross_predictions and a.third_train):raise ValueError('owner adapter requires immutable source, frozen base, omitted cross head and third replay')
     if a.omit_cross_predictions and not a.baked_eq:raise ValueError('omit cross predictions only with compiled structural proof')
     if a.evaluate_only and not a.resume:raise ValueError('evaluation requires a combined checkpoint')
     if bool(a.third_train)!=bool(a.third_test):raise ValueError('both training and held-out replay data required')
@@ -64,13 +70,19 @@ def main():
     seen=set(signatures(base,chain,a.baked_eq));overlap=np.array([sig in seen for sig in signatures(test,tc,a.baked_eq)])
     device=lambda d:{k:mx.array(v) for k,v in d.items()}
     db,dc=map(device,(base,chain));mx.random.seed(117)
-    model=OwnerBlocks(base['x'].shape[-1],base['relations'].shape[-1],width)
-    if a.resume:model.load_weights(str(a.resume))
+    model=OwnerBlocks(base['x'].shape[-1],base['relations'].shape[-1],width,owner_aware=a.owner_aware)
+    if a.resume:
+        weights=mx.load(str(a.resume))
+        expected=dict(tree_flatten(model.parameters()))
+        missing=set(expected)-set(weights);extra=set(weights)-set(expected)
+        if extra or missing-({'owner_edges.weight'} if a.owner_aware else set()):raise ValueError('incompatible checkpoint keys')
+        model.load_weights(list(weights.items()),strict=not bool(missing))
     else:model.cell.load_weights(str(a.transition));model.eq.load_weights(str(a.eq))
     if a.freeze_base:model.cell.freeze();model.eq.freeze()
     if a.omit_cross_predictions:model.cross.freeze()
     if a.identity_source:
         model.immutable_source=True
+        model.update_source.freeze()
     third_train=third_test=None;third_device=None;third_positive=None
     if a.third_train:
         third_train=dict(np.load(a.third_train,allow_pickle=False));third_test=dict(np.load(a.third_test,allow_pickle=False))
@@ -142,6 +154,7 @@ def main():
     if not unchanged or not eq_unchanged:raise AssertionError('frozen model weights changed')
     model.save_weights(str(a.output.with_suffix('.safetensors')))
     report=dict(scope='standalone GPU two-block semantic-owner learning; no runtime commits or saturation',synthetic_only_training=True,backpropagation=True,slot_width=width,token_blocks=2,floats_per_owner=256,train=coverage,test=test_coverage,test_input_overlap=int(overlap.sum()),before=before,after=after,training=training,steps=0 if a.evaluate_only else a.steps,evaluate_only=a.evaluate_only,baked_eq=a.baked_eq,omit_cross_predictions=a.omit_cross_predictions,identity_source=a.identity_source,interface_head_unchanged=unchanged,wall_seconds=time.perf_counter()-began,parent_transition_sha256=hashlib.sha256(a.transition.read_bytes()).hexdigest(),parent_eq_sha256=hashlib.sha256(a.eq.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),promoted_for_execution=False,limitations=['Fixed synthetic routing during differentiable training; independent device audit required','Two-block cost doubles resident floats versus a single token','No stable identity or incidence is supplied to the Eq readouts','No CPU audit rollback or full-stage scheduling integration'])
+    report['owner_aware']=a.owner_aware
     report['base_frozen']=a.freeze_base
     report['frozen_cell_unchanged']=unchanged if a.freeze_base else None
     report['frozen_eq_unchanged']=eq_unchanged if a.freeze_base else None

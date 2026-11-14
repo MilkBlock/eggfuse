@@ -133,6 +133,10 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp):
     binding=xp.stack([projected[:,plan['origins'][s][0],plan['origins'][s][1]] for s in plan['inputs']],axis=1)
     binding_sources=xp.stack([sources[:,plan['origins'][s][0]] for s in plan['inputs']],axis=1)
     binding_slots=xp.stack([positions[plan['origins'][s][0]][:,plan['origins'][s][1]] for s in plan['inputs']],axis=1)
-    return dict(tokens=token_values+plan['source_tags'][None,:,:],source_tags=xp.broadcast_to(plan['source_tags'],(count,sources.shape[1],128)),edges=edges,mask=mask,request=xp.broadcast_to(plan['request'],(count,64)),
+    extra={}
+    if 'owner_token_blocks' in state:
+        from neural_owner_context import encode as encode_owner
+        extra['owner_features']=encode_owner(semantic_sources,state['token_block'][sources],state['owner_completion_code'][semantic_sources],(state['owner_block_count'][semantic_sources]>1)&ready[sources],mask,xp)
+    return dict(**extra,tokens=token_values+plan['source_tags'][None,:,:],source_tags=xp.broadcast_to(plan['source_tags'],(count,sources.shape[1],128)),edges=edges,mask=mask,request=xp.broadcast_to(plan['request'],(count,64)),
                 relations=incidence(projected,plan['required'],xp),sources=sources,token_sources=semantic_sources,generations=state['generation'][sources],binding_roots=binding,binding_sources=binding_sources,binding_slots=binding_slots,
                 live=alive,complete=complete&~overflow&~context_overflow,overflow=overflow,context_overflow=context_overflow)
