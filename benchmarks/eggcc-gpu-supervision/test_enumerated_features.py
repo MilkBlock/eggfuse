@@ -14,6 +14,14 @@ class FeatureAudit(unittest.TestCase):
         self.assertEqual(r['validation'][0]['exact_input_matches'],2)
         self.assertEqual(diagnose([a,self.row(1,True)],[])['conflicting_input_groups'],0)
 
+    def test_classifier_feature_conflicts_cross_sources(self):
+        from fit_completion_classifier import feature_conflicts
+        x=np.array([[0.,1.],[-0.,1.],[2.,1.]],np.float32)
+        y=np.array([[1.,0.],[0.,1.],[0.,1.]],np.float32)
+        self.assertEqual(feature_conflicts(x,y)['conflicting_groups'],1)
+        extended=np.concatenate([x,np.arange(3)[:,None]],axis=1)
+        self.assertEqual(feature_conflicts(extended,y)['conflicting_groups'],0)
+
     def test_signed_zero_and_nonfinite(self):
         self.assertEqual(feature_key([0.],[False]),feature_key([-0.],[False]))
         with self.assertRaises(ValueError):feature_key([np.nan],[False])

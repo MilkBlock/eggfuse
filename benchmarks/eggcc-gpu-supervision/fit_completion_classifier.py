@@ -83,6 +83,15 @@ def unique_training_rows(x,y,programs):
     return x[keep],y[keep],dict(captured=len(x),unique=len(keep),duplicates=len(x)-len(keep),ambiguous_inputs=conflicts)
 
 
+def feature_conflicts(x,y):
+    # Cross-source information check, unlike per-program weighting deduplication.
+    groups={}
+    for row,target in zip(x,y):
+        row=row.copy();row[row==0]=0
+        groups.setdefault(row.tobytes(),set()).add(target.tobytes())
+    return dict(unique_inputs=len(groups),conflicting_groups=sum(len(v)>1 for v in groups.values()),includes_required_eq_mask=False)
+
+
 def inputs_for_case(path,meta,data,plans):
     captures=captured_inputs(path,meta);out={}
     if len(captures)!=len(data['rules']):raise ValueError('capture alignment')
@@ -116,6 +125,7 @@ def inputs_for_case(path,meta,data,plans):
 def main():
     p=argparse.ArgumentParser()
     for key in ('model','source_model','decoder','decoder_report','output'):p.add_argument(key,type=Path)
+    p.add_argument('--shared-context',action='store_true',help='append current-boundary floating shared context; offline experimental head')
     p.add_argument('--feedback-head',type=Path,action='append',default=[],help='explicit parent weights for audited synthetic feedback')
     p.add_argument('--allow-historical-real-training',action='store_true',help='explicit historical experiment reproduction only')
     p.add_argument('--train',type=Path,action='append',required=True);p.add_argument('--validation',type=Path,action='append',required=True);a=p.parse_args()
@@ -131,7 +141,7 @@ def main():
         pick=np.flatnonzero(f['alphas']==dr['selected']['partition'])
         if len(pick)!=1:raise ValueError('decoder selection')
         dw=f['w'];dc=f['coef'][:,pick]
-    cases=[];programs={};entries=set();family=None;plans=None;completion_control=None
+    cases=[];programs={};entries=set();family=None;plans=None;completion_control=None;context_error=0.
     for split,paths in [('train',a.train),('validation',a.validation)]:
         for path in paths:
             d,m=load(path,split)
@@ -144,19 +154,24 @@ def main():
             if family is not None and sf!=family:raise ValueError('semantic family mismatch')
             if plans is None:plans=[compile_states(r) for r in sf]
             family=sf;d['features'],_=align_features(d,model,True)
+            d['classifier_features']=d['features']
+            if a.shared_context:
+                from condition_boundary import captured_bridges
+                extra,error=captured_bridges(path,m,shared_context=True);context_error=max(context_error,error)
+                d['classifier_features']=np.concatenate([d['features'],extra],axis=1)
             details=inputs_for_case(path,m,d,plans);cases.append((split,d,m,details))
     heads=[];coverage=[]
     for rid,plan in enumerate(plans):
         source=[(d,v[rid],source_group(m)) for s,d,m,v in cases if s=='train' and rid in v]
-        x=np.concatenate([d['features'][v['ids']] for d,v,_ in source]);y=np.concatenate([v['target'] for _,v,_ in source])
+        x=np.concatenate([d['classifier_features'][v['ids']] for d,v,_ in source]);y=np.concatenate([v['target'] for _,v,_ in source])
         x,y,duplicates=unique_training_rows(x,y,[p for _,v,p in source for _ in v['ids']])
         heads.append(fit_head(x,y,10.))
-        coverage.append(dict(states=y.shape[1],observed_training_states=int(np.any(y,axis=0).sum()),training_instances=len(y),sampling=duplicates))
+        coverage.append(dict(states=y.shape[1],observed_training_states=int(np.any(y,axis=0).sum()),training_instances=len(y),sampling=duplicates,exact_feature_conflicts=feature_conflicts(x,y)))
     results=[];gpu_error=0.;token_error=0.;decoding_disagreements=0
     for split,d,m,details in cases:
         rebuilt=np.zeros_like(d['targets']);baseline_tokens=np.tanh(d['features']@model['coef']);selected_rows={}
         for rid,v in details.items():
-            x=d['features'][v['ids']];score=score_head(x,heads[rid],np);states=plans[rid]['states']
+            x=d['classifier_features'][v['ids']];score=score_head(x,heads[rid],np);states=plans[rid]['states']
             index,chosen=choose(score,v['required'],states,np)
             rebuilt[v['ids']]=tokens(index,v['codes'],v['token_plan'],np)
             dh,ds,drq,dt,dsco=map(device,(heads[rid],states,v['required'],v['token_plan'],v['codes']))
@@ -183,7 +198,7 @@ def main():
     if gpu_error>5e-6 or token_error>5e-6:raise ValueError(f'GPU numerical error: score={gpu_error}, token={token_error}')
     np.savez_compressed(a.output.with_suffix('.npz'),**{f'head_{i}_{k}':v for i,h in enumerate(heads) for k,v in h.items()})
     out=dict(scope='offline direct whole-state ridge and GPU token reconstruction on audited GPU captures; not installed',alpha=10.,backpropagation=False,
-        installed=False,union_authorized=False,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
+        installed=False,union_authorized=False,shared_boundary_context=a.shared_context,maximum_gpu_context_error=context_error,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
         head_sha256=hashlib.sha256(a.output.with_suffix('.npz').read_bytes()).hexdigest(),coefficient_bytes=sum(h['coef'].nbytes for h in heads),normalization_bytes=sum(h[k].nbytes for h in heads for k in ('mean','scale','bias')),coverage=coverage,
         maximum_gpu_score_error=gpu_error,maximum_gpu_token_error=token_error,token_decode_disagreements=decoding_disagreements,cases=results,
         limitations=['All legal type-compatible states are included, but unseen states have no positive training evidence','No predicted-source rollout or native full-program acceptance','No learned equality is a proof','Current input Eq is retained; scalar effects outside query inputs are unsupported'])

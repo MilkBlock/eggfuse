@@ -69,3 +69,36 @@ features are insufficient. Missing-input enumeration, multi-producer identity,
 and interaction closure remain separate coverage obligations. The 20 growing
 inputs remain excluded from full-execution training; boundary-only proofs are
 not whole-state labels.
+
+## Shared-context follow-up (same data and alpha)
+
+`fit_completion_classifier.py ... --shared-context` appends 256 current-boundary
+floating columns from `device_boundary_shared_context`. Existing base features
+remain separate for the historical baseline calculation. The report explicitly
+identifies this schema; the head is offline and is not installed in the resident
+GPU runner. GPU context parity was checked on each input case (first accepted
+capture per case), with maximum observed error 1.14e-6. This does not certify
+unexamined numerical inputs.
+
+All 487 cases are retained. Across all training cases, exact feature conflicts
+are now zero for each rule, even without including the required Eq mask in the
+key. This does not prove feature injectivity for unseen structures. Training
+exact partitions improve from 2,300/2,404 to 2,331/2,404.
+
+| Development case | Original head exact | Enumeration exact | Shared-context exact | Enumeration false merges | Shared-context false merges |
+|---|---:|---:|---:|---:|---:|
+| GCD | 25/41 | 13/41 | 17/41 | 228 | 49 |
+| LCM | 80/99 | 22/99 | 28/99 | 661 | 149 |
+
+Shared-context direct-input exact counts are still only 4/26 and 8/78.
+Generated-source exact counts are 13/15 and 20/21. The head is not promoted:
+resolving observed information collisions does not resolve the remaining entry
+coverage/distribution and finite-feature prediction problems. No validation
+samples were fitted, no gradients were used, and alpha remains 10. These are
+exact-source development evaluations, not predicted-source feedback rollouts.
+
+Reproduction uses the original unpacked collection and positional arguments,
+with output `shared-classifier.json` and `--shared-context`; exact arguments,
+weights and logs are saved beside the original enumeration artifacts. Tracked
+`shared-context-ridge-results.json` contains all validation groups, provenance,
+training counts and numerical parity results.
