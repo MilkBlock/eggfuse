@@ -19,6 +19,25 @@ class Speculation(unittest.TestCase):
         _,_,bad=frame_payload(state,plan,batch,0,mx.array([1.]),mx.array(-1),mx.arange(8),mx)
         self.assertFalse(bool(bad))
 
+    def test_literal_view_input_keeps_exact_identity_and_unknown_is_rejected(self):
+        from device_literal_namespace import bind_effect_literals
+        eq=dict(kind='eq',name='E');i64=dict(kind='i64',name='i64')
+        literal=dict(literal=(1<<53)+1,sort=i64)
+        rule=dict(slots=[dict(sort=i64,definition='query'),dict(sort=eq,definition=0)],
+                  effects=[dict(kind='construct',call=dict(table='F'),args=[literal],dst=1,sort=eq)])
+        recipe,ids=bind_effect_literals(dict(rules=[rule]),{})
+        plan=compile_frame(rule,2,2,recipe)
+        state=dict(slots=mx.array([[7,7]]),slot_roots=mx.array([[7,7]]),slot_valid=mx.ones((1,2),mx.bool_),scalar_numbers=mx.zeros((1,2)),scalar_numeric=mx.zeros((1,2),mx.bool_),scalar_codes=mx.zeros((1,2,64)),scalar_valid=mx.zeros((1,2),mx.bool_))
+        batch=dict(binding_sources=mx.array([[0]]),binding_slots=mx.array([[-1]]),binding_roots=mx.array([[0]]))
+        payload,_,ready=frame_payload(state,plan,batch,0,mx.array([-1.]),mx.array(2),mx.arange(8),mx)
+        self.assertTrue(bool(ready));self.assertEqual(int(payload['slots'][0,0]),0)
+        self.assertEqual(int(payload['slots'][0,1]),3)
+        self.assertTrue(bool(payload['scalar_valid'][0,0]))
+        bad=dict(batch,binding_roots=mx.array([[6]]))
+        _,_,ready=frame_payload(state,plan,bad,0,mx.array([-1.]),mx.array(2),mx.arange(8),mx)
+        self.assertFalse(bool(ready))
+        with self.assertRaises(ValueError):compile_frame(rule,2,2,{})
+
     def test_original_set_is_a_constructor_fact_in_cpu_audit(self):
         from reference_cell_closure import facts_from_cells
         rule=dict(query=[dict(call=dict(table='F'),args=[dict(slot=0),dict(slot=1)])],effects=[dict(kind='set',call=dict(table='G'),args=[dict(slot=0)],value=dict(slot=1))])

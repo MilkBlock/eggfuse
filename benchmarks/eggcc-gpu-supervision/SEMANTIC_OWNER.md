@@ -684,3 +684,32 @@ missing external-congruence equality with score -0.805. The audit remains
 Artifacts and weights: external SSD `neural-canon-expanded-v20.tar.gz`. Four
 replay tests pass, including the explicit entry-limit contract. No native
 runtime or CPU execution optimization was performed.
+
+### Actual third-frame installation exposes output identity gap
+
+Enable `--speculate` on the v20 full-width canon audit. The speculative path
+now uses the declared stage query dimensions and GPU slot guards, and supports
+reserved exact i64 literals in constructor operands and projected inputs.
+Unknown literal identities cannot silently read slot -1. Constants for every
+compiled follow rule are reserved before fresh GPU identity allocation.
+No RHS labels or CPU-produced output identities enter the speculative payload.
+
+`canon-speculative-results.json`: 216 isolated frames installed by GPU, 167
+full graph passes, 49 missing-union failures (22.69%). Crucially, 48 of these
+failures have correct within-frame Eq. `frame_payload` allocates fresh output
+handles; predicting internal equality alone does not connect outputs to all
+existing external constructor results. The next interface must expose actual
+result reuse/ownership witnesses, not merely increase local Eq accuracy.
+
+CPU correction restores all 216 checked graphs, but 49 token states remain
+dirty. Same-rule downstream queries recover all 421 expected bindings without
+false matches; this does not establish full-graph correctness, as the graph
+audit demonstrates. Only 27 frames add information according to the oracle,
+and 20 of those pass directly. These are isolated forks, not successive
+commits into one saturation run.
+
+Measured Python/host audit time: 0.8324 s for 216 frames (3.85 ms/frame);
+correction-path wall time: 0.2339 s total. These are synchronous standalone
+measurements, not native CPU throughput or a GPU speedup claim.
+Six relevant tests pass (speculation + literal constructors). Raw report and
+test log archived as `neural-canon-speculative-v21.tar.gz` on external SSD.

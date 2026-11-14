@@ -1,0 +1,40 @@
+{
+  "scope": "Standalone MLX GPU third-frame speculative installation and CPU audit; isolated forks, not cumulative saturation",
+  "counts": {
+    "gpu_installed": 216,
+    "local_eq_pass": 215,
+    "local_eq_pass_graph_fail": 48,
+    "missing_union_failures": 49,
+    "wrong_merge_failures": 0,
+    "constructor_failures": 0,
+    "reference_new_constructors": 39,
+    "reference_new_unions": 0,
+    "reference_novel_frames": 27,
+    "prediction_pass_novel_frames": 20,
+    "prediction_graph_pass": 167,
+    "cpu_corrected": 49,
+    "corrected_graph_pass": 216,
+    "token_refresh_required": 49,
+    "downstream_expected": 421,
+    "downstream_observed": 421,
+    "downstream_false_positive": 0,
+    "downstream_missed": 0,
+    "downstream_incomplete": 0,
+    "cpu_audit_seconds": 0.8323797935736366,
+    "correction_wall_seconds": 0.23388037359109148,
+    "rolled_back": 49
+  },
+  "correction_fraction": 0.22685185185185186,
+  "audit_ms_per_frame": 3.8536101554335027,
+  "audit_frames_per_second": 259.49692876691813,
+  "weights_sha256": "3c210591fd9539d3f9e908a9a53c0e2ffdee69be229644b700ba82aecf83285d",
+  "readout_weights_sha256": "f636ba3f1dc3f3b590b608c4a6d924a295bf7737b1eb832175831e1df53db6f0",
+  "status": "difference",
+  "limitations": [
+    "216 isolated installations; not 216 committed mutations of one graph",
+    "Same-rule downstream query only; no proof all rules remain correct",
+    "49 corrected latent tokens still dirty; correction does not reconstruct floating semantic state",
+    "48 full-graph failures occur despite correct within-frame Eq: output identity reuse remains missing",
+    "CPU wall audit includes Python oracle and host inspection; not native runtime throughput or speedup"
+  ]
+}

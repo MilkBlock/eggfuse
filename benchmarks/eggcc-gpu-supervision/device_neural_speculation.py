@@ -9,12 +9,15 @@ from device_slot_owners import COLUMNS,read,shape
 from device_token_commit import commit
 
 
-def compile_frame(rule,width,eq_width):
+def compile_frame(rule,width,eq_width,recipe=None):
+    from typed_literal import compiled_id
+    def operand(a):
+        return "slot" in a or (recipe is not None and compiled_id(a,recipe)>=0)
     if len(rule['slots'])>min(width,eq_width):raise ValueError('semantic layout exceeds frame')
     operations=[]
     for op in rule['effects']:
         if op['kind']=='copy' and 'slot' in op['arg']:operations.append(('copy',op['dst'],op['arg']['slot']))
-        elif op['kind']=='construct' and all('slot' in a for a in op['args']) and op['sort']['kind']=='eq':operations.append(('fresh',op['dst'],0))
+        elif op['kind']=='construct' and all(operand(a) for a in op['args']) and op['sort']['kind']=='eq':operations.append(('fresh',op['dst'],0))
         elif op['kind']=='union' and all('slot' in a for a in op['args']):continue
         elif op['kind']=='set' and 'slot' in op['value'] and all('slot' in a for a in op['args']):continue
         else:raise ValueError('unbaked speculative effect')
@@ -24,7 +27,11 @@ def compile_frame(rule,width,eq_width):
         si,sj=rule['slots'][i]['sort'],rule['slots'][j]['sort']
         indices[i,j]=indices[j,i]=k
         allowed[i,j]=allowed[j,i]=si['kind']=='eq' and si==sj
-    return dict(operations=operations,inputs=[s for s,d in enumerate(rule['slots']) if d['definition']=='query'],pair_index=indices,allowed=allowed,slots=len(rule['slots']))
+    import json
+    from multi_entry_ridge import scalar
+    constants=[(i,json.loads(k)) for k,i in (recipe or {}).get('literal_ids',{}).items()]
+    constants=[(i,v) for i,v in constants if v['sort']=='i64']
+    return dict(literal_inputs=[s['sort'].get('kind')=='i64' and s['sort'].get('name')=='i64' for s in rule['slots']],literal_ids=np.array([i for i,v in constants],np.int32),literal_codes=np.array([scalar(v) for i,v in constants],np.float32).reshape(-1,64),literal_numbers=np.array([v['value'] for i,v in constants],np.float32),operations=operations,inputs=[s for s,d in enumerate(rule['slots']) if d['definition']=='query'],pair_index=indices,allowed=allowed,slots=len(rule['slots']))
 
 
 def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp):
@@ -33,8 +40,22 @@ def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp):
         old=state['owner_'+column] if 'slot_owner' in state else state[column]
         payload[column]=xp.full((1,)+old.shape[1:],-1 if column in ('slots','slot_roots') else 0,old.dtype)
     for k,slot in enumerate(plan['inputs']):
+        address=batch['binding_slots'][index,k]
+        constant=address<0
+        literal_live=xp.array(False);literal_index=xp.array(0)
+        if len(plan.get('literal_ids',[])):
+            matches=xp.array(plan['literal_ids'])==batch['binding_roots'][index,k]
+            literal_live=xp.any(matches)&plan['literal_inputs'][slot];literal_index=xp.argmax(matches.astype(xp.int32))
         for column in COLUMNS:
-            value=read(state,column,batch['binding_sources'][index,k],batch['binding_slots'][index,k],xp)
+            value=read(state,column,batch['binding_sources'][index,k],xp.maximum(address,0),xp)
+            if len(plan.get('literal_ids',[])):
+                if column in ('slots','slot_roots'):literal=batch['binding_roots'][index,k]
+                elif column in ('slot_valid','scalar_valid','scalar_numeric'):literal=literal_live
+                elif column=='scalar_codes':literal=xp.array(plan['literal_codes'])[literal_index]
+                elif column=='scalar_numbers':literal=xp.array(plan['literal_numbers'])[literal_index]
+                else:raise ValueError('unsupported literal column')
+                value=xp.where(constant,literal,value)
+            elif column in ('slot_valid','scalar_valid'):value=value&~constant
             mask=xp.arange(width)==slot
             payload[column]=xp.where(mask[None,:,None] if column=='scalar_codes' else mask[None,:],value,payload[column])
     for kind,dst,src in plan['operations']:

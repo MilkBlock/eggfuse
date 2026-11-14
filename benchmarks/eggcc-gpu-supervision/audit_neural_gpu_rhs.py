@@ -33,7 +33,8 @@ def initial_case(recipe,record,spare=0,payload_width=None):
     snapshot=dict(rows=[dict(table=t,values=[value(v) for v in vs],subsumed=False) for t,vs in sorted(ref.normalized_facts())])
     local,state,ids,rows=prepare_family(lowered,snapshot,[0,1],2+spare,include_effects=True)
     from device_literal_namespace import bind_effect_literals
-    local,ids=bind_effect_literals(local,ids)
+    literal_recipe,ids=bind_effect_literals(dict(local,rules=local["rules"]+(recipe["rules"] if spare else [])),ids)
+    local=dict(local,literal_ids=literal_recipe["literal_ids"])
     full_lowered,_=lower(recipe);width=max(len(r['slots']) for r in full_lowered['rules'])
     if spare:
         kw=1+max(sum(s['definition']=='query' for s in r['slots']) for r in recipe['rules'])
@@ -272,7 +273,7 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
                     error.update(rule=rid,candidate=int(index),binding=[[int(s),int(v)] for s,v in key],sources=sources[index].tolist())
                     semantic_errors.append(error)
                 if speculation is not None:
-                    spec_reports.append(audit_speculation(state,local,frames,rule,len(local['rules'])-len(recipe['rules'])+rid,batch,index,tokens[index],semantic[index],model,oracle,key,mapping,*speculation,width))
+                    spec_reports.append(audit_speculation(state,local,frames,rule,len(local['rules'])-len(recipe['rules'])+rid,batch,index,tokens[index],semantic[index],model,oracle,key,mapping,*speculation,width,query_atoms=query_atoms,query_fields=query_fields))
                 signature=hashlib.sha256(b''.join(features[k][index].tobytes() for k in features)).digest()
                 value=(eq_labels[-1].tobytes(),eq_local[-1].tobytes())
                 if signature in feature_labels:

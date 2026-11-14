@@ -13,18 +13,21 @@ from reference_union_family import compare_graph
 from audit_snapshot_queries import device
 
 
-def audit(state,local,frames,rule,rid,batch,index,token,scores,model,oracle,key,mapping,base_roots,fresh_base,seed_count,eq_width):
-    width=shape(state)[1];plan=compile_frame(rule,width,eq_width)
+def audit(state,local,frames,rule,rid,batch,index,token,scores,model,oracle,key,mapping,base_roots,fresh_base,seed_count,eq_width,query_atoms=2,query_fields=5):
+    width=shape(state)[1];plan=compile_frame(rule,width,eq_width,local)
     payload,roots,ready=frame_payload(state,plan,batch,index,scores,mx.array(fresh_base),base_roots,mx)
     predicted,marks=install(state,payload,roots,batch,index,token,rid,plan['inputs'],ready,mx)
     mx.eval(predicted,roots,marks)
     if not bool(marks['accepted'][0]):raise ValueError('speculative frame was not admitted')
     # Query the proposed state before computing any exact completion labels.
-    qp=compile_candidates(local,rule)
+    qp=compile_candidates(local,rule,atoms=query_atoms,fields=query_fields,compact_constants=True)
     downstream=candidates(predicted,frames,device(qp),mx.array(True),mx.array(True),mx)
     logits,_=model.transition(downstream['tokens'],downstream['edges'],downstream['mask'],downstream['request'],downstream['relations']);mx.eval(logits,downstream)
     started=time.perf_counter();ref=deepcopy(oracle);bound=dict(key);apply_instance(ref,rule,bound)
     values=completed(rule,bound,ref)
+    from neural_eq_readout import targets,metrics
+    label=targets(rule,values,ref,eq_width)
+    local_eq_ok=metrics(np.array(scores)[None,:],label["eq_target"][None,:],label["eq_mask"][None,:],eq_width)["closed_exact_states"]==1
     raw=np.array(payload['slots'][0]);valid=np.array(payload['slot_valid'][0]);base=np.array(base_roots)
     # Canonicalize both old handles and newly allocated semantic output handles
     # through the independent CPU result, including external constructor reuse.
@@ -39,7 +42,7 @@ def audit(state,local,frames,rule,rid,batch,index,token,scores,model,oracle,key,
     passed=covered and check['passed']
     # Read predicted query keys in the correct semantic vocabulary. Rejected
     # merges and missed merges can both change which matches are emitted.
-    accepted=np.array(downstream['live'])&(np.array(logits)>=0)
+    accepted=np.array(downstream['live']&downstream['constraints_satisfied'])&(np.array(logits)>=0)
     expected={tuple(sorted(b.items())) for b in ref.matches(rule)};observed=set();unknown=0
     for row in np.flatnonzero(accepted):
         result=[]
@@ -61,6 +64,6 @@ def audit(state,local,frames,rule,rid,batch,index,token,scores,model,oracle,key,
     resolved,verdict=resolve(predicted,predicted,corrected,mx.array(passed),mx.array(1),mx.array(1),mx);mx.eval(resolved,verdict)
     if not correction_pass:raise AssertionError('CPU correction did not restore exact graph')
     novel=(ref.constructions>oracle.constructions) or (ref.unions>oracle.unions)
-    return dict(gpu_installed=1,missing_union_failures=int('missing_union' in check['errors']),wrong_merge_failures=int('inconsistent_result_class' in check['errors']),constructor_failures=int('unexpected_constructor' in check['errors']),reference_new_constructors=ref.constructions-oracle.constructions,reference_new_unions=ref.unions-oracle.unions,reference_novel_frames=int(novel),prediction_pass_novel_frames=int(passed and novel),prediction_graph_pass=int(passed),cpu_corrected=int(not passed),corrected_graph_pass=int(correction_pass),token_refresh_required=int(refresh),
+    return dict(gpu_installed=1,local_eq_pass=int(local_eq_ok),local_eq_pass_graph_fail=int(local_eq_ok and not passed),missing_union_failures=int('missing_union' in check['errors']),wrong_merge_failures=int('inconsistent_result_class' in check['errors']),constructor_failures=int('unexpected_constructor' in check['errors']),reference_new_constructors=ref.constructions-oracle.constructions,reference_new_unions=ref.unions-oracle.unions,reference_novel_frames=int(novel),prediction_pass_novel_frames=int(passed and novel),prediction_graph_pass=int(passed),cpu_corrected=int(not passed),corrected_graph_pass=int(correction_pass),token_refresh_required=int(refresh),
         downstream_expected=len(expected),downstream_observed=len(observed),downstream_false_positive=len(observed-expected)+unknown,downstream_missed=len(expected-observed),
         downstream_incomplete=int(not bool(downstream['complete'])),cpu_audit_seconds=cpu_seconds,correction_wall_seconds=time.perf_counter()-correction_started,rolled_back=int(bool(verdict['rolled_back'])))
