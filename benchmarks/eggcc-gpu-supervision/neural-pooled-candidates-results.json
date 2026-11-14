@@ -1,0 +1,1346 @@
+{
+  "scope": "synthetic pooled matching fine-tuning; standalone GPU snapshot evaluation, no saturation or ownership execution",
+  "experiments": {
+    "pool17": {
+      "training": {
+        "scope": "standalone synthetic pooled matching and generated-token chain training; no graph commits or ownership execution",
+        "synthetic_only_training": true,
+        "source_rules": [
+          283,
+          284,
+          285,
+          286,
+          287,
+          288,
+          289,
+          290,
+          291,
+          292,
+          293,
+          294,
+          295,
+          296,
+          297,
+          298,
+          299
+        ],
+        "training_coverage": [
+          {
+            "rule": 0,
+            "candidates": 64516,
+            "scanned": 64516,
+            "positive_seen": 70,
+            "negative_seen": 64446,
+            "positive_kept": 70,
+            "negative_kept": 128
+          },
+          {
+            "rule": 1,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 2,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 3,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 4,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 5,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 6,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 7,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 8,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 9,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 10,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 11,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 12,
+            "candidates": 32,
+            "scanned": 32,
+            "positive_seen": 16,
+            "negative_seen": 16,
+            "positive_kept": 16,
+            "negative_kept": 16
+          },
+          {
+            "rule": 13,
+            "candidates": 512,
+            "scanned": 512,
+            "positive_seen": 16,
+            "negative_seen": 496,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 14,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 15,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          },
+          {
+            "rule": 16,
+            "candidates": 4064,
+            "scanned": 4064,
+            "positive_seen": 16,
+            "negative_seen": 4048,
+            "positive_kept": 16,
+            "negative_kept": 128
+          }
+        ],
+        "test_coverage": [
+          {
+            "rule": 0,
+            "candidates": 15876,
+            "scanned": 15876,
+            "positive_seen": 34,
+            "negative_seen": 15842,
+            "positive_kept": 34,
+            "negative_kept": 64
+          },
+          {
+            "rule": 1,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 2,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 3,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 4,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 5,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 6,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 7,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 8,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 9,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 10,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 11,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 12,
+            "candidates": 16,
+            "scanned": 16,
+            "positive_seen": 8,
+            "negative_seen": 8,
+            "positive_kept": 8,
+            "negative_kept": 8
+          },
+          {
+            "rule": 13,
+            "candidates": 128,
+            "scanned": 128,
+            "positive_seen": 8,
+            "negative_seen": 120,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 14,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 15,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 16,
+            "candidates": 1008,
+            "scanned": 1008,
+            "positive_seen": 8,
+            "negative_seen": 1000,
+            "positive_kept": 8,
+            "negative_kept": 64
+          }
+        ],
+        "evaluation_feature_overlap": 982,
+        "before": {
+          "pool": {
+            "samples": 1194,
+            "correct": 1194,
+            "false_positive": 0,
+            "false_negative": 0
+          },
+          "chain": {
+            "samples": 1154,
+            "false_positive": 0,
+            "false_negative": 0,
+            "token_mse": 0.00388284376822412
+          }
+        },
+        "after": {
+          "pool": {
+            "samples": 1194,
+            "correct": 1194,
+            "false_positive": 0,
+            "false_negative": 0
+          },
+          "chain": {
+            "samples": 1154,
+            "false_positive": 0,
+            "false_negative": 0,
+            "token_mse": 0.0031640897504985332
+          }
+        },
+        "steps": 400,
+        "wall_seconds": 74.60751879197778,
+        "parent_weights_sha256": "337a2684531ca3f8472b4d2b151d1743b9110897c3b222c9797f2626728a1a83",
+        "weights_sha256": "6caf007efe1d2088da1cfb4aa23d99cfba047447de28d77906c7b2ecd6561e42",
+        "promoted_as_default": false,
+        "shared_fraction": 0
+      },
+      "snapshot": {
+        "scope": "standalone first-Run seed-interface candidate audit; no effects, ownership or saturation",
+        "synthetic_only_training": true,
+        "snapshot_run": 437,
+        "seed_cells": 269,
+        "initial_import_seconds": 0.024900083022657782,
+        "initial_encoding_seconds": 0.00814691698178649,
+        "cpu_reference_init_seconds": 0.01617566600907594,
+        "groups": [
+          {
+            "rule": 283,
+            "candidates": 361,
+            "evaluated": 361,
+            "unresolved_candidates": 0,
+            "valid_tuples": 1,
+            "accepted_tuples": 21,
+            "false_positive_tuples": 20,
+            "false_negative_tuples": 0,
+            "expected_matches": 1,
+            "recovered_matches": 1,
+            "missed_matches": 0,
+            "gpu_seconds": 0.007099499984178692,
+            "cpu_audit_seconds": 0.00416737498017028
+          },
+          {
+            "rule": 284,
+            "candidates": 95,
+            "evaluated": 95,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0019040000042878091,
+            "cpu_audit_seconds": 0.000927375047467649
+          },
+          {
+            "rule": 285,
+            "candidates": 76,
+            "evaluated": 76,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0018171249539591372,
+            "cpu_audit_seconds": 0.0008299589972011745
+          },
+          {
+            "rule": 286,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.1834024917334318e-05
+          },
+          {
+            "rule": 287,
+            "candidates": 209,
+            "evaluated": 209,
+            "unresolved_candidates": 0,
+            "valid_tuples": 4,
+            "accepted_tuples": 9,
+            "false_positive_tuples": 5,
+            "false_negative_tuples": 0,
+            "expected_matches": 4,
+            "recovered_matches": 4,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0021707499981857836,
+            "cpu_audit_seconds": 0.0026649170322343707
+          },
+          {
+            "rule": 288,
+            "candidates": 171,
+            "evaluated": 171,
+            "unresolved_candidates": 0,
+            "valid_tuples": 2,
+            "accepted_tuples": 4,
+            "false_positive_tuples": 2,
+            "false_negative_tuples": 0,
+            "expected_matches": 2,
+            "recovered_matches": 2,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0020214159740135074,
+            "cpu_audit_seconds": 0.001987166004255414
+          },
+          {
+            "rule": 289,
+            "candidates": 19,
+            "evaluated": 19,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.001486541994381696,
+            "cpu_audit_seconds": 0.00019812496611848474
+          },
+          {
+            "rule": 290,
+            "candidates": 2356,
+            "evaluated": 2356,
+            "unresolved_candidates": 0,
+            "valid_tuples": 18,
+            "accepted_tuples": 18,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 18,
+            "recovered_matches": 18,
+            "missed_matches": 0,
+            "gpu_seconds": 0.014488290005829185,
+            "cpu_audit_seconds": 0.02281112311175093
+          },
+          {
+            "rule": 291,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.3749988283962011e-05
+          },
+          {
+            "rule": 292,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.133297337219119e-05
+          },
+          {
+            "rule": 293,
+            "candidates": 722,
+            "evaluated": 722,
+            "unresolved_candidates": 0,
+            "valid_tuples": 6,
+            "accepted_tuples": 10,
+            "false_positive_tuples": 4,
+            "false_negative_tuples": 0,
+            "expected_matches": 6,
+            "recovered_matches": 6,
+            "missed_matches": 0,
+            "gpu_seconds": 0.004209042002912611,
+            "cpu_audit_seconds": 0.005785915942396969
+          },
+          {
+            "rule": 294,
+            "candidates": 1007,
+            "evaluated": 1007,
+            "unresolved_candidates": 0,
+            "valid_tuples": 8,
+            "accepted_tuples": 27,
+            "false_positive_tuples": 19,
+            "false_negative_tuples": 0,
+            "expected_matches": 8,
+            "recovered_matches": 8,
+            "missed_matches": 0,
+            "gpu_seconds": 0.005858125048689544,
+            "cpu_audit_seconds": 0.009636583039537072
+          },
+          {
+            "rule": 295,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.337495632469654e-05
+          },
+          {
+            "rule": 296,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.191697083413601e-05
+          },
+          {
+            "rule": 297,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.4416989870369434e-05
+          },
+          {
+            "rule": 298,
+            "candidates": 76,
+            "evaluated": 76,
+            "unresolved_candidates": 0,
+            "valid_tuples": 1,
+            "accepted_tuples": 6,
+            "false_positive_tuples": 5,
+            "false_negative_tuples": 0,
+            "expected_matches": 1,
+            "recovered_matches": 1,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0013788330252282321,
+            "cpu_audit_seconds": 0.001080916030332446
+          },
+          {
+            "rule": 299,
+            "candidates": 19,
+            "evaluated": 19,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0008204579935409129,
+            "cpu_audit_seconds": 0.0002092079957947135
+          }
+        ],
+        "weights_sha256": "6caf007efe1d2088da1cfb4aa23d99cfba047447de28d77906c7b2ecd6561e42",
+        "trace_sha256": "a2905bb27cc55472573437ff872f35eb12adce8cd60e50758f93e097a043d3a8",
+        "limitations": [
+          "Complete type-pool Cartesian enumeration is a diagnostic, not scalable routing",
+          "All successor tokens are computed but not committed or audited in this test",
+          "No new training or promotion; counts measure matches, not mutations",
+          "GPU timing includes dispatch and first-use compilation; no speedup claim"
+        ],
+        "totals": {
+          "candidates": 5111,
+          "evaluated": 5111,
+          "unresolved_candidates": 0,
+          "valid_tuples": 40,
+          "accepted_tuples": 95,
+          "false_positive_tuples": 55,
+          "false_negative_tuples": 0,
+          "expected_matches": 40,
+          "recovered_matches": 40,
+          "missed_matches": 0,
+          "gpu_seconds": 0.04325408098520711,
+          "cpu_audit_seconds": 0.05037528905086219
+        }
+      }
+    },
+    "shared-pool17": {
+      "training": {
+        "scope": "standalone synthetic pooled matching and generated-token chain training; no graph commits or ownership execution",
+        "synthetic_only_training": true,
+        "source_rules": [
+          283,
+          284,
+          285,
+          286,
+          287,
+          288,
+          289,
+          290,
+          291,
+          292,
+          293,
+          294,
+          295,
+          296,
+          297,
+          298,
+          299
+        ],
+        "training_coverage": [
+          {
+            "rule": 0,
+            "candidates": 64009,
+            "scanned": 64009,
+            "positive_seen": 68,
+            "negative_seen": 63941,
+            "positive_kept": 68,
+            "negative_kept": 128
+          },
+          {
+            "rule": 1,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 30,
+            "negative_seen": 4018,
+            "positive_kept": 30,
+            "negative_kept": 128
+          },
+          {
+            "rule": 2,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 31,
+            "negative_seen": 4017,
+            "positive_kept": 31,
+            "negative_kept": 128
+          },
+          {
+            "rule": 3,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 22,
+            "negative_seen": 4026,
+            "positive_kept": 22,
+            "negative_kept": 128
+          },
+          {
+            "rule": 4,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 29,
+            "negative_seen": 4019,
+            "positive_kept": 29,
+            "negative_kept": 128
+          },
+          {
+            "rule": 5,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 28,
+            "negative_seen": 4020,
+            "positive_kept": 28,
+            "negative_kept": 128
+          },
+          {
+            "rule": 6,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 21,
+            "negative_seen": 4027,
+            "positive_kept": 21,
+            "negative_kept": 128
+          },
+          {
+            "rule": 7,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 25,
+            "negative_seen": 4023,
+            "positive_kept": 25,
+            "negative_kept": 128
+          },
+          {
+            "rule": 8,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 23,
+            "negative_seen": 4025,
+            "positive_kept": 23,
+            "negative_kept": 128
+          },
+          {
+            "rule": 9,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 19,
+            "negative_seen": 4029,
+            "positive_kept": 19,
+            "negative_kept": 128
+          },
+          {
+            "rule": 10,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 20,
+            "negative_seen": 4028,
+            "positive_kept": 20,
+            "negative_kept": 128
+          },
+          {
+            "rule": 11,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 20,
+            "negative_seen": 4028,
+            "positive_kept": 20,
+            "negative_kept": 128
+          },
+          {
+            "rule": 12,
+            "candidates": 32,
+            "scanned": 32,
+            "positive_seen": 17,
+            "negative_seen": 15,
+            "positive_kept": 17,
+            "negative_kept": 15
+          },
+          {
+            "rule": 13,
+            "candidates": 512,
+            "scanned": 512,
+            "positive_seen": 34,
+            "negative_seen": 478,
+            "positive_kept": 34,
+            "negative_kept": 128
+          },
+          {
+            "rule": 14,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 19,
+            "negative_seen": 4029,
+            "positive_kept": 19,
+            "negative_kept": 128
+          },
+          {
+            "rule": 15,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 21,
+            "negative_seen": 4027,
+            "positive_kept": 21,
+            "negative_kept": 128
+          },
+          {
+            "rule": 16,
+            "candidates": 4048,
+            "scanned": 4048,
+            "positive_seen": 19,
+            "negative_seen": 4029,
+            "positive_kept": 19,
+            "negative_kept": 128
+          }
+        ],
+        "test_coverage": [
+          {
+            "rule": 0,
+            "candidates": 14884,
+            "scanned": 14884,
+            "positive_seen": 23,
+            "negative_seen": 14861,
+            "positive_kept": 23,
+            "negative_kept": 64
+          },
+          {
+            "rule": 1,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 16,
+            "negative_seen": 960,
+            "positive_kept": 16,
+            "negative_kept": 64
+          },
+          {
+            "rule": 2,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 18,
+            "negative_seen": 958,
+            "positive_kept": 18,
+            "negative_kept": 64
+          },
+          {
+            "rule": 3,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 16,
+            "negative_seen": 960,
+            "positive_kept": 16,
+            "negative_kept": 64
+          },
+          {
+            "rule": 4,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 17,
+            "negative_seen": 959,
+            "positive_kept": 17,
+            "negative_kept": 64
+          },
+          {
+            "rule": 5,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 15,
+            "negative_seen": 961,
+            "positive_kept": 15,
+            "negative_kept": 64
+          },
+          {
+            "rule": 6,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 13,
+            "negative_seen": 963,
+            "positive_kept": 13,
+            "negative_kept": 64
+          },
+          {
+            "rule": 7,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 13,
+            "negative_seen": 963,
+            "positive_kept": 13,
+            "negative_kept": 64
+          },
+          {
+            "rule": 8,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 10,
+            "negative_seen": 966,
+            "positive_kept": 10,
+            "negative_kept": 64
+          },
+          {
+            "rule": 9,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 10,
+            "negative_seen": 966,
+            "positive_kept": 10,
+            "negative_kept": 64
+          },
+          {
+            "rule": 10,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 8,
+            "negative_seen": 968,
+            "positive_kept": 8,
+            "negative_kept": 64
+          },
+          {
+            "rule": 11,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 10,
+            "negative_seen": 966,
+            "positive_kept": 10,
+            "negative_kept": 64
+          },
+          {
+            "rule": 12,
+            "candidates": 16,
+            "scanned": 16,
+            "positive_seen": 9,
+            "negative_seen": 7,
+            "positive_kept": 9,
+            "negative_kept": 7
+          },
+          {
+            "rule": 13,
+            "candidates": 128,
+            "scanned": 128,
+            "positive_seen": 16,
+            "negative_seen": 112,
+            "positive_kept": 16,
+            "negative_kept": 64
+          },
+          {
+            "rule": 14,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 11,
+            "negative_seen": 965,
+            "positive_kept": 11,
+            "negative_kept": 64
+          },
+          {
+            "rule": 15,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 12,
+            "negative_seen": 964,
+            "positive_kept": 12,
+            "negative_kept": 64
+          },
+          {
+            "rule": 16,
+            "candidates": 976,
+            "scanned": 976,
+            "positive_seen": 8,
+            "negative_seen": 968,
+            "positive_kept": 8,
+            "negative_kept": 64
+          }
+        ],
+        "evaluation_feature_overlap": 1006,
+        "before": {
+          "pool": {
+            "samples": 1256,
+            "correct": 1252,
+            "false_positive": 4,
+            "false_negative": 0
+          },
+          "unseen_pool": {
+            "samples": 250,
+            "correct": 247,
+            "false_positive": 3,
+            "false_negative": 0
+          },
+          "chain": {
+            "samples": 1154,
+            "false_positive": 0,
+            "false_negative": 0,
+            "token_mse": 0.00388284376822412
+          }
+        },
+        "after": {
+          "pool": {
+            "samples": 1256,
+            "correct": 1254,
+            "false_positive": 2,
+            "false_negative": 0
+          },
+          "unseen_pool": {
+            "samples": 250,
+            "correct": 248,
+            "false_positive": 2,
+            "false_negative": 0
+          },
+          "chain": {
+            "samples": 1154,
+            "false_positive": 0,
+            "false_negative": 0,
+            "token_mse": 0.0034421493764966726
+          }
+        },
+        "steps": 400,
+        "wall_seconds": 75.88602874998469,
+        "parent_weights_sha256": "337a2684531ca3f8472b4d2b151d1743b9110897c3b222c9797f2626728a1a83",
+        "weights_sha256": "3199feae361fdd0b0970facbe7a4d438c5761195797dc72cff3785e6b0189462",
+        "promoted_as_default": false,
+        "shared_fraction": 0.35
+      },
+      "snapshot": {
+        "scope": "standalone first-Run seed-interface candidate audit; no effects, ownership or saturation",
+        "synthetic_only_training": true,
+        "snapshot_run": 437,
+        "seed_cells": 269,
+        "initial_import_seconds": 0.025421333964914083,
+        "initial_encoding_seconds": 0.007659875031094998,
+        "cpu_reference_init_seconds": 0.015171959006693214,
+        "groups": [
+          {
+            "rule": 283,
+            "candidates": 361,
+            "evaluated": 361,
+            "unresolved_candidates": 0,
+            "valid_tuples": 1,
+            "accepted_tuples": 21,
+            "false_positive_tuples": 20,
+            "false_negative_tuples": 0,
+            "expected_matches": 1,
+            "recovered_matches": 1,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0070603740168735385,
+            "cpu_audit_seconds": 0.004344875051174313
+          },
+          {
+            "rule": 284,
+            "candidates": 95,
+            "evaluated": 95,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0017719579627737403,
+            "cpu_audit_seconds": 0.0009723750408738852
+          },
+          {
+            "rule": 285,
+            "candidates": 76,
+            "evaluated": 76,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0017513339989818633,
+            "cpu_audit_seconds": 0.0009171670535579324
+          },
+          {
+            "rule": 286,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.2125005014240742e-05
+          },
+          {
+            "rule": 287,
+            "candidates": 209,
+            "evaluated": 209,
+            "unresolved_candidates": 0,
+            "valid_tuples": 4,
+            "accepted_tuples": 9,
+            "false_positive_tuples": 5,
+            "false_negative_tuples": 0,
+            "expected_matches": 4,
+            "recovered_matches": 4,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0019335830002091825,
+            "cpu_audit_seconds": 0.002784583019092679
+          },
+          {
+            "rule": 288,
+            "candidates": 171,
+            "evaluated": 171,
+            "unresolved_candidates": 0,
+            "valid_tuples": 2,
+            "accepted_tuples": 4,
+            "false_positive_tuples": 2,
+            "false_negative_tuples": 0,
+            "expected_matches": 2,
+            "recovered_matches": 2,
+            "missed_matches": 0,
+            "gpu_seconds": 0.00195237499428913,
+            "cpu_audit_seconds": 0.001979875029064715
+          },
+          {
+            "rule": 289,
+            "candidates": 19,
+            "evaluated": 19,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0012679159990511835,
+            "cpu_audit_seconds": 0.00021941697923466563
+          },
+          {
+            "rule": 290,
+            "candidates": 2356,
+            "evaluated": 2356,
+            "unresolved_candidates": 0,
+            "valid_tuples": 18,
+            "accepted_tuples": 18,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 18,
+            "recovered_matches": 18,
+            "missed_matches": 0,
+            "gpu_seconds": 0.013979169016238302,
+            "cpu_audit_seconds": 0.023320750042330474
+          },
+          {
+            "rule": 291,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.3165990822017193e-05
+          },
+          {
+            "rule": 292,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.1541997082531452e-05
+          },
+          {
+            "rule": 293,
+            "candidates": 722,
+            "evaluated": 722,
+            "unresolved_candidates": 0,
+            "valid_tuples": 6,
+            "accepted_tuples": 10,
+            "false_positive_tuples": 4,
+            "false_negative_tuples": 0,
+            "expected_matches": 6,
+            "recovered_matches": 6,
+            "missed_matches": 0,
+            "gpu_seconds": 0.003664625051897019,
+            "cpu_audit_seconds": 0.005943958996795118
+          },
+          {
+            "rule": 294,
+            "candidates": 1007,
+            "evaluated": 1007,
+            "unresolved_candidates": 0,
+            "valid_tuples": 8,
+            "accepted_tuples": 27,
+            "false_positive_tuples": 19,
+            "false_negative_tuples": 0,
+            "expected_matches": 8,
+            "recovered_matches": 8,
+            "missed_matches": 0,
+            "gpu_seconds": 0.005233332980424166,
+            "cpu_audit_seconds": 0.01006804296048358
+          },
+          {
+            "rule": 295,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.3249984476715326e-05
+          },
+          {
+            "rule": 296,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.1541007552295923e-05
+          },
+          {
+            "rule": 297,
+            "candidates": 0,
+            "evaluated": 0,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0,
+            "cpu_audit_seconds": 1.1625001206994057e-05
+          },
+          {
+            "rule": 298,
+            "candidates": 76,
+            "evaluated": 76,
+            "unresolved_candidates": 0,
+            "valid_tuples": 1,
+            "accepted_tuples": 6,
+            "false_positive_tuples": 5,
+            "false_negative_tuples": 0,
+            "expected_matches": 1,
+            "recovered_matches": 1,
+            "missed_matches": 0,
+            "gpu_seconds": 0.0013089999556541443,
+            "cpu_audit_seconds": 0.0009714160114526749
+          },
+          {
+            "rule": 299,
+            "candidates": 19,
+            "evaluated": 19,
+            "unresolved_candidates": 0,
+            "valid_tuples": 0,
+            "accepted_tuples": 0,
+            "false_positive_tuples": 0,
+            "false_negative_tuples": 0,
+            "expected_matches": 0,
+            "recovered_matches": 0,
+            "missed_matches": 0,
+            "gpu_seconds": 0.000741249998100102,
+            "cpu_audit_seconds": 0.00020879204384982586
+          }
+        ],
+        "weights_sha256": "3199feae361fdd0b0970facbe7a4d438c5761195797dc72cff3785e6b0189462",
+        "trace_sha256": "a2905bb27cc55472573437ff872f35eb12adce8cd60e50758f93e097a043d3a8",
+        "limitations": [
+          "Complete type-pool Cartesian enumeration is a diagnostic, not scalable routing",
+          "All successor tokens are computed but not committed or audited in this test",
+          "No new training or promotion; counts measure matches, not mutations",
+          "GPU timing includes dispatch and first-use compilation; no speedup claim"
+        ],
+        "totals": {
+          "candidates": 5111,
+          "evaluated": 5111,
+          "unresolved_candidates": 0,
+          "valid_tuples": 40,
+          "accepted_tuples": 95,
+          "false_positive_tuples": 55,
+          "false_negative_tuples": 0,
+          "expected_matches": 40,
+          "recovered_matches": 40,
+          "missed_matches": 0,
+          "gpu_seconds": 0.04066491697449237,
+          "cpu_audit_seconds": 0.05180450121406466
+        }
+      }
+    }
+  },
+  "baseline": {
+    "false_positive_tuples": 74,
+    "false_negative_tuples": 0,
+    "expected_matches": 40,
+    "candidates": 5111
+  },
+  "tests_passed": 12,
+  "promoted_as_default": false,
+  "speedup_claim": false,
+  "command": "python train_neural_candidates.py TRACE.json PARENT.safetensors OUTPUT.json --shared-fraction 0.35",
+  "interpretation": "Sharing-aware synthetic negatives improved held-out synthetic matching but did not improve real snapshot matching beyond independent pools. Both retain 55 false positives.",
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/neural-pooled-candidates-v1.tar.gz",
+  "archive_sha256": "a5bfcb6f9fcc31f5f1276c676e9579588e5e2dfa3e27eea6f9b0cd864eade4f0"
+}

@@ -199,3 +199,41 @@ python benchmarks/eggcc-gpu-supervision/neural_snapshot_candidates.py \
 The saved result records trace and model hashes. This work does not change the
 Cell CPU runtime; its Cargo benchmark campaign and final-state sum-bits contract
 are not evidence for this standalone neural experiment.
+
+## Follow-up: synthetic pooled candidate training
+
+`neural_candidate_training.py` generates canonical constructor snapshots from
+rule interfaces only. It combines independently generated Cells, optionally
+sharing existing typed identities across instances. Reservoir sampling keeps
+positive and negative candidates from bounded Cartesian enumeration. This is
+sampled coverage, not an enumeration of all possible Cell interactions.
+`train_neural_candidates.py` retains the original single-step and generated-token
+two-step losses while adding matching loss on these pooled candidates.
+
+The frozen GCD snapshot remains evaluation-only. Results and model hashes are in
+`neural-pooled-candidates-results.json`.
+
+| Training variant | Synthetic held-out FP / FN | GCD FP / FN | GCD recovered |
+| --- | ---: | ---: | ---: |
+| Original two-step model | — | 74 / 0 | 40 / 40 |
+| Independent synthetic pools | 0 / 0 of 1,194 | 55 / 0 | 40 / 40 |
+| Cross-instance sharing probability 0.35 | 2 / 0 of 1,256 | 55 / 0 | 40 / 40 |
+
+The independent-pool test already had zero errors before fine-tuning. For the
+sharing-aware test, 1,006 feature patterns overlap training. On the 250 unseen
+patterns, errors decreased from three to two. Two-step matching retained zero
+errors on its existing 1,154 tuples; positive-token MSE changed from 0.003883 to
+0.003442 for sharing-aware training. These are local regression checks, not an
+autonomous rollout acceptance test.
+
+Real snapshot acceptance precision is still only 40/95 = 42.11%. Neither model
+is promoted or allowed to commit graph effects. The follow-up supports changing
+the relation representation before another data-only training sweep. Twelve
+neural tests pass. The neighboring Bake branch remains `f3321a3a`; this experiment
+introduces no alternative ownership representation.
+
+```sh
+python benchmarks/eggcc-gpu-supervision/train_neural_candidates.py \
+  TRACE.json PARENT.safetensors OUTPUT.json --shared-fraction 0.35
+# Use --shared-fraction 0 for the independent-pool control.
+```
