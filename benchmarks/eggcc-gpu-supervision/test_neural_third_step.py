@@ -19,6 +19,13 @@ class ThirdStep(unittest.TestCase):
         self.assertFalse(report['recurrent_latent_inputs'])
         self.assertFalse(any(k.startswith(('p_', 'c_')) for k in raw))
         self.assertNotIn('seed_x',raw)
+        from train_current_cell import input_census
+        doubled={k:np.concatenate([v,v]) for k,v in raw.items()}
+        self.assertEqual(input_census(doubled)['conflicting_duplicate_samples'],0)
+        positive=np.flatnonzero(raw['valid'])[0]
+        slot=np.flatnonzero(raw['eq_mask'][positive])[0]
+        doubled['eq_target'][len(raw['valid'])+positive,slot]=1-raw['eq_target'][positive,slot]
+        self.assertGreater(input_census(doubled)['conflicting_duplicate_samples'],0)
         data={k:mx.array(v) for k,v in raw.items()}
         model=CurrentCellModel(raw['x'].shape[-1],raw['relations'].shape[-1],3)
         before=model(data)

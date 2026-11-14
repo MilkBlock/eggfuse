@@ -84,3 +84,31 @@ back to the recurrent path blocks on the preserved dirty metadata. This proves
 execution-path independence from historical latents, not trained-model accuracy
 or complete saturation of arbitrary rulesets. The learned checkpoint still needs
 a full independent Run audit.
+
+## Learned-model multi-Run audit
+
+`audit_current_cell.py TRACE FIT.safetensors AUDIT.json` executes the trained
+current-state model against the full eight-rule canon Run, starting from the
+same 61 synthetic template pairs as the training generator. It checks the recipe
+hash, poisons old latents before each Run, and independently executes the CPU
+ruleset for comparison. GPU state is passed directly to the next Run only after
+a successful audit; no CPU correction is installed. Budgets are three Runs and
+eight admission attempts per rule, with one-hop witness context. These are not
+held-out workload results.
+
+With the 600-step checkpoint: 47/61 first Runs pass; 45/61 reach an independently
+verified fixed point. There are 76 audited Runs. Fourteen cases fail in the first
+Run with diagnosed wrong Eq output, concentrated in pairs involving Cell 5.
+Pair (7,6) passes the first Run but fails the second with query-incomplete;
+one remaining case does not reach a fixed point within the Run budget. Errors
+are not dismissed as latent drift: historical latents are deliberately NaN and
+are not model inputs. The model remains unpromoted.
+
+The 233 legal training samples contain 98 distinct exact masked feature inputs
+and no contradictory duplicate labels. This rules out exact collisions within
+this sample set only; it does not establish global representation sufficiency.
+`train_current_cell.input_census` reproduces this diagnostic.
+
+Full evidence and CPU audit timing are in `current-cell-run-results.json`.
+Timing includes CPU full ruleset execution and graph comparison, but excludes
+separate admission diagnosis and GPU time; it is not an end-to-end speed claim.

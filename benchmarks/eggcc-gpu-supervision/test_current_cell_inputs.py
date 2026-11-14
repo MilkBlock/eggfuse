@@ -37,6 +37,16 @@ class CurrentInputs(unittest.TestCase):
         np.testing.assert_array_equal(a['binding_roots'], b['binding_roots'])
         self.assertTrue(bool(mx.all(mx.isfinite(b['tokens']))))
 
+    def test_trained_capacity_cannot_truncate_generated_cell(self):
+        _, _, state, frames, _ = fixtures.DeviceCandidates().prepared()
+        from device_slot_owners import shape
+        width=shape(state)[1]
+        with self.assertRaisesRegex(ValueError,'exceeds trained field capacity'):
+            current_inputs(state,frames,mx,field_capacity=width-1)
+        padded=current_inputs(state,frames,mx,field_capacity=width+2)
+        self.assertEqual(padded['fields'].shape[1],(width+2)*128)
+        np.testing.assert_array_equal(padded['fields'][:,width*128:],0.)
+
     def test_unsettled_and_hidden_cells(self):
         _, _, state, frames, target = fixtures.DeviceCandidates().prepared()
         unsettled = dict(state)

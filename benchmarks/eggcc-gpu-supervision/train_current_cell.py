@@ -42,6 +42,23 @@ def loss(model, batch):
             masked_loss(scores, batch['eq_target'], batch['eq_mask']))
 
 
+def input_census(raw):
+    """Exact masked-input contradictions; zero conflicts is not completeness."""
+    groups={};conflicts=0
+    for i in np.flatnonzero(raw['valid']):
+        parts=[]
+        for k in ('x','edges','mask','request','relations','source_tags'):
+            value=raw[k][i]
+            if k in ('x','source_tags'):value=np.where(raw['mask'][i,:,None],value,0)
+            if k=='edges':value=np.where((raw['mask'][i,:,None]&raw['mask'][i,None,:])[...,None],value,0)
+            parts.append(value.tobytes())
+        key=hashlib.sha256(b''.join(parts)).digest()
+        label=(raw['eq_target'][i]*raw['eq_mask'][i]).tobytes()+raw['eq_mask'][i].tobytes()
+        if key in groups and groups[key]!=label:conflicts+=1
+        else:groups[key]=label
+    return dict(unique_inputs=len(groups),conflicting_duplicate_samples=conflicts)
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('dataset', type=Path); p.add_argument('output', type=Path)
@@ -75,7 +92,7 @@ def main():
     after=evaluate();model.save_weights(str(a.output.with_suffix('.safetensors')))
     result=dict(scope='training-domain fit of synthetic current-Cell inputs; not a Run audit',
                 dataset_sha256=digest,recipe_sha256=manifest['recipe_sha256'],steps=a.steps,
-                before=before,after=after,recurrent_latent_inputs=False,backpropagation=True,
+                before=before,after=after,input_census=input_census(raw),recurrent_latent_inputs=False,backpropagation=True,
                 promoted_as_default=False,input_width=int(raw['x'].shape[-1]))
     a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result),flush=True)
 
