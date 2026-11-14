@@ -1,0 +1,233 @@
+{
+  "scope": "standalone cumulative GPU diagnosis; CPU inspection after execution, no CPU feedback",
+  "producer": 7,
+  "consumer": 6,
+  "weights_sha256": "ac77ef02ab3daac2f1cef0e77e29aea4125c19a505a743c175948e629cd47ba9",
+  "readout_weights_sha256": "318c82348a80e194cddd28bcd282fd1d3074ad65f132bc019353c6504f540332",
+  "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+  "cumulative": {
+    "scope": "one cumulative GPU state; host fixed-order sweeps, final CPU audit",
+    "pool_capacity_overrides": {
+      "Bop": 32
+    },
+    "candidate_lanes_per_sweep": 16576,
+    "sweeps": 12,
+    "scheduled_steps": 96,
+    "admitted": 14,
+    "replayed": 14,
+    "capture_legal_entries": 14,
+    "capture_skipped_entries": 0,
+    "graph": {
+      "passed": false,
+      "errors": [
+        "missing_union"
+      ],
+      "actual_facts": 35,
+      "expected_facts": 35,
+      "mapped_classes": 32,
+      "missing_union_classes": [
+        {
+          "expected": 6,
+          "actual": [
+            6,
+            248
+          ]
+        },
+        {
+          "expected": 7,
+          "actual": [
+            7,
+            253
+          ]
+        },
+        {
+          "expected": 8,
+          "actual": [
+            8,
+            247
+          ]
+        }
+      ],
+      "duplicate_constructor_results": [
+        {
+          "table": "Const",
+          "args": [
+            10,
+            11,
+            12
+          ],
+          "results": [
+            8,
+            247
+          ]
+        }
+      ]
+    },
+    "facts_decoded": true,
+    "cpu_fixedpoint": false,
+    "device_no_novel": true,
+    "semantic_events": [],
+    "boundary_alias_events": [
+      {
+        "admission": 6,
+        "rule": 7,
+        "handle": 247,
+        "root": 247,
+        "existing_roots": [
+          8
+        ]
+      },
+      {
+        "admission": 6,
+        "rule": 7,
+        "handle": 248,
+        "root": 248,
+        "existing_roots": [
+          6
+        ]
+      },
+      {
+        "admission": 6,
+        "rule": 7,
+        "handle": 252,
+        "root": 247,
+        "existing_roots": [
+          8
+        ]
+      },
+      {
+        "admission": 6,
+        "rule": 7,
+        "handle": 253,
+        "root": 253,
+        "existing_roots": [
+          7
+        ]
+      },
+      {
+        "admission": 7,
+        "rule": 0,
+        "handle": 247,
+        "root": 247,
+        "existing_roots": [
+          8
+        ]
+      },
+      {
+        "admission": 7,
+        "rule": 0,
+        "handle": 248,
+        "root": 248,
+        "existing_roots": [
+          6
+        ]
+      },
+      {
+        "admission": 7,
+        "rule": 0,
+        "handle": 248,
+        "root": 248,
+        "existing_roots": [
+          6
+        ]
+      },
+      {
+        "admission": 8,
+        "rule": 0,
+        "handle": 247,
+        "root": 247,
+        "existing_roots": [
+          8
+        ]
+      },
+      {
+        "admission": 8,
+        "rule": 0,
+        "handle": 248,
+        "root": 248,
+        "existing_roots": [
+          6
+        ]
+      },
+      {
+        "admission": 8,
+        "rule": 0,
+        "handle": 248,
+        "root": 248,
+        "existing_roots": [
+          6
+        ]
+      },
+      {
+        "admission": 11,
+        "rule": 0,
+        "handle": 8,
+        "root": 8,
+        "existing_roots": [
+          247
+        ]
+      },
+      {
+        "admission": 11,
+        "rule": 0,
+        "handle": 6,
+        "root": 6,
+        "existing_roots": [
+          248
+        ]
+      },
+      {
+        "admission": 11,
+        "rule": 0,
+        "handle": 6,
+        "root": 6,
+        "existing_roots": [
+          248
+        ]
+      },
+      {
+        "admission": 12,
+        "rule": 0,
+        "handle": 8,
+        "root": 8,
+        "existing_roots": [
+          247
+        ]
+      },
+      {
+        "admission": 12,
+        "rule": 0,
+        "handle": 6,
+        "root": 6,
+        "existing_roots": [
+          248
+        ]
+      },
+      {
+        "admission": 12,
+        "rule": 0,
+        "handle": 6,
+        "root": 6,
+        "existing_roots": [
+          248
+        ]
+      }
+    ],
+    "needs_attention": false,
+    "attention_reasons": {
+      "query_overflow": 0,
+      "query_incomplete": 0,
+      "dirty_input": 0,
+      "nonfinite": 0,
+      "invalid_keys": 0,
+      "rejected_proposal": 0,
+      "payload_invalid": 0
+    },
+    "attention_events": [],
+    "capacity_steps": 0,
+    "refresh_steps": 0,
+    "cpu_audit_seconds": 0.04961558396462351,
+    "intermediate_host_value_reads": false,
+    "status": "difference"
+  }
+}

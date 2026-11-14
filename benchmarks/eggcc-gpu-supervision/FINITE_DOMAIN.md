@@ -90,3 +90,22 @@ The candidate is not promoted. The deeper audit demonstrates remaining
 boundary-equivalence/closure obligations, even after local fitting improves.
 These results do not establish a complete ownership lifecycle or multi-stage
 runtime. The default model remains unchanged.
+
+## Cross-Cell alias diagnosis
+
+`finite-boundary-diagnosis.json` records the twelve-sweep (7,6) case with
+per-admission result-root inspection. The device retains only each selected
+frame's result roots; CPU checks run after execution and do not feed the GPU.
+Every admitted frame has correct within-frame Eq relations. Nevertheless,
+admission 6 (rule 7) creates handle 247 where the reference already has result
+8 for `Const(10,11,12)`. Final roots retain both results, plus unmatched pairs
+(6,248) and (7,253). Full graph comparison rejects this despite device idleness.
+
+This is evidence of a missing cross-Cell result alias, not a demonstrated
+within-frame Eq predictor error. Source witness reuse currently inspects only
+selected matched source Cells; absence there is not global freshness proof.
+The next structural obligation is to expose the relevant completed constructor
+witness through Bake's ownership/export context, preserving actual returned
+identity and lifetime. Training local Eq alone cannot recover an external
+identity absent from its interface. No graph-wide runtime scan or weakened
+acceptance was introduced to hide the failure.

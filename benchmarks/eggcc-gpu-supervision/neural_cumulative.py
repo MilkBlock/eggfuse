@@ -38,7 +38,8 @@ def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,
     started=time.perf_counter();ref=deepcopy(oracle);identities=dict(mapping)
     errors=[];admitted=0;capacity=0;refresh=0;replayed=0
     reasons={k:0 for k in ('query_overflow','query_incomplete','dirty_input','nonfinite','invalid_keys','rejected_proposal','payload_invalid')}
-    attention_events=[]
+    attention_events=[];semantic_events=[];boundary_alias_events=[]
+    final_roots=np.array(roots)
     for ri,event in trace:
         if bool(event["needs_attention"]):attention_events.append(dict(rule=ri,pools={a["call"]["table"]:int(n) for a,n in zip(rules[ri]["query"],np.array(event["pool_sizes"]))}))
         for k in reasons:reasons[k]+=bool(event[k])
@@ -52,11 +53,22 @@ def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,
         bound={s:ref.root(identities[int(v)]) for s,v in zip(inputs,key)}
         if bound not in ref.matches(rule):errors.append('invalid_effect_entry');continue
         apply_instance(ref,rule,bound);values=completed(rule,bound,ref)
+        actual=np.array(event['result_roots']);valid=np.array(event['result_valid'])
+        mismatches=[]
+        for i,desc in enumerate(rule['slots']):
+            if desc['sort']['kind']!='eq' or not valid[i]:continue
+            for j in range(i+1,len(rule['slots'])):
+                if rule['slots'][j]['sort']!=desc['sort'] or not valid[j]:continue
+                expected=ref.root(values[i])==ref.root(values[j]);observed=bool(actual[i]==actual[j])
+                if observed!=expected:mismatches.append(dict(slots=[i,j],expected=expected,observed=observed))
+        if mismatches:semantic_events.append(dict(admission=admitted,rule=ri,binding=sorted(bound.items()),pairs=mismatches))
         if collector is not None:
             from neural_eq_readout import targets
             collector.append(dict(token=np.array(event['output_token']),request=np.array(event['request']),rule=np.int32(ri),**targets(rule,values,ref,eq_width)))
         for handle,value in zip(np.array(event['result_slots']),values):
             handle=int(handle);value=ref.root(value)
+            aliases=sorted({int(final_roots[h]) for h,v in identities.items() if ref.root(v)==value and final_roots[h]!=final_roots[handle]})
+            if aliases:boundary_alias_events.append(dict(admission=admitted,rule=ri,handle=handle,root=int(final_roots[handle]),existing_roots=aliases))
             if handle in identities and ref.root(identities[handle])!=value:errors.append('inconsistent_result_identity')
             else:identities[handle]=value
         replayed+=1
@@ -76,6 +88,8 @@ def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,
                 sweeps=sweeps,scheduled_steps=len(trace),admitted=admitted,replayed=replayed,
                 capture_legal_entries=replayed,capture_skipped_entries=admitted-replayed,
                 graph=graph,facts_decoded=covered,cpu_fixedpoint=fixedpoint,device_no_novel=bool(idle),
+                semantic_events=semantic_events,
+                boundary_alias_events=boundary_alias_events,
                 needs_attention=bool(attention),attention_reasons=reasons,attention_events=attention_events,capacity_steps=capacity,refresh_steps=refresh,
                 cpu_audit_seconds=time.perf_counter()-started,intermediate_host_value_reads=False,
                 status='pass' if covered and graph['passed'] and fixedpoint and bool(idle) and not bool(attention) else 'difference')

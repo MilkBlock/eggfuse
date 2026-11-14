@@ -1,6 +1,6 @@
 import unittest,json
 import numpy as np
-from reference_union_family import Reference
+from reference_union_family import Reference,compare_graph
 from device_snapshot_import import eq_registry,identity
 
 
@@ -8,6 +8,16 @@ def value(i,sort='E'):return dict(sort=sort,eq=str(i))
 def atom(t,args):return dict(call=dict(table=t),args=[dict(slot=s) for s in args])
 
 class UnionReference(unittest.TestCase):
+    def test_duplicate_constructor_boundary_is_not_a_local_value_error(self):
+        vals=[value(0),value(1)];ids={identity(v):i for i,v in enumerate(vals)}
+        ref=Reference({},[dict(table='F',values=vals)],ids)
+        result=compare_graph(ref,[('F',(0,),1),('F',(0,),2)],np.arange(3),1)
+        self.assertEqual(result['errors'],['missing_union'])
+        self.assertEqual(result['missing_union_classes'],[dict(expected=1,actual=[1,2])])
+        self.assertEqual(result['duplicate_constructor_results'],[dict(table='F',args=[0],results=[1,2])])
+        repaired=compare_graph(ref,[('F',(0,),1),('F',(0,),2)],np.array([0,1,1]),1)
+        self.assertTrue(repaired['passed'])
+
     def fixture(self):
         vals=[value(i) for i in range(6)];ids={identity(v):i for i,v in enumerate(vals)}
         rows=[dict(table=t,values=[vals[a],vals[b]]) for t,a,b in [('F',0,2),('F',1,3),('G',2,4),('G',3,5),('Link',0,1)]]

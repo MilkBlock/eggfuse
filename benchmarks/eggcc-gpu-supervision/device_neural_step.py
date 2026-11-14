@@ -35,6 +35,7 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
     event=dict(
         admitted=accepted,audit_pending=accepted,selected=selected,
         key=keys[selected],result_slots=payload["slots"][0],result_valid=payload["slot_valid"][0],
+        result_roots=proposed_roots[xp.clip(payload['slots'][0],0,len(proposed_roots)-1)],
         duplicate_candidates=xp.sum((eligible&known).astype(xp.int32)),
         no_novel_proposal=enabled&~blocked&~xp.any(novel),
         needs_attention=enabled&(blocked|(requested&~accepted)|marks['token_refresh_required']),

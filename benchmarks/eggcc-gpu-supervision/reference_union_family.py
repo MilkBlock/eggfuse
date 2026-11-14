@@ -143,5 +143,14 @@ def compare_graph(reference,observed,roots,seed_count,include_mapping=False):
     actual={(t,tuple(mapping[int(roots[v])] for v in (*args,result))) for t,args,result in observed if all(int(roots[v]) in mapping for v in (*args,result))}
     if actual!=expected:errors.append('fact_set_difference')
     result=dict(passed=not errors,errors=errors,actual_facts=len(actual),expected_facts=len(expected),mapped_classes=len(mapping))
+    if 'missing_union' in errors:
+        classes={}
+        for actual_root,expected_root in mapping.items():classes.setdefault(expected_root,[]).append(actual_root)
+        result['missing_union_classes']=[dict(expected=k,actual=sorted(v)) for k,v in sorted(classes.items()) if len(v)>1]
+        constructors={}
+        for table,args,value in observed:
+            key=(table,tuple(int(roots[v]) for v in args))
+            constructors.setdefault(key,set()).add(int(roots[value]))
+        result['duplicate_constructor_results']=[dict(table=t,args=list(args),results=sorted(values)) for (t,args),values in sorted(constructors.items()) if len(values)>1]
     if include_mapping and not errors:result['mapping']=mapping
     return result
