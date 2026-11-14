@@ -11,6 +11,20 @@ from test_neural_cell_chains import recipe
 
 
 class ThirdStep(unittest.TestCase):
+    def test_current_state_samples_have_no_recurrent_inputs(self):
+        from neural_third_step import build
+        from train_current_cell import CurrentCellModel
+        raw,report=build(recipe(),1,23,per_pair=1,current_state=True,include_uncovered_transfers=True)
+        self.assertTrue(report['current_state_inputs'])
+        self.assertFalse(report['recurrent_latent_inputs'])
+        self.assertFalse(any(k.startswith(('p_', 'c_')) for k in raw))
+        self.assertNotIn('seed_x',raw)
+        data={k:mx.array(v) for k,v in raw.items()}
+        model=CurrentCellModel(raw['x'].shape[-1],raw['relations'].shape[-1],3)
+        before=model(data)
+        after=model(dict(data,eq_target=1-data['eq_target'],source_kind=mx.zeros_like(data['source_kind'])))
+        for a,b in zip(before,after):np.testing.assert_array_equal(a,b)
+
     def test_entry_limit_is_explicit(self):
         from neural_third_step import build
         with self.assertRaisesRegex(ValueError,"positive entry limit"):

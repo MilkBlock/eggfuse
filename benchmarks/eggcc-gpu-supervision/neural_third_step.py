@@ -68,7 +68,8 @@ def fingerprints(data):
     return result
 
 
-def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,include_uncovered_transfers=False,entries_per_consumer=2):
+def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,include_uncovered_transfers=False,entries_per_consumer=2,current_state=False):
+    if current_state and block_owner:raise ValueError('current-state block projection is not supported')
     if entries_per_consumer<1:raise ValueError("positive entry limit required")
     if block_owner and include_uncovered_transfers:raise ValueError("uncovered semantic owner replay is not proved")
     records=[];base=samples(recipe,count,seed,records,ordered=True);transfers=[]
@@ -103,6 +104,13 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,incl
         check=compare_graph(oracle,facts,np.array(registry['roots'])[:int(next_id)],seed_count,include_mapping=True)
         if not covered or not check['passed']:raise ValueError('synthetic device/oracle mismatch')
         mapping=check['mapping']
+        current_fields=None
+        if current_state:
+            from device_current_cell_inputs import current_inputs
+            current=current_inputs(state,frames,mx);mx.eval(current)
+            if not bool(current['complete']):raise ValueError('incomplete current Cell state')
+            current_fields=np.array(current['fields'])
+
         for rid,rule in enumerate(recipe['rules']):
             plan=compile_candidates(local,rule,atoms=base['x'].shape[1],fields=field_width,context_capacity=context_capacity,compact_constants=True)
             b=candidates(state,frames,device(plan),mx.array(True),mx.array(True),mx);mx.eval(b)
@@ -122,6 +130,12 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,incl
                     eq=targets(rule,completed(rule,bound,ref),ref,width)
                 datum={k:np.array(b[k][j]) for k in ('edges','mask','request','relations','source_tags')}
                 datum.update(seed_x=np.array(raw)[sources],source_kind=kind,valid=np.float32(valid),rule=np.int32(rid),case=np.int32(case),**eq)
+                if current_state:
+                    # Actual resolved semantic owners, never logical producer addresses.
+                    datum.pop('seed_x')
+                    datum['x']=current_fields[np.array(b['token_sources'][j])]
+                    items.append(datum)
+                    continue
                 datum.update({'p_'+k:base[k][chain['parent'][i]] for k in ('x','edges','mask','request','relations')})
                 datum.update({'c_'+k:chain[k][i] for k in ('seed_x','replace','edges','mask','request','relations')})
                 if block_owner:
@@ -132,16 +146,23 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False,incl
                 items.append(datum)
         print(json.dumps(dict(case=case+1,total_cases=len(selected),candidates=len(items))),flush=True)
     if not items:raise ValueError('empty replay dataset')
+    if current_state:
+        field_capacity=max(v['x'].shape[-1] for v in items)
+        for v in items:v['x']=np.pad(v['x'],((0,0),(0,field_capacity-v['x'].shape[-1])))
     data={k:np.array([v[k] for v in items]) for k in items[0]}
     report=dict(entries_per_consumer=entries_per_consumer,include_uncovered_transfers=include_uncovered_transfers,observed_template_pairs=len(pairs),block_owner=block_owner,synthetic_only=True,seed=seed,source_samples_per_rule=count,per_pair=per_pair,context_capacity=context_capacity,cases=len(selected),physical_transfers=moved,candidates=len(items),valid=int(data['valid'].sum()),generated_target_inputs=int(((data['source_kind']==2)&data['mask']).any(axis=1).sum()),token_targets_used_as_inputs=False,scope='bounded synthetic exact-completion routing, differentiable three-step token replay; not autonomous saturation')
+    if current_state:
+        report.update(current_state_inputs=True, recurrent_latent_inputs=False,
+                      input_width=int(data['x'].shape[-1]),
+                      scope='synthetic current-state Cell query features and exact effect labels; not autonomous saturation')
     return data,report
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--entries-per-consumer',type=int,default=2);p.add_argument('--ruleset',default='context');p.add_argument('trace',type=Path);p.add_argument('output',type=Path);p.add_argument('--seed',type=int,default=23001);p.add_argument('--count',type=int,default=4);p.add_argument('--per-pair',type=int,default=2);p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--block-owner',action='store_true');p.add_argument('--include-uncovered-transfers',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--current-state',action='store_true');p.add_argument('--entries-per-consumer',type=int,default=2);p.add_argument('--ruleset',default='context');p.add_argument('trace',type=Path);p.add_argument('output',type=Path);p.add_argument('--seed',type=int,default=23001);p.add_argument('--count',type=int,default=4);p.add_argument('--per-pair',type=int,default=2);p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--block-owner',action='store_true');p.add_argument('--include-uncovered-transfers',action='store_true');a=p.parse_args()
     if min(a.count,a.per_pair)<1:raise ValueError('positive sample counts required')
     source=json.loads(a.trace.read_text());source=source.get('recipe',source);recipe,stage_manifest=select_ruleset(source,a.ruleset)
-    began=time.perf_counter();data,report=build(recipe,a.count,a.seed,a.per_pair,a.context_capacity,a.block_owner,a.include_uncovered_transfers,a.entries_per_consumer)
+    began=time.perf_counter();data,report=build(recipe,a.count,a.seed,a.per_pair,a.context_capacity,a.block_owner,a.include_uncovered_transfers,a.entries_per_consumer,a.current_state)
     report['stage_manifest']=stage_manifest
     np.savez_compressed(a.output,**data);report.update(wall_seconds=time.perf_counter()-began,recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),dataset_sha256=hashlib.sha256(a.output.read_bytes()).hexdigest())
     a.output.with_suffix('.json').write_text(json.dumps(report,indent=2)+'\n')

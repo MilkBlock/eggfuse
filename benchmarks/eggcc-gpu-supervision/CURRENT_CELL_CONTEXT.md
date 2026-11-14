@@ -33,3 +33,31 @@ must not be presented as validated for this representation. Current limitations:
 Next integration must train from current synthetic explicit states, validate
 multi-Run generation, and only then retire recurrent-latent invalidation within
 proven coverage. It must not substitute an unvalidated encoder for old weights.
+
+## Synthetic current-state training
+
+`neural_third_step.py --current-state --include-uncovered-transfers` now generates
+features from exact completed synthetic Cells after ownership transfer. It uses
+resolved semantic source addresses, drops recurrent parent/consumer replay arrays,
+and pads to the actual maximum observed full layout. It does not assume twice the
+base template width bounds the composed layout. CPU exact application supplies
+labels; no real Run bindings train this experiment.
+
+`train_current_cell.py` trains a fresh encoder, transient transition and Eq head
+with backprop. Only explicit `x`, edges, masks, source role tags, requests and
+incidence enter the model. There is no token-target regression or recurrent
+latent input. The dataset hash and current-state manifest are checked.
+
+The first canon run uses 61 template pairs, 717 candidates, 233 legal matches and
+600 training steps. Matching errors fall to zero; 207/233 legal states have exact
+Eq outputs, with 18 false-positive and 11 false-negative pairs. This is training
+fit, not independent validation or a full Run audit. It is not enabled by default.
+The 5,376-float padded source input also requires efficiency work. This uses the
+existing selected query context, not yet all-context generation or scalable
+Bake-directed routing. Evidence is in `current-cell-results.json`; large artifacts
+are outside Git under `current-cell-v36`.
+
+```sh
+python neural_third_step.py TRACE DATA.npz --ruleset canon --current-state --include-uncovered-transfers --count 1 --per-pair 1
+python train_current_cell.py DATA.npz FIT.json --steps 600
+```

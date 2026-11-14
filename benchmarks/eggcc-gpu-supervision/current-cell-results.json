@@ -1,0 +1,81 @@
+{
+  "dataset": {
+    "entries_per_consumer": 2,
+    "include_uncovered_transfers": true,
+    "observed_template_pairs": 61,
+    "block_owner": false,
+    "synthetic_only": true,
+    "seed": 23001,
+    "source_samples_per_rule": 1,
+    "per_pair": 1,
+    "context_capacity": 0,
+    "cases": 61,
+    "physical_transfers": 61,
+    "candidates": 717,
+    "valid": 233,
+    "generated_target_inputs": 602,
+    "token_targets_used_as_inputs": false,
+    "scope": "synthetic current-state Cell query features and exact effect labels; not autonomous saturation",
+    "current_state_inputs": true,
+    "recurrent_latent_inputs": false,
+    "input_width": 5376,
+    "stage_manifest": {
+      "ruleset": "canon",
+      "source_rule_ids": [
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277
+      ],
+      "membership_authoritative": true,
+      "full_schedule_replaced_for_training": true
+    },
+    "wall_seconds": 18.948260416975245,
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "dataset_sha256": "81fa9707bf9ed4229fab3d9dc395c58c14175928749248ae3582f678992e7628"
+  },
+  "fit": {
+    "scope": "training-domain fit of synthetic current-Cell inputs; not a Run audit",
+    "dataset_sha256": "81fa9707bf9ed4229fab3d9dc395c58c14175928749248ae3582f678992e7628",
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "steps": 600,
+    "before": {
+      "matching_errors": 484,
+      "eq": {
+        "states": 233,
+        "pairs": 2623,
+        "false_positive_pairs": 958,
+        "false_negative_pairs": 437,
+        "nonfinite_states": 0,
+        "exact_states": 0,
+        "closed_false_positive_pairs": 1426,
+        "closed_false_negative_pairs": 207,
+        "closed_exact_states": 7,
+        "states_with_false_merge": 221
+      }
+    },
+    "after": {
+      "matching_errors": 0,
+      "eq": {
+        "states": 233,
+        "pairs": 2623,
+        "false_positive_pairs": 18,
+        "false_negative_pairs": 11,
+        "nonfinite_states": 0,
+        "exact_states": 207,
+        "closed_false_positive_pairs": 18,
+        "closed_false_negative_pairs": 11,
+        "closed_exact_states": 207,
+        "states_with_false_merge": 18
+      }
+    },
+    "recurrent_latent_inputs": false,
+    "backpropagation": true,
+    "promoted_as_default": false,
+    "input_width": 5376
+  }
+}
