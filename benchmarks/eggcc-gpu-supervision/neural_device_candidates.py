@@ -72,13 +72,15 @@ def compile_candidates(recipe,consumer,capacity=16,atoms=2,fields=5,context_capa
 
 def candidates(state,frames,plan,external_complete,eq_settled,xp):
     cap=plan['capacity'];count=cap**len(plan['views']);ordinal=xp.arange(count)
+    from neural_semantic_owner import resolve
+    token_sources,token_valid=resolve(state,xp)
+    ready=state['settled']&token_valid
     views=[];complete=xp.array(True);overflow=xp.array(False)
     for view_plan in plan['views']:
         v=project(state,view_plan,external_complete,eq_settled,xp,include_fields=True);n=len(v['live'])
         # Prefer the later producer for duplicate facts, retaining generated tokens.
         same=xp.all(v['value_roots'][:,None,:]==v['value_roots'][None,:,:],axis=-1)
         later=xp.arange(n)[None,:]>xp.arange(n)[:,None]
-        ready=state['settled']&~state.get('token_dirty',xp.zeros_like(state['settled']))
         eligible=v['live']&ready[v['source']]
         complete=complete&~xp.any(v['live']&~ready[v['source']])
         keep=eligible&~xp.any(same&later&eligible[None,:],axis=1)
@@ -114,10 +116,11 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp):
     rid=xp.clip(state['keys'][:,0],0,len(frames['roles'])-1)
     valid=read(state,'slot_valid',rr,ss,xp)&frames['valid'][rid]
     labels=xp.where(valid,read(state,'slot_roots',rr,ss,xp),-1)
-    edges=relational_edges(labels,frames['roles'][rid],sources)
+    semantic_sources=token_sources[sources]
+    edges=relational_edges(labels,frames['roles'][rid],semantic_sources)
     binding=xp.stack([projected[:,plan['origins'][s][0],plan['origins'][s][1]] for s in plan['inputs']],axis=1)
     binding_sources=xp.stack([sources[:,plan['origins'][s][0]] for s in plan['inputs']],axis=1)
     binding_slots=xp.stack([positions[plan['origins'][s][0]][:,plan['origins'][s][1]] for s in plan['inputs']],axis=1)
-    return dict(tokens=state['tokens'][sources]+plan['source_tags'][None,:,:],source_tags=xp.broadcast_to(plan['source_tags'],(count,sources.shape[1],128)),edges=edges,mask=mask,request=xp.broadcast_to(plan['request'],(count,64)),
-                relations=incidence(projected,plan['required'],xp),sources=sources,generations=state['generation'][sources],binding_roots=binding,binding_sources=binding_sources,binding_slots=binding_slots,
+    return dict(tokens=state['tokens'][semantic_sources]+plan['source_tags'][None,:,:],source_tags=xp.broadcast_to(plan['source_tags'],(count,sources.shape[1],128)),edges=edges,mask=mask,request=xp.broadcast_to(plan['request'],(count,64)),
+                relations=incidence(projected,plan['required'],xp),sources=sources,token_sources=semantic_sources,generations=state['generation'][sources],binding_roots=binding,binding_sources=binding_sources,binding_slots=binding_slots,
                 live=alive,complete=complete&~overflow&~context_overflow,overflow=overflow,context_overflow=context_overflow)

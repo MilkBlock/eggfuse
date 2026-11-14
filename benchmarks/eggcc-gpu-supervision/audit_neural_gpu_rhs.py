@@ -70,6 +70,7 @@ def initial_case(recipe,record,spare=0):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
+    p.add_argument('--semantic-owners',action='store_true')
     p.add_argument('--speculate',action='store_true');p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
     if a.limit<1:raise ValueError('positive case budget required')
@@ -110,6 +111,11 @@ def main():
         for _ in range(2):
             state,next_id,marks=complete(state,plan,next_id,mx.array(len(ctx['roots'])),mx.array(64),mx.array(True),settled,mx,registry,eq_rounds=8)
             registry=marks['eq_context'];settled=marks['eq_settled'];executed+=marks['executed'];created+=marks['new_constructors'];merged+=marks['new_equivalences']
+        if a.semantic_owners:
+            from neural_semantic_owner import initialize,compile_semantic_transfer
+            state=initialize(state,mx)
+            semantic_proof=compile_semantic_transfer(local,tp)
+            tp=dict(tp,semantic_covered=semantic_proof['covered'])
         before=state
         if tp['covered']:
             state,move=handoff(state,device(tp),mx.array(src),mx.array(dst),mx.array(1),mx.array(1),logits[i],tokens[i],~marks['needs_attention']&(first[i]>=0),mx.array(True),mx)
@@ -122,10 +128,12 @@ def main():
         for column in COLUMNS:
             if 'owner_'+column in final:preserved &= np.array_equal(read(before_host,column,rr,ss,np),read(final,column,rr,ss,np))
         report=dict(producer=int(chain['producer'][i]),consumer=int(chain['consumer'][i]),executed=int(executed),new_constructors=int(created),new_equivalences=int(merged),pending=bool(marks['needs_attention']),graph=check,facts_decoded=covered,transfer_covered=tp['covered'],transferred=bool(move['transferred']),copied_fields=int(move['copied_fields']),interfaces_preserved=bool(preserved),token_retained=bool(np.array_equal(np.array(state['tokens'][dst]),np.array(tokens[i]))))
+        if a.semantic_owners:
+            report['semantic_owner']=dict(semantic_proof,adopted=bool(move.get('semantic_adopted',False)))
         if a.follow and check['passed']:
             report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity,(registry['roots'],int(next_id),seed_count) if a.speculate else None)
         reports.append(report);print(json.dumps(report),flush=True)
-    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,speculative_frames=a.speculate,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,semantic_owners=a.semantic_owners,speculative_frames=a.speculate,wall_seconds=time.perf_counter()-started,speedup_claim=False)
     if a.eq_readout:result['readout_weights_sha256']=hashlib.sha256(a.eq_readout.read_bytes()).hexdigest()
     failed=audit_failed(reports,a.follow,a.speculate)
     result['status']='difference' if failed else 'pass'

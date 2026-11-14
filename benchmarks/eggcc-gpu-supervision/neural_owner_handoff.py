@@ -15,5 +15,7 @@ def handoff(state,plan,source,target,source_generation,target_generation,
     n=len(state['tokens']);t=xp.clip(target,0,n-1)
     write=(xp.arange(n)==t)&marks['transferred']
     out['tokens']=xp.where(write[:,None],token[None,:],state['tokens'])
-    return out,dict(marks,token_adopted=marks['transferred'],uncertified=~certified,
+    from neural_semantic_owner import adopt
+    out,semantic=adopt(state,out,source,target,marks['transferred'],plan.get('semantic_covered',False),xp)
+    return out,dict(marks,semantic_adopted=semantic,token_adopted=marks['transferred'],uncertified=~certified,
                     invalid_prediction=~finite,model_rejected=logit<0)

@@ -1,0 +1,26 @@
+{
+  "scope": "GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation",
+  "status": "difference",
+  "recipe_sha256": "1e8aa8d798be90a1d8cba63c79bf52ba27d8318fbbe480bb88601e4296189b29",
+  "weights_sha256": "7b60467200c2120bd59d7ed6d1202931ed785d675a27b7535e574eedbbeb8b75",
+  "readout_weights_sha256": "49737e4c83ababb2e6b9c548dcf1838d7890643d7157cc80f83f2feb0c1a9fdb",
+  "semantic_owners": true,
+  "speedup_claim": false,
+  "cases": 107,
+  "semantic_adoptions": 0,
+  "coverage_reasons": {
+    "payload_only_fields": 83,
+    "payload_uncovered": 23,
+    "missing_facts": 1
+  },
+  "totals": {
+    "candidates": 1659,
+    "recovered": 312,
+    "semantic_states": 312,
+    "semantic_wrong_states": 16,
+    "semantic_false_merge_states": 2,
+    "missed": 0,
+    "false_positive": 0
+  },
+  "interpretation": "No semantic adoptions: numerical metrics measure the unchanged destination-token path, not semantic-owner accuracy. Synthetic independent snapshots, not whole Eggcc execution."
+}
