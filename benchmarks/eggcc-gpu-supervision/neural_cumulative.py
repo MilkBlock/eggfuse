@@ -43,7 +43,7 @@ def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,
     mx.eval(state,roots,next_id,attention,idle)
     started=time.perf_counter();ref=deepcopy(oracle);identities=dict(mapping)
     errors=[];admitted=0;capacity=0;refresh=0;replayed=0
-    reasons={k:0 for k in ('query_overflow','query_incomplete','dirty_input','nonfinite','invalid_keys','rejected_proposal','payload_invalid')}
+    reasons={k:0 for k in ('query_overflow','query_incomplete','dirty_input','nonfinite','invalid_keys','rejected_proposal','payload_invalid','stale_witness_context')}
     attention_events=[];semantic_events=[];boundary_alias_events=[]
     final_roots=np.array(roots)
     for ri,event in trace:

@@ -29,5 +29,13 @@ class Context(unittest.TestCase):
         out=retain(state,state,batch,0,np)
         self.assertFalse(out['context_valid'].any())
 
+    def test_stage_initialization_preserves_context_or_rejects_layout(self):
+        state=self.fixture();state['context_sources'][1,0]=0;state['context_generations'][1,0]=2;state['context_valid'][1,0]=True
+        out=initialize(state,1,np)
+        self.assertEqual(out['context_sources'][1,0],0);self.assertTrue(out['context_valid'][1,0])
+        with self.assertRaises(ValueError):initialize(state,2,np)
+        incomplete=dict(state);del incomplete['context_valid']
+        with self.assertRaises(ValueError):initialize(incomplete,1,np)
+
 
 if __name__=='__main__':unittest.main()

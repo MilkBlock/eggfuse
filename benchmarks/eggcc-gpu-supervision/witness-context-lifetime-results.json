@@ -1,0 +1,51 @@
+{
+  "scope": "GPU source-context lifetime guard targeted regression; not multi-stage execution",
+  "weights_sha256": "ac77ef02ab3daac2f1cef0e77e29aea4125c19a505a743c175948e629cd47ba9",
+  "readout_weights_sha256": "318c82348a80e194cddd28bcd282fd1d3074ad65f132bc019353c6504f540332",
+  "top_level_status": "difference",
+  "cumulative": {
+    "scope": "one cumulative GPU state; host fixed-order sweeps, final CPU audit",
+    "witness_context_depth": 1,
+    "witness_context_reference_bytes": 4104,
+    "witness_sources_per_lookup": 20,
+    "pool_capacity_overrides": {
+      "Bop": 32
+    },
+    "candidate_lanes_per_sweep": 16576,
+    "sweeps": 12,
+    "scheduled_steps": 96,
+    "admitted": 12,
+    "replayed": 12,
+    "capture_legal_entries": 12,
+    "capture_skipped_entries": 0,
+    "graph": {
+      "passed": true,
+      "errors": [],
+      "actual_facts": 35,
+      "expected_facts": 35,
+      "mapped_classes": 29
+    },
+    "facts_decoded": true,
+    "cpu_fixedpoint": true,
+    "device_no_novel": true,
+    "semantic_events": [],
+    "boundary_alias_events": [],
+    "needs_attention": false,
+    "attention_reasons": {
+      "query_overflow": 0,
+      "query_incomplete": 0,
+      "dirty_input": 0,
+      "nonfinite": 0,
+      "invalid_keys": 0,
+      "rejected_proposal": 0,
+      "payload_invalid": 0,
+      "stale_witness_context": 0
+    },
+    "attention_events": [],
+    "capacity_steps": 0,
+    "refresh_steps": 0,
+    "cpu_audit_seconds": 0.05421500001102686,
+    "intermediate_host_value_reads": false,
+    "status": "pass"
+  }
+}

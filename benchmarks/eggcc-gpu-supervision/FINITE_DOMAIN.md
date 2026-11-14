@@ -171,3 +171,23 @@ to the egraph semantics, and the GPU `difference` is not reclassified as pass.
 Finite template interaction types do not guarantee a bounded number of dynamic
 instances. All 60 entries reaching an exact reference fixed point also pass the
 current GPU cumulative checks, within this single-ruleset synthetic fixture.
+
+## Source context lifecycle
+
+Selected admissions now check every required link in the bounded source
+context before installation. A retained source that is missing, invisible,
+unsettled, generation-stale, or physically invalid cannot silently become a
+constructor lookup miss. The GPU rejects that admission, keeps roots and the
+allocation cursor unchanged, and records `stale_witness_context`. Some physical
+owner failures are already caught earlier as `query_incomplete`. Neither path
+reports device saturation. This is an audit request, not CPU correction or
+recovery implementation.
+
+Initialization preserves existing context for the same layout and rejects
+partial or incompatible layouts instead of discarding references at a future
+stage boundary. This does not itself implement stage switching or reclamation.
+Fourteen relevant tests pass, including generation changes, visibility/removal,
+physical owner reuse, invalid intermediate links and initialization. The
+unchanged (7,6) case still passes the twelve-sweep cumulative graph/fixed-point
+check with 12 admissions and zero stale-context events. Its whole audit remains
+`difference` because separate follow-prediction checks are still authoritative.

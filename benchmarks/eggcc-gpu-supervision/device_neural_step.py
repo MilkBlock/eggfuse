@@ -29,8 +29,13 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
     blocked=(~batch['complete']|dirty|xp.any(batch['live']&~finite)
              |xp.any(state['present']&~resident_valid)|xp.any(eligible&~valid))
     selected=xp.argmax(novel.astype(xp.int32));requested=enabled&~blocked&xp.any(novel)
+    context_invalid=xp.array(False)
+    context_depth=max((s.get('context_depth',0) for s in frame_plan['witness_sites'].values()),default=0)
+    if context_depth:
+        from device_witness_context import inspect
+        context_invalid=inspect(state,batch['sources'][selected],batch['mask'][selected],batch['generations'][selected],context_depth,xp)[3]
     payload,proposed_roots,ready=frame_payload(state,frame_plan,batch,selected,scores[selected],next_id,roots,xp)
-    result,marks=install(state,payload,proposed_roots,batch,selected,tokens[selected],rule_id,frame_plan['inputs'],ready&requested,xp)
+    result,marks=install(state,payload,proposed_roots,batch,selected,tokens[selected],rule_id,frame_plan['inputs'],ready&requested&~context_invalid,xp)
     accepted=xp.any(marks['accepted'])
     event=dict(
         admitted=accepted,audit_pending=accepted,selected=selected,
@@ -39,6 +44,7 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
         duplicate_candidates=xp.sum((eligible&known).astype(xp.int32)),
         no_novel_proposal=enabled&~blocked&~xp.any(novel),
         needs_attention=enabled&(blocked|(requested&~accepted)|marks['token_refresh_required']),
+        stale_witness_context=requested&context_invalid,
         query_overflow=enabled&batch['overflow'],pool_sizes=batch['pool_sizes'],
         query_incomplete=enabled&~batch['complete'],dirty_input=enabled&dirty,
         nonfinite=enabled&xp.any(batch['live']&~finite),

@@ -25,6 +25,25 @@ def fixture(spare):
 
 
 class DeviceStep(unittest.TestCase):
+    def test_stale_ancestor_blocks_fresh_allocation_and_requests_audit(self):
+        from device_witness_context import initialize
+        state,roots,next_id,frames,query,frame=fixture(3)
+        state=initialize(state,1,mx)
+        for site in frame['witness_sites'].values():site['context_depth']=1
+        head=lambda token,request:mx.full((len(token),3),-1.)
+        first,r1,n1,event=advance(state,roots,next_id,frames,query,frame,0,Model(),head,mx.array(True),mx)
+        self.assertTrue(bool(event['admitted']))
+        for column,value in (('generation',99),('visible',False),('present',False),('owner_generation',99)):
+            stale=dict(first);stale[column]=stale[column].at[0].add(value-stale[column][0]) if column in ('generation','owner_generation') else stale[column].at[0].multiply(False)
+            second,r2,n2,marks=advance(stale,r1,n1,frames,query,frame,0,Model(),head,mx.array(True),mx)
+            if column=='owner_generation':self.assertTrue(bool(marks['query_incomplete']))
+            else:self.assertTrue(bool(marks['stale_witness_context']),column)
+            self.assertTrue(bool(marks['needs_attention']),column)
+            self.assertFalse(bool(marks['admitted']),column)
+            self.assertFalse(bool(marks['no_novel_proposal']),column)
+            np.testing.assert_array_equal(second['present'],stale['present'])
+            np.testing.assert_array_equal(r2,r1);self.assertEqual(int(n2),int(n1))
+
     def test_two_device_steps_share_state_without_teacher_or_intermediate_host_read(self):
         state,roots,next_id,frames,query,frame=fixture(3)
         head=lambda token,request:mx.full((len(token),3),-1.)
