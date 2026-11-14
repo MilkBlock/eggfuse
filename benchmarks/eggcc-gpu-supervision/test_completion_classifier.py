@@ -46,6 +46,16 @@ class CompletionClassifier(unittest.TestCase):
         self.assertEqual(counts,dict(captured=4,unique=3,duplicates=1,ambiguous_inputs=1))
         np.testing.assert_array_equal(yy,y[[0,2,3]])
 
+    def test_distinct_frame_initialization_is_not_a_new_source_program(self):
+        programs={};entries=set()
+        base=dict(capture=dict(synthetic_input=True,input_sha256='same'),snapshot_run=0)
+        register_entry(base,'train',programs,entries)
+        framed=dict(base,producer_frame_import=dict(frames=2))
+        register_entry(framed,'train',programs,entries)
+        self.assertEqual(len(programs),1);self.assertEqual(len(entries),2)
+        with self.assertRaises(ValueError):register_entry(framed,'train',programs,entries)
+        with self.assertRaises(ValueError):register_entry(framed,'validation',programs,entries)
+
     def test_centered_head_preserves_ridge_objective_and_gpu_choice(self):
         rng=np.random.default_rng(5)
         x=np.concatenate([np.ones((32,1)),rng.normal(10,.1,(32,19))],axis=1).astype(np.float32)

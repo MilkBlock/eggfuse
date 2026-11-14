@@ -91,7 +91,7 @@ def register_entry(meta, split, programs, entries):
     program=source_group(meta)
     if program in programs and (programs[program]!=split or split!='train'):
         raise ValueError('duplicate validation or leaked program')
-    entry=(program,meta['snapshot_run'],meta.get('source_token_mode','exact completed states'))
+    entry=(program,meta['snapshot_run'],meta.get('source_token_mode','exact completed states'),bool(meta.get('producer_frame_import')))
     if entry in entries:raise ValueError('duplicate program entry')
     programs[program]=split;entries.add(entry)
 

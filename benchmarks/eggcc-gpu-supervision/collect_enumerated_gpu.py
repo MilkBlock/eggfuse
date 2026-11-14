@@ -8,14 +8,15 @@ from synthetic_cell_inputs import validate
 def main():
     p=argparse.ArgumentParser()
     for key in ('native','model','head','output'):p.add_argument(key,type=Path)
-    p.add_argument('--resume',action='store_true');a=p.parse_args()
+    p.add_argument('--resume',action='store_true');p.add_argument('--producer-frames',action='store_true');a=p.parse_args()
     sha=lambda path:hashlib.sha256(path.read_bytes()).hexdigest()
     native=json.loads((a.native/'manifest.json').read_text());head=json.loads(a.head.with_suffix('.json').read_text())
     if head['head_sha256']!=sha(a.head) or not head.get('synthetic_only_training'):raise ValueError('synthetic-only parent head required')
-    report=dict(scope='enumerated terminating-boundary GPU feedback and CPU labels; no full Eggcc claim',native_manifest_sha256=sha(a.native/'manifest.json'),model_sha256=sha(a.model),head_sha256=sha(a.head),expected=sum(r['status']=='pass' for r in native['records']),records=[])
+    report=dict(producer_frames=a.producer_frames,scope='enumerated terminating-boundary GPU feedback and CPU labels; no full Eggcc claim',native_manifest_sha256=sha(a.native/'manifest.json'),model_sha256=sha(a.model),head_sha256=sha(a.head),expected=sum(r['status']=='pass' for r in native['records']),records=[])
     a.output.mkdir(parents=True,exist_ok=a.resume)
     if a.resume:
         old=json.loads((a.output/'manifest.json').read_text())
+        if bool(old.get('producer_frames',False))!=a.producer_frames:raise ValueError('resume initialization mode changed')
         for key in ('native_manifest_sha256','model_sha256','head_sha256','expected'):
             if old[key]!=report[key]:raise ValueError('resume identity changed')
         for row in old['records']:
@@ -37,6 +38,7 @@ def main():
             commands=[
                 [sys.executable,str(scripts/'audit_construct_union_family.py'),str(doc),str(a.model),str(folder/'execution.json'),'--synthetic-input','--rules','0,1,2','--snapshot-run','0','--capacity','32','--ticks','20','--flush-every','1','--order-queries','--boundary-context','--experimental-boundary-model','--predicted-source-feedback','--completion-classifier',str(a.head),'--completion-classifier-report',str(a.head.with_suffix('.json')),'--capture',str(folder/'capture.npz')],
                 [sys.executable,str(scripts/'label_composed_witnesses.py'),str(folder/'capture.npz'),str(doc),str(a.model),'/dev/null',str(folder/'labeled.npz'),str(folder/'labels.json'),'--synthetic-input','--snapshot-run','0','--completion-classifier',str(a.head)]]
+            if a.producer_frames:commands[0].append('--producer-frames')
             for phase,cmd in enumerate(commands):
                 try:
                     with (folder/(str(phase)+'.log')).open('w') as log:result=execute(cmd,log,60)

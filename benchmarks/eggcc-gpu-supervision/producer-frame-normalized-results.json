@@ -1,0 +1,97 @@
+{
+  "scope": "same 12 synthetic input snapshots; different Cell initialization and resulting query populations; not full Eggcc or speed comparison",
+  "bake_branch": "codex/cell-parallel-admission",
+  "bake_commit": "f3321a3a",
+  "results": {
+    "seed": {
+      "scope": "enumerated terminating-boundary GPU feedback and CPU labels; no full Eggcc claim",
+      "producer_frames": false,
+      "prediction": {
+        "all": {
+          "instances": 99,
+          "correct": 85
+        },
+        "direct": {
+          "instances": 76,
+          "correct": 63
+        },
+        "generated": {
+          "instances": 23,
+          "correct": 22
+        }
+      },
+      "complete": true,
+      "expected": 12,
+      "attempted": 12,
+      "statuses": {
+        "pass": 12
+      },
+      "samples": 99,
+      "generated_source_consumers": 23,
+      "released_owner_rows": 76,
+      "owner_witness_pairs": {
+        "accepted_samples": 99,
+        "logical_shared_pairs": 20,
+        "physical_alias_pairs": 0
+      },
+      "manifest_sha256": "c91f5d6d2a6d8e228e174b98bdecfeda18eb29ab0d2afbff6ab183bc09e5acd8",
+      "head_sha256": "6432d7cfc63553f8b79f37faf4fe1513f52697694cf682b9c80269f1fabd3c05",
+      "training_performed": false
+    },
+    "frame": {
+      "scope": "enumerated terminating-boundary GPU feedback and CPU labels; no full Eggcc claim",
+      "producer_frames": true,
+      "prediction": {
+        "all": {
+          "instances": 75,
+          "correct": 62
+        },
+        "direct": {
+          "instances": 48,
+          "correct": 36
+        },
+        "generated": {
+          "instances": 27,
+          "correct": 26
+        }
+      },
+      "complete": true,
+      "expected": 12,
+      "attempted": 12,
+      "statuses": {
+        "pass": 12
+      },
+      "samples": 75,
+      "generated_source_consumers": 27,
+      "released_owner_rows": 0,
+      "owner_witness_pairs": {
+        "accepted_samples": 75,
+        "logical_shared_pairs": 29,
+        "physical_alias_pairs": 0
+      },
+      "manifest_sha256": "bfaa23099102a150815c691e0b5bfa9dacbd362adcea0451cb63caead31140a2",
+      "head_sha256": "6432d7cfc63553f8b79f37faf4fe1513f52697694cf682b9c80269f1fabd3c05",
+      "training_performed": false
+    }
+  },
+  "expanded_training": {
+    "entries": 665,
+    "source_groups": 653,
+    "head_sha256": "1bfb89f49975ecfebb5cf7c827160ada0de5b57369ef451c6f168af119106cd1",
+    "promoted": false,
+    "validation": [
+      {
+        "case": "016-gcd",
+        "correct": 32,
+        "instances": 41
+      },
+      {
+        "case": "019-lcm",
+        "correct": 81,
+        "instances": 99
+      }
+    ]
+  },
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/multi-frame-normalized-v1.tar.gz",
+  "archive_sha256": "d402adb0c2763c5d7e009038929c5a5afd31dddfff0f5577c083e8f0e09039b0"
+}
