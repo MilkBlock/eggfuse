@@ -18,7 +18,7 @@ from reference_cell_closure import facts_from_cells
 from reference_union_family import compare_graph
 
 
-def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,seed_count,table_capacities=None):
+def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,seed_count,table_capacities=None,collector=None):
     width=shape(state)[1];eq_width=max(len(r['slots']) for r in rules)
     atoms=max(len(r['query']) for r in rules);fields=max(len(a['args']) for r in rules for a in r['query'])
     offset=len(local['rules'])-len(rules)
@@ -28,7 +28,7 @@ def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,
     for _ in range(sweeps):
         all_idle=mx.array(True)
         for ri,(query,frame) in enumerate(plans):
-            state,roots,next_id,event=advance(state,roots,next_id,frames,query,frame,offset+ri,model,head,~attention&~idle,mx)
+            state,roots,next_id,event=advance(state,roots,next_id,frames,query,frame,offset+ri,model,head,~attention&~idle,mx,capture=collector is not None)
             all_idle=all_idle&event['no_novel_proposal'];attention=attention|event['needs_attention']
             # Synchronize bounded allocations; no tensor value is read by host.
             mx.eval(state,roots,next_id,event,attention,all_idle)
@@ -52,6 +52,9 @@ def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,
         bound={s:ref.root(identities[int(v)]) for s,v in zip(inputs,key)}
         if bound not in ref.matches(rule):errors.append('invalid_effect_entry');continue
         apply_instance(ref,rule,bound);values=completed(rule,bound,ref)
+        if collector is not None:
+            from neural_eq_readout import targets
+            collector.append(dict(token=np.array(event['output_token']),request=np.array(event['request']),rule=np.int32(ri),**targets(rule,values,ref,eq_width)))
         for handle,value in zip(np.array(event['result_slots']),values):
             handle=int(handle);value=ref.root(value)
             if handle in identities and ref.root(identities[handle])!=value:errors.append('inconsistent_result_identity')
@@ -71,6 +74,7 @@ def run(local,state,roots,next_id,frames,rules,model,head,sweeps,oracle,mapping,
     return dict(scope='one cumulative GPU state; host fixed-order sweeps, final CPU audit',
                 pool_capacity_overrides=table_capacities or {},candidate_lanes_per_sweep=sum(int(np.prod(q['capacities'])) for q,f in plans),
                 sweeps=sweeps,scheduled_steps=len(trace),admitted=admitted,replayed=replayed,
+                capture_legal_entries=replayed,capture_skipped_entries=admitted-replayed,
                 graph=graph,facts_decoded=covered,cpu_fixedpoint=fixedpoint,device_no_novel=bool(idle),
                 needs_attention=bool(attention),attention_reasons=reasons,attention_events=attention_events,capacity_steps=capacity,refresh_steps=refresh,
                 cpu_audit_seconds=time.perf_counter()-started,intermediate_host_value_reads=False,

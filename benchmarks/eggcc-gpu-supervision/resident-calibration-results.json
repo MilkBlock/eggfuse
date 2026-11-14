@@ -1,0 +1,164 @@
+{
+  "scope": "Synthetic cumulative GPU token capture and Eq-only calibration; standalone stage prototype",
+  "training": {
+    "cases": 61,
+    "passes": 58,
+    "graphs_passed": 58,
+    "admitted": 271,
+    "needs_attention": 2,
+    "capture": {
+      "samples": 271,
+      "sha256": "6c920994c36e7028c45f88d94766c607aa937284342514edfaede9f4cf1c0554",
+      "synthetic_only": true,
+      "scope": "post-run labels for legal replay entries; generated token inputs frozen"
+    },
+    "seed": 47019
+  },
+  "baseline_test": {
+    "cases": 61,
+    "passes": 58,
+    "graphs_passed": 59,
+    "admitted": 230,
+    "needs_attention": 2,
+    "capture": {
+      "samples": 230,
+      "sha256": "3705ee8bedb34cd1fc61d909eab0a7259756b9a02999a38a55ba83e82106239c",
+      "synthetic_only": true,
+      "scope": "post-run labels for legal replay entries; generated token inputs frozen"
+    },
+    "seed": 88037
+  },
+  "calibrated_test": {
+    "cases": 61,
+    "passes": 58,
+    "graphs_passed": 59,
+    "admitted": 230,
+    "needs_attention": 2,
+    "capture": null,
+    "seed": 88037
+  },
+  "calibration": {
+    "scope": "Eq-only calibration on detached synthetic cumulative tokens; not runtime verification",
+    "before": {
+      "train": {
+        "states": 271,
+        "pairs": 2985,
+        "false_positive_pairs": 3,
+        "false_negative_pairs": 10,
+        "nonfinite_states": 0,
+        "exact_states": 265,
+        "closed_false_positive_pairs": 5,
+        "closed_false_negative_pairs": 10,
+        "closed_exact_states": 265,
+        "states_with_false_merge": 2
+      },
+      "test": {
+        "states": 230,
+        "pairs": 2762,
+        "false_positive_pairs": 3,
+        "false_negative_pairs": 4,
+        "nonfinite_states": 0,
+        "exact_states": 226,
+        "closed_false_positive_pairs": 5,
+        "closed_false_negative_pairs": 4,
+        "closed_exact_states": 226,
+        "states_with_false_merge": 2
+      },
+      "unseen": {
+        "states": 127,
+        "pairs": 1625,
+        "false_positive_pairs": 1,
+        "false_negative_pairs": 4,
+        "nonfinite_states": 0,
+        "exact_states": 124,
+        "closed_false_positive_pairs": 1,
+        "closed_false_negative_pairs": 4,
+        "closed_exact_states": 124,
+        "states_with_false_merge": 1
+      },
+      "anchors": {
+        "states": 1816,
+        "pairs": 21704,
+        "false_positive_pairs": 2,
+        "false_negative_pairs": 12,
+        "nonfinite_states": 0,
+        "exact_states": 1803,
+        "closed_false_positive_pairs": 2,
+        "closed_false_negative_pairs": 12,
+        "closed_exact_states": 1803,
+        "states_with_false_merge": 2
+      }
+    },
+    "after": {
+      "train": {
+        "states": 271,
+        "pairs": 2985,
+        "false_positive_pairs": 0,
+        "false_negative_pairs": 0,
+        "nonfinite_states": 0,
+        "exact_states": 271,
+        "closed_false_positive_pairs": 0,
+        "closed_false_negative_pairs": 0,
+        "closed_exact_states": 271,
+        "states_with_false_merge": 0
+      },
+      "test": {
+        "states": 230,
+        "pairs": 2762,
+        "false_positive_pairs": 2,
+        "false_negative_pairs": 6,
+        "nonfinite_states": 0,
+        "exact_states": 226,
+        "closed_false_positive_pairs": 2,
+        "closed_false_negative_pairs": 6,
+        "closed_exact_states": 226,
+        "states_with_false_merge": 2
+      },
+      "unseen": {
+        "states": 127,
+        "pairs": 1625,
+        "false_positive_pairs": 2,
+        "false_negative_pairs": 6,
+        "nonfinite_states": 0,
+        "exact_states": 123,
+        "closed_false_positive_pairs": 2,
+        "closed_false_negative_pairs": 6,
+        "closed_exact_states": 123,
+        "states_with_false_merge": 2
+      },
+      "anchors": {
+        "states": 1816,
+        "pairs": 21704,
+        "false_positive_pairs": 8,
+        "false_negative_pairs": 16,
+        "nonfinite_states": 0,
+        "exact_states": 1801,
+        "closed_false_positive_pairs": 10,
+        "closed_false_negative_pairs": 16,
+        "closed_exact_states": 1801,
+        "states_with_false_merge": 5
+      }
+    },
+    "steps": 600,
+    "transition_unchanged": true,
+    "train_samples": 271,
+    "test_samples": 230,
+    "test_input_overlap": 103,
+    "inputs": {
+      "eggfuse-resident-train.npz": "6c920994c36e7028c45f88d94766c607aa937284342514edfaede9f4cf1c0554",
+      "eggfuse-resident-test.npz": "3705ee8bedb34cd1fc61d909eab0a7259756b9a02999a38a55ba83e82106239c",
+      "eggfuse-canon-expanded-trained.eq.safetensors": "f636ba3f1dc3f3b590b608c4a6d924a295bf7737b1eb832175831e1df53db6f0",
+      "eggfuse-canon-expanded-train.npz": "6efe9042198725f64e923ec257a4b39ba4f8b1f134bf4d036cba4bd976d3c24a",
+      "eggfuse-canon-expanded-trained.transition.safetensors": "3c210591fd9539d3f9e908a9a53c0e2ffdee69be229644b700ba82aecf83285d"
+    },
+    "weights_sha256": "48f647837587ac1f8714c118999f8b158501933bf581fb617d8819ac9e96890f"
+  },
+  "promoted": false,
+  "conclusion": "Perfect fitted training states did not improve held-out cumulative execution. Retain v20 readout.",
+  "limitations": [
+    "Captured floating inputs are detached; no gradient through earlier cumulative transitions",
+    "103 of 230 test inputs overlap training; 127 unseen reported separately",
+    "CPU labels only after execution and legal reference match; final graph can still differ",
+    "No real Run training, native runtime, asynchronous supervision, or speedup claim"
+  ]
+}

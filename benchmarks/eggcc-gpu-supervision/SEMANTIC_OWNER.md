@@ -929,3 +929,37 @@ Seven tests cover mixed-radix layouts, exact reference joins after expansion,
 overflow telemetry, invalid overrides, device-step admission, and independent
 fixedpoint rejection. Text results: `canon-pool-capacity-results.json`;
 external SSD archive: `neural-canon-pool-capacity-v28.tar.gz`.
+
+### Capture actual cumulative tokens and test readout-only calibration
+
+`--capture-cumulative OUT.npz --sample-seed SEED` retains selected output
+tokens on GPU; CPU reads them only after the complete bounded execution.
+Labels come from legally replayed source-rule applications. Invalid/unknown
+entries are counted and excluded, not silently labeled. Capture has no effect
+on inference inputs or graph mutations; a regression checks this.
+
+With six sweeps, Bop capacity 32 and all 61 pairs, seed 47019 supplies 271
+training entries and seed 88037 supplies 230 evaluation entries; no entries
+were skipped. No real Eggcc Run supplied examples. The source Cell transition
+and Eq checkpoints remain v20 during capture.
+
+`train_resident_eq.py TRAIN.npz TEST.npz V20_EQ OUTPUT --anchors V20_THIRD_TRAIN.npz
+--transition V20_TRANSITION --steps 600` trains only EqReadout, mixing its
+resident loss with 0.5 times a sampled earlier third-step loss. It validates
+capture hashes, source model hashes and stage recipe identity before training.
+The Cell weights are unchanged. Repeat execution produced identical readout
+weight hashes.
+
+Training closure accuracy rises 265/271 to 271/271, but held-out stored inputs
+remain 226/230. There are 103 overlapping inputs: on the 127 unseen inputs,
+correct states fall 124 to 123 and false-merge states rise 1 to 2. Anchor
+accuracy falls 1803/1816 to 1801/1816. Actual cumulative GPU re-execution on
+seed 88037 remains 58/61 successful, 59 correct final graphs, 230 admissions.
+This readout is rejected as a replacement; training fit is not progress in
+recurrent correctness. The capture pipeline is retained for joint transition
+training or better synthetic coverage.
+
+Seven capture/admission tests pass. Text: `resident-calibration-results.json`.
+Raw datasets, reports and experimental readout are retained in
+external SSD archive `neural-resident-calibration-v29.tar.gz` plus v20 anchor
+and transition artifacts. No performance claim is made.
