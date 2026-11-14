@@ -109,7 +109,7 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None):
                 if transfers is not None:
                     for plan in projections:
                         if plan['covered']:
-                            transfers.append(dict(chain=len(items)-1,plan=plan,source_values=[after.root(v) for v in values],target_values=completed(consumer,binding,after),reference=after))
+                            transfers.append(dict(chain=len(items)-1,plan=plan,initial_reference=ref,initial_binding=dict(binding),source_binding=dict(record['binding']),source_values=[after.root(v) for v in values],target_values=completed(consumer,binding,after),reference=after))
                             break
                 # Independent, well-typed boundary fact breaks a cross-atom
                 # binding while retaining at least one actual generated source.
