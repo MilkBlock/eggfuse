@@ -10,7 +10,7 @@ import numpy as np
 import mlx.core as mx
 from neural_cell_samples import samples,apply_instance
 from neural_cell_chains import chains,completed
-from neural_ordered_relations import OrderedCellTransition
+from neural_ordered_relations import ordered_model
 from lower_constructor_sets import lower
 from device_snapshot_import import prepare_family,identity,eq_registry
 from device_constructor_completion import compile_completion,complete
@@ -67,12 +67,13 @@ def initial_case(recipe,record):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
+    p.add_argument('--interface-only',action='store_true')
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
     if a.limit<1:raise ValueError('positive case budget required')
     raw=json.loads(a.trace.read_text());source=raw.get('recipe',raw);recipe=dict(source,rules=[r for r in source['rules'] if r['metadata']['source_set']=='context'])
     started=time.perf_counter();records=[];base=samples(recipe,4,93003,records,ordered=True);transfers=[]
     chain,_=chains(recipe,records,ordered=True,transfers=transfers)
-    model=OrderedCellTransition(base['x'].shape[-1],base['relations'].shape[-1]);model.load_weights(str(a.weights))
+    model=ordered_model(base['x'].shape[-1],base['relations'].shape[-1],a.interface_only);model.load_weights(str(a.weights))
     parent=device({k:v[chain['parent']] for k,v in base.items()});dc=device(chain)
     first,source_tokens=model(parent['x'],parent['edges'],parent['mask'],parent['request'],parent['relations'])
     incoming=mx.where(dc['replace'][...,None],source_tokens[:,None,:],dc['tokens'])
@@ -113,7 +114,7 @@ def main():
         if a.follow and check['passed']:
             report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst)
         reports.append(report);print(json.dumps(report),flush=True)
-    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,wall_seconds=time.perf_counter()-started,speedup_claim=False)
     failed=audit_failed(reports,a.follow)
     result['status']='difference' if failed else 'pass'
     a.output.write_text(json.dumps(result,indent=2)+'\n')

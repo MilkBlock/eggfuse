@@ -51,4 +51,22 @@ class OrderedCellTransition(CellTransition):
     def transition(self,source_tokens,edges,mask,request,relations):
         logits,token=super().transition(source_tokens,edges,mask,request)
         h=self.relation(relations)
-        return logits+self.match_relation(h)[:,0],token+self.token_relation(h)
+        return self.match_logit(logits,h),token+self.token_relation(h)
+
+    def match_logit(self,logits,h):
+        return logits+self.match_relation(h)[:,0]
+
+
+class InterfaceCellTransition(OrderedCellTransition):
+    """Slot-only constructor matching is independent of latent source content.
+
+    Scalar predicates and other query semantics require additional explicit
+    inputs; this specialization is not a general-query correctness claim.
+    """
+    def match_logit(self,logits,h):
+        return self.match_relation(h)[:,0]
+
+
+def ordered_model(input_width,relation_width,interface_only=False):
+    cls=InterfaceCellTransition if interface_only else OrderedCellTransition
+    return cls(input_width,relation_width)

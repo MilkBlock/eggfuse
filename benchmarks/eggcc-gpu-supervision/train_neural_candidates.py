@@ -31,7 +31,8 @@ def objective(model, batch, parent, chain, pool):
 
 def main():
     p = argparse.ArgumentParser(); p.add_argument('trace', type=Path); p.add_argument('weights', type=Path); p.add_argument('output', type=Path)
-    p.add_argument('--typed-patterns',action='store_true'); p.add_argument('--ordered',action='store_true'); p.add_argument('--steps', type=int, default=400); p.add_argument('--shared-fraction', type=float, default=.35); a = p.parse_args()
+    p.add_argument('--interface-only',action='store_true');p.add_argument('--typed-patterns',action='store_true'); p.add_argument('--ordered',action='store_true'); p.add_argument('--steps', type=int, default=400); p.add_argument('--shared-fraction', type=float, default=.35); a = p.parse_args()
+    if a.interface_only and not a.ordered:raise ValueError('interface head requires ordered features')
     if a.steps < 1: raise ValueError('positive steps required')
     source = json.loads(a.trace.read_text()); source = source.get('recipe', source)
     source_ids = [i for i,r in enumerate(source['rules']) if r['metadata']['source_set']=='context']
@@ -49,9 +50,9 @@ def main():
     device = lambda d:{k:mx.array(v) for k,v in d.items()}
     db, dc, dp = map(device, (base, chain, train))
     if a.ordered:
-        from neural_ordered_relations import OrderedCellTransition
+        from neural_ordered_relations import ordered_model
         mx.random.seed(93)
-        model=OrderedCellTransition(train['x'].shape[-1],train['relations'].shape[-1]); model.load_weights(str(a.weights),strict=False)
+        model=ordered_model(train['x'].shape[-1],train['relations'].shape[-1],a.interface_only); model.load_weights(str(a.weights),strict=False)
     else:
         model=CellTransition(train['x'].shape[-1]); model.load_weights(str(a.weights))
     def evaluate():
@@ -67,7 +68,7 @@ def main():
         value,g=grad(model,batch,parent,c,pool); optimizer.update(model,g); mx.eval(value,model.parameters(),optimizer.state)
         if step%100==0: print(json.dumps(dict(step=step,loss=float(value))),flush=True)
     after=evaluate(); model.save_weights(str(a.output.with_suffix('.safetensors')))
-    report=dict(scope='standalone synthetic pooled matching and generated-token chain training; no graph commits or ownership execution',synthetic_only_training=True,typed_patterns=a.typed_patterns,ordered_relations=a.ordered,shared_fraction=a.shared_fraction,source_rules=source_ids,training_coverage=coverage,test_coverage=test_coverage,evaluation_feature_overlap=overlap,before=before,after=after,steps=a.steps,wall_seconds=time.perf_counter()-started,parent_weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),promoted_as_default=False)
+    report=dict(scope='standalone synthetic pooled matching and generated-token chain training; no graph commits or ownership execution',synthetic_only_training=True,interface_only=a.interface_only,typed_patterns=a.typed_patterns,ordered_relations=a.ordered,shared_fraction=a.shared_fraction,source_rules=source_ids,training_coverage=coverage,test_coverage=test_coverage,evaluation_feature_overlap=overlap,before=before,after=after,steps=a.steps,wall_seconds=time.perf_counter()-started,parent_weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),promoted_as_default=False)
     a.output.write_text(json.dumps(report,indent=2)+'\n'); print(json.dumps(after))
 
 

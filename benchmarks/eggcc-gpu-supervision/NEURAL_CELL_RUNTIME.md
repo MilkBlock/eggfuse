@@ -471,3 +471,58 @@ python benchmarks/eggcc-gpu-supervision/audit_neural_gpu_rhs.py \
   TRACE.json WEIGHTS.safetensors OUTPUT.json --limit 107 --follow
 # Current trained model: expected semantic audit exit is 1, not 0.
 ```
+
+## Matching isolated from latent source content
+
+`InterfaceCellTransition` specializes the current slot-only constructor family.
+Its match logit comes exclusively from the learned ordered-interface MLP. Whole
+Cell tokens still enter relational attention and successor generation, and token
+loss still backpropagates through the recurrent computation. Matching remains a
+GPU floating neural forward pass; no CPU match result is used as its input.
+The interface incidence itself remains exact metadata, not a learned identity.
+
+This specialization is explicit (`--interface-only`) and does not silently change
+the old checkpoint interpretation. It is not valid for arbitrary scalar guards,
+mutable reads or other predicates without supplying their required inputs.
+Tests establish that changing source tokens, attention edges and requests while
+holding the interface fixed cannot change the match score, while successor
+tokens and their source gradients remain nonconstant.
+
+After 800 synthetic-only joint training steps:
+
+| Evaluation | Correct / expected | False positives | False negatives |
+| --- | ---: | ---: | ---: |
+| Typed-pattern evaluation | 1,559 / 1,559 | 0 | 0 |
+| Existing two-step tuple evaluation | 1,154 / 1,154 | 0 | 0 |
+| Actual GCD Run 437 | 40 / 40 | 0 | 0 |
+| Actual LCM Run 514 | 109 / 109 | 0 | 0 |
+| Following queries on 107 device-completed local states | 312 / 312 | 0 | 0 |
+
+The last row uses 1,659 live candidates, of which exactly 312 are accepted; 240
+accepted candidate tuples read the generated target Cell. Routing was complete
+and all predictions finite. The preceding exact RHS checks and 84 covered owner
+transfers still pass; 23 layouts retain their earlier capacity boundary. The
+following-query audit now returns `pass` / exit 0. It does not yet commit these
+following matches into another RHS round or establish a stage fixed point.
+
+`audit_neural_interface_patterns.py` additionally enumerates all 1,480 typed
+partitions and checks the 1,075 distinct ordered-interface signatures (258
+positive, 817 negative). All classify correctly at batch sizes 1, 64 and 256.
+The minimum signed logit is approximately 1.18235, and maximum observed batch-size
+variation is 0.00000763. This is exhaustive finite-domain empirical validation
+on the current backend, not a formal floating-point roundoff proof or a proof
+of routing/lifecycle correctness.
+
+The typed-pattern evaluation intentionally shares structural patterns with
+training: 1,395 of its 1,559 feature tuples overlap. All 164 unseen scalar-feature
+tuples pass; since this matching head does not consume scalar magnitudes, that
+is not generalization to scalar predicates. Positive two-step token MSE is
+0.000308; latent accuracy alone still does not prove downstream semantics.
+Both architecture and training duration changed, so this is not an isolated
+performance or optimization ablation.
+
+Twenty-nine neural tests pass. Details, hashes and reproduction commands are in
+`neural-interface-head-results.json`. This variant remains opt-in, with no
+full-runtime performance or multi-stage saturation claim. The next step is
+committing these device-produced following bindings and iterating at original
+Run boundaries with semantic deduplication and explicit capacity obligations.

@@ -111,11 +111,13 @@ def binding_key(rule, chosen, rows, ids):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('trace', type=Path); p.add_argument('weights', type=Path); p.add_argument('output', type=Path)
+    p.add_argument('--interface-only',action='store_true')
     p.add_argument('--ordered',action='store_true')
     p.add_argument('--typed-coverage',action='store_true')
     p.add_argument('--ruleset', default='context'); p.add_argument('--snapshot-run', type=int, default=437)
     p.add_argument('--batch', type=int, default=256); p.add_argument('--candidate-limit', type=int, default=1000000)
     a = p.parse_args()
+    if a.interface_only and not a.ordered:raise ValueError('interface head requires ordered features')
     if a.typed_coverage and not a.ordered:
         raise ValueError('typed coverage requires ordered interface features')
     if a.batch < 1 or a.candidate_limit < 1:
@@ -136,9 +138,9 @@ def main():
     rows, ids, pools, x, labels, roles = import_interfaces(recipe, boundaries[0])
     import_seconds = time.perf_counter() - started
     if a.ordered:
-        from neural_ordered_relations import OrderedCellTransition,demand,incidence
+        from neural_ordered_relations import ordered_model,demand,incidence
         atom_count=max(len(r['query']) for r in recipe['rules'])
-        model=OrderedCellTransition(x.shape[-1],2*(atom_count*labels.shape[1])**2)
+        model=ordered_model(x.shape[-1],2*(atom_count*labels.shape[1])**2,a.interface_only)
     else:
         model = CellTransition(x.shape[-1])
     model.load_weights(str(a.weights))
@@ -193,7 +195,7 @@ def main():
         if pattern_catalog is not None:item['uncovered_typed_patterns']=uncovered_patterns
         results.append(item); print(json.dumps(item), flush=True)
     report = dict(scope='standalone first-Run seed-interface candidate audit; no effects, ownership or saturation',
-                  synthetic_only_training=True, ordered_relations=a.ordered, snapshot_run=a.snapshot_run, seed_cells=len(rows),
+                  synthetic_only_training=True, interface_only=a.interface_only, ordered_relations=a.ordered, snapshot_run=a.snapshot_run, seed_cells=len(rows),
                   initial_import_seconds=import_seconds, initial_encoding_seconds=encode_seconds,
                   cpu_reference_init_seconds=reference_seconds, groups=results,
                   weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),
