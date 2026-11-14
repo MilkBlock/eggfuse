@@ -31,13 +31,18 @@ def objective(model, batch, parent, chain, pool):
 
 def main():
     p = argparse.ArgumentParser(); p.add_argument('trace', type=Path); p.add_argument('weights', type=Path); p.add_argument('output', type=Path)
-    p.add_argument('--ordered',action='store_true'); p.add_argument('--steps', type=int, default=400); p.add_argument('--shared-fraction', type=float, default=.35); a = p.parse_args()
+    p.add_argument('--typed-patterns',action='store_true'); p.add_argument('--ordered',action='store_true'); p.add_argument('--steps', type=int, default=400); p.add_argument('--shared-fraction', type=float, default=.35); a = p.parse_args()
     if a.steps < 1: raise ValueError('positive steps required')
     source = json.loads(a.trace.read_text()); source = source.get('recipe', source)
     source_ids = [i for i,r in enumerate(source['rules']) if r['metadata']['source_set']=='context']
     recipe = dict(source, rules=[source['rules'][i] for i in source_ids]); started=time.perf_counter()
-    train, coverage = pooled_candidates(recipe, 41001, shared_fraction=a.shared_fraction,ordered=a.ordered)
-    test, test_coverage = pooled_candidates(recipe, 97003, examples=8, per_class=64, shared_fraction=a.shared_fraction,ordered=a.ordered)
+    if a.typed_patterns:
+        from neural_typed_patterns import typed_candidates
+        train,coverage=typed_candidates(recipe,(0,3),ordered=a.ordered)
+        test,test_coverage=typed_candidates(recipe,(-9,17),ordered=a.ordered)
+    else:
+        train, coverage = pooled_candidates(recipe, 41001, shared_fraction=a.shared_fraction,ordered=a.ordered)
+        test, test_coverage = pooled_candidates(recipe, 97003, examples=8, per_class=64, shared_fraction=a.shared_fraction,ordered=a.ordered)
     seen = set(fingerprints(train)); unseen = np.array([k not in seen for k in fingerprints(test)]); overlap = int((~unseen).sum())
     print(json.dumps(dict(training=len(train['valid']), test=len(test['valid']), overlap=overlap)), flush=True)
     base, chain, _ = build(recipe, 8, 23001,ordered=a.ordered); tb, tc, _ = build(recipe, 4, 93003,ordered=a.ordered)
@@ -62,7 +67,7 @@ def main():
         value,g=grad(model,batch,parent,c,pool); optimizer.update(model,g); mx.eval(value,model.parameters(),optimizer.state)
         if step%100==0: print(json.dumps(dict(step=step,loss=float(value))),flush=True)
     after=evaluate(); model.save_weights(str(a.output.with_suffix('.safetensors')))
-    report=dict(scope='standalone synthetic pooled matching and generated-token chain training; no graph commits or ownership execution',synthetic_only_training=True,ordered_relations=a.ordered,shared_fraction=a.shared_fraction,source_rules=source_ids,training_coverage=coverage,test_coverage=test_coverage,evaluation_feature_overlap=overlap,before=before,after=after,steps=a.steps,wall_seconds=time.perf_counter()-started,parent_weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),promoted_as_default=False)
+    report=dict(scope='standalone synthetic pooled matching and generated-token chain training; no graph commits or ownership execution',synthetic_only_training=True,typed_patterns=a.typed_patterns,ordered_relations=a.ordered,shared_fraction=a.shared_fraction,source_rules=source_ids,training_coverage=coverage,test_coverage=test_coverage,evaluation_feature_overlap=overlap,before=before,after=after,steps=a.steps,wall_seconds=time.perf_counter()-started,parent_weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),promoted_as_default=False)
     a.output.write_text(json.dumps(report,indent=2)+'\n'); print(json.dumps(after))
 
 

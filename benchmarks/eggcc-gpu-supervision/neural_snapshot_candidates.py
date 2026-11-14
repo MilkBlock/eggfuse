@@ -112,9 +112,12 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('trace', type=Path); p.add_argument('weights', type=Path); p.add_argument('output', type=Path)
     p.add_argument('--ordered',action='store_true')
+    p.add_argument('--typed-coverage',action='store_true')
     p.add_argument('--ruleset', default='context'); p.add_argument('--snapshot-run', type=int, default=437)
     p.add_argument('--batch', type=int, default=256); p.add_argument('--candidate-limit', type=int, default=1000000)
     a = p.parse_args()
+    if a.typed_coverage and not a.ordered:
+        raise ValueError('typed coverage requires ordered interface features')
     if a.batch < 1 or a.candidate_limit < 1:
         raise ValueError('positive capacities required')
     trace = json.loads(a.trace.read_text())
@@ -144,6 +147,13 @@ def main():
     tokens = model.encode(mx.array(x)); mx.eval(tokens, labels, roles)
     encode_seconds = time.perf_counter() - started
     atoms = max(len(r['query']) for r in recipe['rules']); results = []
+    pattern_catalog=None
+    if a.typed_coverage:
+        from neural_typed_patterns import typed_candidates
+        patterns,_=typed_candidates(recipe,(0,),ordered=True)
+        pattern_catalog={rid:set() for rid in source_ids}
+        for local,features in zip(patterns['rule'],patterns['relations']):
+            pattern_catalog[source_ids[int(local)]].add(features.tobytes())
     # Reference is evaluation only. It cannot supply candidate sources or features.
     started = time.perf_counter(); reference = Reference(recipe, rows, ids)
     reference_seconds = time.perf_counter() - started
@@ -153,6 +163,7 @@ def main():
         _, request = template(rule)
         accepted = set(); predicted_count = fp = fn = valid_count = 0
         gpu_seconds = audit_seconds = 0.
+        uncovered_patterns=0
         for start in range(0, count, a.batch):
             n = min(a.batch, count - start); began = time.perf_counter()
             ix, mask = candidate_indices(pool, start, n, atoms)
@@ -165,6 +176,8 @@ def main():
             mx.eval(logits, successor, ix)
             gpu_seconds += time.perf_counter() - began
             began = time.perf_counter(); predicted = np.array(logits) >= 0; chosen = np.array(ix)
+            if pattern_catalog is not None:
+                uncovered_patterns+=sum(features.tobytes() not in pattern_catalog[rid] for features in np.array(extra['relations']))
             for chosen_row, pred in zip(chosen, predicted):
                 key = binding_key(rule, chosen_row, rows, ids); valid = key is not None
                 valid_count += valid; predicted_count += bool(pred); fp += bool(pred and not valid); fn += bool(not pred and valid)
@@ -177,6 +190,7 @@ def main():
                     valid_tuples=valid_count, accepted_tuples=predicted_count, false_positive_tuples=fp,
                     false_negative_tuples=fn, expected_matches=len(expected), recovered_matches=len(accepted & expected),
                     missed_matches=len(expected-accepted), gpu_seconds=gpu_seconds, cpu_audit_seconds=audit_seconds)
+        if pattern_catalog is not None:item['uncovered_typed_patterns']=uncovered_patterns
         results.append(item); print(json.dumps(item), flush=True)
     report = dict(scope='standalone first-Run seed-interface candidate audit; no effects, ownership or saturation',
                   synthetic_only_training=True, ordered_relations=a.ordered, snapshot_run=a.snapshot_run, seed_cells=len(rows),
@@ -193,6 +207,8 @@ def main():
         'accepted_tuples', 'false_positive_tuples', 'false_negative_tuples',
         'expected_matches', 'recovered_matches', 'missed_matches',
         'gpu_seconds', 'cpu_audit_seconds')}
+    if pattern_catalog is not None:
+        report['totals']['uncovered_typed_patterns']=sum(g['uncovered_typed_patterns'] for g in results)
     a.output.write_text(json.dumps(report, indent=2)+'\n')
 
 

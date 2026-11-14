@@ -276,3 +276,51 @@ transition MLP, accept/token heads, and optionally this relation correction.
 It does not update Bake, identity incidence, the reference target-code
 construction, or ownership authorization. Forward GPU execution uses the trained
 weights and does not perform gradient updates.
+
+## Exhaustive typed interface patterns
+
+`neural_typed_patterns.py` enumerates restricted-growth strings for each type's
+query-port positions and takes their Cartesian product. This includes partial
+sharing that random input generation missed. The 17 context templates have
+1,480 raw typed partitions in total. Constructor congruence canonicalizes each
+local input before labels are assigned; duplicate feature patterns are removed.
+A capacity overrun raises an unresolved-coverage error, never silent truncation.
+
+Training uses scalar bases 0 and 3; evaluation uses -9 and 17. Both enumerate the
+same bounded structural patterns. Each dataset contains 1,559 feature tuples;
+1,395 evaluation tuples overlap training features, so this is intentionally not
+an unseen-structure generalization claim. It is also not exhaustive coverage of
+scalar values, mutable state, hidden facts, lifecycle conflicts or long rollouts.
+
+Two successive 400-step training phases retain generated-token chain losses.
+The original model made 642 false acceptances on the exhaustive evaluation set.
+After phase one it made four; after phase two it made one. All 164 feature tuples
+not seen in training were classified correctly. The existing two-step test
+retained zero false positives/negatives on 1,154 tuples, with positive-token MSE
+0.002484 after phase two. Exact semantic token execution remains unverified.
+
+Frozen actual-input snapshot audits after phase two:
+
+| Snapshot | Candidates | Legal / recovered matches | False positives | False negatives | Uncovered typed patterns |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| GCD Run 437 | 5,111 | 40 / 40 | 1 | 0 | 0 |
+| LCM Run 514 | 13,288 | 109 / 109 | 1 | 0 | 0 |
+
+All candidate patterns were present in the finite structural catalog. This
+separates structural coverage from learned correctness: coverage is complete for
+these query-interface patterns, but the network still makes a false acceptance
+on each snapshot. The model remains unpromoted. No effects, ownership transfers,
+or saturation claims follow from these match counts. Real snapshot data was
+not used as training input. Details/hashes: `neural-typed-patterns-results.json`.
+
+```sh
+python benchmarks/eggcc-gpu-supervision/train_neural_candidates.py \
+  TRACE.json PARENT.safetensors OUTPUT.json --ordered --typed-patterns
+python benchmarks/eggcc-gpu-supervision/neural_snapshot_candidates.py \
+  TRACE.json OUTPUT.safetensors AUDIT.json --snapshot-run 437 \
+  --ordered --typed-coverage
+```
+
+Nineteen neural tests pass, including Bell counts through seven positions,
+independent matching of normalized patterns, and explicit capacity failure.
+The neighboring Bake branch remains `f3321a3a`.

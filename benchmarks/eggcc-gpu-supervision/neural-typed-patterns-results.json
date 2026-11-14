@@ -1,0 +1,1268 @@
+{
+  "scope": "exhaustive bounded typed query-interface patterns; standalone neural training and snapshot matching, not full Cell completion",
+  "raw_typed_partition_count": 1480,
+  "training_scalar_bases": [
+    0,
+    3
+  ],
+  "evaluation_scalar_bases": [
+    -9,
+    17
+  ],
+  "phase1": {
+    "scope": "standalone synthetic pooled matching and generated-token chain training; no graph commits or ownership execution",
+    "synthetic_only_training": true,
+    "typed_patterns": true,
+    "ordered_relations": true,
+    "shared_fraction": 0.35,
+    "source_rules": [
+      283,
+      284,
+      285,
+      286,
+      287,
+      288,
+      289,
+      290,
+      291,
+      292,
+      293,
+      294,
+      295,
+      296,
+      297,
+      298,
+      299
+    ],
+    "training_coverage": [
+      {
+        "rule": 0,
+        "enumerated_patterns_with_scalar_variants": 60,
+        "distinct_features": 27,
+        "positive": 4,
+        "negative": 23
+      },
+      {
+        "rule": 1,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 2,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 3,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 4,
+        "enumerated_patterns_with_scalar_variants": 406,
+        "distinct_features": 203,
+        "positive": 52,
+        "negative": 151
+      },
+      {
+        "rule": 5,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 6,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 7,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 30,
+        "positive": 10,
+        "negative": 20
+      },
+      {
+        "rule": 8,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 104,
+        "positive": 30,
+        "negative": 74
+      },
+      {
+        "rule": 9,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 30,
+        "positive": 10,
+        "negative": 20
+      },
+      {
+        "rule": 10,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 11,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 12,
+        "enumerated_patterns_with_scalar_variants": 10,
+        "distinct_features": 5,
+        "positive": 2,
+        "negative": 3
+      },
+      {
+        "rule": 13,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 14,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 15,
+        "enumerated_patterns_with_scalar_variants": 1754,
+        "distinct_features": 877,
+        "positive": 203,
+        "negative": 674
+      },
+      {
+        "rule": 16,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      }
+    ],
+    "test_coverage": [
+      {
+        "rule": 0,
+        "enumerated_patterns_with_scalar_variants": 60,
+        "distinct_features": 27,
+        "positive": 4,
+        "negative": 23
+      },
+      {
+        "rule": 1,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 2,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 3,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 4,
+        "enumerated_patterns_with_scalar_variants": 406,
+        "distinct_features": 203,
+        "positive": 52,
+        "negative": 151
+      },
+      {
+        "rule": 5,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 6,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 7,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 30,
+        "positive": 10,
+        "negative": 20
+      },
+      {
+        "rule": 8,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 104,
+        "positive": 30,
+        "negative": 74
+      },
+      {
+        "rule": 9,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 30,
+        "positive": 10,
+        "negative": 20
+      },
+      {
+        "rule": 10,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 11,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 12,
+        "enumerated_patterns_with_scalar_variants": 10,
+        "distinct_features": 5,
+        "positive": 2,
+        "negative": 3
+      },
+      {
+        "rule": 13,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 14,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 15,
+        "enumerated_patterns_with_scalar_variants": 1754,
+        "distinct_features": 877,
+        "positive": 203,
+        "negative": 674
+      },
+      {
+        "rule": 16,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      }
+    ],
+    "evaluation_feature_overlap": 1395,
+    "before": {
+      "pool": {
+        "samples": 1559,
+        "correct": 917,
+        "false_positive": 642,
+        "false_negative": 0
+      },
+      "unseen_pool": {
+        "samples": 164,
+        "correct": 116,
+        "false_positive": 48,
+        "false_negative": 0
+      },
+      "chain": {
+        "samples": 1154,
+        "false_positive": 0,
+        "false_negative": 0,
+        "token_mse": 0.00388284376822412
+      }
+    },
+    "after": {
+      "pool": {
+        "samples": 1559,
+        "correct": 1555,
+        "false_positive": 4,
+        "false_negative": 0
+      },
+      "unseen_pool": {
+        "samples": 164,
+        "correct": 164,
+        "false_positive": 0,
+        "false_negative": 0
+      },
+      "chain": {
+        "samples": 1154,
+        "false_positive": 0,
+        "false_negative": 0,
+        "token_mse": 0.002823414746671915
+      }
+    },
+    "steps": 400,
+    "wall_seconds": 79.53185404202668,
+    "parent_weights_sha256": "337a2684531ca3f8472b4d2b151d1743b9110897c3b222c9797f2626728a1a83",
+    "weights_sha256": "4cea9bbab95b72cd7a67cd705d851ff221c85b574f74d5be8da9d62cf5340271",
+    "promoted_as_default": false
+  },
+  "phase2": {
+    "scope": "standalone synthetic pooled matching and generated-token chain training; no graph commits or ownership execution",
+    "synthetic_only_training": true,
+    "typed_patterns": true,
+    "ordered_relations": true,
+    "shared_fraction": 0.35,
+    "source_rules": [
+      283,
+      284,
+      285,
+      286,
+      287,
+      288,
+      289,
+      290,
+      291,
+      292,
+      293,
+      294,
+      295,
+      296,
+      297,
+      298,
+      299
+    ],
+    "training_coverage": [
+      {
+        "rule": 0,
+        "enumerated_patterns_with_scalar_variants": 60,
+        "distinct_features": 27,
+        "positive": 4,
+        "negative": 23
+      },
+      {
+        "rule": 1,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 2,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 3,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 4,
+        "enumerated_patterns_with_scalar_variants": 406,
+        "distinct_features": 203,
+        "positive": 52,
+        "negative": 151
+      },
+      {
+        "rule": 5,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 6,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 7,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 30,
+        "positive": 10,
+        "negative": 20
+      },
+      {
+        "rule": 8,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 104,
+        "positive": 30,
+        "negative": 74
+      },
+      {
+        "rule": 9,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 30,
+        "positive": 10,
+        "negative": 20
+      },
+      {
+        "rule": 10,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 11,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 12,
+        "enumerated_patterns_with_scalar_variants": 10,
+        "distinct_features": 5,
+        "positive": 2,
+        "negative": 3
+      },
+      {
+        "rule": 13,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 14,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 15,
+        "enumerated_patterns_with_scalar_variants": 1754,
+        "distinct_features": 877,
+        "positive": 203,
+        "negative": 674
+      },
+      {
+        "rule": 16,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      }
+    ],
+    "test_coverage": [
+      {
+        "rule": 0,
+        "enumerated_patterns_with_scalar_variants": 60,
+        "distinct_features": 27,
+        "positive": 4,
+        "negative": 23
+      },
+      {
+        "rule": 1,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 2,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 3,
+        "enumerated_patterns_with_scalar_variants": 20,
+        "distinct_features": 10,
+        "positive": 4,
+        "negative": 6
+      },
+      {
+        "rule": 4,
+        "enumerated_patterns_with_scalar_variants": 406,
+        "distinct_features": 203,
+        "positive": 52,
+        "negative": 151
+      },
+      {
+        "rule": 5,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 6,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 7,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 30,
+        "positive": 10,
+        "negative": 20
+      },
+      {
+        "rule": 8,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 104,
+        "positive": 30,
+        "negative": 74
+      },
+      {
+        "rule": 9,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 30,
+        "positive": 10,
+        "negative": 20
+      },
+      {
+        "rule": 10,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 11,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 12,
+        "enumerated_patterns_with_scalar_variants": 10,
+        "distinct_features": 5,
+        "positive": 2,
+        "negative": 3
+      },
+      {
+        "rule": 13,
+        "enumerated_patterns_with_scalar_variants": 30,
+        "distinct_features": 15,
+        "positive": 5,
+        "negative": 10
+      },
+      {
+        "rule": 14,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      },
+      {
+        "rule": 15,
+        "enumerated_patterns_with_scalar_variants": 1754,
+        "distinct_features": 877,
+        "positive": 203,
+        "negative": 674
+      },
+      {
+        "rule": 16,
+        "enumerated_patterns_with_scalar_variants": 104,
+        "distinct_features": 52,
+        "positive": 15,
+        "negative": 37
+      }
+    ],
+    "evaluation_feature_overlap": 1395,
+    "before": {
+      "pool": {
+        "samples": 1559,
+        "correct": 1555,
+        "false_positive": 4,
+        "false_negative": 0
+      },
+      "unseen_pool": {
+        "samples": 164,
+        "correct": 164,
+        "false_positive": 0,
+        "false_negative": 0
+      },
+      "chain": {
+        "samples": 1154,
+        "false_positive": 0,
+        "false_negative": 0,
+        "token_mse": 0.002823414746671915
+      }
+    },
+    "after": {
+      "pool": {
+        "samples": 1559,
+        "correct": 1558,
+        "false_positive": 1,
+        "false_negative": 0
+      },
+      "unseen_pool": {
+        "samples": 164,
+        "correct": 164,
+        "false_positive": 0,
+        "false_negative": 0
+      },
+      "chain": {
+        "samples": 1154,
+        "false_positive": 0,
+        "false_negative": 0,
+        "token_mse": 0.002483560238033533
+      }
+    },
+    "steps": 400,
+    "wall_seconds": 77.2709825829952,
+    "parent_weights_sha256": "4cea9bbab95b72cd7a67cd705d851ff221c85b574f74d5be8da9d62cf5340271",
+    "weights_sha256": "71d3dbc92a4c2692ed3c3ba4ca9f2dd14245ba34529670d8a559cf2351a37669",
+    "promoted_as_default": false
+  },
+  "snapshots": {
+    "gcd": {
+      "scope": "standalone first-Run seed-interface candidate audit; no effects, ownership or saturation",
+      "synthetic_only_training": true,
+      "ordered_relations": true,
+      "snapshot_run": 437,
+      "seed_cells": 269,
+      "initial_import_seconds": 0.024327749968506396,
+      "initial_encoding_seconds": 0.007152790960390121,
+      "cpu_reference_init_seconds": 0.0016077079926617444,
+      "groups": [
+        {
+          "rule": 283,
+          "candidates": 361,
+          "evaluated": 361,
+          "unresolved_candidates": 0,
+          "valid_tuples": 1,
+          "accepted_tuples": 2,
+          "false_positive_tuples": 1,
+          "false_negative_tuples": 0,
+          "expected_matches": 1,
+          "recovered_matches": 1,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0061518329894170165,
+          "cpu_audit_seconds": 0.004480541043449193,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 284,
+          "candidates": 95,
+          "evaluated": 95,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0014082500129006803,
+          "cpu_audit_seconds": 0.0011756669846363366,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 285,
+          "candidates": 76,
+          "evaluated": 76,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0013975409674458206,
+          "cpu_audit_seconds": 0.000961375015322119,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 286,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 1.1832977179437876e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 287,
+          "candidates": 209,
+          "evaluated": 209,
+          "unresolved_candidates": 0,
+          "valid_tuples": 4,
+          "accepted_tuples": 4,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 4,
+          "recovered_matches": 4,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0017642499879002571,
+          "cpu_audit_seconds": 0.002910457958932966,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 288,
+          "candidates": 171,
+          "evaluated": 171,
+          "unresolved_candidates": 0,
+          "valid_tuples": 2,
+          "accepted_tuples": 2,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 2,
+          "recovered_matches": 2,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0021156250149942935,
+          "cpu_audit_seconds": 0.002083625993691385,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 289,
+          "candidates": 19,
+          "evaluated": 19,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0015959999873302877,
+          "cpu_audit_seconds": 0.00023966602748259902,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 290,
+          "candidates": 2356,
+          "evaluated": 2356,
+          "unresolved_candidates": 0,
+          "valid_tuples": 18,
+          "accepted_tuples": 18,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 18,
+          "recovered_matches": 18,
+          "missed_matches": 0,
+          "gpu_seconds": 0.017255417886190116,
+          "cpu_audit_seconds": 0.0246809161035344,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 291,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 1.2583972420543432e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 292,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 1.2541015166789293e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 293,
+          "candidates": 722,
+          "evaluated": 722,
+          "unresolved_candidates": 0,
+          "valid_tuples": 6,
+          "accepted_tuples": 6,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 6,
+          "recovered_matches": 6,
+          "missed_matches": 0,
+          "gpu_seconds": 0.005489248957019299,
+          "cpu_audit_seconds": 0.006570209108758718,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 294,
+          "candidates": 1007,
+          "evaluated": 1007,
+          "unresolved_candidates": 0,
+          "valid_tuples": 8,
+          "accepted_tuples": 8,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 8,
+          "recovered_matches": 8,
+          "missed_matches": 0,
+          "gpu_seconds": 0.006887751049362123,
+          "cpu_audit_seconds": 0.010718960023950785,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 295,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 1.3499986380338669e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 296,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 1.1625001206994057e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 297,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 1.166702713817358e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 298,
+          "candidates": 76,
+          "evaluated": 76,
+          "unresolved_candidates": 0,
+          "valid_tuples": 1,
+          "accepted_tuples": 1,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 1,
+          "recovered_matches": 1,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0013619170058518648,
+          "cpu_audit_seconds": 0.0011147919576615095,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 299,
+          "candidates": 19,
+          "evaluated": 19,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0012728329747915268,
+          "cpu_audit_seconds": 0.0002416670322418213,
+          "uncovered_typed_patterns": 0
+        }
+      ],
+      "weights_sha256": "71d3dbc92a4c2692ed3c3ba4ca9f2dd14245ba34529670d8a559cf2351a37669",
+      "trace_sha256": "a2905bb27cc55472573437ff872f35eb12adce8cd60e50758f93e097a043d3a8",
+      "limitations": [
+        "Complete type-pool Cartesian enumeration is a diagnostic, not scalable routing",
+        "All successor tokens are computed but not committed or audited in this test",
+        "No new training or promotion; counts measure matches, not mutations",
+        "GPU timing includes dispatch and first-use compilation; no speedup claim"
+      ],
+      "totals": {
+        "candidates": 5111,
+        "evaluated": 5111,
+        "unresolved_candidates": 0,
+        "valid_tuples": 40,
+        "accepted_tuples": 41,
+        "false_positive_tuples": 1,
+        "false_negative_tuples": 0,
+        "expected_matches": 40,
+        "recovered_matches": 40,
+        "missed_matches": 0,
+        "gpu_seconds": 0.046700666833203286,
+        "cpu_audit_seconds": 0.05525162722915411,
+        "uncovered_typed_patterns": 0
+      }
+    },
+    "lcm": {
+      "scope": "standalone first-Run seed-interface candidate audit; no effects, ownership or saturation",
+      "synthetic_only_training": true,
+      "ordered_relations": true,
+      "snapshot_run": 514,
+      "seed_cells": 302,
+      "initial_import_seconds": 0.02822295797523111,
+      "initial_encoding_seconds": 0.07598341698758304,
+      "cpu_reference_init_seconds": 0.0018422499997541308,
+      "groups": [
+        {
+          "rule": 283,
+          "candidates": 1936,
+          "evaluated": 1936,
+          "unresolved_candidates": 0,
+          "valid_tuples": 1,
+          "accepted_tuples": 2,
+          "false_positive_tuples": 1,
+          "false_negative_tuples": 0,
+          "expected_matches": 1,
+          "recovered_matches": 1,
+          "missed_matches": 0,
+          "gpu_seconds": 0.15881320793414488,
+          "cpu_audit_seconds": 0.01851904101204127,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 284,
+          "candidates": 176,
+          "evaluated": 176,
+          "unresolved_candidates": 0,
+          "valid_tuples": 3,
+          "accepted_tuples": 3,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 3,
+          "recovered_matches": 3,
+          "missed_matches": 0,
+          "gpu_seconds": 0.001900959003251046,
+          "cpu_audit_seconds": 0.0016580420196987689,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 285,
+          "candidates": 264,
+          "evaluated": 264,
+          "unresolved_candidates": 0,
+          "valid_tuples": 1,
+          "accepted_tuples": 1,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 1,
+          "recovered_matches": 1,
+          "missed_matches": 0,
+          "gpu_seconds": 0.08755229198141024,
+          "cpu_audit_seconds": 0.0029452909948304296,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 286,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 1.4041957911103964e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 287,
+          "candidates": 308,
+          "evaluated": 308,
+          "unresolved_candidates": 0,
+          "valid_tuples": 5,
+          "accepted_tuples": 5,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 5,
+          "recovered_matches": 5,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0036530829966068268,
+          "cpu_audit_seconds": 0.003905666060745716,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 288,
+          "candidates": 1188,
+          "evaluated": 1188,
+          "unresolved_candidates": 0,
+          "valid_tuples": 3,
+          "accepted_tuples": 3,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 3,
+          "recovered_matches": 3,
+          "missed_matches": 0,
+          "gpu_seconds": 0.009154167026281357,
+          "cpu_audit_seconds": 0.012865457916632295,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 289,
+          "candidates": 44,
+          "evaluated": 44,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0013940840144641697,
+          "cpu_audit_seconds": 0.00044887495459988713,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 290,
+          "candidates": 5500,
+          "evaluated": 5500,
+          "unresolved_candidates": 0,
+          "valid_tuples": 65,
+          "accepted_tuples": 65,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 65,
+          "recovered_matches": 65,
+          "missed_matches": 0,
+          "gpu_seconds": 0.027857791108544916,
+          "cpu_audit_seconds": 0.052506209758576006,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 291,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 2.158299321308732e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 292,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 1.5290977898985147e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 293,
+          "candidates": 1760,
+          "evaluated": 1760,
+          "unresolved_candidates": 0,
+          "valid_tuples": 11,
+          "accepted_tuples": 11,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 11,
+          "recovered_matches": 11,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0688850000151433,
+          "cpu_audit_seconds": 0.014691542135551572,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 294,
+          "candidates": 1848,
+          "evaluated": 1848,
+          "unresolved_candidates": 0,
+          "valid_tuples": 18,
+          "accepted_tuples": 18,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 18,
+          "recovered_matches": 18,
+          "missed_matches": 0,
+          "gpu_seconds": 0.014713708951603621,
+          "cpu_audit_seconds": 0.017246249073650688,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 295,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 1.6207981389015913e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 296,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 1.2541015166789293e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 297,
+          "candidates": 0,
+          "evaluated": 0,
+          "unresolved_candidates": 0,
+          "valid_tuples": 0,
+          "accepted_tuples": 0,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 0,
+          "recovered_matches": 0,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0,
+          "cpu_audit_seconds": 1.2624950613826513e-05,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 298,
+          "candidates": 220,
+          "evaluated": 220,
+          "unresolved_candidates": 0,
+          "valid_tuples": 1,
+          "accepted_tuples": 1,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 1,
+          "recovered_matches": 1,
+          "missed_matches": 0,
+          "gpu_seconds": 0.0011010830057784915,
+          "cpu_audit_seconds": 0.0027541249874047935,
+          "uncovered_typed_patterns": 0
+        },
+        {
+          "rule": 299,
+          "candidates": 44,
+          "evaluated": 44,
+          "unresolved_candidates": 0,
+          "valid_tuples": 1,
+          "accepted_tuples": 1,
+          "false_positive_tuples": 0,
+          "false_negative_tuples": 0,
+          "expected_matches": 1,
+          "recovered_matches": 1,
+          "missed_matches": 0,
+          "gpu_seconds": 0.001299707975704223,
+          "cpu_audit_seconds": 0.00045066699385643005,
+          "uncovered_typed_patterns": 0
+        }
+      ],
+      "weights_sha256": "71d3dbc92a4c2692ed3c3ba4ca9f2dd14245ba34529670d8a559cf2351a37669",
+      "trace_sha256": "bbb6d2e50059c6e74a39115f4a917de85c933b97c644db65469ba734437f8370",
+      "limitations": [
+        "Complete type-pool Cartesian enumeration is a diagnostic, not scalable routing",
+        "All successor tokens are computed but not committed or audited in this test",
+        "No new training or promotion; counts measure matches, not mutations",
+        "GPU timing includes dispatch and first-use compilation; no speedup claim"
+      ],
+      "totals": {
+        "candidates": 13288,
+        "evaluated": 13288,
+        "unresolved_candidates": 0,
+        "valid_tuples": 109,
+        "accepted_tuples": 110,
+        "false_positive_tuples": 1,
+        "false_negative_tuples": 0,
+        "expected_matches": 109,
+        "recovered_matches": 109,
+        "missed_matches": 0,
+        "gpu_seconds": 0.3763250840129331,
+        "cpu_audit_seconds": 0.12808345578378066,
+        "uncovered_typed_patterns": 0
+      }
+    }
+  },
+  "tests_passed": 19,
+  "promoted_as_default": false,
+  "runtime_ownership_executed": false,
+  "saturation_proved": false,
+  "speedup_claim": false,
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/neural-typed-patterns-v1.tar.gz",
+  "archive_sha256": "78f21965d15fd8057b74f9792900705b47d293240dee64d11140aa20300d6db3",
+  "commands": [
+    "python train_neural_candidates.py TRACE.json PARENT.safetensors PHASE1.json --ordered --typed-patterns",
+    "python train_neural_candidates.py TRACE.json PHASE1.safetensors PHASE2.json --ordered --typed-patterns",
+    "python neural_snapshot_candidates.py TRACE.json PHASE2.safetensors OUTPUT.json --snapshot-run RUN --ordered --typed-coverage"
+  ]
+}
