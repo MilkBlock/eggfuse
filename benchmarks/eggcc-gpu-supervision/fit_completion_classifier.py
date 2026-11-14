@@ -39,6 +39,24 @@ def training_policy(meta, allow_historical=False):
         raise ValueError('real Run training disabled; use rule-generated synthetic inputs')
 
 
+def feedback_head_identity(path):
+    sha=hashlib.sha256(path.read_bytes()).hexdigest()
+    report=json.loads(path.with_suffix('.json').read_text())
+    if report.get('head_sha256')!=sha or report.get('synthetic_only_training') is not True:
+        raise ValueError('feedback head must have a matching synthetic-only training report')
+    return sha
+
+
+def verify_source(meta, allowed_models, feedback_heads):
+    if meta['model_sha256'] not in allowed_models:raise ValueError('unverified feature basis')
+    mode=meta.get('source_token_mode','exact completed states')
+    if mode=='exact completed states':return
+    info=meta.get('completion_readout') or {}
+    if (not meta['capture'].get('synthetic_input') or mode!='direct state ridge generated Cells, exact imported Cells'
+        or info.get('kind')!='direct_state_ridge' or info.get('head_sha256') not in feedback_heads):
+        raise ValueError('unverified synthetic feedback source')
+
+
 def register_entry(meta, split, programs, entries):
     """Allow distinct training snapshots, never cross-program-split leakage."""
     program=source_group(meta)
@@ -97,12 +115,14 @@ def inputs_for_case(path,meta,data,plans):
 def main():
     p=argparse.ArgumentParser()
     for key in ('model','source_model','decoder','decoder_report','output'):p.add_argument(key,type=Path)
+    p.add_argument('--feedback-head',type=Path,action='append',default=[],help='explicit parent weights for audited synthetic feedback')
     p.add_argument('--allow-historical-real-training',action='store_true',help='explicit historical experiment reproduction only')
     p.add_argument('--train',type=Path,action='append',required=True);p.add_argument('--validation',type=Path,action='append',required=True);a=p.parse_args()
     with np.load(a.model) as f:model={k:f[k] for k in f.files}
     with np.load(a.source_model) as f:
         for k in ('w','encoding','channels','zero_role_channels'):
             if not np.array_equal(f[k],model[k]):raise ValueError('incompatible feature basis')
+    feedback_heads={feedback_head_identity(p) for p in a.feedback_head}
     allowed={hashlib.sha256(x.read_bytes()).hexdigest() for x in (a.model,a.source_model)}
     dr=json.loads(a.decoder_report.read_text())
     if dr['model_sha256']!=hashlib.sha256(a.model.read_bytes()).hexdigest() or dr['weights_sha256']!=hashlib.sha256(a.decoder.read_bytes()).hexdigest():raise ValueError('decoder provenance')
@@ -115,7 +135,7 @@ def main():
         for path in paths:
             d,m=load(path,split)
             if split=='train':training_policy(m,a.allow_historical_real_training)
-            if m['model_sha256'] not in allowed or m.get('source_token_mode','exact completed states')!='exact completed states':raise ValueError('unverified exact-source basis')
+            verify_source(m,allowed,feedback_heads)
             register_entry(m,split,programs,entries);sf=semantic_family(m)
             if family is not None and sf!=family:raise ValueError('semantic family mismatch')
             if plans is None:plans=[compile_states(r) for r in sf]
@@ -159,7 +179,7 @@ def main():
     if gpu_error>5e-6 or token_error>5e-6:raise ValueError(f'GPU numerical error: score={gpu_error}, token={token_error}')
     np.savez_compressed(a.output.with_suffix('.npz'),**{f'head_{i}_{k}':v for i,h in enumerate(heads) for k,v in h.items()})
     out=dict(scope='offline direct whole-state ridge and GPU token reconstruction on audited GPU captures; not installed',alpha=10.,backpropagation=False,
-        installed=False,union_authorized=False,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
+        installed=False,union_authorized=False,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
         head_sha256=hashlib.sha256(a.output.with_suffix('.npz').read_bytes()).hexdigest(),coefficient_bytes=sum(h['coef'].nbytes for h in heads),normalization_bytes=sum(h[k].nbytes for h in heads for k in ('mean','scale','bias')),coverage=coverage,
         maximum_gpu_score_error=gpu_error,maximum_gpu_token_error=token_error,token_decode_disagreements=decoding_disagreements,cases=results,
         limitations=['All legal type-compatible states are included, but unseen states have no positive training evidence','No predicted-source rollout or native full-program acceptance','No learned equality is a proof','Current input Eq is retained; scalar effects outside query inputs are unsupported'])

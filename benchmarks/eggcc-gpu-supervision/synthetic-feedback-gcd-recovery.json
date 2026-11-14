@@ -1,0 +1,88 @@
+{
+  "scope": "finite baked state recoverability audit on actual captured tokens; not semantic correctness",
+  "instances": 41,
+  "mismatches": 0,
+  "maximum_squared_error": 5.079964227050482e-14,
+  "minimum_margin": 0.08447768539190292,
+  "recovered_state_semantics": {
+    "instances": 41,
+    "query_instances": 41,
+    "exact_partitions": 20,
+    "false_merges": 75,
+    "missed_equalities": 15,
+    "nontransitive": 0,
+    "closure_false_merges": 75,
+    "dynamic_quotient": {
+      "queries": 206,
+      "positives": 18,
+      "true_positives": 7,
+      "false_positives": 45,
+      "false_negatives": 11,
+      "precision": 0.1346153846153846,
+      "recall": 0.3888888888888889
+    }
+  },
+  "capture_sha256": "461d8b3e61856f8a834f8a4275021eb7daea0cf15c3cdc289c2966da7189d174",
+  "uses_labels_for_decoding": false,
+  "uses_producer_choice_for_decoding": false,
+  "backpropagation": false,
+  "rows": [
+    {
+      "prefix": "capture/1/0/0/",
+      "rule": 0,
+      "instances": 1,
+      "mismatches": 0,
+      "maximum_squared_error": 4.907185768843192e-14,
+      "minimum_margin": 1.2902565002441406
+    },
+    {
+      "prefix": "capture/1/0/1/",
+      "rule": 1,
+      "instances": 18,
+      "mismatches": 0,
+      "maximum_squared_error": 5.079964227050482e-14,
+      "minimum_margin": 0.4301009178161621
+    },
+    {
+      "prefix": "capture/1/0/2/",
+      "rule": 2,
+      "instances": 6,
+      "mismatches": 0,
+      "maximum_squared_error": 3.0100921755149557e-14,
+      "minimum_margin": 0.08447768539190292
+    },
+    {
+      "prefix": "capture/4/0/0/",
+      "rule": 0,
+      "instances": 4,
+      "mismatches": 0,
+      "maximum_squared_error": 2.656208586415687e-14,
+      "minimum_margin": 1.2902567386627197
+    },
+    {
+      "prefix": "capture/4/0/1/",
+      "rule": 1,
+      "instances": 8,
+      "mismatches": 0,
+      "maximum_squared_error": 4.29101199017623e-14,
+      "minimum_margin": 0.46281698346138
+    },
+    {
+      "prefix": "capture/4/0/2/",
+      "rule": 2,
+      "instances": 1,
+      "mismatches": 0,
+      "maximum_squared_error": 3.942679516200087e-14,
+      "minimum_margin": 0.4210401177406311
+    },
+    {
+      "prefix": "capture/7/0/0/",
+      "rule": 0,
+      "instances": 3,
+      "mismatches": 0,
+      "maximum_squared_error": 2.656208586415687e-14,
+      "minimum_margin": 1.2902567386627197
+    }
+  ],
+  "passed": true
+}

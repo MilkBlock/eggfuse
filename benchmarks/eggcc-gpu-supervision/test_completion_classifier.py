@@ -1,13 +1,34 @@
 import unittest
 import numpy as np
 import mlx.core as mx
-from fit_completion_classifier import fit_head,score_head,choose,register_entry,unique_training_rows,training_policy
+from fit_completion_classifier import fit_head,score_head,choose,register_entry,unique_training_rows,training_policy,verify_source,feedback_head_identity
 from device_completion_states import compile_states
 from test_completion_states import rule
 from audit_snapshot_queries import device
 
 
 class CompletionClassifier(unittest.TestCase):
+    def test_feedback_parent_cannot_hide_real_training(self):
+        import tempfile,json,hashlib
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td)/'head.npz';p.write_bytes(b'weights');sha=hashlib.sha256(p.read_bytes()).hexdigest()
+            report=dict(head_sha256=sha,synthetic_only_training=False)
+            p.with_suffix('.json').write_text(json.dumps(report))
+            with self.assertRaises(ValueError):feedback_head_identity(p)
+            report['synthetic_only_training']=True;p.with_suffix('.json').write_text(json.dumps(report))
+            self.assertEqual(feedback_head_identity(p),sha)
+            p.write_bytes(b'changed')
+            with self.assertRaises(ValueError):feedback_head_identity(p)
+
+    def test_feedback_requires_synthetic_provenance_and_explicit_head(self):
+        m=dict(model_sha256='m',capture=dict(synthetic_input=True),source_token_mode='direct state ridge generated Cells, exact imported Cells',completion_readout=dict(kind='direct_state_ridge',head_sha256='h'))
+        verify_source(m,{'m'},{'h'})
+        with self.assertRaises(ValueError):verify_source(m,{'m'},set())
+        with self.assertRaises(ValueError):verify_source(dict(m,capture={}),{'m'},{'h'})
+        with self.assertRaises(ValueError):verify_source(m,{'other'},{'h'})
+        with self.assertRaises(ValueError):verify_source(dict(m,source_token_mode='unknown'),{'m'},{'h'})
+
     def test_synthetic_only_policy(self):
         with self.assertRaises(ValueError):training_policy(dict(capture={}))
         training_policy(dict(capture=dict(synthetic_input=True)))
