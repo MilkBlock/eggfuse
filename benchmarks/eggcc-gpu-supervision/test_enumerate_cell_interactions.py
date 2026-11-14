@@ -33,6 +33,9 @@ class Enumeration(unittest.TestCase):
         for c in cases:self.assertEqual(replay_case(r,c),c['snapshot'])
         c=cases[0];doc=dict(schema='enumerated-cell-input/v1',recipe=r,recipe_sha256=digest(r),case=c,snapshot=c['snapshot'],input_sha256=c['input_sha256'])
         self.assertEqual(validate(doc),(r,c['snapshot']))
+        from synthetic_cell_inputs import provenance
+        self.assertEqual(provenance(doc)['case'],'enumerated-'+c['input_sha256'])
+        self.assertTrue(provenance(doc)['synthetic_input'])
         for mutate in [lambda c:c.update(wiring=[-1]),lambda c:c.update(partition=[[99]]),lambda c:c.update(input_sha256='bad')]:
             bad=copy.deepcopy(c);mutate(bad)
             with self.assertRaises(ValueError):replay_case(r,bad)

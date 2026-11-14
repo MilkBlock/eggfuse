@@ -92,10 +92,9 @@ def main():
     if meta['capture']['schema']!='device-composed-witness/v1' or not meta['capture']['passed'] or hashlib.sha256(a.capture.read_bytes()).hexdigest()!=meta['capture']['artifact_sha256']:raise ValueError('capture provenance')
     if hashlib.sha256(a.trace.read_bytes()).hexdigest()!=meta['trace_sha256'] or hashlib.sha256(a.model.read_bytes()).hexdigest()!=meta['model_sha256']:raise ValueError('source provenance')
     if a.synthetic_input:
-        from synthetic_cell_inputs import validate
+        from synthetic_cell_inputs import validate,provenance as synthetic_provenance
         recipe,snapshot=validate(trace)
-        provenance=dict(case='synthetic-'+str(trace['generator']['seed']),partition='train',synthetic_input=True,
-            input_sha256=trace['input_sha256'],generator=trace['generator'],reachability=trace['reachability'])
+        provenance=synthetic_provenance(trace)
         trace=dict(recipe=recipe,boundaries=[dict(ordinal=a.snapshot_run,graph=snapshot)])
     else:provenance=partition(trace,a.corpus)
     original=dict(trace['recipe'],rules=[trace['recipe']['rules'][i] for i in meta['source_rules']])

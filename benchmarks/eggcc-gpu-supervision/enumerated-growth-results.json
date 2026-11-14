@@ -1,0 +1,3008 @@
+{
+  "scope": "bounded native runtime without Bake search; final snapshot equals independent CPU reference; no global fixed-point proof",
+  "bound": 8,
+  "records": [
+    {
+      "index": 187,
+      "input_sha256": "343f775b51271810624f8a5eaa8886de734bbe259fcd0850d11de1e2b4d8e762",
+      "reference": [
+        {
+          "changed": 2,
+          "applications": 5,
+          "facts": 6,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 7,
+          "facts": 10,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 12,
+          "facts": 13,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 16,
+          "facts": 16,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 20,
+          "facts": 19,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 24,
+          "facts": 22,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 28,
+          "facts": 25,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 32,
+          "facts": 28,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 28,
+        "native_projected_facts": 28,
+        "seed_anchors": 4,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        4,
+        6,
+        10,
+        13,
+        16,
+        19,
+        22,
+        25,
+        28
+      ],
+      "archive_sha256": "76b059bdeca4b923e5f1c412c0cb8c34350fcf858544100bcba7c81b557ae9d0",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 0
+    },
+    {
+      "index": 190,
+      "input_sha256": "a5a9e08d0f65e956e290f64bf2f87ddae39e2a7e2e443ccdb4e04f33509e2a68",
+      "reference": [
+        {
+          "changed": 2,
+          "applications": 7,
+          "facts": 7,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 9,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 34,
+          "facts": 29,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 29,
+        "native_projected_facts": 29,
+        "seed_anchors": 4,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        7,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26,
+        29
+      ],
+      "archive_sha256": "2e7d8c21f4c5cc6c7a02251b15db94ec7536cb3911716cff54a693a7ac0cd7aa",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 0
+    },
+    {
+      "index": 193,
+      "input_sha256": "630f4e9d50598c72e735eb7ae29aef969ba7ecb6da832afb6ebe52b9a10977ea",
+      "reference": [
+        {
+          "changed": 6,
+          "applications": 6,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 6
+        },
+        {
+          "changed": 9,
+          "applications": 13,
+          "facts": 18,
+          "new_unions": 1,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 22,
+          "facts": 24,
+          "new_unions": 2,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 30,
+          "facts": 30,
+          "new_unions": 2,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 38,
+          "facts": 36,
+          "new_unions": 2,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 46,
+          "facts": 42,
+          "new_unions": 2,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 54,
+          "facts": 48,
+          "new_unions": 2,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 62,
+          "facts": 54,
+          "new_unions": 2,
+          "new_constructors": 8
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 54,
+        "native_projected_facts": 54,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        11,
+        18,
+        24,
+        30,
+        36,
+        42,
+        48,
+        54
+      ],
+      "archive_sha256": "39a9cbc9c758e230e42118f2f489ce47296e5ea0ffa130fbfe104938fabb3903",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "last_boundary_change": 0
+    },
+    {
+      "index": 194,
+      "input_sha256": "61a4a13d97243870528895e9d97fb1ab35d9e33162821600c15f5690fc15a5ed",
+      "reference": [
+        {
+          "changed": 6,
+          "applications": 5,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 6
+        },
+        {
+          "changed": 7,
+          "applications": 13,
+          "facts": 11,
+          "new_unions": 3,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 34,
+          "facts": 29,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 29,
+        "native_projected_facts": 29,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        11,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26,
+        29
+      ],
+      "archive_sha256": "923b23fdf096b5ebc2ef94061daffeb48c8a8dbcbb130e2fe2e5a9719a7be432",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 2
+    },
+    {
+      "index": 197,
+      "input_sha256": "4995fc88484d80a63b99bf138735e032a0da7cae3fbf9b31f1ec659d175ece2a",
+      "reference": [
+        {
+          "changed": 3,
+          "applications": 4,
+          "facts": 7,
+          "new_unions": 1,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 9,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 34,
+          "facts": 29,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 29,
+        "native_projected_facts": 29,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        7,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26,
+        29
+      ],
+      "archive_sha256": "999fa66cd31737e8cd63ea604e11fa9d013e2b586f64613191c1a8619cf67e8b",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 1
+    },
+    {
+      "index": 198,
+      "input_sha256": "95cbb511ab7a364ce9a404f0deb26a2b6e9291ffc50994ab1aaab10e79f688e4",
+      "reference": [
+        {
+          "changed": 3,
+          "applications": 3,
+          "facts": 7,
+          "new_unions": 1,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 9,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 34,
+          "facts": 29,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 29,
+        "native_projected_facts": 29,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        7,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26,
+        29
+      ],
+      "archive_sha256": "5e4268d8075b99719dd16cdb33e03854b3f5bb5b9f70fd87c30af1c1b59115c5",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 1
+    },
+    {
+      "index": 220,
+      "input_sha256": "b088b961571a7ac59cfc09c631e2203ca85b0bcb15a6b4b7f107dc5f04c6bcd0",
+      "reference": [
+        {
+          "changed": 1,
+          "applications": 3,
+          "facts": 5,
+          "new_unions": 1,
+          "new_constructors": 0
+        },
+        {
+          "changed": 2,
+          "applications": 7,
+          "facts": 7,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 9,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 26,
+        "native_projected_facts": 26,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        5,
+        7,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26
+      ],
+      "archive_sha256": "0225c592712f0cf7566e3e4daacd86e06efc464b77506254799df8690b92b2f1",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 1
+    },
+    {
+      "index": 221,
+      "input_sha256": "6944d43b8709f2ad036a0e8983a09b019c657de7961d20c7a94dc6058638fbad",
+      "reference": [
+        {
+          "changed": 1,
+          "applications": 4,
+          "facts": 5,
+          "new_unions": 1,
+          "new_constructors": 0
+        },
+        {
+          "changed": 2,
+          "applications": 7,
+          "facts": 7,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 9,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 26,
+        "native_projected_facts": 26,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        5,
+        7,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26
+      ],
+      "archive_sha256": "3ef450d98018c82e2257a2742528d016df80e9df5c65869d085d27e63e66b955",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 1
+    },
+    {
+      "index": 227,
+      "input_sha256": "b080c2994ded40820381ef3352117fe1f9c87ae0457bfd9f27c8c48c5e2809d1",
+      "reference": [
+        {
+          "changed": 2,
+          "applications": 2,
+          "facts": 7,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 3,
+          "facts": 9,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 4,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 5,
+          "facts": 13,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 6,
+          "facts": 15,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 7,
+          "facts": 17,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 8,
+          "facts": 19,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 9,
+          "facts": 21,
+          "new_unions": 0,
+          "new_constructors": 2
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 21,
+        "native_projected_facts": 21,
+        "seed_anchors": 6,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21
+      ],
+      "archive_sha256": "9937fbe05499b183dd9538d5a39be973bc0c4bd684836bd5a37cc271980ec346",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      ],
+      "last_boundary_change": 0
+    },
+    {
+      "index": 228,
+      "input_sha256": "80a4f8959e0f60dbef1043a9307cd68c232621456ec29f3abc3674806720eb0e",
+      "reference": [
+        {
+          "changed": 2,
+          "applications": 2,
+          "facts": 7,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 3,
+          "facts": 9,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 4,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 5,
+          "facts": 13,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 6,
+          "facts": 15,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 7,
+          "facts": 17,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 8,
+          "facts": 19,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 9,
+          "facts": 21,
+          "new_unions": 0,
+          "new_constructors": 2
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 21,
+        "native_projected_facts": 21,
+        "seed_anchors": 6,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21
+      ],
+      "archive_sha256": "36eafb635e3986991970c869946e9cd36324ee41915478234240e69e1c06a437",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      ],
+      "last_boundary_change": 0
+    },
+    {
+      "index": 462,
+      "input_sha256": "f1aa05aca1af9dc6eda22b8a041b090252303aaff71125897a9d38820ba8b36c",
+      "reference": [
+        {
+          "changed": 2,
+          "applications": 5,
+          "facts": 6,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 7,
+          "facts": 10,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 12,
+          "facts": 13,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 16,
+          "facts": 16,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 20,
+          "facts": 19,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 24,
+          "facts": 22,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 28,
+          "facts": 25,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 32,
+          "facts": 28,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 28,
+        "native_projected_facts": 28,
+        "seed_anchors": 4,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        4,
+        6,
+        10,
+        13,
+        16,
+        19,
+        22,
+        25,
+        28
+      ],
+      "archive_sha256": "a344abc757ab45107a2d15ae5b667310200b86a06d228bc904421798e06b6abf",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 0
+    },
+    {
+      "index": 465,
+      "input_sha256": "5716ecb368b8fb9d14a930227f48a82123af914c53a4c6c274aa1e438f722276",
+      "reference": [
+        {
+          "changed": 2,
+          "applications": 7,
+          "facts": 7,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 9,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 34,
+          "facts": 29,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 29,
+        "native_projected_facts": 29,
+        "seed_anchors": 4,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        7,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26,
+        29
+      ],
+      "archive_sha256": "30aa135fdeb8b9c4826340194a074b468f4ee13e3e93d40cb3ce62d89d993897",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 0
+    },
+    {
+      "index": 468,
+      "input_sha256": "3a7b863ed6f7ea48d46208af45472611eb3eac210780c622fa3d32a410d3ded5",
+      "reference": [
+        {
+          "changed": 6,
+          "applications": 6,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 6
+        },
+        {
+          "changed": 9,
+          "applications": 13,
+          "facts": 18,
+          "new_unions": 1,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 22,
+          "facts": 24,
+          "new_unions": 2,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 30,
+          "facts": 30,
+          "new_unions": 2,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 38,
+          "facts": 36,
+          "new_unions": 2,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 46,
+          "facts": 42,
+          "new_unions": 2,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 54,
+          "facts": 48,
+          "new_unions": 2,
+          "new_constructors": 8
+        },
+        {
+          "changed": 10,
+          "applications": 62,
+          "facts": 54,
+          "new_unions": 2,
+          "new_constructors": 8
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 54,
+        "native_projected_facts": 54,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        11,
+        18,
+        24,
+        30,
+        36,
+        42,
+        48,
+        54
+      ],
+      "archive_sha256": "4726a32f247864b54abd81153fd233833c904b2d8ee748015206d236d3b4bd55",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "last_boundary_change": 0
+    },
+    {
+      "index": 469,
+      "input_sha256": "78ca44a3857569297dbb7b67dae56b31c3ba02fb68dd8c42d0b78a1b3d2a3aa6",
+      "reference": [
+        {
+          "changed": 6,
+          "applications": 5,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 6
+        },
+        {
+          "changed": 7,
+          "applications": 13,
+          "facts": 11,
+          "new_unions": 3,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 34,
+          "facts": 29,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 29,
+        "native_projected_facts": 29,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        11,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26,
+        29
+      ],
+      "archive_sha256": "6e843e761091de239d2f4759cbcab2628bcc358887bdbd56e788d92d8df29fe9",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 2
+    },
+    {
+      "index": 472,
+      "input_sha256": "47b118c047901699092d18404d024c06a36be698333133d395628990e8073142",
+      "reference": [
+        {
+          "changed": 3,
+          "applications": 4,
+          "facts": 7,
+          "new_unions": 1,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 9,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 34,
+          "facts": 29,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 29,
+        "native_projected_facts": 29,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        7,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26,
+        29
+      ],
+      "archive_sha256": "7c73106c836cd8830d2903e2172c9c63d355f7c1036ae1be05898b86926aa7ac",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 1
+    },
+    {
+      "index": 473,
+      "input_sha256": "f61464410e1149f213fc7e07ffdda206f6f2aa512f7b795ba62fb0b30097811e",
+      "reference": [
+        {
+          "changed": 3,
+          "applications": 3,
+          "facts": 7,
+          "new_unions": 1,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 9,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 34,
+          "facts": 29,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 29,
+        "native_projected_facts": 29,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        7,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26,
+        29
+      ],
+      "archive_sha256": "6ebcfe4489b5dd01d6137899c3543269ee32283afe000d0959853e550c5b8200",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 1
+    },
+    {
+      "index": 495,
+      "input_sha256": "d5dabff7adb6a9d5e3e62b0df67f96abc008605b874767777332744afd630a86",
+      "reference": [
+        {
+          "changed": 1,
+          "applications": 3,
+          "facts": 5,
+          "new_unions": 1,
+          "new_constructors": 0
+        },
+        {
+          "changed": 2,
+          "applications": 7,
+          "facts": 7,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 9,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 26,
+        "native_projected_facts": 26,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        5,
+        7,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26
+      ],
+      "archive_sha256": "65c4c3045d59f3a9959d9a72f053cd7d6c0ba96b537e1ad81b1c182db8f98c9f",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 1
+    },
+    {
+      "index": 496,
+      "input_sha256": "589bf185ba6fb22dc616d2ffdc10cebe7ed4505379ec70394b923ac053c2a7c3",
+      "reference": [
+        {
+          "changed": 1,
+          "applications": 4,
+          "facts": 5,
+          "new_unions": 1,
+          "new_constructors": 0
+        },
+        {
+          "changed": 2,
+          "applications": 7,
+          "facts": 7,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 4,
+          "applications": 9,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 14,
+          "facts": 14,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 18,
+          "facts": 17,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 22,
+          "facts": 20,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 26,
+          "facts": 23,
+          "new_unions": 1,
+          "new_constructors": 4
+        },
+        {
+          "changed": 5,
+          "applications": 30,
+          "facts": 26,
+          "new_unions": 1,
+          "new_constructors": 4
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 26,
+        "native_projected_facts": 26,
+        "seed_anchors": 5,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        5,
+        7,
+        11,
+        14,
+        17,
+        20,
+        23,
+        26
+      ],
+      "archive_sha256": "f71884929536fb6aa4510ae15a9ea20978cbff7cd9fa0e5486dab532fe328670",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          2,
+          3
+        ]
+      ],
+      "last_boundary_change": 1
+    },
+    {
+      "index": 502,
+      "input_sha256": "cc0b22002ce498cc59d3b0787c9662360883225817cff8b975f3bf8f0b22dcda",
+      "reference": [
+        {
+          "changed": 2,
+          "applications": 2,
+          "facts": 7,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 3,
+          "facts": 9,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 4,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 5,
+          "facts": 13,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 6,
+          "facts": 15,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 7,
+          "facts": 17,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 8,
+          "facts": 19,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 9,
+          "facts": 21,
+          "new_unions": 0,
+          "new_constructors": 2
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 21,
+        "native_projected_facts": 21,
+        "seed_anchors": 6,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21
+      ],
+      "archive_sha256": "711f82136e2a7c3489eacf9256fedb3d8aa10456ebac6b906809eba1e9534413",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      ],
+      "last_boundary_change": 0
+    },
+    {
+      "index": 503,
+      "input_sha256": "af8846a25941ddf6b46c32cd27c671b075f5be73868ce2553b2b8c04a60ab812",
+      "reference": [
+        {
+          "changed": 2,
+          "applications": 2,
+          "facts": 7,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 3,
+          "facts": 9,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 4,
+          "facts": 11,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 5,
+          "facts": 13,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 6,
+          "facts": 15,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 7,
+          "facts": 17,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 8,
+          "facts": 19,
+          "new_unions": 0,
+          "new_constructors": 2
+        },
+        {
+          "changed": 2,
+          "applications": 9,
+          "facts": 21,
+          "new_unions": 0,
+          "new_constructors": 2
+        }
+      ],
+      "comparison": {
+        "passed": true,
+        "errors": [],
+        "native_audits": true,
+        "expected_facts": 21,
+        "native_projected_facts": 21,
+        "seed_anchors": 6,
+        "reference_runs": 8,
+        "native_runs": 8
+      },
+      "native_facts": [
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21
+      ],
+      "archive_sha256": "49a0a004d526063dc403f2f0373607932fd3013393c21b1a2cc545c68e17fe97",
+      "boundary_partitions": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      ],
+      "last_boundary_change": 0
+    }
+  ],
+  "compiler_sha256": "5267cc805adb548a3d5246b779728ffa9d9b23aad49397707beb48aa4a84bf28",
+  "observer_sha256": "b4d1694f0a78dd8d53e768cec76e4f93353ba1b3bad59118cdcee16004b32896"
+}

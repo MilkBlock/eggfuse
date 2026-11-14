@@ -99,6 +99,18 @@ def validate(document):
     return document['recipe'],document['snapshot']
 
 
+def provenance(document):
+    validate(document)
+    if document['schema']=='enumerated-cell-input/v1':
+        return dict(case='enumerated-'+document['input_sha256'],partition='train',synthetic_input=True,
+            input_sha256=document['input_sha256'],generator=dict(kind='typed-two-cell-enumeration',
+                producer=document['case']['producer'],consumer=document['case']['consumer'],
+                wiring=document['case']['wiring'],partition=document['case']['partition']),
+            reachability='completed-producer boundary; source-program reachability unproved')
+    return dict(case='synthetic-'+str(document['generator']['seed']),partition='train',synthetic_input=True,
+        input_sha256=document['input_sha256'],generator=document['generator'],reachability=document['reachability'])
+
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('recipe',type=Path);p.add_argument('output',type=Path)
     p.add_argument('--rules',default='283,290,293');p.add_argument('--seed',type=int,default=20261120);p.add_argument('--count',type=int,default=12);p.add_argument('--fragments',type=int,default=4);p.add_argument('--reuse',type=float,default=.35);a=p.parse_args()
