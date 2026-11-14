@@ -1,0 +1,431 @@
+{
+  "scope": "standalone bounded synthetic GPU Cell completion; not native or multi-stage Eggcc",
+  "artifact_root": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/finite-completion-v30",
+  "training": {
+    "scope": "standalone GPU fitting of bounded synthetic two-step domain; no runtime commits or generalization claim",
+    "stage_manifest": {
+      "ruleset": "canon",
+      "source_rule_ids": [
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277
+      ],
+      "membership_authoritative": true,
+      "full_schedule_replaced_for_training": true
+    },
+    "coverage": {
+      "finite_boundary": true,
+      "boundary_domain": "fixed completed source plus consumer queries; prior source roots unchanged",
+      "combined_owner": false,
+      "combined_templates": 0,
+      "max_combined_slots": 0,
+      "chains": 8166,
+      "positive": 4258,
+      "negative": 3908,
+      "negative_unavailable": 350,
+      "producer_consumer_pairs": 61,
+      "producers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "consumers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "compiled_owner_opportunities": 1080,
+      "scope": "bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance"
+    },
+    "before": {
+      "eq": {
+        "states": 4258,
+        "pairs": 49198,
+        "false_positive_pairs": 206,
+        "false_negative_pairs": 424,
+        "nonfinite_states": 0,
+        "exact_states": 4006,
+        "closed_false_positive_pairs": 278,
+        "closed_false_negative_pairs": 412,
+        "closed_exact_states": 4007,
+        "states_with_false_merge": 206
+      },
+      "matching_errors": 0,
+      "by_consumer": {
+        "0": {
+          "states": 2583,
+          "pairs": 18081,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 2583,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 2583,
+          "states_with_false_merge": 0
+        },
+        "1": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "2": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "3": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "4": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "5": {
+          "states": 65,
+          "pairs": 455,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 65,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 65,
+          "states_with_false_merge": 0
+        },
+        "6": {
+          "states": 301,
+          "pairs": 11739,
+          "false_positive_pairs": 103,
+          "false_negative_pairs": 209,
+          "nonfinite_states": 0,
+          "exact_states": 175,
+          "closed_false_positive_pairs": 129,
+          "closed_false_negative_pairs": 208,
+          "closed_exact_states": 176,
+          "states_with_false_merge": 103
+        },
+        "7": {
+          "states": 305,
+          "pairs": 11895,
+          "false_positive_pairs": 103,
+          "false_negative_pairs": 215,
+          "nonfinite_states": 0,
+          "exact_states": 179,
+          "closed_false_positive_pairs": 149,
+          "closed_false_negative_pairs": 204,
+          "closed_exact_states": 179,
+          "states_with_false_merge": 103
+        }
+      }
+    },
+    "after": {
+      "eq": {
+        "states": 4258,
+        "pairs": 49198,
+        "false_positive_pairs": 0,
+        "false_negative_pairs": 231,
+        "nonfinite_states": 0,
+        "exact_states": 4170,
+        "closed_false_positive_pairs": 0,
+        "closed_false_negative_pairs": 231,
+        "closed_exact_states": 4170,
+        "states_with_false_merge": 0
+      },
+      "matching_errors": 0,
+      "by_consumer": {
+        "0": {
+          "states": 2583,
+          "pairs": 18081,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 2583,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 2583,
+          "states_with_false_merge": 0
+        },
+        "1": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "2": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "3": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "4": {
+          "states": 251,
+          "pairs": 1757,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 251,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 251,
+          "states_with_false_merge": 0
+        },
+        "5": {
+          "states": 65,
+          "pairs": 455,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 0,
+          "nonfinite_states": 0,
+          "exact_states": 65,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 0,
+          "closed_exact_states": 65,
+          "states_with_false_merge": 0
+        },
+        "6": {
+          "states": 301,
+          "pairs": 11739,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 107,
+          "nonfinite_states": 0,
+          "exact_states": 257,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 107,
+          "closed_exact_states": 257,
+          "states_with_false_merge": 0
+        },
+        "7": {
+          "states": 305,
+          "pairs": 11895,
+          "false_positive_pairs": 0,
+          "false_negative_pairs": 124,
+          "nonfinite_states": 0,
+          "exact_states": 261,
+          "closed_false_positive_pairs": 0,
+          "closed_false_negative_pairs": 124,
+          "closed_exact_states": 261,
+          "states_with_false_merge": 0
+        }
+      }
+    },
+    "steps": 600,
+    "source_samples": 40,
+    "backpropagation": true,
+    "generated_sources": true,
+    "promoted_as_default": false,
+    "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+    "parent_sha256": "f4f5528a93704273671276a37ab2806a41b589639ba2556f7456876a46eabb21",
+    "weights_sha256": "3983f834822b565ba4d3397370438ef34f3382114314379bd9c7e5ab39323567",
+    "wall_seconds": 48.18759866699111
+  },
+  "interface_head_verified_unchanged": true,
+  "cumulative": {
+    "seed": 93003,
+    "sweeps": 6,
+    "cases": 61,
+    "passed": 58,
+    "graphs_passed": 60,
+    "admitted": 247,
+    "cpu_audit_seconds": 0.310059457027819
+  },
+  "extended": {
+    "5-7": {
+      "scope": "one cumulative GPU state; host fixed-order sweeps, final CPU audit",
+      "pool_capacity_overrides": {
+        "Bop": 32
+      },
+      "candidate_lanes_per_sweep": 16576,
+      "sweeps": 12,
+      "scheduled_steps": 96,
+      "admitted": 13,
+      "replayed": 13,
+      "capture_legal_entries": 13,
+      "capture_skipped_entries": 0,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 43,
+        "expected_facts": 43,
+        "mapped_classes": 23
+      },
+      "facts_decoded": true,
+      "cpu_fixedpoint": false,
+      "device_no_novel": false,
+      "needs_attention": true,
+      "attention_reasons": {
+        "query_overflow": 1,
+        "query_incomplete": 1,
+        "dirty_input": 0,
+        "nonfinite": 0,
+        "invalid_keys": 0,
+        "rejected_proposal": 0,
+        "payload_invalid": 0
+      },
+      "attention_events": [
+        {
+          "rule": 0,
+          "pools": {
+            "Add": 1,
+            "Bop": 34
+          }
+        }
+      ],
+      "capacity_steps": 0,
+      "refresh_steps": 0,
+      "cpu_audit_seconds": 0.05922774999635294,
+      "intermediate_host_value_reads": false,
+      "status": "difference"
+    },
+    "6-7": {
+      "scope": "one cumulative GPU state; host fixed-order sweeps, final CPU audit",
+      "pool_capacity_overrides": {
+        "Bop": 32
+      },
+      "candidate_lanes_per_sweep": 16576,
+      "sweeps": 12,
+      "scheduled_steps": 96,
+      "admitted": 9,
+      "replayed": 9,
+      "capture_legal_entries": 9,
+      "capture_skipped_entries": 0,
+      "graph": {
+        "passed": true,
+        "errors": [],
+        "actual_facts": 29,
+        "expected_facts": 29,
+        "mapped_classes": 24
+      },
+      "facts_decoded": true,
+      "cpu_fixedpoint": true,
+      "device_no_novel": true,
+      "needs_attention": false,
+      "attention_reasons": {
+        "query_overflow": 0,
+        "query_incomplete": 0,
+        "dirty_input": 0,
+        "nonfinite": 0,
+        "invalid_keys": 0,
+        "rejected_proposal": 0,
+        "payload_invalid": 0
+      },
+      "attention_events": [],
+      "capacity_steps": 0,
+      "refresh_steps": 0,
+      "cpu_audit_seconds": 0.05181912501575425,
+      "intermediate_host_value_reads": false,
+      "status": "pass"
+    },
+    "7-6": {
+      "scope": "one cumulative GPU state; host fixed-order sweeps, final CPU audit",
+      "pool_capacity_overrides": {
+        "Bop": 32
+      },
+      "candidate_lanes_per_sweep": 16576,
+      "sweeps": 12,
+      "scheduled_steps": 96,
+      "admitted": 14,
+      "replayed": 14,
+      "capture_legal_entries": 14,
+      "capture_skipped_entries": 0,
+      "graph": {
+        "passed": false,
+        "errors": [
+          "missing_union"
+        ],
+        "actual_facts": 35,
+        "expected_facts": 35,
+        "mapped_classes": 32
+      },
+      "facts_decoded": true,
+      "cpu_fixedpoint": false,
+      "device_no_novel": true,
+      "needs_attention": false,
+      "attention_reasons": {
+        "query_overflow": 0,
+        "query_incomplete": 0,
+        "dirty_input": 0,
+        "nonfinite": 0,
+        "invalid_keys": 0,
+        "rejected_proposal": 0,
+        "payload_invalid": 0
+      },
+      "attention_events": [],
+      "capacity_steps": 0,
+      "refresh_steps": 0,
+      "cpu_audit_seconds": 0.05308479198720306,
+      "intermediate_host_value_reads": false,
+      "status": "difference"
+    }
+  },
+  "promoted_as_default": false
+}

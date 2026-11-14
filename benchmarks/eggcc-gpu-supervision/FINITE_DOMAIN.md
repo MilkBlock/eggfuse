@@ -62,3 +62,31 @@ injectivity, adequate numerical separation, accurate predicted tokens, or
 recurrent closure. Ten finite-domain/audit unit tests pass. No model is retrained
 or promoted by this result. The next training gate is fitting this covered
 domain, followed by actual cumulative admission and ownership audits.
+
+## Generated-token fitting and cumulative execution
+
+`train_finite_completion.py TRACE COMBINED_WEIGHTS OUTPUT.json --steps 600`
+fits the enumerated domain on MLX. It differentiates through the source Cell
+and consumer transition, rather than substituting reference source tokens.
+The existing interface predicate weights remain frozen (six tensors checked
+unchanged). This experiment measures training-domain fitting, not generalization.
+
+`finite-training-results.json` records complete Eq states improving from
+4,006/4,258 to 4,170/4,258, with states containing false merges falling from
+206 to zero. Matching errors stay zero. The 88 remaining failures are in
+consumer rules 6 and 7. The artifact archive contains weights and full reports;
+binary weights are not tracked in Git.
+
+The subsequent cumulative GPU audit uses seed 93003, six sweeps and Bop pool
+capacity 32. It passes 58/61 cases; 60 final graphs pass comparison. Targeted
+twelve-sweep checks distinguish three failures:
+
+- Pair (6,7) reaches a verified fixed point.
+- Pair (5,7) continues correctly but reaches 34 Bop candidates, exceeding 32.
+- Pair (7,6) stops proposing tokens while CPU validation still finds a missing
+  union. GPU idleness is therefore not sufficient evidence of saturation.
+
+The candidate is not promoted. The deeper audit demonstrates remaining
+boundary-equivalence/closure obligations, even after local fitting improves.
+These results do not establish a complete ownership lifecycle or multi-stage
+runtime. The default model remains unchanged.
