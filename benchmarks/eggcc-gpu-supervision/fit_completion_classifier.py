@@ -15,7 +15,7 @@ from multi_entry_ridge import scalar
 from audit_training_expansion import summarize
 from audit_device_match_readout import dynamic_metrics
 from token_eq_readout import readout_rows,materialize
-from device_completion_classifier import score_head,choose
+from device_completion_classifier import score_head,choose,classifier_features
 from completion_control import capture_control
 
 
@@ -39,6 +39,16 @@ def fit_head(x,y,alpha=10.,weights=None):
     return dict(mean=mean,scale=scale,coef=(z.T@dual).astype(np.float32),bias=bias)
 
 
+
+
+def fit_normalized_joint_head(x,y,alpha=10.,weights=None):
+    from device_joint_features import compile_projection
+    mean=x.mean(axis=0);scale=np.maximum(x.std(axis=0),.02)
+    projection=compile_projection(x.shape[1])/scale[:,None]
+    projection[np.min(x,axis=0)==np.max(x,axis=0)]=0  # No observed variation; retain raw columns, omit nonlinear amplification.
+    basis=dict(feature_projection=projection,feature_center=mean)
+    expanded=classifier_features(x,basis,np)
+    return dict(fit_head(expanded,y,alpha,weights),**basis)
 
 
 def balanced_state_weights(y):
@@ -179,6 +189,7 @@ def inputs_for_case(path,meta,data,plans):
 def main():
     p=argparse.ArgumentParser()
     for key in ('model','source_model','decoder','decoder_report','output'):p.add_argument(key,type=Path)
+    p.add_argument('--normalized-joint',action='store_true',help='training-input standardized fixed nonlinear projection; no gradients')
     p.add_argument('--local-context',action='store_true',help='anchor shared context on constructor-result sorts')
     p.add_argument('--ambiguous-only',action='store_true',help='fit only rows whose input constraints permit multiple completion states')
     p.add_argument('--mean-context',action='store_true',help='mean rather than sqrt-count normalization in shared context')
@@ -188,6 +199,7 @@ def main():
     p.add_argument('--feedback-head',type=Path,action='append',default=[],help='explicit parent weights for audited synthetic feedback')
     p.add_argument('--allow-historical-real-training',action='store_true',help='explicit historical experiment reproduction only')
     p.add_argument('--train',type=Path,action='append',required=True);p.add_argument('--validation',type=Path,action='append',required=True);a=p.parse_args()
+    if a.normalized_joint and a.joint_features:raise ValueError('choose one joint projection')
     if (a.mean_context or a.local_context) and not a.shared_context:raise ValueError('mean/local context requires shared context')
     with np.load(a.model) as f:model={k:f[k] for k in f.files}
     with np.load(a.source_model) as f:
@@ -230,7 +242,7 @@ def main():
             if not len(x):raise ValueError('no ambiguous examples for this head')
         x,y,duplicates=unique_training_rows(x,y,programs_for_rows)
         weights=balanced_state_weights(y) if a.balanced_states else None
-        heads.append(fit_head(x,y,10.,weights=weights))
+        heads.append((fit_normalized_joint_head if a.normalized_joint else fit_head)(x,y,10.,weights=weights))
         coverage.append(dict(input_determined_rows_excluded=forced,states=y.shape[1],observed_training_states=int(np.any(y,axis=0).sum()),training_instances=len(y),sampling=duplicates,exact_feature_conflicts=feature_conflicts(x,y)))
     results=[];gpu_error=0.;token_error=0.;decoding_disagreements=0
     for split,d,m,details in cases:
@@ -263,8 +275,8 @@ def main():
     if gpu_error>5e-6 or token_error>5e-6:raise ValueError(f'GPU numerical error: score={gpu_error}, token={token_error}')
     np.savez_compressed(a.output.with_suffix('.npz'),**{f'head_{i}_{k}':v for i,h in enumerate(heads) for k,v in h.items()})
     out=dict(scope='offline direct whole-state ridge and GPU token reconstruction on audited GPU captures; not installed',alpha=10.,backpropagation=False,
-        installed=False,union_authorized=False,local_shared_context=a.local_context,ambiguous_only=a.ambiguous_only,mean_shared_context=a.mean_context,joint_features=a.joint_features,balanced_states=a.balanced_states,shared_boundary_context=a.shared_context,maximum_gpu_context_error=context_error,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
-        head_sha256=hashlib.sha256(a.output.with_suffix('.npz').read_bytes()).hexdigest(),coefficient_bytes=sum(h['coef'].nbytes for h in heads),normalization_bytes=sum(h[k].nbytes for h in heads for k in ('mean','scale','bias')),coverage=coverage,
+        installed=False,union_authorized=False,normalized_joint=a.normalized_joint,local_shared_context=a.local_context,ambiguous_only=a.ambiguous_only,mean_shared_context=a.mean_context,joint_features=a.joint_features,balanced_states=a.balanced_states,shared_boundary_context=a.shared_context,maximum_gpu_context_error=context_error,completion_control=completion_control,training_source_groups=sum(v=='train' for v in programs.values()),synthetic_only_training=all(m['capture'].get('synthetic_input',False) for s,_,m,_ in cases if s=='train'),feedback_parent_heads=sorted(feedback_heads),training_entries=sum(s=='train' for s,_,_,_ in cases),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),decoder_sha256=dr['weights_sha256'],
+        head_sha256=hashlib.sha256(a.output.with_suffix('.npz').read_bytes()).hexdigest(),coefficient_bytes=sum(h['coef'].nbytes for h in heads),feature_projection_bytes=sum(h[k].nbytes for h in heads for k in ('feature_projection','feature_center') if k in h),normalization_bytes=sum(h[k].nbytes for h in heads for k in ('mean','scale','bias')),coverage=coverage,
         maximum_gpu_score_error=gpu_error,maximum_gpu_token_error=token_error,token_decode_disagreements=decoding_disagreements,cases=results,
         limitations=['All legal type-compatible states are included, but unseen states have no positive training evidence','No predicted-source rollout or native full-program acceptance','No learned equality is a proof','Current input Eq is retained; scalar effects outside query inputs are unsupported'])
     a.output.write_text(json.dumps(out,indent=2)+'\n');print(json.dumps(out,indent=2))

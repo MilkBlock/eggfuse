@@ -64,7 +64,8 @@ def proposals(state,plan,model,capacity,external_complete,eq_settled,xp,capture=
     boundary_capture=None
     base_width=1+model['w'].shape[0]+model['w'].shape[1]
     classifier=plan.get('completion_classifier')
-    expected_width=classifier['head']['coef'].shape[0] if classifier is not None else model['coef'].shape[0]
+    from device_completion_classifier import input_width
+    expected_width=input_width(classifier['head']) if classifier is not None else model['coef'].shape[0]
     if 'joint_projection' in plan:expected_width-=plan['joint_projection'].shape[1]
     if expected_width!=base_width:
         if 'boundary_context' not in plan:raise ValueError('boundary model requires compiled context')

@@ -1,0 +1,138 @@
+{
+  "scope": "selected-family GPU prototype; synthetic-only training, recurring real development evaluation; no speedup claim",
+  "head_sha256": "6432d7cfc63553f8b79f37faf4fe1513f52697694cf682b9c80269f1fabd3c05",
+  "training_entries": 641,
+  "backpropagation": false,
+  "feature_projection_bytes": 7503372,
+  "coefficient_bytes": 344192,
+  "normalization_bytes": 64664,
+  "offline": [
+    {
+      "case": "016-gcd",
+      "groups": {
+        "all": {
+          "instances": 41,
+          "exact_partitions": 36
+        },
+        "direct": {
+          "instances": 26,
+          "exact_partitions": 23
+        },
+        "generated": {
+          "instances": 15,
+          "exact_partitions": 13
+        }
+      }
+    },
+    {
+      "case": "019-lcm",
+      "groups": {
+        "all": {
+          "instances": 99,
+          "exact_partitions": 93
+        },
+        "direct": {
+          "instances": 78,
+          "exact_partitions": 72
+        },
+        "generated": {
+          "instances": 21,
+          "exact_partitions": 21
+        }
+      }
+    }
+  ],
+  "feedback": {
+    "gcd": {
+      "graph_passed": true,
+      "label_passed": true,
+      "maximum_error": 4.798173904418945e-06,
+      "groups": {
+        "all": {
+          "correct": 36,
+          "instances": 41
+        },
+        "direct": {
+          "correct": 23,
+          "instances": 26
+        },
+        "generated": {
+          "correct": 13,
+          "instances": 15
+        }
+      }
+    },
+    "lcm": {
+      "graph_passed": true,
+      "label_passed": false,
+      "numerical_failure": {
+        "passed": false,
+        "failure": "floating reconstruction exceeds tolerance",
+        "maximum_error": 5.4836273193359375e-06,
+        "tolerance": 5e-06,
+        "audited_score_lanes": 262,
+        "failed_score_lanes": 6,
+        "score_failure_fraction": 0.022900763358778626,
+        "score_failures": [
+          {
+            "capture_index": 1,
+            "rule": 290,
+            "lane": 39,
+            "accepted": true,
+            "max_abs": 5.0067901611328125e-06,
+            "recorded_choice": 0,
+            "recomputed_choice": 0
+          },
+          {
+            "capture_index": 1,
+            "rule": 290,
+            "lane": 41,
+            "accepted": true,
+            "max_abs": 5.125999450683594e-06,
+            "recorded_choice": 0,
+            "recomputed_choice": 0
+          },
+          {
+            "capture_index": 1,
+            "rule": 290,
+            "lane": 44,
+            "accepted": true,
+            "max_abs": 5.4836273193359375e-06,
+            "recorded_choice": 0,
+            "recomputed_choice": 0
+          },
+          {
+            "capture_index": 1,
+            "rule": 290,
+            "lane": 52,
+            "accepted": true,
+            "max_abs": 5.334615707397461e-06,
+            "recorded_choice": 0,
+            "recomputed_choice": 0
+          },
+          {
+            "capture_index": 1,
+            "rule": 290,
+            "lane": 54,
+            "accepted": true,
+            "max_abs": 5.245208740234375e-06,
+            "recorded_choice": 0,
+            "recomputed_choice": 0
+          },
+          {
+            "capture_index": 1,
+            "rule": 290,
+            "lane": 55,
+            "accepted": true,
+            "max_abs": 5.066394805908203e-06,
+            "recorded_choice": 0,
+            "recomputed_choice": 0
+          }
+        ],
+        "source_capture_sha256": "36202e98c503d4e9b0aaced914204e8f6595fb6452a99f1dcd8b2ca0aa294d6e",
+        "training_output_written": false
+      }
+    }
+  },
+  "promoted_as_general_default": false
+}

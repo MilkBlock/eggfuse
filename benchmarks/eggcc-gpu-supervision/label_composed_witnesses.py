@@ -131,10 +131,10 @@ def main():
             if len(chosen)!=1:raise ValueError('completion alpha')
             completion_plans=[compile_readout(r,f['w'],f['coef'][:,chosen]) for r in local['rules'][:len(original['rules'])]]
     if a.completion_classifier:
-        from device_completion_classifier import compile_classifier
+        from device_completion_classifier import compile_classifier,load_head
         if hashlib.sha256(a.completion_classifier.read_bytes()).hexdigest()!=info['head_sha256']:raise ValueError('classifier identity')
         with np.load(a.completion_classifier) as f:
-            completion_plans=[compile_classifier(r,{k:f[f'head_{rid}_{k}'] for k in ('mean','scale','coef','bias')})
+            completion_plans=[compile_classifier(r,load_head(f,rid))
                               for rid,r in enumerate(local['rules'][:len(original['rules'])])]
     ref=Reference(original,rows,ids)
     if 'source_control' in meta:
@@ -155,7 +155,8 @@ def main():
         saved={k:data[k] for k in data.files}
     mapping=resolve_identities(ref,facts,len(ids));seed_values={i:json.loads(v) for v,i in ids.items()}
     boundary_generated=[];boundary_features=[];boundary_error=0.;xs=[];extra=[];ys=[];labels=[];pred=[];rules=[];continued=[];numerical=0.
-    for c in captures:
+    score_failures=[];audited_score_lanes=0
+    for capture_index,c in enumerate(captures):
         x=floating_inputs(c,model,np);z,_=relation_features(inputs(local,c),projection(),np);rid=int(c['rule']);rule=local['rules'][rid]
         if 'boundary' in c:
             from device_boundary_context import compile_context,encode as boundary_encode,masks as boundary_masks
@@ -193,7 +194,11 @@ def main():
                     if value['sort']!=rule['slots'][s]['sort']['name'] or 'eq' in value:raise ValueError('completion scalar identity')
                     if np.max(abs(scalar(value)-detail['scalar_codes'][lane,j]))>5e-6:raise ValueError('completion scalar code')
             expected,recomputed=apply(expected,c['bindings'],detail['scalar_codes'],detail['scalar_ready'],plan,np)
-            if classifier and live.any():numerical=max(numerical,float(np.max(abs(recomputed['scores'][live]-detail['scores'][live]))))
+            if classifier and live.any():
+                errors=np.max(abs(recomputed['scores']-detail['scores']),axis=1)
+                numerical=max(numerical,float(np.max(errors[live])));audited_score_lanes+=int(live.sum())
+                for lane in np.flatnonzero(live&(errors>5e-6)):
+                    score_failures.append(dict(capture_index=capture_index,rule=int(meta['source_rules'][rid]),lane=int(lane),accepted=bool(c['accepted'][lane]),max_abs=float(errors[lane]),recorded_choice=int(detail['chosen'][lane]),recomputed_choice=int(recomputed['chosen'][lane])))
             for key in ('chosen','required','selected','ready'):
                 if not np.array_equal(recomputed[key][live],detail[key][live]):raise ValueError('completion readout '+key)
         elif 'completion_readout' in c:raise ValueError('unregistered completion readout')
@@ -203,7 +208,10 @@ def main():
             xs.append(x[lane]);extra.append(z[lane]);ys.append(y);labels.append(label);pred.append(c['predicted_tokens'][lane]);rules.append(meta['source_rules'][rid])
             source_generated=(c['source_rules'][lane]<len(original['rules'])) if initial_sources is None else generated_origin(c['request']['sources'][lane],c['request']['generations'][lane],initial_sources)
             continued.append(bool(np.any(c['request']['edge_valid'][lane]&source_generated)))
-    if numerical>5e-6:raise ValueError('floating inputs changed')
+    if numerical>5e-6:
+        failure=dict(passed=False,failure='floating reconstruction exceeds tolerance',maximum_error=numerical,tolerance=5e-6,audited_score_lanes=audited_score_lanes,failed_score_lanes=len(score_failures),score_failure_fraction=len(score_failures)/audited_score_lanes if audited_score_lanes else None,score_failures=score_failures,source_capture_sha256=meta['capture']['artifact_sha256'],training_output_written=False)
+        a.report.write_text(json.dumps(failure,indent=2)+'\n')
+        raise ValueError(f'floating inputs changed: max_abs={numerical}')
     rr=rows_from_labels(semantic_recipe,[meta['source_rules'].index(r) for r in rules],labels)
     payload=dict(features=np.array(xs,np.float32),input_relations=np.array(extra,np.float32),targets=np.array(ys,np.float32),target_eq_classes=np.array(labels,np.int32),predicted_tokens=np.array(pred,np.float32),rules=np.array(rules,np.int32),generated_source=np.array(continued,bool),**saved)
     if boundary_features:

@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 from calibrate_semantic_family import load,semantic_family,align_features
 from fit_completion_classifier import inputs_for_case,training_policy,assemble_classifier_features
-from device_completion_classifier import score_head,choose
+from device_completion_classifier import score_head,choose,load_head
 from device_completion_states import compile_states
 
 
@@ -75,7 +75,7 @@ def main():
             bucket=buckets.setdefault(int(rid),dict(train=[],validation=[]))
             predictions=None
             if heads is not None:
-                head={k:heads[f'head_{rid}_{k}'] for k in ('mean','scale','coef','bias')}
+                head=load_head(heads,rid)
                 predictions,_=choose(score_head(d['features'][v['ids']],head,np),v['required'],plans[rid]['states'],np)
                 if recorded is not None:
                     np.testing.assert_array_equal(predictions,recorded[v['ids']]);replayed+=len(predictions)
