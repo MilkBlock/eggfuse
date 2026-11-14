@@ -221,3 +221,69 @@ tensor. A dense-reference test checks FP32 numerical equivalence. Data generatio
 for this experiment used the previous implementation; device count parity above
 also checks the resulting replay against the new implementation. No timing
 speedup is claimed. Full text metrics are in `owner-block-third-results.json`.
+
+## Compile known equalities; do not predict every cross-block pair
+
+`neural_baked_eq` derives positive consequences from sealed constructor facts,
+copy/union effects and the ownership layout's shared ports. Multi-argument
+congruence requires all arguments; repeated congruence is saturated offline.
+It never consumes instance IDs or CPU labels and never proves an unknown pair
+unequal. Mutable reads and unsupported effects are explicitly uncovered. During
+sample construction and device audit, independent exact labels must agree with
+every compiled positive proof. Nonfinite neural outputs remain failures even on
+proven pairs.
+
+The `--baked-eq` audit option prepares one shared proof tensor per rule before
+execution and applies it on GPU. It also applies before speculative frame
+installation when that separate mode is used. Full Eq masks and graph acceptance
+remain unchanged. Training can exclude proven positives from its loss, but the
+experiments below performed **no new training**.
+
+The cross-block prediction network was not part of the device's next-query
+forward path; it was an auxiliary training/readout head. `--omit-cross-predictions`
+skips that head and its loss, proposing only within-block Eq and static links.
+Missing dynamic cross equalities still fail the full joint audit. They are
+unresolved boundary work, not inequalities or excluded tables.
+
+| Same frozen checkpoint, 578 positive owners | Full owner Eq correct after closure | States with false merges |
+| --- | ---: | ---: |
+| Neural local and cross readouts | 280 | 209 |
+| Add static positive proofs | 361 | 209 |
+| Static proofs, omit cross head | 565 | 4 |
+| Also preserve source block unchanged | 571 | 0 |
+
+All rows audit the same 40,200 typed pair obligations. Static compilation proves
+4,909 positive pair occurrences. The last row is 98.79% within-owner Eq accuracy;
+seven owners still omit relations (12 pairs after closure). It does not establish
+correct external result addressing, scalar evaluation or whole-egraph execution.
+Raw pair output is only 317/578 exact in that row: most omitted pair proposals
+are consequences of the retained links, not additional required computations.
+The archived auxiliary unseen split used the previous input fingerprint without
+explicit proof tensors; do not infer a novel-state generalization rate from it.
+Future proof-mode runs include those tensors in the fingerprint.
+
+`OwnerBlocks.immutable_source` now bypasses the source-update network rather than
+computing a zero update. Tests put NaNs in both skipped networks and verify finite
+outputs and bitwise preservation of the source block. The existing two-block
+storage still copies/retains the source vector in the destination arena; this is
+semantic immutability, not a zero-copy storage claim. The switch is explicit in
+the audit CLI (`--immutable-source`); it is not encoded in weight files.
+
+Critically, downstream consumption is not solved. On the same 107 actual GPU
+handoffs, adding single-rule static proofs leaves the updated-source model at
+41/338 wrong next states, including four false merges. Preserving the source
+instead yields 66/338 wrong next states, including nine false merges. All 107
+handoffs and matching checks pass, but both semantic audits return `difference`.
+Do not promote immutable-source execution merely because owner-state decoding
+improves. Consumers currently read original block roles and do not explicitly
+consume the combined owner's compiled completion description. The next task is
+to make those consumer inputs ownership-aware while retaining positive birth
+facts, rather than require every old block alone to represent the entire current
+Eq state.
+
+Reproduce owner readouts with `train_neural_owner_blocks.py ... --resume
+FROZEN_WEIGHTS --freeze-base --baked-eq --evaluate-only`, adding
+`--omit-cross-predictions` and then `--identity-source` for the two ablations.
+Use `audit_neural_gpu_rhs.py ... --block-owner --baked-eq` with or without
+`--immutable-source` for actual handoff/next-query checks. See
+`baked-owner-eq-results.json`. No speed or native-runtime result is claimed.

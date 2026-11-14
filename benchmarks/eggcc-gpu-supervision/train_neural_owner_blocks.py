@@ -23,42 +23,54 @@ def build(recipe,count,seed):
     return base,data,coverage
 
 
-def objective(model,batch,parent,chain,third=None):
+def objective(model,batch,parent,chain,third=None,baked_eq=False,omit_cross=False):
     _,_,blocks=replay(model,parent,chain)
-    source,target,cross=model.readout(blocks,chain['source_request'],chain['request'],chain['owner_request'])
+    source,target,cross=model.readout(blocks,chain['source_request'],chain['request'],chain['owner_request'],include_cross=not omit_cross)
     align=mx.mean((blocks[:,0]-chain['source_target'])**2+(blocks[:,1]-chain['target'])**2,axis=1)
     extra=mx.array(0.)
     if third is not None:
         from neural_third_step import replay_blocks
         _,third_token=replay_blocks(model,third)
         extra=masked_loss(model.eq(third_token,third['request']),third['eq_target'],third['eq_mask'])
+    source_mask=chain['source_eq_mask'];target_mask=chain['eq_mask'];cross_mask=chain['cross_eq_mask']
+    if baked_eq:
+        source_mask=source_mask&~chain['source_known_eq'];target_mask=target_mask&~chain['target_known_eq'];cross_mask=cross_mask&~chain['cross_known_eq']
     return (extra+direct_loss(model.cell,batch)+mx.sum(align*chain['valid'])/mx.maximum(mx.sum(chain['valid']),1)
-        +masked_loss(source,chain['source_eq_target'],chain['source_eq_mask'])
-        +masked_loss(target,chain['eq_target'],chain['eq_mask'])
-        +masked_loss(cross,chain['cross_eq_target'],chain['cross_eq_mask']))
+        +masked_loss(source,chain['source_eq_target'],source_mask)
+        +masked_loss(target,chain['eq_target'],target_mask)
+        +(mx.array(0.) if omit_cross else masked_loss(cross,chain['cross_eq_target'],cross_mask)))
 
 
-def signatures(base,data):
-    return [hashlib.sha256(sig.encode()+a.tobytes()+b.tobytes()).hexdigest()
-            for sig,a,b in zip(fingerprints(base,data),data['owner_request'],data['source_request'])]
+def signatures(base,data,with_proof=False):
+    result=[]
+    for i,(sig,a,b) in enumerate(zip(fingerprints(base,data),data['owner_request'],data['source_request'])):
+        proof=b''.join(data[k][i].tobytes() for k in ('source_known_eq','target_known_eq','cross_known_eq')) if with_proof else b''
+        result.append(hashlib.sha256(sig.encode()+a.tobytes()+b.tobytes()+proof).hexdigest())
+    return result
 
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('transition',type=Path);p.add_argument('eq',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--steps',type=int,default=1200);p.add_argument('--resume',type=Path);p.add_argument('--freeze-base',action='store_true');p.add_argument('--third-train',type=Path);p.add_argument('--third-test',type=Path);a=p.parse_args()
+    p.add_argument('--steps',type=int,default=1200);p.add_argument('--resume',type=Path);p.add_argument('--freeze-base',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--evaluate-only',action='store_true');p.add_argument('--omit-cross-predictions',action='store_true');p.add_argument('--identity-source',action='store_true');p.add_argument('--third-train',type=Path);p.add_argument('--third-test',type=Path);a=p.parse_args()
+    if a.identity_source and not a.evaluate_only:raise ValueError('identity-source is an evaluation ablation')
+    if a.omit_cross_predictions and not a.baked_eq:raise ValueError('omit cross predictions only with compiled structural proof')
+    if a.evaluate_only and not a.resume:raise ValueError('evaluation requires a combined checkpoint')
     if bool(a.third_train)!=bool(a.third_test):raise ValueError('both training and held-out replay data required')
     if a.steps<1:raise ValueError('positive training steps')
     source=json.loads(a.trace.read_text());source=source.get('recipe',source)
     recipe=dict(source,rules=[r for r in source['rules'] if r['metadata']['source_set']=='context'])
     began=time.perf_counter();base,chain,coverage=build(recipe,8,23001);test,tc,test_coverage=build(recipe,4,93003)
     width=max(len(r['slots']) for r in recipe['rules'])
-    seen=set(signatures(base,chain));overlap=np.array([sig in seen for sig in signatures(test,tc)])
+    seen=set(signatures(base,chain,a.baked_eq));overlap=np.array([sig in seen for sig in signatures(test,tc,a.baked_eq)])
     device=lambda d:{k:mx.array(v) for k,v in d.items()}
     db,dc=map(device,(base,chain));mx.random.seed(117)
     model=OwnerBlocks(base['x'].shape[-1],base['relations'].shape[-1],width)
     if a.resume:model.load_weights(str(a.resume))
     else:model.cell.load_weights(str(a.transition));model.eq.load_weights(str(a.eq))
     if a.freeze_base:model.cell.freeze();model.eq.freeze()
+    if a.omit_cross_predictions:model.cross.freeze()
+    if a.identity_source:
+        model.immutable_source=True
     third_train=third_test=None;third_device=None;third_positive=None
     if a.third_train:
         third_train=dict(np.load(a.third_train,allow_pickle=False));third_test=dict(np.load(a.third_test,allow_pickle=False))
@@ -72,16 +84,21 @@ def main():
         for start in range(0,len(c['valid']),128):
             cc=device({k:v[start:start+128] for k,v in c.items()});pp=device({k:v[c['parent'][start:start+128]] for k,v in b.items()})
             first,second,blocks=replay(model,pp,cc)
-            scores=model.readout(blocks,cc['source_request'],cc['request'],cc['owner_request'])
+            scores=model.readout(blocks,cc['source_request'],cc['request'],cc['owner_request'],include_cross=not a.omit_cross_predictions)
             _,old=model.cell(pp['x'],pp['edges'],pp['mask'],pp['request'],pp['relations'])
             old_eq=model.eq(old,cc['source_request']);mx.eval(scores,first,second,blocks,old_eq)
             all_scores.append(tuple(np.array(v) for v in scores));old_scores.append(np.array(old_eq));accept.append((np.array(first)>=0)&(np.array(second)>=0))
             mse.append(np.mean((np.array(blocks[:,0])-c['source_target'][start:start+128])**2+(np.array(blocks[:,1])-c['target'][start:start+128])**2,axis=1))
         scores=[np.concatenate([s[i] for s in all_scores]) for i in range(3)]
         labels=[c[k] for k in ('source_eq_target','eq_target','cross_eq_target')];masks=[c[k] for k in ('source_eq_mask','eq_mask','cross_eq_mask')]
-        joint=joint_arrays(*scores,width);truth=joint_arrays(*labels,width);mask=joint_arrays(*masks,width)
+        raw_joint=joint_arrays(*scores,width);truth=joint_arrays(*labels,width);mask=joint_arrays(*masks,width)
+        known=[c[k] for k in ('source_known_eq','target_known_eq','cross_known_eq')]
+        if a.baked_eq:
+            from neural_baked_eq import apply as apply_proof
+            scores=[apply_proof(v,k,np) for v,k in zip(scores,known)]
+        joint=joint_arrays(*scores,width)
         pos=c['valid'];changed=pos&np.any((c['source_eq_before']!=c['source_eq_target'])&c['source_eq_mask'],axis=1)
-        report=dict(matching_errors=int((np.concatenate(accept)!=pos).sum()),two_block_mse=float(np.concatenate(mse)[pos].mean()),
+        report=dict(raw_combined=metrics(raw_joint[pos],truth[pos],mask[pos],2*width),baked_positive_pairs=int(joint_arrays(*known,width)[pos].sum()),matching_errors=int((np.concatenate(accept)!=pos).sum()),two_block_mse=float(np.concatenate(mse)[pos].mean()),
             combined=metrics(joint[pos],truth[pos],mask[pos],2*width),
             source_entry=metrics(scores[0][pos],labels[0][pos],masks[0][pos],width),
             target_entry=metrics(scores[1][pos],labels[1][pos],masks[1][pos],width),
@@ -102,13 +119,13 @@ def main():
     if third_test is not None:before['third_step']=evaluate_third(third_test)[0]
     print(json.dumps(dict(before=before,coverage=coverage)),flush=True)
     grad=nn.value_and_grad(model,objective);opt=optim.Adam(learning_rate=5e-4);rng=np.random.default_rng(119)
-    for step in range(a.steps):
+    for step in range(0 if a.evaluate_only else a.steps):
         ci=mx.array(rng.integers(len(chain['valid']),size=64));bi=mx.array(rng.integers(len(base['valid']),size=128))
         c={k:v[ci] for k,v in dc.items()};parent={k:v[c['parent']] for k,v in db.items()};batch={k:v[bi] for k,v in db.items()}
         third=None
         if third_device is not None:
             ti=mx.array(rng.choice(third_positive,size=64));third={k:v[ti] for k,v in third_device.items()}
-        value,g=grad(model,batch,parent,c,third);opt.update(model,g);mx.eval(value,model.parameters(),opt.state)
+        value,g=grad(model,batch,parent,c,third,a.baked_eq,a.omit_cross_predictions);opt.update(model,g);mx.eval(value,model.parameters(),opt.state)
         if step%100==0:print(json.dumps(dict(step=step,loss=float(value))),flush=True)
     after,arrays=evaluate(test,tc);training,_=evaluate(base,chain);novel=tc['valid']&~overlap
     after['unseen']=metrics(*(v[novel] for v in arrays),2*width)
@@ -124,7 +141,7 @@ def main():
     eq_current=dict(tree_flatten(model.eq.parameters()));eq_unchanged=all(np.array_equal(v,np.array(eq_current[k])) for k,v in frozen_eq.items())
     if not unchanged or not eq_unchanged:raise AssertionError('frozen model weights changed')
     model.save_weights(str(a.output.with_suffix('.safetensors')))
-    report=dict(scope='standalone GPU two-block semantic-owner learning; no runtime commits or saturation',synthetic_only_training=True,backpropagation=True,slot_width=width,token_blocks=2,floats_per_owner=256,train=coverage,test=test_coverage,test_input_overlap=int(overlap.sum()),before=before,after=after,training=training,steps=a.steps,interface_head_unchanged=unchanged,wall_seconds=time.perf_counter()-began,parent_transition_sha256=hashlib.sha256(a.transition.read_bytes()).hexdigest(),parent_eq_sha256=hashlib.sha256(a.eq.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),promoted_for_execution=False,limitations=['Fixed synthetic routing during differentiable training; independent device audit required','Two-block cost doubles resident floats versus a single token','No stable identity or incidence is supplied to the Eq readouts','No CPU audit rollback or full-stage scheduling integration'])
+    report=dict(scope='standalone GPU two-block semantic-owner learning; no runtime commits or saturation',synthetic_only_training=True,backpropagation=True,slot_width=width,token_blocks=2,floats_per_owner=256,train=coverage,test=test_coverage,test_input_overlap=int(overlap.sum()),before=before,after=after,training=training,steps=0 if a.evaluate_only else a.steps,evaluate_only=a.evaluate_only,baked_eq=a.baked_eq,omit_cross_predictions=a.omit_cross_predictions,identity_source=a.identity_source,interface_head_unchanged=unchanged,wall_seconds=time.perf_counter()-began,parent_transition_sha256=hashlib.sha256(a.transition.read_bytes()).hexdigest(),parent_eq_sha256=hashlib.sha256(a.eq.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),promoted_for_execution=False,limitations=['Fixed synthetic routing during differentiable training; independent device audit required','Two-block cost doubles resident floats versus a single token','No stable identity or incidence is supplied to the Eq readouts','No CPU audit rollback or full-stage scheduling integration'])
     report['base_frozen']=a.freeze_base
     report['frozen_cell_unchanged']=unchanged if a.freeze_base else None
     report['frozen_eq_unchanged']=eq_unchanged if a.freeze_base else None

@@ -138,6 +138,7 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                 if block_owner:
                     from neural_owner_blocks import supervision
                     packed.update(supervision(recipe,projections[0],values,target_values,ref,after,width))
+                    if np.any(packed['target_known_eq']&((packed['eq_target']==0)|~packed['eq_mask'])):raise AssertionError('static target proof contradicts independent labels')
                 items.append(dict(parent=record['index'],producer=producer,consumer=rid,**packed,request=request,target=target,valid=True,owner_covered=any(p['covered'] for p in projections)))
                 if transfers is not None:
                     for plan in projections:
@@ -176,7 +177,7 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                         negative.update(source_eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool),target_eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool))
                     if block_owner:
                         for key in ('source_request','owner_request'):negative[key]=packed[key]
-                        for key in ('source_target','source_eq_target','source_eq_before','source_eq_mask','cross_eq_target','cross_eq_mask'):negative[key]=np.zeros_like(packed[key])
+                        for key in ('source_target','source_eq_target','source_eq_before','source_eq_mask','cross_eq_target','cross_eq_mask','source_known_eq','target_known_eq','cross_known_eq'):negative[key]=np.zeros_like(packed[key])
                     items.append(dict(parent=record['index'],producer=producer,consumer=rid,**negative,request=request,target=np.zeros(128,np.float32),valid=False,owner_covered=False))
                     break
                 coverage.add((producer,rid));accepted+=1

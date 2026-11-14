@@ -23,7 +23,11 @@ def supervision(recipe,plan,source_values,target_values,before,after,width):
             a,b=source['slots'][i]['sort'],target['slots'][j]['sort']
             if a['kind']=='eq' and a==b:
                 mask[i,j]=True;cross[i,j]=after.root(sv)==after.root(tv)
-    return dict(source_request=template(source)[1],owner_request=request(compose(recipe,plan)),
+    from neural_baked_eq import compile_owner
+    known=compile_owner(recipe,plan,width)
+    for key,truth,valid in (('source_known_eq',new['eq_target'],new['eq_mask']),('cross_known_eq',cross.reshape(-1),mask.reshape(-1))):
+        if np.any(known[key]&((truth==0)|~valid)):raise AssertionError('static owner proof contradicts independent labels')
+    return dict(**known,source_request=template(source)[1],owner_request=request(compose(recipe,plan)),
         source_target=code(source,[after.root(v) for v in source_values],after),
         source_eq_target=new['eq_target'],source_eq_before=old['eq_target'],source_eq_mask=new['eq_mask'],
         cross_eq_target=cross.reshape(-1),cross_eq_mask=mask.reshape(-1))
@@ -31,7 +35,7 @@ def supervision(recipe,plan,source_values,target_values,before,after,width):
 
 class OwnerBlocks(nn.Module):
     def __init__(self,input_width,relation_width,width):
-        super().__init__();self.width=width
+        super().__init__();self.width=width;self.immutable_source=False
         self.cell=ordered_model(input_width,relation_width,True)
         self.cell.relation.freeze();self.cell.match_relation.freeze()
         self.eq=EqReadout(width)
@@ -42,12 +46,18 @@ class OwnerBlocks(nn.Module):
 
     def advance(self,source,inputs,edges,mask,source_request,target_request,owner_request,relations):
         accepted,target=self.cell.transition(inputs,edges,mask,target_request,relations)
-        features=mx.concatenate([source,target,source_request,target_request,owner_request],axis=-1)
-        updated=source+self.update_source(features)
+        if self.immutable_source:updated=source
+        else:
+            features=mx.concatenate([source,target,source_request,target_request,owner_request],axis=-1)
+            updated=source+self.update_source(features)
         return accepted,mx.stack([updated,target],axis=1)
 
-    def readout(self,blocks,source_request,target_request,owner_request):
+    def readout(self,blocks,source_request,target_request,owner_request,include_cross=True):
         a=self.eq(blocks[:,0],source_request);b=self.eq(blocks[:,1],target_request)
+        if not include_cross:
+            # No proposal is not an inequality proof. Full graph audit still
+            # charges every missing dynamic cross relation as a boundary.
+            return a,b,mx.full((blocks.shape[0],self.width*self.width),-1.,blocks.dtype)
         features=mx.concatenate([blocks[:,0],blocks[:,1],source_request,target_request,owner_request],axis=-1)
         return a,b,self.cross(features)
 
