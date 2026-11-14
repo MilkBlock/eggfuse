@@ -88,6 +88,7 @@ def main():
     p.add_argument('--completion-decoder',type=Path)
     p.add_argument('--completion-classifier',type=Path)
     p.add_argument('--snapshot-run',type=int,required=True);a=p.parse_args();start=time.monotonic()
+    if a.report.resolve()==a.output.with_suffix('.json').resolve():raise ValueError('label report must not overwrite training metadata')
     meta=json.loads(a.capture.with_suffix('.json').read_text());trace=json.loads(a.trace.read_bytes())
     if meta['capture']['schema']!='device-composed-witness/v1' or not meta['capture']['passed'] or hashlib.sha256(a.capture.read_bytes()).hexdigest()!=meta['capture']['artifact_sha256']:raise ValueError('capture provenance')
     if hashlib.sha256(a.trace.read_bytes()).hexdigest()!=meta['trace_sha256'] or hashlib.sha256(a.model.read_bytes()).hexdigest()!=meta['model_sha256']:raise ValueError('source provenance')
