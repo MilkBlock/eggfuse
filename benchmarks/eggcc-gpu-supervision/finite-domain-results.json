@@ -1,0 +1,64 @@
+{
+  "scope": "All typed source input partitions; bounded continuation census for one selected rule only",
+  "stage_manifest": {
+    "ruleset": "canon",
+    "source_rule_ids": [
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277
+    ],
+    "membership_authoritative": true,
+    "full_schedule_replaced_for_training": true
+  },
+  "rule": 0,
+  "source_samples": 40,
+  "valid_sources": 40,
+  "typed_input_partitions": {
+    "0": 5,
+    "1": 5,
+    "2": 5,
+    "3": 5,
+    "4": 5,
+    "5": 5,
+    "6": 5,
+    "7": 5
+  },
+  "legacy_positive": 10,
+  "continuations": {
+    "samples": 372,
+    "positive": 186,
+    "transfer_records": 186,
+    "coverage": {
+      "finite_boundary": true,
+      "boundary_domain": "fixed completed source plus consumer queries; prior source roots unchanged",
+      "combined_owner": false,
+      "combined_templates": 0,
+      "max_combined_slots": 0,
+      "chains": 372,
+      "positive": 186,
+      "negative": 186,
+      "negative_unavailable": 0,
+      "producer_consumer_pairs": 1,
+      "producers": [
+        0
+      ],
+      "consumers": [
+        0
+      ],
+      "compiled_owner_opportunities": 0,
+      "scope": "bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance"
+    }
+  },
+  "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+  "limitations": [
+    "No prior source-root changes in boundary domain",
+    "No unspecified external facts or scalar domains",
+    "Not all ruleset interactions or arbitrary-depth closure",
+    "Compiled candidates are not runtime ownership transfers"
+  ]
+}

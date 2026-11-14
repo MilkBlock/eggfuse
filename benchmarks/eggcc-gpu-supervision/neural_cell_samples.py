@@ -26,7 +26,7 @@ def apply_instance(ref,rule,binding):
     return slots
 
 
-def samples(recipe,count,seed,records=None,ordered=False,eq_targets=False):
+def samples(recipe,count,seed,records=None,ordered=False,eq_targets=False,input_cases=None):
     rng=np.random.default_rng(seed);rules=recipe['rules'];width=max(len(a['args']) for r in rules for a in r['query']);atoms=max(len(r['query']) for r in rules)
     relations=[];eq_labels=[];eq_masks=[];eq_width=max(len(r['slots']) for r in rules)
     xs=[];edges=[];masks=[];requests=[];ys=[];targets=[];rids=[];source_targets=[]
@@ -38,7 +38,7 @@ def samples(recipe,count,seed,records=None,ordered=False,eq_targets=False):
                 if 'slot' not in arg:raise ValueError('candidate generator currently requires slot query arguments')
                 occurrences.setdefault(arg['slot'],[]).append((ai,fi))
         repeats=[v for v in occurrences.values() if len(v)>1]
-        for example in range(count):
+        for example in range(len(input_cases[rid]) if input_cases is not None else count):
             values={}
             for slot,uses in occurrences.items():
                 sort=rule['slots'][slot]['sort']
@@ -49,8 +49,9 @@ def samples(recipe,count,seed,records=None,ordered=False,eq_targets=False):
                 elif sort['kind']=='String':value=dict(sort=sort['name'],value='s'+str(rng.integers(0,12)))
                 else:raise ValueError('unsupported synthetic scalar '+str(sort))
                 values[slot]=value
+            if input_cases is not None:values=input_cases[rid][example]
             rows=[dict(table=a['call']['table'],values=[dict(values[x['slot']]) for x in a['args']],subsumed=False) for a in rule['query']]
-            if example%2 and repeats:
+            if input_cases is None and example%2 and repeats:
                 uses=repeats[int(rng.integers(len(repeats)))];ai,fi=uses[-1];old=rows[ai]['values'][fi]
                 rows[ai]['values'][fi]=dict(old,eq='broken') if 'eq' in old else dict(old,value=old['value']+100 if isinstance(old['value'],int) else old['value']+'!')
             # Canonical constructor identity is authoritative even for negatives.

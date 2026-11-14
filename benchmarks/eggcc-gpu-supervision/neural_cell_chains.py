@@ -79,7 +79,7 @@ def pack_sources(sources,owners,ref,atoms,field_width):
     return dict(tokens=tokens,seed_x=seed_x,edges=edge,mask=mask,replace=replace)
 
 
-def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_targets=False,combined_owner=False,ordered_owner_request=True,block_owner=False,include_uncovered_transfers=False):
+def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_targets=False,combined_owner=False,ordered_owner_request=True,block_owner=False,include_uncovered_transfers=False,finite_boundary=False):
     if block_owner and (combined_owner or not eq_targets):raise ValueError('block owners require separate templates and Eq supervision')
     atoms=max(len(r['query']) for r in recipe['rules']);width=max(len(r['slots']) for r in recipe['rules']);items=[];coverage=set()
     combined_ids=set();max_combined_slots=0
@@ -102,7 +102,9 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                 exports[(atom['call']['table'],tuple(values[s] for s in ports))]=ports
         for rid,consumer in enumerate(recipe['rules']):
             accepted=0
-            for ref,binding in candidate_contexts(record['reference'],consumer,exports):
+            from finite_entry_domain import boundary_contexts
+            contexts=boundary_contexts if finite_boundary else candidate_contexts
+            for ref,binding in contexts(record['reference'],consumer,exports):
                 sources=[];owners=[];projections=[]
                 for atom in consumer['query']:
                     row=[binding[a['slot']] for a in atom['args']];key=(atom['call']['table'],tuple(row));ports=exports.get(key)
@@ -184,6 +186,6 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                     items.append(dict(parent=record['index'],producer=producer,consumer=rid,**negative,request=request,target=np.zeros(128,np.float32),valid=False,owner_covered=False))
                     break
                 coverage.add((producer,rid));accepted+=1
-                if accepted>=limit_per_consumer:break
+                if not finite_boundary and accepted>=limit_per_consumer:break
     if not items:raise ValueError('no effect-backed chains')
-    return {key:np.array([i[key] for i in items]) for key in items[0]},dict(combined_owner=combined_owner,combined_templates=len(combined_ids),max_combined_slots=max_combined_slots,chains=len(items),positive=sum(i['valid'] for i in items),negative=sum(not i['valid'] for i in items),negative_unavailable=sum(i['valid'] for i in items)-sum(not i['valid'] for i in items),producer_consumer_pairs=len(coverage),producers=sorted({p for p,_ in coverage}),consumers=sorted({c for _,c in coverage}),compiled_owner_opportunities=sum(i['owner_covered'] for i in items),scope='bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance')
+    return {key:np.array([i[key] for i in items]) for key in items[0]},dict(finite_boundary=finite_boundary,boundary_domain='fixed completed source plus consumer queries; prior source roots unchanged' if finite_boundary else 'fresh unbound consumer inputs; entry limit applies',combined_owner=combined_owner,combined_templates=len(combined_ids),max_combined_slots=max_combined_slots,chains=len(items),positive=sum(i['valid'] for i in items),negative=sum(not i['valid'] for i in items),negative_unavailable=sum(i['valid'] for i in items)-sum(not i['valid'] for i in items),producer_consumer_pairs=len(coverage),producers=sorted({p for p,_ in coverage}),consumers=sorted({c for _,c in coverage}),compiled_owner_opportunities=sum(i['owner_covered'] for i in items),scope='bounded effect-backed positive and mismatched-entry two-step tuples; not complete interaction enumeration or runtime ownership acceptance')
