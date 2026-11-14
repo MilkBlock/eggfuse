@@ -23,7 +23,8 @@ def main():
     for k in ('trace','model','output'):p.add_argument(k,type=Path)
     p.add_argument('--capture',type=Path)
     p.add_argument('--rules',default='283,293');p.add_argument('--snapshot-run',type=int,default=466)
-    p.add_argument('--capacity',type=int,default=128);p.add_argument('--ticks',type=int,default=24);a=p.parse_args()
+    p.add_argument('--flush-every',type=int,default=4);p.add_argument('--order-queries',action='store_true');p.add_argument('--capacity',type=int,default=128);p.add_argument('--ticks',type=int,default=24);a=p.parse_args()
+    if a.flush_every<1 or a.ticks<1:raise ValueError('positive execution window required')
     raw=a.trace.read_bytes();trace=json.loads(raw);ids_rule=[int(x) for x in a.rules.split(',')]
     if not all(trace.get(k) is True for k in ('strict_run_graphs_equal','strict_audit_reference_equal','run_control_counts_equal')):raise ValueError('unaudited trace')
     original=dict(trace['recipe'],rules=[trace['recipe']['rules'][i] for i in ids_rule])
@@ -34,6 +35,12 @@ def main():
     if len(boundary)!=1:raise ValueError('snapshot boundary')
     local,state,ids,rows=prepare_family(lowered,boundary[0],list(range(len(ids_rule))),a.capacity)
     blocks=[(0,compile_transition(local,r)) for r in range(len(ids_rule))]
+    if a.order_queries:
+        from collections import Counter
+        from device_query_join import order_query
+        counts=Counter(r['table'] for r in rows);table_rows={i:int(counts[t['name']]) for i,t in enumerate(local['tables'])}
+        blocks=[(st,dict(p,query=order_query(p['query'],table_rows))) for st,p in blocks]
+    query_orders=[p['query'].get('order',list(range(len(p['query']['atoms'])))) for _,p in blocks]
     blocks,catalog,atoms=compile_catalog(local,blocks,state['slots'].shape[1]);current=device(initialize(pack(state),atoms))
     plan=compile_completion(local,state['slots'].shape[1],include_unions=True)
     if plan['marks']:raise ValueError(plan['marks'])
@@ -41,6 +48,9 @@ def main():
     registry=eq_registry(ids,plan['eq_sort_names'],reserve);ctx=device(registry);cp=device(plan);dp=device(blocks)
     with np.load(a.model) as f:
         if str(f['encoding'])!='class-history-neighborhood-input' or int(f['channels'])!=4 or bool(f.get('source_neighborhood',False)) or bool(f.get('source_relations',False)):raise ValueError('model interface')
+        if 'family_semantics' in f:
+            family=[{k:r[k] for k in ('slots','query','effects')} for r in original['rules']]
+            if json.loads(str(f['family_semantics']))!=family:raise ValueError('calibrated model family mismatch')
         model=device({k:f[k] for k in ('w','coef')})
     schedule,meta=compile_schedule(dict(saturate=dict(run=stage)),[stage]);ds=device(schedule)
     control=dict(control=initial(ds,meta['repeat_slots'],mx),open_run=mx.array(False),unreported_change=mx.array(False),failed_run=mx.array(False))
@@ -49,11 +59,12 @@ def main():
     def step(s,n,c,e,r):return run(s,dp,model,cp,ds,meta['repeat_slots'],mx.array([True]),n,mx.array(len(ids)+reserve),mx.array(a.capacity),mx.array(True),r,1,mx,
         eq_context=e,eq_rounds=8,continuation=c,query_kernel=query,takeover_catalog=catalog,takeover_budget=8)
     compiled=mx.compile(step);started=time.monotonic()
-    for _ in range(a.ticks):
+    for tick_index in range(a.ticks):
         current,next_id,m=compiled(current,next_id,control,ctx,ready);ctx=m['eq_context'];ready=m['eq_settled']
         control={k:m[k] for k in ('control','open_run','unreported_change','failed_run')}
         frames.append(dict(state={k:v for k,v in current.items() if k in ('keys','present','visible','settled','effect_pc','slot_owner','owner_projection','owner_live','owner_epoch','owner_generation','owner_slots','owner_slot_roots','owner_slot_valid')},roots=ctx['roots'],next_id=next_id))
         logs.append({k:m[k] for k in ('run_done','run_changed','new_tokens','new_constructors','new_equivalences','takeover_released')});captures.append(m['query_captures'])
+        if (tick_index+1)%a.flush_every==0:mx.eval(current,next_id,m,logs[-a.flush_every:],captures[-a.flush_every:],frames[-a.flush_every:])
     mx.eval(current,next_id,m,logs,captures,frames);gpu_seconds=time.monotonic()-started
     started=time.monotonic();ref=Reference(original,rows,ids);cpu_frames=[];cpu_runs=ref.saturate(original['rules'],observe=lambda r,_:cpu_frames.append(deepcopy(r)))
     lowref=Reference(lowered,rows,ids);lowruns=lowref.saturate(lowered['rules'])
@@ -81,7 +92,7 @@ def main():
     passed=bool(m['finished']) and not bool(m['failed_run']) and len(boundary_checks)==len(cpu_runs) and all(b['passed'] for b in boundary_checks) and check['passed'] and lowering_check['passed'] and complete and per_rule_matches==[r['per_rule_applications'] for r in cpu_runs] and matched==source_counts and len(cpu_runs)==int(log['run_done'].sum()) and all(c['passed'] and c['enumeration_complete'] for c in checks)
     result=dict(scope='real selected construct/union family on GPU; not full Eggcc',rules=ids_rule,snapshot_run=a.snapshot_run,stage=stage,
         trace_sha256=hashlib.sha256(raw).hexdigest(),model_sha256=hashlib.sha256(a.model.read_bytes()).hexdigest(),lowered_sets=sites,
-        seed_rows=len(rows),generated_cells=int(log['new_tokens'].sum()),fresh_ids=int(next_id)-len(ids),original_cpu_fresh_ids=len(ref.parent)-len(ids),lowered_cpu_fresh_ids=len(lowref.parent)-len(ids),released_owner_rows=int(log['takeover_released'].sum()),generated_source_consumers=continued,
+        seed_rows=len(rows),query_order=query_orders,fixed_ticks=a.ticks,flush_every=a.flush_every,host_execution_flushes=a.ticks//a.flush_every,generated_cells=int(log['new_tokens'].sum()),fresh_ids=int(next_id)-len(ids),original_cpu_fresh_ids=len(ref.parent)-len(ids),lowered_cpu_fresh_ids=len(lowref.parent)-len(ids),released_owner_rows=int(log['takeover_released'].sum()),generated_source_consumers=continued,
         cpu_runs=cpu_runs,lowered_cpu_runs=lowruns,gpu_matches_per_run=matched,gpu_matches_per_rule=per_rule_matches,gpu_runs=int(log['run_done'].sum()),gpu_run_changes=log['run_changed'][log['run_done']].tolist(),
         graph_check=check,boundary_checks=boundary_checks,lowering_check=lowering_check,views_complete=complete,query_checks=checks,finished=bool(m['finished']),failed_run=bool(m['failed_run']),passed=passed,
         gpu_compile_upload_execute_seconds=gpu_seconds,cpu_reference_and_audit_seconds=time.monotonic()-started,
@@ -95,7 +106,7 @@ def main():
                     if bool(c['recorded']):payload.update(flatten(c,f'capture/{ti}/{inner}/{block}/'))
         np.savez_compressed(a.capture,**payload)
         result['capture']=dict(schema='device-composed-witness/v1',artifact_sha256=hashlib.sha256(a.capture.read_bytes()).hexdigest(),passed=True,target_labels_included=False,logical_array_bytes=sum(x.nbytes for x in payload.values()))
-        a.capture.with_suffix('.json').write_text(json.dumps(dict(recipe=local,original_recipe=original,source_rules=ids_rule,model_sha256=result['model_sha256'],trace_sha256=result['trace_sha256'],capture=result['capture']),indent=2)+'\n')
+        a.capture.with_suffix('.json').write_text(json.dumps(dict(recipe=local,original_recipe=original,snapshot_run=a.snapshot_run,source_rules=ids_rule,model_sha256=result['model_sha256'],trace_sha256=result['trace_sha256'],capture=result['capture']),indent=2)+'\n')
     a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
     if not passed:raise SystemExit(1)
 

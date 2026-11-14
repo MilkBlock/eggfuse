@@ -26,6 +26,18 @@ def compile_query(recipe,rid,views=None):
     return dict(rule=rid,width=len(rule['slots']),atoms=atoms,required=sorted(required),covered=not reasons,reasons=sorted(set(reasons)))
 
 
+def order_query(plan,table_rows):
+    """Bake one immutable query order from initialization cardinalities.
+
+    Original atom ordinals and preferred witness origins remain authoritative.
+    Estimates affect scheduling only, never completeness or equality proof.
+    """
+    if not plan['covered']:raise ValueError('cannot reorder unsupported query')
+    counts=[table_rows[a['view']['table']] for a in plan['atoms']]
+    if any(type(c) is not int or c<0 for c in counts):raise ValueError('invalid query estimate')
+    return dict(plan,order=sorted(range(len(counts)),key=lambda i:(counts[i],i)))
+
+
 def match(state,plan,capacity,external_complete,eq_settled,xp):
     if capacity<1:raise ValueError('positive binding capacity required')
     if not plan['covered']:raise ValueError('query contains unsupported atoms')
@@ -34,8 +46,11 @@ def match(state,plan,capacity,external_complete,eq_settled,xp):
     live=xp.arange(capacity)==0;bound=set();eq_bound=set();overflow=xp.array(False)
     complete=xp.array(external_complete,dtype=xp.bool_)&xp.array(eq_settled,dtype=xp.bool_)
     witnesses=xp.full((capacity,len(plan['atoms'])),-1,xp.int32);records=xp.full_like(witnesses,-1)
-    candidate_lanes=0
-    for atom_index,atom in enumerate(plan['atoms']):
+    candidate_lanes=0;source_origin={}
+    order=plan.get('order',list(range(len(plan['atoms']))))
+    if sorted(order)!=list(range(len(plan['atoms']))):raise ValueError('invalid query order')
+    for atom_index in order:
+        atom=plan['atoms'][atom_index]
         view=project(state,atom['view'],external_complete,eq_settled,xp,include_fields=True)
         complete=complete&view['complete'];n=view['live'].shape[0];candidate_lanes+=capacity*n
         # Shared Cell views may expose the same logical fact repeatedly. Remove
@@ -63,7 +78,8 @@ def match(state,plan,capacity,external_complete,eq_settled,xp):
         witnesses=xp.where(atom_mask,view['source'][fact,None],witnesses[parent])
         records=xp.where(atom_mask,view['record'][fact,None],records[parent])
         for slot,field in first.items():
-            if slot in bound:continue
+            if slot in source_origin and source_origin[slot]<atom_index:continue
+            source_origin[slot]=atom_index
             mask=xp.arange(width)[None,:]==slot
             values=xp.where(mask,view['values'][fact,field,None],values)
             roots=xp.where(mask,view['value_roots'][fact,field,None],roots)

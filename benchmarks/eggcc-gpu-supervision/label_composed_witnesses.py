@@ -132,7 +132,7 @@ def main():
         feature_reconstruction_max_abs=numerical,cpu_label_and_capture_audit_seconds=time.monotonic()-start,
         target_scope='original-rule CPU selected-family saturation; labels cover semantic Cell slots; compiler temporaries excluded where declared',backpropagation=False,
         limitations=['Labels are final family states, not every intermediate state','Selected context rules, not full Eggcc','Source tokens come from exact completed GPU states; recursive predicted-source rollout not established'])
-    a.output.with_suffix('.json').write_text(json.dumps(dict(meta,semantic_recipe=semantic_recipe,capture=result),indent=2)+'\n')
+    a.output.with_suffix('.json').write_text(json.dumps(dict(meta,semantic_recipe=semantic_recipe,snapshot_run=a.snapshot_run,seed_scalars={str(i):v for i,v in seed_values.items() if 'eq' not in v},capture=result),indent=2)+'\n')
     a.report.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
 
 if __name__=='__main__':main()

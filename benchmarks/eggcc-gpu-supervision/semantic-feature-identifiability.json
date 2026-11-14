@@ -1,0 +1,100 @@
+{
+  "scope": "empirical exact-input ambiguity audit; not accuracy of a fitted model",
+  "parts": [
+    {
+      "case": "024-pascals-row",
+      "partition": "train",
+      "sha256": "793a810832d9ddb8a37f5128e3667d317038a0d6682ddfac09dd46f574248903",
+      "ceilings": {
+        "floating_input": {
+          "samples": 40,
+          "distinct_inputs": 15,
+          "conflicting_input_groups": 5,
+          "samples_in_conflicting_groups": 17,
+          "maximum_exact_samples": 35,
+          "maximum_fraction": 0.875
+        },
+        "plus_input_relations": {
+          "samples": 40,
+          "distinct_inputs": 15,
+          "conflicting_input_groups": 5,
+          "samples_in_conflicting_groups": 17,
+          "maximum_exact_samples": 35,
+          "maximum_fraction": 0.875
+        },
+        "full_selected_sources": {
+          "samples": 40,
+          "distinct_inputs": 14,
+          "conflicting_input_groups": 5,
+          "samples_in_conflicting_groups": 17,
+          "maximum_exact_samples": 35,
+          "maximum_fraction": 0.875
+        }
+      }
+    },
+    {
+      "case": "016-gcd",
+      "partition": "validation",
+      "sha256": "61eba38b555b3647e156ff319beceaa68b60eaf3bcb92db480d77ea7ffea3fcb",
+      "ceilings": {
+        "floating_input": {
+          "samples": 41,
+          "distinct_inputs": 19,
+          "conflicting_input_groups": 3,
+          "samples_in_conflicting_groups": 16,
+          "maximum_exact_samples": 38,
+          "maximum_fraction": 0.926829268292683
+        },
+        "plus_input_relations": {
+          "samples": 41,
+          "distinct_inputs": 19,
+          "conflicting_input_groups": 3,
+          "samples_in_conflicting_groups": 16,
+          "maximum_exact_samples": 38,
+          "maximum_fraction": 0.926829268292683
+        },
+        "full_selected_sources": {
+          "samples": 41,
+          "distinct_inputs": 19,
+          "conflicting_input_groups": 3,
+          "samples_in_conflicting_groups": 16,
+          "maximum_exact_samples": 38,
+          "maximum_fraction": 0.926829268292683
+        }
+      }
+    }
+  ],
+  "combined": {
+    "floating_input": {
+      "samples": 81,
+      "distinct_inputs": 30,
+      "conflicting_input_groups": 9,
+      "samples_in_conflicting_groups": 44,
+      "maximum_exact_samples": 69,
+      "maximum_fraction": 0.8518518518518519
+    },
+    "plus_input_relations": {
+      "samples": 81,
+      "distinct_inputs": 30,
+      "conflicting_input_groups": 9,
+      "samples_in_conflicting_groups": 44,
+      "maximum_exact_samples": 69,
+      "maximum_fraction": 0.8518518518518519
+    },
+    "full_selected_sources": {
+      "samples": 81,
+      "distinct_inputs": 29,
+      "conflicting_input_groups": 9,
+      "samples_in_conflicting_groups": 44,
+      "maximum_exact_samples": 69,
+      "maximum_fraction": 0.8518518518518519
+    }
+  },
+  "backpropagation": false,
+  "grouping_uses_labels": false,
+  "limitations": [
+    "Ceilings apply only to this empirical sample set and stated inputs",
+    "Full selected-source signature is an offline diagnostic, not a GPU feature implementation",
+    "No extra graph neighbors or future outputs enter context signatures"
+  ]
+}
