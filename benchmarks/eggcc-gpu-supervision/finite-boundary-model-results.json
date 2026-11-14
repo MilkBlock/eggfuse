@@ -1,0 +1,531 @@
+{
+  "scope": "boundary Eq only: native derivations plus checked total model; no global saturation, future-constructor or retirement claim",
+  "certified": 16,
+  "inconclusive": 4,
+  "artifact": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/enumerated-boundary-models.json",
+  "artifact_sha256": "eda889af551a591e48fef3bc71a606598f116ce898c054a585cbc514445c9963",
+  "records": [
+    {
+      "index": 187,
+      "input_sha256": "343f775b51271810624f8a5eaa8886de734bbe259fcd0850d11de1e2b4d8e762",
+      "source_archive_sha256": "08bdfd3ceda7eb5fca641ff4e1ca9458051c9013097bde7c2240e2a34227aa2e",
+      "native_archive_sha256": "76b059bdeca4b923e5f1c412c0cb8c34350fcf858544100bcba7c81b557ae9d0",
+      "proof": {
+        "checked_ground_instances": 96,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 190,
+      "input_sha256": "a5a9e08d0f65e956e290f64bf2f87ddae39e2a7e2e443ccdb4e04f33509e2a68",
+      "source_archive_sha256": "9fa2b54a4a01c164df9157a943c42ba72f3f2dc59309cfc172f3f066cb5eb2a0",
+      "native_archive_sha256": "2e7d8c21f4c5cc6c7a02251b15db94ec7536cb3911716cff54a693a7ac0cd7aa",
+      "proof": {
+        "checked_ground_instances": 96,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 193,
+      "input_sha256": "630f4e9d50598c72e735eb7ae29aef969ba7ecb6da832afb6ebe52b9a10977ea",
+      "source_archive_sha256": "0bad2afdd1d48633143cfc79679d1ddbf9d5c694b3e527405f19dea2d03f63a3",
+      "native_archive_sha256": "39a9cbc9c758e230e42118f2f489ce47296e5ea0ffa130fbfe104938fabb3903",
+      "proof": {
+        "checked_ground_instances": 180,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 194,
+      "input_sha256": "61a4a13d97243870528895e9d97fb1ab35d9e33162821600c15f5690fc15a5ed",
+      "source_archive_sha256": "b6fa053ad82d64cf5f15fd367b13216d616bc5d4530d71af4e22a82dd826b707",
+      "native_archive_sha256": "923b23fdf096b5ebc2ef94061daffeb48c8a8dbcbb130e2fe2e5a9719a7be432",
+      "proof": {
+        "checked_ground_instances": 96,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 197,
+      "input_sha256": "4995fc88484d80a63b99bf138735e032a0da7cae3fbf9b31f1ec659d175ece2a",
+      "source_archive_sha256": "7ef6a8c29d87a5dd83f2a1477f326261b3fd9ba1b8851cb8c4d8bb9a59c04d7b",
+      "native_archive_sha256": "999fa66cd31737e8cd63ea604e11fa9d013e2b586f64613191c1a8619cf67e8b",
+      "proof": {
+        "checked_ground_instances": 96,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 198,
+      "input_sha256": "95cbb511ab7a364ce9a404f0deb26a2b6e9291ffc50994ab1aaab10e79f688e4",
+      "source_archive_sha256": "13e2a7a9e2cd44420a76e462dad9748b0cc39f05c839200bc77ee01aa6629cde",
+      "native_archive_sha256": "5e4268d8075b99719dd16cdb33e03854b3f5bb5b9f70fd87c30af1c1b59115c5",
+      "proof": {
+        "checked_ground_instances": 96,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 220,
+      "input_sha256": "b088b961571a7ac59cfc09c631e2203ca85b0bcb15a6b4b7f107dc5f04c6bcd0",
+      "source_archive_sha256": "5548bd8020dff76fc7c7c239159e326a2f900e1e640314bc9e75157164d89c79",
+      "native_archive_sha256": "0225c592712f0cf7566e3e4daacd86e06efc464b77506254799df8690b92b2f1",
+      "proof": {
+        "checked_ground_instances": 84,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 221,
+      "input_sha256": "6944d43b8709f2ad036a0e8983a09b019c657de7961d20c7a94dc6058638fbad",
+      "source_archive_sha256": "c8531dbc13d9e1952beaf4f1c844215bc1bd4a5cadb7f9c8b07281bd421019db",
+      "native_archive_sha256": "3ef450d98018c82e2257a2742528d016df80e9df5c65869d085d27e63e66b955",
+      "proof": {
+        "checked_ground_instances": 84,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 227,
+      "input_sha256": "b080c2994ded40820381ef3352117fe1f9c87ae0457bfd9f27c8c48c5e2809d1",
+      "source_archive_sha256": "774f0efc42f83e366746273a2a47190592ce3cf0fbd6169794124e95dfe951c2",
+      "native_archive_sha256": "9937fbe05499b183dd9538d5a39be973bc0c4bd684836bd5a37cc271980ec346",
+      "proof": {
+        "checked_ground_instances": 12,
+        "valid": true
+      },
+      "boundary_exact": false,
+      "native_partition": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "model_partition": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      "status": "inconclusive"
+    },
+    {
+      "index": 228,
+      "input_sha256": "80a4f8959e0f60dbef1043a9307cd68c232621456ec29f3abc3674806720eb0e",
+      "source_archive_sha256": "4c800c87d466adb8a8d101e14447f9e63c4f1bcbf63bd2fd93d83f9bd8a01481",
+      "native_archive_sha256": "36eafb635e3986991970c869946e9cd36324ee41915478234240e69e1c06a437",
+      "proof": {
+        "checked_ground_instances": 24,
+        "valid": true
+      },
+      "boundary_exact": false,
+      "native_partition": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        2,
+        3
+      ],
+      "status": "inconclusive"
+    },
+    {
+      "index": 462,
+      "input_sha256": "f1aa05aca1af9dc6eda22b8a041b090252303aaff71125897a9d38820ba8b36c",
+      "source_archive_sha256": "4a87e2830db344d8a64a9ef5bd6ec6f663293ef6f4556bbdcab67091a5f7ab0d",
+      "native_archive_sha256": "a344abc757ab45107a2d15ae5b667310200b86a06d228bc904421798e06b6abf",
+      "proof": {
+        "checked_ground_instances": 72,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 465,
+      "input_sha256": "5716ecb368b8fb9d14a930227f48a82123af914c53a4c6c274aa1e438f722276",
+      "source_archive_sha256": "55ce6bb409cc1436a3d9fd4436be75356558e2218890beb3bea2aab96f5d8ffc",
+      "native_archive_sha256": "30aa135fdeb8b9c4826340194a074b468f4ee13e3e93d40cb3ce62d89d993897",
+      "proof": {
+        "checked_ground_instances": 72,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 468,
+      "input_sha256": "3a7b863ed6f7ea48d46208af45472611eb3eac210780c622fa3d32a410d3ded5",
+      "source_archive_sha256": "c913bdf9ade16fb02e6af9b6ec30c449c01a17cd3b963169061d36ed761a5f19",
+      "native_archive_sha256": "4726a32f247864b54abd81153fd233833c904b2d8ee748015206d236d3b4bd55",
+      "proof": {
+        "checked_ground_instances": 135,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 469,
+      "input_sha256": "78ca44a3857569297dbb7b67dae56b31c3ba02fb68dd8c42d0b78a1b3d2a3aa6",
+      "source_archive_sha256": "d6ff92052a2d6ad831d84be1a3045a5d7c96f5bc3a508acfdb4d1bf6629a3d44",
+      "native_archive_sha256": "6e843e761091de239d2f4759cbcab2628bcc358887bdbd56e788d92d8df29fe9",
+      "proof": {
+        "checked_ground_instances": 72,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 472,
+      "input_sha256": "47b118c047901699092d18404d024c06a36be698333133d395628990e8073142",
+      "source_archive_sha256": "e70fb60b3e8a731fa5d817ba02d79a629a90e4d2918eb8b4986e4bb89d2fe4e3",
+      "native_archive_sha256": "7c73106c836cd8830d2903e2172c9c63d355f7c1036ae1be05898b86926aa7ac",
+      "proof": {
+        "checked_ground_instances": 72,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 473,
+      "input_sha256": "f61464410e1149f213fc7e07ffdda206f6f2aa512f7b795ba62fb0b30097811e",
+      "source_archive_sha256": "4f1428ab06f4b49086e3c2296404c04096c72859999b20b013fcd2dd5b15c6d0",
+      "native_archive_sha256": "6ebcfe4489b5dd01d6137899c3543269ee32283afe000d0959853e550c5b8200",
+      "proof": {
+        "checked_ground_instances": 72,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 495,
+      "input_sha256": "d5dabff7adb6a9d5e3e62b0df67f96abc008605b874767777332744afd630a86",
+      "source_archive_sha256": "3efe9dc7e9e8e4659dd9cfad924809f5e6ea0970b5f77791433b0849aefda8aa",
+      "native_archive_sha256": "65c4c3045d59f3a9959d9a72f053cd7d6c0ba96b537e1ad81b1c182db8f98c9f",
+      "proof": {
+        "checked_ground_instances": 63,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 496,
+      "input_sha256": "589bf185ba6fb22dc616d2ffdc10cebe7ed4505379ec70394b923ac053c2a7c3",
+      "source_archive_sha256": "c5c6da7f04da94d83bcc756075c10e99e0941dd356fdcec08147c2247ba2d1ac",
+      "native_archive_sha256": "f71884929536fb6aa4510ae15a9ea20978cbff7cd9fa0e5486dab532fe328670",
+      "proof": {
+        "checked_ground_instances": 63,
+        "valid": true
+      },
+      "boundary_exact": true,
+      "native_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "status": "boundary_eq_certified"
+    },
+    {
+      "index": 502,
+      "input_sha256": "cc0b22002ce498cc59d3b0787c9662360883225817cff8b975f3bf8f0b22dcda",
+      "source_archive_sha256": "0da1b8340bc1c2e99f7d3a206174a10301d057cb69893c8fed7d71c0d818a4c6",
+      "native_archive_sha256": "711f82136e2a7c3489eacf9256fedb3d8aa10456ebac6b906809eba1e9534413",
+      "proof": {
+        "checked_ground_instances": 9,
+        "valid": true
+      },
+      "boundary_exact": false,
+      "native_partition": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "model_partition": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      "status": "inconclusive"
+    },
+    {
+      "index": 503,
+      "input_sha256": "af8846a25941ddf6b46c32cd27c671b075f5be73868ce2553b2b8c04a60ab812",
+      "source_archive_sha256": "17fe4880808295260f5f1fc84bae68476d547a699cd67d49bae004f55377e0f9",
+      "native_archive_sha256": "49a0a004d526063dc403f2f0373607932fd3013393c21b1a2cc545c68e17fe97",
+      "proof": {
+        "checked_ground_instances": 18,
+        "valid": true
+      },
+      "boundary_exact": false,
+      "native_partition": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "model_partition": [
+        0,
+        1,
+        2,
+        2,
+        2,
+        3
+      ],
+      "status": "inconclusive"
+    }
+  ],
+  "total_boundary_labeled": 503,
+  "total_enumerated": 507
+}
