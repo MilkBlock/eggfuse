@@ -1,0 +1,218 @@
+{
+  "scope": "Selected-family actual feedback error diagnosis and offline synthetic expansion; no speed or full Eggcc runtime claim",
+  "recorded_predictions_verified": 140,
+  "rules": {
+    "0": {
+      "training_rows": 1286,
+      "conflicting_inputs": 0,
+      "validation": 22,
+      "correct": 20,
+      "unseen_targets": 0,
+      "exact_training_inputs": 0,
+      "nearest_target_correct": 21,
+      "confusion": [
+        {
+          "target": 0,
+          "predicted": 0,
+          "count": 9
+        },
+        {
+          "target": 0,
+          "predicted": 1,
+          "count": 2
+        },
+        {
+          "target": 1,
+          "predicted": 1,
+          "count": 11
+        }
+      ]
+    },
+    "1": {
+      "training_rows": 1044,
+      "conflicting_inputs": 0,
+      "validation": 98,
+      "correct": 69,
+      "unseen_targets": 0,
+      "exact_training_inputs": 0,
+      "nearest_target_correct": 17,
+      "confusion": [
+        {
+          "target": 0,
+          "predicted": 0,
+          "count": 50
+        },
+        {
+          "target": 0,
+          "predicted": 4,
+          "count": 11
+        },
+        {
+          "target": 0,
+          "predicted": 7,
+          "count": 14
+        },
+        {
+          "target": 0,
+          "predicted": 9,
+          "count": 2
+        },
+        {
+          "target": 0,
+          "predicted": 10,
+          "count": 1
+        },
+        {
+          "target": 7,
+          "predicted": 0,
+          "count": 1
+        },
+        {
+          "target": 7,
+          "predicted": 7,
+          "count": 19
+        }
+      ]
+    },
+    "2": {
+      "training_rows": 779,
+      "conflicting_inputs": 0,
+      "validation": 20,
+      "correct": 1,
+      "unseen_targets": 0,
+      "exact_training_inputs": 0,
+      "nearest_target_correct": 13,
+      "confusion": [
+        {
+          "target": 0,
+          "predicted": 0,
+          "count": 1
+        },
+        {
+          "target": 0,
+          "predicted": 4,
+          "count": 5
+        },
+        {
+          "target": 0,
+          "predicted": 7,
+          "count": 1
+        },
+        {
+          "target": 0,
+          "predicted": 9,
+          "count": 11
+        },
+        {
+          "target": 7,
+          "predicted": 4,
+          "count": 1
+        },
+        {
+          "target": 7,
+          "predicted": 14,
+          "count": 1
+        }
+      ]
+    }
+  },
+  "probe": {
+    "selected_inputs": 14,
+    "interfaces": 18,
+    "native_status": {
+      "pass": 12,
+      "timeout": 2
+    },
+    "gpu_passes": 12,
+    "totals": {
+      "samples": 99,
+      "generated_source_consumers": 23,
+      "released_owner_rows": 76
+    }
+  },
+  "fits": {
+    "merged": {
+      "head_sha256": "a8dfe20930b4557e416520cad74c4e578f63d674e65c84ca6c2b7b28d299df08",
+      "training_entries": 641,
+      "validation": [
+        {
+          "case": "016-gcd",
+          "groups": {
+            "all": {
+              "instances": 41,
+              "exact_partitions": 26
+            },
+            "direct": {
+              "instances": 26,
+              "exact_partitions": 14
+            },
+            "generated": {
+              "instances": 15,
+              "exact_partitions": 12
+            }
+          }
+        },
+        {
+          "case": "019-lcm",
+          "groups": {
+            "all": {
+              "instances": 99,
+              "exact_partitions": 65
+            },
+            "direct": {
+              "instances": 78,
+              "exact_partitions": 45
+            },
+            "generated": {
+              "instances": 21,
+              "exact_partitions": 20
+            }
+          }
+        }
+      ]
+    },
+    "multi-probe": {
+      "head_sha256": "6c2ca015caa8e2c1dd43573233b6fd9f0581989a3665ca8670a23ad7034b661b",
+      "training_entries": 653,
+      "validation": [
+        {
+          "case": "016-gcd",
+          "groups": {
+            "all": {
+              "instances": 41,
+              "exact_partitions": 29
+            },
+            "direct": {
+              "instances": 26,
+              "exact_partitions": 17
+            },
+            "generated": {
+              "instances": 15,
+              "exact_partitions": 12
+            }
+          }
+        },
+        {
+          "case": "019-lcm",
+          "groups": {
+            "all": {
+              "instances": 99,
+              "exact_partitions": 40
+            },
+            "direct": {
+              "instances": 78,
+              "exact_partitions": 20
+            },
+            "generated": {
+              "instances": 21,
+              "exact_partitions": 20
+            }
+          }
+        }
+      ]
+    }
+  },
+  "promoted": false,
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/multi-producer-probe-v1.tar.gz",
+  "archive_sha256": "77b0fdab89d4f62dfa835dda0ed6d2376606a0c64ddf187d7eae4c3c00f45927"
+}

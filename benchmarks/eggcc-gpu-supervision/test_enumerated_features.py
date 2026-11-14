@@ -22,6 +22,18 @@ class FeatureAudit(unittest.TestCase):
         extended=np.concatenate([x,np.arange(3)[:,None]],axis=1)
         self.assertEqual(feature_conflicts(extended,y)['conflicting_groups'],0)
 
+    def test_unseen_target_and_wrong_prediction_remain_separate(self):
+        train=[self.row(0)]
+        known=dict(self.row(0),prediction=1)
+        unknown=dict(self.row(1),prediction=1)
+        rows=diagnose(train,[known,unknown])['validation']
+        self.assertTrue(rows[0]['target_seen'])
+        self.assertFalse(rows[0]['correct'])
+        self.assertFalse(rows[1]['target_seen'])
+        self.assertTrue(rows[1]['correct'])
+        self.assertTrue(rows[0]['nearest_correct'])
+        self.assertFalse(rows[1]['nearest_correct'])
+
     def test_signed_zero_and_nonfinite(self):
         self.assertEqual(feature_key([0.],[False]),feature_key([-0.],[False]))
         with self.assertRaises(ValueError):feature_key([np.nan],[False])
