@@ -37,6 +37,31 @@ class SourceRun(unittest.TestCase):
         _,_,_,m3=execute(second,r2,n2,frames,plans,Model(),head,2,mx)
         self.assertTrue(bool(m3['query_exhausted']));self.assertEqual(int(m3['admitted']),0)
 
+    def test_current_state_runs_ignore_poisoned_historical_latents(self):
+        from device_current_cell_inputs import current_candidates
+        class CurrentModel(Model):
+            def current_candidate_batch(self, state, frames, plan, xp):
+                encoder=lambda x:xp.tanh(x.reshape(len(x),-1,128).sum(axis=1))
+                return current_candidates(state,frames,plan,encoder,
+                                          xp.array(True),xp.array(True),xp)
+        local,state,roots,n,frames,plans=self.fixture()
+        head=lambda t,r:mx.full((len(t),3),-1.)
+        model=CurrentModel()
+        for expected in ({'F','G'},{'F','G','H'},{'F','G','H'}):
+            state=dict(state,tokens=mx.full_like(state['tokens'],float('nan')),
+                       token_dirty=mx.ones_like(state['present']))
+            state,roots,n,report=execute(state,roots,n,frames,plans,model,head,2,mx)
+            self.assertTrue(bool(report['query_exhausted']))
+            self.assertFalse(bool(report['needs_attention']))
+            facts,covered=facts_from_cells(local,{k:np.array(v) for k,v in state.items()})
+            self.assertTrue(covered)
+            self.assertEqual({t for t,_,_ in facts},expected)
+        self.assertEqual(int(report['admitted']),0)
+        # Opting into current-state execution must not certify old latents.
+        self.assertTrue(bool(mx.any(state['token_dirty'] & state['present'])))
+        _,_,_,old=execute(state,roots,n,frames,plans,Model(),head,2,mx)
+        self.assertTrue(bool(old['needs_attention']))
+
     def test_budget_or_disabled_run_cannot_claim_query_exhaustion(self):
         _,state,roots,n,frames,plans=self.fixture();head=lambda t,r:mx.full((len(t),3),-1.)
         _,_,_,m=execute(state,roots,n,frames,plans,Model(),head,1,mx)

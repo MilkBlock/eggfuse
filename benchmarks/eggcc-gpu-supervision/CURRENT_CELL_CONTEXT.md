@@ -61,3 +61,26 @@ are outside Git under `current-cell-v36`.
 python neural_third_step.py TRACE DATA.npz --ruleset canon --current-state --include-uncovered-transfers --count 1 --per-pair 1
 python train_current_cell.py DATA.npz FIT.json --steps 600
 ```
+
+## Admission integration
+
+`CurrentCellModel.current_candidate_batch` explicitly opts into current-state
+inputs. `advance` uses this path for the sealed query snapshot; RHS effects still
+use the current write state. Field capacity comes from the trained model and
+undersized layouts raise instead of truncating. The ordinary recurrent path is
+unchanged.
+
+Only this mode bypasses historical-latent dirty checks during candidate resolution
+and commit. Original dirty metadata is preserved in the resulting state, so
+switching back to the recurrent path cannot consume uncertified old latents.
+Exact ownership generations, witness checks, visibility, capacity, finite new
+outputs and current-state completeness remain required. Existing forward witness
+context checks may still block uncovered cases; they have not been waived.
+
+A controlled-head GPU test poisons historical latents with NaN and marks them
+dirty before each Run. Run one adds G from F; Run two adds H from G; Run three
+admits nothing. New facts remain invisible until the next source Run. Switching
+back to the recurrent path blocks on the preserved dirty metadata. This proves
+execution-path independence from historical latents, not trained-model accuracy
+or complete saturation of arbitrary rulesets. The learned checkpoint still needs
+a full independent Run audit.

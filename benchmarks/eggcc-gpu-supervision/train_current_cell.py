@@ -15,8 +15,18 @@ from neural_eq_readout import EqReadout, masked_loss, metrics
 class CurrentCellModel(nn.Module):
     def __init__(self, fields, relations, slots):
         super().__init__()
+        self.field_capacity = fields // 128
         self.cell = ordered_model(fields, relations, True)
         self.eq = EqReadout(slots)
+
+    def current_candidate_batch(self, state, frames, plan, xp):
+        from device_current_cell_inputs import current_candidates
+        return current_candidates(state, frames, plan, self.cell.encode,
+                                  xp.array(True), xp.array(True), xp,
+                                  field_capacity=self.field_capacity)
+
+    def transition(self, *args):
+        return self.cell.transition(*args)
 
     def __call__(self, batch):
         # Explicit allowlist: CPU labels, provenance and history never enter.

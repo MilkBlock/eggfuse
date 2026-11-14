@@ -17,7 +17,10 @@ def key_view(keys,roots,xp):
 def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_head,enabled,xp,capture=False,query_state=None):
     # A source Run can seal its matching input while effects accumulate in
     # state. RHS witness/lifetime checks still use the current write state.
-    batch=candidates(state if query_state is None else query_state,frames,query_plan,xp.array(True),xp.array(True),xp)
+    current_state_model=hasattr(model,'current_candidate_batch')
+    read_state=state if query_state is None else query_state
+    batch=(model.current_candidate_batch(read_state,frames,query_plan,xp) if current_state_model else
+           candidates(read_state,frames,query_plan,xp.array(True),xp.array(True),xp))
     logits,tokens=model.transition(batch['tokens'],batch['edges'],batch['mask'],batch['request'],batch['relations'])
     scores=eq_head(tokens,batch['request'])
     finite=xp.isfinite(logits)&xp.all(xp.isfinite(tokens),axis=1)&xp.all(xp.isfinite(scores),axis=1)
@@ -27,7 +30,8 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
     proposed,valid=key_view(keys,roots,xp);resident,resident_valid=key_view(state['keys'],roots,xp)
     known=xp.any(xp.all(proposed[:,None,:]==resident[None,:,:],axis=2)&state['present'][None,:],axis=1)
     novel=eligible&valid&~known
-    dirty=xp.any(state['present']&state.get('token_dirty',xp.zeros_like(state['present'])))
+    dirty=(xp.array(False) if current_state_model else
+           xp.any(state['present']&state.get('token_dirty',xp.zeros_like(state['present']))))
     blocked=(~batch['complete']|dirty|xp.any(batch['live']&~finite)
              |xp.any(state['present']&~resident_valid)|xp.any(eligible&~valid))
     selected=xp.argmax(novel.astype(xp.int32));requested=enabled&~blocked&xp.any(novel)
@@ -37,15 +41,16 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
         from device_witness_context import inspect
         context_invalid=inspect(state,batch['sources'][selected],batch['mask'][selected],batch['generations'][selected],context_depth,xp)[3]
     payload,proposed_roots,ready=frame_payload(state,frame_plan,batch,selected,scores[selected],next_id,roots,xp)
-    result,marks=install(state,payload,proposed_roots,batch,selected,tokens[selected],rule_id,frame_plan['inputs'],ready&requested&~context_invalid,xp)
+    result,marks=install(state,payload,proposed_roots,batch,selected,tokens[selected],rule_id,frame_plan['inputs'],ready&requested&~context_invalid,xp,current_state_inputs=current_state_model)
     accepted=xp.any(marks['accepted'])
+    latent_refresh=marks['token_refresh_required']&xp.array(not current_state_model)
     event=dict(
         admitted=accepted,audit_pending=accepted,selected=selected,
         key=keys[selected],result_slots=payload["slots"][0],result_valid=payload["slot_valid"][0],
         result_roots=proposed_roots[xp.clip(payload['slots'][0],0,len(proposed_roots)-1)],
         duplicate_candidates=xp.sum((eligible&known).astype(xp.int32)),
         no_novel_proposal=enabled&~blocked&~xp.any(novel),
-        needs_attention=enabled&(blocked|(requested&~accepted)|marks['token_refresh_required']),
+        needs_attention=enabled&(blocked|(requested&~accepted)|latent_refresh),
         stale_witness_context=requested&context_invalid,
         query_overflow=enabled&batch['overflow'],pool_sizes=batch['pool_sizes'],
         query_incomplete=enabled&~batch['complete'],dirty_input=enabled&dirty,
@@ -54,6 +59,7 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
         rejected_proposal=requested&~accepted,
         capacity=xp.any(marks['capacity'])|(requested&((next_id<0)|(next_id>len(roots)-payload['slots'].shape[1]))),
         payload_invalid=requested&~ready&(next_id>=0)&(next_id<=len(roots)-payload['slots'].shape[1]),
-        token_refresh_required=marks['token_refresh_required'])
+        token_refresh_required=latent_refresh,
+        current_state_inputs=xp.array(current_state_model))
     if capture:event.update(output_token=tokens[selected],request=batch['request'][selected],eq_scores=scores[selected],sources=batch['sources'][selected])
     return result,xp.where(accepted,proposed_roots,roots),xp.where(accepted,next_id+payload['slots'].shape[1],next_id),event

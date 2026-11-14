@@ -7,10 +7,12 @@ from device_slot_owners import shape, live
 from neural_device_candidates import seed_inputs
 
 
-def current_inputs(state, frames, xp):
+def current_inputs(state, frames, xp, field_capacity=None):
     n, width = shape(state)
     # Full compiled width: generated Cells may be wider than query seed rows.
-    fields, _ = seed_inputs(state, frames, xp, field_width=width)
+    if field_capacity is not None and field_capacity < width:
+        raise ValueError('current Cell layout exceeds trained field capacity')
+    fields, _ = seed_inputs(state, frames, xp, field_width=field_capacity or width)
     rid = state['keys'][:, 0]
     valid_id = (rid >= 0) & (rid < len(frames['roles']))
     eligible = state['present'] & state['visible'] & state['settled']
@@ -24,7 +26,7 @@ def current_inputs(state, frames, xp):
                 complete=complete)
 
 
-def current_candidates(state, frames, plan, encoder, external_complete, eq_settled, xp):
+def current_candidates(state, frames, plan, encoder, external_complete, eq_settled, xp, field_capacity=None):
     """Use ephemeral current-state embeddings in the existing query route.
 
     Preserves exact source resolution and ownership/lifetime checks. This first
@@ -33,11 +35,14 @@ def current_candidates(state, frames, plan, encoder, external_complete, eq_settl
     from neural_device_candidates import candidates
     if 'owner_token_blocks' in state:
         raise ValueError('block token layouts need an explicit current-state projection')
-    inputs = current_inputs(state, frames, xp)
+    inputs = current_inputs(state, frames, xp, field_capacity)
     embeddings = encoder(inputs['fields'])
     if embeddings.shape != (len(state['present']), 128):
         raise ValueError('current-state encoder must return one 128-float row per Cell')
-    temporary = dict(state, tokens=embeddings)
+    # Fresh embeddings replace historical latents only in this temporary view.
+    # The resolver must retain every other ownership/lifetime check.
+    temporary = dict(state, tokens=embeddings,
+                     token_dirty=xp.zeros_like(state['present']))
     batch = candidates(temporary, frames, plan,
                        external_complete & inputs['complete'], eq_settled, xp)
     return dict(batch, complete=batch['complete'] & inputs['complete'])
