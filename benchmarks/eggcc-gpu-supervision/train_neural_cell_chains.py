@@ -11,9 +11,9 @@ from neural_cell_transition import CellTransition,loss
 
 
 def rollout(model,parent,chain,teacher=False):
-    first,token=model(parent['x'],parent['edges'],parent['mask'],parent['request'])
+    first,token=model(parent['x'],parent['edges'],parent['mask'],parent['request'],**({'relations':parent['relations']} if 'relations' in parent else {}))
     incoming=chain['tokens'] if teacher else mx.where(chain['replace'][...,None],token[:,None,:],chain['tokens'])
-    second,target=model.transition(incoming,chain['edges'],chain['mask'],chain['request'])
+    second,target=model.transition(incoming,chain['edges'],chain['mask'],chain['request'],**({'relations':chain['relations']} if 'relations' in chain else {}))
     return first,second,target
 
 
@@ -24,8 +24,8 @@ def chain_loss(model,batch,parent,chain):
     return loss(model,batch)+matching+mx.sum(error*chain['valid'])/mx.maximum(mx.sum(chain['valid']),1)
 
 
-def build(recipe,count,seed):
-    records=[];base=samples(recipe,count,seed,records);data,coverage=chains(recipe,records)
+def build(recipe,count,seed,ordered=False):
+    records=[];base=samples(recipe,count,seed,records,ordered=ordered);data,coverage=chains(recipe,records,ordered=ordered)
     return base,data,coverage
 
 

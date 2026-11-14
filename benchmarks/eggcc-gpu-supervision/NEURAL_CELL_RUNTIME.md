@@ -237,3 +237,42 @@ python benchmarks/eggcc-gpu-supervision/train_neural_candidates.py \
   TRACE.json PARENT.safetensors OUTPUT.json --shared-fraction 0.35
 # Use --shared-fraction 0 for the independent-pool control.
 ```
+
+## Ordered interface relation experiment
+
+The optional `--ordered` path retains actual ordered port incidence and the
+query's required slot-sharing matrix. For the 17-template context family this
+adds 200 floats per candidate (two 10-by-10 matrices), alongside the existing
+pooled relation representation. Runtime creates incidence from identity handles
+on GPU. It does not receive CPU match labels. These are structural inputs, not a
+claim that identity comparison has become neural floating computation.
+
+`OrderedCellTransition` learns a relation MLP and corrections to the match logit
+and successor token. Zero-initialized output layers preserve the parent network
+before training. The same projected query-interface features are available when
+one input is a whole generated producer token; that token is not re-encoded.
+Training gradients flow through the two-step token chain. The 15 tests include
+second-only gradients reaching the initial encoder, invariance to ID renumbering,
+and distinguishing different port connections with the same equality count.
+
+Controlled 400-step training retains the same synthetic shared-pool dataset,
+parent weights and chain objectives as the prior experiment. Results in
+`neural-ordered-interfaces-results.json`:
+
+- Synthetic pooled matching: 1,253/1,256, with three false positives.
+- Unseen pooled feature patterns: 247/250 (three false positives).
+- Two-step matching: zero false positives or negatives on 1,154 tuples.
+- Positive two-step token MSE: 0.002769, versus 0.003442 without ordered features.
+- Real GCD Run 437: unchanged 55 false positives and 40/40 recovered matches.
+
+This did not improve real matching and is not promoted. Lower token loss is not
+semantic completion. Next training should enumerate bounded typed interface
+alias patterns rather than rely on a small random sample; retain the real
+snapshot as evaluation-only. No graph effects or ownership transfers were
+executed by this experiment.
+
+Backpropagation currently updates the initial encoder, relational attention,
+transition MLP, accept/token heads, and optionally this relation correction.
+It does not update Bake, identity incidence, the reference target-code
+construction, or ownership authorization. Forward GPU execution uses the trained
+weights and does not perform gradient updates.

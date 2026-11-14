@@ -10,7 +10,7 @@ from neural_cell_transition import CellTransition,loss
 
 
 def fingerprints(data):
-    return [hashlib.sha256(b''.join(data[k][i].tobytes() for k in ('x','edges','mask','request'))).hexdigest() for i in range(len(data['valid']))]
+    return [hashlib.sha256(b''.join(data[k][i].tobytes() for k in (('x','edges','mask','request','relations') if 'relations' in data else ('x','edges','mask','request')))).hexdigest() for i in range(len(data['valid']))]
 
 
 def main():

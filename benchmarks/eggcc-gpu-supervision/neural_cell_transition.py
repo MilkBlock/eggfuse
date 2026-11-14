@@ -36,7 +36,7 @@ class CellTransition(nn.Module):
 
 
 def loss(model,batch):
-    logits,token=model(batch['x'],batch['edges'],batch['mask'],batch['request'])
+    logits,token=model(batch['x'],batch['edges'],batch['mask'],batch['request'],**({'relations':batch['relations']} if 'relations' in batch else {}))
     matching=nn.losses.binary_cross_entropy(logits,batch['valid'],reduction='mean')
     error=mx.mean((token-batch['target'])**2,axis=1)
     completion=mx.sum(error*batch['valid'])/mx.maximum(mx.sum(batch['valid']),1)

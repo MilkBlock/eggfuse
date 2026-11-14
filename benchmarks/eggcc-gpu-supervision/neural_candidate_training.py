@@ -59,7 +59,7 @@ def synthetic_snapshot(recipe, seed, examples=16, shared_fraction=.35):
     return dict(rows=normalized)
 
 
-def pooled_candidates(recipe, seed, examples=16, per_class=128, scan_limit=200000, shared_fraction=.35):
+def pooled_candidates(recipe, seed, examples=16, per_class=128, scan_limit=200000, shared_fraction=.35, ordered=False):
     if per_class < 1 or scan_limit < 1:
         raise ValueError("positive sample capacities required")
     snapshot = synthetic_snapshot(recipe, seed, examples, shared_fraction)
@@ -94,10 +94,18 @@ def pooled_candidates(recipe, seed, examples=16, per_class=128, scan_limit=20000
                              positive_seen=counts[1], negative_seen=counts[0], positive_kept=len(buckets[1]), negative_kept=len(buckets[0])))
     indices = np.array(chosen, np.int32)
     # Chunk feature packing so candidate growth does not create an all-pairs tensor.
-    edge = []
+    edge = []; relations=[]
     dl, dr = mx.array(labels), mx.array(roles)
     for start in range(0, len(indices), 256):
         e = relational_edges(dl, dr, mx.array(indices[start:start+256])); mx.eval(e)
         edge.append(np.array(e))
-    return dict(x=x[indices], edges=np.concatenate(edge), mask=np.array(masks),
-                request=np.array(requests), valid=np.array(valid, np.float32), rule=np.array(rids, np.int32)), coverage
+    result=dict(x=x[indices], edges=np.concatenate(edge), mask=np.array(masks),
+                request=np.array(requests), valid=np.array(valid, np.float32), rule=np.array(rids, np.int32))
+
+    if ordered:
+        from neural_ordered_relations import demand,incidence
+        actual=labels[indices].copy()
+        actual[~np.array(masks)]=-1
+        required=np.array([demand(recipe['rules'][rid],atoms,labels.shape[1]) for rid in rids])
+        result['relations']=incidence(actual,required)
+    return result,coverage

@@ -26,8 +26,9 @@ def apply_instance(ref,rule,binding):
     return slots
 
 
-def samples(recipe,count,seed,records=None):
+def samples(recipe,count,seed,records=None,ordered=False):
     rng=np.random.default_rng(seed);rules=recipe['rules'];width=max(len(a['args']) for r in rules for a in r['query']);atoms=max(len(r['query']) for r in rules)
+    relations=[]
     xs=[];edges=[];masks=[];requests=[];ys=[];targets=[];rids=[];source_targets=[]
     for rid,rule in enumerate(rules):
         roles,request=template(rule)
@@ -81,6 +82,9 @@ def samples(recipe,count,seed,records=None):
                 for bi,other in enumerate(rows):
                     terms=[port_roles[ai][fi]*port_roles[bi][fj] for fi,v in enumerate(row['values']) for fj,w in enumerate(other['values']) if v['sort']==w['sort'] and ref.root(ids[identity(v)])==ref.root(ids[identity(w)])]
                     if terms:edge[ai,bi]=np.sum(terms,axis=0)/np.sqrt(len(terms))
+            if ordered:
+                from neural_ordered_relations import projected
+                relations.append(projected(rule,[[ref.root(ids[identity(v)]) for v in row['values']] for row in rows],atoms,width))
             out=np.zeros(128,np.float32)
             if valid:
                 unions_before=ref.unions
@@ -92,4 +96,7 @@ def samples(recipe,count,seed,records=None):
                     from copy import deepcopy
                     records.append(dict(eq_changed=ref.unions>unions_before,index=len(xs),rule=rid,binding=dict(binding),reference=deepcopy(ref),target=out.copy()))
             source_targets.append(source_code);xs.append(x);edges.append(edge);masks.append(mask);requests.append(request);ys.append(valid);targets.append(out);rids.append(rid)
-    return dict(source_target=np.array(source_targets),x=np.array(xs),edges=np.array(edges),mask=np.array(masks),request=np.array(requests),valid=np.array(ys,np.float32),target=np.array(targets),rule=np.array(rids,np.int32))
+    result=dict(source_target=np.array(source_targets),x=np.array(xs),edges=np.array(edges),mask=np.array(masks),request=np.array(requests),valid=np.array(ys,np.float32),target=np.array(targets),rule=np.array(rids,np.int32))
+
+    if ordered:result['relations']=np.array(relations)
+    return result

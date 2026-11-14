@@ -18,32 +18,37 @@ def scores(model, data):
     predictions = []
     for start in range(0, len(data['valid']), 256):
         b = {k:mx.array(v[start:start+256]) for k,v in data.items()}
-        logits, _ = model(b['x'], b['edges'], b['mask'], b['request'])
+        logits, _ = model(b['x'], b['edges'], b['mask'], b['request'], **({'relations':b['relations']} if 'relations' in b else {}))
         predictions.append(np.array(logits) >= 0)
     p = np.concatenate(predictions); truth = data['valid'] > 0
     return dict(samples=len(p), correct=int((p == truth).sum()), false_positive=int((p & ~truth).sum()), false_negative=int((~p & truth).sum()))
 
 
 def objective(model, batch, parent, chain, pool):
-    logits, _ = model(pool['x'], pool['edges'], pool['mask'], pool['request'])
+    logits, _ = model(pool['x'], pool['edges'], pool['mask'], pool['request'], **({'relations':pool['relations']} if 'relations' in pool else {}))
     return chain_loss(model, batch, parent, chain) + nn.losses.binary_cross_entropy(logits, pool['valid'], reduction='mean')
 
 
 def main():
     p = argparse.ArgumentParser(); p.add_argument('trace', type=Path); p.add_argument('weights', type=Path); p.add_argument('output', type=Path)
-    p.add_argument('--steps', type=int, default=400); p.add_argument('--shared-fraction', type=float, default=.35); a = p.parse_args()
+    p.add_argument('--ordered',action='store_true'); p.add_argument('--steps', type=int, default=400); p.add_argument('--shared-fraction', type=float, default=.35); a = p.parse_args()
     if a.steps < 1: raise ValueError('positive steps required')
     source = json.loads(a.trace.read_text()); source = source.get('recipe', source)
     source_ids = [i for i,r in enumerate(source['rules']) if r['metadata']['source_set']=='context']
     recipe = dict(source, rules=[source['rules'][i] for i in source_ids]); started=time.perf_counter()
-    train, coverage = pooled_candidates(recipe, 41001, shared_fraction=a.shared_fraction)
-    test, test_coverage = pooled_candidates(recipe, 97003, examples=8, per_class=64, shared_fraction=a.shared_fraction)
+    train, coverage = pooled_candidates(recipe, 41001, shared_fraction=a.shared_fraction,ordered=a.ordered)
+    test, test_coverage = pooled_candidates(recipe, 97003, examples=8, per_class=64, shared_fraction=a.shared_fraction,ordered=a.ordered)
     seen = set(fingerprints(train)); unseen = np.array([k not in seen for k in fingerprints(test)]); overlap = int((~unseen).sum())
     print(json.dumps(dict(training=len(train['valid']), test=len(test['valid']), overlap=overlap)), flush=True)
-    base, chain, _ = build(recipe, 8, 23001); tb, tc, _ = build(recipe, 4, 93003)
+    base, chain, _ = build(recipe, 8, 23001,ordered=a.ordered); tb, tc, _ = build(recipe, 4, 93003,ordered=a.ordered)
     device = lambda d:{k:mx.array(v) for k,v in d.items()}
     db, dc, dp = map(device, (base, chain, train))
-    model=CellTransition(train['x'].shape[-1]); model.load_weights(str(a.weights))
+    if a.ordered:
+        from neural_ordered_relations import OrderedCellTransition
+        mx.random.seed(93)
+        model=OrderedCellTransition(train['x'].shape[-1],train['relations'].shape[-1]); model.load_weights(str(a.weights),strict=False)
+    else:
+        model=CellTransition(train['x'].shape[-1]); model.load_weights(str(a.weights))
     def evaluate():
         parent=device({k:v[tc['parent']] for k,v in tb.items()})
         first, second, token=rollout(model, parent, device(tc)); mx.eval(first, second, token)
@@ -57,7 +62,7 @@ def main():
         value,g=grad(model,batch,parent,c,pool); optimizer.update(model,g); mx.eval(value,model.parameters(),optimizer.state)
         if step%100==0: print(json.dumps(dict(step=step,loss=float(value))),flush=True)
     after=evaluate(); model.save_weights(str(a.output.with_suffix('.safetensors')))
-    report=dict(scope='standalone synthetic pooled matching and generated-token chain training; no graph commits or ownership execution',synthetic_only_training=True,shared_fraction=a.shared_fraction,source_rules=source_ids,training_coverage=coverage,test_coverage=test_coverage,evaluation_feature_overlap=overlap,before=before,after=after,steps=a.steps,wall_seconds=time.perf_counter()-started,parent_weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),promoted_as_default=False)
+    report=dict(scope='standalone synthetic pooled matching and generated-token chain training; no graph commits or ownership execution',synthetic_only_training=True,ordered_relations=a.ordered,shared_fraction=a.shared_fraction,source_rules=source_ids,training_coverage=coverage,test_coverage=test_coverage,evaluation_feature_overlap=overlap,before=before,after=after,steps=a.steps,wall_seconds=time.perf_counter()-started,parent_weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),promoted_as_default=False)
     a.output.write_text(json.dumps(report,indent=2)+'\n'); print(json.dumps(after))
 
 

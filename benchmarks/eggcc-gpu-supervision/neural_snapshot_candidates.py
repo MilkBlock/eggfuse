@@ -111,6 +111,7 @@ def binding_key(rule, chosen, rows, ids):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('trace', type=Path); p.add_argument('weights', type=Path); p.add_argument('output', type=Path)
+    p.add_argument('--ordered',action='store_true')
     p.add_argument('--ruleset', default='context'); p.add_argument('--snapshot-run', type=int, default=437)
     p.add_argument('--batch', type=int, default=256); p.add_argument('--candidate-limit', type=int, default=1000000)
     a = p.parse_args()
@@ -131,7 +132,13 @@ def main():
     started = time.perf_counter()
     rows, ids, pools, x, labels, roles = import_interfaces(recipe, boundaries[0])
     import_seconds = time.perf_counter() - started
-    model = CellTransition(x.shape[-1]); model.load_weights(str(a.weights))
+    if a.ordered:
+        from neural_ordered_relations import OrderedCellTransition,demand,incidence
+        atom_count=max(len(r['query']) for r in recipe['rules'])
+        model=OrderedCellTransition(x.shape[-1],2*(atom_count*labels.shape[1])**2)
+    else:
+        model = CellTransition(x.shape[-1])
+    model.load_weights(str(a.weights))
     started = time.perf_counter()
     labels, roles = mx.array(labels), mx.array(roles)
     tokens = model.encode(mx.array(x)); mx.eval(tokens, labels, roles)
@@ -150,7 +157,11 @@ def main():
             n = min(a.batch, count - start); began = time.perf_counter()
             ix, mask = candidate_indices(pool, start, n, atoms)
             edges = relational_edges(labels, roles, ix)
-            logits, successor = model.transition(tokens[ix], edges, mask, mx.broadcast_to(mx.array(request), (n, 64)))
+            extra={}
+            if a.ordered:
+                fields=mx.where(mask[...,None],labels[ix],-1)
+                extra['relations']=incidence(fields,mx.array(demand(rule,atoms,labels.shape[1])),mx)
+            logits, successor = model.transition(tokens[ix], edges, mask, mx.broadcast_to(mx.array(request), (n, 64)),**extra)
             mx.eval(logits, successor, ix)
             gpu_seconds += time.perf_counter() - began
             began = time.perf_counter(); predicted = np.array(logits) >= 0; chosen = np.array(ix)
@@ -168,7 +179,7 @@ def main():
                     missed_matches=len(expected-accepted), gpu_seconds=gpu_seconds, cpu_audit_seconds=audit_seconds)
         results.append(item); print(json.dumps(item), flush=True)
     report = dict(scope='standalone first-Run seed-interface candidate audit; no effects, ownership or saturation',
-                  synthetic_only_training=True, snapshot_run=a.snapshot_run, seed_cells=len(rows),
+                  synthetic_only_training=True, ordered_relations=a.ordered, snapshot_run=a.snapshot_run, seed_cells=len(rows),
                   initial_import_seconds=import_seconds, initial_encoding_seconds=encode_seconds,
                   cpu_reference_init_seconds=reference_seconds, groups=results,
                   weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),
