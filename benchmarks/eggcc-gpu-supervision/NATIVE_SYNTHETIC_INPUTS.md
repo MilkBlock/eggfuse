@@ -92,3 +92,30 @@ These two builds used the current dirty workspace; unrelated native changes
 were preserved and are not part of this commit. No speed claim or performance
 campaign. Four Python extraction tests and a focused Rust witness projection
 test cover alignment and preservation of missing/actual evidence.
+
+## Observed catalog preparation
+
+`bake_synthetic_capture PROGRAM OUTPUT REPORT` (runtime Cargo example, features
+`iterative-bake,spine-shapes`) now prepares the missing catalog. It executes the
+synthetic program, derives stage leaves from its actual shape profile, installs
+producer roots, collects actual continuation choices, emits query handoffs, and
+checks every exported Run graph and ordered binding against the original before
+writing the candidate. Limits are bounded (32 leaves; default catalog limits,
+support 1 for small synthetic cases). This is one offline discovery round, not
+an optimizer speed result. Input must come from the validated synthetic pipeline;
+the tool accepts a Program and does not itself attest that input's provenance.
+
+Reusing the context/canon fixture yields one leaf and two observed joins. Running
+the catalog through `capture_rhs_results` with `slot-transfer-audit,sparse-cells`
+exports 9 examples, 4 direct continuations and 14 retained query witnesses. The
+ordinary parent field remains absent. All original Run snapshots and ordered
+bindings agree; the capture's independent native audits pass. See
+`native-baked-capture-report.json`. This replaces the previous zero-witness
+preparation for this fixture; it does not fill missing evidence by inference.
+
+Latest inspected neighboring Bake revision `e215b801` lowers observed physical
+ancestry into ownership fragments. Its observed borrowed FactRefs demonstrate
+why cursor parents cannot substitute for actual constructor owners. Our exported
+FactRefs are actual retained query evidence, but we still need completed source
+execution mapping and current liveness/ownership checks before labelling token
+retirement. No ownership transfer labels or model accuracy gains claimed here.

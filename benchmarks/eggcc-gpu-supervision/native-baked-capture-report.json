@@ -1,0 +1,80 @@
+{
+  "scope": "native synthetic capture after observed catalog preparation; no GPU ownership transfer claim",
+  "leaves": 1,
+  "selected_joins": [
+    [
+      {
+        "left": 1,
+        "output": 5,
+        "right": 0
+      },
+      {
+        "avoidable_origin_slots": 0,
+        "bridge_support": 0,
+        "consumer_run": 4,
+        "predicted_key_reads": 4,
+        "producer_run": 3,
+        "visits": 2,
+        "width": 4,
+        "witness": {
+          "Fact": {
+            "cell": 24,
+            "op": 5
+          }
+        }
+      }
+    ],
+    [
+      {
+        "left": 0,
+        "output": 5,
+        "right": 0
+      },
+      {
+        "avoidable_origin_slots": 0,
+        "bridge_support": 0,
+        "consumer_run": 4,
+        "predicted_key_reads": 2,
+        "producer_run": 3,
+        "visits": 1,
+        "width": 4,
+        "witness": {
+          "Fact": {
+            "cell": 26,
+            "op": 5
+          }
+        }
+      }
+    ]
+  ],
+  "captured_examples": 9,
+  "direct_continuations": 4,
+  "retained_query_witnesses": 14,
+  "parent_fields": 0,
+  "run_snapshots_and_bindings_equal": true,
+  "native_audits": {
+    "strict_run_graphs_equal": true,
+    "strict_audit_reference_equal": true,
+    "run_control_counts_equal": true
+  },
+  "program_sha256": "0dbd94ea29c2dbaee3629e6f87e77c8e84a0d8bc4ed8a0eb67a96f2ef891249f",
+  "bake_reference": "e215b801",
+  "artifacts": {
+    "baked.json": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/native-synthetic-context-canon/baked.json",
+      "sha256": "aa4f7abea54371b271be20017352b8a1c2ed17dd306db857c85d96eeafbcd94b"
+    },
+    "bake-report.json": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/native-synthetic-context-canon/bake-report.json",
+      "sha256": "ffacce60f2d1665c0fb86cd7390b1b78b93d2aed4bbe00fddbb9f5c35e5d9bbe"
+    },
+    "baked-trace.json": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/native-synthetic-context-canon/baked-trace.json",
+      "sha256": "9029b195c46828b79759b8e1edcc5f46ddfb41a19764a7b9d2a465eedd2b9cac"
+    },
+    "baked-examples.json": {
+      "path": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/native-synthetic-context-canon/baked-examples.json",
+      "sha256": "b74cf54921c581517b99a9a9a197e9d7b3f8e499b23710c923045bdee38fe52a"
+    }
+  }
+}

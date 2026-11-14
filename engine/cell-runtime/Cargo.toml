@@ -72,3 +72,7 @@ required-features = ["rhs-work-audit", "rhs-locals"]
 [[example]]
 name = "cell_change_windows"
 required-features = ["sparse-cells", "slot-transfer-audit"]
+
+[[example]]
+name = "bake_synthetic_capture"
+required-features = ["iterative-bake", "spine-shapes"]
