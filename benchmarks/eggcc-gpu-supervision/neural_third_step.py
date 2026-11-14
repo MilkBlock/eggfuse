@@ -122,7 +122,7 @@ def build(recipe,count,seed,per_pair=2,context_capacity=0,block_owner=False):
                 datum.update({'p_'+k:base[k][chain['parent'][i]] for k in ('x','edges','mask','request','relations')})
                 datum.update({'c_'+k:chain[k][i] for k in ('seed_x','replace','edges','mask','request','relations')})
                 if block_owner:
-                    datum.update({'c_'+k:chain[k][i] for k in ('source_request','owner_request')})
+                    datum.update({'c_'+k:chain[k][i] for k in ('source_request','owner_request','owner_proof_code')})
                     from neural_owner_context import replay_features
                     replay_input={k:datum[k][None,...] for k in ('source_kind','mask','c_owner_request')}
                     np.testing.assert_allclose(replay_features(replay_input,np)[0],np.array(b['owner_features'][j]),atol=1e-6)

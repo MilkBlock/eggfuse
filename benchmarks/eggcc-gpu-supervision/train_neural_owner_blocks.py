@@ -37,6 +37,9 @@ def objective(model,batch,parent,chain,third=None,baked_eq=False,omit_cross=Fals
         from neural_third_step import replay_blocks
         _,third_token=replay_blocks(model,third)
         extra=masked_loss(model.eq(third_token,third['request']),third['eq_target'],third['eq_mask'])
+    if model.proof_token:
+        penalty=mx.mean(model.proof_target(chain['owner_proof_code'])**2)
+        return extra+masked_loss(target,chain['eq_target'],chain['eq_mask'])+penalty
     source_mask=chain['source_eq_mask'];target_mask=chain['eq_mask'];cross_mask=chain['cross_eq_mask']
     if baked_eq:
         source_mask=source_mask&~chain['source_known_eq'];target_mask=target_mask&~chain['target_known_eq'];cross_mask=cross_mask&~chain['cross_known_eq']
@@ -56,9 +59,10 @@ def signatures(base,data,with_proof=False):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('transition',type=Path);p.add_argument('eq',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--owner-aware',action='store_true');p.add_argument('--steps',type=int,default=1200);p.add_argument('--resume',type=Path);p.add_argument('--freeze-base',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--evaluate-only',action='store_true');p.add_argument('--omit-cross-predictions',action='store_true');p.add_argument('--identity-source',action='store_true');p.add_argument('--third-train',type=Path);p.add_argument('--third-test',type=Path);a=p.parse_args()
-    if a.identity_source and not (a.evaluate_only or a.owner_aware):raise ValueError('identity-source is an evaluation ablation')
-    if a.owner_aware and not (a.identity_source and a.freeze_base and a.omit_cross_predictions and a.third_train):raise ValueError('owner adapter requires immutable source, frozen base, omitted cross head and third replay')
+    p.add_argument('--proof-token',action='store_true');p.add_argument('--owner-aware',action='store_true');p.add_argument('--steps',type=int,default=1200);p.add_argument('--resume',type=Path);p.add_argument('--freeze-base',action='store_true');p.add_argument('--baked-eq',action='store_true');p.add_argument('--evaluate-only',action='store_true');p.add_argument('--omit-cross-predictions',action='store_true');p.add_argument('--identity-source',action='store_true');p.add_argument('--third-train',type=Path);p.add_argument('--third-test',type=Path);a=p.parse_args()
+    if a.identity_source and not (a.evaluate_only or a.owner_aware or a.proof_token):raise ValueError('identity-source is an evaluation ablation')
+    if a.owner_aware and a.proof_token:raise ValueError('separate owner edge and proof token experiments')
+    if (a.owner_aware or a.proof_token) and not (a.identity_source and a.freeze_base and a.omit_cross_predictions and a.third_train):raise ValueError('owner adapter requires immutable source, frozen base, omitted cross head and third replay')
     if a.omit_cross_predictions and not a.baked_eq:raise ValueError('omit cross predictions only with compiled structural proof')
     if a.evaluate_only and not a.resume:raise ValueError('evaluation requires a combined checkpoint')
     if bool(a.third_train)!=bool(a.third_test):raise ValueError('both training and held-out replay data required')
@@ -70,12 +74,12 @@ def main():
     seen=set(signatures(base,chain,a.baked_eq));overlap=np.array([sig in seen for sig in signatures(test,tc,a.baked_eq)])
     device=lambda d:{k:mx.array(v) for k,v in d.items()}
     db,dc=map(device,(base,chain));mx.random.seed(117)
-    model=OwnerBlocks(base['x'].shape[-1],base['relations'].shape[-1],width,owner_aware=a.owner_aware)
+    model=OwnerBlocks(base['x'].shape[-1],base['relations'].shape[-1],width,owner_aware=a.owner_aware,proof_token=a.proof_token)
     if a.resume:
         weights=mx.load(str(a.resume))
         expected=dict(tree_flatten(model.parameters()))
         missing=set(expected)-set(weights);extra=set(weights)-set(expected)
-        if extra or missing-({'owner_edges.weight'} if a.owner_aware else set()):raise ValueError('incompatible checkpoint keys')
+        if extra or missing-({'owner_edges.weight'} if a.owner_aware else {'proof_target.weight'} if a.proof_token else set()):raise ValueError('incompatible checkpoint keys')
         model.load_weights(list(weights.items()),strict=not bool(missing))
     else:model.cell.load_weights(str(a.transition));model.eq.load_weights(str(a.eq))
     if a.freeze_base:model.cell.freeze();model.eq.freeze()
@@ -88,6 +92,9 @@ def main():
         third_train=dict(np.load(a.third_train,allow_pickle=False));third_test=dict(np.load(a.third_test,allow_pickle=False))
         for data in (third_train,third_test):
             if 'c_owner_request' not in data:raise ValueError('actual block-handoff replay data required')
+        if a.proof_token:
+            from neural_proof_token import enrich
+            third_train=enrich(third_train,chain,tc);third_test=enrich(third_test,chain,tc)
         third_device=device(third_train);third_positive=np.flatnonzero(third_train['valid']>0)
     frozen={k:np.array(v) for k,v in tree_flatten(model.cell.parameters()) if a.freeze_base or k.startswith(('relation.','match_relation.'))}
     frozen_eq={k:np.array(v) for k,v in tree_flatten(model.eq.parameters())} if a.freeze_base else {}
@@ -154,6 +161,7 @@ def main():
     if not unchanged or not eq_unchanged:raise AssertionError('frozen model weights changed')
     model.save_weights(str(a.output.with_suffix('.safetensors')))
     report=dict(scope='standalone GPU two-block semantic-owner learning; no runtime commits or saturation',synthetic_only_training=True,backpropagation=True,slot_width=width,token_blocks=2,floats_per_owner=256,train=coverage,test=test_coverage,test_input_overlap=int(overlap.sum()),before=before,after=after,training=training,steps=0 if a.evaluate_only else a.steps,evaluate_only=a.evaluate_only,baked_eq=a.baked_eq,omit_cross_predictions=a.omit_cross_predictions,identity_source=a.identity_source,interface_head_unchanged=unchanged,wall_seconds=time.perf_counter()-began,parent_transition_sha256=hashlib.sha256(a.transition.read_bytes()).hexdigest(),parent_eq_sha256=hashlib.sha256(a.eq.read_bytes()).hexdigest(),weights_sha256=hashlib.sha256(a.output.with_suffix('.safetensors').read_bytes()).hexdigest(),promoted_for_execution=False,limitations=['Fixed synthetic routing during differentiable training; independent device audit required','Two-block cost doubles resident floats versus a single token','No stable identity or incidence is supplied to the Eq readouts','No CPU audit rollback or full-stage scheduling integration'])
+    report['proof_token']=a.proof_token
     report['owner_aware']=a.owner_aware
     report['base_frozen']=a.freeze_base
     report['frozen_cell_unchanged']=unchanged if a.freeze_base else None

@@ -9,10 +9,15 @@ from neural_eq_readout import metrics
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('data',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path);p.add_argument('--owner-aware',action='store_true');p.add_argument('--training-data',type=Path);p.add_argument('--without-context',action='store_true');p.add_argument('--block-owner',action='store_true');p.add_argument('--without-source-update',action='store_true');p.add_argument('--case-limit',type=int);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('data',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path);p.add_argument('--proof-token',action='store_true');p.add_argument('--proof-catalog',type=Path);p.add_argument('--owner-aware',action='store_true');p.add_argument('--training-data',type=Path);p.add_argument('--without-context',action='store_true');p.add_argument('--block-owner',action='store_true');p.add_argument('--without-source-update',action='store_true');p.add_argument('--case-limit',type=int);a=p.parse_args()
+    if a.proof_token and (not a.block_owner or a.owner_aware):raise ValueError('proof tokens require separate block model')
     if a.owner_aware and not a.block_owner:raise ValueError('owner-aware requires block model')
     if a.without_source_update and not a.block_owner:raise ValueError('source update ablation requires block model')
     data=dict(np.load(a.data,allow_pickle=False))
+    if a.proof_token:
+        if not a.proof_catalog:raise ValueError('compiled proof catalog required')
+        from neural_proof_token import enrich
+        catalog=dict(np.load(a.proof_catalog,allow_pickle=False));data=enrich(data,catalog)
     if a.case_limit is not None:
         if a.case_limit<1:raise ValueError('positive case limit required')
         keep=data['case']<a.case_limit;data={k:v[keep] for k,v in data.items()}
@@ -25,8 +30,8 @@ def main():
     if width*(width-1)//2!=data['eq_target'].shape[1]:raise ValueError('invalid equality output layout')
     if a.block_owner:
         from neural_owner_blocks import OwnerBlocks
-        model=OwnerBlocks(data['p_x'].shape[-1],data['relations'].shape[-1],width,owner_aware=a.owner_aware)
-        model.immutable_source=a.owner_aware
+        model=OwnerBlocks(data['p_x'].shape[-1],data['relations'].shape[-1],width,owner_aware=a.owner_aware,proof_token=a.proof_token)
+        model.immutable_source=a.owner_aware or a.proof_token
     else:model=CompletionReadout(data['p_x'].shape[-1],data['relations'].shape[-1],width)
     model.load_weights(str(a.weights))
     if a.without_source_update:
@@ -39,14 +44,17 @@ def main():
         out.append(np.array(score));matches.append(np.array(logit)>=0);finite.append(np.isfinite(np.array(logit)))
     score=np.concatenate(out);pos=data['valid']>0
     report=dict(scope='standalone synthetic three-step floating replay with fixed exact routing; no graph mutations',
-        owner_aware=a.owner_aware,case_limit=a.case_limit,block_owner=a.block_owner,source_update_disabled=a.without_source_update or a.owner_aware,context_masked=a.without_context,eq=metrics(score[pos],data['eq_target'][pos],data['eq_mask'][pos],width),matching_errors=int((np.concatenate(matches)!=pos).sum()),nonfinite_matches=int((~np.concatenate(finite)).sum()),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),dataset_sha256=hashlib.sha256(a.data.read_bytes()).hexdigest())
+        proof_token=a.proof_token,owner_aware=a.owner_aware,case_limit=a.case_limit,block_owner=a.block_owner,source_update_disabled=a.without_source_update or a.owner_aware or a.proof_token,context_masked=a.without_context,eq=metrics(score[pos],data['eq_target'][pos],data['eq_mask'][pos],width),matching_errors=int((np.concatenate(matches)!=pos).sum()),nonfinite_matches=int((~np.concatenate(finite)).sum()),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),dataset_sha256=hashlib.sha256(a.data.read_bytes()).hexdigest())
     if a.block_owner:
         source=((data['source_kind']==1)&data['mask']).any(axis=1)
         target=((data['source_kind']==2)&data['mask']).any(axis=1)
         groups=dict(both=source&target,source_only=source&~target,target_only=target&~source,neither=~source&~target)
         report['owner_input_groups']={name:metrics(score[pos&select],data['eq_target'][pos&select],data['eq_mask'][pos&select],width) for name,select in groups.items() if np.any(pos&select)}
+    if a.proof_token:report['proof_catalog_sha256']=hashlib.sha256(a.proof_catalog.read_bytes()).hexdigest()
     if a.training_data:
-        train=dict(np.load(a.training_data,allow_pickle=False));seen=set(fingerprints(train));overlap=np.array([v in seen for v in fingerprints(original)]);novel=pos&~overlap
+        train=dict(np.load(a.training_data,allow_pickle=False))
+        if a.proof_token:train=enrich(train,catalog)
+        seen=set(fingerprints(train));overlap=np.array([v in seen for v in fingerprints(original)]);novel=pos&~overlap
         report.update(overlapping_candidates=int(overlap.sum()),overlapping_positive_states=int((overlap&pos).sum()),unseen_positive=metrics(score[novel],data['eq_target'][novel],data['eq_mask'][novel],width),training_sha256=hashlib.sha256(a.training_data.read_bytes()).hexdigest())
     passed=report['eq']['closed_exact_states']==int(pos.sum()) and not report['matching_errors'] and not report['nonfinite_matches'] and bool(pos.any())
     report['status']='pass' if passed else 'difference';a.output.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))

@@ -383,3 +383,53 @@ floating state. Carrying these particular relations through token completion,
 resolving external constructor identity, and eliminating false merges remain
 live obligations. Do not confuse the 92.90% next-state result with full Eggcc
 saturation correctness or a complete ownership-transfer runtime.
+
+## Target token carries static owner proof features (rejected, 2026-11-14)
+
+`--proof-token` tests an actual change to the generated target block, rather
+than a final readout correction. Bake encodes its positive source/source,
+target/target and cross-block Eq proofs, with ordered port positions and original
+source/target request codes, into 64 dense floats. A zero-initialized 64x128
+learned matrix adds a residual to the new target token. The original source
+block remains bitwise unchanged. The target token is adopted through physical
+handoff and is directly read by subsequent GPU candidates; no refresh is run.
+
+This experiment uses **static owner proofs**. The input-dependent conditional
+proof selector from the preceding experiment still operates at the next Eq
+readout; its selected dynamic cases are not yet encoded into the new token.
+Do not claim that the complete conditional-proof feedback loop is solved.
+The dense proof code is a model input, not a lossless proof certificate.
+
+Training freezes the Cell encoder, transition, Eq head, source updater and cross
+head. Only 8192 adapter weights train for 600 steps, with third-state Eq loss,
+target-state Eq loss and residual magnitude regularization. Old saved replay is
+upgraded from compiled template requests/proof codes, without reading label or
+teacher-token columns. Ambiguous/missing template mappings fail explicitly.
+The prototype stores another 64-float code per replay/chain record and performs
+one dense projection per target generation; no speedup is measured.
+
+The outcome is rejected. Held-out raw next-state correctness falls from 541/625
+to 535/625, and false-merge states rise from 10 to 44. Internal owner correctness
+falls from 571/578 to 568/578 (zero to three false-merge states). In actual GPU
+execution with the unchanged conditional Eq proof overlay, all 107 handoffs pass
+and matches remain exact. Full next-state correctness is 315/338 versus the
+previous 314/338, but false-merge states rise from nine to 21. The apparent one
+state improvement is not sufficient to accept the regression. Raw runtime
+readout has 51 wrong states, exactly matching the 287/338 replay prefix.
+
+Reproduce with `train_neural_owner_blocks.py TRACE TRANSITION EQ OUT --resume
+FROZEN_OWNER --proof-token --identity-source --freeze-base --baked-eq
+--omit-cross-predictions --third-train TRAIN_NPZ --third-test TEST_NPZ --steps 600`.
+Run `audit_neural_gpu_rhs.py TRACE WEIGHTS OUT --proof-token --immutable-source
+--block-owner --baked-eq --conditional-eq --interface-only --follow
+--context-capacity 8 --limit 107`. It saves a static `.proof-catalog.npz` alongside
+the report. Replay with `audit_neural_third_step.py TEST_NPZ WEIGHTS OUT
+--block-owner --proof-token --proof-catalog CATALOG --case-limit 107`.
+`proof-token-results.json` records all hashes and the rejected result.
+
+A separate regression fix removes an unsupported `layout_code` keyword from the
+legacy single-token handoff call; its one-case non-block GPU smoke passes. The
+block path retains that argument. This does not change earlier block metrics.
+Remaining obligations include separating established proof from undecided
+relations in training and token representation, consuming dynamic conditional
+proofs, arbitrary owner growth, and a genuine multi-stage saturation loop.

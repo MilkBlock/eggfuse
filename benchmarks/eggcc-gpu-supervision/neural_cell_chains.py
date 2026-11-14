@@ -176,7 +176,7 @@ def chains(recipe,records,limit_per_consumer=2,ordered=False,transfers=None,eq_t
                     if eq_targets and combined_owner:
                         negative.update(source_eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool),target_eq_mask=np.zeros(eq_width*(eq_width-1)//2,bool))
                     if block_owner:
-                        for key in ('source_request','owner_request'):negative[key]=packed[key]
+                        for key in ('source_request','owner_request','owner_proof_code'):negative[key]=packed[key]
                         for key in ('source_target','source_eq_target','source_eq_before','source_eq_mask','cross_eq_target','cross_eq_mask','source_known_eq','target_known_eq','cross_known_eq'):negative[key]=np.zeros_like(packed[key])
                     items.append(dict(parent=record['index'],producer=producer,consumer=rid,**negative,request=request,target=np.zeros(128,np.float32),valid=False,owner_covered=False))
                     break
