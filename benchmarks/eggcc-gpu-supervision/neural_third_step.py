@@ -30,6 +30,7 @@ def replay(model,batch):
     boundary=model.encode(batch['seed_x'])
     incoming=mx.where((batch['source_kind']==1)[...,None],first[:,None,:],boundary)
     incoming=mx.where((batch['source_kind']==2)[...,None],second[:,None,:],incoming)
+    if 'source_tags' in batch:incoming=incoming+batch['source_tags']
     return model.transition(incoming,batch['edges'],batch['mask'],batch['request'],batch['relations'])
 
 
@@ -52,7 +53,7 @@ def fingerprints(data):
     return result
 
 
-def build(recipe,count,seed,per_pair=2):
+def build(recipe,count,seed,per_pair=2,context_capacity=0):
     records=[];base=samples(recipe,count,seed,records,ordered=True);transfers=[]
     chain,_=chains(recipe,records,ordered=True,transfers=transfers)
     selected=[];pairs=Counter()
@@ -78,7 +79,7 @@ def build(recipe,count,seed,per_pair=2):
         if not covered or not check['passed']:raise ValueError('synthetic device/oracle mismatch')
         mapping=check['mapping']
         for rid,rule in enumerate(recipe['rules']):
-            plan=compile_candidates(local,rule,atoms=base['x'].shape[1],fields=field_width)
+            plan=compile_candidates(local,rule,atoms=base['x'].shape[1],fields=field_width,context_capacity=context_capacity)
             b=candidates(state,frames,device(plan),mx.array(True),mx.array(True),mx);mx.eval(b)
             if not bool(b['complete']):raise ValueError('incomplete synthetic candidate enumeration')
             expected={tuple(sorted(v.items())) for v in oracle.matches(rule)}
@@ -94,7 +95,7 @@ def build(recipe,count,seed,per_pair=2):
                 if valid:
                     ref=deepcopy(oracle);bound=dict(key);apply_instance(ref,rule,bound)
                     eq=targets(rule,completed(rule,bound,ref),ref,width)
-                datum={k:np.array(b[k][j]) for k in ('edges','mask','request','relations')}
+                datum={k:np.array(b[k][j]) for k in ('edges','mask','request','relations','source_tags')}
                 datum.update(seed_x=np.array(raw)[sources],source_kind=kind,valid=np.float32(valid),rule=np.int32(rid),case=np.int32(case),**eq)
                 datum.update({'p_'+k:base[k][chain['parent'][i]] for k in ('x','edges','mask','request','relations')})
                 datum.update({'c_'+k:chain[k][i] for k in ('seed_x','replace','edges','mask','request','relations')})
@@ -102,15 +103,15 @@ def build(recipe,count,seed,per_pair=2):
         print(json.dumps(dict(case=case+1,total_cases=len(selected),candidates=len(items))),flush=True)
     if not items:raise ValueError('empty replay dataset')
     data={k:np.array([v[k] for v in items]) for k in items[0]}
-    report=dict(synthetic_only=True,seed=seed,source_samples_per_rule=count,per_pair=per_pair,cases=len(selected),physical_transfers=moved,candidates=len(items),valid=int(data['valid'].sum()),generated_target_inputs=int(((data['source_kind']==2)&data['mask']).any(axis=1).sum()),token_targets_used_as_inputs=False,scope='bounded synthetic exact-completion routing, differentiable three-step token replay; not autonomous saturation')
+    report=dict(synthetic_only=True,seed=seed,source_samples_per_rule=count,per_pair=per_pair,context_capacity=context_capacity,cases=len(selected),physical_transfers=moved,candidates=len(items),valid=int(data['valid'].sum()),generated_target_inputs=int(((data['source_kind']==2)&data['mask']).any(axis=1).sum()),token_targets_used_as_inputs=False,scope='bounded synthetic exact-completion routing, differentiable three-step token replay; not autonomous saturation')
     return data,report
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('output',type=Path);p.add_argument('--seed',type=int,default=23001);p.add_argument('--count',type=int,default=4);p.add_argument('--per-pair',type=int,default=2);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('output',type=Path);p.add_argument('--seed',type=int,default=23001);p.add_argument('--count',type=int,default=4);p.add_argument('--per-pair',type=int,default=2);p.add_argument('--context-capacity',type=int,default=0);a=p.parse_args()
     if min(a.count,a.per_pair)<1:raise ValueError('positive sample counts required')
     source=json.loads(a.trace.read_text());source=source.get('recipe',source);recipe=dict(source,rules=[r for r in source['rules'] if r['metadata']['source_set']=='context'])
-    began=time.perf_counter();data,report=build(recipe,a.count,a.seed,a.per_pair)
+    began=time.perf_counter();data,report=build(recipe,a.count,a.seed,a.per_pair,a.context_capacity)
     np.savez_compressed(a.output,**data);report.update(wall_seconds=time.perf_counter()-began,recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),dataset_sha256=hashlib.sha256(a.output.read_bytes()).hexdigest())
     a.output.with_suffix('.json').write_text(json.dumps(report,indent=2)+'\n')
 

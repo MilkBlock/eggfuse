@@ -708,3 +708,53 @@ results. NPZ datasets and weights stay outside Git. This measures standalone
 GPU prototype correctness, not egglog runtime performance. Next work must cover
 unseen generated-source contexts and unavailable boundaries before relying on
 these predictions to advance a complete stage.
+
+
+### Bounded resident context tokens and compiled input roles
+
+`compile_candidates(..., context_capacity=8)` optionally appends visible,
+settled resident Cell tokens not already serving as query sources. Query port
+incidence and binding selection remain unchanged. A capacity overflow or an
+unsettled visible context prevents `complete`; it cannot certify a fixed point.
+This prototype gathers from a bounded local snapshot. It does not prove that
+all relevant Cells in a whole graph are resident, and retains the caller's
+external-completeness obligation. Broad resident collection is an information
+experiment, not the final efficient Bake routing policy.
+
+Static floating input-role tags distinguish query atom positions from context.
+All context positions use the same tag. Tags affect the temporary consumption
+view, never stored Cell tokens or stable identity metadata. Without such a role
+distinction, pooling a graph's tokens could erase which ones are the current
+query's inputs. The existing matrix/attention flow consumes the enlarged fixed
+batch; no data-dependent GPU loop was added. Padding and input selection have
+explicit masks. Dataset replay uses exactly the same tags.
+
+With 1600 synthetic joint steps, third-step evaluation reaches 296/312 exact
+states, with two false-merge states. Among the 197 non-overlapping positive
+inputs, 181 are exact (91.88%). The actual GPU ownership-follow audit agrees:
+16 wrong states, two false merges, and seven query-only oracle errors. Matching
+remains 312/312 and no context capacity overflows occur in the 107 local cases.
+Accepted tuples consume 1,561 extra context inputs. That work is charged as
+additional input consumption, not claimed as a speedup.
+
+A same-weight ablation masking context inputs reduces closed exact states to
+290/312 (177/197 non-overlapping), supporting a useful contribution from the
+context under this test. It is not a universal completeness or performance
+proof. Typed training is 398/398, third-step training 509/509, two-step evaluation
+578/578, and real seed GCD/LCM checks 40/40 and 109/109. Full semantic acceptance
+still fails and predicted equalities are not committed by this audit.
+
+Reproduction:
+
+```sh
+python neural_third_step.py GCD_TRACE CONTEXT_TRAIN.npz --seed 23001 --count 4 --per-pair 2 --context-capacity 8
+python neural_third_step.py GCD_TRACE CONTEXT_TEST.npz --seed 93003 --count 4 --per-pair 1 --context-capacity 8
+python train_neural_eq_readout.py GCD_TRACE THIRD.safetensors CONTEXT.json --typed-patterns --resume --steps 1600 --third-train CONTEXT_TRAIN.npz --third-test CONTEXT_TEST.npz
+python audit_neural_third_step.py CONTEXT_TEST.npz CONTEXT.safetensors HELDOUT.json --training-data CONTEXT_TRAIN.npz
+python audit_neural_third_step.py CONTEXT_TEST.npz CONTEXT.safetensors MASKED.json --training-data CONTEXT_TRAIN.npz --without-context
+python audit_neural_gpu_rhs.py GCD_TRACE CONTEXT.transition.safetensors FOLLOW.json --limit 107 --follow --interface-only --context-capacity 8 --eq-readout CONTEXT.eq.safetensors
+```
+
+The next execution integration must make speculative token state affect later
+computation with explicit incomplete/error marks and CPU audit/correction;
+continued offline accuracy fitting alone does not close the runtime goal.

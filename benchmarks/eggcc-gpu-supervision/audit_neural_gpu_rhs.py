@@ -67,7 +67,7 @@ def initial_case(recipe,record):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
+    p.add_argument('--context-capacity',type=int,default=0);p.add_argument('--interface-only',action='store_true');p.add_argument('--eq-readout',type=Path)
     p.add_argument('--limit',type=int,default=8);p.add_argument('--follow',action='store_true');a=p.parse_args()
     if a.limit<1:raise ValueError('positive case budget required')
     if a.eq_readout and not (a.follow and a.interface_only):raise ValueError('Eq audit requires interface-only following candidates')
@@ -118,9 +118,9 @@ def main():
             if 'owner_'+column in final:preserved &= np.array_equal(read(before_host,column,rr,ss,np),read(final,column,rr,ss,np))
         report=dict(producer=int(chain['producer'][i]),consumer=int(chain['consumer'][i]),executed=int(executed),new_constructors=int(created),new_equivalences=int(merged),pending=bool(marks['needs_attention']),graph=check,facts_decoded=covered,transfer_covered=tp['covered'],transferred=bool(move['transferred']),copied_fields=int(move['copied_fields']),interfaces_preserved=bool(preserved),token_retained=bool(np.array_equal(np.array(state['tokens'][dst]),np.array(tokens[i]))))
         if a.follow and check['passed']:
-            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head)
+            report['follow']=follow_candidates(recipe,local,state,frames,model,oracle,check.pop('mapping'),dst,eq_head,a.context_capacity)
         reports.append(report);print(json.dumps(report),flush=True)
-    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,wall_seconds=time.perf_counter()-started,speedup_claim=False)
+    result=dict(scope='GPU exact RHS completion and neural-token owner transfer on independent synthetic initial snapshots; not autonomous matching or saturation',cases=reports,available_template_pairs=available,selected_pairs=len(reports),recipe_sha256=hashlib.sha256(json.dumps(recipe,sort_keys=True).encode()).hexdigest(),weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),interface_only=a.interface_only,cpu_prefilled_target_rhs=False,cpu_supplied_initial_bindings=True,device_follow_candidates=a.follow,context_capacity=a.context_capacity,wall_seconds=time.perf_counter()-started,speedup_claim=False)
     if a.eq_readout:result['readout_weights_sha256']=hashlib.sha256(a.eq_readout.read_bytes()).hexdigest()
     failed=audit_failed(reports,a.follow)
     result['status']='difference' if failed else 'pass'
@@ -140,9 +140,9 @@ def audit_failed(reports,follow=False):
     return not reports
 
 
-def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None):
+def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_row,eq_head=None,context_capacity=0):
     from neural_device_candidates import compile_candidates,candidates
-    counts=dict(candidates=0,accepted=0,false_positive=0,expected=0,recovered=0,missed=0,incomplete_rules=0,accepted_from_generated=0,invalid_predictions=0)
+    counts=dict(candidates=0,accepted=0,false_positive=0,expected=0,recovered=0,missed=0,incomplete_rules=0,accepted_from_generated=0,invalid_predictions=0,context_overflow_rules=0,context_inputs=0)
     groups=[]
     if eq_head is not None:
         from copy import deepcopy
@@ -152,7 +152,7 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
         width=max(len(r['slots']) for r in recipe['rules'])
         counts.update(semantic_states=0,semantic_wrong_states=0,semantic_false_merge_states=0,semantic_local_wrong_states=0,semantic_external_eq_states=0,semantic_feature_conflicts=0,semantic_local_feature_conflicts=0)
     for rid,rule in enumerate(recipe['rules']):
-        host_plan=compile_candidates(local,rule)
+        host_plan=compile_candidates(local,rule,context_capacity=context_capacity)
         batch=candidates(state,frames,device(host_plan),mx.array(True),mx.array(True),mx)
         logits,tokens=model.transition(batch['tokens'],batch['edges'],batch['mask'],batch['request'],batch['relations']);mx.eval(batch,logits,tokens)
         if eq_head is not None:
@@ -181,8 +181,8 @@ def follow_candidates(recipe,local,state,frames,model,oracle,mapping,generated_r
                 if signature in feature_labels:
                     conflicts+=value[0]!=feature_labels[signature][0];local_conflicts+=value[1]!=feature_labels[signature][1]
                 else:feature_labels[signature]=value
-            from_generated+=bool((sources[index]==generated_row).any())
-        group=dict(rule=rid,invalid_predictions=int((live&~finite).sum()),candidates=int(live.sum()),accepted=int(pred.sum()),false_positive=fp,expected=len(expected),recovered=len(recovered),missed=len(expected-recovered),incomplete_rules=int(not bool(batch['complete'])),accepted_from_generated=from_generated)
+            from_generated+=bool((sources[index,:host_plan['atoms']]==generated_row).any())
+        group=dict(rule=rid,context_overflow_rules=int(bool(batch['context_overflow'])),context_inputs=int(np.array(batch['mask'])[pred,host_plan['atoms']:].sum()),invalid_predictions=int((live&~finite).sum()),candidates=int(live.sum()),accepted=int(pred.sum()),false_positive=fp,expected=len(expected),recovered=len(recovered),missed=len(expected-recovered),incomplete_rules=int(not bool(batch['complete'])),accepted_from_generated=from_generated)
         if eq_head is not None:
             m=metrics(np.array(eq_scores).reshape(-1,width*(width-1)//2),np.array(eq_labels).reshape(-1,width*(width-1)//2),np.array(eq_masks).reshape(-1,width*(width-1)//2),width)
             loc=np.array(eq_local).reshape(-1,width*(width-1)//2);full=np.array(eq_labels).reshape(loc.shape);mask=np.array(eq_masks,dtype=bool).reshape(loc.shape)

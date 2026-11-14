@@ -62,6 +62,26 @@ class DeviceCandidates(unittest.TestCase):
         self.assertFalse(audit_failed([dict(good,follow=dict(counts=counts))],True))
         self.assertTrue(audit_failed([dict(good,follow=dict(counts=dict(counts,semantic_wrong_states=1)))],True))
 
+    def test_context_tokens_cover_resident_cells_without_changing_query_incidence(self):
+        recipe,local,state,frames,_=self.prepared()
+        plain=candidates(state,frames,device(compile_candidates(local,recipe['rules'][0])),mx.array(True),mx.array(True),mx)
+        rich=candidates(state,frames,device(compile_candidates(local,recipe['rules'][0],context_capacity=8)),mx.array(True),mx.array(True),mx)
+        mx.eval(plain,rich)
+        np.testing.assert_array_equal(plain['relations'],rich['relations'])
+        np.testing.assert_array_equal(plain['binding_roots'],rich['binding_roots'])
+        expected=set(np.flatnonzero(np.array(state['present']&state['visible']&state['settled'])))
+        for i in np.flatnonzero(np.array(rich['live'])):
+            sources=np.array(rich['sources'][i]);mask=np.array(rich['mask'][i])
+            self.assertEqual(set(sources[mask]),expected)
+        self.assertFalse(bool(rich['context_overflow']))
+        np.testing.assert_allclose(np.array(rich['tokens']),np.array(state['tokens'])[np.array(rich['sources'])]+np.array(rich['source_tags']),atol=1e-6)
+        tags=np.array(rich['source_tags'][0]);self.assertFalse(np.array_equal(tags[0],tags[1]))
+        self.assertFalse(np.array_equal(tags[0],tags[2]))
+        np.testing.assert_array_equal(tags[2:],np.broadcast_to(tags[2],tags[2:].shape))
+        narrow=candidates(state,frames,device(compile_candidates(local,recipe['rules'][0],context_capacity=1)),mx.array(True),mx.array(True),mx)
+        self.assertTrue(bool(narrow['context_overflow']))
+        self.assertFalse(bool(narrow['complete']))
+
     def test_overflow_blocks_complete_enumeration_claim(self):
         recipe,local,state,frames,_=self.prepared()
         batch=candidates(state,frames,device(compile_candidates(local,recipe['rules'][0],capacity=2)),mx.array(True),mx.array(True),mx)

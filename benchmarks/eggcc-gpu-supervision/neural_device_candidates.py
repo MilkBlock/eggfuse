@@ -51,8 +51,14 @@ def encode_seeds(state,layout,model,xp,field_width=5):
     return dict(state,tokens=xp.where(update[:,None],token,state['tokens']))
 
 
-def compile_candidates(recipe,consumer,capacity=16,atoms=2,fields=5):
-    if not 1<=len(consumer['query'])<=atoms or capacity<1:raise ValueError('candidate shape')
+def input_role_tags(atoms,context_capacity):
+    if not context_capacity:return np.zeros((atoms,128),np.float32)
+    roles=[('query',i) for i in range(atoms)]+[('context',)]*context_capacity
+    return np.array([np.concatenate([vec(('cell-input-role',role,j)) for j in (0,1)]) for role in roles],np.float32)
+
+
+def compile_candidates(recipe,consumer,capacity=16,atoms=2,fields=5,context_capacity=0):
+    if not 1<=len(consumer['query'])<=atoms or capacity<1 or context_capacity<0:raise ValueError('candidate shape')
     tables={t['name']:i for i,t in enumerate(recipe['tables'])};views=[];origins={}
     for ai,a in enumerate(consumer['query']):
         if len(a['args'])>fields or any('slot' not in x for x in a['args']):raise ValueError('unsupported query projection')
@@ -60,8 +66,8 @@ def compile_candidates(recipe,consumer,capacity=16,atoms=2,fields=5):
         for fi,arg in enumerate(a['args']):origins.setdefault(arg['slot'],(ai,fi))
     inputs=[s for s,d in enumerate(consumer['slots']) if d['definition']=='query']
     if set(inputs)!=set(origins):raise ValueError('incomplete input projection')
-    return dict(views=views,capacity=capacity,atoms=atoms,fields=fields,inputs=inputs,origins=origins,
-                required=demand(consumer,atoms,fields),request=template(consumer)[1])
+    return dict(views=views,capacity=capacity,atoms=atoms,fields=fields,inputs=inputs,origins=origins,context_capacity=context_capacity,
+                required=demand(consumer,atoms,fields),request=template(consumer)[1],source_tags=input_role_tags(atoms,context_capacity))
 
 
 def candidates(state,frames,plan,external_complete,eq_settled,xp):
@@ -91,11 +97,24 @@ def candidates(state,frames,plan,external_complete,eq_settled,xp):
     sources=xp.stack(sources,axis=1);projected=xp.stack(projected,axis=1)
     mask=xp.broadcast_to(xp.arange(plan['atoms'])<len(views),(count,plan['atoms']))
     n,width=shape(state);rr=xp.arange(n)[:,None];ss=xp.arange(width)[None,:]
+    context_overflow=xp.array(False)
+    if plan['context_capacity']:
+        k=plan['context_capacity'];row=xp.arange(n)
+        used=xp.any((sources[:,:,None]==row[None,None,:])&mask[:,:,None],axis=1)
+        eligible=state['present']&state['visible']&state['settled']
+        extra=eligible[None,:]&~used
+        order=xp.sort(xp.where(extra,n-1-row[None,:],n),axis=1)[:,:k]
+        if order.shape[1]<k:order=xp.concatenate([order,xp.full((count,k-order.shape[1]),n,xp.int32)],axis=1)
+        selected=order<n;pick=xp.clip(n-1-order,0,n-1)
+        sources=xp.concatenate([sources,pick],axis=1);mask=xp.concatenate([mask,selected],axis=1)
+        context_overflow=xp.any(alive&(xp.sum(extra.astype(xp.int32),axis=1)>k))
+        # Unsettled resident context is not silently treated as absent.
+        complete=complete&~xp.any(state['present']&state['visible']&~state['settled'])
     rid=xp.clip(state['keys'][:,0],0,len(frames['roles'])-1)
     valid=read(state,'slot_valid',rr,ss,xp)&frames['valid'][rid]
     labels=xp.where(valid,read(state,'slot_roots',rr,ss,xp),-1)
     edges=relational_edges(labels,frames['roles'][rid],sources)
     binding=xp.stack([projected[:,plan['origins'][s][0],plan['origins'][s][1]] for s in plan['inputs']],axis=1)
-    return dict(tokens=state['tokens'][sources],edges=edges,mask=mask,request=xp.broadcast_to(plan['request'],(count,64)),
+    return dict(tokens=state['tokens'][sources]+plan['source_tags'][None,:,:],source_tags=xp.broadcast_to(plan['source_tags'],(count,sources.shape[1],128)),edges=edges,mask=mask,request=xp.broadcast_to(plan['request'],(count,64)),
                 relations=incidence(projected,plan['required'],xp),sources=sources,generations=state['generation'][sources],binding_roots=binding,
-                live=alive,complete=complete&~overflow,overflow=overflow)
+                live=alive,complete=complete&~overflow&~context_overflow,overflow=overflow,context_overflow=context_overflow)
