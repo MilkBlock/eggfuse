@@ -22,7 +22,9 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
     batch=(model.current_candidate_batch(read_state,frames,query_plan,xp) if current_state_model else
            candidates(read_state,frames,query_plan,xp.array(True),xp.array(True),xp))
     logits,tokens=model.transition(batch['tokens'],batch['edges'],batch['mask'],batch['request'],batch['relations'])
-    scores=eq_head(tokens,batch['request'])
+    template_only=getattr(model,'template_only',False)
+    scores=(xp.zeros((len(logits),frame_plan['score_width']),xp.float32) if template_only else
+            eq_head(tokens,batch['request']))
     finite=xp.isfinite(logits)&xp.all(xp.isfinite(tokens),axis=1)&xp.all(xp.isfinite(scores),axis=1)
     eligible=batch['live']&batch['constraints_satisfied']&(logits>=0)&finite
     n=len(logits);padding=state['keys'].shape[1]-1-batch['binding_roots'].shape[1]
@@ -40,7 +42,7 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
     if context_depth:
         from device_witness_context import inspect
         context_invalid=inspect(state,batch['sources'][selected],batch['mask'][selected],batch['generations'][selected],context_depth,xp)[3]
-    payload,proposed_roots,ready=frame_payload(state,frame_plan,batch,selected,scores[selected],next_id,roots,xp,template_effects=current_state_model)
+    payload,proposed_roots,ready=frame_payload(state,frame_plan,batch,selected,scores[selected],next_id,roots,xp,template_effects=current_state_model,template_only=getattr(model,'template_only',False))
     result,marks=install(state,payload,proposed_roots,batch,selected,tokens[selected],rule_id,frame_plan['inputs'],ready&requested&~context_invalid,xp,current_state_inputs=current_state_model)
     accepted=xp.any(marks['accepted'])
     latent_refresh=marks['token_refresh_required']&xp.array(not current_state_model)
@@ -61,5 +63,5 @@ def advance(state,roots,next_id,frames,query_plan,frame_plan,rule_id,model,eq_he
         payload_invalid=requested&~ready&(next_id>=0)&(next_id<=len(roots)-payload['slots'].shape[1]),
         token_refresh_required=latent_refresh,
         current_state_inputs=xp.array(current_state_model))
-    if capture:event.update(output_token=tokens[selected],request=batch['request'][selected],eq_scores=scores[selected],sources=batch['sources'][selected])
+    if capture:event.update(output_token=tokens[selected],request=batch['request'][selected],eq_scores=scores[selected],eq_scores_predicted=xp.array(not template_only),sources=batch['sources'][selected])
     return result,xp.where(accepted,proposed_roots,roots),xp.where(accepted,next_id+payload['slots'].shape[1],next_id),event

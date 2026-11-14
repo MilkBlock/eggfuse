@@ -40,7 +40,7 @@ def summarize(cases):
 def main():
     p=argparse.ArgumentParser();p.add_argument('trace',type=Path);p.add_argument('weights',type=Path)
     p.add_argument('output',type=Path);p.add_argument('--runs',type=int,default=3)
-    p.add_argument('--candidate-capacity',type=int,default=16);p.add_argument('--pair',type=int,nargs=2);p.add_argument('--limit',type=int,default=61);p.add_argument('--attempts',type=int,default=8)
+    p.add_argument('--template-only',action='store_true');p.add_argument('--candidate-capacity',type=int,default=16);p.add_argument('--pair',type=int,nargs=2);p.add_argument('--limit',type=int,default=61);p.add_argument('--attempts',type=int,default=8)
     a=p.parse_args()
     if min(a.runs,a.limit,a.attempts,a.candidate_capacity)<1:raise ValueError('positive budgets required')
     raw=json.loads(a.trace.read_text());recipe,stage=select_ruleset(raw.get('recipe',raw),'canon')
@@ -51,7 +51,7 @@ def main():
     chain,_=chains(recipe,records,ordered=True,transfers=transfers,include_uncovered_transfers=True)
     slots=max(len(r['slots']) for r in recipe['rules']);atoms=base['x'].shape[1];fields=base['x'].shape[-1]//128
     model=CurrentCellModel(manifest['input_width'],base['relations'].shape[-1],slots)
-    model.load_weights(str(a.weights));selected=[];seen=set()
+    model.load_weights(str(a.weights));model.template_only=a.template_only;selected=[];seen=set()
     for record in transfers:
         i=record['chain'];pair=(int(chain['producer'][i]),int(chain['consumer'][i]))
         if pair not in seen:seen.add(pair);selected.append((pair,record))
@@ -78,7 +78,7 @@ def main():
         plans=[]
         for i,r in enumerate(recipe['rules']):
             query=device(compile_candidates(local,r,atoms=atoms,fields=fields,compact_constants=True,capacity=a.candidate_capacity))
-            frame=compile_frame(r,width,slots,local,True)
+            frame=compile_frame(r,width,slots,local,True,local_conditions=a.template_only)
             for site in frame['witness_sites'].values():site['context_depth']=1
             plans.append((offset+i,query,frame))
         results=[]
@@ -99,7 +99,7 @@ def main():
         print(json.dumps(dict(pair=pair,runs=len(results),status=results[-1]['status'])),flush=True)
     result=dict(scope='standalone synthetic canon multi-Run GPU audit; exact initial Cells, no CPU corrections',
         recipe_sha256=recipe_hash,weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),
-        stage=stage,run_budget=a.runs,attempts=a.attempts,candidate_capacity=a.candidate_capacity,cases=reports,
+        stage=stage,template_only=a.template_only,run_budget=a.runs,attempts=a.attempts,candidate_capacity=a.candidate_capacity,cases=reports,
         summary=summarize(reports),
         first_run_pass=sum(x['runs'][0]['status']=='pass' for x in reports),
         verified_fixedpoints=sum(x['runs'][-1]['status']=='pass' and not x['runs'][-1]['run_changed'] for x in reports))

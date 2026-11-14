@@ -58,7 +58,7 @@ def diagnose(local,reference,execution,mapping,width,collector=None):
         for (i,j),k in indices.items():
             if j>=len(values) or rule['slots'][i]['sort']['kind']!='eq' or rule['slots'][i]['sort']!=rule['slots'][j]['sort']:continue
             expected=ref.root(values[i])==ref.root(values[j]);observed=bool(actual[i]==actual[j])
-            if expected!=observed:pairs.append(dict(slots=[i,j],expected=expected,observed=observed,score=float(scores[k])))
+            if expected!=observed:pairs.append(dict(slots=[i,j],expected=expected,observed=observed,score=float(scores[k]) if bool(event.get('eq_scores_predicted',True)) else None))
         events.append(dict(rule_id=rid,binding=sorted(binding.items()),sources=np.array(event['sources']).tolist(),pairs=pairs))
         if pairs:return dict(events=events,incomplete='first incorrect installed frame')
         for handle,value in zip(np.array(event['result_slots']),values):

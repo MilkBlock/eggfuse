@@ -9,7 +9,7 @@ from device_slot_owners import COLUMNS,read,shape
 from device_token_commit import commit
 
 
-def compile_frame(rule,width,eq_width,recipe=None,reuse_witnesses=False):
+def compile_frame(rule,width,eq_width,recipe=None,reuse_witnesses=False,local_conditions=False):
     from typed_literal import compiled_id
     def operand(a):
         return "slot" in a or (recipe is not None and compiled_id(a,recipe)>=0)
@@ -38,10 +38,14 @@ def compile_frame(rule,width,eq_width,recipe=None,reuse_witnesses=False):
     constants=[(i,v) for i,v in constants if v['sort']=='i64']
     from device_source_witness import compile_sites
     witness_sites=compile_sites(recipe,rule) if reuse_witnesses else {}
-    return dict(required_eq=required_eq,witness_sites=witness_sites,literal_inputs=[s['sort'].get('kind')=='i64' and s['sort'].get('name')=='i64' for s in rule['slots']],literal_ids=np.array([i for i,v in constants],np.int32),literal_codes=np.array([scalar(v) for i,v in constants],np.float32).reshape(-1,64),literal_numbers=np.array([v['value'] for i,v in constants],np.float32),operations=operations,inputs=[s for s,d in enumerate(rule['slots']) if d['definition']=='query'],pair_index=indices,allowed=allowed,slots=len(rule['slots']))
+    conditions=None
+    if local_conditions:
+        from device_cell_conditions import compile_conditions
+        conditions=compile_conditions(recipe,rule,width)
+    return dict(score_width=eq_width*(eq_width-1)//2,local_conditions=conditions,required_eq=required_eq,witness_sites=witness_sites,literal_inputs=[s['sort'].get('kind')=='i64' and s['sort'].get('name')=='i64' for s in rule['slots']],literal_ids=np.array([i for i,v in constants],np.int32),literal_codes=np.array([scalar(v) for i,v in constants],np.float32).reshape(-1,64),literal_numbers=np.array([v['value'] for i,v in constants],np.float32),operations=operations,inputs=[s for s,d in enumerate(rule['slots']) if d['definition']=='query'],pair_index=indices,allowed=allowed,slots=len(rule['slots']))
 
 
-def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp,template_effects=False):
+def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp,template_effects=False,template_only=False):
     _,width=shape(state);payload={}
     for column in COLUMNS:
         old=state['owner_'+column] if 'slot_owner' in state else state[column]
@@ -80,12 +84,23 @@ def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp,template_eff
                 payload[column]=xp.where(mask[:,:,None] if column=='scalar_codes' else mask,payload[column][:,src:src+1],payload[column])
     before=payload['slot_roots'][0];valid=payload['slot_valid'][0]
     allowed=xp.array(plan['allowed'])&valid[:,None]&valid[None,:]
-    adjacency=allowed&((scores[xp.array(plan['pair_index'])]>=0)|(before[:,None]==before[None,:]))
-    if template_effects:
+    proposed_eq=xp.zeros_like(allowed) if template_only else scores[xp.array(plan['pair_index'])]>=0
+    adjacency=allowed&(proposed_eq|(before[:,None]==before[None,:]))
+    if template_effects or template_only:
         adjacency=adjacency|(allowed&xp.array(plan['required_eq']))
     adjacency=adjacency|xp.eye(width,dtype=xp.bool_)
     labels=before
-    for _ in range(width):labels=xp.min(xp.where(adjacency,labels[None,:],xp.iinfo(labels.dtype).max),axis=1)
+    if template_only and plan.get('local_conditions') is None:raise ValueError('template-only mode requires compiled local conditions')
+    for _ in range(width):
+        if template_only:
+            from device_cell_conditions import activate
+            adjacency=adjacency|activate(plan['local_conditions'],labels,valid,xp)
+        labels=xp.min(xp.where(adjacency,labels[None,:],xp.iinfo(labels.dtype).max),axis=1)
+    local_settled=xp.array(True)
+    if template_only:
+        check_edges=adjacency|activate(plan['local_conditions'],labels,valid,xp)
+        check_labels=xp.min(xp.where(check_edges,labels[None,:],xp.iinfo(labels.dtype).max),axis=1)
+        local_settled=xp.all(check_labels==labels)
     # Preserve the base snapshot's exact identities; the overlay aliases their
     # current roots and the new frame's handles without rewriting stable slots.
     handles=xp.arange(len(roots))
@@ -98,7 +113,7 @@ def frame_payload(state,plan,batch,index,scores,fresh_base,roots,xp,template_eff
     alias=xp.where((roots[:,None]==before[None,:])&valid[None,:],labels[None,:],roots[:,None])
     proposed=xp.min(alias,axis=1)
     payload['slot_roots']=proposed[xp.clip(before,0,len(roots)-1)][None,:]
-    ready=xp.all(valid[:plan['slots']])&xp.all(xp.isfinite(scores))&(fresh_base>=0)&(fresh_base<=len(roots)-width)
+    ready=local_settled&xp.all(valid[:plan['slots']])&xp.all(xp.isfinite(scores))&(fresh_base>=0)&(fresh_base<=len(roots)-width)
     return payload,proposed,ready
 
 

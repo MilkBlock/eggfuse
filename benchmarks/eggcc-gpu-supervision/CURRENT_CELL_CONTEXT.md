@@ -179,3 +179,29 @@ There is no claim of complete congruence or boundary coverage. The static mask
 uses existing closure machinery, not a new per-instance dependency registry.
 Thirteen relevant installer/Run tests pass. Earlier learned-model audit results
 predate this change and must not be presented as validation of the new behavior.
+
+## Experimental template-only effect semantics
+
+`audit_current_cell.py --template-only` keeps the current-state floating matcher
+but bypasses the learned Eq readout entirely. The installed equality relation is
+formed from current identities, explicit template unions, copy aliases, actual
+returned constructor witnesses and local congruence conditions. The compiler
+pairs occurrences of the same constructor in query/effects; all corresponding
+inputs must be equal before their output ports merge. Fixed wiring is shared in
+the plan; no per-instance reverse subscribers are created. Bound scalar literals
+use exact reserved identity metadata. Unsupported non-constructor facts fail
+compilation rather than being silently treated as constructors.
+
+The local closure uses bounded GPU operations and explicitly checks settlement
+before installation. Stable slot handles remain unchanged. This is exact semantic
+control, not a claim that Boolean/int operations realize neural floating speed.
+The candidate matcher can still miss cases; external constructor reuse and
+cross-Cell congruence coverage remain incomplete. Full-Run CPU audit therefore
+remains required. This mode is experimental, not the default.
+
+Pair (1,6), previously failing with the 3,000-step learned Eq head, passes two
+Runs and reaches a CPU-verified fixed point with this mode (capacity 32). Evidence:
+`template-cell-transition-results.json`. The final audit rerun bypasses Eq-head
+computation, not merely its outputs. Installer, condition, admission and audit
+unit checks pass. This targeted result does not establish all-workload correctness
+or any speedup.
