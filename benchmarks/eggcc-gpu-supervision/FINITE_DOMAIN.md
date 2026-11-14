@@ -147,3 +147,27 @@ correct facts, then overflows at 67 Bop candidates. Its lack of saturation is
 unresolved, not proof of infinite growth. Raising capacity again without
 examining this expansion is not the next correctness fix. See
 `witness-context-results.json` for the retained results and artifact location.
+
+## Exact CPU termination census
+
+`audit_synthetic_growth.py TRACE OUTPUT.json --all-pairs` independently runs
+the original rule effects for the same seed, four source samples per rule, and
+first entry of each pair used by the GPU audit. All matches are captured before
+each reference Run. It does not use learned weights or device plans. It retains
+growth budgets as explicit outcomes, never certificates of nontermination or
+saturation. Tests check exact quiescence, budget handling, and source immutability.
+
+`synthetic-growth-results.json` reports 60 fixed points and one twelve-round
+budget exhaustion, exactly the pair (5,7) still productive on GPU. Its initial
+graph aliases `LessEq()` and `LessThan()` at root 2. Rule 7's output
+`LessThan(Sub(x,one),y)` therefore matches the same `LessEq` input pattern while
+retaining the result's context and y's type facts. The precise reference adds
+four constructors in round one and three in each subsequent observed round,
+with zero new unions. This explains the witnessed recursive expansion; a
+bounded run alone is not a general termination proof.
+
+The problematic input is retained. No disjoint-constructor assumption is added
+to the egraph semantics, and the GPU `difference` is not reclassified as pass.
+Finite template interaction types do not guarantee a bounded number of dynamic
+instances. All 60 entries reaching an exact reference fixed point also pass the
+current GPU cumulative checks, within this single-ruleset synthetic fixture.

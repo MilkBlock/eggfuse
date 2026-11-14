@@ -1,0 +1,1911 @@
+{
+  "scope": "exact CPU reference termination census for all selected synthetic pairs",
+  "artifact_root": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/witness-context-v31",
+  "stage_manifest": {
+    "ruleset": "canon",
+    "source_rule_ids": [
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277
+    ],
+    "membership_authoritative": true,
+    "full_schedule_replaced_for_training": true
+  },
+  "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+  "statuses": {
+    "fixedpoint": 60,
+    "round_budget": 1
+  },
+  "cases": [
+    {
+      "pair": [
+        0,
+        0
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 5,
+      "aliased_nullary_constructors": []
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Add",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        0,
+        2
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Add",
+            "Eq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        0,
+        3
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Add",
+            "And"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        0,
+        4
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Add",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        0,
+        5
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 7,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Add",
+            "GreaterThan"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        0,
+        6
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Add",
+            "GreaterEq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        0,
+        7
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Add",
+            "LessEq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        1,
+        0
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Add",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        1,
+        1
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 5,
+      "aliased_nullary_constructors": []
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Eq",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        1,
+        3
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "And",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        1,
+        4
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Mul",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        1,
+        5
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 7,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "GreaterThan",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        1,
+        6
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 16,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "GreaterEq",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        1,
+        7
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 16,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "LessEq",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        2,
+        0
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 3,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Add",
+            "Eq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        2,
+        1
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 3,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Eq",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        2,
+        2
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": []
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 3,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "And",
+            "Eq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        2,
+        4
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 3,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Eq",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        2,
+        5
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 5,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Eq",
+            "GreaterThan"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        2,
+        6
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Eq",
+            "GreaterEq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        2,
+        7
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Eq",
+            "LessEq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        3,
+        0
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Add",
+            "And"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        3,
+        1
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "And",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "And",
+            "Eq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        3,
+        3
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 5,
+      "aliased_nullary_constructors": []
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "And",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        3,
+        5
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 7,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "And",
+            "GreaterThan"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        3,
+        6
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 16,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "And",
+            "GreaterEq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        3,
+        7
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 16,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "And",
+            "LessEq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        4,
+        0
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 3,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Add",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        4,
+        1
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 3,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Mul",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        4,
+        2
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 3,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "Eq",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        4,
+        3
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 3,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "And",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        4,
+        4
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 4,
+      "aliased_nullary_constructors": []
+    },
+    {
+      "pair": [
+        4,
+        5
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 5,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "GreaterThan",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        4,
+        6
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "GreaterEq",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        4,
+        7
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 0,
+          "tables": [
+            "LessEq",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        5,
+        0
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 5,
+      "aliased_nullary_constructors": [
+        {
+          "root": 2,
+          "tables": [
+            "Add",
+            "LessThan"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        5,
+        1
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 5,
+      "aliased_nullary_constructors": [
+        {
+          "root": 2,
+          "tables": [
+            "LessThan",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 5,
+      "aliased_nullary_constructors": [
+        {
+          "root": 2,
+          "tables": [
+            "Eq",
+            "LessThan"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        5,
+        3
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 5,
+      "aliased_nullary_constructors": [
+        {
+          "root": 2,
+          "tables": [
+            "And",
+            "LessThan"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        5,
+        4
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 5,
+      "aliased_nullary_constructors": [
+        {
+          "root": 2,
+          "tables": [
+            "LessThan",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        5,
+        6
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 19,
+      "aliased_nullary_constructors": [
+        {
+          "root": 2,
+          "tables": [
+            "GreaterEq",
+            "LessThan"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        5,
+        7
+      ],
+      "status": "round_budget",
+      "rounds": 12,
+      "final_facts": 52,
+      "aliased_nullary_constructors": [
+        {
+          "root": 2,
+          "tables": [
+            "LessEq",
+            "LessThan"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        6,
+        0
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 16,
+      "aliased_nullary_constructors": []
+    },
+    {
+      "pair": [
+        6,
+        1
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 7,
+          "tables": [
+            "Add",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        6,
+        2
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 7,
+          "tables": [
+            "Add",
+            "Eq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        6,
+        3
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 7,
+          "tables": [
+            "Add",
+            "And"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        6,
+        4
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 7,
+          "tables": [
+            "Add",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        6,
+        5
+      ],
+      "status": "fixedpoint",
+      "rounds": 3,
+      "final_facts": 17,
+      "aliased_nullary_constructors": [
+        {
+          "root": 7,
+          "tables": [
+            "Add",
+            "GreaterThan"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        6,
+        7
+      ],
+      "status": "fixedpoint",
+      "rounds": 4,
+      "final_facts": 29,
+      "aliased_nullary_constructors": [
+        {
+          "root": 7,
+          "tables": [
+            "Add",
+            "LessEq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        7,
+        0
+      ],
+      "status": "fixedpoint",
+      "rounds": 2,
+      "final_facts": 16,
+      "aliased_nullary_constructors": []
+    },
+    {
+      "pair": [
+        7,
+        1
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 9,
+          "tables": [
+            "Add",
+            "Mul"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        7,
+        2
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 9,
+          "tables": [
+            "Add",
+            "Eq"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        7,
+        3
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 9,
+          "tables": [
+            "Add",
+            "And"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        7,
+        4
+      ],
+      "status": "fixedpoint",
+      "rounds": 1,
+      "final_facts": 15,
+      "aliased_nullary_constructors": [
+        {
+          "root": 9,
+          "tables": [
+            "Add",
+            "Or"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        7,
+        5
+      ],
+      "status": "fixedpoint",
+      "rounds": 3,
+      "final_facts": 17,
+      "aliased_nullary_constructors": [
+        {
+          "root": 9,
+          "tables": [
+            "Add",
+            "GreaterThan"
+          ]
+        }
+      ]
+    },
+    {
+      "pair": [
+        7,
+        6
+      ],
+      "status": "fixedpoint",
+      "rounds": 3,
+      "final_facts": 35,
+      "aliased_nullary_constructors": [
+        {
+          "root": 9,
+          "tables": [
+            "Add",
+            "GreaterEq"
+          ]
+        }
+      ]
+    }
+  ],
+  "productive_case": {
+    "pair": [
+      5,
+      7
+    ],
+    "scope": "exact standalone CPU reference with all matches before each Run; not native egglog or GPU execution",
+    "status": "round_budget",
+    "logs": [
+      {
+        "round": 1,
+        "applications": 4,
+        "per_rule_applications": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2
+        ],
+        "new_constructors": 4,
+        "new_unions": 0,
+        "facts": 19,
+        "tables": {
+          "Sub": 1,
+          "Const": 1,
+          "Bop": 10,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              13,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              14,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              7,
+              10,
+              1,
+              11
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              13,
+              10,
+              14
+            ]
+          ]
+        ]
+      },
+      {
+        "round": 2,
+        "applications": 6,
+        "per_rule_applications": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          3
+        ],
+        "new_constructors": 3,
+        "new_unions": 0,
+        "facts": 22,
+        "tables": {
+          "Sub": 1,
+          "Bop": 13,
+          "Const": 1,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              14,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              15,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              14,
+              10,
+              15
+            ]
+          ]
+        ]
+      },
+      {
+        "round": 3,
+        "applications": 7,
+        "per_rule_applications": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          4
+        ],
+        "new_constructors": 3,
+        "new_unions": 0,
+        "facts": 25,
+        "tables": {
+          "Bop": 16,
+          "Sub": 1,
+          "Const": 1,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              15,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              16,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              15,
+              10,
+              16
+            ]
+          ]
+        ]
+      },
+      {
+        "round": 4,
+        "applications": 8,
+        "per_rule_applications": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          5
+        ],
+        "new_constructors": 3,
+        "new_unions": 0,
+        "facts": 28,
+        "tables": {
+          "Bop": 19,
+          "Sub": 1,
+          "Const": 1,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              16,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              17,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              16,
+              10,
+              17
+            ]
+          ]
+        ]
+      },
+      {
+        "round": 5,
+        "applications": 9,
+        "per_rule_applications": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          6
+        ],
+        "new_constructors": 3,
+        "new_unions": 0,
+        "facts": 31,
+        "tables": {
+          "Bop": 22,
+          "Sub": 1,
+          "Const": 1,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              17,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              18,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              17,
+              10,
+              18
+            ]
+          ]
+        ]
+      },
+      {
+        "round": 6,
+        "applications": 10,
+        "per_rule_applications": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          7
+        ],
+        "new_constructors": 3,
+        "new_unions": 0,
+        "facts": 34,
+        "tables": {
+          "Bop": 25,
+          "Sub": 1,
+          "Const": 1,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              18,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              19,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              18,
+              10,
+              19
+            ]
+          ]
+        ]
+      },
+      {
+        "round": 7,
+        "applications": 11,
+        "per_rule_applications": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          8
+        ],
+        "new_constructors": 3,
+        "new_unions": 0,
+        "facts": 37,
+        "tables": {
+          "Bop": 28,
+          "Sub": 1,
+          "Const": 1,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              19,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              20,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              19,
+              10,
+              20
+            ]
+          ]
+        ]
+      },
+      {
+        "round": 8,
+        "applications": 12,
+        "per_rule_applications": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          9
+        ],
+        "new_constructors": 3,
+        "new_unions": 0,
+        "facts": 40,
+        "tables": {
+          "Bop": 31,
+          "Sub": 1,
+          "Const": 1,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              20,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              21,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              20,
+              10,
+              21
+            ]
+          ]
+        ]
+      },
+      {
+        "round": 9,
+        "applications": 13,
+        "per_rule_applications": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          10
+        ],
+        "new_constructors": 3,
+        "new_unions": 0,
+        "facts": 43,
+        "tables": {
+          "Bop": 34,
+          "Sub": 1,
+          "Const": 1,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              21,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              22,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              21,
+              10,
+              22
+            ]
+          ]
+        ]
+      },
+      {
+        "round": 10,
+        "applications": 14,
+        "per_rule_applications": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          11
+        ],
+        "new_constructors": 3,
+        "new_unions": 0,
+        "facts": 46,
+        "tables": {
+          "Bop": 37,
+          "Sub": 1,
+          "Const": 1,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              22,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              23,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              22,
+              10,
+              23
+            ]
+          ]
+        ]
+      },
+      {
+        "round": 11,
+        "applications": 15,
+        "per_rule_applications": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          12
+        ],
+        "new_constructors": 3,
+        "new_unions": 0,
+        "facts": 49,
+        "tables": {
+          "Bop": 40,
+          "Sub": 1,
+          "Const": 1,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              23,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              24,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              23,
+              10,
+              24
+            ]
+          ]
+        ]
+      },
+      {
+        "round": 12,
+        "applications": 16,
+        "per_rule_applications": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          13
+        ],
+        "new_constructors": 3,
+        "new_unions": 0,
+        "facts": 52,
+        "tables": {
+          "Bop": 43,
+          "Sub": 1,
+          "Const": 1,
+          "LessThan": 1,
+          "LessEq": 1,
+          "Add": 1,
+          "GreaterThan": 1,
+          "Int": 1,
+          "ContextOf": 1,
+          "HasArgType": 1
+        },
+        "new_normalized_facts": [
+          [
+            "Bop",
+            [
+              2,
+              24,
+              11,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              2,
+              25,
+              1,
+              1
+            ]
+          ],
+          [
+            "Bop",
+            [
+              12,
+              24,
+              10,
+              25
+            ]
+          ]
+        ]
+      }
+    ],
+    "initial_facts": [
+      [
+        "Add",
+        [
+          7
+        ]
+      ],
+      [
+        "Bop",
+        [
+          0,
+          1,
+          1,
+          1
+        ]
+      ],
+      [
+        "Bop",
+        [
+          2,
+          1,
+          1,
+          1
+        ]
+      ],
+      [
+        "Bop",
+        [
+          2,
+          1,
+          11,
+          1
+        ]
+      ],
+      [
+        "Bop",
+        [
+          2,
+          13,
+          1,
+          1
+        ]
+      ],
+      [
+        "Bop",
+        [
+          7,
+          1,
+          10,
+          11
+        ]
+      ],
+      [
+        "Bop",
+        [
+          12,
+          1,
+          10,
+          13
+        ]
+      ],
+      [
+        "Const",
+        [
+          9,
+          3,
+          5,
+          10
+        ]
+      ],
+      [
+        "ContextOf",
+        [
+          1,
+          5,
+          6
+        ]
+      ],
+      [
+        "GreaterThan",
+        [
+          0
+        ]
+      ],
+      [
+        "HasArgType",
+        [
+          1,
+          3,
+          4
+        ]
+      ],
+      [
+        "Int",
+        [
+          8,
+          9
+        ]
+      ],
+      [
+        "LessEq",
+        [
+          2
+        ]
+      ],
+      [
+        "LessThan",
+        [
+          2
+        ]
+      ],
+      [
+        "Sub",
+        [
+          12
+        ]
+      ]
+    ],
+    "aliased_nullary_constructors": [
+      {
+        "root": 2,
+        "tables": [
+          "LessEq",
+          "LessThan"
+        ]
+      }
+    ],
+    "wall_seconds": 0.009042792022228241
+  }
+}
