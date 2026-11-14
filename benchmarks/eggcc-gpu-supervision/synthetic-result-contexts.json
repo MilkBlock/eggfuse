@@ -1,0 +1,274 @@
+{
+  "records": [
+    {
+      "case": "1-absent",
+      "status": "complete",
+      "evidence": {
+        "table": "Get",
+        "key": [
+          {
+            "sort": "Expr",
+            "eq": "synthetic-result-17"
+          },
+          {
+            "sort": "i64",
+            "value": 3
+          }
+        ],
+        "wanted": {
+          "eq": "7",
+          "sort": "Expr"
+        },
+        "actual": null,
+        "already_equal": false
+      },
+      "runs": [
+        {
+          "new_equivalences": 1,
+          "applications": 4,
+          "per_rule_applications": [
+            1,
+            2,
+            1
+          ],
+          "new_constructors": 5
+        },
+        {
+          "new_equivalences": 0,
+          "applications": 5,
+          "per_rule_applications": [
+            2,
+            2,
+            1
+          ]
+        }
+      ],
+      "input_sha256": "5cb4b757c44ed6bddedfe2f58ed289f5cdf7b74469f9d9e67f505f197fd9fc3d"
+    },
+    {
+      "case": "1-equal",
+      "status": "complete",
+      "evidence": {
+        "table": "Get",
+        "key": [
+          {
+            "sort": "Expr",
+            "eq": "synthetic-result-17"
+          },
+          {
+            "sort": "i64",
+            "value": 3
+          }
+        ],
+        "wanted": {
+          "eq": "7",
+          "sort": "Expr"
+        },
+        "actual": {
+          "eq": "7",
+          "sort": "Expr"
+        },
+        "already_equal": true
+      },
+      "runs": [
+        {
+          "new_equivalences": 1,
+          "applications": 4,
+          "per_rule_applications": [
+            1,
+            2,
+            1
+          ],
+          "new_constructors": 4
+        },
+        {
+          "new_equivalences": 0,
+          "applications": 5,
+          "per_rule_applications": [
+            2,
+            2,
+            1
+          ]
+        }
+      ],
+      "input_sha256": "d244c5730d3030059ad8b06679c1cc3173d33afdaadc09643b85966d260ba622"
+    },
+    {
+      "case": "1-distinct",
+      "status": "complete",
+      "evidence": {
+        "table": "Get",
+        "key": [
+          {
+            "sort": "Expr",
+            "eq": "synthetic-result-17"
+          },
+          {
+            "sort": "i64",
+            "value": 3
+          }
+        ],
+        "wanted": {
+          "eq": "7",
+          "sort": "Expr"
+        },
+        "actual": {
+          "sort": "Expr",
+          "eq": "synthetic-result-18"
+        },
+        "already_equal": false
+      },
+      "runs": [
+        {
+          "new_equivalences": 2,
+          "applications": 4,
+          "per_rule_applications": [
+            1,
+            2,
+            1
+          ],
+          "new_constructors": 4
+        },
+        {
+          "new_equivalences": 0,
+          "applications": 5,
+          "per_rule_applications": [
+            2,
+            2,
+            1
+          ]
+        }
+      ],
+      "input_sha256": "f1894b809b6f496cf58d1dd377e4f3eaae1e3e5edf08803953ab789170862f9a"
+    },
+    {
+      "case": "2-absent",
+      "status": "complete",
+      "evidence": {
+        "table": "Single",
+        "key": [
+          {
+            "sort": "Expr",
+            "eq": "synthetic-result-17"
+          }
+        ],
+        "wanted": {
+          "eq": "11",
+          "sort": "Expr"
+        },
+        "actual": null,
+        "already_equal": false
+      },
+      "runs": [
+        {
+          "new_equivalences": 1,
+          "applications": 4,
+          "per_rule_applications": [
+            1,
+            2,
+            1
+          ],
+          "new_constructors": 5
+        },
+        {
+          "new_equivalences": 0,
+          "applications": 5,
+          "per_rule_applications": [
+            2,
+            2,
+            1
+          ]
+        }
+      ],
+      "input_sha256": "051c22cfaa58638ca166081607b8398683c9c24fc5cd55e8edeb12342e647357"
+    },
+    {
+      "case": "2-equal",
+      "status": "complete",
+      "evidence": {
+        "table": "Single",
+        "key": [
+          {
+            "sort": "Expr",
+            "eq": "synthetic-result-17"
+          }
+        ],
+        "wanted": {
+          "eq": "11",
+          "sort": "Expr"
+        },
+        "actual": {
+          "eq": "11",
+          "sort": "Expr"
+        },
+        "already_equal": true
+      },
+      "runs": [
+        {
+          "new_equivalences": 1,
+          "applications": 4,
+          "per_rule_applications": [
+            1,
+            2,
+            1
+          ],
+          "new_constructors": 4
+        },
+        {
+          "new_equivalences": 0,
+          "applications": 5,
+          "per_rule_applications": [
+            2,
+            2,
+            1
+          ]
+        }
+      ],
+      "input_sha256": "cbec751133974f6a233d20ddcf50804fa2426a5ad167ddbbca9506a5ff713144"
+    },
+    {
+      "case": "2-distinct",
+      "status": "complete",
+      "evidence": {
+        "table": "Single",
+        "key": [
+          {
+            "sort": "Expr",
+            "eq": "synthetic-result-17"
+          }
+        ],
+        "wanted": {
+          "eq": "11",
+          "sort": "Expr"
+        },
+        "actual": {
+          "sort": "Expr",
+          "eq": "synthetic-result-18"
+        },
+        "already_equal": false
+      },
+      "runs": [
+        {
+          "new_equivalences": 2,
+          "applications": 4,
+          "per_rule_applications": [
+            1,
+            2,
+            1
+          ],
+          "new_constructors": 4
+        },
+        {
+          "new_equivalences": 0,
+          "applications": 5,
+          "per_rule_applications": [
+            2,
+            2,
+            1
+          ]
+        }
+      ],
+      "input_sha256": "1fec8402de6e8692b5eec27abb6e4feaf351516835e18ee85911cab21ed0c8c2"
+    }
+  ]
+}

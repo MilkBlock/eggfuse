@@ -1,0 +1,897 @@
+{
+  "scope": "actual selected-family GPU token Eq readout; no fitting or union authorization",
+  "case": "016-gcd",
+  "partition": "validation",
+  "source_token_mode": "direct state ridge generated Cells, exact imported Cells",
+  "completion_readout": {
+    "kind": "direct_state_ridge",
+    "head_sha256": "710a5dabb298d8192b0f9f1b0da0688827e18e1180d65267ddfff53d1d40e0ba",
+    "decoder_sha256": "cf9c22bbc95c2a04eca32565875bbce864bdad6038b5115e64b1162b2582b313",
+    "representation": "direct whole-state ridge plus actual scalar moments",
+    "union_authorized": false
+  },
+  "selected_state_audit": {
+    "instances": 41,
+    "query_instances": 41,
+    "exact_partitions": 20,
+    "false_merges": 75,
+    "missed_equalities": 15,
+    "nontransitive": 0,
+    "closure_false_merges": 75,
+    "dynamic_quotient": {
+      "queries": 206,
+      "positives": 18,
+      "true_positives": 7,
+      "false_positives": 45,
+      "false_negatives": 11,
+      "precision": 0.1346153846153846,
+      "recall": 0.3888888888888889
+    },
+    "decoded_token_disagreements": 20,
+    "rejected_instances": 21,
+    "rejected_fraction": 0.5121951219512195,
+    "local_diagnostics": [
+      {
+        "capture_prefix": "capture/1/0/1/",
+        "lane": 3,
+        "rule": 290,
+        "witness_rows": [
+          136,
+          9
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 4,
+        "generated_source": false,
+        "false_quotient_pairs": [],
+        "missed_quotient_pairs": [
+          [
+            0,
+            6
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      },
+      {
+        "capture_prefix": "capture/1/0/1/",
+        "lane": 4,
+        "rule": 290,
+        "witness_rows": [
+          141,
+          9
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 5,
+        "generated_source": false,
+        "false_quotient_pairs": [],
+        "missed_quotient_pairs": [
+          [
+            0,
+            6
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      },
+      {
+        "capture_prefix": "capture/1/0/1/",
+        "lane": 5,
+        "rule": 290,
+        "witness_rows": [
+          142,
+          9
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 6,
+        "generated_source": false,
+        "false_quotient_pairs": [],
+        "missed_quotient_pairs": [
+          [
+            0,
+            6
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      },
+      {
+        "capture_prefix": "capture/1/0/2/",
+        "lane": 0,
+        "rule": 293,
+        "witness_rows": [
+          147,
+          3
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 19,
+        "generated_source": false,
+        "false_quotient_pairs": [
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/1/0/2/",
+        "lane": 1,
+        "rule": 293,
+        "witness_rows": [
+          159,
+          6
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 20,
+        "generated_source": false,
+        "false_quotient_pairs": [
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/1/0/2/",
+        "lane": 2,
+        "rule": 293,
+        "witness_rows": [
+          149,
+          12
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 21,
+        "generated_source": false,
+        "false_quotient_pairs": [
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/1/0/2/",
+        "lane": 3,
+        "rule": 293,
+        "witness_rows": [
+          148,
+          14
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 22,
+        "generated_source": false,
+        "false_quotient_pairs": [
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/1/0/2/",
+        "lane": 4,
+        "rule": 293,
+        "witness_rows": [
+          162,
+          16
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 23,
+        "generated_source": false,
+        "false_quotient_pairs": [
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/1/0/2/",
+        "lane": 5,
+        "rule": 293,
+        "witness_rows": [
+          171,
+          18
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 24,
+        "generated_source": false,
+        "false_quotient_pairs": [
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/4/0/0/",
+        "lane": 2,
+        "rule": 283,
+        "witness_rows": [
+          185,
+          0
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 26,
+        "generated_source": true,
+        "false_quotient_pairs": [
+          [
+            1,
+            3
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/4/0/0/",
+        "lane": 3,
+        "rule": 283,
+        "witness_rows": [
+          186,
+          12
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 27,
+        "generated_source": true,
+        "false_quotient_pairs": [
+          [
+            1,
+            3
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/4/0/0/",
+        "lane": 4,
+        "rule": 283,
+        "witness_rows": [
+          187,
+          1
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 28,
+        "generated_source": true,
+        "false_quotient_pairs": [
+          [
+            1,
+            3
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/4/0/1/",
+        "lane": 6,
+        "rule": 290,
+        "witness_rows": [
+          185,
+          9
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 29,
+        "generated_source": true,
+        "false_quotient_pairs": [],
+        "missed_quotient_pairs": [
+          [
+            0,
+            6
+          ]
+        ]
+      },
+      {
+        "capture_prefix": "capture/4/0/1/",
+        "lane": 7,
+        "rule": 290,
+        "witness_rows": [
+          186,
+          9
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 30,
+        "generated_source": true,
+        "false_quotient_pairs": [],
+        "missed_quotient_pairs": [
+          [
+            0,
+            6
+          ]
+        ]
+      },
+      {
+        "capture_prefix": "capture/4/0/1/",
+        "lane": 8,
+        "rule": 290,
+        "witness_rows": [
+          187,
+          9
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 31,
+        "generated_source": true,
+        "false_quotient_pairs": [],
+        "missed_quotient_pairs": [
+          [
+            0,
+            6
+          ]
+        ]
+      },
+      {
+        "capture_prefix": "capture/4/0/1/",
+        "lane": 21,
+        "rule": 290,
+        "witness_rows": [
+          35,
+          204
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 32,
+        "generated_source": true,
+        "false_quotient_pairs": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            6
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/4/0/1/",
+        "lane": 22,
+        "rule": 290,
+        "witness_rows": [
+          64,
+          204
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 33,
+        "generated_source": true,
+        "false_quotient_pairs": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            6
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/4/0/1/",
+        "lane": 23,
+        "rule": 290,
+        "witness_rows": [
+          99,
+          204
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 34,
+        "generated_source": true,
+        "false_quotient_pairs": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            6
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/4/0/1/",
+        "lane": 24,
+        "rule": 290,
+        "witness_rows": [
+          29,
+          205
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 35,
+        "generated_source": true,
+        "false_quotient_pairs": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            6
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/4/0/1/",
+        "lane": 25,
+        "rule": 290,
+        "witness_rows": [
+          73,
+          205
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 36,
+        "generated_source": true,
+        "false_quotient_pairs": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            6
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "missed_quotient_pairs": []
+      },
+      {
+        "capture_prefix": "capture/4/0/2/",
+        "lane": 6,
+        "rule": 293,
+        "witness_rows": [
+          202,
+          186
+        ],
+        "witness_generations": [
+          1,
+          1
+        ],
+        "sample": 37,
+        "generated_source": true,
+        "false_quotient_pairs": [],
+        "missed_quotient_pairs": [
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            3
+          ]
+        ]
+      }
+    ],
+    "diagnostic_scope": "post-execution CPU label rejection at captured inputs; not a repair ticket or an applied correction"
+  },
+  "capture_sha256": "23ade9e7b9348a34f5b28496b1ccf534c710920d808f8cd2cfc4d3465d012bc7",
+  "adapter_sha256": null,
+  "inference_coefficients_sha256": null,
+  "decoder_sha256": "cf9c22bbc95c2a04eca32565875bbce864bdad6038b5115e64b1162b2582b313",
+  "label_statistics": {
+    "full_pair_queries": 410,
+    "static_equalities": 81,
+    "dynamic_quotient_queries": 206,
+    "dynamic_true_equalities": 18,
+    "distinct_rule_partitions": 6
+  },
+  "static_only_baseline": {
+    "instances": 41,
+    "query_instances": 41,
+    "exact_partitions": 30,
+    "false_merges": 0,
+    "missed_equalities": 37,
+    "nontransitive": 0,
+    "closure_false_merges": 0
+  },
+  "results": {
+    "cpu_target_token": {
+      "instances": 41,
+      "query_instances": 41,
+      "exact_partitions": 41,
+      "false_merges": 0,
+      "missed_equalities": 0,
+      "nontransitive": 0,
+      "closure_false_merges": 0,
+      "dynamic_quotient": {
+        "queries": 206,
+        "positives": 18,
+        "true_positives": 18,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      }
+    },
+    "gpu_predicted_token": {
+      "instances": 41,
+      "query_instances": 41,
+      "exact_partitions": 20,
+      "false_merges": 45,
+      "missed_equalities": 15,
+      "nontransitive": 0,
+      "closure_false_merges": 45,
+      "dynamic_quotient": {
+        "queries": 206,
+        "positives": 18,
+        "true_positives": 7,
+        "false_positives": 25,
+        "false_negatives": 11,
+        "precision": 0.21875,
+        "recall": 0.3888888888888889
+      }
+    }
+  },
+  "groups": {
+    "rule_283": {
+      "cpu_target_token": {
+        "instances": 8,
+        "query_instances": 8,
+        "exact_partitions": 8,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 8,
+          "positives": 4,
+          "true_positives": 4,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 8,
+        "query_instances": 8,
+        "exact_partitions": 5,
+        "false_merges": 12,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 12,
+        "dynamic_quotient": {
+          "queries": 8,
+          "positives": 4,
+          "true_positives": 4,
+          "false_positives": 3,
+          "false_negatives": 0,
+          "precision": 0.5714285714285714,
+          "recall": 1.0
+        }
+      }
+    },
+    "rule_290": {
+      "cpu_target_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 26,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 156,
+          "positives": 12,
+          "true_positives": 12,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 15,
+        "false_merges": 15,
+        "missed_equalities": 12,
+        "nontransitive": 0,
+        "closure_false_merges": 15,
+        "dynamic_quotient": {
+          "queries": 156,
+          "positives": 12,
+          "true_positives": 3,
+          "false_positives": 10,
+          "false_negatives": 9,
+          "precision": 0.23076923076923078,
+          "recall": 0.25
+        }
+      }
+    },
+    "rule_293": {
+      "cpu_target_token": {
+        "instances": 7,
+        "query_instances": 7,
+        "exact_partitions": 7,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 42,
+          "positives": 2,
+          "true_positives": 2,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 7,
+        "query_instances": 7,
+        "exact_partitions": 0,
+        "false_merges": 18,
+        "missed_equalities": 3,
+        "nontransitive": 0,
+        "closure_false_merges": 18,
+        "dynamic_quotient": {
+          "queries": 42,
+          "positives": 2,
+          "true_positives": 0,
+          "false_positives": 12,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0
+        }
+      }
+    },
+    "direct_source": {
+      "cpu_target_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 26,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 146,
+          "positives": 7,
+          "true_positives": 7,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 26,
+        "query_instances": 26,
+        "exact_partitions": 17,
+        "false_merges": 18,
+        "missed_equalities": 9,
+        "nontransitive": 0,
+        "closure_false_merges": 18,
+        "dynamic_quotient": {
+          "queries": 146,
+          "positives": 7,
+          "true_positives": 1,
+          "false_positives": 12,
+          "false_negatives": 6,
+          "precision": 0.07692307692307693,
+          "recall": 0.14285714285714285
+        }
+      }
+    },
+    "generated_source": {
+      "cpu_target_token": {
+        "instances": 15,
+        "query_instances": 15,
+        "exact_partitions": 15,
+        "false_merges": 0,
+        "missed_equalities": 0,
+        "nontransitive": 0,
+        "closure_false_merges": 0,
+        "dynamic_quotient": {
+          "queries": 60,
+          "positives": 11,
+          "true_positives": 11,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "gpu_predicted_token": {
+        "instances": 15,
+        "query_instances": 15,
+        "exact_partitions": 3,
+        "false_merges": 27,
+        "missed_equalities": 6,
+        "nontransitive": 0,
+        "closure_false_merges": 27,
+        "dynamic_quotient": {
+          "queries": 60,
+          "positives": 11,
+          "true_positives": 6,
+          "false_positives": 13,
+          "false_negatives": 5,
+          "precision": 0.3157894736842105,
+          "recall": 0.5454545454545454
+        }
+      }
+    }
+  },
+  "cpu_readout_audit_seconds": 0.08920354198198766,
+  "backpropagation": false,
+  "union_authorized": false,
+  "limitations": [
+    "Small selected immutable Cell family, not full Eggcc",
+    "Exact execution establishes completion; ridge is audited separately",
+    "Test samples must not be used for fitting"
+  ]
+}

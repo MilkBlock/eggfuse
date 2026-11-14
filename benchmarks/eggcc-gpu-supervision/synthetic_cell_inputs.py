@@ -84,6 +84,9 @@ def validate(document):
     g=document['generator']
     expected=generate(document['recipe'],g['seed'],g['fragments'],g['reuse'])
     if 'initial_merge' in g:expected=merge_input(document['recipe'],expected,*g['initial_merge'])
+    if 'result_context' in g:
+        from synthetic_result_ownership import result_context
+        c=g['result_context'];expected,_=result_context(document['recipe'],expected,c['rule'],c['mode'])
     if expected!=document['snapshot']:raise ValueError('seed replay mismatch')
     return document['recipe'],document['snapshot']
 
