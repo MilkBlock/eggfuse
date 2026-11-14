@@ -320,6 +320,12 @@ pub struct Stats {
     #[serde(default)]
     pub constructor_pipeline_table_waits:u64,
     #[serde(default)]
+    pub constructor_pipeline_root_reads:u64,
+    #[serde(default)]
+    pub constructor_pipeline_root_hits:u64,
+    #[serde(default)]
+    pub constructor_pipeline_root_jobs:u64,
+    #[serde(default)]
     pub constructor_fused_cells:u64,
     #[serde(default)]
     pub constructor_fused_planned_operations:u64,
@@ -1694,14 +1700,7 @@ impl Graph {
         if self.dirty_facts[table].is_empty() {
             // Matching observes a repaired snapshot. Avoid allocating/copying
             // a set on every keyed read; retain the original FactRef order.
-            for &f in self.intern.get(table, &h).into_iter().flatten() {
-                if let Some(r) = self.fact(f)? {
-                    if r.table == table && r.values[..key.len()] == *key {
-                        return Ok(Some(r));
-                    }
-                }
-            }
-            return Ok(None);
+            return self.lookup_settled_constructor_bucket(table,key,self.intern.get(table,&h));
         }
         #[cfg(not(feature = "sparse-cells"))]
         let mut refs = self.intern.get(table, &h).cloned().unwrap_or_default();
@@ -1715,6 +1714,14 @@ impl Graph {
                 if r.table == table && r.values[..key.len()] == *key {
                     return Ok(Some(r));
                 }
+            }
+        }
+        Ok(None)
+    }
+    fn lookup_settled_constructor_bucket(&self,table:usize,key:&[Value],bucket:Option<&constructor_index::Bucket>)->Result<Option<Row>> {
+        for &f in bucket.into_iter().flatten() {
+            if let Some(r)=self.fact(f)? {
+                if r.table==table && r.values[..key.len()]==*key {return Ok(Some(r));}
             }
         }
         Ok(None)

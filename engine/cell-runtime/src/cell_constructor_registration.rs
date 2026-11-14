@@ -36,11 +36,11 @@ pub(crate) struct Owned {
     frames:Vec<Vec<CellReady>>,directory:Vec<Directory>,
     epoch:u64,input:std::sync::Arc<Input>,
 }
-struct Directory {table:usize,index:constructor_index::Table,members:TableRows<u64>,
+struct Directory {table:usize,index:constructor_index::Lease,members:TableRows<u64>,
     changes:HashMap<Dependency,crate::change_batch::Change>}
 impl Directory {
-    fn take(graph:&mut Graph,tables:impl Iterator<Item=usize>)->Vec<Self> {
-        tables.map(|table|Self {table,index:graph.intern.take(table),
+    fn take(graph:&mut Graph,tables:impl Iterator<Item=usize>,readable:bool)->Vec<Self> {
+        tables.map(|table|Self {table,index:graph.intern.take(table,readable),
             members:std::mem::take(&mut graph.members[table]),
             changes:graph.changes.take_new_row_table(table)}).collect()
     }
@@ -63,7 +63,7 @@ impl Owned {
             OwnedGroup {cell:d.done.cell,rows:first..rows.len()}
         }).collect();
         let input=std::sync::Arc::new(Input {groups,rows,owned});
-        let directory=Directory::take(graph,input.rows.iter().map(|r|r.table).collect::<BTreeSet<_>>().into_iter());
+        let directory=Directory::take(graph,input.rows.iter().map(|r|r.table).collect::<BTreeSet<_>>().into_iter(),false);
         // Lease only the slots this worker writes. The original arena layout
         // and all Cell input/continuation state stay in place.
         let frames=input.groups.chunks(16).enumerate().map(|(chunk,groups)|groups.iter().enumerate().map(|(i,g)| {
@@ -138,7 +138,7 @@ fn install_cell(cell:u32,facts:&mut crate::slots::FrameMap<u32,FactState>,rows:&
         }).is_none(),"fresh constructor operation");
         let part=directory.binary_search_by_key(&row.table,|p|p.table).unwrap();
         let part=&mut directory[part];
-        part.index.entry(row.hash).or_default().insert(f);part.members.insert(f.ordered_id());
+        part.index.insert(row.hash,f);part.members.insert(f.ordered_id());
         let activate=part.changes.is_empty();
         assert!(part.changes.insert(Dependency::Fact(f),crate::change_batch::Change::Wake).is_none());
         if let Some((_,count,_))=publication.tables.iter_mut().find(|r|r.0==row.table) {*count+=1;}

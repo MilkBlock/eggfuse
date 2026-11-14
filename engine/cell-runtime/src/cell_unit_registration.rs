@@ -376,7 +376,7 @@ mod tests {
             let mut tasks=Vec::new();
             for i in 0..64 {
                 let cell=g.begin_transient(0,[(0,Value::Eq(100+i/2))].into_iter().collect(),None).unwrap();
-                let (_,job)=g.take_root_job(0,cell,4,&[],tasks.len()*4,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+                let (_,job)=g.take_root_job(0,cell,4,&[],tasks.len()*4,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
                 tasks.push((job.unwrap(),crate::cell::Effects::default()));
             }
             let unfinished=std::sync::atomic::AtomicUsize::new(tasks.len());let mut done=Vec::new();

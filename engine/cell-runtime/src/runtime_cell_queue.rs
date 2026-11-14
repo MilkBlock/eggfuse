@@ -440,17 +440,6 @@ impl Executor {
                         continue;
                     }
                     if self.resume_prepared_cell(&mut execution,position)? {continue;}
-                    if let Op::Let(_,Call::Table(table),_)=&execution.ops[position]
-                        && self.graph.constructor_table_leased(*table) {
-                        let table=*table;
-                        self.graph.stats.constructor_pipeline_table_waits+=1;
-                        let state=self.graph.suspend_rhs(execution.cell);
-                        while self.graph.constructor_table_leased(table) {
-                            self.poll_cell_queue(queue,pending,true)?;
-                        }
-                        self.graph.restore_rhs(state);
-                        if let Some(window)=&mut execution.births {window.after_ready_batch(&self.graph);}
-                    }
                     let prepared_root=execution.constructor.is_some() && self.graph.program.executions[rid]
                         .constructor.as_ref().is_some_and(|plan|plan.operation==position);
                     if roots && execution.births.is_none() && !prepared_root {
@@ -459,7 +448,8 @@ impl Executor {
                         let (counts,job)=self.graph.take_root_job(rid,execution.cell,stop,&pending,queue.operations,
                             &mut execution.effects.writer(),
                             #[cfg(feature="storage-metrics")] &execution.known,
-                            |hash|queue.flying.as_ref().is_some_and(|w|w.contains_root(hash)))?;
+                            |hash,key|queue.flying.as_ref().is_some_and(|w|w.contains_root(hash)
+                                || w.registered() && w.contains_fresh_input(key)))?;
                         execution.work.constructors+=counts.root_existing_reuses;
                         self.cell_execution.as_mut().unwrap().counts.births.add(counts);
                         if self.graph.rhs_frame(execution.cell).unwrap().completed_prefix!=position {continue;}
@@ -470,6 +460,20 @@ impl Executor {
                             stats.queue_bytes+=((pending.capacity()-before)*std::mem::size_of::<u32>()) as u64;
                             self.park_cell(queue,execution,Some(job));break;
                         }
+                    }
+                    // A root hit or disjoint fresh cone above needs only a
+                    // brief read of the same directory. Other source effects
+                    // still require its mutating owner to return.
+                    if let Op::Let(_,Call::Table(table),_)=&execution.ops[position]
+                        && self.graph.constructor_table_leased(*table) {
+                        let table=*table;
+                        self.graph.stats.constructor_pipeline_table_waits+=1;
+                        let state=self.graph.suspend_rhs(execution.cell);
+                        while self.graph.constructor_table_leased(table) {
+                            self.poll_cell_queue(queue,pending,true)?;
+                        }
+                        self.graph.restore_rhs(state);
+                        if let Some(window)=&mut execution.births {window.after_ready_batch(&self.graph);}
                     }
                     // Only an unresolved root key or value dependency requires
                     // this fence. Other constructors may keep admitting while

@@ -67,6 +67,8 @@ fn worker_births_preserve_composed_entries_foreign_returns_and_run_lifetimes() {
                 "owned physical registration must leave the source executor");
             assert!(report["stats"]["constructor_pipeline_cells"].as_u64().unwrap()>0,
                 "background construction must continue into registration: {report}");
+            assert!(report["stats"]["constructor_pipeline_root_jobs"].as_u64().unwrap()>0,
+                "source must admit disjoint roots while the same table is worker owned: {report}");
         }
         let ownership=candidate.graph.ownership_report();
         let previous=control.graph.ownership_report();

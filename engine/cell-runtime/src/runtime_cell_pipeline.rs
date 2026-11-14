@@ -9,6 +9,7 @@ pub(super) struct Flying {
     producer:Producer,
     clock:Instant,
     root_hashes:Vec<u64>,
+    source_range:std::ops::RangeInclusive<u32>,
     #[cfg(feature="cell-sync-diagnostics")] diagnostic:crate::sync_diagnostics::Clock,
 }
 enum Producer {
@@ -24,6 +25,12 @@ impl Flying {
     pub fn registered(&self)->bool {matches!(self.producer,Producer::Registered {..})}
     pub fn has_roots(&self)->bool {!self.root_hashes.is_empty()}
     pub fn contains_root(&self,hash:u64)->bool {self.root_hashes.binary_search(&hash).is_ok()}
+    pub fn contains_fresh_input(&self,key:&[Value])->bool {
+        key.iter().any(|v|match v {
+            Value::Eq(id)=>self.source_range.contains(&((*id>>32) as u32)),
+            Value::Set(values)=>self.contains_fresh_input(values),_=>false,
+        })
+    }
     pub fn references(&self,key:&[Value],probes:&mut u64)->bool {
         key.iter().any(|v| { *probes+=1;match v {
             Value::Eq(id)=>self.owners.binary_search_by(|p| {*probes+=1;p.execution.cell.cmp(&((*id>>32) as u32))}).is_ok(),
@@ -83,8 +90,9 @@ impl Executor {
             }
         }),ready:Vec::new()}};
         let owners=std::mem::replace(&mut queue.owners,std::mem::take(&mut queue.spare));
+        let source_range=owners.first().unwrap().execution.cell..=owners.last().unwrap().execution.cell;
         queue.flying=Some(Flying {owners:owners.into(),producer,
-            clock,root_hashes,#[cfg(feature="cell-sync-diagnostics")] diagnostic});
+            clock,root_hashes,source_range,#[cfg(feature="cell-sync-diagnostics")] diagnostic});
         queue.operations=0;queue.shared=false;queue.roots=false;Ok(())
     }
 

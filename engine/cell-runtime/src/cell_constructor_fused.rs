@@ -19,12 +19,15 @@ impl Graph {
         // Ownership uses static ports, so no global reverse directory is leased.
         if self.ownership.is_none() || tasks.iter().any(|(j,_)|
             self.cells.get(&j.cell).is_none_or(|c|!c.facts.is_empty())) {return None;}
-        let owner=self.prepare_fused_constructors(tasks)?;
+        let owner=self.prepare_constructor_region(tasks,true)?;
         self.stats.constructor_pipeline_regions+=1;
         self.stats.constructor_pipeline_cells+=tasks.len() as u64;
         Some(owner)
     }
     pub(crate) fn prepare_fused_constructors(&mut self,tasks:&[(Job,crate::cell::Effects)])->Option<Owner> {
+        self.prepare_constructor_region(tasks,false)
+    }
+    fn prepare_constructor_region(&mut self,tasks:&[(Job,crate::cell::Effects)],readable:bool)->Option<Owner> {
         if !self.local_registration_supported() || !self.pipelined_births_ready()
             || crate::sync_diagnostics::registry_inline() || tasks.len()<2 {return None;}
         let operations:usize=tasks.iter().map(|(j,_)|j.operations()).sum();
@@ -53,7 +56,7 @@ impl Graph {
         // The existing owners share this empty input header. Rows stay in each
         // producer's Piece; there is no flattened Input row buffer to refill.
         let input=std::sync::Arc::new(Input {groups:Vec::new(),rows:Vec::new(),owned});
-        let directory=Owned {frames:Vec::new(),directory:Directory::take(self,tables.into_iter()),
+        let directory=Owned {frames:Vec::new(),directory:Directory::take(self,tables.into_iter(),readable),
             epoch:self.epoch,input:input.clone()};
         let subscriptions=(!owned).then(||Subscriptions {uses:std::mem::take(&mut self.uses),
             metrics:std::mem::take(&mut self.maintenance),
@@ -64,6 +67,8 @@ impl Graph {
         self.stats.constructor_registry_independent_batches+=1;
         self.stats.constructor_registry_functionless_batches+=1;
         self.stats.constructor_registry_bytes+=directory.storage_bytes() as u64;
+        if readable {self.stats.constructor_registry_bytes+=(directory.directory.len()
+            *(std::mem::size_of::<std::sync::RwLock<constructor_index::Table>>()+2*std::mem::size_of::<usize>())) as u64;}
         self.stats.constructor_registry_frame_bytes+=(frames.capacity()*std::mem::size_of::<CellReady>()) as u64;
         Some(Owner {directory,subscriptions,frames:frames.into_iter(),rows:0})
     }
@@ -149,7 +154,7 @@ mod tests {
         let mut tasks=Vec::new();
         for i in 0..64 {
             let cell=g.begin_transient(0,[(0,Value::Eq(100+i/2))].into_iter().collect(),None).unwrap();
-            let (_,job)=g.take_root_job(0,cell,4,&[],tasks.len()*4,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+            let (_,job)=g.take_root_job(0,cell,4,&[],tasks.len()*4,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
             tasks.push((job.unwrap(),crate::cell::Effects::default()));
         }
         (g,tasks)
@@ -247,11 +252,13 @@ mod tests {
         p.templates.push(template);p.table_templates.push(1);
         let mut g=Graph::new(p).unwrap();
         g.program.repair_ports=repair_ports::Plan::derive(&g.program);g.use_cell_ownership().unwrap();
+        let old=g.begin_transient(0,[(0,Value::Eq(900))].into_iter().collect(),None).unwrap();
+        let old_result=g.construct(old,0,0,&[Arg::Slot(0)],1).unwrap();g.promote_active();
         let mut tasks=Vec::new();
         for i in 0..64 {
             let cell=g.begin_transient(0,[(0,Value::Eq(100+i))].into_iter().collect(),None).unwrap();
             let (_,job)=g.take_root_job(0,cell,4,&[],tasks.len()*4,&mut crate::cell::Effects::default().writer(),
-                #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+                #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
             tasks.push((job.unwrap(),crate::cell::Effects::default()));
         }
         let owner=g.prepare_pipelined_constructors(&tasks).unwrap();
@@ -269,6 +276,22 @@ mod tests {
         let result=g.construct(cell,0,1,&[Arg::Slot(0)],1).unwrap();
         assert_eq!(g.lookup(1,&[Value::Eq(900)]).unwrap().unwrap().values.last(),Some(&result));
         assert_eq!(g.members[1].len(),1);assert!(g.intern.leased(0));
+        g.promote_active();
+        let mut effects=crate::cell::Effects::default();
+        let reuse=g.begin_transient(0,[(0,Value::Eq(900))].into_iter().collect(),None).unwrap();
+        let (counts,job)=g.take_root_job(0,reuse,4,&[],0,&mut effects.writer(),
+            #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
+        assert!(job.is_none());assert_eq!(counts.root_existing_reuses,1);
+        assert_eq!(g.slot(reuse,1).unwrap(),old_result,"reuse the actual foreign result while its index is leased");
+        g.promote_active();
+        let next=g.begin_transient(0,[(0,Value::Eq(999))].into_iter().collect(),None).unwrap();
+        let (_,next_job)=g.take_root_job(0,next,4,&[],0,&mut effects.writer(),
+            #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
+        let next_job=next_job.expect("an unrelated root need not join the current producer");
+        assert_eq!(g.stats.constructor_pipeline_root_reads,2);
+        assert_eq!(g.stats.constructor_pipeline_root_hits,1);
+        assert_eq!(g.stats.constructor_pipeline_root_jobs,1);
+        assert_eq!(wave.unfinished(),63,"both same-table admissions precede releasing the worker");
         let mut acceptance=Acceptance::default();
         for event in ready.drain(..) {let (mut done,publication)=acceptance.accept(&mut g,event,true);
             g.commit_registered_local_job(done.done,&mut done.effects.writer(),publication).unwrap();}
@@ -280,7 +303,10 @@ mod tests {
         }
         let ((owner,_,_),_)=wave.finish();owner.restore(&mut g);acceptance.finish(&mut g);
         drop(parents);g.parents.thaw();
-        assert!(!g.intern.leased(0));assert_eq!(g.members[0].len(),3);assert_eq!(g.members[1].len(),1);
+        assert!(!g.intern.leased(0));assert_eq!(g.members[0].len(),4);assert_eq!(g.members[1].len(),1);
+        let done=next_job.run(g.parents.reader(),&mut effects.writer(),&mut Counts::default());
+        g.commit_local_job(done,&mut effects.writer()).unwrap();
+        assert!(g.lookup(0,&[Value::Eq(999)]).unwrap().is_some());
         assert_eq!(g.lookup(1,&[Value::Eq(900)]).unwrap().unwrap().values.last(),Some(&result));
         g.union(100,900).unwrap();g.repair().unwrap();
         assert!(g.lookup(1,&[Value::Eq(100)]).unwrap().is_some());

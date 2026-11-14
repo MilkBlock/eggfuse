@@ -38,7 +38,7 @@ impl Graph {
     pub(crate) fn take_root_job(&mut self,rule:usize,cell:u32,stop:usize,
         pending:&[u32],operations:usize,receipts:&mut EffectWriter<'_>,
         #[cfg(feature="storage-metrics")] known:&crate::cell::QueryFacts,
-        unregistered:impl Fn(u64)->bool)->Result<(Counts,Option<Job>)> {
+        unregistered:impl Fn(u64,&[Value])->bool)->Result<(Counts,Option<Job>)> {
         let mut counts=Counts::default();
         if !self.local_jobs_supported() || !self.pipelined_births_ready() {return Ok((counts,None));}
         let position=self.rhs_frame(cell).unwrap().completed_prefix;
@@ -54,31 +54,53 @@ impl Graph {
         if blocked {return Ok((counts,None));}
         counts.root_bucket_probes+=1;
         let hash=self.constructor_hash(step.table,&key);
-        if unregistered(hash) {counts.root_pending+=1;return Ok((counts,None));}
+        if unregistered(hash,&key) {counts.root_pending+=1;return Ok((counts,None));}
         // The authoritative lookup consumes the already canonical key/hash.
         // A nonempty hash bucket alone proves neither presence nor absence.
         // This sealed region excludes union, deletion and mutable effects.
-        if self.intern.contains_key(step.table, &hash) {
+        let shared=self.intern.leased(step.table);
+        let row=if shared {
+            // Only this proven root admission may read a live worker index.
+            // The caller excludes every in-flight root hash and every value
+            // in its fresh cone, including already-adopted earlier Cells.
+            // Thus absent leased fact slots cannot hide an exact candidate.
+            #[cfg(feature="family-overlap")]
+            let clock=crate::family_overlap::clock();
+            let Some(row)=self.intern.shared_bucket(step.table,hash,|bucket| {
+                if bucket.is_none() {return Ok(None);}
+                counts.root_bucket_fallbacks+=1;
+                self.key_lookup_calls.set(self.key_lookup_calls.get()+1);
+                self.lookup_settled_constructor_bucket(step.table,&key,bucket)
+            }) else {return Ok((counts,None));};
+            #[cfg(feature="rhs-work-audit")]
+            if let Ok(Some(r))=&row {self.rhs_births.read(r.witness);}
+            #[cfg(feature="family-overlap")]
+            crate::family_overlap::physical(step.table,0,clock,||key.iter().cloned().enumerate().collect());
+            self.stats.constructor_pipeline_root_reads+=1;
+            row?
+        } else if self.intern.contains_key(step.table, &hash) {
             counts.root_bucket_fallbacks+=1;
-            if let Some(row)=self.lookup_canonical_hashed(step.table,&key,Some(hash))? {
-                let destination=step.destination;
-                #[cfg(feature="storage-metrics")]
-                let probe=crate::rhs_projection_trace::before(self,rule,cell,position,known);
-                receipts.record(position,row.witness);
-                self.composition_result_entry(cell,position,row.witness,!row.hidden);
-                let frame=self.rhs_frame_mut(cell).unwrap();
-                frame.values.insert(destination,row.values.last().unwrap().clone());
-                frame.completed_prefix=position+1;
-                self.stats.constructor_requests+=1;
-                self.stats.constructor_reused+=1;
-                #[cfg(feature="storage-metrics")]
-                crate::rhs_projection_trace::after(self,probe,&crate::cell::SingleEffect(position,row.witness),true);
-                counts.root_existing_reuses+=1;
-                counts.root_existing_key_fields+=key.len() as u64;
-                return Ok((counts,None));
-            }
-            counts.root_collision_misses+=1;
+            self.lookup_canonical_hashed(step.table,&key,Some(hash))?
+        } else {None};
+        if let Some(row)=row {
+            let destination=step.destination;
+            #[cfg(feature="storage-metrics")]
+            let probe=crate::rhs_projection_trace::before(self,rule,cell,position,known);
+            receipts.record(position,row.witness);
+            self.composition_result_entry(cell,position,row.witness,!row.hidden);
+            let frame=self.rhs_frame_mut(cell).unwrap();
+            frame.values.insert(destination,row.values.last().unwrap().clone());
+            frame.completed_prefix=position+1;
+            self.stats.constructor_requests+=1;
+            self.stats.constructor_reused+=1;
+            #[cfg(feature="storage-metrics")]
+            crate::rhs_projection_trace::after(self,probe,&crate::cell::SingleEffect(position,row.witness),true);
+            counts.root_existing_reuses+=1;
+            counts.root_existing_key_fields+=key.len() as u64;
+            self.stats.constructor_pipeline_root_hits+=u64::from(shared);
+            return Ok((counts,None));
         }
+        counts.root_collision_misses+=u64::from(counts.root_bucket_fallbacks!=0);
         let value=Value::Eq(((cell as u64)<<32)|(step.destination as u64+1));
         if canon(&value,&self.parents)!=value {return Ok((counts,None));}
         let plan=plan.clone();counts.plan_handles+=1;
@@ -103,6 +125,7 @@ impl Graph {
         counts.slot_leases+=1;counts.slot_seals+=u64::from(sealed);
         counts.sealed_bytes+=u64::from(sealed)*crate::slots::FrameSlots::seal_bytes() as u64;
         counts.root_jobs+=1;
+        self.stats.constructor_pipeline_root_jobs+=u64::from(shared);
         let unit_epoch=plan.units.as_ref().map(|_|self.epoch);
         let limit=plan.steps.len();
         Ok((counts,Some(Job {cell,plan,frame:Local {values,facts:Default::default(),completed_prefix:position},
@@ -116,6 +139,37 @@ mod tests {
     use super::*;
     use crate::cell::Effects;
     use std::sync::atomic::AtomicUsize;
+
+    #[test]
+    fn shared_root_reads_keep_hidden_witnesses_and_reject_hash_collisions() {
+        for hidden in [false,true] {
+            let mut g=super::super::tests::graph();
+            let (old,_,_)=super::super::tests::start(&mut g);
+            if hidden {g.hide(0,&[Value::Eq(100)],false).unwrap();}
+            let witness=FactRef {cell:old,op:0};
+            let collision=g.constructor_hash(0,&[Value::Eq(200)]);
+            assert!(!g.intern.contains_key(0,&collision));
+            g.intern.entry(0,collision).or_default().insert(witness);
+            let index=g.intern.take(0,true);
+            let reuse=g.begin_transient(0,[(0,Value::Eq(100))].into_iter().collect(),None).unwrap();
+            let mut effects=Effects::default();
+            let (counts,job)=g.take_root_job(0,reuse,4,&[],0,&mut effects.writer(),
+                #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
+            assert!(job.is_none());assert_eq!(counts.root_existing_reuses,1);
+            assert_eq!(g.slot(reuse,1).unwrap(),g.slot(old,1).unwrap());
+            assert_eq!(g.fact(witness).unwrap().unwrap().hidden,hidden);
+            g.promote_active();
+            let fresh=g.begin_transient(0,[(0,Value::Eq(200))].into_iter().collect(),None).unwrap();
+            let (counts,job)=g.take_root_job(0,fresh,4,&[],0,&mut effects.writer(),
+                #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
+            assert_eq!(counts.root_collision_misses,1);assert!(job.is_some());
+            assert_eq!(g.stats.constructor_pipeline_root_hits,1);
+            g.intern.restore(0,index);g.intern.remove(0,&collision);
+            let done=job.unwrap().run(g.parents.reader(),&mut effects.writer(),&mut Counts::default());
+            g.commit_local_job(done,&mut effects.writer()).unwrap();
+            assert_ne!(g.slot(fresh,1).unwrap(),g.slot(old,1).unwrap());
+        }
+    }
 
     #[test]
     fn owned_pending_keys_cannot_prove_a_fresh_root() {
@@ -132,11 +186,11 @@ mod tests {
         let cell=g.begin_transient(0,[(0,Value::Eq(50))].into_iter().collect(),None).unwrap();
         let mut effects=Effects::default();
         let (counts,job)=g.take_root_job(0,cell,4,&[],0,&mut effects.writer(),
-            #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+            #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
         assert!(job.is_none());assert_eq!(counts.root_bucket_probes,0);
         g.repair().unwrap();
         let (counts,job)=g.take_root_job(0,cell,4,&[],0,&mut effects.writer(),
-            #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+            #[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
         assert!(job.is_none());assert_eq!(counts.root_existing_reuses,1);
         assert_eq!(g.slot(cell,1).unwrap(),g.slot(old,1).unwrap());
     }
@@ -153,7 +207,7 @@ mod tests {
             let mut tasks=Vec::new();
             for input in [100,200] {
                 let cell=g.begin_transient(0,[(0,Value::Eq(input))].into_iter().collect(),None).unwrap();
-                let (_,job)=g.take_root_job(0,cell,3,&[],tasks.len()*3,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+                let (_,job)=g.take_root_job(0,cell,3,&[],tasks.len()*3,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
                 let mut job=job.unwrap();
                 if collide {job.root=Some(0);}
                 tasks.push((job,Effects::default()));
@@ -189,7 +243,7 @@ mod tests {
             let mut counts=Counts::default();
             for _ in 0..8 {
                 let cell=g.begin_transient(0,[(0,Value::Eq(100))].into_iter().collect(),None).unwrap();
-                let (work,job)=g.take_root_job(0,cell,4,&pending,tasks.len()*4,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();counts.add(work);
+                let (work,job)=g.take_root_job(0,cell,4,&pending,tasks.len()*4,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();counts.add(work);
                 let job=job.expect("empty authoritative root bucket");
                 assert!(g.cells[&cell].facts.is_empty(),"source has not constructed an anchor");
                 assert!(job.terminal_at(4),"disjoint root hashes may overlap the next admission wave");
@@ -231,7 +285,7 @@ mod tests {
         let cell=g.begin_transient(0,[(0,Value::Eq(100))].into_iter().collect(),None).unwrap();
         #[cfg(feature="storage-metrics")]
         crate::rhs_projection_trace::start(8,&g.program);
-        let (counts,job)=g.take_root_job(0,cell,4,&[],0,&mut effects.writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+        let (counts,job)=g.take_root_job(0,cell,4,&[],0,&mut effects.writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
         assert!(job.is_none());assert_eq!(counts.root_bucket_fallbacks,1);
         assert_eq!(counts.root_existing_reuses,1);
         assert_eq!(counts.root_existing_key_fields,1);
@@ -251,11 +305,11 @@ mod tests {
         }
         g.promote_active();
         let cell=g.begin_transient(0,[(0,Value::Eq(200))].into_iter().collect(),None).unwrap();
-        let (counts,job)=g.take_root_job(0,cell,4,&[],0,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|true).unwrap();
+        let (counts,job)=g.take_root_job(0,cell,4,&[],0,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|true).unwrap();
         assert!(job.is_none());assert_eq!(counts.root_pending,1);
         assert_eq!(counts.slot_leases,0,"an in-flight hash is not proof of absence");
         g.enqueue_union(Value::Eq(100),Value::Eq(200)).unwrap();
-        let (counts,job)=g.take_root_job(0,cell,4,&[],0,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+        let (counts,job)=g.take_root_job(0,cell,4,&[],0,&mut crate::cell::Effects::default().writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
         assert!(job.is_none());assert_eq!(counts.root_bucket_probes,0);
         }
     }
@@ -273,7 +327,7 @@ mod tests {
         g.intern.entry(0, hash).or_default().insert(candidate);
         let cell=g.begin_transient(0,[(0,key[0].clone())].into_iter().collect(),None).unwrap();
         let mut effects=Effects::default();
-        let (mut counts,job)=g.take_root_job(0,cell,4,&[],0,&mut effects.writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_|false).unwrap();
+        let (mut counts,job)=g.take_root_job(0,cell,4,&[],0,&mut effects.writer(),#[cfg(feature="storage-metrics")] &crate::cell::QueryFacts::None,|_,_|false).unwrap();
         assert_eq!(counts.root_existing_reuses,0);
         assert_eq!(counts.root_collision_misses,1);
         let job=job.expect("exact miss admits the existing compiled worker cone");
