@@ -35,13 +35,16 @@ def run(directory,output,compiler,observer,compile_timeout=10.,run_timeout=1.,re
     stages=list(dict.fromkeys(r['metadata']['source_set'] for r in recipe['rules']))
     if len(stages)!=1:raise ValueError('explicit multistage policy required')
     schedule=dict(saturate=dict(run=stages[0]));groups={}
-    for line in (directory/'cases.jsonl').read_text().splitlines():
+    documents=manifest.get('input_format')=='documents'
+    input_path=directory/('documents.jsonl' if documents else 'cases.jsonl')
+    for line in input_path.read_text().splitlines():
         case=json.loads(line)
-        doc=dict(schema='enumerated-cell-input/v1',recipe=recipe,recipe_sha256=digest(recipe),case=case,snapshot=case['snapshot'],input_sha256=case['input_sha256'])
-        validate(doc);groups.setdefault(case['input_sha256'],[]).append(doc)
+        doc=case if documents else dict(schema='enumerated-cell-input/v1',recipe=recipe,recipe_sha256=digest(recipe),case=case,snapshot=case['snapshot'],input_sha256=case['input_sha256'])
+        if doc['recipe']!=recipe:raise ValueError('input recipe mismatch')
+        validate(doc);groups.setdefault(doc['input_sha256'],[]).append(doc)
     output.mkdir(parents=True,exist_ok=resume)
     sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
-    report=dict(scope='native labels for completed-producer boundary graphs; not GPU model training',compiler_sha256=sha(compiler),observer_sha256=sha(observer),enumeration_sha256=sha(directory/'cases.jsonl'),source_control=schedule,expected_inputs=len(groups),records=[])
+    report=dict(scope='native labels for synthetic constructor boundaries; not GPU model training',compiler_sha256=sha(compiler),observer_sha256=sha(observer),enumeration_sha256=sha(input_path),source_control=schedule,expected_inputs=len(groups),records=[])
     if resume:
         previous=json.loads((output/'manifest.json').read_text())
         for key in ('compiler_sha256','observer_sha256','enumeration_sha256','source_control','expected_inputs'):
@@ -65,7 +68,7 @@ def run(directory,output,compiler,observer,compile_timeout=10.,run_timeout=1.,re
         temporary=tempfile.TemporaryDirectory(prefix='eggfuse-enumerated-')
         folder=Path(temporary.name);source=folder/'input.egg';program=folder/'compiled/program.json';trace=folder/'trace.json'
         (folder/'input.json').write_text(json.dumps(docs[0])+'\n')
-        (folder/'routes.json').write_text(json.dumps([d['case'] for d in docs])+'\n')
+        (folder/'routes.json').write_text(json.dumps([d.get('case',d.get('generator')) for d in docs])+'\n')
         source.write_text(emit(docs[0],schedule))
         record=dict(index=index,input_sha256=identity,routes=len(docs),source_sha256=sha(source),status='pending')
         commands=[([str(compiler),'compile','--source',str(source),'--output',str(folder/'compiled')],compile_timeout),([str(observer),str(program),str(trace),'--relations','--snapshot-runs=0'],run_timeout)]

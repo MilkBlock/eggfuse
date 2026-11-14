@@ -90,6 +90,11 @@ def validate(document):
     if document.get('schema')!='synthetic-cell-input/v1':raise ValueError('synthetic schema')
     if digest(document['recipe'])!=document['recipe_sha256'] or digest(document['snapshot'])!=document['input_sha256']:raise ValueError('synthetic provenance')
     g=document['generator']
+    if g.get('kind')=='context-density/v1':
+        from synthetic_context_density import generate as density
+        expected=density(document['recipe'],g['rule'],g['variant'],g['neighbors'],g['scalar'])
+        if expected!=document['snapshot']:raise ValueError('density replay mismatch')
+        return document['recipe'],expected
     expected=generate(document['recipe'],g['seed'],g['fragments'],g['reuse'])
     if 'initial_merge' in g:expected=merge_input(document['recipe'],expected,*g['initial_merge'])
     if 'result_context' in g:
@@ -107,7 +112,7 @@ def provenance(document):
                 producer_phase=document['case'].get('producer_phase','completed'),producer=document['case']['producer'],consumer=document['case']['consumer'],
                 wiring=document['case']['wiring'],partition=document['case']['partition']),
             reachability=document['case'].get('producer_phase','completed')+'-producer boundary; source-program reachability unproved')
-    return dict(case='synthetic-'+str(document['generator']['seed']),partition='train',synthetic_input=True,
+    return dict(case='synthetic-'+str(document['generator'].get('seed',document['input_sha256'])),partition='train',synthetic_input=True,
         input_sha256=document['input_sha256'],generator=document['generator'],reachability=document['reachability'])
 
 

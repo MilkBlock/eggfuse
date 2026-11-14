@@ -1,0 +1,131 @@
+{
+  "scope": "actual selected-family GPU feedback on synthetic context-density inputs; graph audit is separate from prediction",
+  "archive": "/Volumes/Extreme SSD/eggfuse-artifacts/21ee/context-density-v1.tar.gz",
+  "archive_sha256": "ca02c79a81f19f03999d73863a81220f3b190d65693decfabe5518c0cd4cd014",
+  "native_pass": 24,
+  "gpu_and_label_pass": 24,
+  "prediction_totals": {
+    "correct": 38,
+    "instances": 42
+  },
+  "direct_targets_invariant_across_density": true,
+  "groups": [
+    {
+      "variant": "linked",
+      "neighbors": 0,
+      "correct": 2,
+      "instances": 2
+    },
+    {
+      "variant": "linked",
+      "neighbors": 4,
+      "correct": 2,
+      "instances": 2
+    },
+    {
+      "variant": "linked",
+      "neighbors": 12,
+      "correct": 1,
+      "instances": 2
+    },
+    {
+      "variant": "other_context",
+      "neighbors": 0,
+      "correct": 2,
+      "instances": 2
+    },
+    {
+      "variant": "other_context",
+      "neighbors": 4,
+      "correct": 0,
+      "instances": 2
+    },
+    {
+      "variant": "other_context",
+      "neighbors": 12,
+      "correct": 1,
+      "instances": 2
+    },
+    {
+      "variant": "other_result",
+      "neighbors": 0,
+      "correct": 2,
+      "instances": 2
+    },
+    {
+      "variant": "other_result",
+      "neighbors": 4,
+      "correct": 2,
+      "instances": 2
+    },
+    {
+      "variant": "other_result",
+      "neighbors": 12,
+      "correct": 2,
+      "instances": 2
+    },
+    {
+      "variant": "absent",
+      "neighbors": 0,
+      "correct": 2,
+      "instances": 2
+    },
+    {
+      "variant": "absent",
+      "neighbors": 4,
+      "correct": 2,
+      "instances": 2
+    },
+    {
+      "variant": "absent",
+      "neighbors": 12,
+      "correct": 2,
+      "instances": 2
+    }
+  ],
+  "candidate": {
+    "accepted": false,
+    "training_entries": 665,
+    "synthetic_only_training": true,
+    "head_sha256": "6d2bfbef07063f63661740456242e03e7d34e04c4c5c95f66962fe15c91afcb9",
+    "maximum_gpu_score_error": 1.0728836059570312e-06,
+    "validation": [
+      {
+        "case": "016-gcd",
+        "groups": {
+          "all": {
+            "instances": 41,
+            "exact_partitions": 30
+          },
+          "direct": {
+            "instances": 26,
+            "exact_partitions": 20
+          },
+          "generated": {
+            "instances": 15,
+            "exact_partitions": 10
+          }
+        }
+      },
+      {
+        "case": "019-lcm",
+        "groups": {
+          "all": {
+            "instances": 99,
+            "exact_partitions": 63
+          },
+          "direct": {
+            "instances": 78,
+            "exact_partitions": 42
+          },
+          "generated": {
+            "instances": 21,
+            "exact_partitions": 21
+          }
+        }
+      }
+    ]
+  },
+  "backpropagation": false,
+  "speed_measured": false
+}
