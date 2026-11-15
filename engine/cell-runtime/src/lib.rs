@@ -34,6 +34,7 @@ pub mod multistage;
 pub mod program;
 pub mod proof_audit;
 pub mod query;
+pub mod gpu_selector;
 
 pub mod schedule;
 pub mod value;

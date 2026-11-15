@@ -1,0 +1,105 @@
+{
+  "scope": "complete standalone Cell CPU program with live Metal candidate filtering; CPU reference equivalence",
+  "native_egglog_audit": false,
+  "program_sha256": "2f8ab58996d6774fb14687e8e8c967f6a8989ef8ae874d4e407c4132cbc63971",
+  "runtime_sha256": "fde175c15cd1f136e650c36a393eb480fef93d60a6cffc6796f0c6d22f50c42f",
+  "service_sha256": "095124d94eded12918f785d3a7765a08cd24e84d40c1995fb2cc77b52dfbca3a",
+  "python": "/Users/mineralsteins/.codex-minato/worktrees/3063/egg_layout/out/cell-real-state/venv/bin/python",
+  "passed": true,
+  "runs": 882,
+  "comparisons": {
+    "gpu": {
+      "state.json": true,
+      "rhs.json": true,
+      "writes.json": true,
+      "resumes.json": true,
+      "schedule": true,
+      "complete": true
+    },
+    "large_batches": {
+      "state.json": true,
+      "rhs.json": true,
+      "writes.json": true,
+      "resumes.json": true,
+      "schedule": true,
+      "complete": true
+    },
+    "disconnect": {
+      "state.json": true,
+      "rhs.json": true,
+      "writes.json": true,
+      "resumes.json": true,
+      "schedule": true,
+      "complete": true
+    }
+  },
+  "measurements": {
+    "cpu": {
+      "status": "complete",
+      "inference_seconds": 0.022262083,
+      "setup_seconds": 0.001952708,
+      "gpu_selector": null
+    },
+    "gpu": {
+      "status": "complete",
+      "inference_seconds": 0.291879167,
+      "setup_seconds": 0.058395708,
+      "gpu_selector": {
+        "batches": 808,
+        "bypassed_domains": 4275,
+        "decoded_rows": 2973,
+        "device_service_seconds": 0.1909957038005814,
+        "exchange_seconds": 0.2668726869999997,
+        "failures": 0,
+        "input_rows": 2973,
+        "last_error": null,
+        "preparation_seconds": 0.0008027639999999978,
+        "rejected_rows": 392,
+        "request_bytes": 82523,
+        "retained_rows": 2581
+      }
+    },
+    "large_batches": {
+      "status": "complete",
+      "inference_seconds": 0.018435667,
+      "setup_seconds": 0.0583575,
+      "gpu_selector": {
+        "batches": 0,
+        "bypassed_domains": 5083,
+        "decoded_rows": 0,
+        "device_service_seconds": 0.0,
+        "exchange_seconds": 0.0,
+        "failures": 0,
+        "input_rows": 0,
+        "last_error": null,
+        "preparation_seconds": 0.0,
+        "rejected_rows": 0,
+        "request_bytes": 0,
+        "retained_rows": 0
+      }
+    },
+    "disconnect": {
+      "status": "complete",
+      "inference_seconds": 0.019074333,
+      "setup_seconds": 0.020677666,
+      "gpu_selector": {
+        "batches": 0,
+        "bypassed_domains": 5082,
+        "decoded_rows": 2,
+        "device_service_seconds": 0.0,
+        "exchange_seconds": 8.0833e-05,
+        "failures": 1,
+        "input_rows": 0,
+        "last_error": "Connection reset by peer (os error 54)",
+        "preparation_seconds": 3.25e-06,
+        "rejected_rows": 0,
+        "request_bytes": 75,
+        "retained_rows": 0
+      }
+    }
+  },
+  "timing_scope": "single diagnostic execution per lane; inference includes transfer audit; no speedup estimate",
+  "case": "sum-bits",
+  "source_sha256": "29b8396e56c0a08bc11ca9e5d52afdc25c138e5e4731d2780484bb004b3686d1",
+  "source_matches_repository_suite": true
+}

@@ -30,6 +30,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!(
             "eggfuse-cell-runtime --program FILE [--inspect-program | --output DIR] [--audit-stages] [--extract-unit-cost OPERATOR]"
         );
+        println!("  --gpu-selector-python PATH --gpu-selector-service PATH [--gpu-selector-min-rows N] (experimental exact Metal query filtering)");
         println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor and scalar Unit matcher)");
         println!("  --congruence-cells (experimental equality expressions and persistent completion cells)");
         #[cfg(feature = "spine-blocks")]
@@ -70,7 +71,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Err(format!("duplicate option {flag}").into());
         }
         match flag.as_str() {
-            "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" | "--completion-batch-tasks" | "--query-workers" | "--query-grain" => {
+            "--gpu-selector-python" | "--gpu-selector-service" | "--gpu-selector-min-rows" | "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" | "--completion-batch-tasks" | "--query-workers" | "--query-grain" => {
                 flags
                     .next()
                     .filter(|v| !v.starts_with("--"))
@@ -204,6 +205,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if overlap_completion { graph.use_overlapped_completion()?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
+    match (opt("--gpu-selector-python"), opt("--gpu-selector-service")) {
+        (Some(python), Some(service)) => {
+            let min_rows = opt("--gpu-selector-min-rows").map(|v| v.parse::<usize>()).transpose()?.unwrap_or(2);
+            runtime.gpu_selector = Some(eggfuse_cell_runtime::gpu_selector::Selector::start(&python, &service, min_rows)?);
+        }
+        (None, None) if opt("--gpu-selector-min-rows").is_none() => {}
+        _ => return Err("GPU selection requires --gpu-selector-python and --gpu-selector-service".into()),
+    }
     if let Some(workers) = opt("--query-workers") {
         #[cfg(feature="sparse-cells")]
         runtime.use_query_workers(workers.parse()?, opt("--query-grain").map(|s| s.parse())

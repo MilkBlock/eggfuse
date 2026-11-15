@@ -243,6 +243,11 @@ impl Frame {
                         field.read(&exec.graph, |col| &seed.values[col], &self.results, expanded));
                     exec.query_indexes.candidates(&exec.graph, t, &bound)?
                 };
+                let refs = if let Some(selector) = &mut exec.gpu_selector {
+                    let bound = expansion.bind::<Vec<Option<Value>>>(|field|
+                        field.read(&exec.graph, |col| &seed.values[col], &self.results, expanded));
+                    selector.select(&exec.graph, &r.query[ins.atom], &bound, refs)?
+                } else { refs };
                 #[cfg(feature = "sparse-cells")]
                 let refs = if !LOCAL && refs.len() >= 8 && refs.len() <= 65536
                     && let Some((atom, left, right, target)) = &k.sum_filter

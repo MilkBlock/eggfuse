@@ -131,6 +131,7 @@ impl CellResultObserver {
 }
 
 pub struct Executor {
+    pub gpu_selector: Option<crate::gpu_selector::Selector>,
     #[cfg(feature = "sparse-cells")]
     query_workers: Option<query_workers::Workers>,
     completion: Option<completion::State>,
@@ -391,6 +392,7 @@ impl Executor {
             audit,
             snapshots: vec![],
             binding_audit: vec![],
+            gpu_selector: None,
             binding_observer: None,
             result_observer: None,
             initial_audit,
@@ -692,6 +694,12 @@ impl Executor {
         out: &mut Vec<Binding>,
         delta: Option<(usize, u64, Dependency)>,
     ) -> Result<()> {
+        let filtered;
+        let witnesses = if let Some(selector) = &mut self.gpu_selector {
+            let bound = query[chosen].args.iter().map(|a| operand(a, env, &self.graph)).collect::<Vec<_>>();
+            filtered = selector.select(&self.graph, &query[chosen], &bound, Rc::new(witnesses.to_vec()))?;
+            filtered.as_slice()
+        } else { witnesses };
         for w in witnesses.iter().copied() {
             if !self.sieve.allow(rid, chosen, table, w, &self.query_indexes) {
                 continue;
@@ -3129,7 +3137,7 @@ impl Executor {
         let repair_cells = self.graph.repair_cell_report();
         #[cfg(not(feature = "spine-blocks"))]
         let repair_cells = J::Null;
-        json!({"stable_ports":self.graph.stable_port_report(),"cell_ownership":self.graph.ownership_report(),"maintenance":self.graph.maintenance_report(),"local_union_cells":self.graph.local_union_report(),"repair_cells":repair_cells,"fact_decode_calls":self.graph.fact_decode_calls.get(),"fact_decode_ports":self.graph.fact_decode_ports.get(),"repair_ports":self.graph.repair_port_report(),"backend":"cell-cpu","scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
+        json!({"gpu_selector":self.gpu_selector.as_ref().map(|s| &s.stats),"stable_ports":self.graph.stable_port_report(),"cell_ownership":self.graph.ownership_report(),"maintenance":self.graph.maintenance_report(),"local_union_cells":self.graph.local_union_report(),"repair_cells":repair_cells,"fact_decode_calls":self.graph.fact_decode_calls.get(),"fact_decode_ports":self.graph.fact_decode_ports.get(),"repair_ports":self.graph.repair_port_report(),"backend":if self.gpu_selector.is_some() {"cell-cpu-gpu-selector"} else {"cell-cpu"},"scope":"standalone Cell recipe executor","status":if self.tasks.is_empty(){"complete"}else{"checkpointed"},
             "union_digest":self.graph.union_digest_report(),
             "scoped_completion":self.graph.scoped_completion_report(),
             "scoped_executor":self.scoped_execution_report(),
