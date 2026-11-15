@@ -1,0 +1,801 @@
+{
+  "scope": "standalone synthetic canon multi-Run GPU audit; exact initial Cells, no CPU corrections",
+  "recipe_sha256": "90a9fd93b9092e90a57e122df70b881386828cd250907152dc5b21a1601ca760",
+  "weights_sha256": "ff166d46c61bea2a52f4e3112ed691367c82875616611fb52157b8c756cadf58",
+  "stage": {
+    "ruleset": "canon",
+    "source_rule_ids": [
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277
+    ],
+    "membership_authoritative": true,
+    "full_schedule_replaced_for_training": true
+  },
+  "exact_prefix": true,
+  "run_budget": 3,
+  "attempts": 8,
+  "candidate_capacity": 32,
+  "summary": {
+    "cases": 61,
+    "audited_runs": 88,
+    "failed_runs": 0,
+    "runs_with_diagnosed_eq_error": 0,
+    "runs_with_query_overflow": 0,
+    "admitted_cells": 263,
+    "cpu_full_run_audit_seconds": 0.4045644970028661,
+    "cpu_full_run_audit_mean_seconds": 0.004597323829578024,
+    "timing_scope": "CPU reference ruleset and graph comparison; excludes GPU and admission diagnosis"
+  },
+  "first_run_pass": 61,
+  "verified_fixedpoints": 59,
+  "raw_audit_sha256": "5c711c9add184d914385d6db35c1dc35f5697328e75a0f52a532678ff87dda25",
+  "raw_audit_path": "/private/tmp/eggfuse-gpu-match-selector/out/exact-prefix-all.json",
+  "all_query_sets_pass": true,
+  "cases": [
+    {
+      "pair": [
+        0,
+        0
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        0,
+        2
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        0,
+        3
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        0,
+        4
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        0,
+        5
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        0,
+        6
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        0,
+        7
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        1,
+        0
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        1,
+        1
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        1,
+        3
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        1,
+        4
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        1,
+        5
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        1,
+        6
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        1,
+        7
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        2,
+        0
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        2,
+        1
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        2,
+        2
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        2,
+        3
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        2,
+        4
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        2,
+        5
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        2,
+        6
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        2,
+        7
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        3,
+        0
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        3,
+        1
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        3,
+        2
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        3,
+        3
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        3,
+        4
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        3,
+        5
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        3,
+        6
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        3,
+        7
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        4,
+        0
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        4,
+        1
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        4,
+        2
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        4,
+        3
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        4,
+        4
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        4,
+        5
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        4,
+        6
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        4,
+        7
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        5,
+        0
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        5,
+        1
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        5,
+        2
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        5,
+        3
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        5,
+        4
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        5,
+        6
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        5,
+        7
+      ],
+      "runs": 3,
+      "statuses": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": false
+    },
+    {
+      "pair": [
+        6,
+        0
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        6,
+        1
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        6,
+        2
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        6,
+        3
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        6,
+        4
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        6,
+        5
+      ],
+      "runs": 3,
+      "statuses": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        6,
+        7
+      ],
+      "runs": 3,
+      "statuses": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": false
+    },
+    {
+      "pair": [
+        7,
+        0
+      ],
+      "runs": 2,
+      "statuses": [
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        7,
+        1
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        7,
+        2
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        7,
+        3
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        7,
+        4
+      ],
+      "runs": 1,
+      "statuses": [
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        7,
+        5
+      ],
+      "runs": 3,
+      "statuses": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    },
+    {
+      "pair": [
+        7,
+        6
+      ],
+      "runs": 3,
+      "statuses": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "query_sets_pass": true,
+      "fixedpoint": true
+    }
+  ]
+}

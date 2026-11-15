@@ -12,7 +12,7 @@ def expand(bank,pools,request,model,atoms,ports,capacity,xp):
     messages=xp.zeros((capacity,atoms,ports,64),xp.float32)
     entries=xp.full((capacity,atoms,2),-1,xp.int32)
     live=xp.arange(capacity)==0
-    overflow=xp.array(False);nonfinite=xp.array(False);evaluated=xp.array(0,xp.int32);scheduled=0
+    overflow=xp.array(False);nonfinite=xp.array(False);evaluated=xp.array(0,xp.int32);scheduled=0;rejected=xp.array(False)
     for depth,pool in enumerate(pools):
         roots=pool['roots'];n=len(roots)
         if n<1:raise ValueError('pools require at least one masked padding row')
@@ -31,6 +31,7 @@ def expand(bank,pools,request,model,atoms,ports,capacity,xp):
         eligible=live[:,None]&pool['live'][None,:]
         nonfinite=nonfinite|xp.any(eligible&~xp.isfinite(scores))
         chosen=eligible&xp.isfinite(scores)&(scores>=0)
+        rejected=rejected|xp.any(eligible&~chosen)
         count=xp.sum(chosen.astype(xp.int32));overflow=overflow|(count>capacity)
         evaluated=evaluated+xp.sum(eligible.astype(xp.int32))
         order=xp.sort(xp.where(chosen.reshape(-1),xp.arange(capacity*n),capacity*n))[:capacity]
@@ -41,4 +42,4 @@ def expand(bank,pools,request,model,atoms,ports,capacity,xp):
         entries=xp.where(slot[None,:,None],pool['entries'][child,None,:],entries[parent])
         live=next_live
     return dict(entries=entries,live=live,overflow=overflow,nonfinite=nonfinite,
-                complete=~overflow&~nonfinite,active_choices=evaluated,scheduled_choices=xp.array(scheduled,xp.int32))
+                complete=~overflow&~nonfinite&~rejected,proposal_complete=~overflow&~nonfinite,active_choices=evaluated,scheduled_choices=xp.array(scheduled,xp.int32))

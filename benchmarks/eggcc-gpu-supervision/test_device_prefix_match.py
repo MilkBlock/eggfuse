@@ -24,7 +24,7 @@ class PrefixDecode(unittest.TestCase):
         bad=expand(bank,[pool],mx.zeros(64),lambda x:mx.full((len(x),1),float('nan')),1,1,2,mx)
         self.assertFalse(bool(bad['complete']));self.assertTrue(bool(bad['nonfinite']))
         empty=expand(bank,[pool],mx.zeros(64),lambda x:-mx.ones((len(x),1)),1,1,2,mx)
-        self.assertTrue(bool(empty['complete']));self.assertFalse(bool(mx.any(empty['live'])))
+        self.assertFalse(bool(empty['complete']));self.assertTrue(bool(empty['proposal_complete']));self.assertFalse(bool(mx.any(empty['live'])))
 
 
 if __name__=='__main__':unittest.main()
