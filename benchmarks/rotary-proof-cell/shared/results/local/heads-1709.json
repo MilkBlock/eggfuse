@@ -1,0 +1,11 @@
+{
+  "relation_truth_table_correct": 256,
+  "relation_truth_table_cases": 256,
+  "relation_min_signed_margin": 4.513981342315674,
+  "swap_rows_correct": 56,
+  "swap_rows": 56,
+  "insertion_rows_correct": 8,
+  "insertion_rows": 8,
+  "activation_correct": true,
+  "limitation": "binary primitive inputs only; not a proof for all soft recurrent states"
+}

@@ -1,0 +1,712 @@
+{
+  "rows": {
+    "train_replay": {
+      "1703": {
+        "old_passed": 2048,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 369,
+        "correct_alias": 369,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1709": {
+        "old_passed": 2048,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 369,
+        "correct_alias": 369,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1721": {
+        "old_passed": 2048,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 369,
+        "correct_alias": 369,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      }
+    },
+    "seen": {
+      "1703": {
+        "old_passed": 2048,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 351,
+        "correct_alias": 351,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1709": {
+        "old_passed": 2048,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 351,
+        "correct_alias": 351,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1721": {
+        "old_passed": 2048,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 351,
+        "correct_alias": 351,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      }
+    },
+    "shape": {
+      "1703": {
+        "old_passed": 1,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 389,
+        "correct_alias": 389,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1709": {
+        "old_passed": 4,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 389,
+        "correct_alias": 389,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1721": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 389,
+        "correct_alias": 389,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      }
+    },
+    "union": {
+      "1703": {
+        "old_passed": 982,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 370,
+        "correct_alias": 370,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1709": {
+        "old_passed": 982,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 370,
+        "correct_alias": 370,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1721": {
+        "old_passed": 982,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 370,
+        "correct_alias": 370,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      }
+    },
+    "mapping": {
+      "1703": {
+        "old_passed": 580,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 370,
+        "correct_alias": 370,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1709": {
+        "old_passed": 112,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 370,
+        "correct_alias": 370,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1721": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 370,
+        "correct_alias": 370,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      }
+    },
+    "joint": {
+      "1703": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 218,
+        "correct_alias": 218,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1709": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 218,
+        "correct_alias": 218,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1721": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 218,
+        "correct_alias": 218,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      }
+    },
+    "fresh_shape": {
+      "1703": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 397,
+        "correct_alias": 397,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1709": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 397,
+        "correct_alias": 397,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1721": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 397,
+        "correct_alias": 397,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      }
+    },
+    "fresh_joint": {
+      "1703": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 408,
+        "correct_alias": 408,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1709": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 408,
+        "correct_alias": 408,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1721": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 408,
+        "correct_alias": 408,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      }
+    },
+    "final_shape": {
+      "1703": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 398,
+        "correct_alias": 398,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1709": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 398,
+        "correct_alias": 398,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1721": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 398,
+        "correct_alias": 398,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      }
+    },
+    "final_joint": {
+      "1703": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 404,
+        "correct_alias": 404,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1709": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 404,
+        "correct_alias": 404,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      },
+      "1721": {
+        "old_passed": 0,
+        "new_passed": 2048,
+        "cases": 2048,
+        "run_passed": [
+          2048,
+          2048,
+          2048
+        ],
+        "expected_transfers": 404,
+        "correct_alias": 404,
+        "false_transfers": 0,
+        "missed_transfers": 0
+      }
+    }
+  },
+  "seeds": {
+    "1703": {
+      "semantic_status": "pass",
+      "lineage": {
+        "direct_recurrence_equal": true,
+        "protected_lanes_equal": true,
+        "erased_relation_changes_transfer": 20,
+        "gate_gradient_to_generated_relation": 0.0006519575836136937
+      },
+      "masks": {
+        "train_replay": {
+          "predicted_retirements": 369,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "seen": {
+          "predicted_retirements": 351,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "shape": {
+          "predicted_retirements": 389,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "union": {
+          "predicted_retirements": 370,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "mapping": {
+          "predicted_retirements": 370,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "joint": {
+          "predicted_retirements": 218,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "fresh_shape": {
+          "predicted_retirements": 397,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "fresh_joint": {
+          "predicted_retirements": 408,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "final_shape": {
+          "predicted_retirements": 398,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "final_joint": {
+          "predicted_retirements": 404,
+          "unchanged": true,
+          "old_masked": true
+        }
+      },
+      "fresh_unique": {
+        "final_shape": 2048,
+        "final_joint": 2048
+      },
+      "ablations": {
+        "relation": {
+          "passed": 125,
+          "cases": 256
+        },
+        "pointer": {
+          "passed": 205,
+          "cases": 256
+        }
+      },
+      "model_sha256": "ae5169e1ee520a072fcce68fc4a42d04291d5f0a21b34ed7740febe401370b89",
+      "result_sha256": "97a3adad6a7ef80c5da6a235f95157c0c9bca6dc82d0e778d3b7cd4fd3014a01"
+    },
+    "1709": {
+      "semantic_status": "pass",
+      "lineage": {
+        "direct_recurrence_equal": true,
+        "protected_lanes_equal": true,
+        "erased_relation_changes_transfer": 20,
+        "gate_gradient_to_generated_relation": 0.00045240187318995595
+      },
+      "masks": {
+        "train_replay": {
+          "predicted_retirements": 369,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "seen": {
+          "predicted_retirements": 351,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "shape": {
+          "predicted_retirements": 389,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "union": {
+          "predicted_retirements": 370,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "mapping": {
+          "predicted_retirements": 370,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "joint": {
+          "predicted_retirements": 218,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "fresh_shape": {
+          "predicted_retirements": 397,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "fresh_joint": {
+          "predicted_retirements": 408,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "final_shape": {
+          "predicted_retirements": 398,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "final_joint": {
+          "predicted_retirements": 404,
+          "unchanged": true,
+          "old_masked": true
+        }
+      },
+      "fresh_unique": {
+        "final_shape": 2048,
+        "final_joint": 2048
+      },
+      "ablations": {
+        "relation": {
+          "passed": 125,
+          "cases": 256
+        },
+        "pointer": {
+          "passed": 205,
+          "cases": 256
+        }
+      },
+      "model_sha256": "342104a4827d74653366a1e73cbfcb9f45b7c33eca5e40e6885649318f8be47a",
+      "result_sha256": "6e1adcbf971b714576c2729370440ba0522b47fd2a8b4c331f135eaa2dc8f608"
+    },
+    "1721": {
+      "semantic_status": "pass",
+      "lineage": {
+        "direct_recurrence_equal": true,
+        "protected_lanes_equal": true,
+        "erased_relation_changes_transfer": 20,
+        "gate_gradient_to_generated_relation": 0.0008099796250462532
+      },
+      "masks": {
+        "train_replay": {
+          "predicted_retirements": 369,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "seen": {
+          "predicted_retirements": 351,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "shape": {
+          "predicted_retirements": 389,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "union": {
+          "predicted_retirements": 370,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "mapping": {
+          "predicted_retirements": 370,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "joint": {
+          "predicted_retirements": 218,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "fresh_shape": {
+          "predicted_retirements": 397,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "fresh_joint": {
+          "predicted_retirements": 408,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "final_shape": {
+          "predicted_retirements": 398,
+          "unchanged": true,
+          "old_masked": true
+        },
+        "final_joint": {
+          "predicted_retirements": 404,
+          "unchanged": true,
+          "old_masked": true
+        }
+      },
+      "fresh_unique": {
+        "final_shape": 2048,
+        "final_joint": 2048
+      },
+      "ablations": {
+        "relation": {
+          "passed": 125,
+          "cases": 256
+        },
+        "pointer": {
+          "passed": 205,
+          "cases": 256
+        }
+      },
+      "model_sha256": "87c4280fd0eedadc3c89ad098487e92a11894f6f2d024beb00814f3dc996adc4",
+      "result_sha256": "093df07a326dec3213004eb9a89b54f2228e6a232cf484b2a2603415ae542526"
+    }
+  },
+  "fresh_manifest_sha256": "8c2ef5dfdc19c9d04deaf673e61ce7b00ea70f0b2f68773928fd503f39d5c5b5",
+  "artifact_root": "/Volumes/Extreme SSD/eggfuse-experiments/rotary-shared-local-20261117",
+  "initial_shared_commit": "f7687c01",
+  "old_flat_commit": "14f1183e",
+  "token_floats": {
+    "old": 128,
+    "new": 279
+  },
+  "token_bytes": {
+    "old": 512,
+    "new": 1116
+  },
+  "learned_parameters": 667,
+  "protected_input_floats": 139,
+  "change": "structured GPU state plus tied heads PLUS offline primitive-rule supervision",
+  "source_sha256": {
+    "abi.py": "69ac7578925acdb288aa1bb7d052364fb841d3c1a63ccdd7c7cc97f882ad8ba5",
+    "audit_saved.py": "348a2eb978bde2b09756efd3d7664e1357db30912cd6f6ca8e0da95f4cf92732",
+    "collect_results.py": "a8b54a40a230e0e81fe435af0247424a7a7bdbd99007efa64ea4d55f2f2c3977",
+    "cpu_contract.py": "64348419bade6baa50a8e0df98f3b55d9945643a11801c3ddeba17cc8d943990",
+    "experiment.py": "506c3b21fcbcdbbcbc6c87219f3790eec0cfa6b911fbaee97798694194b39ed3",
+    "fresh.py": "9d63a429af35f5a9ca5e654fee212b91eb6491c984ced58a0c74fac40f2fbe10",
+    "inspect_heads.py": "1771560ce4bed86482cc3fda7dffd48b0e3af652f6a822637917043392514d42",
+    "local_supervision.py": "cf896128124d5ac009159172711218789feca80b5a4bc095b76d8c810523583c",
+    "shared_net.py": "24e5e99da2bfbc5462f6df55b5ad49a4562af9eda830aed9a2c039e18823d2dc",
+    "test_contract.py": "58f539d6dd0fc63cdd85fb6b2aa76420b754bf412b58d8a9bb55300a0347ee28",
+    "test_local.py": "a8c107b347c41280b228bdb09ceb1cc13a63e2f443471de2bbb9c5232119bdcc",
+    "test_shared.py": "1235b870d9f25094c1ceb2a6f91c78ddf69e80f4aad519be6931d6044ff08c5c"
+  },
+  "limits": [
+    "bounded fixed-size synthetic family",
+    "not a compression/speed result",
+    "not fully learned proof semantics",
+    "no CPU fallback or state repair"
+  ]
+}

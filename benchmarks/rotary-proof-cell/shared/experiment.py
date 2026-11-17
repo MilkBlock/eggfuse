@@ -8,7 +8,7 @@ import mlx.nn as nn
 import mlx.optimizers as optim
 from abi import *
 from shared_net import SharedNet,loss,unpack,discrete
-from fresh import freeze,register,cases as fresh_cases
+from fresh import freeze,freeze_final,register,cases as fresh_cases,final_cases
 from spec import seed_inputs,positions,digest
 from semantics import targets,audit as baseline_audit
 from cpu_contract import audit
@@ -40,10 +40,10 @@ def evaluate(model,cases,pos,shared=True):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('output',type=Path);p.add_argument('--seed',type=int,default=1703)
-    p.add_argument('--steps',type=int,default=6000);p.add_argument('--old-root',type=Path,required=True);a=p.parse_args()
+    p.add_argument('--local-supervision',action='store_true');p.add_argument('--steps',type=int,default=6000);p.add_argument('--old-root',type=Path,required=True);a=p.parse_args()
     if not mx.metal.is_available():raise RuntimeError('Metal required; no CPU fallback')
     mx.set_default_device(mx.gpu);mx.random.seed(a.seed);a.output.mkdir(parents=True,exist_ok=True)
-    manifest=freeze();register(manifest)
+    manifest=freeze_final() if a.local_supervision else freeze();register(manifest)
     old=a.old_root/f'seed-{a.seed}'
     with np.load(old/'inputs.npz') as z:
         train=z['train'];datasets={k:z[k] for k in z.files if k!='train'}
@@ -51,7 +51,9 @@ def main():
     for k in datasets:
         with np.load(old/f'{k}-checkpoints.npz') as z:locs[k]=z['positions'];assert np.array_equal(z['cases'],datasets[k])
     for name,hard in [('fresh_shape',False),('fresh_joint',True)]:datasets[name],locs[name]=fresh_cases(manifest,hard)
-    protocol=dict(seed=a.seed,steps=a.steps,train_hash=digest(train),fresh_manifest=manifest,
+    if a.local_supervision:
+        for name,hard in [('final_shape',False),('final_joint',True)]:datasets[name],locs[name]=final_cases(manifest,hard)
+    protocol=dict(local_supervision=a.local_supervision,seed=a.seed,steps=a.steps,train_hash=digest(train),fresh_manifest=manifest,
         dataset_hashes={k:digest(v) for k,v in datasets.items()},latent_floats=TOKEN_WIDTH,
         source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(Path(__file__).parent.glob('*.py'))},
         old_checkpoint_sha256=hashlib.sha256((old/'model.safetensors').read_bytes()).hexdigest(),
@@ -59,7 +61,11 @@ def main():
     (a.output/'protocol.json').write_text(json.dumps(protocol,indent=2)+'\n')
     np.savez_compressed(a.output/'inputs.npz',train=train,**datasets)
     x=seed_inputs(train);y=targets(train);model=SharedNet();opt=optim.Adam(learning_rate=.002)
-    grad=nn.value_and_grad(model,loss);rng=np.random.default_rng(a.seed);history=[];start=time.perf_counter()
+    if a.local_supervision:
+        from local_supervision import local_loss
+        def objective(m,x,p,t):return loss(m,x,p,t)+local_loss(m)
+    else:objective=loss
+    grad=nn.value_and_grad(model,objective);rng=np.random.default_rng(a.seed);history=[];start=time.perf_counter()
     for step in range(a.steps):
         ix=rng.integers(len(train),size=128)
         value,g=grad(model,mx.array(x[ix]),mx.array(positions(128,rng)),{k:mx.array(v[:,ix]) for k,v in y.items()})
@@ -70,7 +76,8 @@ def main():
     predictions={};masks={};old_predictions={}
     for name,c in datasets.items():predictions[name],masks[name]=evaluate(model,c,locs[name])
     baseline=StructureNet();baseline.load_weights(str(old/'model.safetensors'))
-    for name in ('fresh_shape','fresh_joint'):old_predictions[name],_=evaluate(baseline,datasets[name],locs[name],False)
+    for name in datasets:
+        if name.startswith(('fresh_','final_')):old_predictions[name],_=evaluate(baseline,datasets[name],locs[name],False)
     # Ablations alter learned weights only. They cannot invoke a reference answer.
     corrupt_predictions={}
     for name,panel in [('relation','union'),('pointer','mapping')]:

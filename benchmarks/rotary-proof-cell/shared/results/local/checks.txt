@@ -1,0 +1,23 @@
+Nine unit/contract tests passed.
+
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.259s
+
+OK
+
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.199s
+
+OK
+
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.060s
+
+OK
+
+
+Training: jobs 855/856/857, all semantic panels pass.
+Independent CPU replay: job 861, final-joint 2048/2048, no MLX imported.
