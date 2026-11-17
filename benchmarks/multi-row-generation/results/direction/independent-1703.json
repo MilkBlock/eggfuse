@@ -1,0 +1,1832 @@
+{
+  "status": "pass",
+  "protocol": {
+    "train_family": "short_cycles",
+    "mode": "independent",
+    "seed": 1703,
+    "steps": 6000,
+    "train_graphs": 4096,
+    "batch": 64,
+    "learning_rate": 0.001,
+    "split": {
+      "seen": {
+        "rows": 2,
+        "length": 4,
+        "graphs": 256,
+        "exact_input_overlap": 0,
+        "cycle_shapes": [
+          [
+            1,
+            1,
+            1,
+            1,
+            2,
+            2
+          ],
+          [
+            1,
+            1,
+            2,
+            2,
+            2
+          ],
+          [
+            2,
+            2,
+            2,
+            2
+          ]
+        ],
+        "input_sha256": "459614aa953d7287ea5064656fd8dae105973cc1f4dfd5390243a8b174ca9016"
+      },
+      "long_cycle": {
+        "rows": 2,
+        "length": 4,
+        "graphs": 256,
+        "exact_input_overlap": 0,
+        "cycle_shapes": [
+          [
+            8
+          ]
+        ],
+        "input_sha256": "48c0e48d78c1b8ccd672fe184eba485f7fb67d7b2b21048fcceec4ffb700cbf2"
+      },
+      "larger": {
+        "rows": 3,
+        "length": 4,
+        "graphs": 256,
+        "exact_input_overlap": 0,
+        "cycle_shapes": [
+          [
+            12
+          ]
+        ],
+        "input_sha256": "db571fab8c5ab7019d08382cff8047515c8c0540592ee86c0d1c5bb4265c2c6d"
+      },
+      "more_rows": {
+        "rows": 8,
+        "length": 2,
+        "graphs": 256,
+        "exact_input_overlap": 0,
+        "cycle_shapes": [
+          [
+            16
+          ]
+        ],
+        "input_sha256": "229d5d2bcb67b30fea7f2376988370eb2bbc3d3989047b965bdac8ea982e87e6"
+      },
+      "arbitrary": {
+        "rows": 4,
+        "length": 4,
+        "graphs": 256,
+        "exact_input_overlap": 0,
+        "cycle_shapes": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            3,
+            6
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            11
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            2,
+            10
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            3,
+            3,
+            6
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            5,
+            7
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            12
+          ],
+          [
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            2,
+            5
+          ],
+          [
+            1,
+            1,
+            1,
+            2,
+            3,
+            4,
+            4
+          ],
+          [
+            1,
+            1,
+            1,
+            2,
+            3,
+            8
+          ],
+          [
+            1,
+            1,
+            1,
+            2,
+            4,
+            7
+          ],
+          [
+            1,
+            1,
+            1,
+            2,
+            5,
+            6
+          ],
+          [
+            1,
+            1,
+            1,
+            4,
+            9
+          ],
+          [
+            1,
+            1,
+            2,
+            2,
+            3,
+            3,
+            4
+          ],
+          [
+            1,
+            1,
+            2,
+            2,
+            3,
+            7
+          ],
+          [
+            1,
+            1,
+            2,
+            2,
+            5,
+            5
+          ],
+          [
+            1,
+            1,
+            2,
+            2,
+            10
+          ],
+          [
+            1,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          [
+            1,
+            1,
+            2,
+            3,
+            9
+          ],
+          [
+            1,
+            1,
+            2,
+            4,
+            4,
+            4
+          ],
+          [
+            1,
+            1,
+            2,
+            4,
+            8
+          ],
+          [
+            1,
+            1,
+            2,
+            5,
+            7
+          ],
+          [
+            1,
+            1,
+            2,
+            12
+          ],
+          [
+            1,
+            1,
+            3,
+            3,
+            8
+          ],
+          [
+            1,
+            1,
+            3,
+            4,
+            7
+          ],
+          [
+            1,
+            1,
+            3,
+            5,
+            6
+          ],
+          [
+            1,
+            1,
+            3,
+            11
+          ],
+          [
+            1,
+            1,
+            4,
+            4,
+            6
+          ],
+          [
+            1,
+            1,
+            4,
+            10
+          ],
+          [
+            1,
+            1,
+            5,
+            9
+          ],
+          [
+            1,
+            1,
+            6,
+            8
+          ],
+          [
+            1,
+            1,
+            7,
+            7
+          ],
+          [
+            1,
+            1,
+            14
+          ],
+          [
+            1,
+            2,
+            2,
+            2,
+            2,
+            7
+          ],
+          [
+            1,
+            2,
+            2,
+            5,
+            6
+          ],
+          [
+            1,
+            2,
+            2,
+            11
+          ],
+          [
+            1,
+            2,
+            3,
+            3,
+            7
+          ],
+          [
+            1,
+            2,
+            3,
+            4,
+            6
+          ],
+          [
+            1,
+            2,
+            3,
+            10
+          ],
+          [
+            1,
+            2,
+            4,
+            9
+          ],
+          [
+            1,
+            2,
+            5,
+            8
+          ],
+          [
+            1,
+            2,
+            6,
+            7
+          ],
+          [
+            1,
+            2,
+            13
+          ],
+          [
+            1,
+            3,
+            3,
+            4,
+            5
+          ],
+          [
+            1,
+            3,
+            3,
+            9
+          ],
+          [
+            1,
+            3,
+            4,
+            8
+          ],
+          [
+            1,
+            3,
+            5,
+            7
+          ],
+          [
+            1,
+            3,
+            6,
+            6
+          ],
+          [
+            1,
+            3,
+            12
+          ],
+          [
+            1,
+            4,
+            5,
+            6
+          ],
+          [
+            1,
+            4,
+            11
+          ],
+          [
+            1,
+            5,
+            10
+          ],
+          [
+            1,
+            6,
+            9
+          ],
+          [
+            1,
+            7,
+            8
+          ],
+          [
+            1,
+            15
+          ],
+          [
+            2,
+            2,
+            2,
+            3,
+            3,
+            4
+          ],
+          [
+            2,
+            2,
+            2,
+            4,
+            6
+          ],
+          [
+            2,
+            2,
+            3,
+            9
+          ],
+          [
+            2,
+            2,
+            4,
+            8
+          ],
+          [
+            2,
+            2,
+            5,
+            7
+          ],
+          [
+            2,
+            2,
+            12
+          ],
+          [
+            2,
+            3,
+            3,
+            8
+          ],
+          [
+            2,
+            3,
+            4,
+            7
+          ],
+          [
+            2,
+            3,
+            5,
+            6
+          ],
+          [
+            2,
+            3,
+            11
+          ],
+          [
+            2,
+            4,
+            4,
+            6
+          ],
+          [
+            2,
+            4,
+            10
+          ],
+          [
+            2,
+            5,
+            9
+          ],
+          [
+            2,
+            7,
+            7
+          ],
+          [
+            2,
+            14
+          ],
+          [
+            3,
+            3,
+            4,
+            6
+          ],
+          [
+            3,
+            4,
+            4,
+            5
+          ],
+          [
+            3,
+            5,
+            8
+          ],
+          [
+            3,
+            13
+          ],
+          [
+            4,
+            4,
+            8
+          ],
+          [
+            4,
+            5,
+            7
+          ],
+          [
+            4,
+            6,
+            6
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            5,
+            11
+          ],
+          [
+            6,
+            10
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            8
+          ],
+          [
+            16
+          ]
+        ],
+        "input_sha256": "2a562388f4181f633085d871fa92ba720e7b71b1ef7da94eba86962b6e34d9d7"
+      },
+      "final_fanin_rows": {
+        "rows": 8,
+        "length": 2,
+        "graphs": 256,
+        "exact_input_overlap": 0,
+        "cycle_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            2,
+            2
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            4
+          ],
+          [
+            1,
+            1,
+            1,
+            2
+          ],
+          [
+            1,
+            1,
+            1,
+            2,
+            2
+          ],
+          [
+            1,
+            1,
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            1,
+            1,
+            4
+          ],
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            1,
+            1,
+            2,
+            2
+          ],
+          [
+            1,
+            1,
+            2,
+            4
+          ],
+          [
+            1,
+            1,
+            2,
+            5
+          ],
+          [
+            1,
+            1,
+            3
+          ],
+          [
+            1,
+            1,
+            4
+          ],
+          [
+            1,
+            1,
+            5
+          ],
+          [
+            1,
+            1,
+            6
+          ],
+          [
+            1,
+            1,
+            8
+          ],
+          [
+            1,
+            1,
+            9
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2,
+            2
+          ],
+          [
+            1,
+            2,
+            2,
+            2
+          ],
+          [
+            1,
+            2,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            4
+          ],
+          [
+            1,
+            2,
+            5
+          ],
+          [
+            1,
+            2,
+            7
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            3,
+            3
+          ],
+          [
+            1,
+            3,
+            4
+          ],
+          [
+            1,
+            3,
+            5
+          ],
+          [
+            1,
+            3,
+            6
+          ],
+          [
+            1,
+            3,
+            7
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            4,
+            4
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            1,
+            9
+          ],
+          [
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ],
+          [
+            6
+          ],
+          [
+            7
+          ],
+          [
+            8
+          ],
+          [
+            9
+          ],
+          [
+            14
+          ]
+        ],
+        "input_sha256": "0042a82079e86976f1b3361f76b7861aca2d8aa7718ba98cbd57d31aba316fca"
+      },
+      "final_fanin_layout": {
+        "rows": 3,
+        "length": 4,
+        "graphs": 256,
+        "exact_input_overlap": 0,
+        "cycle_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            2
+          ],
+          [
+            1,
+            1,
+            1,
+            3
+          ],
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            1,
+            1,
+            2,
+            2
+          ],
+          [
+            1,
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            1,
+            2,
+            4
+          ],
+          [
+            1,
+            1,
+            3
+          ],
+          [
+            1,
+            1,
+            3,
+            4
+          ],
+          [
+            1,
+            1,
+            4
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2,
+            2
+          ],
+          [
+            1,
+            2,
+            2,
+            2
+          ],
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            4
+          ],
+          [
+            1,
+            2,
+            5
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            3,
+            3
+          ],
+          [
+            1,
+            3,
+            4
+          ],
+          [
+            1,
+            3,
+            5
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            1,
+            7
+          ],
+          [
+            1,
+            8
+          ],
+          [
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ],
+          [
+            6
+          ],
+          [
+            8
+          ]
+        ],
+        "input_sha256": "a91bc8941662fd724d8063eb530a5df18c46307cce380bd4bbbc97aea744e9e1"
+      }
+    },
+    "checkpoint_policy": "fixed final step; heldouts evaluated only after fitting",
+    "source_sha256": {
+      "network.py": "78057bd8409dc264fd8ba75d62ecda566193df75f0ca0325784ccd28995090b7",
+      "run.py": "c950e3a81a0a472cd05e9eb60e7c196a56fe1bfad0f666b5c93c60ba03abaefd",
+      "task.py": "4dca9afe44b53205d7181570c18a0404ae2f5bab56254d6c2a3cf5f4d19ddb8a",
+      "test_direction.py": "3eec8d73e781f88a48ff1ca5a8cb3a356b9cb25d8bc65f00316fac79d458a5cc",
+      "test_task.py": "27de1d36e34851d4f604ab5536f866dbbd527f8882498bf849cb400a9b59007b",
+      "verify.py": "21e5688ac25e7a5ca888de61465d51062b2d57545c908c905fbfa520378371d1"
+    }
+  },
+  "panels": {
+    "train_replay": {
+      "graphs": 1024,
+      "whole_graph_passed": 1024,
+      "stage_graph_passed": [
+        1024,
+        1024
+      ],
+      "obligations": 16384,
+      "missing_or_invalid_obligations": 0,
+      "exact_pointer_count": [
+        8192,
+        8192
+      ],
+      "decoded_value_count": [
+        8192,
+        8192
+      ],
+      "repeated_first_stage_partner_count": 0,
+      "reference_errors": 0,
+      "cross_row_successor_obligations": 3422,
+      "cross_row_successor_correct": 3422,
+      "examples": [],
+      "cpu_decoder_agrees": true
+    },
+    "seen": {
+      "graphs": 256,
+      "whole_graph_passed": 256,
+      "stage_graph_passed": [
+        256,
+        256
+      ],
+      "obligations": 4096,
+      "missing_or_invalid_obligations": 0,
+      "exact_pointer_count": [
+        2048,
+        2048
+      ],
+      "decoded_value_count": [
+        2048,
+        2048
+      ],
+      "repeated_first_stage_partner_count": 0,
+      "reference_errors": 0,
+      "cross_row_successor_obligations": 1014,
+      "cross_row_successor_correct": 1014,
+      "examples": [],
+      "cpu_decoder_agrees": true
+    },
+    "long_cycle": {
+      "graphs": 256,
+      "whole_graph_passed": 256,
+      "stage_graph_passed": [
+        256,
+        256
+      ],
+      "obligations": 4096,
+      "missing_or_invalid_obligations": 0,
+      "exact_pointer_count": [
+        2048,
+        2048
+      ],
+      "decoded_value_count": [
+        2048,
+        2048
+      ],
+      "repeated_first_stage_partner_count": 0,
+      "reference_errors": 0,
+      "cross_row_successor_obligations": 1168,
+      "cross_row_successor_correct": 1168,
+      "examples": [],
+      "cpu_decoder_agrees": true
+    },
+    "larger": {
+      "graphs": 256,
+      "whole_graph_passed": 256,
+      "stage_graph_passed": [
+        256,
+        256
+      ],
+      "obligations": 6144,
+      "missing_or_invalid_obligations": 0,
+      "exact_pointer_count": [
+        3072,
+        3072
+      ],
+      "decoded_value_count": [
+        3072,
+        3072
+      ],
+      "repeated_first_stage_partner_count": 0,
+      "reference_errors": 0,
+      "cross_row_successor_obligations": 2233,
+      "cross_row_successor_correct": 2233,
+      "examples": [],
+      "cpu_decoder_agrees": true
+    },
+    "more_rows": {
+      "graphs": 256,
+      "whole_graph_passed": 256,
+      "stage_graph_passed": [
+        256,
+        256
+      ],
+      "obligations": 8192,
+      "missing_or_invalid_obligations": 0,
+      "exact_pointer_count": [
+        4096,
+        4096
+      ],
+      "decoded_value_count": [
+        4096,
+        4096
+      ],
+      "repeated_first_stage_partner_count": 0,
+      "reference_errors": 0,
+      "cross_row_successor_obligations": 3798,
+      "cross_row_successor_correct": 3798,
+      "examples": [],
+      "cpu_decoder_agrees": true
+    },
+    "arbitrary": {
+      "graphs": 256,
+      "whole_graph_passed": 256,
+      "stage_graph_passed": [
+        256,
+        256
+      ],
+      "obligations": 8192,
+      "missing_or_invalid_obligations": 0,
+      "exact_pointer_count": [
+        4096,
+        4096
+      ],
+      "decoded_value_count": [
+        4096,
+        4096
+      ],
+      "repeated_first_stage_partner_count": 0,
+      "reference_errors": 0,
+      "cross_row_successor_obligations": 3071,
+      "cross_row_successor_correct": 3071,
+      "examples": [],
+      "cpu_decoder_agrees": true
+    },
+    "final_fanin_rows": {
+      "graphs": 256,
+      "whole_graph_passed": 256,
+      "stage_graph_passed": [
+        256,
+        256
+      ],
+      "obligations": 8192,
+      "missing_or_invalid_obligations": 0,
+      "exact_pointer_count": [
+        4096,
+        4096
+      ],
+      "decoded_value_count": [
+        4096,
+        4096
+      ],
+      "repeated_first_stage_partner_count": 0,
+      "reference_errors": 0,
+      "cross_row_successor_obligations": 3571,
+      "cross_row_successor_correct": 3571,
+      "examples": [],
+      "cpu_decoder_agrees": true
+    },
+    "final_fanin_layout": {
+      "graphs": 256,
+      "whole_graph_passed": 256,
+      "stage_graph_passed": [
+        256,
+        256
+      ],
+      "obligations": 6144,
+      "missing_or_invalid_obligations": 0,
+      "exact_pointer_count": [
+        3072,
+        3072
+      ],
+      "decoded_value_count": [
+        3072,
+        3072
+      ],
+      "repeated_first_stage_partner_count": 0,
+      "reference_errors": 0,
+      "cross_row_successor_obligations": 2062,
+      "cross_row_successor_correct": 2062,
+      "examples": [],
+      "cpu_decoder_agrees": true
+    }
+  },
+  "erased_first_latent": {
+    "graphs": 256,
+    "whole_graph_passed": 0,
+    "stage_graph_passed": [
+      256,
+      0
+    ],
+    "obligations": 4096,
+    "missing_or_invalid_obligations": 2048,
+    "exact_pointer_count": [
+      2048,
+      270
+    ],
+    "decoded_value_count": [
+      2048,
+      0
+    ],
+    "repeated_first_stage_partner_count": 0,
+    "reference_errors": 0,
+    "cross_row_successor_obligations": 1168,
+    "cross_row_successor_correct": 0,
+    "examples": [
+      {
+        "a": [
+          [
+            1,
+            0
+          ],
+          [
+            10,
+            2
+          ],
+          [
+            14,
+            3
+          ],
+          [
+            13,
+            3
+          ],
+          [
+            7,
+            3
+          ],
+          [
+            6,
+            1
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            9,
+            3
+          ]
+        ],
+        "b": [
+          [
+            10,
+            5,
+            1
+          ],
+          [
+            9,
+            10,
+            2
+          ],
+          [
+            1,
+            13,
+            1
+          ],
+          [
+            14,
+            6,
+            0
+          ],
+          [
+            5,
+            7,
+            0
+          ],
+          [
+            7,
+            14,
+            1
+          ],
+          [
+            6,
+            1,
+            0
+          ],
+          [
+            13,
+            9,
+            2
+          ]
+        ],
+        "predicted": [
+          [
+            2,
+            0,
+            3,
+            7,
+            5,
+            6,
+            4,
+            1
+          ],
+          [
+            6,
+            7,
+            7,
+            7,
+            6,
+            7,
+            7,
+            7
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            0,
+            3,
+            7,
+            5,
+            6,
+            4,
+            1
+          ],
+          [
+            3,
+            6,
+            5,
+            7,
+            2,
+            0,
+            4,
+            1
+          ]
+        ]
+      },
+      {
+        "a": [
+          [
+            8,
+            1
+          ],
+          [
+            12,
+            3
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            11,
+            2
+          ],
+          [
+            7,
+            0
+          ]
+        ],
+        "b": [
+          [
+            5,
+            2,
+            1
+          ],
+          [
+            7,
+            12,
+            3
+          ],
+          [
+            11,
+            0,
+            3
+          ],
+          [
+            12,
+            5,
+            3
+          ],
+          [
+            8,
+            11,
+            1
+          ],
+          [
+            0,
+            7,
+            0
+          ],
+          [
+            2,
+            4,
+            0
+          ],
+          [
+            4,
+            8,
+            2
+          ]
+        ],
+        "predicted": [
+          [
+            4,
+            3,
+            6,
+            5,
+            7,
+            0,
+            2,
+            1
+          ],
+          [
+            6,
+            7,
+            7,
+            7,
+            6,
+            7,
+            7,
+            7
+          ]
+        ],
+        "expected": [
+          [
+            4,
+            3,
+            6,
+            5,
+            7,
+            0,
+            2,
+            1
+          ],
+          [
+            6,
+            5,
+            4,
+            7,
+            0,
+            2,
+            3,
+            1
+          ]
+        ]
+      },
+      {
+        "a": [
+          [
+            10,
+            2
+          ],
+          [
+            6,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            7,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            12,
+            3
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "b": [
+          [
+            5,
+            12,
+            1
+          ],
+          [
+            6,
+            1,
+            1
+          ],
+          [
+            12,
+            7,
+            2
+          ],
+          [
+            3,
+            10,
+            2
+          ],
+          [
+            1,
+            2,
+            2
+          ],
+          [
+            10,
+            6,
+            1
+          ],
+          [
+            2,
+            5,
+            1
+          ],
+          [
+            7,
+            3,
+            0
+          ]
+        ],
+        "predicted": [
+          [
+            5,
+            1,
+            4,
+            7,
+            3,
+            0,
+            2,
+            6
+          ],
+          [
+            6,
+            7,
+            7,
+            7,
+            6,
+            7,
+            7,
+            7
+          ]
+        ],
+        "expected": [
+          [
+            5,
+            1,
+            4,
+            7,
+            3,
+            0,
+            2,
+            6
+          ],
+          [
+            1,
+            2,
+            7,
+            4,
+            0,
+            6,
+            3,
+            5
+          ]
+        ]
+      }
+    ]
+  },
+  "lineage": {
+    "second_step_consumes_generated_latent": true,
+    "original_inputs_available_to_second_step": false,
+    "teacher_latents": false
+  },
+  "timing": {
+    "parallel": {
+      "median_ms": 1.4309374382719398,
+      "samples_ms": [
+        1.413708901964128,
+        1.7592919757589698,
+        1.7160000279545784,
+        1.7917909426614642,
+        3.513125004246831,
+        1.1291669216006994,
+        0.9886249899864197,
+        1.0267910547554493,
+        1.7048330046236515,
+        1.760666025802493,
+        1.3246670132502913,
+        1.3109169667586684,
+        1.4481659745797515,
+        2.924458938650787,
+        1.0938328923657537,
+        1.2559170136228204,
+        1.177457976154983,
+        3.383832983672619,
+        1.6846669605001807,
+        1.3328338973224163
+      ]
+    },
+    "serial_same_queries": {
+      "median_ms": 4.793436964973807,
+      "samples_ms": [
+        4.81016596313566,
+        4.729249980300665,
+        6.934083998203278,
+        6.604499998502433,
+        5.20650006365031,
+        4.671582952141762,
+        4.944499931298196,
+        4.630708950571716,
+        4.708416992798448,
+        6.109499954618514,
+        5.555500043556094,
+        5.878875032067299,
+        6.062583066523075,
+        4.914749995805323,
+        4.776707966811955,
+        4.720041994005442,
+        4.634040989913046,
+        4.706792067736387,
+        4.732707981020212,
+        4.006749950349331
+      ]
+    },
+    "decoded_serial_equal": true
+  },
+  "training": [
+    {
+      "step": 1,
+      "loss": 10.58171272277832,
+      "seconds": 0.032855457975529134
+    },
+    {
+      "step": 501,
+      "loss": 0.012418504804372787,
+      "seconds": 2.8424449580488726
+    },
+    {
+      "step": 1001,
+      "loss": 0.004822904709726572,
+      "seconds": 5.672521583037451
+    },
+    {
+      "step": 1501,
+      "loss": 0.002739032730460167,
+      "seconds": 8.438611582969315
+    },
+    {
+      "step": 2001,
+      "loss": 0.0016258317045867443,
+      "seconds": 11.184565042029135
+    },
+    {
+      "step": 2501,
+      "loss": 0.001026369514875114,
+      "seconds": 13.821585792000405
+    },
+    {
+      "step": 3001,
+      "loss": 0.0007253052899613976,
+      "seconds": 16.542188666993752
+    },
+    {
+      "step": 3501,
+      "loss": 0.0004861345805693418,
+      "seconds": 19.292847124976106
+    },
+    {
+      "step": 4001,
+      "loss": 0.0003736199578270316,
+      "seconds": 21.912762374966405
+    },
+    {
+      "step": 4501,
+      "loss": 0.0002612497773952782,
+      "seconds": 24.67825954197906
+    },
+    {
+      "step": 5001,
+      "loss": 0.00019118466298095882,
+      "seconds": 27.542999124969356
+    },
+    {
+      "step": 5501,
+      "loss": 0.000151052518049255,
+      "seconds": 30.300235499977134
+    },
+    {
+      "step": 6000,
+      "loss": 0.00011753253784263507,
+      "seconds": 32.977877332945354
+    }
+  ],
+  "position_scale": {
+    "query": 0.321431964635849,
+    "pointer": 0.2804018557071686
+  },
+  "model_sha256": "4fd6ae678f4b4a86741aafcc82f967ba7b9815f2de3aa8d40562e0b670911fa7",
+  "cpu_corrections": 0,
+  "scope": "synthetic same-graph neural relational Cell generation, two stages, fixed anchor output layout",
+  "environment": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "device": "Device(gpu, 0)"
+  },
+  "limitations": [
+    "no free row allocation or variable match multiplicity",
+    "no union/ownership conflict resolution or eggcc execution",
+    "fixed categorical key vocabulary, no arbitrary identity claim",
+    "query serialization is not an autoregressive baseline",
+    "whole-goal feasibility and end-to-end practical speed remain unproved"
+  ]
+}

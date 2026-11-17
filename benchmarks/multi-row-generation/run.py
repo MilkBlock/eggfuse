@@ -33,19 +33,22 @@ def forward_panel(model,data,erase=False):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('output',type=Path);p.add_argument('--mode',choices=['joint','independent'],required=True)
-    p.add_argument('--seed',type=int,required=True);p.add_argument('--steps',type=int,default=6000);a=p.parse_args()
+    p.add_argument('--train-family',choices=['involution','short_cycles'],default='involution');p.add_argument('--seed',type=int,required=True);p.add_argument('--steps',type=int,default=6000);a=p.parse_args()
     if not mx.metal.is_available():raise RuntimeError('Metal required; no CPU inference fallback')
     mx.set_default_device(mx.gpu);mx.random.seed(a.seed);a.output.mkdir(parents=True,exist_ok=True)
-    train=[generate(r,l,1024,1200+i) for i,(r,l) in enumerate([(2,3),(3,2),(2,4),(4,2)])]
+    train=[generate(r,l,1024,1200+i,a.train_family) for i,(r,l) in enumerate([(2,3),(3,2),(2,4),(4,2)])]
     tests=dict(seen=generate(2,4,256,9400),long_cycle=generate(2,4,256,9401,'long_cycle'),
         larger=generate(3,4,256,9402,'long_cycle'),more_rows=generate(8,2,256,9403,'long_cycle'),
         arbitrary=generate(4,4,256,9404,'arbitrary'))
+    if a.train_family=='short_cycles':
+        tests['final_fanin_rows']=generate(8,2,256,19403,'functional')
+        tests['final_fanin_layout']=generate(3,4,256,19404,'functional')
     seen=set(v for d in train for v in fingerprints(d));split={}
     for name,d in tests.items():
         overlap=len(seen&set(fingerprints(d)));assert overlap==0
         split[name]=dict(rows=d['rows'],length=d['length'],graphs=len(d['a']),exact_input_overlap=overlap,
                          cycle_shapes=sorted(set(d['cycle_keys'])),input_sha256=hashlib.sha256(d['a'].tobytes()+d['b'].tobytes()).hexdigest())
-    protocol=dict(mode=a.mode,seed=a.seed,steps=a.steps,train_graphs=sum(len(d['a']) for d in train),batch=64,learning_rate=.001,
+    protocol=dict(train_family=a.train_family,mode=a.mode,seed=a.seed,steps=a.steps,train_graphs=sum(len(d['a']) for d in train),batch=64,learning_rate=.001,
         split=split,checkpoint_policy='fixed final step; heldouts evaluated only after fitting',
         source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(Path(__file__).parent.glob('*.py'))})
     (a.output/'protocol.json').write_text(json.dumps(protocol,indent=2)+'\n')

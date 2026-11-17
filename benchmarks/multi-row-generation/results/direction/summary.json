@@ -1,0 +1,451 @@
+{
+  "driver_format_only_change": {
+    "executed_sha256": "c950e3a81a0a472cd05e9eb60e7c196a56fe1bfad0f666b5c93c60ba03abaefd",
+    "checked_in_sha256": "0a41e2deb2efaddd56ab31fb010a7346b2843160e69296aa7471a1d807a522ff",
+    "same_python_ast": true
+  },
+  "scope": "bounded same-graph two-stage neural generation; not full architecture proof",
+  "models": {
+    "joint-1703": {
+      "status": "pass",
+      "panels": {
+        "train_replay": {
+          "passed": 1024,
+          "graphs": 1024,
+          "cross_row_correct": 3422,
+          "cross_row_total": 3422,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "seen": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 1014,
+          "cross_row_total": 1014,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "long_cycle": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 1168,
+          "cross_row_total": 1168,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "larger": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 2233,
+          "cross_row_total": 2233,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "more_rows": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 3798,
+          "cross_row_total": 3798,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "arbitrary": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 3071,
+          "cross_row_total": 3071,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "final_fanin_rows": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 3571,
+          "cross_row_total": 3571,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "final_fanin_layout": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 2062,
+          "cross_row_total": 2062,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        }
+      },
+      "erased_first_latent_passed": 0,
+      "lineage": {
+        "second_step_consumes_generated_latent": true,
+        "original_inputs_available_to_second_step": false,
+        "teacher_latents": false
+      },
+      "model_sha256": "1debc16b918c92055523f9e0f2840284ad75c5fad0584ce2285a763ceb5668a7",
+      "fresh_nonbijective_graphs": 256,
+      "timing": {
+        "seen": {
+          "parallel_ms": 1.2426039902493358,
+          "serial_ms": 2.8539790073409677,
+          "speed_ratio": 2.2967727689078963,
+          "complete": 32,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 641.7015868335615
+        },
+        "final_fanin_layout": {
+          "parallel_ms": 1.3733330415561795,
+          "serial_ms": 4.233583516906947,
+          "speed_ratio": 3.0827070992988714,
+          "complete": 32,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 573.323884869305
+        },
+        "final_fanin_rows": {
+          "parallel_ms": 1.3801039895042777,
+          "serial_ms": 4.964457999449223,
+          "speed_ratio": 3.597162269802884,
+          "complete": 32,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 587.9200866103911
+        }
+      }
+    },
+    "joint-1709": {
+      "status": "difference",
+      "panels": {
+        "train_replay": {
+          "passed": 1024,
+          "graphs": 1024,
+          "cross_row_correct": 3422,
+          "cross_row_total": 3422,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "seen": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 1014,
+          "cross_row_total": 1014,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "long_cycle": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 1168,
+          "cross_row_total": 1168,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "larger": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 2233,
+          "cross_row_total": 2233,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "more_rows": {
+          "passed": 250,
+          "graphs": 256,
+          "cross_row_correct": 3784,
+          "cross_row_total": 3798,
+          "missing": 20,
+          "cpu_decoder_agrees": true
+        },
+        "arbitrary": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 3071,
+          "cross_row_total": 3071,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "final_fanin_rows": {
+          "passed": 251,
+          "graphs": 256,
+          "cross_row_correct": 3564,
+          "cross_row_total": 3571,
+          "missing": 12,
+          "cpu_decoder_agrees": true
+        },
+        "final_fanin_layout": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 2062,
+          "cross_row_total": 2062,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        }
+      },
+      "erased_first_latent_passed": 0,
+      "lineage": {
+        "second_step_consumes_generated_latent": true,
+        "original_inputs_available_to_second_step": false,
+        "teacher_latents": false
+      },
+      "model_sha256": "68eb0e43f2fc8d3b98b4b6d00e980fce56ee16b8389c719d4fd81d211a88bdda",
+      "fresh_nonbijective_graphs": 256,
+      "timing": {
+        "seen": {
+          "parallel_ms": 1.350146485492587,
+          "serial_ms": 3.074437554460019,
+          "speed_ratio": 2.277114066877226,
+          "complete": 32,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 582.619685607944
+        },
+        "final_fanin_layout": {
+          "parallel_ms": 1.3619999517686665,
+          "serial_ms": 4.728416504804045,
+          "speed_ratio": 3.471671565526721,
+          "complete": 32,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 622.3451164188972
+        },
+        "final_fanin_rows": {
+          "parallel_ms": 1.5487499767914414,
+          "serial_ms": 5.177999963052571,
+          "speed_ratio": 3.3433414306032003,
+          "complete": 28,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 407.50191212985897
+        }
+      }
+    },
+    "independent-1703": {
+      "status": "pass",
+      "panels": {
+        "train_replay": {
+          "passed": 1024,
+          "graphs": 1024,
+          "cross_row_correct": 3422,
+          "cross_row_total": 3422,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "seen": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 1014,
+          "cross_row_total": 1014,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "long_cycle": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 1168,
+          "cross_row_total": 1168,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "larger": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 2233,
+          "cross_row_total": 2233,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "more_rows": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 3798,
+          "cross_row_total": 3798,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "arbitrary": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 3071,
+          "cross_row_total": 3071,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "final_fanin_rows": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 3571,
+          "cross_row_total": 3571,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "final_fanin_layout": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 2062,
+          "cross_row_total": 2062,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        }
+      },
+      "erased_first_latent_passed": 0,
+      "lineage": {
+        "second_step_consumes_generated_latent": true,
+        "original_inputs_available_to_second_step": false,
+        "teacher_latents": false
+      },
+      "model_sha256": "4fd6ae678f4b4a86741aafcc82f967ba7b9815f2de3aa8d40562e0b670911fa7",
+      "fresh_nonbijective_graphs": 256,
+      "timing": {
+        "seen": {
+          "parallel_ms": 1.2506255297921598,
+          "serial_ms": 2.972978982143104,
+          "speed_ratio": 2.3771935813889713,
+          "complete": 32,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 700.4998745943282
+        },
+        "final_fanin_layout": {
+          "parallel_ms": 1.269000582396984,
+          "serial_ms": 4.137645999435335,
+          "speed_ratio": 3.260554846728153,
+          "complete": 32,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 678.116931280822
+        },
+        "final_fanin_rows": {
+          "parallel_ms": 1.465458539314568,
+          "serial_ms": 5.615375004708767,
+          "speed_ratio": 3.8318211358850314,
+          "complete": 32,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 582.9204404623479
+        }
+      }
+    },
+    "independent-1709": {
+      "status": "pass",
+      "panels": {
+        "train_replay": {
+          "passed": 1024,
+          "graphs": 1024,
+          "cross_row_correct": 3422,
+          "cross_row_total": 3422,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "seen": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 1014,
+          "cross_row_total": 1014,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "long_cycle": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 1168,
+          "cross_row_total": 1168,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "larger": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 2233,
+          "cross_row_total": 2233,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "more_rows": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 3798,
+          "cross_row_total": 3798,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "arbitrary": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 3071,
+          "cross_row_total": 3071,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "final_fanin_rows": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 3571,
+          "cross_row_total": 3571,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        },
+        "final_fanin_layout": {
+          "passed": 256,
+          "graphs": 256,
+          "cross_row_correct": 2062,
+          "cross_row_total": 2062,
+          "missing": 0,
+          "cpu_decoder_agrees": true
+        }
+      },
+      "erased_first_latent_passed": 0,
+      "lineage": {
+        "second_step_consumes_generated_latent": true,
+        "original_inputs_available_to_second_step": false,
+        "teacher_latents": false
+      },
+      "model_sha256": "fd06d029a574367500e8f186fa55955220af7648850176923180c40987b5dab9",
+      "fresh_nonbijective_graphs": 256,
+      "timing": {
+        "seen": {
+          "parallel_ms": 1.447875052690506,
+          "serial_ms": 3.1268539605662227,
+          "speed_ratio": 2.159615883121795,
+          "complete": 32,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 484.4762743378015
+        },
+        "final_fanin_layout": {
+          "parallel_ms": 1.6408124356530607,
+          "serial_ms": 4.392958013340831,
+          "speed_ratio": 2.6773066304756443,
+          "complete": 32,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 524.9085436027726
+        },
+        "final_fanin_rows": {
+          "parallel_ms": 1.4513744390569627,
+          "serial_ms": 5.843917024321854,
+          "speed_ratio": 4.026470955433779,
+          "complete": 32,
+          "graphs": 32,
+          "decoded_equal": true,
+          "complete_graphs_per_second": 585.437678364122
+        }
+      }
+    }
+  },
+  "artifacts": "/Volumes/EggFuseWorkspace/experiments/multi-row-generation-direction-20261118",
+  "readout_bound_gpu_checks": true,
+  "cpu_corrections": 0,
+  "baseline_limit": "cached serial emission of same queries, not trained autoregression",
+  "output_placement": "source-anchored, not learned free row allocation",
+  "environment": {
+    "mlx": "0.32.4",
+    "numpy": "2.5.4"
+  },
+  "unfinished": [
+    "strong autoregressive baseline",
+    "free allocation and variable match multiplicity",
+    "union",
+    "ownership conflict coordination",
+    "real eggcc",
+    "strong canonical latent contract"
+  ]
+}

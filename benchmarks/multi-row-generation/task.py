@@ -21,6 +21,14 @@ def permutation(n,rng,family):
     elif family=='long_cycle':
         dest[order]=np.roll(order,-1)
     elif family=='arbitrary':dest=rng.permutation(n)
+    elif family=='short_cycles':
+        start=0
+        while start<n:
+            size=int(rng.integers(1,min(3,n-start)+1));group=order[start:start+size]
+            dest[group]=np.roll(group,-1);start+=size
+    elif family=='functional':
+        dest=rng.integers(n,size=n)
+        while len(set(dest.tolist()))==n:dest=rng.integers(n,size=n)
     else:raise ValueError(family)
     return dest
 
@@ -47,9 +55,11 @@ def generate(rows,length,count,seed,family='involution'):
         visited=set();cycles=[]
         for i in range(n):
             if i in visited:continue
-            j=i;size=0
-            while j not in visited:visited.add(j);size+=1;j=int(successor[j])
-            cycles.append(size)
+            path=[];offset={};j=i
+            while j not in visited and j not in offset:
+                offset[j]=len(path);path.append(j);j=int(successor[j])
+            if j in offset:cycles.append(len(path)-offset[j])
+            visited.update(path)
         cycle_keys.append(tuple(sorted(cycles)))
     x_a=np.concatenate((np.eye(KEYS)[a[:,:,0]],np.zeros((count,n,KEYS)),np.eye(VALUES)[a[:,:,1]],np.broadcast_to([1,0],(count,n,2))),-1).astype(np.float32)
     x_b=np.concatenate((np.eye(KEYS)[b[:,:,0]],np.eye(KEYS)[b[:,:,1]],np.eye(VALUES)[b[:,:,2]],np.broadcast_to([0,1],(count,n,2))),-1).astype(np.float32)
