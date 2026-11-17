@@ -1,0 +1,329 @@
+{
+  "artifact_root": "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118",
+  "parent_commit": "affbe28271d1b29362cc7b1e063a91b3d2922312",
+  "sources": {
+    "independent-1703": {
+      "assignment.py": "current",
+      "audit_saved.py": "pre-serialization-fix-sources.json",
+      "benchmark_allocation.py": "current",
+      "data.py": "current",
+      "model.py": "current",
+      "recover_report.py": "current",
+      "test_allocation.py": "current",
+      "train.py": "current"
+    },
+    "independent-1709": {
+      "assignment.py": "current",
+      "audit_saved.py": "pre-serialization-fix-sources.json",
+      "benchmark_allocation.py": "current",
+      "data.py": "current",
+      "diagnose.py": "current",
+      "model.py": "current",
+      "recover_report.py": "current",
+      "test_allocation.py": "current",
+      "train.py": "current"
+    },
+    "joint-1703": {
+      "assignment.py": "current",
+      "data.py": "pre-serialization-fix-sources.json",
+      "model.py": "current",
+      "test_allocation.py": "current",
+      "train.py": "current"
+    },
+    "joint-1709": {
+      "assignment.py": "current",
+      "audit_saved.py": "pre-serialization-fix-sources.json",
+      "benchmark_allocation.py": "current",
+      "data.py": "pre-serialization-fix-sources.json",
+      "model.py": "current",
+      "test_allocation.py": "current",
+      "train.py": "current"
+    }
+  },
+  "jobs": [
+    {
+      "id": "922",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/test_allocation.py"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-922.log"
+    },
+    {
+      "id": "923",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/test_allocation.py"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-923.log"
+    },
+    {
+      "id": "924",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/train.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/joint-1703",
+        "--mode",
+        "joint",
+        "--seed",
+        "1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-924.log"
+    },
+    {
+      "id": "925",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/train.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/joint-1709",
+        "--mode",
+        "joint",
+        "--seed",
+        "1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-925.log"
+    },
+    {
+      "id": "926",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/train.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/independent-1703",
+        "--mode",
+        "independent",
+        "--seed",
+        "1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-926.log"
+    },
+    {
+      "id": "927",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/train.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/independent-1709",
+        "--mode",
+        "independent",
+        "--seed",
+        "1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-927.log"
+    },
+    {
+      "id": "928",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/benchmark_allocation.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/benchmark.json"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-928.log"
+    },
+    {
+      "id": "929",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/recover_report.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/joint-1703",
+        "/Users/mineralsteins/.local/state/eggfuse-jobs/job-924.log"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-929.log"
+    },
+    {
+      "id": "930",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/recover_report.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/joint-1709",
+        "/Users/mineralsteins/.local/state/eggfuse-jobs/job-925.log"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-930.log"
+    },
+    {
+      "id": "931",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/benchmark_allocation.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/benchmark.json"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-931.log"
+    },
+    {
+      "id": "932",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/test_allocation.py"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-932.log"
+    },
+    {
+      "id": "933",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/diagnose.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/diagnosis.json"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-933.log"
+    },
+    {
+      "id": "934",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/joint-1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-934.log"
+    },
+    {
+      "id": "935",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/joint-1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-935.log"
+    },
+    {
+      "id": "936",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/independent-1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-936.log"
+    },
+    {
+      "id": "937",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/independent-1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-937.log"
+    },
+    {
+      "id": "938",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/test_exact.py"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-938.log"
+    },
+    {
+      "id": "939",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/joint-1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-939.log"
+    },
+    {
+      "id": "940",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/joint-1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-940.log"
+    },
+    {
+      "id": "941",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/independent-1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-941.log"
+    },
+    {
+      "id": "942",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/allocation/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-allocation-20261118/independent-1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-942.log"
+    }
+  ],
+  "hardware": "Apple M3 Max",
+  "runtime": "Python 3.14.3, MLX 0.32.4 on Metal, NumPy 2.5.4",
+  "supplemental_dependencies": {
+    "benchmarks/multi-row-generation/network.py": "78057bd8409dc264fd8ba75d62ecda566193df75f0ca0325784ccd28995090b7",
+    "benchmarks/multi-row-generation/task.py": "4dca9afe44b53205d7181570c18a0404ae2f5bab56254d6c2a3cf5f4d19ddb8a"
+  },
+  "note": "Dependency hashes above captured at report assembly. Source versions captured by each training protocol verified against current files or archived source.",
+  "reporting_incidents": {
+    "922": "test harness omitted model argument to loss; fixed before fitting; 923 and 932 pass",
+    "924/925": "completed fitting and all saved predictions; final JSON serialization failed on NumPy count; recovered by 929/930 without training/inference rerun",
+    "928": "benchmark started before recovered reports existed and exited before measurements; 931 is complete benchmark",
+    "934/935/936/937": "audit reporting comparison failed on tuple versus JSON-list containers; fixed by comparing both through JSON; audits 939-942 completed and confirm semantic failures",
+    "926/927/939/940/941/942": "exit 1 is actual semantic acceptance failure, retained"
+  },
+  "status": "all four models fail complete unanchored-set acceptance; no architecture completion or speedup claim"
+}

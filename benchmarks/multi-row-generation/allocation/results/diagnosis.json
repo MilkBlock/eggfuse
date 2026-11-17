@@ -1,0 +1,3494 @@
+{
+  "independent-1703/iid-2x4.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 208,
+      "duplicate_legal_bindings": 110,
+      "illegal_bindings": 24,
+      "wrong_fields_on_legal_bindings": 64,
+      "binding_set_exact_graphs": 97,
+      "coverage_only_failure_graphs": 101,
+      "field_only_failure_graphs": 7,
+      "illegal_binding_graphs": 23,
+      "wrong_fields_graphs": 51
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "b": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 1
+      },
+      {
+        "a": [
+          [
+            4,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            1
+          ]
+        ],
+        "b": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 0
+      }
+    ]
+  },
+  "independent-1703/iid-4x2.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 198,
+      "duplicate_legal_bindings": 106,
+      "illegal_bindings": 27,
+      "wrong_fields_on_legal_bindings": 49,
+      "binding_set_exact_graphs": 92,
+      "coverage_only_failure_graphs": 113,
+      "field_only_failure_graphs": 8,
+      "illegal_binding_graphs": 23,
+      "wrong_fields_graphs": 40
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "b": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 1
+      },
+      {
+        "a": [
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "b": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 1
+      }
+    ]
+  },
+  "independent-1703/multiplicity-2x4.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 348,
+      "duplicate_legal_bindings": 175,
+      "illegal_bindings": 27,
+      "wrong_fields_on_legal_bindings": 81,
+      "binding_set_exact_graphs": 40,
+      "coverage_only_failure_graphs": 142,
+      "field_only_failure_graphs": 6,
+      "illegal_binding_graphs": 23,
+      "wrong_fields_graphs": 63
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "b": [
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 1
+      },
+      {
+        "a": [
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "b": [
+          [
+            2,
+            0
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 1
+      }
+    ]
+  },
+  "independent-1703/multiplicity-4x2.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 360,
+      "duplicate_legal_bindings": 185,
+      "illegal_bindings": 25,
+      "wrong_fields_on_legal_bindings": 87,
+      "binding_set_exact_graphs": 36,
+      "coverage_only_failure_graphs": 144,
+      "field_only_failure_graphs": 1,
+      "illegal_binding_graphs": 22,
+      "wrong_fields_graphs": 64
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "b": [
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 1
+      },
+      {
+        "a": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "b": [
+          [
+            7,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 1
+      }
+    ]
+  },
+  "independent-1709/iid-2x4.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 124,
+      "duplicate_legal_bindings": 111,
+      "illegal_bindings": 2,
+      "wrong_fields_on_legal_bindings": 32,
+      "binding_set_exact_graphs": 115,
+      "coverage_only_failure_graphs": 122,
+      "field_only_failure_graphs": 10,
+      "illegal_binding_graphs": 2,
+      "wrong_fields_graphs": 27
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            4,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            1
+          ]
+        ],
+        "b": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            7,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "b": [
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 1
+      }
+    ]
+  },
+  "independent-1709/iid-4x2.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 105,
+      "duplicate_legal_bindings": 95,
+      "illegal_bindings": 2,
+      "wrong_fields_on_legal_bindings": 15,
+      "binding_set_exact_graphs": 119,
+      "coverage_only_failure_graphs": 126,
+      "field_only_failure_graphs": 4,
+      "illegal_binding_graphs": 2,
+      "wrong_fields_graphs": 13
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "b": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            3,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 1
+      },
+      {
+        "a": [
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            7,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "b": [
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 0
+      }
+    ]
+  },
+  "independent-1709/multiplicity-2x4.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 319,
+      "duplicate_legal_bindings": 269,
+      "illegal_bindings": 10,
+      "wrong_fields_on_legal_bindings": 61,
+      "binding_set_exact_graphs": 31,
+      "coverage_only_failure_graphs": 166,
+      "field_only_failure_graphs": 1,
+      "illegal_binding_graphs": 10,
+      "wrong_fields_graphs": 52
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "b": [
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            2
+          ]
+        ],
+        "predicted": [
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 1
+      },
+      {
+        "a": [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "b": [
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 1
+      }
+    ]
+  },
+  "independent-1709/multiplicity-4x2.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 321,
+      "duplicate_legal_bindings": 239,
+      "illegal_bindings": 19,
+      "wrong_fields_on_legal_bindings": 53,
+      "binding_set_exact_graphs": 31,
+      "coverage_only_failure_graphs": 165,
+      "field_only_failure_graphs": 0,
+      "illegal_binding_graphs": 17,
+      "wrong_fields_graphs": 45
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "b": [
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            2
+          ]
+        ],
+        "predicted": [
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 1
+      },
+      {
+        "a": [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "b": [
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 1
+      }
+    ]
+  },
+  "joint-1703/iid-2x4-cut.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 304,
+      "duplicate_legal_bindings": 247,
+      "illegal_bindings": 96,
+      "wrong_fields_on_legal_bindings": 111,
+      "binding_set_exact_graphs": 38,
+      "coverage_only_failure_graphs": 82,
+      "field_only_failure_graphs": 3,
+      "illegal_binding_graphs": 80,
+      "wrong_fields_graphs": 82
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "b": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            1
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            4,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            1
+          ]
+        ],
+        "b": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 2
+      }
+    ]
+  },
+  "joint-1703/iid-2x4.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 235,
+      "duplicate_legal_bindings": 148,
+      "illegal_bindings": 34,
+      "wrong_fields_on_legal_bindings": 93,
+      "binding_set_exact_graphs": 63,
+      "coverage_only_failure_graphs": 117,
+      "field_only_failure_graphs": 7,
+      "illegal_binding_graphs": 30,
+      "wrong_fields_graphs": 63
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "b": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            1
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            4,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            1
+          ]
+        ],
+        "b": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 1
+      }
+    ]
+  },
+  "joint-1703/iid-4x2-cut.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 269,
+      "duplicate_legal_bindings": 200,
+      "illegal_bindings": 241,
+      "wrong_fields_on_legal_bindings": 193,
+      "binding_set_exact_graphs": 18,
+      "coverage_only_failure_graphs": 23,
+      "field_only_failure_graphs": 3,
+      "illegal_binding_graphs": 152,
+      "wrong_fields_graphs": 131
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            6,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "b": [
+          [
+            6,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            6,
+            1
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "missing": 2,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            2,
+            2
+          ],
+          [
+            7,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            7,
+            3
+          ]
+        ],
+        "b": [
+          [
+            3,
+            2
+          ],
+          [
+            6,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "predicted": [
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 0
+      }
+    ]
+  },
+  "joint-1703/iid-4x2.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 254,
+      "duplicate_legal_bindings": 89,
+      "illegal_bindings": 41,
+      "wrong_fields_on_legal_bindings": 85,
+      "binding_set_exact_graphs": 71,
+      "coverage_only_failure_graphs": 106,
+      "field_only_failure_graphs": 8,
+      "illegal_binding_graphs": 38,
+      "wrong_fields_graphs": 63
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "b": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            1
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            7,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "b": [
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 0
+      }
+    ]
+  },
+  "joint-1703/multiplicity-2x4-cut.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 407,
+      "duplicate_legal_bindings": 349,
+      "illegal_bindings": 109,
+      "wrong_fields_on_legal_bindings": 178,
+      "binding_set_exact_graphs": 15,
+      "coverage_only_failure_graphs": 76,
+      "field_only_failure_graphs": 2,
+      "illegal_binding_graphs": 78,
+      "wrong_fields_graphs": 126
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "b": [
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            2
+          ]
+        ],
+        "predicted": [
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 1
+      },
+      {
+        "a": [
+          [
+            0,
+            2
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            6,
+            2
+          ],
+          [
+            6,
+            3
+          ]
+        ],
+        "b": [
+          [
+            6,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "predicted": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "missing": 2,
+        "duplicates": 3
+      }
+    ]
+  },
+  "joint-1703/multiplicity-2x4.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 352,
+      "duplicate_legal_bindings": 210,
+      "illegal_bindings": 40,
+      "wrong_fields_on_legal_bindings": 122,
+      "binding_set_exact_graphs": 37,
+      "coverage_only_failure_graphs": 122,
+      "field_only_failure_graphs": 4,
+      "illegal_binding_graphs": 30,
+      "wrong_fields_graphs": 87
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "b": [
+          [
+            7,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 3
+      },
+      {
+        "a": [
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "b": [
+          [
+            2,
+            0
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 2
+      }
+    ]
+  },
+  "joint-1703/multiplicity-4x2-cut.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 417,
+      "duplicate_legal_bindings": 284,
+      "illegal_bindings": 236,
+      "wrong_fields_on_legal_bindings": 259,
+      "binding_set_exact_graphs": 6,
+      "coverage_only_failure_graphs": 32,
+      "field_only_failure_graphs": 2,
+      "illegal_binding_graphs": 149,
+      "wrong_fields_graphs": 154
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "b": [
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            1
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            6,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            6,
+            2
+          ],
+          [
+            6,
+            0
+          ]
+        ],
+        "b": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            6,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "missing": 3,
+        "duplicates": 0
+      }
+    ]
+  },
+  "joint-1703/multiplicity-4x2.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 395,
+      "duplicate_legal_bindings": 186,
+      "illegal_bindings": 50,
+      "wrong_fields_on_legal_bindings": 125,
+      "binding_set_exact_graphs": 31,
+      "coverage_only_failure_graphs": 114,
+      "field_only_failure_graphs": 3,
+      "illegal_binding_graphs": 36,
+      "wrong_fields_graphs": 95
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "b": [
+          [
+            7,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 2
+      },
+      {
+        "a": [
+          [
+            0,
+            2
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            6,
+            2
+          ],
+          [
+            6,
+            3
+          ]
+        ],
+        "b": [
+          [
+            6,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "predicted": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 2
+      }
+    ]
+  },
+  "joint-1709/iid-2x4-cut.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 399,
+      "duplicate_legal_bindings": 353,
+      "illegal_bindings": 17,
+      "wrong_fields_on_legal_bindings": 140,
+      "binding_set_exact_graphs": 44,
+      "coverage_only_failure_graphs": 117,
+      "field_only_failure_graphs": 4,
+      "illegal_binding_graphs": 17,
+      "wrong_fields_graphs": 85
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "b": [
+          [
+            7,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            7,
+            3
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            1
+          ]
+        ],
+        "predicted": [],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "b": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 1
+      }
+    ]
+  },
+  "joint-1709/iid-2x4.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 335,
+      "duplicate_legal_bindings": 106,
+      "illegal_bindings": 13,
+      "wrong_fields_on_legal_bindings": 40,
+      "binding_set_exact_graphs": 62,
+      "coverage_only_failure_graphs": 152,
+      "field_only_failure_graphs": 5,
+      "illegal_binding_graphs": 13,
+      "wrong_fields_graphs": 35
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "b": [
+          [
+            7,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            7,
+            3
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            1
+          ]
+        ],
+        "predicted": [],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "b": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [],
+        "missing": 2,
+        "duplicates": 0
+      }
+    ]
+  },
+  "joint-1709/iid-4x2-cut.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 465,
+      "duplicate_legal_bindings": 310,
+      "illegal_bindings": 32,
+      "wrong_fields_on_legal_bindings": 83,
+      "binding_set_exact_graphs": 38,
+      "coverage_only_failure_graphs": 141,
+      "field_only_failure_graphs": 0,
+      "illegal_binding_graphs": 28,
+      "wrong_fields_graphs": 57
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "b": [
+          [
+            7,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            7,
+            3
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            1
+          ]
+        ],
+        "predicted": [],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "b": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "missing": 4,
+        "duplicates": 1
+      }
+    ]
+  },
+  "joint-1709/iid-4x2.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 287,
+      "duplicate_legal_bindings": 176,
+      "illegal_bindings": 14,
+      "wrong_fields_on_legal_bindings": 55,
+      "binding_set_exact_graphs": 58,
+      "coverage_only_failure_graphs": 149,
+      "field_only_failure_graphs": 3,
+      "illegal_binding_graphs": 12,
+      "wrong_fields_graphs": 43
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "b": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            3,
+            1
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            7,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "b": [
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "predicted": [
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "missing": 2,
+        "duplicates": 2
+      }
+    ]
+  },
+  "joint-1709/multiplicity-2x4-cut.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 496,
+      "duplicate_legal_bindings": 423,
+      "illegal_bindings": 25,
+      "wrong_fields_on_legal_bindings": 270,
+      "binding_set_exact_graphs": 13,
+      "coverage_only_failure_graphs": 99,
+      "field_only_failure_graphs": 0,
+      "illegal_binding_graphs": 21,
+      "wrong_fields_graphs": 132
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "b": [
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            2
+          ]
+        ],
+        "predicted": [],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "b": [
+          [
+            7,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            2,
+            3
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "missing": 1,
+        "duplicates": 0
+      }
+    ]
+  },
+  "joint-1709/multiplicity-2x4.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 477,
+      "duplicate_legal_bindings": 188,
+      "illegal_bindings": 24,
+      "wrong_fields_on_legal_bindings": 90,
+      "binding_set_exact_graphs": 14,
+      "coverage_only_failure_graphs": 154,
+      "field_only_failure_graphs": 3,
+      "illegal_binding_graphs": 22,
+      "wrong_fields_graphs": 75
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "b": [
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            2
+          ]
+        ],
+        "predicted": [],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "b": [
+          [
+            2,
+            0
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            0,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "missing": 2,
+        "duplicates": 0
+      }
+    ]
+  },
+  "joint-1709/multiplicity-4x2-cut.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 599,
+      "duplicate_legal_bindings": 473,
+      "illegal_bindings": 29,
+      "wrong_fields_on_legal_bindings": 193,
+      "binding_set_exact_graphs": 6,
+      "coverage_only_failure_graphs": 126,
+      "field_only_failure_graphs": 1,
+      "illegal_binding_graphs": 24,
+      "wrong_fields_graphs": 109
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "b": [
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            2
+          ]
+        ],
+        "predicted": [],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "b": [
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "predicted": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "missing": 0,
+        "duplicates": 1
+      }
+    ]
+  },
+  "joint-1709/multiplicity-4x2.npz": {
+    "counts": {
+      "graphs": 256,
+      "missing_bindings": 424,
+      "duplicate_legal_bindings": 233,
+      "illegal_bindings": 22,
+      "wrong_fields_on_legal_bindings": 117,
+      "binding_set_exact_graphs": 11,
+      "coverage_only_failure_graphs": 154,
+      "field_only_failure_graphs": 2,
+      "illegal_binding_graphs": 19,
+      "wrong_fields_graphs": 81
+    },
+    "coverage_examples": [
+      {
+        "a": [
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "b": [
+          [
+            1,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            5,
+            2
+          ]
+        ],
+        "expected": [
+          [
+            2,
+            2
+          ]
+        ],
+        "predicted": [],
+        "missing": 1,
+        "duplicates": 0
+      },
+      {
+        "a": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "b": [
+          [
+            7,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "predicted": [
+          [
+            0,
+            3
+          ]
+        ],
+        "missing": 2,
+        "duplicates": 0
+      }
+    ]
+  }
+}
