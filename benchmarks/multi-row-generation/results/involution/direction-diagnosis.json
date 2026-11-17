@@ -1,0 +1,18 @@
+{
+  "joint-1703": {
+    "predecessor_matches": 2048,
+    "second_stage_pointers": 2048
+  },
+  "joint-1709": {
+    "predecessor_matches": 2048,
+    "second_stage_pointers": 2048
+  },
+  "independent-1703": {
+    "predecessor_matches": 2048,
+    "second_stage_pointers": 2048
+  },
+  "independent-1709": {
+    "predecessor_matches": 2048,
+    "second_stage_pointers": 2048
+  }
+}
