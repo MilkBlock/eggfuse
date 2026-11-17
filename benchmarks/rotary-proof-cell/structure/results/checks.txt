@@ -1,0 +1,17 @@
+Contract tests (job 836):
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.113s
+
+OK
+
+Generated-latent recurrence test (job 841):
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.116s
+
+OK
+
+Standalone CPU audits: seen 2048/2048 (exit 0); union 982/2048 (exit 1, expected research finding).
+
+Training jobs: 837 / seed 1703; 838 / seed 1709; 839 / seed 1721. All completed with semantic difference, exit 1.

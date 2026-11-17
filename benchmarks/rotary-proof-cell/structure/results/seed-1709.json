@@ -1,0 +1,2564 @@
+{
+  "experiment_completed": true,
+  "semantic_status": "difference",
+  "seed": 1709,
+  "protocol": {
+    "seed": 1709,
+    "steps": 12000,
+    "train_cases": 32768,
+    "batch_size": 128,
+    "learning_rate": 0.002,
+    "checkpoint_policy": "final fixed step only; no holdout evaluation before training completes",
+    "split_manifest": {
+      "shapes": [
+        [
+          [
+            0,
+            0,
+            9
+          ],
+          [
+            0,
+            1,
+            9
+          ],
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            3,
+            2
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            9
+          ],
+          [
+            0,
+            1,
+            9
+          ],
+          [
+            0,
+            4,
+            9
+          ],
+          [
+            0,
+            5,
+            9
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            9
+          ],
+          [
+            0,
+            1,
+            9
+          ],
+          [
+            1,
+            4,
+            2
+          ],
+          [
+            1,
+            5,
+            2
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            2
+          ],
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            4,
+            9
+          ],
+          [
+            0,
+            5,
+            9
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            9
+          ],
+          [
+            0,
+            1,
+            9
+          ],
+          [
+            1,
+            4,
+            5
+          ],
+          [
+            0,
+            6,
+            9
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            4,
+            9
+          ],
+          [
+            1,
+            2,
+            4
+          ],
+          [
+            1,
+            5,
+            6
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            9
+          ],
+          [
+            1,
+            4,
+            1
+          ],
+          [
+            0,
+            5,
+            9
+          ],
+          [
+            1,
+            6,
+            2
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            4,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            9
+          ],
+          [
+            0,
+            1,
+            9
+          ],
+          [
+            1,
+            4,
+            4
+          ],
+          [
+            1,
+            5,
+            5
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            4,
+            9
+          ],
+          [
+            1,
+            6,
+            5
+          ]
+        ]
+      ],
+      "names": [
+        "mixed_forest",
+        "parallel_unary",
+        "parallel_binary_tails",
+        "parallel_unary_tails",
+        "diamond",
+        "fanout",
+        "ladder",
+        "binary_join",
+        "held_double_arguments",
+        "held_delayed_join"
+      ],
+      "shape_keys": [
+        [
+          "F(x0)",
+          "F(x1)",
+          "H(x2,x3)",
+          "H(x3,x2)"
+        ],
+        [
+          "F(F(x0))",
+          "F(F(x1))",
+          "F(x0)",
+          "F(x1)"
+        ],
+        [
+          "F(x0)",
+          "F(x1)",
+          "H(F(x0),x2)",
+          "H(F(x1),x2)"
+        ],
+        [
+          "F(H(x0,x1))",
+          "F(H(x2,x1))",
+          "H(x0,x1)",
+          "H(x2,x1)"
+        ],
+        [
+          "F(H(F(x0),F(x1)))",
+          "F(x0)",
+          "F(x1)",
+          "H(F(x0),F(x1))"
+        ],
+        [
+          "F(H(x0,x1))",
+          "H(F(H(x0,x1)),H(x2,H(x0,x1)))",
+          "H(x0,x1)",
+          "H(x2,H(x0,x1))"
+        ],
+        [
+          "F(H(F(x0),x1))",
+          "F(x0)",
+          "H(F(H(F(x0),x1)),x2)",
+          "H(F(x0),x1)"
+        ],
+        [
+          "H(H(x0,x1),H(x2,x3))",
+          "H(x0,H(x2,x3))",
+          "H(x0,x1)",
+          "H(x2,x3)"
+        ],
+        [
+          "F(x0)",
+          "F(x1)",
+          "H(F(x0),F(x0))",
+          "H(F(x1),F(x1))"
+        ],
+        [
+          "F(H(x0,x1))",
+          "H(F(H(x0,x1)),H(x2,x3))",
+          "H(x0,x1)",
+          "H(x2,x3)"
+        ]
+      ],
+      "unions": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          4,
+          7
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          6,
+          7
+        ]
+      ],
+      "maps": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          5
+        ]
+      ],
+      "resulting_layouts": [
+        [
+          0,
+          1,
+          2,
+          3,
+          8,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          1,
+          2,
+          0,
+          3,
+          8,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          1,
+          0,
+          3,
+          2,
+          8,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          1,
+          0,
+          2,
+          4,
+          8,
+          3,
+          5,
+          6,
+          7
+        ],
+        [
+          1,
+          0,
+          2,
+          3,
+          8,
+          5,
+          4,
+          6,
+          7
+        ],
+        [
+          1,
+          0,
+          2,
+          3,
+          8,
+          4,
+          6,
+          5,
+          7
+        ],
+        [
+          1,
+          0,
+          2,
+          3,
+          8,
+          4,
+          5,
+          7,
+          6
+        ],
+        [
+          2,
+          0,
+          1,
+          3,
+          8,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          0,
+          2,
+          3,
+          1,
+          8,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          0,
+          2,
+          1,
+          4,
+          8,
+          3,
+          5,
+          6,
+          7
+        ],
+        [
+          0,
+          2,
+          1,
+          3,
+          8,
+          5,
+          4,
+          6,
+          7
+        ],
+        [
+          0,
+          2,
+          1,
+          3,
+          8,
+          4,
+          6,
+          5,
+          7
+        ],
+        [
+          0,
+          2,
+          1,
+          3,
+          8,
+          4,
+          5,
+          7,
+          6
+        ],
+        [
+          0,
+          3,
+          1,
+          2,
+          8,
+          4,
+          5,
+          6,
+          7
+        ],
+        [
+          0,
+          1,
+          3,
+          4,
+          8,
+          2,
+          5,
+          6,
+          7
+        ],
+        [
+          0,
+          1,
+          3,
+          2,
+          8,
+          5,
+          4,
+          6,
+          7
+        ],
+        [
+          0,
+          1,
+          3,
+          2,
+          8,
+          4,
+          6,
+          5,
+          7
+        ],
+        [
+          0,
+          1,
+          3,
+          2,
+          8,
+          4,
+          5,
+          7,
+          6
+        ],
+        [
+          0,
+          1,
+          4,
+          2,
+          8,
+          3,
+          5,
+          6,
+          7
+        ],
+        [
+          0,
+          1,
+          2,
+          4,
+          8,
+          5,
+          3,
+          6,
+          7
+        ],
+        [
+          0,
+          1,
+          2,
+          4,
+          8,
+          3,
+          6,
+          5,
+          7
+        ],
+        [
+          0,
+          1,
+          2,
+          4,
+          8,
+          3,
+          5,
+          7,
+          6
+        ],
+        [
+          0,
+          1,
+          2,
+          5,
+          8,
+          3,
+          4,
+          6,
+          7
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          8,
+          5,
+          6,
+          4,
+          7
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          8,
+          5,
+          4,
+          7,
+          6
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          8,
+          6,
+          4,
+          5,
+          7
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          8,
+          4,
+          6,
+          7,
+          5
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          8,
+          4,
+          7,
+          5,
+          6
+        ]
+      ],
+      "groups": {
+        "seen": [
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            5,
+            6,
+            8,
+            9,
+            10,
+            11
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            9,
+            10,
+            11,
+            12,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            24,
+            26,
+            27
+          ]
+        ],
+        "shape": [
+          [
+            8,
+            9
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            5,
+            6,
+            8,
+            9,
+            10,
+            11
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            9,
+            10,
+            11,
+            12,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            24,
+            26,
+            27
+          ]
+        ],
+        "union": [
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            9,
+            10,
+            11,
+            12,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            24,
+            26,
+            27
+          ]
+        ],
+        "mapping": [
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          [
+            0,
+            1,
+            2,
+            3,
+            5,
+            6,
+            8,
+            9,
+            10,
+            11
+          ],
+          [
+            8,
+            13,
+            23,
+            25
+          ]
+        ],
+        "joint": [
+          [
+            8,
+            9
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            8,
+            13,
+            23,
+            25
+          ]
+        ]
+      },
+      "primitive_support": [
+        {
+          "shape": 8,
+          "unseen_input_features": []
+        },
+        {
+          "shape": 9,
+          "unseen_input_features": []
+        }
+      ],
+      "whole_shape_id_is_model_input": false,
+      "union_pair_id_is_model_input": false,
+      "mapping_id_is_model_input": false
+    },
+    "dataset_hashes": {
+      "train": "546aac73d87644c089542880cbacfcbbb5ad84b2151968a2b3aaa7fcfac659de",
+      "train_replay": "a9316b02079998d95fd2fd655f1035bfe3cb3c63ac591824bafb776500a5f7af",
+      "seen": "d02da6b2a36a8e96c9a8cac9ea8ac2a7cf0d462632bd9c95ae28c2d72f9bbb65",
+      "shape": "c41d57a7e3f6ed4c52660f40b5b5799063f8bae35c9b0718e63053e8cc363e3b",
+      "union": "a3bb642ef2e7c44b69d3f471d6f0da1a89c60e611dc0f6fd26f32f484ee195a4",
+      "mapping": "4513c079269a2c6c3aab111b0a2f394385f591984d682ab11600758327d59e53",
+      "joint": "a33cba166edb682b81a084abe246574abe5713fe4d73dba3f41eb8a7ad442084"
+    },
+    "input_features": 139,
+    "latent_width": 128,
+    "output_logits": 370,
+    "source_sha256": {
+      "audit.py": "2cb596bae321901c67cb7e70d3ddc9947bc71f1f6a98ea2f18334774dcb2ef62",
+      "experiment.py": "3dfa9a1e23b5814ccb94936943cc9e99eb315efb85f7d25cd44ad37e36774274",
+      "network.py": "46ea9d178ec21e4ff79cfbfeeb3014ee196e2fe13227e9da7420bf2fae70348a",
+      "semantics.py": "901c755241e3db65abac856f88d45f7d7b472a13cf7c13be49e34abcc14e74e1",
+      "spec.py": "d0bb9187d0ab17e794c3e53e2df9a8759beb3722eae294bb945e04e0c66f6e13",
+      "test_structure.py": "b8e9a8c05e1865ab3824c9eac71e81768977afbcb5bcfb2d3fcfa6431cbddf39"
+    }
+  },
+  "groups": {
+    "train_replay": {
+      "cases": 2048,
+      "passed": 2048,
+      "stage_passed": [
+        2048,
+        2048,
+        2048
+      ],
+      "first_failing_run": [
+        0,
+        0,
+        0
+      ],
+      "field_trace_passed": {
+        "ops": 2048,
+        "args": 2048,
+        "layout": 2048,
+        "alias": 2048,
+        "eq": 2048,
+        "owner": 2048,
+        "proof": 2048,
+        "premises": 2048,
+        "union_witness": 2048,
+        "gate": 2048,
+        "commands": 2048,
+        "payload": 2048,
+        "pending": 2048,
+        "retired": 2048
+      },
+      "cpu_gpu_decisions_agree": true,
+      "reads_passed": 2048,
+      "expected_transfers": 369,
+      "transfer_true_positive": 369,
+      "false_transfers": 0,
+      "missed_transfers": 0,
+      "transfer_alias_passed": 369,
+      "union_eq_false_positive_bits": 0,
+      "union_eq_missing_bits": 0,
+      "derived_equality_cases": 115,
+      "derived_equality_case_passed": 115,
+      "decoded_union_position_passed": 2048,
+      "examples": []
+    },
+    "seen": {
+      "cases": 2048,
+      "passed": 2048,
+      "stage_passed": [
+        2048,
+        2048,
+        2048
+      ],
+      "first_failing_run": [
+        0,
+        0,
+        0
+      ],
+      "field_trace_passed": {
+        "ops": 2048,
+        "args": 2048,
+        "layout": 2048,
+        "alias": 2048,
+        "eq": 2048,
+        "owner": 2048,
+        "proof": 2048,
+        "premises": 2048,
+        "union_witness": 2048,
+        "gate": 2048,
+        "commands": 2048,
+        "payload": 2048,
+        "pending": 2048,
+        "retired": 2048
+      },
+      "cpu_gpu_decisions_agree": true,
+      "reads_passed": 2048,
+      "expected_transfers": 351,
+      "transfer_true_positive": 351,
+      "false_transfers": 0,
+      "missed_transfers": 0,
+      "transfer_alias_passed": 351,
+      "union_eq_false_positive_bits": 0,
+      "union_eq_missing_bits": 0,
+      "derived_equality_cases": 114,
+      "derived_equality_case_passed": 114,
+      "decoded_union_position_passed": 2048,
+      "examples": []
+    },
+    "shape": {
+      "cases": 2048,
+      "passed": 4,
+      "stage_passed": [
+        35,
+        38,
+        38
+      ],
+      "first_failing_run": [
+        2013,
+        29,
+        2
+      ],
+      "field_trace_passed": {
+        "ops": 1975,
+        "args": 4,
+        "layout": 2044,
+        "alias": 2043,
+        "eq": 2031,
+        "owner": 2046,
+        "proof": 2045,
+        "premises": 2046,
+        "union_witness": 2048,
+        "gate": 2048,
+        "commands": 2048,
+        "payload": 2048,
+        "pending": 2045,
+        "retired": 2046
+      },
+      "cpu_gpu_decisions_agree": true,
+      "reads_passed": 2029,
+      "expected_transfers": 389,
+      "transfer_true_positive": 388,
+      "false_transfers": 1,
+      "missed_transfers": 1,
+      "transfer_alias_passed": 385,
+      "union_eq_false_positive_bits": 0,
+      "union_eq_missing_bits": 18,
+      "derived_equality_cases": 124,
+      "derived_equality_case_passed": 108,
+      "decoded_union_position_passed": 2048,
+      "examples": [
+        {
+          "case": [
+            8,
+            6,
+            0,
+            0,
+            4,
+            5,
+            12
+          ],
+          "fields": [
+            "args"
+          ],
+          "stage2_eq_actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "transfer_actual": false,
+          "transfer_expected": false
+        },
+        {
+          "case": [
+            8,
+            3,
+            15,
+            0,
+            2,
+            6,
+            15
+          ],
+          "fields": [
+            "args"
+          ],
+          "stage2_eq_actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "transfer_actual": false,
+          "transfer_expected": false
+        },
+        {
+          "case": [
+            8,
+            2,
+            22,
+            1,
+            4,
+            6,
+            1
+          ],
+          "fields": [
+            "args"
+          ],
+          "stage2_eq_actual": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "transfer_actual": false,
+          "transfer_expected": false
+        }
+      ]
+    },
+    "union": {
+      "cases": 2048,
+      "passed": 982,
+      "stage_passed": [
+        2048,
+        982,
+        982
+      ],
+      "first_failing_run": [
+        0,
+        1066,
+        0
+      ],
+      "field_trace_passed": {
+        "ops": 2048,
+        "args": 2048,
+        "layout": 1676,
+        "alias": 1677,
+        "eq": 982,
+        "owner": 1680,
+        "proof": 1677,
+        "premises": 1679,
+        "union_witness": 1375,
+        "gate": 2048,
+        "commands": 2048,
+        "payload": 2048,
+        "pending": 1680,
+        "retired": 1679
+      },
+      "cpu_gpu_decisions_agree": true,
+      "reads_passed": 982,
+      "expected_transfers": 370,
+      "transfer_true_positive": 4,
+      "false_transfers": 3,
+      "missed_transfers": 366,
+      "transfer_alias_passed": 2,
+      "union_eq_false_positive_bits": 296,
+      "union_eq_missing_bits": 1066,
+      "derived_equality_cases": 0,
+      "derived_equality_case_passed": 0,
+      "decoded_union_position_passed": 1375,
+      "examples": [
+        {
+          "case": [
+            7,
+            4,
+            12,
+            1,
+            1,
+            3,
+            15
+          ],
+          "fields": [
+            "layout",
+            "alias",
+            "eq",
+            "owner",
+            "proof",
+            "premises",
+            "union_witness",
+            "pending",
+            "retired"
+          ],
+          "stage2_eq_actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            2,
+            1,
+            3,
+            5,
+            6,
+            8,
+            7
+          ],
+          "transfer_actual": false,
+          "transfer_expected": true
+        },
+        {
+          "case": [
+            6,
+            4,
+            22,
+            1,
+            4,
+            5,
+            2
+          ],
+          "fields": [
+            "eq",
+            "union_witness"
+          ],
+          "stage2_eq_actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "transfer_actual": false,
+          "transfer_expected": false
+        },
+        {
+          "case": [
+            2,
+            7,
+            9,
+            1,
+            5,
+            6,
+            14
+          ],
+          "fields": [
+            "eq",
+            "union_witness"
+          ],
+          "stage2_eq_actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "transfer_actual": false,
+          "transfer_expected": false
+        }
+      ]
+    },
+    "mapping": {
+      "cases": 2048,
+      "passed": 112,
+      "stage_passed": [
+        198,
+        221,
+        173
+      ],
+      "first_failing_run": [
+        1850,
+        43,
+        43
+      ],
+      "field_trace_passed": {
+        "ops": 2048,
+        "args": 2048,
+        "layout": 1678,
+        "alias": 1678,
+        "eq": 2048,
+        "owner": 2048,
+        "proof": 2048,
+        "premises": 2048,
+        "union_witness": 2048,
+        "gate": 2048,
+        "commands": 140,
+        "payload": 2048,
+        "pending": 2048,
+        "retired": 2048
+      },
+      "cpu_gpu_decisions_agree": true,
+      "reads_passed": 1678,
+      "expected_transfers": 370,
+      "transfer_true_positive": 370,
+      "false_transfers": 0,
+      "missed_transfers": 0,
+      "transfer_alias_passed": 0,
+      "union_eq_false_positive_bits": 0,
+      "union_eq_missing_bits": 0,
+      "derived_equality_cases": 107,
+      "derived_equality_case_passed": 107,
+      "decoded_union_position_passed": 2048,
+      "examples": [
+        {
+          "case": [
+            7,
+            2,
+            23,
+            0,
+            0,
+            3,
+            10
+          ],
+          "fields": [
+            "commands"
+          ],
+          "stage2_eq_actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "transfer_actual": false,
+          "transfer_expected": false
+        },
+        {
+          "case": [
+            7,
+            2,
+            25,
+            0,
+            1,
+            6,
+            8
+          ],
+          "fields": [
+            "commands"
+          ],
+          "stage2_eq_actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "transfer_actual": false,
+          "transfer_expected": false
+        },
+        {
+          "case": [
+            6,
+            1,
+            25,
+            1,
+            5,
+            6,
+            1
+          ],
+          "fields": [
+            "commands"
+          ],
+          "stage2_eq_actual": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "transfer_actual": false,
+          "transfer_expected": false
+        }
+      ]
+    },
+    "joint": {
+      "cases": 2048,
+      "passed": 0,
+      "stage_passed": [
+        0,
+        0,
+        0
+      ],
+      "first_failing_run": [
+        2048,
+        0,
+        0
+      ],
+      "field_trace_passed": {
+        "ops": 1965,
+        "args": 2,
+        "layout": 1829,
+        "alias": 1829,
+        "eq": 1013,
+        "owner": 1881,
+        "proof": 1873,
+        "premises": 1880,
+        "union_witness": 1461,
+        "gate": 2048,
+        "commands": 123,
+        "payload": 2047,
+        "pending": 1879,
+        "retired": 1878
+      },
+      "cpu_gpu_decisions_agree": true,
+      "reads_passed": 1013,
+      "expected_transfers": 218,
+      "transfer_true_positive": 49,
+      "false_transfers": 1,
+      "missed_transfers": 169,
+      "transfer_alias_passed": 0,
+      "union_eq_false_positive_bits": 451,
+      "union_eq_missing_bits": 1035,
+      "derived_equality_cases": 0,
+      "derived_equality_case_passed": 0,
+      "decoded_union_position_passed": 1461,
+      "examples": [
+        {
+          "case": [
+            8,
+            4,
+            25,
+            1,
+            1,
+            3,
+            14
+          ],
+          "fields": [
+            "args",
+            "layout",
+            "alias",
+            "eq",
+            "owner",
+            "proof",
+            "premises",
+            "union_witness",
+            "pending",
+            "retired"
+          ],
+          "stage2_eq_actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            1,
+            2,
+            3,
+            6,
+            7,
+            5,
+            8
+          ],
+          "transfer_actual": false,
+          "transfer_expected": true
+        },
+        {
+          "case": [
+            9,
+            7,
+            25,
+            1,
+            2,
+            6,
+            0
+          ],
+          "fields": [
+            "args",
+            "eq",
+            "union_witness",
+            "commands"
+          ],
+          "stage2_eq_actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "transfer_actual": false,
+          "transfer_expected": false
+        },
+        {
+          "case": [
+            9,
+            4,
+            23,
+            0,
+            6,
+            7,
+            7
+          ],
+          "fields": [
+            "args",
+            "commands"
+          ],
+          "stage2_eq_actual": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage2_eq_expected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final_alias_actual": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "final_alias_expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "transfer_actual": false,
+          "transfer_expected": false
+        }
+      ]
+    }
+  },
+  "mask_checks": {
+    "train_replay": {
+      "predicted_retirements": 369,
+      "read_unchanged": true,
+      "no_retired_bank_access": true
+    },
+    "seen": {
+      "predicted_retirements": 351,
+      "read_unchanged": true,
+      "no_retired_bank_access": true
+    },
+    "shape": {
+      "predicted_retirements": 389,
+      "read_unchanged": true,
+      "no_retired_bank_access": true
+    },
+    "union": {
+      "predicted_retirements": 7,
+      "read_unchanged": true,
+      "no_retired_bank_access": true
+    },
+    "mapping": {
+      "predicted_retirements": 370,
+      "read_unchanged": true,
+      "no_retired_bank_access": true
+    },
+    "joint": {
+      "predicted_retirements": 50,
+      "read_unchanged": true,
+      "no_retired_bank_access": true
+    }
+  },
+  "lineage": {
+    "direct_recurrence_bitwise_equal": true,
+    "initial_input_gradient_max": 17782.166015625,
+    "corrupt_second_latent_changes_decoded_third": 32,
+    "cases": 32
+  },
+  "training": [
+    {
+      "step": 1,
+      "loss": 27.736303329467773,
+      "seconds": 0.012295749969780445
+    },
+    {
+      "step": 1001,
+      "loss": 0.06133943796157837,
+      "seconds": 3.325046082958579
+    },
+    {
+      "step": 2001,
+      "loss": 0.012138266116380692,
+      "seconds": 6.831167249940336
+    },
+    {
+      "step": 3001,
+      "loss": 0.004700539167970419,
+      "seconds": 10.344732165918685
+    },
+    {
+      "step": 4001,
+      "loss": 0.002436218084767461,
+      "seconds": 13.972818374983035
+    },
+    {
+      "step": 5001,
+      "loss": 0.0012615807354450226,
+      "seconds": 17.423089332995005
+    },
+    {
+      "step": 6001,
+      "loss": 0.0007172626792453229,
+      "seconds": 20.831953874905594
+    },
+    {
+      "step": 7001,
+      "loss": 0.0003930565435439348,
+      "seconds": 24.27930449997075
+    },
+    {
+      "step": 8001,
+      "loss": 0.00023622365552000701,
+      "seconds": 27.712741249939427
+    },
+    {
+      "step": 9001,
+      "loss": 0.00013924764061812311,
+      "seconds": 31.20684587501455
+    },
+    {
+      "step": 10001,
+      "loss": 8.304041693918407e-05,
+      "seconds": 34.73670000000857
+    },
+    {
+      "step": 11001,
+      "loss": 5.295548544381745e-05,
+      "seconds": 38.29806166596245
+    },
+    {
+      "step": 12000,
+      "loss": 2.5337745682918467e-05,
+      "seconds": 41.82325729099102
+    }
+  ],
+  "checkpoint_sha256": "bd89871208012dd136c925ba5df577ee9286038c00119d99c4a3406220a25c72",
+  "device": "Device(gpu, 0)",
+  "environment": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "python": "3.14.3",
+    "mlx": "0.32.4",
+    "numpy": "2.5.4"
+  },
+  "cpu_corrections": 0,
+  "teacher_latents_used": false,
+  "seed_encodings_per_rollout": 1,
+  "scope": "standalone structural generalization experiment, not actual egglog runtime",
+  "limitations": [
+    "expanded ABI trained from scratch; not the original 20-pattern checkpoint",
+    "fixed size: four leaves, four F/H constructors, at most one new G member",
+    "fixed three Run schedule and manually specified proof vocabulary",
+    "no bitwise canonicalization, arbitrary-size graphs, iterative Bake or speedup claim"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "cases": 2048,
+  "passed": 2048,
+  "stage_passed": [
+    2048,
+    2048,
+    2048
+  ],
+  "first_failing_run": [
+    0,
+    0,
+    0
+  ],
+  "field_trace_passed": {
+    "ops": 2048,
+    "args": 2048,
+    "layout": 2048,
+    "alias": 2048,
+    "eq": 2048,
+    "owner": 2048,
+    "proof": 2048,
+    "premises": 2048,
+    "union_witness": 2048,
+    "gate": 2048,
+    "commands": 2048,
+    "payload": 2048,
+    "pending": 2048,
+    "retired": 2048
+  },
+  "cpu_gpu_decisions_agree": true,
+  "reads_passed": 2048,
+  "expected_transfers": 351,
+  "transfer_true_positive": 351,
+  "false_transfers": 0,
+  "missed_transfers": 0,
+  "transfer_alias_passed": 351,
+  "union_eq_false_positive_bits": 0,
+  "union_eq_missing_bits": 0,
+  "derived_equality_cases": 114,
+  "derived_equality_case_passed": 114,
+  "decoded_union_position_passed": 2048,
+  "examples": []
+}

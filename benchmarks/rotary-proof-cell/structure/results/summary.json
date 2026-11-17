@@ -1,0 +1,123 @@
+{
+  "base_revision": "8d2a5fc1",
+  "artifact_root": "/Volumes/Extreme SSD/eggfuse-experiments/rotary-proof-structure-20261117",
+  "strict_trace_passed": {
+    "train_replay": {
+      "1703": {
+        "passed": 2048,
+        "cases": 2048
+      },
+      "1709": {
+        "passed": 2048,
+        "cases": 2048
+      },
+      "1721": {
+        "passed": 2048,
+        "cases": 2048
+      }
+    },
+    "seen": {
+      "1703": {
+        "passed": 2048,
+        "cases": 2048
+      },
+      "1709": {
+        "passed": 2048,
+        "cases": 2048
+      },
+      "1721": {
+        "passed": 2048,
+        "cases": 2048
+      }
+    },
+    "shape": {
+      "1703": {
+        "passed": 1,
+        "cases": 2048
+      },
+      "1709": {
+        "passed": 4,
+        "cases": 2048
+      },
+      "1721": {
+        "passed": 0,
+        "cases": 2048
+      }
+    },
+    "union": {
+      "1703": {
+        "passed": 982,
+        "cases": 2048
+      },
+      "1709": {
+        "passed": 982,
+        "cases": 2048
+      },
+      "1721": {
+        "passed": 982,
+        "cases": 2048
+      }
+    },
+    "mapping": {
+      "1703": {
+        "passed": 580,
+        "cases": 2048
+      },
+      "1709": {
+        "passed": 112,
+        "cases": 2048
+      },
+      "1721": {
+        "passed": 0,
+        "cases": 2048
+      }
+    },
+    "joint": {
+      "1703": {
+        "passed": 0,
+        "cases": 2048
+      },
+      "1709": {
+        "passed": 0,
+        "cases": 2048
+      },
+      "1721": {
+        "passed": 0,
+        "cases": 2048
+      }
+    }
+  },
+  "seen_panel": {
+    "cases": 2048,
+    "exact_training_rows": 0,
+    "semantic_tuple_seen_with_another_annotation": 1022,
+    "semantic_tuple_unseen": 1026
+  },
+  "provenance": {
+    "1703": {
+      "model_sha256": "110d3f436b7e1de06327d7b92ce795a757194d0cf126408d6fae018a5b7eb849",
+      "result_sha256": "687fbaefa11b57b2a7d776c1e491f13864c60f90d734b6738661fd7de88b125e"
+    },
+    "1709": {
+      "model_sha256": "bd89871208012dd136c925ba5df577ee9286038c00119d99c4a3406220a25c72",
+      "result_sha256": "404e55865465d700f2dccfe06dab2d7de227b8737b4acf7961dc410847870745"
+    },
+    "1721": {
+      "model_sha256": "28236e5e3d6fb995b2c60bc321c4d76fb885bce510ac1413b68323fc8d5b98db",
+      "result_sha256": "3a2148fee7555ea24076c87004daa8cf0a101d88b4b454be428c134a5b0594fb"
+    }
+  },
+  "source_sha256": {
+    "audit.py": "2cb596bae321901c67cb7e70d3ddc9947bc71f1f6a98ea2f18334774dcb2ef62",
+    "collect_results.py": "db0d2fc6201c052a2c1269445e67640c3ef53a055d243ee4668d114009acaa86",
+    "diagnose.py": "3278d2beb7245fbd51db03559610d28f0baeb6d1524ac535b176b63b8dfb9cd8",
+    "experiment.py": "3dfa9a1e23b5814ccb94936943cc9e99eb315efb85f7d25cd44ad37e36774274",
+    "network.py": "46ea9d178ec21e4ff79cfbfeeb3014ee196e2fe13227e9da7420bf2fae70348a",
+    "semantics.py": "901c755241e3db65abac856f88d45f7d7b472a13cf7c13be49e34abcc14e74e1",
+    "spec.py": "d0bb9187d0ab17e794c3e53e2df9a8759beb3722eae294bb945e04e0c66f6e13",
+    "test_network.py": "7b719b7ab1b3fbae22040897965723072fdbbe2ab680fc1741e7a36ae2d405e4",
+    "test_structure.py": "b8e9a8c05e1865ab3824c9eac71e81768977afbcb5bcfb2d3fcfa6431cbddf39"
+  },
+  "model_selection": "all three predeclared seeds at step 12000, no heldout selection or retraining",
+  "verdict": "cross-structure semantic acceptance failed; no CPU repair"
+}
