@@ -1,0 +1,86 @@
+{
+  "seed": 1703,
+  "optimizer": "Adam",
+  "learning_rate": 0.002,
+  "batch_size": 128,
+  "steps": 3000,
+  "queue_job": 834,
+  "base_revision": "68afd3c5",
+  "checkpoint_sha256": "237f1fd3ba2ce566082ba9e733994aa1d89b5576da26be07e95532f4f4bc924c",
+  "source_sha256": {
+    "audit.py": "0f31366e270dbb0cb22e94334dd463528fe968b7d507bda1ad84c0bd3c381ff9",
+    "contract.py": "bbb91eb9a4f078cf5657fb2dbefcaf434342b494af4e0d9beb0dbf080f0f51db",
+    "experiment.py": "bc1a7549796cd06621e87da09f4d83444d509577cc3e156db4f58b74629de759",
+    "model.py": "033b3266c461de4f3ef244400a5afa0a8ab3c9afa63867c7b137beb5418aabd3",
+    "schema.py": "85537af2821a9a88541ca66308904a6a4876eb133ef0190f725aa89d836e44f7",
+    "test_rotary_proof.py": "d857cb6d9702a361aef9b536fd1c90c7273c20af74138845c8c21e8ac1738e01"
+  },
+  "artifact_directory": "/Volumes/Extreme SSD/eggfuse-experiments/rotary-proof-cell-20261117/reproducible",
+  "history": [
+    {
+      "step": 1,
+      "loss": 17.602088928222656,
+      "seconds": 0.031169708934612572
+    },
+    {
+      "step": 251,
+      "loss": 0.026776887476444244,
+      "seconds": 0.8877342499326915
+    },
+    {
+      "step": 501,
+      "loss": 0.012108096852898598,
+      "seconds": 1.7389714589808136
+    },
+    {
+      "step": 751,
+      "loss": 0.007270050700753927,
+      "seconds": 2.581518166931346
+    },
+    {
+      "step": 1001,
+      "loss": 0.005231207702308893,
+      "seconds": 3.3753196669276804
+    },
+    {
+      "step": 1251,
+      "loss": 0.0036837938241660595,
+      "seconds": 4.179586083977483
+    },
+    {
+      "step": 1501,
+      "loss": 0.0028557335026562214,
+      "seconds": 5.049911584006622
+    },
+    {
+      "step": 1751,
+      "loss": 0.0022725327871739864,
+      "seconds": 5.873184958938509
+    },
+    {
+      "step": 2001,
+      "loss": 0.0018727290444076061,
+      "seconds": 6.712114083929919
+    },
+    {
+      "step": 2251,
+      "loss": 0.00149799813516438,
+      "seconds": 7.5251356669468805
+    },
+    {
+      "step": 2501,
+      "loss": 0.0012790323235094547,
+      "seconds": 8.323636333923787
+    },
+    {
+      "step": 2751,
+      "loss": 0.0010928568663075566,
+      "seconds": 9.118232375010848
+    },
+    {
+      "step": 3000,
+      "loss": 0.0008631942328065634,
+      "seconds": 9.925215999945067
+    }
+  ]
+}

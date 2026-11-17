@@ -1,0 +1,12 @@
+{
+  "cases": 1280,
+  "passed": 1280,
+  "errors": {},
+  "examples": [],
+  "accepted": true,
+  "cpu_gpu_decoder_equal": true,
+  "owner_positions_bound": true,
+  "finite": true,
+  "decoder_max_abs_difference": 2.813796306355698e-05,
+  "rotary_rebase_max_error": 3.725290298461914e-08
+}

@@ -1,0 +1,630 @@
+{
+  "scope": "bounded learned Seed/F/G latent/proof prototype, not full eggcc or general egraph",
+  "status": "pass",
+  "device": "Device(gpu, 0)",
+  "environment": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "python": "3.14.3",
+    "mlx": "0.32.4",
+    "numpy": "2.5.4"
+  },
+  "training_cases": 3840,
+  "heldout_cases": 1280,
+  "training_tags": [
+    234,
+    21,
+    97,
+    75,
+    133,
+    64,
+    63,
+    36,
+    247,
+    119,
+    89,
+    112,
+    250,
+    238,
+    37,
+    163,
+    62,
+    213,
+    61,
+    20,
+    147,
+    131,
+    161,
+    222,
+    90,
+    224,
+    215,
+    104,
+    45,
+    77,
+    244,
+    157,
+    191,
+    111,
+    248,
+    31,
+    171,
+    106,
+    19,
+    160,
+    44,
+    249,
+    103,
+    205,
+    194,
+    99,
+    33,
+    156,
+    85,
+    180,
+    60,
+    201,
+    237,
+    150,
+    76,
+    145,
+    118,
+    23,
+    236,
+    86,
+    211,
+    196,
+    203,
+    82,
+    46,
+    202,
+    79,
+    102,
+    11,
+    27,
+    192,
+    107,
+    126,
+    57,
+    208,
+    120,
+    134,
+    42,
+    0,
+    117,
+    95,
+    240,
+    6,
+    125,
+    210,
+    167,
+    124,
+    235,
+    142,
+    40,
+    241,
+    225,
+    187,
+    51,
+    136,
+    207,
+    162,
+    141,
+    48,
+    78,
+    139,
+    72,
+    53,
+    50,
+    166,
+    214,
+    26,
+    56,
+    159,
+    35,
+    223,
+    197,
+    143,
+    65,
+    209,
+    96,
+    110,
+    174,
+    181,
+    91,
+    219,
+    121,
+    108,
+    73,
+    206,
+    254,
+    189,
+    81,
+    242,
+    185,
+    217,
+    66,
+    94,
+    7,
+    200,
+    1,
+    14,
+    88,
+    123,
+    184,
+    55,
+    193,
+    151,
+    186,
+    127,
+    233,
+    183,
+    113,
+    198,
+    218,
+    28,
+    144,
+    255,
+    140,
+    220,
+    24,
+    49,
+    101,
+    253,
+    92,
+    227,
+    15,
+    130,
+    87,
+    138,
+    239,
+    67,
+    109,
+    154,
+    137,
+    229,
+    178,
+    47,
+    16,
+    168,
+    135,
+    68,
+    190,
+    188,
+    204,
+    80,
+    32,
+    25,
+    70,
+    182,
+    5,
+    158,
+    116,
+    176,
+    114,
+    146,
+    132
+  ],
+  "heldout_tags": [
+    212,
+    69,
+    221,
+    17,
+    153,
+    115,
+    22,
+    129,
+    84,
+    228,
+    9,
+    13,
+    175,
+    173,
+    179,
+    18,
+    172,
+    231,
+    98,
+    164,
+    38,
+    251,
+    71,
+    83,
+    155,
+    230,
+    216,
+    74,
+    8,
+    152,
+    128,
+    148,
+    246,
+    169,
+    100,
+    3,
+    29,
+    58,
+    149,
+    43,
+    232,
+    170,
+    93,
+    226,
+    34,
+    12,
+    199,
+    59,
+    52,
+    39,
+    243,
+    4,
+    54,
+    2,
+    105,
+    245,
+    195,
+    41,
+    252,
+    177,
+    122,
+    30,
+    10,
+    165
+  ],
+  "split_scope": "all 20 semantic/layout patterns occur in training; held-out annotation combinations and positions only",
+  "validation": {
+    "cases": 3840,
+    "passed": 3840,
+    "errors": {},
+    "examples": [],
+    "accepted": true,
+    "cpu_gpu_decoder_equal": true,
+    "owner_positions_bound": true,
+    "finite": true,
+    "decoder_max_abs_difference": 2.733574950042339e-05,
+    "rotary_rebase_max_error": 4.470348358154297e-08
+  },
+  "heldout": {
+    "cases": 1280,
+    "passed": 1280,
+    "errors": {},
+    "examples": [],
+    "accepted": true,
+    "cpu_gpu_decoder_equal": true,
+    "owner_positions_bound": true,
+    "finite": true,
+    "decoder_max_abs_difference": 2.813796306355698e-05,
+    "rotary_rebase_max_error": 3.725290298461914e-08
+  },
+  "example": {
+    "case": [
+      0,
+      1,
+      2,
+      165
+    ],
+    "positions": [
+      0,
+      5,
+      9
+    ],
+    "headers": [
+      {
+        "layout": [
+          0,
+          1,
+          2,
+          3,
+          5
+        ],
+        "alias": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "owner": [
+          1
+        ],
+        "proof": [
+          0
+        ],
+        "premises": [
+          0,
+          5,
+          5
+        ],
+        "g_arg": [
+          5
+        ],
+        "eq": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pending": [
+          1,
+          1
+        ],
+        "retired": [
+          0
+        ],
+        "payload": [
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1
+        ]
+      },
+      {
+        "layout": [
+          0,
+          1,
+          2,
+          3,
+          5
+        ],
+        "alias": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "owner": [
+          1
+        ],
+        "proof": [
+          1
+        ],
+        "premises": [
+          1,
+          2,
+          5
+        ],
+        "g_arg": [
+          5
+        ],
+        "eq": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "pending": [
+          0,
+          1
+        ],
+        "retired": [
+          0
+        ],
+        "payload": [
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1
+        ]
+      },
+      {
+        "layout": [
+          0,
+          1,
+          4,
+          2,
+          3
+        ],
+        "alias": [
+          0,
+          1,
+          3,
+          4
+        ],
+        "owner": [
+          2
+        ],
+        "proof": [
+          3
+        ],
+        "premises": [
+          0,
+          2,
+          3
+        ],
+        "g_arg": [
+          2
+        ],
+        "eq": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "pending": [
+          0,
+          0
+        ],
+        "retired": [
+          1
+        ],
+        "payload": [
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1
+        ]
+      }
+    ],
+    "reads": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "retired_payload_interventions": {
+    "zero": {
+      "checked_cases": 960,
+      "unchanged": true,
+      "old_active": 0,
+      "old_visible_values": 0
+    },
+    "random": {
+      "checked_cases": 960,
+      "unchanged": true,
+      "old_active": 0,
+      "old_visible_values": 0
+    },
+    "nan": {
+      "checked_cases": 960,
+      "unchanged": true,
+      "old_active": 0,
+      "old_visible_values": 0
+    }
+  },
+  "reordered_reference_reads": {
+    "checked_cases": 960,
+    "order": [
+      3,
+      0,
+      2,
+      1
+    ],
+    "roles_follow_query": true,
+    "ports_follow_query": true,
+    "all_valid": true
+  },
+  "tampering_rejected": {
+    "wrong_premise": true,
+    "false_union": true,
+    "early_publication": true,
+    "wrong_projection": true,
+    "lost_old_information": true,
+    "lost_pending_obligation": true,
+    "advertised_proof_not_in_latent": true,
+    "wrong_rotary_owner_position": true
+  },
+  "lineage": {
+    "third_loss_gradient_to_initial_seed": 3121.125,
+    "corrupt_second_latent_rejected": true
+  },
+  "source_sha256": {
+    "audit.py": "0f31366e270dbb0cb22e94334dd463528fe968b7d507bda1ad84c0bd3c381ff9",
+    "contract.py": "bbb91eb9a4f078cf5657fb2dbefcaf434342b494af4e0d9beb0dbf080f0f51db",
+    "experiment.py": "bc1a7549796cd06621e87da09f4d83444d509577cc3e156db4f58b74629de759",
+    "model.py": "033b3266c461de4f3ef244400a5afa0a8ab3c9afa63867c7b137beb5418aabd3",
+    "schema.py": "85537af2821a9a88541ca66308904a6a4876eb133ef0190f725aa89d836e44f7",
+    "test_rotary_proof.py": "d857cb6d9702a361aef9b536fd1c90c7273c20af74138845c8c21e8ac1738e01"
+  },
+  "checkpoint_sha256": "237f1fd3ba2ce566082ba9e733994aa1d89b5576da26be07e95532f4f4bc924c",
+  "training": [
+    {
+      "step": 1,
+      "loss": 17.602088928222656,
+      "seconds": 0.031169708934612572
+    },
+    {
+      "step": 251,
+      "loss": 0.026776887476444244,
+      "seconds": 0.8877342499326915
+    },
+    {
+      "step": 501,
+      "loss": 0.012108096852898598,
+      "seconds": 1.7389714589808136
+    },
+    {
+      "step": 751,
+      "loss": 0.007270050700753927,
+      "seconds": 2.581518166931346
+    },
+    {
+      "step": 1001,
+      "loss": 0.005231207702308893,
+      "seconds": 3.3753196669276804
+    },
+    {
+      "step": 1251,
+      "loss": 0.0036837938241660595,
+      "seconds": 4.179586083977483
+    },
+    {
+      "step": 1501,
+      "loss": 0.0028557335026562214,
+      "seconds": 5.049911584006622
+    },
+    {
+      "step": 1751,
+      "loss": 0.0022725327871739864,
+      "seconds": 5.873184958938509
+    },
+    {
+      "step": 2001,
+      "loss": 0.0018727290444076061,
+      "seconds": 6.712114083929919
+    },
+    {
+      "step": 2251,
+      "loss": 0.00149799813516438,
+      "seconds": 7.5251356669468805
+    },
+    {
+      "step": 2501,
+      "loss": 0.0012790323235094547,
+      "seconds": 8.323636333923787
+    },
+    {
+      "step": 2751,
+      "loss": 0.0010928568663075566,
+      "seconds": 9.118232375010848
+    },
+    {
+      "step": 3000,
+      "loss": 0.0008631942328065634,
+      "seconds": 9.925215999945067
+    }
+  ],
+  "cpu_corrections": 0,
+  "teacher_latents_used_in_rollout": false,
+  "input_seed_encodings_per_rollout": 1,
+  "model_origin": "/Volumes/Extreme SSD/eggfuse-experiments/rotary-proof-cell-20261117/reproducible/model.safetensors",
+  "active_transfer_scope": "old A removed from the read bank after neural retirement; audit checkpoints remain separately retained",
+  "limitations": [
+    "No arbitrary operator/ruleset, external constructor collision, mutable function or scalar arithmetic coverage",
+    "Initial a,b are symbolic handles and carry no learned numeric ID",
+    "Fixed three-Run schedule; no learned global stopping or dynamic candidate enumeration",
+    "Model accuracy is empirically verified on a finite domain, not universally proved",
+    "Rotation coordinates change token bytes; no bitwise equality across positions or permutation-invariance claim",
+    "Static GPU routing, argmax, masking and rotary operations remain outside the learned transition",
+    "No online Bake or automatically discovered proof vocabulary in this prototype",
+    "Audit checkpoint storage and host transfers are retained; no compression or speedup claim"
+  ]
+}
