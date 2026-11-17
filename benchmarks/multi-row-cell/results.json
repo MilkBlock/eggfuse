@@ -1,0 +1,224 @@
+{
+  "status": "pass",
+  "scope": "deterministic compressed-template GPU view/ownership foundation, not neural egraph feasibility",
+  "records": [
+    {
+      "rows": 2,
+      "length": 8,
+      "source_instances": 8,
+      "seed": 19,
+      "one_graph": true,
+      "all_transfers_accepted": true,
+      "active_instances": 4,
+      "forwarding_records": 8,
+      "active_payloads": 4,
+      "run1_pending": 0,
+      "run2_pending": 0,
+      "run1_audit": {
+        "checked": 20,
+        "errors": []
+      },
+      "run2_audit": {
+        "checked": 20,
+        "errors": []
+      },
+      "state_tensor_bytes_before": 900,
+      "state_tensor_bytes_after": 900,
+      "shared_library_bytes": 340,
+      "source_boundary_references": 12,
+      "target_boundary_references": 8,
+      "source_member_instruction_copies": 0,
+      "target_member_instruction_copies": 0,
+      "permanent_instance_pair_matrices": 0,
+      "cpu_corrections": 0,
+      "model_executed": false,
+      "union_executed": false,
+      "pass": true
+    },
+    {
+      "rows": 2,
+      "length": 8,
+      "source_instances": 8,
+      "seed": 71,
+      "one_graph": true,
+      "all_transfers_accepted": true,
+      "active_instances": 4,
+      "forwarding_records": 8,
+      "active_payloads": 4,
+      "run1_pending": 0,
+      "run2_pending": 0,
+      "run1_audit": {
+        "checked": 20,
+        "errors": []
+      },
+      "run2_audit": {
+        "checked": 20,
+        "errors": []
+      },
+      "state_tensor_bytes_before": 900,
+      "state_tensor_bytes_after": 900,
+      "shared_library_bytes": 340,
+      "source_boundary_references": 12,
+      "target_boundary_references": 8,
+      "source_member_instruction_copies": 0,
+      "target_member_instruction_copies": 0,
+      "permanent_instance_pair_matrices": 0,
+      "cpu_corrections": 0,
+      "model_executed": false,
+      "union_executed": false,
+      "pass": true
+    },
+    {
+      "rows": 4,
+      "length": 8,
+      "source_instances": 16,
+      "seed": 19,
+      "one_graph": true,
+      "all_transfers_accepted": true,
+      "active_instances": 8,
+      "forwarding_records": 16,
+      "active_payloads": 8,
+      "run1_pending": 0,
+      "run2_pending": 0,
+      "run1_audit": {
+        "checked": 40,
+        "errors": []
+      },
+      "run2_audit": {
+        "checked": 40,
+        "errors": []
+      },
+      "state_tensor_bytes_before": 1796,
+      "state_tensor_bytes_after": 1796,
+      "shared_library_bytes": 340,
+      "source_boundary_references": 24,
+      "target_boundary_references": 16,
+      "source_member_instruction_copies": 0,
+      "target_member_instruction_copies": 0,
+      "permanent_instance_pair_matrices": 0,
+      "cpu_corrections": 0,
+      "model_executed": false,
+      "union_executed": false,
+      "pass": true
+    },
+    {
+      "rows": 4,
+      "length": 8,
+      "source_instances": 16,
+      "seed": 71,
+      "one_graph": true,
+      "all_transfers_accepted": true,
+      "active_instances": 8,
+      "forwarding_records": 16,
+      "active_payloads": 8,
+      "run1_pending": 0,
+      "run2_pending": 0,
+      "run1_audit": {
+        "checked": 40,
+        "errors": []
+      },
+      "run2_audit": {
+        "checked": 40,
+        "errors": []
+      },
+      "state_tensor_bytes_before": 1796,
+      "state_tensor_bytes_after": 1796,
+      "shared_library_bytes": 340,
+      "source_boundary_references": 24,
+      "target_boundary_references": 16,
+      "source_member_instruction_copies": 0,
+      "target_member_instruction_copies": 0,
+      "permanent_instance_pair_matrices": 0,
+      "cpu_corrections": 0,
+      "model_executed": false,
+      "union_executed": false,
+      "pass": true
+    },
+    {
+      "rows": 4,
+      "length": 16,
+      "source_instances": 24,
+      "seed": 19,
+      "one_graph": true,
+      "all_transfers_accepted": true,
+      "active_instances": 12,
+      "forwarding_records": 24,
+      "active_payloads": 12,
+      "run1_pending": 0,
+      "run2_pending": 0,
+      "run1_audit": {
+        "checked": 60,
+        "errors": []
+      },
+      "run2_audit": {
+        "checked": 60,
+        "errors": []
+      },
+      "state_tensor_bytes_before": 3268,
+      "state_tensor_bytes_after": 3268,
+      "shared_library_bytes": 340,
+      "source_boundary_references": 36,
+      "target_boundary_references": 24,
+      "source_member_instruction_copies": 0,
+      "target_member_instruction_copies": 0,
+      "permanent_instance_pair_matrices": 0,
+      "cpu_corrections": 0,
+      "model_executed": false,
+      "union_executed": false,
+      "pass": true
+    },
+    {
+      "rows": 4,
+      "length": 16,
+      "source_instances": 24,
+      "seed": 71,
+      "one_graph": true,
+      "all_transfers_accepted": true,
+      "active_instances": 12,
+      "forwarding_records": 24,
+      "active_payloads": 12,
+      "run1_pending": 0,
+      "run2_pending": 0,
+      "run1_audit": {
+        "checked": 60,
+        "errors": []
+      },
+      "run2_audit": {
+        "checked": 60,
+        "errors": []
+      },
+      "state_tensor_bytes_before": 3268,
+      "state_tensor_bytes_after": 3268,
+      "shared_library_bytes": 340,
+      "source_boundary_references": 36,
+      "target_boundary_references": 24,
+      "source_member_instruction_copies": 0,
+      "target_member_instruction_copies": 0,
+      "permanent_instance_pair_matrices": 0,
+      "cpu_corrections": 0,
+      "model_executed": false,
+      "union_executed": false,
+      "pass": true
+    }
+  ],
+  "source_sha256": {
+    "catalog.py": "b44fda6b313577f68204550155ef50d5891bf7ebdb2e1311f8a8a7c7e8305852",
+    "device.py": "99997ac5d1f1e3314db89085b5651f90353007aafc4bb9d9f4e8033c01bb6d7f",
+    "reference.py": "d0cc5c34a5a9f398be5341f6d2cd69fdd0ecd80eb051541c4c49c4aeff2bed87",
+    "rotary.py": "42ad1b849962558a0f7a5da04884b2038af09ba9380c2fcf9e8c85ae22e98bd3",
+    "run.py": "f86384d569e1d8ed5ad647ced3f1c73893198df2090abb8e9220fe3b50376a02",
+    "test_device.py": "bc875bb0e79ce7e15c9a430bb568e51091c1acd10df66308d11c9f163a98e376"
+  },
+  "environment": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "device": "Device(gpu, 0)"
+  },
+  "limitations": [
+    "no union or cross-instance congruence engine",
+    "no neural template/binding proposal generation",
+    "full same-graph address bank is temporary and can be expensive",
+    "functional arena updates and source-ordered transfer loop",
+    "reported state bytes are tensor element footprints, not allocator peaks or RSS; fixed arenas and forwarding headers remain",
+    "pure finite constructor plans, at most 32 template ports; no mutable effects or eggcc integration"
+  ]
+}
