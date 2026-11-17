@@ -1,0 +1,25 @@
+{
+  "controls_reproduced": [
+    "control-independent-1703/iid-4x2.npz",
+    "control-independent-1703/iid-2x4.npz",
+    "control-independent-1703/multiplicity-4x2.npz",
+    "control-independent-1703/multiplicity-2x4.npz",
+    "control-independent-1709/iid-4x2.npz",
+    "control-independent-1709/iid-2x4.npz",
+    "control-independent-1709/multiplicity-4x2.npz",
+    "control-independent-1709/multiplicity-2x4.npz",
+    "control-joint-1703/iid-4x2.npz",
+    "control-joint-1703/iid-2x4.npz",
+    "control-joint-1703/multiplicity-4x2.npz",
+    "control-joint-1703/multiplicity-2x4.npz",
+    "control-joint-1709/iid-4x2.npz",
+    "control-joint-1709/iid-2x4.npz",
+    "control-joint-1709/multiplicity-4x2.npz",
+    "control-joint-1709/multiplicity-2x4.npz"
+  ],
+  "fresh_input_hashes": {
+    "double_triple": "da2901da719e854a87a9afceb51c60f9924ebe5bcd6d7ccf0c2d1e9a91ac1bbe",
+    "four_left": "1bd752012309d424ccca8f31147037bef8e87e59fb056320067fa7efa5f2c056"
+  },
+  "status": "pass"
+}

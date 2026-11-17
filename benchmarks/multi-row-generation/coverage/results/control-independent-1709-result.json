@@ -1,0 +1,3411 @@
+{
+  "protocol": {
+    "treatment": "control",
+    "mode": "independent",
+    "seed": 1709,
+    "steps": 4000,
+    "lr": 0.001,
+    "batch": 32,
+    "training_seed": 51900,
+    "coverage_weight": 0.0,
+    "count_weight": 0.0,
+    "prior_model_sha256": "c7700be4d1af7bfe2b141752a4e8ed256138a192cf41385b6807e10096ccdef9",
+    "new_shape_counts": {
+      "double_triple": 5,
+      "four_left": 7
+    },
+    "shape_overlap": 0,
+    "final_input_hashes": {
+      "double_triple": "da2901da719e854a87a9afceb51c60f9924ebe5bcd6d7ccf0c2d1e9a91ac1bbe",
+      "four_left": "1bd752012309d424ccca8f31147037bef8e87e59fb056320067fa7efa5f2c056"
+    },
+    "source_sha256": {
+      "coverage/metrics.py": "e680ba992fe5190925e61a0c091fce0d7af7cc5ebde7b6d2bca82836778ab51b",
+      "coverage/run.py": "bfc859ee1d4acbf6fa192515db2da9161596e0ffd5f6a010c81706012899494f",
+      "coverage/objective.py": "75208a516a0afbea7974c6c37508ee4eea001a4944394378b8bcfd39e4a50e85",
+      "coverage/test_coverage.py": "eaa70152234ad23ee512004493472405912eb99c9c17bc6e43414e934d18792b",
+      "coverage/benchmark.py": "1da53f6926e9967f01bafd19d787907fa55dbd7d59b0e388e3ad1bd8c122858a",
+      "coverage/audit_saved.py": "68af00e63052d2818ac9b16ce9c13704365bf9828ba6a09250319d38ee358385",
+      "coverage/fixtures.py": "1fd99cbde4036f8b9a66d5ff8b8cc7e41a4577169651b6f786980d1456e678ef",
+      "allocation/model.py": "f9e958726b27c26432e85a20752d8b4f2fd75d575250d8000702f9110edd1303",
+      "allocation/data.py": "b959d5effa844466fe338d2815a096c6b13efa5c4a644a8fb3c032094611e00b",
+      "allocation/assignment.py": "1709042aa25e7f5cdf05d1b25224986ae4f3928450a7ad80e186c67dd087318f",
+      "network.py": "78057bd8409dc264fd8ba75d62ecda566193df75f0ca0325784ccd28995090b7",
+      "task.py": "4dca9afe44b53205d7181570c18a0404ae2f5bab56254d6c2a3cf5f4d19ddb8a"
+    },
+    "inference_network_unchanged": true
+  },
+  "training": [],
+  "panels": {
+    "train_replay-4x2": {
+      "graphs": 256,
+      "complete_graphs": 145,
+      "valid_unique": 853,
+      "duplicates": 80,
+      "missing": 75,
+      "obligations": 928,
+      "count_error_graphs": 90,
+      "active_outputs": 942,
+      "illegal_bindings": 1,
+      "field_errors": 8,
+      "address_errors": 0,
+      "cross_row_valid": 853,
+      "by_cardinality": {
+        "0": {
+          "graphs": 32,
+          "complete": 32
+        },
+        "1": {
+          "graphs": 32,
+          "complete": 26
+        },
+        "2": {
+          "graphs": 32,
+          "complete": 9
+        },
+        "3": {
+          "graphs": 32,
+          "complete": 11
+        },
+        "4": {
+          "graphs": 32,
+          "complete": 13
+        },
+        "5": {
+          "graphs": 32,
+          "complete": 16
+        },
+        "6": {
+          "graphs": 32,
+          "complete": 11
+        },
+        "8": {
+          "graphs": 32,
+          "complete": 27
+        }
+      },
+      "examples": [
+        {
+          "a": [
+            [
+              5,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "b": [
+            [
+              7,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              1
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pointers": [
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              1,
+              2
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "b": [
+            [
+              5,
+              2
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              7,
+              3
+            ],
+            [
+              4,
+              3
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ]
+          ],
+          "active": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pointers": [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              5,
+              1
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "b": [
+            [
+              3,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "expected": [
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "pointers": [
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              0,
+              1
+            ]
+          ]
+        }
+      ],
+      "soft": {
+        "soft_coverage_mse": 0.11007893597380543,
+        "soft_count_mse": 0.048355534028149155,
+        "active_entropy": 0.18281252400269982,
+        "hard_count_absolute_error": 0.4375
+      }
+    },
+    "train_replay-2x4": {
+      "graphs": 256,
+      "complete_graphs": 117,
+      "valid_unique": 824,
+      "duplicates": 102,
+      "missing": 104,
+      "obligations": 928,
+      "count_error_graphs": 105,
+      "active_outputs": 946,
+      "illegal_bindings": 4,
+      "field_errors": 16,
+      "address_errors": 0,
+      "cross_row_valid": 824,
+      "by_cardinality": {
+        "0": {
+          "graphs": 32,
+          "complete": 30
+        },
+        "1": {
+          "graphs": 32,
+          "complete": 21
+        },
+        "2": {
+          "graphs": 32,
+          "complete": 8
+        },
+        "3": {
+          "graphs": 32,
+          "complete": 6
+        },
+        "4": {
+          "graphs": 32,
+          "complete": 12
+        },
+        "5": {
+          "graphs": 32,
+          "complete": 8
+        },
+        "6": {
+          "graphs": 32,
+          "complete": 8
+        },
+        "8": {
+          "graphs": 32,
+          "complete": 24
+        }
+      },
+      "examples": [
+        {
+          "a": [
+            [
+              5,
+              3
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "b": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "expected": [
+            [
+              3,
+              0
+            ]
+          ],
+          "active": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1
+          ],
+          "pointers": [
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              0
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              5,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "b": [
+            [
+              7,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              1
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "active": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "pointers": [
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              2,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              7,
+              3
+            ]
+          ],
+          "b": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          "active": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "pointers": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        }
+      ],
+      "soft": {
+        "soft_coverage_mse": 0.14058344676386514,
+        "soft_count_mse": 0.05314525246384991,
+        "active_entropy": 0.18910544596677728,
+        "hard_count_absolute_error": 0.4921875
+      }
+    },
+    "iid-4x2": {
+      "graphs": 256,
+      "complete_graphs": 115,
+      "valid_unique": 812,
+      "duplicates": 91,
+      "missing": 116,
+      "obligations": 928,
+      "count_error_graphs": 118,
+      "active_outputs": 920,
+      "illegal_bindings": 2,
+      "field_errors": 15,
+      "address_errors": 0,
+      "cross_row_valid": 812,
+      "by_cardinality": {
+        "0": {
+          "graphs": 32,
+          "complete": 31
+        },
+        "1": {
+          "graphs": 32,
+          "complete": 18
+        },
+        "2": {
+          "graphs": 32,
+          "complete": 9
+        },
+        "3": {
+          "graphs": 32,
+          "complete": 7
+        },
+        "4": {
+          "graphs": 32,
+          "complete": 7
+        },
+        "5": {
+          "graphs": 32,
+          "complete": 10
+        },
+        "6": {
+          "graphs": 32,
+          "complete": 9
+        },
+        "8": {
+          "graphs": 32,
+          "complete": 24
+        }
+      },
+      "examples": [
+        {
+          "a": [
+            [
+              4,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "b": [
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              1
+            ]
+          ],
+          "active": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0
+          ],
+          "pointers": [
+            [
+              0,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              3,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "b": [
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              1
+            ]
+          ],
+          "active": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1
+          ],
+          "pointers": [
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              6,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "b": [
+            [
+              6,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              6,
+              1
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "active": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "pointers": [
+            [
+              0,
+              0
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        }
+      ],
+      "soft": {
+        "soft_coverage_mse": 0.132649618668367,
+        "soft_count_mse": 0.06113249955567676,
+        "active_entropy": 0.18575933578746634,
+        "hard_count_absolute_error": 0.5625
+      }
+    },
+    "iid-2x4": {
+      "graphs": 256,
+      "complete_graphs": 105,
+      "valid_unique": 785,
+      "duplicates": 98,
+      "missing": 143,
+      "obligations": 928,
+      "count_error_graphs": 107,
+      "active_outputs": 917,
+      "illegal_bindings": 2,
+      "field_errors": 32,
+      "address_errors": 0,
+      "cross_row_valid": 785,
+      "by_cardinality": {
+        "0": {
+          "graphs": 32,
+          "complete": 32
+        },
+        "1": {
+          "graphs": 32,
+          "complete": 23
+        },
+        "2": {
+          "graphs": 32,
+          "complete": 11
+        },
+        "3": {
+          "graphs": 32,
+          "complete": 3
+        },
+        "4": {
+          "graphs": 32,
+          "complete": 7
+        },
+        "5": {
+          "graphs": 32,
+          "complete": 5
+        },
+        "6": {
+          "graphs": 32,
+          "complete": 10
+        },
+        "8": {
+          "graphs": 32,
+          "complete": 14
+        }
+      },
+      "examples": [
+        {
+          "a": [
+            [
+              4,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              1
+            ]
+          ],
+          "b": [
+            [
+              4,
+              1
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "active": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "pointers": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              3,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "b": [
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              1
+            ]
+          ],
+          "active": [
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1
+          ],
+          "pointers": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              3
+            ]
+          ],
+          "b": [
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "active": [
+            0,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0,
+            1
+          ],
+          "pointers": [
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              3
+            ]
+          ]
+        }
+      ],
+      "soft": {
+        "soft_coverage_mse": 0.16054950673553334,
+        "soft_count_mse": 0.06426793882005226,
+        "active_entropy": 0.19170020240045854,
+        "hard_count_absolute_error": 0.55078125
+      }
+    },
+    "multiplicity-4x2": {
+      "graphs": 256,
+      "illegal_bindings": 19,
+      "field_errors": 53,
+      "address_errors": 0,
+      "complete_graphs": 31,
+      "valid_unique": 805,
+      "duplicates": 212,
+      "missing": 347,
+      "obligations": 1152,
+      "count_error_graphs": 169,
+      "active_outputs": 1089,
+      "cross_row_valid": 805,
+      "by_cardinality": {
+        "1": {
+          "graphs": 32,
+          "complete": 17
+        },
+        "2": {
+          "graphs": 32,
+          "complete": 14
+        },
+        "3": {
+          "graphs": 32,
+          "complete": 0
+        },
+        "4": {
+          "graphs": 32,
+          "complete": 0
+        },
+        "5": {
+          "graphs": 32,
+          "complete": 0
+        },
+        "6": {
+          "graphs": 32,
+          "complete": 0
+        },
+        "7": {
+          "graphs": 32,
+          "complete": 0
+        },
+        "8": {
+          "graphs": 32,
+          "complete": 0
+        }
+      },
+      "examples": [
+        {
+          "a": [
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "b": [
+            [
+              1,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          "expected": [
+            [
+              2,
+              2
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pointers": [
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "b": [
+            [
+              4,
+              3
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "active": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "pointers": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              4,
+              3
+            ]
+          ],
+          "b": [
+            [
+              7,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "active": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "pointers": [
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        }
+      ],
+      "soft": {
+        "soft_coverage_mse": 0.4157817191301036,
+        "soft_count_mse": 0.16950087858025267,
+        "active_entropy": 0.18739892320277238,
+        "hard_count_absolute_error": 0.93359375
+      }
+    },
+    "multiplicity-2x4": {
+      "graphs": 256,
+      "illegal_bindings": 10,
+      "field_errors": 61,
+      "address_errors": 0,
+      "complete_graphs": 30,
+      "valid_unique": 806,
+      "duplicates": 235,
+      "missing": 346,
+      "obligations": 1152,
+      "count_error_graphs": 181,
+      "active_outputs": 1112,
+      "cross_row_valid": 806,
+      "by_cardinality": {
+        "1": {
+          "graphs": 32,
+          "complete": 18
+        },
+        "2": {
+          "graphs": 32,
+          "complete": 9
+        },
+        "3": {
+          "graphs": 32,
+          "complete": 0
+        },
+        "4": {
+          "graphs": 32,
+          "complete": 1
+        },
+        "5": {
+          "graphs": 32,
+          "complete": 1
+        },
+        "6": {
+          "graphs": 32,
+          "complete": 0
+        },
+        "7": {
+          "graphs": 32,
+          "complete": 1
+        },
+        "8": {
+          "graphs": 32,
+          "complete": 0
+        }
+      },
+      "examples": [
+        {
+          "a": [
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "b": [
+            [
+              1,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          "expected": [
+            [
+              2,
+              2
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "pointers": [
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "b": [
+            [
+              4,
+              3
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "active": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0
+          ],
+          "pointers": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              4,
+              3
+            ]
+          ],
+          "b": [
+            [
+              7,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "active": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "pointers": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              3
+            ]
+          ]
+        }
+      ],
+      "soft": {
+        "soft_coverage_mse": 0.4137521287281726,
+        "soft_count_mse": 0.18459620514282127,
+        "active_entropy": 0.1961203222626783,
+        "hard_count_absolute_error": 1.0078125
+      }
+    },
+    "double_triple-4x2": {
+      "graphs": 256,
+      "illegal_bindings": 50,
+      "field_errors": 30,
+      "address_errors": 0,
+      "complete_graphs": 81,
+      "valid_unique": 449,
+      "duplicates": 317,
+      "missing": 191,
+      "obligations": 640,
+      "count_error_graphs": 164,
+      "active_outputs": 846,
+      "cross_row_valid": 449,
+      "by_cardinality": {
+        "0": {
+          "graphs": 64,
+          "complete": 44
+        },
+        "1": {
+          "graphs": 64,
+          "complete": 36
+        },
+        "3": {
+          "graphs": 64,
+          "complete": 1
+        },
+        "6": {
+          "graphs": 64,
+          "complete": 0
+        }
+      },
+      "examples": [
+        {
+          "a": [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              1
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              4,
+              2
+            ]
+          ],
+          "b": [
+            [
+              5,
+              3
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              5,
+              3
+            ]
+          ],
+          "expected": [],
+          "active": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "pointers": [
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              6,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "b": [
+            [
+              4,
+              1
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              1
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "pointers": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              1,
+              0
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "b": [
+            [
+              5,
+              1
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              5,
+              3
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0
+          ],
+          "pointers": [
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        }
+      ],
+      "soft": {
+        "soft_coverage_mse": 0.5118513238549377,
+        "soft_count_mse": 0.15444443282616233,
+        "active_entropy": 0.1980845568825326,
+        "hard_count_absolute_error": 0.9140625
+      }
+    },
+    "double_triple-2x4": {
+      "graphs": 256,
+      "illegal_bindings": 59,
+      "field_errors": 42,
+      "address_errors": 0,
+      "complete_graphs": 75,
+      "valid_unique": 463,
+      "duplicates": 287,
+      "missing": 177,
+      "obligations": 640,
+      "count_error_graphs": 169,
+      "active_outputs": 851,
+      "cross_row_valid": 463,
+      "by_cardinality": {
+        "0": {
+          "graphs": 64,
+          "complete": 46
+        },
+        "1": {
+          "graphs": 64,
+          "complete": 26
+        },
+        "3": {
+          "graphs": 64,
+          "complete": 3
+        },
+        "6": {
+          "graphs": 64,
+          "complete": 0
+        }
+      },
+      "examples": [
+        {
+          "a": [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              1
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              4,
+              2
+            ]
+          ],
+          "b": [
+            [
+              5,
+              3
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              5,
+              3
+            ]
+          ],
+          "expected": [],
+          "active": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "pointers": [
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              6,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "b": [
+            [
+              4,
+              1
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              4,
+              0
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              1
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "pointers": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              1,
+              0
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "b": [
+            [
+              5,
+              1
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              5,
+              3
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1
+          ],
+          "pointers": [
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      "soft": {
+        "soft_coverage_mse": 0.47353179757102604,
+        "soft_count_mse": 0.14435606595549738,
+        "active_entropy": 0.200745125755245,
+        "hard_count_absolute_error": 0.96484375
+      }
+    },
+    "four_left-4x2": {
+      "graphs": 256,
+      "complete_graphs": 59,
+      "valid_unique": 470,
+      "duplicates": 198,
+      "missing": 550,
+      "obligations": 1020,
+      "count_error_graphs": 128,
+      "active_outputs": 856,
+      "illegal_bindings": 67,
+      "field_errors": 121,
+      "address_errors": 0,
+      "cross_row_valid": 470,
+      "by_cardinality": {
+        "0": {
+          "graphs": 86,
+          "complete": 59
+        },
+        "4": {
+          "graphs": 85,
+          "complete": 0
+        },
+        "8": {
+          "graphs": 85,
+          "complete": 0
+        }
+      },
+      "examples": [
+        {
+          "a": [
+            [
+              6,
+              1
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "b": [
+            [
+              4,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              5,
+              0
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0
+          ],
+          "pointers": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              6,
+              2
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          "b": [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              1
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0
+          ],
+          "pointers": [
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              5,
+              2
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          "b": [
+            [
+              3,
+              2
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "active": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "pointers": [
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        }
+      ],
+      "soft": {
+        "soft_coverage_mse": 0.6337244198377164,
+        "soft_count_mse": 0.4045584358290036,
+        "active_entropy": 0.16702953747463378,
+        "hard_count_absolute_error": 1.1796875
+      }
+    },
+    "four_left-2x4": {
+      "graphs": 256,
+      "complete_graphs": 66,
+      "valid_unique": 506,
+      "duplicates": 159,
+      "missing": 514,
+      "obligations": 1020,
+      "count_error_graphs": 131,
+      "active_outputs": 828,
+      "illegal_bindings": 43,
+      "field_errors": 120,
+      "address_errors": 0,
+      "cross_row_valid": 506,
+      "by_cardinality": {
+        "0": {
+          "graphs": 86,
+          "complete": 66
+        },
+        "4": {
+          "graphs": 85,
+          "complete": 0
+        },
+        "8": {
+          "graphs": 85,
+          "complete": 0
+        }
+      },
+      "examples": [
+        {
+          "a": [
+            [
+              6,
+              1
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "b": [
+            [
+              4,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              5,
+              0
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0
+          ],
+          "pointers": [
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              0,
+              3
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              6,
+              2
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          "b": [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              1
+            ]
+          ],
+          "active": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0
+          ],
+          "pointers": [
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              3
+            ]
+          ]
+        },
+        {
+          "a": [
+            [
+              5,
+              2
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          "b": [
+            [
+              3,
+              2
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "active": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "pointers": [
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        }
+      ],
+      "soft": {
+        "soft_coverage_mse": 0.5044775563918031,
+        "soft_count_mse": 0.3989304200873356,
+        "active_entropy": 0.16436374280907218,
+        "hard_count_absolute_error": 1.140625
+      }
+    }
+  },
+  "model_sha256": "c7700be4d1af7bfe2b141752a4e8ed256138a192cf41385b6807e10096ccdef9",
+  "status": "difference",
+  "cpu_inference_corrections": 0,
+  "scope": "unchanged unanchored set decoder, coverage supervision only; not full egraph inference"
+}

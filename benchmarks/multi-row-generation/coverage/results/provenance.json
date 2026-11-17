@@ -1,0 +1,334 @@
+{
+  "parent_commit": "c13fd51b",
+  "artifact_root": "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118",
+  "artifacts": [
+    {
+      "path": "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-independent-1703/result.json",
+      "sha256": "be954d807f2b5fe86ac21b4088c08e51ec4722e372a1f10d8792bb0c266912d0",
+      "source_hashes_verified": true
+    },
+    {
+      "path": "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-independent-1709/result.json",
+      "sha256": "344931c769ff92e053c187a5711c42ffe527b54327c63ebba51560e27463a20d",
+      "source_hashes_verified": true
+    },
+    {
+      "path": "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-joint-1703/result.json",
+      "sha256": "d6d7c43e0ff38cb7ec0b3c80021885bdedb4af0b770c91f0e5aed37f1653fc8f",
+      "source_hashes_verified": true
+    },
+    {
+      "path": "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-joint-1709/result.json",
+      "sha256": "984d43fc695bc908f81f7a3a882c30dbbe7948e44c08cb75321881e556c24a1d",
+      "source_hashes_verified": true
+    },
+    {
+      "path": "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-independent-1703/result.json",
+      "sha256": "9af0711b8fa91721badd80d4865257434cb07f0c5c60fe0a533e57f3881772d9",
+      "source_hashes_verified": true
+    },
+    {
+      "path": "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-independent-1709/result.json",
+      "sha256": "992fe333f492f2fd834964d24fb5415854f4372c6b4fabbbaf72ae122cfed580",
+      "source_hashes_verified": true
+    },
+    {
+      "path": "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-joint-1703/result.json",
+      "sha256": "146db9fd07f6a870b67c5f44718b5163a1248bcd29fdd3e13cac7e68e852aab9",
+      "source_hashes_verified": true
+    },
+    {
+      "path": "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-joint-1709/result.json",
+      "sha256": "93d599ee67ca8031a7cc1f5516a31132230abcfa8cf376b9b84712294b1db433",
+      "source_hashes_verified": true
+    }
+  ],
+  "jobs": [
+    {
+      "id": "943",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/test_coverage.py"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-943.log"
+    },
+    {
+      "id": "944",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/run.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-joint-1703",
+        "--mode",
+        "joint",
+        "--seed",
+        "1703",
+        "--treatment",
+        "control"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-944.log"
+    },
+    {
+      "id": "945",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/run.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-joint-1703",
+        "--mode",
+        "joint",
+        "--seed",
+        "1703",
+        "--treatment",
+        "coverage"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-945.log"
+    },
+    {
+      "id": "946",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/run.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-joint-1709",
+        "--mode",
+        "joint",
+        "--seed",
+        "1709",
+        "--treatment",
+        "control"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-946.log"
+    },
+    {
+      "id": "947",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/run.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-joint-1709",
+        "--mode",
+        "joint",
+        "--seed",
+        "1709",
+        "--treatment",
+        "coverage"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-947.log"
+    },
+    {
+      "id": "948",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/run.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-independent-1703",
+        "--mode",
+        "independent",
+        "--seed",
+        "1703",
+        "--treatment",
+        "control"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-948.log"
+    },
+    {
+      "id": "949",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/run.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-independent-1703",
+        "--mode",
+        "independent",
+        "--seed",
+        "1703",
+        "--treatment",
+        "coverage"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-949.log"
+    },
+    {
+      "id": "950",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/run.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-independent-1709",
+        "--mode",
+        "independent",
+        "--seed",
+        "1709",
+        "--treatment",
+        "control"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-950.log"
+    },
+    {
+      "id": "951",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/run.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-independent-1709",
+        "--mode",
+        "independent",
+        "--seed",
+        "1709",
+        "--treatment",
+        "coverage"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-951.log"
+    },
+    {
+      "id": "952",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/benchmark.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/benchmark.json"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-952.log"
+    },
+    {
+      "id": "953",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-joint-1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-953.log"
+    },
+    {
+      "id": "954",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-joint-1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-954.log"
+    },
+    {
+      "id": "955",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-independent-1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-955.log"
+    },
+    {
+      "id": "956",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/control-independent-1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-956.log"
+    },
+    {
+      "id": "957",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-joint-1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-957.log"
+    },
+    {
+      "id": "958",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-joint-1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-958.log"
+    },
+    {
+      "id": "959",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-independent-1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-959.log"
+    },
+    {
+      "id": "960",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118/coverage-independent-1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-960.log"
+    },
+    {
+      "id": "961",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/coverage/check_controls.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-coverage-20261118"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-961.log"
+    }
+  ],
+  "network_source_unchanged_from_parent": true,
+  "network_source_sha256": "f9e958726b27c26432e85a20752d8b4f2fd75d575250d8000702f9110edd1303",
+  "runtime": "Python 3.14.3; MLX 0.32.4 on Metal; NumPy 2.5.4",
+  "hardware": "Apple M3 Max",
+  "notes": [
+    "All training/evaluation exit-1 results are strict semantic acceptance failures, not discarded seeds.",
+    "Eight NumPy-only audits bind actual decoded tokens to saved raw logits and reproduce all report fields.",
+    "Control weights and 16 old-panel outputs match the original run exactly; both treatments share fresh input hashes.",
+    "Results measure a standalone one-stage neural task; no full engine or neural speedup claim."
+  ]
+}
