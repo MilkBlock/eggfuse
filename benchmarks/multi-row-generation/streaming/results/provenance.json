@@ -1,0 +1,213 @@
+{
+  "parent_commit": "5e86d9ac5c2e56a8426a619c06333bc2cac7b065",
+  "artifact_root": "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118",
+  "records": [
+    {
+      "artifact": "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/blind-1703/result.json",
+      "sha256": "02c3fc2b746106def2bf19294cd24b7e9c31528fe211a846c01d9d9d914be8ae",
+      "source_hashes_verified": true
+    },
+    {
+      "artifact": "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/blind-1709/result.json",
+      "sha256": "b3cb49e52e2027ad2637092f2eaa9b0e8058e512853faec52d2803b8fa81a978",
+      "source_hashes_verified": true
+    },
+    {
+      "artifact": "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/feedback-1703/result.json",
+      "sha256": "03007c5fe0d8cd625f06ad272d0a216cc86b92612d8005dadcad1a42662c9016",
+      "source_hashes_verified": true
+    },
+    {
+      "artifact": "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/feedback-1709/result.json",
+      "sha256": "df59062be29b08017e56c86d6e01e1f86da444cacd90b7f406dcf9c4d92b5e38",
+      "source_hashes_verified": true
+    }
+  ],
+  "jobs": [
+    {
+      "id": "962",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/test_stream.py"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-962.log"
+    },
+    {
+      "id": "963",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/test_stream.py"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-963.log"
+    },
+    {
+      "id": "964",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/train.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/feedback-1703",
+        "--arm",
+        "feedback",
+        "--seed",
+        "1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-964.log"
+    },
+    {
+      "id": "965",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/train.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/blind-1703",
+        "--arm",
+        "blind",
+        "--seed",
+        "1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-965.log"
+    },
+    {
+      "id": "966",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/train.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/feedback-1709",
+        "--arm",
+        "feedback",
+        "--seed",
+        "1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-966.log"
+    },
+    {
+      "id": "967",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/train.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/blind-1709",
+        "--arm",
+        "blind",
+        "--seed",
+        "1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-967.log"
+    },
+    {
+      "id": "968",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/benchmark_stream.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/benchmark.json"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-968.log"
+    },
+    {
+      "id": "969",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/feedback-1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-969.log"
+    },
+    {
+      "id": "970",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/feedback-1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-970.log"
+    },
+    {
+      "id": "971",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/blind-1703"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-971.log"
+    },
+    {
+      "id": "972",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/audit_saved.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/blind-1709"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-972.log"
+    },
+    {
+      "id": "973",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/check_history.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-973.log"
+    },
+    {
+      "id": "974",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/streaming/projection_ceiling.py",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118",
+        "/Volumes/EggFuseWorkspace/experiments/multi-row-streaming-20261118/projection-ceiling.json"
+      ],
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-974.log"
+    }
+  ],
+  "runtime": "Python 3.14.3; MLX 0.32.4 on Metal; NumPy 2.5.4",
+  "hardware": "Apple M3 Max",
+  "text_storage": "JSON reports compacted without changing parsed values; artifact SHA-256 entries above refer to original pretty-printed files.",
+  "validation": [
+    "paired initial weights byte-identical",
+    "shared fresh input hashes",
+    "24 intervention panels have bit-identical first round and changed later generated tokens",
+    "four independent CPU audits bind tokens to actual logits and reproduce all metrics"
+  ],
+  "scope": "standalone one-stage neural row-causal generation; all four models fail strict acceptance",
+  "incidents": {
+    "962": "test harness tried indexing MLX array using NumPy index; corrected before fitting, three tests pass in 963"
+  }
+}

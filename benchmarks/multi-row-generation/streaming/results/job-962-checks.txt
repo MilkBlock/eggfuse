@@ -1,0 +1,14 @@
+..E
+======================================================================
+ERROR: test_history_is_generated_and_causal (__main__.Streaming.test_history_is_generated_and_causal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/EggFuseWorkspace/worktrees/eggfuse/benchmarks/multi-row-generation/streaming/test_stream.py", line 23, in test_history_is_generated_and_causal
+    self.assertGreater(float(mx.max(mx.abs(full['latent'][:,later]-erased['latent'][:,later]))),1e-4)
+                                           ~~~~~~~~~~~~~~^^^^^^^^^
+ValueError: Cannot index mlx array using the given type yet
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.378s
+
+FAILED (errors=1)
