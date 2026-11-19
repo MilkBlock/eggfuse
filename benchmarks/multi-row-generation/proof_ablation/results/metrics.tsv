@@ -1,0 +1,17 @@
+panel	seed	source	verifier	accepted	active_proposals	complete	duplicates	graphs	missing	obligations	packet_bytes	proof_bytes	steps	transmitted	unique_writes
+heldout	1703	neural	primitive	311	857	83	12	384	481	780	24432	3864	335	857	299
+heldout	1703	neural	macro	311	857	83	12	384	481	780	23844	3276	311	857	299
+heldout	1703	all_requests	primitive	780	1536	384	0	384	0	780	41032	4168	1042	1536	780
+heldout	1703	all_requests	macro	780	1536	384	0	384	0	780	39984	3120	780	1536	780
+heldout	1709	neural	primitive	285	821	73	10	384	505	780	23676	3972	345	821	275
+heldout	1709	neural	macro	285	821	73	10	384	505	780	22800	3096	285	821	275
+heldout	1709	all_requests	primitive	780	1536	384	0	384	0	780	41032	4168	1042	1536	780
+heldout	1709	all_requests	macro	780	1536	384	0	384	0	780	39984	3120	780	1536	780
+secondary	1703	neural	primitive	301	756	87	6	384	461	756	21820	3676	334	756	295
+secondary	1703	neural	macro	301	756	87	6	384	461	756	21136	2992	301	756	295
+secondary	1703	all_requests	primitive	756	1536	384	0	384	0	756	41152	4288	1072	1536	756
+secondary	1703	all_requests	macro	756	1536	384	0	384	0	756	39888	3024	756	1536	756
+secondary	1709	neural	primitive	344	738	106	8	384	420	756	21640	3928	469	738	336
+secondary	1709	neural	macro	344	738	106	8	384	420	756	20612	2900	344	738	336
+secondary	1709	all_requests	primitive	756	1536	384	0	384	0	756	41152	4288	1072	1536	756
+secondary	1709	all_requests	macro	756	1536	384	0	384	0	756	39888	3024	756	1536	756
