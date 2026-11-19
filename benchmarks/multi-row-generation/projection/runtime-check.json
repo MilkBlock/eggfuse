@@ -1,0 +1,81 @@
+{
+  "source": "/Volumes/EggFuseWorkspace/experiments/multi-row-projection-compiler-20261118.json",
+  "scope": "earlier one-rule compiler fixture",
+  "pair_rows": {
+    "pair": [
+      [
+        0,
+        0,
+        3,
+        1,
+        2
+      ],
+      [
+        0,
+        1,
+        3,
+        1,
+        0
+      ],
+      [
+        1,
+        0,
+        3,
+        2,
+        2
+      ],
+      [
+        1,
+        1,
+        3,
+        2,
+        0
+      ],
+      [
+        2,
+        2,
+        5,
+        0,
+        1
+      ]
+    ],
+    "swap": [
+      [
+        0,
+        0,
+        3,
+        2,
+        1
+      ],
+      [
+        1,
+        0,
+        3,
+        0,
+        1
+      ],
+      [
+        0,
+        1,
+        3,
+        2,
+        2
+      ],
+      [
+        1,
+        1,
+        3,
+        0,
+        2
+      ],
+      [
+        2,
+        2,
+        5,
+        1,
+        0
+      ]
+    ]
+  },
+  "swapped_columns_verified": true
+}
