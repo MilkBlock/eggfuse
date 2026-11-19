@@ -1,0 +1,879 @@
+{
+  "artifact_root": "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+  "fits": {
+    "counterfactual-1703": {
+      "arm": "counterfactual",
+      "seed": 1703,
+      "parent_sha256": "899191f5ea675265a274a14674b78ce5a40a9b1777204fedb96e367cc3dc5090",
+      "model_sha256": "bc547566bbbb8eb363b204ba66069a59e0af0bff8a83e0f459728fa7d378c837",
+      "steps": 1024,
+      "batch": 32,
+      "graph_rollouts": 32768,
+      "sampled_joint_steps": 262144,
+      "actor_lr": 0.0003,
+      "critic_lr": 0.001,
+      "critic_init": "4da12b6987d8b3590f50e6adbe8824c7b0518d7cd8144444dba2c7496173c3c7",
+      "critic_parameters": 79393,
+      "data_order": "6b3da190fd8917f9645f60447572f09e5156a6509029be0128096e34beb27e01",
+      "history": [
+        {
+          "step": 1,
+          "loss": 0.2620340883731842,
+          "seconds": 0.2500888330396265,
+          "reward": 0.302734375,
+          "critic_mse": 0.26780200004577637,
+          "entropy": 0.8400877714157104,
+          "advantage_std": 0.397419810295105,
+          "team_minus_cf_abs": 0.06432965397834778,
+          "C1": 0.8541666865348816,
+          "C2": 0.6015625,
+          "P": 0.6145833730697632,
+          "E2": 0.09375,
+          "W1": 0.33984375,
+          "W2": 0.21484375
+        },
+        {
+          "step": 257,
+          "loss": -0.07597959786653519,
+          "seconds": 8.031334166997112,
+          "reward": 0.3782551884651184,
+          "critic_mse": 0.13586550951004028,
+          "entropy": 0.9383922815322876,
+          "advantage_std": 0.36427319049835205,
+          "team_minus_cf_abs": 0.01870647445321083,
+          "C1": 0.9583333134651184,
+          "C2": 0.6458333134651184,
+          "P": 0.6458333134651184,
+          "E2": 0.09375,
+          "W1": 0.25,
+          "W2": 0.2265625
+        },
+        {
+          "step": 513,
+          "loss": -0.002924796426668763,
+          "seconds": 15.831090625026263,
+          "reward": 0.3583984375,
+          "critic_mse": 0.07829064130783081,
+          "entropy": 0.9686363935470581,
+          "advantage_std": 0.2791389226913452,
+          "team_minus_cf_abs": 0.01723691076040268,
+          "C1": 0.9322916865348816,
+          "C2": 0.6666666865348816,
+          "P": 0.671875,
+          "E2": 0.03125,
+          "W1": 0.27734375,
+          "W2": 0.2578125
+        },
+        {
+          "step": 769,
+          "loss": -0.042762890458106995,
+          "seconds": 23.579070333042182,
+          "reward": 0.3479817509651184,
+          "critic_mse": 0.10601905733346939,
+          "entropy": 0.9296348094940186,
+          "advantage_std": 0.32349032163619995,
+          "team_minus_cf_abs": 0.01841401867568493,
+          "C1": 0.9270833134651184,
+          "C2": 0.59375,
+          "P": 0.609375,
+          "E2": 0.125,
+          "W1": 0.26953125,
+          "W2": 0.1875
+        },
+        {
+          "step": 1024,
+          "loss": -0.023067278787493706,
+          "seconds": 31.322007333044894,
+          "reward": 0.3772786557674408,
+          "critic_mse": 0.12110038846731186,
+          "entropy": 0.9759855270385742,
+          "advantage_std": 0.34927451610565186,
+          "team_minus_cf_abs": 0.022393979132175446,
+          "C1": 0.8541666269302368,
+          "C2": 0.6536458730697632,
+          "P": 0.671875,
+          "E2": 0.1875,
+          "W1": 0.3125,
+          "W2": 0.19921875
+        }
+      ],
+      "seconds": 31.370046832947992,
+      "test_manifest_sha256": "9b34889dafa3ba8fa6160165104dd01c0139e964621866d11de00dbd654735b3"
+    },
+    "counterfactual-1709": {
+      "arm": "counterfactual",
+      "seed": 1709,
+      "parent_sha256": "883d2540647bbd6034a27aabbd5b74d8f6ed54c6f8b76bc70bbf5391d74f04c2",
+      "model_sha256": "2da8c5ebfadd85cfbeb1733a9a49acd0aa652edd0c04741c41631b3139832289",
+      "steps": 1024,
+      "batch": 32,
+      "graph_rollouts": 32768,
+      "sampled_joint_steps": 262144,
+      "actor_lr": 0.0003,
+      "critic_lr": 0.001,
+      "critic_init": "95aaf242c5a83a4b1c92f0227b9f07d0bfecbd844f8989789c0d66b2caf51157",
+      "critic_parameters": 79393,
+      "data_order": "de123727f4492c7ebadc578a86388c5ba7a61c46166943e681b855bdb4189a48",
+      "history": [
+        {
+          "step": 1,
+          "loss": 0.10259397327899933,
+          "seconds": 0.31793333298992366,
+          "reward": 0.2317708432674408,
+          "critic_mse": 0.19427865743637085,
+          "entropy": 0.9333916902542114,
+          "advantage_std": 0.40625786781311035,
+          "team_minus_cf_abs": 0.0621396005153656,
+          "C1": 0.7760416865348816,
+          "C2": 0.546875,
+          "P": 0.5729166269302368,
+          "E2": 0.03125,
+          "W1": 0.265625,
+          "W2": 0.28125
+        },
+        {
+          "step": 257,
+          "loss": -0.07251396030187607,
+          "seconds": 8.974809166043997,
+          "reward": 0.2985025942325592,
+          "critic_mse": 0.07293468713760376,
+          "entropy": 0.8718996047973633,
+          "advantage_std": 0.2632371783256531,
+          "team_minus_cf_abs": 0.018210647627711296,
+          "C1": 0.8958333730697632,
+          "C2": 0.6171875,
+          "P": 0.6380208730697632,
+          "E2": 0.0,
+          "W1": 0.171875,
+          "W2": 0.40234375
+        },
+        {
+          "step": 513,
+          "loss": -0.06677519530057907,
+          "seconds": 17.149572958005592,
+          "reward": 0.3330078125,
+          "critic_mse": 0.07103095948696136,
+          "entropy": 0.9058176279067993,
+          "advantage_std": 0.2600202262401581,
+          "team_minus_cf_abs": 0.014218723401427269,
+          "C1": 0.921875,
+          "C2": 0.7604166269302368,
+          "P": 0.7916666865348816,
+          "E2": 0.0,
+          "W1": 0.18359375,
+          "W2": 0.71875
+        },
+        {
+          "step": 769,
+          "loss": -0.0030795407947152853,
+          "seconds": 25.78703933302313,
+          "reward": 0.4641926884651184,
+          "critic_mse": 0.05771944671869278,
+          "entropy": 0.824265718460083,
+          "advantage_std": 0.231519877910614,
+          "team_minus_cf_abs": 0.01273924671113491,
+          "C1": 0.9375,
+          "C2": 0.8255208730697632,
+          "P": 0.8541666865348816,
+          "E2": 0.0,
+          "W1": 0.1640625,
+          "W2": 0.421875
+        },
+        {
+          "step": 1024,
+          "loss": -0.03945063799619675,
+          "seconds": 36.49617841595318,
+          "reward": 0.3658854067325592,
+          "critic_mse": 0.07198427617549896,
+          "entropy": 0.8538824319839478,
+          "advantage_std": 0.26833635568618774,
+          "team_minus_cf_abs": 0.011986867524683475,
+          "C1": 0.90625,
+          "C2": 0.7083333134651184,
+          "P": 0.734375,
+          "E2": 0.0,
+          "W1": 0.1875,
+          "W2": 0.40625
+        }
+      ],
+      "seconds": 36.51031795796007,
+      "test_manifest_sha256": "9b34889dafa3ba8fa6160165104dd01c0139e964621866d11de00dbd654735b3"
+    },
+    "supervised-1703": {
+      "arm": "supervised",
+      "seed": 1703,
+      "parent_sha256": "899191f5ea675265a274a14674b78ce5a40a9b1777204fedb96e367cc3dc5090",
+      "model_sha256": "17dcad1e2fb182269ab8905f94f5de0c9ee6b83dbb5927b99e82f2c630a5e480",
+      "steps": 1024,
+      "batch": 32,
+      "graph_rollouts": 32768,
+      "sampled_joint_steps": 0,
+      "actor_lr": 0.0003,
+      "critic_lr": null,
+      "critic_init": null,
+      "critic_parameters": 0,
+      "data_order": "6b3da190fd8917f9645f60447572f09e5156a6509029be0128096e34beb27e01",
+      "history": [
+        {
+          "step": 1,
+          "loss": 3.837449073791504,
+          "seconds": 0.5664366250857711
+        },
+        {
+          "step": 257,
+          "loss": 1.3920520544052124,
+          "seconds": 7.4566120830131695
+        },
+        {
+          "step": 513,
+          "loss": 1.4688546657562256,
+          "seconds": 14.123468125006184
+        },
+        {
+          "step": 769,
+          "loss": 1.4315394163131714,
+          "seconds": 20.779064666014165
+        },
+        {
+          "step": 1024,
+          "loss": 1.3462424278259277,
+          "seconds": 27.372757625067607
+        }
+      ],
+      "seconds": 27.38775425008498,
+      "test_manifest_sha256": "9b34889dafa3ba8fa6160165104dd01c0139e964621866d11de00dbd654735b3"
+    },
+    "supervised-1709": {
+      "arm": "supervised",
+      "seed": 1709,
+      "parent_sha256": "883d2540647bbd6034a27aabbd5b74d8f6ed54c6f8b76bc70bbf5391d74f04c2",
+      "model_sha256": "cbe186c785063947021cc85c5836734adf9f1a7d6b5b6641736468a56ddf2487",
+      "steps": 1024,
+      "batch": 32,
+      "graph_rollouts": 32768,
+      "sampled_joint_steps": 0,
+      "actor_lr": 0.0003,
+      "critic_lr": null,
+      "critic_init": null,
+      "critic_parameters": 0,
+      "data_order": "de123727f4492c7ebadc578a86388c5ba7a61c46166943e681b855bdb4189a48",
+      "history": [
+        {
+          "step": 1,
+          "loss": 4.253328800201416,
+          "seconds": 0.22169262496754527
+        },
+        {
+          "step": 257,
+          "loss": 1.705492615699768,
+          "seconds": 7.095333750010468
+        },
+        {
+          "step": 513,
+          "loss": 1.501819372177124,
+          "seconds": 13.814397000009194
+        },
+        {
+          "step": 769,
+          "loss": 1.3979097604751587,
+          "seconds": 20.505969124962576
+        },
+        {
+          "step": 1024,
+          "loss": 1.3325130939483643,
+          "seconds": 27.12549829191994
+        }
+      ],
+      "seconds": 27.140155375003815,
+      "test_manifest_sha256": "9b34889dafa3ba8fa6160165104dd01c0139e964621866d11de00dbd654735b3"
+    },
+    "supervised1-1703": {
+      "arm": "supervised1",
+      "seed": 1703,
+      "parent_sha256": "899191f5ea675265a274a14674b78ce5a40a9b1777204fedb96e367cc3dc5090",
+      "model_sha256": "a2a7b2e03d9d404d55d20f2072041e23106e9cfe244ffe2fee33fcaff1d13f3d",
+      "steps": 1024,
+      "batch": 32,
+      "graph_rollouts": 32768,
+      "sampled_joint_steps": 0,
+      "actor_lr": 0.0003,
+      "critic_lr": null,
+      "critic_init": null,
+      "critic_parameters": 0,
+      "data_order": "6b3da190fd8917f9645f60447572f09e5156a6509029be0128096e34beb27e01",
+      "history": [
+        {
+          "step": 1,
+          "loss": 1.374906301498413,
+          "seconds": 0.26886508299503475
+        },
+        {
+          "step": 257,
+          "loss": 1.339798092842102,
+          "seconds": 10.66865291702561
+        },
+        {
+          "step": 513,
+          "loss": 1.4177308082580566,
+          "seconds": 20.997686541988514
+        },
+        {
+          "step": 769,
+          "loss": 1.390958547592163,
+          "seconds": 31.160994250094518
+        },
+        {
+          "step": 1024,
+          "loss": 1.3200483322143555,
+          "seconds": 41.44546279206406
+        }
+      ],
+      "seconds": 41.46093270799611,
+      "test_manifest_sha256": "9b34889dafa3ba8fa6160165104dd01c0139e964621866d11de00dbd654735b3"
+    },
+    "supervised1-1709": {
+      "arm": "supervised1",
+      "seed": 1709,
+      "parent_sha256": "883d2540647bbd6034a27aabbd5b74d8f6ed54c6f8b76bc70bbf5391d74f04c2",
+      "model_sha256": "b82c7fa2bf7916ca27b90cb39f473f944c23b031b355cffe43b2ea9c5aa104a2",
+      "steps": 1024,
+      "batch": 32,
+      "graph_rollouts": 32768,
+      "sampled_joint_steps": 0,
+      "actor_lr": 0.0003,
+      "critic_lr": null,
+      "critic_init": null,
+      "critic_parameters": 0,
+      "data_order": "de123727f4492c7ebadc578a86388c5ba7a61c46166943e681b855bdb4189a48",
+      "history": [
+        {
+          "step": 1,
+          "loss": 1.4993829727172852,
+          "seconds": 0.2688566669821739
+        },
+        {
+          "step": 257,
+          "loss": 1.6255278587341309,
+          "seconds": 10.307201583054848
+        },
+        {
+          "step": 513,
+          "loss": 1.4180293083190918,
+          "seconds": 20.307965958025306
+        },
+        {
+          "step": 769,
+          "loss": 1.3438770771026611,
+          "seconds": 32.62987029203214
+        },
+        {
+          "step": 1024,
+          "loss": 1.2984473705291748,
+          "seconds": 43.810985082993284
+        }
+      ],
+      "seconds": 43.82828666700516,
+      "test_manifest_sha256": "9b34889dafa3ba8fa6160165104dd01c0139e964621866d11de00dbd654735b3"
+    },
+    "team-1703": {
+      "arm": "team",
+      "seed": 1703,
+      "parent_sha256": "899191f5ea675265a274a14674b78ce5a40a9b1777204fedb96e367cc3dc5090",
+      "model_sha256": "3f8baf2fbacf80bb63240847e0e2fb481cc4b50631a6fb2dc536dbb38ee790d7",
+      "steps": 1024,
+      "batch": 32,
+      "graph_rollouts": 32768,
+      "sampled_joint_steps": 262144,
+      "actor_lr": 0.0003,
+      "critic_lr": 0.001,
+      "critic_init": "4da12b6987d8b3590f50e6adbe8824c7b0518d7cd8144444dba2c7496173c3c7",
+      "critic_parameters": 79393,
+      "data_order": "6b3da190fd8917f9645f60447572f09e5156a6509029be0128096e34beb27e01",
+      "history": [
+        {
+          "step": 1,
+          "loss": 0.2560265064239502,
+          "seconds": 0.5223089581122622,
+          "reward": 0.302734375,
+          "critic_mse": 0.26780200004577637,
+          "entropy": 0.8400877714157104,
+          "advantage_std": 0.3808830976486206,
+          "team_minus_cf_abs": 0.06432965397834778,
+          "C1": 0.8541666865348816,
+          "C2": 0.6015625,
+          "P": 0.6145833730697632,
+          "E2": 0.09375,
+          "W1": 0.33984375,
+          "W2": 0.21484375
+        },
+        {
+          "step": 257,
+          "loss": -0.037139635533094406,
+          "seconds": 8.453356291051023,
+          "reward": 0.2955729365348816,
+          "critic_mse": 0.13899680972099304,
+          "entropy": 0.9351248741149902,
+          "advantage_std": 0.3706497848033905,
+          "team_minus_cf_abs": 0.02040441706776619,
+          "C1": 0.921875,
+          "C2": 0.5520833730697632,
+          "P": 0.5625,
+          "E2": 0.0625,
+          "W1": 0.27734375,
+          "W2": 0.19140625
+        },
+        {
+          "step": 513,
+          "loss": 0.012129133567214012,
+          "seconds": 16.232463041087613,
+          "reward": 0.337890625,
+          "critic_mse": 0.1079404205083847,
+          "entropy": 0.9600546360015869,
+          "advantage_std": 0.32235175371170044,
+          "team_minus_cf_abs": 0.01862509176135063,
+          "C1": 0.90625,
+          "C2": 0.6145833730697632,
+          "P": 0.6302083730697632,
+          "E2": 0.09375,
+          "W1": 0.29296875,
+          "W2": 0.21484375
+        },
+        {
+          "step": 769,
+          "loss": -0.0922577977180481,
+          "seconds": 24.018505915999413,
+          "reward": 0.3395182192325592,
+          "critic_mse": 0.11535919457674026,
+          "entropy": 0.9906449317932129,
+          "advantage_std": 0.332629531621933,
+          "team_minus_cf_abs": 0.020723914727568626,
+          "C1": 0.9166666865348816,
+          "C2": 0.5989583730697632,
+          "P": 0.6067708730697632,
+          "E2": 0.125,
+          "W1": 0.2734375,
+          "W2": 0.21484375
+        },
+        {
+          "step": 1024,
+          "loss": 0.00618826923891902,
+          "seconds": 31.754099625046365,
+          "reward": 0.3961588442325592,
+          "critic_mse": 0.1242520809173584,
+          "entropy": 1.0055441856384277,
+          "advantage_std": 0.34507396817207336,
+          "team_minus_cf_abs": 0.019708091393113136,
+          "C1": 0.859375,
+          "C2": 0.671875,
+          "P": 0.6979166865348816,
+          "E2": 0.1875,
+          "W1": 0.3125,
+          "W2": 0.19140625
+        }
+      ],
+      "seconds": 31.770500125014223,
+      "test_manifest_sha256": "9b34889dafa3ba8fa6160165104dd01c0139e964621866d11de00dbd654735b3"
+    },
+    "team-1709": {
+      "arm": "team",
+      "seed": 1709,
+      "parent_sha256": "883d2540647bbd6034a27aabbd5b74d8f6ed54c6f8b76bc70bbf5391d74f04c2",
+      "model_sha256": "3cbbd8d3e806388c57b065e55e598f34284e335bd19d7e402c9d4b7febaeac01",
+      "steps": 1024,
+      "batch": 32,
+      "graph_rollouts": 32768,
+      "sampled_joint_steps": 262144,
+      "actor_lr": 0.0003,
+      "critic_lr": 0.001,
+      "critic_init": "95aaf242c5a83a4b1c92f0227b9f07d0bfecbd844f8989789c0d66b2caf51157",
+      "critic_parameters": 79393,
+      "data_order": "de123727f4492c7ebadc578a86388c5ba7a61c46166943e681b855bdb4189a48",
+      "history": [
+        {
+          "step": 1,
+          "loss": 0.12133512645959854,
+          "seconds": 0.3381142090074718,
+          "reward": 0.2317708432674408,
+          "critic_mse": 0.19427865743637085,
+          "entropy": 0.9333916902542114,
+          "advantage_std": 0.39249467849731445,
+          "team_minus_cf_abs": 0.0621396005153656,
+          "C1": 0.7760416865348816,
+          "C2": 0.546875,
+          "P": 0.5729166269302368,
+          "E2": 0.03125,
+          "W1": 0.265625,
+          "W2": 0.28125
+        },
+        {
+          "step": 257,
+          "loss": -0.010129252448678017,
+          "seconds": 9.838385459035635,
+          "reward": 0.3707682192325592,
+          "critic_mse": 0.0774688869714737,
+          "entropy": 0.8338279128074646,
+          "advantage_std": 0.27527546882629395,
+          "team_minus_cf_abs": 0.015867315232753754,
+          "C1": 0.9010416269302368,
+          "C2": 0.6536458134651184,
+          "P": 0.6927083730697632,
+          "E2": 0.03125,
+          "W1": 0.16796875,
+          "W2": 0.28125
+        },
+        {
+          "step": 513,
+          "loss": -0.04743022099137306,
+          "seconds": 19.08868199994322,
+          "reward": 0.3834635317325592,
+          "critic_mse": 0.13490083813667297,
+          "entropy": 0.8426108360290527,
+          "advantage_std": 0.3649505376815796,
+          "team_minus_cf_abs": 0.01658353954553604,
+          "C1": 0.9010416865348816,
+          "C2": 0.6458333134651184,
+          "P": 0.6770833730697632,
+          "E2": 0.15625,
+          "W1": 0.1875,
+          "W2": 0.3046875
+        },
+        {
+          "step": 769,
+          "loss": -0.014629794284701347,
+          "seconds": 28.71537512494251,
+          "reward": 0.4117838442325592,
+          "critic_mse": 0.04963815212249756,
+          "entropy": 0.823085606098175,
+          "advantage_std": 0.21897682547569275,
+          "team_minus_cf_abs": 0.013930734246969223,
+          "C1": 0.9166666269302368,
+          "C2": 0.796875,
+          "P": 0.828125,
+          "E2": 0.0,
+          "W1": 0.18359375,
+          "W2": 0.5078125
+        },
+        {
+          "step": 1024,
+          "loss": 0.0010594765190035105,
+          "seconds": 37.8965530419955,
+          "reward": 0.4124348759651184,
+          "critic_mse": 0.07372501492500305,
+          "entropy": 0.7503317594528198,
+          "advantage_std": 0.2704930901527405,
+          "team_minus_cf_abs": 0.01320873387157917,
+          "C1": 0.9375,
+          "C2": 0.7291666865348816,
+          "P": 0.75,
+          "E2": 0.0625,
+          "W1": 0.16015625,
+          "W2": 0.3984375
+        }
+      ],
+      "seconds": 37.91998754197266,
+      "test_manifest_sha256": "9b34889dafa3ba8fa6160165104dd01c0139e964621866d11de00dbd654735b3"
+    }
+  },
+  "device": "Apple M3 Max",
+  "notes": [
+    "Supplementary evaluation job 1131 stopped at import before model loading; job 1132 ran on the same checkpoints.",
+    "Training in all primary arms finished; actor checkpoint hashes and initializations checked before final evaluation.",
+    "Training-source changes after primary fitting added the supervised1 secondary arm, preserving the primary update formula."
+  ],
+  "jobs": [
+    {
+      "id": "1113",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/evaluate.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "--freeze-only"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1114",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "/Volumes/EggFuseWorkspace/tmp/credit-evaluator-smoke.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1115",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/test_reward.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1116",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "CREDIT_TEST_DEVICE=cpu",
+        "CREDIT_TEST_PARENT=/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119/1703/final.pt",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/test_actor.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1117",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "CREDIT_TEST_DEVICE=mps",
+        "CREDIT_TEST_PARENT=/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119/1703/final.pt",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/test_actor.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1118",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "-c",
+        "\nimport sys,time,json,os\nfrom pathlib import Path\nsys.path.insert(0,\"benchmarks/multi-row-generation/credit_ablation\")\nimport torch\nfrom actor import sample_rollout,CentralCritic\nfrom width_ablation.model import FIG20,INPUTS,WidthSystem\nfrom eclass_ablation.data import dataset\nfrom encoder import EClassSchema\ntorch.manual_seed(97);dev=torch.device(\"mps\");templates=json.loads((FIG20/\"corpus/manifest.json\").read_text())[\"templates\"];train=[t for t in templates if t[\"split\"]==\"train\"];s=EClassSchema(train);t=train[0];m=WidthSystem(s,1703);m.load_state_dict(torch.load(\"/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119/1703/final.pt\",map_location=\"cpu\",weights_only=True));m.to(dev);m.eval();c=CentralCritic(32).to(dev)\nwith torch.inference_mode():table=m.encoder.encode_bank(s.bank(t,\"pairwise\",dev)).clone()\n# Grad-tracked actor can consume detached frozen encoder values.\ntable=table.clone();x=dataset(\"train\",t,32);inputs=tuple(torch.as_tensor(x[k],device=dev,dtype=torch.int32) for k in INPUTS);m.train();o=torch.optim.Adam(m.parameters(),lr=.00001);oc=torch.optim.Adam(c.parameters(),lr=.0001);times=[]\nfor i in range(8):\n start=time.perf_counter();st,tok,rel,rec=sample_rollout(m,inputs,table);q,team,cf=c(rec);r=torch.zeros_like(q);lp=torch.stack([z.log_prob for z in rec],1);ent=torch.stack([z.entropy for z in rec],1);loss=-(lp*(r[...,None]-cf)+.01*ent).mean();o.zero_grad();oc.zero_grad();loss.backward();q.square().mean().backward();o.step();oc.step();torch.mps.synchronize();times.append(time.perf_counter()-start)\nprint(json.dumps(dict(batch=32,actor_steps=8,critic_parameters=sum(p.numel() for p in c.parameters()),single_row_actions=[z.law.shape[-3]*z.law.shape[-2]*z.law.shape[-1] for z in rec],hot_step_ms=[round(t*1000,2) for t in times[1:]],scope=\"actor plus critic synthetic-return training step; excludes true reward and template encoder\")))\n"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1119",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/test_reward.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1120",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/adapt.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+        "supervised",
+        "1703"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1121",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/adapt.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+        "team",
+        "1703"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1122",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/adapt.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+        "counterfactual",
+        "1703"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1123",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/adapt.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+        "supervised",
+        "1709"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1124",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/adapt.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+        "team",
+        "1709"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1125",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/adapt.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+        "counterfactual",
+        "1709"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1126",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/evaluate.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1127",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/replay.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1128",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/variance.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1129",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/adapt.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+        "supervised1",
+        "1703"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1130",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/adapt.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+        "supervised1",
+        "1709"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1131",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/supervision_width.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119"
+      ],
+      "exit_code": 1
+    },
+    {
+      "id": "1132",
+      "status": "done",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/credit_ablation/supervision_width.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "source_at_assembly": {
+    "actor.py": "97454a439383e92bff2798baee4698886e541118360f28fe5d780ea8cfc81b74",
+    "adapt.py": "3f0f2df29c6be1c81742589055f36ebc01cdeab7922ff1e6172c1c205d507c8f",
+    "credit_inputs.py": "4c641d1cf86e43f7886b9d850a5505e42efb4cb2448c5ed3af819d371f2a44fb",
+    "evaluate.py": "bf71418ae584e46ec70bc8e6312d81e8cf5f4a7883dbafb93cb60b904f431bba",
+    "replay.py": "ee83395a03b31e02d43ed783275a6a878bbbe3f88f5e052614e06152c6c610cf",
+    "report.py": "827b1a8819d9d7d80f31846c75005108f222842483bd83f2d0b02447a83e07dd",
+    "reward.py": "ab87aa4971cec574deff31de74a74cc0b87c8a722c32f22252d9364a19916e8d",
+    "supervision_width.py": "c6afe132d1a45c1746d4d0a760de06f09053452fcd61ac8091af10e3b337094d",
+    "test_actor.py": "a08a197cb06d941e24fdf69e61bf03776b75c03100947f758ecb58b16bc3a389",
+    "test_reward.py": "2a2ec9149eb6f63dfaa1edc7d76c0ae6419e07157f1c7c133679e16f8e29b18e",
+    "variance.py": "552fcae3767c48d2880ecdaff61f74dc2400b9864078bde44b162d58fffdeedd"
+  }
+}
