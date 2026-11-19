@@ -1,0 +1,29 @@
+{
+  "imported_from": "temporary pip installation outside checkout",
+  "compiler_sha256": "b6b4f432a298ca4e02bcbd1276b89c06c1a6d169def61eece1ca6de140415ac7",
+  "generated_plan_sha256": "70298ee93f61b440e9729b4743f52059004a65238d63e9a7f2ce31eb2f1eb44d",
+  "checkpoints": [
+    "learned-1703",
+    "learned-1709",
+    "static-1703",
+    "static-1709",
+    "aux-1703",
+    "aux-1709"
+  ],
+  "masks": [
+    "none",
+    "parents",
+    "parents_latent"
+  ],
+  "graphs_per_case": 2,
+  "stage_logits_bit_exact": true,
+  "discrete_outputs_bit_exact": true,
+  "generated_90_float_pair_tokens_bit_exact": true,
+  "experiment_modules_imported": [],
+  "job_id": 998,
+  "wheel_filename": "eggfuse-0.1.0-py3-none-any.whl",
+  "wheel_sha256": "bef11d820c92bb5e7d74683c3f45f8f7411a88513f6ceab1c84c816a1a6d36da",
+  "comparison": "shape, dtype, raw uint8 view",
+  "test_script_sha256": "287d0b499829a0779050d9bfab483f198c4bdd1d3af886edba948252e1c14dd0",
+  "size_bytes": 10794
+}

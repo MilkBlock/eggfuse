@@ -1,0 +1,124 @@
+{
+  "arm": "aux",
+  "seed": 1703,
+  "steps": 2000,
+  "working_directory": "/Volumes/EggFuseWorkspace/experiments/eggfuse-sdk-example-rof0vq0g",
+  "installed_package": "/Volumes/EggFuseWorkspace/experiments/eggfuse-sdk-example-rof0vq0g/site/eggfuse/__init__.py",
+  "reference_model_sha256": "cef3c75cba919464ebec91dae218b2c58254d97ecfd4f288a18677181d1b7bcc",
+  "example_model_sha256": "21baeba59e1706d7d488feb2766dbb7d3f2dea451401cebf7335b2b0153c3cd5",
+  "training_input_sha256": "3944fbdfe07090cdf3cea4f16849be8fe9a3ee86686143092fcebc99849e8a1e",
+  "reference_losses": [
+    [
+      1,
+      4.121411323547363
+    ],
+    [
+      501,
+      2.033592462539673
+    ],
+    [
+      1001,
+      2.1738481521606445
+    ],
+    [
+      1501,
+      1.8827800750732422
+    ],
+    [
+      2000,
+      2.2792906761169434
+    ]
+  ],
+  "example_losses": [
+    [
+      1,
+      4.121411323547363
+    ],
+    [
+      501,
+      2.37341046333313
+    ],
+    [
+      1001,
+      2.884982109069824
+    ],
+    [
+      1501,
+      1.7877247333526611
+    ],
+    [
+      2000,
+      2.791062593460083
+    ]
+  ],
+  "training_bit_exact": false,
+  "cli_decode_and_pair_token_exact": [
+    "none",
+    "parents",
+    "parents_latent"
+  ],
+  "wheel_sha256": "bef11d820c92bb5e7d74683c3f45f8f7411a88513f6ceab1c84c816a1a6d36da",
+  "wheel_filename": "eggfuse-0.1.0-py3-none-any.whl",
+  "initial_sha256": "95e0346acf9b7db0e99b77043a9213b8af06cb871f8b24ea0f65572c02cc0f4c",
+  "parent_sha256": "8f4ae89291b49ad3e86811a73b724bc4d165baf12beb1ab8217941919b4aa55a",
+  "plan_sha256": "70298ee93f61b440e9729b4743f52059004a65238d63e9a7f2ce31eb2f1eb44d",
+  "legacy_repeat_sha256": "62188a699290e8824d99d65ac08f62c0657f5dc2254eb3d2666df1386ee68f5f",
+  "legacy_repeat_losses": [
+    [
+      1,
+      4.121411323547363
+    ],
+    [
+      501,
+      2.5109434127807617
+    ],
+    [
+      1001,
+      2.8868777751922607
+    ],
+    [
+      1501,
+      1.9291930198669434
+    ],
+    [
+      2000,
+      1.9642270803451538
+    ]
+  ],
+  "training_step_audit": {
+    "initial_logits_and_token_exact": true,
+    "pair_and_result_training_labels_exact": true,
+    "interpreted_first_batch_losses": [
+      4.121411323547363,
+      4.121411323547363,
+      4.121411323547363
+    ],
+    "package_vs_reference": {
+      "tensors": 139,
+      "tensors_with_difference": 1,
+      "max_abs": 1.4901161193847656e-08,
+      "relative_l2": 2.9382418726444805e-09
+    },
+    "original_vs_itself": {
+      "tensors": 139,
+      "tensors_with_difference": 1,
+      "max_abs": 1.4901161193847656e-08,
+      "relative_l2": 2.989799317231393e-09
+    }
+  },
+  "source_hashes": {
+    "check_reproduction.py": "033194552b89dadbb4c98885acf5d93e0182529d22a217b6c7f04c36e1446944",
+    "check_training_step.py": "5b75b30d269673cb68670be299571f7e6414cf4866e998bb04c375199f501f6b",
+    "infer.py": "5fa26da37c940b9f9db6abff6f2a4e2e716c4856418bd1951dd8264b35b0252e",
+    "train.py": "71a6993439283624a88e92e6300b4af30bdbf719cacb4fd77a4b9449c220430a",
+    "training_support.py": "903dde7d1f73aee31d418c8d92fd6cb4f5a3e77cb9cd88c8665c1140623a1555"
+  },
+  "reference_source_sha256": "40b9b10cd7e9af9cbe49e6d744c4c44a90a346c576e50cac69e43a3b5a7fbbaa",
+  "jobs": {
+    "996": "example full 2000-step run",
+    "997": "three inference masks passed; strict final weight equality failed",
+    "999": "unmodified research trainer repeated 2000 steps",
+    "1000": "first-batch data, forward and gradient comparisons"
+  },
+  "scope": "One complete aux/1703 example retrain and inference parity at fixed weights. Accuracy uses the six original experiment checkpoints."
+}
