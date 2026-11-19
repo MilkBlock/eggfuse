@@ -219,8 +219,12 @@ def visibility(a,i):
     a.txt(155,207,["0 early releases","2,868 reused / 204 retired","4,248 reused / 516 retired"][i],14,SUB)
 
 def stopping(a,i):
-    chain(a,["frontier",["fixed round budget","exact worklist","learned stop gate"][i],["return at K","stop if empty","defer or audit"][i]],
-          ["n","v" if i==1 else "n","v"])
+    steps=[["K scheduler ticks","retain pending state","resume or close"],
+           ["mail + work + delta","sealed and drained?","publish observation"],
+           ["work / wait / close","exact closure check","publish or defer"]]
+    chain(a,steps[i],["n","v","s"] if i!=1 else ["s","v","s"])
+    a.txt(155,207,["K=4: 9.19 ticks / graph","5.96 ticks / graph","guarded: 6.99 ticks / graph"][i],14,SUB)
+
 def template_classes(a,mode):
     # p and q have a certified local equality after effect k; r has none.
     xs=(57,155,252)
