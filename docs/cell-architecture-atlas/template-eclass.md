@@ -1,6 +1,8 @@
 # 图 20：把可证明的模板端口等价分区交给 GNN
 
-**状态为待验证。** 当前 01–02 的同一图里，端口进入 equality 节点表示需要检查的条件。Bake 的 Cell e-graph 还能记录 Cell 表达式同类；要给具体端口增加成员边，必须再给出从模板、端口到等价证明及生效位置的映射。
+**已完成图 20 的首轮两族配对。** 四个模型、两个种子的请求判断、完整非空覆盖和延迟已测。[实测报告](../../benchmarks/multi-row-generation/eclass_ablation/README.md) · [逐状态结果](../../benchmarks/multi-row-generation/eclass_ablation/results/metrics.tsv)
+
+ 当前 01–02 的同一图里，端口进入 equality 节点表示需要检查的条件。Bake 的 Cell e-graph 还能记录 Cell 表达式同类；要给具体端口增加成员边，必须再给出从模板、端口到等价证明及生效位置的映射。
 
 ![显式端口、单例类节点、两两已证等价边、端口到类节点](figures/20-template-classes.svg)
 
@@ -19,4 +21,4 @@
 
 **验收。** 单列 union 前、union 后、始终未合并、外部跨实例后来合并四类输入。记录非法提前同类、错误跨实例传播、丢失父来源、正确父已供齐时的错父、非空整图完成、重复和遗漏。CPU 只做事后审计。若当前材料不足，应补带明确 union 证书的真实 Bake 工作负载，另用受控正/负例调试验证器，再把结果分开报告。
 
-**当前材料。** 本轮重建的 sum-bits 与 Raytrace 的 `bake/cell-egraph.json` 各报告 38 个表达式类、51 个 registered compositions 与 0 个 `certified_unions`。这是这两份 Bake 摘要的计数；它不说明 eggcc 所有运行都无 union，也不等价于已经验证了端口别名。图 01–02 实际导出的节点类型与关系见下方源码，尚无类成员边或带阶段的 union 证书。图 20 尚无模型得分。[当前提取器](../../benchmarks/multi-row-generation/port_ablation/corpus/export.py) · [Bake 自身的报告语义](../../src/native_cell_egraph.rs)
+**当前材料。** 本轮重建的 sum-bits 与 Raytrace 的 `bake/cell-egraph.json` 各报告 38 个表达式类、51 个 registered compositions 与 0 个 `certified_unions`。这是这两份 Bake 摘要的计数；它不说明 eggcc 所有运行都无 union，也不等价于已经验证了端口别名。图 01–02 实际导出的节点类型与关系见下方源码，尚无类成员边或带阶段的 union 证书。随后从真实 typed recipe 的显式 union 操作另行提取带前提与阶段的端口证明，经 135 个真实 Cell CPU 程序重放后展开图 20。此前 19 个两叶接口中只有 6 个发布端口直接落在源 union 端点上，均来自 producer 143。其余训练材料的来源在实测报告中单列。[当前提取器](../../benchmarks/multi-row-generation/port_ablation/corpus/export.py) · [Bake 自身的报告语义](../../src/native_cell_egraph.rs)

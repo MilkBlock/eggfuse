@@ -32,6 +32,7 @@ out.extend(["## 现有配对数据", "![冻结检查点的第二 Run 完整非�
                 ('S9','长期架构与源语义契约','../MULTI_ROW_EGRAPH_NEURAL_PLAN.zh.md'),
                 ('S10','单 row 的头共享与 Bake 编码实测','../../benchmarks/multi-row-generation/port_ablation/README.md'),
                 ('S11','模板局部等价类的证据与冻结协议','template-eclass.md'),
+                ('S12','图 20 四臂两种子实测','../../benchmarks/multi-row-generation/eclass_ablation/README.md'),
                 ('M1','Gilmer 等，ICML 2017，消息传递神经网络','https://proceedings.mlr.press/v70/gilmer17a.html'),
                 ('M2','Foerster 等，AAAI 2018，反事实多智能体信用分配','https://arxiv.org/abs/1705.08926')]),
             "## 重新生成",
