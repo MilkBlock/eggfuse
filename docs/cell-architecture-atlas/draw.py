@@ -282,6 +282,19 @@ def overview():
     a.txt(974,249,"duplicates / missing",15,SUB);a.txt(122,254,"typed port routes",15,SUB)
     write("00-overview",a,W,H)
 
+def ingress(a,i):
+    steps=[["typed input facts","single-member template","exact port read"],
+           ["unique result class","shared two-op template","instance parameters"],
+           ["shuffled instances","address + port heads","gather typed field"]]
+    chain(a,steps[i],["s","n","s"])
+    a.txt(155,207,["129 instances","89 instances","145 ordered arguments"][i],14,SUB)
+
+def workload_rows(a,i):
+    steps=[["one row","enumerate witnesses","ordered commit"],
+           ["two rows","disjoint witnesses","ordered commit"]]
+    chain(a,steps[i],["n","v","s"])
+    a.txt(155,207,"same input and source schedule",14,SUB)
+
 PLATES=[
 ("01-template",[("Template ID",0),("Compiler roles",1),("Pooled GNN",2),("Port GNN",3)],graph),
 ("02-heads",[("One head per rule",False),("One head across rules",True)],heads),
@@ -302,7 +315,9 @@ PLATES=[
 ("17-proof",[("Primitive witness",0),("Composed witness",1)],proof),
 ("18-integral",[("Original schedule",0),("Primary exit",1),("Integral exit",2)],visibility),
 ("19-stop",[("Fixed rounds",0),("Exact worklist",1),("Learned gate",2)],stopping),
-("20-template-classes",[("Explicit ports",0),("Singletons",1),("Pairwise Eq",2),("Class nodes",3)],template_classes)]
+("20-template-classes",[("Explicit ports",0),("Singletons",1),("Pairwise Eq",2),("Class nodes",3)],template_classes),
+("21-ingress",[("Single member",0),("Composed input",1),("Learned read",2)],ingress),
+("22-pass3-rows",[("One row",0),("Two rows",1)],workload_rows)]
 def synthesis():
     a=Art();W,H=1100,335;a.rect(0,0,W,H,BG,r=0)
     for x,w,h in [(10,316,"SHARED TEMPLATE"),(338,374,"INSTANCE POLICY"),(723,367,"JOINT OUTCOME")]:

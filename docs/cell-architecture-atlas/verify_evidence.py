@@ -32,9 +32,9 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==20
+    assert len(plates)==22
     for i,p in enumerate(plates,1):
-        assert p['id'].startswith(f'{i:02}-') and p['arms'] and p['measure'] and p['status'].startswith('已测')
+        assert p['id'].startswith(f'{i:02}-') and p['arms'] and p['measure'] and p['status'].startswith(('已测','实跑'))
         assert p['title'] in md and (HERE/'figures'/f"{p['id']}.svg").is_file()
         ElementTree.parse(HERE/'figures'/f"{p['id']}.svg")
         for key in re.findall(r'S\d+',p['src']):assert (HERE/evidence[key]).is_file()
@@ -84,7 +84,19 @@ def check():
         # 20: same port identities with four different template encodings.
         for arm,n in [('explicit',pair(49,41)),('singleton',pair(79,34)),('pairwise',pair(61,65)),('incidence',pair(59,64))]:
             assert value('eclass_ablation','nonempty_complete',model=f'{arm}-{seed}',subset='heldout',state='all')==n
-    print('All 20 primary comparisons, both seeds, diagrams and local source links verified.')
+    folder=BENCH.parent/'pass3-cell-gpu/results'
+    report=json.loads((folder/'ingress-and-pass3.json').read_text())
+    other=json.loads((folder/'distinct-graphs.json').read_text())
+    assert report['shared_initial']
+    for name,n,args,tokens in [('sum-bits',223,342,[3747,3518]),('dot-product',320,583,[3565,3138])]:
+        item=report['cases'][name]
+        assert item['ingress']['roundtrip_exact'] and item['ingress']['ordered_arguments']==145
+        assert other[name]['rows']==n and other[name]['ordered_arguments']==args and other[name]['roundtrip_exact']
+        assert len(item['input_matrix'])==4 and all(v['fully_checked_runs']==3 for v in item['input_matrix'].values())
+        trial=item['rows']['2']
+        assert trial['tokens']==tokens and trial['cross_row_duplicates']==0 and trial['same_as_one_row']
+        assert trial['device_done'] and not trial['full_typed_graph_equal'] and trial['acceptance']=='incomplete'
+    print('Original 20 comparisons and the scoped ingress and integration results verified.')
 
 
 if __name__=='__main__':check()
