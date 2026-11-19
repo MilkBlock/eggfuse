@@ -1,0 +1,196 @@
+{
+ "sum-bits": {
+  "cpu": {
+   "samples": [
+    {
+     "wall_ms": 124.557625,
+     "inference_ms": 20.493000000000002
+    },
+    {
+     "wall_ms": 125.871708,
+     "inference_ms": 21.409541
+    },
+    {
+     "wall_ms": 125.88875,
+     "inference_ms": 21.333667000000002
+    }
+   ],
+   "median_wall_ms": 125.871708,
+   "median_inference_ms": 21.333667000000002,
+   "state_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "one": {
+   "samples": [
+    {
+     "wall_ms": 2384.814083,
+     "inference_ms": 1543.495083
+    },
+    {
+     "wall_ms": 2425.871,
+     "inference_ms": 1557.185542
+    },
+    {
+     "wall_ms": 2423.266083,
+     "inference_ms": 1550.675791
+    }
+   ],
+   "median_wall_ms": 2423.266083,
+   "median_inference_ms": 1550.675791,
+   "state_sha256": "a960e11b8f05a5e567d2c968083a5d14fa143c6b7a0da044ff78d5af0ecff124"
+  },
+  "two": {
+   "samples": [
+    {
+     "wall_ms": 2498.62575,
+     "inference_ms": 1623.74675
+    },
+    {
+     "wall_ms": 2380.729208,
+     "inference_ms": 1536.289708
+    },
+    {
+     "wall_ms": 2422.907,
+     "inference_ms": 1557.2515
+    }
+   ],
+   "median_wall_ms": 2422.907,
+   "median_inference_ms": 1557.2515,
+   "state_sha256": "a960e11b8f05a5e567d2c968083a5d14fa143c6b7a0da044ff78d5af0ecff124"
+  },
+  "learned1703": {
+   "samples": [
+    {
+     "wall_ms": 2776.280583,
+     "inference_ms": 1832.001
+    },
+    {
+     "wall_ms": 2608.040709,
+     "inference_ms": 1727.94875
+    },
+    {
+     "wall_ms": 2665.2465,
+     "inference_ms": 1759.345458
+    }
+   ],
+   "median_wall_ms": 2665.2465,
+   "median_inference_ms": 1759.345458,
+   "state_sha256": "a960e11b8f05a5e567d2c968083a5d14fa143c6b7a0da044ff78d5af0ecff124"
+  },
+  "learned1709": {
+   "samples": [
+    {
+     "wall_ms": 2600.090167,
+     "inference_ms": 1761.994542
+    },
+    {
+     "wall_ms": 2586.080417,
+     "inference_ms": 1750.861667
+    },
+    {
+     "wall_ms": 2578.838167,
+     "inference_ms": 1721.384
+    }
+   ],
+   "median_wall_ms": 2586.080417,
+   "median_inference_ms": 1750.861667,
+   "state_sha256": "a960e11b8f05a5e567d2c968083a5d14fa143c6b7a0da044ff78d5af0ecff124"
+  }
+ },
+ "dot-product": {
+  "cpu": {
+   "samples": [
+    {
+     "wall_ms": 125.760417,
+     "inference_ms": 18.094375
+    },
+    {
+     "wall_ms": 125.531292,
+     "inference_ms": 17.755959
+    },
+    {
+     "wall_ms": 127.220875,
+     "inference_ms": 18.168125
+    }
+   ],
+   "median_wall_ms": 125.760417,
+   "median_inference_ms": 18.094375,
+   "state_sha256": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "one": {
+   "samples": [
+    {
+     "wall_ms": 4294.457208,
+     "inference_ms": 3399.748042
+    },
+    {
+     "wall_ms": 4268.186792,
+     "inference_ms": 3406.267833
+    },
+    {
+     "wall_ms": 4265.158083,
+     "inference_ms": 3388.687708
+    }
+   ],
+   "median_wall_ms": 4268.186792,
+   "median_inference_ms": 3399.748042,
+   "state_sha256": "a0c0e01023d7619c5d0e6810faf4136c64bcfc813165d36647cdf7931d157228"
+  },
+  "two": {
+   "samples": [
+    {
+     "wall_ms": 4267.803125,
+     "inference_ms": 3397.265292
+    },
+    {
+     "wall_ms": 4263.320417,
+     "inference_ms": 3380.191542
+    },
+    {
+     "wall_ms": 4255.313875,
+     "inference_ms": 3382.940291
+    }
+   ],
+   "median_wall_ms": 4263.320417,
+   "median_inference_ms": 3382.940291,
+   "state_sha256": "a0c0e01023d7619c5d0e6810faf4136c64bcfc813165d36647cdf7931d157228"
+  },
+  "learned1703": {
+   "samples": [
+    {
+     "wall_ms": 4546.195125,
+     "inference_ms": 3665.096834
+    },
+    {
+     "wall_ms": 4517.662334,
+     "inference_ms": 3661.212042
+    },
+    {
+     "wall_ms": 4532.767875,
+     "inference_ms": 3674.627708
+    }
+   ],
+   "median_wall_ms": 4532.767875,
+   "median_inference_ms": 3665.096834,
+   "state_sha256": "a0c0e01023d7619c5d0e6810faf4136c64bcfc813165d36647cdf7931d157228"
+  },
+  "learned1709": {
+   "samples": [
+    {
+     "wall_ms": 4341.357125,
+     "inference_ms": 3471.014375
+    },
+    {
+     "wall_ms": 4342.8525,
+     "inference_ms": 3473.769834
+    },
+    {
+     "wall_ms": 4301.050875,
+     "inference_ms": 3462.1245
+    }
+   ],
+   "median_wall_ms": 4341.357125,
+   "median_inference_ms": 3471.014375,
+   "state_sha256": "a0c0e01023d7619c5d0e6810faf4136c64bcfc813165d36647cdf7931d157228"
+  }
+ }
+}

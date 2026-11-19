@@ -1,0 +1,24 @@
+{
+ "sum-bits": {
+  "opened": [
+   "address.pt",
+   "device.json",
+   "device.npz",
+   "export-schema.json",
+   "ports.pt"
+  ],
+  "export_sha256": "a960e11b8f05a5e567d2c968083a5d14fa143c6b7a0da044ff78d5af0ecff124",
+  "completed": 1428
+ },
+ "dot-product": {
+  "opened": [
+   "address.pt",
+   "device.json",
+   "device.npz",
+   "export-schema.json",
+   "ports.pt"
+  ],
+  "export_sha256": "a0c0e01023d7619c5d0e6810faf4136c64bcfc813165d36647cdf7931d157228",
+  "completed": 1535
+ }
+}

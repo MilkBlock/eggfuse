@@ -1,0 +1,1408 @@
+{
+ "sum-bits": {
+  "reference": {
+   "completed": 1428,
+   "device_done": true,
+   "reference_runs": 1428,
+   "device_rows": 4045,
+   "reference_rows": 4045,
+   "full_typed_graph_equal": true,
+   "first_schedule_difference": null,
+   "first_rhs_count_difference": null,
+   "first_write_count_difference": null,
+   "tokens": [
+    3382,
+    3883
+   ],
+   "cross_row_duplicates": 0,
+   "within_row_duplicates": 0,
+   "first_required_continuation": 9,
+   "cpu_continuations": 2098,
+   "gpu_continuations": 2098,
+   "measured_inference_ms": 1551.457875,
+   "measured_cli_work_ms": 1837.176084,
+   "acceptance": "pass",
+   "ordered_exact": {
+    "schedule": 1428,
+    "rhs": 1428,
+    "writes": 1428,
+    "spine": 1428,
+    "known_class_roots": 1428,
+    "write_count": 1428
+   }
+  },
+  "aligned": {
+   "schedule": 1428,
+   "rhs": 1428,
+   "writes": 1428,
+   "spine": 1428,
+   "known_class_roots": 1428,
+   "write_count": 1428
+  },
+  "source_sha256": {
+   "program.json": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+   "ingress.json": "c7ed5402c634d987271d578f502f347316bac8d86524e301165a41ab8d4ee065",
+   "output.npz": "7fafefa188db8552bf7c271a981509a49de24168f33876d27ab764d38b0ef93d",
+   "rhs.json": "87cfc653e389f335aeb84c3fde781e9bd8c64c088bc7b68240eee2e4bd98fda9",
+   "writes.json": "7a50d4e675bd63fcaf59bff0c83a3ad78a3ff5dd77d32e62b9d25ee7c693407f",
+   "resumes.json": "ed315f27445e29df0b3903f22ef4133322bb17665f55342cf45e7907d7f4043f",
+   "events.json": "73e771e511cf7906df4d8c04e9fda65915427b74cf6ce5bc8aa8c935ae3184db"
+  },
+  "native_contract": {
+   "status": "pass",
+   "report_sha256": "ae41ac1c059240779cf4bbe6e1ac0006fceb8e7ae31fcd8d97106cea67eef519",
+   "export_sha256": "a960e11b8f05a5e567d2c968083a5d14fa143c6b7a0da044ff78d5af0ecff124"
+  },
+  "ordering": {
+   "immediate_canonical": {
+    "first_schedule_difference": null,
+    "first_rhs_count_difference": null,
+    "first_write_count_difference": 122,
+    "full_typed_graph_equal": false,
+    "completed": 1428,
+    "gpu_continuations": 0
+   },
+   "fenced_canonical": {
+    "first_schedule_difference": null,
+    "first_rhs_count_difference": null,
+    "first_write_count_difference": null,
+    "full_typed_graph_equal": false,
+    "completed": 1428,
+    "gpu_continuations": 0
+   },
+   "immediate_published": {
+    "first_schedule_difference": null,
+    "first_rhs_count_difference": null,
+    "first_write_count_difference": 122,
+    "full_typed_graph_equal": true,
+    "completed": 1428,
+    "gpu_continuations": 0
+   },
+   "fenced_published": {
+    "first_schedule_difference": null,
+    "first_rhs_count_difference": null,
+    "first_write_count_difference": null,
+    "full_typed_graph_equal": true,
+    "completed": 1428,
+    "gpu_continuations": 0
+   }
+  },
+  "variants": {
+   "scan": {
+    "lanes": 2,
+    "lookup": null,
+    "tiles": null,
+    "batch_runs": null,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 11565.381,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "scan_one": {
+    "lanes": 1,
+    "lookup": null,
+    "tiles": null,
+    "batch_runs": null,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 20447.658709,
+    "token_bank_bytes": 54829056,
+    "tokens": [
+     7265,
+     0
+    ],
+    "runs_using_both": 0,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "point": {
+    "lanes": 2,
+    "lookup": "point",
+    "tiles": null,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 12359.127459,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "hash": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": null,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 11624.134917,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "two": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 1551.457875,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "one": {
+    "lanes": 1,
+    "lookup": "hash",
+    "tiles": 64,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 1562.147583,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     7265,
+     0
+    ],
+    "runs_using_both": 0,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "prune": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 1683.15275,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "matched_scan": {
+    "lanes": 2,
+    "lookup": "scan",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 1894.307708,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "matched_point": {
+    "lanes": 2,
+    "lookup": "point",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 1867.0035,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "matched_hash": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 1572.451917,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "run_batch_1": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": null,
+    "batch_runs": 1,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 26119.476792,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "run_batch_4": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": null,
+    "batch_runs": 4,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 25794.273375,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "run_batch_16": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": null,
+    "batch_runs": 16,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 25781.686791,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "dense_1": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 1,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 11291.030958,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "dense_4": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 4,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 4073.124084,
+    "token_bank_bytes": 438632448,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "dense_8": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 8,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 2941.991042,
+    "token_bank_bytes": 877264896,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "packed_8": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 8,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 2927.026833,
+    "token_bank_bytes": 231374848,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "packed_16": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 16,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 2246.808833,
+    "token_bank_bytes": 462749696,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "packed_32": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 2088.686875,
+    "token_bank_bytes": 925499392,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "cap_32": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "private",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 32,
+    "inference_ms": 2079.988541,
+    "token_bank_bytes": 115687424,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "cap_64": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "private",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 64,
+    "inference_ms": 2091.591459,
+    "token_bank_bytes": 231374848,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "scalar_integer": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "private",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 64,
+    "inference_ms": 2062.672208,
+    "token_bank_bytes": 231374848,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0,
+    "primitive_calls": [
+     0,
+     0,
+     0,
+     21721,
+     149,
+     0,
+     38958,
+     0,
+     26164,
+     5142,
+     0,
+     0,
+     0,
+     0,
+     0,
+     6183
+    ],
+    "float_calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "scalar_guarded": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "private",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 64,
+    "inference_ms": 2151.6565,
+    "token_bank_bytes": 231374848,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0,
+    "primitive_calls": [
+     0,
+     0,
+     0,
+     21721,
+     149,
+     0,
+     38958,
+     0,
+     26164,
+     5142,
+     0,
+     0,
+     0,
+     0,
+     0,
+     6183
+    ],
+    "float_calls": [
+     0,
+     0,
+     0,
+     21721,
+     149,
+     0,
+     31132,
+     0,
+     18440,
+     5142,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "scalar_lossy": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "private",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 64,
+    "inference_ms": 2121.974709,
+    "token_bank_bytes": 231374848,
+    "tokens": [
+     3382,
+     3883
+    ],
+    "runs_using_both": 277,
+    "repeated_within": 0,
+    "repeated_between": 0,
+    "primitive_calls": [
+     0,
+     0,
+     0,
+     21721,
+     149,
+     0,
+     38958,
+     0,
+     26164,
+     5142,
+     0,
+     0,
+     0,
+     0,
+     0,
+     6183
+    ],
+    "float_calls": [
+     0,
+     0,
+     0,
+     21721,
+     149,
+     0,
+     31132,
+     0,
+     18440,
+     5142,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "learned1703": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": "901261841696cde9c9322714ff6f9396482c799f30daf8204d1b4e8aa75a2ffd",
+    "token_cap": 256,
+    "inference_ms": 1729.727,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3436,
+     3829
+    ],
+    "runs_using_both": 251,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "learned1709": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": "dddb0ff1ffe33c96f2f0e59e6727954125125b475743032b1c8ab64884bee476",
+    "token_cap": 256,
+    "inference_ms": 1705.887917,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     2940,
+     4325
+    ],
+    "runs_using_both": 248,
+    "repeated_within": 0,
+    "repeated_between": 0
+   }
+  },
+  "first_resume": [
+   9,
+   5,
+   0,
+   375,
+   281,
+   1
+  ],
+  "longest_resumed_depth": 9,
+  "transcript_sha256": "db0e5ed7e195053eb5fc2efcb8670d556a87b8ba15162fbd885f43814ae1157c"
+ },
+ "dot-product": {
+  "reference": {
+   "completed": 1535,
+   "device_done": true,
+   "reference_runs": 1535,
+   "device_rows": 4257,
+   "reference_rows": 4257,
+   "full_typed_graph_equal": true,
+   "first_schedule_difference": null,
+   "first_rhs_count_difference": null,
+   "first_write_count_difference": null,
+   "tokens": [
+    3575,
+    3129
+   ],
+   "cross_row_duplicates": 0,
+   "within_row_duplicates": 0,
+   "first_required_continuation": 11,
+   "cpu_continuations": 1835,
+   "gpu_continuations": 1835,
+   "measured_inference_ms": 3372.356959,
+   "measured_cli_work_ms": 3542.879167,
+   "acceptance": "pass",
+   "ordered_exact": {
+    "schedule": 1535,
+    "rhs": 1535,
+    "writes": 1535,
+    "spine": 1535,
+    "known_class_roots": 1535,
+    "write_count": 1535
+   }
+  },
+  "aligned": {
+   "schedule": 1535,
+   "rhs": 1535,
+   "writes": 1535,
+   "spine": 1535,
+   "known_class_roots": 1535,
+   "write_count": 1535
+  },
+  "source_sha256": {
+   "program.json": "c0d1da51c3aca3e61c945b39dc7da9e3ed135d77c57330ffd34dbbed8adc1159",
+   "ingress.json": "69f915371a5ec5f162a4565802ecf7779bd9bcf4522dbd523e3343d1fec1198f",
+   "output.npz": "edd0dde35fa34ff783debc04f0b8ed941460033e3db7258d5e6d858cb44689ff",
+   "rhs.json": "b1c8487c29aee05ceaae0764ddc61d756be89d1ba9ab1fa31885cb48d4567da8",
+   "writes.json": "de5952348d049211280475eda189fafb9a50425b7b9a29bd62d7b06c8d1943ee",
+   "resumes.json": "5667346fa87a7a31880a2482c24527e6648fab9fd1ad20932c048bd1d0415916",
+   "events.json": "cac38233e14b65978f53b712bcd9afd8287ea11058edb14c3ba03b260312118a"
+  },
+  "native_contract": {
+   "status": "pass",
+   "report_sha256": "abb6fe7fa08d2e258a836fd14871ff943a7fa5cbff852f40912e745cdf9e408a",
+   "export_sha256": "a0c0e01023d7619c5d0e6810faf4136c64bcfc813165d36647cdf7931d157228"
+  },
+  "ordering": {
+   "immediate_canonical": {
+    "first_schedule_difference": 1000,
+    "first_rhs_count_difference": 898,
+    "first_write_count_difference": 165,
+    "full_typed_graph_equal": false,
+    "completed": 1536,
+    "gpu_continuations": 0
+   },
+   "fenced_canonical": {
+    "first_schedule_difference": 1000,
+    "first_rhs_count_difference": 898,
+    "first_write_count_difference": 896,
+    "full_typed_graph_equal": false,
+    "completed": 1536,
+    "gpu_continuations": 0
+   },
+   "immediate_published": {
+    "first_schedule_difference": null,
+    "first_rhs_count_difference": null,
+    "first_write_count_difference": 165,
+    "full_typed_graph_equal": true,
+    "completed": 1535,
+    "gpu_continuations": 0
+   },
+   "fenced_published": {
+    "first_schedule_difference": null,
+    "first_rhs_count_difference": null,
+    "first_write_count_difference": null,
+    "full_typed_graph_equal": true,
+    "completed": 1535,
+    "gpu_continuations": 0
+   }
+  },
+  "variants": {
+   "scan": {
+    "lanes": 2,
+    "lookup": null,
+    "tiles": null,
+    "batch_runs": null,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 14730.037417,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "scan_one": {
+    "lanes": 1,
+    "lookup": null,
+    "tiles": null,
+    "batch_runs": null,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 25867.442542,
+    "token_bank_bytes": 54829056,
+    "tokens": [
+     6704,
+     0
+    ],
+    "runs_using_both": 0,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "point": {
+    "lanes": 2,
+    "lookup": "point",
+    "tiles": null,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 16117.991333,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "hash": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": null,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 15088.054625,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "two": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 3372.356959,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "one": {
+    "lanes": 1,
+    "lookup": "hash",
+    "tiles": 64,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 3409.005875,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     6704,
+     0
+    ],
+    "runs_using_both": 0,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "prune": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 3650.629917,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "matched_scan": {
+    "lanes": 2,
+    "lookup": "scan",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 3578.998,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "matched_point": {
+    "lanes": 2,
+    "lookup": "point",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 3671.978166,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "matched_hash": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 256,
+    "inference_ms": 3420.9455,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "run_batch_1": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": null,
+    "batch_runs": 1,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 34796.613084,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "run_batch_4": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": null,
+    "batch_runs": 4,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 34490.603292,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "run_batch_16": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": null,
+    "batch_runs": 16,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 34554.208125,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "dense_1": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 1,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 14618.398833,
+    "token_bank_bytes": 109658112,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "dense_4": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 4,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 6034.846334,
+    "token_bank_bytes": 438632448,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "dense_8": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 8,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": null,
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 4721.426208,
+    "token_bank_bytes": 877264896,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "packed_8": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 8,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 4744.452167,
+    "token_bank_bytes": 231374848,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "packed_16": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 16,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 4192.824167,
+    "token_bank_bytes": 462749696,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "packed_32": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": null,
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": null,
+    "inference_ms": 3945.667417,
+    "token_bank_bytes": 925499392,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "cap_32": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "private",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 32,
+    "inference_ms": 3937.077208,
+    "token_bank_bytes": 115687424,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "cap_64": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "private",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 64,
+    "inference_ms": 3960.736458,
+    "token_bank_bytes": 231374848,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "scalar_integer": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "private",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 64,
+    "inference_ms": 3949.250333,
+    "token_bank_bytes": 231374848,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0,
+    "primitive_calls": [
+     0,
+     4,
+     0,
+     28290,
+     122,
+     0,
+     46868,
+     0,
+     37462,
+     10318,
+     0,
+     0,
+     0,
+     0,
+     0,
+     10953
+    ],
+    "float_calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "scalar_guarded": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "private",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 64,
+    "inference_ms": 4052.697291,
+    "token_bank_bytes": 231374848,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0,
+    "primitive_calls": [
+     0,
+     4,
+     0,
+     28290,
+     122,
+     0,
+     46868,
+     0,
+     37462,
+     10318,
+     0,
+     0,
+     0,
+     0,
+     0,
+     10953
+    ],
+    "float_calls": [
+     0,
+     0,
+     0,
+     28290,
+     122,
+     0,
+     35913,
+     0,
+     26612,
+     10318,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "scalar_lossy": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "private",
+    "token_layout": "packed",
+    "router": null,
+    "token_cap": 64,
+    "inference_ms": 4001.831291,
+    "token_bank_bytes": 231374848,
+    "tokens": [
+     3575,
+     3129
+    ],
+    "runs_using_both": 320,
+    "repeated_within": 0,
+    "repeated_between": 0,
+    "primitive_calls": [
+     0,
+     4,
+     0,
+     28290,
+     122,
+     0,
+     46868,
+     0,
+     37462,
+     10318,
+     0,
+     0,
+     0,
+     0,
+     0,
+     10953
+    ],
+    "float_calls": [
+     0,
+     0,
+     0,
+     28290,
+     122,
+     0,
+     35913,
+     0,
+     26612,
+     10318,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "learned1703": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": "901261841696cde9c9322714ff6f9396482c799f30daf8204d1b4e8aa75a2ffd",
+    "token_cap": 256,
+    "inference_ms": 3663.397458,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     4004,
+     2700
+    ],
+    "runs_using_both": 256,
+    "repeated_within": 0,
+    "repeated_between": 0
+   },
+   "learned1709": {
+    "lanes": 2,
+    "lookup": "hash",
+    "tiles": 32,
+    "batch_runs": 0,
+    "arena": "shared",
+    "token_layout": "packed",
+    "router": "dddb0ff1ffe33c96f2f0e59e6727954125125b475743032b1c8ab64884bee476",
+    "token_cap": 256,
+    "inference_ms": 3470.092916,
+    "token_bank_bytes": 28921856,
+    "tokens": [
+     3244,
+     3460
+    ],
+    "runs_using_both": 280,
+    "repeated_within": 0,
+    "repeated_between": 0
+   }
+  },
+  "first_resume": [
+   11,
+   15,
+   0,
+   375,
+   285,
+   1
+  ],
+  "longest_resumed_depth": 11,
+  "transcript_sha256": "d826579a23430a64d4dcde231dc6e9047be95390e8a92865312cc4a3e4d3259f"
+ }
+}
