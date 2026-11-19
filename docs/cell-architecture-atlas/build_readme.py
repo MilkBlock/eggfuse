@@ -9,7 +9,7 @@ out=["# Cell 多行推理架构消融图册",
      "基线提交 `68193237`，2026-11-19。阅读重点是同图多个 row 能否快速生成互补 token。每次 Run、一次神经发射和一个训练更新是三个不同的时间单位。实线表示数据流，紫色虚线表示训练监督，灰色空槽或 × 表示未启用或被屏蔽的通道。每个分面的小写字母和图下说明对应。",
      "![当前的离线编译、GPU 前向与 CPU 审计](figures/00-overview.svg)",
      "![候选的模板端口 GNN、共享 row 策略和训练奖励](figures/00-proposal.svg)",
-     "建议先用编译器端口角色做基线，检验跨规则共享和单 row 的绝对正确性；然后冻结权重展开到多行，测零样本覆盖损失；最后才比较监督、RL、动态启用行数与同步策略。图 01–02 已完成两叶 Bake 接口的单 row 对照；03 已比较四种多端口寻址，04 已测单行零更新展开，05 已比较监督与 RL 分工，06–07 追踪自适应宽度与就绪，08–13 给出已有机制的对照，14–19 定义扩展语义，图 20 单列静态可证明端口等价分区。",
+     "建议先用编译器端口角色做基线，检验跨规则共享和单 row 的绝对正确性；然后冻结权重展开到多行，测零样本覆盖损失；最后才比较监督、RL、动态启用行数与同步策略。图 01–02 已完成两叶 Bake 接口的单 row 对照；03 已比较四种多端口寻址，04 已测单行零更新展开，05 已比较监督与 RL 分工，06 已测行门控和物理跳算，07 追踪就绪性，08–13 给出已有机制的对照，14–19 定义扩展语义，图 20 单列静态可证明端口等价分区。",
      "## 对照索引",
      "| 图 | 实验问题 | 状态 |\n|---:|---|---|\n"+"\n".join(f"| {i:02} | [{p['title']}](#a{i:02}) | {p['status']} |" for i,p in enumerate(panels,1))]
 for i,p in enumerate(panels,1):
@@ -36,6 +36,7 @@ out.extend(["## 现有配对数据", "![冻结检查点的第二 Run 完整非�
                 ('S13','跨 row/位置/端口寻址及真实前沿迁移','../../benchmarks/multi-row-generation/address_ablation/README.md'),
                 ('S14','图 04 单 row 零训练展开与消费者诊断','../../benchmarks/multi-row-generation/width_ablation/README.md'),
                 ('S15','图 05 两行监督、团队奖励与反事实信用','../../benchmarks/multi-row-generation/credit_ablation/README.md'),
+                ('S16','图 06 实际 GPU 行门控与执行计数','../../benchmarks/multi-row-generation/gate_ablation/README.md'),
                 ('M1','Gilmer 等，ICML 2017，消息传递神经网络','https://proceedings.mlr.press/v70/gilmer17a.html'),
                 ('M2','Foerster 等，AAAI 2018，反事实多智能体信用分配','https://arxiv.org/abs/1705.08926')]),
             "## 重新生成",

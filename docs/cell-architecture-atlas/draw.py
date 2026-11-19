@@ -83,8 +83,8 @@ def curriculum(a,i):
 def gate(a,adaptive):
     a.node(155,41,168,"row gate" if adaptive else "fixed width", "n" if adaptive else "s")
     a.link(155,58,155,80)
-    a.grid(89,84,4,4,cell=23,fill=(lambda i,j:i<(2,4,1,2)[j]) if adaptive else None)
-    a.txt(155,208,"2 → 4 → 1 → 2 active" if adaptive else "4 → 4 → 4 → 4 active",15)
+    a.grid(89,89,2,4,cell=27,fill=(lambda i,j:i==0 and j<2) if adaptive else None)
+    a.txt(155,208,"1 → 1 → 0 → 0 active" if adaptive else "2 → 2 → 2 → 2 active",15)
 
 def ready(a,local):
     for x,l in [(62,"P0"),(151,"P1"),(249,"U")]:a.node(x,54,55,l,"s")
