@@ -1,7 +1,7 @@
 import unittest
 from collections import Counter
 
-from codec import canonical, encode, members
+from codec import canonical, encode, members, primitive
 
 
 def table(name,sig):
@@ -26,6 +26,14 @@ class CellIngress(unittest.TestCase):
                 self.assertTrue(all(len(prog)==1 for prog in t))
                 self.assertEqual(sum(r['values'][-1]==eq('u') for r in decoded),2)
         with self.assertRaises(ValueError):encode([get,get],ts)
+
+    def test_numeric_and_equality_signatures_are_distinct(self):
+        def signature(op,kind,out):
+            return {'primitive':op,'inputs':[kind,kind],'output':out}
+        self.assertEqual(primitive(signature('!=','Expr','Unit'),{'Expr'}),'eq-id-!=')
+        self.assertEqual(primitive(signature('!=','i64','Unit'),{'Expr'}),'!=')
+        for args in [('+','String','String'),('!=','SetExpr','Unit'),('min','f64','f64')]:
+            with self.assertRaises(ValueError):primitive(signature(*args),{'Expr'})
 
     def test_missing_argument_is_not_the_result_port(self):
         import torch

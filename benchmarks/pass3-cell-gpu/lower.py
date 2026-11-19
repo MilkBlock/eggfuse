@@ -7,7 +7,7 @@ _spec=spec_from_file_location('pass3_control',HERE.parent/'eggcc-gpu-supervision
 _control=module_from_spec(_spec);_spec.loader.exec_module(_control)
 control_code=_control.lower
 
-PRIMS=['!=','%','*','+','-','/','<','<=','>','>=','and','bool-<','max','min','or']
+PRIMS=['!=','%','*','+','-','/','<','<=','>','>=','and','bool-<','max','min','or','eq-id-!=']
 EFFECTS=['copy','construct','set','compute','union','subsume','panic']
 
 
@@ -45,28 +45,53 @@ def compile_image(p):
         if 'elements' in v:raise ValueError('container symbol requires a device container codec')
         return int(v['value'])
     literals=[scalar(i,v) for i,v in enumerate(p['symbols'])]
-    rules=[]
+    routes_by_rule=[[] for _ in p['rules']]
+    for entry in p['stage_entries']:routes_by_rule[entry['rule']].append(entry)
+    demanded={names[e['table']] for e in p['stage_entries']}
+    section('DEMANDED',[int(t in demanded) for t in range(len(tables))])
+    rules=[];routes=[]
     for rid,r in enumerate(p['rules']):
-        seen=set();pending=list(r['q']);atoms=[]
+        seen=set();pending=list(enumerate(r['q']));atoms=[];order=[]
         while pending:
             choices=[]
-            for j,(op,args) in enumerate(pending):
+            for j,(_, (op,args)) in enumerate(pending):
                 known=[v<0 or v in seen for v in args]
                 if isinstance(op,str) and not all(known[:-1]):continue
                 choices.append((int(isinstance(op,str) or all(known[:-1])),sum(known),-j))
             if not choices:raise ValueError(('ungrounded primitive',rid))
-            j=-max(choices)[2];op,args=pending.pop(j)
+            j=-max(choices)[2];source,(op,args)=pending.pop(j);order.append(source)
             flags=0
             for k,v in enumerate(args):
                 if v>=0 and v not in seen:flags|=1<<k;seen.add(v)
             f=op if isinstance(op,int) else -1-PRIMS.index(op)
             atoms.extend([f,len(args),words(args),flags])
+        entries=routes_by_rule[rid];pairs=[];covered=0
+        for entry in entries:
+            pivot=entry['anchor'];ops=[];bound=set()
+            schedule=[pivot,*entry['atoms']]
+            if sorted(schedule)!=list(range(len(r['q']))):raise ValueError('incomplete Cell entry')
+            covered|=1<<order.index(pivot)
+            for pos,qi in enumerate(schedule):
+                call,args=r['q'][qi]
+                if pos and any(x>=0 and x not in bound for x in args[:-1]):
+                    raise ValueError('nonfunctional Cell step')
+                flag=0
+                for j,x in enumerate(args):
+                    if x>=0 and x not in bound:bound.add(x);flag|=1<<j
+                ops.extend([call if isinstance(call,int) else -1-PRIMS.index(call),len(args),words(args),flag])
+            pairs.extend([pivot,words(ops)])
+        produces=any(op in ('construct','set') and t in demanded for op,t,_,_ in r['e'])
+        routes.extend([len(entries),words(pairs),covered,int(produces)])
         query=words(atoms);effects=[]
         for kind,fn,dst,args in r['e']:
             fn=fn if isinstance(fn,int) else PRIMS.index(fn)
             effects.extend([EFFECTS.index(kind),fn,dst,len(args),words(args)])
         rules.extend([len(r['q']),query,len(r['e']),words(effects),len(r['inputs']),words(r['inputs']),int(r['semi'])])
-    section('RULE',rules)
+    section('RULE',rules);section('SPINE',routes)
+    offsets=[];total=0
+    for rule in p['rules']:
+        offsets.append(total);total+=len(rule['inputs'])+5
+    section('TOKEN_BASE',offsets);layout['TOTAL_TOKEN_COLS']=total
     sets=list(p['sets']);sr=[]
     for name in sets:sr.extend([len(p['sets'][name]),words(p['sets'][name])])
     section('SETS',sr)
@@ -93,6 +118,7 @@ def save_device_image(packet,destination):
     import json
     import numpy as np
     p=json.loads(packet.read_text());rom,lits,layout,sets,strings=compile_image(p)
+    if layout['WIDTH']>30 or layout['DEPTH']>31:raise ValueError('typed port mask exceeds the Metal ABI')
     # Resolve the negative internal link only at read time. The compressed slot
     # program and instance parameters are the sole source of initial fact contents.
     queries=[];widths=[];starts=[];addresses=[];member_coords=[]
@@ -107,11 +133,15 @@ def save_device_image(packet,destination):
     sort_ids={sort:i for i,sort in enumerate(sorted({v['sort'] for v in p['symbols']}))}
     eq_sort=[sort_ids[v['sort']] if 'eq' in v else -1 for v in p['symbols']]
     arrays=destination/'device.npz'
-    np.savez_compressed(arrays,eq_sort=np.asarray(eq_sort,np.int32),rom=np.asarray(rom,np.int32),lits=np.asarray(lits,np.int64),
+    np.savez_compressed(arrays,physical_order=np.random.default_rng(181).permutation(len(p['instances'])).astype(np.int32),eq_sort=np.asarray(eq_sort,np.int32),rom=np.asarray(rom,np.int32),lits=np.asarray(lits,np.int64),
         role_width=np.asarray(widths,np.int32),role_query=np.asarray(queries,np.int32),
         role_base=np.asarray(starts,np.int32),role_dst=np.asarray(addresses,np.int32),members=np.asarray(member_coords,np.int32))
     spec=dict(schema='eggfuse.gpu-ingress/1',layout=layout,sets=sets,strings=strings,packet_sha256=hashlib.sha256(packet.read_bytes()).hexdigest(),
               device_sha256=hashlib.sha256(arrays.read_bytes()).hexdigest(),max_set=max(map(len,p['sets'].values())))
+    from export_graph import schema_for
+    schema_path=destination/'export-schema.json'
+    schema_path.write_text(json.dumps(schema_for(p),separators=(',',':'))+'\n')
+    spec['export_schema_sha256']=hashlib.sha256(schema_path.read_bytes()).hexdigest()
     (destination/'device.json').write_text(json.dumps(spec,separators=(',',':'))+'\n')
 
 

@@ -18,7 +18,8 @@ def read(path,weights,ports,out,join):
         rom=torch.as_tensor(f['rom'],device=dev).long()
         members=torch.as_tensor(f['members'],device=dev).long()
         sort=torch.as_tensor(f['eq_sort'],device=dev)
-    physical,selected=pointer(weights,layout['NINST'],dev)
+        order=torch.as_tensor(f['physical_order'],device=dev).long()
+    physical,selected=pointer(weights,order,dev)
     slots=torch.arange(layout['NINST'],device=dev)
     # The model actually selects a descriptor out of the shuffled bank.
     bank=rom[layout['INSTANCE']:layout['INSTANCE']+3*len(slots)].reshape(-1,3)[physical]

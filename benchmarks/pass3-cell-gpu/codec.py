@@ -68,8 +68,22 @@ def encode(rows,tables,*,compose=True):
     return templates,instances,symbols
 
 
+def primitive(call,eq_sorts):
+    name=call['primitive'];a,b=call['inputs'];out=call['output']
+    if a!=b:raise ValueError(f'unhandled mixed-type primitive: {call}')
+    if name=='!=' and out=='Unit' and a in eq_sorts:
+        return 'eq-id-!='
+    supported=((a=='i64' and ((out=='i64' and name in ('%','*','+','-','/','min','max'))
+                    or (out=='Unit' and name in ('!=','<','<=','>','>='))
+                    or (out=='bool' and name=='bool-<')))
+               or (a=='bool' and out=='bool' and name in ('and','or')))
+    if not supported:raise ValueError(f'unhandled primitive signature: {call}')
+    return name
+
+
 def packet(program,root,compose=True):
     r=json.loads(program.read_text());p=r['recipe'];tables=p['tables'];idx={t['name']:i for i,t in enumerate(tables)}
+    eq_sorts={s['name'] for t in tables for s in t['schema'] if s['kind']=='eq'}
     templates,cells,symbols=encode(r['initial'],tables,compose=compose)
     literal={canonical(v):i for i,v in enumerate(symbols)}
     def operand(a):
@@ -85,13 +99,13 @@ def packet(program,root,compose=True):
     for rule in p['rules']:
         atoms=[];effects=[]
         for q in rule['query']:
-            call=q['call'];atoms.append([idx[call['table']] if 'table' in call else call['primitive'],
+            call=q['call'];atoms.append([idx[call['table']] if 'table' in call else primitive(call,eq_sorts),
                                           [operand(a) for a in q['args']]])
         for e in rule['effects']:
             call=e.get('call',{});args=list(e.get('args',[]))
             if 'arg' in e:args=[e['arg']]
             if 'value' in e:args.append(e['value'])
-            effects.append([e['kind'],idx[call['table']] if 'table' in call else call.get('primitive',-1),
+            effects.append([e['kind'],idx[call['table']] if 'table' in call else (primitive(call,eq_sorts) if 'primitive' in call else -1),
                             e.get('dst',-1),[operand(a) for a in args]])
         rules.append(dict(q=atoms,e=effects,n=len(rule['slots']),inputs=[i for i,s in enumerate(rule['slots']) if s['definition']=='query'],
                           semi=rule['metadata']['seminaive']))
@@ -104,7 +118,7 @@ def packet(program,root,compose=True):
             if 'eq' in v:rank.setdefault(canonical(v),len(rank)+1)
     eq_order=[rank.get(canonical(v),0) for v in symbols]
     result=dict(eq_order=eq_order,format='eggfuse.cell-ingress/1',tables=tables,symbols=symbols,templates=templates,instances=cells,
-                sets=sets,control=schedule,rules=rules,program_sha256=digest(program),recipe_sha256=p['sha256'])
+                sets=sets,control=schedule,rules=rules,stage_entries=r['multi_stage']['stage_entries'],program_sha256=digest(program),recipe_sha256=p['sha256'])
     (root/'ingress.json').write_text(canonical(result)+'\n')
     return result
 
