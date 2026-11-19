@@ -188,12 +188,13 @@ def locality(a,i):
     a.txt(155,209,"shared producer and requests",14,SUB)
 
 def union(a,i):
-    a.port(66,57,"p");a.port(245,57,"q")
-    a.link(84,57,226,57,c="#946422");a.txt(155,48,"p = q",15);a.link(155,60,155,88,c="#946422")
-    if i==0:chain_low(a,"merge + repair","read new epoch")
-    else:chain_low(a,"pending equality","flush before observer")
-def chain_low(a,l1,l2):
-    a.node(155,108,195,l1,'v');a.link(155,125,155,152);a.node(155,171,210,l2,'s')
+    if i==0:
+        chain(a,["union receipt","repair now","next reader"],["s","v","s"])
+    elif i==1:
+        chain(a,["ordered receipts","pending queue","repair before reader"],["s","v","s"])
+    else:
+        chain(a,["arrived device tensors","one packed dispatch","repair + epoch read"],["s","v","s"])
+    a.txt(155,206,["576 repair batches","288 repair batches","2 dispatches vs 4"][i],15,SUB)
 def ownership(a,i):
     for x,lab in [(75,"Cell A"),(232,"Cell B")]:a.node(x,58,97,lab,'s')
     a.link(76,75,136,112);a.link(230,75,176,112);a.node(155,132,153,"composed Cell",'s')
@@ -290,7 +291,7 @@ PLATES=[
 ("12-coverage",[("Set loss",False),("Set loss + coverage",True)],coverage),
 ("13-history",[("Blinded history",0),("All rows",1),("Same row only",2)],history),
 ("14-locality",[("Global state",0),("Local states + messages",1),("Certified port path",2)],locality),
-("15-union",[("Eager equality",0),("Deferred equality",1)],union),
+("15-union",[("Immediate repair",0),("Observation fence",1),("Fused submission",2)],union),
 ("16-owner",[("Retain instances",0),("Transfer + forwarding",1)],ownership),
 ("17-proof",[("Primitive witness",0),("Composed witness",1)],proof),
 ("18-integral",[("Original schedule",0),("Primary exit",1),("Integral exit",2)],visibility),
