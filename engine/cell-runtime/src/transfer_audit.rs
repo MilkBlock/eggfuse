@@ -38,6 +38,31 @@ thread_local! {
     static RESUME_RUNS: std::cell::RefCell<Vec<(u64,String)>>=const{std::cell::RefCell::new(Vec::new())};
     static WRITE_RUNS: std::cell::RefCell<Vec<(u64,String)>>=const{std::cell::RefCell::new(Vec::new())};
 }
+thread_local! {
+    static EVENTS: std::cell::RefCell<Option<Vec<Vec<serde_json::Value>>>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+pub fn enable_events() {
+    EVENTS.replace(Some(Vec::new()));
+}
+
+pub fn take_events() -> Option<Vec<Vec<serde_json::Value>>> {
+    EVENTS.take()
+}
+
+pub(crate) fn birth(table: usize, key: &[crate::value::Value], value: &crate::value::Value, witness: u64) {
+    event(|| serde_json::json!(["birth", table, key, value, witness, SOURCE.get()]));
+}
+
+pub(crate) fn event(make: impl FnOnce() -> serde_json::Value) {
+    EVENTS.with_borrow_mut(|events| {
+        if let Some(run) = events.as_mut().and_then(|runs| runs.last_mut()) {
+            run.push(make());
+        }
+    });
+}
+
 pub fn enable_write_audit() {
     WRITE_ACTIVE.set(true);
 }
@@ -53,6 +78,9 @@ pub(crate) fn repaired() {
 }
 pub(crate) fn begin_writes() {
     if WRITE_ACTIVE.get() {
+        EVENTS.with_borrow_mut(|events| {
+            if let Some(runs) = events { runs.push(Vec::new()); }
+        });
         ORDINAL.set(0);
         SOURCE.set(None);
         use sha2::Digest;
@@ -68,6 +96,7 @@ pub(crate) fn effective(
     old: Option<&crate::value::Value>,
     new: &crate::value::Value,
 ) -> Result<(), String> {
+    event(|| serde_json::json!(["write", epoch, SOURCE.get(), table, index, key, old, new]));
     observation::write(epoch, SOURCE.get(), table, index, key, old, new);
     WRITES.with_borrow_mut(|state| {
         if let Some((count, hash)) = state {
@@ -93,6 +122,7 @@ pub fn take_write_digests() -> Vec<(u64, String)> {
 
 pub(crate) fn resume(root: u64, producer: usize, consumer: usize, depth: u32) {
     use sha2::Digest;
+    event(|| serde_json::json!(["resume", ORDINAL.get(), root, producer, consumer, depth]));
     RESUMES.with_borrow_mut(|state| {
         if let Some((n, h)) = state {
             for word in [

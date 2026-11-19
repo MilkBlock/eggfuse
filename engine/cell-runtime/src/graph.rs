@@ -1446,6 +1446,8 @@ impl Graph {
         // In port-key mode this is an immutable birth hint, not a promise
         // that the hash follows future canonical representatives.
         let h = self.constructor_hash(t, key);
+        #[cfg(feature = "slot-transfer-audit")]
+        crate::transfer_audit::birth(t, key, &v, f.ordered_id());
         let vs = Self::shared_fields(key, &v);
         #[cfg(feature = "sparse-cells")]
         self.promote_owner(f.cell);
@@ -1729,6 +1731,8 @@ impl Graph {
             return Ok(());
         }
         let (lo, hi) = (a.min(b), a.max(b));
+        #[cfg(feature = "slot-transfer-audit")]
+        crate::transfer_audit::event(|| serde_json::json!(["union", hi, lo]));
 
         #[cfg(feature = "sparse-cells")]
         { self.sealed_input_cell = None; }

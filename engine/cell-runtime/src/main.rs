@@ -30,6 +30,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!(
             "eggfuse-cell-runtime --program FILE [--inspect-program | --output DIR] [--audit-stages] [--extract-unit-cost OPERATOR]"
         );
+        #[cfg(feature = "slot-transfer-audit")]
+        println!("  --audit-events (save ordered birth, union, function write and Spine witnesses)");
         println!("  --gpu-selector-python PATH --gpu-selector-service PATH [--gpu-selector-min-rows N] (experimental exact Metal query filtering)");
         println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor and scalar Unit matcher)");
         println!("  --congruence-cells (experimental equality expressions and persistent completion cells)");
@@ -71,6 +73,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Err(format!("duplicate option {flag}").into());
         }
         match flag.as_str() {
+            #[cfg(feature = "slot-transfer-audit")]
+            "--audit-events" => {}
             "--gpu-selector-python" | "--gpu-selector-service" | "--gpu-selector-min-rows" | "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" | "--completion-batch-tasks" | "--query-workers" | "--query-grain" => {
                 flags
                     .next()
@@ -279,6 +283,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     {
         eggfuse_cell_runtime::transfer_audit::set_active(true);
         eggfuse_cell_runtime::transfer_audit::enable_write_audit();
+        if args.iter().any(|arg| arg == "--audit-events") {
+            eggfuse_cell_runtime::transfer_audit::enable_events();
+        }
     }
     #[cfg(feature = "allocation-metrics")]
     let allocation_start = allocation_metrics::begin();
@@ -295,6 +302,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let allocation_delta = allocation_metrics::end(allocation_start);
     #[cfg(feature = "slot-transfer-audit")]
     {
+        if let Some(events) = eggfuse_cell_runtime::transfer_audit::take_events() {
+            std::fs::write(out.join("events.json"), serde_json::to_vec(&events)?)?;
+        }
         eggfuse_cell_runtime::transfer_audit::set_active(false);
         std::fs::write(
             out.join("resumes.json"),
