@@ -1,0 +1,269 @@
+{
+  "scope": "Single-row training and zero-update independent lane expansion, two scoped Runs and complete ancestry checks.",
+  "root": "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+  "source_sha256": {
+    "rule-134": "ae05393507396360a00283b9bcab782f1ff1419f0a3469d46dc2dc8df8fc2103",
+    "rule-135": "16ab79d65508eae8ba053826a3fd624daf64141f1c03e6dcbc9153a6b80ff749",
+    "rule-143": "65722f9a07b2bc3efb3844b59584099fc180b0b1dd50be1d7b8834bbfecdf724"
+  },
+  "final_weights": {
+    "1703": "899191f5ea675265a274a14674b78ce5a40a9b1777204fedb96e367cc3dc5090",
+    "1709": "883d2540647bbd6034a27aabbd5b74d8f6ed54c6f8b76bc70bbf5391d74f04c2"
+  },
+  "checked_traces": 72,
+  "trace_hashes": {
+    "rule-134-1703-1x1-parallel.npz": "d71e67dff0a621bc271e2cec552e779032423d20ff6ffdaa9efaa6b3a26e0efc",
+    "rule-134-1703-2x2-parallel.npz": "a0c78e5ba833ac36331ce899d95c59488f3827d37d3a38f259461ba6afeba78d",
+    "rule-134-1703-4x4-parallel.npz": "03fb8fd572e6bb75eba2dda471550609372515bfd1f48f1301ed59d8706c84ae",
+    "rule-134-1703-1x2-parallel.npz": "84834150c64ea4267b373d6276822c079cc7e1989673f250886f67c352dd98a1",
+    "rule-134-1703-2x1-parallel.npz": "a8714df371e3ae0d0879293951b84f4e557ddbbfa3d222f3520fbebb9147953e",
+    "rule-134-1703-1x4-parallel.npz": "a8e9ad51c2d2e841ca6a89c1aabdf8c96b888f9c8955a0e400be72bf82b4eb68",
+    "rule-134-1703-4x1-parallel.npz": "026cb4eb5bbfb1fe76a03a35207a5544e86fd69140415a67a1e38e1b269fc8c3",
+    "rule-134-1703-1x1-zero_history.npz": "3f25db918cc5b37001e7967ca01978c79d9f978d093191c7a2dae9be9d25eccd",
+    "rule-134-1703-2x2-zero_history.npz": "3f25db918cc5b37001e7967ca01978c79d9f978d093191c7a2dae9be9d25eccd",
+    "rule-134-1703-4x4-zero_history.npz": "3f25db918cc5b37001e7967ca01978c79d9f978d093191c7a2dae9be9d25eccd",
+    "rule-134-1703-2x2-serial_lanes.npz": "a0c78e5ba833ac36331ce899d95c59488f3827d37d3a38f259461ba6afeba78d",
+    "rule-134-1703-4x4-serial_lanes.npz": "03fb8fd572e6bb75eba2dda471550609372515bfd1f48f1301ed59d8706c84ae",
+    "rule-134-1709-1x1-parallel.npz": "f9f14cc743747b8bca18ad3198b56133de2ae4974032d7f98c12dbb53d504f1d",
+    "rule-134-1709-2x2-parallel.npz": "3e0342195ff1877d7ac8064ad9c7b3690298f65c75a20da6a33e648f9ac2503c",
+    "rule-134-1709-4x4-parallel.npz": "c7944d8b96c1f4023eb7cfa1078a570b47da5dd36510705353b7000c8925fe8c",
+    "rule-134-1709-1x2-parallel.npz": "1fa8d533b25e9046fe479fd5265622d82ff1c0aeb5d8770fbba6f64b3def5a55",
+    "rule-134-1709-2x1-parallel.npz": "9a40d99c7e1911bfe57ef4281d3eddd24340accc1e22064371e296b9ea514b25",
+    "rule-134-1709-1x4-parallel.npz": "d4726651b22010f788899c39bf6f3ad012e7924bcd2c3c424a9cba748453b247",
+    "rule-134-1709-4x1-parallel.npz": "21e70eb285d2df5d54b0cb01c2f22465fc7ef21adaca52760fa12d58e35b59ea",
+    "rule-134-1709-1x1-zero_history.npz": "4b58c32227ecf7b4e0b17522374f5ce8aacb29f3d3a4420ed6709afc4fdd05b9",
+    "rule-134-1709-2x2-zero_history.npz": "4b58c32227ecf7b4e0b17522374f5ce8aacb29f3d3a4420ed6709afc4fdd05b9",
+    "rule-134-1709-4x4-zero_history.npz": "4b58c32227ecf7b4e0b17522374f5ce8aacb29f3d3a4420ed6709afc4fdd05b9",
+    "rule-134-1709-2x2-serial_lanes.npz": "3e0342195ff1877d7ac8064ad9c7b3690298f65c75a20da6a33e648f9ac2503c",
+    "rule-134-1709-4x4-serial_lanes.npz": "c7944d8b96c1f4023eb7cfa1078a570b47da5dd36510705353b7000c8925fe8c",
+    "rule-135-1703-1x1-parallel.npz": "13acae70ef3c9b19c861de163af7be835e477f715a89f9cb8374dc95416db9cb",
+    "rule-135-1703-2x2-parallel.npz": "4e8e7e4eb65a002d4e38957bd74105f6e7b2cc4da548f249c9931a6542d223a2",
+    "rule-135-1703-4x4-parallel.npz": "37a9a714b045135ce3677be4f40fdf259be8de23512211a1bd46bf71dca236a0",
+    "rule-135-1703-1x2-parallel.npz": "1aadf5891f35c6ce2b7552a747a105afbab0b98c661649391ad85ea97efe0175",
+    "rule-135-1703-2x1-parallel.npz": "acb6c5ac096362aad4f72b32cc3fc804456d74e61670756dab8027e6fc2ef217",
+    "rule-135-1703-1x4-parallel.npz": "5d15dcb765e7ca5213068fe853b3183e3835836c884379c6ea6bd11229bf207d",
+    "rule-135-1703-4x1-parallel.npz": "12b5663f7cfdbe8e8470937110e12c5cc2985634c317c850f6d7ed8a4d0e308f",
+    "rule-135-1703-1x1-zero_history.npz": "b5557c9bdfa687ab84859c838f18530142a4040c2c42ebfb1fb8d5820b58cffe",
+    "rule-135-1703-2x2-zero_history.npz": "b5557c9bdfa687ab84859c838f18530142a4040c2c42ebfb1fb8d5820b58cffe",
+    "rule-135-1703-4x4-zero_history.npz": "b5557c9bdfa687ab84859c838f18530142a4040c2c42ebfb1fb8d5820b58cffe",
+    "rule-135-1703-2x2-serial_lanes.npz": "4e8e7e4eb65a002d4e38957bd74105f6e7b2cc4da548f249c9931a6542d223a2",
+    "rule-135-1703-4x4-serial_lanes.npz": "37a9a714b045135ce3677be4f40fdf259be8de23512211a1bd46bf71dca236a0",
+    "rule-135-1709-1x1-parallel.npz": "5f8408bf21be77b9a3660cd46063d5dc4f54601cc4dbf4d8ce59f955844159da",
+    "rule-135-1709-2x2-parallel.npz": "4ef68259d59565a66b110d89bd029f69c911a6f516ed9943fe04d714e1765408",
+    "rule-135-1709-4x4-parallel.npz": "82f2971d34ee52dfa0cd04fe3dad2a9ffe4a282338b996e8630585eb21dfc0e4",
+    "rule-135-1709-1x2-parallel.npz": "45b92927d6d66f588e7177001b3cb87f8d1ec37c6167a4406bba864b3e902afe",
+    "rule-135-1709-2x1-parallel.npz": "3e08339b82b54af9e7c25b917851f65a7268ea4db769b9a57ec7606eea6becbf",
+    "rule-135-1709-1x4-parallel.npz": "2e135507bf4899fd90ac473b5852370d6d688211e4c01d8e321dc36cfaa5ddcd",
+    "rule-135-1709-4x1-parallel.npz": "f6c2a69c871c74f7019671f76fc239615059ba14d49d12e4dae7925f22c0894e",
+    "rule-135-1709-1x1-zero_history.npz": "b0e3667b1db3f6f11c41a33d8d1d17d60bb49f7133504d013d179ade0fe85fa7",
+    "rule-135-1709-2x2-zero_history.npz": "b0e3667b1db3f6f11c41a33d8d1d17d60bb49f7133504d013d179ade0fe85fa7",
+    "rule-135-1709-4x4-zero_history.npz": "b0e3667b1db3f6f11c41a33d8d1d17d60bb49f7133504d013d179ade0fe85fa7",
+    "rule-135-1709-2x2-serial_lanes.npz": "4ef68259d59565a66b110d89bd029f69c911a6f516ed9943fe04d714e1765408",
+    "rule-135-1709-4x4-serial_lanes.npz": "82f2971d34ee52dfa0cd04fe3dad2a9ffe4a282338b996e8630585eb21dfc0e4",
+    "rule-143-1703-1x1-parallel.npz": "9c643ac6d4b4497bb6b25982e372445817d9d011e6f38e0f470cdfd67ac1e664",
+    "rule-143-1703-2x2-parallel.npz": "e75d86be7e861e7b383373d55e8a12532ebff6e59535e4f4e40f4f717c0b58dd",
+    "rule-143-1703-4x4-parallel.npz": "6349e6040f182fcf5e48709637a3e01fca7fa41cb608314b8d6da3704aee984e",
+    "rule-143-1703-1x2-parallel.npz": "192cccae2d3eaae43af605603cefac84c3079d631cac9422ff07490c878f4830",
+    "rule-143-1703-2x1-parallel.npz": "88c1e8ea8ed485e5ad693ec3cf902692b993906246451e67f6c45aab176e8b2b",
+    "rule-143-1703-1x4-parallel.npz": "c95a137efe5cff9a3aa33bc1e0219b772b6e9099bbcd6e704e9b8eda71089920",
+    "rule-143-1703-4x1-parallel.npz": "e5dbaeea8bb4e1927ffe5018d98f3f0325dae4b878f445759eda7c3aa6f9ec3a",
+    "rule-143-1703-1x1-zero_history.npz": "d3bc854df22e17643ece86745a33f6382645caf11089d258606a326fca9e1e26",
+    "rule-143-1703-2x2-zero_history.npz": "d3bc854df22e17643ece86745a33f6382645caf11089d258606a326fca9e1e26",
+    "rule-143-1703-4x4-zero_history.npz": "d3bc854df22e17643ece86745a33f6382645caf11089d258606a326fca9e1e26",
+    "rule-143-1703-2x2-serial_lanes.npz": "e75d86be7e861e7b383373d55e8a12532ebff6e59535e4f4e40f4f717c0b58dd",
+    "rule-143-1703-4x4-serial_lanes.npz": "6349e6040f182fcf5e48709637a3e01fca7fa41cb608314b8d6da3704aee984e",
+    "rule-143-1709-1x1-parallel.npz": "0d40148a0cbbee5eb3038a45c6196e89a95443764b66ab293a54cf1aeab672e8",
+    "rule-143-1709-2x2-parallel.npz": "b6f7801420e85ae3cc951ec5e8a805bc18703a17c0a7aaf3b516cbfcd49d5014",
+    "rule-143-1709-4x4-parallel.npz": "0aec2d958e744f33654ee3d986500157fa82d48a5eeabb1721a46ece934d7a76",
+    "rule-143-1709-1x2-parallel.npz": "218e009d9f15de84f28165c4de7608a2d09b4eae1b3de18ce39e2056ec35b682",
+    "rule-143-1709-2x1-parallel.npz": "6bbb396ea9d72dda40b03927526b05373d341b7f8acd5ad95b8357052efd8fcf",
+    "rule-143-1709-1x4-parallel.npz": "9e455324e6e44f2fa526107e186c3df29f5bbe56a1d02f2490dad238a4c76261",
+    "rule-143-1709-4x1-parallel.npz": "1e0aef5e0aa9cd6820d63ac236ea910ff5e2683d91c4ab3ce731f5c2c3e00e0b",
+    "rule-143-1709-1x1-zero_history.npz": "970ca4d20246e3521996f1bdb4ec863e4c60535ca05b0b698ca40498d29f80d5",
+    "rule-143-1709-2x2-zero_history.npz": "970ca4d20246e3521996f1bdb4ec863e4c60535ca05b0b698ca40498d29f80d5",
+    "rule-143-1709-4x4-zero_history.npz": "970ca4d20246e3521996f1bdb4ec863e4c60535ca05b0b698ca40498d29f80d5",
+    "rule-143-1709-2x2-serial_lanes.npz": "b6f7801420e85ae3cc951ec5e8a805bc18703a17c0a7aaf3b516cbfcd49d5014",
+    "rule-143-1709-4x4-serial_lanes.npz": "0aec2d958e744f33654ee3d986500157fa82d48a5eeabb1721a46ece934d7a76"
+  },
+  "checked_results_sha256": "5467cb0be78444ed7efc0733134db4466df674470b23a7f6d17f901a6f16255e",
+  "jobs": [
+    {
+      "id": "1098",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/legacy.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/width-legacy-20261119/results.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "id": "1099",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/test_audit.py"
+      ],
+      "exit_code": 1
+    },
+    {
+      "id": "1100",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/legacy.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/width-legacy-20261119/results.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1101",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/test_audit.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1102",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "WIDTH_TEST_DEVICE=cpu",
+        "WIDTH_TEST_PARENT=/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119/pairwise-1703/final.pt",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/test_model.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1103",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "WIDTH_TEST_DEVICE=mps",
+        "WIDTH_TEST_PARENT=/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119/pairwise-1703/final.pt",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/test_model.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1104",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/audit.py",
+        "--legacy",
+        "/Volumes/EggFuseWorkspace/experiments/width-legacy-20261119/results.json",
+        "--output",
+        "/Volumes/EggFuseWorkspace/experiments/width-legacy-20261119/cpu-replay.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1105",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "WIDTH_TEST_DEVICE=cpu",
+        "WIDTH_TEST_PARENT=/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119/pairwise-1703/final.pt",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/test_model.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1106",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "WIDTH_TEST_DEVICE=mps",
+        "WIDTH_TEST_PARENT=/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119/pairwise-1703/final.pt",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/test_model.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1107",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/test_audit.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1108",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/study.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1109",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/train_width.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+        "1703"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1110",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/train_width.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+        "1709"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1111",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/evaluate_width.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "1112",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/width_ablation/audit.py",
+        "--formal",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119",
+        "--output",
+        "/Volumes/EggFuseWorkspace/experiments/single-to-multi-width-20261119/cpu-replay.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "device": "Apple M3 Max",
+  "backend": "PyTorch 2.15 MPS eager, CPU fallback disabled"
+}
