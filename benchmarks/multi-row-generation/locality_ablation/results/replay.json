@@ -1,0 +1,209 @@
+{
+  "evaluation_sha256": "55f7b0e53c55a53aafd82fdb718cf8e4e25b5c4ee7208ec31312f557f944dda5",
+  "trace_count": 36,
+  "trace_sha256": {
+    "1703-rule-134-original.npz": "7c92b78b3174b0cc5ffa1f960c57e1f1f5737a0725f0a04f93ebb0b5436cf2c6",
+    "1703-rule-134-all-home.npz": "f087b12827f8b69a9c55c71f9af6c2df500d42a1e66de673cad3fc23df253231",
+    "1703-rule-134-half-cross.npz": "995bbc8369207a942b88dadd1234651b0bc365f652c667ce7a7c6d93de2de9e6",
+    "1703-rule-134-all-cross.npz": "1b3b0e1169fd1a24e5097ac19d8e44326f9166960791263f914f2489936eb5e1",
+    "1703-rule-134-hot-cross.npz": "5bcdc239530691aaa8c25f8aa89570d0bd57dde056cd82f74f704208002004fc",
+    "1703-rule-135-original.npz": "36fb4e275d6b59bae6bc408f618c785232325c15543d97a4b98845a7bb8deef5",
+    "1703-rule-135-all-home.npz": "8d7b0b2936372067b6b6d08b6c1650a47b2b2e5ae51477f1c066c6d93f97a786",
+    "1703-rule-135-half-cross.npz": "c396375da970a2ea2d0ffbd1ce84a00c33b9243ff6df2b0e4fa03b2265a1e59a",
+    "1703-rule-135-all-cross.npz": "8fba317f82a58a1281f89f94f18f99b76c8ece02cdc37a079e54b8eccf85a1b0",
+    "1703-rule-135-hot-cross.npz": "b2dfd684b160391fa052006dfbc4405caf6ad572cdd2c5d9c65e098780713d6b",
+    "1703-rule-143-original.npz": "26f3b9424ba63e5bd93cb283ec9bb42fa7244c6da9681a9d325fed26039f3912",
+    "1703-rule-143-all-home.npz": "6891bceda9c5c8df63c260582cc25c89df76b489624ba843155d737d436e7595",
+    "1703-rule-143-half-cross.npz": "a207c07f65263129288cbc63212c9288b216faab0051dc67626b77f0a2bb4856",
+    "1703-rule-143-all-cross.npz": "525834857d849f5a753630bc79d77d147d7ede5667fd2cef7c5582c4c74e2efe",
+    "1703-rule-143-hot-cross.npz": "d651c42db6e9be9fbd5d26be5c4b723bf87ab8b8a0472867b86e5e062cdca0c7",
+    "1703-rule-266-seen-secondary.npz": "6bfde92ae7bdca265c06b99e6c025e7e402f2fb20a7784037bc2ed59836579dd",
+    "1703-rule-267-seen-secondary.npz": "74e5ddbf165723602b1bafa40a394d1b5c5896fe80e50b40c4dfcc04381f25f6",
+    "1703-rule-580-seen-secondary.npz": "0f7e7a32850664920859d43e5f565a772082d6218c3bf85ab119338b284fe9cf",
+    "1709-rule-134-original.npz": "e78e54a5118f049ce5b0ab411ff88c50756bf61a7fb7c98d3f912d9e9627c642",
+    "1709-rule-134-all-home.npz": "865687453870c7b1dc34331342f21b42e4339746af03bfc7a04054d5ea04fa84",
+    "1709-rule-134-half-cross.npz": "e338070ff80dba4d0234906b5dcc378181c11ad41fc9d6e9e1346f310aaac3d6",
+    "1709-rule-134-all-cross.npz": "0981a919d39913c42fd065fe3b4829105cec5141cafb0323d6146a9a4869ba91",
+    "1709-rule-134-hot-cross.npz": "0db28068254f7154fcce4e1d15fa8c8f3731ef079eb7f5253c1f84899d316505",
+    "1709-rule-135-original.npz": "6607b7ac607045b88177742f84b87521dcba0aaf13f406021718909d4f750da8",
+    "1709-rule-135-all-home.npz": "74fb0501b3968bfab20facaf98bb140836024fd168f05491097a0da263a1e6fb",
+    "1709-rule-135-half-cross.npz": "565c0658fdf46802fd2d5019314109e03462d4b9e34891921fb6a15464910d01",
+    "1709-rule-135-all-cross.npz": "7c6d08ec9259b060f85a2947840b7ea4b3dda594aa7a47694097607448f6fea4",
+    "1709-rule-135-hot-cross.npz": "107cf1af7cd75cd5840d2102726949cee7f2dc995509e09ae2b0be76b8345bbd",
+    "1709-rule-143-original.npz": "b38fca5c9a4c6107bc4e32b464eae7fca89222688481b4064d37af2137227e98",
+    "1709-rule-143-all-home.npz": "67704d41ffda7f8194932bf9f4d416b8441404dd0bffaec7bc5b1b76967973f5",
+    "1709-rule-143-half-cross.npz": "b1fea6f7d21bb683bda1c730f880e2a9fa971439f1ffe28f88f0a11d73ccbb67",
+    "1709-rule-143-all-cross.npz": "4381f125637d47688c0d66a5abf012063d238444574fc4f1d9765258d838de0f",
+    "1709-rule-143-hot-cross.npz": "5e0368622cc5e3f8b6254d8caaf6074fa5de917e60063c40256caf71fde520ab",
+    "1709-rule-266-seen-secondary.npz": "59b7cff915e40a86da9a4eef149e35aae394c2548dddfb183663e10edae59956",
+    "1709-rule-267-seen-secondary.npz": "620df5fe1beadd1cacbd6ad99c35b18357b528a6696b3c37e0ddcaa8443c429a",
+    "1709-rule-580-seen-secondary.npz": "ba01cbb443d6c1aae8d1cb73a817dba4fe3f2bbbcb3395f74a2efff184f1d57d"
+  },
+  "median_ms": {
+    "1703/global": 6.451438,
+    "1703/local": 6.558521,
+    "1703/drop": 6.314584,
+    "1703/stale": 6.377354,
+    "1703/mute": 6.5258965,
+    "1703/resend": 7.070541499999999,
+    "1703/certified": 5.675750000000001,
+    "1709/global": 7.2892915,
+    "1709/local": 7.373021,
+    "1709/drop": 7.3809995,
+    "1709/stale": 7.4267085,
+    "1709/mute": 7.435229,
+    "1709/resend": 7.8262295,
+    "1709/certified": 6.7847919999999995
+  },
+  "weights": {
+    "1703": {
+      "global": {
+        "initial": "23e1ff1423d1466a41a403e87d8be12f8a97888df02a3691051aef5541b129aa",
+        "batches": "30548905efb8d2cd13410a724e4c84cb3460109eb4dcbc7cd22f3df4540e57b7",
+        "weight": "b0194efa114b454493ad4670c4ff44c4318658748bcf7f692281fd49c27362ca",
+        "params": 4849,
+        "final_loss": 0.03182687237858772
+      },
+      "local": {
+        "initial": "23e1ff1423d1466a41a403e87d8be12f8a97888df02a3691051aef5541b129aa",
+        "batches": "30548905efb8d2cd13410a724e4c84cb3460109eb4dcbc7cd22f3df4540e57b7",
+        "weight": "ed9c270b5655a4b68713b2352cbe85a7ee8b57b72eb34e41eb1fd11432fab8e4",
+        "params": 4849,
+        "final_loss": 0.03149281069636345
+      }
+    },
+    "1709": {
+      "global": {
+        "initial": "e8ac48366efe39542e8a86b39c9458f502334a85cc320dc82c6812150c0963ee",
+        "batches": "c1adbc9a1a7f8f09d126630518c16e4e1725d5d043cc73791648ccbc1a8f5e27",
+        "weight": "3b02c32a686d2b7dd1010b9bb4fb0366a11a44d6e9fd66120b2283a44754ed87",
+        "params": 4849,
+        "final_loss": 0.028599167242646217
+      },
+      "local": {
+        "initial": "e8ac48366efe39542e8a86b39c9458f502334a85cc320dc82c6812150c0963ee",
+        "batches": "c1adbc9a1a7f8f09d126630518c16e4e1725d5d043cc73791648ccbc1a8f5e27",
+        "weight": "a62fe7ecd25abe593fc644366bc24e938906a745c16797d63cd3c59825d78210",
+        "params": 4849,
+        "final_loss": 0.027489935979247093
+      }
+    }
+  },
+  "unaffected_home_state": {
+    "1703/rule-134/global": 0,
+    "1703/rule-134/local": 128,
+    "1703/rule-135/global": 0,
+    "1703/rule-135/local": 128,
+    "1703/rule-143/global": 0,
+    "1703/rule-143/local": 128,
+    "1709/rule-134/global": 0,
+    "1709/rule-134/local": 128,
+    "1709/rule-135/global": 0,
+    "1709/rule-135/local": 128,
+    "1709/rule-143/global": 0,
+    "1709/rule-143/local": 128
+  },
+  "paired_graph_changes": {
+    "1703/original/global-to-local": {
+      "gained": 0,
+      "lost": 4
+    },
+    "1703/original/local-to-mute": {
+      "gained": 0,
+      "lost": 90
+    },
+    "1703/all-home/global-to-local": {
+      "gained": 0,
+      "lost": 0
+    },
+    "1703/all-home/local-to-mute": {
+      "gained": 0,
+      "lost": 0
+    },
+    "1703/half-cross/global-to-local": {
+      "gained": 2,
+      "lost": 10
+    },
+    "1703/half-cross/local-to-mute": {
+      "gained": 0,
+      "lost": 104
+    },
+    "1703/all-cross/global-to-local": {
+      "gained": 0,
+      "lost": 15
+    },
+    "1703/all-cross/local-to-mute": {
+      "gained": 0,
+      "lost": 119
+    },
+    "1703/hot-cross/global-to-local": {
+      "gained": 2,
+      "lost": 4
+    },
+    "1703/hot-cross/local-to-mute": {
+      "gained": 0,
+      "lost": 96
+    },
+    "1703/seen-secondary/global-to-local": {
+      "gained": 2,
+      "lost": 6
+    },
+    "1703/seen-secondary/local-to-mute": {
+      "gained": 10,
+      "lost": 54
+    },
+    "1709/original/global-to-local": {
+      "gained": 0,
+      "lost": 10
+    },
+    "1709/original/local-to-mute": {
+      "gained": 6,
+      "lost": 92
+    },
+    "1709/all-home/global-to-local": {
+      "gained": 0,
+      "lost": 0
+    },
+    "1709/all-home/local-to-mute": {
+      "gained": 0,
+      "lost": 0
+    },
+    "1709/half-cross/global-to-local": {
+      "gained": 0,
+      "lost": 10
+    },
+    "1709/half-cross/local-to-mute": {
+      "gained": 2,
+      "lost": 140
+    },
+    "1709/all-cross/global-to-local": {
+      "gained": 0,
+      "lost": 9
+    },
+    "1709/all-cross/local-to-mute": {
+      "gained": 0,
+      "lost": 150
+    },
+    "1709/hot-cross/global-to-local": {
+      "gained": 8,
+      "lost": 14
+    },
+    "1709/hot-cross/local-to-mute": {
+      "gained": 8,
+      "lost": 122
+    },
+    "1709/seen-secondary/global-to-local": {
+      "gained": 0,
+      "lost": 8
+    },
+    "1709/seen-secondary/local-to-mute": {
+      "gained": 18,
+      "lost": 66
+    }
+  },
+  "compiler_reference_sha256": {
+    "manifest.json": "72091b90e4ac4d0c50ff2477f32b7660f7db79adbdf8f35acc8b90d9a006d7ec",
+    "replay-evidence.json": "f3a5237f97157f50b69bedc0a00db7952cdca578c0e073dd4762daba4008dea9",
+    "extra-events.json": "d2226b23fe753beda70df37ac8e3dd86eb3f959c2461239a09ce15da13859366"
+  }
+}
