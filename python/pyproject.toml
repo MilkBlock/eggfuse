@@ -4,8 +4,8 @@ build-backend = "uv_build"
 
 [project]
 name = "eggfuse"
-version = "0.1.0"
-description = "EggFuse cross-Run Cell projection compiler and MLX inference API"
+version = "0.2.0"
+description = "Offline Cell projection compiler and two-Run output verifier"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["mlx>=0.32.4,<0.33"]
+dependencies = ["numpy>=1.24"]

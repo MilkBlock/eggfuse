@@ -1,6 +1,5 @@
-"""Python interface to the EggFuse two-Run Cell inference prototype."""
-from .api import infer, load_model
+"""Offline EggFuse compiler and post-inference source-semantic verifier."""
 from .compiler import compile_projection, projection_recipe
-from .model import CrossRun, decode
+from .verify import verify_crossrun
 
-__all__ = ['CrossRun', 'compile_projection', 'decode', 'infer', 'load_model', 'projection_recipe']
+__all__ = ["compile_projection", "projection_recipe", "verify_crossrun"]
