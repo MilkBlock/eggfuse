@@ -1,0 +1,32 @@
+# ARGS: 6 2
+# Two recurrent channels share their old values. A data-dependent gate swaps roles.
+@main(n: int, seed: int) {
+  zero: int = const 0;
+  one: int = const 1;
+  i: int = id zero;
+  a: int = id seed;
+  b: int = id one;
+.loop:
+  more: bool = lt i n;
+  br more .gate .done;
+.gate:
+  high: bool = gt a b;
+  diff: int = sub a b;
+  merged: int = add a b;
+  br high .updatea .updateb;
+.updatea:
+  a: int = id diff;
+  b: int = add merged i;
+  jmp .join;
+.updateb:
+  a: int = add merged i;
+  b: int = sub zero diff;
+  jmp .join;
+.join:
+  i: int = add i one;
+  jmp .loop;
+.done:
+  print a;
+  print b;
+  ret;
+}

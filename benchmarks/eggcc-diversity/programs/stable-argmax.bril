@@ -1,0 +1,36 @@
+# ARGS: 9 2
+# Keep the first index reaching the maximum, including a plateau of exact ties.
+@main(n: int, cap: int) {
+  zero: int = const 0;
+  one: int = const 1;
+  low: int = const -1;
+  i: int = id zero;
+  best: int = id low;
+  winner: int = id low;
+.loop:
+  more: bool = lt i n;
+  br more .score .done;
+.score:
+  inside: bool = lt i cap;
+  br inside .ramp .plateau;
+.ramp:
+  v: int = id i;
+  jmp .compare;
+.plateau:
+  v: int = id cap;
+  jmp .compare;
+.compare:
+  replace: bool = gt v best;
+  br replace .record .advance;
+.record:
+  winner: int = id i;
+  best: int = id v;
+  jmp .advance;
+.advance:
+  i: int = add i one;
+  jmp .loop;
+.done:
+  print winner;
+  print best;
+  ret;
+}

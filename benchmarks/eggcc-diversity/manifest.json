@@ -1,0 +1,321 @@
+{
+  "schema": 1,
+  "origin": "Hand-authored for EggFuse. Integer Bril fixtures, no upstream program copies.",
+  "split_unit": "source family; keep all argument cases and all derived graph/token/Run views of a source in its split",
+  "cases": [
+    {
+      "name": "affine-twins",
+      "family": "fanout",
+      "split": "train",
+      "mechanisms": [
+        "shared intermediate",
+        "parallel consumers"
+      ],
+      "examples": [
+        {
+          "args": [
+            5,
+            2
+          ],
+          "output": [
+            565,
+            35
+          ]
+        },
+        {
+          "args": [
+            0,
+            3
+          ],
+          "output": [
+            0,
+            0
+          ]
+        },
+        {
+          "args": [
+            3,
+            -1
+          ],
+          "output": [
+            14,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "name": "clamped-ramp",
+      "family": "pointwise clamp",
+      "split": "train",
+      "mechanisms": [
+        "lower/upper gates",
+        "control reconvergence"
+      ],
+      "examples": [
+        {
+          "args": [
+            9,
+            4
+          ],
+          "output": [
+            19
+          ]
+        },
+        {
+          "args": [
+            2,
+            9
+          ],
+          "output": [
+            1
+          ]
+        },
+        {
+          "args": [
+            7,
+            0
+          ],
+          "output": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "segmented-prefix",
+      "family": "segmented reduction",
+      "split": "train",
+      "mechanisms": [
+        "boundary reset",
+        "loop-carried prefix"
+      ],
+      "examples": [
+        {
+          "args": [
+            9,
+            3
+          ],
+          "output": [
+            84,
+            24
+          ]
+        },
+        {
+          "args": [
+            0,
+            2
+          ],
+          "output": [
+            0,
+            0
+          ]
+        },
+        {
+          "args": [
+            6,
+            1
+          ],
+          "output": [
+            21,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "name": "window-laplacian",
+      "family": "stencil",
+      "split": "train",
+      "mechanisms": [
+        "overlapping loads",
+        "allocation lifetime",
+        "separate init loop"
+      ],
+      "examples": [
+        {
+          "args": [
+            8
+          ],
+          "output": [
+            126
+          ]
+        },
+        {
+          "args": [
+            2
+          ],
+          "output": [
+            0
+          ]
+        },
+        {
+          "args": [
+            3
+          ],
+          "output": [
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "name": "histogram-scatter",
+      "family": "scatter accumulation",
+      "split": "development",
+      "mechanisms": [
+        "indexed read-modify-write",
+        "repeated destination"
+      ],
+      "examples": [
+        {
+          "args": [
+            11,
+            3
+          ],
+          "output": [
+            26
+          ]
+        },
+        {
+          "args": [
+            3,
+            9
+          ],
+          "output": [
+            3
+          ]
+        },
+        {
+          "args": [
+            7,
+            1
+          ],
+          "output": [
+            28
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gated-state",
+      "family": "coupled recurrence",
+      "split": "development",
+      "mechanisms": [
+        "data-dependent state transition",
+        "two loop-carried channels"
+      ],
+      "examples": [
+        {
+          "args": [
+            6,
+            2
+          ],
+          "output": [
+            39,
+            16
+          ]
+        },
+        {
+          "args": [
+            0,
+            0
+          ],
+          "output": [
+            0,
+            1
+          ]
+        },
+        {
+          "args": [
+            4,
+            -1
+          ],
+          "output": [
+            11,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gemm-bias-relu",
+      "family": "fused contraction epilogue",
+      "split": "heldout",
+      "mechanisms": [
+        "nested loops",
+        "reduction then pointwise activation"
+      ],
+      "examples": [
+        {
+          "args": [
+            3,
+            2
+          ],
+          "output": [
+            8
+          ]
+        },
+        {
+          "args": [
+            2,
+            0
+          ],
+          "output": [
+            2
+          ]
+        },
+        {
+          "args": [
+            1,
+            4
+          ],
+          "output": [
+            14
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stable-argmax",
+      "family": "ordered reduction",
+      "split": "heldout",
+      "mechanisms": [
+        "identity-sensitive ties",
+        "companion index"
+      ],
+      "examples": [
+        {
+          "args": [
+            9,
+            2
+          ],
+          "output": [
+            2,
+            2
+          ]
+        },
+        {
+          "args": [
+            6,
+            0
+          ],
+          "output": [
+            0,
+            0
+          ]
+        },
+        {
+          "args": [
+            0,
+            3
+          ],
+          "output": [
+            -1,
+            -1
+          ]
+        }
+      ]
+    }
+  ]
+}

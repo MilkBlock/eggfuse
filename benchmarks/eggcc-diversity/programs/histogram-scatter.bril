@@ -1,0 +1,37 @@
+# ARGS: 11 3
+# A collision in an indexed scatter must see the previous store.
+@main(n: int, buckets: int) {
+  zero: int = const 0;
+  one: int = const 1;
+  arr: ptr<int> = alloc buckets;
+  i: int = id zero;
+.init:
+  needszero: bool = lt i buckets;
+  br needszero .clear .begin;
+.clear:
+  p: ptr<int> = ptradd arr i;
+  store p zero;
+  i: int = add i one;
+  jmp .init;
+.begin:
+  i: int = id zero;
+  sum: int = id zero;
+.loop:
+  more: bool = lt i n;
+  br more .scatter .done;
+.scatter:
+  q: int = div i buckets;
+  multiple: int = mul q buckets;
+  idx: int = sub i multiple;
+  p: ptr<int> = ptradd arr idx;
+  old: int = load p;
+  next: int = add old one;
+  store p next;
+  sum: int = add sum next;
+  i: int = add i one;
+  jmp .loop;
+.done:
+  free arr;
+  print sum;
+  ret;
+}

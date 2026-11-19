@@ -1,0 +1,36 @@
+# ARGS: 9 4
+# Clamp an affine ramp to [0, ceiling]. Two diamonds reconverge.
+@main(n: int, ceiling: int) {
+  zero: int = const 0;
+  one: int = const 1;
+  three: int = const 3;
+  i: int = id zero;
+  sum: int = id zero;
+.loop:
+  more: bool = lt i n;
+  br more .body .done;
+.body:
+  t: int = mul i three;
+  v: int = sub t n;
+  negative: bool = lt v zero;
+  br negative .low .testhigh;
+.low:
+  clipped: int = id zero;
+  jmp .merge;
+.testhigh:
+  large: bool = gt v ceiling;
+  br large .high .mid;
+.high:
+  clipped: int = id ceiling;
+  jmp .merge;
+.mid:
+  clipped: int = id v;
+  jmp .merge;
+.merge:
+  sum: int = add sum clipped;
+  i: int = add i one;
+  jmp .loop;
+.done:
+  print sum;
+  ret;
+}

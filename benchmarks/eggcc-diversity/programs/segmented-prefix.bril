@@ -1,0 +1,30 @@
+# ARGS: 9 3
+# Reset the recurrent sum at segment boundaries and checksum each prefix.
+@main(n: int, width: int) {
+  zero: int = const 0;
+  one: int = const 1;
+  i: int = id zero;
+  offset: int = id zero;
+  prefix: int = id zero;
+  sum: int = id zero;
+.loop:
+  more: bool = lt i n;
+  br more .boundary .done;
+.boundary:
+  full: bool = eq offset width;
+  br full .reset .append;
+.reset:
+  prefix: int = id zero;
+  offset: int = id zero;
+  jmp .append;
+.append:
+  i: int = add i one;
+  prefix: int = add prefix i;
+  sum: int = add sum prefix;
+  offset: int = add offset one;
+  jmp .loop;
+.done:
+  print sum;
+  print prefix;
+  ret;
+}

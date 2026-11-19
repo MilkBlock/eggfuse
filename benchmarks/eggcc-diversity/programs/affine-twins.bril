@@ -1,0 +1,27 @@
+# ARGS: 5 2
+# Two consumers reuse a shared activation and a loop-invariant scale.
+@main(n: int, shift: int) {
+  zero: int = const 0;
+  one: int = const 1;
+  two: int = const 2;
+  i: int = id zero;
+  left: int = id zero;
+  right: int = id zero;
+.loop:
+  more: bool = lt i n;
+  br more .body .done;
+.body:
+  scale: int = add shift two;
+  t: int = mul scale i;
+  x: int = add t one;
+  square: int = mul x x;
+  residual: int = sub x i;
+  left: int = add left square;
+  right: int = add right residual;
+  i: int = add i one;
+  jmp .loop;
+.done:
+  print left;
+  print right;
+  ret;
+}

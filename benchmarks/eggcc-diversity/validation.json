@@ -1,0 +1,338 @@
+{
+  "schema": 1,
+  "eggcc_binary_sha256": "162b82499bcc131dead74e00fe21f5ecbfe2dd4c4e3e1cb9a78a2b6383402897",
+  "cases": {
+    "affine-twins": {
+      "source_sha256": "aa36844956ce1c77de7939113e705b373d4c24b7b01d9f3f0c3d239bbfd4bf6f",
+      "functions": 1,
+      "instructions": 20,
+      "labels": 3,
+      "opcodes": {
+        "add": 5,
+        "br": 1,
+        "const": 3,
+        "id": 3,
+        "jmp": 1,
+        "lt": 1,
+        "mul": 2,
+        "print": 2,
+        "ret": 1,
+        "sub": 1
+      },
+      "checked": [
+        [
+          5,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          -1
+        ]
+      ],
+      "pass3": {
+        "optimized_default_output": [
+          "565",
+          "35"
+        ],
+        "input_file": "affine-twins.egg",
+        "input_bytes": 286636,
+        "input_sha256": "5ec2b017830fc1427c8acd4ba4d05cfb373b7ac90aed40594fed4c4e7d99bcb7"
+      }
+    },
+    "clamped-ramp": {
+      "source_sha256": "4c3f02d7dcf977f85d6d745005d49a34442eca0b48c00ebafb6e49e3675fa872",
+      "functions": 1,
+      "instructions": 24,
+      "labels": 8,
+      "opcodes": {
+        "add": 2,
+        "br": 3,
+        "const": 3,
+        "gt": 1,
+        "id": 5,
+        "jmp": 4,
+        "lt": 2,
+        "mul": 1,
+        "print": 1,
+        "ret": 1,
+        "sub": 1
+      },
+      "checked": [
+        [
+          9,
+          4
+        ],
+        [
+          2,
+          9
+        ],
+        [
+          7,
+          0
+        ]
+      ],
+      "pass3": {
+        "optimized_default_output": [
+          "19"
+        ],
+        "input_file": "clamped-ramp.egg",
+        "input_bytes": 290382,
+        "input_sha256": "df720edffe5c0915ca8f45af060d4a927504f523888c93dc2b223b80bee18266"
+      }
+    },
+    "segmented-prefix": {
+      "source_sha256": "aef54fae4b94c1f32fc3a6cfbd23ed936fb39bd2dc2b1d55a9c812c4f58167db",
+      "functions": 1,
+      "instructions": 21,
+      "labels": 5,
+      "opcodes": {
+        "add": 4,
+        "br": 2,
+        "const": 2,
+        "eq": 1,
+        "id": 6,
+        "jmp": 2,
+        "lt": 1,
+        "print": 2,
+        "ret": 1
+      },
+      "checked": [
+        [
+          9,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          6,
+          1
+        ]
+      ],
+      "pass3": {
+        "optimized_default_output": [
+          "84",
+          "24"
+        ],
+        "input_file": "segmented-prefix.egg",
+        "input_bytes": 289280,
+        "input_sha256": "1de800efcbb93dffeb82d307e6020e20189ae6456f7cb8c747ada311c198bf60"
+      }
+    },
+    "window-laplacian": {
+      "source_sha256": "f423d061555414e16644012979eb17bc1da4730957e762114e7385b10f654c35",
+      "functions": 1,
+      "instructions": 35,
+      "labels": 6,
+      "opcodes": {
+        "add": 5,
+        "alloc": 1,
+        "br": 2,
+        "const": 3,
+        "free": 1,
+        "id": 3,
+        "jmp": 2,
+        "load": 3,
+        "lt": 2,
+        "mul": 3,
+        "print": 1,
+        "ptradd": 4,
+        "ret": 1,
+        "store": 1,
+        "sub": 3
+      },
+      "checked": [
+        [
+          8
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "pass3": {
+        "optimized_default_output": [
+          "126"
+        ],
+        "input_file": "window-laplacian.egg",
+        "input_bytes": 291840,
+        "input_sha256": "12ace9687056005af55f505a14e7e59f3363d7e3705ecdfb545d13a2c42c65cf"
+      }
+    },
+    "histogram-scatter": {
+      "source_sha256": "30a258bc5a97b07526f6bc149f7fc8f122f507e5c4b36225c22c36b08ca73bcf",
+      "functions": 1,
+      "instructions": 27,
+      "labels": 6,
+      "opcodes": {
+        "add": 4,
+        "alloc": 1,
+        "br": 2,
+        "const": 2,
+        "div": 1,
+        "free": 1,
+        "id": 3,
+        "jmp": 2,
+        "load": 1,
+        "lt": 2,
+        "mul": 1,
+        "print": 1,
+        "ptradd": 2,
+        "ret": 1,
+        "store": 2,
+        "sub": 1
+      },
+      "checked": [
+        [
+          11,
+          3
+        ],
+        [
+          3,
+          9
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "pass3": {
+        "optimized_default_output": [
+          "26"
+        ],
+        "input_file": "histogram-scatter.egg",
+        "input_bytes": 290906,
+        "input_sha256": "426bbca575d6d1ca2ec9f7e8af857ec24b1f1e89870ced61346cd971d8541c5c"
+      }
+    },
+    "gated-state": {
+      "source_sha256": "085066a18e5b7c8265277be9a0dc8ac704f229015c35fa7243b8bfeea8bb511b",
+      "functions": 1,
+      "instructions": 22,
+      "labels": 6,
+      "opcodes": {
+        "add": 4,
+        "br": 2,
+        "const": 2,
+        "gt": 1,
+        "id": 4,
+        "jmp": 3,
+        "lt": 1,
+        "print": 2,
+        "ret": 1,
+        "sub": 2
+      },
+      "checked": [
+        [
+          6,
+          2
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          4,
+          -1
+        ]
+      ],
+      "pass3": {
+        "optimized_default_output": [
+          "39",
+          "16"
+        ],
+        "input_file": "gated-state.egg",
+        "input_bytes": 288502,
+        "input_sha256": "5a4e06968bf98303a00d07d518158538215ac425ed2844908407c54b6f392626"
+      }
+    },
+    "gemm-bias-relu": {
+      "source_sha256": "76a31e7c3b166c749621df6f519d08510c11b9cfd43141575f59c3046f308b9d",
+      "functions": 1,
+      "instructions": 34,
+      "labels": 12,
+      "opcodes": {
+        "add": 8,
+        "br": 4,
+        "const": 2,
+        "gt": 1,
+        "id": 5,
+        "jmp": 7,
+        "lt": 3,
+        "mul": 1,
+        "print": 1,
+        "ret": 1,
+        "sub": 1
+      },
+      "checked": [
+        [
+          3,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "pass3": {
+        "optimized_default_output": [
+          "8"
+        ],
+        "input_file": "gemm-bias-relu.egg",
+        "input_bytes": 297976,
+        "input_sha256": "2c4514da3565d316e71bb151af04369b9d8bd130963a5cfca3f520082917103d"
+      }
+    },
+    "stable-argmax": {
+      "source_sha256": "9c0cc801f42eacd7fc249707d743f37e8707722f0d1718cbaa4af47970d43aef",
+      "functions": 1,
+      "instructions": 24,
+      "labels": 8,
+      "opcodes": {
+        "add": 1,
+        "br": 3,
+        "const": 3,
+        "gt": 1,
+        "id": 7,
+        "jmp": 4,
+        "lt": 2,
+        "print": 2,
+        "ret": 1
+      },
+      "checked": [
+        [
+          9,
+          2
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "pass3": {
+        "optimized_default_output": [
+          "2",
+          "2"
+        ],
+        "input_file": "stable-argmax.egg",
+        "input_bytes": 290730,
+        "input_sha256": "40d9a1b67de279b0a762db48a4279cba134f5a2d26985d424761ea7bb88f660b"
+      }
+    }
+  }
+}

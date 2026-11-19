@@ -1,0 +1,51 @@
+# ARGS: 3 2
+# Dense square integer product, procedural operands, column bias, ReLU and checksum.
+# A[r,k] = r+k; B[k,c] = k-c. A zero-trip reduction still applies the bias.
+@main(size: int, depth: int) {
+  zero: int = const 0;
+  one: int = const 1;
+  row: int = id zero;
+  total: int = id zero;
+.rows:
+  more_rows: bool = lt row size;
+  br more_rows .begin_cols .done;
+.begin_cols:
+  col: int = id zero;
+  jmp .cols;
+.cols:
+  more_cols: bool = lt col size;
+  br more_cols .begin_k .row_done;
+.begin_k:
+  k: int = id zero;
+  sum: int = id zero;
+  jmp .reduce;
+.reduce:
+  more_k: bool = lt k depth;
+  br more_k .mac .bias;
+.mac:
+  a: int = add row k;
+  b: int = sub k col;
+  product: int = mul a b;
+  sum: int = add sum product;
+  k: int = add k one;
+  jmp .reduce;
+.bias:
+  biased: int = add sum col;
+  positive: bool = gt biased zero;
+  br positive .positive .clamped;
+.positive:
+  total: int = add total biased;
+  jmp .advance;
+.clamped:
+  total: int = add total zero;
+  jmp .advance;
+.advance:
+  col: int = add col one;
+  jmp .cols;
+.row_done:
+  row: int = add row one;
+  jmp .rows;
+.done:
+  print total;
+  ret;
+}

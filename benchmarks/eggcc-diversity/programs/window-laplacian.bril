@@ -1,0 +1,45 @@
+# ARGS: 8
+# Initialize a vector, then read overlapping triples from one allocation.
+@main(n: int) {
+  zero: int = const 0;
+  one: int = const 1;
+  two: int = const 2;
+  arr: ptr<int> = alloc n;
+  i: int = id zero;
+.fill:
+  more: bool = lt i n;
+  br more .write .begin;
+.write:
+  cell: ptr<int> = ptradd arr i;
+  sq: int = mul i i;
+  cube: int = mul sq i;
+  store cell cube;
+  i: int = add i one;
+  jmp .fill;
+.begin:
+  sum: int = id zero;
+  i: int = id one;
+  limit: int = sub n one;
+.scan:
+  inside: bool = lt i limit;
+  br inside .stencil .done;
+.stencil:
+  lo: int = sub i one;
+  hi: int = add i one;
+  a: ptr<int> = ptradd arr lo;
+  b: ptr<int> = ptradd arr i;
+  c: ptr<int> = ptradd arr hi;
+  left: int = load a;
+  mid: int = load b;
+  right: int = load c;
+  sides: int = add left right;
+  twice: int = mul mid two;
+  lap: int = sub sides twice;
+  sum: int = add sum lap;
+  i: int = add i one;
+  jmp .scan;
+.done:
+  free arr;
+  print sum;
+  ret;
+}
