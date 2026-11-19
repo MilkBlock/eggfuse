@@ -65,7 +65,7 @@ def address(a,axes):
     a.path([(65,57),(33,57),(33,129),(147,129)],c="#946422")
     a.rect(151,119,23,23,"#f3cd80","#946422",3)
     a.txt(242,68,"source",14);a.txt(243,132,"target",14)
-    a.node(154,178,258,["flat index = rL + t","RoPE(row) | RoPE(pos)","row / pos / port"][axes],"s")
+    a.node(154,178,258,["rL + t","RoPE(row) | RoPE(pos)","row / pos / port","(rL + t)P + p"][axes],"s")
     if axes==2:
         for j in range(3):a.rect(153+j*6,122,4,16,"#946422" if j==1 else "white","#946422",1)
 
@@ -253,7 +253,7 @@ def overview():
 PLATES=[
 ("01-template",[("Template ID",0),("Compiler roles",1),("Pooled GNN",2),("Port GNN",3)],graph),
 ("02-heads",[("One head per rule",False),("One head across rules",True)],heads),
-("03-address",[("Flat coordinate",0),("Two rotary axes",1),("Add port axis",2)],address),
+("03-address",[("Flat coordinate",0),("Two rotary axes",1),("Add port axis",2),("Packed address",3)],address),
 ("04-width",[("Single row",1),("Two rows",2),("Four rows",4)],width),
 ("05-learning",[("Zero-shot",0),("Set supervision",1),("Team RL",2),("Counterfactual RL",3)],curriculum),
 ("06-gates",[("Fixed active rows",False),("Learned activation",True)],gate),
