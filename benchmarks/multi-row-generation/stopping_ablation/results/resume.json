@@ -1,0 +1,602 @@
+{
+ "1703/rule-134/ordinary/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   82,
+   0,
+   6,
+   0,
+   40,
+   0
+  ]
+ },
+ "1703/rule-134/ordinary/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-134/ordinary/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   14,
+   0,
+   4,
+   82,
+   28,
+   0
+  ]
+ },
+ "1703/rule-134/late_duplicate/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   82,
+   0,
+   46,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-134/late_duplicate/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-134/late_duplicate/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   14,
+   0,
+   32,
+   82,
+   0,
+   0
+  ]
+ },
+ "1703/rule-134/late_union/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   82,
+   0,
+   0,
+   0,
+   46,
+   0
+  ]
+ },
+ "1703/rule-134/late_union/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-134/late_union/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   14,
+   0,
+   0,
+   82,
+   32,
+   0
+  ]
+ },
+ "1703/rule-134/opposite_actions": 84,
+ "1703/rule-135/ordinary/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   80,
+   0,
+   7,
+   0,
+   41,
+   0
+  ]
+ },
+ "1703/rule-135/ordinary/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-135/ordinary/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   16,
+   0,
+   4,
+   80,
+   28,
+   0
+  ]
+ },
+ "1703/rule-135/late_duplicate/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   80,
+   0,
+   48,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-135/late_duplicate/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-135/late_duplicate/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   16,
+   0,
+   32,
+   80,
+   0,
+   0
+  ]
+ },
+ "1703/rule-135/late_union/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   80,
+   0,
+   0,
+   0,
+   48,
+   0
+  ]
+ },
+ "1703/rule-135/late_union/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-135/late_union/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   16,
+   0,
+   0,
+   80,
+   32,
+   0
+  ]
+ },
+ "1703/rule-135/opposite_actions": 84,
+ "1703/rule-143/ordinary/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   74,
+   0,
+   8,
+   0,
+   46,
+   0
+  ]
+ },
+ "1703/rule-143/ordinary/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-143/ordinary/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   22,
+   0,
+   4,
+   74,
+   28,
+   0
+  ]
+ },
+ "1703/rule-143/late_duplicate/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   74,
+   0,
+   54,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-143/late_duplicate/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-143/late_duplicate/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   22,
+   0,
+   32,
+   74,
+   0,
+   0
+  ]
+ },
+ "1703/rule-143/late_union/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   74,
+   0,
+   0,
+   0,
+   54,
+   0
+  ]
+ },
+ "1703/rule-143/late_union/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1703/rule-143/late_union/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   22,
+   0,
+   0,
+   74,
+   32,
+   0
+  ]
+ },
+ "1703/rule-143/opposite_actions": 84,
+ "1709/rule-134/ordinary/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   82,
+   0,
+   6,
+   0,
+   40,
+   0
+  ]
+ },
+ "1709/rule-134/ordinary/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-134/ordinary/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   14,
+   0,
+   4,
+   82,
+   28,
+   0
+  ]
+ },
+ "1709/rule-134/late_duplicate/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   82,
+   0,
+   46,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-134/late_duplicate/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-134/late_duplicate/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   14,
+   0,
+   32,
+   82,
+   0,
+   0
+  ]
+ },
+ "1709/rule-134/late_union/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   82,
+   0,
+   0,
+   0,
+   46,
+   0
+  ]
+ },
+ "1709/rule-134/late_union/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-134/late_union/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   14,
+   0,
+   0,
+   82,
+   32,
+   0
+  ]
+ },
+ "1709/rule-134/opposite_actions": 84,
+ "1709/rule-135/ordinary/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   80,
+   0,
+   7,
+   0,
+   41,
+   0
+  ]
+ },
+ "1709/rule-135/ordinary/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-135/ordinary/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   16,
+   0,
+   4,
+   80,
+   28,
+   0
+  ]
+ },
+ "1709/rule-135/late_duplicate/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   80,
+   0,
+   48,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-135/late_duplicate/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-135/late_duplicate/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   16,
+   0,
+   32,
+   80,
+   0,
+   0
+  ]
+ },
+ "1709/rule-135/late_union/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   80,
+   0,
+   0,
+   0,
+   48,
+   0
+  ]
+ },
+ "1709/rule-135/late_union/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-135/late_union/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   16,
+   0,
+   0,
+   80,
+   32,
+   0
+  ]
+ },
+ "1709/rule-135/opposite_actions": 84,
+ "1709/rule-143/ordinary/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   74,
+   0,
+   8,
+   0,
+   46,
+   0
+  ]
+ },
+ "1709/rule-143/ordinary/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-143/ordinary/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   22,
+   0,
+   4,
+   74,
+   28,
+   0
+  ]
+ },
+ "1709/rule-143/late_duplicate/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   74,
+   0,
+   54,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-143/late_duplicate/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-143/late_duplicate/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   22,
+   0,
+   32,
+   74,
+   0,
+   0
+  ]
+ },
+ "1709/rule-143/late_union/exact": {
+  "graphs": 128,
+  "statuses_at_4": [
+   74,
+   0,
+   0,
+   0,
+   54,
+   0
+  ]
+ },
+ "1709/rule-143/late_union/fixed4": {
+  "graphs": 128,
+  "statuses_at_4": [
+   128,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "1709/rule-143/late_union/blind_guard": {
+  "graphs": 128,
+  "statuses_at_4": [
+   22,
+   0,
+   0,
+   74,
+   32,
+   0
+  ]
+ },
+ "1709/rule-143/opposite_actions": 84
+}
