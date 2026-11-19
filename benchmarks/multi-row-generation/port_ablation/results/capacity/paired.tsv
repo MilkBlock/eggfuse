@@ -1,0 +1,5 @@
+before	after	gained_graphs	lost_graphs	delta	conditional_pair_bootstrap_delta_low	conditional_pair_bootstrap_delta_high
+shared_roles-1703	private_roles-1703	3	0	3	0.0	7.0
+shared_roles-1703	wide_roles-1703	2	0	2	0.0	5.0
+shared_roles-1709	private_roles-1709	0	4	-4	-8.0	-1.0
+shared_roles-1709	wide_roles-1709	3	4	-1	-5.0	3.0

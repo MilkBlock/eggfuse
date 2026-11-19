@@ -1,0 +1,276 @@
+{
+  "artifact_root": "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+  "device": "Apple M3 Max",
+  "formal_jobs": {
+    "1030": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/test_encoder.py"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1030.log"
+    },
+    "1031": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "private_roles",
+        "1703"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1031.log"
+    },
+    "1032": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "shared_roles",
+        "1703"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1032.log"
+    },
+    "1033": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "private_roles",
+        "1709"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1033.log"
+    },
+    "1034": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "shared_roles",
+        "1709"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1034.log"
+    },
+    "1035": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "shared_id",
+        "1703"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1035.log"
+    },
+    "1036": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "shared_id",
+        "1709"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1036.log"
+    },
+    "1037": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "shared_pooled",
+        "1703"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1037.log"
+    },
+    "1038": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "shared_pooled",
+        "1709"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1038.log"
+    },
+    "1039": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "shared_ports",
+        "1703"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1039.log"
+    },
+    "1040": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "shared_ports",
+        "1709"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1040.log"
+    },
+    "1042": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/data/freeze.py",
+        "/Volumes/EggFuseWorkspace/worktrees/eggfuse/benchmarks/multi-row-generation/port_ablation/data/manifest.json"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1042.log"
+    },
+    "1043": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/test_capacity.py"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1043.log"
+    },
+    "1044": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "wide_roles",
+        "1703"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1044.log"
+    },
+    "1045": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "wide_roles",
+        "1709"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1045.log"
+    },
+    "1046": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/evaluate.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "--capacity"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1046.log"
+    },
+    "1048": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/replay.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119",
+        "--capacity"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1048.log"
+    },
+    "1050": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/evaluate.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1050.log"
+    },
+    "1051": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/port_ablation/replay.py",
+        "/Volumes/EggFuseWorkspace/experiments/single-row-port-roles-20261119"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1051.log"
+    }
+  },
+  "pilot": "Original operand descriptors omitted ordered per-column roles. Corrected before inspecting held-out outcomes; all primary models initialized from scratch. Early runs under single-row-port-heads-20261119 are excluded.",
+  "evaluator": "First main evaluation exited on an unused import before loading weights; rerun on the original frozen checkpoints. Replays 1048 and 1051 validated all projected rows from saved actual pointers and generated tokens.",
+  "hashes": {
+    "benchmarks/multi-row-generation/port_ablation/capacity.py": "1003b50978e2903a5df8dc6ad393ef588786813871987cc5072bb514cf173738",
+    "benchmarks/multi-row-generation/port_ablation/corpus/export.py": "1b54308719b6fcc23afdd3d1911827f460f818404d03afb80a55a0687f2df507",
+    "benchmarks/multi-row-generation/port_ablation/corpus/verify.py": "79ca2e0fef4859936bfdcfed945d7c50f8ada503d19e14ffbb908df10f33e257",
+    "benchmarks/multi-row-generation/port_ablation/data/__init__.py": "e9ad64f3a692a23cf7448a2c62b5160f49b6638855db07774288886c0bd470d3",
+    "benchmarks/multi-row-generation/port_ablation/data/freeze.py": "cf27f4eb30297b26284b33e7350b5b071fe588856c08c3f2393be85c3842de4e",
+    "benchmarks/multi-row-generation/port_ablation/data/port_audit.py": "7e3039eaf89f4263717a4ac3c14ad92487e83d39fcd80097ae1b94c458b1957b",
+    "benchmarks/multi-row-generation/port_ablation/data/port_data.py": "3646b39fe10ff9edd2983c43abaa2248c499491a2bd998394bba123ce349af34",
+    "benchmarks/multi-row-generation/port_ablation/data/score.py": "d3890a408dbdb465d64d8e93f16ece013d84a56cd7f7dc5a2dd0486e0d4792df",
+    "benchmarks/multi-row-generation/port_ablation/data/test_port_data.py": "6952bd68d5fb8882542fae9885b99c70ac96f340ff66d9a9e11992037c14350a",
+    "benchmarks/multi-row-generation/port_ablation/decoder.py": "68471b292f62a02280f2c58386e8728fbf0ff4d8fc58e7ed449313a8647e4325",
+    "benchmarks/multi-row-generation/port_ablation/encoders.py": "8d5ed1b15e3b4df2fc1e0fd590cc05bfbffda818b9f780b73d3e5522d50d23ad",
+    "benchmarks/multi-row-generation/port_ablation/evaluate.py": "b0d95d81104485e07a10a637b2f1227563e1ae1ee9c35b5c7be1f60da84fac39",
+    "benchmarks/multi-row-generation/port_ablation/fit.py": "acbdbda387be24ba96c85f351bad8d46be81ccf95a99586b6e60e1d1d1e29a6e",
+    "benchmarks/multi-row-generation/port_ablation/learning.py": "37a7e018069d4ed2dd3b643719c3ea4aa21fc5ec777795ce95a7a67ba6bc35ea",
+    "benchmarks/multi-row-generation/port_ablation/plot.py": "780f8bdaceb759542f25160fc0e6f396e61a4deb1a55f7bb595b589feb9e5b89",
+    "benchmarks/multi-row-generation/port_ablation/replay.py": "7848062632de294b627a2410051fe1d6bd08322e9e4a2bdd6ab0d80f0985bd31",
+    "benchmarks/multi-row-generation/port_ablation/study.py": "79d3e6bdf15c60d654c7889150bc5e65f2a3027c8743accd30d8f01fdb5e0144",
+    "benchmarks/multi-row-generation/port_ablation/summarize.py": "f045665334572131cfa684e17ebe7a2e57bae54709ef88bfd9787dd982277cac",
+    "benchmarks/multi-row-generation/port_ablation/test_capacity.py": "fbcfd1d7ccce8f41e2f2e48737cf13986b3546230fe959d1dd9cc8421e830c20",
+    "benchmarks/multi-row-generation/port_ablation/test_decoder.py": "d27674ec5bfdc30baf30b9c8fdcacba1b3209e8e4cab19e1734c146b19c65e9c",
+    "benchmarks/multi-row-generation/port_ablation/test_encoder.py": "9295429f22fea870b39ac03a65654117383ab42ca128267557d5ecc4474318a6"
+  },
+  "corpus": "4c121cc57044d38719279ff412148be2b76f016907701456e5dba20dacbab1aa"
+}
