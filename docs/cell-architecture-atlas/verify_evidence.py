@@ -32,7 +32,7 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==22
+    assert len(plates)==29
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and p['arms'] and p['measure'] and p['status'].startswith(('已测','实跑'))
         assert p['title'] in md and (HERE/'figures'/f"{p['id']}.svg").is_file()
@@ -96,7 +96,28 @@ def check():
         trial=item['rows']['2']
         assert trial['tokens']==tokens and trial['cross_row_duplicates']==0 and trial['same_as_one_row']
         assert trial['device_done'] and not trial['full_typed_graph_equal'] and trial['acceptance']=='incomplete'
-    print('Original 20 comparisons and the scoped ingress and integration results verified.')
+    integrated=json.loads((folder/'integration.json').read_text())
+    release=json.loads((folder/'release-check.json').read_text())['cases']
+    primitives=json.loads((folder/'typed-scalars.json').read_text())
+    assert [primitives[m]['wrong'] for m in ('integer','guarded','lossy')]==[0,0,279]
+    timing=json.loads((folder/'cli.json').read_text())
+    for name,n,res,raw,overlap in [('sum-bits',1428,2098,[3369,3868],28),('dot-product',1535,1835,[3572,3126],6)]:
+        r=integrated[name];rep=release[name]
+        assert r['reference']['acceptance']==rep['fresh_acceptance']=='pass' and rep['fresh_runs']==n
+        assert r['reference']['gpu_continuations']==r['reference']['cpu_continuations']==res
+        assert all(r['aligned'][k]==n and rep['fresh_source_digests'][k]==n for k in ('schedule','rhs','writes','spine','known_class_roots'))
+        assert r['native_contract']['status']==rep['fresh_native_status']=='pass'
+        assert r['ordering']['fenced_published']['full_typed_graph_equal'] and r['ordering']['immediate_canonical']['first_write_count_difference']
+        a=r['variants']
+        assert all(k in a for k in ('matched_scan','matched_point','matched_hash','run_batch_1','run_batch_4','run_batch_16'))
+        assert len(a)==26 and a['two']['token_bank_bytes']<a['cap_32']['token_bank_bytes']<a['packed_32']['token_bank_bytes']
+        assert rep['emissions']['parity']['exclusive']==raw and rep['emissions']['parity']['both_proposed']==overlap
+        assert all(min(rep['emissions'][arm]['exclusive'])>0 for arm in ('parity','1703','1709'))
+        assert all(len(v['samples'])==3 for v in timing[name].values())
+        with (folder/f'{name}-runs.tsv').open() as f:
+            rows=list(csv.DictReader(f,delimiter='\t'))
+        assert len(rows)==n and sum(int(r['spine_count']) for r in rows)==res
+    print('Verified all 29 plates, including two full ordered Pass 3 audits, row contributions and paired CLI timings.')
 
 
 if __name__=='__main__':check()

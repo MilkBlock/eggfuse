@@ -39,7 +39,7 @@
   card([证据起点],[开放父引用时，静态投影加训练期字段头在两个种子下通过 65、67 张非空碰撞图，共 512 张。这个基线给分工留下了很大的改进空间。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–22 为真实 Pass 3 集成。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–29 为真实 Pass 3 集成与验收。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -177,10 +177,11 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S22","图 18 私有成员与退出条件","benchmarks/multi-row-generation/integral_ablation/README.md")
 #src("S23","图 19 预算、关闭与恢复","benchmarks/multi-row-generation/stopping_ablation/README.md")
 #src("S24","图 21–22 初图与多行执行","benchmarks/pass3-cell-gpu/README.md")
+#src("S25","图 23–29 逐 Run 验收与耗时","benchmarks/pass3-cell-gpu/ACCEPTANCE.md")
 #v(3mm)
 #linebar()
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
-#text(size:9.5pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。图 01 采用“按边传递消息”的方法；端口角色与 Cell 语义由本项目定义。 #link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文] *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。图 05 借用固定其他行动作的反事实基线，具体动作、奖励及审计仍由实验定义。 #link("https://arxiv.org/abs/1705.08926")[论文原文]]
+#text(size:9pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。#link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文]。 *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。#link("https://arxiv.org/abs/1705.08926")[论文原文]。]
 #v(1fr)
-#small[版次 15　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
+#small[版次 16　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]

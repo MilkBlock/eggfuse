@@ -295,6 +295,10 @@ def workload_rows(a,i):
     chain(a,steps[i],["n","v","s"])
     a.txt(155,207,"same input and source schedule",14,SUB)
 
+def pass3_path(a,steps):
+    chain(a,steps[:3],["s","n","v"])
+    a.txt(155,207,steps[3],14,SUB)
+
 PLATES=[
 ("01-template",[("Template ID",0),("Compiler roles",1),("Pooled GNN",2),("Port GNN",3)],graph),
 ("02-heads",[("One head per rule",False),("One head across rules",True)],heads),
@@ -317,7 +321,14 @@ PLATES=[
 ("19-stop",[("Fixed rounds",0),("Exact worklist",1),("Learned gate",2)],stopping),
 ("20-template-classes",[("Explicit ports",0),("Singletons",1),("Pairwise Eq",2),("Class nodes",3)],template_classes),
 ("21-ingress",[("Single member",0),("Composed input",1),("Learned read",2)],ingress),
-("22-pass3-rows",[("One row",0),("Two rows",1)],workload_rows)]
+("22-pass3-rows",[("One row",0),("Two rows",1)],workload_rows),
+('23-union-directory',[('Immediate / live', ['apply union', 'live key', 'merge', 'first error: 122 / 165']), ('Fenced / live', ['queue equality', 'live key', 'merge', 'final graph differs']), ('Immediate / prior', ['apply union', 'published key', 'merge', 'wrong write history']), ('Fenced / prior', ['queue equality', 'published key', 'ordered merge', 'all writes agree'])],pass3_path),
+('24-spine-device',[('Generic join', ['visible rows', 'full rule join', 'RHS token', '0 continuations']), ('Spine entry', ['published fact', 'root + producer', 'resume at source Run', '2,098 / 1,835 resumes']), ('Pruned residual', ['published fact', 'point-read plan', 'skip covered suffix', 'same ordered witnesses'])],pass3_path),
+('25-scalar-types',[('Checked integer', ['typed operands', 'checked i64', 'result or failed guard', '0 / 4,054 wrong']), ('Guarded FP32', ['typed operands', 'exact FP32 domain?', 'FP32 or device i64', '0 / 4,054 wrong']), ('Relaxed FP32', ['wide integers', 'cast to FP32', 'project result', '279 / 4,054 wrong'])],pass3_path),
+('26-key-iteration',[('Chain scan', ['bound slots', 'walk relation', 'compare fields', 'all candidates']), ('Point scan', ['complete key', 'look up once', 'compare fields', 'linear directory']), ('Hashed point', ['complete key', 'hash bucket', 'verify full key', 'published directory'])],pass3_path),
+('27-batch-axis',[('Split dispatch', ['source Run', 'parallel queries', 'ordered commit', '3 device calls']), ('Fuse Runs', ['one group', '1 / 4 / 16 Runs', 'barrier per Run', 'same visibility']), ('Tile entries', ['frozen Run', 'disjoint entry lists', 'ordered commit', 'parallel within graph'])],pass3_path),
+('28-binding-bank',[('Dense private', ['each worker', 'max-width tokens', 'private reservation', '836.6 MiB at 8 tiles']), ('Packed private', ['each worker', 'rule-width tokens', 'private reservation', '220.7 MiB at 8 tiles']), ('Packed shared', ['both rows', 'reserve rule slots', 'sort and commit', '27.6 MiB at 32 tiles'])],pass3_path),
+('29-full-cli',[('One GPU row', ['one policy row', '64 work tiles', 'commit graph', '2.423 / 4.268 s']), ('Two GPU rows', ['two policy rows', '32 tiles per row', 'commit graph', '2.423 / 4.263 s']), ('Learned routing', ['shared row scores', 'assign entrance', 'exact join + commit', 'both seeds pass'])],pass3_path)]
 def synthesis():
     a=Art();W,H=1100,335;a.rect(0,0,W,H,BG,r=0)
     for x,w,h in [(10,316,"SHARED TEMPLATE"),(338,374,"INSTANCE POLICY"),(723,367,"JOINT OUTCOME")]:
