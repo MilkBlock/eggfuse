@@ -1,0 +1,6418 @@
+{
+ "status": "pass",
+ "cases": [
+  {
+   "id": "r23-only-second",
+   "source_sha256": "e7571969ada65c7a9cf0d9bd94c2ea244bd4e359061c18286b01e8d8c691f578",
+   "program_sha256": "00d3d14b8ca6d60f678b71031967709265f0e7b471f69be84c55022167386021",
+   "runs": [
+    {
+     "ruleset": "peepholes",
+     "matches": 1
+    },
+    {
+     "ruleset": "reveal",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 3
+    }
+   ],
+   "external_endpoints": null,
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     16
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r23-external-pp",
+   "source_sha256": "6bdda22145f5d3e45b47100150055a5134bdf1a9b31ff27ca2917427517ad1d2",
+   "program_sha256": "215c5120f1ca4d8a8eeb51b01b7915cda9fb41d1b7a33d82e6a15c76201b838b",
+   "runs": [
+    {
+     "ruleset": "peepholes",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r23-external-pq",
+   "source_sha256": "73fab0da546fd40ef5f0498368b04d47c97fac03a149126072f077ab80c56f34",
+   "program_sha256": "6e2d40d2def913b4eb847cf367fb5e66ec164c64297b2f8237ce44234df6368a",
+   "runs": [
+    {
+     "ruleset": "peepholes",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r23-external-pr",
+   "source_sha256": "11a2d2c25f8f645a13151e534338b10cd9e3feb7e4d3aacb2a733263a2d9ea69",
+   "program_sha256": "e953aa4aea872d4c9448f9014c83817511f5e86557f29239971c9b421d8417e3",
+   "runs": [
+    {
+     "ruleset": "peepholes",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     16
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r23-external-qp",
+   "source_sha256": "90c9fc10de9c2199efe32c8f6566545661758eba0ddf09c0e5d8139739c2fd3b",
+   "program_sha256": "ffffc15d090b95d2095d2853392f6e1720d7110aed9290393d4e43fc95c22151",
+   "runs": [
+    {
+     "ruleset": "peepholes",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r23-external-qq",
+   "source_sha256": "daaab9337aa6c5cb59546afb534e2f40b865995a33dda0db4947683b57540ac2",
+   "program_sha256": "da921f2d649f4e7c415fa85c71cfea7852cc6388f1e603fed63e6c5c7e808fbe",
+   "runs": [
+    {
+     "ruleset": "peepholes",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r23-external-qr",
+   "source_sha256": "a39795b8f46fdebef6956f102571a1a31b8ad405ee842b7dcffcce239ab04bb7",
+   "program_sha256": "c44ba83c75048036b32cf60b5c868db1d96c5fb33c09323619308b41061a08ed",
+   "runs": [
+    {
+     "ruleset": "peepholes",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     16
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r23-external-rp",
+   "source_sha256": "0a4e8e7ce21633f297a0ae337294189ae79ca6cbca2d2666853d0d2c8b41865e",
+   "program_sha256": "7c06edf79f3dc6666c353cc4e5fb59f9b5b227568e9d8659272265fb5d047366",
+   "runs": [
+    {
+     "ruleset": "peepholes",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     17,
+     18
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r23-external-rq",
+   "source_sha256": "d846e1cb20e9f5da2ead689397510fd9f7f1c7d8830abce8dd870483fa4dd295",
+   "program_sha256": "ead709cf2b2281bb72dcee68c4464df7340ce4816bd0f93be941a3ca05733341",
+   "runs": [
+    {
+     "ruleset": "peepholes",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     17,
+     18
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r23-external-rr",
+   "source_sha256": "a53a72cc39f7a00cbff1cc85e639238a3798d22ae5b3f3abc9028b602f3dc562",
+   "program_sha256": "d8a6b8a6934ee353e6da0d21c78640fcde8e8372e29c74117b75d35ecb2cc7ba",
+   "runs": [
+    {
+     "ruleset": "peepholes",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 4
+    }
+   ],
+   "external_endpoints": [
+    0,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     16
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r134-only-second",
+   "source_sha256": "20edab5cb9c9616e7fd5b83c0208ce6989e1ec71056bbf35760d321586d688aa",
+   "program_sha256": "ee5d3160f4c3277a8042487effcb8ed6b402fd23e3093370a25829e94c38f2b1",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 1
+    },
+    {
+     "ruleset": "reveal",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 3
+    }
+   ],
+   "external_endpoints": null,
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     16
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r134-external-pp",
+   "source_sha256": "2603750b500ebe8c9091371086769349a60308a8179d65552efefcc47ecabeb3",
+   "program_sha256": "1b98b9e95fde2f74ee4ce4eec5a226f5d64ee8e1064a697602aa9ec29ce5c388",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r134-external-pq",
+   "source_sha256": "a7df51f7e3bcb9e8322ac4c9e91d7a0652d17ae8286e86148793c5720c63b365",
+   "program_sha256": "5b9f0fafb9fc2e7a65be319f69c7236f0c309f3ef19f111a38d4bb40fc34f728",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r134-external-pr",
+   "source_sha256": "0d88fa344988eed40925dad09acaed4cdd437d3cc790350d40136f059bac14a0",
+   "program_sha256": "85298ea49cecff018ce989159fa22d32061ee575efae902f63df154028dc269d",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     16
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r134-external-qp",
+   "source_sha256": "e5bfd6d70d32152ebbbb70a720e2ac56439c85739d1a3daea5f2618c56957efe",
+   "program_sha256": "3a9267dc0fb813daf1e8eda05dec05ca6026c0760814e79c71bda5cec4b22577",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r134-external-qq",
+   "source_sha256": "01d5e734138f4e4b1eaa31b83bf637b39eeb690e053d39e4eddec908aca47b75",
+   "program_sha256": "c3c7aa2d3afb727cbb3b40de40604854b6c6d30b6ecacc920b68c80007db8699",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r134-external-qr",
+   "source_sha256": "bef803c7563a426da6fd332a5961651628582d04c1abad7fbf92e48d6e659344",
+   "program_sha256": "3279835f2174db0f586e3c5ae1f4e05ac26d831f9257eda8d3b22102b53faa1d",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     16
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r134-external-rp",
+   "source_sha256": "0dc9d436fc66e89432cbbbe3c1a73602242d7a6d733c5237a99412316a3ef5bc",
+   "program_sha256": "6ec1ad1843eb8276cf1a1987206283f319ec085159ff434178608c048c843307",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     17,
+     18
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r134-external-rq",
+   "source_sha256": "f9aa577cd2856ca3689d9eb56d05b28a18ac7244a97b1c51c91fe556e5b15ff9",
+   "program_sha256": "29ce6c8903058cea49689930f5b6353f3f8c09f1fe17a2a8a1ba69df6ef8150b",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     17,
+     18
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r134-external-rr",
+   "source_sha256": "28c36f919ce5ced289667f02e0c4ce8719bf4fb799114f41e8799c6ad90f2e1d",
+   "program_sha256": "ffcc88026dfc65fbb19059dc7ddadaaa9d57d76e9a97b0ddf7841060360ce168",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 4
+    }
+   ],
+   "external_endpoints": [
+    0,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     16
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r135-only-second",
+   "source_sha256": "1abf37a9f48bc7b6d4a46c6d2e922e1d4f95e90213b5fb2bea748f7b0348fbe9",
+   "program_sha256": "5aae7e8898d5e2e09aeceee6079b872197644f48fd5ff77922fb8050c5ae2710",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 1
+    },
+    {
+     "ruleset": "reveal",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 3
+    }
+   ],
+   "external_endpoints": null,
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     16
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r135-external-pp",
+   "source_sha256": "379bd8a1610d552572ce4821b3439d8eaacd5ca90eb4481121f2adf00fbaa956",
+   "program_sha256": "891716e39c200f42e10c4ec9e45f5d1abf7deb97e3f22db01110cc963aeab990",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r135-external-pq",
+   "source_sha256": "bd7614361860625d1f6d642ea6770e3603da6cee588df5f6e26b68ed3f81ef01",
+   "program_sha256": "6935a45268b3ebeaa8aaf51f41f9c61c4aef8dff1eeb786bdd87f7a8205708dc",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r135-external-pr",
+   "source_sha256": "0d035d9d124c9cfa4efb1e4c874872532ed00b5bf3e4d653ca5727666249ee69",
+   "program_sha256": "77b260527924932a7b7227c7e944b344252c7df8e36ef532c03e7a2a07316103",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     16
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r135-external-qp",
+   "source_sha256": "560ce5f43aebb91fd6a5446d05a2cb4157e055d0aff1425c969586bfc0a7e118",
+   "program_sha256": "10e9727d1ffc0340755584710f4c8267f615ca88bad03f577d23816040c381c0",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r135-external-qq",
+   "source_sha256": "f2cf40ba9a040bb9ac242b904d3bf82d74ef41d6b26bca42f776b02670e7b08c",
+   "program_sha256": "0a30f47578db49cf27dee847ad135667d39b0b01cc0a32e6d2532fb89ef8a859",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     17,
+     18
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r135-external-qr",
+   "source_sha256": "d3bcf59633c74638e8eaf61e4026c7b0909cc694646a6ac23eec37488d4d5b66",
+   "program_sha256": "bb940a484267c7ac955e7031aaf581806eb520d5f521cbad5cea4f44bb816c02",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1,
+     2,
+     16
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r135-external-rp",
+   "source_sha256": "14f1a22de36eebccc613bcc5a4d0b989a102025c5e66414ddbe7726d7b1b7172",
+   "program_sha256": "81cda3ab0dc8299ef0b8b3ac3ec197cecedced0ac78dcd6035c8b95b0b7f2a54",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     17,
+     18
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r135-external-rq",
+   "source_sha256": "55ad1f7fd5c837c979cb9d813d1552bbb859c0664ae36eb6ce0036f18ff9ba2b",
+   "program_sha256": "c7d35e37a07ea0b5429bf7eee14bd311679eb7abfddb697d9fb3b34450e5d333",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     17,
+     18
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r135-external-rr",
+   "source_sha256": "1ec7d43cde8587732d322c1c30286833729571c2018ad13b9c11f2efc9b55685",
+   "program_sha256": "54c58e2c6b69840d20494ec79d57abe00ab3163dde16f2590121bb842968e914",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 4
+    }
+   ],
+   "external_endpoints": [
+    0,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     16
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r143-only-second",
+   "source_sha256": "c7c0c18a07e8b7dbafc82228f23edfe7267e05167a47f8bf87a4ae47701a2422",
+   "program_sha256": "a07780cc8521ef69f3542f7d65f302b5ea834ac0e646350d181603e2fa648b3a",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 1
+    },
+    {
+     "ruleset": "reveal",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 3
+    }
+   ],
+   "external_endpoints": null,
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     2
+    ],
+    [
+     3
+    ],
+    [
+     16
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     3,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r143-external-pp",
+   "source_sha256": "cd590daf8203d04f041a34fcceb56b64bc888b61ec067589ab45885bd64673e7",
+   "program_sha256": "43f08377ee45370366501fb0c10467c189aa4c2bc92e5a9be279d2f4e9f7c80e",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r143-external-pq",
+   "source_sha256": "3c1fc5d18cf467e056463e9899459ae24ed055df5b0fd9c92cf5ac0628fa0481",
+   "program_sha256": "4178a23d368fbb63dae3aabb4e110f496c5348e7b007f50eed21180e0b4c8fc8",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    19
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r143-external-pr",
+   "source_sha256": "f80eea8d101e348cd98cc0a0642bf74d77a7cc76441162ab6fdacae3a848efcf",
+   "program_sha256": "0259d974b4082e0ac8d22d953c223dfe626ded3b682d0d59241c514ba4c84689",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     2,
+     3,
+     16
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r143-external-qp",
+   "source_sha256": "cce0bfcc3d49fdf4b51edce30e7b5ae20e0f9070dcf1c9b7dad657f146cb1405",
+   "program_sha256": "9b704cd599584a8547ba219c18a418d6c69d20f949c6201788c80be8499a909e",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    3,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r143-external-qq",
+   "source_sha256": "3c68a4adff563df9f8957e68feb830ddab64a78dd1680f8106ce78968bd48ce8",
+   "program_sha256": "76359bd26383cc6a73c3359f0a60d91714b5ab1c7fbaf1699b57652d5182459e",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    3,
+    19
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r143-external-qr",
+   "source_sha256": "c5ef37953350236ad126bf3e66b630407e0a114fd1b54377dc3ad263ba8f0ddc",
+   "program_sha256": "6c98c882f802cd39f55f669461ca7a806015fa4adb0b598504893c8efacfcb8f",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    3,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     2,
+     3,
+     16
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r143-external-rp",
+   "source_sha256": "fdfb86bddb5d87f22087cc860a5e4191272c57dabd4397b1c2889aacb994298c",
+   "program_sha256": "2ef560c6ced4055584e4a1e17796de4aacc028b972842a581c0751a2d589bdc9",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     18,
+     19
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r143-external-rq",
+   "source_sha256": "3c747b4bf6fb46e73cb364757c01d38600a1163723e1b82ca632b373d899d718",
+   "program_sha256": "02be47916fb68ada39dbc9e5a846937deb3bae6288b7161db55db542a9ede44b",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    19
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     18,
+     19
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     16
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r143-external-rr",
+   "source_sha256": "a54255f1a3b4301a6e27fdf464559e97e23c7abba408aaaabb79d6400153cd1c",
+   "program_sha256": "4dc263bb85dabf1ea93d24c0104934d23a8482a7f2d44174449d0f3c74570fbb",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 4
+    }
+   ],
+   "external_endpoints": [
+    0,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     16
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r198-only-second",
+   "source_sha256": "a0a150888c729f245bce5a03dcdc22fb2271091b15a07ed33862832dacabb05a",
+   "program_sha256": "5844e54424650f16d0b19e8b0e508f0862c84cb7244d7a2b522a4b5e63f8ef47",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 1
+    },
+    {
+     "ruleset": "reveal",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 3
+    }
+   ],
+   "external_endpoints": null,
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     3
+    ],
+    [
+     17
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r198-external-pp",
+   "source_sha256": "a4ed266c2cff337ed07158cb7970ddd59d955c86a12a7f719a8e4f37eebd3e97",
+   "program_sha256": "35965b5ce1879471acee6bdd18bd9936f743c06a72019b1b879a90b3d536a6a3",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    3,
+    19
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r198-external-pq",
+   "source_sha256": "453bb21909916f88b91cb2a0b72d68d389dccaf3c70d23f4870d0e24720320c9",
+   "program_sha256": "1218ebb2e81640fc095c37e375a3ae90213fdf704e9748b143c850ee109979f3",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    3,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r198-external-pr",
+   "source_sha256": "d1818571015dba7cce0f243f54925a0323ab084cf5c7a67b9599daa3bfc21a91",
+   "program_sha256": "9f55499cd9d7e509cf8ba0c5bfaa18ea5bde03644c7ab7462314cc2fb871a94f",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    3,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     17
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r198-external-qp",
+   "source_sha256": "8babd3029663848474060b11f31ca7fbad89d9ea4178b0f2062129f540dcff0a",
+   "program_sha256": "784fe08015aed194c1bca937d0c5025a9c3eeeee42dc4154b6c3102d1a95036b",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    19
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r198-external-qq",
+   "source_sha256": "a1e17674bf0fd856b65154652e82f4ed7b4d1c77643546c2a5f973cee069f2f3",
+   "program_sha256": "2176b83a4de7905a77ac5724f151595c2bb816e4c4e2c0e0c1fcc38a5731c87f",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r198-external-qr",
+   "source_sha256": "62925516101f8177e186d2c7a1b4a1260b7b5b042eedec89e04fc9591b1b8635",
+   "program_sha256": "55b5224bb90826378251ecf4f3f84e5df125312a9135b2c137e359bd5c290834",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     17
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r198-external-rp",
+   "source_sha256": "53edfd9f6b30d1c6740a57e9c93cbfc07d733b8e4caf285de1de2b855fce8980",
+   "program_sha256": "68c2b8189ba7d26f95737c798d0da1f0dc6c088cfac6161e65e3067c05229af4",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    19
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1,
+     18,
+     19
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r198-external-rq",
+   "source_sha256": "6aabfe1e4590717983f038900c8be9ae725542e297434f9709d8a1f2468510ce",
+   "program_sha256": "9cb0b18928f4b2a03af1a4cb07fd3ffcfd12347490dea0ea4c6cdba74a0c64bf",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1,
+     18,
+     19
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r198-external-rr",
+   "source_sha256": "3c0ad804b192721cea10eda02b8e529ae15b8f23b7f18319559b9e33de168b5b",
+   "program_sha256": "95b13581edef5d8a5d2ca17a6e2b8108a1023a2056dfd616e493f364a3492562",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 4
+    }
+   ],
+   "external_endpoints": [
+    1,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1,
+     17
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r199-only-second",
+   "source_sha256": "426a87d7752a14bbc144b3dc508fdf786f0dc1db2d21e869228884487a7e216f",
+   "program_sha256": "1faed2a2ed879eb4e105e903904d1b0cb44465a5ffa979c89ff888c2b7f45bd0",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 1
+    },
+    {
+     "ruleset": "reveal",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 3
+    }
+   ],
+   "external_endpoints": null,
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     3
+    ],
+    [
+     17
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r199-external-pp",
+   "source_sha256": "4fa59480d6eabf4ae8aee0e31368017b596f404dacdd5991338263e6546ad274",
+   "program_sha256": "cc3291d0f93e873169ca4c357c556a339af1698f82035ac0dbe491d2482858ba",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    3,
+    19
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r199-external-pq",
+   "source_sha256": "aaec071b59fa08b4b01bb33aacce563b0e778b6ae4ca6ce6f431e297b8756f86",
+   "program_sha256": "6eca718ef350fd30b623fee990f250fbcdde6bf4e65c6e2a501b20b93b5f1e05",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    3,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r199-external-pr",
+   "source_sha256": "3c4efbfa7c763830ab5f4989d7969af839dec8e1a3d132a39de4f2a700da4f23",
+   "program_sha256": "fa0273e2a8d0182f3731e814b593a15e6a27a3e6c511de3c20e7fe0a14445cf5",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    3,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     17
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r199-external-qp",
+   "source_sha256": "9f769208cd9bf052f553d2ccbd06d6ba95c25c8a115fdb39c9625f9d3077a870",
+   "program_sha256": "e45d9b3a6a5193609fce2b06583e25c6eb2a7203eb2325f04853d1670d8786f8",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    19
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r199-external-qq",
+   "source_sha256": "03d9d72b6ff156e548564b57014f1c76e2c790414c5586e579ef724660656d41",
+   "program_sha256": "56a8cf1ccccc0d799df07ce7576faa05820a23f9e0c757ee703b32daec461e69",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     18,
+     19
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r199-external-qr",
+   "source_sha256": "00dde2378f9f4754436cd09c73b6ebed7803b0e69578e40b1c244ef7d3b89753",
+   "program_sha256": "06cabef8755acb05bd33df04842ecaf9c4ddbb767cb53bd9e57b66bff9ff8315",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1
+    ],
+    [
+     2,
+     3,
+     17
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r199-external-rp",
+   "source_sha256": "a4ae38495edf8a6550b624093a3272f75f14bfc5a18dd955272debce2cefb69f",
+   "program_sha256": "0c92561e483860587e24a3d7f4cd763843563b617b15bc36c24dae8676685ba9",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    19
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1,
+     18,
+     19
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r199-external-rq",
+   "source_sha256": "18801d57f37ef7db253dcb0b5acec4d2c7489111fb837b5562ab5054e2a4f454",
+   "program_sha256": "3a328409f88555f9359c2d39b005b54cefec3bf20cbf60feb7525e58270c4376",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1,
+     18,
+     19
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r199-external-rr",
+   "source_sha256": "471c2ee27b6c48388078d9e987f8929c4c28fb1d6ff36cec5b7fb3a606d1209e",
+   "program_sha256": "c2c1a3e21b42dd519898d20f04650a0fa2d6bedb21d5f94b78dc2fead9d9dd3c",
+   "runs": [
+    {
+     "ruleset": "always-run",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 4
+    }
+   ],
+   "external_endpoints": [
+    1,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     1,
+     17
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     18,
+     19
+    ]
+   ],
+   "consumer_reads": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     18,
+     1
+    ],
+    [
+     19,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r266-only-second",
+   "source_sha256": "4bf13afc446eb23af6f4b046a4db9056ea17efdba0efda8f9d50f5481bb7739e",
+   "program_sha256": "0e1e72229882043e1c67b506c4e4ea0255e52402af074b2b73e6c04522f66dbb",
+   "runs": [
+    {
+     "ruleset": "apply-drop-unions",
+     "matches": 1
+    },
+    {
+     "ruleset": "reveal",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 3
+    }
+   ],
+   "external_endpoints": null,
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r266-external-pp",
+   "source_sha256": "b84d41cc3b2ccd4965e8f27699a918f4b542a8e273d1c7de055c6ec7fb116681",
+   "program_sha256": "f76591cbc1291e2a809794757594581ad7aa0091ae44d79c64e6a6ad26775c99",
+   "runs": [
+    {
+     "ruleset": "apply-drop-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    0,
+    16
+   ],
+   "secondary_congruence": [
+    [
+     2,
+     18
+    ]
+   ],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r266-external-pq",
+   "source_sha256": "22b09413b87ccd61691886fc29cf25731ab6ec48b7fb2f6fc120661f1f589d25",
+   "program_sha256": "6e6f36344af1647628334fe7a6bc3c629719d9e8940bf1bbf6b104b5909ed2a8",
+   "runs": [
+    {
+     "ruleset": "apply-drop-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    0,
+    17
+   ],
+   "secondary_congruence": [
+    [
+     2,
+     18
+    ]
+   ],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r266-external-pr",
+   "source_sha256": "f43a20d8e54ec0735e6246f9fd61feb8105dfcd913dfd50342e1d35ac07913ec",
+   "program_sha256": "dd6c7380d075753b947dfcaf2daaa5439875712ca91534db6db69cf9d1b08b33",
+   "runs": [
+    {
+     "ruleset": "apply-drop-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1,
+     18
+    ],
+    [
+     2
+    ],
+    [
+     16,
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ]
+   ]
+  },
+  {
+   "id": "r266-external-qp",
+   "source_sha256": "a12c25f0d43ebfcc104ef4f35ddbaea42b078c316e11fe5c4be12696005a782a",
+   "program_sha256": "aebb24372171fc7269bdceddb48a6df25ad3851bb6cb70431bab8716dba419a3",
+   "runs": [
+    {
+     "ruleset": "apply-drop-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    16
+   ],
+   "secondary_congruence": [
+    [
+     2,
+     18
+    ]
+   ],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r266-external-qq",
+   "source_sha256": "de668761a835e304196afe68ba28bf94ff7d96deabd62edc3fa52771e5996408",
+   "program_sha256": "5b2314a5b54c8e499fc1846623921865e58567c74ed621d8e866f1019ef4dc97",
+   "runs": [
+    {
+     "ruleset": "apply-drop-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    17
+   ],
+   "secondary_congruence": [
+    [
+     2,
+     18
+    ]
+   ],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r266-external-qr",
+   "source_sha256": "b25e651fbbedda035c819e7c665862c4863aff34cdbd11df6631a01b4d2dcadd",
+   "program_sha256": "2fc23e394fe7fca76006995aaa206a27d9294c0c8d96cd1e50c50dbafad26521",
+   "runs": [
+    {
+     "ruleset": "apply-drop-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1,
+     18
+    ],
+    [
+     2
+    ],
+    [
+     16,
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ]
+   ]
+  },
+  {
+   "id": "r266-external-rp",
+   "source_sha256": "ea5c829187b85badcf692a99efd0cd703fa44c61885765a46a9fd42a0a3ef85b",
+   "program_sha256": "65d9750363c045c043558efcb1642c0663e8527bbe4a6a1cbf7d4ddd7066c682",
+   "runs": [
+    {
+     "ruleset": "apply-drop-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     16,
+     17
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r266-external-rq",
+   "source_sha256": "a82fff4d6ce1b18e2128cca42d76a161499ed49a308b126e0d3ef8deb2935d8a",
+   "program_sha256": "644455f8088d684169ab02bd7784e88c3f80e7a26894ec6065e89bd85e27e070",
+   "runs": [
+    {
+     "ruleset": "apply-drop-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     16,
+     17
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r266-external-rr",
+   "source_sha256": "51c9c90e35fe5db7dd3ce17dea831402bb55fe305ab507390bc14032096f23ea",
+   "program_sha256": "44aa4ed70d89c9aba16b795bdd921f92b5f20c6b6e051dfe086b6db874082df5",
+   "runs": [
+    {
+     "ruleset": "apply-drop-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 4
+    }
+   ],
+   "external_endpoints": [
+    2,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     18
+    ],
+    [
+     16,
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r267-only-second",
+   "source_sha256": "dd1614ac7bfdda641563fd18171121f0f237cbcc4a91e9df520fcc89399d428d",
+   "program_sha256": "d184a486c0088c0dc6adf004b6d49c5a6fa9b0030035091de601daf60c9ffa65",
+   "runs": [
+    {
+     "ruleset": "apply-subst-unions",
+     "matches": 1
+    },
+    {
+     "ruleset": "reveal",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 3
+    }
+   ],
+   "external_endpoints": null,
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     1,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r267-external-pp",
+   "source_sha256": "508368b10a6f1319fe3873e4cae3636408aed938e34801b7e230862d4b010461",
+   "program_sha256": "063b27f57307fc2912c460ed7ae0a9ba316f87e842ff2b1fb5b8c742610d9017",
+   "runs": [
+    {
+     "ruleset": "apply-subst-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    0,
+    16
+   ],
+   "secondary_congruence": [
+    [
+     2,
+     18
+    ]
+   ],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r267-external-pq",
+   "source_sha256": "b6995a95d5bf54e15acec911a796e7718cdb199f9628e008646da1615aab37ab",
+   "program_sha256": "25dde3903588987eece16e59b9a0b91b046531a6cc5b6de0bff208f13efad885",
+   "runs": [
+    {
+     "ruleset": "apply-subst-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    0,
+    17
+   ],
+   "secondary_congruence": [
+    [
+     2,
+     18
+    ]
+   ],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r267-external-pr",
+   "source_sha256": "1d1b88c1c0f4e23de4e449cf38a68aa89650ced2db1edf3f8e74a36bb4df4934",
+   "program_sha256": "4ec9239ad6f129a63d4b44fa9a00ebbfe389dead62437fbb245de37182019deb",
+   "runs": [
+    {
+     "ruleset": "apply-subst-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1,
+     18
+    ],
+    [
+     2
+    ],
+    [
+     16,
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ]
+   ]
+  },
+  {
+   "id": "r267-external-qp",
+   "source_sha256": "c4c04ec3ac7dc54f5592a45e9d1243fb3f3d58407798fda6e0383a85dd7c5cd1",
+   "program_sha256": "363af7bdba9a2a8c3e0e55fe241f7486b90e34cd6c75040dd8823c0a7088e97c",
+   "runs": [
+    {
+     "ruleset": "apply-subst-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    16
+   ],
+   "secondary_congruence": [
+    [
+     2,
+     18
+    ]
+   ],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r267-external-qq",
+   "source_sha256": "302fdb9baaeced2ff5535bb55ee7877d8aa2f66d6caee5a9c480bc560271d59c",
+   "program_sha256": "a8e7d1980d563ca2d20cecb217487b10fea07294244c4ede5793051f4ba1fd03",
+   "runs": [
+    {
+     "ruleset": "apply-subst-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    17
+   ],
+   "secondary_congruence": [
+    [
+     2,
+     18
+    ]
+   ],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r267-external-qr",
+   "source_sha256": "d15c823ee81212104fa52adaf2c63037d33d5523fbc4c1037d19d580f8da0be0",
+   "program_sha256": "cbd0812bee6b5c68d93408ebdec8ab7bb7e7f05fff84043ccca5ed6aadaf8e4d",
+   "runs": [
+    {
+     "ruleset": "apply-subst-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1,
+     18
+    ],
+    [
+     2
+    ],
+    [
+     16,
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ]
+   ]
+  },
+  {
+   "id": "r267-external-rp",
+   "source_sha256": "f276169b308cdd695734502547024c145d73c4a9cc75c0128c58d0379ce4c6d4",
+   "program_sha256": "898fa304e0d146dd9076d73f3480b8393ce5ef34c2dac2c4e3ddc8c84a22c785",
+   "runs": [
+    {
+     "ruleset": "apply-subst-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     16,
+     17
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r267-external-rq",
+   "source_sha256": "beee349ca13216a912be9ebab5adbc03d2891166f146f0b89b364d4eeed8eec8",
+   "program_sha256": "d749a13e09de2db05529fb40216f7af9dffd5f7b4e3467a3cfbb7df8f7b1fe24",
+   "runs": [
+    {
+     "ruleset": "apply-subst-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     16,
+     17
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r267-external-rr",
+   "source_sha256": "829529e051fe2dbf08a9a51044cb58ae652f2e919042dc2a520d3686456b26c6",
+   "program_sha256": "cc8a3e7225c658118c749327fee5d9e9252560d62d6affb7ca63c0538c439dee",
+   "runs": [
+    {
+     "ruleset": "apply-subst-unions",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 4
+    }
+   ],
+   "external_endpoints": [
+    2,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     18
+    ],
+    [
+     16,
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r317-only-second",
+   "source_sha256": "62e6ad4874ffa7ce0d6d7b55a866b5ea2e83709e97c7574fd9684880c2695ded",
+   "program_sha256": "5553261eaaf761307b9cf8b5938d5b2d69888ccd3c054f69da62cc05911dbba6",
+   "runs": [
+    {
+     "ruleset": "context",
+     "matches": 1
+    },
+    {
+     "ruleset": "reveal",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 3
+    }
+   ],
+   "external_endpoints": null,
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r317-external-pp",
+   "source_sha256": "c505205a62ece94f93df335c7783900ae710d3ddfa413e3ced95623e8c3aa586",
+   "program_sha256": "3b09ff0505ca350ed1465e4bea74501b600ced9b1f6c579625448409c7350deb",
+   "runs": [
+    {
+     "ruleset": "context",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r317-external-pq",
+   "source_sha256": "0d05013024c8b5260d09af0547cc9156b8af170433dd02c42889a28f0ae87a8e",
+   "program_sha256": "b4191b5d9e0288519ea18a0657517f41f70a2c9a411a31ba3d2bfac49b80c5ae",
+   "runs": [
+    {
+     "ruleset": "context",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r317-external-pr",
+   "source_sha256": "20553544c03a4591be9ae4d378de291e4f1f6251948847529d183035a55eb6d4",
+   "program_sha256": "e866a72cd35d3af03fac3333559c0d02ff86018e01851896a2e352eeb06f9a5e",
+   "runs": [
+    {
+     "ruleset": "context",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1,
+     18
+    ],
+    [
+     2
+    ],
+    [
+     16,
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ]
+   ]
+  },
+  {
+   "id": "r317-external-qp",
+   "source_sha256": "d2ab7385853b0b6d428d106497de8544e656223fe32b4e7b118d8088b27e8e05",
+   "program_sha256": "41b690f68c3d75d202e3ffb02d88aa397b6871e5a8c2fc8f84344afcb047bdab",
+   "runs": [
+    {
+     "ruleset": "context",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    0,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r317-external-qq",
+   "source_sha256": "eae1f16f096dc98ad8406ab7e3bc7bf033b642ec75a7773fa759297fa15e493c",
+   "program_sha256": "5fd3776619991afd9db87c471deac65570d41dee78ec54c0795d2985b52a189c",
+   "runs": [
+    {
+     "ruleset": "context",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    0,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1,
+     16,
+     17
+    ],
+    [
+     2
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r317-external-qr",
+   "source_sha256": "fcbd3e016557800c18eaaf3d6b22b680d79f2bcdfab6c017db9cbb3c5be28418",
+   "program_sha256": "41f2c0ef7654fd4d05faf5e3c0170dc8dbeb4eb9e280c7ff794c166ea6d09e58",
+   "runs": [
+    {
+     "ruleset": "context",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1,
+     18
+    ],
+    [
+     2
+    ],
+    [
+     16,
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     0
+    ]
+   ]
+  },
+  {
+   "id": "r317-external-rp",
+   "source_sha256": "b666727abfd1c979675bee340e121bd592defe3d95585b29c36f265ed52704f5",
+   "program_sha256": "56110998e240b60c468f075e14b1e97b87c1f0d301d44c56f12711b64806025d",
+   "runs": [
+    {
+     "ruleset": "context",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     16,
+     17
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r317-external-rq",
+   "source_sha256": "d91a850c3041df85f128c436b16949cc5c3096d586115b96248deb7817583e1e",
+   "program_sha256": "ee215632d22b714473b93c6cb02623068a6a1c2ea95f6b1dec9598d4758cd805",
+   "runs": [
+    {
+     "ruleset": "context",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     16,
+     17
+    ],
+    [
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r317-external-rr",
+   "source_sha256": "ea7ae0ead49a3a2e7221ed8d84d2aff9b79e3afd93c89beb69d79cd4a2235a63",
+   "program_sha256": "bf59c3a58a29010e61396b24e04f0cc0465aad62008fe71facc833f86835d8fe",
+   "runs": [
+    {
+     "ruleset": "context",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 4
+    }
+   ],
+   "external_endpoints": [
+    2,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     18
+    ],
+    [
+     16,
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r580-only-second",
+   "source_sha256": "2ee016fc38ce2483fe9b0247fc3f2059545f67ec38f4b4c384f598951e9e1309",
+   "program_sha256": "ffba2c9eddddb9924f5dd312648374cdb804e45deb5831f848d5951eea04150e",
+   "runs": [
+    {
+     "ruleset": "type-helpers",
+     "matches": 1
+    },
+    {
+     "ruleset": "reveal",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 3
+    }
+   ],
+   "external_endpoints": null,
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0
+    ],
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     16,
+     18
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r580-external-pp",
+   "source_sha256": "6745278df12e124f4386989901538215dca3c477e9bd0ac40b031dbe33b50ca2",
+   "program_sha256": "29af8b17877aafe3b27add1b03b50eebb6b4ab70ec1fc15e1d4ffe8956115fd9",
+   "runs": [
+    {
+     "ruleset": "type-helpers",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     2,
+     16,
+     18
+    ],
+    [
+     1
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r580-external-pq",
+   "source_sha256": "b45d95f49b4584d1ed7ba1d81455c51b2cdccff2779eafc2cf2ba00ee3d79f9b",
+   "program_sha256": "642c2527db44043e356aaf3961bbdbd28b35ea8ddc03cd4aed590084ae3975b2",
+   "runs": [
+    {
+     "ruleset": "type-helpers",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    2,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     2,
+     16,
+     18
+    ],
+    [
+     1
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r580-external-pr",
+   "source_sha256": "b8a545dd1f75832015a351b9720de9620b3dbe77185ddbe76d3e90cc84d73171",
+   "program_sha256": "70405c5d522dcbad9f535ea2d88ab2d14bb65075fc09d20b05e3cd0da246144e",
+   "runs": [
+    {
+     "ruleset": "type-helpers",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    2,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     2,
+     17
+    ],
+    [
+     1
+    ],
+    [
+     16,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r580-external-qp",
+   "source_sha256": "295d1877dafac89ff9f535ee07aca333f3db96746146a985046b23a590d7a703",
+   "program_sha256": "1caf0093e2d1ef434f243dc1fe62c54ccb76e05bcca324427903412e5781680c",
+   "runs": [
+    {
+     "ruleset": "type-helpers",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    0,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     2,
+     16,
+     18
+    ],
+    [
+     1
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r580-external-qq",
+   "source_sha256": "690979536cee4679b533652e6afb92b981a97def02242faa6ff7326feb819ebe",
+   "program_sha256": "d31f00c6fa73c414e446d0cb35d3742bf22c281b4c5fcf644f10007e189e55e7",
+   "runs": [
+    {
+     "ruleset": "type-helpers",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    0,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     2,
+     16,
+     18
+    ],
+    [
+     1
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r580-external-qr",
+   "source_sha256": "4c72b3879d57517722c5ddb43b7758727455e0843856455b20b9bd284874956f",
+   "program_sha256": "9137500e5bd7141791eef17570e0359e5a509ab65811aa8fd1feb5e120b32da0",
+   "runs": [
+    {
+     "ruleset": "type-helpers",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    0,
+    17
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     2,
+     17
+    ],
+    [
+     1
+    ],
+    [
+     16,
+     18
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r580-external-rp",
+   "source_sha256": "bcd3f75bf149d8593686ce7e32418818a4ccf3aedd871dedc3ac190e3a0434e3",
+   "program_sha256": "64dd974b3afa39db7aae1c8ecb612d7a7e8bd0172eda8269d48b5f12008a56d5",
+   "runs": [
+    {
+     "ruleset": "type-helpers",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    18
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     16,
+     18
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r580-external-rq",
+   "source_sha256": "d20bcf11c8566412bca9e02ffcb1f711f9b09e0f1ddd199944801a51be642457",
+   "program_sha256": "dbae609501d06e64848e33f97f41b599ad91af8710fe8ea87ae5f2d81d2fc123",
+   "runs": [
+    {
+     "ruleset": "type-helpers",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 5
+    }
+   ],
+   "external_endpoints": [
+    1,
+    16
+   ],
+   "secondary_congruence": [],
+   "equal_groups": [
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     16,
+     18
+    ],
+    [
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  },
+  {
+   "id": "r580-external-rr",
+   "source_sha256": "de662055a306a0927cd59bc30be5761a50ea58608a65e4b52de765b32b1ed163",
+   "program_sha256": "b5ecb58d61a5c8434666a42976f956058cd7d71466053f089d7d45629bd82541",
+   "runs": [
+    {
+     "ruleset": "type-helpers",
+     "matches": 2
+    },
+    {
+     "ruleset": "external",
+     "matches": 1
+    },
+    {
+     "ruleset": "observe",
+     "matches": 8
+    }
+   ],
+   "external_endpoints": [
+    1,
+    17
+   ],
+   "secondary_congruence": [
+    [
+     0,
+     16
+    ]
+   ],
+   "equal_groups": [
+    [
+     0,
+     2,
+     16,
+     18
+    ],
+    [
+     1,
+     17
+    ]
+   ],
+   "consumer_reads": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     1
+    ]
+   ]
+  }
+ ]
+}

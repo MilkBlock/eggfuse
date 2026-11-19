@@ -1,0 +1,3291 @@
+{
+ "schema": "eggfuse.eclass.certified-local-ports/v1",
+ "templates": [
+  {
+   "id": "rule-23",
+   "family_id": "family-0581a3e82fd61d26",
+   "version": "20f0fe9798e3517be2bd755d2f565e10238460ae40e7cabdc23e424af0ed1450",
+   "source_sha256": "0423b6682d237274cf4d054b410da775d2273067a6558ea0f9576967d186accb",
+   "source": "(rewrite (Top (Select ) pred x x) x :ruleset peepholes)",
+   "provenance": {
+    "sum-bits": {
+     "rule": 23,
+     "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    },
+    "raytrace": {
+     "rule": 23,
+     "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    }
+   },
+   "ports": [
+    {
+     "slot": 1,
+     "node": 19,
+     "sort": "Expr",
+     "also_slots": [
+      1
+     ]
+    },
+    {
+     "slot": 2,
+     "node": 20,
+     "sort": "Expr",
+     "also_slots": [
+      2
+     ]
+    },
+    {
+     "slot": 3,
+     "node": 21,
+     "sort": "Expr",
+     "also_slots": [
+      3,
+      4
+     ]
+    }
+   ],
+   "public_ports": [
+    0,
+    1,
+    2
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "template",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 3
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 4
+     },
+     {
+      "kind": "copy",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "union",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     }
+    ],
+    "edges": [
+     [
+      5,
+      "query",
+      6
+     ],
+     [
+      0,
+      "binds",
+      7
+     ],
+     [
+      7,
+      "input",
+      6
+     ],
+     [
+      5,
+      "query",
+      8
+     ],
+     [
+      0,
+      "binds",
+      9
+     ],
+     [
+      9,
+      "input",
+      8
+     ],
+     [
+      1,
+      "binds",
+      10
+     ],
+     [
+      10,
+      "input",
+      8
+     ],
+     [
+      2,
+      "binds",
+      11
+     ],
+     [
+      11,
+      "input",
+      8
+     ],
+     [
+      2,
+      "binds",
+      12
+     ],
+     [
+      12,
+      "input",
+      8
+     ],
+     [
+      3,
+      "binds",
+      13
+     ],
+     [
+      13,
+      "input",
+      8
+     ],
+     [
+      5,
+      "effect",
+      14
+     ],
+     [
+      3,
+      "binds",
+      15
+     ],
+     [
+      15,
+      "input",
+      14
+     ],
+     [
+      14,
+      "defines",
+      4
+     ],
+     [
+      5,
+      "effect",
+      16
+     ],
+     [
+      14,
+      "precedes",
+      16
+     ],
+     [
+      4,
+      "binds",
+      17
+     ],
+     [
+      17,
+      "input",
+      16
+     ],
+     [
+      2,
+      "binds",
+      18
+     ],
+     [
+      18,
+      "input",
+      16
+     ],
+     [
+      1,
+      "projects",
+      19
+     ],
+     [
+      2,
+      "projects",
+      20
+     ],
+     [
+      3,
+      "projects",
+      21
+     ],
+     [
+      4,
+      "projects",
+      21
+     ]
+    ]
+   },
+   "certificates": [
+    {
+     "left_port": 2,
+     "right_port": 1,
+     "sort": "Expr",
+     "operation": 1,
+     "visible_from_stage": 1,
+     "guard": "producer_committed",
+     "scope": "template_local",
+     "raw_union_slots": [
+      4,
+      2
+     ]
+    }
+   ],
+   "split": "train"
+  },
+  {
+   "id": "rule-134",
+   "family_id": "family-b562c081845f7600",
+   "version": "82e51ba8858de66ce3ab3613fe1788c642c9ee646f6c8062d3e22033921bdbba",
+   "source_sha256": "8eee73c313c8dd1a1b492df732d4fcea5865aafec53695dfc13d17b3f79fb30e",
+   "source": "(rewrite (Concat (Empty ty ctx) x) x :ruleset always-run)",
+   "provenance": {
+    "sum-bits": {
+     "rule": 134,
+     "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    },
+    "raytrace": {
+     "rule": 134,
+     "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    }
+   },
+   "ports": [
+    {
+     "slot": 2,
+     "node": 20,
+     "sort": "Expr",
+     "also_slots": [
+      2
+     ]
+    },
+    {
+     "slot": 3,
+     "node": 21,
+     "sort": "Expr",
+     "also_slots": [
+      3
+     ]
+    },
+    {
+     "slot": 4,
+     "node": 22,
+     "sort": "Expr",
+     "also_slots": [
+      4,
+      5
+     ]
+    }
+   ],
+   "public_ports": [
+    0,
+    1,
+    2
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "template",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "copy",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "union",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     }
+    ],
+    "edges": [
+     [
+      6,
+      "query",
+      7
+     ],
+     [
+      0,
+      "binds",
+      8
+     ],
+     [
+      8,
+      "input",
+      7
+     ],
+     [
+      1,
+      "binds",
+      9
+     ],
+     [
+      9,
+      "input",
+      7
+     ],
+     [
+      2,
+      "binds",
+      10
+     ],
+     [
+      10,
+      "input",
+      7
+     ],
+     [
+      6,
+      "query",
+      11
+     ],
+     [
+      2,
+      "binds",
+      12
+     ],
+     [
+      12,
+      "input",
+      11
+     ],
+     [
+      3,
+      "binds",
+      13
+     ],
+     [
+      13,
+      "input",
+      11
+     ],
+     [
+      4,
+      "binds",
+      14
+     ],
+     [
+      14,
+      "input",
+      11
+     ],
+     [
+      6,
+      "effect",
+      15
+     ],
+     [
+      4,
+      "binds",
+      16
+     ],
+     [
+      16,
+      "input",
+      15
+     ],
+     [
+      15,
+      "defines",
+      5
+     ],
+     [
+      6,
+      "effect",
+      17
+     ],
+     [
+      15,
+      "precedes",
+      17
+     ],
+     [
+      5,
+      "binds",
+      18
+     ],
+     [
+      18,
+      "input",
+      17
+     ],
+     [
+      3,
+      "binds",
+      19
+     ],
+     [
+      19,
+      "input",
+      17
+     ],
+     [
+      2,
+      "projects",
+      20
+     ],
+     [
+      3,
+      "projects",
+      21
+     ],
+     [
+      4,
+      "projects",
+      22
+     ],
+     [
+      5,
+      "projects",
+      22
+     ]
+    ]
+   },
+   "certificates": [
+    {
+     "left_port": 2,
+     "right_port": 1,
+     "sort": "Expr",
+     "operation": 1,
+     "visible_from_stage": 1,
+     "guard": "producer_committed",
+     "scope": "template_local",
+     "raw_union_slots": [
+      5,
+      3
+     ]
+    }
+   ],
+   "split": "heldout"
+  },
+  {
+   "id": "rule-135",
+   "family_id": "family-b562c081845f7600",
+   "version": "3ff18af4e91137f39dffd1e40a7f240eceb5f3d4593a103308905bfaacb5e134",
+   "source_sha256": "7a725e75abda3f11dde52cb1675a446f33d5e7b8a69f8416826dc9411e878d23",
+   "source": "(rewrite (Concat x (Empty ty ctx)) x :ruleset always-run)",
+   "provenance": {
+    "sum-bits": {
+     "rule": 135,
+     "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    },
+    "raytrace": {
+     "rule": 135,
+     "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    }
+   },
+   "ports": [
+    {
+     "slot": 2,
+     "node": 20,
+     "sort": "Expr",
+     "also_slots": [
+      2
+     ]
+    },
+    {
+     "slot": 3,
+     "node": 21,
+     "sort": "Expr",
+     "also_slots": [
+      3
+     ]
+    },
+    {
+     "slot": 4,
+     "node": 22,
+     "sort": "Expr",
+     "also_slots": [
+      4,
+      5
+     ]
+    }
+   ],
+   "public_ports": [
+    0,
+    1,
+    2
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "template",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "copy",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "union",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     }
+    ],
+    "edges": [
+     [
+      6,
+      "query",
+      7
+     ],
+     [
+      0,
+      "binds",
+      8
+     ],
+     [
+      8,
+      "input",
+      7
+     ],
+     [
+      1,
+      "binds",
+      9
+     ],
+     [
+      9,
+      "input",
+      7
+     ],
+     [
+      2,
+      "binds",
+      10
+     ],
+     [
+      10,
+      "input",
+      7
+     ],
+     [
+      6,
+      "query",
+      11
+     ],
+     [
+      3,
+      "binds",
+      12
+     ],
+     [
+      12,
+      "input",
+      11
+     ],
+     [
+      2,
+      "binds",
+      13
+     ],
+     [
+      13,
+      "input",
+      11
+     ],
+     [
+      4,
+      "binds",
+      14
+     ],
+     [
+      14,
+      "input",
+      11
+     ],
+     [
+      6,
+      "effect",
+      15
+     ],
+     [
+      4,
+      "binds",
+      16
+     ],
+     [
+      16,
+      "input",
+      15
+     ],
+     [
+      15,
+      "defines",
+      5
+     ],
+     [
+      6,
+      "effect",
+      17
+     ],
+     [
+      15,
+      "precedes",
+      17
+     ],
+     [
+      5,
+      "binds",
+      18
+     ],
+     [
+      18,
+      "input",
+      17
+     ],
+     [
+      3,
+      "binds",
+      19
+     ],
+     [
+      19,
+      "input",
+      17
+     ],
+     [
+      2,
+      "projects",
+      20
+     ],
+     [
+      3,
+      "projects",
+      21
+     ],
+     [
+      4,
+      "projects",
+      22
+     ],
+     [
+      5,
+      "projects",
+      22
+     ]
+    ]
+   },
+   "certificates": [
+    {
+     "left_port": 2,
+     "right_port": 1,
+     "sort": "Expr",
+     "operation": 1,
+     "visible_from_stage": 1,
+     "guard": "producer_committed",
+     "scope": "template_local",
+     "raw_union_slots": [
+      5,
+      3
+     ]
+    }
+   ],
+   "split": "heldout"
+  },
+  {
+   "id": "rule-143",
+   "family_id": "family-ef37cdc308df9f49",
+   "version": "b6fae1c81df897cdb079a2d3113abf4a53dff6b2aee50b73627ea11e827e406f",
+   "source_sha256": "8f616828831c2000aeef168f8d7e688f7875749e4b6260279ed3bd9fc12d103f",
+   "source": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "provenance": {
+    "sum-bits": {
+     "rule": 143,
+     "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+     "producer_units": [
+      32,
+      33,
+      36,
+      37,
+      38,
+      39,
+      42,
+      59
+     ],
+     "consumer_units": [
+      35,
+      38
+     ],
+     "spine_leaves": [
+      3
+     ]
+    },
+    "raytrace": {
+     "rule": 143,
+     "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+     "producer_units": [
+      32,
+      35,
+      36,
+      37,
+      38,
+      44,
+      45,
+      54
+     ],
+     "consumer_units": [
+      34,
+      38
+     ],
+     "spine_leaves": [
+      1
+     ]
+    }
+   },
+   "ports": [
+    {
+     "slot": 0,
+     "node": 24,
+     "sort": "Expr",
+     "also_slots": [
+      0
+     ]
+    },
+    {
+     "slot": 2,
+     "node": 25,
+     "sort": "Expr",
+     "also_slots": [
+      2,
+      3
+     ]
+    },
+    {
+     "slot": 4,
+     "node": 26,
+     "sort": "Expr",
+     "also_slots": [
+      4
+     ]
+    },
+    {
+     "slot": 5,
+     "node": 27,
+     "sort": "Expr",
+     "also_slots": [
+      5
+     ]
+    }
+   ],
+   "public_ports": [
+    0,
+    2,
+    3
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "i64",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "template",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "construct",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "construct",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "construct",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "literal",
+      "sort": "i64",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "union",
+      "sort": "none",
+      "ordinal": 3
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     }
+    ],
+    "edges": [
+     [
+      6,
+      "query",
+      7
+     ],
+     [
+      0,
+      "binds",
+      8
+     ],
+     [
+      8,
+      "input",
+      7
+     ],
+     [
+      1,
+      "binds",
+      9
+     ],
+     [
+      9,
+      "input",
+      7
+     ],
+     [
+      2,
+      "binds",
+      10
+     ],
+     [
+      10,
+      "input",
+      7
+     ],
+     [
+      6,
+      "effect",
+      11
+     ],
+     [
+      0,
+      "binds",
+      12
+     ],
+     [
+      12,
+      "input",
+      11
+     ],
+     [
+      1,
+      "binds",
+      13
+     ],
+     [
+      13,
+      "input",
+      11
+     ],
+     [
+      11,
+      "defines",
+      3
+     ],
+     [
+      6,
+      "effect",
+      14
+     ],
+     [
+      11,
+      "precedes",
+      14
+     ],
+     [
+      3,
+      "binds",
+      15
+     ],
+     [
+      15,
+      "input",
+      14
+     ],
+     [
+      14,
+      "defines",
+      4
+     ],
+     [
+      6,
+      "effect",
+      16
+     ],
+     [
+      14,
+      "precedes",
+      16
+     ],
+     [
+      0,
+      "binds",
+      17
+     ],
+     [
+      17,
+      "input",
+      16
+     ],
+     [
+      1,
+      "binds",
+      18
+     ],
+     [
+      18,
+      "input",
+      16
+     ],
+     [
+      19,
+      "binds",
+      20
+     ],
+     [
+      20,
+      "input",
+      16
+     ],
+     [
+      16,
+      "defines",
+      5
+     ],
+     [
+      6,
+      "effect",
+      21
+     ],
+     [
+      16,
+      "precedes",
+      21
+     ],
+     [
+      4,
+      "binds",
+      22
+     ],
+     [
+      22,
+      "input",
+      21
+     ],
+     [
+      5,
+      "binds",
+      23
+     ],
+     [
+      23,
+      "input",
+      21
+     ],
+     [
+      0,
+      "projects",
+      24
+     ],
+     [
+      2,
+      "projects",
+      25
+     ],
+     [
+      3,
+      "projects",
+      25
+     ],
+     [
+      4,
+      "projects",
+      26
+     ],
+     [
+      5,
+      "projects",
+      27
+     ]
+    ]
+   },
+   "certificates": [
+    {
+     "left_port": 2,
+     "right_port": 3,
+     "sort": "Expr",
+     "operation": 3,
+     "visible_from_stage": 1,
+     "guard": "producer_committed",
+     "scope": "template_local",
+     "raw_union_slots": [
+      4,
+      5
+     ]
+    }
+   ],
+   "split": "heldout"
+  },
+  {
+   "id": "rule-198",
+   "family_id": "family-0c295bc0bbc670aa",
+   "version": "21284b8d757997204d7d08f21ff6687b217b739da06b3e09076dc76be344f73f",
+   "source_sha256": "c09032738e84e773cbdef66a13fe654087a3af152450b05a9dc11f1c42d67ac7",
+   "source": "(rewrite (IntersectHelper-List<i64+IntInterval> (Nil-List<i64+IntInterval> ) m2 res) res :ruleset always-run)",
+   "provenance": {
+    "sum-bits": {
+     "rule": 198,
+     "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    },
+    "raytrace": {
+     "rule": 198,
+     "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    }
+   },
+   "ports": [
+    {
+     "slot": 0,
+     "node": 18,
+     "sort": "List<i64+IntInterval>",
+     "also_slots": [
+      0
+     ]
+    },
+    {
+     "slot": 1,
+     "node": 19,
+     "sort": "List<i64+IntInterval>",
+     "also_slots": [
+      1
+     ]
+    },
+    {
+     "slot": 2,
+     "node": 20,
+     "sort": "List<i64+IntInterval>",
+     "also_slots": [
+      2
+     ]
+    },
+    {
+     "slot": 3,
+     "node": 21,
+     "sort": "List<i64+IntInterval>",
+     "also_slots": [
+      3,
+      4
+     ]
+    }
+   ],
+   "public_ports": [
+    1,
+    2,
+    3
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "template",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 3
+     },
+     {
+      "kind": "copy",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "union",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     }
+    ],
+    "edges": [
+     [
+      5,
+      "query",
+      6
+     ],
+     [
+      0,
+      "binds",
+      7
+     ],
+     [
+      7,
+      "input",
+      6
+     ],
+     [
+      5,
+      "query",
+      8
+     ],
+     [
+      0,
+      "binds",
+      9
+     ],
+     [
+      9,
+      "input",
+      8
+     ],
+     [
+      1,
+      "binds",
+      10
+     ],
+     [
+      10,
+      "input",
+      8
+     ],
+     [
+      2,
+      "binds",
+      11
+     ],
+     [
+      11,
+      "input",
+      8
+     ],
+     [
+      3,
+      "binds",
+      12
+     ],
+     [
+      12,
+      "input",
+      8
+     ],
+     [
+      5,
+      "effect",
+      13
+     ],
+     [
+      3,
+      "binds",
+      14
+     ],
+     [
+      14,
+      "input",
+      13
+     ],
+     [
+      13,
+      "defines",
+      4
+     ],
+     [
+      5,
+      "effect",
+      15
+     ],
+     [
+      13,
+      "precedes",
+      15
+     ],
+     [
+      4,
+      "binds",
+      16
+     ],
+     [
+      16,
+      "input",
+      15
+     ],
+     [
+      2,
+      "binds",
+      17
+     ],
+     [
+      17,
+      "input",
+      15
+     ],
+     [
+      0,
+      "projects",
+      18
+     ],
+     [
+      1,
+      "projects",
+      19
+     ],
+     [
+      2,
+      "projects",
+      20
+     ],
+     [
+      3,
+      "projects",
+      21
+     ],
+     [
+      4,
+      "projects",
+      21
+     ]
+    ]
+   },
+   "certificates": [
+    {
+     "left_port": 3,
+     "right_port": 2,
+     "sort": "List<i64+IntInterval>",
+     "operation": 1,
+     "visible_from_stage": 1,
+     "guard": "producer_committed",
+     "scope": "template_local",
+     "raw_union_slots": [
+      4,
+      2
+     ]
+    }
+   ],
+   "split": "train"
+  },
+  {
+   "id": "rule-199",
+   "family_id": "family-0c295bc0bbc670aa",
+   "version": "bf4ff63acebc266cd1d47c850cc8b446dc7b6f9adc06df4e037f86586051b8ad",
+   "source_sha256": "609fe33fc826a361a5afd90fac5079c44b9ef0477aeec3750ead1d6c1b3e8951",
+   "source": "(rewrite (IntersectHelper-List<i64+IntInterval> m1 (Nil-List<i64+IntInterval> ) res) res :ruleset always-run)",
+   "provenance": {
+    "sum-bits": {
+     "rule": 199,
+     "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    },
+    "raytrace": {
+     "rule": 199,
+     "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    }
+   },
+   "ports": [
+    {
+     "slot": 0,
+     "node": 18,
+     "sort": "List<i64+IntInterval>",
+     "also_slots": [
+      0
+     ]
+    },
+    {
+     "slot": 1,
+     "node": 19,
+     "sort": "List<i64+IntInterval>",
+     "also_slots": [
+      1
+     ]
+    },
+    {
+     "slot": 2,
+     "node": 20,
+     "sort": "List<i64+IntInterval>",
+     "also_slots": [
+      2
+     ]
+    },
+    {
+     "slot": 3,
+     "node": 21,
+     "sort": "List<i64+IntInterval>",
+     "also_slots": [
+      3,
+      4
+     ]
+    }
+   ],
+   "public_ports": [
+    1,
+    2,
+    3
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "template",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 3
+     },
+     {
+      "kind": "copy",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "union",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     }
+    ],
+    "edges": [
+     [
+      5,
+      "query",
+      6
+     ],
+     [
+      0,
+      "binds",
+      7
+     ],
+     [
+      7,
+      "input",
+      6
+     ],
+     [
+      5,
+      "query",
+      8
+     ],
+     [
+      1,
+      "binds",
+      9
+     ],
+     [
+      9,
+      "input",
+      8
+     ],
+     [
+      0,
+      "binds",
+      10
+     ],
+     [
+      10,
+      "input",
+      8
+     ],
+     [
+      2,
+      "binds",
+      11
+     ],
+     [
+      11,
+      "input",
+      8
+     ],
+     [
+      3,
+      "binds",
+      12
+     ],
+     [
+      12,
+      "input",
+      8
+     ],
+     [
+      5,
+      "effect",
+      13
+     ],
+     [
+      3,
+      "binds",
+      14
+     ],
+     [
+      14,
+      "input",
+      13
+     ],
+     [
+      13,
+      "defines",
+      4
+     ],
+     [
+      5,
+      "effect",
+      15
+     ],
+     [
+      13,
+      "precedes",
+      15
+     ],
+     [
+      4,
+      "binds",
+      16
+     ],
+     [
+      16,
+      "input",
+      15
+     ],
+     [
+      2,
+      "binds",
+      17
+     ],
+     [
+      17,
+      "input",
+      15
+     ],
+     [
+      0,
+      "projects",
+      18
+     ],
+     [
+      1,
+      "projects",
+      19
+     ],
+     [
+      2,
+      "projects",
+      20
+     ],
+     [
+      3,
+      "projects",
+      21
+     ],
+     [
+      4,
+      "projects",
+      21
+     ]
+    ]
+   },
+   "certificates": [
+    {
+     "left_port": 3,
+     "right_port": 2,
+     "sort": "List<i64+IntInterval>",
+     "operation": 1,
+     "visible_from_stage": 1,
+     "guard": "producer_committed",
+     "scope": "template_local",
+     "raw_union_slots": [
+      4,
+      2
+     ]
+    }
+   ],
+   "split": "train"
+  },
+  {
+   "id": "rule-266",
+   "family_id": "family-569657b9eac30991",
+   "version": "b31ec5ffc7a8b88506e3a9ff651af3881ee1be9b6f59931667f6e13fa42b989a",
+   "source_sha256": "f5d85086421170672b8a1f332296303d5e619b887adaf1c7d6b685719c1c952f",
+   "source": "(rule ((DelayedDropUnion lhs rhs))\n      ((union lhs rhs))\n        :ruleset apply-drop-unions )",
+   "provenance": {
+    "sum-bits": {
+     "rule": 266,
+     "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    },
+    "raytrace": {
+     "rule": 266,
+     "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": [
+      9
+     ]
+    }
+   },
+   "ports": [
+    {
+     "slot": 0,
+     "node": 11,
+     "sort": "Expr",
+     "also_slots": [
+      0
+     ]
+    },
+    {
+     "slot": 1,
+     "node": 12,
+     "sort": "Expr",
+     "also_slots": [
+      1
+     ]
+    },
+    {
+     "slot": 2,
+     "node": 13,
+     "sort": "Expr",
+     "also_slots": [
+      2
+     ]
+    }
+   ],
+   "public_ports": [
+    0,
+    1,
+    2
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "template",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "union",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     }
+    ],
+    "edges": [
+     [
+      3,
+      "query",
+      4
+     ],
+     [
+      0,
+      "binds",
+      5
+     ],
+     [
+      5,
+      "input",
+      4
+     ],
+     [
+      1,
+      "binds",
+      6
+     ],
+     [
+      6,
+      "input",
+      4
+     ],
+     [
+      2,
+      "binds",
+      7
+     ],
+     [
+      7,
+      "input",
+      4
+     ],
+     [
+      3,
+      "effect",
+      8
+     ],
+     [
+      0,
+      "binds",
+      9
+     ],
+     [
+      9,
+      "input",
+      8
+     ],
+     [
+      1,
+      "binds",
+      10
+     ],
+     [
+      10,
+      "input",
+      8
+     ],
+     [
+      0,
+      "projects",
+      11
+     ],
+     [
+      1,
+      "projects",
+      12
+     ],
+     [
+      2,
+      "projects",
+      13
+     ]
+    ]
+   },
+   "certificates": [
+    {
+     "left_port": 0,
+     "right_port": 1,
+     "sort": "Expr",
+     "operation": 0,
+     "visible_from_stage": 1,
+     "guard": "producer_committed",
+     "scope": "template_local",
+     "raw_union_slots": [
+      0,
+      1
+     ]
+    }
+   ],
+   "split": "train"
+  },
+  {
+   "id": "rule-267",
+   "family_id": "family-569657b9eac30991",
+   "version": "b2d94a6b442026c254e4917d7be6cfbd9cdb1e72b5c39a93e0150e0079c4fff3",
+   "source_sha256": "659e2ef3707d7895ee506cce2575014a5866eded3e6af1291120741d06028e02",
+   "source": "(rule ((DelayedSubstUnion lhs rhs))\n      ((union lhs rhs))\n        :ruleset apply-subst-unions )",
+   "provenance": {
+    "sum-bits": {
+     "rule": 267,
+     "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": [
+      6
+     ]
+    },
+    "raytrace": {
+     "rule": 267,
+     "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    }
+   },
+   "ports": [
+    {
+     "slot": 0,
+     "node": 11,
+     "sort": "Expr",
+     "also_slots": [
+      0
+     ]
+    },
+    {
+     "slot": 1,
+     "node": 12,
+     "sort": "Expr",
+     "also_slots": [
+      1
+     ]
+    },
+    {
+     "slot": 2,
+     "node": 13,
+     "sort": "Expr",
+     "also_slots": [
+      2
+     ]
+    }
+   ],
+   "public_ports": [
+    0,
+    1,
+    2
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "template",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "union",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     }
+    ],
+    "edges": [
+     [
+      3,
+      "query",
+      4
+     ],
+     [
+      0,
+      "binds",
+      5
+     ],
+     [
+      5,
+      "input",
+      4
+     ],
+     [
+      1,
+      "binds",
+      6
+     ],
+     [
+      6,
+      "input",
+      4
+     ],
+     [
+      2,
+      "binds",
+      7
+     ],
+     [
+      7,
+      "input",
+      4
+     ],
+     [
+      3,
+      "effect",
+      8
+     ],
+     [
+      0,
+      "binds",
+      9
+     ],
+     [
+      9,
+      "input",
+      8
+     ],
+     [
+      1,
+      "binds",
+      10
+     ],
+     [
+      10,
+      "input",
+      8
+     ],
+     [
+      0,
+      "projects",
+      11
+     ],
+     [
+      1,
+      "projects",
+      12
+     ],
+     [
+      2,
+      "projects",
+      13
+     ]
+    ]
+   },
+   "certificates": [
+    {
+     "left_port": 0,
+     "right_port": 1,
+     "sort": "Expr",
+     "operation": 0,
+     "visible_from_stage": 1,
+     "guard": "producer_committed",
+     "scope": "template_local",
+     "raw_union_slots": [
+      0,
+      1
+     ]
+    }
+   ],
+   "split": "train"
+  },
+  {
+   "id": "rule-317",
+   "family_id": "family-8ed2822efb701b52",
+   "version": "d0c202b4eb876adb46582519b4dca61d1d42dd693b99fd5980327c8d91d0ae91",
+   "source_sha256": "3f9132e7dd41637220172136ea6caed0c4049db8fc3862e251ea3dfeb11d2130",
+   "source": "(rule ((= lhs (AddContext ctx inner))\n       (= inner (AddContext ctx expr)))\n      ((union lhs inner))\n        :ruleset context )",
+   "provenance": {
+    "sum-bits": {
+     "rule": 317,
+     "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": [
+      4
+     ]
+    },
+    "raytrace": {
+     "rule": 317,
+     "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": [
+      6
+     ]
+    }
+   },
+   "ports": [
+    {
+     "slot": 1,
+     "node": 22,
+     "sort": "Expr",
+     "also_slots": [
+      1,
+      4
+     ]
+    },
+    {
+     "slot": 2,
+     "node": 23,
+     "sort": "Expr",
+     "also_slots": [
+      2,
+      5
+     ]
+    },
+    {
+     "slot": 3,
+     "node": 24,
+     "sort": "Expr",
+     "also_slots": [
+      3
+     ]
+    }
+   ],
+   "public_ports": [
+    0,
+    1,
+    2
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "template",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "copy",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "copy",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "union",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     }
+    ],
+    "edges": [
+     [
+      6,
+      "query",
+      7
+     ],
+     [
+      0,
+      "binds",
+      8
+     ],
+     [
+      8,
+      "input",
+      7
+     ],
+     [
+      1,
+      "binds",
+      9
+     ],
+     [
+      9,
+      "input",
+      7
+     ],
+     [
+      2,
+      "binds",
+      10
+     ],
+     [
+      10,
+      "input",
+      7
+     ],
+     [
+      6,
+      "query",
+      11
+     ],
+     [
+      0,
+      "binds",
+      12
+     ],
+     [
+      12,
+      "input",
+      11
+     ],
+     [
+      3,
+      "binds",
+      13
+     ],
+     [
+      13,
+      "input",
+      11
+     ],
+     [
+      1,
+      "binds",
+      14
+     ],
+     [
+      14,
+      "input",
+      11
+     ],
+     [
+      6,
+      "effect",
+      15
+     ],
+     [
+      1,
+      "binds",
+      16
+     ],
+     [
+      16,
+      "input",
+      15
+     ],
+     [
+      15,
+      "defines",
+      4
+     ],
+     [
+      6,
+      "effect",
+      17
+     ],
+     [
+      15,
+      "precedes",
+      17
+     ],
+     [
+      2,
+      "binds",
+      18
+     ],
+     [
+      18,
+      "input",
+      17
+     ],
+     [
+      17,
+      "defines",
+      5
+     ],
+     [
+      6,
+      "effect",
+      19
+     ],
+     [
+      17,
+      "precedes",
+      19
+     ],
+     [
+      5,
+      "binds",
+      20
+     ],
+     [
+      20,
+      "input",
+      19
+     ],
+     [
+      4,
+      "binds",
+      21
+     ],
+     [
+      21,
+      "input",
+      19
+     ],
+     [
+      1,
+      "projects",
+      22
+     ],
+     [
+      4,
+      "projects",
+      22
+     ],
+     [
+      2,
+      "projects",
+      23
+     ],
+     [
+      5,
+      "projects",
+      23
+     ],
+     [
+      3,
+      "projects",
+      24
+     ]
+    ]
+   },
+   "certificates": [
+    {
+     "left_port": 1,
+     "right_port": 0,
+     "sort": "Expr",
+     "operation": 2,
+     "visible_from_stage": 1,
+     "guard": "producer_committed",
+     "scope": "template_local",
+     "raw_union_slots": [
+      5,
+      4
+     ]
+    }
+   ],
+   "split": "train"
+  },
+  {
+   "id": "rule-580",
+   "family_id": "family-788ab12598990ec6",
+   "version": "356823f2cf96d208c6561e4dc2f370aa46a063c6b022c585991e40b51a73efe5",
+   "source_sha256": "80d7dd04a55547a285e1583cf231f276955ecad1da72b2bbca3cbc9723d65632",
+   "source": "(rewrite (TypeListRemoveAt (TCons x xs) 0) xs :ruleset type-helpers)",
+   "provenance": {
+    "sum-bits": {
+     "rule": 580,
+     "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    },
+    "raytrace": {
+     "rule": 580,
+     "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+     "producer_units": [],
+     "consumer_units": [],
+     "spine_leaves": []
+    }
+   },
+   "ports": [
+    {
+     "slot": 1,
+     "node": 20,
+     "sort": "TypeList",
+     "also_slots": [
+      1
+     ]
+    },
+    {
+     "slot": 2,
+     "node": 21,
+     "sort": "TypeList",
+     "also_slots": [
+      2
+     ]
+    },
+    {
+     "slot": 3,
+     "node": 22,
+     "sort": "TypeList",
+     "also_slots": [
+      3,
+      4
+     ]
+    }
+   ],
+   "public_ports": [
+    0,
+    1,
+    2
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "slot",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "template",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "match",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "literal",
+      "sort": "i64",
+      "ordinal": 0
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "query_column",
+      "sort": "none",
+      "ordinal": 2
+     },
+     {
+      "kind": "copy",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "union",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "operand",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "public_port",
+      "sort": "eq",
+      "ordinal": 0
+     }
+    ],
+    "edges": [
+     [
+      5,
+      "query",
+      6
+     ],
+     [
+      0,
+      "binds",
+      7
+     ],
+     [
+      7,
+      "input",
+      6
+     ],
+     [
+      1,
+      "binds",
+      8
+     ],
+     [
+      8,
+      "input",
+      6
+     ],
+     [
+      2,
+      "binds",
+      9
+     ],
+     [
+      9,
+      "input",
+      6
+     ],
+     [
+      5,
+      "query",
+      10
+     ],
+     [
+      2,
+      "binds",
+      11
+     ],
+     [
+      11,
+      "input",
+      10
+     ],
+     [
+      12,
+      "binds",
+      13
+     ],
+     [
+      13,
+      "input",
+      10
+     ],
+     [
+      3,
+      "binds",
+      14
+     ],
+     [
+      14,
+      "input",
+      10
+     ],
+     [
+      5,
+      "effect",
+      15
+     ],
+     [
+      3,
+      "binds",
+      16
+     ],
+     [
+      16,
+      "input",
+      15
+     ],
+     [
+      15,
+      "defines",
+      4
+     ],
+     [
+      5,
+      "effect",
+      17
+     ],
+     [
+      15,
+      "precedes",
+      17
+     ],
+     [
+      4,
+      "binds",
+      18
+     ],
+     [
+      18,
+      "input",
+      17
+     ],
+     [
+      1,
+      "binds",
+      19
+     ],
+     [
+      19,
+      "input",
+      17
+     ],
+     [
+      1,
+      "projects",
+      20
+     ],
+     [
+      2,
+      "projects",
+      21
+     ],
+     [
+      3,
+      "projects",
+      22
+     ],
+     [
+      4,
+      "projects",
+      22
+     ]
+    ]
+   },
+   "certificates": [
+    {
+     "left_port": 2,
+     "right_port": 0,
+     "sort": "TypeList",
+     "operation": 1,
+     "visible_from_stage": 1,
+     "guard": "producer_committed",
+     "scope": "template_local",
+     "raw_union_slots": [
+      4,
+      1
+     ]
+    }
+   ],
+   "split": "train"
+  }
+ ],
+ "excluded": [
+  {
+   "rule": 145,
+   "ports": 2,
+   "reason": "no third same-sort port independent across both actual instances"
+  },
+  {
+   "rule": 167,
+   "ports": 3,
+   "reason": "no third same-sort port independent across both actual instances"
+  },
+  {
+   "rule": 168,
+   "ports": 3,
+   "reason": "no third same-sort port independent across both actual instances"
+  },
+  {
+   "rule": 172,
+   "ports": 3,
+   "reason": "no third same-sort port independent across both actual instances"
+  },
+  {
+   "rule": 173,
+   "ports": 3,
+   "reason": "no third same-sort port independent across both actual instances"
+  },
+  {
+   "rule": 572,
+   "ports": 3,
+   "reason": "no third same-sort port independent across both actual instances"
+  },
+  {
+   "rule": 576,
+   "ports": 2,
+   "reason": "no third same-sort port independent across both actual instances"
+  }
+ ]
+}

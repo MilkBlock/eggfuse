@@ -1,0 +1,2413 @@
+[
+ {
+  "id": "r23-enabled",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17,
+    18
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    17,
+    1
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "source_sha256": "82934f46cffbe95075d898a97405a6ee7a3c0f642f9dee5e756b09f27f661221",
+  "program_sha256": "17e5f62b0bb62d5dc9077043f9bd625dc9804b0d3303039336e2ded24d5f04c0",
+  "independent_distractors": [
+   0
+  ]
+ },
+ {
+  "id": "r23-withheld",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "05b39aa7b8560e5a8073a2c7b2999efe7e8958320f4f8cdd5ef1638d0cc027c7",
+  "program_sha256": "28698a7f33a6d3f607621b8594661f06984e2f8320f616c9243a183cb5d94503",
+  "independent_distractors": [
+   0
+  ]
+ },
+ {
+  "id": "r134-enabled",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17,
+    18
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    17,
+    1
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "source_sha256": "ef9628f2fc595c1de1e66f343f35189a735dee6235bd21050ecb9e9a171572e0",
+  "program_sha256": "87bb33fbe62f7bc53370ca1ba20083ddef4193fef4825dc9a951ef13ea2da1d7",
+  "independent_distractors": [
+   0
+  ]
+ },
+ {
+  "id": "r134-withheld",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "e851fc3f1543da667d41e82762c641bdf00828faf44e71895a25d7932dd0ebcb",
+  "program_sha256": "555d8fef9cb60e9e027633490c2db29434944b98da4d8806898e23a5b361498f",
+  "independent_distractors": [
+   0
+  ]
+ },
+ {
+  "id": "r135-enabled",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17,
+    18
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    17,
+    1
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "source_sha256": "4ea3a6428064e52e231dcfd09bbe5d7a6679cb2fecad9d99145717d07445946d",
+  "program_sha256": "4ee91373adb1c9b5bfd84609d8460a6791ecae56f5e317fa3e305b59cfd757c3",
+  "independent_distractors": [
+   0
+  ]
+ },
+ {
+  "id": "r135-withheld",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "a7bd5a6177fc84fdc5a7db2d8364dbcd218bcbbbec87723f2db59032a2d2d30e",
+  "program_sha256": "71d979d067f954c7f1e5ea6a408654ba3e5f91dbaa9779314bf63e5a60fd391e",
+  "independent_distractors": [
+   0
+  ]
+ },
+ {
+  "id": "r143-enabled",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    3
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ],
+   [
+    19
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18,
+    19
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    3,
+    0
+   ],
+   [
+    19,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    2,
+    0
+   ],
+   [
+    3,
+    0
+   ],
+   [
+    18,
+    1
+   ],
+   [
+    19,
+    1
+   ]
+  ],
+  "source_sha256": "6ef4c1f8b22858db68f1a10a103fb8551fd79551c5a6e32ff263fe8b9057face",
+  "program_sha256": "96857b22893f489ccfe6368a52e9e3b20d5979caa0b08e41d67fdb994c53e432",
+  "independent_distractors": [
+   0,
+   1
+  ]
+ },
+ {
+  "id": "r143-withheld",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    3
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ],
+   [
+    19
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    3
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ],
+   [
+    19
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    3,
+    0
+   ],
+   [
+    19,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    3,
+    0
+   ],
+   [
+    19,
+    1
+   ]
+  ],
+  "source_sha256": "a1ed32387e2be82a147d12159f622d49f2094fd8cec89e215d41163a1dc0350c",
+  "program_sha256": "b9e684d0edfa9731cc49efc9bcd78cafafe155b7f075c0682ac946dd51762b43",
+  "independent_distractors": [
+   0,
+   1
+  ]
+ },
+ {
+  "id": "r145-enabled",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    1
+   ],
+   [
+    16,
+    17
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    16,
+    1
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "46e6431b74e1916ff9b09e5ab08d6fcc9f5492de1d7e29d22fc555a72e8ee7c3",
+  "program_sha256": "de57d659e8b206733669ca2d39465bf58a0b69114a6c4ba9898d03c8542000c9",
+  "independent_distractors": []
+ },
+ {
+  "id": "r145-withheld",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "source_sha256": "fd6fdcf70246f42b1d6c60ffcbec58ed2083702c8887fc93abf7dfa9663e897d",
+  "program_sha256": "b4a722e531635d8d978c6f1ea74271e05494eda0d3e31639f6b0a65a74e6e4c3",
+  "independent_distractors": []
+ },
+ {
+  "id": "r167-enabled",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    17,
+    18
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    17,
+    1
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "source_sha256": "116685182c0bc536528d488a8f3cb2fbae7d5b845780d5929d660317c76ab074",
+  "program_sha256": "f67263dd0865bc0468c487271e3ee3f8d8b11caa0a7b4cc30341455a6b6f0547",
+  "independent_distractors": []
+ },
+ {
+  "id": "r167-withheld",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "6b443b4d61d5b99f98f855922c8d66dd93024c52a520cb30575de75c9ad52019",
+  "program_sha256": "471bb555f9fb616dcd94951b9b547187a03362734b29d453b21d99fff47964db",
+  "independent_distractors": []
+ },
+ {
+  "id": "r168-enabled",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    17,
+    18
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    17,
+    1
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "source_sha256": "eaf7ed65724c14df15a3acf371c10db6715db71795cc407c46eae56aa826dab3",
+  "program_sha256": "4cc291ba69816118c607bd903a1341f4702308aaf00d7a91d612d550bdd86d5e",
+  "independent_distractors": []
+ },
+ {
+  "id": "r168-withheld",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "7ebbe74e992dd6657d55824cb4ed361bf9161eb22c0825ee0b8acdc1ccd96c28",
+  "program_sha256": "b413bb9ee14ad33b283d7894befe6f8f9051faa51f326aff1477afe9a23daa70",
+  "independent_distractors": []
+ },
+ {
+  "id": "r172-enabled",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    17,
+    18
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    17,
+    1
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "source_sha256": "c672e0b4578938316112bd6a6c7602bf96165b104de8814fa81b8433ab71d020",
+  "program_sha256": "a5c7ba5d116d9d50e386dffef83465d9792512e39ed6a7abf2133889f43ecf26",
+  "independent_distractors": []
+ },
+ {
+  "id": "r172-withheld",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "b92238d2473982417ee0a81ef1540981cdaa4200e67c9c7f5918149ff51648f7",
+  "program_sha256": "d042f38f3bd5b17ab6f894dda4ec3a249aa625168b4ce3661cc011971c04fab9",
+  "independent_distractors": []
+ },
+ {
+  "id": "r173-enabled",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    17,
+    18
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    17,
+    1
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "source_sha256": "47d3b6c3cf67a414c5fce20055c46a99d6098e3f26983aa642a6b2867470ea65",
+  "program_sha256": "5ace1e9c56b72151beaf8fd1b860f4c6f10832366cd07a75a5b63dff459dd47e",
+  "independent_distractors": []
+ },
+ {
+  "id": "r173-withheld",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "277a3ecab3bef7bcea013d8f92af6504b4f29d01b648446e4c843628337f85db",
+  "program_sha256": "0d8c6720544c04a7d9ab713eb65b4e4cbdbc31d3c681d039e584e4fd9791c42b",
+  "independent_distractors": []
+ },
+ {
+  "id": "r198-enabled",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    3
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ],
+   [
+    19
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    17
+   ],
+   [
+    18,
+    19
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    2,
+    0
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    2,
+    0
+   ],
+   [
+    3,
+    0
+   ],
+   [
+    18,
+    1
+   ],
+   [
+    19,
+    1
+   ]
+  ],
+  "source_sha256": "7d255ba42ae6f3da64c0e5c33c98cb4e382098e57027b4679b3a74e6e8ee30db",
+  "program_sha256": "bf3870c93860f7bb3df459d829368d983f3e3f66b105d9fa882c333f52091bac",
+  "independent_distractors": [
+   1
+  ]
+ },
+ {
+  "id": "r198-withheld",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    3
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ],
+   [
+    19
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    3
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ],
+   [
+    19
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    2,
+    0
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    2,
+    0
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "source_sha256": "947bb22d4e17b6cae07bdd22a7cfa1a1ded6b4205680437ee7d53f9ef7550e07",
+  "program_sha256": "18b19d093c38e469e66a987c3714f28d9901e743266d273a93e81c48642561f1",
+  "independent_distractors": [
+   1
+  ]
+ },
+ {
+  "id": "r199-enabled",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    3
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ],
+   [
+    19
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    17
+   ],
+   [
+    18,
+    19
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    2,
+    0
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    2,
+    0
+   ],
+   [
+    3,
+    0
+   ],
+   [
+    18,
+    1
+   ],
+   [
+    19,
+    1
+   ]
+  ],
+  "source_sha256": "41eba8194374ed08e79a25b6f2bdc57605f36b9022975b704252f2492c118720",
+  "program_sha256": "b2901d415a049c54d9e473e39d6a1f69150a5fbfe9713d8057e3a02bfbbf966f",
+  "independent_distractors": [
+   1
+  ]
+ },
+ {
+  "id": "r199-withheld",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    3
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ],
+   [
+    19
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    3
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ],
+   [
+    19
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    2,
+    0
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    2,
+    0
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "source_sha256": "f3bda392f089097ae08329b03e2147571e12c4e0d6d7443ad582f468060e589c",
+  "program_sha256": "cb7bc4dafbe3bf4cabfa22b353c85d0175eb51a9f1e022d49f4afa3a0af49cce",
+  "independent_distractors": [
+   1
+  ]
+ },
+ {
+  "id": "r266-enabled",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16,
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    16,
+    1
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "0bd90b41b60cb4c6bbd19b55564506a27f370d383d7f8e51d9cce8d76688f83c",
+  "program_sha256": "4da6c4ddb8b742c9eb130cdc5022e823c5cc28f0fb56869133ec4ed0ac2977b7",
+  "independent_distractors": [
+   2
+  ]
+ },
+ {
+  "id": "r266-withheld",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "90f698d64728f6ad4702dd0577b90e00c1a40ee2c1fcad146acc64f7392ddc05",
+  "program_sha256": "f96ba794be600ba0d883c0135cb0f3bb9e3c68fa51bfd71fde831f4599dd2143",
+  "independent_distractors": [
+   2
+  ]
+ },
+ {
+  "id": "r267-enabled",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16,
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    16,
+    1
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "aff9cdb472870a8855aec312bc662236484f90be2d52e921450b6167e3fcaefb",
+  "program_sha256": "348ce2c3d7ed7367d29ef4cd1f325b0407bc12ce300299e3867541a3d1f4cd84",
+  "independent_distractors": [
+   2
+  ]
+ },
+ {
+  "id": "r267-withheld",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "2e8dcbf1f9e9e0d966cbab25b09218f483a40b3f83d9cad1b6460196fa7d4ef3",
+  "program_sha256": "21ef34a48b3fabdf0fa8388568ca841dccd8c7af4fc2a8b4fb51b44ecc1218f6",
+  "independent_distractors": [
+   2
+  ]
+ },
+ {
+  "id": "r317-enabled",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16,
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    16,
+    1
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "140e06f07d8bce7b3ef6e5e0666745b8d49f9d4ab16f6af6e751e92c1bd5168d",
+  "program_sha256": "fa20fe937da302e866b8a26517bc9ce187b38025bc1bb9f72f2ad4b56da9fe80",
+  "independent_distractors": [
+   2
+  ]
+ },
+ {
+  "id": "r317-withheld",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "source_sha256": "e5e779075f7a3d004f54420429979b76e8294482d38916f1f13f553ba2606ccf",
+  "program_sha256": "d6039ca3e02964d2347d6676fbac299ffc2f31c20c0513775ff1c1c80324e407",
+  "independent_distractors": [
+   2
+  ]
+ },
+ {
+  "id": "r572-enabled",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    17,
+    18
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    17,
+    1
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "source_sha256": "62f334561edf8e101546b4153c5dc15036c9c2f786190681894749ab7d2fa9b0",
+  "program_sha256": "d51dcd711eb3d1a272a129ba84bac7a74aa38fd1bf0bf37edf3f9ab6dcb6ba01",
+  "independent_distractors": []
+ },
+ {
+  "id": "r572-withheld",
+  "pre_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    16
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    1,
+    0
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "488ed4cdc0654eb611e0de6322b6cdecf663d178619057654c583f35be5dc1ad",
+  "program_sha256": "55c7c9f0e996f9d6814fa90743f68f852d04f912888c45bdb222a559b67a5563",
+  "independent_distractors": []
+ },
+ {
+  "id": "r576-enabled",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    1
+   ],
+   [
+    16,
+    17
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    16,
+    1
+   ],
+   [
+    17,
+    1
+   ]
+  ],
+  "source_sha256": "a476a4ce9bac2b3000246b92776eca79d132752c7883c655ccc5b665d962b721",
+  "program_sha256": "b0c10faefb6130a58dd9a9a639dc2534c44559538dabd1aead640e9fa49a593b",
+  "independent_distractors": []
+ },
+ {
+  "id": "r576-withheld",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "source_sha256": "49286810153a1808a66bd6ca9be2dc0e486287f86322f4b0c4e279ff3b44a8ea",
+  "program_sha256": "68a78e9886ec1b8f33187c62b90460582ffc9576dc3f11184b381251604d4849",
+  "independent_distractors": []
+ },
+ {
+  "id": "r580-enabled",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0,
+    2
+   ],
+   [
+    1
+   ],
+   [
+    16,
+    18
+   ],
+   [
+    17
+   ]
+  ],
+  "producer_matches": 2,
+  "pre_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    16,
+    1
+   ],
+   [
+    18,
+    1
+   ]
+  ],
+  "source_sha256": "ab7d0f5bcb364e9bf7fa7703b901bea8c50d0c7da3dab3c0dd088bc28aca04ff",
+  "program_sha256": "290b9156675bd7a3bee42ead7e85b4ef7e9ae1878f44c8f2780b62741885d366",
+  "independent_distractors": [
+   1
+  ]
+ },
+ {
+  "id": "r580-withheld",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    2
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ],
+   [
+    18
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "source_sha256": "14e6968f07d2f55c2f20d0f23a4a5c5363ed8910814bc1abfbf6fa8cb93ce422",
+  "program_sha256": "ad23ad7fc415b3c0226d61ccefe2d10922c300b9815bd940997a771ee46955a4",
+  "independent_distractors": [
+   1
+  ]
+ },
+ {
+  "id": "r145-guard-false",
+  "pre_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ]
+  ],
+  "post_sort_partition": [
+   [
+    0
+   ],
+   [
+    1
+   ],
+   [
+    16
+   ],
+   [
+    17
+   ]
+  ],
+  "producer_matches": 0,
+  "pre_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "post_reads": [
+   [
+    0,
+    0
+   ],
+   [
+    16,
+    1
+   ]
+  ],
+  "source_sha256": "8b31056ef3ea629a5017cbd2e37cd36259a96a6c97e8e121f0304cd3d5d37481",
+  "program_sha256": "6f77bec244b086b61f0a7c102ab9d9720b1e689eafba3a15b05b59e891f9a291",
+  "independent_distractors": []
+ }
+]

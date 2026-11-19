@@ -1,0 +1,119 @@
+{
+  "status": "pass",
+  "template_count": 10,
+  "family_counts": {
+    "train": 5,
+    "heldout": 2
+  },
+  "templates_per_split": {
+    "train": 7,
+    "heldout": 3
+  },
+  "old_catalog_census": {
+    "no_explicit_producer_union": 11,
+    "published_column_is_union_endpoint": 6,
+    "producer_union_other_slots": 2
+  },
+  "old_catalog_templates": [
+    {
+      "template": "t-190d47775d444806",
+      "category": "no_explicit_producer_union"
+    },
+    {
+      "template": "t-27bf08b4a5836427",
+      "category": "no_explicit_producer_union"
+    },
+    {
+      "template": "t-287604533134e251",
+      "category": "no_explicit_producer_union"
+    },
+    {
+      "template": "t-406771cd347f0164",
+      "category": "no_explicit_producer_union"
+    },
+    {
+      "template": "t-40efce55452576e7",
+      "category": "no_explicit_producer_union"
+    },
+    {
+      "template": "t-429b06d30ca5d01a",
+      "category": "no_explicit_producer_union"
+    },
+    {
+      "template": "t-53b1c1f73e3ddba2",
+      "category": "published_column_is_union_endpoint"
+    },
+    {
+      "template": "t-54bd383b2b04f117",
+      "category": "no_explicit_producer_union"
+    },
+    {
+      "template": "t-64aea501cb4c666b",
+      "category": "no_explicit_producer_union"
+    },
+    {
+      "template": "t-6676542d8921bdc8",
+      "category": "published_column_is_union_endpoint"
+    },
+    {
+      "template": "t-693eeb58ce92806c",
+      "category": "producer_union_other_slots"
+    },
+    {
+      "template": "t-6af350fc4e65d6bb",
+      "category": "no_explicit_producer_union"
+    },
+    {
+      "template": "t-70b88927f81b9ecf",
+      "category": "no_explicit_producer_union"
+    },
+    {
+      "template": "t-8421af9759476a69",
+      "category": "published_column_is_union_endpoint"
+    },
+    {
+      "template": "t-9fa3e2ef44e70e42",
+      "category": "published_column_is_union_endpoint"
+    },
+    {
+      "template": "t-b6eca31a4a5cd235",
+      "category": "no_explicit_producer_union"
+    },
+    {
+      "template": "t-df684cd42862c98c",
+      "category": "producer_union_other_slots"
+    },
+    {
+      "template": "t-e494bdbde4e4ac6e",
+      "category": "published_column_is_union_endpoint"
+    },
+    {
+      "template": "t-fac1aab306c0d07c",
+      "category": "published_column_is_union_endpoint"
+    }
+  ],
+  "verified_node_permutations": 10,
+  "base_replays": 35,
+  "dynamic_replays": 100,
+  "raw_external_cases": 90,
+  "with_secondary_congruence": [
+    "r266-external-pp",
+    "r266-external-pq",
+    "r266-external-qp",
+    "r266-external-qq",
+    "r267-external-pp",
+    "r267-external-pq",
+    "r267-external-qp",
+    "r267-external-qq",
+    "r580-external-rr"
+  ],
+  "installed_local_union_cells": {
+    "sum-bits": false,
+    "raytrace": false
+  },
+  "files": {
+    "manifest.json": "72091b90e4ac4d0c50ff2477f32b7660f7db79adbdf8f35acc8b90d9a006d7ec",
+    "replay-evidence.json": "f3a5237f97157f50b69bedc0a00db7952cdca578c0e073dd4762daba4008dea9",
+    "extra-events.json": "d2226b23fe753beda70df37ac8e3dd86eb3f959c2461239a09ce15da13859366"
+  }
+}
