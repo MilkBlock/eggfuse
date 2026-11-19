@@ -1,0 +1,55 @@
+arm	seed	split	mask	complete	nonempty	duplicates	missing	obligations	illegal	field_errors	parent_field_errors	parent_ready	complete_on_ready	twin_pairs_exact	twin_pairs	median_ms	timed_valid_nonempty_per_second
+learned	1703	iid	none	13	162	9	176	352	162	76	15	66	13			5.66702	10.63
+learned	1703	iid	parents	0	162	1	341	352	65	10	1	66	0			6.1325	0.0
+learned	1703	iid	parents_latent	1	162	0	346	352	50	5	1	66	1			5.6964	0.0
+learned	1709	iid	none	8	162	6	204	352	215	68	25	64	8			5.55554	5.3
+learned	1709	iid	parents	1	162	0	338	352	131	12	0	64	1			5.54142	0.0
+learned	1709	iid	parents_latent	0	162	0	350	352	53	2	0	64	0			5.90121	0.0
+static	1703	iid	none	9	162	5	236	352	181	0	0	81	9			6.43673	4.81
+static	1703	iid	parents	1	162	0	331	352	126	0	0	81	1			6.78133	0.0
+static	1703	iid	parents_latent	1	162	0	349	352	58	0	0	81	1			6.14531	0.0
+static	1709	iid	none	9	162	3	209	352	199	0	0	90	9			5.91423	0.0
+static	1709	iid	parents	0	162	0	335	352	158	0	0	90	0			6.18829	0.0
+static	1709	iid	parents_latent	0	162	0	351	352	4	0	0	90	0			6.26073	0.0
+aux	1703	iid	none	23	162	7	187	352	171	0	0	88	23			6.5214	28.85
+aux	1703	iid	parents	0	162	0	345	352	81	0	0	88	0			6.38379	0.0
+aux	1703	iid	parents_latent	1	162	0	345	352	119	0	0	88	1			5.50346	5.34
+aux	1709	iid	none	8	162	9	228	352	215	0	0	77	8			5.89269	5.18
+aux	1709	iid	parents	0	162	0	338	352	176	0	0	77	0			5.89992	0.0
+aux	1709	iid	parents_latent	0	162	0	348	352	60	0	0	77	0			6.37883	0.0
+learned	1703	left_collision	none	26	256	1	274	438	190	36	11	120	26	4	128	6.37646	5.01
+learned	1703	left_collision	parents	0	256	0	434	438	66	2	0	120	0	0	128	5.51998	0.0
+learned	1703	left_collision	parents_latent	0	256	0	438	438	32	0	0	120	0	0	128	5.75454	0.0
+learned	1709	left_collision	none	21	256	7	276	438	198	66	33	107	21	4	128	5.8219	5.3
+learned	1709	left_collision	parents	2	256	2	424	438	148	11	2	107	2	0	128	5.96533	0.0
+learned	1709	left_collision	parents_latent	1	256	0	435	438	54	2	1	107	1	0	128	5.84065	0.0
+static	1703	left_collision	none	23	256	6	316	438	227	0	0	113	23	6	128	5.97402	20.31
+static	1703	left_collision	parents	1	256	0	420	438	125	0	0	113	1	0	128	5.91581	0.0
+static	1703	left_collision	parents_latent	2	256	0	431	438	55	0	0	113	2	0	128	5.98921	0.0
+static	1709	left_collision	none	17	256	3	296	438	215	0	0	137	17	6	128	5.82998	10.24
+static	1709	left_collision	parents	0	256	1	422	438	215	0	0	137	0	0	128	6.28129	0.0
+static	1709	left_collision	parents_latent	0	256	0	438	438	4	0	0	137	0	0	128	5.89052	0.0
+aux	1703	left_collision	none	31	256	5	280	438	169	0	0	117	31	9	128	6.0534	9.7
+aux	1703	left_collision	parents	3	256	0	427	438	54	0	0	117	3	0	128	5.9989	5.01
+aux	1703	left_collision	parents_latent	0	256	0	437	438	99	0	0	117	0	0	128	5.95792	0.0
+aux	1709	left_collision	none	36	256	7	279	438	180	0	0	136	36	7	128	6.00938	15.01
+aux	1709	left_collision	parents	1	256	1	416	438	184	0	0	136	1	0	128	6.10227	0.0
+aux	1709	left_collision	parents_latent	3	256	0	429	438	59	0	0	136	3	0	128	6.28683	0.0
+learned	1703	right_collision	none	23	256	2	273	472	190	68	23	123	23	10	128	5.52952	22.35
+learned	1703	right_collision	parents	0	256	0	466	472	48	4	1	123	0	0	128	5.41417	0.0
+learned	1703	right_collision	parents_latent	0	256	0	467	472	44	5	1	123	0	0	128	5.28423	0.0
+learned	1709	right_collision	none	20	256	11	306	472	246	50	20	128	20	8	128	5.70419	5.5
+learned	1709	right_collision	parents	1	256	0	458	472	134	4	1	128	1	0	128	6.1016	0.0
+learned	1709	right_collision	parents_latent	0	256	0	465	472	56	5	1	128	0	0	128	5.6601	0.0
+static	1703	right_collision	none	16	256	4	320	472	212	0	0	132	16	8	128	5.99177	5.29
+static	1703	right_collision	parents	1	256	0	446	472	192	0	0	132	1	1	128	5.95046	5.14
+static	1703	right_collision	parents_latent	0	256	0	469	472	75	0	0	132	0	0	128	5.90298	0.0
+static	1709	right_collision	none	20	256	4	290	472	270	0	0	153	20	21	128	5.84885	10.88
+static	1709	right_collision	parents	1	256	0	454	472	212	0	0	153	1	0	128	5.98533	5.14
+static	1709	right_collision	parents_latent	0	256	0	472	472	3	0	0	153	0	0	128	6.27965	0.0
+aux	1703	right_collision	none	34	256	8	270	472	198	0	0	138	34	18	128	5.83752	21.08
+aux	1703	right_collision	parents	1	256	0	465	472	87	0	0	138	1	1	128	5.52644	0.0
+aux	1703	right_collision	parents_latent	0	256	0	467	472	109	0	0	138	0	0	128	5.81394	0.0
+aux	1709	right_collision	none	31	256	9	300	472	249	0	0	141	31	7	128	6.09602	20.82
+aux	1709	right_collision	parents	0	256	1	457	472	192	0	0	141	0	0	128	5.91394	0.0
+aux	1709	right_collision	parents_latent	0	256	0	468	472	47	0	0	141	0	0	128	6.18608	0.0
