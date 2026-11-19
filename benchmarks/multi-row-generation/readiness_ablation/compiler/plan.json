@@ -1,0 +1,335 @@
+{
+  "schema": "eggfuse.readiness-wave/v1",
+  "schedule": [
+    "wave0",
+    "wave1",
+    "wave2",
+    "finish"
+  ],
+  "rules": [
+    {
+      "rule": 0,
+      "ruleset": "finish",
+      "inputs": [
+        "P0",
+        "P1"
+      ],
+      "checks": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      ],
+      "table": "C",
+      "outputs": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "rule": 1,
+      "ruleset": "finish",
+      "inputs": [
+        "U"
+      ],
+      "checks": [],
+      "table": "V",
+      "outputs": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "rule": 2,
+      "ruleset": "wave0",
+      "inputs": [
+        "InP0"
+      ],
+      "checks": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            "literal",
+            0
+          ]
+        ]
+      ],
+      "table": "P0",
+      "outputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    },
+    {
+      "rule": 3,
+      "ruleset": "wave0",
+      "inputs": [
+        "InP1"
+      ],
+      "checks": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            "literal",
+            0
+          ]
+        ]
+      ],
+      "table": "P1",
+      "outputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    },
+    {
+      "rule": 4,
+      "ruleset": "wave0",
+      "inputs": [
+        "InU"
+      ],
+      "checks": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            "literal",
+            0
+          ]
+        ]
+      ],
+      "table": "U",
+      "outputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    },
+    {
+      "rule": 5,
+      "ruleset": "wave1",
+      "inputs": [
+        "InP0"
+      ],
+      "checks": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            "literal",
+            1
+          ]
+        ]
+      ],
+      "table": "P0",
+      "outputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    },
+    {
+      "rule": 6,
+      "ruleset": "wave1",
+      "inputs": [
+        "InP1"
+      ],
+      "checks": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            "literal",
+            1
+          ]
+        ]
+      ],
+      "table": "P1",
+      "outputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    },
+    {
+      "rule": 7,
+      "ruleset": "wave1",
+      "inputs": [
+        "InU"
+      ],
+      "checks": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            "literal",
+            1
+          ]
+        ]
+      ],
+      "table": "U",
+      "outputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    },
+    {
+      "rule": 8,
+      "ruleset": "wave2",
+      "inputs": [
+        "InP0"
+      ],
+      "checks": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            "literal",
+            2
+          ]
+        ]
+      ],
+      "table": "P0",
+      "outputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    },
+    {
+      "rule": 9,
+      "ruleset": "wave2",
+      "inputs": [
+        "InP1"
+      ],
+      "checks": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            "literal",
+            2
+          ]
+        ]
+      ],
+      "table": "P1",
+      "outputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    },
+    {
+      "rule": 10,
+      "ruleset": "wave2",
+      "inputs": [
+        "InU"
+      ],
+      "checks": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            "literal",
+            2
+          ]
+        ]
+      ],
+      "table": "U",
+      "outputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    }
+  ]
+}

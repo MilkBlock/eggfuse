@@ -1,0 +1,2086 @@
+{
+  "cases": [
+    {
+      "id": "delayed",
+      "source_sha256": "02d1438ae3af1d8922efe242fce7890839a861b5239c18010f9cb0369ca627a3",
+      "program_sha256": "e29f978d27a62f8863b71bf7e2047b2cb077ff8d153953737e6929f9e86532fe",
+      "runs": [
+        {
+          "ordinal": 1,
+          "ruleset": "wave0",
+          "logical_matches": 3,
+          "executed_bindings": 3,
+          "actual_publications": 3,
+          "bindings_sha256": "305c2f73b360ca6705956976c9174a672e145508785c30f15350df8e2a258e4f",
+          "rhs_outputs_sha256": "46ecc55c1b74d2458b01a68c54b11e938024b4408f5260ac2f59b882f98c02c2",
+          "delta_sha256": "46ecc55c1b74d2458b01a68c54b11e938024b4408f5260ac2f59b882f98c02c2",
+          "visible_public_sha256": "9968f57e3a864c384b227da549293c0b6f815914329bd4cc32ca0e2bddc71e03",
+          "ready_sha256": "4d88099682623bf5d5fa5985aad6b21e46f2b5ae410c373baad4461e098a5d56",
+          "actual_rhs": [
+            [
+              2,
+              [
+                [
+                  0,
+                  0,
+                  5
+                ]
+              ],
+              [
+                "P0",
+                [
+                  0,
+                  5
+                ]
+              ]
+            ],
+            [
+              3,
+              [
+                [
+                  0,
+                  1,
+                  5
+                ]
+              ],
+              [
+                "P1",
+                [
+                  1,
+                  5
+                ]
+              ]
+            ],
+            [
+              4,
+              [
+                [
+                  0,
+                  2,
+                  1
+                ]
+              ],
+              [
+                "U",
+                [
+                  2,
+                  1
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "P0",
+              [
+                0,
+                5
+              ]
+            ],
+            [
+              "P1",
+              [
+                1,
+                5
+              ]
+            ],
+            [
+              "U",
+              [
+                2,
+                1
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [],
+            "V": [
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "ruleset": "wave1",
+          "logical_matches": 1,
+          "executed_bindings": 1,
+          "actual_publications": 1,
+          "bindings_sha256": "2dc541ef7447400eb66834763f9368de574c93f48452e6d62131d907146f80aa",
+          "rhs_outputs_sha256": "c0e794f5ea1bfc6a31f23f13166c57c8d66b3f8f889ca62f9a25dbed859b9ff2",
+          "delta_sha256": "c0e794f5ea1bfc6a31f23f13166c57c8d66b3f8f889ca62f9a25dbed859b9ff2",
+          "visible_public_sha256": "87e2fd8816a32e57366dc627ceeffdc12b774db999d59c89e1cde2748c4c5d36",
+          "ready_sha256": "7fce691443fee5eac92fb87aaecdbf802356971d0d8ac6d7cfef0f9197554669",
+          "actual_rhs": [
+            [
+              7,
+              [
+                [
+                  1,
+                  0,
+                  5
+                ]
+              ],
+              [
+                "U",
+                [
+                  0,
+                  5
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "U",
+              [
+                0,
+                5
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [],
+            "V": [
+              [
+                0,
+                5
+              ],
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 3,
+          "ruleset": "wave2",
+          "logical_matches": 1,
+          "executed_bindings": 1,
+          "actual_publications": 1,
+          "bindings_sha256": "232149234347a812962190f04196b9e4725118de1835ffeb203fa17b79aac143",
+          "rhs_outputs_sha256": "1341639829dcc367fbd2fcfd5cf4c5e38393914e4755944d883b161db450da75",
+          "delta_sha256": "1341639829dcc367fbd2fcfd5cf4c5e38393914e4755944d883b161db450da75",
+          "visible_public_sha256": "5a710aa0a59bcc1ee48c1685aee8f52de227cb0386a03eb77f9a08191a64fbe8",
+          "ready_sha256": "3b0b9d9f3202ddc02795b0ae1f5adb4b582ce742278f0cf71904527d24743903",
+          "actual_rhs": [
+            [
+              9,
+              [
+                [
+                  2,
+                  0,
+                  5
+                ]
+              ],
+              [
+                "P1",
+                [
+                  0,
+                  5
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "P1",
+              [
+                0,
+                5
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [
+              [
+                0,
+                5,
+                5
+              ]
+            ],
+            "V": [
+              [
+                0,
+                5
+              ],
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 4,
+          "ruleset": "finish",
+          "logical_matches": 3,
+          "executed_bindings": 3,
+          "actual_publications": 3,
+          "bindings_sha256": "9c062694967ea0c72b33c487c11d37c9b2750adf8c6b0c4da33e5c54b02582d3",
+          "rhs_outputs_sha256": "5ebfa37e173f52f7064dd973e3a4c510afc92fe32b79623ac47f1dccca2369fc",
+          "delta_sha256": "5ebfa37e173f52f7064dd973e3a4c510afc92fe32b79623ac47f1dccca2369fc",
+          "visible_public_sha256": "20f1d7e6bcea8196ed0e5b1522804894ac25c64c14346c0d265c8b11d6574ba1",
+          "ready_sha256": "3b0b9d9f3202ddc02795b0ae1f5adb4b582ce742278f0cf71904527d24743903",
+          "actual_rhs": [
+            [
+              0,
+              [
+                [
+                  0,
+                  5
+                ],
+                [
+                  0,
+                  5
+                ]
+              ],
+              [
+                "C",
+                [
+                  0,
+                  5,
+                  5
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                [
+                  0,
+                  5
+                ]
+              ],
+              [
+                "V",
+                [
+                  0,
+                  5
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                [
+                  2,
+                  1
+                ]
+              ],
+              [
+                "V",
+                [
+                  2,
+                  1
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "C",
+              [
+                0,
+                5,
+                5
+              ]
+            ],
+            [
+              "V",
+              [
+                0,
+                5
+              ]
+            ],
+            [
+              "V",
+              [
+                2,
+                1
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [
+              [
+                0,
+                5,
+                5
+              ]
+            ],
+            "V": [
+              [
+                0,
+                5
+              ],
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        }
+      ],
+      "final_semantic_sha256": "20f1d7e6bcea8196ed0e5b1522804894ac25c64c14346c0d265c8b11d6574ba1",
+      "finish_witnesses_sha256": "bb466506d6f15dac616a27dd9c62eb91f6c2d5e2009194f5a6f1e7a91f56220b",
+      "final_physical_sha256": "57b54e5f32d9d39423cd1e2ceb0420f61197fd6fe990b0e3f9b3122c89aa8ea2",
+      "final_relations": {
+        "P0": [
+          [
+            0,
+            5
+          ]
+        ],
+        "P1": [
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            5
+          ]
+        ],
+        "U": [
+          [
+            0,
+            5
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "C": [
+          [
+            0,
+            5,
+            5
+          ]
+        ],
+        "V": [
+          [
+            0,
+            5
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      },
+      "finish_witnesses": {
+        "C": {
+          "0": [
+            [
+              1,
+              0,
+              5,
+              0
+            ],
+            [
+              2,
+              0,
+              5,
+              2
+            ]
+          ]
+        },
+        "V": {
+          "0": [
+            [
+              3,
+              0,
+              5,
+              1
+            ]
+          ],
+          "2": [
+            [
+              3,
+              2,
+              1,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "absent",
+      "source_sha256": "03a7ec8086a8efd0eb021305804e06c6f8d5edc4fb9685e144a80f0039d757fd",
+      "program_sha256": "bd25145d41e08ff14fd973794798b036edb6c45fd1e50591b220e77fdd18d18f",
+      "runs": [
+        {
+          "ordinal": 1,
+          "ruleset": "wave0",
+          "logical_matches": 3,
+          "executed_bindings": 3,
+          "actual_publications": 3,
+          "bindings_sha256": "305c2f73b360ca6705956976c9174a672e145508785c30f15350df8e2a258e4f",
+          "rhs_outputs_sha256": "46ecc55c1b74d2458b01a68c54b11e938024b4408f5260ac2f59b882f98c02c2",
+          "delta_sha256": "46ecc55c1b74d2458b01a68c54b11e938024b4408f5260ac2f59b882f98c02c2",
+          "visible_public_sha256": "9968f57e3a864c384b227da549293c0b6f815914329bd4cc32ca0e2bddc71e03",
+          "ready_sha256": "4d88099682623bf5d5fa5985aad6b21e46f2b5ae410c373baad4461e098a5d56",
+          "actual_rhs": [
+            [
+              2,
+              [
+                [
+                  0,
+                  0,
+                  5
+                ]
+              ],
+              [
+                "P0",
+                [
+                  0,
+                  5
+                ]
+              ]
+            ],
+            [
+              3,
+              [
+                [
+                  0,
+                  1,
+                  5
+                ]
+              ],
+              [
+                "P1",
+                [
+                  1,
+                  5
+                ]
+              ]
+            ],
+            [
+              4,
+              [
+                [
+                  0,
+                  2,
+                  1
+                ]
+              ],
+              [
+                "U",
+                [
+                  2,
+                  1
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "P0",
+              [
+                0,
+                5
+              ]
+            ],
+            [
+              "P1",
+              [
+                1,
+                5
+              ]
+            ],
+            [
+              "U",
+              [
+                2,
+                1
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [],
+            "V": [
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "ruleset": "wave1",
+          "logical_matches": 1,
+          "executed_bindings": 1,
+          "actual_publications": 1,
+          "bindings_sha256": "2dc541ef7447400eb66834763f9368de574c93f48452e6d62131d907146f80aa",
+          "rhs_outputs_sha256": "c0e794f5ea1bfc6a31f23f13166c57c8d66b3f8f889ca62f9a25dbed859b9ff2",
+          "delta_sha256": "c0e794f5ea1bfc6a31f23f13166c57c8d66b3f8f889ca62f9a25dbed859b9ff2",
+          "visible_public_sha256": "87e2fd8816a32e57366dc627ceeffdc12b774db999d59c89e1cde2748c4c5d36",
+          "ready_sha256": "7fce691443fee5eac92fb87aaecdbf802356971d0d8ac6d7cfef0f9197554669",
+          "actual_rhs": [
+            [
+              7,
+              [
+                [
+                  1,
+                  0,
+                  5
+                ]
+              ],
+              [
+                "U",
+                [
+                  0,
+                  5
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "U",
+              [
+                0,
+                5
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [],
+            "V": [
+              [
+                0,
+                5
+              ],
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 3,
+          "ruleset": "wave2",
+          "logical_matches": 0,
+          "executed_bindings": 0,
+          "actual_publications": 0,
+          "bindings_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rhs_outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "delta_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "visible_public_sha256": "87e2fd8816a32e57366dc627ceeffdc12b774db999d59c89e1cde2748c4c5d36",
+          "ready_sha256": "7fce691443fee5eac92fb87aaecdbf802356971d0d8ac6d7cfef0f9197554669",
+          "actual_rhs": [],
+          "published": [],
+          "ready": {
+            "C": [],
+            "V": [
+              [
+                0,
+                5
+              ],
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 4,
+          "ruleset": "finish",
+          "logical_matches": 2,
+          "executed_bindings": 2,
+          "actual_publications": 2,
+          "bindings_sha256": "2f178f0a3f27086d389e63564f27697853c98a0b4b7071016d58edcfd19addc1",
+          "rhs_outputs_sha256": "e30f426df2223705c1aeffb33b0e952b2b2aead926ee48ec5e091f5893ef4f7f",
+          "delta_sha256": "e30f426df2223705c1aeffb33b0e952b2b2aead926ee48ec5e091f5893ef4f7f",
+          "visible_public_sha256": "9fa96fbdf1b48be785eadc96167438ad85d08e6d63a4a8290a59d195826fcead",
+          "ready_sha256": "7fce691443fee5eac92fb87aaecdbf802356971d0d8ac6d7cfef0f9197554669",
+          "actual_rhs": [
+            [
+              1,
+              [
+                [
+                  0,
+                  5
+                ]
+              ],
+              [
+                "V",
+                [
+                  0,
+                  5
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                [
+                  2,
+                  1
+                ]
+              ],
+              [
+                "V",
+                [
+                  2,
+                  1
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "V",
+              [
+                0,
+                5
+              ]
+            ],
+            [
+              "V",
+              [
+                2,
+                1
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [],
+            "V": [
+              [
+                0,
+                5
+              ],
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        }
+      ],
+      "final_semantic_sha256": "9fa96fbdf1b48be785eadc96167438ad85d08e6d63a4a8290a59d195826fcead",
+      "finish_witnesses_sha256": "4a243738be6b08ade79e63226736dbf2219701ada184c84f4b0b27de2a07f402",
+      "final_physical_sha256": "4034f71cbd5e4644cfb5365eaf7b664a2c8eea37346af36255f64395151ae29f",
+      "final_relations": {
+        "P0": [
+          [
+            0,
+            5
+          ]
+        ],
+        "P1": [
+          [
+            1,
+            5
+          ]
+        ],
+        "U": [
+          [
+            0,
+            5
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "C": [],
+        "V": [
+          [
+            0,
+            5
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      },
+      "finish_witnesses": {
+        "C": {},
+        "V": {
+          "0": [
+            [
+              3,
+              0,
+              5,
+              1
+            ]
+          ],
+          "2": [
+            [
+              3,
+              2,
+              1,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "overlap",
+      "source_sha256": "ab6ddc8e29d0e1a16869c8cae215a91debf9e8800356be7717f4c15cdfce7b60",
+      "program_sha256": "a16c9bc976220e2904684046f087d332a1f5ba496fadd7d261fc2fc02b19e5f4",
+      "runs": [
+        {
+          "ordinal": 1,
+          "ruleset": "wave0",
+          "logical_matches": 3,
+          "executed_bindings": 3,
+          "actual_publications": 3,
+          "bindings_sha256": "d3b24535fe1d4d7ca5c02b14f11807a5c8cd2bb0a89785abef0d39e433c61ee0",
+          "rhs_outputs_sha256": "4932e528be0bc366f1316da27b95488fdf05e81e2005f132ab617e7748fc24f0",
+          "delta_sha256": "4932e528be0bc366f1316da27b95488fdf05e81e2005f132ab617e7748fc24f0",
+          "visible_public_sha256": "b3fefdc7b761753b81ac48d83f431b75994bd8b764871f6ca2b3814a6bcab8f0",
+          "ready_sha256": "549479b5ff5a5f72122e4b4741424a07db2bea471e7240421a290c02490c9e9f",
+          "actual_rhs": [
+            [
+              2,
+              [
+                [
+                  0,
+                  0,
+                  4
+                ]
+              ],
+              [
+                "P0",
+                [
+                  0,
+                  4
+                ]
+              ]
+            ],
+            [
+              3,
+              [
+                [
+                  0,
+                  0,
+                  7
+                ]
+              ],
+              [
+                "P1",
+                [
+                  0,
+                  7
+                ]
+              ]
+            ],
+            [
+              4,
+              [
+                [
+                  0,
+                  0,
+                  9
+                ]
+              ],
+              [
+                "U",
+                [
+                  0,
+                  9
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "P0",
+              [
+                0,
+                4
+              ]
+            ],
+            [
+              "P1",
+              [
+                0,
+                7
+              ]
+            ],
+            [
+              "U",
+              [
+                0,
+                9
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [
+              [
+                0,
+                4,
+                7
+              ]
+            ],
+            "V": [
+              [
+                0,
+                9
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "ruleset": "wave1",
+          "logical_matches": 2,
+          "executed_bindings": 2,
+          "actual_publications": 2,
+          "bindings_sha256": "af556898b0760ab85ff5e333d955b2d0dff1adcd7ce630d2e0ead50e550315ca",
+          "rhs_outputs_sha256": "f214c722d17008ea35d1a5480cf9d9bbdf69d70ecff821a69141036310268798",
+          "delta_sha256": "f214c722d17008ea35d1a5480cf9d9bbdf69d70ecff821a69141036310268798",
+          "visible_public_sha256": "507b8123ccb4e630e59ef1d87e513a4cfacb09466042cbb9228c48e6169cf067",
+          "ready_sha256": "f7b4e977addece01ea928abc8ae4ad93dfa7fa8a78a45b94915469933bb5836d",
+          "actual_rhs": [
+            [
+              5,
+              [
+                [
+                  1,
+                  1,
+                  4
+                ]
+              ],
+              [
+                "P0",
+                [
+                  1,
+                  4
+                ]
+              ]
+            ],
+            [
+              7,
+              [
+                [
+                  1,
+                  1,
+                  9
+                ]
+              ],
+              [
+                "U",
+                [
+                  1,
+                  9
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "P0",
+              [
+                1,
+                4
+              ]
+            ],
+            [
+              "U",
+              [
+                1,
+                9
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [
+              [
+                0,
+                4,
+                7
+              ]
+            ],
+            "V": [
+              [
+                0,
+                9
+              ],
+              [
+                1,
+                9
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 3,
+          "ruleset": "wave2",
+          "logical_matches": 1,
+          "executed_bindings": 1,
+          "actual_publications": 1,
+          "bindings_sha256": "521ead58efb1857d9eaae4347a87072edfa4d207136c970103cbfa594e2f89e3",
+          "rhs_outputs_sha256": "204b429ccf8d4b5a456909ad1954518e0e185aab720a5f6e0ea97b77ffa93107",
+          "delta_sha256": "204b429ccf8d4b5a456909ad1954518e0e185aab720a5f6e0ea97b77ffa93107",
+          "visible_public_sha256": "da1163a0505f8e6b6a22f25f57b1a510c6a23710697c1a6c57077f8580cb9893",
+          "ready_sha256": "f43a5167122886db045fcc1debe3e78f2b3170e572c94357037e6ed6b8289bbe",
+          "actual_rhs": [
+            [
+              9,
+              [
+                [
+                  2,
+                  1,
+                  7
+                ]
+              ],
+              [
+                "P1",
+                [
+                  1,
+                  7
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "P1",
+              [
+                1,
+                7
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [
+              [
+                0,
+                4,
+                7
+              ],
+              [
+                1,
+                4,
+                7
+              ]
+            ],
+            "V": [
+              [
+                0,
+                9
+              ],
+              [
+                1,
+                9
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 4,
+          "ruleset": "finish",
+          "logical_matches": 4,
+          "executed_bindings": 4,
+          "actual_publications": 4,
+          "bindings_sha256": "d9acff8d83532064a81b0c5cb1b7151f8284887b75bbdb3cc25235b32bbbebe4",
+          "rhs_outputs_sha256": "4874bbb5c736308c5360997578632dcdca3c1356b2d222fd82acbbee17f7337e",
+          "delta_sha256": "4874bbb5c736308c5360997578632dcdca3c1356b2d222fd82acbbee17f7337e",
+          "visible_public_sha256": "fbbb41eec7adb58a1cbc3d2ac47207237fab03907bd067afb4f764ad26884bd2",
+          "ready_sha256": "f43a5167122886db045fcc1debe3e78f2b3170e572c94357037e6ed6b8289bbe",
+          "actual_rhs": [
+            [
+              0,
+              [
+                [
+                  0,
+                  4
+                ],
+                [
+                  0,
+                  7
+                ]
+              ],
+              [
+                "C",
+                [
+                  0,
+                  4,
+                  7
+                ]
+              ]
+            ],
+            [
+              0,
+              [
+                [
+                  1,
+                  4
+                ],
+                [
+                  1,
+                  7
+                ]
+              ],
+              [
+                "C",
+                [
+                  1,
+                  4,
+                  7
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                [
+                  0,
+                  9
+                ]
+              ],
+              [
+                "V",
+                [
+                  0,
+                  9
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                [
+                  1,
+                  9
+                ]
+              ],
+              [
+                "V",
+                [
+                  1,
+                  9
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "C",
+              [
+                0,
+                4,
+                7
+              ]
+            ],
+            [
+              "C",
+              [
+                1,
+                4,
+                7
+              ]
+            ],
+            [
+              "V",
+              [
+                0,
+                9
+              ]
+            ],
+            [
+              "V",
+              [
+                1,
+                9
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [
+              [
+                0,
+                4,
+                7
+              ],
+              [
+                1,
+                4,
+                7
+              ]
+            ],
+            "V": [
+              [
+                0,
+                9
+              ],
+              [
+                1,
+                9
+              ]
+            ]
+          }
+        }
+      ],
+      "final_semantic_sha256": "fbbb41eec7adb58a1cbc3d2ac47207237fab03907bd067afb4f764ad26884bd2",
+      "finish_witnesses_sha256": "d9f2a56169207ce066bab0f7015a45d6c017a2382779531819239d222a039e7a",
+      "final_physical_sha256": "764ad30042917a62e8b4223b7c634fe30f356a2d7b9c2c66e64d16808fb9e420",
+      "final_relations": {
+        "P0": [
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        "P1": [
+          [
+            0,
+            7
+          ],
+          [
+            1,
+            7
+          ]
+        ],
+        "U": [
+          [
+            0,
+            9
+          ],
+          [
+            1,
+            9
+          ]
+        ],
+        "C": [
+          [
+            0,
+            4,
+            7
+          ],
+          [
+            1,
+            4,
+            7
+          ]
+        ],
+        "V": [
+          [
+            0,
+            9
+          ],
+          [
+            1,
+            9
+          ]
+        ]
+      },
+      "finish_witnesses": {
+        "C": {
+          "0": [
+            [
+              1,
+              0,
+              4,
+              0
+            ],
+            [
+              2,
+              0,
+              7,
+              0
+            ]
+          ],
+          "1": [
+            [
+              1,
+              1,
+              4,
+              1
+            ],
+            [
+              2,
+              1,
+              7,
+              2
+            ]
+          ]
+        },
+        "V": {
+          "0": [
+            [
+              3,
+              0,
+              9,
+              0
+            ]
+          ],
+          "1": [
+            [
+              3,
+              1,
+              9,
+              1
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "duplicate-publication",
+      "source_sha256": "19464d54e627b808e3733e8f882f91711077fa9eacfbe2372f1853a464923763",
+      "program_sha256": "b0ce6e0218fe853188fda11acd6320a8f959d38a8394f043d50859496aeefd31",
+      "runs": [
+        {
+          "ordinal": 1,
+          "ruleset": "wave0",
+          "logical_matches": 2,
+          "executed_bindings": 2,
+          "actual_publications": 2,
+          "bindings_sha256": "491c1efbb75d56b07d7c0cb166e45c021bb8699f08e312c65c73f042a8d7696f",
+          "rhs_outputs_sha256": "8913bff58809b1b4148cf317a5385915c8e46aac5c2707743d93050c27a1f50f",
+          "delta_sha256": "8913bff58809b1b4148cf317a5385915c8e46aac5c2707743d93050c27a1f50f",
+          "visible_public_sha256": "d00b6cd72b0643d2985d905caf4e823703ef569322287616d0a2a0ee86372fca",
+          "ready_sha256": "13a8eaf0d2b62b4254c7627d9b79ee247569dae5b2f66412ebd7e50171c2977c",
+          "actual_rhs": [
+            [
+              2,
+              [
+                [
+                  0,
+                  2,
+                  1
+                ]
+              ],
+              [
+                "P0",
+                [
+                  2,
+                  1
+                ]
+              ]
+            ],
+            [
+              4,
+              [
+                [
+                  0,
+                  1,
+                  3
+                ]
+              ],
+              [
+                "U",
+                [
+                  1,
+                  3
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "P0",
+              [
+                2,
+                1
+              ]
+            ],
+            [
+              "U",
+              [
+                1,
+                3
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [],
+            "V": [
+              [
+                1,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "ruleset": "wave1",
+          "logical_matches": 1,
+          "executed_bindings": 1,
+          "actual_publications": 0,
+          "bindings_sha256": "09196e79148d841facc80a1946b8b3725487f1a3d0fa9a7c46a44575eeafb538",
+          "rhs_outputs_sha256": "bc23d88d58e5bcc225a27775ff4cac7a369aea4db5caef7b65ce1d701decf270",
+          "delta_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "visible_public_sha256": "d00b6cd72b0643d2985d905caf4e823703ef569322287616d0a2a0ee86372fca",
+          "ready_sha256": "13a8eaf0d2b62b4254c7627d9b79ee247569dae5b2f66412ebd7e50171c2977c",
+          "actual_rhs": [
+            [
+              5,
+              [
+                [
+                  1,
+                  2,
+                  1
+                ]
+              ],
+              [
+                "P0",
+                [
+                  2,
+                  1
+                ]
+              ]
+            ]
+          ],
+          "published": [],
+          "ready": {
+            "C": [],
+            "V": [
+              [
+                1,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 3,
+          "ruleset": "wave2",
+          "logical_matches": 1,
+          "executed_bindings": 1,
+          "actual_publications": 1,
+          "bindings_sha256": "4207fbafca77cff530634e7d11c74b46ae657c797199cdd0937c48403a87573d",
+          "rhs_outputs_sha256": "3e69e930d38e24876c16200d76fbf73de812fb4f88abee0e6aa09f393543fb15",
+          "delta_sha256": "3e69e930d38e24876c16200d76fbf73de812fb4f88abee0e6aa09f393543fb15",
+          "visible_public_sha256": "49e9c141aa07d3afc13ac7f2b87bdfff7f7c5469c3ee66399abbec04361044d0",
+          "ready_sha256": "1efdda9c2c9f70214c60e7a4e38a390228731c4daee98df74d389c17b763e796",
+          "actual_rhs": [
+            [
+              9,
+              [
+                [
+                  2,
+                  2,
+                  3
+                ]
+              ],
+              [
+                "P1",
+                [
+                  2,
+                  3
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "P1",
+              [
+                2,
+                3
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [
+              [
+                2,
+                1,
+                3
+              ]
+            ],
+            "V": [
+              [
+                1,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 4,
+          "ruleset": "finish",
+          "logical_matches": 2,
+          "executed_bindings": 2,
+          "actual_publications": 2,
+          "bindings_sha256": "c86008dea985f95fe458e6722f3e1e4f51d968de60d19035226ef0b1fc4d4392",
+          "rhs_outputs_sha256": "e34d2fdf1e9596449e525d035592227104097e7fbeee7f50688f2a1b1633c4c4",
+          "delta_sha256": "e34d2fdf1e9596449e525d035592227104097e7fbeee7f50688f2a1b1633c4c4",
+          "visible_public_sha256": "b7c010543423b6db7b44e10ca66cd649ee7d854a4c8749e94ea369cfc0635294",
+          "ready_sha256": "1efdda9c2c9f70214c60e7a4e38a390228731c4daee98df74d389c17b763e796",
+          "actual_rhs": [
+            [
+              0,
+              [
+                [
+                  2,
+                  1
+                ],
+                [
+                  2,
+                  3
+                ]
+              ],
+              [
+                "C",
+                [
+                  2,
+                  1,
+                  3
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                [
+                  1,
+                  3
+                ]
+              ],
+              [
+                "V",
+                [
+                  1,
+                  3
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "C",
+              [
+                2,
+                1,
+                3
+              ]
+            ],
+            [
+              "V",
+              [
+                1,
+                3
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [
+              [
+                2,
+                1,
+                3
+              ]
+            ],
+            "V": [
+              [
+                1,
+                3
+              ]
+            ]
+          }
+        }
+      ],
+      "final_semantic_sha256": "b7c010543423b6db7b44e10ca66cd649ee7d854a4c8749e94ea369cfc0635294",
+      "finish_witnesses_sha256": "89845794a63abcde49901abac883f5e4db1acafbcb38d51c6f0f67d4ff19ff41",
+      "final_physical_sha256": "9e3e98a89b591da8b4fba39cc1b93dac2bfb8d70cbbd5cd6fdb8ee91b9239c8f",
+      "final_relations": {
+        "P0": [
+          [
+            2,
+            1
+          ]
+        ],
+        "P1": [
+          [
+            2,
+            3
+          ]
+        ],
+        "U": [
+          [
+            1,
+            3
+          ]
+        ],
+        "C": [
+          [
+            2,
+            1,
+            3
+          ]
+        ],
+        "V": [
+          [
+            1,
+            3
+          ]
+        ]
+      },
+      "finish_witnesses": {
+        "C": {
+          "2": [
+            [
+              1,
+              2,
+              1,
+              0
+            ],
+            [
+              2,
+              2,
+              3,
+              2
+            ]
+          ]
+        },
+        "V": {
+          "1": [
+            [
+              3,
+              1,
+              3,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "empty",
+      "source_sha256": "25c8bf12fa97dcdd2523ba009d5d5a5fb67e8be4f7c185b692330707df3e0621",
+      "program_sha256": "683d3c02c93fdfea6d38cec8ddfacf7cd213f21d748aded4edcb6815fe089106",
+      "runs": [
+        {
+          "ordinal": 1,
+          "ruleset": "wave0",
+          "logical_matches": 0,
+          "executed_bindings": 0,
+          "actual_publications": 0,
+          "bindings_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rhs_outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "delta_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "visible_public_sha256": "8c555e530af94e9b40f0b4b5b91cf690670d3f1cd0eadff04803717358025ea5",
+          "ready_sha256": "fa511aa28a8d6dbcc76c890525a844b5d26e5722e1685f9aa7f530f1c0a3a6b9",
+          "actual_rhs": [],
+          "published": [],
+          "ready": {
+            "C": [],
+            "V": []
+          }
+        },
+        {
+          "ordinal": 2,
+          "ruleset": "wave1",
+          "logical_matches": 0,
+          "executed_bindings": 0,
+          "actual_publications": 0,
+          "bindings_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rhs_outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "delta_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "visible_public_sha256": "8c555e530af94e9b40f0b4b5b91cf690670d3f1cd0eadff04803717358025ea5",
+          "ready_sha256": "fa511aa28a8d6dbcc76c890525a844b5d26e5722e1685f9aa7f530f1c0a3a6b9",
+          "actual_rhs": [],
+          "published": [],
+          "ready": {
+            "C": [],
+            "V": []
+          }
+        },
+        {
+          "ordinal": 3,
+          "ruleset": "wave2",
+          "logical_matches": 0,
+          "executed_bindings": 0,
+          "actual_publications": 0,
+          "bindings_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rhs_outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "delta_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "visible_public_sha256": "8c555e530af94e9b40f0b4b5b91cf690670d3f1cd0eadff04803717358025ea5",
+          "ready_sha256": "fa511aa28a8d6dbcc76c890525a844b5d26e5722e1685f9aa7f530f1c0a3a6b9",
+          "actual_rhs": [],
+          "published": [],
+          "ready": {
+            "C": [],
+            "V": []
+          }
+        },
+        {
+          "ordinal": 4,
+          "ruleset": "finish",
+          "logical_matches": 0,
+          "executed_bindings": 0,
+          "actual_publications": 0,
+          "bindings_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "rhs_outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "delta_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "visible_public_sha256": "8c555e530af94e9b40f0b4b5b91cf690670d3f1cd0eadff04803717358025ea5",
+          "ready_sha256": "fa511aa28a8d6dbcc76c890525a844b5d26e5722e1685f9aa7f530f1c0a3a6b9",
+          "actual_rhs": [],
+          "published": [],
+          "ready": {
+            "C": [],
+            "V": []
+          }
+        }
+      ],
+      "final_semantic_sha256": "8c555e530af94e9b40f0b4b5b91cf690670d3f1cd0eadff04803717358025ea5",
+      "finish_witnesses_sha256": "6d36137f784df0680acaea77f2d746231f5b4a6f54f76ab5bddca425dde30dcd",
+      "final_physical_sha256": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+      "final_relations": {
+        "P0": [],
+        "P1": [],
+        "U": [],
+        "C": [],
+        "V": []
+      },
+      "finish_witnesses": {
+        "C": {},
+        "V": {}
+      }
+    },
+    {
+      "id": "reversed-arrival",
+      "source_sha256": "fb352c336727e6fe2ed90ddd67f1eaab79d152601022c9a86a8700a323d77764",
+      "program_sha256": "4e27d1682bc19f9292e03843ca742dad6ee6676a5eeaaf0d1e484981c42ec1d2",
+      "runs": [
+        {
+          "ordinal": 1,
+          "ruleset": "wave0",
+          "logical_matches": 3,
+          "executed_bindings": 3,
+          "actual_publications": 3,
+          "bindings_sha256": "a62e8927cdfb851e4b09b22875e80d7d70be16544c8738347240291e2c2a0720",
+          "rhs_outputs_sha256": "b375c418f8021b38ddf4aa495881150cb6bec4dd673be5c175c729696732a2ee",
+          "delta_sha256": "b375c418f8021b38ddf4aa495881150cb6bec4dd673be5c175c729696732a2ee",
+          "visible_public_sha256": "e4ef91728d388ec78eddf470f52a09b4687b8098dc1f1190747440f8521c6389",
+          "ready_sha256": "4d88099682623bf5d5fa5985aad6b21e46f2b5ae410c373baad4461e098a5d56",
+          "actual_rhs": [
+            [
+              3,
+              [
+                [
+                  0,
+                  0,
+                  5
+                ]
+              ],
+              [
+                "P1",
+                [
+                  0,
+                  5
+                ]
+              ]
+            ],
+            [
+              3,
+              [
+                [
+                  0,
+                  1,
+                  5
+                ]
+              ],
+              [
+                "P1",
+                [
+                  1,
+                  5
+                ]
+              ]
+            ],
+            [
+              4,
+              [
+                [
+                  0,
+                  2,
+                  1
+                ]
+              ],
+              [
+                "U",
+                [
+                  2,
+                  1
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "P1",
+              [
+                0,
+                5
+              ]
+            ],
+            [
+              "P1",
+              [
+                1,
+                5
+              ]
+            ],
+            [
+              "U",
+              [
+                2,
+                1
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [],
+            "V": [
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 2,
+          "ruleset": "wave1",
+          "logical_matches": 1,
+          "executed_bindings": 1,
+          "actual_publications": 1,
+          "bindings_sha256": "2dc541ef7447400eb66834763f9368de574c93f48452e6d62131d907146f80aa",
+          "rhs_outputs_sha256": "c0e794f5ea1bfc6a31f23f13166c57c8d66b3f8f889ca62f9a25dbed859b9ff2",
+          "delta_sha256": "c0e794f5ea1bfc6a31f23f13166c57c8d66b3f8f889ca62f9a25dbed859b9ff2",
+          "visible_public_sha256": "3048d74c2b58a2bf731b208716acbcc2ac2d7710d309999698caed6a15495d0f",
+          "ready_sha256": "7fce691443fee5eac92fb87aaecdbf802356971d0d8ac6d7cfef0f9197554669",
+          "actual_rhs": [
+            [
+              7,
+              [
+                [
+                  1,
+                  0,
+                  5
+                ]
+              ],
+              [
+                "U",
+                [
+                  0,
+                  5
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "U",
+              [
+                0,
+                5
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [],
+            "V": [
+              [
+                0,
+                5
+              ],
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 3,
+          "ruleset": "wave2",
+          "logical_matches": 1,
+          "executed_bindings": 1,
+          "actual_publications": 1,
+          "bindings_sha256": "56bab14b8a75398c5055b8e2fcd85d2fc46aa718d4604082ed494f404e9026af",
+          "rhs_outputs_sha256": "a7968198c8bce0a47740e3fb5f1dca603724c87124c1cb48eca5b705e21e4f71",
+          "delta_sha256": "a7968198c8bce0a47740e3fb5f1dca603724c87124c1cb48eca5b705e21e4f71",
+          "visible_public_sha256": "5a710aa0a59bcc1ee48c1685aee8f52de227cb0386a03eb77f9a08191a64fbe8",
+          "ready_sha256": "3b0b9d9f3202ddc02795b0ae1f5adb4b582ce742278f0cf71904527d24743903",
+          "actual_rhs": [
+            [
+              8,
+              [
+                [
+                  2,
+                  0,
+                  5
+                ]
+              ],
+              [
+                "P0",
+                [
+                  0,
+                  5
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "P0",
+              [
+                0,
+                5
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [
+              [
+                0,
+                5,
+                5
+              ]
+            ],
+            "V": [
+              [
+                0,
+                5
+              ],
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "ordinal": 4,
+          "ruleset": "finish",
+          "logical_matches": 3,
+          "executed_bindings": 3,
+          "actual_publications": 3,
+          "bindings_sha256": "9c062694967ea0c72b33c487c11d37c9b2750adf8c6b0c4da33e5c54b02582d3",
+          "rhs_outputs_sha256": "5ebfa37e173f52f7064dd973e3a4c510afc92fe32b79623ac47f1dccca2369fc",
+          "delta_sha256": "5ebfa37e173f52f7064dd973e3a4c510afc92fe32b79623ac47f1dccca2369fc",
+          "visible_public_sha256": "20f1d7e6bcea8196ed0e5b1522804894ac25c64c14346c0d265c8b11d6574ba1",
+          "ready_sha256": "3b0b9d9f3202ddc02795b0ae1f5adb4b582ce742278f0cf71904527d24743903",
+          "actual_rhs": [
+            [
+              0,
+              [
+                [
+                  0,
+                  5
+                ],
+                [
+                  0,
+                  5
+                ]
+              ],
+              [
+                "C",
+                [
+                  0,
+                  5,
+                  5
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                [
+                  0,
+                  5
+                ]
+              ],
+              [
+                "V",
+                [
+                  0,
+                  5
+                ]
+              ]
+            ],
+            [
+              1,
+              [
+                [
+                  2,
+                  1
+                ]
+              ],
+              [
+                "V",
+                [
+                  2,
+                  1
+                ]
+              ]
+            ]
+          ],
+          "published": [
+            [
+              "C",
+              [
+                0,
+                5,
+                5
+              ]
+            ],
+            [
+              "V",
+              [
+                0,
+                5
+              ]
+            ],
+            [
+              "V",
+              [
+                2,
+                1
+              ]
+            ]
+          ],
+          "ready": {
+            "C": [
+              [
+                0,
+                5,
+                5
+              ]
+            ],
+            "V": [
+              [
+                0,
+                5
+              ],
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        }
+      ],
+      "final_semantic_sha256": "20f1d7e6bcea8196ed0e5b1522804894ac25c64c14346c0d265c8b11d6574ba1",
+      "finish_witnesses_sha256": "7f09411405ce89bde7a11fd223ce43f5e0231820bed27a4048f5c45ba3495551",
+      "final_physical_sha256": "9c1980fa28836c06b645633efd903f05d92a5025811f6e8989f45f9777a3e7b6",
+      "final_relations": {
+        "P0": [
+          [
+            0,
+            5
+          ]
+        ],
+        "P1": [
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            5
+          ]
+        ],
+        "U": [
+          [
+            0,
+            5
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "C": [
+          [
+            0,
+            5,
+            5
+          ]
+        ],
+        "V": [
+          [
+            0,
+            5
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      },
+      "finish_witnesses": {
+        "C": {
+          "0": [
+            [
+              1,
+              0,
+              5,
+              2
+            ],
+            [
+              2,
+              0,
+              5,
+              0
+            ]
+          ]
+        },
+        "V": {
+          "0": [
+            [
+              3,
+              0,
+              5,
+              1
+            ]
+          ],
+          "2": [
+            [
+              3,
+              2,
+              1,
+              0
+            ]
+          ]
+        }
+      }
+    }
+  ],
+  "paired": {
+    "common_observable_prefix_waves": 2,
+    "delayed_only_c": [
+      0,
+      5,
+      5
+    ],
+    "unchanged_v": [
+      [
+        0,
+        5
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "repeated_binding_count": 1,
+    "repeated_new_fact_count": 0
+  }
+}

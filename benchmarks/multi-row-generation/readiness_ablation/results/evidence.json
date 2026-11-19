@@ -1,0 +1,76 @@
+{
+  "files_sha256": {
+    "results.json": "dce14914e2258c8ab1b87e196201e00a03a1eb486b88a50b6a0afdd52673bcb8",
+    "cpu-replay.json": "c500fe2b6230f126988edb937bdd76bb30b490196e8eb5b3e4fc0b7f32fcd129",
+    "repeat-timing.json": "5ce533a18681a7e864ec0db85053437d7d2cfdbfd2980af77e0103a6ff080647"
+  },
+  "plan_sha256": "e1a3ca7dd457d9245b0e9a6b047a7dd470f6ab1f4fe14112c1afdde18490dbb2",
+  "rust_distinct_sources": 576,
+  "trace_sha256": {
+    "iid--barrier.npz": "68dc160e0e332aa8af1f3174c08843ccc6fae918ae8ec78f3522b543640f536c",
+    "iid--barrier_min.npz": "68dc160e0e332aa8af1f3174c08843ccc6fae918ae8ec78f3522b543640f536c",
+    "iid--local.npz": "68d4ec33d2297c5767525c2e9197468bce5193a40e1f63ba53e3744f25e653ea",
+    "iid--keyed-1703-raw.npz": "14248a0191a903cdb269e782ee4950f7d43e45861e31ec89f4c33c64377aaa42",
+    "iid--keyed-1703-guarded.npz": "b65eec9ac171347fa96435a44173a1aae04f2245b09fb4f04f56a414ccdc1ae8",
+    "iid--keyed-1703-guarded_drain.npz": "b65eec9ac171347fa96435a44173a1aae04f2245b09fb4f04f56a414ccdc1ae8",
+    "iid--keyed-1709-raw.npz": "14248a0191a903cdb269e782ee4950f7d43e45861e31ec89f4c33c64377aaa42",
+    "iid--keyed-1709-guarded.npz": "b65eec9ac171347fa96435a44173a1aae04f2245b09fb4f04f56a414ccdc1ae8",
+    "iid--keyed-1709-guarded_drain.npz": "b65eec9ac171347fa96435a44173a1aae04f2245b09fb4f04f56a414ccdc1ae8",
+    "iid--blind-1703-raw.npz": "ea1acffbdc2764e6a4413c43e6cb210960f5404d0bb594f8dbb92eeffa6aa0ae",
+    "iid--blind-1703-guarded.npz": "c9ece83ac279553a5d11c8f3fc9ca483231494f8b25c6aba37ba1c9640764dc5",
+    "iid--blind-1703-guarded_drain.npz": "c9ece83ac279553a5d11c8f3fc9ca483231494f8b25c6aba37ba1c9640764dc5",
+    "iid--blind-1709-raw.npz": "e9c87e69067d6c9cc421c8c284722a4a3b13943be113483936df66d4769b6e59",
+    "iid--blind-1709-guarded.npz": "aa7d726f59263c91e54b75382c458fbf36a2d6cc16e94aff88252979a84e2d3f",
+    "iid--blind-1709-guarded_drain.npz": "aa7d726f59263c91e54b75382c458fbf36a2d6cc16e94aff88252979a84e2d3f",
+    "heldout--barrier.npz": "f9eed25ae167fb465c66e57303bc8fb266c52fd14a01a8f51eac72e5bb22081b",
+    "heldout--barrier_min.npz": "f9eed25ae167fb465c66e57303bc8fb266c52fd14a01a8f51eac72e5bb22081b",
+    "heldout--local.npz": "29cd6a45005f0a5bec5deaf4fcb6c20f34aa56d517e124ae48fa8e6668412a66",
+    "heldout--keyed-1703-raw.npz": "883fc86e7b42e690717a66478eaa55db667f61e22fa61a67c68297e6dacb31e8",
+    "heldout--keyed-1703-guarded.npz": "3f2efa253cf27ee332e28984d3258b25275058033d7fefab7ded6685bf56c241",
+    "heldout--keyed-1703-guarded_drain.npz": "3f2efa253cf27ee332e28984d3258b25275058033d7fefab7ded6685bf56c241",
+    "heldout--keyed-1709-raw.npz": "883fc86e7b42e690717a66478eaa55db667f61e22fa61a67c68297e6dacb31e8",
+    "heldout--keyed-1709-guarded.npz": "3f2efa253cf27ee332e28984d3258b25275058033d7fefab7ded6685bf56c241",
+    "heldout--keyed-1709-guarded_drain.npz": "3f2efa253cf27ee332e28984d3258b25275058033d7fefab7ded6685bf56c241",
+    "heldout--blind-1703-raw.npz": "3312282ac1a9d1bf82efb28ab99bda702911715a230364e0a21b7d3b76ec8d51",
+    "heldout--blind-1703-guarded.npz": "2cce75e4b21dbcc17856ac4b92bf34aa0d153598509c0df4bab72e3c5d366d01",
+    "heldout--blind-1703-guarded_drain.npz": "2cce75e4b21dbcc17856ac4b92bf34aa0d153598509c0df4bab72e3c5d366d01",
+    "heldout--blind-1709-raw.npz": "453b7fd8d62af1a62882ab9d68cb87116dec49193e8d4b39bd9a0fdcdd260154",
+    "heldout--blind-1709-guarded.npz": "52bcf88df92728afc6400448fdb32f899a921452477082d5988998324481914c",
+    "heldout--blind-1709-guarded_drain.npz": "52bcf88df92728afc6400448fdb32f899a921452477082d5988998324481914c"
+  },
+  "round_medians_ms": {
+    "barrier_min": [
+      1.0198960000000001,
+      1.1701255000000002,
+      1.149458,
+      1.136271,
+      1.1442915,
+      1.162167
+    ],
+    "local": [
+      1.05775,
+      1.235479,
+      1.1819790000000001,
+      1.1975835,
+      1.15775,
+      1.1827705000000002
+    ],
+    "barrier": [
+      1.0377705,
+      1.180979,
+      1.2060415,
+      1.1794165,
+      1.2155415,
+      1.1943955000000002
+    ]
+  },
+  "paired_difference_per_round_ms": [
+    0.03845850000000001,
+    0.13191699999999995,
+    0.06095850000000003,
+    0.05145900000000003,
+    0.006312500000000054,
+    -0.010624500000000037
+  ],
+  "pooled_paired_difference_ms": 0.04031249999999986
+}

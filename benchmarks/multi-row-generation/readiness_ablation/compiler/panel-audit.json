@@ -1,0 +1,67 @@
+{
+  "status": "pass",
+  "source_semantics": "three producer Runs then shared finish",
+  "distinct_sources": 576,
+  "distinct_executed_runs": 2304,
+  "panels": {
+    "iid": {
+      "graphs": 256,
+      "unique_source_schedules": 192,
+      "rhs_bindings_by_run": {
+        "wave0": 1504,
+        "wave1": 848,
+        "wave2": 748,
+        "finish": 1820
+      },
+      "effective_publications_by_run": {
+        "wave0": 1504,
+        "wave1": 712,
+        "wave2": 628,
+        "finish": 1820
+      },
+      "repeated_bindings_to_already_published": 256,
+      "final_row_counts": {
+        "C": 820,
+        "V": 1000
+      },
+      "nonempty_graphs_per_relation": {
+        "C": 256,
+        "V": 256
+      },
+      "ordered_execution_evidence_sha256": "bc137e9c48019b8c3382f7c98f05e6dcb3c68afc075d1197124f89a3d1a12d09",
+      "raw_tensor_sha256": "3d1b30e7c18036ec943ab273fce427dca06de9c4fc809fe55a175c681b04448d"
+    },
+    "heldout": {
+      "graphs": 512,
+      "unique_source_schedules": 384,
+      "rhs_bindings_by_run": {
+        "wave0": 2920,
+        "wave1": 1536,
+        "wave2": 1864,
+        "finish": 3760
+      },
+      "effective_publications_by_run": {
+        "wave0": 2920,
+        "wave1": 1324,
+        "wave2": 1564,
+        "finish": 3760
+      },
+      "repeated_bindings_to_already_published": 512,
+      "final_row_counts": {
+        "C": 1720,
+        "V": 2040
+      },
+      "nonempty_graphs_per_relation": {
+        "C": 512,
+        "V": 512
+      },
+      "ordered_execution_evidence_sha256": "1531be2c5c4a37230695661e5a3662be49dfd9d82c8866f7a9f00915c37e29ef",
+      "raw_tensor_sha256": "10adcc047e8dae0c682f6931493905403066ca9338c64d81829726369ab57dac"
+    }
+  },
+  "source_program_sha256": "b16ab8e73b510ffc3b52dc8c45fc97a60936c96aba53a6bbf4eaf0f5e83b0a41",
+  "binary_sha256": "b6b4f432a298ca4e02bcbd1276b89c06c1a6d169def61eece1ca6de140415ac7",
+  "input_generator_sha256": "a8afbd046e1b8df118f808f674a2d017b7d512c886c8be96d3ab02d14c183e08",
+  "full_evidence_path": "/Volumes/EggFuseWorkspace/experiments/readiness-source-replay/cell-cpu-source-replay.json",
+  "full_evidence_sha256": "f84442e5ed10d7e83ca2000fc73f8bba00b353fd71196b4ce091d7bac40a576f"
+}
