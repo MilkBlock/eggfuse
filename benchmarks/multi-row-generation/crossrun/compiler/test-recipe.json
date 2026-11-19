@@ -1,0 +1,370 @@
+{
+  "recipe_sha256": "5222680330aa109ab7d6f4abe5b866ccb75aad2a525ae6fc3137679142866848",
+  "case": "alias-a0",
+  "rule": {
+    "metadata": {
+      "seminaive": true,
+      "source_set": "make",
+      "name": "(rule ((A i k x)\n       (B j k y))\n      ((Pair i j k x y))\n        :ruleset make )"
+    },
+    "slots": [
+      {
+        "name": "i",
+        "sort": {
+          "name": "i64",
+          "kind": "i64"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "k",
+        "sort": {
+          "name": "i64",
+          "kind": "i64"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "x",
+        "sort": {
+          "name": "i64",
+          "kind": "i64"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "@A1",
+        "sort": {
+          "name": "@ASort",
+          "kind": "eq"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "j",
+        "sort": {
+          "name": "i64",
+          "kind": "i64"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "y",
+        "sort": {
+          "name": "i64",
+          "kind": "i64"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "@B1",
+        "sort": {
+          "name": "@BSort",
+          "kind": "eq"
+        },
+        "definition": "query"
+      },
+      {
+        "name": "@Pair1",
+        "sort": {
+          "name": "@PairSort",
+          "kind": "eq"
+        },
+        "definition": 0
+      }
+    ],
+    "query": [
+      {
+        "call": {
+          "table": "A"
+        },
+        "args": [
+          {
+            "slot": 0
+          },
+          {
+            "slot": 1
+          },
+          {
+            "slot": 2
+          },
+          {
+            "slot": 3
+          }
+        ]
+      },
+      {
+        "call": {
+          "table": "B"
+        },
+        "args": [
+          {
+            "slot": 4
+          },
+          {
+            "slot": 1
+          },
+          {
+            "slot": 5
+          },
+          {
+            "slot": 6
+          }
+        ]
+      }
+    ],
+    "effects": [
+      {
+        "op": "let",
+        "dst": 7,
+        "sort": {
+          "name": "@PairSort",
+          "kind": "eq"
+        },
+        "call": {
+          "table": "Pair"
+        },
+        "args": [
+          {
+            "slot": 0
+          },
+          {
+            "slot": 4
+          },
+          {
+            "slot": 1
+          },
+          {
+            "slot": 2
+          },
+          {
+            "slot": 5
+          }
+        ],
+        "kind": "construct"
+      }
+    ],
+    "interface": {
+      "rows": [
+        {
+          "atom": 0,
+          "table": "A",
+          "columns": [
+            {
+              "slot": 0
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 2
+            },
+            {
+              "slot": 3
+            }
+          ],
+          "key_columns": [
+            0,
+            1,
+            2
+          ],
+          "witness": "complete visible row"
+        },
+        {
+          "atom": 1,
+          "table": "B",
+          "columns": [
+            {
+              "slot": 4
+            },
+            {
+              "slot": 1
+            },
+            {
+              "slot": 5
+            },
+            {
+              "slot": 6
+            }
+          ],
+          "key_columns": [
+            0,
+            1,
+            2
+          ],
+          "witness": "complete visible row"
+        }
+      ],
+      "primitive_atoms": [],
+      "guaranteed_atoms": [],
+      "residual_atoms": [
+        0,
+        1
+      ],
+      "correlation": "one complete binding row; slot equality and literals remain constraints"
+    },
+    "footprint": {
+      "read_tables": [
+        "A",
+        "B"
+      ],
+      "write_tables": [
+        "Pair"
+      ],
+      "union_sorts": [],
+      "equality_invalidates": [],
+      "operations": [
+        "construct"
+      ],
+      "precision": "conservative direct/merge footprint; global rebuild may have further effects"
+    }
+  },
+  "tables": [
+    {
+      "name": "A",
+      "schema": [
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "@ASort",
+          "kind": "eq"
+        }
+      ],
+      "kind": "constructor",
+      "merge": null,
+      "merge_expr": null,
+      "internal": false,
+      "can_subsume": true
+    },
+    {
+      "name": "B",
+      "schema": [
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "@BSort",
+          "kind": "eq"
+        }
+      ],
+      "kind": "constructor",
+      "merge": null,
+      "merge_expr": null,
+      "internal": false,
+      "can_subsume": true
+    },
+    {
+      "name": "Pair",
+      "schema": [
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "@PairSort",
+          "kind": "eq"
+        }
+      ],
+      "kind": "constructor",
+      "merge": null,
+      "merge_expr": null,
+      "internal": false,
+      "can_subsume": true
+    },
+    {
+      "name": "Request",
+      "schema": [
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "@RequestSort",
+          "kind": "eq"
+        }
+      ],
+      "kind": "constructor",
+      "merge": null,
+      "merge_expr": null,
+      "internal": false,
+      "can_subsume": true
+    },
+    {
+      "name": "Result",
+      "schema": [
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "i64",
+          "kind": "i64"
+        },
+        {
+          "name": "@ResultSort",
+          "kind": "eq"
+        }
+      ],
+      "kind": "constructor",
+      "merge": null,
+      "merge_expr": null,
+      "internal": false,
+      "can_subsume": true
+    }
+  ]
+}

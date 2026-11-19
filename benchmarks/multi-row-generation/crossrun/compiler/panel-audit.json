@@ -1,0 +1,45 @@
+{
+  "source_sha256": "3b2b371564baa2e46aefd8151bf2c4788d49d4dfd226e6dabcc507f49254462d",
+  "binary_sha256": "b6b4f432a298ca4e02bcbd1276b89c06c1a6d169def61eece1ca6de140415ac7",
+  "splits": {
+    "iid": {
+      "graphs": 256,
+      "published_rows": [
+        1014,
+        352
+      ],
+      "nonempty_graphs": [
+        227,
+        162
+      ],
+      "ordered_publications_sha256": "06e8322fc30b709811bbbaf3b96b46bfe69de927444a5679a30281c4f23813df",
+      "input_sha256": "3ec1d701cd90a87e48c1189e67a57dc1095168f3be5550cc996b5cc9efaad9f1"
+    },
+    "left_collision": {
+      "graphs": 256,
+      "published_rows": [
+        1270,
+        438
+      ],
+      "nonempty_graphs": [
+        256,
+        256
+      ],
+      "ordered_publications_sha256": "cf222b008e220b496708285ee65038a0e81cf1039d8a6026cc7a2ff78cd40323",
+      "input_sha256": "de2135c244c8cf877ab8a76b14e97b1f3ae7d44e0f03611fab7504c09a0a7cbc"
+    },
+    "right_collision": {
+      "graphs": 256,
+      "published_rows": [
+        1270,
+        472
+      ],
+      "nonempty_graphs": [
+        256,
+        256
+      ],
+      "ordered_publications_sha256": "754839edf4b4ec962257e2e6126d9a7981bf84d4a4b444986d3292572209ee87",
+      "input_sha256": "7aeab50f56ddf265e303451f9da6049f08b0606dd61d12754b4ce1556e3fa890"
+    }
+  }
+}

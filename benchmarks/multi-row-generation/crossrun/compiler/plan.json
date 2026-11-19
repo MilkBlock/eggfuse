@@ -1,0 +1,97 @@
+{
+  "rules": {
+    "finish": {
+      "equalities": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "inputs": [
+        "Pair",
+        "Request"
+      ],
+      "output_table": "Result",
+      "outputs": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ]
+      ]
+    },
+    "make": {
+      "equalities": [
+        [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "inputs": [
+        "A",
+        "B"
+      ],
+      "output_table": "Pair",
+      "outputs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    }
+  },
+  "schema": "eggfuse.crossrun.direct-input-projection/v1"
+}

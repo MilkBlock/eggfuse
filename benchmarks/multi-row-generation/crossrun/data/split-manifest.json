@@ -1,0 +1,126 @@
+{
+  "train": {
+    "seed": 82101,
+    "graphs": 4096,
+    "nonempty_run2": 2683,
+    "graphs_with_equal_payload_different_parents": 0,
+    "run1_obligations": 16380,
+    "run2_obligations": 5896,
+    "run1_cardinalities": {
+      "0": 456,
+      "1": 455,
+      "2": 455,
+      "3": 455,
+      "4": 455,
+      "5": 455,
+      "6": 455,
+      "7": 455,
+      "8": 455
+    },
+    "run2_cardinalities": {
+      "0": 1413,
+      "1": 935,
+      "2": 725,
+      "3": 581,
+      "4": 442
+    },
+    "sha256": {
+      "a": "dfd15f341bebbd089cbe529f9e997cdf5d4702e48faec1576b42e65436be8c50",
+      "b": "ca6781368b59145fb4b9357bb2f7255b59e443d3ecb8a0761639962462cddea8",
+      "requests": "eaacd637c041c13e1b75245734be50094191a473fc1e2eb03fa9e9c3f84d2501",
+      "target1": "64b91515348f5c78b0c0f676425c807b238dd89d4ec7f11d004aac4dc218ad45",
+      "target2": "b93cc9b8beb443d657dabb0a413e675be1a21496bad3517804f89105192bc0bc"
+    }
+  },
+  "iid": {
+    "seed": 82102,
+    "graphs": 256,
+    "nonempty_run2": 162,
+    "graphs_with_equal_payload_different_parents": 0,
+    "run1_obligations": 1014,
+    "run2_obligations": 352,
+    "run1_cardinalities": {
+      "0": 29,
+      "1": 29,
+      "2": 29,
+      "3": 29,
+      "4": 28,
+      "5": 28,
+      "6": 28,
+      "7": 28,
+      "8": 28
+    },
+    "run2_cardinalities": {
+      "0": 94,
+      "1": 57,
+      "2": 47,
+      "3": 31,
+      "4": 27
+    },
+    "sha256": {
+      "a": "f382bd93f3f0d184f27d8607dca7d4d9656ef19e11fd9cf987c2473e6ebb1215",
+      "b": "8c00b6a7005ed18001af9585ccf24a2af39fc6d1210e24bcff12ed22634122c8",
+      "requests": "77a74615400decd6d15d07e33059678457af75c255b59114f9e3b3eea65a2506",
+      "target1": "06a82769f8a5dc67c1d308d7cc59a91ba910ad68a2b2253acb295ab0b068c1bf",
+      "target2": "22297deeff733ea1492a7bc015004dde5af5e07c53c7b0b2c93430f381af16b7"
+    }
+  },
+  "left_collision": {
+    "seed": 82103,
+    "graphs": 256,
+    "nonempty_run2": 256,
+    "graphs_with_equal_payload_different_parents": 256,
+    "run1_obligations": 1270,
+    "run2_obligations": 438,
+    "run1_cardinalities": {
+      "2": 38,
+      "3": 38,
+      "4": 36,
+      "5": 36,
+      "6": 36,
+      "7": 36,
+      "8": 36
+    },
+    "run2_cardinalities": {
+      "1": 128,
+      "2": 74,
+      "3": 54
+    },
+    "sha256": {
+      "a": "77f2e5de58b481209b94c33230c175c07e676ef685203adfd1020bebe5e1acef",
+      "b": "3eccc3bff162f7ea199e5119da861f27dd0bf173bb44440fe8ab87413ea4d139",
+      "requests": "7851419594b1dda4ac64eea15898890676e835edd3d4615542a599d6d27d6454",
+      "target1": "c99c5622a59d7e6968437446ad8df6add76340ae236da477c0d1d8a5847d9515",
+      "target2": "f6b34ec0e93e41aa5da8727e36865b34205b36f2d0f952968d91211cb9173c10"
+    }
+  },
+  "right_collision": {
+    "seed": 82104,
+    "graphs": 256,
+    "nonempty_run2": 256,
+    "graphs_with_equal_payload_different_parents": 256,
+    "run1_obligations": 1270,
+    "run2_obligations": 472,
+    "run1_cardinalities": {
+      "2": 38,
+      "3": 38,
+      "4": 36,
+      "5": 36,
+      "6": 36,
+      "7": 36,
+      "8": 36
+    },
+    "run2_cardinalities": {
+      "1": 102,
+      "2": 92,
+      "3": 62
+    },
+    "sha256": {
+      "a": "860174f30d29800ef68de3889ae84c5b6a3d29e9e06e717c07b23f4cd86471ee",
+      "b": "9a5f943084347e00483629408c91e2f39673cee74c2614fb0a805ddd43e8cc3a",
+      "requests": "cc0b497a01907b530079771d30c3cede4f68b1239da961a334ff7dc7034e30c8",
+      "target1": "a51f1207212bd487c96f19365d7444a49e992abea40379bbf60d8b36627f391a",
+      "target2": "3a2190ea6bfb4cf46f3bd2a72a02ad5d1551a0f02fa1e3e7d4810c3f490824b7"
+    }
+  }
+}

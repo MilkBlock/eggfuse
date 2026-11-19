@@ -1,0 +1,223 @@
+{
+  "cases": [
+    {
+      "id": "alias-a0",
+      "program_sha256": "a0ae5fe32d0de5927a2703d02a1c148fe9e0ace02c262ced00ee4761e0edecf9",
+      "recipe_sha256": "5222680330aa109ab7d6f4abe5b866ccb75aad2a525ae6fc3137679142866848",
+      "runs": [
+        {
+          "logical_matches": 5,
+          "published_count": 5,
+          "published_rows": [
+            [
+              0,
+              0,
+              3,
+              1,
+              2
+            ],
+            [
+              0,
+              1,
+              3,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              3,
+              1,
+              2
+            ],
+            [
+              1,
+              1,
+              3,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              5,
+              0,
+              1
+            ]
+          ],
+          "ruleset": "make",
+          "run": 1
+        },
+        {
+          "logical_matches": 3,
+          "published_count": 3,
+          "published_rows": [
+            [
+              0,
+              0,
+              1,
+              1,
+              2
+            ],
+            [
+              0,
+              0,
+              2,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              0,
+              0,
+              1
+            ]
+          ],
+          "ruleset": "finish",
+          "run": 2
+        }
+      ],
+      "source_sha256": "87e44d77ec9d35fb46e2e35cd88561508083a6f31de85853324f22f7007877b1"
+    },
+    {
+      "id": "alias-a1",
+      "program_sha256": "be6ed182e5c1218cb45a5f15f0ad232d915c661204003d0e43169f6a79f6655c",
+      "recipe_sha256": "5222680330aa109ab7d6f4abe5b866ccb75aad2a525ae6fc3137679142866848",
+      "runs": [
+        {
+          "logical_matches": 5,
+          "published_count": 5,
+          "published_rows": [
+            [
+              0,
+              0,
+              3,
+              1,
+              2
+            ],
+            [
+              0,
+              1,
+              3,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              3,
+              1,
+              2
+            ],
+            [
+              1,
+              1,
+              3,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              5,
+              0,
+              1
+            ]
+          ],
+          "ruleset": "make",
+          "run": 1
+        },
+        {
+          "logical_matches": 3,
+          "published_count": 3,
+          "published_rows": [
+            [
+              1,
+              0,
+              1,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              2,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              0,
+              0,
+              1
+            ]
+          ],
+          "ruleset": "finish",
+          "run": 2
+        }
+      ],
+      "source_sha256": "9e7104f39d886704844dbb07ea6e8bad2b6eb20ad7ba1d0c12f69790eb462a85"
+    },
+    {
+      "id": "empty-finish",
+      "program_sha256": "6b85a59f4e9f9446cd5f5ab049ce2d7e3ae165332fad1f2ee3ee641dec7b69e0",
+      "recipe_sha256": "5222680330aa109ab7d6f4abe5b866ccb75aad2a525ae6fc3137679142866848",
+      "runs": [
+        {
+          "logical_matches": 5,
+          "published_count": 5,
+          "published_rows": [
+            [
+              0,
+              0,
+              3,
+              1,
+              2
+            ],
+            [
+              0,
+              1,
+              3,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              3,
+              1,
+              2
+            ],
+            [
+              1,
+              1,
+              3,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              5,
+              0,
+              1
+            ]
+          ],
+          "ruleset": "make",
+          "run": 1
+        },
+        {
+          "logical_matches": 0,
+          "published_count": 0,
+          "published_rows": [],
+          "ruleset": "finish",
+          "run": 2
+        }
+      ],
+      "source_sha256": "23b5726ef3684cf6fc3680abda0fee13b533a4ff59f1540af056b4787a0a0303"
+    }
+  ],
+  "schema": "eggfuse.crossrun.cpu-audit/v1"
+}
