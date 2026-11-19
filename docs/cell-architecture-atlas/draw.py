@@ -196,10 +196,14 @@ def union(a,i):
         chain(a,["arrived device tensors","one packed dispatch","repair + epoch read"],["s","v","s"])
     a.txt(155,206,["576 repair batches","288 repair batches","2 dispatches vs 4"][i],15,SUB)
 def ownership(a,i):
-    for x,lab in [(75,"Cell A"),(232,"Cell B")]:a.node(x,58,97,lab,'s')
-    a.link(76,75,136,112);a.link(230,75,176,112);a.node(155,132,153,"composed Cell",'s')
-    if i:a.path([(75,76),(32,108),(32,177),(127,177)],c="#946422");a.node(201,178,142,"forward port",'v');a.link(201,162,179,150,c="#946422")
-    else:a.txt(155,183,"keep both old owners",15)
+    if i==0:
+        chain(a,["two row proposals","compose target","read original sources"],["n","s","s"])
+    elif i==1:
+        chain(a,["old cursor: generation 1","check forwarding header","read target member"],["n","v","s"])
+    else:
+        chain(a,["shared pair scores","select disjoint pairs","validate and commit"],["n","v","s"])
+    a.txt(155,206,["live source payloads","old physical slots reused","no conflicting claims"][i],14,SUB)
+
 def proof(a,i):
     if not i:chain(a,["proposal","replay primitives","verify output"],["n","v","v"])
     else:chain(a,["template + ports","instantiate macro","verify boundary"],["n","s","v"])
@@ -292,7 +296,7 @@ PLATES=[
 ("13-history",[("Blinded history",0),("All rows",1),("Same row only",2)],history),
 ("14-locality",[("Global state",0),("Local states + messages",1),("Certified port path",2)],locality),
 ("15-union",[("Immediate repair",0),("Observation fence",1),("Fused submission",2)],union),
-("16-owner",[("Retain instances",0),("Transfer + forwarding",1)],ownership),
+("16-owner",[("Retain instances",0),("Forward old ports",1),("Joint selection",2)],ownership),
 ("17-proof",[("Primitive witness",0),("Composed witness",1)],proof),
 ("18-integral",[("Original schedule",0),("Primary exit",1),("Integral exit",2)],visibility),
 ("19-stop",[("Fixed rounds",0),("Exact worklist",1),("Learned gate",2)],stopping),
