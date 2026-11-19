@@ -205,8 +205,11 @@ def ownership(a,i):
     a.txt(155,206,["live source payloads","old physical slots reused","no conflicting claims"][i],14,SUB)
 
 def proof(a,i):
-    if not i:chain(a,["proposal","replay primitives","verify output"],["n","v","v"])
-    else:chain(a,["template + ports","instantiate macro","verify boundary"],["n","s","v"])
+    if i==0:
+        chain(a,["Pair + Request references","replay equality steps","check parents and RHS"],["n","v","s"])
+    else:
+        chain(a,["same references + macro","check port and epoch","check parents and RHS"],["n","v","s"])
+    a.txt(155,207,"example: 9 words + header" if i==0 else "example: 1 word + header",15,SUB)
 
 def visibility(a,i):
     a.node(66,55,86,"Run a","n");a.node(244,55,86,"Run b","n")
