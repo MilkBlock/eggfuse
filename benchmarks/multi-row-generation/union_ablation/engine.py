@@ -37,7 +37,7 @@ def device_plan(name,dev):
             torch.tensor(local,dtype=torch.int32,device=dev),p['vertices'])
 
 
-def schedule(token,inputs,plan,policy,boundaries):
+def schedule(token,inputs,plan,policy,boundaries,*,cursor_reader=None):
     if policy not in MODES:raise ValueError(policy)
     readers=READERS[boundaries]
     req,port,phase,committed,external,event_ports=(inputs[2],*inputs[4:])
@@ -83,7 +83,8 @@ def schedule(token,inputs,plan,policy,boundaries):
         kernels().advance(cls,book,event.contiguous(),addresses,words,snapshot,flags,event_count,
                           threads=batch,arg_casts={7:'int32',6:'int32'})
         if observe:
-            stage=project(picked,pointer,req,exists & snapshot[:,6:].bool(),all_arrived)
+            rows_now,valid_now=(picked,exists) if cursor_reader is None else cursor_reader(tick,pointer,exists)
+            stage=project(rows_now,pointer,req,valid_now & snapshot[:,6:].bool(),all_arrived)
             live=stage['active'].bool()
             delta=live & ~published
             published=published | live
