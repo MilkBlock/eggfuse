@@ -212,17 +212,12 @@ def proof(a,i):
     a.txt(155,207,"example: 9 words + header" if i==0 else "example: 1 word + header",15,SUB)
 
 def visibility(a,i):
-    a.node(66,55,86,"Run a","n");a.node(244,55,86,"Run b","n")
-    a.link(112,55,198,55)
-    if i==0:
-        a.link(245,72,245,118);a.node(241,140,110,"publish B","s")
-        a.txt(149,184,"compute B at its Run",16)
-    else:
-        a.link(65,72,65,109);a.node(78,130,144,"private B","s")
-        a.path([(151,130),(231,130),(241,75)],c="#946422")
-        a.txt(155,176,"exit: "+("primary fixed point" if i==1 else "integral fixed point"),15)
-        for j in range(6):
-            a.rect(64+31*j,187,26,10,"#a7c8d7" if j<3 else ("white" if i==1 else "#afdad1"),"#71878e",2,i==1 and j>=3)
+    steps=[["A: anchor","B: compare + project","C: finish"],
+           ["A: anchor + private B","B: release + private C","C: release or repair"],
+           ["A: private B and C","B: release or repair","C: release or repair"]]
+    chain(a,steps[i],["s","v","s"] if i else ["s","s","s"])
+    a.txt(155,207,["0 early releases","2,868 reused / 204 retired","4,248 reused / 516 retired"][i],14,SUB)
+
 def stopping(a,i):
     chain(a,["frontier",["fixed round budget","exact worklist","learned stop gate"][i],["return at K","stop if empty","defer or audit"][i]],
           ["n","v" if i==1 else "n","v"])
