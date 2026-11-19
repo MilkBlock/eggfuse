@@ -1,0 +1,1872 @@
+{
+  "corpus_sha256": "4c121cc57044d38719279ff412148be2b76f016907701456e5dba20dacbab1aa",
+  "counterfactual_example": {
+    "consumer_checks": [
+      [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    ],
+    "family": "f-b924c9ceb250f0f1f1c1",
+    "parents": [
+      {
+        "request": [
+          6,
+          4,
+          7
+        ],
+        "row": [
+          6,
+          4,
+          7
+        ],
+        "source_indices": [
+          0,
+          0
+        ]
+      },
+      {
+        "request": [
+          4,
+          4,
+          7
+        ],
+        "row": [
+          4,
+          4,
+          7
+        ],
+        "source_indices": [
+          2,
+          1
+        ]
+      }
+    ],
+    "request_slot": 0,
+    "template": "t-27bf08b4a5836427"
+  },
+  "distinct_unsorted_type_erased_boundary_signatures": {
+    "heldout": 2,
+    "train": 9
+  },
+  "equal_width_different_template_probes": [
+    {
+      "changed_binding_identities": [
+        62,
+        60
+      ],
+      "changed_source_witness_sets": [
+        62,
+        60
+      ],
+      "graphs": 64,
+      "substituted": "t-27bf08b4a5836427",
+      "template": "t-190d47775d444806"
+    },
+    {
+      "changed_binding_identities": [
+        62,
+        60
+      ],
+      "changed_source_witness_sets": [
+        62,
+        60
+      ],
+      "graphs": 64,
+      "substituted": "t-693eeb58ce92806c",
+      "template": "t-190d47775d444806"
+    },
+    {
+      "changed_binding_identities": [
+        62,
+        60
+      ],
+      "changed_source_witness_sets": [
+        62,
+        60
+      ],
+      "graphs": 64,
+      "substituted": "t-df684cd42862c98c",
+      "template": "t-190d47775d444806"
+    },
+    {
+      "changed_binding_identities": [
+        64,
+        64
+      ],
+      "changed_source_witness_sets": [
+        64,
+        64
+      ],
+      "graphs": 64,
+      "substituted": "t-40efce55452576e7",
+      "template": "t-27bf08b4a5836427"
+    },
+    {
+      "changed_binding_identities": [
+        60,
+        60
+      ],
+      "changed_source_witness_sets": [
+        60,
+        60
+      ],
+      "graphs": 64,
+      "substituted": "t-693eeb58ce92806c",
+      "template": "t-40efce55452576e7"
+    },
+    {
+      "changed_binding_identities": [
+        60,
+        60
+      ],
+      "changed_source_witness_sets": [
+        60,
+        60
+      ],
+      "graphs": 64,
+      "substituted": "t-df684cd42862c98c",
+      "template": "t-40efce55452576e7"
+    }
+  ],
+  "heldout_overlap_with_training_wiring": 0,
+  "input_hash_overlap_train_with_heldout": 0,
+  "panels": {
+    "t-190d47775d444806": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 64
+        },
+        "run2_count_histogram": {
+          "1": 32,
+          "2": 16,
+          "3": 16
+        },
+        "sha256": {
+          "a": "9f2f52447ead0d3e5b22857d272378a1dd6a1d97783ce536199889a26c859509",
+          "b": "568e0f3cae9efc93ca934958a99e75ae1eda7df4f38d069880bd80cf640a0c80",
+          "probe": "10873a52e69f088b2d0bac1faf75bcec38e0802d9e8c10ca7ff50e9fee532d14",
+          "requests": "9d30e84c1354904f0693e1076f33460e2a2f39bf63c09607cd1462f0ccb247fe",
+          "target1": "96751517ca41cff4b4e7f52551d2ae24fe0f8889c0b45ed4c59b2958999eae17",
+          "target2": "555f95595bb67252661dc23d46c42298dd115512360d2aa01dafcff5d1650a7a"
+        },
+        "source_obligations": [
+          176,
+          112
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          60,
+          60
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 16
+        },
+        "run2_count_histogram": {
+          "0": 4,
+          "1": 25,
+          "2": 20,
+          "3": 4,
+          "4": 11
+        },
+        "sha256": {
+          "a": "037ef607d84def5c2c5fae39b3fd49ca75137304c26d3a989143e8b986d29651",
+          "b": "362b571e3698a370f4f81bdcaf826dc1738d662a8cb85dacc331f2a508b44230",
+          "probe": "fa3d97dea24ec20ef980be688aa9d751a5de1f0076bc4ce2aa44f47218a7ca14",
+          "requests": "38ebbc3f9b5451bad2f669b61938882cdb0fde69425609d14ca317161b71eba6",
+          "target1": "5440dd9a0ff5f35d00222430055fd66e3ee5a46dffe80956b731da8d4d1a670d",
+          "target2": "235a1f387b3dc42e33e1755da2dfd82658608d07940eec8512a9f460aae7c6f9"
+        },
+        "source_obligations": [
+          155,
+          121
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 1024,
+        "nonempty": [
+          913,
+          908
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 256
+        },
+        "run2_count_histogram": {
+          "0": 116,
+          "1": 309,
+          "2": 381,
+          "3": 79,
+          "4": 139
+        },
+        "sha256": {
+          "a": "4ac35daa417c1975ed037e9acc5fb5550e1857044abdabc37b85923835dc8d10",
+          "b": "e481226784fecaf3dde70245d8e55f3d7c159406cb1f179ad59fdb7bfbcd1ff5",
+          "probe": "2bbafdabec205dc0a667ecde74dbc15cf15609c0559f81c15de7b6be3ca857dc",
+          "requests": "2f5bbb1b2f9e5a1c6d43c35556e1c60fa483e2b71e90d44e1eb0b898cd7b5da2",
+          "target1": "ea4f9d489416558f7658054325dd6e2938cf68e04d3e04792867a7f897289f2b",
+          "target2": "7b61014f4170fde198be9cb60237d5290978a5b297b736f09db4832920072b51"
+        },
+        "source_obligations": [
+          2430,
+          1864
+        ]
+      }
+    },
+    "t-27bf08b4a5836427": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 64
+        },
+        "run2_count_histogram": {
+          "1": 17,
+          "2": 21,
+          "3": 26
+        },
+        "sha256": {
+          "a": "1993970891f1d0ac378553007ff3eff89dbd1ea9e74eb00cbda5e4a1e357a02c",
+          "b": "7122d4845486b4a10ba896bbe1cd35f7c21d247fc4fe3a3b9e91cbc94e9474e2",
+          "probe": "5f53209e6e9481c77ace3b8235a041cdea24bfb8289e20ed348085e713bc8f59",
+          "requests": "0ca200ddd7a52319b1e2cff87d61631f20618f37b2c007c96a32019f742d523c",
+          "target1": "08f12871a6a6c8ea0f68a3de254fff5805192b3cfc3022ee4f5063277c40b780",
+          "target2": "a28cab89b184d2acfe1f8bed1f09fc2aeb988aff82f9840643af741982f3c24b"
+        },
+        "source_obligations": [
+          204,
+          137
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          58,
+          58
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 16
+        },
+        "run2_count_histogram": {
+          "0": 6,
+          "1": 18,
+          "2": 20,
+          "3": 8,
+          "4": 12
+        },
+        "sha256": {
+          "a": "9d783cff73273ff75210b3d54933b7fdb8e5849ec886739a8b8e708ba6c56580",
+          "b": "928511dcc580c4871823824812c0aa033b73c232eaf82351ecd930d14922fa6c",
+          "probe": "6e31ea646fbdad017e428bc792e4f03693407eeaf9a30616c24919fa325ec30c",
+          "requests": "56bfb25041ba8bb5444d86cae702b875df24ca57cb546925ee195cb7cee9c3d7",
+          "target1": "3a07e2e3e5340235255fc0daa1e5250b9d22649ef8ce106187e678a972aa06e3",
+          "target2": "44422980de8da27c69bec49561159e772bd7bd23bd3428341873b69809abcce9"
+        },
+        "source_obligations": [
+          166,
+          130
+        ]
+      }
+    },
+    "t-287604533134e251": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 27,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 64
+        },
+        "run2_count_histogram": {
+          "1": 16,
+          "2": 23,
+          "3": 25
+        },
+        "sha256": {
+          "a": "0eb4ad9ac53baca0c9428de743a18a36061a01cb718af4ae9d96d4396600a994",
+          "b": "a19744194d11d8e7af9546d0e341f8942cd89fd50861e888f110d702b2af9427",
+          "probe": "a9cd92269103c4c68906727ff5f3e6de7961e685a3999f77d53476b7f6b6683b",
+          "requests": "dcfc10f05e8e973c66ae12e3d6b7ab3d9dfa495cac8a148bd2680442fdf060a0",
+          "target1": "e5d5714d5935925021cca52946f4f4b407a94e3584fe455596293a1101904fa2",
+          "target2": "a7991c4af48da0b10f74dc25b2f95c158500f8f8fb455454540f039761fbaa65"
+        },
+        "source_obligations": [
+          220,
+          137
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 37,
+        "nonempty": [
+          64,
+          55
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 16
+        },
+        "run2_count_histogram": {
+          "0": 9,
+          "1": 12,
+          "2": 27,
+          "3": 6,
+          "4": 10
+        },
+        "sha256": {
+          "a": "f6737b0f77955ae4c130d9e8c8802dcab99027b79b0f7f992eb84f78e505f544",
+          "b": "c3b045f6b7f55072074a6ceb3309717431f5bcdab23ccab56ed1bb4c107aa801",
+          "probe": "a1bc43012ba1c2675e8e6d8c6171178a9697672fd70ed52997fbbebdc5e51f09",
+          "requests": "4c4f70d570d2cc7dfa2701b9e3d54098f4b74768ad306d7786a510306449158d",
+          "target1": "bfa620fb1aa539094385905b287d354563fdf750645fbd4942b3c31d4af9acb5",
+          "target2": "163e3b0266014a26ff3b20231eed5eeedd1333977f57b97285663f00170d392c"
+        },
+        "source_obligations": [
+          207,
+          124
+        ]
+      }
+    },
+    "t-406771cd347f0164": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 34,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 64
+        },
+        "run2_count_histogram": {
+          "1": 29,
+          "2": 15,
+          "3": 20
+        },
+        "sha256": {
+          "a": "b96323fc7b60797e13c75ca5510a500dcbde3a3a95ffd9c0d39169fa1388875f",
+          "b": "9ee77fff4072b59c09bb75cd054bdbe2b177a9c33de818a04b882365b00b2587",
+          "probe": "b1c03a9171d6ec62249eb4f8c8fe8923d4f5c7f00107032edcc272aba1b441ad",
+          "requests": "e8b29b6792a07ced7407a24fcbd5127ffb1894dcda9fd9df02e2ca9966fe9846",
+          "target1": "c3c34ec2e33abefa881b1d378edaf436c294092a21ff7161b8575f5b292b8c90",
+          "target2": "f715bbe6ea6f3ab03bf38e6318834b092488431df6992f04286973659226dc39"
+        },
+        "source_obligations": [
+          188,
+          119
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 42,
+        "nonempty": [
+          59,
+          59
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 16
+        },
+        "run2_count_histogram": {
+          "0": 5,
+          "1": 13,
+          "2": 29,
+          "3": 3,
+          "4": 14
+        },
+        "sha256": {
+          "a": "674c8e2cef4ca3c5fdef0480153dfdeb469b8cfe3d58d2199cdad2c515417e08",
+          "b": "a46879da5692d76fc5ee21b730be07cf8f4837a5cb92c40af3a1332cd7e16fc3",
+          "probe": "be2df2030aa2c3fc2e3a93f3c08081c55fe4e125981fcc2a287233ed1d018086",
+          "requests": "d082ef0253b6066a1537111b066799f71aae6df84b32395c8c702ae35bdac47e",
+          "target1": "e1ad5366b2643090d2f45726d7c671611b999362cdf49708c2fbe510dec4f7c7",
+          "target2": "cb46f94df38fa14d8bdc13616ccb956d6ac2b504ef53619c959078026b47af86"
+        },
+        "source_obligations": [
+          175,
+          136
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 607,
+        "nonempty": [
+          940,
+          924
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 256
+        },
+        "run2_count_histogram": {
+          "0": 100,
+          "1": 264,
+          "2": 387,
+          "3": 84,
+          "4": 189
+        },
+        "sha256": {
+          "a": "61cf8d533e7d5d40a0b7edaf5962f6dd3783f0cead9bfa39060c249850ef54ce",
+          "b": "9bf3a829bf13b122c374caef2e33dec697fe968587d91dc6a4615698f1d38a23",
+          "probe": "f547906dd0cfb95f2c1f259991dbce46fb1c46b9fe57e65858b23e56d61bd636",
+          "requests": "28a01a315ef5855ef92f0b29fa6d484c9d1fdb2f8deb05ee6d7ce74191e485d7",
+          "target1": "0ed9803a88083beaba9aa8e7a400d3ecf2a7157324337b7cc11e78f25f1bd3c5",
+          "target2": "4650a8c089730b6e613dbc67fdc1318634ca85c8bea191dc0affe2c046175c4f"
+        },
+        "source_obligations": [
+          2649,
+          2046
+        ]
+      }
+    },
+    "t-40efce55452576e7": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 64
+        },
+        "run2_count_histogram": {
+          "1": 21,
+          "2": 31,
+          "3": 12
+        },
+        "sha256": {
+          "a": "2b493d1e71e96035a0d4bfb7713fa6b0044e61ddebbcfe04b0cefdf2b3007b33",
+          "b": "ebfa1545e124aca86a5b278e7bcbe90dec38928890f5a7031adf29fbe0d649d6",
+          "probe": "7f9f2dfad3b5ccb9827731ee3b6fc3e90686f43a318fe7a75c65a8b771f2a4e7",
+          "requests": "00c1f381278ecd02a3dbe1e5ea87b4e442c762ea1ca1b45f4b9c1cd10c4849ce",
+          "target1": "46c1c73692464851acc92d4d4fddf09dbf35ec340203a9af7552c887c0f566a6",
+          "target2": "9c37d3d2de0090aba73632579ede5278e575c5be43e518fec72e0983bad95c71"
+        },
+        "source_obligations": [
+          186,
+          119
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          57,
+          57
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 16
+        },
+        "run2_count_histogram": {
+          "0": 7,
+          "1": 21,
+          "2": 21,
+          "3": 3,
+          "4": 12
+        },
+        "sha256": {
+          "a": "8218285b75412360f405dd030f8bfb7de15a2d84becb0dd469948a9c4bb1b6fa",
+          "b": "e95339a95c0ac5c04378e91d5c95e2da3601761a7ce57bad0cc72e9caeb063e9",
+          "probe": "368594ddecd812ee8a086af411b09ff65a0eb7f6967e7245594506b4b5a25ac9",
+          "requests": "aa7dbb1c6f8018741b841b2ebe2465489bc05dfb05278f38ffadbe99473568e4",
+          "target1": "4d072fdaa108ea5fe55093623b803f0ab51803aa0d8bdf127ead982a6fe35d04",
+          "target2": "3bcd95872e705ede6abdad448a04def7b9e49da40377ac3df986d32b5c0041c0"
+        },
+        "source_obligations": [
+          156,
+          120
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 1024,
+        "nonempty": [
+          923,
+          920
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 256
+        },
+        "run2_count_histogram": {
+          "0": 104,
+          "1": 329,
+          "2": 391,
+          "3": 69,
+          "4": 130,
+          "5": 1
+        },
+        "sha256": {
+          "a": "81101eb06165b942e962a4f7d494d69fd57aec840b19ed3dd55d7fd5c86bb785",
+          "b": "e08f30d226084ebeb08786c7b4df16981e42e55349670d6ac17dbd1a6ec1406b",
+          "probe": "9ba56f5c5b347e2afaf1071e2463c7bcc0599f2ccdaccf870a9207197610ed11",
+          "requests": "108c0c69c30dae9f312b9d264824fe2481acd9181bb2414ece8b45daf49bebdb",
+          "target1": "e89678f97ee8d80164d21d839c4d4553b0d0dfc6009ea277c0a9472eabdbabe6",
+          "target2": "8dcdbd3ea9ea8a4ada2f2dc39d66f0333825ff1adcb6a595bb9af677f9206fb3"
+        },
+        "source_obligations": [
+          2406,
+          1843
+        ]
+      }
+    },
+    "t-429b06d30ca5d01a": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 0,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 64
+        },
+        "run2_count_histogram": {
+          "1": 14,
+          "2": 18,
+          "3": 32
+        },
+        "sha256": {
+          "a": "f40dbd7d999adcf0b760f8fe32b1c2f1b5c97ee687d6ecec760a50da2e334815",
+          "b": "6fd09ea8d5677c28fbf4ca46487264f0f6cfa9f4890bfe5d9a83812bb93f30e8",
+          "probe": "8a777245c83e4058e123da5ced32539bcc7bd28a893992c821704472fd7eff2e",
+          "requests": "14b10c3568c6c23e65417703d7917acd70a6e62b3128edba19d585a5c2df9ffb",
+          "target1": "f80969d438444a5075b960339af35ef8447f0b7900c541c540915f65072d28ff",
+          "target2": "8a84c7e6057c69ea46875156bb1a8767e90b90796661758d583a7cc2ca0428b5"
+        },
+        "source_obligations": [
+          210,
+          146
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 0,
+        "nonempty": [
+          61,
+          61
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 16
+        },
+        "run2_count_histogram": {
+          "0": 3,
+          "1": 18,
+          "2": 31,
+          "3": 2,
+          "4": 10
+        },
+        "sha256": {
+          "a": "f4eea7da0110e760df16820e5b87ef1c590695a9fc9a31ac61c83261676322d8",
+          "b": "e482aed8af232abd79a8159f5ee42ec71374ca0ef2bdac320ff7b932bf123288",
+          "probe": "8d786c8076f5e5cac148a24efd3c7ffd7b52cae49f490ea58b2b218101d13eeb",
+          "requests": "32c4af1e52c89132f0bcdf7422857256065be8ea9467b9c4cc0aae2a5d0a15ff",
+          "target1": "9652453b2d0105201792cb7bc9dadd14865a163f9f1760175a1b52aa5f536bce",
+          "target2": "cb4e7b9a6dc8d3a4e7f316ad3860a29a615d322b2debe66725bab8c215e4d57e"
+        },
+        "source_obligations": [
+          164,
+          126
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 6,
+        "nonempty": [
+          934,
+          932
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 256
+        },
+        "run2_count_histogram": {
+          "0": 92,
+          "1": 276,
+          "2": 370,
+          "3": 86,
+          "4": 200
+        },
+        "sha256": {
+          "a": "79cc62a00452dd3f915dc85beff9fc6274d698a182588b60aff94552fc727bc3",
+          "b": "e1c95d9634438cfb231c15635fd20cde798687504d51f58320bc11d60ec2398c",
+          "probe": "d9b6f0a5111d9f1b478f12a364811a61555ab970eaac22a9e434fa8c1c7c1cee",
+          "requests": "30744c55a31468d1f139b6790ce0c728209110c06d435b820b61a91dc67059e7",
+          "target1": "b039f4a376a3dc8233a914254d0413207feac745703b049f2495cb516a4105a6",
+          "target2": "58971a08542fab3cb7e886b92a527d988b1e1d0c3b7562916b4f39b82f4b5484"
+        },
+        "source_obligations": [
+          2616,
+          2074
+        ]
+      }
+    },
+    "t-53b1c1f73e3ddba2": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 35,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 64
+        },
+        "run2_count_histogram": {
+          "1": 24,
+          "2": 21,
+          "3": 19
+        },
+        "sha256": {
+          "a": "77b2c53a98698ca27903257360d31eed5df9d97be052a84883b30144cffbbf74",
+          "b": "abf3abfd8ec6a6417514ca03912535e212fb6574e31b6c57dbb9ed34b44d260d",
+          "probe": "d2ba5de874da46fe1e958ff4c384001fad32f208e08b21a7711d44ee068d0e77",
+          "requests": "996ac506f278f33c496a6d23626d3ab63b708c71d38040c53da795c54fb9abe9",
+          "target1": "fea538dff835c0fa53a73c690e57004d1ce85ca475f1dce7bc053249bd255ca6",
+          "target2": "b8e734a6ce5dcc0650e2ef0632b00333a0b799b2dfa3890ac0d15f8cb6fc943c"
+        },
+        "source_obligations": [
+          222,
+          123
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 38,
+        "nonempty": [
+          63,
+          55
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 16
+        },
+        "run2_count_histogram": {
+          "0": 9,
+          "1": 9,
+          "2": 24,
+          "3": 11,
+          "4": 11
+        },
+        "sha256": {
+          "a": "72bfd6a93197d8e9181e8b8af23a15e7b7cf1b42542b79e9d2c3e6ce07a64ddc",
+          "b": "03ede47690ddb63b5c4737a352c3395be9cad2e6d8b79a626b448f8297cfe9fc",
+          "probe": "c92d6952cafd267391be5433c1c0bb4c33ed25d62ce117e1d6c9a9f9182b274c",
+          "requests": "f395c50e858f28f5720328a9ca45fe202d35899b5ff0b957408cd0eeaabea0c1",
+          "target1": "331aa76bd1f035b2b0a9de8a75f5ac042d149acc998625ef25d477e1abdc1e1b",
+          "target2": "782da7651c08dc4d1aa1724f582039bdafd4d6546b7fd41f5cb5ca4da71000e0"
+        },
+        "source_obligations": [
+          205,
+          134
+        ]
+      }
+    },
+    "t-54bd383b2b04f117": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 64
+        },
+        "run2_count_histogram": {
+          "1": 24,
+          "2": 14,
+          "3": 26
+        },
+        "sha256": {
+          "a": "1c8ac1462f7e9201bcd1d540f7415bb432a0da1b862f73999e77a7ec26065bd7",
+          "b": "d82097d7b7f5c3f5caa2c1248340171d164af5fc34ed4759e523f36fd3555cb1",
+          "probe": "b5b57f0e3e6bf94c24826fc592733291c41829b918ec3550e883439973db5406",
+          "requests": "e731997c5da4a36bd8ff16a09a0c0f007434b549dbd0079f1374dccd09f99990",
+          "target1": "2047182d287cb3f910f489ae2bb35005edf4dcad07a11176dd4de169f68e8b8d",
+          "target2": "eb38d7ac9fda931b216073389c2ad89eb39541e8a3b0f256319969bab1d62202"
+        },
+        "source_obligations": [
+          194,
+          130
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          59,
+          59
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 16
+        },
+        "run2_count_histogram": {
+          "0": 5,
+          "1": 17,
+          "2": 21,
+          "3": 4,
+          "4": 17
+        },
+        "sha256": {
+          "a": "3edbbdb9225e64be4fc22beb6673ab29a40622e3620e0ec2d1cbca6873551cd9",
+          "b": "0351decf58d8dad1e1e96358e57ffb2e040f5787dfef1ec97d27647198743fd9",
+          "probe": "77ebda50f741b1bfc63638dbcbc6b106f608b0d701a4ea365409b2e08cf11ec1",
+          "requests": "2e6faef1f3314370ad55853f2f9fc68051483186c8da8995efa0d96f4415845e",
+          "target1": "f692ba64ebe652d501532145b00b707e04fcad5db675f31fb935eaf53119c61b",
+          "target2": "4d3c53f7f9c76bc8df6a6c0ce458befe65f9e5eb4c1338ec9dc90ee1a27d8f26"
+        },
+        "source_obligations": [
+          167,
+          139
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 1024,
+        "nonempty": [
+          936,
+          936
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 256
+        },
+        "run2_count_histogram": {
+          "0": 88,
+          "1": 296,
+          "2": 358,
+          "3": 78,
+          "4": 204
+        },
+        "sha256": {
+          "a": "8e4904e8858f007527b618b0ee43a823332b6aca391db7fb04ccc331ec6df261",
+          "b": "d19eefaad22001e8e71e4f72890125c5dfd679b727e019281f5493974b03b3e8",
+          "probe": "f463a4c5b8e6dd202df8d8d56bb20bfcb007af80b659134ca861aef79086dd13",
+          "requests": "96128543130149ec0ed882daf23a7426935bebe36a2f26da19e2c664ccbb495a",
+          "target1": "4f3bd7777ee575639bd48235e96dcb8f98000b1480378c71a92051eb994fbb47",
+          "target2": "150b27738ab37fa1b59e233aadc2f808b1a14532f77166692f47673f362f322d"
+        },
+        "source_obligations": [
+          2613,
+          2062
+        ]
+      }
+    },
+    "t-64aea501cb4c666b": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 64
+        },
+        "run2_count_histogram": {
+          "1": 9,
+          "2": 31,
+          "3": 24
+        },
+        "sha256": {
+          "a": "9bb354467f7f63be66e391255a7bc152f0b94103a453a5dcc6c6a61730a3c77b",
+          "b": "c1f78e26dd34afdff3009e987049d23078ae1f0aa601f6a4429781e87542a78d",
+          "probe": "5a5935905bfd6d0e6dc376616f14a760fff3cb37161c4da763e4a5c8af0dc64d",
+          "requests": "78f186e05698b21ea5943573030a26fb754781b2afeb83fa27ec19feb8f4d660",
+          "target1": "ca328f3949bccdc48c44b9dacb015fd92443df41850c9f89f85edc3b09880965",
+          "target2": "77da3198317fc9e0554b5623fc6043aed19868bdd4b7193e7e53eda6036e0103"
+        },
+        "source_obligations": [
+          218,
+          143
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          61
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 16
+        },
+        "run2_count_histogram": {
+          "0": 3,
+          "1": 12,
+          "2": 19,
+          "3": 13,
+          "4": 17
+        },
+        "sha256": {
+          "a": "dc336c28f67fcfc68d6eda476744b135f9d96f901961171fa988faa3ae7e333b",
+          "b": "b8bc9e996b90e624d1ea9f2dfa5df1b824b868d52f06a24eb6e1ad8c08e782e7",
+          "probe": "47f5723b8857a1e171a0cb982ae317a7d1a9ef0bfe3dce1b9ab4d129cbb8f9ec",
+          "requests": "b122974414a7e4cd0257ce22d3243c382959192c095f865106feb75cf6a69073",
+          "target1": "7250d5c80afa583e76237d73d22c79d3c74585c2d91a0d8fa812712ace0c0ef2",
+          "target2": "66403e14039b1be2ee4bea022a6bb5acb2b281dee330fecd5ff222b0e090d1b6"
+        },
+        "source_obligations": [
+          214,
+          157
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 1024,
+        "nonempty": [
+          1019,
+          935
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 256
+        },
+        "run2_count_histogram": {
+          "0": 89,
+          "1": 182,
+          "2": 339,
+          "3": 196,
+          "4": 205,
+          "5": 11,
+          "6": 2
+        },
+        "sha256": {
+          "a": "e4c73c22c2af18231eccefeaef61d6eebcccc0f6943140ffb36e97b9d192ac5b",
+          "b": "fca69dfb1ece059ce68fc451d45e31a06b0b427c4c1ef75314d0b2ff58b23163",
+          "probe": "92c6cba85cd0eb4461428408b829f021c55efbfe68a0e729cf41f4291a461349",
+          "requests": "8cfc9be482673d55a4c272f63bdbc9ff7bcb8882823b8afb0eb55ea4b737a686",
+          "target1": "65a27f4286d0621a47d390a98e8a5ec1d2395ac133d726db7415666c37946384",
+          "target2": "cf894fee3eb9f43b1d9c5650c40c05bf68c53c4aa6e99d2c0cd779554c5b019f"
+        },
+        "source_obligations": [
+          3333,
+          2335
+        ]
+      }
+    },
+    "t-6676542d8921bdc8": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 64
+        },
+        "run2_count_histogram": {
+          "1": 8,
+          "2": 18,
+          "3": 35,
+          "4": 3
+        },
+        "sha256": {
+          "a": "676b1ca6b2ff34e2d7c9df0f590eb17f1d2d8a1ee05460a68139a9696600d642",
+          "b": "bb220a0413d366cf6ac5e838de38cd99a4b4b6af92fce4e7dcbd11c2274342d3",
+          "probe": "b8bfa1c17658f2fabe64cf0d80ca0df3775d213104524d32ea29b5b92d77d430",
+          "requests": "62a47e959f0704c011ffb033fc83744b6ba51907a49b6507bcbce147c57a3f37",
+          "target1": "f3a24987442fb499d458e6ddcab13601a8eb6efa1cec5bdc280144e3526cd8bd",
+          "target2": "a560d69d7d4e9089db0de4a4ce48338ad13aefd854dbbe68ce63a9aa6d4ac038"
+        },
+        "source_obligations": [
+          226,
+          161
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          55
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 16
+        },
+        "run2_count_histogram": {
+          "0": 9,
+          "1": 4,
+          "2": 31,
+          "3": 12,
+          "4": 7,
+          "5": 1
+        },
+        "sha256": {
+          "a": "fab396ee479b22df390f9df7c2c114b92cabf61b9248c8edd0d85218a45d5eac",
+          "b": "ab50ad858e71afc73e2ae5743da7bc6d55203c1e22292ea6f4ca35ad8fd0adde",
+          "probe": "15937faa6a02007115186aec964b03338a897d8e3287d597dd0a11ea675490c5",
+          "requests": "91b2a65e849471e3ff885427f1253dd9d0bdeb4b2b68e9f1341632dada91e403",
+          "target1": "6c397b8eb0dab020364c34aa71447cbccb500c1ccce40bc2a8b711b940c374b8",
+          "target2": "efd37d85b77f3efc0476fad2e10905385fdcb0d0b8be811a1f4c89123e720da8"
+        },
+        "source_obligations": [
+          198,
+          135
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 1024,
+        "nonempty": [
+          1019,
+          941
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 256
+        },
+        "run2_count_histogram": {
+          "0": 83,
+          "1": 186,
+          "2": 361,
+          "3": 161,
+          "4": 219,
+          "5": 9,
+          "6": 5
+        },
+        "sha256": {
+          "a": "983cf44238e0ec8b90c9f0a7092a3b048a3d83ce27da50e3ba99b538326c6e0c",
+          "b": "5bd66be3575f9eb59ecc561d145c368b0bfab05207e47613dc3a22d3f69e1bd8",
+          "probe": "c5f5075abbaacdb54e1fd821ff8525356c044e3a013c2024fb1bdeedb1678825",
+          "requests": "fb3ea58fb96f4afdc3ca20b22bc9c8c4d3fdd60d65bf369dc6cfec319f8fa826",
+          "target1": "0b7b3d5307d1282f74f7e540a0dfad62376be5a9c664f11058f3d250b8016fcd",
+          "target2": "b1879e1d124f5c4d525990552dc1a65b8c3c04eda49d90141b0170bad797f0b5"
+        },
+        "source_obligations": [
+          3330,
+          2342
+        ]
+      }
+    },
+    "t-693eeb58ce92806c": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 64
+        },
+        "run2_count_histogram": {
+          "1": 31,
+          "2": 15,
+          "3": 18
+        },
+        "sha256": {
+          "a": "5cc6fe5de770f85875797ce3f89e79b8b0074280cee1101a912d54d8c9a91372",
+          "b": "94284fe70d3b1a49895941483c3fa43a7ff51360476c9149e6366e04788edbba",
+          "probe": "c9da5aa0a68534c3517303c89c0d63e10391a70978773adb8f50a65d96af2d61",
+          "requests": "6eed75e52c8d7928fe1faf734f863d29e255f4d2450b38daf6ce85783d133265",
+          "target1": "25e47ba76cd56c58527a8ec025bc3bd8e653af48eb4736a1c48f3ac12443e1b1",
+          "target2": "b249ab64fa072f5b352f9743c2c9b6e2428e000f56aebd63ecffbe7bf3475f4d"
+        },
+        "source_obligations": [
+          184,
+          115
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          60,
+          58
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 16
+        },
+        "run2_count_histogram": {
+          "0": 6,
+          "1": 19,
+          "2": 13,
+          "3": 11,
+          "4": 15
+        },
+        "sha256": {
+          "a": "b181ff917ed7a3bdfb7a7f72470451f1b00b34d26eb9b4fdcdeca26a4e8906ca",
+          "b": "c288e2e19ef0b873e48168fd048e786aea9def49885e98e4187199f02e035afd",
+          "probe": "b96ee91686bdbc69a2c80b5dc49cdb2c329e3add9d3bb8f09de5a654a1ec98ab",
+          "requests": "68eacf2b2874612072c4101e1a0b4c0e70290069c5c52482d8a5ed437fe7fa74",
+          "target1": "4398036eda7201e361aefb21187137160f14134f3461fc733c59d818ba0141b5",
+          "target2": "a73f756e4436181f2fa856e3f4189d22bdb30af12228935ede398bb990fa0ad0"
+        },
+        "source_obligations": [
+          179,
+          138
+        ]
+      }
+    },
+    "t-6af350fc4e65d6bb": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "5/6": 64
+        },
+        "run2_count_histogram": {
+          "1": 24,
+          "2": 14,
+          "3": 26
+        },
+        "sha256": {
+          "a": "1ae4d0571bef152c377675022bc118aa9646427fd6abf74dbc51a865a08626f5",
+          "b": "7eaa1570fec33b7c46f23b8ff40bcb14039faf71955fa3c3fa6b739fe28ac1da",
+          "probe": "84513cb4eb3e042b4eb80224d9d8f7e09dc41f8dbe00e8b5af6f20303436cbdd",
+          "requests": "076f50354bad45046cfcfa77fc826e06c17ed1a743d9125c22d1fa00a1bbe2d8",
+          "target1": "37cf68a13db9d88de47db570eafe677910569a852b098b36a89e1ecb1261c2db",
+          "target2": "75f880f4f7f32242a725db7726dec76f1922c601dd6f73346f7fae040b08cc09"
+        },
+        "source_obligations": [
+          194,
+          130
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          57,
+          57
+        ],
+        "probe_partial_equal_columns": {
+          "5/6": 16
+        },
+        "run2_count_histogram": {
+          "0": 7,
+          "1": 10,
+          "2": 27,
+          "3": 12,
+          "4": 8
+        },
+        "sha256": {
+          "a": "235f1cfb501dfafb0be261b6f2d1c0ed53bbf17788833c3aee0cb7216f045dc7",
+          "b": "9e236535a6e305d7c02455187e9e28468c05c8ea1b583b8b36680b947887458f",
+          "probe": "27bdf63302926e0acc9cd90be2a9833fa9fd5962f1f7b46a7a77565c8fabe4f9",
+          "requests": "633da93f88f43a79cda69f4a22d02d10f793108f7a5c818233121e6b38d6fefb",
+          "target1": "d708510b50d95add0d441923125ddfcd26e3c166dd952cd4d1bea05757638e3f",
+          "target2": "60e008203b192c36971d731b798f1457bd30919da3813e562d65e9bc1bd4d068"
+        },
+        "source_obligations": [
+          171,
+          132
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 1024,
+        "nonempty": [
+          931,
+          931
+        ],
+        "probe_partial_equal_columns": {
+          "5/6": 256
+        },
+        "run2_count_histogram": {
+          "0": 93,
+          "1": 279,
+          "2": 397,
+          "3": 80,
+          "4": 175
+        },
+        "sha256": {
+          "a": "8a9496f136dc51c3fbc0742aa2d4d91c10dc7aa7d6551ec8416f1ee3dc256132",
+          "b": "c8c212ebf4c18095337ff7ca8397a0a10b826d4940b361e2de5e239f3dd26c43",
+          "probe": "9bb5040aac89968fc917d6c75a269fa7ccf91407369322c5ebaf17941b2936a4",
+          "requests": "78473bbded953b335132e6e0e1a008bd41a1505ea1bd92f9e46b57acf98463a9",
+          "target1": "363f79822f5b81ae1b79f78986b3f0b38c8c7701cec8efb80c01981cc6e4971f",
+          "target2": "999a701d94bcf76bcad071e6b11f0b56a8828287e61839fa68de5a76bb6867b7"
+        },
+        "source_obligations": [
+          2585,
+          2013
+        ]
+      }
+    },
+    "t-70b88927f81b9ecf": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 64
+        },
+        "run2_count_histogram": {
+          "1": 28,
+          "2": 21,
+          "3": 15
+        },
+        "sha256": {
+          "a": "7a0fdc73e24b119fead74a3b9769bf8ab54889d2965390922b4284cbe8230298",
+          "b": "85e9059b1d0eb2cfbab7061497d5bda27f24a52c79c6192a59b78988b28a87f5",
+          "probe": "ac0e28baac32ccaac938cc2475883794323ba7a933b021335a913ec3fc13a49b",
+          "requests": "95f9efc184102eb9be756322ffeb1edc9647a5279c4e712e6e3c7c32b18e3204",
+          "target1": "849160bcf025956a28fa3d67fd07a95dc838c2b5a6720249bfa49265ecfb8090",
+          "target2": "238a4259efa12dd86bd47d1ead7eb2738ad48d2beaf0a139b1f0089b287700dc"
+        },
+        "source_obligations": [
+          180,
+          115
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          59,
+          59
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 16
+        },
+        "run2_count_histogram": {
+          "0": 5,
+          "1": 17,
+          "2": 17,
+          "3": 10,
+          "4": 15
+        },
+        "sha256": {
+          "a": "af5225092458e0331f0879e58b67c45d7b1637a004691e7487caff652ca95eb6",
+          "b": "90fc23d1ec1ca4bf22f960e76950f1e96c324a61dd340d74bd7c216d62da0a45",
+          "probe": "ef6752fb20819dde04736babfa03691facd49d9297e8ba833bd638621edf793a",
+          "requests": "0e0a15c01e709ee5ff9f63074355b42b87715a3728e500da9b238d3047a0736d",
+          "target1": "28aa58c3e9d0cc0892476827fabb69701205da135c4af72682d800e9d28914a9",
+          "target2": "5b696c0e9ab2362cecb326c588748fa083c6116e889704c41531a96d21e7bcd1"
+        },
+        "source_obligations": [
+          172,
+          141
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 1024,
+        "nonempty": [
+          925,
+          922
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 256
+        },
+        "run2_count_histogram": {
+          "0": 102,
+          "1": 284,
+          "2": 330,
+          "3": 103,
+          "4": 205
+        },
+        "sha256": {
+          "a": "8b32dcfa1502c25e2fb4f22ce09ee3b18b52c5083e115ab1bb0e6973a5d0d6bc",
+          "b": "904f7fdd29e4a4229f74edf99acd5f8d1ba8c37652999ed7809053b0a5eb8f50",
+          "probe": "a9a1136016f6df9670ad64cb3a7eb74875ec00bba12076379f667faaf7aec425",
+          "requests": "10be1de0a4b836724d1df3b4f18262dff1f7cef39d145d6f1efb7c408c086c6c",
+          "target1": "39783e229912add048d074e166b076dafc666c36af1934d0b5126e108da2bed6",
+          "target2": "ae5e4f4c89e6befc8cf16a680178a7235d6e07258ba3158c5d84d3f2aa6e041a"
+        },
+        "source_obligations": [
+          2596,
+          2073
+        ]
+      }
+    },
+    "t-8421af9759476a69": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 34,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 64
+        },
+        "run2_count_histogram": {
+          "1": 13,
+          "2": 22,
+          "3": 29
+        },
+        "sha256": {
+          "a": "cdaa2f5a3927b412d2c8cb1d7550682434f28129da15b2b5f1ecb6178e1394f5",
+          "b": "44bbab444045b7a8dc9944bf145b15e0b46aea66147c139db513d1c4a5512de7",
+          "probe": "030ba7bbaa5ee5198eb8b7406f72ffd1b6721f2da5c3e1c1a69a7f6496baa34f",
+          "requests": "b24cc7be06831a079e7d6677562c667233049fe41cbbd4c97ea7b5b860aa6819",
+          "target1": "6ca78967a3dd124f028920f0c7a61afae0cde1063fb9e3cde70d64e6d08ee103",
+          "target2": "22d571e1cb7c49e590877ed163010b02723ae2ee7452c9a9055caec4a6452657"
+        },
+        "source_obligations": [
+          226,
+          144
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 30,
+        "nonempty": [
+          63,
+          59
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 16
+        },
+        "run2_count_histogram": {
+          "0": 5,
+          "1": 13,
+          "2": 23,
+          "3": 11,
+          "4": 12
+        },
+        "sha256": {
+          "a": "5e21452ceeaaa2015a729797edf39da20b28140717a1022b7ed0f336f3facca6",
+          "b": "c44ae1c8fc1802ee9e1a13101805dce07a4329a3eff034a7fe5b998ba9031ab9",
+          "probe": "360202b31faabc7f696b97585ad38a82f56566e5efe2c7211343879924a55350",
+          "requests": "40fd12aeda2cc6b4d24632b7eac4eef31d3befaafdde88c3a3e0913f1edcb6ae",
+          "target1": "b5b2abcec0db5a5feacaa4b406734243eb87617164b7f19773fda20e860bb2fd",
+          "target2": "8b3e433041026b4b0f316f96a9d2d5d0023c3fa03f8be693da19a79f2c7aea02"
+        },
+        "source_obligations": [
+          201,
+          140
+        ]
+      }
+    },
+    "t-9fa3e2ef44e70e42": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 27,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 64
+        },
+        "run2_count_histogram": {
+          "1": 30,
+          "2": 24,
+          "3": 10
+        },
+        "sha256": {
+          "a": "90e22043b1ef6a2521281a845f182c27384e6d197f49dc54e5ff0c9c6c8adb3f",
+          "b": "6b3ee3ccd775f578acf4c2d88f75eeefc3b98074b3750c62119840d3b0eaa0bf",
+          "probe": "b3e3d3240630776bbc784ab33c49222a9beb8aba3ff31c114c0959fb357b4e82",
+          "requests": "6d4d9f0f564e5d54081909772eea6dbb9e6ae045eaf5d11e6ecb33f2ab652b96",
+          "target1": "da239f2f89daacf017dd71236548951ac5fbee1a6005a3dbe8a393096c0fb6dc",
+          "target2": "b46d39d18ab0aeca1c0acf4557e8e71d346f34d1074ea57022272e32e15fa03a"
+        },
+        "source_obligations": [
+          172,
+          108
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 32,
+        "nonempty": [
+          57,
+          56
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 16
+        },
+        "run2_count_histogram": {
+          "0": 8,
+          "1": 18,
+          "2": 22,
+          "3": 7,
+          "4": 9
+        },
+        "sha256": {
+          "a": "ca0f35b86f24f74eb226ec22f03a54242a0a4fd6c1fb3d76a0525ede078f3067",
+          "b": "b856c4c9cb48b254918599377760cb4adcf1a1d94e8a70824c281848545d089b",
+          "probe": "3e4227f04186eaf62fb0547831522f9a6d64902d110d002bc8d11eac1eee342e",
+          "requests": "cebe77e92672acb82d4e65d63fd6c32f4002ddba39f239501740ef1fb3c96cc1",
+          "target1": "9b99f7781c84ea329b8d33df0f76f4e45e9d31ae66df48aeb7072d172fe210c6",
+          "target2": "9dc4203c5370eb6e61a14921c805e7828f34e1661f6805043ae375b4c37a50f2"
+        },
+        "source_obligations": [
+          154,
+          119
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 553,
+        "nonempty": [
+          912,
+          907
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 256
+        },
+        "run2_count_histogram": {
+          "0": 117,
+          "1": 343,
+          "2": 372,
+          "3": 79,
+          "4": 113
+        },
+        "sha256": {
+          "a": "d43c79b75c890e2d7ae2ab3ea87a1da5397ebf9f34f37e0d8b5391cbecbe3d14",
+          "b": "9cdd6ece4be1b7bef2e54f1ab547b19b12a896657b70fe185d28735bdc7a9297",
+          "probe": "5d0dcb286892c915d448fb2ecd603fac9d37ea826c5c983b9543b1c4550335d3",
+          "requests": "cae6343e8c4485a6e33cb0fac914190f86d850729d2c19f0ac119f540a7324d0",
+          "target1": "619678a07019b0fff4ad9192c99da2f1c1173aa4727b6bf54f17618dcaa1fbad",
+          "target2": "279513d9a60b4f0a18ce1d8d65d591e569fda5364e1380ddb309c52f51eeca46"
+        },
+        "source_obligations": [
+          2379,
+          1776
+        ]
+      }
+    },
+    "t-b6eca31a4a5cd235": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 42,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "2/4": 64
+        },
+        "run2_count_histogram": {
+          "1": 19,
+          "2": 28,
+          "3": 17
+        },
+        "sha256": {
+          "a": "1f1357bfc6114bd708052513b826f601257303704463afcd3e50d28b230a58b9",
+          "b": "7cd5176abc6aa0b549dd92a23aa949585c796cc61b6574721b2343c4e7a31d40",
+          "probe": "d4747b0284db5187b5205c3c95e96c2261cb02d40abb84af96534fbf83d4fd72",
+          "requests": "4a8fdf7e5941d9a9cae0da5f1b0508f3c1bd5a8ac86438d76154945c1fccb404",
+          "target1": "67f984d6578b8dc00c39cebdb81218b00972001fd11c016a66f9ac233bce2368",
+          "target2": "ee6250576adb0210e585f154af8ef368a5d17e35d1c5184db8f0012615a96897"
+        },
+        "source_obligations": [
+          200,
+          126
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 30,
+        "nonempty": [
+          56,
+          56
+        ],
+        "probe_partial_equal_columns": {
+          "2/4": 16
+        },
+        "run2_count_histogram": {
+          "0": 8,
+          "1": 15,
+          "2": 16,
+          "3": 13,
+          "4": 12
+        },
+        "sha256": {
+          "a": "d501700b3cf4d2c06d01eb9012086ff7ea41a4c5093de90cf4c4407d391e755d",
+          "b": "312c4e3d65912be4fb7c2fa62bad39044620a6883d3a281b48d01779e704671e",
+          "probe": "ae3da238a4311fa495877828879421b26b5df836019987433ac440be54859549",
+          "requests": "c5ce90006c6eec159f7baa87d65c32e39565dd8d43902f48377fa2a4922486ce",
+          "target1": "b1a989e69ce42e47c8c4e3704788d06cb335444c538fc2872511dc4373ed7cec",
+          "target2": "7e5f2bedb8d92ebaf1924e8d8489d4844e249749dd7680ff8fc00adb3e5d1024"
+        },
+        "source_obligations": [
+          175,
+          134
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 533,
+        "nonempty": [
+          916,
+          912
+        ],
+        "probe_partial_equal_columns": {
+          "2/4": 256
+        },
+        "run2_count_histogram": {
+          "0": 112,
+          "1": 266,
+          "2": 360,
+          "3": 145,
+          "4": 141
+        },
+        "sha256": {
+          "a": "3864a2b77c1fc8f35aa16d290750c1d1a1e89bfa9c5ff7459e3f815167379820",
+          "b": "1a5b20cb4f46bdfedd9964dd050627cf276301fe641410376d4c98d155c66feb",
+          "probe": "aff5c162f4654a67fd6652b899efc2733b6c62a63279458344243e230cbd0d0d",
+          "requests": "a9a9701469f840fae2f6abbee0158f6678c1f6c5ff5019c900df386b73507d70",
+          "target1": "1c7b058a627bb590fca6c4b31f3881177baf4482d16ca08767ecafd0c892d448",
+          "target2": "7a6e17d2d21b7ab612dcf5006df5e2702874afa0aec381be5dd3aef9baf75c93"
+        },
+        "source_obligations": [
+          2627,
+          1985
+        ]
+      }
+    },
+    "t-df684cd42862c98c": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 64
+        },
+        "run2_count_histogram": {
+          "1": 25,
+          "2": 17,
+          "3": 22
+        },
+        "sha256": {
+          "a": "7e6316a0bfb85ce5c2d9df171eedacdb78a3746e9c0941f31bb2666ce8757e1e",
+          "b": "89b5e4259089c4250341dfbaa3c03403243f08ece6117c0297c903e5ec908161",
+          "probe": "d8e64a40f0aadbaa24824ae8b89afaa49c977a3cf2f969bff02f521abc27d617",
+          "requests": "b6959e756b38b416d2ca7a214c3ad1ddc5aa6ce403f7b9009638e3efce6b33d8",
+          "target1": "1c3cc71c4bbaa2e9abed80f55768d7087e0dc3bcec17775ecf984d8a17caab7b",
+          "target2": "9e9307d1d8fbe32271348dab1ba9422012be7fd39c9e8e3f6dc1701cd3a2f1f5"
+        },
+        "source_obligations": [
+          188,
+          125
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          62,
+          60
+        ],
+        "probe_partial_equal_columns": {
+          "2/3": 16
+        },
+        "run2_count_histogram": {
+          "0": 4,
+          "1": 16,
+          "2": 26,
+          "3": 6,
+          "4": 12
+        },
+        "sha256": {
+          "a": "7fe7a3f91a97a75b741bce421cb96112babd981b641e7133971d1d6bc5f7a469",
+          "b": "fa26c15516c7bd781f90f09c6fbf14806b569fee87fe6a643626a5885f26728d",
+          "probe": "b718c3527ea15d9ffdaa638f4ce6c7d54b2cfe65fd9e01e59f83c33583664f86",
+          "requests": "d1eacc87908fd230794096381d704801b3524765e527fbc1f2b02f1296a4559a",
+          "target1": "df1853c8b9291b933cb7f03fcb8218702346c90fe502c7c5e272f590fe5b5aef",
+          "target2": "9d12b854853323f8900f8639653e937b631f15028540ecd7f9f8f03a4ce3f327"
+        },
+        "source_obligations": [
+          170,
+          134
+        ]
+      }
+    },
+    "t-e494bdbde4e4ac6e": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 29,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 64
+        },
+        "run2_count_histogram": {
+          "1": 16,
+          "2": 24,
+          "3": 24
+        },
+        "sha256": {
+          "a": "ed5c18c023dd80887f8741b3844637c53ba28481f4f2487edc454b630d85cbcc",
+          "b": "ccb35412cd7fedb5f4f1520abfc3ff19acaf89b29eca46b3fedfba60995230e3",
+          "probe": "a3882fe6046d2d9427b988db517708ff9f8471297bed82eeba8797ccac046e60",
+          "requests": "75ca317349cd7ca05c86a007b52a47f8afafe70aa4c26ff106a86e1ddf8e65d4",
+          "target1": "f8c032e3fc1adfd42a9c3fa632cb300fff231592268feaba3162c34cd8e480c6",
+          "target2": "5c301924ff2fb33b4530a66ef1d9639367304cdf567dd4dfd1c2eba40cd92410"
+        },
+        "source_obligations": [
+          218,
+          136
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 36,
+        "nonempty": [
+          64,
+          62
+        ],
+        "probe_partial_equal_columns": {
+          "1/2": 16
+        },
+        "run2_count_histogram": {
+          "0": 2,
+          "1": 10,
+          "2": 29,
+          "3": 10,
+          "4": 13
+        },
+        "sha256": {
+          "a": "56c9b4b8887cb74143e9efb85e3444fe4a0a84c3c3959cdc0cffbd57d4a44464",
+          "b": "8b0221b41d407357b603d2f25f7f204b05af0f9331464ac3abbbac1698c3f6cf",
+          "probe": "cc293b65f37d3f040150e4423c26ddd54b5dc220a19734d0a902cd9a8baa795f",
+          "requests": "a511772c58201c3d0f177b67a298a6c9f86b21e6fa5581145e5bdbda68553cce",
+          "target1": "db645365c9a65f9a78e0e35adbf4defcfb1344961dba6c2488a55bdc8a0252c4",
+          "target2": "928163da1ab5950165547f6051c9d12bc6c4f4692d028d30a9033b5a7769e0d7"
+        },
+        "source_obligations": [
+          215,
+          150
+        ]
+      }
+    },
+    "t-fac1aab306c0d07c": {
+      "collision": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          64,
+          64
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 64
+        },
+        "run2_count_histogram": {
+          "1": 18,
+          "2": 20,
+          "3": 26
+        },
+        "sha256": {
+          "a": "1a5f160555a71e46c387ef9316ccd522216c6a968bcbbcde0cd3f39c09cc1f0f",
+          "b": "82a6a70a51b4f30d6a34438fce313946aa61255cfac0da07150ab36aec9990e4",
+          "probe": "af622e74967787fa230555f4facf9ca1bb2358c033664b652ba2b22520a5e46a",
+          "requests": "47945f776e740ce5e4d45f64c285ef6465ca9cc0551e921af739275f1e0c3ad1",
+          "target1": "ac3e2169064661415a1a92256b0064c9b024234f23dacb3ceb7fc552b85f43cd",
+          "target2": "3ecd1c9447196733aa0d3af6a59b4bb60001d6394781d04e43597c5ecc0f28db"
+        },
+        "source_obligations": [
+          196,
+          136
+        ]
+      },
+      "iid": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 64,
+        "graphs_with_consistent_residual_candidates": 64,
+        "nonempty": [
+          60,
+          60
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 16
+        },
+        "run2_count_histogram": {
+          "0": 4,
+          "1": 19,
+          "2": 21,
+          "3": 10,
+          "4": 9,
+          "5": 1
+        },
+        "sha256": {
+          "a": "2ac3061fbf2a31c7fcfa0a266c29fe952942edc2759e9f8ef8a662bf4491b261",
+          "b": "e628a984342cee17437fa7108149fa2abc51943309bbed00ab98865328b63e19",
+          "probe": "7a8048d5fd6a1769a0f2a49498b93567c6faf7f8c0bcd8b993804e99d7746ada",
+          "requests": "cc183fb4bd44f6a0b2ed3d3f6878543a0f6b04565b198d0cd3b4c7fe987dc18b",
+          "target1": "3be603f8bc6241b5bc53bf8c25af04cb7c6394a45d15934dcff291cad86828c1",
+          "target2": "c05b916f84c935647d178ac6c39486608e25d17ca170ae35b98f05813e85997a"
+        },
+        "source_obligations": [
+          172,
+          132
+        ]
+      },
+      "train": {
+        "actual_value_range": [
+          0,
+          7
+        ],
+        "graphs": 1024,
+        "graphs_with_consistent_residual_candidates": 1024,
+        "nonempty": [
+          926,
+          924
+        ],
+        "probe_partial_equal_columns": {
+          "3/4": 256
+        },
+        "run2_count_histogram": {
+          "0": 100,
+          "1": 293,
+          "2": 369,
+          "3": 98,
+          "4": 164
+        },
+        "sha256": {
+          "a": "ec094bd54804b05940f9e1b32b13bf6d6364ea8176dd6d03d2c3d98c5f89c130",
+          "b": "d613209fed3b9627e447e3dda09ab0c0935d755f80d00d50ac9e28ea6edfcde5",
+          "probe": "946446dd966ad510da8ff6c084e38fffedf2f52973e439c1f7f08cd68cae2025",
+          "requests": "55ab43186b51f9b1cdb46d685ddde9985c210418484d22773b91165e3e1ce30c",
+          "target1": "22ee252d0ba9464b56589b3687c3e70d269efa39dc45f03b063b68ec09f5fb61",
+          "target2": "d57dbc6238013a4c1c2c11c6d98b305dc21a1efdd50848d3222201ef01d3b59d"
+        },
+        "source_obligations": [
+          2546,
+          1981
+        ]
+      }
+    }
+  },
+  "schema": "eggfuse.port-ablation.frontier-data/v1",
+  "source_sha256": "3646b39fe10ff9edd2983c43abaa2248c499491a2bd998394bba123ce349af34"
+}
