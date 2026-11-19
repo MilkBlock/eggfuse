@@ -3,6 +3,7 @@ import unittest
 
 import torch
 
+from activity_ties import select
 from model import ARMS, AddressModel, gather_rows
 
 
@@ -21,6 +22,13 @@ class AddressContracts(unittest.TestCase):
 
     def run_model(self, model):
         return model(self.coords, self.make, self.finish, self.value, self.length, self.ports)
+
+    def test_activity_only_breaks_exact_address_ties(self):
+        scores = torch.tensor([[[2., 2., 0.], [3., 2., 0.], [0., 1., 1.]]])
+        active = torch.tensor([[False, True, True]])
+        self.assertEqual(select(scores, active, False).tolist(), [[0, 0, 1]])
+        self.assertEqual(select(scores, active, True).tolist(), [[1, 0, 1]])
+        self.assertEqual(select(scores, torch.zeros_like(active), True).tolist(), [[0, 0, 1]])
 
     def test_matched_parameters_axis_budget_and_content(self):
         reference = self.model('flat').state_dict()

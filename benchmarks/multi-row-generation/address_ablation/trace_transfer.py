@@ -50,13 +50,17 @@ def score(model, token, request, previous_active, previous_request, layout):
     scores = model.address_scores(stage='make', query_coords=query, candidate_coords=bank,
                                   length=length, ports=ports)
     parent = scores.argmax(-1)
+    return parent, scores, project_parent(rows, request, previous_active, previous_request, parent)
+
+
+def project_parent(rows, request, previous_active, previous_request, parent):
     moved = parent.gather(1, previous_request)
     picked = rows.gather(1, moved[...,None].expand(-1,-1,rows.shape[-1]))
     tag = request[...,4].gather(1,previous_request)
     rebuilt = torch.cat((picked[...,:2],tag[...,None],picked[...,3:5]),-1)
     result = {'pointers':torch.stack((moved,previous_request),-1),
               'rows':rebuilt,'active':previous_active}
-    return parent, scores, result
+    return result
 
 
 def host(x):

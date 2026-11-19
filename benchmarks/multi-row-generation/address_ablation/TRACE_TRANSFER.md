@@ -58,3 +58,39 @@
 交叉交换地址模型的两个种子、保留原生成前沿后，`owner-row` 的有效父数及配对发射数全部不变。`split-handle` 的 two 头还受训练种子影响，在固定图 20 的 1709 前沿时改用 two-1703，选中有效父从 572 升至 676。该小型外部前沿没有显示三轴头稳定超过包含端口信息的 packed 头。真实激活状态和同地址重复是本次诊断另外暴露的约束。
 
 [配对结果](results/trace-transfer.json)与[交叉种子结果](results/trace-transfer-crossed.json)保留每规则、每种子、每布局的精确统计。交叉复现命令在上文参数后追加 `--cross-seed` 并使用另一个输出文件。GPU 作业 1093 和 1094 完成两组正式测量，独立旧审计的各面板基线逐项复现。
+
+## 最高地址分并列时，生产者的激活位有多少用？
+
+固定 packed 的两个最终权重、图 20 的原始生成 token 和消费者已选的 Request。下面两条路径只在最高分并列时可能选出不同的父。激活位从实际 Pair token 的第 32–33 通道解码，记录了生产者自己的输出。只有 CPU 事后审计能判定该父的原始绑定是否合法。
+
+```mermaid
+flowchart LR
+    Q[请求地址] --> S[GPU 对八个实际 Pair 打分]
+    S --> T[最高分槽集合]
+    T --> A[取首个槽]
+    T --> B[优先其中已激活的槽]
+    P[生成 Pair 的激活位] --> B
+    A --> R[沿所选父投影 RHS]
+    B --> R
+    R --> V[CPU 审计物理来源和完整发射]
+```
+
+并列槽全部失活时，实验沿用首个最高分槽，留下可审计的失败。将八个候选完全倒序后重复前向，并将指针映回原物理槽。此操作仅改变同分候选的遍历先后。每个种子各有 384 张非空图、780 个合法请求，两种地址布局的计数一致。表中“选对父”逐个探测合法请求；“完整图”按照消费者实际发出的所有动作计分，包括重复、遗漏和非法输出。
+
+| 前沿种子 | 原序只看地址，选对父 | 倒序只看地址，选对父 | 并列时优先激活，正序／倒序 | 原序完整图，只看地址 → 优先激活 | 倒序完整图，只看地址 → 优先激活 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1703 | 536 | 776 | 780／780 | 136 → 263 | 260 → 263 |
+| 1709 | 752 | 614 | 780／780 | 265 → 282 | 175 → 282 |
+
+单看地址时，反转候选次序改变了 248／182 个合法请求所选的物理槽。加入激活位后，两份前沿均降至 0。物理来源修正后，原序输出中的遗漏从 278／98 降到 57／72，重复从 71／60 增到 96／66。一个实际输出此前可能读了失活父，修正后却与另一个输出完成了同一项义务。由此能分清两个问题：指针已经能从这批前沿取出每个请求的有效父；消费者仍需决定各槽是否发出、覆盖哪个请求。
+
+这是同一批冻结轨迹上的 GPU 指针干预。它没有测量在线端到端耗时，也未覆盖同地址、同时激活但属于不同版本的有效候选。[逐规则结果和输入哈希](results/activity-ties.json)
+
+```sh
+~/.local/bin/eggfuse-job submit --kind compute -- \
+  /Volumes/EggFuseWorkspace/bin/run-eggfuse env PYTORCH_ENABLE_MPS_FALLBACK=0 python \
+  benchmarks/multi-row-generation/address_ablation/activity_ties.py \
+  /Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119 \
+  /Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119 \
+  /Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119/activity-ties.json
+```
