@@ -1,0 +1,331 @@
+{
+  "rule-23": {
+    "immediate": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "fused_fenced": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "no_congruence": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    }
+  },
+  "rule-134": {
+    "immediate": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "fused_fenced": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "no_congruence": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    }
+  },
+  "rule-135": {
+    "immediate": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "fused_fenced": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "no_congruence": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    }
+  },
+  "rule-143": {
+    "immediate": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "fused_fenced": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "no_congruence": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    }
+  },
+  "rule-198": {
+    "immediate": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "fused_fenced": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "no_congruence": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    }
+  },
+  "rule-199": {
+    "immediate": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "fused_fenced": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "no_congruence": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    }
+  },
+  "rule-266": {
+    "immediate": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 8,
+      "completed_secondary_reads": 8
+    },
+    "fused_fenced": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 8,
+      "completed_secondary_reads": 8
+    },
+    "no_congruence": {
+      "external_cases": 9,
+      "all_four_observers_exact": 5,
+      "failed_cases": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "missing_final_reads": 8,
+      "spurious_final_reads": 0,
+      "secondary_reads": 8,
+      "completed_secondary_reads": 0
+    }
+  },
+  "rule-267": {
+    "immediate": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 8,
+      "completed_secondary_reads": 8
+    },
+    "fused_fenced": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 8,
+      "completed_secondary_reads": 8
+    },
+    "no_congruence": {
+      "external_cases": 9,
+      "all_four_observers_exact": 5,
+      "failed_cases": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "missing_final_reads": 8,
+      "spurious_final_reads": 0,
+      "secondary_reads": 8,
+      "completed_secondary_reads": 0
+    }
+  },
+  "rule-317": {
+    "immediate": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "fused_fenced": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    },
+    "no_congruence": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 0,
+      "completed_secondary_reads": 0
+    }
+  },
+  "rule-580": {
+    "immediate": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 8,
+      "completed_secondary_reads": 8
+    },
+    "fused_fenced": {
+      "external_cases": 9,
+      "all_four_observers_exact": 9,
+      "failed_cases": [],
+      "missing_final_reads": 0,
+      "spurious_final_reads": 0,
+      "secondary_reads": 8,
+      "completed_secondary_reads": 8
+    },
+    "no_congruence": {
+      "external_cases": 9,
+      "all_four_observers_exact": 8,
+      "failed_cases": [
+        [
+          1,
+          1
+        ]
+      ],
+      "missing_final_reads": 8,
+      "spurious_final_reads": 0,
+      "secondary_reads": 8,
+      "completed_secondary_reads": 0
+    }
+  }
+}

@@ -1,0 +1,561 @@
+{
+  "schema": "eggfuse.initial-constructor-plan/v1",
+  "initial_archive_sha256": "01cdee8a2ae4f9f7a12a72efd67ad3e523c593f2b9006a6bdbb48585daba620f",
+  "templates_sha256": "72091b90e4ac4d0c50ff2477f32b7660f7db79adbdf8f35acc8b90d9a006d7ec",
+  "plans": {
+    "rule-23": {
+      "vertices": 15,
+      "ports": [
+        0,
+        1,
+        2
+      ],
+      "public": [
+        [
+          1,
+          0,
+          6
+        ],
+        [
+          3,
+          2,
+          10
+        ]
+      ],
+      "local_pair": [
+        2,
+        1
+      ],
+      "implications": [
+        {
+          "table": "Top",
+          "requires": [
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          "unifies": [
+            6,
+            10
+          ]
+        }
+      ]
+    },
+    "rule-134": {
+      "vertices": 18,
+      "ports": [
+        0,
+        1,
+        2
+      ],
+      "public": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          3,
+          4,
+          5
+        ]
+      ],
+      "local_pair": [
+        2,
+        1
+      ],
+      "implications": [
+        {
+          "table": "Concat",
+          "requires": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              4
+            ]
+          ],
+          "unifies": [
+            2,
+            5
+          ]
+        },
+        {
+          "table": "Empty",
+          "requires": [
+            [
+              6,
+              8
+            ],
+            [
+              7,
+              9
+            ]
+          ],
+          "unifies": [
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    "rule-135": {
+      "vertices": 18,
+      "ports": [
+        0,
+        1,
+        2
+      ],
+      "public": [
+        [
+          1,
+          0,
+          2
+        ],
+        [
+          4,
+          3,
+          5
+        ]
+      ],
+      "local_pair": [
+        2,
+        1
+      ],
+      "implications": [
+        {
+          "table": "Concat",
+          "requires": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              4
+            ]
+          ],
+          "unifies": [
+            2,
+            5
+          ]
+        },
+        {
+          "table": "Empty",
+          "requires": [
+            [
+              6,
+              8
+            ],
+            [
+              7,
+              9
+            ]
+          ],
+          "unifies": [
+            1,
+            4
+          ]
+        }
+      ]
+    },
+    "rule-143": {
+      "vertices": 18,
+      "ports": [
+        0,
+        2,
+        3
+      ],
+      "public": [
+        [
+          0,
+          6,
+          8
+        ],
+        [
+          1,
+          12,
+          14
+        ]
+      ],
+      "local_pair": [
+        1,
+        2
+      ],
+      "implications": [
+        {
+          "table": "Single",
+          "requires": [
+            [
+              2,
+              3
+            ]
+          ],
+          "unifies": [
+            6,
+            12
+          ]
+        }
+      ]
+    },
+    "rule-198": {
+      "vertices": 17,
+      "ports": [
+        1,
+        2,
+        3
+      ],
+      "public": [
+        [
+          1,
+          0,
+          5
+        ],
+        [
+          3,
+          2,
+          6
+        ]
+      ],
+      "local_pair": [
+        2,
+        1
+      ],
+      "implications": [
+        {
+          "table": "IntersectHelper-List<i64+IntInterval>",
+          "requires": [
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          "unifies": [
+            5,
+            6
+          ]
+        }
+      ]
+    },
+    "rule-199": {
+      "vertices": 17,
+      "ports": [
+        1,
+        2,
+        3
+      ],
+      "public": [
+        [
+          1,
+          0,
+          5
+        ],
+        [
+          3,
+          2,
+          6
+        ]
+      ],
+      "local_pair": [
+        2,
+        1
+      ],
+      "implications": [
+        {
+          "table": "IntersectHelper-List<i64+IntInterval>",
+          "requires": [
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          "unifies": [
+            5,
+            6
+          ]
+        }
+      ]
+    },
+    "rule-266": {
+      "vertices": 14,
+      "ports": [
+        0,
+        1,
+        2
+      ],
+      "public": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          3,
+          4,
+          5
+        ]
+      ],
+      "local_pair": [
+        0,
+        1
+      ],
+      "implications": [
+        {
+          "table": "DelayedDropUnion",
+          "requires": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              4
+            ]
+          ],
+          "unifies": [
+            2,
+            5
+          ]
+        }
+      ]
+    },
+    "rule-267": {
+      "vertices": 14,
+      "ports": [
+        0,
+        1,
+        2
+      ],
+      "public": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          3,
+          4,
+          5
+        ]
+      ],
+      "local_pair": [
+        0,
+        1
+      ],
+      "implications": [
+        {
+          "table": "DelayedSubstUnion",
+          "requires": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              4
+            ]
+          ],
+          "unifies": [
+            2,
+            5
+          ]
+        }
+      ]
+    },
+    "rule-317": {
+      "vertices": 16,
+      "ports": [
+        0,
+        1,
+        2
+      ],
+      "public": [
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          5,
+          6,
+          7
+        ]
+      ],
+      "local_pair": [
+        1,
+        0
+      ],
+      "implications": [
+        {
+          "table": "AddContext",
+          "requires": [
+            [
+              1,
+              2
+            ]
+          ],
+          "unifies": [
+            2,
+            3
+          ]
+        },
+        {
+          "table": "AddContext",
+          "requires": [
+            [
+              0,
+              4
+            ],
+            [
+              1,
+              5
+            ]
+          ],
+          "unifies": [
+            2,
+            6
+          ]
+        },
+        {
+          "table": "AddContext",
+          "requires": [
+            [
+              0,
+              4
+            ],
+            [
+              1,
+              7
+            ]
+          ],
+          "unifies": [
+            2,
+            5
+          ]
+        },
+        {
+          "table": "AddContext",
+          "requires": [
+            [
+              0,
+              4
+            ],
+            [
+              2,
+              5
+            ]
+          ],
+          "unifies": [
+            3,
+            6
+          ]
+        },
+        {
+          "table": "AddContext",
+          "requires": [
+            [
+              0,
+              4
+            ],
+            [
+              2,
+              7
+            ]
+          ],
+          "unifies": [
+            3,
+            5
+          ]
+        },
+        {
+          "table": "AddContext",
+          "requires": [
+            [
+              5,
+              7
+            ]
+          ],
+          "unifies": [
+            6,
+            5
+          ]
+        }
+      ]
+    },
+    "rule-580": {
+      "vertices": 16,
+      "ports": [
+        0,
+        1,
+        2
+      ],
+      "public": [
+        [
+          2,
+          5,
+          7
+        ],
+        [
+          3,
+          10,
+          12
+        ]
+      ],
+      "local_pair": [
+        2,
+        0
+      ],
+      "implications": [
+        {
+          "table": "TCons",
+          "requires": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "unifies": [
+            5,
+            10
+          ]
+        },
+        {
+          "table": "TypeListRemoveAt",
+          "requires": [
+            [
+              5,
+              10
+            ]
+          ],
+          "unifies": [
+            7,
+            12
+          ]
+        }
+      ]
+    }
+  }
+}
