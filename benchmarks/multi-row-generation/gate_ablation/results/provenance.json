@@ -1,0 +1,283 @@
+{
+  "root": "/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119",
+  "jobs": {
+    "1133": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "-c",
+        "import sys;sys.path.insert(0,\"benchmarks/multi-row-generation/gate_ablation\");from metal_stage import metal_library;lib=metal_library();print(lib.score_physical.thread_execution_width,lib.score_physical.max_threads_per_threadgroup)"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1134": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "GATE_TEST_PARENT=/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119/supervised-1703/final.pt",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/test_metal_stage.py"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1135": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/test_gate.py"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1136": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/gate_data.py",
+        "/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119/fresh-gate-inputs.json"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1137": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/test_gate.py"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1138": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/metal_stage_check.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/metal-gate-kernel-validation-20261119.json"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1139": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/test_audit_gate.py"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1140": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "GATE_TEST_PARENT=/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119/supervised-1703/final.pt",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/test_metal_stage.py"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1141": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/metal_stage_check.py",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/metal-gate-kernel-final-20261119.json"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1142": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/test_audit_gate.py"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1143": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/train_gates.py",
+        "/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "gate_p0",
+        "1703"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1144": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "/Volumes/EggFuseWorkspace/tmp/gate-eval-smoke.py"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1145": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/train_gates.py",
+        "/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "gate_p25",
+        "1703"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1146": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/train_gates.py",
+        "/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "gate_p0",
+        "1709"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1147": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/train_gates.py",
+        "/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119",
+        "gate_p25",
+        "1709"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1148": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "-c",
+        "from pathlib import Path; import sys,json; sys.path.insert(0,\"benchmarks/multi-row-generation/gate_ablation\"); from replay_gate import training_replay; root=Path(\"/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119\"); r=training_replay(root); (root/\"sampled-gates-cpu.json\").write_text(json.dumps(r,indent=2)+\"\\n\"); print({name:[round(x[\"max_delta_error\"],10) for x in steps.values()] for name,steps in r.items()})"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1149": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/calibrate.py",
+        "/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1150": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/test_audit_gate.py"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1151": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/evaluate.py",
+        "/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1152": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/replay_gate.py",
+        "/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1153": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/timing_pairs.py",
+        "/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    },
+    "1154": {
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/gate_ablation/shuffle_budget.py",
+        "/Volumes/EggFuseWorkspace/experiments/adaptive-width-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/two-row-credit-20261119"
+      ],
+      "exit_code": 0,
+      "status": "done"
+    }
+  },
+  "source_sha256": {
+    "audit_gate.py": "f9d4e1b5c8ac1cf85a85b4d84641a37b640da9eefdad99144bd3bb16a29332a5",
+    "calibrate.py": "11c3b6e1c38538c12bd008394ebbd170fe4d1a9fa9c41206dda99854db8f5e4e",
+    "evaluate.py": "3d55532e4274064bec96fb55d117b85f4e99ec2bd64b153ba829e569bacbc8ae",
+    "gate_data.py": "7cf2d4c36084764e28722af82a6a4301c4fad558053476c625753c0f63c4a26d",
+    "gate_model.py": "9f99a9e130161588fa89f2196456893fdb47ade867180f0c9c91467cccee3a39",
+    "metal_stage.py": "bc65916ae6b3413309aacde4677d80f98bca7991fc239dca083da7e04dfc9e3a",
+    "metal_stage_check.py": "ec63aafa6b3212bdebd28b8efac011f13a20d66fd4ea9c9e32be64ca8478a75c",
+    "replay_gate.py": "f6162ba3de3c62e40642416a9c73297d64eb6671d7c95b4aca3d028ab2b12f5a",
+    "report.py": "d511fefcc36c9628af5dc2cc86c4a47fc5aaeafebce51b67e02d5d2e3f0337ba",
+    "shuffle_budget.py": "6660c144c7db26b3c36ee8ee5e65f2c95ec993bf51b3bf4e2aba43ed91031ec8",
+    "test_audit_gate.py": "fd35e426bf089027602f64883370dba4e855eb76250d0085b2eab3818a13b546",
+    "test_gate.py": "f01e7363435cdb59a463785d1caebb4e43b2957308a9a8193d4b572f1b1ceb5d",
+    "test_metal_stage.py": "2ff48e4546b0b27548e807689359c3988fba30947540d11e7b1d4d270943b1df",
+    "timing_pairs.py": "5d3fe2d419e454dc90530fad1b86dc9e070a358606ccc59ac783ca732673bc6f",
+    "train_gates.py": "b2ed059b5e28bedb151ab664b86f3c6727d9f88ce418684b7836e5b68521696e"
+  }
+}
