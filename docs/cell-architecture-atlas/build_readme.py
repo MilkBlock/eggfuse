@@ -9,7 +9,7 @@ out=["# Cell 多行推理架构消融图册",
      "基线提交 `68193237`，2026-11-19。阅读重点是同图多个 row 能否快速生成互补 token。每次 Run、一次神经发射和一个训练更新是三个不同的时间单位。实线表示数据流，紫色虚线表示训练监督，灰色空槽或 × 表示未启用或被屏蔽的通道。每个分面的小写字母和图下说明对应。",
      "![当前的离线编译、GPU 前向与 CPU 审计](figures/00-overview.svg)",
      "![候选的模板端口 GNN、共享 row 策略和训练奖励](figures/00-proposal.svg)",
-     "建议先用编译器端口角色做基线，检验跨规则共享和单 row 的绝对正确性；然后冻结权重展开到多行，测零样本覆盖损失；最后才比较监督、RL、动态启用行数与同步策略。图 01–07 给出候选，08–13 给出已有机制的对照，14–19 定义扩展语义的验收。",
+     "建议先用编译器端口角色做基线，检验跨规则共享和单 row 的绝对正确性；然后冻结权重展开到多行，测零样本覆盖损失；最后才比较监督、RL、动态启用行数与同步策略。图 01–02 已完成两叶 Bake 接口的单 row 对照；03–07 追踪地址、展开和分工，08–13 给出已有机制的对照，14–19 定义扩展语义，图 20 单列静态可证明端口等价分区。",
      "## 对照索引",
      "| 图 | 实验问题 | 状态 |\n|---:|---|---|\n"+"\n".join(f"| {i:02} | [{p['title']}](#a{i:02}) | {p['status']} |" for i,p in enumerate(panels,1))]
 for i,p in enumerate(panels,1):
@@ -30,6 +30,8 @@ out.extend(["## 现有配对数据", "![冻结检查点的第二 Run 完整非�
                 ('S7','确定性 Cell 机制','../../benchmarks/multi-row-cell/README.md'),
                 ('S8','额外 eggcc 工作负载和家族拆分','../../benchmarks/eggcc-diversity/manifest.json'),
                 ('S9','长期架构与源语义契约','../MULTI_ROW_EGRAPH_NEURAL_PLAN.zh.md'),
+                ('S10','单 row 的头共享与 Bake 编码实测','../../benchmarks/multi-row-generation/port_ablation/README.md'),
+                ('S11','模板局部等价类的证据与冻结协议','template-eclass.md'),
                 ('M1','Gilmer 等，ICML 2017，消息传递神经网络','https://proceedings.mlr.press/v70/gilmer17a.html'),
                 ('M2','Foerster 等，AAAI 2018，反事实多智能体信用分配','https://arxiv.org/abs/1705.08926')]),
             "## 重新生成",

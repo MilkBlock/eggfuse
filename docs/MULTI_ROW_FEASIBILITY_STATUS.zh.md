@@ -104,3 +104,7 @@ IID 4×2 完整图为 63→78、55→156、84→138、115→101；收益不稳�
 ## PyTorch MPS 迁移，2026-11-19
 
 [训练、推理与转换代码](../benchmarks/multi-row-generation/torch_crossrun/README.md) 独立运行在 PyTorch。EggFuse 0.2 通过外部命令编译计划和审计输出。六个冻结模型在左右父碰撞留出集及三种父引用可见性设置下，两次 Run 的激活、引用和字段与 MLX 完全相同。两端复现相同的整图通过数、重复及遗漏。连续 latent 的最大绝对差为 2.03×10⁻⁴。开放父引用时，同机 eager 计时的 12 个配对条件中，PyTorch MPS 与 MLX Metal 耗时比的中位数为 1.48。该结果保留历史神经模型的能力与失败样本；跨 row 任务认领和完整覆盖仍是开放问题。
+
+## 单 row 头与静态模板编码，2026-11-19
+
+[图 01–02 的完整配对](../benchmarks/multi-row-generation/port_ablation/README.md) 在两个完整留出的两叶 Bake 家族上测量。448 张非空碰撞图中，独立头 3/0、共享角色 0/4、模板 ID 4/1、整图 GNN 8/1、逐端口 GNN 1/3；分子分别对应种子 1703/1709。当前覆盖不足以选择 GNN。真实模板接线决定任务，具体实例为合成候选前沿。此次图不携带 union 后的模板端口等价分区；[图 20](cell-architecture-atlas/template-eclass.md) 将其作为单独的待验证选项。

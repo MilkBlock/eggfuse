@@ -193,6 +193,27 @@ def visibility(a,i):
 def stopping(a,i):
     chain(a,["frontier",["fixed round budget","exact worklist","learned stop gate"][i],["return at K","stop if empty","defer or audit"][i]],
           ["n","v" if i==1 else "n","v"])
+def template_classes(a,mode):
+    # p and q have a certified local equality after effect k; r has none.
+    xs=(57,155,252)
+    a.txt(155,36,"template T  /  after step k",14)
+    for x,l in zip(xs,"pqr"):a.port(x,80,l)
+    if mode==0:
+        a.txt(155,143,"read / test / copy",17)
+        a.txt(155,185,"baseline port graph",14,SUB)
+    elif mode==1:
+        for x,lab in zip(xs,("C1","C2","C3")):
+            a.link(x,98,x,134);a.node(x,154,55,lab,'v')
+        a.txt(155,196,"one class per port",14,SUB)
+    elif mode==2:
+        a.path([(57,99),(57,130),(155,130),(155,99)],c="#946422")
+        a.txt(105,157,"proven equal",15)
+        a.txt(155,196,"pairwise relation edges",14,SUB)
+    else:
+        for x,end in [(57,92),(155,120),(252,252)]:a.link(x,99,end,134,c="#946422")
+        a.node(107,154,75,"Cpq",'v');a.node(252,154,55,"Cr",'v')
+        a.txt(155,196,"port–class incidence",14,SUB)
+
 def plate(name,arms,fn):
     W,H=1100,294
     a=Art();a.rect(0,0,W,H,"#f5f7f7",r=0)
@@ -248,7 +269,8 @@ PLATES=[
 ("16-owner",[("Retain instances",0),("Transfer + forwarding",1)],ownership),
 ("17-proof",[("Primitive witness",0),("Composed witness",1)],proof),
 ("18-integral",[("Original schedule",0),("Primary exit",1),("Integral exit",2)],visibility),
-("19-stop",[("Fixed rounds",0),("Exact worklist",1),("Learned gate",2)],stopping)]
+("19-stop",[("Fixed rounds",0),("Exact worklist",1),("Learned gate",2)],stopping),
+("20-template-classes",[("Explicit ports",0),("Singletons",1),("Pairwise Eq",2),("Class nodes",3)],template_classes)]
 def synthesis():
     a=Art();W,H=1100,335;a.rect(0,0,W,H,BG,r=0)
     for x,w,h in [(10,316,"SHARED TEMPLATE"),(338,374,"INSTANCE POLICY"),(723,367,"JOINT OUTCOME")]:
