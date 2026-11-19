@@ -39,7 +39,7 @@
   card([证据起点],[开放父引用时，静态投影加训练期字段头在两个种子下通过 65、67 张非空碰撞图，共 512 张。这个基线给分工留下了很大的改进空间。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–02 已完成两族消融，03 已测端口寻址，04 已测零更新展开，05–07 为近期试验，图 08–13 汇总已测机制，图 14–19 定义扩展语义，图 20 检查模板局部等价类。]
+#small[代码基线 68193237　·　图 01–02 已完成两族消融，03 已测端口寻址，04 已测零更新展开，05 已测两行训练，06–07 为近期试验，图 08–13 汇总已测机制，图 14–19 定义扩展语义，图 20 检查模板局部等价类。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -79,7 +79,7 @@ card([同一见证与同一判据],[消费者必须读到模型实际生成的�
 #text(size:11pt,fill:muted)[一种待测组合把模板编码、实例选择与轨迹级训练接在一起。通过图 01、02、04、05 逐项替换其中一处，可分辨收益的来源。]
 #v(3mm)
 #image("figures/00-proposal.svg",width:100%)
-#small[总图 A　左侧从模板结构生成端口向量；中间结合当前实例和父引用，由各 row 共用的策略选择绑定。右侧用已生成的集合判定覆盖，虚线只出现在训练。GNN 和共享头已有单行实测；与多行 RL 联合仍属候选。]
+#small[总图 A　左侧从模板结构生成端口向量；中间结合当前实例和父引用，由各 row 共用的策略选择绑定。右侧用已生成的集合判定覆盖，虚线只出现在训练。GNN、共享头、两行 RL 已分别实测；组合策略仍需同任务配对。]
 #v(3mm)
 #grid(columns:(1fr,1fr),gutter:8mm,
 card([训练时],[先让单 row 在八个顺序位置上生成整套义务，学会跟随显式父引用。复制权重到两个 row 后，再用精确轨迹审计提供联合训练信号。]),
@@ -167,10 +167,11 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S12","图 20 已证等价分区实测","benchmarks/multi-row-generation/eclass_ablation/README.md")
 #src("S13","图 03 多端口地址与迁移","benchmarks/multi-row-generation/address_ablation/README.md")
 #src("S14","图 04 零更新展开","benchmarks/multi-row-generation/width_ablation/README.md")
+#src("S15","图 05 两行监督与 RL","benchmarks/multi-row-generation/credit_ablation/README.md")
 #v(3mm)
 #linebar()
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
 #text(size:9.5pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。图 01 采用“按边传递消息”的方法；端口角色与 Cell 语义由本项目定义。 #link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文] *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。图 05 借用固定其他行动作的反事实基线，具体动作、奖励及审计仍由实验定义。 #link("https://arxiv.org/abs/1705.08926")[论文原文]]
 #v(1fr)
-#small[版次 5　·　2026 年 11 月 19 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
+#small[版次 6　·　2026 年 11 月 19 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
