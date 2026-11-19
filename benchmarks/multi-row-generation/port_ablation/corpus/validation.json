@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "manifest_sha256": "2270e7102adc14476c094f82bfe8151a56ceff5143b0a5f77b4c1cb0bc592ab5",
+  "checks": {
+    "original_two_leaf_joins": 30,
+    "make_comparisons": 4720,
+    "finish_comparisons": 2752,
+    "positive_two_stage": 480,
+    "rejected_column_mutants": 4240
+  }
+}

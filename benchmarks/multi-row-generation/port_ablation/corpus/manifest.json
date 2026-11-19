@@ -1,0 +1,10585 @@
+{
+ "schema": "eggfuse.baked-two-leaf-port-contract/v1",
+ "catalogs": {
+  "sum-bits": {
+   "catalog_sha256": "e556cad79ab6a5a642c0a434e4701b65d0a31306a553bb3907b345b2926b4b94",
+   "recipe_sha256": "3270d6f77a99b915be0c279e3c0f4f7ec3887804d3767b9ed3581dfd9eb998e7",
+   "leaves": 32,
+   "learned_compositions": 32
+  },
+  "raytrace": {
+   "catalog_sha256": "cce68f16b5048257001881d189a21f5f82135a9863e25bc550506b51520436e7",
+   "recipe_sha256": "2e395e858371b1a49a7283bf2fbf57d0512aa9d6db6cf4ead29193b1c0032a5a",
+   "leaves": 32,
+   "learned_compositions": 32
+  }
+ },
+ "templates": [
+  {
+   "id": "t-190d47775d444806",
+   "family_id": "f-6d13267e1cfa61a2463a",
+   "rule_ids": [
+    "r-264e3f7196158e6d",
+    "r-27016183c991ec6b"
+   ],
+   "stages": [
+    {
+     "left_width": 2,
+     "right_width": 3,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 3,
+     "right_width": 3,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "literal",
+      "sort": "integer",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      3,
+      "reads",
+      4
+     ],
+     [
+      3,
+      "reads",
+      5
+     ],
+     [
+      3,
+      "reads",
+      6
+     ],
+     [
+      1,
+      "tested_by",
+      7
+     ],
+     [
+      4,
+      "tested_by",
+      7
+     ],
+     [
+      9,
+      "tested_by",
+      8
+     ],
+     [
+      5,
+      "tested_by",
+      8
+     ],
+     [
+      2,
+      "tested_by",
+      10
+     ],
+     [
+      6,
+      "tested_by",
+      10
+     ],
+     [
+      4,
+      "projected_to",
+      11
+     ],
+     [
+      5,
+      "projected_to",
+      12
+     ],
+     [
+      6,
+      "projected_to",
+      13
+     ],
+     [
+      14,
+      "reads",
+      15
+     ],
+     [
+      11,
+      "published_to",
+      15
+     ],
+     [
+      14,
+      "reads",
+      16
+     ],
+     [
+      12,
+      "published_to",
+      16
+     ],
+     [
+      14,
+      "reads",
+      17
+     ],
+     [
+      13,
+      "published_to",
+      17
+     ],
+     [
+      18,
+      "reads",
+      19
+     ],
+     [
+      18,
+      "reads",
+      20
+     ],
+     [
+      18,
+      "reads",
+      21
+     ],
+     [
+      15,
+      "tested_by",
+      22
+     ],
+     [
+      19,
+      "tested_by",
+      22
+     ],
+     [
+      16,
+      "tested_by",
+      23
+     ],
+     [
+      20,
+      "tested_by",
+      23
+     ],
+     [
+      17,
+      "tested_by",
+      24
+     ],
+     [
+      21,
+      "tested_by",
+      24
+     ],
+     [
+      15,
+      "projected_to",
+      25
+     ],
+     [
+      16,
+      "projected_to",
+      26
+     ],
+     [
+      17,
+      "projected_to",
+      27
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      3
+     ],
+     [
+      14,
+      18
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 34,
+     "left": 7,
+     "right": 2,
+     "output_operation": 1,
+     "source_rule": 55,
+     "consumer_rule": 58,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Get",
+     "lineage": [
+      "f-6d13267e1cfa61a2463a"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )"
+    },
+    {
+     "catalog": "raytrace",
+     "unit": 33,
+     "left": 4,
+     "right": 0,
+     "output_operation": 1,
+     "source_rule": 55,
+     "consumer_rule": 58,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Get",
+     "lineage": [
+      "f-6d13267e1cfa61a2463a"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-27bf08b4a5836427",
+   "family_id": "f-b924c9ceb250f0f1f1c1",
+   "rule_ids": [
+    "r-8dff6d6ccf0651d3",
+    "r-b587cd5f9dc344e2"
+   ],
+   "stages": [
+    {
+     "left_width": 2,
+     "right_width": 3,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "TermAndCost"
+     ],
+     "right_sorts": [
+      "Expr",
+      "TermAndCost",
+      "___PotentialExtractedExprSort"
+     ],
+     "output_sorts": [
+      "Expr",
+      "TermAndCost",
+      "___PotentialExtractedExprSort"
+     ]
+    },
+    {
+     "left_width": 3,
+     "right_width": 3,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "TermAndCost",
+      "___PotentialExtractedExprSort"
+     ],
+     "right_sorts": [
+      "Expr",
+      "TermAndCost",
+      "___PotentialExtractedExprSort"
+     ],
+     "output_sorts": [
+      "Expr",
+      "TermAndCost",
+      "___PotentialExtractedExprSort"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      3,
+      "reads",
+      4
+     ],
+     [
+      3,
+      "reads",
+      5
+     ],
+     [
+      3,
+      "reads",
+      6
+     ],
+     [
+      1,
+      "tested_by",
+      7
+     ],
+     [
+      4,
+      "tested_by",
+      7
+     ],
+     [
+      2,
+      "tested_by",
+      8
+     ],
+     [
+      5,
+      "tested_by",
+      8
+     ],
+     [
+      4,
+      "projected_to",
+      9
+     ],
+     [
+      5,
+      "projected_to",
+      10
+     ],
+     [
+      6,
+      "projected_to",
+      11
+     ],
+     [
+      12,
+      "reads",
+      13
+     ],
+     [
+      9,
+      "published_to",
+      13
+     ],
+     [
+      12,
+      "reads",
+      14
+     ],
+     [
+      10,
+      "published_to",
+      14
+     ],
+     [
+      12,
+      "reads",
+      15
+     ],
+     [
+      11,
+      "published_to",
+      15
+     ],
+     [
+      16,
+      "reads",
+      17
+     ],
+     [
+      16,
+      "reads",
+      18
+     ],
+     [
+      16,
+      "reads",
+      19
+     ],
+     [
+      13,
+      "tested_by",
+      20
+     ],
+     [
+      17,
+      "tested_by",
+      20
+     ],
+     [
+      14,
+      "tested_by",
+      21
+     ],
+     [
+      18,
+      "tested_by",
+      21
+     ],
+     [
+      15,
+      "tested_by",
+      22
+     ],
+     [
+      19,
+      "tested_by",
+      22
+     ],
+     [
+      13,
+      "projected_to",
+      23
+     ],
+     [
+      14,
+      "projected_to",
+      24
+     ],
+     [
+      15,
+      "projected_to",
+      25
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      3
+     ],
+     [
+      12,
+      16
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 56,
+     "left": 25,
+     "right": 1,
+     "output_operation": 6,
+     "source_rule": 502,
+     "consumer_rule": 506,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "PotentialExtractedExpr",
+     "lineage": [
+      "f-b924c9ceb250f0f1f1c1"
+     ],
+     "source_ruleset": "terms",
+     "consumer_ruleset": "terms-helpers",
+     "source_rule_text": "(rule ((= lhs (Const c ty ass)))\n      ((PotentialExtractedExpr lhs (TCPair (TermConst c) 1)))\n        :ruleset terms )",
+     "consumer_rule_text": "(rule ((PotentialExtractedExpr expr termandcost))\n      ((set (ExtractedExpr expr) (TCPair (NoTerm ) 10000000000000000)))\n        :ruleset terms-helpers )"
+    }
+   ],
+   "split": "heldout",
+   "atomic_seen_in_training": [
+    false,
+    false
+   ]
+  },
+  {
+   "id": "t-287604533134e251",
+   "family_id": "f-9ea63eaf654c97afb7ba",
+   "rule_ids": [
+    "r-089bd3a9f259188c",
+    "r-344c4df8f665376b"
+   ],
+   "stages": [
+    {
+     "left_width": 1,
+     "right_width": 2,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "left_sorts": [
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 2,
+     "right_width": 5,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        1,
+        4
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        3
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr",
+      "i64",
+      "Expr",
+      "i64"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr",
+      "i64"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 4
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      2,
+      "reads",
+      3
+     ],
+     [
+      2,
+      "reads",
+      4
+     ],
+     [
+      1,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "projected_to",
+      6
+     ],
+     [
+      4,
+      "projected_to",
+      7
+     ],
+     [
+      8,
+      "reads",
+      9
+     ],
+     [
+      6,
+      "published_to",
+      9
+     ],
+     [
+      8,
+      "reads",
+      10
+     ],
+     [
+      7,
+      "published_to",
+      10
+     ],
+     [
+      11,
+      "reads",
+      12
+     ],
+     [
+      11,
+      "reads",
+      13
+     ],
+     [
+      11,
+      "reads",
+      14
+     ],
+     [
+      11,
+      "reads",
+      15
+     ],
+     [
+      11,
+      "reads",
+      16
+     ],
+     [
+      9,
+      "tested_by",
+      17
+     ],
+     [
+      12,
+      "tested_by",
+      17
+     ],
+     [
+      10,
+      "tested_by",
+      18
+     ],
+     [
+      13,
+      "tested_by",
+      18
+     ],
+     [
+      16,
+      "tested_by",
+      19
+     ],
+     [
+      14,
+      "tested_by",
+      19
+     ],
+     [
+      9,
+      "tested_by",
+      20
+     ],
+     [
+      15,
+      "tested_by",
+      20
+     ],
+     [
+      9,
+      "projected_to",
+      21
+     ],
+     [
+      10,
+      "projected_to",
+      22
+     ],
+     [
+      16,
+      "projected_to",
+      23
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      2
+     ],
+     [
+      8,
+      11
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "raytrace",
+     "unit": 59,
+     "left": 8,
+     "right": 13,
+     "output_operation": 0,
+     "source_rule": 125,
+     "consumer_rule": 155,
+     "source_pivot": 1,
+     "consumer_pivot": 0,
+     "published_table": "Single",
+     "lineage": [
+      "f-9ea63eaf654c97afb7ba"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Single x)\n       (ContextOf x ctx))\n      ((ContextOf (Single x) ctx))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((= expr (Single x))\n       (= sum (Expr-size x)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )"
+    }
+   ],
+   "split": "heldout",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-406771cd347f0164",
+   "family_id": "f-c80650bbd3b021774e14",
+   "rule_ids": [
+    "r-b3d1b28a3b3c0e68",
+    "r-344c4df8f665376b"
+   ],
+   "stages": [
+    {
+     "left_width": 2,
+     "right_width": 2,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64"
+     ]
+    },
+    {
+     "left_width": 2,
+     "right_width": 5,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        1,
+        4
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        3
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr",
+      "i64",
+      "Expr",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr",
+      "i64"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 4
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      3,
+      "reads",
+      4
+     ],
+     [
+      3,
+      "reads",
+      5
+     ],
+     [
+      1,
+      "tested_by",
+      6
+     ],
+     [
+      4,
+      "tested_by",
+      6
+     ],
+     [
+      2,
+      "tested_by",
+      7
+     ],
+     [
+      5,
+      "tested_by",
+      7
+     ],
+     [
+      4,
+      "projected_to",
+      8
+     ],
+     [
+      5,
+      "projected_to",
+      9
+     ],
+     [
+      10,
+      "reads",
+      11
+     ],
+     [
+      8,
+      "published_to",
+      11
+     ],
+     [
+      10,
+      "reads",
+      12
+     ],
+     [
+      9,
+      "published_to",
+      12
+     ],
+     [
+      13,
+      "reads",
+      14
+     ],
+     [
+      13,
+      "reads",
+      15
+     ],
+     [
+      13,
+      "reads",
+      16
+     ],
+     [
+      13,
+      "reads",
+      17
+     ],
+     [
+      13,
+      "reads",
+      18
+     ],
+     [
+      11,
+      "tested_by",
+      19
+     ],
+     [
+      14,
+      "tested_by",
+      19
+     ],
+     [
+      18,
+      "tested_by",
+      20
+     ],
+     [
+      15,
+      "tested_by",
+      20
+     ],
+     [
+      12,
+      "tested_by",
+      21
+     ],
+     [
+      16,
+      "tested_by",
+      21
+     ],
+     [
+      11,
+      "tested_by",
+      22
+     ],
+     [
+      17,
+      "tested_by",
+      22
+     ],
+     [
+      11,
+      "projected_to",
+      23
+     ],
+     [
+      18,
+      "projected_to",
+      24
+     ],
+     [
+      12,
+      "projected_to",
+      25
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      3
+     ],
+     [
+      10,
+      13
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 55,
+     "left": 8,
+     "right": 0,
+     "output_operation": 2,
+     "source_rule": 153,
+     "consumer_rule": 155,
+     "source_pivot": 0,
+     "consumer_pivot": 1,
+     "published_table": "Expr-size",
+     "lineage": [
+      "f-c80650bbd3b021774e14"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((= expr (Get tup i))\n       (= sum (Expr-size tup)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((= expr (Single x))\n       (= sum (Expr-size x)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )"
+    },
+    {
+     "catalog": "raytrace",
+     "unit": 58,
+     "left": 5,
+     "right": 16,
+     "output_operation": 2,
+     "source_rule": 153,
+     "consumer_rule": 155,
+     "source_pivot": 0,
+     "consumer_pivot": 1,
+     "published_table": "Expr-size",
+     "lineage": [
+      "f-c80650bbd3b021774e14"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((= expr (Get tup i))\n       (= sum (Expr-size tup)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((= expr (Single x))\n       (= sum (Expr-size x)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-40efce55452576e7",
+   "family_id": "f-6d13267e1cfa61a2463a",
+   "rule_ids": [
+    "r-264e3f7196158e6d",
+    "r-b7a4d7de3b66e335"
+   ],
+   "stages": [
+    {
+     "left_width": 2,
+     "right_width": 3,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 3,
+     "right_width": 3,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "literal",
+      "sort": "integer",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      3,
+      "reads",
+      4
+     ],
+     [
+      3,
+      "reads",
+      5
+     ],
+     [
+      3,
+      "reads",
+      6
+     ],
+     [
+      1,
+      "tested_by",
+      7
+     ],
+     [
+      4,
+      "tested_by",
+      7
+     ],
+     [
+      9,
+      "tested_by",
+      8
+     ],
+     [
+      5,
+      "tested_by",
+      8
+     ],
+     [
+      2,
+      "tested_by",
+      10
+     ],
+     [
+      6,
+      "tested_by",
+      10
+     ],
+     [
+      4,
+      "projected_to",
+      11
+     ],
+     [
+      5,
+      "projected_to",
+      12
+     ],
+     [
+      6,
+      "projected_to",
+      13
+     ],
+     [
+      14,
+      "reads",
+      15
+     ],
+     [
+      11,
+      "published_to",
+      15
+     ],
+     [
+      14,
+      "reads",
+      16
+     ],
+     [
+      12,
+      "published_to",
+      16
+     ],
+     [
+      14,
+      "reads",
+      17
+     ],
+     [
+      13,
+      "published_to",
+      17
+     ],
+     [
+      18,
+      "reads",
+      19
+     ],
+     [
+      18,
+      "reads",
+      20
+     ],
+     [
+      18,
+      "reads",
+      21
+     ],
+     [
+      15,
+      "tested_by",
+      22
+     ],
+     [
+      19,
+      "tested_by",
+      22
+     ],
+     [
+      16,
+      "tested_by",
+      23
+     ],
+     [
+      20,
+      "tested_by",
+      23
+     ],
+     [
+      17,
+      "tested_by",
+      24
+     ],
+     [
+      21,
+      "tested_by",
+      24
+     ],
+     [
+      15,
+      "projected_to",
+      25
+     ],
+     [
+      16,
+      "projected_to",
+      26
+     ],
+     [
+      17,
+      "projected_to",
+      27
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      3
+     ],
+     [
+      14,
+      18
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 35,
+     "left": 7,
+     "right": 3,
+     "output_operation": 1,
+     "source_rule": 55,
+     "consumer_rule": 143,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Get",
+     "lineage": [
+      "f-6d13267e1cfa61a2463a"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )"
+    },
+    {
+     "catalog": "raytrace",
+     "unit": 34,
+     "left": 4,
+     "right": 1,
+     "output_operation": 1,
+     "source_rule": 55,
+     "consumer_rule": 143,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Get",
+     "lineage": [
+      "f-6d13267e1cfa61a2463a"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-429b06d30ca5d01a",
+   "family_id": "f-20214b368228a3e4708f",
+   "rule_ids": [
+    "r-9a64197bde70fc77",
+    "r-9a64197bde70fc77"
+   ],
+   "stages": [
+    {
+     "left_width": 4,
+     "right_width": 4,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        3
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "left_sorts": [
+      "BinaryOp",
+      "Expr",
+      "Expr",
+      "Expr"
+     ],
+     "right_sorts": [
+      "BinaryOp",
+      "Expr",
+      "Expr",
+      "Expr"
+     ],
+     "output_sorts": [
+      "BinaryOp",
+      "Expr",
+      "Expr",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 4,
+     "right_width": 5,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        3
+       ]
+      ],
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        4
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ]
+     ],
+     "left_sorts": [
+      "BinaryOp",
+      "Expr",
+      "Expr",
+      "Expr"
+     ],
+     "right_sorts": [
+      "BinaryOp",
+      "Expr",
+      "Expr",
+      "Expr",
+      "BinaryOp"
+     ],
+     "output_sorts": [
+      "BinaryOp",
+      "Expr",
+      "Expr",
+      "Expr"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 4
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      0,
+      "reads",
+      3
+     ],
+     [
+      0,
+      "reads",
+      4
+     ],
+     [
+      5,
+      "reads",
+      6
+     ],
+     [
+      5,
+      "reads",
+      7
+     ],
+     [
+      5,
+      "reads",
+      8
+     ],
+     [
+      5,
+      "reads",
+      9
+     ],
+     [
+      1,
+      "tested_by",
+      10
+     ],
+     [
+      6,
+      "tested_by",
+      10
+     ],
+     [
+      2,
+      "tested_by",
+      11
+     ],
+     [
+      7,
+      "tested_by",
+      11
+     ],
+     [
+      3,
+      "tested_by",
+      12
+     ],
+     [
+      8,
+      "tested_by",
+      12
+     ],
+     [
+      4,
+      "tested_by",
+      13
+     ],
+     [
+      9,
+      "tested_by",
+      13
+     ],
+     [
+      6,
+      "projected_to",
+      14
+     ],
+     [
+      7,
+      "projected_to",
+      15
+     ],
+     [
+      8,
+      "projected_to",
+      16
+     ],
+     [
+      9,
+      "projected_to",
+      17
+     ],
+     [
+      18,
+      "reads",
+      19
+     ],
+     [
+      14,
+      "published_to",
+      19
+     ],
+     [
+      18,
+      "reads",
+      20
+     ],
+     [
+      15,
+      "published_to",
+      20
+     ],
+     [
+      18,
+      "reads",
+      21
+     ],
+     [
+      16,
+      "published_to",
+      21
+     ],
+     [
+      18,
+      "reads",
+      22
+     ],
+     [
+      17,
+      "published_to",
+      22
+     ],
+     [
+      23,
+      "reads",
+      24
+     ],
+     [
+      23,
+      "reads",
+      25
+     ],
+     [
+      23,
+      "reads",
+      26
+     ],
+     [
+      23,
+      "reads",
+      27
+     ],
+     [
+      23,
+      "reads",
+      28
+     ],
+     [
+      19,
+      "tested_by",
+      29
+     ],
+     [
+      24,
+      "tested_by",
+      29
+     ],
+     [
+      20,
+      "tested_by",
+      30
+     ],
+     [
+      25,
+      "tested_by",
+      30
+     ],
+     [
+      21,
+      "tested_by",
+      31
+     ],
+     [
+      26,
+      "tested_by",
+      31
+     ],
+     [
+      22,
+      "tested_by",
+      32
+     ],
+     [
+      27,
+      "tested_by",
+      32
+     ],
+     [
+      19,
+      "tested_by",
+      33
+     ],
+     [
+      28,
+      "tested_by",
+      33
+     ],
+     [
+      19,
+      "projected_to",
+      34
+     ],
+     [
+      20,
+      "projected_to",
+      35
+     ],
+     [
+      21,
+      "projected_to",
+      36
+     ],
+     [
+      22,
+      "projected_to",
+      37
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      5
+     ],
+     [
+      18,
+      23
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "raytrace",
+     "unit": 60,
+     "left": 28,
+     "right": 28,
+     "output_operation": 2,
+     "source_rule": 270,
+     "consumer_rule": 270,
+     "source_pivot": 1,
+     "consumer_pivot": 1,
+     "published_table": "Bop",
+     "lineage": [
+      "f-20214b368228a3e4708f"
+     ],
+     "source_ruleset": "canon",
+     "consumer_ruleset": "canon",
+     "source_rule_text": "(rewrite (Bop (Add ) x y) (Bop (Add ) y x) :ruleset canon)",
+     "consumer_rule_text": "(rewrite (Bop (Add ) x y) (Bop (Add ) y x) :ruleset canon)"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-53b1c1f73e3ddba2",
+   "family_id": "f-9ea63eaf654c97afb7ba",
+   "rule_ids": [
+    "r-b7a4d7de3b66e335",
+    "r-780149710140343b"
+   ],
+   "stages": [
+    {
+     "left_width": 1,
+     "right_width": 2,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "left_sorts": [
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 2,
+     "right_width": 5,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        1,
+        4
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        3
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr",
+      "___ExprIsPureSort",
+      "Expr",
+      "___ExprIsPureSort"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr",
+      "___ExprIsPureSort"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 4
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      2,
+      "reads",
+      3
+     ],
+     [
+      2,
+      "reads",
+      4
+     ],
+     [
+      1,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "projected_to",
+      6
+     ],
+     [
+      4,
+      "projected_to",
+      7
+     ],
+     [
+      8,
+      "reads",
+      9
+     ],
+     [
+      6,
+      "published_to",
+      9
+     ],
+     [
+      8,
+      "reads",
+      10
+     ],
+     [
+      7,
+      "published_to",
+      10
+     ],
+     [
+      11,
+      "reads",
+      12
+     ],
+     [
+      11,
+      "reads",
+      13
+     ],
+     [
+      11,
+      "reads",
+      14
+     ],
+     [
+      11,
+      "reads",
+      15
+     ],
+     [
+      11,
+      "reads",
+      16
+     ],
+     [
+      9,
+      "tested_by",
+      17
+     ],
+     [
+      12,
+      "tested_by",
+      17
+     ],
+     [
+      10,
+      "tested_by",
+      18
+     ],
+     [
+      13,
+      "tested_by",
+      18
+     ],
+     [
+      16,
+      "tested_by",
+      19
+     ],
+     [
+      14,
+      "tested_by",
+      19
+     ],
+     [
+      9,
+      "tested_by",
+      20
+     ],
+     [
+      15,
+      "tested_by",
+      20
+     ],
+     [
+      9,
+      "projected_to",
+      21
+     ],
+     [
+      10,
+      "projected_to",
+      22
+     ],
+     [
+      16,
+      "projected_to",
+      23
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      2
+     ],
+     [
+      8,
+      11
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 42,
+     "left": 3,
+     "right": 28,
+     "output_operation": 1,
+     "source_rule": 143,
+     "consumer_rule": 105,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Single",
+     "lineage": [
+      "f-9ea63eaf654c97afb7ba"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Single _x)\n       (ExprIsPure _x))\n      ((ExprIsPure (Single _x)))\n        :ruleset always-run )"
+    },
+    {
+     "catalog": "raytrace",
+     "unit": 45,
+     "left": 1,
+     "right": 15,
+     "output_operation": 1,
+     "source_rule": 143,
+     "consumer_rule": 105,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Single",
+     "lineage": [
+      "f-9ea63eaf654c97afb7ba"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Single _x)\n       (ExprIsPure _x))\n      ((ExprIsPure (Single _x)))\n        :ruleset always-run )"
+    }
+   ],
+   "split": "heldout",
+   "atomic_seen_in_training": [
+    true,
+    false
+   ]
+  },
+  {
+   "id": "t-54bd383b2b04f117",
+   "family_id": "f-e13dd8322e0dac39c14d",
+   "rule_ids": [
+    "r-d75da25b19688610",
+    "r-8dff6d6ccf0651d3"
+   ],
+   "stages": [
+    {
+     "left_width": 3,
+     "right_width": 4,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "left_sorts": [
+      "Constant",
+      "Type",
+      "Assumption"
+     ],
+     "right_sorts": [
+      "Constant",
+      "Type",
+      "Assumption",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Constant",
+      "Type",
+      "Assumption",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 4,
+     "right_width": 4,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        3
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ]
+     ],
+     "left_sorts": [
+      "Constant",
+      "Type",
+      "Assumption",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Constant",
+      "Type",
+      "Assumption",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Constant",
+      "Type",
+      "Assumption",
+      "Expr"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      0,
+      "reads",
+      3
+     ],
+     [
+      4,
+      "reads",
+      5
+     ],
+     [
+      4,
+      "reads",
+      6
+     ],
+     [
+      4,
+      "reads",
+      7
+     ],
+     [
+      4,
+      "reads",
+      8
+     ],
+     [
+      1,
+      "tested_by",
+      9
+     ],
+     [
+      5,
+      "tested_by",
+      9
+     ],
+     [
+      2,
+      "tested_by",
+      10
+     ],
+     [
+      6,
+      "tested_by",
+      10
+     ],
+     [
+      3,
+      "tested_by",
+      11
+     ],
+     [
+      7,
+      "tested_by",
+      11
+     ],
+     [
+      5,
+      "projected_to",
+      12
+     ],
+     [
+      6,
+      "projected_to",
+      13
+     ],
+     [
+      7,
+      "projected_to",
+      14
+     ],
+     [
+      8,
+      "projected_to",
+      15
+     ],
+     [
+      16,
+      "reads",
+      17
+     ],
+     [
+      12,
+      "published_to",
+      17
+     ],
+     [
+      16,
+      "reads",
+      18
+     ],
+     [
+      13,
+      "published_to",
+      18
+     ],
+     [
+      16,
+      "reads",
+      19
+     ],
+     [
+      14,
+      "published_to",
+      19
+     ],
+     [
+      16,
+      "reads",
+      20
+     ],
+     [
+      15,
+      "published_to",
+      20
+     ],
+     [
+      21,
+      "reads",
+      22
+     ],
+     [
+      21,
+      "reads",
+      23
+     ],
+     [
+      21,
+      "reads",
+      24
+     ],
+     [
+      21,
+      "reads",
+      25
+     ],
+     [
+      17,
+      "tested_by",
+      26
+     ],
+     [
+      22,
+      "tested_by",
+      26
+     ],
+     [
+      18,
+      "tested_by",
+      27
+     ],
+     [
+      23,
+      "tested_by",
+      27
+     ],
+     [
+      19,
+      "tested_by",
+      28
+     ],
+     [
+      24,
+      "tested_by",
+      28
+     ],
+     [
+      20,
+      "tested_by",
+      29
+     ],
+     [
+      25,
+      "tested_by",
+      29
+     ],
+     [
+      17,
+      "projected_to",
+      30
+     ],
+     [
+      18,
+      "projected_to",
+      31
+     ],
+     [
+      19,
+      "projected_to",
+      32
+     ],
+     [
+      20,
+      "projected_to",
+      33
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      4
+     ],
+     [
+      16,
+      21
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 63,
+     "left": 22,
+     "right": 25,
+     "output_operation": 0,
+     "source_rule": 114,
+     "consumer_rule": 502,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Const",
+     "lineage": [
+      "f-e13dd8322e0dac39c14d"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "terms",
+     "source_rule_text": "(rule ((Const c ty ctx))\n      ((ContextOf (Const c ty ctx) ctx))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((= lhs (Const c ty ass)))\n      ((PotentialExtractedExpr lhs (TCPair (TermConst c) 1)))\n        :ruleset terms )"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-64aea501cb4c666b",
+   "family_id": "f-940f87087cd0e1bda053",
+   "rule_ids": [
+    "r-089bd3a9f259188c",
+    "r-264e3f7196158e6d"
+   ],
+   "stages": [
+    {
+     "left_width": 1,
+     "right_width": 2,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "left_sorts": [
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 2,
+     "right_width": 2,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      2,
+      "reads",
+      3
+     ],
+     [
+      2,
+      "reads",
+      4
+     ],
+     [
+      1,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "projected_to",
+      6
+     ],
+     [
+      4,
+      "projected_to",
+      7
+     ],
+     [
+      8,
+      "reads",
+      9
+     ],
+     [
+      6,
+      "published_to",
+      9
+     ],
+     [
+      8,
+      "reads",
+      10
+     ],
+     [
+      7,
+      "published_to",
+      10
+     ],
+     [
+      11,
+      "reads",
+      12
+     ],
+     [
+      11,
+      "reads",
+      13
+     ],
+     [
+      9,
+      "tested_by",
+      14
+     ],
+     [
+      12,
+      "tested_by",
+      14
+     ],
+     [
+      10,
+      "tested_by",
+      15
+     ],
+     [
+      13,
+      "tested_by",
+      15
+     ],
+     [
+      9,
+      "projected_to",
+      16
+     ],
+     [
+      10,
+      "projected_to",
+      17
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      2
+     ],
+     [
+      8,
+      11
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "raytrace",
+     "unit": 62,
+     "left": 8,
+     "right": 4,
+     "output_operation": 0,
+     "source_rule": 125,
+     "consumer_rule": 55,
+     "source_pivot": 1,
+     "consumer_pivot": 0,
+     "published_table": "Single",
+     "lineage": [
+      "f-940f87087cd0e1bda053"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Single x)\n       (ContextOf x ctx))\n      ((ContextOf (Single x) ctx))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-6676542d8921bdc8",
+   "family_id": "f-940f87087cd0e1bda053",
+   "rule_ids": [
+    "r-b7a4d7de3b66e335",
+    "r-264e3f7196158e6d"
+   ],
+   "stages": [
+    {
+     "left_width": 1,
+     "right_width": 2,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "left_sorts": [
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 2,
+     "right_width": 2,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      2,
+      "reads",
+      3
+     ],
+     [
+      2,
+      "reads",
+      4
+     ],
+     [
+      1,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "projected_to",
+      6
+     ],
+     [
+      4,
+      "projected_to",
+      7
+     ],
+     [
+      8,
+      "reads",
+      9
+     ],
+     [
+      6,
+      "published_to",
+      9
+     ],
+     [
+      8,
+      "reads",
+      10
+     ],
+     [
+      7,
+      "published_to",
+      10
+     ],
+     [
+      11,
+      "reads",
+      12
+     ],
+     [
+      11,
+      "reads",
+      13
+     ],
+     [
+      9,
+      "tested_by",
+      14
+     ],
+     [
+      12,
+      "tested_by",
+      14
+     ],
+     [
+      10,
+      "tested_by",
+      15
+     ],
+     [
+      13,
+      "tested_by",
+      15
+     ],
+     [
+      9,
+      "projected_to",
+      16
+     ],
+     [
+      10,
+      "projected_to",
+      17
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      2
+     ],
+     [
+      8,
+      11
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 36,
+     "left": 3,
+     "right": 7,
+     "output_operation": 1,
+     "source_rule": 143,
+     "consumer_rule": 55,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Single",
+     "lineage": [
+      "f-940f87087cd0e1bda053"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )"
+    },
+    {
+     "catalog": "raytrace",
+     "unit": 36,
+     "left": 1,
+     "right": 4,
+     "output_operation": 1,
+     "source_rule": 143,
+     "consumer_rule": 55,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Single",
+     "lineage": [
+      "f-940f87087cd0e1bda053"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-693eeb58ce92806c",
+   "family_id": "f-b924c9ceb250f0f1f1c1",
+   "rule_ids": [
+    "r-b7a4d7de3b66e335",
+    "r-b7a4d7de3b66e335"
+   ],
+   "stages": [
+    {
+     "left_width": 2,
+     "right_width": 3,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 3,
+     "right_width": 3,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      3,
+      "reads",
+      4
+     ],
+     [
+      3,
+      "reads",
+      5
+     ],
+     [
+      3,
+      "reads",
+      6
+     ],
+     [
+      1,
+      "tested_by",
+      7
+     ],
+     [
+      4,
+      "tested_by",
+      7
+     ],
+     [
+      2,
+      "tested_by",
+      8
+     ],
+     [
+      5,
+      "tested_by",
+      8
+     ],
+     [
+      4,
+      "projected_to",
+      9
+     ],
+     [
+      5,
+      "projected_to",
+      10
+     ],
+     [
+      6,
+      "projected_to",
+      11
+     ],
+     [
+      12,
+      "reads",
+      13
+     ],
+     [
+      9,
+      "published_to",
+      13
+     ],
+     [
+      12,
+      "reads",
+      14
+     ],
+     [
+      10,
+      "published_to",
+      14
+     ],
+     [
+      12,
+      "reads",
+      15
+     ],
+     [
+      11,
+      "published_to",
+      15
+     ],
+     [
+      16,
+      "reads",
+      17
+     ],
+     [
+      16,
+      "reads",
+      18
+     ],
+     [
+      16,
+      "reads",
+      19
+     ],
+     [
+      13,
+      "tested_by",
+      20
+     ],
+     [
+      17,
+      "tested_by",
+      20
+     ],
+     [
+      14,
+      "tested_by",
+      21
+     ],
+     [
+      18,
+      "tested_by",
+      21
+     ],
+     [
+      15,
+      "tested_by",
+      22
+     ],
+     [
+      19,
+      "tested_by",
+      22
+     ],
+     [
+      13,
+      "projected_to",
+      23
+     ],
+     [
+      14,
+      "projected_to",
+      24
+     ],
+     [
+      15,
+      "projected_to",
+      25
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      3
+     ],
+     [
+      12,
+      16
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 38,
+     "left": 3,
+     "right": 3,
+     "output_operation": 0,
+     "source_rule": 143,
+     "consumer_rule": 143,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Get",
+     "lineage": [
+      "f-b924c9ceb250f0f1f1c1"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )"
+    },
+    {
+     "catalog": "raytrace",
+     "unit": 38,
+     "left": 1,
+     "right": 1,
+     "output_operation": 0,
+     "source_rule": 143,
+     "consumer_rule": 143,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Get",
+     "lineage": [
+      "f-b924c9ceb250f0f1f1c1"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )"
+    }
+   ],
+   "split": "heldout",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-6af350fc4e65d6bb",
+   "family_id": "f-5026698c61e6638650cc",
+   "rule_ids": [
+    "r-37618e3bafa634da",
+    "r-1ddcdb262fde96fb"
+   ],
+   "stages": [
+    {
+     "left_width": 5,
+     "right_width": 6,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        3
+       ]
+      ],
+      [
+       [
+        0,
+        4
+       ],
+       [
+        1,
+        4
+       ]
+      ],
+      [
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        5
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ]
+     ],
+     "left_sorts": [
+      "TernaryOp",
+      "Expr",
+      "Expr",
+      "Expr",
+      "Expr"
+     ],
+     "right_sorts": [
+      "TernaryOp",
+      "Expr",
+      "Expr",
+      "Expr",
+      "Expr",
+      "Unit"
+     ],
+     "output_sorts": [
+      "TernaryOp",
+      "Expr",
+      "Expr",
+      "Expr",
+      "Expr",
+      "Unit"
+     ]
+    },
+    {
+     "left_width": 6,
+     "right_width": 6,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        3
+       ]
+      ],
+      [
+       [
+        0,
+        4
+       ],
+       [
+        1,
+        4
+       ]
+      ],
+      [
+       [
+        0,
+        5
+       ],
+       [
+        1,
+        5
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ]
+     ],
+     "left_sorts": [
+      "TernaryOp",
+      "Expr",
+      "Expr",
+      "Expr",
+      "Expr",
+      "Unit"
+     ],
+     "right_sorts": [
+      "TernaryOp",
+      "Expr",
+      "Expr",
+      "Expr",
+      "Expr",
+      "Unit"
+     ],
+     "output_sorts": [
+      "TernaryOp",
+      "Expr",
+      "Expr",
+      "Expr",
+      "Expr",
+      "Unit"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 4
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 4
+     },
+     {
+      "kind": "input_column",
+      "sort": "Unit",
+      "ordinal": 5
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "literal",
+      "sort": "integer",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 4
+     },
+     {
+      "kind": "output_column",
+      "sort": "Unit",
+      "ordinal": 5
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 4
+     },
+     {
+      "kind": "input_column",
+      "sort": "Unit",
+      "ordinal": 5
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 4
+     },
+     {
+      "kind": "input_column",
+      "sort": "Unit",
+      "ordinal": 5
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 4
+     },
+     {
+      "kind": "output_column",
+      "sort": "Unit",
+      "ordinal": 5
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      0,
+      "reads",
+      3
+     ],
+     [
+      0,
+      "reads",
+      4
+     ],
+     [
+      0,
+      "reads",
+      5
+     ],
+     [
+      6,
+      "reads",
+      7
+     ],
+     [
+      6,
+      "reads",
+      8
+     ],
+     [
+      6,
+      "reads",
+      9
+     ],
+     [
+      6,
+      "reads",
+      10
+     ],
+     [
+      6,
+      "reads",
+      11
+     ],
+     [
+      6,
+      "reads",
+      12
+     ],
+     [
+      1,
+      "tested_by",
+      13
+     ],
+     [
+      7,
+      "tested_by",
+      13
+     ],
+     [
+      2,
+      "tested_by",
+      14
+     ],
+     [
+      8,
+      "tested_by",
+      14
+     ],
+     [
+      3,
+      "tested_by",
+      15
+     ],
+     [
+      9,
+      "tested_by",
+      15
+     ],
+     [
+      4,
+      "tested_by",
+      16
+     ],
+     [
+      10,
+      "tested_by",
+      16
+     ],
+     [
+      5,
+      "tested_by",
+      17
+     ],
+     [
+      11,
+      "tested_by",
+      17
+     ],
+     [
+      19,
+      "tested_by",
+      18
+     ],
+     [
+      12,
+      "tested_by",
+      18
+     ],
+     [
+      7,
+      "projected_to",
+      20
+     ],
+     [
+      8,
+      "projected_to",
+      21
+     ],
+     [
+      9,
+      "projected_to",
+      22
+     ],
+     [
+      10,
+      "projected_to",
+      23
+     ],
+     [
+      11,
+      "projected_to",
+      24
+     ],
+     [
+      12,
+      "projected_to",
+      25
+     ],
+     [
+      26,
+      "reads",
+      27
+     ],
+     [
+      20,
+      "published_to",
+      27
+     ],
+     [
+      26,
+      "reads",
+      28
+     ],
+     [
+      21,
+      "published_to",
+      28
+     ],
+     [
+      26,
+      "reads",
+      29
+     ],
+     [
+      22,
+      "published_to",
+      29
+     ],
+     [
+      26,
+      "reads",
+      30
+     ],
+     [
+      23,
+      "published_to",
+      30
+     ],
+     [
+      26,
+      "reads",
+      31
+     ],
+     [
+      24,
+      "published_to",
+      31
+     ],
+     [
+      26,
+      "reads",
+      32
+     ],
+     [
+      25,
+      "published_to",
+      32
+     ],
+     [
+      33,
+      "reads",
+      34
+     ],
+     [
+      33,
+      "reads",
+      35
+     ],
+     [
+      33,
+      "reads",
+      36
+     ],
+     [
+      33,
+      "reads",
+      37
+     ],
+     [
+      33,
+      "reads",
+      38
+     ],
+     [
+      33,
+      "reads",
+      39
+     ],
+     [
+      27,
+      "tested_by",
+      40
+     ],
+     [
+      34,
+      "tested_by",
+      40
+     ],
+     [
+      28,
+      "tested_by",
+      41
+     ],
+     [
+      35,
+      "tested_by",
+      41
+     ],
+     [
+      29,
+      "tested_by",
+      42
+     ],
+     [
+      36,
+      "tested_by",
+      42
+     ],
+     [
+      30,
+      "tested_by",
+      43
+     ],
+     [
+      37,
+      "tested_by",
+      43
+     ],
+     [
+      31,
+      "tested_by",
+      44
+     ],
+     [
+      38,
+      "tested_by",
+      44
+     ],
+     [
+      32,
+      "tested_by",
+      45
+     ],
+     [
+      39,
+      "tested_by",
+      45
+     ],
+     [
+      27,
+      "projected_to",
+      46
+     ],
+     [
+      28,
+      "projected_to",
+      47
+     ],
+     [
+      29,
+      "projected_to",
+      48
+     ],
+     [
+      30,
+      "projected_to",
+      49
+     ],
+     [
+      31,
+      "projected_to",
+      50
+     ],
+     [
+      32,
+      "projected_to",
+      51
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      6
+     ],
+     [
+      26,
+      33
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "raytrace",
+     "unit": 39,
+     "left": 24,
+     "right": 25,
+     "output_operation": 2,
+     "source_rule": 284,
+     "consumer_rule": 565,
+     "source_pivot": 1,
+     "consumer_pivot": 0,
+     "published_table": "CellSpineView6",
+     "lineage": [
+      "f-5026698c61e6638650cc"
+     ],
+     "source_ruleset": "cell-spine-complete",
+     "consumer_ruleset": "type-analysis",
+     "source_rule_text": "complete-CellSpineView6",
+     "consumer_rule_text": "(rule ((= lhs (Top (Select ) pred v1 v2)))\n      ((ExpectType pred (Base (BoolT )) '(Select)'))\n        :ruleset type-analysis )"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-70b88927f81b9ecf",
+   "family_id": "f-e13dd8322e0dac39c14d",
+   "rule_ids": [
+    "r-d75da25b19688610",
+    "r-9c5a905a3131cd56"
+   ],
+   "stages": [
+    {
+     "left_width": 3,
+     "right_width": 4,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "left_sorts": [
+      "Constant",
+      "Type",
+      "Assumption"
+     ],
+     "right_sorts": [
+      "Constant",
+      "Type",
+      "Assumption",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Constant",
+      "Type",
+      "Assumption",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 4,
+     "right_width": 4,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        3
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ]
+     ],
+     "left_sorts": [
+      "Constant",
+      "Type",
+      "Assumption",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Constant",
+      "Type",
+      "Assumption",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Constant",
+      "Type",
+      "Assumption",
+      "Expr"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      0,
+      "reads",
+      3
+     ],
+     [
+      4,
+      "reads",
+      5
+     ],
+     [
+      4,
+      "reads",
+      6
+     ],
+     [
+      4,
+      "reads",
+      7
+     ],
+     [
+      4,
+      "reads",
+      8
+     ],
+     [
+      1,
+      "tested_by",
+      9
+     ],
+     [
+      5,
+      "tested_by",
+      9
+     ],
+     [
+      2,
+      "tested_by",
+      10
+     ],
+     [
+      6,
+      "tested_by",
+      10
+     ],
+     [
+      3,
+      "tested_by",
+      11
+     ],
+     [
+      7,
+      "tested_by",
+      11
+     ],
+     [
+      5,
+      "projected_to",
+      12
+     ],
+     [
+      6,
+      "projected_to",
+      13
+     ],
+     [
+      7,
+      "projected_to",
+      14
+     ],
+     [
+      8,
+      "projected_to",
+      15
+     ],
+     [
+      16,
+      "reads",
+      17
+     ],
+     [
+      12,
+      "published_to",
+      17
+     ],
+     [
+      16,
+      "reads",
+      18
+     ],
+     [
+      13,
+      "published_to",
+      18
+     ],
+     [
+      16,
+      "reads",
+      19
+     ],
+     [
+      14,
+      "published_to",
+      19
+     ],
+     [
+      16,
+      "reads",
+      20
+     ],
+     [
+      15,
+      "published_to",
+      20
+     ],
+     [
+      21,
+      "reads",
+      22
+     ],
+     [
+      21,
+      "reads",
+      23
+     ],
+     [
+      21,
+      "reads",
+      24
+     ],
+     [
+      21,
+      "reads",
+      25
+     ],
+     [
+      17,
+      "tested_by",
+      26
+     ],
+     [
+      22,
+      "tested_by",
+      26
+     ],
+     [
+      18,
+      "tested_by",
+      27
+     ],
+     [
+      23,
+      "tested_by",
+      27
+     ],
+     [
+      19,
+      "tested_by",
+      28
+     ],
+     [
+      24,
+      "tested_by",
+      28
+     ],
+     [
+      20,
+      "tested_by",
+      29
+     ],
+     [
+      25,
+      "tested_by",
+      29
+     ],
+     [
+      17,
+      "projected_to",
+      30
+     ],
+     [
+      18,
+      "projected_to",
+      31
+     ],
+     [
+      19,
+      "projected_to",
+      32
+     ],
+     [
+      20,
+      "projected_to",
+      33
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      4
+     ],
+     [
+      16,
+      21
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 62,
+     "left": 22,
+     "right": 24,
+     "output_operation": 0,
+     "source_rule": 114,
+     "consumer_rule": 420,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Const",
+     "lineage": [
+      "f-e13dd8322e0dac39c14d"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "is-resolved",
+     "source_rule_text": "(rule ((Const c ty ctx))\n      ((ContextOf (Const c ty ctx) ctx))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((= lhs (Const _n _ty _ctx)))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-8421af9759476a69",
+   "family_id": "f-9ea63eaf654c97afb7ba",
+   "rule_ids": [
+    "r-b7a4d7de3b66e335",
+    "r-344c4df8f665376b"
+   ],
+   "stages": [
+    {
+     "left_width": 1,
+     "right_width": 2,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "left_sorts": [
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 2,
+     "right_width": 5,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        1,
+        4
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        3
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr",
+      "i64",
+      "Expr",
+      "i64"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr",
+      "i64"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 4
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      2,
+      "reads",
+      3
+     ],
+     [
+      2,
+      "reads",
+      4
+     ],
+     [
+      1,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "projected_to",
+      6
+     ],
+     [
+      4,
+      "projected_to",
+      7
+     ],
+     [
+      8,
+      "reads",
+      9
+     ],
+     [
+      6,
+      "published_to",
+      9
+     ],
+     [
+      8,
+      "reads",
+      10
+     ],
+     [
+      7,
+      "published_to",
+      10
+     ],
+     [
+      11,
+      "reads",
+      12
+     ],
+     [
+      11,
+      "reads",
+      13
+     ],
+     [
+      11,
+      "reads",
+      14
+     ],
+     [
+      11,
+      "reads",
+      15
+     ],
+     [
+      11,
+      "reads",
+      16
+     ],
+     [
+      9,
+      "tested_by",
+      17
+     ],
+     [
+      12,
+      "tested_by",
+      17
+     ],
+     [
+      10,
+      "tested_by",
+      18
+     ],
+     [
+      13,
+      "tested_by",
+      18
+     ],
+     [
+      16,
+      "tested_by",
+      19
+     ],
+     [
+      14,
+      "tested_by",
+      19
+     ],
+     [
+      9,
+      "tested_by",
+      20
+     ],
+     [
+      15,
+      "tested_by",
+      20
+     ],
+     [
+      9,
+      "projected_to",
+      21
+     ],
+     [
+      10,
+      "projected_to",
+      22
+     ],
+     [
+      16,
+      "projected_to",
+      23
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      2
+     ],
+     [
+      8,
+      11
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 39,
+     "left": 3,
+     "right": 15,
+     "output_operation": 1,
+     "source_rule": 143,
+     "consumer_rule": 155,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Single",
+     "lineage": [
+      "f-9ea63eaf654c97afb7ba"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((= expr (Single x))\n       (= sum (Expr-size x)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )"
+    },
+    {
+     "catalog": "raytrace",
+     "unit": 44,
+     "left": 1,
+     "right": 13,
+     "output_operation": 1,
+     "source_rule": 143,
+     "consumer_rule": 155,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Single",
+     "lineage": [
+      "f-9ea63eaf654c97afb7ba"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((= expr (Single x))\n       (= sum (Expr-size x)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )"
+    }
+   ],
+   "split": "heldout",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-9fa3e2ef44e70e42",
+   "family_id": "f-79e7a8713da977f35264",
+   "rule_ids": [
+    "r-b7a4d7de3b66e335",
+    "r-4e1ff48e94b1ca8c"
+   ],
+   "stages": [
+    {
+     "left_width": 2,
+     "right_width": 4,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        2,
+        1
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "i64",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "i64",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 4,
+     "right_width": 5,
+     "checks": [
+      [
+       [
+        0,
+        1
+       ],
+       [
+        2,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        3
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        4
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64",
+      "i64",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "Expr",
+      "Expr",
+      "i64"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "literal",
+      "sort": "integer",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 4
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "literal",
+      "sort": "integer",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      3,
+      "reads",
+      4
+     ],
+     [
+      3,
+      "reads",
+      5
+     ],
+     [
+      3,
+      "reads",
+      6
+     ],
+     [
+      3,
+      "reads",
+      7
+     ],
+     [
+      1,
+      "tested_by",
+      8
+     ],
+     [
+      4,
+      "tested_by",
+      8
+     ],
+     [
+      2,
+      "tested_by",
+      9
+     ],
+     [
+      5,
+      "tested_by",
+      9
+     ],
+     [
+      11,
+      "tested_by",
+      10
+     ],
+     [
+      6,
+      "tested_by",
+      10
+     ],
+     [
+      4,
+      "projected_to",
+      12
+     ],
+     [
+      5,
+      "projected_to",
+      13
+     ],
+     [
+      6,
+      "projected_to",
+      14
+     ],
+     [
+      7,
+      "projected_to",
+      15
+     ],
+     [
+      16,
+      "reads",
+      17
+     ],
+     [
+      12,
+      "published_to",
+      17
+     ],
+     [
+      16,
+      "reads",
+      18
+     ],
+     [
+      13,
+      "published_to",
+      18
+     ],
+     [
+      16,
+      "reads",
+      19
+     ],
+     [
+      14,
+      "published_to",
+      19
+     ],
+     [
+      16,
+      "reads",
+      20
+     ],
+     [
+      15,
+      "published_to",
+      20
+     ],
+     [
+      21,
+      "reads",
+      22
+     ],
+     [
+      21,
+      "reads",
+      23
+     ],
+     [
+      21,
+      "reads",
+      24
+     ],
+     [
+      21,
+      "reads",
+      25
+     ],
+     [
+      21,
+      "reads",
+      26
+     ],
+     [
+      18,
+      "tested_by",
+      27
+     ],
+     [
+      28,
+      "tested_by",
+      27
+     ],
+     [
+      17,
+      "tested_by",
+      29
+     ],
+     [
+      22,
+      "tested_by",
+      29
+     ],
+     [
+      19,
+      "tested_by",
+      30
+     ],
+     [
+      23,
+      "tested_by",
+      30
+     ],
+     [
+      20,
+      "tested_by",
+      31
+     ],
+     [
+      24,
+      "tested_by",
+      31
+     ],
+     [
+      17,
+      "tested_by",
+      32
+     ],
+     [
+      25,
+      "tested_by",
+      32
+     ],
+     [
+      19,
+      "tested_by",
+      33
+     ],
+     [
+      26,
+      "tested_by",
+      33
+     ],
+     [
+      17,
+      "projected_to",
+      34
+     ],
+     [
+      19,
+      "projected_to",
+      35
+     ],
+     [
+      20,
+      "projected_to",
+      36
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      3
+     ],
+     [
+      16,
+      21
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 33,
+     "left": 3,
+     "right": 13,
+     "output_operation": 2,
+     "source_rule": 143,
+     "consumer_rule": 145,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "SubTuple",
+     "lineage": [
+      "f-79e7a8713da977f35264"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rewrite (SubTuple expr 0 len) expr :when ((= len (tuple-length expr))) :ruleset always-run)"
+    },
+    {
+     "catalog": "raytrace",
+     "unit": 35,
+     "left": 1,
+     "right": 10,
+     "output_operation": 2,
+     "source_rule": 143,
+     "consumer_rule": 145,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "SubTuple",
+     "lineage": [
+      "f-79e7a8713da977f35264"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rewrite (SubTuple expr 0 len) expr :when ((= len (tuple-length expr))) :ruleset always-run)"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-b6eca31a4a5cd235",
+   "family_id": "f-256a4b25d75a19386a3b",
+   "rule_ids": [
+    "r-27016183c991ec6b",
+    "r-81d58bf3a13734fd"
+   ],
+   "stages": [
+    {
+     "left_width": 1,
+     "right_width": 4,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        2,
+        0
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "left_sorts": [
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr",
+      "i64",
+      "___AddGetsSort"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr",
+      "i64",
+      "___AddGetsSort"
+     ]
+    },
+    {
+     "left_width": 4,
+     "right_width": 7,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        3
+       ]
+      ],
+      [
+       [
+        1,
+        6
+       ],
+       [
+        1,
+        4
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        5
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       6
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "Expr",
+      "i64",
+      "___AddGetsSort"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr",
+      "i64",
+      "___AddGetsSort",
+      "___NotJustConcatSort",
+      "Expr",
+      "___NotJustConcatSort"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr",
+      "i64",
+      "___AddGetsSort",
+      "___NotJustConcatSort"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "literal",
+      "sort": "integer",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 4
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 5
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 6
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 4
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      2,
+      "reads",
+      3
+     ],
+     [
+      2,
+      "reads",
+      4
+     ],
+     [
+      2,
+      "reads",
+      5
+     ],
+     [
+      2,
+      "reads",
+      6
+     ],
+     [
+      1,
+      "tested_by",
+      7
+     ],
+     [
+      3,
+      "tested_by",
+      7
+     ],
+     [
+      1,
+      "tested_by",
+      8
+     ],
+     [
+      4,
+      "tested_by",
+      8
+     ],
+     [
+      10,
+      "tested_by",
+      9
+     ],
+     [
+      5,
+      "tested_by",
+      9
+     ],
+     [
+      3,
+      "projected_to",
+      11
+     ],
+     [
+      4,
+      "projected_to",
+      12
+     ],
+     [
+      5,
+      "projected_to",
+      13
+     ],
+     [
+      6,
+      "projected_to",
+      14
+     ],
+     [
+      15,
+      "reads",
+      16
+     ],
+     [
+      11,
+      "published_to",
+      16
+     ],
+     [
+      15,
+      "reads",
+      17
+     ],
+     [
+      12,
+      "published_to",
+      17
+     ],
+     [
+      15,
+      "reads",
+      18
+     ],
+     [
+      13,
+      "published_to",
+      18
+     ],
+     [
+      15,
+      "reads",
+      19
+     ],
+     [
+      14,
+      "published_to",
+      19
+     ],
+     [
+      20,
+      "reads",
+      21
+     ],
+     [
+      20,
+      "reads",
+      22
+     ],
+     [
+      20,
+      "reads",
+      23
+     ],
+     [
+      20,
+      "reads",
+      24
+     ],
+     [
+      20,
+      "reads",
+      25
+     ],
+     [
+      20,
+      "reads",
+      26
+     ],
+     [
+      20,
+      "reads",
+      27
+     ],
+     [
+      16,
+      "tested_by",
+      28
+     ],
+     [
+      21,
+      "tested_by",
+      28
+     ],
+     [
+      17,
+      "tested_by",
+      29
+     ],
+     [
+      22,
+      "tested_by",
+      29
+     ],
+     [
+      18,
+      "tested_by",
+      30
+     ],
+     [
+      23,
+      "tested_by",
+      30
+     ],
+     [
+      19,
+      "tested_by",
+      31
+     ],
+     [
+      24,
+      "tested_by",
+      31
+     ],
+     [
+      27,
+      "tested_by",
+      32
+     ],
+     [
+      25,
+      "tested_by",
+      32
+     ],
+     [
+      17,
+      "tested_by",
+      33
+     ],
+     [
+      26,
+      "tested_by",
+      33
+     ],
+     [
+      16,
+      "projected_to",
+      34
+     ],
+     [
+      17,
+      "projected_to",
+      35
+     ],
+     [
+      18,
+      "projected_to",
+      36
+     ],
+     [
+      19,
+      "projected_to",
+      37
+     ],
+     [
+      27,
+      "projected_to",
+      38
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      2
+     ],
+     [
+      15,
+      20
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 58,
+     "left": 2,
+     "right": 18,
+     "output_operation": 0,
+     "source_rule": 58,
+     "consumer_rule": 61,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Add-Gets",
+     "lineage": [
+      "f-256a4b25d75a19386a3b"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Add-Gets orig something n)\n       (Not-Just-Concat something))\n      ((Add-All-Gets orig something n 0))\n        :ruleset always-run )"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-df684cd42862c98c",
+   "family_id": "f-b924c9ceb250f0f1f1c1",
+   "rule_ids": [
+    "r-b7a4d7de3b66e335",
+    "r-27016183c991ec6b"
+   ],
+   "stages": [
+    {
+     "left_width": 2,
+     "right_width": 3,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 3,
+     "right_width": 3,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        2
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      3,
+      "reads",
+      4
+     ],
+     [
+      3,
+      "reads",
+      5
+     ],
+     [
+      3,
+      "reads",
+      6
+     ],
+     [
+      1,
+      "tested_by",
+      7
+     ],
+     [
+      4,
+      "tested_by",
+      7
+     ],
+     [
+      2,
+      "tested_by",
+      8
+     ],
+     [
+      5,
+      "tested_by",
+      8
+     ],
+     [
+      4,
+      "projected_to",
+      9
+     ],
+     [
+      5,
+      "projected_to",
+      10
+     ],
+     [
+      6,
+      "projected_to",
+      11
+     ],
+     [
+      12,
+      "reads",
+      13
+     ],
+     [
+      9,
+      "published_to",
+      13
+     ],
+     [
+      12,
+      "reads",
+      14
+     ],
+     [
+      10,
+      "published_to",
+      14
+     ],
+     [
+      12,
+      "reads",
+      15
+     ],
+     [
+      11,
+      "published_to",
+      15
+     ],
+     [
+      16,
+      "reads",
+      17
+     ],
+     [
+      16,
+      "reads",
+      18
+     ],
+     [
+      16,
+      "reads",
+      19
+     ],
+     [
+      13,
+      "tested_by",
+      20
+     ],
+     [
+      17,
+      "tested_by",
+      20
+     ],
+     [
+      14,
+      "tested_by",
+      21
+     ],
+     [
+      18,
+      "tested_by",
+      21
+     ],
+     [
+      15,
+      "tested_by",
+      22
+     ],
+     [
+      19,
+      "tested_by",
+      22
+     ],
+     [
+      13,
+      "projected_to",
+      23
+     ],
+     [
+      14,
+      "projected_to",
+      24
+     ],
+     [
+      15,
+      "projected_to",
+      25
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      3
+     ],
+     [
+      12,
+      16
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 37,
+     "left": 3,
+     "right": 2,
+     "output_operation": 0,
+     "source_rule": 143,
+     "consumer_rule": 58,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Get",
+     "lineage": [
+      "f-b924c9ceb250f0f1f1c1"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )"
+    },
+    {
+     "catalog": "raytrace",
+     "unit": 37,
+     "left": 1,
+     "right": 0,
+     "output_operation": 0,
+     "source_rule": 143,
+     "consumer_rule": 58,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Get",
+     "lineage": [
+      "f-b924c9ceb250f0f1f1c1"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )"
+    }
+   ],
+   "split": "heldout",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  },
+  {
+   "id": "t-e494bdbde4e4ac6e",
+   "family_id": "f-9ea63eaf654c97afb7ba",
+   "rule_ids": [
+    "r-b7a4d7de3b66e335",
+    "r-41a0399b7fcd1025"
+   ],
+   "stages": [
+    {
+     "left_width": 1,
+     "right_width": 2,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ]
+     ],
+     "left_sorts": [
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 2,
+     "right_width": 5,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        1,
+        4
+       ],
+       [
+        1,
+        2
+       ]
+      ],
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        3
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "Expr",
+      "___ExprIsResolvedSort",
+      "Expr",
+      "___ExprIsResolvedSort"
+     ],
+     "output_sorts": [
+      "Expr",
+      "Expr",
+      "___ExprIsResolvedSort"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 4
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      2,
+      "reads",
+      3
+     ],
+     [
+      2,
+      "reads",
+      4
+     ],
+     [
+      1,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "tested_by",
+      5
+     ],
+     [
+      3,
+      "projected_to",
+      6
+     ],
+     [
+      4,
+      "projected_to",
+      7
+     ],
+     [
+      8,
+      "reads",
+      9
+     ],
+     [
+      6,
+      "published_to",
+      9
+     ],
+     [
+      8,
+      "reads",
+      10
+     ],
+     [
+      7,
+      "published_to",
+      10
+     ],
+     [
+      11,
+      "reads",
+      12
+     ],
+     [
+      11,
+      "reads",
+      13
+     ],
+     [
+      11,
+      "reads",
+      14
+     ],
+     [
+      11,
+      "reads",
+      15
+     ],
+     [
+      11,
+      "reads",
+      16
+     ],
+     [
+      9,
+      "tested_by",
+      17
+     ],
+     [
+      12,
+      "tested_by",
+      17
+     ],
+     [
+      10,
+      "tested_by",
+      18
+     ],
+     [
+      13,
+      "tested_by",
+      18
+     ],
+     [
+      16,
+      "tested_by",
+      19
+     ],
+     [
+      14,
+      "tested_by",
+      19
+     ],
+     [
+      9,
+      "tested_by",
+      20
+     ],
+     [
+      15,
+      "tested_by",
+      20
+     ],
+     [
+      9,
+      "projected_to",
+      21
+     ],
+     [
+      10,
+      "projected_to",
+      22
+     ],
+     [
+      16,
+      "projected_to",
+      23
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      2
+     ],
+     [
+      8,
+      11
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 59,
+     "left": 3,
+     "right": 16,
+     "output_operation": 1,
+     "source_rule": 143,
+     "consumer_rule": 426,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Single",
+     "lineage": [
+      "f-9ea63eaf654c97afb7ba"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "is-resolved",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((= lhs (Single _x))\n       (ExprIsResolved _x))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )"
+    },
+    {
+     "catalog": "raytrace",
+     "unit": 54,
+     "left": 1,
+     "right": 19,
+     "output_operation": 1,
+     "source_rule": 143,
+     "consumer_rule": 426,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "Single",
+     "lineage": [
+      "f-9ea63eaf654c97afb7ba"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "is-resolved",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rule ((= lhs (Single _x))\n       (ExprIsResolved _x))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )"
+    }
+   ],
+   "split": "heldout",
+   "atomic_seen_in_training": [
+    true,
+    false
+   ]
+  },
+  {
+   "id": "t-fac1aab306c0d07c",
+   "family_id": "f-80dd86bbe230b94c7199",
+   "rule_ids": [
+    "r-b7a4d7de3b66e335",
+    "r-f527d4907ab1a077"
+   ],
+   "stages": [
+    {
+     "left_width": 2,
+     "right_width": 4,
+     "checks": [
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        2,
+        1
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "i64",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "i64",
+      "Expr"
+     ]
+    },
+    {
+     "left_width": 4,
+     "right_width": 3,
+     "checks": [
+      [
+       [
+        0,
+        2
+       ],
+       [
+        2,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        0
+       ],
+       [
+        1,
+        0
+       ]
+      ],
+      [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        1
+       ]
+      ],
+      [
+       [
+        0,
+        3
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     ],
+     "outputs": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ]
+     ],
+     "left_sorts": [
+      "Expr",
+      "i64",
+      "i64",
+      "Expr"
+     ],
+     "right_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ],
+     "output_sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+     ]
+    }
+   ],
+   "graph": {
+    "nodes": [
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "literal",
+      "sort": "integer",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 2
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 3
+     },
+     {
+      "kind": "read",
+      "sort": "none",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "input_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "input_column",
+      "sort": "eq",
+      "ordinal": 2
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "literal",
+      "sort": "integer",
+      "ordinal": 1
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "equality",
+      "sort": "none",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 0
+     },
+     {
+      "kind": "output_column",
+      "sort": "i64",
+      "ordinal": 1
+     },
+     {
+      "kind": "output_column",
+      "sort": "eq",
+      "ordinal": 2
+     }
+    ],
+    "edges": [
+     [
+      0,
+      "reads",
+      1
+     ],
+     [
+      0,
+      "reads",
+      2
+     ],
+     [
+      3,
+      "reads",
+      4
+     ],
+     [
+      3,
+      "reads",
+      5
+     ],
+     [
+      3,
+      "reads",
+      6
+     ],
+     [
+      3,
+      "reads",
+      7
+     ],
+     [
+      1,
+      "tested_by",
+      8
+     ],
+     [
+      4,
+      "tested_by",
+      8
+     ],
+     [
+      2,
+      "tested_by",
+      9
+     ],
+     [
+      5,
+      "tested_by",
+      9
+     ],
+     [
+      11,
+      "tested_by",
+      10
+     ],
+     [
+      6,
+      "tested_by",
+      10
+     ],
+     [
+      4,
+      "projected_to",
+      12
+     ],
+     [
+      5,
+      "projected_to",
+      13
+     ],
+     [
+      6,
+      "projected_to",
+      14
+     ],
+     [
+      7,
+      "projected_to",
+      15
+     ],
+     [
+      16,
+      "reads",
+      17
+     ],
+     [
+      12,
+      "published_to",
+      17
+     ],
+     [
+      16,
+      "reads",
+      18
+     ],
+     [
+      13,
+      "published_to",
+      18
+     ],
+     [
+      16,
+      "reads",
+      19
+     ],
+     [
+      14,
+      "published_to",
+      19
+     ],
+     [
+      16,
+      "reads",
+      20
+     ],
+     [
+      15,
+      "published_to",
+      20
+     ],
+     [
+      21,
+      "reads",
+      22
+     ],
+     [
+      21,
+      "reads",
+      23
+     ],
+     [
+      21,
+      "reads",
+      24
+     ],
+     [
+      19,
+      "tested_by",
+      25
+     ],
+     [
+      26,
+      "tested_by",
+      25
+     ],
+     [
+      17,
+      "tested_by",
+      27
+     ],
+     [
+      22,
+      "tested_by",
+      27
+     ],
+     [
+      18,
+      "tested_by",
+      28
+     ],
+     [
+      23,
+      "tested_by",
+      28
+     ],
+     [
+      20,
+      "tested_by",
+      29
+     ],
+     [
+      24,
+      "tested_by",
+      29
+     ],
+     [
+      17,
+      "projected_to",
+      30
+     ],
+     [
+      18,
+      "projected_to",
+      31
+     ],
+     [
+      20,
+      "projected_to",
+      32
+     ]
+    ],
+    "readouts": [
+     [
+      0,
+      3
+     ],
+     [
+      16,
+      21
+     ]
+    ]
+   },
+   "provenance": [
+    {
+     "catalog": "sum-bits",
+     "unit": 32,
+     "left": 3,
+     "right": 5,
+     "output_operation": 2,
+     "source_rule": 143,
+     "consumer_rule": 137,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "SubTuple",
+     "lineage": [
+      "f-80dd86bbe230b94c7199"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)"
+    },
+    {
+     "catalog": "raytrace",
+     "unit": 32,
+     "left": 1,
+     "right": 2,
+     "output_operation": 2,
+     "source_rule": 143,
+     "consumer_rule": 137,
+     "source_pivot": 0,
+     "consumer_pivot": 0,
+     "published_table": "SubTuple",
+     "lineage": [
+      "f-80dd86bbe230b94c7199"
+     ],
+     "source_ruleset": "always-run",
+     "consumer_ruleset": "always-run",
+     "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+     "consumer_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)"
+    }
+   ],
+   "split": "train",
+   "atomic_seen_in_training": [
+    true,
+    true
+   ]
+  }
+ ],
+ "summary": {
+  "templates": 19,
+  "families": 11,
+  "heldout_families": 2,
+  "by_split": {
+   "train": 12,
+   "heldout": 7
+  },
+  "excluded_longer_units": 34,
+  "longer_units_touching_holdout": 14,
+  "max_source_columns": 7
+ },
+ "excluded_longer_units": [
+  {
+   "catalog": "sum-bits",
+   "unit": 40,
+   "left": 36,
+   "right": 2,
+   "output_operation": 1,
+   "source_rule": 55,
+   "consumer_rule": 58,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 41,
+   "left": 36,
+   "right": 3,
+   "output_operation": 1,
+   "source_rule": 55,
+   "consumer_rule": 143,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 43,
+   "left": 35,
+   "right": 5,
+   "output_operation": 2,
+   "source_rule": 143,
+   "consumer_rule": 137,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "SubTuple",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-80dd86bbe230b94c7199"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 44,
+   "left": 35,
+   "right": 13,
+   "output_operation": 2,
+   "source_rule": 143,
+   "consumer_rule": 145,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "SubTuple",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-79e7a8713da977f35264"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rewrite (SubTuple expr 0 len) expr :when ((= len (tuple-length expr))) :ruleset always-run)",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 45,
+   "left": 32,
+   "right": 2,
+   "output_operation": 1,
+   "source_rule": 137,
+   "consumer_rule": 58,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-80dd86bbe230b94c7199",
+    "f-b924c9ceb250f0f1f1c1"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "consumer_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 46,
+   "left": 32,
+   "right": 3,
+   "output_operation": 1,
+   "source_rule": 137,
+   "consumer_rule": 143,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-80dd86bbe230b94c7199",
+    "f-b924c9ceb250f0f1f1c1"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "consumer_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 47,
+   "left": 32,
+   "right": 7,
+   "output_operation": 2,
+   "source_rule": 137,
+   "consumer_rule": 55,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Single",
+   "lineage": [
+    "f-80dd86bbe230b94c7199",
+    "f-97974ed38d14a676f2ba"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "consumer_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 48,
+   "left": 41,
+   "right": 5,
+   "output_operation": 2,
+   "source_rule": 143,
+   "consumer_rule": 137,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "SubTuple",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-80dd86bbe230b94c7199",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 49,
+   "left": 41,
+   "right": 2,
+   "output_operation": 0,
+   "source_rule": 143,
+   "consumer_rule": 58,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053",
+    "f-b924c9ceb250f0f1f1c1"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 50,
+   "left": 41,
+   "right": 3,
+   "output_operation": 0,
+   "source_rule": 143,
+   "consumer_rule": 143,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053",
+    "f-b924c9ceb250f0f1f1c1"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 51,
+   "left": 41,
+   "right": 13,
+   "output_operation": 2,
+   "source_rule": 143,
+   "consumer_rule": 145,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "SubTuple",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-79e7a8713da977f35264",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rewrite (SubTuple expr 0 len) expr :when ((= len (tuple-length expr))) :ruleset always-run)",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 52,
+   "left": 41,
+   "right": 15,
+   "output_operation": 1,
+   "source_rule": 143,
+   "consumer_rule": 155,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Single",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053",
+    "f-9ea63eaf654c97afb7ba"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((= expr (Single x))\n       (= sum (Expr-size x)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 53,
+   "left": 41,
+   "right": 28,
+   "output_operation": 1,
+   "source_rule": 143,
+   "consumer_rule": 105,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Single",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053",
+    "f-9ea63eaf654c97afb7ba"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Single _x)\n       (ExprIsPure _x))\n      ((ExprIsPure (Single _x)))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 54,
+   "left": 41,
+   "right": 7,
+   "output_operation": 1,
+   "source_rule": 143,
+   "consumer_rule": 55,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Single",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 57,
+   "left": 41,
+   "right": 26,
+   "output_operation": 0,
+   "source_rule": 143,
+   "consumer_rule": 103,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-81a8f0bef31c48012efc",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Get _tup _i)\n       (ExprIsPure _tup))\n      ((ExprIsPure (Get _tup _i)))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 60,
+   "left": 32,
+   "right": 15,
+   "output_operation": 2,
+   "source_rule": 137,
+   "consumer_rule": 155,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Single",
+   "lineage": [
+    "f-80dd86bbe230b94c7199",
+    "f-c80650bbd3b021774e14"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "consumer_rule_text": "(rule ((= expr (Single x))\n       (= sum (Expr-size x)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "sum-bits",
+   "unit": 61,
+   "left": 32,
+   "right": 28,
+   "output_operation": 2,
+   "source_rule": 137,
+   "consumer_rule": 105,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Single",
+   "lineage": [
+    "f-80dd86bbe230b94c7199",
+    "f-c80650bbd3b021774e14"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "consumer_rule_text": "(rule ((Single _x)\n       (ExprIsPure _x))\n      ((ExprIsPure (Single _x)))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 40,
+   "left": 36,
+   "right": 0,
+   "output_operation": 1,
+   "source_rule": 55,
+   "consumer_rule": 58,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 41,
+   "left": 36,
+   "right": 1,
+   "output_operation": 1,
+   "source_rule": 55,
+   "consumer_rule": 143,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 42,
+   "left": 34,
+   "right": 2,
+   "output_operation": 2,
+   "source_rule": 143,
+   "consumer_rule": 137,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "SubTuple",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-80dd86bbe230b94c7199"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 43,
+   "left": 34,
+   "right": 10,
+   "output_operation": 2,
+   "source_rule": 143,
+   "consumer_rule": 145,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "SubTuple",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-79e7a8713da977f35264"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rewrite (SubTuple expr 0 len) expr :when ((= len (tuple-length expr))) :ruleset always-run)",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 46,
+   "left": 32,
+   "right": 0,
+   "output_operation": 1,
+   "source_rule": 137,
+   "consumer_rule": 58,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-80dd86bbe230b94c7199",
+    "f-b924c9ceb250f0f1f1c1"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "consumer_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 47,
+   "left": 32,
+   "right": 1,
+   "output_operation": 1,
+   "source_rule": 137,
+   "consumer_rule": 143,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-80dd86bbe230b94c7199",
+    "f-b924c9ceb250f0f1f1c1"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "consumer_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 48,
+   "left": 41,
+   "right": 2,
+   "output_operation": 2,
+   "source_rule": 143,
+   "consumer_rule": 137,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "SubTuple",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-80dd86bbe230b94c7199",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 49,
+   "left": 41,
+   "right": 10,
+   "output_operation": 2,
+   "source_rule": 143,
+   "consumer_rule": 145,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "SubTuple",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-79e7a8713da977f35264",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rewrite (SubTuple expr 0 len) expr :when ((= len (tuple-length expr))) :ruleset always-run)",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 50,
+   "left": 41,
+   "right": 0,
+   "output_operation": 0,
+   "source_rule": 143,
+   "consumer_rule": 58,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053",
+    "f-b924c9ceb250f0f1f1c1"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 51,
+   "left": 41,
+   "right": 1,
+   "output_operation": 0,
+   "source_rule": 143,
+   "consumer_rule": 143,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053",
+    "f-b924c9ceb250f0f1f1c1"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 52,
+   "left": 41,
+   "right": 4,
+   "output_operation": 1,
+   "source_rule": 143,
+   "consumer_rule": 55,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Single",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 53,
+   "left": 41,
+   "right": 13,
+   "output_operation": 1,
+   "source_rule": 143,
+   "consumer_rule": 155,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Single",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053",
+    "f-9ea63eaf654c97afb7ba"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((= expr (Single x))\n       (= sum (Expr-size x)))\n      ((set (Expr-size expr) sum))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 55,
+   "left": 41,
+   "right": 15,
+   "output_operation": 1,
+   "source_rule": 143,
+   "consumer_rule": 105,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Single",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-940f87087cd0e1bda053",
+    "f-9ea63eaf654c97afb7ba"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Single _x)\n       (ExprIsPure _x))\n      ((ExprIsPure (Single _x)))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 56,
+   "left": 41,
+   "right": 11,
+   "output_operation": 0,
+   "source_rule": 143,
+   "consumer_rule": 103,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-81a8f0bef31c48012efc",
+    "f-940f87087cd0e1bda053"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((Get _tup _i)\n       (ExprIsPure _tup))\n      ((ExprIsPure (Get _tup _i)))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 57,
+   "left": 32,
+   "right": 4,
+   "output_operation": 2,
+   "source_rule": 137,
+   "consumer_rule": 55,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Single",
+   "lineage": [
+    "f-80dd86bbe230b94c7199",
+    "f-97974ed38d14a676f2ba"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "consumer_rule_text": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+   "has_heldout_ancestor": false
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 61,
+   "left": 38,
+   "right": 19,
+   "output_operation": 1,
+   "source_rule": 143,
+   "consumer_rule": 426,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Single",
+   "lineage": [
+    "f-9ea63eaf654c97afb7ba",
+    "f-b924c9ceb250f0f1f1c1"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "is-resolved",
+   "source_rule_text": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "consumer_rule_text": "(rule ((= lhs (Single _x))\n       (ExprIsResolved _x))\n      ((ExprIsResolved lhs))\n        :ruleset is-resolved )",
+   "has_heldout_ancestor": true
+  },
+  {
+   "catalog": "raytrace",
+   "unit": 63,
+   "left": 42,
+   "right": 0,
+   "output_operation": 1,
+   "source_rule": 137,
+   "consumer_rule": 58,
+   "source_pivot": 0,
+   "consumer_pivot": 0,
+   "published_table": "Get",
+   "lineage": [
+    "f-6d13267e1cfa61a2463a",
+    "f-80dd86bbe230b94c7199",
+    "f-b924c9ceb250f0f1f1c1"
+   ],
+   "source_ruleset": "always-run",
+   "consumer_ruleset": "always-run",
+   "source_rule_text": "(rewrite (SubTuple expr x 1) (Single (Get expr x)) :ruleset always-run)",
+   "consumer_rule_text": "(rule ((Get x i))\n      ((Add-Gets x x 0))\n        :ruleset always-run )",
+   "has_heldout_ancestor": true
+  }
+ ]
+}
