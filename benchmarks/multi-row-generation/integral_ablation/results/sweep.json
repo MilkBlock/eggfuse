@@ -1,0 +1,122 @@
+{
+ "rule-134/source": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-134/primary": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-134/integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-134/learned_integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-134/stable_integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-135/source": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-135/primary": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-135/integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-135/learned_integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-135/stable_integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-143/source": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-143/primary": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-143/integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-143/learned_integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-143/stable_integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-266/source": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-266/primary": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-266/integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-266/learned_integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-266/stable_integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-267/source": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-267/primary": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-267/integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-267/learned_integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-267/stable_integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-580/source": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-580/primary": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-580/integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-580/learned_integral": {
+  "cases": 9,
+  "full_histories": 324
+ },
+ "rule-580/stable_integral": {
+  "cases": 9,
+  "full_histories": 324
+ }
+}

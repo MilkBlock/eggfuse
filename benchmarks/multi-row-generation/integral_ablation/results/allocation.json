@@ -1,0 +1,632 @@
+[
+ {
+  "mode": "source",
+  "fixed": false,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 399835136,
+    "process_peak_rss": 399835136,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 399835136,
+    "process_peak_rss": 399835136,
+    "mps_tensor": 32035328,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 3670016
+   },
+   {
+    "process_rss": 399835136,
+    "process_peak_rss": 399835136,
+    "mps_tensor": 39440896,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 11010048
+   },
+   {
+    "process_rss": 399835136,
+    "process_peak_rss": 399835136,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "source",
+  "fixed": true,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 400179200,
+    "process_peak_rss": 400179200,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 400179200,
+    "process_peak_rss": 400179200,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 400179200,
+    "process_peak_rss": 400179200,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 400179200,
+    "process_peak_rss": 400179200,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "primary",
+  "fixed": false,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 401522688,
+    "process_peak_rss": 401522688,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 401522688,
+    "process_peak_rss": 401522688,
+    "mps_tensor": 35705344,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 7340032
+   },
+   {
+    "process_rss": 401522688,
+    "process_peak_rss": 401522688,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 401522688,
+    "process_peak_rss": 401522688,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "primary",
+  "fixed": true,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 400474112,
+    "process_peak_rss": 400474112,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 400474112,
+    "process_peak_rss": 400474112,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 400474112,
+    "process_peak_rss": 400474112,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 400474112,
+    "process_peak_rss": 400474112,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "integral",
+  "fixed": false,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 399949824,
+    "process_peak_rss": 399949824,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 399949824,
+    "process_peak_rss": 399949824,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399949824,
+    "process_peak_rss": 399949824,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399949824,
+    "process_peak_rss": 399949824,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "integral",
+  "fixed": true,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 400687104,
+    "process_peak_rss": 400687104,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 400687104,
+    "process_peak_rss": 400687104,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 400687104,
+    "process_peak_rss": 400687104,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 400687104,
+    "process_peak_rss": 400687104,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "primary",
+  "fixed": true,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 400998400,
+    "process_peak_rss": 400998400,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 400998400,
+    "process_peak_rss": 400998400,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 400998400,
+    "process_peak_rss": 400998400,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 400998400,
+    "process_peak_rss": 400998400,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "primary",
+  "fixed": false,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 399704064,
+    "process_peak_rss": 399704064,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 399704064,
+    "process_peak_rss": 399704064,
+    "mps_tensor": 35705344,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 7340032
+   },
+   {
+    "process_rss": 399704064,
+    "process_peak_rss": 399704064,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399704064,
+    "process_peak_rss": 399704064,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "integral",
+  "fixed": true,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 400457728,
+    "process_peak_rss": 400457728,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 400457728,
+    "process_peak_rss": 400457728,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 400457728,
+    "process_peak_rss": 400457728,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 400457728,
+    "process_peak_rss": 400457728,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "integral",
+  "fixed": false,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 399130624,
+    "process_peak_rss": 399130624,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 399130624,
+    "process_peak_rss": 399130624,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399130624,
+    "process_peak_rss": 399130624,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399130624,
+    "process_peak_rss": 399130624,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "source",
+  "fixed": true,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 401293312,
+    "process_peak_rss": 401293312,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 401293312,
+    "process_peak_rss": 401293312,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 401293312,
+    "process_peak_rss": 401293312,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 401293312,
+    "process_peak_rss": 401293312,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "source",
+  "fixed": false,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 399769600,
+    "process_peak_rss": 399769600,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 399769600,
+    "process_peak_rss": 399769600,
+    "mps_tensor": 32035328,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 3670016
+   },
+   {
+    "process_rss": 399769600,
+    "process_peak_rss": 399769600,
+    "mps_tensor": 39440896,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 11010048
+   },
+   {
+    "process_rss": 399769600,
+    "process_peak_rss": 399769600,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "integral",
+  "fixed": false,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 399818752,
+    "process_peak_rss": 399818752,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 399818752,
+    "process_peak_rss": 399818752,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399818752,
+    "process_peak_rss": 399818752,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399818752,
+    "process_peak_rss": 399818752,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "integral",
+  "fixed": true,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 399736832,
+    "process_peak_rss": 399736832,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 399736832,
+    "process_peak_rss": 399736832,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399736832,
+    "process_peak_rss": 399736832,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399736832,
+    "process_peak_rss": 399736832,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "source",
+  "fixed": false,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 400588800,
+    "process_peak_rss": 400588800,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 400588800,
+    "process_peak_rss": 400588800,
+    "mps_tensor": 32035328,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 3670016
+   },
+   {
+    "process_rss": 400588800,
+    "process_peak_rss": 400588800,
+    "mps_tensor": 39440896,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 11010048
+   },
+   {
+    "process_rss": 400588800,
+    "process_peak_rss": 400588800,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "source",
+  "fixed": true,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 399409152,
+    "process_peak_rss": 399409152,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 399409152,
+    "process_peak_rss": 399409152,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399409152,
+    "process_peak_rss": 399409152,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399409152,
+    "process_peak_rss": 399409152,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "primary",
+  "fixed": false,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 399130624,
+    "process_peak_rss": 399130624,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 399130624,
+    "process_peak_rss": 399130624,
+    "mps_tensor": 35705344,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 7340032
+   },
+   {
+    "process_rss": 399130624,
+    "process_peak_rss": 399130624,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 399130624,
+    "process_peak_rss": 399130624,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ },
+ {
+  "mode": "primary",
+  "fixed": true,
+  "graphs": 16384,
+  "stages": [
+   {
+    "process_rss": 401719296,
+    "process_peak_rss": 401719296,
+    "mps_tensor": 28365312,
+    "mps_driver": 51101696,
+    "arena_page_bytes": 0
+   },
+   {
+    "process_rss": 401719296,
+    "process_peak_rss": 401719296,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 401719296,
+    "process_peak_rss": 401719296,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   },
+   {
+    "process_rss": 401719296,
+    "process_peak_rss": 401719296,
+    "mps_tensor": 43110912,
+    "mps_driver": 84656128,
+    "arena_page_bytes": 14680064
+   }
+  ]
+ }
+]
