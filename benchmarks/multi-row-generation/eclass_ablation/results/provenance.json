@@ -1,0 +1,322 @@
+{
+  "artifact_root": "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+  "corpus_commit": "71403614",
+  "hardware": "Apple M3 Max",
+  "mps_fallback": "0",
+  "training_jobs": [
+    "1063",
+    "1064",
+    "1065",
+    "1066",
+    "1067",
+    "1068",
+    "1069",
+    "1070"
+  ],
+  "evaluation_jobs": {
+    "primary": 1071,
+    "cpu_replay": 1073,
+    "posthoc_edge_erasure": 1074
+  },
+  "jobs": [
+    {
+      "id": "1052",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "target/release/examples/real_completion_dataset",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-rule-replays-input.json",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-rule-replays.json"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1052.log"
+    },
+    {
+      "id": "1053",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/test_encoder.py"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1053.log"
+    },
+    {
+      "id": "1054",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "-c",
+        "\nimport sys,json\nsys.path.insert(0,\"benchmarks/multi-row-generation/eclass_ablation\")\nimport torch\nfrom encoder import EClassSchema,EClassEncoder,select_state\nfrom test_encoder import fixture\nt=fixture();schema=EClassSchema([t]);enc=EClassEncoder(schema).to(\"mps\");records=[]\nfor arm,mode in [(\"explicit\",\"physical\"),(\"singleton\",\"physical\"),(\"pairwise\",\"physical\"),(\"incidence\",\"physical\"),(\"pairwise\",\"matched\"),(\"incidence\",\"matched\")]:\n bank=schema.bank(t,arm,\"mps\",mode);enc.train();out=enc.encode_bank(bank);ports=select_state(out,torch.tensor([[0,1],[1,1]],device=\"mps\"),torch.tensor([[1,0],[1,1]],device=\"mps\"));loss=ports[...,0].mean();enc.zero_grad();loss.backward();torch.mps.synchronize();assert enc.role.weight.grad.abs().sum().item()>0\n enc.eval()\n with torch.inference_mode():\n  a=enc.frozen_bank(bank);b=enc.frozen_bank(bank);assert a is b\n records.append(dict(arm=arm,transport=mode,bank=list(out.shape),aliases=bank.views[-1].stats))\nprint(json.dumps(records))\n"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1054.log"
+    },
+    {
+      "id": "1055",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "target/release/examples/real_completion_dataset",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-rule-replays-input-v2.json",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-rule-replays-v2.json"
+      ],
+      "exit_code": 1,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1055.log"
+    },
+    {
+      "id": "1056",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "target/release/examples/real_completion_dataset",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-rule-replays-input-v2.json",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-rule-replays-v2.json"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1056.log"
+    },
+    {
+      "id": "1057",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/test_encoder.py"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1057.log"
+    },
+    {
+      "id": "1058",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/verify_encoder_corpus.py",
+        "benchmarks/multi-row-generation/eclass_ablation/corpus/manifest.json",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-encoder-corpus-20261119.json",
+        "--device",
+        "mps"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1058.log"
+    },
+    {
+      "id": "1059",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "target/release/examples/real_completion_dataset",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-extra-replays-input.json",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-extra-replays.json"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1059.log"
+    },
+    {
+      "id": "1060",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "target/release/examples/real_completion_dataset",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-all-events-input.json",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-all-events-output.json"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1060.log"
+    },
+    {
+      "id": "1061",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/data/test_data.py"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1061.log"
+    },
+    {
+      "id": "1062",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/data/freeze.py",
+        "/Volumes/EggFuseWorkspace/worktrees/eggfuse/benchmarks/multi-row-generation/eclass_ablation/data/manifest.json"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1062.log"
+    },
+    {
+      "id": "1063",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+        "explicit",
+        "1703"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1063.log"
+    },
+    {
+      "id": "1064",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+        "explicit",
+        "1709"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1064.log"
+    },
+    {
+      "id": "1065",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+        "singleton",
+        "1703"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1065.log"
+    },
+    {
+      "id": "1066",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+        "singleton",
+        "1709"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1066.log"
+    },
+    {
+      "id": "1067",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+        "pairwise",
+        "1703"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1067.log"
+    },
+    {
+      "id": "1068",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+        "pairwise",
+        "1709"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1068.log"
+    },
+    {
+      "id": "1069",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+        "incidence",
+        "1703"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1069.log"
+    },
+    {
+      "id": "1070",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+        "incidence",
+        "1709"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1070.log"
+    },
+    {
+      "id": "1071",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/evaluate.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1071.log"
+    },
+    {
+      "id": "1072",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/data/test_data.py"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1072.log"
+    },
+    {
+      "id": "1073",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/data/replay.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1073.log"
+    },
+    {
+      "id": "1074",
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/eclass_ablation/erase_certificate.py",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119"
+      ],
+      "exit_code": 0,
+      "log": "/Users/mineralsteins/.local/state/eggfuse-jobs/job-1074.log"
+    }
+  ],
+  "files": {
+    "results.json": "0022a557f3d057812538903302ed2368279fd216d7a5e7ea6cede13e1d802aea",
+    "paired-controls.json": "83aa18af5fdaadfbb8c04417fe8de3108833dcf1e60ece259366d29afaa12868",
+    "erase-certificate.json": "2e5f2c0698dc9bc44398f42fa999a7e2c42d683dcf9e17f184e485d37dd9f833",
+    "manifest.json": "d6430fa2704afe3527ef0c2a4a7d11816b1b6df977ce35430145ff9d44116f61"
+  },
+  "verification": "All eight frozen weights match their at-fit SHA-256. MPS inference is followed by independent raw lineage replay of 24 held-out model/template traces. Results measure bounded interface probes; cross-rule program replays supply the certified partitions."
+}

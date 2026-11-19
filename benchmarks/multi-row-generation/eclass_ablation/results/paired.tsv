@@ -1,0 +1,9 @@
+seed	baseline	comparison	gained	lost	delta	group_bootstrap_low	group_bootstrap_high
+1703	explicit	singleton	49	19	30	9.0	52.0
+1703	explicit	pairwise	37	25	12	-8.0	34.0
+1703	singleton	incidence	26	46	-20	-43.0	2.03
+1703	pairwise	incidence	33	35	-2	-22.0	18.0
+1709	explicit	singleton	16	23	-7	-25.0	13.0
+1709	explicit	pairwise	39	15	24	7.0	41.0
+1709	singleton	incidence	44	14	30	13.0	47.0
+1709	pairwise	incidence	32	33	-1	-19.0	17.0
