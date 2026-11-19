@@ -1,0 +1,42 @@
+{
+  "arm": "aux",
+  "seed": 1703,
+  "steps": 2,
+  "device": "mps",
+  "torch_version": "2.15.0",
+  "initial_loss": 4.1214118003845215,
+  "historical_first_loss": 4.121411323547363,
+  "final_loss": 3.5474979877471924,
+  "initial_sha256": "a36a275604675d9734411d6aba09170cfad2e78750e9e956266e9d62ca5e04e6",
+  "final_sha256": "d1e4285c5c74f6976ee3feb8b6b6095cf51e18b1ecd211df7f6f8b08cfacc0ea",
+  "plan_sha256": "70298ee93f61b440e9729b4743f52059004a65238d63e9a7f2ce31eb2f1eb44d",
+  "data_sha256": "3944fbdfe07090cdf3cea4f16849be8fe9a3ee86686143092fcebc99849e8a1e",
+  "changed_tensors": 135,
+  "total_tensors": 139,
+  "masks": [
+    "none",
+    "parents",
+    "parents_latent"
+  ],
+  "decode_reload_equal": true,
+  "mask_keeps_first_stage_identical": true,
+  "output_shapes": {
+    "pair_token": [
+      1,
+      8,
+      90
+    ],
+    "make_pointers": [
+      1,
+      8,
+      2
+    ],
+    "finish_pointers": [
+      1,
+      8,
+      2
+    ]
+  },
+  "forbidden_imports_loaded": false,
+  "smoke_scope": "two optimizer updates and serialization, no accuracy claim"
+}

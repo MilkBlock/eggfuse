@@ -1,0 +1,14 @@
+{
+  "left_collision": {
+    "nonempty_complete_graphs": 43,
+    "nonempty_graphs": 256,
+    "duplicates": 3,
+    "missing": 276
+  },
+  "right_collision": {
+    "nonempty_complete_graphs": 30,
+    "nonempty_graphs": 256,
+    "duplicates": 5,
+    "missing": 288
+  }
+}

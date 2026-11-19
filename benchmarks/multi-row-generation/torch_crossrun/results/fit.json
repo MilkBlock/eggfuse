@@ -1,0 +1,47 @@
+{
+  "arm": "aux",
+  "seed": 1703,
+  "steps": 2000,
+  "batch": 32,
+  "device": "mps",
+  "torch_version": "2.15.0",
+  "history": [
+    {
+      "step": 1,
+      "loss": 4.1214118003845215,
+      "seconds": 0.35220287495758384
+    },
+    {
+      "step": 501,
+      "loss": 2.2921319007873535,
+      "seconds": 58.11978804098908
+    },
+    {
+      "step": 1001,
+      "loss": 2.273843288421631,
+      "seconds": 118.0732632909203
+    },
+    {
+      "step": 1501,
+      "loss": 1.7444267272949219,
+      "seconds": 177.28637774998788
+    },
+    {
+      "step": 2000,
+      "loss": 2.233225107192993,
+      "seconds": 238.53590183297638
+    }
+  ],
+  "learning_rate": 0.0003,
+  "optimizer": "Adam",
+  "betas": [
+    0.9,
+    0.999
+  ],
+  "eps": 1e-08,
+  "bias_correction": false,
+  "initial_sha256": "a36a275604675d9734411d6aba09170cfad2e78750e9e956266e9d62ca5e04e6",
+  "model_sha256": "88678ab0bad881669839d4ce1ff5c35dfdc834d153427a68406662e24cd4059a",
+  "plan_sha256": "70298ee93f61b440e9729b4743f52059004a65238d63e9a7f2ce31eb2f1eb44d",
+  "training_input_sha256": "3944fbdfe07090cdf3cea4f16849be8fe9a3ee86686143092fcebc99849e8a1e"
+}

@@ -1,0 +1,4 @@
+# Validated environment for the independent PyTorch scripts and weight conversion.
+torch==2.15.0
+numpy==2.5.4
+safetensors>=0.4

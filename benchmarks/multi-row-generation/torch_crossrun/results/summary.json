@@ -1,0 +1,81 @@
+{
+  "graph_evaluations": 9216,
+  "timed_evaluations": 1152,
+  "decision_differences": 0,
+  "frozen_latent_max_absolute_difference": 0.0002033710479736328,
+  "unmasked_panel_ratios_median": 1.4805358086548228,
+  "unmasked_timings": [
+    {
+      "panel": "learned-1703-left_collision-none",
+      "torch": 13.857791500000001,
+      "mlx": 9.080792,
+      "ratio": 1.5260553815129783
+    },
+    {
+      "panel": "learned-1703-right_collision-none",
+      "torch": 14.032125,
+      "mlx": 8.998875,
+      "ratio": 1.5593199149893737
+    },
+    {
+      "panel": "learned-1709-left_collision-none",
+      "torch": 13.723229499999999,
+      "mlx": 9.1176045,
+      "ratio": 1.5051354223579227
+    },
+    {
+      "panel": "learned-1709-right_collision-none",
+      "torch": 13.891687000000001,
+      "mlx": 8.791833,
+      "ratio": 1.5800672055531537
+    },
+    {
+      "panel": "static-1703-left_collision-none",
+      "torch": 14.0600205,
+      "mlx": 9.5316875,
+      "ratio": 1.4750819831220863
+    },
+    {
+      "panel": "static-1703-right_collision-none",
+      "torch": 13.8900835,
+      "mlx": 9.339479,
+      "ratio": 1.4872439351274305
+    },
+    {
+      "panel": "static-1709-left_collision-none",
+      "torch": 14.3389995,
+      "mlx": 9.806333500000001,
+      "ratio": 1.4622182184605488
+    },
+    {
+      "panel": "static-1709-right_collision-none",
+      "torch": 14.6197295,
+      "mlx": 10.236625,
+      "ratio": 1.4281786721697824
+    },
+    {
+      "panel": "aux-1703-left_collision-none",
+      "torch": 14.366021,
+      "mlx": 9.667645499999999,
+      "ratio": 1.4859896341875591
+    },
+    {
+      "panel": "aux-1703-right_collision-none",
+      "torch": 15.9677915,
+      "mlx": 10.9290835,
+      "ratio": 1.461036645936505
+    },
+    {
+      "panel": "aux-1709-left_collision-none",
+      "torch": 13.855687,
+      "mlx": 9.4536455,
+      "ratio": 1.465644866839993
+    },
+    {
+      "panel": "aux-1709-right_collision-none",
+      "torch": 13.945729499999999,
+      "mlx": 9.5586665,
+      "ratio": 1.4589618227605283
+    }
+  ]
+}

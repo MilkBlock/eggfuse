@@ -1,0 +1,1 @@
+{"same_tensor": true, "device": "mps:0", "shape": [1, 8, 90], "finish_to_make_gradient": true, "loaded_eggfuse": false, "loaded_mlx": false}

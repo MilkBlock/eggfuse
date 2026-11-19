@@ -100,3 +100,7 @@ IID 4×2 完整图为 63→78、55→156、84→138、115→101；收益不稳�
 [两规则实验](../benchmarks/multi-row-generation/crossrun/README.md) 已将编译器的静态字段投影接入 GPU。Run make 发布的实际 Pair token 接入 Run finish，后者还读取 Request。冻结碰撞样本让同字段、异父的生产者必须被区分。CPU 对三个面板的 768 张图均执行了两条真实规则并核验 Run 边界。碰撞组 512 张非空图的严格通过数，原版为 49/41，纯投影为 39/37，加训练期字段监督为 65/67。仅屏蔽父引用后，辅助监督版本为 4/1。完整覆盖、跨 row 并行收益和更广的 egraph 语义仍待验证。
 
 [Python 包](../python/README.md) 提供训练所需的可微模型、编译入口与 GPU 推理接口。[训练与推理示例](../benchmarks/multi-row-generation/crossrun/examples/README.md) 记录外部安装、训练和复核方法。新增八个真正可运行的 Bril 程序已有原生 Pass 3 输入，可作为后续跨源码家族研究的材料。
+
+## PyTorch MPS 迁移，2026-11-19
+
+[训练、推理与转换代码](../benchmarks/multi-row-generation/torch_crossrun/README.md) 独立运行在 PyTorch。EggFuse 0.2 通过外部命令编译计划和审计输出。六个冻结模型在左右父碰撞留出集及三种父引用可见性设置下，两次 Run 的激活、引用和字段与 MLX 完全相同。两端复现相同的整图通过数、重复及遗漏。连续 latent 的最大绝对差为 2.03×10⁻⁴。开放父引用时，同机 eager 计时的 12 个配对条件中，PyTorch MPS 与 MLX Metal 耗时比的中位数为 1.48。该结果保留历史神经模型的能力与失败样本；跨 row 任务认领和完整覆盖仍是开放问题。

@@ -1,5 +1,7 @@
 # 用 Python 训练和推理
 
+本页记录 EggFuse 0.1 的冻结 MLX 实验。当前训练、推理及 MPS 复核见 [PyTorch 入口](../../torch_crossrun/README.md)。复现本页旧命令时请使用 0.1 wheel 与独立环境。
+
 `train.py` 使用 `import eggfuse` 构造两条规则的模型，计算激活、父引用和字段的损失，在 Metal 上执行反向传播与 Adam 更新，保存 `model.safetensors` 和 `fit.json`。`infer.py` 用相同的编译计划加载这些权重，执行 make 和 finish，一次返回两个 Run 的实际输出。
 
 在 Apple Silicon 的 MLX 环境安装本仓库的 Python 包。示例采用 NumPy，完整实验使用 MLX 0.32.4 和 NumPy 2.5.4。下面的命令可从任意工作目录执行。`repo` 指向当前 checkout，`artifacts` 指向存有前一轮反馈模型的实验目录。
