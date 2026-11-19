@@ -1,0 +1,205 @@
+{
+ "sum-bits": {
+  "rows": 223,
+  "ordered_arguments": 342,
+  "multi_member": 78,
+  "instances": 145,
+  "templates": 74,
+  "unknown_original_writer": true,
+  "uncovered": 0,
+  "ambiguous_result_classes": [
+   {
+    "initial": {
+     "sort": "Unit",
+     "value": 0
+    },
+    "members": [
+     [
+      46,
+      1,
+      "CellSpineView3"
+     ],
+     [
+      48,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      49,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      50,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      51,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      52,
+      1,
+      "CellSpineView19"
+     ]
+    ]
+   },
+   {
+    "initial": {
+     "eq": "Gpu(7)",
+     "sort": "Assumption"
+    },
+    "members": [
+     [
+      66,
+      0,
+      "DUMMYCTX"
+     ],
+     [
+      82,
+      0,
+      "InFunc"
+     ]
+    ]
+   }
+  ],
+  "union_classes": [
+   {
+    "eq": "Gpu(1)",
+    "sort": "BaseType"
+   },
+   {
+    "eq": "Gpu(2)",
+    "sort": "BaseType"
+   }
+  ],
+  "changed_port_resolutions": 3,
+  "roundtrip_exact": true
+ },
+ "dot-product": {
+  "rows": 320,
+  "ordered_arguments": 583,
+  "multi_member": 117,
+  "instances": 203,
+  "templates": 74,
+  "unknown_original_writer": true,
+  "uncovered": 0,
+  "ambiguous_result_classes": [
+   {
+    "initial": {
+     "sort": "Unit",
+     "value": 0
+    },
+    "members": [
+     [
+      55,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      56,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      57,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      58,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      59,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      60,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      61,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      62,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      63,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      64,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      65,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      66,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      67,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      68,
+      1,
+      "CellSpineView1"
+     ],
+     [
+      69,
+      1,
+      "CellSpineView29"
+     ]
+    ]
+   },
+   {
+    "initial": {
+     "eq": "Gpu(7)",
+     "sort": "Assumption"
+    },
+    "members": [
+     [
+      94,
+      0,
+      "DUMMYCTX"
+     ],
+     [
+      124,
+      0,
+      "InFunc"
+     ]
+    ]
+   }
+  ],
+  "union_classes": [
+   {
+    "eq": "Gpu(336)",
+    "sort": "BaseType"
+   },
+   {
+    "eq": "Gpu(1)",
+    "sort": "BaseType"
+   }
+  ],
+  "changed_port_resolutions": 10,
+  "roundtrip_exact": true
+ }
+}

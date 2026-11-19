@@ -1,0 +1,802 @@
+{
+ "shared_initial": true,
+ "scope": "GPU ingress and experimental Pass 3; full acceptance incomplete",
+ "cases": {
+  "sum-bits": {
+   "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+   "source_sha256": "29b8396e56c0a08bc11ca9e5d52afdc25c138e5e4731d2780484bb004b3686d1",
+   "ingress": {
+    "rows": 129,
+    "ordered_arguments": 145,
+    "multi_member": 40,
+    "instances": 89,
+    "templates": 46,
+    "unknown_original_writer": true,
+    "uncovered": 0,
+    "ambiguous_result_classes": [
+     {
+      "initial": {
+       "eq": "Value(48)",
+       "sort": "Assumption"
+      },
+      "members": [
+       [
+        36,
+        0,
+        "DUMMYCTX"
+       ],
+       [
+        39,
+        0,
+        "InFunc"
+       ]
+      ]
+     }
+    ],
+    "union_classes": [
+     {
+      "eq": "Value(50)",
+      "sort": "BaseType"
+     },
+     {
+      "eq": "Value(61)",
+      "sort": "BaseType"
+     }
+    ],
+    "changed_port_resolutions": 2,
+    "roundtrip_exact": true
+   },
+   "input_matrix": {
+    "input/learned": {
+     "instances": 89,
+     "templates": 46,
+     "fully_checked_runs": 3,
+     "first_run_facts": 223
+    },
+    "input/exact": {
+     "instances": 89,
+     "templates": 46,
+     "fully_checked_runs": 3,
+     "first_run_facts": 223
+    },
+    "single/learned": {
+     "instances": 129,
+     "templates": 50,
+     "fully_checked_runs": 3,
+     "first_run_facts": 223
+    },
+    "single/exact": {
+     "instances": 129,
+     "templates": 50,
+     "fully_checked_runs": 3,
+     "first_run_facts": 223
+    }
+   },
+   "rows": {
+    "1": {
+     "completed": 1428,
+     "device_done": true,
+     "reference_runs": 1428,
+     "device_rows": 4045,
+     "reference_rows": 4045,
+     "full_typed_graph_equal": false,
+     "first_schedule_difference": null,
+     "first_rhs_count_difference": null,
+     "first_write_count_difference": 122,
+     "tokens": [
+      7265,
+      0
+     ],
+     "cross_row_duplicates": 0,
+     "within_row_duplicates": 0,
+     "first_required_continuation": 9,
+     "cpu_continuations": 2098,
+     "gpu_continuations": 0,
+     "measured_inference_ms": 19917.934792,
+     "measured_cli_work_ms": 20123.399542,
+     "acceptance": "incomplete",
+     "extra_by_table": {
+      "Smaller": 1,
+      "CellSpineView9": 1
+     },
+     "missing_by_table": {
+      "CellSpineView9": 1,
+      "Smaller": 1
+     }
+    },
+    "2": {
+     "completed": 1428,
+     "device_done": true,
+     "reference_runs": 1428,
+     "device_rows": 4045,
+     "reference_rows": 4045,
+     "full_typed_graph_equal": false,
+     "first_schedule_difference": null,
+     "first_rhs_count_difference": null,
+     "first_write_count_difference": 122,
+     "tokens": [
+      3747,
+      3518
+     ],
+     "cross_row_duplicates": 0,
+     "within_row_duplicates": 0,
+     "first_required_continuation": 9,
+     "cpu_continuations": 2098,
+     "gpu_continuations": 0,
+     "measured_inference_ms": 11085.359417,
+     "measured_cli_work_ms": 11275.63325,
+     "acceptance": "incomplete",
+     "extra_by_table": {
+      "Smaller": 1,
+      "CellSpineView9": 1
+     },
+     "missing_by_table": {
+      "CellSpineView9": 1,
+      "Smaller": 1
+     },
+     "same_as_one_row": true
+    }
+   },
+   "prefix": [
+    {
+     "rhs_set": true,
+     "run": 1,
+     "set": "initialization",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      1,
+      0
+     ],
+     "distinct": true,
+     "facts": 223
+    },
+    {
+     "rhs_set": true,
+     "run": 2,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      1,
+      0
+     ],
+     "distinct": true,
+     "facts": 224
+    },
+    {
+     "rhs_set": true,
+     "run": 3,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      2
+     ],
+     "distinct": true,
+     "facts": 226
+    },
+    {
+     "rhs_set": true,
+     "run": 4,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      2,
+      0
+     ],
+     "distinct": true,
+     "facts": 228
+    },
+    {
+     "rhs_set": true,
+     "run": 5,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      2
+     ],
+     "distinct": true,
+     "facts": 230
+    },
+    {
+     "rhs_set": true,
+     "run": 6,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      1,
+      0
+     ],
+     "distinct": true,
+     "facts": 231
+    },
+    {
+     "rhs_set": true,
+     "run": 7,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      1
+     ],
+     "distinct": true,
+     "facts": 232
+    },
+    {
+     "rhs_set": true,
+     "run": 8,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      0
+     ],
+     "distinct": true,
+     "facts": 232
+    },
+    {
+     "rhs_set": true,
+     "run": 9,
+     "set": "cell-spine-complete",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": false,
+     "reference_resumes": 6,
+     "lane_tokens": [
+      7,
+      13
+     ],
+     "distinct": true,
+     "facts": 246
+    },
+    {
+     "rhs_set": true,
+     "run": 10,
+     "set": "cell-spine-complete",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      5,
+      5
+     ],
+     "distinct": true,
+     "facts": 256
+    },
+    {
+     "rhs_set": true,
+     "run": 11,
+     "set": "cell-spine-complete",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      0
+     ],
+     "distinct": true,
+     "facts": 256
+    },
+    {
+     "rhs_set": true,
+     "run": 12,
+     "set": "type-analysis",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": false,
+     "reference_resumes": 13,
+     "lane_tokens": [
+      13,
+      11
+     ],
+     "distinct": true,
+     "facts": 304
+    },
+    {
+     "rhs_set": true,
+     "run": 13,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      0
+     ],
+     "distinct": true,
+     "facts": 304
+    },
+    {
+     "rhs_set": true,
+     "run": 14,
+     "set": "cell-spine-complete",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      0
+     ],
+     "distinct": true,
+     "facts": 304
+    },
+    {
+     "rhs_set": true,
+     "run": 15,
+     "set": "type-analysis",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": false,
+     "reference_resumes": 2,
+     "lane_tokens": [
+      18,
+      9
+     ],
+     "distinct": true,
+     "facts": 352
+    }
+   ],
+   "initialization_effects": {
+    "construct": 120,
+    "copy": 94,
+    "set": 6
+   }
+  },
+  "dot-product": {
+   "program_sha256": "c0d1da51c3aca3e61c945b39dc7da9e3ed135d77c57330ffd34dbbed8adc1159",
+   "source_sha256": "02f301e6689c2ddfca4c8a01b431d031a3289c6bba98f141deecd71edacded68",
+   "ingress": {
+    "rows": 129,
+    "ordered_arguments": 145,
+    "multi_member": 40,
+    "instances": 89,
+    "templates": 46,
+    "unknown_original_writer": true,
+    "uncovered": 0,
+    "ambiguous_result_classes": [
+     {
+      "initial": {
+       "eq": "Value(48)",
+       "sort": "Assumption"
+      },
+      "members": [
+       [
+        36,
+        0,
+        "DUMMYCTX"
+       ],
+       [
+        39,
+        0,
+        "InFunc"
+       ]
+      ]
+     }
+    ],
+    "union_classes": [
+     {
+      "eq": "Value(50)",
+      "sort": "BaseType"
+     },
+     {
+      "eq": "Value(61)",
+      "sort": "BaseType"
+     }
+    ],
+    "changed_port_resolutions": 2,
+    "roundtrip_exact": true
+   },
+   "input_matrix": {
+    "input/learned": {
+     "instances": 89,
+     "templates": 46,
+     "fully_checked_runs": 3,
+     "first_run_facts": 320
+    },
+    "input/exact": {
+     "instances": 89,
+     "templates": 46,
+     "fully_checked_runs": 3,
+     "first_run_facts": 320
+    },
+    "single/learned": {
+     "instances": 129,
+     "templates": 50,
+     "fully_checked_runs": 3,
+     "first_run_facts": 320
+    },
+    "single/exact": {
+     "instances": 129,
+     "templates": 50,
+     "fully_checked_runs": 3,
+     "first_run_facts": 320
+    }
+   },
+   "rows": {
+    "1": {
+     "completed": 1536,
+     "device_done": true,
+     "reference_runs": 1535,
+     "device_rows": 4257,
+     "reference_rows": 4257,
+     "full_typed_graph_equal": false,
+     "first_schedule_difference": 1000,
+     "first_rhs_count_difference": 898,
+     "first_write_count_difference": 165,
+     "tokens": [
+      6703,
+      0
+     ],
+     "cross_row_duplicates": 0,
+     "within_row_duplicates": 0,
+     "first_required_continuation": 11,
+     "cpu_continuations": 1835,
+     "gpu_continuations": 0,
+     "measured_inference_ms": 25093.755,
+     "measured_cli_work_ms": 25283.038291,
+     "acceptance": "incomplete",
+     "extra_by_table": {
+      "Smaller": 2,
+      "CellSpineView9": 2
+     },
+     "missing_by_table": {
+      "CellSpineView9": 2,
+      "Smaller": 2
+     }
+    },
+    "2": {
+     "completed": 1536,
+     "device_done": true,
+     "reference_runs": 1535,
+     "device_rows": 4257,
+     "reference_rows": 4257,
+     "full_typed_graph_equal": false,
+     "first_schedule_difference": 1000,
+     "first_rhs_count_difference": 898,
+     "first_write_count_difference": 165,
+     "tokens": [
+      3565,
+      3138
+     ],
+     "cross_row_duplicates": 0,
+     "within_row_duplicates": 0,
+     "first_required_continuation": 11,
+     "cpu_continuations": 1835,
+     "gpu_continuations": 0,
+     "measured_inference_ms": 14559.839292,
+     "measured_cli_work_ms": 14797.460333,
+     "acceptance": "incomplete",
+     "extra_by_table": {
+      "Smaller": 2,
+      "CellSpineView9": 2
+     },
+     "missing_by_table": {
+      "CellSpineView9": 2,
+      "Smaller": 2
+     },
+     "same_as_one_row": true
+    }
+   },
+   "prefix": [
+    {
+     "rhs_set": true,
+     "run": 1,
+     "set": "initialization",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      1,
+      0
+     ],
+     "distinct": true,
+     "facts": 320
+    },
+    {
+     "rhs_set": true,
+     "run": 2,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      1,
+      0
+     ],
+     "distinct": true,
+     "facts": 321
+    },
+    {
+     "rhs_set": true,
+     "run": 3,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      2
+     ],
+     "distinct": true,
+     "facts": 323
+    },
+    {
+     "rhs_set": true,
+     "run": 4,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      2,
+      0
+     ],
+     "distinct": true,
+     "facts": 325
+    },
+    {
+     "rhs_set": true,
+     "run": 5,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      3
+     ],
+     "distinct": true,
+     "facts": 328
+    },
+    {
+     "rhs_set": true,
+     "run": 6,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      2,
+      0
+     ],
+     "distinct": true,
+     "facts": 330
+    },
+    {
+     "rhs_set": true,
+     "run": 7,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      1
+     ],
+     "distinct": true,
+     "facts": 331
+    },
+    {
+     "rhs_set": true,
+     "run": 8,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      1,
+      0
+     ],
+     "distinct": true,
+     "facts": 332
+    },
+    {
+     "rhs_set": true,
+     "run": 9,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      1
+     ],
+     "distinct": true,
+     "facts": 333
+    },
+    {
+     "rhs_set": true,
+     "run": 10,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      0
+     ],
+     "distinct": true,
+     "facts": 333
+    },
+    {
+     "rhs_set": true,
+     "run": 11,
+     "set": "cell-spine-complete",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": false,
+     "reference_resumes": 15,
+     "lane_tokens": [
+      13,
+      30
+     ],
+     "distinct": true,
+     "facts": 361
+    },
+    {
+     "rhs_set": true,
+     "run": 12,
+     "set": "cell-spine-complete",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      7,
+      7
+     ],
+     "distinct": true,
+     "facts": 375
+    },
+    {
+     "rhs_set": true,
+     "run": 13,
+     "set": "cell-spine-complete",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      0
+     ],
+     "distinct": true,
+     "facts": 375
+    },
+    {
+     "rhs_set": true,
+     "run": 14,
+     "set": "type-analysis",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": false,
+     "reference_resumes": 24,
+     "lane_tokens": [
+      20,
+      11
+     ],
+     "distinct": true,
+     "facts": 443
+    },
+    {
+     "rhs_set": true,
+     "run": 15,
+     "set": "type-helpers",
+     "schedule": true,
+     "graph": true,
+     "rhs": true,
+     "writes": true,
+     "spine_empty_ref": true,
+     "reference_resumes": 0,
+     "lane_tokens": [
+      0,
+      0
+     ],
+     "distinct": true,
+     "facts": 443
+    }
+   ],
+   "initialization_effects": {
+    "construct": 214,
+    "copy": 182,
+    "set": 15
+   }
+  }
+ }
+}
