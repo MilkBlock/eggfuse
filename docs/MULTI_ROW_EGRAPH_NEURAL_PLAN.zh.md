@@ -1,5 +1,7 @@
 # E graph 多 token row 神经推理研究与实施规划
 
+配套图册：[19 组架构消融与逐图判据](cell-architecture-atlas/README.md) · [论文式 PDF](cell-architecture-atlas/Cell多行推理架构消融图册.pdf)
+
 日期：2026-11-18（Asia/Shanghai）
 性质：研究规划，不是已实现架构或性能承诺
 依据：当前 Cell CPU / Bake 研究方向、已提交的独立神经原型、相关原始论文
