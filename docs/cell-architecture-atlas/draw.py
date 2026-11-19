@@ -86,16 +86,30 @@ def gate(a,adaptive):
     a.grid(89,89,2,4,cell=27,fill=(lambda i,j:i==0 and j<2) if adaptive else None)
     a.txt(155,208,"1 → 1 → 0 → 0 active" if adaptive else "2 → 2 → 2 → 2 active",15)
 
-def ready(a,local):
-    for x,l in [(62,"P0"),(151,"P1"),(249,"U")]:a.node(x,54,55,l,"s")
-    if local:
-        a.path([(62,72),(62,101),(99,113)]);a.link(151,71,119,111)
-        a.link(249,71,249,145);a.node(107,130,96,"join gate","v")
-        a.link(107,147,107,168);a.node(107,185,65,"C");a.node(249,164,64,"V")
+def ready(a,mode):
+    if mode=="predict":
+        a.node(155,37,200,"current wave + history","s")
+        a.link(155,53,155,71);a.node(155,88,200,"propose C, V")
+        a.link(155,105,155,122);a.node(155,140,202,"exact guard (optional)","v")
+        a.link(155,157,155,174);a.node(155,191,207,"publish at finish","s")
+        return
+    for x,name in [(58,"P0"),(148,"P1"),(250,"U")]:
+        a.node(x,36,52,name,"s")
+    if mode=="local":
+        a.link(58,53,79,78);a.link(148,53,115,78);a.link(250,53,250,78)
+        a.node(96,96,140,"same-key join","v");a.node(250,96,82,"project","v")
+        for x,name in [(96,"private C"),(250,"private V")]:
+            a.link(x,113,x,128);a.node(x,145,94,name)
+        a.link(96,161,115,178);a.link(250,161,203,178)
+        a.node(155,194,185,"publish at finish","s")
     else:
-        for x in [62,151,249]:a.link(x,71,x,100)
-        a.rect(31,104,250,16,"#c7d2d6",INK,2);a.txt(155,144,"one round barrier",14)
-        for x,l in [(108,"C"),(250,"V")]:a.link(x,147,x,165);a.node(x,183,60,l)
+        for x in (58,148,250):a.link(x,53,x,79)
+        a.node(155,97,252,"wait for finish","x")
+        for x in (96,222):a.link(x,114,x,130)
+        a.node(96,147,88,"join C");a.node(222,147,94,"project V")
+        a.link(96,164,115,179);a.link(222,164,199,179)
+        a.node(155,195,185,"publish at finish","s")
+
 
 def projection(a,i):
     a.node(72,53,88,"latent");a.node(230,53,110,"pointers")
@@ -257,7 +271,7 @@ PLATES=[
 ("04-width",[("Single row",1),("Two rows",2),("Four rows",4)],width),
 ("05-learning",[("Zero-shot",0),("Set supervision",1),("Team RL",2),("Counterfactual RL",3)],curriculum),
 ("06-gates",[("Fixed active rows",False),("Learned activation",True)],gate),
-("07-ready",[("Global barrier",False),("Dependency readiness",True)],ready),
+("07-ready",[("Global barrier","barrier"),("Dependency readiness","local"),("Learned readiness","predict")],ready),
 ("08-projection",[("Predict fields",0),("Static projection",1),("Projection + aux head",2)],projection),
 ("09-parents",[("All channels",0),("Hide parents",1),("Hide parents + latent",2)],tokenmask),
 ("10-recurrence",[("Continuous frontier",False),("Typed frontier",True)],recurrence),

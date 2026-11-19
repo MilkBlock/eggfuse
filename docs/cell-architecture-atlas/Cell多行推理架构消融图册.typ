@@ -39,7 +39,7 @@
   card([证据起点],[开放父引用时，静态投影加训练期字段头在两个种子下通过 65、67 张非空碰撞图，共 512 张。这个基线给分工留下了很大的改进空间。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–02 已完成两族消融，03 已测端口寻址，04 已测零更新展开，05 已测两行训练，06 已测行门控，07 为待测就绪条件，图 08–13 汇总已测机制，图 14–19 定义扩展语义，图 20 检查模板局部等价类。]
+#small[代码基线 68193237　·　图 01–02 已完成两族消融，03 已测端口寻址，04 已测零更新展开，05 已测两行训练，06 已测行门控，07 已测局部就绪和屏障，图 08–13 汇总已测机制，图 14–19 定义扩展语义，图 20 检查模板局部等价类。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -151,7 +151,7 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #v(2mm)
 #small[下列仓库路径相对 EggFuse 根目录。配套 README 提供可点击链接；以 68193237 的源码和冻结记录为本图册基线。]
 #v(3mm)
-#set par(spacing: 0.32em)
+#set par(spacing: 0.26em)
 #let src(k,l,p) = grid(columns:(10mm,50mm,1fr),gutter:3mm,text(fill:teal,weight:"bold",k),text(size:9.5pt,l),text(font:("Menlo","Arial"),size:7.8pt,p))
 #src("S1","PyTorch 独立前向、MPS/MLX 对照","benchmarks/multi-row-generation/torch_crossrun/README.md")
 #src("S2","跨 Run、两种子、父碰撞和掩码","benchmarks/multi-row-generation/crossrun/results/metrics.tsv")
@@ -169,10 +169,11 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S14","图 04 零更新展开","benchmarks/multi-row-generation/width_ablation/README.md")
 #src("S15","图 05 两行监督与 RL","benchmarks/multi-row-generation/credit_ablation/README.md")
 #src("S16","图 06 实际门控跳算","benchmarks/multi-row-generation/gate_ablation/README.md")
+#src("S17","图 07 消费者就绪与源边界","benchmarks/multi-row-generation/readiness_ablation/README.md")
 #v(3mm)
 #linebar()
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
 #text(size:9.5pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。图 01 采用“按边传递消息”的方法；端口角色与 Cell 语义由本项目定义。 #link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文] *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。图 05 借用固定其他行动作的反事实基线，具体动作、奖励及审计仍由实验定义。 #link("https://arxiv.org/abs/1705.08926")[论文原文]]
 #v(1fr)
-#small[版次 7　·　2026 年 11 月 19 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
+#small[版次 8　·　2026 年 11 月 19 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
