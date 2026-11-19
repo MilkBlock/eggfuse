@@ -1,0 +1,341 @@
+{
+  "parent_commit": "85d97649",
+  "artifact_root": "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+  "params": 28560,
+  "hardware": "Apple M3 Max",
+  "jobs": [
+    {
+      "id": "1075",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/test_data.py"
+      ]
+    },
+    {
+      "id": "1076",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "flat",
+        "1703"
+      ]
+    },
+    {
+      "id": "1077",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/test_model.py"
+      ]
+    },
+    {
+      "id": "1078",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "flat",
+        "1703"
+      ]
+    },
+    {
+      "id": "1079",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/test_model.py"
+      ]
+    },
+    {
+      "id": "1080",
+      "status": "done",
+      "exit_code": 1,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "/Volumes/EggFuseWorkspace/tmp/test-address-transfer-implementation.py"
+      ]
+    },
+    {
+      "id": "1081",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/test_model.py"
+      ]
+    },
+    {
+      "id": "1082",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "/Volumes/EggFuseWorkspace/tmp/test-address-transfer-implementation.py"
+      ]
+    },
+    {
+      "id": "1083",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "flat",
+        "1703"
+      ]
+    },
+    {
+      "id": "1084",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "flat",
+        "1709"
+      ]
+    },
+    {
+      "id": "1085",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "two",
+        "1703"
+      ]
+    },
+    {
+      "id": "1086",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "two",
+        "1709"
+      ]
+    },
+    {
+      "id": "1087",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "three",
+        "1703"
+      ]
+    },
+    {
+      "id": "1088",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "three",
+        "1709"
+      ]
+    },
+    {
+      "id": "1089",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "packed",
+        "1703"
+      ]
+    },
+    {
+      "id": "1090",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/fit.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "packed",
+        "1709"
+      ]
+    },
+    {
+      "id": "1091",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/trace_transfer.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119/trace-transfer.json",
+        "--figure20-root",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119"
+      ]
+    },
+    {
+      "id": "1092",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/evaluate.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119"
+      ]
+    },
+    {
+      "id": "1093",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/trace_transfer.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119/trace-transfer.json",
+        "--figure20-root",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119"
+      ]
+    },
+    {
+      "id": "1094",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/trace_transfer.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119/trace-transfer-crossed.json",
+        "--figure20-root",
+        "/Volumes/EggFuseWorkspace/experiments/eclass-ports-20261119",
+        "--cross-seed"
+      ]
+    },
+    {
+      "id": "1095",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/stride_probe.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119"
+      ]
+    },
+    {
+      "id": "1096",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/replay.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119"
+      ]
+    },
+    {
+      "id": "1097",
+      "status": "done",
+      "exit_code": 0,
+      "argv": [
+        "/Volumes/EggFuseWorkspace/bin/run-eggfuse",
+        "env",
+        "PYTORCH_ENABLE_MPS_FALLBACK=0",
+        "python",
+        "benchmarks/multi-row-generation/address_ablation/latent_relayout.py",
+        "/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119"
+      ]
+    }
+  ],
+  "notes": [
+    "Early MPS launches exited before fitting due to MTLCompilerService lookup failures; CPU minibatch sampling retained. The idle FIFO was restarted; five tests including actual MPS passed before the eight official runs.",
+    "Frozen post-hoc probes and Figure 20 transfer use independent CPU audits; no transfer score selects a training checkpoint."
+  ],
+  "sources": {
+    "test_model.py": "540b18e6b13f89ccedd134081c41eb75cb5847c9ec850a031610bfea11ac4c72",
+    "fit.py": "891c0153438a9e81140f93fb840a391b789fa5da090c59c8be6233174b96f95c",
+    "latent_relayout.py": "ca0959a3c175db8969b1c644b73abc343adbedaec5a9eb1efa6e7efc19e8bab2",
+    "stride_probe.py": "3b2c2fa73f3b67d3cc1ec56856f96fd5b9a2ec7bfaf4dea26565d9b401da6aba",
+    "model.py": "7a54f217177191a24591224557876575aab0b43f66bcebd74cd8ae7c0577f71a",
+    "trace_transfer.py": "8d3357024b36d0076cbcc5062b32ea6ee4ede228a88214650ba54f8220b4888f",
+    "replay.py": "9d39a1fac2275ee35a255d316971c064f54dc8b90617f7d803c17e7ec8b51de4",
+    "evaluate.py": "7126630e20b68736aec6f09a533e5facb30c1f93443688684d8ce5ff32ef199c",
+    "test_data.py": "e75d35560c3756069f822d878b4d19609ed99e28ba6406a2749aca8b668bd533",
+    "report.py": "c382755574083a95e34573760fe7726397a196fdc09ce7b7025a1ac796de8030",
+    "data.py": "5ce6a33a94911a57c1ef6b2c5f5065edbe0217b1099dbd28f5304e4f35ebfde7",
+    "study.py": "5af5acca8a5ea956a860f5c1a1db921e91806999cca8c12299716322b079770a"
+  }
+}
