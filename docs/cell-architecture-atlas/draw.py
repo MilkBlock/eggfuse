@@ -167,14 +167,25 @@ def history(a,i):
     a.txt(155,199,["matched blind path","generated history","same-row history only"][i],14)
 
 def locality(a,i):
-    for x in (73,238):
-        a.grid(x-28,52,2,2,cell=18)
-    if not i:
-        a.link(70,98,125,132);a.link(232,98,186,132);a.node(155,151,154,"global latent")
+    if i==2:
+        a.node(155,48,218,"conditional local port pairs","s")
+        a.link(155,65,155,84);a.node(155,102,203,"one external union","v")
+        a.link(155,119,155,139);a.node(155,157,210,"verify path to source","s")
+        a.txt(155,201,"emit with original parent",15,SUB)
+        return
+    for x,name in ((78,"owner 0"),(230,"owner 1")):
+        a.node(x,45,104,name,"s")
+    if i==0:
+        a.link(78,62,124,97);a.link(230,62,187,97)
+        a.node(155,114,175,"global bank: 2 × 16")
+        a.link(155,131,155,151);a.node(155,170,184,"request activation","n")
     else:
-        a.node(74,141,96,"local h0");a.node(232,141,96,"local h1")
-        a.link(68,98,70,122);a.link(230,98,230,122);a.link(124,141,181,141,c="#946422")
-    a.txt(155,197,"equal total latent budget",14)
+        for x in (78,230):
+            a.link(x,62,x,85);a.node(x,104,105,"16 floats")
+        a.path([(230,121),(230,140),(161,140),(161,159)],c="#946422")
+        a.path([(78,121),(78,140),(122,140),(122,159)])
+        a.node(144,177,207,"versioned parent reply","v")
+    a.txt(155,209,"shared producer and requests",14,SUB)
 
 def union(a,i):
     a.port(66,57,"p");a.port(245,57,"q")
@@ -278,7 +289,7 @@ PLATES=[
 ("11-allocation",[("One anchor per slot",0),("Free slots, joint",1),("Free slots, row-local",2)],allocate),
 ("12-coverage",[("Set loss",False),("Set loss + coverage",True)],coverage),
 ("13-history",[("Blinded history",0),("All rows",1),("Same row only",2)],history),
-("14-locality",[("Global state",0),("Local states + messages",1)],locality),
+("14-locality",[("Global state",0),("Local states + messages",1),("Certified port path",2)],locality),
 ("15-union",[("Eager equality",0),("Deferred equality",1)],union),
 ("16-owner",[("Retain instances",0),("Transfer + forwarding",1)],ownership),
 ("17-proof",[("Primitive witness",0),("Composed witness",1)],proof),
