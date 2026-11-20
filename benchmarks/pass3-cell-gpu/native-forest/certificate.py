@@ -52,8 +52,8 @@ class Generator:
 if __name__=='__main__':
     p=argparse.ArgumentParser()
     for k in ('program','image','weights','out'):p.add_argument(k,type=Path)
-    p.add_argument('--device',choices=('cpu','mps'),required=True)
+    p.add_argument('--device',choices=('cpu','mps'),default='cpu')
     p.add_argument('--arm',choices=('learned','all','none','wrong-parent'),default='learned')
     a=p.parse_args()
     with torch.inference_mode():
-        g=Generator(a.program,a.image,torch.load(a.weights,weights_only=True),a.device);print(g.transfer(a.out,a.arm))
+        g=Generator(a.program,a.image,torch.load(a.weights,weights_only=True,map_location='cpu'),a.device);print(g.transfer(a.out,a.arm))

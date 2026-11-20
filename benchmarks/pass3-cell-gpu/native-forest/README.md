@@ -2,6 +2,62 @@
 
 The policy runs exactly once per whole Pass 3 input after receiving static features and the initial graph summary. It emits the same six-word certificate envelope per typed candidate slot as the whole-pass experiment. The two empty-LHS roots are static compiler projections. The network chooses child activations. A child cites the root, its specific effect port, the consumer rule and its certified entrance. Both backends independently check parent identity, publication visibility, freshness and compiler-certified port roles. A universal one-atom certificate can instantiate the RHS inputs directly. Other accepted tokens can require exact suffix-table reads. Uncovered source obligations remain with the exact engine unless explicitly disabled.
 
+## Default deployment
+
+Train the policy in PyTorch offline. Export the learned weights once per checkpoint
+and the static features once per compiled program. The release Cell CPU Rust binary
+then generates the two-level forest, verifies its typed references and executes
+the source schedule in the same process. Graph ownership, exact integer operations,
+merge order and residual searches stay in the Rust runtime. The earlier CPU/Rust
+placement numbers below used a PyTorch CPU forward. The native forward has its
+own paired comparison against unassisted Rust search.
+
+```sh
+dir=benchmarks/pass3-cell-gpu/native-forest
+# Offline, using a trained .pt checkpoint and the program's compiled image.
+python "$dir/export_cpu.py" weights "$CHECKPOINT" weights.json
+python "$dir/export_cpu.py" inputs "$PROGRAM" "$IMAGE_DIR" inputs.json
+
+# Online, on a CPU host with the compiled artifacts.
+cargo run --release --locked -p eggfuse-cell-runtime --features precomputed-forest \
+  --bin eggfuse-cell-runtime -- --program "$PROGRAM" --forest-policy weights.json \
+  --forest-inputs inputs.json --output "$OUTPUT"
+```
+
+The image directory supplies compiler features only during export. Online inputs
+are the source program, the per-program feature file and the learned weights.
+The `neural_policy` report records the backend, active proposals and SHA-256 of
+the actual six-word certificate stream. `precomputed_forest` records which of
+those proposals won committed RHS. `--forest-only` measures autonomous coverage.
+For the exact CPU reference omit both policy flags. For a resident matched
+comparison run the following on the same host.
+
+```sh
+cargo run --release --locked -p eggfuse-cell-runtime --features precomputed-forest \
+  --example bench_cpu_forest_policy -- "$PROGRAM" weights.json inputs.json
+```
+
+### Native inference evidence
+
+On both source programs and both seeds, the native forward generated the same
+certificate bytes as PyTorch CPU. With and without residual completion, the
+native verifier credited the same source ordinals and matched the reference
+Run sequence, ordered RHS, writes, Spine, events and graph for that mode.
+The second mode still diverged from the complete source at Run 3.
+
+| Resident full Pass 3, ms (seeds 1703 / 1709) | Exact Rust only | Native CPU policy + Rust |
+| --- | ---: | ---: |
+| sum-bits | 25.59 / 26.32 | 27.01 / 28.41 |
+| dot-product | 22.35 / 22.67 | 23.36 / 22.69 |
+
+Ten timed trials per arm alternate order after two warmups. Both start with a
+fresh initialized graph. Native policy time includes FP32 forward, certificate
+hashing and verification, exact residual, rebuild and source-order commit.
+The graph export and equality check occur after the stopwatch. These samples
+support CPU deployment as the reference for improving the model; the frozen
+policy has yet to improve on unassisted Rust search in these pairs.
+[Raw samples and certificate hashes](native-policy-results.json)
+
 ### Allowed placements
 
 * CPU PyTorch policy, one CPU thread, followed by the Rust verifier.

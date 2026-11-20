@@ -2919,15 +2919,16 @@ impl Executor {
     }
     #[cfg(feature="precomputed-forest")]
     pub fn use_precomputed_forest(&mut self,bytes:&[u8],digest:&str,residual:bool)->Result<()>{
-        if cfg!(feature="sparse-cells"){return Err("native forest trial uses the default CPU Cell representation".into());}
-        self.stage_spine.forest=Some(crate::precomputed_forest::Forest::load(&self.graph.program,
-            serde_json::from_slice(bytes).map_err(|e|e.to_string())?,digest,residual)?);
-        Ok(())
+        self.install_forest_packet(serde_json::from_slice(bytes).map_err(|e|e.to_string())?,digest,residual)
     }
     #[cfg(feature="precomputed-forest")]
     pub fn use_precomputed_words(&mut self,layout:&crate::precomputed_forest::SealedLayout,words:&[u8],digest:&str)->Result<()>{
+        self.install_forest_packet(layout.unpack(words)?,digest,true)
+    }
+    #[cfg(feature="precomputed-forest")]
+    pub(crate) fn install_forest_packet(&mut self,packet:crate::precomputed_forest::Packet,digest:&str,residual:bool)->Result<()>{
         if cfg!(feature="sparse-cells"){return Err("native forest trial uses the default CPU Cell representation".into());}
-        self.stage_spine.forest=Some(crate::precomputed_forest::Forest::load(&self.graph.program,layout.unpack(words)?,digest,true)?);
+        self.stage_spine.forest=Some(crate::precomputed_forest::Forest::load(&self.graph.program,packet,digest,residual)?);
         Ok(())
     }
     #[cfg(feature="precomputed-forest")]

@@ -47,6 +47,8 @@ pub mod sieve;
 pub mod spine_blocks;
 #[cfg(feature="precomputed-forest")]
 pub mod precomputed_forest;
+#[cfg(feature="precomputed-forest")]
+pub mod forest_policy;
 pub mod stage_spine;
 
 mod entry_join;

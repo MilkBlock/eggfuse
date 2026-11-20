@@ -43,7 +43,16 @@ Before optimizing the Cell CPU path, check whether a new iteration can learn fro
   paths. A specification, shared registry or new counter alone is not a completed
   takeover or evidence of a speedup.
 
-## Recursive neural Cell generation and verification on GPU
+## Recursive neural Cell generation and verification
+
+Use single-threaded CPU policy inference with the authoritative Rust Cell runtime as
+the primary baseline for new neural studies. Train in PyTorch offline and export
+the checkpoint and static compiler features. The current two-level forest can
+run end to end in Rust using `--forest-policy` and `--forest-inputs`.
+Compare with the same Rust runtime using ordinary exact search to measure the
+net contribution of neural generation. GPU policy + Rust and GPU policy + Metal
+remain explicit controls for model size, batch size and device locality.
+[Baseline commands and scope](benchmarks/pass3-cell-gpu/native-forest/README.md).
 
 The research goal is to let the network discover and compose useful derivations
 on a real Pass 3 graph, then verify them more cheaply than matching them again.
@@ -52,7 +61,7 @@ named boundary ports. The network chooses instances, parents and continuations.
 An instance can cite another instance's output port as a premise. One composed
 certificate can justify several rule applications when the template proves them.
 
-- **Generation.** Each neural forward consumes its own preceding GPU tokens and
+- **Generation.** Each neural forward consumes its own preceding generated tokens and
   latents. Multiple rows can propose complementary instances and address a
   parent by row, position and port. A source Run defines visibility and effect
   order. The generator can take several waves inside that Run and carry private
