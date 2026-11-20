@@ -30,14 +30,14 @@ Reproduce with the external workspace PyTorch environment during training and th
 
 ## Eight-slot macro opportunity
 
-A diagnostic native census tries every presented leaf/address on the same source trajectory. It contributes zero learned RHS. The comparison below permits at most one root and one later child per issued action. A binary optimization uses the census winning roots, matching cross-Run source publication/effect/consumer links from the same Bake library, and any alternative root or child actually won by the four deployed policies. It caps each epoch at eight free slots or four slots per hashed owner. Each source RHS ordinal is counted at most once globally. A singleton root remains available when child conclusions overlap.
+A diagnostic native census tries every presented leaf/address on the same source trajectory. It contributes zero learned RHS. The comparison below permits at most one root and one later child per issued action. A binary optimization uses the census winning roots, matching cross-Run source publication/effect/consumer links from the same Bake library, and any alternative root or child actually won by the four deployed policies. It caps each epoch at eight free slots or four slots per hashed owner. Each source RHS ordinal is counted at most once globally. Duplicate task claims are excluded. A singleton root remains available when child conclusions overlap. At equal distinct coverage the solver minimizes issuance.
 
 | Workload | Best demonstrated static policy | Fixed-trace static optimum (roots + children) | Free optimum | Conservative static upper |
 |---|---:|---:|---:|---:|
-| sum-bits | 456 | 481 + 95 = 576 | 579 | 658 |
+| sum-bits | 456 | 477 + 99 = 576 | 579 | 658 |
 | dot-product | 426 | 408 + 67 = 475 | 477 | 500 |
 | gemm-bias-relu | 452 | 426 + 96 = 522 | 523 | 544 |
-| stable-argmax | 377 | 352 + 74 = 426 | 426 | 446 |
+| stable-argmax | 377 | 351 + 75 = 426 | 426 | 446 |
 
 The middle columns are exact optima for that **recorded outcome set**. Another choice of source origin can change which child wins. The demonstrated lower bound comes from a single real native arm. The separate upper bound allows every census-verified task to win and every compatible originating leaf a distinct child, even where no such child was observed. Neither bound is credited to the network. [Rebuild the census, solve the budget and report each policy’s roots/children](budget_oracle.py)
 

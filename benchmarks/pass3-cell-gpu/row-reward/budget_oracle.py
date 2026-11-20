@@ -20,7 +20,8 @@ def optimum(actions,per_owner):
         rows[('task',epoch,leaf,addr)].append(var)
         rows[('ordinal',root)].append(var)
         if child:rows[('ordinal',child)].append(var)
-    lines=['Maximize','win: '+' + '.join(f'{1+int(a[4]>0)} x{i}' for i,a in enumerate(actions)),'Subject To']
+    scale=len(actions)+1
+    lines=['Maximize','win: '+' + '.join(f'{scale*(1+int(a[4]>0))-1} x{i}' for i,a in enumerate(actions)),'Subject To']
     for i,(key,vs) in enumerate(rows.items()):
         cap=(4 if per_owner else 8) if key[0]=='slot' else 1
         lines.append(f'g{i}: '+' + '.join(vs)+f' <= {cap}')
@@ -32,7 +33,7 @@ def optimum(actions,per_owner):
     assert values[0].startswith('Optimal - objective value')
     selected=[actions[int(v[1][1:])] for line in values[1:] if (v:=line.split())[1].startswith('x') and float(v[2])>.5]
     ords=[x for *_,r,c in selected for x in (r,c) if x]
-    assert len(set(ords))==len(ords)==round(float(values[0].split()[-1]))
+    assert len(set(ords))==len(ords) and scale*len(ords)-len(selected)==round(float(values[0].split()[-1]))
     counts=Counter((t,owner(l,a) if per_owner else 0) for t,l,a,_,_ in selected)
     assert max(counts.values())<=(4 if per_owner else 8)
     assert len({(epoch,leaf,addr) for epoch,leaf,addr,_,_ in selected})==len(selected)
