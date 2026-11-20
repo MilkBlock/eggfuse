@@ -1,0 +1,806 @@
+{
+ "joint-98-checked-v4": {
+  "archive": {
+   "sum-bits/1703/target": {
+    "aligned": true,
+    "distinct": 7253,
+    "reported": 7253,
+    "zero_state_single_excluded": false,
+    "source": 7265,
+    "required": 7120,
+    "leftover": 12,
+    "single": 2665,
+    "multi": 4588
+   },
+   "sum-bits/1703/strict": {
+    "aligned": false,
+    "error": "source panic"
+   },
+   "sum-bits/1703/null-single": {
+    "aligned": true,
+    "distinct": 4588,
+    "reported": 4588,
+    "zero_state_single_excluded": false,
+    "source": 7265,
+    "required": 7120,
+    "leftover": 2677,
+    "single": 0,
+    "multi": 4588
+   },
+   "sum-bits/1703/null-multi": {
+    "aligned": true,
+    "distinct": 2665,
+    "reported": 2665,
+    "zero_state_single_excluded": false,
+    "source": 7265,
+    "required": 7120,
+    "leftover": 4600,
+    "single": 2665,
+    "multi": 0
+   },
+   "sum-bits/1703/none-only": {
+    "aligned": false,
+    "error": null
+   },
+   "sum-bits/1703/zero-state": {
+    "aligned": true,
+    "distinct": 7225,
+    "reported": 4588,
+    "zero_state_single_excluded": true,
+    "source": 7265,
+    "required": 7120,
+    "leftover": 40,
+    "single": 2637,
+    "multi": 4588
+   },
+   "sum-bits/1709/target": {
+    "aligned": true,
+    "distinct": 7257,
+    "reported": 7257,
+    "zero_state_single_excluded": false,
+    "source": 7265,
+    "required": 7120,
+    "leftover": 8,
+    "single": 2669,
+    "multi": 4588
+   },
+   "sum-bits/1709/strict": {
+    "aligned": false,
+    "error": "source panic"
+   },
+   "sum-bits/1709/null-single": {
+    "aligned": true,
+    "distinct": 4588,
+    "reported": 4588,
+    "zero_state_single_excluded": false,
+    "source": 7265,
+    "required": 7120,
+    "leftover": 2677,
+    "single": 0,
+    "multi": 4588
+   },
+   "sum-bits/1709/null-multi": {
+    "aligned": true,
+    "distinct": 2669,
+    "reported": 2669,
+    "zero_state_single_excluded": false,
+    "source": 7265,
+    "required": 7120,
+    "leftover": 4596,
+    "single": 2669,
+    "multi": 0
+   },
+   "sum-bits/1709/none-only": {
+    "aligned": false,
+    "error": null
+   },
+   "sum-bits/1709/zero-state": {
+    "aligned": true,
+    "distinct": 7242,
+    "reported": 4588,
+    "zero_state_single_excluded": true,
+    "source": 7265,
+    "required": 7120,
+    "leftover": 23,
+    "single": 2654,
+    "multi": 4588
+   },
+   "dot-product/1703/target": {
+    "aligned": true,
+    "distinct": 6702,
+    "reported": 6702,
+    "zero_state_single_excluded": false,
+    "source": 6704,
+    "required": 6570,
+    "leftover": 2,
+    "single": 2897,
+    "multi": 3805
+   },
+   "dot-product/1703/strict": {
+    "aligned": false,
+    "error": null
+   },
+   "dot-product/1703/null-single": {
+    "aligned": true,
+    "distinct": 3805,
+    "reported": 3805,
+    "zero_state_single_excluded": false,
+    "source": 6704,
+    "required": 6570,
+    "leftover": 2899,
+    "single": 0,
+    "multi": 3805
+   },
+   "dot-product/1703/null-multi": {
+    "aligned": true,
+    "distinct": 2897,
+    "reported": 2897,
+    "zero_state_single_excluded": false,
+    "source": 6704,
+    "required": 6570,
+    "leftover": 3807,
+    "single": 2897,
+    "multi": 0
+   },
+   "dot-product/1703/none-only": {
+    "aligned": false,
+    "error": null
+   },
+   "dot-product/1703/zero-state": {
+    "aligned": true,
+    "distinct": 6679,
+    "reported": 3805,
+    "zero_state_single_excluded": true,
+    "source": 6704,
+    "required": 6570,
+    "leftover": 25,
+    "single": 2874,
+    "multi": 3805
+   },
+   "dot-product/1709/target": {
+    "aligned": true,
+    "distinct": 6702,
+    "reported": 6702,
+    "zero_state_single_excluded": false,
+    "source": 6704,
+    "required": 6570,
+    "leftover": 2,
+    "single": 2897,
+    "multi": 3805
+   },
+   "dot-product/1709/strict": {
+    "aligned": false,
+    "error": null
+   },
+   "dot-product/1709/null-single": {
+    "aligned": true,
+    "distinct": 3805,
+    "reported": 3805,
+    "zero_state_single_excluded": false,
+    "source": 6704,
+    "required": 6570,
+    "leftover": 2899,
+    "single": 0,
+    "multi": 3805
+   },
+   "dot-product/1709/null-multi": {
+    "aligned": true,
+    "distinct": 2897,
+    "reported": 2897,
+    "zero_state_single_excluded": false,
+    "source": 6704,
+    "required": 6570,
+    "leftover": 3807,
+    "single": 2897,
+    "multi": 0
+   },
+   "dot-product/1709/none-only": {
+    "aligned": false,
+    "error": null
+   },
+   "dot-product/1709/zero-state": {
+    "aligned": true,
+    "distinct": 6681,
+    "reported": 3805,
+    "zero_state_single_excluded": true,
+    "source": 6704,
+    "required": 6570,
+    "leftover": 23,
+    "single": 2876,
+    "multi": 3805
+   },
+   "gemm-bias-relu/1703/target": {
+    "aligned": true,
+    "distinct": 15451,
+    "reported": 15451,
+    "zero_state_single_excluded": false,
+    "source": 15462,
+    "required": 15153,
+    "leftover": 11,
+    "single": 5890,
+    "multi": 9561
+   },
+   "gemm-bias-relu/1703/strict": {
+    "aligned": false,
+    "error": null
+   },
+   "gemm-bias-relu/1703/null-single": {
+    "aligned": true,
+    "distinct": 9561,
+    "reported": 9561,
+    "zero_state_single_excluded": false,
+    "source": 15462,
+    "required": 15153,
+    "leftover": 5901,
+    "single": 0,
+    "multi": 9561
+   },
+   "gemm-bias-relu/1703/null-multi": {
+    "aligned": true,
+    "distinct": 5890,
+    "reported": 5890,
+    "zero_state_single_excluded": false,
+    "source": 15462,
+    "required": 15153,
+    "leftover": 9572,
+    "single": 5890,
+    "multi": 0
+   },
+   "gemm-bias-relu/1703/none-only": {
+    "aligned": false,
+    "error": null
+   },
+   "gemm-bias-relu/1703/zero-state": {
+    "aligned": true,
+    "distinct": 15385,
+    "reported": 9561,
+    "zero_state_single_excluded": true,
+    "source": 15462,
+    "required": 15153,
+    "leftover": 77,
+    "single": 5824,
+    "multi": 9561
+   },
+   "gemm-bias-relu/1709/target": {
+    "aligned": true,
+    "distinct": 15453,
+    "reported": 15453,
+    "zero_state_single_excluded": false,
+    "source": 15462,
+    "required": 15153,
+    "leftover": 9,
+    "single": 5892,
+    "multi": 9561
+   },
+   "gemm-bias-relu/1709/strict": {
+    "aligned": false,
+    "error": null
+   },
+   "gemm-bias-relu/1709/null-single": {
+    "aligned": true,
+    "distinct": 9561,
+    "reported": 9561,
+    "zero_state_single_excluded": false,
+    "source": 15462,
+    "required": 15153,
+    "leftover": 5901,
+    "single": 0,
+    "multi": 9561
+   },
+   "gemm-bias-relu/1709/null-multi": {
+    "aligned": true,
+    "distinct": 5892,
+    "reported": 5892,
+    "zero_state_single_excluded": false,
+    "source": 15462,
+    "required": 15153,
+    "leftover": 9570,
+    "single": 5892,
+    "multi": 0
+   },
+   "gemm-bias-relu/1709/none-only": {
+    "aligned": false,
+    "error": null
+   },
+   "gemm-bias-relu/1709/zero-state": {
+    "aligned": true,
+    "distinct": 15402,
+    "reported": 9561,
+    "zero_state_single_excluded": true,
+    "source": 15462,
+    "required": 15153,
+    "leftover": 60,
+    "single": 5841,
+    "multi": 9561
+   },
+   "stable-argmax/1703/target": {
+    "aligned": true,
+    "distinct": 8181,
+    "reported": 8181,
+    "zero_state_single_excluded": false,
+    "source": 8190,
+    "required": 8027,
+    "leftover": 9,
+    "single": 3269,
+    "multi": 4912
+   },
+   "stable-argmax/1703/strict": {
+    "aligned": false,
+    "error": null
+   },
+   "stable-argmax/1703/null-single": {
+    "aligned": true,
+    "distinct": 4912,
+    "reported": 4912,
+    "zero_state_single_excluded": false,
+    "source": 8190,
+    "required": 8027,
+    "leftover": 3278,
+    "single": 0,
+    "multi": 4912
+   },
+   "stable-argmax/1703/null-multi": {
+    "aligned": true,
+    "distinct": 3269,
+    "reported": 3269,
+    "zero_state_single_excluded": false,
+    "source": 8190,
+    "required": 8027,
+    "leftover": 4921,
+    "single": 3269,
+    "multi": 0
+   },
+   "stable-argmax/1703/none-only": {
+    "aligned": false,
+    "error": null
+   },
+   "stable-argmax/1703/zero-state": {
+    "aligned": true,
+    "distinct": 8137,
+    "reported": 4912,
+    "zero_state_single_excluded": true,
+    "source": 8190,
+    "required": 8027,
+    "leftover": 53,
+    "single": 3225,
+    "multi": 4912
+   },
+   "stable-argmax/1709/target": {
+    "aligned": true,
+    "distinct": 8183,
+    "reported": 8183,
+    "zero_state_single_excluded": false,
+    "source": 8190,
+    "required": 8027,
+    "leftover": 7,
+    "single": 3271,
+    "multi": 4912
+   },
+   "stable-argmax/1709/strict": {
+    "aligned": false,
+    "error": null
+   },
+   "stable-argmax/1709/null-single": {
+    "aligned": true,
+    "distinct": 4912,
+    "reported": 4912,
+    "zero_state_single_excluded": false,
+    "source": 8190,
+    "required": 8027,
+    "leftover": 3278,
+    "single": 0,
+    "multi": 4912
+   },
+   "stable-argmax/1709/null-multi": {
+    "aligned": true,
+    "distinct": 3271,
+    "reported": 3271,
+    "zero_state_single_excluded": false,
+    "source": 8190,
+    "required": 8027,
+    "leftover": 4919,
+    "single": 3271,
+    "multi": 0
+   },
+   "stable-argmax/1709/none-only": {
+    "aligned": false,
+    "error": null
+   },
+   "stable-argmax/1709/zero-state": {
+    "aligned": true,
+    "distinct": 8159,
+    "reported": 4912,
+    "zero_state_single_excluded": true,
+    "source": 8190,
+    "required": 8027,
+    "leftover": 31,
+    "single": 3247,
+    "multi": 4912
+   }
+  },
+  "isolated": {
+   "case": "sum-bits",
+   "seed": "1703",
+   "arm": "target",
+   "inputs": {
+    "engine": "f72b5da33330d0f7d860c54baf4d6170ddec284acbc50d3a15ccd249c867deba",
+    "source": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+    "grammar": "c1b42f04710ddddbbe4c033b27a0557b5b1daba8c827676a319d86374d5ec695",
+    "gate": "d40d14711cd19783085478f14d057ad9f390769d59ab43f8b2c8cdce831752c2",
+    "pointer": "e33d7a28fe118a177f68fa6d34bcb0b0946bdea9222c26efe7eea1da3ce1fa72"
+   },
+   "oracle_read_denied": true,
+   "distinct": 7253,
+   "source": 7265,
+   "required": 7120,
+   "single_work": [
+    70366,
+    61048,
+    70366,
+    50732,
+    15600,
+    2665,
+    12,
+    0
+   ],
+   "single_replay": {
+    "offered": 70366,
+    "sent": 61048,
+    "valid": 2677,
+    "valid_sent": 2665,
+    "full_rule_occurrences": 1611,
+    "partial_rule_occurrences": 143,
+    "abstaining_rule_occurrences": 56
+   },
+   "single_rules_always_send": 130,
+   "single_wins_in_always_send_rules": 2527,
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "raw_tuples": 21443,
+   "statically_required_check": false,
+   "guarded_reissued": 0,
+   "fresh": 5868,
+   "rhs_owned": 5857,
+   "direct_template": 5754,
+   "fresh_unowned": 1,
+   "promotions": 0,
+   "actual_issued_before_verification": true,
+   "independent_all_multi_inputs": 4588,
+   "source_fact_replay": {
+    "fully_rebound_winners": 3173,
+    "total_winners": 4588,
+    "example": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 477,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 624,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781341
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 554050781339
+      },
+      {
+       "Eq": 554050781341
+      },
+      {
+       "Eq": 2680059592709
+      }
+     ],
+     "ordinal": 627,
+     "rule": 90,
+     "run": 106,
+     "width": 2
+    }
+   }
+  }
+ },
+ "joint-98-autonomous-v1": {
+  "archive": {
+   "sum-bits/1703/strict": {
+    "aligned": true,
+    "distinct": 7265,
+    "reported": 7265,
+    "zero_state_single_excluded": false,
+    "source": 7265,
+    "required": 7120,
+    "leftover": 0,
+    "single": 2677,
+    "multi": 4588
+   },
+   "sum-bits/1703/target": {
+    "aligned": true,
+    "distinct": 7265,
+    "reported": 7265,
+    "zero_state_single_excluded": false,
+    "source": 7265,
+    "required": 7120,
+    "leftover": 0,
+    "single": 2677,
+    "multi": 4588
+   }
+  },
+  "isolated": {
+   "case": "sum-bits",
+   "seed": "1703",
+   "arm": "strict",
+   "inputs": {
+    "engine": "a35537a6409607214b0d831666cd03f0e7e57ed50fd669278d058b5691b998b9",
+    "source": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+    "grammar": "c1b42f04710ddddbbe4c033b27a0557b5b1daba8c827676a319d86374d5ec695",
+    "gate": "c23fc98a7fd4481dbf37d5626a628797fc143dc225b557c8f2904be0a5c56321",
+    "pointer": "e33d7a28fe118a177f68fa6d34bcb0b0946bdea9222c26efe7eea1da3ce1fa72"
+   },
+   "oracle_read_denied": true,
+   "distinct": 7265,
+   "source": 7265,
+   "required": 7120,
+   "single_work": [
+    70366,
+    48529,
+    48529,
+    50732,
+    6911,
+    2677,
+    0,
+    0
+   ],
+   "single_replay": {
+    "offered": 70366,
+    "sent": 48529,
+    "valid": 2677,
+    "valid_sent": 2677,
+    "full_rule_occurrences": 1553,
+    "partial_rule_occurrences": 252,
+    "abstaining_rule_occurrences": 5
+   },
+   "single_rules_always_send": 116,
+   "single_wins_in_always_send_rules": 1541,
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "raw_tuples": 21443,
+   "statically_required_check": true,
+   "guarded_reissued": 0,
+   "fresh": 5868,
+   "rhs_owned": 5867,
+   "direct_template": 5764,
+   "fresh_unowned": 1,
+   "promotions": 0,
+   "actual_issued_before_verification": true,
+   "independent_all_multi_inputs": 4588,
+   "source_fact_replay": {
+    "fully_rebound_winners": 3173,
+    "total_winners": 4588,
+    "example": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 477,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 624,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781341
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 554050781339
+      },
+      {
+       "Eq": 554050781341
+      },
+      {
+       "Eq": 2680059592709
+      }
+     ],
+     "ordinal": 627,
+     "rule": 90,
+     "run": 106,
+     "width": 2
+    }
+   }
+  }
+ },
+ "corrected_zero_state": {
+  "sum-bits/1703/zero-state": {
+   "aligned": true,
+   "distinct": 7225,
+   "reported": 7225,
+   "zero_state_single_excluded": false,
+   "source": 7265,
+   "required": 7120,
+   "leftover": 40,
+   "single": 2637,
+   "multi": 4588
+  },
+  "sum-bits/1709/zero-state": {
+   "aligned": true,
+   "distinct": 7242,
+   "reported": 7242,
+   "zero_state_single_excluded": false,
+   "source": 7265,
+   "required": 7120,
+   "leftover": 23,
+   "single": 2654,
+   "multi": 4588
+  },
+  "dot-product/1703/zero-state": {
+   "aligned": true,
+   "distinct": 6679,
+   "reported": 6679,
+   "zero_state_single_excluded": false,
+   "source": 6704,
+   "required": 6570,
+   "leftover": 25,
+   "single": 2874,
+   "multi": 3805
+  },
+  "dot-product/1709/zero-state": {
+   "aligned": true,
+   "distinct": 6681,
+   "reported": 6681,
+   "zero_state_single_excluded": false,
+   "source": 6704,
+   "required": 6570,
+   "leftover": 23,
+   "single": 2876,
+   "multi": 3805
+  },
+  "gemm-bias-relu/1703/zero-state": {
+   "aligned": true,
+   "distinct": 15385,
+   "reported": 15385,
+   "zero_state_single_excluded": false,
+   "source": 15462,
+   "required": 15153,
+   "leftover": 77,
+   "single": 5824,
+   "multi": 9561
+  },
+  "gemm-bias-relu/1709/zero-state": {
+   "aligned": true,
+   "distinct": 15402,
+   "reported": 15402,
+   "zero_state_single_excluded": false,
+   "source": 15462,
+   "required": 15153,
+   "leftover": 60,
+   "single": 5841,
+   "multi": 9561
+  },
+  "stable-argmax/1703/zero-state": {
+   "aligned": true,
+   "distinct": 8137,
+   "reported": 8137,
+   "zero_state_single_excluded": false,
+   "source": 8190,
+   "required": 8027,
+   "leftover": 53,
+   "single": 3225,
+   "multi": 4912
+  },
+  "stable-argmax/1709/zero-state": {
+   "aligned": true,
+   "distinct": 8159,
+   "reported": 8159,
+   "zero_state_single_excluded": false,
+   "source": 8190,
+   "required": 8027,
+   "leftover": 31,
+   "single": 3247,
+   "multi": 4912
+  }
+ },
+ "expanded_strict_archives": {
+  "sum-bits/1703/strict": {
+   "aligned": true,
+   "distinct": 7265,
+   "reported": 7265,
+   "zero_state_single_excluded": false,
+   "source": 7265,
+   "required": 7120,
+   "leftover": 0,
+   "single": 2677,
+   "multi": 4588
+  },
+  "sum-bits/1709/strict": {
+   "aligned": true,
+   "distinct": 7265,
+   "reported": 7265,
+   "zero_state_single_excluded": false,
+   "source": 7265,
+   "required": 7120,
+   "leftover": 0,
+   "single": 2677,
+   "multi": 4588
+  },
+  "dot-product/1703/strict": {
+   "aligned": true,
+   "distinct": 6704,
+   "reported": 6704,
+   "zero_state_single_excluded": false,
+   "source": 6704,
+   "required": 6570,
+   "leftover": 0,
+   "single": 2899,
+   "multi": 3805
+  },
+  "dot-product/1709/strict": {
+   "aligned": true,
+   "distinct": 6704,
+   "reported": 6704,
+   "zero_state_single_excluded": false,
+   "source": 6704,
+   "required": 6570,
+   "leftover": 0,
+   "single": 2899,
+   "multi": 3805
+  },
+  "gemm-bias-relu/1703/strict": {
+   "aligned": true,
+   "distinct": 15462,
+   "reported": 15462,
+   "zero_state_single_excluded": false,
+   "source": 15462,
+   "required": 15153,
+   "leftover": 0,
+   "single": 5901,
+   "multi": 9561
+  },
+  "gemm-bias-relu/1709/strict": {
+   "aligned": true,
+   "distinct": 15462,
+   "reported": 15462,
+   "zero_state_single_excluded": false,
+   "source": 15462,
+   "required": 15153,
+   "leftover": 0,
+   "single": 5901,
+   "multi": 9561
+  },
+  "stable-argmax/1703/strict": {
+   "aligned": true,
+   "distinct": 8190,
+   "reported": 8190,
+   "zero_state_single_excluded": false,
+   "source": 8190,
+   "required": 8027,
+   "leftover": 0,
+   "single": 3278,
+   "multi": 4912
+  },
+  "stable-argmax/1709/strict": {
+   "aligned": true,
+   "distinct": 8190,
+   "reported": 8190,
+   "zero_state_single_excluded": false,
+   "source": 8190,
+   "required": 8027,
+   "leftover": 0,
+   "single": 3278,
+   "multi": 4912
+  }
+ }
+}

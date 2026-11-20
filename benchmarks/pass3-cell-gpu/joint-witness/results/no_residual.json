@@ -1,0 +1,928 @@
+{
+ "sum-bits/1703": {
+  "strict": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "schedule": true,
+    "graph": true,
+    "unions": true
+   },
+   "aligned": true,
+   "source_rhs": 7265,
+   "actual_rhs": 7265,
+   "first_rhs_difference": null,
+   "runs": 1428,
+   "neural_single": 2677,
+   "neural_multi": 4588,
+   "zero_witness": 3,
+   "total_attributed": 7265,
+   "uncredited": 0,
+   "required": 7120,
+   "verified_source_coverage": 1.0,
+   "valid_98": true,
+   "pass_without_zero_witness": true,
+   "new_physical_cells": 5868,
+   "cells_in_rhs": 5867,
+   "cells_in_neural_rhs": 5867,
+   "instance_audit": {
+    "physical_events": 5868,
+    "fresh_instances": 5868,
+    "promotions": 0,
+    "distinct_fresh_ids": 5868,
+    "source_rule_template_matches": 5764,
+    "direct_template_share": 0.9822767552828903,
+    "named_primary": 5764,
+    "named_nested": 99,
+    "joint_named_fresh": 5863,
+    "joint_named_share": 0.9991479209270621,
+    "merge_controls": [
+     305,
+     162,
+     162,
+     0,
+     63,
+     99
+    ],
+    "merge_raw_hash": "14173691644333013408",
+    "joint_cell_98": true,
+    "other_templates": [
+     [
+      507,
+      507,
+      906,
+      78
+     ],
+     [
+      506,
+      506,
+      906,
+      25
+     ]
+    ]
+   },
+   "allocation_share": 0.9998295841854125,
+   "single_work": [
+    70366,
+    48529,
+    48529,
+    50732,
+    6911,
+    2677,
+    0,
+    0
+   ],
+   "multi_work": {
+    "approximate_visits": 42972,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 40769,
+    "peak_rule_tuples": 1371,
+    "point_reads": 5374,
+    "primitive_evals": 14602,
+    "raw_parent_rejects": 445,
+    "raw_root_slots": 45432,
+    "raw_tuples": 21443,
+    "rejected_pointers": 0,
+    "root_offers": 107631,
+    "score_bucket_reads": 163147,
+    "shortlisted": 0,
+    "stale_candidates": 1581,
+    "table_rebuilds": 857,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 20998,
+    "visible_rows": 58572
+   },
+   "multi_by_width": {
+    "2": 4374,
+    "3": 186,
+    "4": 20,
+    "5": 8
+   },
+   "multi_raw_sha": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "one_audit_ms": 93.31370799999999,
+   "single_residual": false,
+   "multi_residual": false,
+   "single_threshold": -4.75,
+   "ms": [
+    77.999375,
+    77.459792,
+    79.29195899999999
+   ],
+   "median_ms": 77.999375
+  }
+ },
+ "sum-bits/1709": {
+  "strict": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "schedule": true,
+    "graph": true,
+    "unions": true
+   },
+   "aligned": true,
+   "source_rhs": 7265,
+   "actual_rhs": 7265,
+   "first_rhs_difference": null,
+   "runs": 1428,
+   "neural_single": 2677,
+   "neural_multi": 4588,
+   "zero_witness": 3,
+   "total_attributed": 7265,
+   "uncredited": 0,
+   "required": 7120,
+   "verified_source_coverage": 1.0,
+   "valid_98": true,
+   "pass_without_zero_witness": true,
+   "new_physical_cells": 5868,
+   "cells_in_rhs": 5867,
+   "cells_in_neural_rhs": 5867,
+   "instance_audit": {
+    "physical_events": 5868,
+    "fresh_instances": 5868,
+    "promotions": 0,
+    "distinct_fresh_ids": 5868,
+    "source_rule_template_matches": 5764,
+    "direct_template_share": 0.9822767552828903,
+    "named_primary": 5764,
+    "named_nested": 99,
+    "joint_named_fresh": 5863,
+    "joint_named_share": 0.9991479209270621,
+    "merge_controls": [
+     305,
+     162,
+     162,
+     0,
+     63,
+     99
+    ],
+    "merge_raw_hash": "16470285867709010052",
+    "joint_cell_98": true,
+    "other_templates": [
+     [
+      507,
+      507,
+      906,
+      78
+     ],
+     [
+      506,
+      506,
+      906,
+      25
+     ]
+    ]
+   },
+   "allocation_share": 0.9998295841854125,
+   "single_work": [
+    70366,
+    48529,
+    48529,
+    50732,
+    6911,
+    2677,
+    0,
+    0
+   ],
+   "multi_work": {
+    "approximate_visits": 42689,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 40485,
+    "peak_rule_tuples": 1366,
+    "point_reads": 5374,
+    "primitive_evals": 14602,
+    "raw_parent_rejects": 344,
+    "raw_root_slots": 45168,
+    "raw_tuples": 21342,
+    "rejected_pointers": 0,
+    "root_offers": 107631,
+    "score_bucket_reads": 162765,
+    "shortlisted": 0,
+    "stale_candidates": 1581,
+    "table_rebuilds": 857,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 20998,
+    "visible_rows": 58572
+   },
+   "multi_by_width": {
+    "2": 4374,
+    "3": 186,
+    "4": 20,
+    "5": 8
+   },
+   "multi_raw_sha": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "one_audit_ms": 88.914792,
+   "single_residual": false,
+   "multi_residual": false,
+   "single_threshold": -4.75,
+   "ms": [
+    78.20108400000001,
+    77.438334,
+    78.94383400000001
+   ],
+   "median_ms": 78.20108400000001
+  }
+ },
+ "dot-product/1703": {
+  "strict": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "schedule": true,
+    "graph": true,
+    "unions": true
+   },
+   "aligned": true,
+   "source_rhs": 6704,
+   "actual_rhs": 6704,
+   "first_rhs_difference": null,
+   "runs": 1535,
+   "neural_single": 2899,
+   "neural_multi": 3805,
+   "zero_witness": 3,
+   "total_attributed": 6704,
+   "uncredited": 0,
+   "required": 6570,
+   "verified_source_coverage": 1.0,
+   "valid_98": true,
+   "pass_without_zero_witness": true,
+   "new_physical_cells": 5682,
+   "cells_in_rhs": 5674,
+   "cells_in_neural_rhs": 5674,
+   "instance_audit": {
+    "physical_events": 5682,
+    "fresh_instances": 5682,
+    "promotions": 0,
+    "distinct_fresh_ids": 5682,
+    "source_rule_template_matches": 5538,
+    "direct_template_share": 0.9746568109820486,
+    "named_primary": 5538,
+    "named_nested": 118,
+    "joint_named_fresh": 5656,
+    "joint_named_share": 0.9954241464273144,
+    "merge_controls": [
+     416,
+     176,
+     176,
+     0,
+     58,
+     118
+    ],
+    "merge_raw_hash": "5837800705029730059",
+    "joint_cell_98": true,
+    "other_templates": [
+     [
+      507,
+      507,
+      906,
+      90
+     ],
+     [
+      506,
+      506,
+      906,
+      46
+     ]
+    ]
+   },
+   "allocation_share": 0.9985920450545582,
+   "single_work": [
+    62558,
+    47313,
+    47313,
+    54674,
+    8072,
+    2899,
+    0,
+    0
+   ],
+   "multi_work": {
+    "approximate_visits": 55085,
+    "calls": 3818,
+    "committed": 3805,
+    "exhausted": 0,
+    "learned_pointers": 53088,
+    "peak_rule_tuples": 1260,
+    "point_reads": 17980,
+    "primitive_evals": 8466,
+    "raw_parent_rejects": 424,
+    "raw_root_slots": 52323,
+    "raw_tuples": 21210,
+    "rejected_pointers": 0,
+    "root_offers": 104441,
+    "score_bucket_reads": 210225,
+    "shortlisted": 0,
+    "stale_candidates": 1849,
+    "table_rebuilds": 688,
+    "unsupported": 0,
+    "validated": 3805,
+    "verified_parent_tuples": 20786,
+    "visible_rows": 57477
+   },
+   "multi_by_width": {
+    "2": 3427,
+    "3": 322,
+    "4": 56
+   },
+   "multi_raw_sha": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "one_audit_ms": 88.1435,
+   "single_residual": false,
+   "multi_residual": false,
+   "single_threshold": -4.75,
+   "ms": [
+    78.84016700000001,
+    82.337958,
+    80.126375
+   ],
+   "median_ms": 80.126375
+  }
+ },
+ "dot-product/1709": {
+  "strict": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "schedule": true,
+    "graph": true,
+    "unions": true
+   },
+   "aligned": true,
+   "source_rhs": 6704,
+   "actual_rhs": 6704,
+   "first_rhs_difference": null,
+   "runs": 1535,
+   "neural_single": 2899,
+   "neural_multi": 3805,
+   "zero_witness": 3,
+   "total_attributed": 6704,
+   "uncredited": 0,
+   "required": 6570,
+   "verified_source_coverage": 1.0,
+   "valid_98": true,
+   "pass_without_zero_witness": true,
+   "new_physical_cells": 5682,
+   "cells_in_rhs": 5674,
+   "cells_in_neural_rhs": 5674,
+   "instance_audit": {
+    "physical_events": 5682,
+    "fresh_instances": 5682,
+    "promotions": 0,
+    "distinct_fresh_ids": 5682,
+    "source_rule_template_matches": 5538,
+    "direct_template_share": 0.9746568109820486,
+    "named_primary": 5538,
+    "named_nested": 118,
+    "joint_named_fresh": 5656,
+    "joint_named_share": 0.9954241464273144,
+    "merge_controls": [
+     416,
+     176,
+     176,
+     0,
+     58,
+     118
+    ],
+    "merge_raw_hash": "4524631256545843612",
+    "joint_cell_98": true,
+    "other_templates": [
+     [
+      507,
+      507,
+      906,
+      90
+     ],
+     [
+      506,
+      506,
+      906,
+      46
+     ]
+    ]
+   },
+   "allocation_share": 0.9985920450545582,
+   "single_work": [
+    62558,
+    47313,
+    47313,
+    54674,
+    8072,
+    2899,
+    0,
+    0
+   ],
+   "multi_work": {
+    "approximate_visits": 54850,
+    "calls": 3818,
+    "committed": 3805,
+    "exhausted": 0,
+    "learned_pointers": 52855,
+    "peak_rule_tuples": 1260,
+    "point_reads": 17980,
+    "primitive_evals": 8466,
+    "raw_parent_rejects": 281,
+    "raw_root_slots": 51930,
+    "raw_tuples": 21067,
+    "rejected_pointers": 0,
+    "root_offers": 104441,
+    "score_bucket_reads": 212970,
+    "shortlisted": 0,
+    "stale_candidates": 1849,
+    "table_rebuilds": 688,
+    "unsupported": 0,
+    "validated": 3805,
+    "verified_parent_tuples": 20786,
+    "visible_rows": 57477
+   },
+   "multi_by_width": {
+    "2": 3427,
+    "3": 322,
+    "4": 56
+   },
+   "multi_raw_sha": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "one_audit_ms": 89.2255,
+   "single_residual": false,
+   "multi_residual": false,
+   "single_threshold": -4.75,
+   "ms": [
+    76.692916,
+    78.14012500000001,
+    79.370625
+   ],
+   "median_ms": 78.14012500000001
+  }
+ },
+ "gemm-bias-relu/1703": {
+  "strict": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "schedule": true,
+    "graph": true,
+    "unions": true
+   },
+   "aligned": true,
+   "source_rhs": 15462,
+   "actual_rhs": 15462,
+   "first_rhs_difference": null,
+   "runs": 1652,
+   "neural_single": 5901,
+   "neural_multi": 9561,
+   "zero_witness": 3,
+   "total_attributed": 15462,
+   "uncredited": 0,
+   "required": 15153,
+   "verified_source_coverage": 1.0,
+   "valid_98": true,
+   "pass_without_zero_witness": true,
+   "new_physical_cells": 12869,
+   "cells_in_rhs": 12869,
+   "cells_in_neural_rhs": 12869,
+   "instance_audit": {
+    "physical_events": 12869,
+    "fresh_instances": 12869,
+    "promotions": 0,
+    "distinct_fresh_ids": 12869,
+    "source_rule_template_matches": 12690,
+    "direct_template_share": 0.9860906053306395,
+    "named_primary": 12690,
+    "named_nested": 176,
+    "joint_named_fresh": 12866,
+    "joint_named_share": 0.9997668816535862,
+    "merge_controls": [
+     560,
+     329,
+     329,
+     0,
+     153,
+     176
+    ],
+    "merge_raw_hash": "722415492864132503",
+    "joint_cell_98": true,
+    "other_templates": [
+     [
+      507,
+      507,
+      906,
+      132
+     ],
+     [
+      506,
+      506,
+      906,
+      47
+     ]
+    ]
+   },
+   "allocation_share": 1.0,
+   "single_work": [
+    196265,
+    154820,
+    154820,
+    177722,
+    27432,
+    5901,
+    0,
+    0
+   ],
+   "multi_work": {
+    "approximate_visits": 146316,
+    "calls": 4751,
+    "committed": 9561,
+    "exhausted": 0,
+    "learned_pointers": 140787,
+    "peak_rule_tuples": 6965,
+    "point_reads": 18737,
+    "primitive_evals": 59591,
+    "raw_parent_rejects": 1100,
+    "raw_root_slots": 168394,
+    "raw_tuples": 78407,
+    "rejected_pointers": 0,
+    "root_offers": 261690,
+    "score_bucket_reads": 783992,
+    "shortlisted": 0,
+    "stale_candidates": 3793,
+    "table_rebuilds": 816,
+    "unsupported": 0,
+    "validated": 9561,
+    "verified_parent_tuples": 77307,
+    "visible_rows": 137339
+   },
+   "multi_by_width": {
+    "2": 8990,
+    "3": 488,
+    "4": 58,
+    "5": 25
+   },
+   "multi_raw_sha": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "one_audit_ms": 258.84891700000003,
+   "single_residual": false,
+   "multi_residual": false,
+   "single_threshold": -4.75,
+   "ms": [
+    231.86195800000002,
+    232.02999999999997,
+    233.335583
+   ],
+   "median_ms": 232.02999999999997
+  }
+ },
+ "gemm-bias-relu/1709": {
+  "strict": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "schedule": true,
+    "graph": true,
+    "unions": true
+   },
+   "aligned": true,
+   "source_rhs": 15462,
+   "actual_rhs": 15462,
+   "first_rhs_difference": null,
+   "runs": 1652,
+   "neural_single": 5901,
+   "neural_multi": 9561,
+   "zero_witness": 3,
+   "total_attributed": 15462,
+   "uncredited": 0,
+   "required": 15153,
+   "verified_source_coverage": 1.0,
+   "valid_98": true,
+   "pass_without_zero_witness": true,
+   "new_physical_cells": 12869,
+   "cells_in_rhs": 12869,
+   "cells_in_neural_rhs": 12869,
+   "instance_audit": {
+    "physical_events": 12869,
+    "fresh_instances": 12869,
+    "promotions": 0,
+    "distinct_fresh_ids": 12869,
+    "source_rule_template_matches": 12690,
+    "direct_template_share": 0.9860906053306395,
+    "named_primary": 12690,
+    "named_nested": 176,
+    "joint_named_fresh": 12866,
+    "joint_named_share": 0.9997668816535862,
+    "merge_controls": [
+     560,
+     329,
+     329,
+     0,
+     153,
+     176
+    ],
+    "merge_raw_hash": "11007325204469561335",
+    "joint_cell_98": true,
+    "other_templates": [
+     [
+      507,
+      507,
+      906,
+      132
+     ],
+     [
+      506,
+      506,
+      906,
+      47
+     ]
+    ]
+   },
+   "allocation_share": 1.0,
+   "single_work": [
+    196265,
+    154820,
+    154820,
+    177722,
+    27432,
+    5901,
+    0,
+    0
+   ],
+   "multi_work": {
+    "approximate_visits": 149268,
+    "calls": 4751,
+    "committed": 9561,
+    "exhausted": 0,
+    "learned_pointers": 143772,
+    "peak_rule_tuples": 7021,
+    "point_reads": 18737,
+    "primitive_evals": 59591,
+    "raw_parent_rejects": 2265,
+    "raw_root_slots": 171102,
+    "raw_tuples": 79572,
+    "rejected_pointers": 0,
+    "root_offers": 261690,
+    "score_bucket_reads": 781734,
+    "shortlisted": 0,
+    "stale_candidates": 3793,
+    "table_rebuilds": 816,
+    "unsupported": 0,
+    "validated": 9561,
+    "verified_parent_tuples": 77307,
+    "visible_rows": 137339
+   },
+   "multi_by_width": {
+    "2": 8990,
+    "3": 488,
+    "4": 58,
+    "5": 25
+   },
+   "multi_raw_sha": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "one_audit_ms": 269.550958,
+   "single_residual": false,
+   "multi_residual": false,
+   "single_threshold": -4.75,
+   "ms": [
+    230.494667,
+    234.500875,
+    236.15520800000002
+   ],
+   "median_ms": 234.500875
+  }
+ },
+ "stable-argmax/1703": {
+  "strict": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "schedule": true,
+    "graph": true,
+    "unions": true
+   },
+   "aligned": true,
+   "source_rhs": 8190,
+   "actual_rhs": 8190,
+   "first_rhs_difference": null,
+   "runs": 1149,
+   "neural_single": 3278,
+   "neural_multi": 4912,
+   "zero_witness": 3,
+   "total_attributed": 8190,
+   "uncredited": 0,
+   "required": 8027,
+   "verified_source_coverage": 1.0,
+   "valid_98": true,
+   "pass_without_zero_witness": true,
+   "new_physical_cells": 6841,
+   "cells_in_rhs": 6841,
+   "cells_in_neural_rhs": 6841,
+   "instance_audit": {
+    "physical_events": 6841,
+    "fresh_instances": 6841,
+    "promotions": 0,
+    "distinct_fresh_ids": 6841,
+    "source_rule_template_matches": 6740,
+    "direct_template_share": 0.9852360765969888,
+    "named_primary": 6740,
+    "named_nested": 101,
+    "joint_named_fresh": 6841,
+    "joint_named_share": 1.0,
+    "merge_controls": [
+     377,
+     238,
+     238,
+     0,
+     137,
+     101
+    ],
+    "merge_raw_hash": "7709059358105285257",
+    "joint_cell_98": true,
+    "other_templates": [
+     [
+      507,
+      507,
+      906,
+      83
+     ],
+     [
+      506,
+      506,
+      906,
+      18
+     ]
+    ]
+   },
+   "allocation_share": 1.0,
+   "single_work": [
+    65649,
+    50151,
+    50151,
+    55265,
+    8115,
+    3278,
+    0,
+    0
+   ],
+   "multi_work": {
+    "approximate_visits": 39858,
+    "calls": 3226,
+    "committed": 4912,
+    "exhausted": 0,
+    "learned_pointers": 37637,
+    "peak_rule_tuples": 2544,
+    "point_reads": 3927,
+    "primitive_evals": 14312,
+    "raw_parent_rejects": 422,
+    "raw_root_slots": 44178,
+    "raw_tuples": 20607,
+    "rejected_pointers": 0,
+    "root_offers": 82882,
+    "score_bucket_reads": 176859,
+    "shortlisted": 0,
+    "stale_candidates": 946,
+    "table_rebuilds": 588,
+    "unsupported": 0,
+    "validated": 4912,
+    "verified_parent_tuples": 20185,
+    "visible_rows": 51793
+   },
+   "multi_by_width": {
+    "2": 4660,
+    "3": 200,
+    "4": 36,
+    "5": 16
+   },
+   "multi_raw_sha": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "one_audit_ms": 86.836708,
+   "single_residual": false,
+   "multi_residual": false,
+   "single_threshold": -4.75,
+   "ms": [
+    75.11545799999999,
+    74.227708,
+    74.845542
+   ],
+   "median_ms": 74.845542
+  }
+ },
+ "stable-argmax/1709": {
+  "strict": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "schedule": true,
+    "graph": true,
+    "unions": true
+   },
+   "aligned": true,
+   "source_rhs": 8190,
+   "actual_rhs": 8190,
+   "first_rhs_difference": null,
+   "runs": 1149,
+   "neural_single": 3278,
+   "neural_multi": 4912,
+   "zero_witness": 3,
+   "total_attributed": 8190,
+   "uncredited": 0,
+   "required": 8027,
+   "verified_source_coverage": 1.0,
+   "valid_98": true,
+   "pass_without_zero_witness": true,
+   "new_physical_cells": 6841,
+   "cells_in_rhs": 6841,
+   "cells_in_neural_rhs": 6841,
+   "instance_audit": {
+    "physical_events": 6841,
+    "fresh_instances": 6841,
+    "promotions": 0,
+    "distinct_fresh_ids": 6841,
+    "source_rule_template_matches": 6740,
+    "direct_template_share": 0.9852360765969888,
+    "named_primary": 6740,
+    "named_nested": 101,
+    "joint_named_fresh": 6841,
+    "joint_named_share": 1.0,
+    "merge_controls": [
+     377,
+     238,
+     238,
+     0,
+     137,
+     101
+    ],
+    "merge_raw_hash": "2648016802776661484",
+    "joint_cell_98": true,
+    "other_templates": [
+     [
+      507,
+      507,
+      906,
+      83
+     ],
+     [
+      506,
+      506,
+      906,
+      18
+     ]
+    ]
+   },
+   "allocation_share": 1.0,
+   "single_work": [
+    65649,
+    50151,
+    50151,
+    55265,
+    8115,
+    3278,
+    0,
+    0
+   ],
+   "multi_work": {
+    "approximate_visits": 40195,
+    "calls": 3226,
+    "committed": 4912,
+    "exhausted": 0,
+    "learned_pointers": 37918,
+    "peak_rule_tuples": 2544,
+    "point_reads": 3927,
+    "primitive_evals": 14312,
+    "raw_parent_rejects": 506,
+    "raw_root_slots": 44462,
+    "raw_tuples": 20691,
+    "rejected_pointers": 0,
+    "root_offers": 82882,
+    "score_bucket_reads": 183455,
+    "shortlisted": 0,
+    "stale_candidates": 946,
+    "table_rebuilds": 588,
+    "unsupported": 0,
+    "validated": 4912,
+    "verified_parent_tuples": 20185,
+    "visible_rows": 51793
+   },
+   "multi_by_width": {
+    "2": 4660,
+    "3": 200,
+    "4": 36,
+    "5": 16
+   },
+   "multi_raw_sha": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "one_audit_ms": 91.349,
+   "single_residual": false,
+   "multi_residual": false,
+   "single_threshold": -4.75,
+   "ms": [
+    73.07983399999999,
+    75.024833,
+    72.643417
+   ],
+   "median_ms": 73.07983399999999
+  }
+ }
+}

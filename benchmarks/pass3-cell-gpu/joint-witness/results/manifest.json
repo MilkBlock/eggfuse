@@ -1,0 +1,137 @@
+{
+ "selective": {
+  "directory": "joint-98-named-assisted-v4",
+  "results_file_sha256": "5ef0dd0f0ad5fd7ca08d2e5385bfd70a589301c86d2239e8023a784778e5fca1",
+  "ordinals": {
+   "dot-product-1703-target-ordinals.json.gz": "ee8035829fac8854f9050e141f20d7e768da21261bb24a9aae53ed0bd0193b69",
+   "dot-product-1709-target-ordinals.json.gz": "439effc00d3ca87abb44e6a7a0a1d3c72c06558c8876c4d6d345a27326e00da8",
+   "gemm-bias-relu-1703-target-ordinals.json.gz": "a2974c32b507a814c4d5813545f18af6f861b3a9e8b360853563c43c20527a3b",
+   "gemm-bias-relu-1709-target-ordinals.json.gz": "a4311b61611e069ae78a783ae5c353d65a569e7b95698e79138453268c278b6d",
+   "stable-argmax-1703-target-ordinals.json.gz": "108e79d8a494898f523816dea1f045a1bdd859913c19b4f1ed15eb3cfb81e337",
+   "stable-argmax-1709-target-ordinals.json.gz": "217198683eeaa39fc186b2ec94b213dc3339827817e8d3ffc0942a1f82ece532",
+   "sum-bits-1703-target-ordinals.json.gz": "bb2a3ffba0a6165056d089902585c66fc0717b8159eb32986b08919706e05700",
+   "sum-bits-1709-target-ordinals.json.gz": "463351f52602e282091c8cd25237e02f7f5c62888b2726910827e4b6bfdd4467"
+  }
+ },
+ "no_residual": {
+  "directory": "joint-98-named-certified-v4",
+  "results_file_sha256": "517dc82f336c2a9f9933d31ceea46a77588cb1fd24f7a7ef81666c107d2d3743",
+  "ordinals": {
+   "dot-product-1703-strict-ordinals.json.gz": "d9c0390424a5acf3d3373eaca7a92ec594632cba931ceec4f7d5250269ef8a26",
+   "dot-product-1709-strict-ordinals.json.gz": "81139a36befa07efa15f2212396a351fa57b7159127e143110f708eeecc3d692",
+   "gemm-bias-relu-1703-strict-ordinals.json.gz": "89839e99a839f62ba444becbd0fbc631c65f6f00c0dd5538cb81750787e15feb",
+   "gemm-bias-relu-1709-strict-ordinals.json.gz": "1f927928818ae79436f2315f5eb34c12b8bc3b613855d8d36924465532e7f10c",
+   "stable-argmax-1703-strict-ordinals.json.gz": "a7d9e58db375bf9721f4515fb19591631812cbe6c8f1d6b0dea15a0ed71a15e6",
+   "stable-argmax-1709-strict-ordinals.json.gz": "f710364e3ba9b240f39c6831de66e686993190382cc9af52e9299125e1546542",
+   "sum-bits-1703-strict-ordinals.json.gz": "23a97ea2f8ba4e8c467399121f3e18cbe06209269c236f8afcf35d29e766b2bf",
+   "sum-bits-1709-strict-ordinals.json.gz": "8991066437fec4b7013ddce5673bff876118ee78f4facf043132b8d5cef8b84b"
+  }
+ },
+ "balanced": {
+  "directory": "joint-98-balanced-v1",
+  "results_file_sha256": "2b66ddabdefc6c4910463941ad17f8b3e65e2cfe6c4d6930478e9c9527d6867a",
+  "ordinals": {
+   "dot-product-1703-target-ordinals.json.gz": "96efbd03f13c3797286ea24353cdd12a34420018c16ab8e748871203552ac4d8",
+   "dot-product-1709-target-ordinals.json.gz": "c56853f069a557b3d699cd48a928a14d7f995131cb70b478084e0c5e0a1d8f3d",
+   "gemm-bias-relu-1703-target-ordinals.json.gz": "4498568aebc174c5273b2ed1b3bd9783417195c63ebcbd8288c0fe421055aec5",
+   "gemm-bias-relu-1709-target-ordinals.json.gz": "006935aa16f28a7b05a01c77419ae2bd50e49080e666a37a035c1212b38ba076",
+   "stable-argmax-1703-target-ordinals.json.gz": "83373ba6d6b5581024e6fec063b076c3585de0386facb3a01e77c38789f22cb8",
+   "stable-argmax-1709-target-ordinals.json.gz": "f73f816bc916fa95d2feac24ffbf3c5912664bbf2b3eafaf5794433cb63edb95",
+   "sum-bits-1703-target-ordinals.json.gz": "8bda302edeffe7d46b99940b2927330a1414ca8fad53c11661e6f2374409c6cc",
+   "sum-bits-1709-target-ordinals.json.gz": "e70ba0df20b3a39250e621679f47ae33dcfd6f35c8ebbc43fb4613f4063c3a5d"
+  }
+ },
+ "development": {
+  "directory": "joint-98-dev-autonomous-v1",
+  "results_file_sha256": "ccdf4568104ad4ac83f2fe64ce730dab534c36ffea570aea0b0d1673a3c50e29",
+  "ordinals": {
+   "gated-state-1703-strict-ordinals.json.gz": "a218f74312e11400fd67b77bfa891037583b3aed558e868576105188b2110549",
+   "gated-state-1703-target-ordinals.json.gz": "76e28e51f5495de91d0ae2ef750155ca88f43d4072ff3ae86a6a2ae9faed3cbe",
+   "gated-state-1709-strict-ordinals.json.gz": "d4e44536cca23fe76cd3bef3fd2bb1faea3be686bff02206a4129fc2301c3d46",
+   "gated-state-1709-target-ordinals.json.gz": "04a772ca8664330ffbf9090fd81a958f5e41e6b833d4bfa4800b6d97c4498fcb",
+   "histogram-scatter-1703-strict-ordinals.json.gz": "aa983b32f5af5aeb45aee67628a137e1bc3999c019a9ec4e2668a0d3f218129c",
+   "histogram-scatter-1703-target-ordinals.json.gz": "39d87729a36a55dd8644b416b6d60a92de44710bfdb0ec11f62890d201235ea1",
+   "histogram-scatter-1709-strict-ordinals.json.gz": "c9511e50c1ca7af12cbc1d70043482f3948c1d1ac6b0f65ee35800a196d2fc17",
+   "histogram-scatter-1709-target-ordinals.json.gz": "4ec180095ba0dd3fc01c6415e2784a949f6748247ba2665dda663038fdb5dbcd"
+  }
+ },
+ "negative": {
+  "directory": "joint-98-checked-v4",
+  "results_file_sha256": "c86c1f0b060709a92827c39c9da05a9c1f14ca95a32d37f98021b54a298ae8cc",
+  "ordinals": {
+   "dot-product-1703-none-only-ordinals.json.gz": "8c4c0e7c56619f9ce4ad7f93970a6878c098a4ff77eac7332e6c1400d02866a1",
+   "dot-product-1703-null-multi-ordinals.json.gz": "f7b2c0bf82d2859ee8ef33dda6e2a898068b6f8912131ee501d5ea9ec1e9a5a9",
+   "dot-product-1703-null-single-ordinals.json.gz": "3e4a9f4e57c9d6bc07048f3189fea43ee8b0b413f3bda76b122cbf44e3157df8",
+   "dot-product-1703-strict-ordinals.json.gz": "f5dd75a8196e389ff8f23c1f9544195d6878fdbac90ab6365cab89ebd24cd3b9",
+   "dot-product-1703-target-ordinals.json.gz": "6d61ee5dc0f54ce8bd4154bc2e82a4326ead0c3bec606df6a87c9c833c0beefd",
+   "dot-product-1703-zero-state-ordinals.json.gz": "334172550f04621005c5c5e75fbbc531dc3d89b9121abe037966326a5c9bf5f4",
+   "dot-product-1709-none-only-ordinals.json.gz": "55eda2f95312038a45a0a0763fe41836b1b73581a129cefc4593ae5c211f7c27",
+   "dot-product-1709-null-multi-ordinals.json.gz": "cdd11827cce6cf6fc6c8b7ef648faa9950b66e78d2027c35af4573fffdcb99c6",
+   "dot-product-1709-null-single-ordinals.json.gz": "1c414136558155d61dc3a8afa740e1f372809bd99bf3e9c45db4e7934366811e",
+   "dot-product-1709-strict-ordinals.json.gz": "53f71563ee76f335858c6fe344e4c238e1fb05632ce981f78ef48bf8d2603eec",
+   "dot-product-1709-target-ordinals.json.gz": "20314ac5dbad4e0de049c4db2564918e41102a09ebdc7f122977233e2e99fb9b",
+   "dot-product-1709-zero-state-ordinals.json.gz": "8960492d88454d2f8535e9f3a8598d17d72fcd15b287fd1fbcf4e66f159497d9",
+   "gemm-bias-relu-1703-none-only-ordinals.json.gz": "37c6ae99ffafd80900188a7d263d01c3be56dadc5c59cb60f97ee56928ebe215",
+   "gemm-bias-relu-1703-null-multi-ordinals.json.gz": "8ac11b7535a29307180d7258ff6fda9ba7828f259289e723f98cd60160e087c6",
+   "gemm-bias-relu-1703-null-single-ordinals.json.gz": "3e088996b3a4cdc39cd9e12605d56a674513bd03e438db4422df5d73dbcef9ca",
+   "gemm-bias-relu-1703-strict-ordinals.json.gz": "218bbac3bbecde1c120af79eca80a62db8ce6e9a68fbc9a04f4ecba3cc903aaa",
+   "gemm-bias-relu-1703-target-ordinals.json.gz": "70520e05fedacdd7ef57a31b65d30c249d386e652e034b4b6ab6b64f1d0fc411",
+   "gemm-bias-relu-1703-zero-state-ordinals.json.gz": "d860f305fd2a4cb87413995eb5566e2a6f60597294eccac413f9735e5734b0aa",
+   "gemm-bias-relu-1709-none-only-ordinals.json.gz": "370f3bccf76394a898c3626f298aa70ce458e09b836ee02bd72aa35893dfa0ab",
+   "gemm-bias-relu-1709-null-multi-ordinals.json.gz": "7607bc2440d5769eba91f73d68518d78954d6d5887de5024d88308ad6a481fb0",
+   "gemm-bias-relu-1709-null-single-ordinals.json.gz": "0b5db1ce9d4cfdc9ec31289afca994d6cfdc4b7eec230e25fb60277addcda7e8",
+   "gemm-bias-relu-1709-strict-ordinals.json.gz": "a1dd01c2de67f7d99caa885315c28e0bb0f5ce52fa10dd7acefa5cb3429c0c02",
+   "gemm-bias-relu-1709-target-ordinals.json.gz": "36618da1d95c08eedc51066efd4595d36581741974b9383b1c366364178af6b5",
+   "gemm-bias-relu-1709-zero-state-ordinals.json.gz": "a87655c5e852d0ddfae9221e6a149a86d1f2696035f9e7ea94fa78d76c96a76a",
+   "stable-argmax-1703-none-only-ordinals.json.gz": "b436b11b3cbf65c597960ba29e4f052b40123745fc5cb5df228abc28b7b1cdef",
+   "stable-argmax-1703-null-multi-ordinals.json.gz": "6fc3f09f25fc150448622ac0d10034d2ecae9c809b544d8b771de03c5f44fb30",
+   "stable-argmax-1703-null-single-ordinals.json.gz": "50b19fa3d0b85d5954188624efd21236205bd86e57889b1c6070e0c706301a78",
+   "stable-argmax-1703-strict-ordinals.json.gz": "410a2ce016e1b485d110fbc16234c09f34cee0c0534d29da5f5550ab02bb1a93",
+   "stable-argmax-1703-target-ordinals.json.gz": "078d30447c234a5b2a4dd2c603ec17a04242ae0b567133908b36e570d55a6a68",
+   "stable-argmax-1703-zero-state-ordinals.json.gz": "adc0ed5c53a7b6ca1e0ea34bc69fa926e460cc5038494b99d07f9362c943a71c",
+   "stable-argmax-1709-none-only-ordinals.json.gz": "74bcf5d8ef1a22d050cb7ce5cc78044fda044502d8d075daa0a4628e655df8e3",
+   "stable-argmax-1709-null-multi-ordinals.json.gz": "7a0b389140eead887bd10f8ac81ebeff616763ef0898d8253b04911e4c0fd995",
+   "stable-argmax-1709-null-single-ordinals.json.gz": "60406da2acdabbb039aa2c76b79e23692996ee156f3e6a1eac0d59bd10c8be68",
+   "stable-argmax-1709-strict-ordinals.json.gz": "abe08ffd331a839c7940767f7b0bbd72757c59b9c6349ef3bea2a2ad9558d9d2",
+   "stable-argmax-1709-target-ordinals.json.gz": "0e962b37f9ec1a2a0c788d09285d2b33cb3d4161e594ecf94e870b10e14af3bf",
+   "stable-argmax-1709-zero-state-ordinals.json.gz": "25722b403e054b2767b1d377c80b95dfc79e35e97d19e3c3218bc83db9449292",
+   "sum-bits-1703-none-only-ordinals.json.gz": "068583d1da865f83c0531f4debebb87525cfdadb7e20b1cedadce29d0115e8d6",
+   "sum-bits-1703-null-multi-ordinals.json.gz": "52b8f30a12c2678fe9157e2099294a478fd78c6572ac829c7da1166af9da60c2",
+   "sum-bits-1703-null-single-ordinals.json.gz": "f11159a254eb9f53032971553f9eac885f8590714b80dcc860e84073cdc1aa5b",
+   "sum-bits-1703-target-ordinals.json.gz": "39a5fe88313d370e303051f900fd1713f808965c6c64953576f82c443a81b988",
+   "sum-bits-1703-zero-state-ordinals.json.gz": "b3c4c6c794c44f32a5c006526353740ab13fdf5783a73de70b6944f9314b378f",
+   "sum-bits-1709-none-only-ordinals.json.gz": "ea302041307928d16f2b5f3cd4219489e9bc87dfbb9cdd43ddfeb3d5df93ed88",
+   "sum-bits-1709-null-multi-ordinals.json.gz": "f9eef8cd68834460951f27eb1c2d02a4da1617586df0cb16f1e29f78901c9ff8",
+   "sum-bits-1709-null-single-ordinals.json.gz": "c33f582841eea0dd6e1377c359462e1ab6f0a9547363d3c3f5b2cc72c4c8e11e",
+   "sum-bits-1709-target-ordinals.json.gz": "9aba403927eefcc36f4d74e00d1db85753ec7b9200f265adb5c7c72687a07f7e",
+   "sum-bits-1709-zero-state-ordinals.json.gz": "fc8cc1273ede4721ff32d929b35ab2fb1a7d8efe4bedb1ea6f93c9fff159d9e3"
+  }
+ },
+ "state_mask": {
+  "directory": "joint-98-template-audit-v1",
+  "results_file_sha256": "c06b858b7044c7347f13de20cab062cefac62312caf41f6e65beb0076e6165a3",
+  "ordinals": {
+   "dot-product-1703-target-ordinals.json.gz": "a031a4216e494f2299c283c93834b439077a647a78dd350123aead19f2ddb578",
+   "dot-product-1703-zero-state-ordinals.json.gz": "8bf54b6756cd8bb300d9987da65ca4a5fc9f92c09a9749b2c512aaa83846521c",
+   "dot-product-1709-target-ordinals.json.gz": "8c56ca4a98d7377325dfd11ec78d179e7ba97c4b85b1a83300dce619ef15c477",
+   "dot-product-1709-zero-state-ordinals.json.gz": "92f0dc853fe2914c8892381ca01b3165fee3a720ebc782326991c7a812fb60ed",
+   "gemm-bias-relu-1703-target-ordinals.json.gz": "16e4cf66b0c85872a15934d915ac5a74310fa0410fb6150c153f53651b280da4",
+   "gemm-bias-relu-1703-zero-state-ordinals.json.gz": "af5588760db583763aa930bc1b80de3c104bfa3eccf4555b50499b55b8f6890e",
+   "gemm-bias-relu-1709-target-ordinals.json.gz": "caf94f05cc116d9230331e26df9332f799dacede6303996b59aaa2313673373e",
+   "gemm-bias-relu-1709-zero-state-ordinals.json.gz": "c413258a4c290c4638425307c66f02e2ac8399a419fa09a30102a707952678e3",
+   "stable-argmax-1703-target-ordinals.json.gz": "c80ae7b5968ae7178ad3e89cecedccaf5522425ddcc89849658db6d88de4202b",
+   "stable-argmax-1703-zero-state-ordinals.json.gz": "9b01769e839308c879a3a0140d41f045ff9be88adfdce893d7496544556adc49",
+   "stable-argmax-1709-target-ordinals.json.gz": "55e4d964a2daaaec4af5fc61e54e6c2a6a63c4fce9703475e1f43a8fddfab813",
+   "stable-argmax-1709-zero-state-ordinals.json.gz": "8a22679758950316c7d5899fffedd4b4b3745270079c3da196637fef3dd65768",
+   "sum-bits-1703-target-ordinals.json.gz": "936d8967a4e9f5b504728f0527067293d2721dcd9f70763db607171b2135ef41",
+   "sum-bits-1703-zero-state-ordinals.json.gz": "a184d58543eaed3507f1f39ba12559b67fd676ba97669ea03d5ced1018dbcdda",
+   "sum-bits-1709-target-ordinals.json.gz": "a149ede94efde9d656a9a5356ab946d409d0cd6fa4d394a5e5fc212b925c49fa",
+   "sum-bits-1709-zero-state-ordinals.json.gz": "a740a03528ac6e22c3cff90f5df3ac4b237dccf4b2d700e4b0ed4b354c85a604"
+  }
+ },
+ "timing": {
+  "directory": "joint-98-primary-timings-v1",
+  "results_file_sha256": "3bf645e72daa2e511b0ef45e92b667076b93359a3fe4cc7acb931989d60da399",
+  "ordinals": {}
+ }
+}
