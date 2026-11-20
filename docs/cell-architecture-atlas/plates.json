@@ -6163,5 +6163,728 @@
         ]
       }
     ]
+  },
+  {
+    "id": "107-placement-lifetime",
+    "section": "跨 Run 放置成本",
+    "title": "首次放置的代价，后续合并能收回多少？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "把布局动作从一个合并边界延伸到整个源程序。逐 Run 观察可归属于动态 Graph 的字节，再求和得到驻留的字节·Run。",
+    "arms": "a　普通池化。b　仅保留可延伸的多成员前缀。c　更广地保留前缀，比较固定保留与在 Rust 内执行的训练门控。",
+    "fix": "源调度与自然候选对齐。子进程在每个已稳定 Run 释放实际 Graph，并保留 Program 和观察器，终点另由父进程验证。",
+    "measure": "GEMM-bias-ReLU 的 1,652 个 Run 中，窄布局有 299 个边界比池化省内存，完整轨迹仍多占 9,081,012 字节·Run。宽布局的门控只收回额外驻留的 0.45%。",
+    "note": "gated-state 的 1,163 个 Run 上，窄布局有 498 个边界低于基线，但仍多占 2,917,720 字节·Run。字节·Run 按源边界计权。",
+    "src": "S95",
+    "diagram": [
+      {
+        "title": "Ordinary pooling",
+        "layers": [
+          [
+            [
+              "s",
+              "admit members"
+            ]
+          ],
+          [
+            [
+              "v",
+              "settled source Run"
+            ]
+          ],
+          [
+            [
+              "s",
+              "live graph bytes"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Narrow prefix",
+        "layers": [
+          [
+            [
+              "s",
+              "reserve few groups"
+            ]
+          ],
+          [
+            [
+              "v",
+              "measure each Run"
+            ]
+          ],
+          [
+            [
+              "s",
+              "sum residency"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Broad + policy",
+        "layers": [
+          [
+            [
+              "n",
+              "keep or merge"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify old owners"
+            ]
+          ],
+          [
+            [
+              "s",
+              "charge lifetimes"
+            ]
+          ]
+        ]
+      }
+    ],
+    "observation": {
+      "figure": "107-placement-observations.svg",
+      "source": "benchmarks/pass3-cell-gpu/placement-lifetime/lifetime.svg",
+      "title": "从首次放置到最后一个 Run 的驻留成本",
+      "caption": "左列为 GEMM-bias-ReLU，右列为 gated-state。累计驻留以原 Run 的稳定边界计权；累计申请还包括随后已释放的分配。"
+    }
+  },
+  {
+    "id": "108-native-verifier-bake",
+    "section": "验证器代码生成",
+    "title": "能把同形 Cell 规则的验真循环烘焙为一个本机函数吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "对一次已签发的源父，锚点列、已算结果和字面量如何连接到后续点读、标量运算及 RHS 槽位由编译器确定。",
+    "arms": "a　按通用寄存器计划解释。b　解释静态字段投影。c　在离线阶段按精确形状生成 Rust 函数；未知计划走同一源解释器。",
+    "fix": "使用原模型、原候选、相同表和 primitive 语义。所有冻结源事件、获胜父和真实分配核对。另用新函数表和十四原子规则检验转移与回退。",
+    "measure": "226 个规则入口共用 67 个本机函数。3mm 实际调用 831,251 次，单父验证与获胜绑定组装从 287.60 降至 258.40 ms。",
+    "note": "3mm 完整推理 1,972.17→1,908.90 ms；CG 为 650.43→652.54 ms。源点读和标量运算次数完全相同。",
+    "src": "S96",
+    "diagram": [
+      {
+        "title": "Interpreted fields",
+        "layers": [
+          [
+            [
+              "s",
+              "selected parent"
+            ]
+          ],
+          [
+            [
+              "v",
+              "decode step fields"
+            ]
+          ],
+          [
+            [
+              "v",
+              "assemble RHS"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Bake shapes",
+        "layers": [
+          [
+            [
+              "s",
+              "static projection"
+            ]
+          ],
+          [
+            [
+              "s",
+              "shared Rust kernel"
+            ]
+          ],
+          [
+            [
+              "n",
+              "named root"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Apply kernel",
+        "layers": [
+          [
+            [
+              "n",
+              "named root"
+            ]
+          ],
+          [
+            [
+              "v",
+              "exact keys and guards"
+            ]
+          ],
+          [
+            [
+              "s",
+              "original witness slots"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "109-run-result-certificates",
+    "section": "跨 Run 的验证缓存",
+    "title": "上轮已核过的单父证明，何时能排除本轮的重复工作？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "函数表中有一处更新，原规则可能再次收到同一个父。判断当前水位是否已经排除该绑定，需要区分键缺失与一个完整但已过水位的绑定。",
+    "arms": "a　表版本和全局 union 相同才复用。b　精确检查原地址、原值和缺失的完整键，允许跨 union。c　重复访问同一规则和父之后才物化证明。",
+    "fix": "证书只可拒绝新签发的候选。命中时在审计运行独立执行原验证程序，核对写入、Spine、union、实际 Cell 及最终图。",
+    "measure": "CG 的二次准入复用 95,053 次跨 Run 证明，源后缀点查从 317,345 降到 163,933。另支付 21,363 次正点重验、9,721 次缺失键重验及 188,091 次行读取。",
+    "note": "CG 的完整推理从 662.35 降到 628.24 ms。3mm 的新进程峰值 RSS 则由 747.38 升至 756.28 MiB。",
+    "src": "S97",
+    "diagram": [
+      {
+        "title": "Table validity",
+        "layers": [
+          [
+            [
+              "n",
+              "same parent"
+            ]
+          ],
+          [
+            [
+              "v",
+              "all versions equal"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Physical validity",
+        "layers": [
+          [
+            [
+              "s",
+              "old support rows"
+            ]
+          ],
+          [
+            [
+              "v",
+              "revalidate changes"
+            ]
+          ],
+          [
+            [
+              "v",
+              "test watermark"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Second visit",
+        "layers": [
+          [
+            [
+              "s",
+              "admission stamp"
+            ]
+          ],
+          [
+            [
+              "s",
+              "retain if repeated"
+            ]
+          ],
+          [
+            [
+              "v",
+              "certified rejection"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "110-perfect-receipt-ceiling",
+    "section": "推理加速的边界",
+    "title": "如果父地址总能选对，当前验证器能到达 2× 吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "冻结实际记录的独立父地址，在完整的新源执行中重建凭证。地址之外的表值、数值、RHS 和图变更全部由当前图和源程序产生。",
+    "arms": "a　在线运行两种神经父生成器。b　重放它们已密封的全量地址，仍验证原始失败提案。c　事后只保留曾通过验证的地址，分别替换一个或两个生成器。",
+    "fix": "所有存活父、物理新 Cell、有序 RHS、有效写入、Spine、union 与最终图均核对。被重放的提供者的在线发现计零。",
+    "measure": "3mm：在线 2,080.15 ms，重放全部 1,177.79 ms，重放通过的地址 821.67 ms。独立默认 CPU 为 901.45 ms，2× 目标为 450.72 ms。",
+    "note": "地址重放是已知轨迹上的对照。它保留实际页构造、验真和源执行费用，不能证明在线模型达到默认 CPU 或 2×。",
+    "src": "S98",
+    "diagram": [
+      {
+        "title": "Online",
+        "layers": [
+          [
+            [
+              "n",
+              "rank parent refs"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify against graph"
+            ]
+          ],
+          [
+            [
+              "s",
+              "ordered source RHS"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "All receipts",
+        "layers": [
+          [
+            [
+              "t",
+              "prior addresses"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check every packet"
+            ]
+          ],
+          [
+            [
+              "s",
+              "ordered source RHS"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Accepted subset",
+        "layers": [
+          [
+            [
+              "t",
+              "future outcome mask"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify again"
+            ]
+          ],
+          [
+            [
+              "s",
+              "ordered source RHS"
+            ]
+          ]
+        ]
+      }
+    ],
+    "observation": {
+      "figure": "110-oracle-observations.svg",
+      "source": "benchmarks/pass3-cell-gpu/perfect-receipt-replay/latency.svg",
+      "title": "父地址发现、候选精度与剩余推理时间",
+      "caption": "每组分别除以同一矩阵中的默认 CPU 中位数。左侧 0.5 刻度为 2× 目标。两组紫色条使用已知轨迹。"
+    }
+  },
+  {
+    "id": "111-native-backend-pgo",
+    "section": "编译期后端信息",
+    "title": "同样用真实程序训练原生编译器，哪一部分获得加速？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "把训练源上的 LLVM 边执行频率交给 Rust 优化器。比较模型执行器和默认 CPU 时，两边各自产生自己的配置，留出程序不参加训练。",
+    "arms": "a　普通 release。b　与 PGO 匹配的单代码生成单元，不用执行频率。c　分别使用两套 donor 执行频数，再验证链接 IR 中确有热点计数。",
+    "fix": "三个 donor 程序，CG 和 3mm 留出。相同分配器和输入，以真实获胜来源、物理 Cell、逐 Run 及终图验收。",
+    "measure": "3mm 模型路径由匹配对照的 1,956.59 降至 1,730.21 ms，精确 CPU 由 882.01 降至 806.13 ms。两边均在六组配对中收益。",
+    "note": "CG 公平 PGO 计时为模型 569.76 ms、精确 CPU 311.61 ms。优化器训练日志不计作模型在运行时生成的 token。",
+    "src": "S99",
+    "diagram": [
+      {
+        "title": "Release control",
+        "layers": [
+          [
+            [
+              "s",
+              "same source"
+            ]
+          ],
+          [
+            [
+              "s",
+              "default codegen"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "One code unit",
+        "layers": [
+          [
+            [
+              "s",
+              "same allocator"
+            ]
+          ],
+          [
+            [
+              "s",
+              "matched codegen"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Train each backend",
+        "layers": [
+          [
+            [
+              "t",
+              "donor edge counts"
+            ]
+          ],
+          [
+            [
+              "s",
+              "native optimizer"
+            ]
+          ],
+          [
+            [
+              "v",
+              "held-out source audit"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "112-pgo-and-union-repair",
+    "section": "联合消融",
+    "title": "PGO 的收益能和按 union 修补订阅的收益直接相加吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "把两种父搜索放在同一可执行文件内比较，再训练一个确实运行过跨 union 修补的 LLVM profile，检验最后的组合。",
+    "arms": "a　默认 CPU 分别按原样和独立 PGO 执行。b　同一普通模型二进制切换父搜索。c　换成按修补路径训练的 PGO 二进制，保持相同输入与权重。",
+    "fix": "三个训练源均产生实际移交回执和跨 union 修补。最后完整对照用此前未参与后端训练的 CG 与 3mm，逐 Run 核对真实来源。",
+    "measure": "3mm 普通模型中原路径／修补为 1,910.42／1,855.46 ms；PGO 模型中为 1,599.17／1,673.44 ms。两种代码生成下开关修补均为四组中两组更快。",
+    "note": "同组默认 CPU 为 878.79 ms，独立 PGO 精确 CPU 为 757.00 ms。另一组 3mm 控制中启用修补的中位数更低，因此不能认定它与 PGO 在该负载上有固定的交互方向。",
+    "src": "S100",
+    "diagram": [
+      {
+        "title": "Separate vanilla",
+        "layers": [
+          [
+            [
+              "t",
+              "exact donor runs"
+            ]
+          ],
+          [
+            [
+              "s",
+              "optimize exact binary"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Plain learned",
+        "layers": [
+          [
+            [
+              "n",
+              "same port weights"
+            ]
+          ],
+          [
+            [
+              "s",
+              "original / repair"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Profiled learned",
+        "layers": [
+          [
+            [
+              "t",
+              "train with union repair"
+            ]
+          ],
+          [
+            [
+              "s",
+              "original / repair"
+            ]
+          ],
+          [
+            [
+              "v",
+              "compare full passes"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "113-causal-prefix-placement",
+    "section": "单个动作的长程回报",
+    "title": "一次早期放置的收益能直接从真实程序中提取吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "在一份可延伸前缀首次安置时从同一进程分叉。两个分支唯一区别是是否为该组保留独立 backing，之后再次使用共同的原生规则。",
+    "arms": "a　两个分支都池化，检验相同图和分配器能否复现。b　改变一次放置，跟踪旧端口、后续扩展、整图终点和 owner 驻留。c　在独立程序冻结比较出生、终点与累计回报。",
+    "fix": "不按最后布局回填早期输入。每一对都重新执行余下源 Run，记录下游布局随动作变化后的完整结果。",
+    "measure": "dot-product 的 Run 321 中，成员 3510 与 3511 单独放置立即省 32 B。此 owner 后来增至四个成员，终点却多 64 B，累计多 47,136 个 owner 字节·Run。",
+    "note": "原有四个端口在其余 1,215 个 Run 边界均被核验。owner 驻留、终点整个 Graph 与一次动作的瞬时收益分别报告。",
+    "src": "S101",
+    "diagram": [
+      {
+        "title": "Sham fork",
+        "layers": [
+          [
+            [
+              "s",
+              "same heap state"
+            ]
+          ],
+          [
+            [
+              "s",
+              "pool / pool"
+            ]
+          ],
+          [
+            [
+              "v",
+              "compare ledgers"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Single decision",
+        "layers": [
+          [
+            [
+              "s",
+              "same live prefix"
+            ]
+          ],
+          [
+            [
+              "n",
+              "pool or reserve"
+            ]
+          ],
+          [
+            [
+              "v",
+              "follow old ports"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Frozen policy",
+        "layers": [
+          [
+            [
+              "t",
+              "paired returns"
+            ]
+          ],
+          [
+            [
+              "n",
+              "select at birth"
+            ]
+          ],
+          [
+            [
+              "s",
+              "charge downstream graph"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "114-physical-support-identity",
+    "section": "物理证据的核验",
+    "title": "重验旧父时必须重新解码整个 Row 吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "旧证书持有不可变的源数据。先核对事实地址及代次，再检查共享载荷身份；只有真正缺少载荷时才需要逐指令槽进行比较。",
+    "arms": "a　读取完整源行后比较。b　当实际存储仍共享载荷时直接确认。c　允许按当前 Cell 指令参数或函数键/值就地比较。",
+    "fix": "仍须单独验证可能换了物理来源的虚拟表键。审计逐次比较直接方法与权威行解码的相同及不同两种结论。",
+    "measure": "3mm 通过 609,789 次载荷身份比较并排除 69,688 次无效头。只剩 205 次裸函数比较。完整推理 1,935.38→1,882.17 ms。",
+    "note": "自然负载没有触发压缩事实的逐指令比较。单独清除缓存的真实存储样例覆盖了该路径，并拒绝伪造的字段与代次。",
+    "src": "S97",
+    "diagram": [
+      {
+        "title": "Re-read row",
+        "layers": [
+          [
+            [
+              "s",
+              "old evidence"
+            ]
+          ],
+          [
+            [
+              "v",
+              "decode payload"
+            ]
+          ],
+          [
+            [
+              "v",
+              "compare"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Identity",
+        "layers": [
+          [
+            [
+              "s",
+              "live address"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify same payload"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Compressed input",
+        "layers": [
+          [
+            [
+              "s",
+              "linked instruction"
+            ]
+          ],
+          [
+            [
+              "v",
+              "compare current slots"
+            ]
+          ],
+          [
+            [
+              "v",
+              "reject stale version"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "115-early-placement-objectives",
+    "section": "早期放置的奖励设计",
+    "title": "出生收益、终点回报与累计回报会选中同一批前缀吗？",
+    "status": "已测 · 独立冻结的放置策略",
+    "q": "对同一次安置动作，分别使用首次分配差、终点整个 Graph 差和后续累计 owner 字节·Run 训练。检验冻结后在两个新程序中的完整布局。",
+    "arms": "a　回归出生时的节省。b　回归完整源程序结束时的 Graph 节省。c　回归剩余 Run 内的 owner 驻留差。保留普通池化作为基线。",
+    "fix": "两个训练程序提供 32 对同源分叉。输入只有首次安置时的八项可见特征。部署中的后续状态由策略自身先前动作产生。",
+    "measure": "GEMM-bias-ReLU 的三种奖励分别选 1,364、873、50 次。最终整图相对池化分别多占 157,600、108,896、12,560 B。gated-state 的对应增量为 74,888、30,260、96 B。",
+    "note": "累计回报使门控更谨慎，两套留出程序的池化控制仍最省内存。56 对单次干预及四个相同决策分叉用于验证回报。",
+    "src": "S101",
+    "diagram": [
+      {
+        "title": "At birth",
+        "layers": [
+          [
+            [
+              "s",
+              "matched prefix"
+            ]
+          ],
+          [
+            [
+              "t",
+              "allocation delta"
+            ]
+          ],
+          [
+            [
+              "n",
+              "reserve or pool"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Terminal return",
+        "layers": [
+          [
+            [
+              "s",
+              "matched trajectories"
+            ]
+          ],
+          [
+            [
+              "t",
+              "final graph delta"
+            ]
+          ],
+          [
+            [
+              "n",
+              "frozen gate"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Lifetime return",
+        "layers": [
+          [
+            [
+              "s",
+              "remaining Runs"
+            ]
+          ],
+          [
+            [
+              "t",
+              "owner byte-Runs"
+            ]
+          ],
+          [
+            [
+              "v",
+              "native deployment"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]

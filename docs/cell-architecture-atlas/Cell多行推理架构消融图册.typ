@@ -40,7 +40,7 @@
   card([现有边界],[图 71 的选择性模型覆盖 99.83%–99.97% 的源 RHS，图 75 的根／子配方直接构造超过 99% 的新 Cell。整轮仍慢于精确 Rust。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–106 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–115 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -138,6 +138,17 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
   v(1fr)
   linebar()
   grid(columns:(1fr,auto),gutter:5mm,small(p.note),text(size:8.2pt,fill:teal,[#p.src]))
+  if "observation" in p {
+    let obs=p.observation
+    pagebreak()
+    kicker[图 #str(i+1)　/　实测曲线]
+    v(1mm)
+    text(size:15pt,font:serif,weight:"bold",obs.title)
+    v(1mm)
+    align(center,image("figures/"+obs.figure,height:114mm,width:100%,fit:"contain"))
+    v(1fr)
+    small(obs.caption)
+  }
 }
 
 #pagebreak()
@@ -295,6 +306,13 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S92","跨规则共享前缀或完整属性键","benchmarks/pass3-cell-gpu/shared-verifier-prefix/README.md")
 #src("S93","自然放置、物理动作与真实训练回报","benchmarks/pass3-cell-gpu/prospective-owner-placement/README.md")
 #src("S94","部署路径的类型化密封回执","benchmarks/pass3-cell-gpu/lean-root-receipts/README.md")
+#src("S95","真实动态 Graph 的完整驻留曲线","benchmarks/pass3-cell-gpu/placement-lifetime/README.md")
+#src("S96","单父投影的本机代码生成","benchmarks/pass3-cell-gpu/native-verifier-bake/README.md")
+#src("S97","跨 Run 无结果证书和物理字段核验","benchmarks/pass3-cell-gpu/run-result-certificates/README.md")
+#src("S98","完美地址选择的实际执行对照","benchmarks/pass3-cell-gpu/perfect-receipt-replay/README.md")
+#src("S99","两种执行器分别进行原生 PGO","benchmarks/pass3-cell-gpu/native-backend-pgo/README.md")
+#src("S100","同一 PGO 二进制内比较跨 union 订阅","benchmarks/pass3-cell-gpu/profiled-request-ports/README.md")
+#src("S101","首次安置的单次配对回报","benchmarks/pass3-cell-gpu/prefix-placement-return/README.md")
 #v(2mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)

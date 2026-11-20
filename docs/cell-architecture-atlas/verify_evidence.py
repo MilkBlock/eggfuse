@@ -32,7 +32,7 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==106
+    assert len(plates)==115
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and all(p[k] for k in ('q','arms','fix','measure','note','src'))
         if i<=37:
@@ -46,6 +46,11 @@ def check():
                 assert all(1<=len(layer)<=2 and all(k in 'nswvt' and txt for k,txt in layer) for layer in a['layers'])
         assert p['title'] in md and (HERE/'figures'/f"{p['id']}.svg").is_file()
         ElementTree.parse(HERE/'figures'/f"{p['id']}.svg")
+        if 'observation' in p:
+            image=p['observation']
+            local=HERE/'figures'/image['figure']
+            assert local.read_bytes()==(HERE.parents[1]/image['source']).read_bytes()
+            ElementTree.parse(local)
         for key in re.findall(r'S\d+',p['src']):assert (HERE/evidence[key]).is_file()
     for j,seed in enumerate(SEEDS):
         def pair(a,b):return (a,b)[j]
@@ -273,10 +278,10 @@ def check():
     assert set(tx)=={f'{name}/{seed}' for name in ('sum-bits','dot-product','jacobi-1d') for seed in SEEDS}
     assert tuple(tx['jacobi-1d/1703']['parents-8']['requests'][field] for field in ('reused_parents','reused_rows','reused_scalars'))==(188118,31645,16859)
     import subprocess
-    for group in ('merge-reward','physical-composition-reward','existing-owner-transfer','learned-prefix-feasibility','learned-atom-constraints','collision-trained-ports','prefix-transfer','complete-generation','pair-source-frontier','lazy-equation-ports','composed-cpu','composed-row-dispatch','verified-binding-transfer','suffix-watermarks','owner-action-policy','connected-request-plans','changed-request-roots','incremental-request-ports','request-route-policy','shared-verifier-prefix','prospective-owner-placement','lean-root-receipts'):
+    for group in ('merge-reward','physical-composition-reward','existing-owner-transfer','learned-prefix-feasibility','learned-atom-constraints','collision-trained-ports','prefix-transfer','complete-generation','pair-source-frontier','lazy-equation-ports','composed-cpu','composed-row-dispatch','verified-binding-transfer','suffix-watermarks','owner-action-policy','connected-request-plans','changed-request-roots','incremental-request-ports','request-route-policy','shared-verifier-prefix','prospective-owner-placement','lean-root-receipts','placement-lifetime','native-verifier-bake','run-result-certificates','perfect-receipt-replay','native-backend-pgo','profiled-request-ports','prefix-placement-return'):
         subprocess.run([sys.executable,str(gpu/group/'verify.py')],check=True)
     subprocess.run([sys.executable,str(gpu/'published-single-headers/check.py')],check=True)
-    print('Verified 106 measured plates, including their workload, oracle and source-coverage boundaries.')
+    print('Verified 115 measured plates, including their workload, oracle and source-coverage boundaries.')
 
 
 

@@ -3,7 +3,7 @@ from pathlib import Path
 from html import escape
 import json
 
-OUT = Path(__file__).parent / "figures"
+OUT = Path(__file__).resolve().parent / "figures"
 INK="#162f42"; SUB="#496478"; LINE="#8396a1"; BG="#f5f7f7"
 PALETTE={"n":("#e0ebf5","#305e81"),"s":("#d9efea","#247568"),
          "t":("#eee7f6","#775692"),"v":("#f8ebd2","#946422"),
@@ -450,6 +450,9 @@ if __name__=="__main__":
     OUT.mkdir(exist_ok=True);overview();synthesis();paired_results()
     for name,arms,fn in PLATES:plate(name,arms,fn)
     for panel in json.loads((OUT.parent/'plates.json').read_text()):
+        if 'observation' in panel:
+            obs=panel['observation']
+            (OUT/obs['figure']).write_bytes((OUT.parents[2]/obs['source']).read_bytes())
         if 'diagram' not in panel:
             continue
         arms = panel['diagram']

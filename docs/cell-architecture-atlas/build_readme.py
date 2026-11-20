@@ -15,7 +15,7 @@ out=["# Cell 多行推理架构消融图册",
      "图 23–37 的纯 GPU 基线由精确 Metal 搜索生成绑定，图 35、46 的小模型在指定规则和锚点后选择父行。图 56 首次在本图册的完整源调度里让两行神经策略直接读取自己的上轮生成 token，提出叶块实例。sum-bits 实际神经提交 58／59 个 RHS，独立于剩余精确补查统计；完全关闭补查时 Run 1 即分叉。图 50、61 放开回执和波数，图 60 给出组合端口在同一参考轨迹上的覆盖上限。图 62 已完成两种在线组合验真的冻结流对照，图 64–65 分别检验整段生成与一次覆盖认证。图 71 在 CPU＋Rust 上按源提交序号核到 99.83%–99.97% 的选择性归因。图 75 的有界配置关闭 RHS 补查，四程序双种子达到 100% RHS 和至少 99.71% 的新物理 Cell 直接构造。整轮仍慢于原生精确 Rust。",
      "## 本轮架构取舍",
      "同图多行执行时，直接训练目标宽度的集合监督比两个 RL 对照更稳定（图 04–05）。来源地址、等价判断和成员版本需要各自核验（图 03、14–17、20）。局部就绪与 integral 能把计算提前，验收要追踪结果是否按原槽发布（图 07、18）。声明饱和时仍须检查在途消息、待办和未发布的变化（图 19）。这些结论来自各自的配对原型；两个被冻结的 eggcc Pass 3 已接入独立 GPU 路径并测量完整 CLI；其他源程序与多 GPU 扩展需另测。",
-     "## 完整工作负载的消融（38–106）",
+     "## 完整工作负载的消融（38–115）",
      *[f"**{name}。** {body}" for name,body in guide['findings']],
      "| 建议顺序 | 图 | 核心问题 |\n|---|---|---|\n"+"\n".join(f"| {name} | {span} | {body} |" for name,span,body in guide['order']),
      "### 共同验收口径", *[f"**{name}。** {body}" for name,body in guide['contract']],
@@ -26,6 +26,9 @@ for i,p in enumerate(panels,1):
                 f'**{p["status"]}。** {p["q"]}',
                 f'![{p["title"]}](figures/{p["id"]}.svg)',p['arms'],
                 f'**固定条件。** {p["fix"]}',f'**{"验收指标" if p["status"].startswith("待") else "判据与读数"}。** {p["measure"]}',f'{p["note"]}　档案 {p["src"]}。'])
+    if 'observation' in p:
+        obs=p['observation']
+        out.append(f"![{obs['title']}](figures/{obs['figure']})")
 out.extend(["## 现有配对数据", "![冻结检查点的第二 Run 完整非空图数](figures/00-results.svg)",
             "横轴是通过数，两个种子均以 512 张碰撞图为分母。应同时检查整图正确、合法引用、重复和遗漏。运行时报告等正确性下的延迟和每秒正确非空图；数据按源码家族、模板接线和随机种子冻结。完整实验登记与反证条件见 PDF 倒数第二页。",
             "## 证据与图源",
@@ -124,6 +127,13 @@ out.extend(["## 现有配对数据", "![冻结检查点的第二 Run 完整非�
                 ('S92','跨规则共享前缀或完整属性键','../../benchmarks/pass3-cell-gpu/shared-verifier-prefix/README.md'),
                 ('S93','自然放置、物理动作与真实训练回报','../../benchmarks/pass3-cell-gpu/prospective-owner-placement/README.md'),
                 ('S94','部署路径的类型化密封回执','../../benchmarks/pass3-cell-gpu/lean-root-receipts/README.md'),
+                ('S95','真实动态 Graph 的完整驻留曲线','../../benchmarks/pass3-cell-gpu/placement-lifetime/README.md'),
+                ('S96','单父投影的本机代码生成','../../benchmarks/pass3-cell-gpu/native-verifier-bake/README.md'),
+                ('S97','跨 Run 无结果证书和物理字段核验','../../benchmarks/pass3-cell-gpu/run-result-certificates/README.md'),
+                ('S98','完美地址选择的实际执行对照','../../benchmarks/pass3-cell-gpu/perfect-receipt-replay/README.md'),
+                ('S99','两种执行器分别进行原生 PGO','../../benchmarks/pass3-cell-gpu/native-backend-pgo/README.md'),
+                ('S100','同一 PGO 二进制内比较跨 union 订阅','../../benchmarks/pass3-cell-gpu/profiled-request-ports/README.md'),
+                ('S101','首次安置的单次配对回报','../../benchmarks/pass3-cell-gpu/prefix-placement-return/README.md'),
                 ('M1','Gilmer 等，ICML 2017，消息传递神经网络','https://proceedings.mlr.press/v70/gilmer17a.html'),
                 ('M2','Foerster 等，AAAI 2018，反事实多智能体信用分配','https://arxiv.org/abs/1705.08926')]),
             "## 重新生成",

@@ -31,6 +31,8 @@ def plot(folder):
         ax.set_xlim(0,max(r['live']['median_ms']/r['vanilla']['median_ms'] for r in data.values())+.30)
         ax.legend(loc='upper center',bbox_to_anchor=(.51,-.13),ncol=3,frameon=False,fontsize=9)
         ax.tick_params(axis='y',length=0);ax.grid(axis='x',color='#e4e9ea',lw=.65,zorder=0)
-        fig.savefig(folder/'latency.svg',metadata={'Date':None});plt.close(fig)
+        svg=folder/'latency.svg'
+        fig.savefig(svg,metadata={'Date':None});plt.close(fig)
+        svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines())+'\n')
 
 if __name__=='__main__':plot(HERE)
