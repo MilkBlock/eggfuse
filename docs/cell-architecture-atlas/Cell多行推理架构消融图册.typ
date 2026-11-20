@@ -37,10 +37,10 @@
 #v(2mm)
 #grid(columns:(1fr,1fr),gutter:9mm,
   card([研究问题],[网络能否从上一 Run 生成的 token 继续提出 Cell，并以少量验证关闭真实义务，使整轮加速？]),
-  card([现有边界],[图 62 测待验父子，图 64 在第一个 Run 前完成生成。两图均按来源区分神经提交与精确补查。]))
+  card([现有边界],[图 71 的选择性模型覆盖 99.83%–99.97% 的源 RHS，图 75 的根／子配方直接构造超过 99% 的新 Cell。整轮仍慢于精确 Rust。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–69 含后续实验。图 56 单列真实 Pass 3 的神经提案和精确补查。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–75 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -92,7 +92,7 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
 #for (i,p) in plates.enumerate() {
   pagebreak()
   if p.id == "38-repair-bake" {
-    kicker[讨论回顾   /   图 38–69 的实验动机]
+    kicker[讨论回顾   /   图 38–75 的实验动机]
     v(2mm)
     title(guide.title)
     v(2mm)
@@ -105,7 +105,7 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
     table(columns:(37mm,24mm,1fr),stroke:(bottom:0.45pt+hair),inset:(x:4pt,y:3.1pt),
       ..guide.order.map(r => (text(size:9pt,weight:"bold",r.at(0)),text(size:9pt,fill:teal,r.at(1)),text(size:9pt,r.at(2)))).flatten())
     v(1fr)
-    small[本节数字来自既有实验 S8、S10、S12、S24、S28–S30。图 38–41、45–48、50、55–69 已有不同作用域的实测，其余待测图单列。]
+    small[本节数字来自既有实验 S8、S10、S12、S24、S28–S30。各图按所验证的真实工作负载、原型或反事实注明范围。]
     pagebreak()
     kicker[实验协议   /   共享的正确性和计时口径]
     v(2mm)
@@ -246,8 +246,29 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S48","冷模板与零更新的库增长","benchmarks/pass3-cell-gpu/cold-templates/README.md")
 #src("S49","整数回执与后继选择","benchmarks/pass3-cell-gpu/interactive-policy/README.md")
 #v(4mm)
+#pagebreak()
+#kicker[证据目录   /   完整 Pass 3]
+#title[源提交、物理归因与所有权消融]
+#v(3mm)
+#src("S50","单动作的绑定、叶和组合","benchmarks/pass3-cell-gpu/action-granularity/README.md")
+#src("S51","变长端口证书","benchmarks/pass3-cell-gpu/variable-certificates/README.md")
+#src("S52","在线成员存储与切换","benchmarks/pass3-cell-gpu/online-storage/README.md")
+#src("S53","修复训练与反例","benchmarks/pass3-cell-gpu/repair-training/README.md")
+#src("S54","八槽预算下的多行所有权","benchmarks/pass3-cell-gpu/row-admission/README.md")
+#src("S55","集合监督与工作奖励","benchmarks/pass3-cell-gpu/row-reward/README.md")
+#src("S56","CPU 权威图与 GPU 增量验证","benchmarks/pass3-cell-gpu/verifier-deltas/README.md")
+#src("S57","真实集合存储与容量阶梯","benchmarks/pass3-cell-gpu/set-representations/README.md")
+#src("S58","完整源分母与独立见证","benchmarks/pass3-cell-gpu/coverage-target/README.md")
+#src("S59","同一执行器的联合归因","benchmarks/pass3-cell-gpu/joint-witness/README.md")
+#src("S60","首个精确检查前的多父批次","benchmarks/pass3-cell-gpu/ordinary-witness/README.md")
+#src("S61","明确驱动物理分配的子端口","benchmarks/pass3-cell-gpu/joint-merge/README.md")
+#src("S62","稀疏缓存与压紧候选","benchmarks/pass3-cell-gpu/ordinary-shortlist/README.md")
+#src("S63","有版本的特征复用","benchmarks/pass3-cell-gpu/joint-score-sharing/README.md")
+#src("S64","共享学习编码与固定签名","benchmarks/pass3-cell-gpu/tied-query-keys/README.md")
+#src("S65","实际根配方与物理 ID","benchmarks/pass3-cell-gpu/joint-root-cells/README.md")
+#v(2mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
 #text(size:9pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。#link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文]。 *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。#link("https://arxiv.org/abs/1705.08926")[论文原文]。]
 #v(1fr)
-#small[版次 24　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
+#small[版次 25　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]

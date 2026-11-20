@@ -32,14 +32,13 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==69
+    assert len(plates)==75
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and all(p[k] for k in ('q','arms','fix','measure','note','src'))
         if i<=37:
             assert p['status'].startswith(('已测','实跑'))
         else:
-            if i in (38,39,40,41,45,46,47,48,50,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69):assert p['status'].startswith('已测')
-            else:assert p['status']=='待验证 · 实验设计'
+            assert p['status'].startswith('已测')
             arms=p['diagram']
             assert len(arms)>=2 and len({a['title'] for a in arms})==len(arms)
             for a in arms:
@@ -244,7 +243,29 @@ def check():
             assert trial['training']['candidate_draws']==51200 and len(trial['ms'])==6
     coverage=json.loads((gpu/'coverage-certificate/learned-results.json').read_text())
     assert set(coverage['learned'])=={'1703','1709'}
-    print('Verified 61 measured plates and 8 pending designs, including scoped prefixes and complete source passes.')
+    for subdir,script,fn in [
+        ('action-granularity','check_results','check'),('variable-certificates','verify','verify'),
+        ('online-storage','check_results','check'),('repair-training','verify_evidence','check'),
+        ('row-admission','check_results','check'),('row-reward','check_results','check'),
+        ('verifier-deltas','check','verify'),('set-representations','check_results','check'),
+        ('ordinary-witness','verify_evidence','check'),('single-witness','verify','verify'),
+        ('ordinary-shortlist','verify_evidence','verify'),('joint-score-sharing','check_results','check'),
+        ('joint-merge','check_results','check'),('joint-root-cells','check_results','check'),('joint-witness','check_results','check'),
+    ]:
+        runpy.run_path(str(gpu/subdir/(script+'.py')))[fn](gpu/subdir)
+    import sys
+    sys.path.insert(0,str(gpu/'coverage-target'))
+    try:runpy.run_path(str(gpu/'coverage-target/verify.py'))['check'](gpu/'coverage-target')
+    finally:sys.path.pop(0)
+    tied=json.loads((gpu/'tied-query-keys/results.json').read_text())
+    for arms in tied.values():
+        assert all(arms[x]['aligned'] and len(arms[x]['ms'])==6 for x in ('original','asymmetric-zero','tied-one','tied-three','fixed-bits'))
+        assert arms['tied-one']['uncredited']==arms['tied-three']['uncredited']==0
+        assert arms['fixed-bits']['neural_multi']==0
+    final=runpy.run_path(str(gpu/'coverage-target/final_check.py'))['check'](gpu/'coverage-target')
+    assert final==json.loads((gpu/'coverage-target/final.json').read_text())
+    print('Verified 75 measured plates, including their workload, oracle and source-coverage boundaries.')
+
 
 
 if __name__=='__main__':check()
