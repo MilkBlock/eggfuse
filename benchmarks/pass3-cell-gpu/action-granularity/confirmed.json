@@ -1,0 +1,162 @@
+{
+ "sum-bits/1703": {
+  "raw": {
+   "roots": 58,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "leaf": {
+   "roots": 59,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "macro": {
+   "roots": 59,
+   "extensions": 21,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  }
+ },
+ "sum-bits/1709": {
+  "raw": {
+   "roots": 54,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "leaf": {
+   "roots": 56,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "macro": {
+   "roots": 56,
+   "extensions": 20,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  }
+ },
+ "dot-product/1703": {
+  "raw": {
+   "roots": 50,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "leaf": {
+   "roots": 50,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "macro": {
+   "roots": 50,
+   "extensions": 14,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  }
+ },
+ "dot-product/1709": {
+  "raw": {
+   "roots": 46,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "leaf": {
+   "roots": 46,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "macro": {
+   "roots": 46,
+   "extensions": 9,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  }
+ },
+ "gemm-bias-relu/1703": {
+  "raw": {
+   "roots": 43,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "leaf": {
+   "roots": 44,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "macro": {
+   "roots": 44,
+   "extensions": 15,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  }
+ },
+ "gemm-bias-relu/1709": {
+  "raw": {
+   "roots": 42,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "leaf": {
+   "roots": 43,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "macro": {
+   "roots": 43,
+   "extensions": 14,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  }
+ },
+ "stable-argmax/1703": {
+  "raw": {
+   "roots": 41,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "leaf": {
+   "roots": 42,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "macro": {
+   "roots": 42,
+   "extensions": 16,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  }
+ },
+ "stable-argmax/1709": {
+  "raw": {
+   "roots": 35,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "leaf": {
+   "roots": 36,
+   "extensions": 0,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  },
+  "macro": {
+   "roots": 36,
+   "extensions": 11,
+   "same_source_ordinals": true,
+   "all_events_equal": true
+  }
+ }
+}

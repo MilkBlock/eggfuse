@@ -1,0 +1,112 @@
+{
+ "affine-twins": {
+  "split": "train",
+  "program": "f3fa8b84e6d0a6c9f0d2c2ec8a7b55e1f99584df1b13aec701cd6a2beb51690d",
+  "runs": 1058,
+  "unions": 541,
+  "source_neural_rhs": 80,
+  "source_total_rhs": 4215,
+  "events": 831,
+  "eligible": 428,
+  "weighted_eligible": 1411
+ },
+ "clamped-ramp": {
+  "split": "train",
+  "program": "96a4d2c049004adc219a62fb35b6d7922be6977eba4966feda72482a37a6e485",
+  "runs": 1544,
+  "unions": 1576,
+  "source_neural_rhs": 112,
+  "source_total_rhs": 9471,
+  "events": 2647,
+  "eligible": 1140,
+  "weighted_eligible": 3780
+ },
+ "segmented-prefix": {
+  "split": "train",
+  "program": "00b1d59ecc0acae767b54d84f97918540fe04f61c3f3d16b067001d9cdc985b1",
+  "runs": 1228,
+  "unions": 1081,
+  "source_neural_rhs": 107,
+  "source_total_rhs": 7425,
+  "events": 1801,
+  "eligible": 840,
+  "weighted_eligible": 2761
+ },
+ "window-laplacian": {
+  "split": "train",
+  "program": "d09745430b914a5d779b893e728b89bdd07c81ccff7565f4afc98a19c0199c2a",
+  "runs": 1387,
+  "unions": 1026,
+  "source_neural_rhs": 141,
+  "source_total_rhs": 8005,
+  "events": 1560,
+  "eligible": 769,
+  "weighted_eligible": 2546
+ },
+ "histogram-scatter": {
+  "split": "development",
+  "program": "63419c066fdb21fa1d806812b5e54dccf9a070ea9c5574831ac3bfa7e12cdd93",
+  "runs": 1195,
+  "unions": 904,
+  "source_neural_rhs": 126,
+  "source_total_rhs": 6742,
+  "events": 1405,
+  "eligible": 685,
+  "weighted_eligible": 2288
+ },
+ "gated-state": {
+  "split": "development",
+  "program": "dfd4a66d482c4d69d82d8dc22a54647f1fc8a02c1ba8775d8b28063d8b8dc240",
+  "runs": 1163,
+  "unions": 914,
+  "source_neural_rhs": 102,
+  "source_total_rhs": 6118,
+  "events": 1495,
+  "eligible": 719,
+  "weighted_eligible": 2376
+ },
+ "gemm-bias-relu": {
+  "split": "heldout",
+  "program": "83c66481f465ab7bc0790e447cd665a4f8b0a2b1bec7a471f6c54bb95d7580c5",
+  "runs": 1652,
+  "unions": 2317,
+  "source_neural_rhs": 207,
+  "source_total_rhs": 15462,
+  "events": 3817,
+  "eligible": 1682,
+  "weighted_eligible": 5630
+ },
+ "stable-argmax": {
+  "split": "heldout",
+  "program": "491b90013a12e8789cc7f15eeac5686cb955d2b2eb126bafe9a29bd964c11030",
+  "runs": 1149,
+  "unions": 1230,
+  "source_neural_rhs": 128,
+  "source_total_rhs": 8190,
+  "events": 1983,
+  "eligible": 894,
+  "weighted_eligible": 3005
+ },
+ "sum-bits": {
+  "split": "anchor",
+  "program": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+  "runs": 1428,
+  "unions": 1039,
+  "source_neural_rhs": 91,
+  "source_total_rhs": 7265,
+  "events": 1779,
+  "eligible": 856,
+  "weighted_eligible": 2847
+ },
+ "dot-product": {
+  "split": "anchor",
+  "program": "71f70f4e733db6414355af86ed649eac88baceeff7c261fdfb75f6056d3eb846",
+  "runs": 1535,
+  "unions": 611,
+  "source_neural_rhs": 195,
+  "source_total_rhs": 6704,
+  "events": 847,
+  "eligible": 457,
+  "weighted_eligible": 1538
+ }
+}

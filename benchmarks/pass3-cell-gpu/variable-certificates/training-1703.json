@@ -1,0 +1,38 @@
+{
+ "seed": 1703,
+ "train_programs": [
+  "affine-twins",
+  "clamped-ramp",
+  "segmented-prefix",
+  "window-laplacian"
+ ],
+ "supervision": "published parent and source-winning child",
+ "updates": 400,
+ "seen": [
+  "001251b55ada355c16f691c0ce79a6e88f5fe6f8a97cdcdfbf7fe4ca04f1735e",
+  "069be97ead7cb92ac41e4364112e35e4e8128747eecfa5b1ff565b11e64dfc4c",
+  "11ee84b105859191e88d12179e40ef4800c150bde276aec95b888e046b7d33aa",
+  "410f6079f563fd2ab02eef315d1911acaf56b93efff0e319ae95c555119f6416",
+  "43d282058c9b46f49ef1e6570769e21c51b9a5a83a68dd9f7f96033f5c4d0e7e",
+  "5a818dff244bbe16cb9a17a1699e17be863ef59b9576b1c26ebe747374702729",
+  "7a5104c944d8bf40efd0215f7e4b0be0f3eddc58d9589491d1795160020a39c3",
+  "9c8713462fccf2a636922475fe7379cceb52ffffa8b031c86d4eb342828d6529",
+  "b86de2ce6b18fe9da4f5d23055c80e5eacb3ef0f6e1537d8bbf351559d83d92c",
+  "bc2726f3c69ef7575b47673d5b99da90726c1c5053e5816c765820117ce4d9b5",
+  "c9877f92bec36e3f8eb751cfcb3abf2a6ae287ce4a45ab39916a24abf1f5dbb0",
+  "f7cc270addcec68716ed749823a262839984ddf56e473ee6b97fe855c84bd07b"
+ ],
+ "held": [
+  "c206c7a8367246ab985ca6d84d62d8dcb211e1a83fda9f453e1acb39e26e7adc",
+  "caf5535cabb8b2f3b86ee3e258a83430bad836acbae65ccde32d8d85b663a80c",
+  "fd014ee0352a75e2332f4429c7ddeac796a3350bd014f1d7fb6277a536ffe8da"
+ ],
+ "trained_rows": [
+  76,
+  108,
+  102,
+  134
+ ],
+ "params": 466,
+ "loss": 0.002003198955208063
+}

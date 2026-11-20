@@ -1,0 +1,120 @@
+{
+ "training": [
+  "affine-twins",
+  "clamped-ramp",
+  "segmented-prefix",
+  "window-laplacian"
+ ],
+ "available": {
+  "affine-twins": 677,
+  "clamped-ramp": 2089,
+  "segmented-prefix": 1462,
+  "window-laplacian": 1285
+ },
+ "bake": {
+  "pool": 58,
+  "selected": [
+   [
+    "Get",
+    "Single",
+    0
+   ],
+   [
+    "Get",
+    "ContextOf",
+    0
+   ],
+   [
+    "AddContext",
+    "AddContext",
+    1
+   ],
+   [
+    "AddContext",
+    "Concat",
+    1
+   ],
+   [
+    "SubTuple",
+    "BodyContainsExpr",
+    1
+   ],
+   [
+    "Get",
+    "BodyContainsExpr",
+    1
+   ],
+   [
+    "SubTuple",
+    "ExprIsResolved",
+    0
+   ],
+   [
+    "SubTuple",
+    "HasType",
+    0
+   ]
+  ],
+  "tables": [
+   "AddContext",
+   "BodyContainsExpr",
+   "Concat",
+   "ContextOf",
+   "ExprIsResolved",
+   "Get",
+   "HasType",
+   "Single",
+   "SubTuple"
+  ]
+ },
+ "risk90": 39,
+ "examples": 2400,
+ "updates": 400,
+ "batch": 64,
+ "styles": {
+  "synthetic-1703": {
+   "examples": 2400,
+   "pairs": {},
+   "positive": 1117,
+   "outside": 1687
+  },
+  "real-1703": {
+   "examples": 2400,
+   "pairs": {},
+   "positive": 1199,
+   "outside": 1886
+  },
+  "paired-1703": {
+   "examples": 2400,
+   "pairs": {
+    "reader": 200,
+    "collision": 200,
+    "prior": 200
+   },
+   "positive": 1086,
+   "outside": 1757
+  },
+  "synthetic-1709": {
+   "examples": 2400,
+   "pairs": {},
+   "positive": 1094,
+   "outside": 1700
+  },
+  "real-1709": {
+   "examples": 2400,
+   "pairs": {},
+   "positive": 1141,
+   "outside": 1933
+  },
+  "paired-1709": {
+   "examples": 2400,
+   "pairs": {
+    "reader": 200,
+    "collision": 200,
+    "prior": 200
+   },
+   "positive": 993,
+   "outside": 1781
+  }
+ }
+}

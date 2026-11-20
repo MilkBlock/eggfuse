@@ -1,0 +1,1116 @@
+{
+ "0-0": {
+  "external": 0,
+  "same_key_peer": 0,
+  "collisions": 0,
+  "runs": 4,
+  "arms": {
+   "generic": {
+    "counts": {
+     "actual_external": 0,
+     "ambiguous": 0,
+     "applied": 0,
+     "candidates": 0,
+     "catalog": 0,
+     "catalog_applied": 0,
+     "covered_port_work": 0,
+     "eligible_port_work": 0,
+     "fast_eligible": 0,
+     "key_changed": 0,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 0,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 0
+    },
+    "recipients": 1,
+    "state_sha": "0df728d8956215deb69f8fdbb9304ae813b47c616b5cd6bf3b65bfcfd344390f",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "capture": {
+    "counts": {
+     "actual_external": 0,
+     "ambiguous": 0,
+     "applied": 0,
+     "candidates": 1,
+     "catalog": 0,
+     "catalog_applied": 0,
+     "covered_port_work": 0,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 0,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 0,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 1,
+    "state_sha": "0df728d8956215deb69f8fdbb9304ae813b47c616b5cd6bf3b65bfcfd344390f",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ],
+    "opportunities": [
+     {
+      "cell": 4,
+      "depth": 0,
+      "dirty": false,
+      "epoch": 4,
+      "external": false,
+      "fast": true,
+      "hash_bucket": 1,
+      "key_from": false,
+      "op": 2,
+      "outside_count": 0,
+      "parent_chain": 1,
+      "positions": [],
+      "table": 0,
+      "template": 3,
+      "union": 0,
+      "uses": 1,
+      "weight": 2,
+      "x": [
+       0.25,
+       0.0,
+       1.0,
+       0.0,
+       0.0,
+       0.0,
+       0.3333333432674408,
+       0.0625,
+       0.0,
+       0.0,
+       0.125,
+       0.0
+      ]
+     }
+    ]
+   },
+   "unsafe": {
+    "counts": {
+     "actual_external": 0,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 1,
+     "catalog": 0,
+     "catalog_applied": 0,
+     "covered_port_work": 2,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 0,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 1,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 0
+    },
+    "recipients": 1,
+    "state_sha": "0df728d8956215deb69f8fdbb9304ae813b47c616b5cd6bf3b65bfcfd344390f",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "every": {
+    "counts": {
+     "actual_external": 0,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 1,
+     "catalog": 0,
+     "catalog_applied": 0,
+     "covered_port_work": 2,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 0,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 1,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 1,
+    "state_sha": "0df728d8956215deb69f8fdbb9304ae813b47c616b5cd6bf3b65bfcfd344390f",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "stale": {
+    "counts": {
+     "actual_external": 0,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 1,
+     "catalog": 0,
+     "catalog_applied": 0,
+     "covered_port_work": 2,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 0,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 1,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 1,
+    "state_sha": "0df728d8956215deb69f8fdbb9304ae813b47c616b5cd6bf3b65bfcfd344390f",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "synthetic-1703": {
+    "counts": {
+     "actual_external": 0,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 1,
+     "catalog": 0,
+     "catalog_applied": 0,
+     "covered_port_work": 2,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 0,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 1,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 0
+    },
+    "recipients": 1,
+    "state_sha": "0df728d8956215deb69f8fdbb9304ae813b47c616b5cd6bf3b65bfcfd344390f",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "real-1703": {
+    "counts": {
+     "actual_external": 0,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 1,
+     "catalog": 0,
+     "catalog_applied": 0,
+     "covered_port_work": 2,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 0,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 1,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 0
+    },
+    "recipients": 1,
+    "state_sha": "0df728d8956215deb69f8fdbb9304ae813b47c616b5cd6bf3b65bfcfd344390f",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "paired-1703": {
+    "counts": {
+     "actual_external": 0,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 1,
+     "catalog": 0,
+     "catalog_applied": 0,
+     "covered_port_work": 2,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 0,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 1,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 0
+    },
+    "recipients": 1,
+    "state_sha": "0df728d8956215deb69f8fdbb9304ae813b47c616b5cd6bf3b65bfcfd344390f",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "paired-1709": {
+    "counts": {
+     "actual_external": 0,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 1,
+     "catalog": 0,
+     "catalog_applied": 0,
+     "covered_port_work": 2,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 0,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 1,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 0
+    },
+    "recipients": 1,
+    "state_sha": "0df728d8956215deb69f8fdbb9304ae813b47c616b5cd6bf3b65bfcfd344390f",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   }
+  }
+ },
+ "1-0": {
+  "external": 1,
+  "same_key_peer": 0,
+  "collisions": 0,
+  "runs": 4,
+  "arms": {
+   "generic": {
+    "counts": {
+     "actual_external": 0,
+     "ambiguous": 0,
+     "applied": 0,
+     "candidates": 0,
+     "catalog": 0,
+     "catalog_applied": 0,
+     "covered_port_work": 0,
+     "eligible_port_work": 0,
+     "fast_eligible": 0,
+     "key_changed": 0,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 0,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 0
+    },
+    "recipients": 2,
+    "state_sha": "b9ab69bad4b3fc6dea1dc56999ff730d7dc744ba091de2c132a780544b04f705",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "capture": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 0,
+     "candidates": 2,
+     "catalog": 1,
+     "catalog_applied": 0,
+     "covered_port_work": 0,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 1,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 0,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 0
+    },
+    "recipients": 2,
+    "state_sha": "b9ab69bad4b3fc6dea1dc56999ff730d7dc744ba091de2c132a780544b04f705",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ],
+    "opportunities": [
+     {
+      "cell": 4,
+      "depth": 0,
+      "dirty": false,
+      "epoch": 4,
+      "external": true,
+      "fast": true,
+      "hash_bucket": 1,
+      "key_from": false,
+      "op": 2,
+      "outside_count": 1,
+      "parent_chain": 1,
+      "positions": [],
+      "table": 0,
+      "template": 3,
+      "union": 0,
+      "uses": 2,
+      "weight": 2,
+      "x": [
+       0.25,
+       0.0,
+       1.0,
+       0.0,
+       0.0,
+       0.0,
+       0.3333333432674408,
+       0.125,
+       0.0,
+       0.0,
+       0.125,
+       0.0
+      ]
+     },
+     {
+      "cell": 5,
+      "depth": 0,
+      "dirty": false,
+      "epoch": 4,
+      "external": true,
+      "fast": false,
+      "hash_bucket": 1,
+      "key_from": true,
+      "op": 1,
+      "outside_count": 1,
+      "parent_chain": 0,
+      "positions": [
+       0
+      ],
+      "table": 3,
+      "template": 0,
+      "union": 0,
+      "uses": 2,
+      "weight": 2,
+      "x": [
+       0.25,
+       0.125,
+       0.0,
+       1.0,
+       0.0,
+       0.0,
+       0.3333333432674408,
+       0.125,
+       1.0,
+       1.0,
+       0.0625,
+       0.0
+      ]
+     }
+    ]
+   },
+   "unsafe": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 0,
+     "candidates": 2,
+     "catalog": 1,
+     "catalog_applied": 0,
+     "covered_port_work": 0,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 1,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 2,
+     "rejected": 2,
+     "stale": 0,
+     "unsafe_external_rejected": 2,
+     "with_external": 0,
+     "wrong_external": 2
+    },
+    "recipients": 2,
+    "state_sha": "b9ab69bad4b3fc6dea1dc56999ff730d7dc744ba091de2c132a780544b04f705",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "every": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 2,
+     "catalog": 1,
+     "catalog_applied": 0,
+     "covered_port_work": 2,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 1,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 2,
+     "rejected": 1,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 1,
+     "wrong_external": 0
+    },
+    "recipients": 2,
+    "state_sha": "b9ab69bad4b3fc6dea1dc56999ff730d7dc744ba091de2c132a780544b04f705",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "stale": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 2,
+     "catalog": 1,
+     "catalog_applied": 0,
+     "covered_port_work": 2,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 1,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 2,
+     "rejected": 1,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 1,
+     "wrong_external": 0
+    },
+    "recipients": 2,
+    "state_sha": "b9ab69bad4b3fc6dea1dc56999ff730d7dc744ba091de2c132a780544b04f705",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "synthetic-1703": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 0,
+     "candidates": 2,
+     "catalog": 1,
+     "catalog_applied": 0,
+     "covered_port_work": 0,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 1,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 1,
+     "rejected": 1,
+     "stale": 0,
+     "unsafe_external_rejected": 1,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 2,
+    "state_sha": "b9ab69bad4b3fc6dea1dc56999ff730d7dc744ba091de2c132a780544b04f705",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "real-1703": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 0,
+     "candidates": 2,
+     "catalog": 1,
+     "catalog_applied": 0,
+     "covered_port_work": 0,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 1,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 1,
+     "rejected": 1,
+     "stale": 0,
+     "unsafe_external_rejected": 1,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 2,
+    "state_sha": "b9ab69bad4b3fc6dea1dc56999ff730d7dc744ba091de2c132a780544b04f705",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "paired-1703": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 0,
+     "candidates": 2,
+     "catalog": 1,
+     "catalog_applied": 0,
+     "covered_port_work": 0,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 1,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 1,
+     "rejected": 1,
+     "stale": 0,
+     "unsafe_external_rejected": 1,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 2,
+    "state_sha": "b9ab69bad4b3fc6dea1dc56999ff730d7dc744ba091de2c132a780544b04f705",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   },
+   "paired-1709": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 0,
+     "candidates": 2,
+     "catalog": 1,
+     "catalog_applied": 0,
+     "covered_port_work": 0,
+     "eligible_port_work": 2,
+     "fast_eligible": 1,
+     "key_changed": 1,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 1,
+     "rejected": 1,
+     "stale": 0,
+     "unsafe_external_rejected": 1,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 2,
+    "state_sha": "b9ab69bad4b3fc6dea1dc56999ff730d7dc744ba091de2c132a780544b04f705",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ]
+    ]
+   }
+  }
+ },
+ "1-1": {
+  "external": 1,
+  "same_key_peer": 1,
+  "collisions": 1,
+  "runs": 4,
+  "arms": {
+   "generic": {
+    "counts": {
+     "actual_external": 0,
+     "ambiguous": 0,
+     "applied": 0,
+     "candidates": 0,
+     "catalog": 0,
+     "catalog_applied": 0,
+     "covered_port_work": 0,
+     "eligible_port_work": 0,
+     "fast_eligible": 0,
+     "key_changed": 0,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 0,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 0
+    },
+    "recipients": 3,
+    "state_sha": "24a5c95ffea730407d9ee06cf77d6def0a1c384b7360a2932293b0da237c48c8",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ],
+     [
+      "union",
+      25769803780,
+      21474836484
+     ]
+    ]
+   },
+   "capture": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 0,
+     "candidates": 3,
+     "catalog": 2,
+     "catalog_applied": 0,
+     "covered_port_work": 0,
+     "eligible_port_work": 4,
+     "fast_eligible": 2,
+     "key_changed": 1,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 0,
+     "rejected": 0,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 3,
+    "state_sha": "24a5c95ffea730407d9ee06cf77d6def0a1c384b7360a2932293b0da237c48c8",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ],
+     [
+      "union",
+      25769803780,
+      21474836484
+     ]
+    ],
+    "opportunities": [
+     {
+      "cell": 4,
+      "depth": 0,
+      "dirty": false,
+      "epoch": 4,
+      "external": true,
+      "fast": true,
+      "hash_bucket": 1,
+      "key_from": false,
+      "op": 2,
+      "outside_count": 1,
+      "parent_chain": 1,
+      "positions": [],
+      "table": 0,
+      "template": 3,
+      "union": 0,
+      "uses": 2,
+      "weight": 2,
+      "x": [
+       0.25,
+       0.0,
+       1.0,
+       0.0,
+       0.0,
+       0.0,
+       0.3333333432674408,
+       0.125,
+       0.0,
+       0.0,
+       0.125,
+       0.0
+      ]
+     },
+     {
+      "cell": 5,
+      "depth": 0,
+      "dirty": false,
+      "epoch": 4,
+      "external": true,
+      "fast": false,
+      "hash_bucket": 1,
+      "key_from": true,
+      "op": 1,
+      "outside_count": 1,
+      "parent_chain": 0,
+      "positions": [
+       0
+      ],
+      "table": 3,
+      "template": 0,
+      "union": 0,
+      "uses": 2,
+      "weight": 2,
+      "x": [
+       0.25,
+       0.125,
+       0.0,
+       1.0,
+       0.0,
+       0.0,
+       0.3333333432674408,
+       0.125,
+       1.0,
+       1.0,
+       0.0625,
+       0.0
+      ]
+     },
+     {
+      "cell": 6,
+      "depth": 0,
+      "dirty": false,
+      "epoch": 4,
+      "external": false,
+      "fast": true,
+      "hash_bucket": 1,
+      "key_from": false,
+      "op": 1,
+      "outside_count": 0,
+      "parent_chain": 0,
+      "positions": [],
+      "table": 3,
+      "template": 1,
+      "union": 1,
+      "uses": 1,
+      "weight": 2,
+      "x": [
+       0.25,
+       0.125,
+       1.0,
+       0.0,
+       0.0,
+       0.0,
+       0.3333333432674408,
+       0.0625,
+       0.0,
+       1.0,
+       0.0625,
+       0.0
+      ]
+     }
+    ]
+   },
+   "unsafe": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 3,
+     "catalog": 2,
+     "catalog_applied": 1,
+     "covered_port_work": 2,
+     "eligible_port_work": 4,
+     "fast_eligible": 2,
+     "key_changed": 1,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 3,
+     "rejected": 2,
+     "stale": 0,
+     "unsafe_external_rejected": 2,
+     "with_external": 0,
+     "wrong_external": 2
+    },
+    "recipients": 3,
+    "state_sha": "24a5c95ffea730407d9ee06cf77d6def0a1c384b7360a2932293b0da237c48c8",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ],
+     [
+      "union",
+      25769803780,
+      21474836484
+     ]
+    ]
+   },
+   "every": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 2,
+     "candidates": 3,
+     "catalog": 2,
+     "catalog_applied": 1,
+     "covered_port_work": 4,
+     "eligible_port_work": 4,
+     "fast_eligible": 2,
+     "key_changed": 1,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 3,
+     "rejected": 1,
+     "stale": 0,
+     "unsafe_external_rejected": 0,
+     "with_external": 1,
+     "wrong_external": 1
+    },
+    "recipients": 3,
+    "state_sha": "24a5c95ffea730407d9ee06cf77d6def0a1c384b7360a2932293b0da237c48c8",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ],
+     [
+      "union",
+      25769803780,
+      21474836484
+     ]
+    ]
+   },
+   "stale": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 3,
+     "catalog": 2,
+     "catalog_applied": 0,
+     "covered_port_work": 2,
+     "eligible_port_work": 4,
+     "fast_eligible": 2,
+     "key_changed": 1,
+     "local_only": 0,
+     "pending": 0,
+     "proposed": 3,
+     "rejected": 2,
+     "stale": 1,
+     "unsafe_external_rejected": 0,
+     "with_external": 1,
+     "wrong_external": 1
+    },
+    "recipients": 3,
+    "state_sha": "24a5c95ffea730407d9ee06cf77d6def0a1c384b7360a2932293b0da237c48c8",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ],
+     [
+      "union",
+      25769803780,
+      21474836484
+     ]
+    ]
+   },
+   "synthetic-1703": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 3,
+     "catalog": 2,
+     "catalog_applied": 1,
+     "covered_port_work": 2,
+     "eligible_port_work": 4,
+     "fast_eligible": 2,
+     "key_changed": 1,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 2,
+     "rejected": 1,
+     "stale": 0,
+     "unsafe_external_rejected": 1,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 3,
+    "state_sha": "24a5c95ffea730407d9ee06cf77d6def0a1c384b7360a2932293b0da237c48c8",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ],
+     [
+      "union",
+      25769803780,
+      21474836484
+     ]
+    ]
+   },
+   "real-1703": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 3,
+     "catalog": 2,
+     "catalog_applied": 1,
+     "covered_port_work": 2,
+     "eligible_port_work": 4,
+     "fast_eligible": 2,
+     "key_changed": 1,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 2,
+     "rejected": 1,
+     "stale": 0,
+     "unsafe_external_rejected": 1,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 3,
+    "state_sha": "24a5c95ffea730407d9ee06cf77d6def0a1c384b7360a2932293b0da237c48c8",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ],
+     [
+      "union",
+      25769803780,
+      21474836484
+     ]
+    ]
+   },
+   "paired-1703": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 3,
+     "catalog": 2,
+     "catalog_applied": 1,
+     "covered_port_work": 2,
+     "eligible_port_work": 4,
+     "fast_eligible": 2,
+     "key_changed": 1,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 2,
+     "rejected": 1,
+     "stale": 0,
+     "unsafe_external_rejected": 1,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 3,
+    "state_sha": "24a5c95ffea730407d9ee06cf77d6def0a1c384b7360a2932293b0da237c48c8",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ],
+     [
+      "union",
+      25769803780,
+      21474836484
+     ]
+    ]
+   },
+   "paired-1709": {
+    "counts": {
+     "actual_external": 2,
+     "ambiguous": 0,
+     "applied": 1,
+     "candidates": 3,
+     "catalog": 2,
+     "catalog_applied": 1,
+     "covered_port_work": 2,
+     "eligible_port_work": 4,
+     "fast_eligible": 2,
+     "key_changed": 1,
+     "local_only": 1,
+     "pending": 0,
+     "proposed": 2,
+     "rejected": 1,
+     "stale": 0,
+     "unsafe_external_rejected": 1,
+     "with_external": 0,
+     "wrong_external": 1
+    },
+    "recipients": 3,
+    "state_sha": "24a5c95ffea730407d9ee06cf77d6def0a1c384b7360a2932293b0da237c48c8",
+    "ordered_unions": [
+     [
+      "union",
+      17179869189,
+      17179869187
+     ],
+     [
+      "union",
+      25769803780,
+      21474836484
+     ]
+    ]
+   }
+  }
+ }
+}

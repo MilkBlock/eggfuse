@@ -1,0 +1,1162 @@
+{
+ "sum-bits/1703": {
+  "training": {
+   "programs": [
+    "affine-twins",
+    "clamped-ramp",
+    "segmented-prefix",
+    "window-laplacian"
+   ],
+   "shapes": [
+    "001251b55ada355c16f691c0ce79a6e88f5fe6f8a97cdcdfbf7fe4ca04f1735e",
+    "069be97ead7cb92ac41e4364112e35e4e8128747eecfa5b1ff565b11e64dfc4c",
+    "11ee84b105859191e88d12179e40ef4800c150bde276aec95b888e046b7d33aa",
+    "410f6079f563fd2ab02eef315d1911acaf56b93efff0e319ae95c555119f6416",
+    "43d282058c9b46f49ef1e6570769e21c51b9a5a83a68dd9f7f96033f5c4d0e7e",
+    "5a818dff244bbe16cb9a17a1699e17be863ef59b9576b1c26ebe747374702729",
+    "7a5104c944d8bf40efd0215f7e4b0be0f3eddc58d9589491d1795160020a39c3",
+    "9c8713462fccf2a636922475fe7379cceb52ffffa8b031c86d4eb342828d6529",
+    "b86de2ce6b18fe9da4f5d23055c80e5eacb3ef0f6e1537d8bbf351559d83d92c",
+    "bc2726f3c69ef7575b47673d5b99da90726c1c5053e5816c765820117ce4d9b5",
+    "f7cc270addcec68716ed749823a262839984ddf56e473ee6b97fe855c84bd07b"
+   ],
+   "labeled_fields": 1328,
+   "typed_classes": 164,
+   "params": 6404,
+   "updates": 400
+  },
+  "arms": {
+   "4": {
+    "children": 1,
+    "reference": 91,
+    "eligible_width": 82,
+    "capacity_overflow": 9,
+    "payload_reference_slots": 376,
+    "typed_slots": 376,
+    "values_emitted_before_run1": 296,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 189,
+    "total_fields": 250,
+    "correct_fields": 13,
+    "full_slots_in_vocab": 44,
+    "cohorts": {
+     "cold": [
+      5,
+      4,
+      0
+     ],
+     "seen": [
+      77,
+      40,
+      1
+     ]
+    },
+    "exact": 7262,
+    "source_aligned": true,
+    "header": "5a2802e0bca701b6b2fa61a30b1a1656ee56ac39859f7e1f0ba98e7d00629b0f",
+    "samples": [
+     25.401833,
+     24.271042,
+     28.934125,
+     25.686332999999998,
+     25.126125,
+     24.701917,
+     25.761,
+     25.023
+    ],
+    "port_ms": [
+     0.410167,
+     0.41154199999999996,
+     0.42700000000000005,
+     0.397167,
+     0.405625,
+     0.41125,
+     0.403375,
+     0.402375
+    ],
+    "cold_cli_ms": 160.81675,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 25.263979,
+    "median_port_ms": 0.40789600000000004
+   },
+   "6": {
+    "children": 1,
+    "reference": 91,
+    "eligible_width": 91,
+    "capacity_overflow": 0,
+    "payload_reference_slots": 564,
+    "typed_slots": 564,
+    "values_emitted_before_run1": 312,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 224,
+    "total_fields": 296,
+    "correct_fields": 18,
+    "full_slots_in_vocab": 46,
+    "cohorts": {
+     "cold": [
+      5,
+      4,
+      0
+     ],
+     "seen": [
+      86,
+      42,
+      1
+     ]
+    },
+    "exact": 7262,
+    "source_aligned": true,
+    "header": "5a2802e0bca701b6b2fa61a30b1a1656ee56ac39859f7e1f0ba98e7d00629b0f",
+    "samples": [
+     24.994542000000003,
+     25.478209000000003,
+     29.1825,
+     25.549542000000002,
+     24.431792,
+     25.500792,
+     25.135458,
+     24.576041
+    ],
+    "port_ms": [
+     0.437708,
+     0.433958,
+     0.4865,
+     0.432584,
+     0.444417,
+     0.424667,
+     0.425209,
+     0.422667
+    ],
+    "cold_cli_ms": 161.0285,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 25.306833500000003,
+    "median_port_ms": 0.433271
+   }
+  }
+ },
+ "dot-product/1703": {
+  "training": {
+   "programs": [
+    "affine-twins",
+    "clamped-ramp",
+    "segmented-prefix",
+    "window-laplacian"
+   ],
+   "shapes": [
+    "001251b55ada355c16f691c0ce79a6e88f5fe6f8a97cdcdfbf7fe4ca04f1735e",
+    "069be97ead7cb92ac41e4364112e35e4e8128747eecfa5b1ff565b11e64dfc4c",
+    "11ee84b105859191e88d12179e40ef4800c150bde276aec95b888e046b7d33aa",
+    "410f6079f563fd2ab02eef315d1911acaf56b93efff0e319ae95c555119f6416",
+    "43d282058c9b46f49ef1e6570769e21c51b9a5a83a68dd9f7f96033f5c4d0e7e",
+    "5a818dff244bbe16cb9a17a1699e17be863ef59b9576b1c26ebe747374702729",
+    "7a5104c944d8bf40efd0215f7e4b0be0f3eddc58d9589491d1795160020a39c3",
+    "9c8713462fccf2a636922475fe7379cceb52ffffa8b031c86d4eb342828d6529",
+    "b86de2ce6b18fe9da4f5d23055c80e5eacb3ef0f6e1537d8bbf351559d83d92c",
+    "bc2726f3c69ef7575b47673d5b99da90726c1c5053e5816c765820117ce4d9b5",
+    "f7cc270addcec68716ed749823a262839984ddf56e473ee6b97fe855c84bd07b"
+   ],
+   "labeled_fields": 1328,
+   "typed_classes": 164,
+   "params": 6404,
+   "updates": 400
+  },
+  "arms": {
+   "4": {
+    "children": 1,
+    "reference": 195,
+    "eligible_width": 169,
+    "capacity_overflow": 26,
+    "payload_reference_slots": 780,
+    "typed_slots": 780,
+    "values_emitted_before_run1": 644,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 407,
+    "total_fields": 540,
+    "correct_fields": 30,
+    "full_slots_in_vocab": 89,
+    "cohorts": {
+     "seen": [
+      161,
+      89,
+      1
+     ],
+     "cold": [
+      8,
+      0,
+      0
+     ]
+    },
+    "exact": 6701,
+    "source_aligned": true,
+    "header": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+    "samples": [
+     22.666875,
+     23.406125,
+     22.912541,
+     22.133291999999997,
+     22.106875000000002,
+     22.357042,
+     22.386665999999998,
+     22.399625
+    ],
+    "port_ms": [
+     0.789416,
+     0.7983750000000001,
+     0.799458,
+     0.7935000000000001,
+     0.804334,
+     0.783333,
+     0.81725,
+     0.825916
+    ],
+    "cold_cli_ms": 159.339208,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 22.3931455,
+    "median_port_ms": 0.7989165
+   },
+   "6": {
+    "children": 1,
+    "reference": 195,
+    "eligible_width": 195,
+    "capacity_overflow": 0,
+    "payload_reference_slots": 1170,
+    "typed_slots": 1170,
+    "values_emitted_before_run1": 680,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 481,
+    "total_fields": 680,
+    "correct_fields": 33,
+    "full_slots_in_vocab": 89,
+    "cohorts": {
+     "seen": [
+      177,
+      89,
+      1
+     ],
+     "cold": [
+      18,
+      0,
+      0
+     ]
+    },
+    "exact": 6701,
+    "source_aligned": true,
+    "header": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+    "samples": [
+     23.097791,
+     22.669625,
+     22.718542000000003,
+     22.968374999999998,
+     23.778042,
+     22.677167,
+     22.133542,
+     22.654083
+    ],
+    "port_ms": [
+     0.8352499999999999,
+     0.8164589999999999,
+     0.83575,
+     0.9031659999999999,
+     0.875125,
+     0.819333,
+     0.858916,
+     0.8352919999999999
+    ],
+    "cold_cli_ms": 164.969125,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 22.697854500000002,
+    "median_port_ms": 0.835521
+   }
+  }
+ },
+ "gemm-bias-relu/1703": {
+  "training": {
+   "programs": [
+    "affine-twins",
+    "clamped-ramp",
+    "segmented-prefix",
+    "window-laplacian"
+   ],
+   "shapes": [
+    "001251b55ada355c16f691c0ce79a6e88f5fe6f8a97cdcdfbf7fe4ca04f1735e",
+    "069be97ead7cb92ac41e4364112e35e4e8128747eecfa5b1ff565b11e64dfc4c",
+    "11ee84b105859191e88d12179e40ef4800c150bde276aec95b888e046b7d33aa",
+    "410f6079f563fd2ab02eef315d1911acaf56b93efff0e319ae95c555119f6416",
+    "43d282058c9b46f49ef1e6570769e21c51b9a5a83a68dd9f7f96033f5c4d0e7e",
+    "5a818dff244bbe16cb9a17a1699e17be863ef59b9576b1c26ebe747374702729",
+    "7a5104c944d8bf40efd0215f7e4b0be0f3eddc58d9589491d1795160020a39c3",
+    "9c8713462fccf2a636922475fe7379cceb52ffffa8b031c86d4eb342828d6529",
+    "b86de2ce6b18fe9da4f5d23055c80e5eacb3ef0f6e1537d8bbf351559d83d92c",
+    "bc2726f3c69ef7575b47673d5b99da90726c1c5053e5816c765820117ce4d9b5",
+    "f7cc270addcec68716ed749823a262839984ddf56e473ee6b97fe855c84bd07b"
+   ],
+   "labeled_fields": 1328,
+   "typed_classes": 164,
+   "params": 6404,
+   "updates": 400
+  },
+  "arms": {
+   "4": {
+    "children": 1,
+    "reference": 207,
+    "eligible_width": 189,
+    "capacity_overflow": 18,
+    "payload_reference_slots": 828,
+    "typed_slots": 828,
+    "values_emitted_before_run1": 606,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 341,
+    "total_fields": 534,
+    "correct_fields": 25,
+    "full_slots_in_vocab": 85,
+    "cohorts": {
+     "seen": [
+      177,
+      85,
+      1
+     ],
+     "cold": [
+      12,
+      0,
+      0
+     ]
+    },
+    "exact": 15459,
+    "source_aligned": true,
+    "header": "80aa9cb3c3cc41b088395486bc04695c1842892924d587771b208b6a567c94ef",
+    "samples": [
+     50.068917,
+     49.894708,
+     49.349125,
+     48.646375,
+     48.768417,
+     48.737334,
+     49.177749999999996,
+     47.518875
+    ],
+    "port_ms": [
+     0.90225,
+     0.8588340000000001,
+     0.825542,
+     0.818125,
+     0.866,
+     0.860667,
+     0.861958,
+     0.82125
+    ],
+    "cold_cli_ms": 203.742833,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 48.9730835,
+    "median_port_ms": 0.8597505000000001
+   },
+   "6": {
+    "children": 1,
+    "reference": 207,
+    "eligible_width": 207,
+    "capacity_overflow": 0,
+    "payload_reference_slots": 1242,
+    "typed_slots": 1242,
+    "values_emitted_before_run1": 624,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 387,
+    "total_fields": 624,
+    "correct_fields": 27,
+    "full_slots_in_vocab": 85,
+    "cohorts": {
+     "seen": [
+      195,
+      85,
+      1
+     ],
+     "cold": [
+      12,
+      0,
+      0
+     ]
+    },
+    "exact": 15459,
+    "source_aligned": true,
+    "header": "80aa9cb3c3cc41b088395486bc04695c1842892924d587771b208b6a567c94ef",
+    "samples": [
+     49.92400000000001,
+     52.973875,
+     49.989125,
+     48.818208,
+     48.210125,
+     47.999624999999995,
+     48.556959,
+     47.81075
+    ],
+    "port_ms": [
+     0.8490000000000001,
+     0.9065,
+     0.894666,
+     0.858459,
+     0.866541,
+     0.8737499999999999,
+     0.879791,
+     0.850541
+    ],
+    "cold_cli_ms": 201.73075,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 48.6875835,
+    "median_port_ms": 0.8701455
+   }
+  }
+ },
+ "stable-argmax/1703": {
+  "training": {
+   "programs": [
+    "affine-twins",
+    "clamped-ramp",
+    "segmented-prefix",
+    "window-laplacian"
+   ],
+   "shapes": [
+    "001251b55ada355c16f691c0ce79a6e88f5fe6f8a97cdcdfbf7fe4ca04f1735e",
+    "069be97ead7cb92ac41e4364112e35e4e8128747eecfa5b1ff565b11e64dfc4c",
+    "11ee84b105859191e88d12179e40ef4800c150bde276aec95b888e046b7d33aa",
+    "410f6079f563fd2ab02eef315d1911acaf56b93efff0e319ae95c555119f6416",
+    "43d282058c9b46f49ef1e6570769e21c51b9a5a83a68dd9f7f96033f5c4d0e7e",
+    "5a818dff244bbe16cb9a17a1699e17be863ef59b9576b1c26ebe747374702729",
+    "7a5104c944d8bf40efd0215f7e4b0be0f3eddc58d9589491d1795160020a39c3",
+    "9c8713462fccf2a636922475fe7379cceb52ffffa8b031c86d4eb342828d6529",
+    "b86de2ce6b18fe9da4f5d23055c80e5eacb3ef0f6e1537d8bbf351559d83d92c",
+    "bc2726f3c69ef7575b47673d5b99da90726c1c5053e5816c765820117ce4d9b5",
+    "f7cc270addcec68716ed749823a262839984ddf56e473ee6b97fe855c84bd07b"
+   ],
+   "labeled_fields": 1328,
+   "typed_classes": 164,
+   "params": 6404,
+   "updates": 400
+  },
+  "arms": {
+   "4": {
+    "children": 5,
+    "reference": 128,
+    "eligible_width": 114,
+    "capacity_overflow": 14,
+    "payload_reference_slots": 512,
+    "typed_slots": 512,
+    "values_emitted_before_run1": 381,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 287,
+    "total_fields": 325,
+    "correct_fields": 59,
+    "full_slots_in_vocab": 80,
+    "cohorts": {
+     "seen": [
+      110,
+      80,
+      5
+     ],
+     "cold": [
+      4,
+      0,
+      0
+     ]
+    },
+    "exact": 8183,
+    "source_aligned": true,
+    "header": "a2578382d77c250d01e14dc7f33f328cdfb742a5f9a2c1ddab1eb787311b2660",
+    "samples": [
+     26.112,
+     25.568167,
+     25.519125,
+     25.678875,
+     27.430875,
+     26.113917,
+     27.230082999999997,
+     27.11
+    ],
+    "port_ms": [
+     0.545042,
+     0.5165000000000001,
+     0.5206670000000001,
+     0.540334,
+     0.536583,
+     0.517,
+     0.534875,
+     0.5355409999999999
+    ],
+    "cold_cli_ms": 165.777833,
+    "autonomous": {
+     "first": 3,
+     "rhs": 7,
+     "children": 5,
+     "exact": 0
+    },
+    "median_ms": 26.112958499999998,
+    "median_port_ms": 0.5352079999999999
+   },
+   "6": {
+    "children": 5,
+    "reference": 128,
+    "eligible_width": 128,
+    "capacity_overflow": 0,
+    "payload_reference_slots": 768,
+    "typed_slots": 768,
+    "values_emitted_before_run1": 395,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 345,
+    "total_fields": 395,
+    "correct_fields": 63,
+    "full_slots_in_vocab": 88,
+    "cohorts": {
+     "seen": [
+      124,
+      88,
+      5
+     ],
+     "cold": [
+      4,
+      0,
+      0
+     ]
+    },
+    "exact": 8183,
+    "source_aligned": true,
+    "header": "a2578382d77c250d01e14dc7f33f328cdfb742a5f9a2c1ddab1eb787311b2660",
+    "samples": [
+     27.879250000000003,
+     26.983792,
+     25.52975,
+     25.808834,
+     26.707458,
+     26.172500000000003,
+     27.934167,
+     28.212208999999998
+    ],
+    "port_ms": [
+     0.554209,
+     0.5523750000000001,
+     0.567959,
+     0.5509999999999999,
+     0.571125,
+     0.596833,
+     0.6015,
+     0.605833
+    ],
+    "cold_cli_ms": 166.186709,
+    "autonomous": {
+     "first": 3,
+     "rhs": 7,
+     "children": 5,
+     "exact": 0
+    },
+    "median_ms": 26.845625,
+    "median_port_ms": 0.569542
+   }
+  }
+ },
+ "sum-bits/1709": {
+  "training": {
+   "programs": [
+    "affine-twins",
+    "clamped-ramp",
+    "segmented-prefix",
+    "window-laplacian"
+   ],
+   "shapes": [
+    "001251b55ada355c16f691c0ce79a6e88f5fe6f8a97cdcdfbf7fe4ca04f1735e",
+    "069be97ead7cb92ac41e4364112e35e4e8128747eecfa5b1ff565b11e64dfc4c",
+    "11ee84b105859191e88d12179e40ef4800c150bde276aec95b888e046b7d33aa",
+    "410f6079f563fd2ab02eef315d1911acaf56b93efff0e319ae95c555119f6416",
+    "43d282058c9b46f49ef1e6570769e21c51b9a5a83a68dd9f7f96033f5c4d0e7e",
+    "5a818dff244bbe16cb9a17a1699e17be863ef59b9576b1c26ebe747374702729",
+    "7a5104c944d8bf40efd0215f7e4b0be0f3eddc58d9589491d1795160020a39c3",
+    "9c8713462fccf2a636922475fe7379cceb52ffffa8b031c86d4eb342828d6529",
+    "b86de2ce6b18fe9da4f5d23055c80e5eacb3ef0f6e1537d8bbf351559d83d92c",
+    "bc2726f3c69ef7575b47673d5b99da90726c1c5053e5816c765820117ce4d9b5",
+    "f7cc270addcec68716ed749823a262839984ddf56e473ee6b97fe855c84bd07b"
+   ],
+   "labeled_fields": 1328,
+   "typed_classes": 164,
+   "params": 6404,
+   "updates": 400
+  },
+  "arms": {
+   "4": {
+    "children": 1,
+    "reference": 92,
+    "eligible_width": 83,
+    "capacity_overflow": 9,
+    "payload_reference_slots": 392,
+    "typed_slots": 392,
+    "values_emitted_before_run1": 309,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 189,
+    "total_fields": 253,
+    "correct_fields": 14,
+    "full_slots_in_vocab": 44,
+    "cohorts": {
+     "cold": [
+      6,
+      4,
+      0
+     ],
+     "seen": [
+      77,
+      40,
+      1
+     ]
+    },
+    "exact": 7262,
+    "source_aligned": true,
+    "header": "5d7375ad128fd02a491489ef02eceb621edf35345bb188ced17d1b8f5d9d5e84",
+    "samples": [
+     25.581166,
+     24.655375,
+     29.594790999999997,
+     27.21175,
+     26.690625,
+     28.710791,
+     25.532166,
+     24.810959
+    ],
+    "port_ms": [
+     0.44991699999999996,
+     0.436542,
+     0.409833,
+     0.43512500000000004,
+     0.454166,
+     0.436291,
+     0.436417,
+     0.425
+    ],
+    "cold_cli_ms": 164.751375,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 26.1358955,
+    "median_port_ms": 0.436354
+   },
+   "6": {
+    "children": 1,
+    "reference": 92,
+    "eligible_width": 92,
+    "capacity_overflow": 0,
+    "payload_reference_slots": 588,
+    "typed_slots": 588,
+    "values_emitted_before_run1": 329,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 224,
+    "total_fields": 299,
+    "correct_fields": 19,
+    "full_slots_in_vocab": 46,
+    "cohorts": {
+     "cold": [
+      6,
+      4,
+      0
+     ],
+     "seen": [
+      86,
+      42,
+      1
+     ]
+    },
+    "exact": 7262,
+    "source_aligned": true,
+    "header": "5d7375ad128fd02a491489ef02eceb621edf35345bb188ced17d1b8f5d9d5e84",
+    "samples": [
+     25.555875,
+     24.953,
+     29.202334,
+     25.939125,
+     25.696666999999998,
+     25.344333,
+     25.044166,
+     25.432792
+    ],
+    "port_ms": [
+     0.442,
+     0.45295799999999997,
+     0.436208,
+     0.473125,
+     0.434417,
+     0.47300000000000003,
+     0.434042,
+     0.444375
+    ],
+    "cold_cli_ms": 160.67675,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 25.4943335,
+    "median_port_ms": 0.4431875
+   }
+  }
+ },
+ "dot-product/1709": {
+  "training": {
+   "programs": [
+    "affine-twins",
+    "clamped-ramp",
+    "segmented-prefix",
+    "window-laplacian"
+   ],
+   "shapes": [
+    "001251b55ada355c16f691c0ce79a6e88f5fe6f8a97cdcdfbf7fe4ca04f1735e",
+    "069be97ead7cb92ac41e4364112e35e4e8128747eecfa5b1ff565b11e64dfc4c",
+    "11ee84b105859191e88d12179e40ef4800c150bde276aec95b888e046b7d33aa",
+    "410f6079f563fd2ab02eef315d1911acaf56b93efff0e319ae95c555119f6416",
+    "43d282058c9b46f49ef1e6570769e21c51b9a5a83a68dd9f7f96033f5c4d0e7e",
+    "5a818dff244bbe16cb9a17a1699e17be863ef59b9576b1c26ebe747374702729",
+    "7a5104c944d8bf40efd0215f7e4b0be0f3eddc58d9589491d1795160020a39c3",
+    "9c8713462fccf2a636922475fe7379cceb52ffffa8b031c86d4eb342828d6529",
+    "b86de2ce6b18fe9da4f5d23055c80e5eacb3ef0f6e1537d8bbf351559d83d92c",
+    "bc2726f3c69ef7575b47673d5b99da90726c1c5053e5816c765820117ce4d9b5",
+    "f7cc270addcec68716ed749823a262839984ddf56e473ee6b97fe855c84bd07b"
+   ],
+   "labeled_fields": 1328,
+   "typed_classes": 164,
+   "params": 6404,
+   "updates": 400
+  },
+  "arms": {
+   "4": {
+    "children": 1,
+    "reference": 195,
+    "eligible_width": 169,
+    "capacity_overflow": 26,
+    "payload_reference_slots": 780,
+    "typed_slots": 780,
+    "values_emitted_before_run1": 644,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 407,
+    "total_fields": 540,
+    "correct_fields": 28,
+    "full_slots_in_vocab": 89,
+    "cohorts": {
+     "seen": [
+      161,
+      89,
+      1
+     ],
+     "cold": [
+      8,
+      0,
+      0
+     ]
+    },
+    "exact": 6701,
+    "source_aligned": true,
+    "header": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+    "samples": [
+     22.737792,
+     22.338625,
+     22.546916,
+     22.734833,
+     22.410458000000002,
+     22.292625,
+     22.461041,
+     21.863791
+    ],
+    "port_ms": [
+     0.791666,
+     0.77775,
+     0.800333,
+     0.777875,
+     0.798,
+     0.763458,
+     0.7755000000000001,
+     0.7910839999999999
+    ],
+    "cold_cli_ms": 159.223125,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 22.4357495,
+    "median_port_ms": 0.7844795
+   },
+   "6": {
+    "children": 1,
+    "reference": 195,
+    "eligible_width": 195,
+    "capacity_overflow": 0,
+    "payload_reference_slots": 1170,
+    "typed_slots": 1170,
+    "values_emitted_before_run1": 680,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 481,
+    "total_fields": 680,
+    "correct_fields": 31,
+    "full_slots_in_vocab": 89,
+    "cohorts": {
+     "seen": [
+      177,
+      89,
+      1
+     ],
+     "cold": [
+      18,
+      0,
+      0
+     ]
+    },
+    "exact": 6701,
+    "source_aligned": true,
+    "header": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+    "samples": [
+     22.560416,
+     22.066375,
+     22.401,
+     22.766042,
+     22.371333,
+     22.206,
+     22.444959,
+     22.430292
+    ],
+    "port_ms": [
+     0.820875,
+     0.808166,
+     0.843292,
+     0.812875,
+     0.84425,
+     0.83775,
+     0.837958,
+     0.826917
+    ],
+    "cold_cli_ms": 165.926042,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 22.415646000000002,
+    "median_port_ms": 0.8323335000000001
+   }
+  }
+ },
+ "gemm-bias-relu/1709": {
+  "training": {
+   "programs": [
+    "affine-twins",
+    "clamped-ramp",
+    "segmented-prefix",
+    "window-laplacian"
+   ],
+   "shapes": [
+    "001251b55ada355c16f691c0ce79a6e88f5fe6f8a97cdcdfbf7fe4ca04f1735e",
+    "069be97ead7cb92ac41e4364112e35e4e8128747eecfa5b1ff565b11e64dfc4c",
+    "11ee84b105859191e88d12179e40ef4800c150bde276aec95b888e046b7d33aa",
+    "410f6079f563fd2ab02eef315d1911acaf56b93efff0e319ae95c555119f6416",
+    "43d282058c9b46f49ef1e6570769e21c51b9a5a83a68dd9f7f96033f5c4d0e7e",
+    "5a818dff244bbe16cb9a17a1699e17be863ef59b9576b1c26ebe747374702729",
+    "7a5104c944d8bf40efd0215f7e4b0be0f3eddc58d9589491d1795160020a39c3",
+    "9c8713462fccf2a636922475fe7379cceb52ffffa8b031c86d4eb342828d6529",
+    "b86de2ce6b18fe9da4f5d23055c80e5eacb3ef0f6e1537d8bbf351559d83d92c",
+    "bc2726f3c69ef7575b47673d5b99da90726c1c5053e5816c765820117ce4d9b5",
+    "f7cc270addcec68716ed749823a262839984ddf56e473ee6b97fe855c84bd07b"
+   ],
+   "labeled_fields": 1328,
+   "typed_classes": 164,
+   "params": 6404,
+   "updates": 400
+  },
+  "arms": {
+   "4": {
+    "children": 1,
+    "reference": 207,
+    "eligible_width": 189,
+    "capacity_overflow": 18,
+    "payload_reference_slots": 828,
+    "typed_slots": 828,
+    "values_emitted_before_run1": 606,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 341,
+    "total_fields": 534,
+    "correct_fields": 20,
+    "full_slots_in_vocab": 85,
+    "cohorts": {
+     "seen": [
+      177,
+      85,
+      1
+     ],
+     "cold": [
+      12,
+      0,
+      0
+     ]
+    },
+    "exact": 15459,
+    "source_aligned": true,
+    "header": "80aa9cb3c3cc41b088395486bc04695c1842892924d587771b208b6a567c94ef",
+    "samples": [
+     49.626084,
+     49.453208,
+     49.208584,
+     48.32025,
+     47.649457999999996,
+     48.249125,
+     47.106333,
+     48.363375
+    ],
+    "port_ms": [
+     0.834958,
+     0.8452919999999999,
+     0.855583,
+     0.829209,
+     0.844,
+     0.85325,
+     0.866667,
+     0.884
+    ],
+    "cold_cli_ms": 200.919791,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 48.3418125,
+    "median_port_ms": 0.8492709999999999
+   },
+   "6": {
+    "children": 1,
+    "reference": 207,
+    "eligible_width": 207,
+    "capacity_overflow": 0,
+    "payload_reference_slots": 1242,
+    "typed_slots": 1242,
+    "values_emitted_before_run1": 624,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 387,
+    "total_fields": 624,
+    "correct_fields": 22,
+    "full_slots_in_vocab": 85,
+    "cohorts": {
+     "seen": [
+      195,
+      85,
+      1
+     ],
+     "cold": [
+      12,
+      0,
+      0
+     ]
+    },
+    "exact": 15459,
+    "source_aligned": true,
+    "header": "80aa9cb3c3cc41b088395486bc04695c1842892924d587771b208b6a567c94ef",
+    "samples": [
+     49.62275,
+     49.253125000000004,
+     48.690625000000004,
+     47.871375,
+     47.904,
+     48.869333,
+     50.775332999999996,
+     52.673917
+    ],
+    "port_ms": [
+     0.845708,
+     0.896,
+     0.884292,
+     0.880166,
+     0.84675,
+     0.8835409999999999,
+     0.908791,
+     0.879792
+    ],
+    "cold_cli_ms": 213.506916,
+    "autonomous": {
+     "first": 3,
+     "rhs": 3,
+     "children": 1,
+     "exact": 0
+    },
+    "median_ms": 49.061229,
+    "median_port_ms": 0.8818535
+   }
+  }
+ },
+ "stable-argmax/1709": {
+  "training": {
+   "programs": [
+    "affine-twins",
+    "clamped-ramp",
+    "segmented-prefix",
+    "window-laplacian"
+   ],
+   "shapes": [
+    "001251b55ada355c16f691c0ce79a6e88f5fe6f8a97cdcdfbf7fe4ca04f1735e",
+    "069be97ead7cb92ac41e4364112e35e4e8128747eecfa5b1ff565b11e64dfc4c",
+    "11ee84b105859191e88d12179e40ef4800c150bde276aec95b888e046b7d33aa",
+    "410f6079f563fd2ab02eef315d1911acaf56b93efff0e319ae95c555119f6416",
+    "43d282058c9b46f49ef1e6570769e21c51b9a5a83a68dd9f7f96033f5c4d0e7e",
+    "5a818dff244bbe16cb9a17a1699e17be863ef59b9576b1c26ebe747374702729",
+    "7a5104c944d8bf40efd0215f7e4b0be0f3eddc58d9589491d1795160020a39c3",
+    "9c8713462fccf2a636922475fe7379cceb52ffffa8b031c86d4eb342828d6529",
+    "b86de2ce6b18fe9da4f5d23055c80e5eacb3ef0f6e1537d8bbf351559d83d92c",
+    "bc2726f3c69ef7575b47673d5b99da90726c1c5053e5816c765820117ce4d9b5",
+    "f7cc270addcec68716ed749823a262839984ddf56e473ee6b97fe855c84bd07b"
+   ],
+   "labeled_fields": 1328,
+   "typed_classes": 164,
+   "params": 6404,
+   "updates": 400
+  },
+  "arms": {
+   "4": {
+    "children": 3,
+    "reference": 128,
+    "eligible_width": 114,
+    "capacity_overflow": 14,
+    "payload_reference_slots": 516,
+    "typed_slots": 516,
+    "values_emitted_before_run1": 385,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 287,
+    "total_fields": 325,
+    "correct_fields": 46,
+    "full_slots_in_vocab": 80,
+    "cohorts": {
+     "seen": [
+      110,
+      80,
+      3
+     ],
+     "cold": [
+      4,
+      0,
+      0
+     ]
+    },
+    "exact": 8185,
+    "source_aligned": true,
+    "header": "bbac74a5a65337bdd6dd3ee6c2ed8cb6317a60a7fba9600433d84e43e385a67f",
+    "samples": [
+     25.554292,
+     26.448041,
+     27.284667,
+     29.477125,
+     28.170707999999998,
+     26.377208999999997,
+     26.192209000000002,
+     25.666833999999998
+    ],
+    "port_ms": [
+     0.546542,
+     0.528916,
+     0.559791,
+     0.582583,
+     0.545042,
+     0.5444169999999999,
+     0.543667,
+     0.522333
+    ],
+    "cold_cli_ms": 163.592084,
+    "autonomous": {
+     "first": 3,
+     "rhs": 5,
+     "children": 3,
+     "exact": 0
+    },
+    "median_ms": 26.412625,
+    "median_port_ms": 0.5447295
+   },
+   "6": {
+    "children": 3,
+    "reference": 128,
+    "eligible_width": 128,
+    "capacity_overflow": 0,
+    "payload_reference_slots": 774,
+    "typed_slots": 774,
+    "values_emitted_before_run1": 401,
+    "copy_slots": 0,
+    "type_vocabulary_fields": 345,
+    "total_fields": 395,
+    "correct_fields": 50,
+    "full_slots_in_vocab": 88,
+    "cohorts": {
+     "seen": [
+      124,
+      88,
+      3
+     ],
+     "cold": [
+      4,
+      0,
+      0
+     ]
+    },
+    "exact": 8185,
+    "source_aligned": true,
+    "header": "bbac74a5a65337bdd6dd3ee6c2ed8cb6317a60a7fba9600433d84e43e385a67f",
+    "samples": [
+     25.006583999999997,
+     26.088292,
+     29.655250000000002,
+     30.511916,
+     27.443958000000002,
+     26.368541999999998,
+     25.154042,
+     25.455375
+    ],
+    "port_ms": [
+     0.544833,
+     0.542334,
+     0.571917,
+     0.540542,
+     0.5785,
+     0.574083,
+     0.587917,
+     0.5425420000000001
+    ],
+    "cold_cli_ms": 161.846625,
+    "autonomous": {
+     "first": 3,
+     "rhs": 5,
+     "children": 3,
+     "exact": 0
+    },
+    "median_ms": 26.228417,
+    "median_port_ms": 0.5583750000000001
+   }
+  }
+ }
+}
