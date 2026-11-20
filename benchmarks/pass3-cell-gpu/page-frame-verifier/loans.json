@@ -1,0 +1,1600 @@
+{
+ "sum-bits": {
+  "arms": {
+   "vanilla": {
+    "ms": [
+     20.951708,
+     21.317666,
+     23.249041000000002,
+     21.8125,
+     21.63775,
+     22.120082999999997,
+     23.025208,
+     21.569208
+    ],
+    "rhs": 7265,
+    "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "median_ms": 21.725125
+   },
+   "production": {
+    "ms": [
+     34.080292,
+     34.580542,
+     36.544833,
+     35.092958,
+     34.789625,
+     34.454708000000004,
+     34.602624999999996,
+     34.752542
+    ],
+    "wall_ms": [
+     63.85179189965129,
+     63.564833952113986,
+     64.62920806370676,
+     74.25279193557799,
+     63.92537499777973,
+     71.3013329077512,
+     62.74104199837893,
+     72.34587497077882
+    ],
+    "identity": {
+     "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+     "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+     "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+     "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+     "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+     "rhs": 7265,
+     "direct_cells": 5867,
+     "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+     "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+     "raw_choice": "ba97b60fa6618883ee61f9d3afe48e795bc8e32bb06766929aba4c775c011462",
+     "root_raw": "3833050765356384797",
+     "paged": 9956,
+     "raw_tuples": 9956,
+     "verified": 8471,
+     "parent_rejects": 1485,
+     "single": "125788180205275239"
+    },
+    "page_reads": {
+     "dead_port_args": 0,
+     "dead_port_calls": 0,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 0,
+     "parents": 0,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "source_rows": 0,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 2623,
+    "fresh": 5868,
+    "rhs": 7265,
+    "direct": 5867,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 0,
+     "dead_port_calls": 0,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 0,
+     "parents": 0,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "source_rows": 0,
+     "union_source_rows": 0
+    },
+    "production_decodes": 2623,
+    "median_ms": 34.6775835
+   },
+   "tail-receipt": {
+    "ms": [
+     33.500707999999996,
+     34.652457999999996,
+     34.350167,
+     36.434374999999996,
+     33.8275,
+     33.63225,
+     34.008666,
+     34.426958
+    ],
+    "wall_ms": [
+     70.43270801659673,
+     72.25025002844632,
+     73.15391697920859,
+     73.96633399184793,
+     71.57954201102257,
+     70.6766250077635,
+     71.21541607193649,
+     71.92608306650072
+    ],
+    "identity": {
+     "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+     "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+     "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+     "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+     "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+     "rhs": 7265,
+     "direct_cells": 5867,
+     "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+     "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+     "raw_choice": "ba97b60fa6618883ee61f9d3afe48e795bc8e32bb06766929aba4c775c011462",
+     "root_raw": "3833050765356384797",
+     "paged": 9956,
+     "raw_tuples": 9956,
+     "verified": 8471,
+     "parent_rejects": 1485,
+     "single": "125788180205275239"
+    },
+    "page_reads": {
+     "dead_port_args": 3537,
+     "dead_port_calls": 2019,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 1467,
+     "parents": 23021,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      4588,
+      10198,
+      27637,
+      0
+     ],
+     "source_rows": 21808,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 2623,
+    "fresh": 5868,
+    "rhs": 7265,
+    "direct": 5867,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 3537,
+     "dead_port_calls": 2019,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 1467,
+     "parents": 23021,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      4588,
+      10198,
+      27637,
+      0
+     ],
+     "source_rows": 21808,
+     "union_source_rows": 0
+    },
+    "production_decodes": 2623,
+    "median_ms": 34.1794165
+   },
+   "borrowed-receipt": {
+    "ms": [
+     35.52325,
+     35.501042,
+     36.943875,
+     33.952959,
+     32.917833,
+     34.250625,
+     34.691917000000004,
+     34.19525
+    ],
+    "wall_ms": [
+     72.12170795537531,
+     75.17737499438226,
+     75.69466705899686,
+     73.77004099544138,
+     69.76462504826486,
+     71.25345896929502,
+     71.66974991559982,
+     71.06241607107222
+    ],
+    "identity": {
+     "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+     "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+     "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+     "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+     "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+     "rhs": 7265,
+     "direct_cells": 5867,
+     "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+     "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+     "raw_choice": "ba97b60fa6618883ee61f9d3afe48e795bc8e32bb06766929aba4c775c011462",
+     "root_raw": "3833050765356384797",
+     "paged": 9956,
+     "raw_tuples": 9956,
+     "verified": 8471,
+     "parent_rejects": 1485,
+     "single": "125788180205275239"
+    },
+    "page_reads": {
+     "dead_port_args": 3537,
+     "dead_port_calls": 2019,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 1467,
+     "parents": 23021,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      4588,
+      10198,
+      27637,
+      10198
+     ],
+     "source_rows": 21808,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 2623,
+    "fresh": 5868,
+    "rhs": 7265,
+    "direct": 5867,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 3537,
+     "dead_port_calls": 2019,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 1467,
+     "parents": 23021,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      4588,
+      10198,
+      27637,
+      10198
+     ],
+     "source_rows": 21808,
+     "union_source_rows": 0
+    },
+    "production_decodes": 2623,
+    "median_ms": 34.471271
+   },
+   "issued-ports": {
+    "ms": [
+     35.778417,
+     34.475167,
+     36.077708,
+     36.707333,
+     35.934041,
+     34.233459,
+     34.587292,
+     34.168
+    ],
+    "wall_ms": [
+     77.5714999763295,
+     62.92316596955061,
+     76.49708294775337,
+     64.41554194316268,
+     74.88833402749151,
+     61.89995806198567,
+     72.12366699241102,
+     62.25204200018197
+    ],
+    "identity": {
+     "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+     "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+     "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+     "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+     "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+     "rhs": 7265,
+     "direct_cells": 5867,
+     "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+     "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+     "raw_choice": "ba97b60fa6618883ee61f9d3afe48e795bc8e32bb06766929aba4c775c011462",
+     "root_raw": "3833050765356384797",
+     "paged": 9956,
+     "raw_tuples": 9956,
+     "verified": 8471,
+     "parent_rejects": 1485,
+     "single": "125788180205275239"
+    },
+    "page_reads": {
+     "dead_port_args": 3537,
+     "dead_port_calls": 2019,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 16151,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 6870,
+     "offset_bytes": 0,
+     "pages": 1467,
+     "parents": 23021,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      4588,
+      10198,
+      27637,
+      10198
+     ],
+     "source_rows": 21808,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 2623,
+    "fresh": 5868,
+    "rhs": 7265,
+    "direct": 5867,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 3537,
+     "dead_port_calls": 2019,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 16151,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 6870,
+     "offset_bytes": 0,
+     "pages": 1467,
+     "parents": 23021,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      4588,
+      10198,
+      27637,
+      10198
+     ],
+     "source_rows": 21808,
+     "union_source_rows": 0
+    },
+    "production_decodes": 2623,
+    "median_ms": 35.1828545
+   }
+  },
+  "faults": {
+   "1": {
+    "graph": "a18ff7d779ff2542cbd2d952b72d5778c2f2fa6f78ed8aa70fc4c87e3d64e2b0",
+    "runs": 406,
+    "pointer_rejects": 335,
+    "fresh_rejects": 0
+   },
+   "2": {
+    "graph": "a18ff7d779ff2542cbd2d952b72d5778c2f2fa6f78ed8aa70fc4c87e3d64e2b0",
+    "runs": 406,
+    "pointer_rejects": 0,
+    "fresh_rejects": 335
+   },
+   "3": {
+    "graph": "a18ff7d779ff2542cbd2d952b72d5778c2f2fa6f78ed8aa70fc4c87e3d64e2b0",
+    "runs": 406,
+    "pointer_rejects": 0,
+    "fresh_rejects": 335
+   },
+   "root-1": {
+    "error": "no verified root recipe for fresh Cell 145 at RHS 17 template 289",
+    "runs": 8
+   },
+   "root-2": {
+    "error": "no verified root recipe for fresh Cell 145 at RHS 17 template 289",
+    "runs": 8
+   },
+   "root-3": {
+    "error": "no verified root recipe for fresh Cell 145 at RHS 17 template 289",
+    "runs": 8
+   }
+  }
+ },
+ "dot-product": {
+  "arms": {
+   "vanilla": {
+    "ms": [
+     17.922458,
+     17.214875,
+     18.584166,
+     20.316750000000003,
+     19.300083,
+     19.067708,
+     20.225875000000002,
+     18.040833
+    ],
+    "rhs": 6704,
+    "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "median_ms": 18.825937
+   },
+   "production": {
+    "ms": [
+     34.145,
+     30.83375,
+     31.957708,
+     33.85,
+     33.427167,
+     34.259458,
+     34.134125000000004,
+     32.767625
+    ],
+    "wall_ms": [
+     62.13924998883158,
+     66.15154107566923,
+     60.89741596952081,
+     70.75837498996407,
+     66.91962503828108,
+     72.82420806586742,
+     62.57479195483029,
+     71.03933405596763
+    ],
+    "identity": {
+     "single_winners": "84672cf01e64de495bd74e2b3934558ff25e284ca8e1ffde684ede80e5b82621",
+     "multi_winners": "3352d3f4701eb1d61fd89a02c0775026f93f471b6a177a02aa81aba610dde211",
+     "root_parents": "ae003238e455d0cfc803e886e70f4d929b300f974b43f10c9495e13f29ca7dc5",
+     "root_ids": "a7656cc96d3c533814028737fa51d7d22a198ab94517fae05ad6b5e965dc4247",
+     "nested_ids": "4cfd3f4b51bf1e53f80817299294f363f381cea2a178584098d60e9f25710592",
+     "rhs": 6704,
+     "direct_cells": 5666,
+     "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+     "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+     "raw_choice": "9916d4abddd474fb989575861537357418d2479c30a4a8b16d944600d3330e6d",
+     "root_raw": "16546688558528842230",
+     "paged": 12099,
+     "raw_tuples": 12099,
+     "verified": 10564,
+     "parent_rejects": 1535,
+     "single": "8157204766339464249"
+    },
+    "page_reads": {
+     "dead_port_args": 0,
+     "dead_port_calls": 0,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 0,
+     "parents": 0,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "source_rows": 0,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 1196,
+    "fresh": 5682,
+    "rhs": 6704,
+    "direct": 5666,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 0,
+     "dead_port_calls": 0,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 0,
+     "parents": 0,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "source_rows": 0,
+     "union_source_rows": 0
+    },
+    "production_decodes": 1196,
+    "median_ms": 33.638583499999996
+   },
+   "tail-receipt": {
+    "ms": [
+     30.817125,
+     30.41425,
+     31.546249999999997,
+     30.19175,
+     32.824833999999996,
+     34.027625,
+     33.670959,
+     34.639792
+    ],
+    "wall_ms": [
+     69.3419580347836,
+     65.54458395112306,
+     68.4500839561224,
+     67.59429106023163,
+     74.90654196590185,
+     77.4560000281781,
+     73.16358294337988,
+     74.51033301185817
+    ],
+    "identity": {
+     "single_winners": "84672cf01e64de495bd74e2b3934558ff25e284ca8e1ffde684ede80e5b82621",
+     "multi_winners": "3352d3f4701eb1d61fd89a02c0775026f93f471b6a177a02aa81aba610dde211",
+     "root_parents": "ae003238e455d0cfc803e886e70f4d929b300f974b43f10c9495e13f29ca7dc5",
+     "root_ids": "a7656cc96d3c533814028737fa51d7d22a198ab94517fae05ad6b5e965dc4247",
+     "nested_ids": "4cfd3f4b51bf1e53f80817299294f363f381cea2a178584098d60e9f25710592",
+     "rhs": 6704,
+     "direct_cells": 5666,
+     "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+     "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+     "raw_choice": "9916d4abddd474fb989575861537357418d2479c30a4a8b16d944600d3330e6d",
+     "root_raw": "16546688558528842230",
+     "paged": 12099,
+     "raw_tuples": 12099,
+     "verified": 10564,
+     "parent_rejects": 1535,
+     "single": "8157204766339464249"
+    },
+    "page_reads": {
+     "dead_port_args": 13554,
+     "dead_port_calls": 7835,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 1250,
+     "parents": 31296,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      3805,
+      9173,
+      24264,
+      0
+     ],
+     "source_rows": 30280,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 1196,
+    "fresh": 5682,
+    "rhs": 6704,
+    "direct": 5666,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 13554,
+     "dead_port_calls": 7835,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 1250,
+     "parents": 31296,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      3805,
+      9173,
+      24264,
+      0
+     ],
+     "source_rows": 30280,
+     "union_source_rows": 0
+    },
+    "production_decodes": 1196,
+    "median_ms": 32.185542
+   },
+   "borrowed-receipt": {
+    "ms": [
+     30.586458,
+     31.117542,
+     34.642832999999996,
+     31.529,
+     32.521708000000004,
+     32.963,
+     34.216499999999996,
+     33.463083999999995
+    ],
+    "wall_ms": [
+     66.37862499337643,
+     71.55124994460493,
+     71.95975002832711,
+     68.43699992168695,
+     69.78899997193366,
+     71.20441703591496,
+     73.44870897941291,
+     71.59333408344537
+    ],
+    "identity": {
+     "single_winners": "84672cf01e64de495bd74e2b3934558ff25e284ca8e1ffde684ede80e5b82621",
+     "multi_winners": "3352d3f4701eb1d61fd89a02c0775026f93f471b6a177a02aa81aba610dde211",
+     "root_parents": "ae003238e455d0cfc803e886e70f4d929b300f974b43f10c9495e13f29ca7dc5",
+     "root_ids": "a7656cc96d3c533814028737fa51d7d22a198ab94517fae05ad6b5e965dc4247",
+     "nested_ids": "4cfd3f4b51bf1e53f80817299294f363f381cea2a178584098d60e9f25710592",
+     "rhs": 6704,
+     "direct_cells": 5666,
+     "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+     "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+     "raw_choice": "9916d4abddd474fb989575861537357418d2479c30a4a8b16d944600d3330e6d",
+     "root_raw": "16546688558528842230",
+     "paged": 12099,
+     "raw_tuples": 12099,
+     "verified": 10564,
+     "parent_rejects": 1535,
+     "single": "8157204766339464249"
+    },
+    "page_reads": {
+     "dead_port_args": 13554,
+     "dead_port_calls": 7835,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 1250,
+     "parents": 31296,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      3805,
+      9173,
+      24264,
+      9173
+     ],
+     "source_rows": 30280,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 1196,
+    "fresh": 5682,
+    "rhs": 6704,
+    "direct": 5666,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 13554,
+     "dead_port_calls": 7835,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 1250,
+     "parents": 31296,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      3805,
+      9173,
+      24264,
+      9173
+     ],
+     "source_rows": 30280,
+     "union_source_rows": 0
+    },
+    "production_decodes": 1196,
+    "median_ms": 32.742354000000006
+   },
+   "issued-ports": {
+    "ms": [
+     31.101791,
+     30.645042,
+     33.724709,
+     30.8435,
+     34.759458,
+     32.925999999999995,
+     35.562458,
+     33.612333
+    ],
+    "wall_ms": [
+     66.9902089284733,
+     58.45237500034273,
+     73.77020898275077,
+     58.45004098955542,
+     74.14949999656528,
+     61.16341706365347,
+     73.12537496909499,
+     62.53074994310737
+    ],
+    "identity": {
+     "single_winners": "84672cf01e64de495bd74e2b3934558ff25e284ca8e1ffde684ede80e5b82621",
+     "multi_winners": "3352d3f4701eb1d61fd89a02c0775026f93f471b6a177a02aa81aba610dde211",
+     "root_parents": "ae003238e455d0cfc803e886e70f4d929b300f974b43f10c9495e13f29ca7dc5",
+     "root_ids": "a7656cc96d3c533814028737fa51d7d22a198ab94517fae05ad6b5e965dc4247",
+     "nested_ids": "4cfd3f4b51bf1e53f80817299294f363f381cea2a178584098d60e9f25710592",
+     "rhs": 6704,
+     "direct_cells": 5666,
+     "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+     "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+     "raw_choice": "9916d4abddd474fb989575861537357418d2479c30a4a8b16d944600d3330e6d",
+     "root_raw": "16546688558528842230",
+     "paged": 12099,
+     "raw_tuples": 12099,
+     "verified": 10564,
+     "parent_rejects": 1535,
+     "single": "8157204766339464249"
+    },
+    "page_reads": {
+     "dead_port_args": 13554,
+     "dead_port_calls": 7835,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 20251,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 11045,
+     "offset_bytes": 0,
+     "pages": 1250,
+     "parents": 31296,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      3805,
+      9173,
+      24264,
+      9173
+     ],
+     "source_rows": 30280,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 1196,
+    "fresh": 5682,
+    "rhs": 6704,
+    "direct": 5666,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 13554,
+     "dead_port_calls": 7835,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 20251,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 11045,
+     "offset_bytes": 0,
+     "pages": 1250,
+     "parents": 31296,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      3805,
+      9173,
+      24264,
+      9173
+     ],
+     "source_rows": 30280,
+     "union_source_rows": 0
+    },
+    "production_decodes": 1196,
+    "median_ms": 33.2691665
+   }
+  },
+  "faults": {
+   "1": {
+    "graph": "921c396f6edaa2e0594576b34f435f61e8c4cec4184a3ce11ffdf23718336e61",
+    "runs": 556,
+    "pointer_rejects": 1021,
+    "fresh_rejects": 0
+   },
+   "2": {
+    "graph": "921c396f6edaa2e0594576b34f435f61e8c4cec4184a3ce11ffdf23718336e61",
+    "runs": 556,
+    "pointer_rejects": 0,
+    "fresh_rejects": 1021
+   },
+   "3": {
+    "graph": "921c396f6edaa2e0594576b34f435f61e8c4cec4184a3ce11ffdf23718336e61",
+    "runs": 556,
+    "pointer_rejects": 0,
+    "fresh_rejects": 1021
+   },
+   "root-1": {
+    "error": "no verified root recipe for fresh Cell 167 at RHS 39 template 289",
+    "runs": 10
+   },
+   "root-2": {
+    "error": "no verified root recipe for fresh Cell 167 at RHS 39 template 289",
+    "runs": 10
+   },
+   "root-3": {
+    "error": "no verified root recipe for fresh Cell 167 at RHS 39 template 289",
+    "runs": 10
+   }
+  }
+ },
+ "jacobi-1d": {
+  "arms": {
+   "vanilla": {
+    "ms": [
+     111.545166,
+     106.935291,
+     108.508875,
+     105.244,
+     113.876,
+     113.076292,
+     109.018,
+     115.461042
+    ],
+    "rhs": 41319,
+    "graph": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+    "median_ms": 110.281583
+   },
+   "production": {
+    "ms": [
+     227.69129199999998,
+     230.28970900000002,
+     234.77975,
+     236.386209,
+     241.125583,
+     229.599209,
+     238.19341699999998,
+     241.911875
+    ],
+    "wall_ms": [
+     283.9894579956308,
+     285.99075006786734,
+     288.1113749463111,
+     309.26737503614277,
+     296.4583750581369,
+     297.7099170675501,
+     293.92637498676777,
+     310.6360419187695
+    ],
+    "identity": {
+     "single_winners": "be25311b9d3f92bf25790cb011875d2d03e050bf8661a343b8957f43edb53093",
+     "multi_winners": "43cff60500c488ebe255281e77655c51cfb0959a4329770e15136ec8f11ceb5d",
+     "root_parents": "e8499989e6bd1f6845243e265b40cd3cdb1641aab9576152fe99ea2313974395",
+     "root_ids": "6a08fb114db746df24f16b5f90ef3265e457a38b21614a0314504924ff10fe68",
+     "nested_ids": "c261681126c334cc623b80acb84631db851eec16eca07a8f6e8103c7c52510ee",
+     "rhs": 41319,
+     "direct_cells": 32721,
+     "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+     "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+     "raw_choice": "cd652240243f88901bb40451088fdf3927fae9bcb67dd215f099076ff1551067",
+     "root_raw": "3073609478453442137",
+     "paged": 122523,
+     "raw_tuples": 122523,
+     "verified": 71622,
+     "parent_rejects": 50901,
+     "single": "15770779219082734948"
+    },
+    "page_reads": {
+     "dead_port_args": 0,
+     "dead_port_calls": 0,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 0,
+     "parents": 0,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "source_rows": 0,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 13133,
+    "fresh": 32819,
+    "rhs": 41319,
+    "direct": 32721,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 0,
+     "dead_port_calls": 0,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 0,
+     "parents": 0,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "source_rows": 0,
+     "union_source_rows": 0
+    },
+    "production_decodes": 13133,
+    "median_ms": 235.58297950000002
+   },
+   "tail-receipt": {
+    "ms": [
+     226.662125,
+     222.456417,
+     227.952542,
+     218.37912500000002,
+     225.542958,
+     226.31041599999998,
+     220.273208,
+     249.915417
+    ],
+    "wall_ms": [
+     297.5928339874372,
+     289.21687498223037,
+     295.9877500543371,
+     284.81604205444455,
+     294.1984160570428,
+     293.5620000353083,
+     286.9967919541523,
+     320.08387497626245
+    ],
+    "identity": {
+     "single_winners": "be25311b9d3f92bf25790cb011875d2d03e050bf8661a343b8957f43edb53093",
+     "multi_winners": "43cff60500c488ebe255281e77655c51cfb0959a4329770e15136ec8f11ceb5d",
+     "root_parents": "e8499989e6bd1f6845243e265b40cd3cdb1641aab9576152fe99ea2313974395",
+     "root_ids": "6a08fb114db746df24f16b5f90ef3265e457a38b21614a0314504924ff10fe68",
+     "nested_ids": "c261681126c334cc623b80acb84631db851eec16eca07a8f6e8103c7c52510ee",
+     "rhs": 41319,
+     "direct_cells": 32721,
+     "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+     "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+     "raw_choice": "cd652240243f88901bb40451088fdf3927fae9bcb67dd215f099076ff1551067",
+     "root_raw": "3073609478453442137",
+     "paged": 122523,
+     "raw_tuples": 122523,
+     "verified": 71622,
+     "parent_rejects": 50901,
+     "single": "15770779219082734948"
+    },
+    "page_reads": {
+     "dead_port_args": 59590,
+     "dead_port_calls": 36642,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 2519,
+     "parents": 385523,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      23172,
+      55224,
+      143002,
+      0
+     ],
+     "source_rows": 322119,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 13133,
+    "fresh": 32819,
+    "rhs": 41319,
+    "direct": 32721,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 59590,
+     "dead_port_calls": 36642,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 2519,
+     "parents": 385523,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      23172,
+      55224,
+      143002,
+      0
+     ],
+     "source_rows": 322119,
+     "union_source_rows": 0
+    },
+    "production_decodes": 13133,
+    "median_ms": 225.926687
+   },
+   "borrowed-receipt": {
+    "ms": [
+     232.036792,
+     225.391708,
+     222.349958,
+     220.837709,
+     224.581708,
+     222.98345899999998,
+     221.4435,
+     229.87479199999999
+    ],
+    "wall_ms": [
+     310.57195796165615,
+     293.32104104105383,
+     289.751207921654,
+     287.02620801050216,
+     294.6677500149235,
+     291.37445893138647,
+     287.745333975181,
+     297.7837909711525
+    ],
+    "identity": {
+     "single_winners": "be25311b9d3f92bf25790cb011875d2d03e050bf8661a343b8957f43edb53093",
+     "multi_winners": "43cff60500c488ebe255281e77655c51cfb0959a4329770e15136ec8f11ceb5d",
+     "root_parents": "e8499989e6bd1f6845243e265b40cd3cdb1641aab9576152fe99ea2313974395",
+     "root_ids": "6a08fb114db746df24f16b5f90ef3265e457a38b21614a0314504924ff10fe68",
+     "nested_ids": "c261681126c334cc623b80acb84631db851eec16eca07a8f6e8103c7c52510ee",
+     "rhs": 41319,
+     "direct_cells": 32721,
+     "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+     "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+     "raw_choice": "cd652240243f88901bb40451088fdf3927fae9bcb67dd215f099076ff1551067",
+     "root_raw": "3073609478453442137",
+     "paged": 122523,
+     "raw_tuples": 122523,
+     "verified": 71622,
+     "parent_rejects": 50901,
+     "single": "15770779219082734948"
+    },
+    "page_reads": {
+     "dead_port_args": 59590,
+     "dead_port_calls": 36642,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 2519,
+     "parents": 385523,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      23172,
+      55224,
+      143002,
+      55224
+     ],
+     "source_rows": 322119,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 13133,
+    "fresh": 32819,
+    "rhs": 41319,
+    "direct": 32721,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 59590,
+     "dead_port_calls": 36642,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 2519,
+     "parents": 385523,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      23172,
+      55224,
+      143002,
+      55224
+     ],
+     "source_rows": 322119,
+     "union_source_rows": 0
+    },
+    "production_decodes": 13133,
+    "median_ms": 223.7825835
+   },
+   "issued-ports": {
+    "ms": [
+     219.26325,
+     245.07662499999998,
+     220.004708,
+     227.96283300000002,
+     230.15329200000002,
+     228.118708,
+     225.88887499999998,
+     234.592834
+    ],
+    "wall_ms": [
+     287.8248749766499,
+     300.00091693364084,
+     286.19187499862164,
+     281.7846250254661,
+     296.91720905248076,
+     283.2698749843985,
+     293.3728329371661,
+     290.33312504179776
+    ],
+    "identity": {
+     "single_winners": "be25311b9d3f92bf25790cb011875d2d03e050bf8661a343b8957f43edb53093",
+     "multi_winners": "43cff60500c488ebe255281e77655c51cfb0959a4329770e15136ec8f11ceb5d",
+     "root_parents": "e8499989e6bd1f6845243e265b40cd3cdb1641aab9576152fe99ea2313974395",
+     "root_ids": "6a08fb114db746df24f16b5f90ef3265e457a38b21614a0314504924ff10fe68",
+     "nested_ids": "c261681126c334cc623b80acb84631db851eec16eca07a8f6e8103c7c52510ee",
+     "rhs": 41319,
+     "direct_cells": 32721,
+     "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+     "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+     "raw_choice": "cd652240243f88901bb40451088fdf3927fae9bcb67dd215f099076ff1551067",
+     "root_raw": "3073609478453442137",
+     "paged": 122523,
+     "raw_tuples": 122523,
+     "verified": 71622,
+     "parent_rejects": 50901,
+     "single": "15770779219082734948"
+    },
+    "page_reads": {
+     "dead_port_args": 59590,
+     "dead_port_calls": 36642,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 228675,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 156848,
+     "offset_bytes": 0,
+     "pages": 2519,
+     "parents": 385523,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      23172,
+      55224,
+      143002,
+      55224
+     ],
+     "source_rows": 322119,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 13133,
+    "fresh": 32819,
+    "rhs": 41319,
+    "direct": 32721,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 59590,
+     "dead_port_calls": 36642,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 228675,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 156848,
+     "offset_bytes": 0,
+     "pages": 2519,
+     "parents": 385523,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      23172,
+      55224,
+      143002,
+      55224
+     ],
+     "source_rows": 322119,
+     "union_source_rows": 0
+    },
+    "production_decodes": 13133,
+    "median_ms": 228.0407705
+   }
+  },
+  "faults": {}
+ },
+ "conjugate-gradient": {
+  "arms": {
+   "vanilla": {
+    "ms": [
+     367.295084,
+     360.854125,
+     359.105292,
+     360.26525,
+     349.0185,
+     350.1755,
+     322.546209,
+     354.938458
+    ],
+    "rhs": 131371,
+    "graph": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "median_ms": 357.021875
+   },
+   "production": {
+    "ms": [
+     1012.72575,
+     987.8022090000001,
+     1001.3626659999999,
+     1003.456708,
+     1025.964583,
+     1015.3164589999999,
+     927.6378749999999,
+     994.346
+    ],
+    "wall_ms": [
+     1121.241542045027,
+     1094.3923329468817,
+     1097.5108750863,
+     1126.498291036114,
+     1133.7399169569835,
+     1134.1703330399469,
+     1021.9117499655113,
+     1109.7169999266043
+    ],
+    "identity": {
+     "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+     "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+     "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+     "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+     "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+     "rhs": 131371,
+     "direct_cells": 97026,
+     "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+     "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+     "raw_choice": "9fc7f5ea0c4344028ced847f46a34584532b7e3d1fc778c1bca4720493dd4db8",
+     "root_raw": "11466691416239942697",
+     "paged": 765670,
+     "raw_tuples": 765670,
+     "verified": 189604,
+     "parent_rejects": 576066,
+     "single": "7888652829744989950"
+    },
+    "page_reads": {
+     "dead_port_args": 0,
+     "dead_port_calls": 0,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 0,
+     "parents": 0,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "source_rows": 0,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 38979,
+    "fresh": 97139,
+    "rhs": 131371,
+    "direct": 97026,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 0,
+     "dead_port_calls": 0,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 0,
+     "parents": 0,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "source_rows": 0,
+     "union_source_rows": 0
+    },
+    "production_decodes": 38979,
+    "median_ms": 1002.409687
+   },
+   "tail-receipt": {
+    "ms": [
+     1046.768542,
+     984.649042,
+     981.658833,
+     995.604125,
+     1019.345875,
+     1041.1797080000001,
+     1004.8672919999999,
+     952.8645
+    ],
+    "wall_ms": [
+     1167.3640420194715,
+     1102.506291004829,
+     1102.6977919973433,
+     1111.3902919460088,
+     1138.0745409987867,
+     1160.9738339902833,
+     1123.943749931641,
+     1065.658290986903
+    ],
+    "identity": {
+     "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+     "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+     "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+     "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+     "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+     "rhs": 131371,
+     "direct_cells": 97026,
+     "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+     "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+     "raw_choice": "9fc7f5ea0c4344028ced847f46a34584532b7e3d1fc778c1bca4720493dd4db8",
+     "root_raw": "11466691416239942697",
+     "paged": 765670,
+     "raw_tuples": 765670,
+     "verified": 189604,
+     "parent_rejects": 576066,
+     "single": "7888652829744989950"
+    },
+    "page_reads": {
+     "dead_port_args": 134557,
+     "dead_port_calls": 73122,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 4092,
+     "parents": 2727279,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      57695,
+      133269,
+      339316,
+      0
+     ],
+     "source_rows": 1822658,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 38979,
+    "fresh": 97139,
+    "rhs": 131371,
+    "direct": 97026,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 134557,
+     "dead_port_calls": 73122,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 4092,
+     "parents": 2727279,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      57695,
+      133269,
+      339316,
+      0
+     ],
+     "source_rows": 1822658,
+     "union_source_rows": 0
+    },
+    "production_decodes": 38979,
+    "median_ms": 1000.2357084999999
+   },
+   "borrowed-receipt": {
+    "ms": [
+     1003.793041,
+     1001.832792,
+     1017.4551670000001,
+     1052.4440829999999,
+     1066.3182499999998,
+     1050.432125,
+     1065.292416,
+     1049.476958
+    ],
+    "wall_ms": [
+     1125.4916669568047,
+     1124.9589580111206,
+     1132.4167919810861,
+     1174.5189999928698,
+     1191.2207920104265,
+     1171.8118339776993,
+     1190.1235420955345,
+     1175.7489170413464
+    ],
+    "identity": {
+     "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+     "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+     "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+     "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+     "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+     "rhs": 131371,
+     "direct_cells": 97026,
+     "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+     "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+     "raw_choice": "9fc7f5ea0c4344028ced847f46a34584532b7e3d1fc778c1bca4720493dd4db8",
+     "root_raw": "11466691416239942697",
+     "paged": 765670,
+     "raw_tuples": 765670,
+     "verified": 189604,
+     "parent_rejects": 576066,
+     "single": "7888652829744989950"
+    },
+    "page_reads": {
+     "dead_port_args": 134557,
+     "dead_port_calls": 73122,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 4092,
+     "parents": 2727279,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      57695,
+      133269,
+      339316,
+      133269
+     ],
+     "source_rows": 1822658,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 38979,
+    "fresh": 97139,
+    "rhs": 131371,
+    "direct": 97026,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 134557,
+     "dead_port_calls": 73122,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 0,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 0,
+     "offset_bytes": 0,
+     "pages": 4092,
+     "parents": 2727279,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      57695,
+      133269,
+      339316,
+      133269
+     ],
+     "source_rows": 1822658,
+     "union_source_rows": 0
+    },
+    "production_decodes": 38979,
+    "median_ms": 1049.9545415
+   },
+   "issued-ports": {
+    "ms": [
+     1021.5966249999999,
+     1055.951041,
+     1048.6817500000002,
+     1080.5580420000001,
+     1021.017583,
+     1038.456375,
+     1070.530041,
+     1020.203
+    ],
+    "wall_ms": [
+     1141.2170840194449,
+     1157.381166005507,
+     1165.336332982406,
+     1179.8719159560278,
+     1142.4223750364035,
+     1144.7956670308486,
+     1188.5492500150576,
+     1126.6949590062723
+    ],
+    "identity": {
+     "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+     "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+     "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+     "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+     "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+     "rhs": 131371,
+     "direct_cells": 97026,
+     "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+     "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+     "raw_choice": "9fc7f5ea0c4344028ced847f46a34584532b7e3d1fc778c1bca4720493dd4db8",
+     "root_raw": "11466691416239942697",
+     "paged": 765670,
+     "raw_tuples": 765670,
+     "verified": 189604,
+     "parent_rejects": 576066,
+     "single": "7888652829744989950"
+    },
+    "page_reads": {
+     "dead_port_args": 134557,
+     "dead_port_calls": 73122,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 1424518,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 1302761,
+     "offset_bytes": 0,
+     "pages": 4092,
+     "parents": 2727279,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      57695,
+      133269,
+      339316,
+      133269
+     ],
+     "source_rows": 1822658,
+     "union_source_rows": 0
+    },
+    "physical_decodes": 38979,
+    "fresh": 97139,
+    "rhs": 131371,
+    "direct": 97026,
+    "aligned": true,
+    "production_page_reads": {
+     "dead_port_args": 134557,
+     "dead_port_calls": 73122,
+     "frame_rows": 0,
+     "fresh_rejects": 0,
+     "issue_frame_refs": 1424518,
+     "issue_offset_mismatches": 0,
+     "issue_source_refs": 1302761,
+     "offset_bytes": 0,
+     "pages": 4092,
+     "parents": 2727279,
+     "pointer_rejects": 0,
+     "prefix_hits": 0,
+     "seals": [
+      57695,
+      133269,
+      339316,
+      133269
+     ],
+     "source_rows": 1822658,
+     "union_source_rows": 0
+    },
+    "production_decodes": 38979,
+    "median_ms": 1043.5690625000002
+   }
+  },
+  "faults": {}
+ }
+}

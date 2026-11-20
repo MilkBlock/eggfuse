@@ -1,0 +1,133 @@
+{
+ "frames": {
+  "executable_sha256": "a50224119b936116498e796ca572c0ae752c907ae2366320a5720c2a51eaafe6",
+  "runtime": "31bf7e41",
+  "integration": "a759dd49",
+  "extensions": [
+   "incremental-neural-index",
+   "baked-port-codes",
+   "adaptive-row-policy",
+   "witness-production-profile",
+   "multi-root-pages",
+   "transaction-guards",
+   "single-signature-frontier",
+   "integrated-cpu-policy",
+   "page-frame-verifier"
+  ],
+  "compiled": {
+   "src/ordinary_witness.rs": "401c3c338de2e1c066121ce050bd825d235970c3c8088db69c26cb1a46172242",
+   "src/ordinary_shortlist.rs": "6b43aed1923ef57ceb339f060e5c132c48b5779cbb4786a6344eb905d673cf12",
+   "src/joint_root.rs": "e1ab07d9b7d9f032074bf8d5f9702ab945219a8ac610a6f4e9540e145d155147",
+   "src/multi_root_pages.rs": "8be83f7a6996f80d4c6784ed93d9a7b71bdb2c5031a698161f4951dfb816d32d",
+   "src/adaptive_root_page.rs": "277d909b17e12ab9492b230dbfd576147ffee0cd38111eddfeef6052a2a24481",
+   "src/page_frame_reader.rs": "300dd3b5cb02637601cc7fa1da9aa722cbc03e033e260d3a310fb0bea4763f2f",
+   "examples/joint_witness_session.rs": "5e8c073a5a6dcda9e49417550c3f519393183b02a6fe87928a48acf7edbb4cae"
+  }
+ },
+ "seals": {
+  "executable_sha256": "bd400763deeb694b6aafe325ba7f5eac4d34896b871769635e898327b4f38dfc",
+  "runtime": "31bf7e41",
+  "integration": "a759dd49",
+  "extensions": [
+   "incremental-neural-index",
+   "baked-port-codes",
+   "adaptive-row-policy",
+   "witness-production-profile",
+   "multi-root-pages",
+   "transaction-guards",
+   "single-signature-frontier",
+   "integrated-cpu-policy",
+   "page-frame-verifier"
+  ],
+  "compiled": {
+   "src/ordinary_witness.rs": "3ab2d4ac042c5f2f08b781d2af072b760398090a6cf3378438a023e710f3940b",
+   "src/ordinary_shortlist.rs": "5d1c0ae5ffa76761916c7525bde3cb175040b03435f7044d3745ab33df48c01b",
+   "src/joint_root.rs": "f98b527b84b5da8b6bef83ae78b848b6db7bd06dda6ef55e011bd0ac407ba2cc",
+   "src/multi_root_pages.rs": "8be83f7a6996f80d4c6784ed93d9a7b71bdb2c5031a698161f4951dfb816d32d",
+   "src/adaptive_root_page.rs": "277d909b17e12ab9492b230dbfd576147ffee0cd38111eddfeef6052a2a24481",
+   "src/page_frame_reader.rs": "abd4a03200ed97ae9113dd801d0df77e14ac2e120079e4fa6ac7b860fa5f28bb",
+   "src/verified_page_seal.rs": "7ff531c1b7684056dc0f4939014e13ecf3515d6b68ae53090394f04e1878dc03",
+   "examples/joint_witness_session.rs": "5e8c073a5a6dcda9e49417550c3f519393183b02a6fe87928a48acf7edbb4cae"
+  }
+ },
+ "released": {
+  "executable_sha256": "d61c0b8f3fddfde034d5a3b8c596fa813318742ef3b94471ff2db07476ef64b4",
+  "runtime": "31bf7e41",
+  "integration": "a759dd49",
+  "extensions": [
+   "incremental-neural-index",
+   "baked-port-codes",
+   "adaptive-row-policy",
+   "witness-production-profile",
+   "multi-root-pages",
+   "transaction-guards",
+   "single-signature-frontier",
+   "integrated-cpu-policy",
+   "page-frame-verifier"
+  ],
+  "compiled": {
+   "src/ordinary_witness.rs": "33caf8c6320bd3bd318cf4f5226ea92ef29b68389a7a4913113956f9f785ddc5",
+   "src/ordinary_shortlist.rs": "5c8ae6083a7090183192d935d7e5e454b26addb82c5d83ff525468d776dc2247",
+   "src/joint_root.rs": "f98b527b84b5da8b6bef83ae78b848b6db7bd06dda6ef55e011bd0ac407ba2cc",
+   "src/multi_root_pages.rs": "8be83f7a6996f80d4c6784ed93d9a7b71bdb2c5031a698161f4951dfb816d32d",
+   "src/adaptive_root_page.rs": "277d909b17e12ab9492b230dbfd576147ffee0cd38111eddfeef6052a2a24481",
+   "src/page_frame_reader.rs": "bc605cb2bf169be45be09f8be9fc43ea70e1b9a791ba323bd77abd0809191770",
+   "src/verified_page_seal.rs": "bf14493dd820b8338f57ecd4edfea0b101fa5934dbdd2d446e51fe980c30f2ac",
+   "examples/joint_witness_session.rs": "9f34585e9f093bdd35b062b7b83c737ffdece18b83a4a5d07da221c3e17b3377"
+  }
+ },
+ "loans": {
+  "executable_sha256": "79b9ae0ee2dbb3291fa7484624a827bd499dec34b58b6be1ddf8ff203909b00d",
+  "runtime": "31bf7e41",
+  "integration": "a759dd49",
+  "extensions": [
+   "incremental-neural-index",
+   "baked-port-codes",
+   "adaptive-row-policy",
+   "witness-production-profile",
+   "multi-root-pages",
+   "transaction-guards",
+   "single-signature-frontier",
+   "integrated-cpu-policy",
+   "page-frame-verifier"
+  ],
+  "compiled": {
+   "src/ordinary_witness.rs": "33caf8c6320bd3bd318cf4f5226ea92ef29b68389a7a4913113956f9f785ddc5",
+   "src/ordinary_shortlist.rs": "5c8ae6083a7090183192d935d7e5e454b26addb82c5d83ff525468d776dc2247",
+   "src/joint_root.rs": "0c7f4139e15e8e879e0af15b66126531794beef287d3be463e6bd3db5583a8d0",
+   "src/multi_root_pages.rs": "6db7d8e78f970101723cac89014438be1f250bf889c3c311286b8a0d1a7ca96b",
+   "src/adaptive_root_page.rs": "06fd50e069d58be309cb6020e96c5a4b8f60efa14dd0455d25cabb74c8d2f801",
+   "src/page_frame_reader.rs": "bc605cb2bf169be45be09f8be9fc43ea70e1b9a791ba323bd77abd0809191770",
+   "src/verified_page_seal.rs": "c5f5304f676663c363dbc40bd66e2575db97ab98f930befb433f3696a12a1861",
+   "src/verified_parent_refs.rs": "dbbb261f89185e3dfa44db57f479856db5803c81b90d8f76290f82a50d55aa85",
+   "examples/joint_witness_session.rs": "9f34585e9f093bdd35b062b7b83c737ffdece18b83a4a5d07da221c3e17b3377"
+  }
+ },
+ "compact": {
+  "executable_sha256": "6e2a560b7e027e0bf686817b5b887acb9920542160c8e7b33a72d3ca45adb7ba",
+  "runtime": "31bf7e41",
+  "integration": "a759dd49",
+  "extensions": [
+   "incremental-neural-index",
+   "baked-port-codes",
+   "adaptive-row-policy",
+   "witness-production-profile",
+   "multi-root-pages",
+   "transaction-guards",
+   "single-signature-frontier",
+   "integrated-cpu-policy",
+   "page-frame-verifier"
+  ],
+  "compiled": {
+   "src/ordinary_witness.rs": "33caf8c6320bd3bd318cf4f5226ea92ef29b68389a7a4913113956f9f785ddc5",
+   "src/ordinary_shortlist.rs": "465377577a4b1944dda80a78eeecbb53b2cd86d261e664b5fc9eb69b40033ac2",
+   "src/joint_root.rs": "0c7f4139e15e8e879e0af15b66126531794beef287d3be463e6bd3db5583a8d0",
+   "src/multi_root_pages.rs": "6db7d8e78f970101723cac89014438be1f250bf889c3c311286b8a0d1a7ca96b",
+   "src/adaptive_root_page.rs": "06fd50e069d58be309cb6020e96c5a4b8f60efa14dd0455d25cabb74c8d2f801",
+   "src/page_frame_reader.rs": "f606be50a2d7571ed0c8733725bab0c4ed1f7b10222149420bd25f25cde9432c",
+   "src/verified_page_seal.rs": "c5f5304f676663c363dbc40bd66e2575db97ab98f930befb433f3696a12a1861",
+   "src/verified_parent_refs.rs": "dbbb261f89185e3dfa44db57f479856db5803c81b90d8f76290f82a50d55aa85",
+   "examples/joint_witness_session.rs": "9f34585e9f093bdd35b062b7b83c737ffdece18b83a4a5d07da221c3e17b3377"
+  }
+ }
+}
