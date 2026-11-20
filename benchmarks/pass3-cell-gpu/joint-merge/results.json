@@ -1,0 +1,1418 @@
+{
+ "sum-bits/1703": {
+  "learned": {
+   "total_rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5754,
+   "extra_direct": 103,
+   "direct_union": 5857,
+   "gap": 11,
+   "direct_fraction": 0.9981254260395365,
+   "counts": [
+    305,
+    191,
+    191,
+    0,
+    88,
+    103
+   ],
+   "by_provider": {
+    "multi": 78,
+    "single": 25
+   },
+   "raw_gate_hash": "1338953330754647943",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f"
+  },
+  "shadow": {
+   "total_rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5754,
+   "extra_direct": 0,
+   "direct_union": 5754,
+   "gap": 114,
+   "direct_fraction": 0.9805725971370143,
+   "counts": [
+    305,
+    191,
+    191,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "1338953330754647943",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f"
+  },
+  "null": {
+   "total_rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5754,
+   "extra_direct": 0,
+   "direct_union": 5754,
+   "gap": 114,
+   "direct_fraction": 0.9805725971370143,
+   "counts": [
+    305,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "10686640804661368020",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f"
+  },
+  "wrong-template": {
+   "total_rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5754,
+   "extra_direct": 0,
+   "direct_union": 5754,
+   "gap": 114,
+   "direct_fraction": 0.9805725971370143,
+   "counts": [
+    305,
+    191,
+    191,
+    191,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "1338953330754647943",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f"
+  },
+  "wrong-operands": {
+   "total_rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5754,
+   "extra_direct": 0,
+   "direct_union": 5754,
+   "gap": 114,
+   "direct_fraction": 0.9805725971370143,
+   "counts": [
+    305,
+    191,
+    191,
+    191,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "1338953330754647943",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f"
+  },
+  "stale": {
+   "total_rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5754,
+   "extra_direct": 0,
+   "direct_union": 5754,
+   "gap": 114,
+   "direct_fraction": 0.9805725971370143,
+   "counts": [
+    305,
+    191,
+    191,
+    191,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "1338953330754647943",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f"
+  },
+  "all": {
+   "total_rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5754,
+   "extra_direct": 103,
+   "direct_union": 5857,
+   "gap": 11,
+   "direct_fraction": 0.9981254260395365,
+   "counts": [
+    305,
+    305,
+    193,
+    0,
+    90,
+    103
+   ],
+   "by_provider": {
+    "multi": 78,
+    "single": 25
+   },
+   "raw_gate_hash": "2355818184475456999",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f"
+  },
+  "learned-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 4783",
+   "first_uncompleted_run": 816,
+   "partial_rhs": 4783
+  },
+  "null-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 2105",
+   "first_uncompleted_run": 261,
+   "partial_rhs": 2105
+  }
+ },
+ "sum-bits/1709": {
+  "learned": {
+   "total_rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5757,
+   "extra_direct": 103,
+   "direct_union": 5860,
+   "gap": 8,
+   "direct_fraction": 0.9986366734832992,
+   "counts": [
+    305,
+    191,
+    191,
+    0,
+    88,
+    103
+   ],
+   "by_provider": {
+    "multi": 78,
+    "single": 25
+   },
+   "raw_gate_hash": "10915285408295938978",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6"
+  },
+  "shadow": {
+   "total_rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5757,
+   "extra_direct": 0,
+   "direct_union": 5757,
+   "gap": 111,
+   "direct_fraction": 0.9810838445807771,
+   "counts": [
+    305,
+    191,
+    191,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "10915285408295938978",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6"
+  },
+  "null": {
+   "total_rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5757,
+   "extra_direct": 0,
+   "direct_union": 5757,
+   "gap": 111,
+   "direct_fraction": 0.9810838445807771,
+   "counts": [
+    305,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "12480089264264878813",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6"
+  },
+  "wrong-template": {
+   "total_rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5757,
+   "extra_direct": 0,
+   "direct_union": 5757,
+   "gap": 111,
+   "direct_fraction": 0.9810838445807771,
+   "counts": [
+    305,
+    191,
+    191,
+    191,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "10915285408295938978",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6"
+  },
+  "wrong-operands": {
+   "total_rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5757,
+   "extra_direct": 0,
+   "direct_union": 5757,
+   "gap": 111,
+   "direct_fraction": 0.9810838445807771,
+   "counts": [
+    305,
+    191,
+    191,
+    191,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "10915285408295938978",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6"
+  },
+  "stale": {
+   "total_rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5757,
+   "extra_direct": 0,
+   "direct_union": 5757,
+   "gap": 111,
+   "direct_fraction": 0.9810838445807771,
+   "counts": [
+    305,
+    191,
+    191,
+    191,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "10915285408295938978",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6"
+  },
+  "all": {
+   "total_rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "total_fresh": 5868,
+   "base_direct": 5757,
+   "extra_direct": 103,
+   "direct_union": 5860,
+   "gap": 8,
+   "direct_fraction": 0.9986366734832992,
+   "counts": [
+    305,
+    305,
+    193,
+    0,
+    90,
+    103
+   ],
+   "by_provider": {
+    "multi": 78,
+    "single": 25
+   },
+   "raw_gate_hash": "1312222388569291830",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6"
+  },
+  "learned-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 4783",
+   "first_uncompleted_run": 816,
+   "partial_rhs": 4783
+  },
+  "null-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 2105",
+   "first_uncompleted_run": 261,
+   "partial_rhs": 2105
+  }
+ },
+ "dot-product/1703": {
+  "learned": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 128,
+   "direct_union": 5664,
+   "gap": 18,
+   "direct_fraction": 0.996832101372756,
+   "counts": [
+    416,
+    210,
+    210,
+    0,
+    82,
+    128
+   ],
+   "by_provider": {
+    "multi": 90,
+    "single": 38
+   },
+   "raw_gate_hash": "18087437119849661712",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca"
+  },
+  "shadow": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 0,
+   "direct_union": 5536,
+   "gap": 146,
+   "direct_fraction": 0.9743048222456882,
+   "counts": [
+    416,
+    210,
+    210,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "18087437119849661712",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca"
+  },
+  "null": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 0,
+   "direct_union": 5536,
+   "gap": 146,
+   "direct_fraction": 0.9743048222456882,
+   "counts": [
+    416,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "2976851784037947172",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca"
+  },
+  "wrong-template": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 0,
+   "direct_union": 5536,
+   "gap": 146,
+   "direct_fraction": 0.9743048222456882,
+   "counts": [
+    416,
+    210,
+    210,
+    210,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "18087437119849661712",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca"
+  },
+  "wrong-operands": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 0,
+   "direct_union": 5536,
+   "gap": 146,
+   "direct_fraction": 0.9743048222456882,
+   "counts": [
+    416,
+    210,
+    210,
+    210,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "18087437119849661712",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca"
+  },
+  "stale": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 0,
+   "direct_union": 5536,
+   "gap": 146,
+   "direct_fraction": 0.9743048222456882,
+   "counts": [
+    416,
+    210,
+    210,
+    210,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "18087437119849661712",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca"
+  },
+  "all": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 136,
+   "direct_union": 5672,
+   "gap": 10,
+   "direct_fraction": 0.9982400563181978,
+   "counts": [
+    416,
+    416,
+    221,
+    0,
+    85,
+    136
+   ],
+   "by_provider": {
+    "multi": 90,
+    "single": 46
+   },
+   "raw_gate_hash": "1596133009014849848",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca"
+  },
+  "learned-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 4872",
+   "first_uncompleted_run": 875,
+   "partial_rhs": 4872
+  },
+  "null-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 3465",
+   "first_uncompleted_run": 327,
+   "partial_rhs": 3465
+  }
+ },
+ "dot-product/1709": {
+  "learned": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 128,
+   "direct_union": 5664,
+   "gap": 18,
+   "direct_fraction": 0.996832101372756,
+   "counts": [
+    416,
+    210,
+    210,
+    0,
+    82,
+    128
+   ],
+   "by_provider": {
+    "multi": 90,
+    "single": 38
+   },
+   "raw_gate_hash": "14427680488669089425",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664"
+  },
+  "shadow": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 0,
+   "direct_union": 5536,
+   "gap": 146,
+   "direct_fraction": 0.9743048222456882,
+   "counts": [
+    416,
+    210,
+    210,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "14427680488669089425",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664"
+  },
+  "null": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 0,
+   "direct_union": 5536,
+   "gap": 146,
+   "direct_fraction": 0.9743048222456882,
+   "counts": [
+    416,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "7727800232019979045",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664"
+  },
+  "wrong-template": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 0,
+   "direct_union": 5536,
+   "gap": 146,
+   "direct_fraction": 0.9743048222456882,
+   "counts": [
+    416,
+    210,
+    210,
+    210,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "14427680488669089425",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664"
+  },
+  "wrong-operands": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 0,
+   "direct_union": 5536,
+   "gap": 146,
+   "direct_fraction": 0.9743048222456882,
+   "counts": [
+    416,
+    210,
+    210,
+    210,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "14427680488669089425",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664"
+  },
+  "stale": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 0,
+   "direct_union": 5536,
+   "gap": 146,
+   "direct_fraction": 0.9743048222456882,
+   "counts": [
+    416,
+    210,
+    210,
+    210,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "14427680488669089425",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664"
+  },
+  "all": {
+   "total_rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "total_fresh": 5682,
+   "base_direct": 5536,
+   "extra_direct": 136,
+   "direct_union": 5672,
+   "gap": 10,
+   "direct_fraction": 0.9982400563181978,
+   "counts": [
+    416,
+    416,
+    221,
+    0,
+    85,
+    136
+   ],
+   "by_provider": {
+    "multi": 90,
+    "single": 46
+   },
+   "raw_gate_hash": "14968014676758972049",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664"
+  },
+  "learned-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 4872",
+   "first_uncompleted_run": 875,
+   "partial_rhs": 4872
+  },
+  "null-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 3465",
+   "first_uncompleted_run": 327,
+   "partial_rhs": 3465
+  }
+ },
+ "gemm-bias-relu/1703": {
+  "learned": {
+   "total_rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12679,
+   "extra_direct": 176,
+   "direct_union": 12855,
+   "gap": 14,
+   "direct_fraction": 0.998912114383402,
+   "counts": [
+    560,
+    345,
+    345,
+    0,
+    169,
+    176
+   ],
+   "by_provider": {
+    "multi": 132,
+    "single": 44
+   },
+   "raw_gate_hash": "9185176769261288579",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5"
+  },
+  "shadow": {
+   "total_rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12679,
+   "extra_direct": 0,
+   "direct_union": 12679,
+   "gap": 190,
+   "direct_fraction": 0.9852358380604553,
+   "counts": [
+    560,
+    345,
+    345,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "9185176769261288579",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5"
+  },
+  "null": {
+   "total_rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12679,
+   "extra_direct": 0,
+   "direct_union": 12679,
+   "gap": 190,
+   "direct_fraction": 0.9852358380604553,
+   "counts": [
+    560,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "11905124975535362388",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5"
+  },
+  "wrong-template": {
+   "total_rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12679,
+   "extra_direct": 0,
+   "direct_union": 12679,
+   "gap": 190,
+   "direct_fraction": 0.9852358380604553,
+   "counts": [
+    560,
+    345,
+    345,
+    345,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "9185176769261288579",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5"
+  },
+  "wrong-operands": {
+   "total_rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12679,
+   "extra_direct": 0,
+   "direct_union": 12679,
+   "gap": 190,
+   "direct_fraction": 0.9852358380604553,
+   "counts": [
+    560,
+    345,
+    345,
+    345,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "9185176769261288579",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5"
+  },
+  "stale": {
+   "total_rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12679,
+   "extra_direct": 0,
+   "direct_union": 12679,
+   "gap": 190,
+   "direct_fraction": 0.9852358380604553,
+   "counts": [
+    560,
+    345,
+    345,
+    345,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "9185176769261288579",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5"
+  },
+  "all": {
+   "total_rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12679,
+   "extra_direct": 179,
+   "direct_union": 12858,
+   "gap": 11,
+   "direct_fraction": 0.9991452327298158,
+   "counts": [
+    560,
+    560,
+    348,
+    0,
+    169,
+    179
+   ],
+   "by_provider": {
+    "multi": 132,
+    "single": 47
+   },
+   "raw_gate_hash": "3408767426700563144",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5"
+  },
+  "learned-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 14781",
+   "first_uncompleted_run": 1213,
+   "partial_rhs": 14781
+  },
+  "null-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 8862",
+   "first_uncompleted_run": 485,
+   "partial_rhs": 8862
+  }
+ },
+ "gemm-bias-relu/1709": {
+  "learned": {
+   "total_rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12681,
+   "extra_direct": 176,
+   "direct_union": 12857,
+   "gap": 12,
+   "direct_fraction": 0.9990675266143445,
+   "counts": [
+    560,
+    345,
+    345,
+    0,
+    169,
+    176
+   ],
+   "by_provider": {
+    "multi": 132,
+    "single": 44
+   },
+   "raw_gate_hash": "15761298485945563255",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119"
+  },
+  "shadow": {
+   "total_rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12681,
+   "extra_direct": 0,
+   "direct_union": 12681,
+   "gap": 188,
+   "direct_fraction": 0.985391250291398,
+   "counts": [
+    560,
+    345,
+    345,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "15761298485945563255",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119"
+  },
+  "null": {
+   "total_rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12681,
+   "extra_direct": 0,
+   "direct_union": 12681,
+   "gap": 188,
+   "direct_fraction": 0.985391250291398,
+   "counts": [
+    560,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "14004253218096710984",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119"
+  },
+  "wrong-template": {
+   "total_rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12681,
+   "extra_direct": 0,
+   "direct_union": 12681,
+   "gap": 188,
+   "direct_fraction": 0.985391250291398,
+   "counts": [
+    560,
+    345,
+    345,
+    345,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "15761298485945563255",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119"
+  },
+  "wrong-operands": {
+   "total_rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12681,
+   "extra_direct": 0,
+   "direct_union": 12681,
+   "gap": 188,
+   "direct_fraction": 0.985391250291398,
+   "counts": [
+    560,
+    345,
+    345,
+    345,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "15761298485945563255",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119"
+  },
+  "stale": {
+   "total_rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12681,
+   "extra_direct": 0,
+   "direct_union": 12681,
+   "gap": 188,
+   "direct_fraction": 0.985391250291398,
+   "counts": [
+    560,
+    345,
+    345,
+    345,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "15761298485945563255",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119"
+  },
+  "all": {
+   "total_rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "total_fresh": 12869,
+   "base_direct": 12681,
+   "extra_direct": 179,
+   "direct_union": 12860,
+   "gap": 9,
+   "direct_fraction": 0.9993006449607584,
+   "counts": [
+    560,
+    560,
+    348,
+    0,
+    169,
+    179
+   ],
+   "by_provider": {
+    "multi": 132,
+    "single": 47
+   },
+   "raw_gate_hash": "7167765818148326632",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119"
+  },
+  "learned-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 14781",
+   "first_uncompleted_run": 1213,
+   "partial_rhs": 14781
+  },
+  "null-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 8862",
+   "first_uncompleted_run": 485,
+   "partial_rhs": 8862
+  }
+ },
+ "stable-argmax/1703": {
+  "learned": {
+   "total_rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6731,
+   "extra_direct": 101,
+   "direct_union": 6832,
+   "gap": 9,
+   "direct_fraction": 0.9986844028650782,
+   "counts": [
+    377,
+    238,
+    238,
+    0,
+    137,
+    101
+   ],
+   "by_provider": {
+    "multi": 83,
+    "single": 18
+   },
+   "raw_gate_hash": "3005431533949154929",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903"
+  },
+  "shadow": {
+   "total_rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6731,
+   "extra_direct": 0,
+   "direct_union": 6731,
+   "gap": 110,
+   "direct_fraction": 0.983920479462067,
+   "counts": [
+    377,
+    238,
+    238,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "3005431533949154929",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903"
+  },
+  "null": {
+   "total_rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6731,
+   "extra_direct": 0,
+   "direct_union": 6731,
+   "gap": 110,
+   "direct_fraction": 0.983920479462067,
+   "counts": [
+    377,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "18045689509728375081",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903"
+  },
+  "wrong-template": {
+   "total_rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6731,
+   "extra_direct": 0,
+   "direct_union": 6731,
+   "gap": 110,
+   "direct_fraction": 0.983920479462067,
+   "counts": [
+    377,
+    238,
+    238,
+    238,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "3005431533949154929",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903"
+  },
+  "wrong-operands": {
+   "total_rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6731,
+   "extra_direct": 0,
+   "direct_union": 6731,
+   "gap": 110,
+   "direct_fraction": 0.983920479462067,
+   "counts": [
+    377,
+    238,
+    238,
+    238,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "3005431533949154929",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903"
+  },
+  "stale": {
+   "total_rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6731,
+   "extra_direct": 0,
+   "direct_union": 6731,
+   "gap": 110,
+   "direct_fraction": 0.983920479462067,
+   "counts": [
+    377,
+    238,
+    238,
+    238,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "3005431533949154929",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903"
+  },
+  "all": {
+   "total_rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6731,
+   "extra_direct": 101,
+   "direct_union": 6832,
+   "gap": 9,
+   "direct_fraction": 0.9986844028650782,
+   "counts": [
+    377,
+    377,
+    238,
+    0,
+    137,
+    101
+   ],
+   "by_provider": {
+    "multi": 83,
+    "single": 18
+   },
+   "raw_gate_hash": "17730254589885410274",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903"
+  },
+  "learned-no-fallback": {
+   "total_rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6731,
+   "extra_direct": 101,
+   "direct_union": 6832,
+   "gap": 9,
+   "direct_fraction": 0.9986844028650782,
+   "counts": [
+    377,
+    238,
+    238,
+    0,
+    137,
+    101
+   ],
+   "by_provider": {
+    "multi": 83,
+    "single": 18
+   },
+   "raw_gate_hash": "3005431533949154929",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903"
+  },
+  "null-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 4669",
+   "first_uncompleted_run": 329,
+   "partial_rhs": 4669
+  }
+ },
+ "stable-argmax/1709": {
+  "learned": {
+   "total_rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6733,
+   "extra_direct": 101,
+   "direct_union": 6834,
+   "gap": 7,
+   "direct_fraction": 0.9989767577839497,
+   "counts": [
+    377,
+    238,
+    238,
+    0,
+    137,
+    101
+   ],
+   "by_provider": {
+    "multi": 83,
+    "single": 18
+   },
+   "raw_gate_hash": "4370216181406848849",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674"
+  },
+  "shadow": {
+   "total_rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6733,
+   "extra_direct": 0,
+   "direct_union": 6733,
+   "gap": 108,
+   "direct_fraction": 0.9842128343809384,
+   "counts": [
+    377,
+    238,
+    238,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "4370216181406848849",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674"
+  },
+  "null": {
+   "total_rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6733,
+   "extra_direct": 0,
+   "direct_union": 6733,
+   "gap": 108,
+   "direct_fraction": 0.9842128343809384,
+   "counts": [
+    377,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "14166088481452897521",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674"
+  },
+  "wrong-template": {
+   "total_rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6733,
+   "extra_direct": 0,
+   "direct_union": 6733,
+   "gap": 108,
+   "direct_fraction": 0.9842128343809384,
+   "counts": [
+    377,
+    238,
+    238,
+    238,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "4370216181406848849",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674"
+  },
+  "wrong-operands": {
+   "total_rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6733,
+   "extra_direct": 0,
+   "direct_union": 6733,
+   "gap": 108,
+   "direct_fraction": 0.9842128343809384,
+   "counts": [
+    377,
+    238,
+    238,
+    238,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "4370216181406848849",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674"
+  },
+  "stale": {
+   "total_rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6733,
+   "extra_direct": 0,
+   "direct_union": 6733,
+   "gap": 108,
+   "direct_fraction": 0.9842128343809384,
+   "counts": [
+    377,
+    238,
+    238,
+    238,
+    0,
+    0
+   ],
+   "by_provider": {},
+   "raw_gate_hash": "4370216181406848849",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674"
+  },
+  "all": {
+   "total_rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6733,
+   "extra_direct": 101,
+   "direct_union": 6834,
+   "gap": 7,
+   "direct_fraction": 0.9989767577839497,
+   "counts": [
+    377,
+    377,
+    238,
+    0,
+    137,
+    101
+   ],
+   "by_provider": {
+    "multi": 83,
+    "single": 18
+   },
+   "raw_gate_hash": "13239534693582907610",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674"
+  },
+  "learned-no-fallback": {
+   "total_rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "total_fresh": 6841,
+   "base_direct": 6733,
+   "extra_direct": 101,
+   "direct_union": 6834,
+   "gap": 7,
+   "direct_fraction": 0.9989767577839497,
+   "counts": [
+    377,
+    238,
+    238,
+    0,
+    137,
+    101
+   ],
+   "by_provider": {
+    "multi": 83,
+    "single": 18
+   },
+   "raw_gate_hash": "4370216181406848849",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674"
+  },
+  "null-no-fallback": {
+   "failure": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 4669",
+   "first_uncompleted_run": 329,
+   "partial_rhs": 4669
+  }
+ }
+}
