@@ -55,7 +55,8 @@ def inspect_ir(dest):
             if n<=0: continue
             positive+=1
             for group,terms in {'execution':('Executor','execute'), 'graph':('graph','Graph'),
-                                'multi-parent':('ordinary_witness',),'single-parent':('single_witness',)}.items():
+                                'multi-parent':('ordinary_witness',),'single-parent':('single_witness',),
+                                'activation':('wake_roots',),'subscriptions':('current_ports',),'connected':('emit_bridge',)}.items():
                 if all(t in symbol for t in terms):
                     g=accounts.setdefault(group,dict(positive_functions=0,max_entry_count=0,symbol=''))
                     g['positive_functions']+=1
@@ -104,6 +105,13 @@ def train(a,kind,progdata):
         assert len(records)==3 and len(endpoints)==1 and raw.stat().st_size>0
         runs,graph,rhs=endpoints.pop()
         traces[name]=dict(runs=runs,state=graph,rhs=rhs,repetitions=len(records),raw_sha256=file_digest(raw),raw_bytes=raw.stat().st_size)
+        if kind=='learned' and cfg.get('patch_subscriptions')==3:
+            work=[dict(union_repairs=r['multi']['patch_ports']['union_repairs'],
+                       activations=r['multi']['wake']['routed_calls'],
+                       transferred=r['multi']['wake']['direct_receipts'],
+                       requests=r['multi']['bridges']['requests']) for r in records]
+            assert all(v==work[0] for v in work) and work[0]['activations']>0 and work[0]['union_repairs']>0
+            traces[name]['union_aware']=work[0]
     profile=directory/'donors.profdata'
     subprocess.run([a.profdata,'merge','-o',profile,*[directory/(n+'.profraw') for n in DONORS]],check=True)
     info=capture([a.profdata,'show',profile])
