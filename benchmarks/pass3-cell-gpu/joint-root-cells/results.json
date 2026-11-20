@@ -1,0 +1,2274 @@
+{
+ "sum-bits/1703/high": {
+  "use": {
+   "rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "root_recipe_issued": [
+    61048,
+    21443
+   ],
+   "root_verified": 7253,
+   "root_rejected": 0,
+   "root_consumed": 7253,
+   "direct_roots": 5754,
+   "direct_children": 103,
+   "direct_distinct": 5857,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5754,
+   "root_proposal_hash": "682238451010085972",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "merge_gate_hash": "1338953330754647943",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "1ac5008141ab41cd2dc9bc1a1c36d48db93a3095597eacf10a446c009ae8e358",
+   "root_commits_sha": "15bf6ceccde5bec76ab8568b3cc9dd3e92b680023b1df6c9590f698e0149087a"
+  },
+  "withhold": {
+   "rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "root_recipe_issued": [
+    61048,
+    21443
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5754,
+   "root_proposal_hash": "682238451010085972",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "merge_gate_hash": "1338953330754647943",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "root_recipe_issued": [
+    61048,
+    21443
+   ],
+   "root_verified": 0,
+   "root_rejected": 7253,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5754,
+   "root_proposal_hash": "682238451010085972",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "merge_gate_hash": "1338953330754647943",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "root_recipe_issued": [
+    61048,
+    21443
+   ],
+   "root_verified": 0,
+   "root_rejected": 7253,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5754,
+   "root_proposal_hash": "682238451010085972",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "merge_gate_hash": "1338953330754647943",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 7265,
+   "neural_rhs": 7253,
+   "source_exact": true,
+   "root_recipe_issued": [
+    61048,
+    21443
+   ],
+   "root_verified": 7253,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5754,
+   "root_proposal_hash": "682238451010085972",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "merge_gate_hash": "1338953330754647943",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 670 at RHS 542 template 139",
+   "fault": [
+    670,
+    542,
+    139
+   ],
+   "first_uncompleted_run": 102
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "sum-bits/1703/certified": {
+  "use": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21443
+   ],
+   "root_verified": 7265,
+   "root_rejected": 0,
+   "root_consumed": 7265,
+   "direct_roots": 5764,
+   "direct_children": 103,
+   "direct_distinct": 5867,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "17974609851673891035",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "merge_gate_hash": "1338953330754647943",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "7bdc27b668676904b7bfbd9b2992b33ef2d65d44fcb8d1ff21d11e658690ac8c",
+   "root_commits_sha": "468b1b567c7d75ab9e483d4f03c34fda3262998e13fcaf9c837f75cd94e58cd5"
+  },
+  "withhold": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21443
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "17974609851673891035",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "merge_gate_hash": "1338953330754647943",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21443
+   ],
+   "root_verified": 0,
+   "root_rejected": 7265,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "17974609851673891035",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "merge_gate_hash": "1338953330754647943",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21443
+   ],
+   "root_verified": 0,
+   "root_rejected": 7265,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "17974609851673891035",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "merge_gate_hash": "1338953330754647943",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21443
+   ],
+   "root_verified": 7265,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "17974609851673891035",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "merge_gate_hash": "1338953330754647943",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21443
+   ],
+   "root_verified": 7265,
+   "root_rejected": 0,
+   "root_consumed": 7265,
+   "direct_roots": 5764,
+   "direct_children": 103,
+   "direct_distinct": 5867,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "17974609851673891035",
+   "multi_raw_hash": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "merge_gate_hash": "1338953330754647943",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "7bdc27b668676904b7bfbd9b2992b33ef2d65d44fcb8d1ff21d11e658690ac8c",
+   "root_commits_sha": "468b1b567c7d75ab9e483d4f03c34fda3262998e13fcaf9c837f75cd94e58cd5"
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "sum-bits/1709/high": {
+  "use": {
+   "rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "root_recipe_issued": [
+    62516,
+    21342
+   ],
+   "root_verified": 7257,
+   "root_rejected": 0,
+   "root_consumed": 7257,
+   "direct_roots": 5757,
+   "direct_children": 103,
+   "direct_distinct": 5860,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5757,
+   "root_proposal_hash": "5187120885577414483",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "merge_gate_hash": "10915285408295938978",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "830570525e280d167d8cd5d9455bfef49d78c5181fca9cf9f1f4be62cce144f6",
+   "root_commits_sha": "2c81ce97c8a20bbf093e283bb1f94c9d69f0f711b1fce5df1d4fc3c56b0e7be1"
+  },
+  "withhold": {
+   "rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "root_recipe_issued": [
+    62516,
+    21342
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5757,
+   "root_proposal_hash": "5187120885577414483",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "merge_gate_hash": "10915285408295938978",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "root_recipe_issued": [
+    62516,
+    21342
+   ],
+   "root_verified": 0,
+   "root_rejected": 7257,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5757,
+   "root_proposal_hash": "5187120885577414483",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "merge_gate_hash": "10915285408295938978",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "root_recipe_issued": [
+    62516,
+    21342
+   ],
+   "root_verified": 0,
+   "root_rejected": 7257,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5757,
+   "root_proposal_hash": "5187120885577414483",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "merge_gate_hash": "10915285408295938978",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 7265,
+   "neural_rhs": 7257,
+   "source_exact": true,
+   "root_recipe_issued": [
+    62516,
+    21342
+   ],
+   "root_verified": 7257,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5757,
+   "root_proposal_hash": "5187120885577414483",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "merge_gate_hash": "10915285408295938978",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 670 at RHS 542 template 139",
+   "fault": [
+    670,
+    542,
+    139
+   ],
+   "first_uncompleted_run": 102
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "sum-bits/1709/certified": {
+  "use": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21342
+   ],
+   "root_verified": 7265,
+   "root_rejected": 0,
+   "root_consumed": 7265,
+   "direct_roots": 5764,
+   "direct_children": 103,
+   "direct_distinct": 5867,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "11307008266237054804",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "merge_gate_hash": "10915285408295938978",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "0a7f678d7abd4d113107408c6bee02df53b79a09d76267fbf2802a9e60a25ed0",
+   "root_commits_sha": "1d0a972ff798b7fb2941f148c94ea81bb639789e47d00c32b63478c9b1b20d38"
+  },
+  "withhold": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21342
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "11307008266237054804",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "merge_gate_hash": "10915285408295938978",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21342
+   ],
+   "root_verified": 0,
+   "root_rejected": 7265,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "11307008266237054804",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "merge_gate_hash": "10915285408295938978",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21342
+   ],
+   "root_verified": 0,
+   "root_rejected": 7265,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "11307008266237054804",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "merge_gate_hash": "10915285408295938978",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21342
+   ],
+   "root_verified": 7265,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 103,
+   "direct_distinct": 103,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "11307008266237054804",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "merge_gate_hash": "10915285408295938978",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "source_exact": true,
+   "root_recipe_issued": [
+    48529,
+    21342
+   ],
+   "root_verified": 7265,
+   "root_rejected": 0,
+   "root_consumed": 7265,
+   "direct_roots": 5764,
+   "direct_children": 103,
+   "direct_distinct": 5867,
+   "fresh": 5868,
+   "elected_rule_template_comparison": 5764,
+   "root_proposal_hash": "11307008266237054804",
+   "multi_raw_hash": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "merge_gate_hash": "10915285408295938978",
+   "allocation_sha": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "root_allocations_sha": "0a7f678d7abd4d113107408c6bee02df53b79a09d76267fbf2802a9e60a25ed0",
+   "root_commits_sha": "1d0a972ff798b7fb2941f148c94ea81bb639789e47d00c32b63478c9b1b20d38"
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "dot-product/1703/high": {
+  "use": {
+   "rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "root_recipe_issued": [
+    55821,
+    21210
+   ],
+   "root_verified": 6702,
+   "root_rejected": 0,
+   "root_consumed": 6702,
+   "direct_roots": 5536,
+   "direct_children": 128,
+   "direct_distinct": 5664,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5536,
+   "root_proposal_hash": "5333610134800750235",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "merge_gate_hash": "18087437119849661712",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "d5093fd88bcfa991ff3707709a36ad9cdbd2d4cedd5d5c69c64998638880e2f2",
+   "root_commits_sha": "4142afb4acfcc9f691456da3ce93bd9f9066efcfe974156dddf1f8162affc72b"
+  },
+  "withhold": {
+   "rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "root_recipe_issued": [
+    55821,
+    21210
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5536,
+   "root_proposal_hash": "5333610134800750235",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "merge_gate_hash": "18087437119849661712",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "root_recipe_issued": [
+    55821,
+    21210
+   ],
+   "root_verified": 0,
+   "root_rejected": 6702,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5536,
+   "root_proposal_hash": "5333610134800750235",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "merge_gate_hash": "18087437119849661712",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "root_recipe_issued": [
+    55821,
+    21210
+   ],
+   "root_verified": 0,
+   "root_rejected": 6702,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5536,
+   "root_proposal_hash": "5333610134800750235",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "merge_gate_hash": "18087437119849661712",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "root_recipe_issued": [
+    55821,
+    21210
+   ],
+   "root_verified": 6702,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5536,
+   "root_proposal_hash": "5333610134800750235",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "merge_gate_hash": "18087437119849661712",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 1143 at RHS 1015 template 139",
+   "fault": [
+    1143,
+    1015,
+    139
+   ],
+   "first_uncompleted_run": 135
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "dot-product/1703/certified": {
+  "use": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21210
+   ],
+   "root_verified": 6704,
+   "root_rejected": 0,
+   "root_consumed": 6704,
+   "direct_roots": 5538,
+   "direct_children": 128,
+   "direct_distinct": 5666,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "17001018198326840834",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "merge_gate_hash": "18087437119849661712",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "a3d40f64a5a983800676a3f5555f5cf4216dffeb26f7072680dbb92eca4cdb7d",
+   "root_commits_sha": "ddaa57f7bef1389d6820342a24fa1ebabb94d815539676977ac25da92a2e3d70"
+  },
+  "withhold": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21210
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "17001018198326840834",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "merge_gate_hash": "18087437119849661712",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21210
+   ],
+   "root_verified": 0,
+   "root_rejected": 6704,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "17001018198326840834",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "merge_gate_hash": "18087437119849661712",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21210
+   ],
+   "root_verified": 0,
+   "root_rejected": 6704,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "17001018198326840834",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "merge_gate_hash": "18087437119849661712",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21210
+   ],
+   "root_verified": 6704,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "17001018198326840834",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "merge_gate_hash": "18087437119849661712",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21210
+   ],
+   "root_verified": 6704,
+   "root_rejected": 0,
+   "root_consumed": 6704,
+   "direct_roots": 5538,
+   "direct_children": 128,
+   "direct_distinct": 5666,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "17001018198326840834",
+   "multi_raw_hash": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "merge_gate_hash": "18087437119849661712",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "a3d40f64a5a983800676a3f5555f5cf4216dffeb26f7072680dbb92eca4cdb7d",
+   "root_commits_sha": "ddaa57f7bef1389d6820342a24fa1ebabb94d815539676977ac25da92a2e3d70"
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "dot-product/1709/high": {
+  "use": {
+   "rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "root_recipe_issued": [
+    57791,
+    21067
+   ],
+   "root_verified": 6702,
+   "root_rejected": 0,
+   "root_consumed": 6702,
+   "direct_roots": 5536,
+   "direct_children": 128,
+   "direct_distinct": 5664,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5536,
+   "root_proposal_hash": "485692153549837865",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "merge_gate_hash": "14427680488669089425",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "3d3ba4c968d6536a4d55008d979a96f94b42e4ce83b692c4695749763b17d85c",
+   "root_commits_sha": "0dd49f3aa60348b25591b528fe2e2edf77f35c70fc6fa4dbb41a98f566f8870e"
+  },
+  "withhold": {
+   "rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "root_recipe_issued": [
+    57791,
+    21067
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5536,
+   "root_proposal_hash": "485692153549837865",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "merge_gate_hash": "14427680488669089425",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "root_recipe_issued": [
+    57791,
+    21067
+   ],
+   "root_verified": 0,
+   "root_rejected": 6702,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5536,
+   "root_proposal_hash": "485692153549837865",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "merge_gate_hash": "14427680488669089425",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "root_recipe_issued": [
+    57791,
+    21067
+   ],
+   "root_verified": 0,
+   "root_rejected": 6702,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5536,
+   "root_proposal_hash": "485692153549837865",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "merge_gate_hash": "14427680488669089425",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 6704,
+   "neural_rhs": 6702,
+   "source_exact": true,
+   "root_recipe_issued": [
+    57791,
+    21067
+   ],
+   "root_verified": 6702,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5536,
+   "root_proposal_hash": "485692153549837865",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "merge_gate_hash": "14427680488669089425",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 1143 at RHS 1015 template 139",
+   "fault": [
+    1143,
+    1015,
+    139
+   ],
+   "first_uncompleted_run": 135
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "dot-product/1709/certified": {
+  "use": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21067
+   ],
+   "root_verified": 6704,
+   "root_rejected": 0,
+   "root_consumed": 6704,
+   "direct_roots": 5538,
+   "direct_children": 128,
+   "direct_distinct": 5666,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "116788740914070498",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "merge_gate_hash": "14427680488669089425",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "eaff48d1b15b2e3d8fa908c5fabb4f806c88e5626d297f580a4386dcc25068b4",
+   "root_commits_sha": "e2820eb41cadfbe262c50e31b0caaf5af83f3dad7f7babed1efe032b6e604956"
+  },
+  "withhold": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21067
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "116788740914070498",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "merge_gate_hash": "14427680488669089425",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21067
+   ],
+   "root_verified": 0,
+   "root_rejected": 6704,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "116788740914070498",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "merge_gate_hash": "14427680488669089425",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21067
+   ],
+   "root_verified": 0,
+   "root_rejected": 6704,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "116788740914070498",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "merge_gate_hash": "14427680488669089425",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21067
+   ],
+   "root_verified": 6704,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 128,
+   "direct_distinct": 128,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "116788740914070498",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "merge_gate_hash": "14427680488669089425",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "source_exact": true,
+   "root_recipe_issued": [
+    47313,
+    21067
+   ],
+   "root_verified": 6704,
+   "root_rejected": 0,
+   "root_consumed": 6704,
+   "direct_roots": 5538,
+   "direct_children": 128,
+   "direct_distinct": 5666,
+   "fresh": 5682,
+   "elected_rule_template_comparison": 5538,
+   "root_proposal_hash": "116788740914070498",
+   "multi_raw_hash": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "merge_gate_hash": "14427680488669089425",
+   "allocation_sha": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "root_allocations_sha": "eaff48d1b15b2e3d8fa908c5fabb4f806c88e5626d297f580a4386dcc25068b4",
+   "root_commits_sha": "e2820eb41cadfbe262c50e31b0caaf5af83f3dad7f7babed1efe032b6e604956"
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "gemm-bias-relu/1703/high": {
+  "use": {
+   "rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "root_recipe_issued": [
+    172578,
+    78407
+   ],
+   "root_verified": 15451,
+   "root_rejected": 0,
+   "root_consumed": 15451,
+   "direct_roots": 12679,
+   "direct_children": 176,
+   "direct_distinct": 12855,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12679,
+   "root_proposal_hash": "2263058424522296007",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "merge_gate_hash": "9185176769261288579",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "8b82bbff5b711dc9c2e4e26da2328372768d530744a5457bd67a3a00de7e1bbc",
+   "root_commits_sha": "4ebb80b306c1f03cec4a6b855aff0ceeff322a7c20f1caaa231b656b8ad3f2f1"
+  },
+  "withhold": {
+   "rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "root_recipe_issued": [
+    172578,
+    78407
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12679,
+   "root_proposal_hash": "2263058424522296007",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "merge_gate_hash": "9185176769261288579",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "root_recipe_issued": [
+    172578,
+    78407
+   ],
+   "root_verified": 0,
+   "root_rejected": 15451,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12679,
+   "root_proposal_hash": "2263058424522296007",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "merge_gate_hash": "9185176769261288579",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "root_recipe_issued": [
+    172578,
+    78407
+   ],
+   "root_verified": 0,
+   "root_rejected": 15451,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12679,
+   "root_proposal_hash": "2263058424522296007",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "merge_gate_hash": "9185176769261288579",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 15462,
+   "neural_rhs": 15451,
+   "source_exact": true,
+   "root_recipe_issued": [
+    172578,
+    78407
+   ],
+   "root_verified": 15451,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12679,
+   "root_proposal_hash": "2263058424522296007",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "merge_gate_hash": "9185176769261288579",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 1695 at RHS 1567 template 139",
+   "fault": [
+    1695,
+    1567,
+    139
+   ],
+   "first_uncompleted_run": 171
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "gemm-bias-relu/1703/certified": {
+  "use": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    78407
+   ],
+   "root_verified": 15462,
+   "root_rejected": 0,
+   "root_consumed": 15462,
+   "direct_roots": 12690,
+   "direct_children": 176,
+   "direct_distinct": 12866,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "6237607569713626770",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "merge_gate_hash": "9185176769261288579",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "db24b63cb0181a751407c673828c39acf4abd2608d3521651f66b300263e5e5c",
+   "root_commits_sha": "d73ad88c6f2aa6e3bf993b116f398183926e47fa018c835c455489dd471d82fa"
+  },
+  "withhold": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    78407
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "6237607569713626770",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "merge_gate_hash": "9185176769261288579",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    78407
+   ],
+   "root_verified": 0,
+   "root_rejected": 15462,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "6237607569713626770",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "merge_gate_hash": "9185176769261288579",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    78407
+   ],
+   "root_verified": 0,
+   "root_rejected": 15462,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "6237607569713626770",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "merge_gate_hash": "9185176769261288579",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    78407
+   ],
+   "root_verified": 15462,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "6237607569713626770",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "merge_gate_hash": "9185176769261288579",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    78407
+   ],
+   "root_verified": 15462,
+   "root_rejected": 0,
+   "root_consumed": 15462,
+   "direct_roots": 12690,
+   "direct_children": 176,
+   "direct_distinct": 12866,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "6237607569713626770",
+   "multi_raw_hash": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "merge_gate_hash": "9185176769261288579",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "db24b63cb0181a751407c673828c39acf4abd2608d3521651f66b300263e5e5c",
+   "root_commits_sha": "d73ad88c6f2aa6e3bf993b116f398183926e47fa018c835c455489dd471d82fa"
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "gemm-bias-relu/1709/high": {
+  "use": {
+   "rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "root_recipe_issued": [
+    179361,
+    79572
+   ],
+   "root_verified": 15453,
+   "root_rejected": 0,
+   "root_consumed": 15453,
+   "direct_roots": 12681,
+   "direct_children": 176,
+   "direct_distinct": 12857,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12681,
+   "root_proposal_hash": "952593773570053421",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "merge_gate_hash": "15761298485945563255",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "d9c2484526dd86acf818e706df31c427f1a9e2985af9fe2e26a279e62eb0a22c",
+   "root_commits_sha": "b8b750c60a69d8a0671f5f9474636aeb257e6c8c8a7949d78183a14a8d596ccd"
+  },
+  "withhold": {
+   "rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "root_recipe_issued": [
+    179361,
+    79572
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12681,
+   "root_proposal_hash": "952593773570053421",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "merge_gate_hash": "15761298485945563255",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "root_recipe_issued": [
+    179361,
+    79572
+   ],
+   "root_verified": 0,
+   "root_rejected": 15453,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12681,
+   "root_proposal_hash": "952593773570053421",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "merge_gate_hash": "15761298485945563255",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "root_recipe_issued": [
+    179361,
+    79572
+   ],
+   "root_verified": 0,
+   "root_rejected": 15453,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12681,
+   "root_proposal_hash": "952593773570053421",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "merge_gate_hash": "15761298485945563255",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 15462,
+   "neural_rhs": 15453,
+   "source_exact": true,
+   "root_recipe_issued": [
+    179361,
+    79572
+   ],
+   "root_verified": 15453,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12681,
+   "root_proposal_hash": "952593773570053421",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "merge_gate_hash": "15761298485945563255",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 1695 at RHS 1567 template 139",
+   "fault": [
+    1695,
+    1567,
+    139
+   ],
+   "first_uncompleted_run": 171
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "gemm-bias-relu/1709/certified": {
+  "use": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    79572
+   ],
+   "root_verified": 15462,
+   "root_rejected": 0,
+   "root_consumed": 15462,
+   "direct_roots": 12690,
+   "direct_children": 176,
+   "direct_distinct": 12866,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "2088080988276160632",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "merge_gate_hash": "15761298485945563255",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "13cf5190db577868ba3c5ddf2e764bd6e5cb9a98736cd3914b52b4b828c1175f",
+   "root_commits_sha": "ed7747375c30b301010d0d40ee48d0d37ad2d405fd98d2b0ae77ed01a303b7dd"
+  },
+  "withhold": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    79572
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "2088080988276160632",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "merge_gate_hash": "15761298485945563255",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    79572
+   ],
+   "root_verified": 0,
+   "root_rejected": 15462,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "2088080988276160632",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "merge_gate_hash": "15761298485945563255",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    79572
+   ],
+   "root_verified": 0,
+   "root_rejected": 15462,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "2088080988276160632",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "merge_gate_hash": "15761298485945563255",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    79572
+   ],
+   "root_verified": 15462,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 176,
+   "direct_distinct": 176,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "2088080988276160632",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "merge_gate_hash": "15761298485945563255",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "rhs": 15462,
+   "neural_rhs": 15462,
+   "source_exact": true,
+   "root_recipe_issued": [
+    154820,
+    79572
+   ],
+   "root_verified": 15462,
+   "root_rejected": 0,
+   "root_consumed": 15462,
+   "direct_roots": 12690,
+   "direct_children": 176,
+   "direct_distinct": 12866,
+   "fresh": 12869,
+   "elected_rule_template_comparison": 12690,
+   "root_proposal_hash": "2088080988276160632",
+   "multi_raw_hash": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+   "merge_gate_hash": "15761298485945563255",
+   "allocation_sha": "4b4addc4c2ca56acb8faa7dc3eaa6d3f429a4a939125fac229db2053872ba768",
+   "root_allocations_sha": "13cf5190db577868ba3c5ddf2e764bd6e5cb9a98736cd3914b52b4b828c1175f",
+   "root_commits_sha": "ed7747375c30b301010d0d40ee48d0d37ad2d405fd98d2b0ae77ed01a303b7dd"
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "stable-argmax/1703/high": {
+  "use": {
+   "rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "root_recipe_issued": [
+    57366,
+    20607
+   ],
+   "root_verified": 8181,
+   "root_rejected": 0,
+   "root_consumed": 8181,
+   "direct_roots": 6731,
+   "direct_children": 101,
+   "direct_distinct": 6832,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6731,
+   "root_proposal_hash": "15046754802443512383",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "merge_gate_hash": "3005431533949154929",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "2988e67b5e2b40c2017f5ef2ac485aebfe9ca49742ebd1b3871250e4a92c1839",
+   "root_commits_sha": "91effb2238c8cea62c0d7d3762e52b40fb6b634d0f6d656d2800a8349d23bd12"
+  },
+  "withhold": {
+   "rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "root_recipe_issued": [
+    57366,
+    20607
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6731,
+   "root_proposal_hash": "15046754802443512383",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "merge_gate_hash": "3005431533949154929",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "root_recipe_issued": [
+    57366,
+    20607
+   ],
+   "root_verified": 0,
+   "root_rejected": 8181,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6731,
+   "root_proposal_hash": "15046754802443512383",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "merge_gate_hash": "3005431533949154929",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "root_recipe_issued": [
+    57366,
+    20607
+   ],
+   "root_verified": 0,
+   "root_rejected": 8181,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6731,
+   "root_proposal_hash": "15046754802443512383",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "merge_gate_hash": "3005431533949154929",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 8190,
+   "neural_rhs": 8181,
+   "source_exact": true,
+   "root_recipe_issued": [
+    57366,
+    20607
+   ],
+   "root_verified": 8181,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6731,
+   "root_proposal_hash": "15046754802443512383",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "merge_gate_hash": "3005431533949154929",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 1049 at RHS 921 template 139",
+   "fault": [
+    1049,
+    921,
+    139
+   ],
+   "first_uncompleted_run": 114
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "stable-argmax/1703/certified": {
+  "use": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20607
+   ],
+   "root_verified": 8190,
+   "root_rejected": 0,
+   "root_consumed": 8190,
+   "direct_roots": 6740,
+   "direct_children": 101,
+   "direct_distinct": 6841,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "12928876598386314395",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "merge_gate_hash": "3005431533949154929",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "6f896f5ac12a3d0b34e764f4ed56a5bb81790348afa9cf1910b00c96c199e766",
+   "root_commits_sha": "dc1f6230033876b31229fef9e9483f6a2dc49b02eaed331caf849cc3552638cf"
+  },
+  "withhold": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20607
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "12928876598386314395",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "merge_gate_hash": "3005431533949154929",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20607
+   ],
+   "root_verified": 0,
+   "root_rejected": 8190,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "12928876598386314395",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "merge_gate_hash": "3005431533949154929",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20607
+   ],
+   "root_verified": 0,
+   "root_rejected": 8190,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "12928876598386314395",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "merge_gate_hash": "3005431533949154929",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20607
+   ],
+   "root_verified": 8190,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "12928876598386314395",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "merge_gate_hash": "3005431533949154929",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20607
+   ],
+   "root_verified": 8190,
+   "root_rejected": 0,
+   "root_consumed": 8190,
+   "direct_roots": 6740,
+   "direct_children": 101,
+   "direct_distinct": 6841,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "12928876598386314395",
+   "multi_raw_hash": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "merge_gate_hash": "3005431533949154929",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "6f896f5ac12a3d0b34e764f4ed56a5bb81790348afa9cf1910b00c96c199e766",
+   "root_commits_sha": "dc1f6230033876b31229fef9e9483f6a2dc49b02eaed331caf849cc3552638cf"
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "stable-argmax/1709/high": {
+  "use": {
+   "rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "root_recipe_issued": [
+    60320,
+    20691
+   ],
+   "root_verified": 8183,
+   "root_rejected": 0,
+   "root_consumed": 8183,
+   "direct_roots": 6733,
+   "direct_children": 101,
+   "direct_distinct": 6834,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6733,
+   "root_proposal_hash": "14841817878357897474",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "merge_gate_hash": "4370216181406848849",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "8a82d8dac2de798d92339be4e3aa14a42a0ba06847d217df04809837271257f8",
+   "root_commits_sha": "69aed7d732519635e20ca7b3da84c1c837ed8855f2318e6f3c6e557daf37a4a0"
+  },
+  "withhold": {
+   "rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "root_recipe_issued": [
+    60320,
+    20691
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6733,
+   "root_proposal_hash": "14841817878357897474",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "merge_gate_hash": "4370216181406848849",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "root_recipe_issued": [
+    60320,
+    20691
+   ],
+   "root_verified": 0,
+   "root_rejected": 8183,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6733,
+   "root_proposal_hash": "14841817878357897474",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "merge_gate_hash": "4370216181406848849",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "root_recipe_issued": [
+    60320,
+    20691
+   ],
+   "root_verified": 0,
+   "root_rejected": 8183,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6733,
+   "root_proposal_hash": "14841817878357897474",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "merge_gate_hash": "4370216181406848849",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 8190,
+   "neural_rhs": 8183,
+   "source_exact": true,
+   "root_recipe_issued": [
+    60320,
+    20691
+   ],
+   "root_verified": 8183,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6733,
+   "root_proposal_hash": "14841817878357897474",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "merge_gate_hash": "4370216181406848849",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 1049 at RHS 921 template 139",
+   "fault": [
+    1049,
+    921,
+    139
+   ],
+   "first_uncompleted_run": 114
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ },
+ "stable-argmax/1709/certified": {
+  "use": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20691
+   ],
+   "root_verified": 8190,
+   "root_rejected": 0,
+   "root_consumed": 8190,
+   "direct_roots": 6740,
+   "direct_children": 101,
+   "direct_distinct": 6841,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "8686442622701704313",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "merge_gate_hash": "4370216181406848849",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "82159a38e515f506b332ee83f2ff62abffd241411f3dc8282390fd4d2195023e",
+   "root_commits_sha": "cb8a8207ca18ffba12c3a629bb402ed27770993ac2cf92f08cf2664e2ab592f8"
+  },
+  "withhold": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20691
+   ],
+   "root_verified": 0,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "8686442622701704313",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "merge_gate_hash": "4370216181406848849",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-template": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20691
+   ],
+   "root_verified": 0,
+   "root_rejected": 8190,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "8686442622701704313",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "merge_gate_hash": "4370216181406848849",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "wrong-port": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20691
+   ],
+   "root_verified": 0,
+   "root_rejected": 8190,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "8686442622701704313",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "merge_gate_hash": "4370216181406848849",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "shadow": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20691
+   ],
+   "root_verified": 8190,
+   "root_rejected": 0,
+   "root_consumed": 0,
+   "direct_roots": 0,
+   "direct_children": 101,
+   "direct_distinct": 101,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "8686442622701704313",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "merge_gate_hash": "4370216181406848849",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "root_commits_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "use/no-fallback": {
+   "rhs": 8190,
+   "neural_rhs": 8190,
+   "source_exact": true,
+   "root_recipe_issued": [
+    50151,
+    20691
+   ],
+   "root_verified": 8190,
+   "root_rejected": 0,
+   "root_consumed": 8190,
+   "direct_roots": 6740,
+   "direct_children": 101,
+   "direct_distinct": 6841,
+   "fresh": 6841,
+   "elected_rule_template_comparison": 6740,
+   "root_proposal_hash": "8686442622701704313",
+   "multi_raw_hash": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+   "merge_gate_hash": "4370216181406848849",
+   "allocation_sha": "58b904ec8b2e87507744b37d254b5a5cca7cbde67ef3d39af8bb8fb997755d3f",
+   "root_allocations_sha": "82159a38e515f506b332ee83f2ff62abffd241411f3dc8282390fd4d2195023e",
+   "root_commits_sha": "cb8a8207ca18ffba12c3a629bb402ed27770993ac2cf92f08cf2664e2ab592f8"
+  },
+  "withhold/no-fallback": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "fault": [
+    129,
+    1,
+    375
+   ],
+   "first_uncompleted_run": 1
+  }
+ }
+}

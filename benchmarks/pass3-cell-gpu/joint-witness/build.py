@@ -40,7 +40,11 @@ def build(out,shortlist,merge_child,root_recipe):
         session=crate/'examples/joint_witness_session.rs'
         old=session.read_text();assert old.count("const MERGE_SUPPORT: bool = false;")==1
         session.write_text(old.replace("const MERGE_SUPPORT: bool = false;","const MERGE_SUPPORT: bool = true;"))
-    if root_recipe:install('joint-root-cells',crate,'overlay.py')
+    if root_recipe:
+        install('joint-root-cells',crate,'overlay.py')
+        session=crate/'examples/joint_witness_session.rs'
+        s=session.read_text();assert s.count('const ROOT_SUPPORT: bool = false;')==1
+        session.write_text(s.replace('const ROOT_SUPPORT: bool = false;','const ROOT_SUPPORT: bool = true;'))
     target=out/'target'
     subprocess.run(['cargo','metadata','--offline','--format-version','1'],cwd=tree,stdout=subprocess.DEVNULL,check=True)
     subprocess.run(['cargo','build','--locked','--offline','--release','-p','eggfuse-cell-runtime','--features',

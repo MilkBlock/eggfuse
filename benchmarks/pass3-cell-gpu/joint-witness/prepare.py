@@ -18,9 +18,10 @@ def prepare(a):
     single.update(residual=a.policy!='certified',mode='learned')
     write('single.json',single)
     shutil.copyfile(HERE.parent/'ordinary-witness'/f'weights-{a.seed}.json',a.out/'multi.json')
-    gate=read(HERE.parent/'merge-result-port'/f'gate-{a.seed}.json')
+    gate=read(HERE/'weights'/f'nested-{a.seed}.json')
     write('merge.json',dict(program_sha256=read(a.program)['sha256'],weights=gate['weights'],control='learned'))
-    write('request.json',dict(single_config='single.json',multi_weights='multi.json',merge_config='merge.json',
+    write('root.json',dict(control='use',forbid_fallback=a.policy=='certified'))
+    write('request.json',dict(source_sha256=hashlib.sha256(a.program.read_bytes()).hexdigest(),root_config='root.json',single_config='single.json',multi_weights='multi.json',merge_config='merge.json',
                               multi_mode='stackseal3xlearned',radius=2,cap=1000000,multi_residual=False,audit=False))
 
 

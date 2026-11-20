@@ -28,6 +28,14 @@ def check(folder):
     for key,v in read('negative').items():
         assert v['null-single']['neural_single']==v['null-multi']['neural_multi']==0
         assert not v['strict']['aligned'] and not v['none-only']['aligned']
+    bundles=read('bundles')
+    assert len(bundles)==8
+    proofs=json.loads((folder.parent/'joint-root-cells/results.json').read_text())
+    for key,v in bundles.items():
+        b=v['report'];final=proofs[key+'/certified']['use']
+        assert v['reference_read_denied'] and b['remaining_rhs']==0 and b['rhs']==final['rhs']==b['neural_rhs']
+        assert b['root_cells_allocated']+b['merge_counts'][5]==final['direct_distinct']
+        assert set(v['files'])=={'program.json','plans.json','single.json','multi.json','merge.json','root.json','request.json'}
     print('Verified joint 98% RHS and distinct explicitly named fresh Cell IDs, closures, controls and timed pairs.')
 
 

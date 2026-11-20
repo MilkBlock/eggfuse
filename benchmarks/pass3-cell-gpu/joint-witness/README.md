@@ -25,11 +25,17 @@
 | stable-argmax/1703 | 8,181 / 8,190 | 9 | 8,190 / 8,190 | 6,841 / 6,841 |
 | stable-argmax/1709 | 8,183 / 8,190 | 7 | 8,190 / 8,190 | 6,841 / 6,841 |
 
-表中父模板的一项表示“这条已提交证书的源模板与实际分配模板相同”。这项对照本身没有改写根分配器，不能把它描述为每个物理根都有独立驱动 allocator 的指令。嵌套子分配另有独立指令和反事实检验。
+这张早期表的父模板一项表示“这条已提交证书的源模板与实际分配模板相同”。这项对照本身没有改写根分配器，不能把它描述为每个物理根都有独立驱动 allocator 的指令。嵌套子分配另有独立指令和反事实检验。下节给出根配方也实际驱动分配的最终对照。
 
 分母包含同一个绑定在不同源 Run 中合法出现的不同提交。精确补出的输入不能凭“同一条规则”取得归因，物理 Cell 也按本次创建的 ID 去重。四程序两种子均逐 Run 对齐有序 RHS、有效写入、Spine、union 和最终图。另在两个开发程序上配对复核了无补查 RHS；开发集不并入留出结果。主动屏蔽其中一个提供者时单列其余来源。对无证明的选择性阈值，拿掉残余也可能提前漏掉一项并触发源程序 panic。[学习阈值](results/selective.json) · [无补查](results/no_residual.json) · [更严格的选择性对照](results/balanced.json) · [失败与空提案控制](results/negative.json) · [屏蔽递归状态](results/state_mask.json)
 
 **速度仍是独立目标。** 在同一原生程序上交错运行默认精确引擎和联合提供者，计入图观测、神经前向、所有验证、原序提交和 rebuild。计时从已有初始图开始，到完整源调度结束。请求墙钟另含载入配置、图导出／校验和序列化。当前实现即使关闭详细日志仍存储单见证提交记录，成本包含在时间里。学习筛选和模板归因已过覆盖门槛，整个引擎仍慢于原来的 Rust 精确搜索。[配对时间](results/timing.json) · [点查列表复用](../ordinary-shortlist/README.md) · [单见证评分复用](../joint-score-sharing/README.md)
+
+## 直接驱动根与子分配器的最终配置
+
+每份原始候选在验真前携带可解码的根 Cell 配方，内含所选源引用和静态模板／槽位投影。验证器从这些引用重建带类型的输入，再让获胜配方直接向分配器提供模板与参数。嵌套 merge 的独立子证书使用训练集校准过的阈值。对同一物理 ID 只计一次；复用已存在对象、普通分配回退和源规则仅恰好使用相同模板都不能计入。撤掉配方、换错模板、破坏来源端口，以及只验不发，均产生零个根配方直接新建的 ID。
+
+无 RHS 补查的两个种子实际直接分配了 **5,867／5,868** 个 sum-bits 新实例、**5,666／5,682** 个 dot-product 新实例、**12,866／12,869** 个 GEMM 新实例和 **6,841／6,841** 个 stable-argmax 新实例。禁止已提交源规则的根分配回退后，八组仍完成原调度。这个控制并未禁止所有可能的辅助分配；例如嵌套子门可以弃权。sum-bits／1703 的完整根配方版本为 94.74 ms，同组不发根配方的等覆盖联合执行为 81.24 ms；严格归因有成本。[真实配方、逐 ID 与反例](../joint-root-cells/README.md)
 
 ## 从冻结权重运行
 
@@ -37,9 +43,9 @@
 
 ~~~sh
 dir=benchmarks/pass3-cell-gpu/joint-witness
-python "$dir/build.py" /tmp/joint-build --shortlist --merge-child
+python "$dir/build.py" /tmp/joint-build --shortlist --merge-child --root-recipe
 python "$dir/prepare.py" "$PROGRAM" "$IMAGE_DIR" /tmp/eggfuse-bundle --policy certified --seed 1703
 /tmp/joint-build/session --bundle /tmp/eggfuse-bundle
 ~~~
 
-将 `--policy` 设为 `high` 可运行允许少量单见证补查的对照。该程序以新的运行图计算 SHA-256 和结果计数。在线执行不加载 Python、PyTorch 或 GPU。若要复现详细审计，使用 `evaluate.py` 运行已编译的二进制，以 `--sealed --shortlist --sealed-index 3xlearned --radius 2 --cap 1000000 --merge-control learned` 选择同一配置；`--arms strict` 关闭两个残余路径，`--arms target` 只保留单见证补查。原始档案目录和逐提交记录的 SHA-256 见[复现清单](results/manifest.json)。
+将 `--policy` 设为 `high` 可运行允许少量单见证补查的对照。该程序以新的运行图计算 SHA-256 和结果计数。在线执行不加载 Python、PyTorch 或 GPU。隔离测试复制这七个包文件与 Rust 二进制，禁止读取参考卷和用户目录并禁止联网，八次运行的图摘要、根配方和子分配 ID 数均一致。[隔离运行记录](results/bundles.json)若要复现详细审计，使用 `evaluate.py` 运行已编译的二进制，以 `--sealed --shortlist --sealed-index 3xlearned --radius 2 --cap 1000000 --merge-control learned` 选择同一配置；`--arms strict` 关闭两个残余路径，`--arms target` 只保留单见证补查。原始档案目录和逐提交记录的 SHA-256 见[复现清单](results/manifest.json)。

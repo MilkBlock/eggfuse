@@ -2,6 +2,8 @@
 
 This branch builds the Rust Cell compiler, offline Bake and standalone CPU executor in one Cargo workspace. The compiler uses the vendored egglog frontend for native analysis. The executor runs checked recipe IR, publishes at the original Run boundaries and exports a logical graph.
 
+[完整 Pass 3 的神经 Cell 生成与 Rust 验证](benchmarks/pass3-cell-gpu/joint-witness/README.md) · [覆盖验收与逐项归因](benchmarks/pass3-cell-gpu/coverage-target/README.md) · [架构消融图册](docs/cell-architecture-atlas/Cell多行推理架构消融图册.pdf)。当前实验支持 PyTorch 离线训练、Rust CPU 独立推理；生产精确引擎与神经配置分别计时。
+
 [论文：EggFuse: Exploiting Locality in E-Graphs](paper/README.md) · [普通 primitive 与上游兼容性](benchmarks/upstream-suite/README.md) · [96 × 3 eggcc 重测](benchmarks/eggcc-suite/README.md) · [egglog 2.0／3.0 对照](benchmarks/egglog3-suite/README.md)。Cell 模板、实例、Shared Entry、完成与发布构成执行架构；Iterative Bake 是其中的离线反馈环节。
 
 [优化分类与度量目录](docs/optimization-catalog/README.md)：按被替代的工作整理 9 类、30 组优化，列出启用条件、精确计数器路径、新增成本、验证状态与缺测项。

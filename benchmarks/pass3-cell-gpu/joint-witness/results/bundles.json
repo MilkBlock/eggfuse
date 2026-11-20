@@ -1,0 +1,274 @@
+{
+ "sum-bits/1703": {
+  "report": {
+   "backend": "cpu-rust",
+   "inference_ms": 100.853,
+   "merge_counts": [
+    305,
+    191,
+    191,
+    0,
+    88,
+    103
+   ],
+   "multi_raw_tuples": 21443,
+   "neural_rhs": 7265,
+   "remaining_rhs": 0,
+   "rhs": 7265,
+   "root_cells_allocated": 5764,
+   "root_recipes_applied": 7265,
+   "runs": 1428,
+   "single_emitted": 48529,
+   "single_scored": 70366,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "files": [
+   "merge.json",
+   "multi.json",
+   "plans.json",
+   "program.json",
+   "request.json",
+   "root.json",
+   "single.json"
+  ],
+  "reference_read_denied": true
+ },
+ "sum-bits/1709": {
+  "report": {
+   "backend": "cpu-rust",
+   "inference_ms": 95.52075,
+   "merge_counts": [
+    305,
+    191,
+    191,
+    0,
+    88,
+    103
+   ],
+   "multi_raw_tuples": 21342,
+   "neural_rhs": 7265,
+   "remaining_rhs": 0,
+   "rhs": 7265,
+   "root_cells_allocated": 5764,
+   "root_recipes_applied": 7265,
+   "runs": 1428,
+   "single_emitted": 48529,
+   "single_scored": 70366,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "files": [
+   "merge.json",
+   "multi.json",
+   "plans.json",
+   "program.json",
+   "request.json",
+   "root.json",
+   "single.json"
+  ],
+  "reference_read_denied": true
+ },
+ "dot-product/1703": {
+  "report": {
+   "backend": "cpu-rust",
+   "inference_ms": 91.27191599999999,
+   "merge_counts": [
+    416,
+    210,
+    210,
+    0,
+    82,
+    128
+   ],
+   "multi_raw_tuples": 21210,
+   "neural_rhs": 6704,
+   "remaining_rhs": 0,
+   "rhs": 6704,
+   "root_cells_allocated": 5538,
+   "root_recipes_applied": 6704,
+   "runs": 1535,
+   "single_emitted": 47313,
+   "single_scored": 62558,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "files": [
+   "merge.json",
+   "multi.json",
+   "plans.json",
+   "program.json",
+   "request.json",
+   "root.json",
+   "single.json"
+  ],
+  "reference_read_denied": true
+ },
+ "dot-product/1709": {
+  "report": {
+   "backend": "cpu-rust",
+   "inference_ms": 90.508291,
+   "merge_counts": [
+    416,
+    210,
+    210,
+    0,
+    82,
+    128
+   ],
+   "multi_raw_tuples": 21067,
+   "neural_rhs": 6704,
+   "remaining_rhs": 0,
+   "rhs": 6704,
+   "root_cells_allocated": 5538,
+   "root_recipes_applied": 6704,
+   "runs": 1535,
+   "single_emitted": 47313,
+   "single_scored": 62558,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "files": [
+   "merge.json",
+   "multi.json",
+   "plans.json",
+   "program.json",
+   "request.json",
+   "root.json",
+   "single.json"
+  ],
+  "reference_read_denied": true
+ },
+ "gemm-bias-relu/1703": {
+  "report": {
+   "backend": "cpu-rust",
+   "inference_ms": 272.732583,
+   "merge_counts": [
+    560,
+    345,
+    345,
+    0,
+    169,
+    176
+   ],
+   "multi_raw_tuples": 78407,
+   "neural_rhs": 15462,
+   "remaining_rhs": 0,
+   "rhs": 15462,
+   "root_cells_allocated": 12690,
+   "root_recipes_applied": 15462,
+   "runs": 1652,
+   "single_emitted": 154820,
+   "single_scored": 196265,
+   "state_sha": "17da4d64835c0b660c6346c0a2377f2e7a272442b5da5e746a7d69f15b41c983"
+  },
+  "files": [
+   "merge.json",
+   "multi.json",
+   "plans.json",
+   "program.json",
+   "request.json",
+   "root.json",
+   "single.json"
+  ],
+  "reference_read_denied": true
+ },
+ "gemm-bias-relu/1709": {
+  "report": {
+   "backend": "cpu-rust",
+   "inference_ms": 275.10025,
+   "merge_counts": [
+    560,
+    345,
+    345,
+    0,
+    169,
+    176
+   ],
+   "multi_raw_tuples": 79572,
+   "neural_rhs": 15462,
+   "remaining_rhs": 0,
+   "rhs": 15462,
+   "root_cells_allocated": 12690,
+   "root_recipes_applied": 15462,
+   "runs": 1652,
+   "single_emitted": 154820,
+   "single_scored": 196265,
+   "state_sha": "17da4d64835c0b660c6346c0a2377f2e7a272442b5da5e746a7d69f15b41c983"
+  },
+  "files": [
+   "merge.json",
+   "multi.json",
+   "plans.json",
+   "program.json",
+   "request.json",
+   "root.json",
+   "single.json"
+  ],
+  "reference_read_denied": true
+ },
+ "stable-argmax/1703": {
+  "report": {
+   "backend": "cpu-rust",
+   "inference_ms": 90.58624999999999,
+   "merge_counts": [
+    377,
+    238,
+    238,
+    0,
+    137,
+    101
+   ],
+   "multi_raw_tuples": 20607,
+   "neural_rhs": 8190,
+   "remaining_rhs": 0,
+   "rhs": 8190,
+   "root_cells_allocated": 6740,
+   "root_recipes_applied": 8190,
+   "runs": 1149,
+   "single_emitted": 50151,
+   "single_scored": 65649,
+   "state_sha": "40ca93637eb8ee4d7bde32f752a7f4e30d7bd713cea47da81aac0b586c37561a"
+  },
+  "files": [
+   "merge.json",
+   "multi.json",
+   "plans.json",
+   "program.json",
+   "request.json",
+   "root.json",
+   "single.json"
+  ],
+  "reference_read_denied": true
+ },
+ "stable-argmax/1709": {
+  "report": {
+   "backend": "cpu-rust",
+   "inference_ms": 90.131959,
+   "merge_counts": [
+    377,
+    238,
+    238,
+    0,
+    137,
+    101
+   ],
+   "multi_raw_tuples": 20691,
+   "neural_rhs": 8190,
+   "remaining_rhs": 0,
+   "rhs": 8190,
+   "root_cells_allocated": 6740,
+   "root_recipes_applied": 8190,
+   "runs": 1149,
+   "single_emitted": 50151,
+   "single_scored": 65649,
+   "state_sha": "40ca93637eb8ee4d7bde32f752a7f4e30d7bd713cea47da81aac0b586c37561a"
+  },
+  "files": [
+   "merge.json",
+   "multi.json",
+   "plans.json",
+   "program.json",
+   "request.json",
+   "root.json",
+   "single.json"
+  ],
+  "reference_read_denied": true
+ }
+}

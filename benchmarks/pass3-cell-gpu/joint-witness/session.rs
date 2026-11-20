@@ -24,7 +24,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let root = Path::new(folder);
                 let mut request: Value =
                     serde_json::from_slice(&std::fs::read(root.join("request.json"))?)?;
-                for field in ["single_config", "multi_weights", "merge_config"] {
+                for field in [
+                    "single_config",
+                    "multi_weights",
+                    "merge_config",
+                    "root_config",
+                ] {
                     if let Some(file) = request[field].as_str() {
                         request[field] = json!(root.join(file));
                     }
@@ -47,11 +52,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .into(),
             ),
         };
-    let program = Program::parse(serde_json::from_slice(&std::fs::read(program_path)?)?)?;
+    let program_bytes = std::fs::read(program_path)?;
+    let digest = format!("{:x}", Sha256::digest(&program_bytes));
+    let program = Program::parse(serde_json::from_slice(&program_bytes)?)?;
     let plan = std::fs::read(plan_path)?;
     let mut out = std::io::BufWriter::new(std::io::stdout().lock());
     for line in requests {
         let req: Value = serde_json::from_str(&line?)?;
+        if one_shot && req["source_sha256"].as_str() != Some(digest.as_str()) {
+            return Err("program digest differs from the compiled bundle".into());
+        }
+        const ROOT_SUPPORT: bool = false;
+        if req["root_config"].is_string() && !ROOT_SUPPORT {
+            return Err("this binary has no root Cell recipe decoder".into());
+        }
         const MERGE_SUPPORT: bool = false;
         if req["merge_config"].is_string() && !MERGE_SUPPORT {
             return Err("this binary was built without the nested merge policy".into());
@@ -98,6 +112,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             writeln!(out, "{}", failure)?;
             out.flush()?;
+            if one_shot {
+                return Err("source execution failed".into());
+            }
             continue;
         }
         let ms = start.elapsed().as_secs_f64() * 1000.;
@@ -143,7 +160,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             report = json!({"backend":"cpu-rust","runs":report["runs"],"rhs":total,"neural_rhs":neural,
                 "remaining_rhs":total-neural,"state_sha":report["state_sha"],"inference_ms":ms,
                 "multi_raw_tuples":multi["counts"]["raw_tuples"],"single_scored":single["work"][0],
-                "single_emitted":single["work"][1],"merge_counts":report["merge_child"]["counts"]});
+                "single_emitted":single["work"][1],"root_recipes_applied":report["root_recipe"]["applied"],"root_cells_allocated":report["root_recipe"]["allocated"],"merge_counts":report["merge_child"]["counts"]});
         }
         writeln!(out, "{}", report)?;
         out.flush()?;

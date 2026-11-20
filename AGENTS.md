@@ -94,6 +94,11 @@ residuals separately. Reject changes in ordered RHS, effective writes, Spine and
 final graph. A verified opportunity ceiling, all-candidate diagnostic, or sum
 of independent provider runs does not establish combined neural coverage.
 [Source denominators and attribution](benchmarks/pass3-cell-gpu/coverage-target/README.md).
+Use the [joint CPU witness study](benchmarks/pass3-cell-gpu/joint-witness/README.md)
+for the measured high-coverage deployment. The selective policy may use a
+small residual; the certified cutoff has a different recall guarantee. For
+physical claims, report fresh ids allocated from the actual verified root or
+merge-child recipe and compare with withheld or corrupted recipe controls.
 
 Consult the existing evidence before proposing these mechanisms as new:
 

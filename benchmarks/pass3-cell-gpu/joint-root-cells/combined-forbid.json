@@ -1,0 +1,230 @@
+{
+ "sum-bits/1703/high": {
+  "use": {
+   "error": "no verified root recipe for fresh Cell 670 at RHS 542 template 139",
+   "first_uncompleted_run": 102
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "sum-bits/1703/certified": {
+  "use": {
+   "error": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 4783",
+   "first_uncompleted_run": 816
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "sum-bits/1709/high": {
+  "use": {
+   "error": "no verified root recipe for fresh Cell 670 at RHS 542 template 139",
+   "first_uncompleted_run": 102
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "sum-bits/1709/certified": {
+  "use": {
+   "error": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 4783",
+   "first_uncompleted_run": 816
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "dot-product/1703/high": {
+  "use": {
+   "error": "no verified root recipe for fresh Cell 1143 at RHS 1015 template 139",
+   "first_uncompleted_run": 135
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "dot-product/1703/certified": {
+  "use": {
+   "error": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 4872",
+   "first_uncompleted_run": 875
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "dot-product/1709/high": {
+  "use": {
+   "error": "no verified root recipe for fresh Cell 1143 at RHS 1015 template 139",
+   "first_uncompleted_run": 135
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "dot-product/1709/certified": {
+  "use": {
+   "error": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 4872",
+   "first_uncompleted_run": 875
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "gemm-bias-relu/1703/high": {
+  "use": {
+   "error": "no verified root recipe for fresh Cell 1695 at RHS 1567 template 139",
+   "first_uncompleted_run": 171
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "gemm-bias-relu/1703/certified": {
+  "use": {
+   "error": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 14781",
+   "first_uncompleted_run": 1213
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "gemm-bias-relu/1709/high": {
+  "use": {
+   "error": "no verified root recipe for fresh Cell 1695 at RHS 1567 template 139",
+   "first_uncompleted_run": 171
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "gemm-bias-relu/1709/certified": {
+  "use": {
+   "error": "no verified neural template 906 for fresh dynamic constructor 324 at source ordinal 14781",
+   "first_uncompleted_run": 1213
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "stable-argmax/1703/high": {
+  "use": {
+   "error": "no verified root recipe for fresh Cell 1049 at RHS 921 template 139",
+   "first_uncompleted_run": 114
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "stable-argmax/1703/certified": {
+  "use": {
+   "source_exact": true,
+   "direct": 6841,
+   "fresh": 6841,
+   "rhs": 8190
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "stable-argmax/1709/high": {
+  "use": {
+   "error": "no verified root recipe for fresh Cell 1049 at RHS 921 template 139",
+   "first_uncompleted_run": 114
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ },
+ "stable-argmax/1709/certified": {
+  "use": {
+   "source_exact": true,
+   "direct": 6841,
+   "fresh": 6841,
+   "rhs": 8190
+  },
+  "wrong-port": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  },
+  "wrong-template": {
+   "error": "no verified root recipe for fresh Cell 129 at RHS 1 template 375",
+   "first_uncompleted_run": 1
+  }
+ }
+}

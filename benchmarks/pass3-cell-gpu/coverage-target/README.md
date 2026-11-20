@@ -13,7 +13,23 @@ A complementary physical measure attributes Rust Cell allocations to the source 
 
 The witness count is structural under a stated interface. A proposed relational row supplies its slots. A complete table key selects at most one visible row; ready primitives can be evaluated forward. Breadth-first search closes these dependencies and finds the minimum independent proposed rows for the source query. It does not exploit inverse primitives, observed accidental uniqueness, prior multi-member Cell proofs, or additional indexes. Current source ordinal counts weight each rule. The per-Run slot lower bound separately assumes perfect choices anywhere in the graph; it sums min(budget, Run RHS). Multi-RHS certificates and adaptable Run budgets require their own measurement. [Per-rule actions and full histograms](source.json)
 
-## Measured result with two statically partitioned rows, four waves
+## Final native acceptance
+
+The joint CPU/Rust executor passes both thresholds in the **same execution**
+for four full programs, two seeds and two policies. Selective high recall wins
+99.83–99.97% of committed source RHS; the certified single-policy cutoff and
+sealed three-view multi-parent policy win all source RHS with residual matching
+disabled. Physical coverage uses the allocator-consumed binary root and dependent
+merge recipes: new ids must actually be created from the verified recipe's
+template and bound ports. With the certified cutoff the fractions are
+5,867/5,868 (sum-bits), 5,666/5,682 (dot-product), 12,866/12,869 (GEMM) and
+6,841/6,841 (stable-argmax), on both seeds. Withholding matching recipes
+eliminates their direct allocation credit. Learning is not required to recover
+equal values under a tied encoding or to prove that a statically stale row
+cannot match. All of these cases are distinguished by explicit controls.
+[All 16 acceptance rows](final.json) · [Rust deployment and distribution of work](../joint-witness/README.md) · [Physical construction evidence](../joint-root-cells/README.md)
+
+## Earlier baseline with two statically partitioned rows, four waves
 
 | Workload / seed | Actually neural RHS / source | Missing to target | Cell allocations in neural RHS / all new allocations |
 |---|---:|---:|---:|
