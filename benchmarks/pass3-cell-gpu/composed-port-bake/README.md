@@ -49,3 +49,7 @@ python "$dir/build.py" "$e/NEW-composed-port-build"
 python "$dir/measure.py" "$e/NEW-composed-port-build/session" "$e/pass3-atlas-integration-20261120" "$e/repair-bake-families-20261120" "$e/recurrent-compositions-20261120" "$e/recurrent-compositions-train-20261120" "$e/NEW-composed-port-study" --arms leaf inline delta delta-none delta-mixed --save-charges
 python "$dir/verify.py"
 ```
+
+## Larger frozen workload
+
+Jacobi exercises 413 source-winning composed children, compared with 90 on sum-bits and 44 on dot-product. Both frozen seeds match all 41,319 RHS ordinals, effective writes, Spine resumes, unions, schedule and final graph of a separate vanilla Rust process. The longest recursive chain reaches 11. The incremental gate removes 25,474 entry row reads, 413 standalone child recipes and 2,049 repeated field checks. Charging 413 positive deliveries and 2,154 header reads gives 22,907 fewer entry visits. Maintaining the original order requires 35,797 rank lookups and 17,301 vector-entry moves. The leaf and incremental arms took 1,197.57 and 1,197.63 ms at seed 1703, and 1,114.16 and 1,137.48 ms at seed 1709. Vanilla took 117.88 and 112.80 ms respectively. The larger number of proven children did not yield a whole-pass speedup. [Eight-sample comparisons and source audit](jacobi.json) · [Runner](larger.py)

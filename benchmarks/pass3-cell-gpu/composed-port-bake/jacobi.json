@@ -1,0 +1,336 @@
+{
+ "jacobi-1d/1703": {
+  "leaf": {
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "direct": 32721,
+   "fresh_cells": 32819,
+   "graph": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "identity": "9a8fdb97ee62e749417e1c158c65cd823009d4eb51a197a8f5adac88565f6bfa",
+   "boundary": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "max_chain": 11,
+   "wins": 413,
+   "initial_row_decodes_saved": 0,
+   "net_entry_after_rebuild": 0,
+   "ms": [
+    1190.973084,
+    1225.901708,
+    1204.167166,
+    1246.120375,
+    1172.2839999999999,
+    1176.5278329999999,
+    1209.71325,
+    1172.7512499999998
+   ],
+   "median_ms": 1197.570125
+  },
+  "inline": {
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "direct": 32721,
+   "fresh_cells": 32819,
+   "graph": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "identity": "9a8fdb97ee62e749417e1c158c65cd823009d4eb51a197a8f5adac88565f6bfa",
+   "boundary": [
+    38,
+    30550,
+    61100,
+    36039,
+    413,
+    35626,
+    413,
+    2049,
+    413
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "max_chain": 11,
+   "wins": 413,
+   "initial_row_decodes_saved": 25474,
+   "net_entry_after_rebuild": -5489,
+   "ms": [
+    1225.478334,
+    1175.424417,
+    1184.0821669999998,
+    1208.1032089999999,
+    1210.511125,
+    1214.088792,
+    1178.561792,
+    1181.8127080000002
+   ],
+   "median_ms": 1196.0926879999997
+  },
+  "delta": {
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "direct": 32721,
+   "fresh_cells": 32819,
+   "graph": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "identity": "9a8fdb97ee62e749417e1c158c65cd823009d4eb51a197a8f5adac88565f6bfa",
+   "boundary": [
+    1,
+    2154,
+    60858,
+    35797,
+    413,
+    35384,
+    413,
+    2049,
+    413
+   ],
+   "delta": [
+    1120,
+    17301,
+    35797,
+    1012,
+    72
+   ],
+   "max_chain": 11,
+   "wins": 413,
+   "initial_row_decodes_saved": 25474,
+   "net_entry_after_rebuild": 22907,
+   "ms": [
+    1204.9485829999999,
+    1255.6562920000001,
+    1188.100583,
+    1206.0379169999999,
+    1185.580417,
+    1154.630292,
+    1190.3091670000001,
+    1240.544458
+   ],
+   "median_ms": 1197.6288749999999
+  },
+  "vanilla": {
+   "rhs": 41319,
+   "graph": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "ms": [
+    126.016084,
+    127.936208,
+    118.101416,
+    117.655542,
+    116.56750000000001,
+    116.400791,
+    113.14141599999999,
+    125.501625
+   ],
+   "median_ms": 117.878479
+  }
+ },
+ "jacobi-1d/1709": {
+  "leaf": {
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "direct": 32721,
+   "fresh_cells": 32819,
+   "graph": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "identity": "3f12bc026f20bc5fe29774c6b30345799cfb3795d6becdc7ed31d64dfb8d83bd",
+   "boundary": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "max_chain": 11,
+   "wins": 413,
+   "initial_row_decodes_saved": 0,
+   "net_entry_after_rebuild": 0,
+   "ms": [
+    1182.834625,
+    1164.11525,
+    1182.822958,
+    1092.8510840000001,
+    1106.350666,
+    1102.595209,
+    1114.660958,
+    1113.652708
+   ],
+   "median_ms": 1114.156833
+  },
+  "inline": {
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "direct": 32721,
+   "fresh_cells": 32819,
+   "graph": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "identity": "3f12bc026f20bc5fe29774c6b30345799cfb3795d6becdc7ed31d64dfb8d83bd",
+   "boundary": [
+    38,
+    30550,
+    61100,
+    36039,
+    413,
+    35626,
+    413,
+    2049,
+    413
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "max_chain": 11,
+   "wins": 413,
+   "initial_row_decodes_saved": 25474,
+   "net_entry_after_rebuild": -5489,
+   "ms": [
+    1166.1558750000002,
+    1157.868875,
+    1150.778791,
+    1097.406166,
+    1105.963708,
+    1094.431958,
+    1097.8114580000001,
+    1111.814625
+   ],
+   "median_ms": 1108.8891665
+  },
+  "delta": {
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "direct": 32721,
+   "fresh_cells": 32819,
+   "graph": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "identity": "3f12bc026f20bc5fe29774c6b30345799cfb3795d6becdc7ed31d64dfb8d83bd",
+   "boundary": [
+    1,
+    2154,
+    60858,
+    35797,
+    413,
+    35384,
+    413,
+    2049,
+    413
+   ],
+   "delta": [
+    1120,
+    17301,
+    35797,
+    1012,
+    72
+   ],
+   "max_chain": 11,
+   "wins": 413,
+   "initial_row_decodes_saved": 25474,
+   "net_entry_after_rebuild": 22907,
+   "ms": [
+    1167.5141250000001,
+    1140.421458,
+    1155.322417,
+    1124.510208,
+    1155.787417,
+    1134.5431669999998,
+    1105.877166,
+    1130.3985
+   ],
+   "median_ms": 1137.4823124999998
+  },
+  "vanilla": {
+   "rhs": 41319,
+   "graph": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "ms": [
+    115.617458,
+    113.498875,
+    119.811,
+    116.574458,
+    108.268709,
+    105.61058299999999,
+    108.48575000000001,
+    112.09725
+   ],
+   "median_ms": 112.7980625
+  }
+ }
+}

@@ -29,3 +29,13 @@ def check(path):
 if __name__=='__main__':
     check(HERE/'receipts.json')
     check(HERE/'incremental.json')
+    held=json.loads((HERE/'jacobi.json').read_bytes())
+    assert set(held)=={'jacobi-1d/1703','jacobi-1d/1709'}
+    for arms in held.values():
+        for mode in ('leaf','inline','delta'):
+            arm=arms[mode]
+            assert all(arm['checks'].values()) and arm['identity']==arms['leaf']['identity']
+            assert arm['rhs']==arm['neural_rhs']==arms['vanilla']['rhs']==41319
+            assert arm['direct']*100>=arm['fresh_cells']*98
+            assert arm['wins']==413 and arm['max_chain']==11 and len(arm['ms'])==8
+        assert arms['delta']['net_entry_after_rebuild']==22907
