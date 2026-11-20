@@ -73,3 +73,18 @@ python "$dir/bench.py" "$e/NEW-page-reader/session" "$e" "$e/NEW-page-reader-com
 python "$dir/bench.py" "$e/NEW-page-reader/session" "$e" "$e/NEW-page-tail-comparison" --arms production tail receipt tail-receipt borrowed-receipt compact-issued
 python "$dir/verify.py"
 ```
+
+## Native phase attribution on the two larger graphs
+
+The rule-level timers bracket parent-frame preparation, neural issue/sealing and exact validation through the verifier’s return. These instrumented times use three separate resident samples. Full-pass timings in the tables above determine admission. [Recorded phase samples](phases.json) · [Native timer driver](phases.py)
+
+| Source / arm | Full inference (ms) | Frame preparation | Multi-parent issue/seal | Multi-parent exact validation |
+|---|---:|---:|---:|---:|
+| jacobi-1d / production | 248.12 | 4.10 | 79.71 | 36.21 |
+| jacobi-1d / compact | 239.22 | 3.89 | 77.87 | 32.10 |
+| jacobi-1d / compact-issued | 245.23 | 4.19 | 78.85 | 34.42 |
+| conjugate-gradient / production | 1018.71 | 11.86 | 371.61 | 152.43 |
+| conjugate-gradient / compact | 1030.55 | 12.53 | 377.34 | 147.59 |
+| conjugate-gradient / compact-issued | 1045.58 | 12.37 | 378.00 | 156.61 |
+
+In these profiles multi-parent issuance consumes more time than exact page validation. A faster exact page reader alone has limited leverage on the full pass. The remaining time includes single-parent execution and graph operations. The phase subtraction does not distinguish those costs.

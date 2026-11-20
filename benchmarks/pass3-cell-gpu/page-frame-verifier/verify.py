@@ -34,3 +34,9 @@ def check(path):
 
 if __name__=='__main__':
     for f in ('frames.json','seals.json','released.json','loans.json','compact.json'):check(HERE/f)
+
+    profiles=json.loads((HERE/'phases.json').read_bytes())
+    assert set(profiles)=={'jacobi-1d','conjugate-gradient'}
+    for arms in profiles.values():
+        for arm in arms.values():
+            ms=arm['measured_ms'];assert len(arm['samples'])==3 and 0<sum(ms[1:])<ms[0]
