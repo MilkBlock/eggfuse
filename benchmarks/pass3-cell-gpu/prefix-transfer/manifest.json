@@ -1,0 +1,24 @@
+{
+ "3mm": {
+  "source": "e390e27aa13096bbcac54df8a42fed18df9145a605f677f645b8aaed40bd0f4b",
+  "program": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+  "seed": 1703,
+  "parts": {
+   "inputs/common-prefix.egg": "288a595607759753c23ad6dd9a54f34729070b21e957296db7acce20dca88902",
+   "inputs/3mm.eggpart": "f5e2406d086fdfbd3e63ee5667007917b5e52ec04debf34282caf2c823bf8462",
+   "inputs/common-suffix.egg": "8bcaf87f9f90e2272cafdcb7041e9fcea339120ad917eb102c231590e66f74d2"
+  },
+  "plans": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc"
+ },
+ "deriche": {
+  "source": "b93d070e55594487e9caabf7c0d646233745368aa235f5dc29c338eacf5071c6",
+  "program": "78e06bc3718067d2214d5d1eecf4676139bdd1b678e3bcb2a22464f0c50700ab",
+  "seed": 1703,
+  "parts": {
+   "inputs/common-prefix.egg": "288a595607759753c23ad6dd9a54f34729070b21e957296db7acce20dca88902",
+   "inputs/deriche.eggpart": "804a8ba208ccc6a094ead4466998b21c039115b8bc2672a594f813f4120dc5f8",
+   "inputs/common-suffix.egg": "8bcaf87f9f90e2272cafdcb7041e9fcea339120ad917eb102c231590e66f74d2"
+  },
+  "plans": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc"
+ }
+}
