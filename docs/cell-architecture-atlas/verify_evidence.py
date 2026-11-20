@@ -32,13 +32,13 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==55
+    assert len(plates)==56
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and all(p[k] for k in ('q','arms','fix','measure','note','src'))
         if i<=37:
             assert p['status'].startswith(('已测','实跑'))
         else:
-            if i in (38,39,40,41,46,55):assert p['status'].startswith('已测')
+            if i in (38,39,40,41,46,55,56):assert p['status'].startswith('已测')
             else:assert p['status']=='待验证 · 实验设计'
             arms=p['diagram']
             assert len(arms)>=2 and len({a['title'] for a in arms})==len(arms)
@@ -204,7 +204,24 @@ def check():
             assert a['index_bytes']<arms['full']['index_bytes'] and a['maintenance'][3]<=32
             assert sum(t['saved_clean_rows'] for t in strata[n][k].values())==a['price']['clean_rows_saved']
             assert arms['hindsight']['price']['priced_work']>=a['price']['priced_work']
-    print('Verified 43 measured plates, 12 pending designs, and all diagrams.')
+    rec=folder.parent/'recurrent-generator'
+    measured=json.loads((rec/'results.json').read_text())
+    isolated=json.loads((rec/'isolated.json').read_text())
+    parity=json.loads((rec/'parity.json').read_text())
+    ordinals=json.loads((rec/'provenance.json').read_text())
+    for case in ('sum-bits','dot-product','gemm-bias-relu','stable-argmax'):
+        assert isolated[case]['neural_only']['first_schedule_or_count_difference']==1
+        assert isolated[case]['neural_only']['actual_rhs']==0
+        for seed in SEEDS:
+            key=f'{case}/{seed}';arms=measured[key];a=arms['intact'];b=arms['positive-only']
+            assert a['won']==ordinals[key]['unique_rhs_ordinals']>0
+            assert a['won']+a['exact_fallback']==a['rhs'] and len(a['ms'])==10
+            assert all(t['semantic_exact'] for t in arms.values())
+            assert parity[key]['intact']['discrete_differences']==0 and parity[key]['intact']['max_latent_difference']<.002
+            assert b['changed_discrete_vs_intact']==0 and arms['zero-latent']['changed_discrete_vs_intact']>0
+            assert a['work']['exact_seeds_skipped']==a['accepted'] and b['work']['exact_seeds_skipped']==0
+            assert arms['shadow']['won']==arms['all-null']['raw']==0
+    print('Verified 44 measured plates, 12 pending designs, and neural versus exact attribution.')
 
 
 if __name__=='__main__':check()

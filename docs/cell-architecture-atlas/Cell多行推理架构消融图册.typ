@@ -33,14 +33,14 @@
 #v(2mm)
 #align(center,image("figures/00-overview.svg",width:92%))
 #v(1mm)
-#small[图 00　现行 PyTorch 路径。离线计划提供编译器确定的端口接线；make 预测绑定，finish 直接读取 GPU 上的 Pair。独立 CPU 审计在设备输出完成后核对来源与整图覆盖。]
+#small[图 00　早期受控两规则 PyTorch 原型。离线计划提供编译器确定的端口接线；make 预测绑定，finish 直接读取 GPU 上的 Pair。独立 CPU 审计核对来源与覆盖。完整 Pass 3 的递归提案与补查见图 56。]
 #v(2mm)
 #grid(columns:(1fr,1fr),gutter:9mm,
-  card([研究问题],[同一张图的多个 row 能否同时生成不同的合法绑定，保留正确的跨行引用，并让下一 Run 直接使用这些结果？]),
-  card([证据起点],[开放父引用时，静态投影加训练期字段头在两个种子下通过 65、67 张非空碰撞图，共 512 张。这个基线给分工留下了很大的改进空间。]))
+  card([研究问题],[网络能否从上一 Run 生成的 token 继续提出 Cell，并以少量验证关闭真实义务，使整轮加速？]),
+  card([现有边界],[图 56 的 sum-bits 共 7,265 个 RHS，其中 58／59 个来自两种子递归提案，其余来自精确补查。关闭补查后，Run 1 即分叉。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–55 含后续实测和待验证设计，见第 41 页。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–56 含后续实验。图 56 单列真实 Pass 3 的神经提案和精确补查。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -92,7 +92,7 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
 #for (i,p) in plates.enumerate() {
   pagebreak()
   if p.id == "38-repair-bake" {
-    kicker[讨论回顾   /   图 38–55 的实验动机]
+    kicker[讨论回顾   /   图 38–56 的实验动机]
     v(2mm)
     title(guide.title)
     v(2mm)
@@ -105,7 +105,7 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
     table(columns:(37mm,24mm,1fr),stroke:(bottom:0.45pt+hair),inset:(x:4pt,y:3.1pt),
       ..guide.order.map(r => (text(size:9pt,weight:"bold",r.at(0)),text(size:9pt,fill:teal,r.at(1)),text(size:9pt,r.at(2)))).flatten())
     v(1fr)
-    small[本节数字来自既有实验 S8、S10、S12、S24、S28–S30。图 38–41、46、55 已有实测，其余待测图单列。]
+    small[本节数字来自既有实验 S8、S10、S12、S24、S28–S30。图 38–41、46、55–56 已有实测，其余待测图单列。]
     pagebreak()
     kicker[实验协议   /   共享的正确性和计时口径]
     v(2mm)
@@ -224,10 +224,11 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S32","图 38–40、55 成本消融","benchmarks/pass3-cell-gpu/co-repair/README.md")
 #src("S33","图 46 输入编码与宽度","benchmarks/pass3-cell-gpu/key-signals/README.md")
 #src("S34","图 41 固定空间的选择","benchmarks/pass3-cell-gpu/region-admission/README.md")
+#src("S35","图 56 递归生成与验证","benchmarks/pass3-cell-gpu/recurrent-generator/README.md")
 #v(5mm)
 #linebar()
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
 #text(size:9pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。#link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文]。 *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。#link("https://arxiv.org/abs/1705.08926")[论文原文]。]
 #v(1fr)
-#small[版次 21　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
+#small[版次 22　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]

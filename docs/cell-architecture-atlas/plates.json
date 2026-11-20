@@ -2056,5 +2056,104 @@
         ]
       }
     ]
+  },
+  {
+    "id": "56-recurrent-verifier",
+    "section": "递归神经生成器与验证器",
+    "title": "多少个真实 RHS 来自上一轮 token 驱动的网络？",
+    "status": "已测 · 神经提案与精确补查分别计账",
+    "q": "冻结同一组神经权重。屏蔽生成的 latent 会改变哪些提案？验证器关闭这些入口以后，精确搜索实际少做几步？",
+    "arms": "a　精确 Metal 搜索。b　两行网络读上一 Run 的 token，提出叶模板与锚点，逐项验真，保留原搜索。c　用相同提案精确关闭已验入口。b、c 分别屏蔽 latent，另作换行、弃权与关闭补查对照。",
+    "fix": "4 个家族训练，两个种子，2 行各 1 个提案槽；每个可用叶模板最多读取 8 个未经匹配筛选的类型相符行。在线无参考轨迹，审计逐个核实实际提交序号、源规则和父引用。",
+    "measure": "sum-bits 两种子神经提交 58／59 项，总 RHS 7,265。种子 1703 屏蔽 latent 改变 20 个提案，提交仍为 58 项；关闭入口省 59 步，验证用 99 步。常驻精确／联合为 863／976 ms。",
+    "note": "关闭精确补查后，四个负载在 Run 1 均分叉，产生 0 个 RHS。全调度验收依赖精确补查。神经生成器完整覆盖 Pass 3 与端到端加速均未达成。",
+    "src": "S35",
+    "diagram": [
+      {
+        "title": "Exact baseline",
+        "layers": [
+          [
+            [
+              "s",
+              "scheduled graph"
+            ]
+          ],
+          [
+            [
+              "s",
+              "Metal search"
+            ]
+          ],
+          [
+            [
+              "w",
+              "ordered RHS"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Positive verifier",
+        "layers": [
+          [
+            [
+              "n",
+              "previous token"
+            ]
+          ],
+          [
+            [
+              "n",
+              "leaf + anchor"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify"
+            ],
+            [
+              "s",
+              "exact search"
+            ]
+          ],
+          [
+            [
+              "w",
+              "dedup + commit"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Coverage verifier",
+        "layers": [
+          [
+            [
+              "n",
+              "same proposals"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify + close"
+            ]
+          ],
+          [
+            [
+              "s",
+              "search remainder"
+            ]
+          ],
+          [
+            [
+              "w",
+              "ordered commit"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
