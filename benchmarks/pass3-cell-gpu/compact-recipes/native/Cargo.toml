@@ -1,0 +1,15 @@
+[package]
+name = "eggfuse-vanilla-benchmark"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[features]
+audit = ["eggfuse-cell-runtime/slot-transfer-audit"]
+
+[dependencies]
+eggfuse-cell-runtime = { path = "../../../../engine/cell-runtime" }
+serde_json = "1"
+sha2 = "0.10"
+
+[workspace]

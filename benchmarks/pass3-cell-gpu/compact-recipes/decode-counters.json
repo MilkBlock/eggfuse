@@ -1,0 +1,299 @@
+{
+ "sum-bits/1703": {
+  "full": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 19551520,
+   "root_row_decodes": 15371,
+   "root_header_checks": 0,
+   "owned_slot_transfers": 0,
+   "raw": "17974609851673891035",
+   "emitted": [
+    48529,
+    21443
+   ],
+   "wire_hash": "6556585625515805956",
+   "commits": "468b1b567c7d75ab9e483d4f03c34fda3262998e13fcaf9c837f75cd94e58cd5",
+   "physical": "7bdc27b668676904b7bfbd9b2992b33ef2d65d44fcb8d1ff21d11e658690ac8c",
+   "multi": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "children": "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "wrong-template": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   }
+  },
+  "checked_slots": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 0,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "17974609851673891035",
+   "emitted": [
+    48529,
+    21443
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "468b1b567c7d75ab9e483d4f03c34fda3262998e13fcaf9c837f75cd94e58cd5",
+   "physical": "7bdc27b668676904b7bfbd9b2992b33ef2d65d44fcb8d1ff21d11e658690ac8c",
+   "multi": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "children": "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "wrong-template": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   }
+  },
+  "vanilla": {
+   "rhs": 7265,
+   "runs": 1428,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  }
+ },
+ "dot-product/1703": {
+  "full": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "fresh": 5682,
+   "direct_cells": 5666,
+   "source_pass_rhs": 6704,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "wire_bytes": 20580800,
+   "root_row_decodes": 15477,
+   "root_header_checks": 0,
+   "owned_slot_transfers": 0,
+   "raw": "17001018198326840834",
+   "emitted": [
+    47313,
+    21210
+   ],
+   "wire_hash": "15440836988260394282",
+   "commits": "ddaa57f7bef1389d6820342a24fa1ebabb94d815539676977ac25da92a2e3d70",
+   "physical": "a3d40f64a5a983800676a3f5555f5cf4216dffeb26f7072680dbb92eca4cdb7d",
+   "multi": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "children": "41c0095ccc47032e7a778c97ee8a6f1340b788e468ffe36c7fb108be91bfa579",
+   "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "rejected": 0,
+   "root_allocated": 5538,
+   "applied": 6704,
+   "wrong-template": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   }
+  },
+  "checked_slots": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "fresh": 5682,
+   "direct_cells": 5666,
+   "source_pass_rhs": 6704,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "wire_bytes": 0,
+   "root_row_decodes": 0,
+   "root_header_checks": 48051,
+   "owned_slot_transfers": 6704,
+   "raw": "17001018198326840834",
+   "emitted": [
+    47313,
+    21210
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "ddaa57f7bef1389d6820342a24fa1ebabb94d815539676977ac25da92a2e3d70",
+   "physical": "a3d40f64a5a983800676a3f5555f5cf4216dffeb26f7072680dbb92eca4cdb7d",
+   "multi": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "children": "41c0095ccc47032e7a778c97ee8a6f1340b788e468ffe36c7fb108be91bfa579",
+   "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "rejected": 0,
+   "root_allocated": 5538,
+   "applied": 6704,
+   "wrong-template": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   }
+  },
+  "vanilla": {
+   "rhs": 6704,
+   "runs": 1535,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  }
+ },
+ "jacobi-1d/1703": {
+  "full": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "fresh": 32819,
+   "direct_cells": 32721,
+   "source_pass_rhs": 41319,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "wire_bytes": 209945952,
+   "root_row_decodes": 93990,
+   "root_header_checks": 0,
+   "owned_slot_transfers": 0,
+   "raw": "6552132521050014800",
+   "emitted": [
+    440274,
+    221274
+   ],
+   "wire_hash": "12956622074730661069",
+   "commits": "20c2ca071aef241b32e199679da945f8e0a5a91bd39c01ba1272e284ba6a6a47",
+   "physical": "a9d1c26fd25aacd4fac3cf0957755fcefd4261594e68ad9c6872dfbd2557b5eb",
+   "multi": "f59b99082db8a9ef58c3cf53aeb80e735e7ae06b2047f0659b6f606e0fb75be9",
+   "children": "1eb1e36cb1af645b9248161ee297a643972d341f3d3a8117a2ece98619dc7977",
+   "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+   "rejected": 0,
+   "root_allocated": 32316,
+   "applied": 41319,
+   "wrong-template": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   }
+  },
+  "checked_slots": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "fresh": 32819,
+   "direct_cells": 32721,
+   "source_pass_rhs": 41319,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "wire_bytes": 0,
+   "root_row_decodes": 0,
+   "root_header_checks": 288077,
+   "owned_slot_transfers": 41319,
+   "raw": "6552132521050014800",
+   "emitted": [
+    440274,
+    221274
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "20c2ca071aef241b32e199679da945f8e0a5a91bd39c01ba1272e284ba6a6a47",
+   "physical": "a9d1c26fd25aacd4fac3cf0957755fcefd4261594e68ad9c6872dfbd2557b5eb",
+   "multi": "f59b99082db8a9ef58c3cf53aeb80e735e7ae06b2047f0659b6f606e0fb75be9",
+   "children": "1eb1e36cb1af645b9248161ee297a643972d341f3d3a8117a2ece98619dc7977",
+   "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+   "rejected": 0,
+   "root_allocated": 32316,
+   "applied": 41319,
+   "wrong-template": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   }
+  },
+  "vanilla": {
+   "rhs": 41319,
+   "runs": 1990,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5"
+  }
+ }
+}

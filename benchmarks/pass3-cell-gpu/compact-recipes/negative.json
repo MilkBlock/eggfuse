@@ -1,0 +1,186 @@
+{
+ "sum-bits/1703": {
+  "full": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 19551520,
+   "raw": "17974609851673891035",
+   "emitted": [
+    48529,
+    21443
+   ],
+   "wire_hash": "6556585625515805956",
+   "commits": "468b1b567c7d75ab9e483d4f03c34fda3262998e13fcaf9c837f75cd94e58cd5",
+   "physical": "7bdc27b668676904b7bfbd9b2992b33ef2d65d44fcb8d1ff21d11e658690ac8c",
+   "multi": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "children": "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "wrong-template": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    87.701708,
+    85.3955,
+    82.38008300000001,
+    81.57845800000001,
+    101.83200000000001,
+    85.71158299999999,
+    78.19404100000001,
+    87.025542
+   ],
+   "median_ms": 85.5535415,
+   "speedup": 0.2592552933650327
+  },
+  "shared_wire": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 6924704,
+   "raw": "17974609851673891035",
+   "emitted": [
+    48529,
+    21443
+   ],
+   "wire_hash": "12332894668680516350",
+   "commits": "468b1b567c7d75ab9e483d4f03c34fda3262998e13fcaf9c837f75cd94e58cd5",
+   "physical": "7bdc27b668676904b7bfbd9b2992b33ef2d65d44fcb8d1ff21d11e658690ac8c",
+   "multi": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "children": "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "wrong-template": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    84.705334,
+    79.415291,
+    83.678208,
+    81.480416,
+    82.686583,
+    83.85925,
+    80.277417,
+    81.29870799999999
+   ],
+   "median_ms": 82.0834995,
+   "speedup": 0.27021519105676045
+  },
+  "resident": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 0,
+   "raw": "17974609851673891035",
+   "emitted": [
+    48529,
+    21443
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "468b1b567c7d75ab9e483d4f03c34fda3262998e13fcaf9c837f75cd94e58cd5",
+   "physical": "7bdc27b668676904b7bfbd9b2992b33ef2d65d44fcb8d1ff21d11e658690ac8c",
+   "multi": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "children": "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "wrong-template": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    83.96387499999999,
+    85.64445900000001,
+    85.155834,
+    77.692709,
+    79.01204100000001,
+    81.890708,
+    82.37587500000001,
+    81.387084
+   ],
+   "median_ms": 82.13329150000001,
+   "speedup": 0.27005137740035656
+  },
+  "vanilla": {
+   "rhs": 7265,
+   "runs": 1428,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "ms": [
+    23.047667,
+    22.604833000000003,
+    21.652041,
+    21.263416,
+    21.755584000000002,
+    23.714540999999997,
+    20.618083,
+    25.175375
+   ],
+   "median_ms": 22.180208500000003,
+   "speedup": 1.0
+  }
+ }
+}

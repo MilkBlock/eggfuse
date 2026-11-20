@@ -1,0 +1,1106 @@
+{
+ "sum-bits/1703": {
+  "full": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 19551520,
+   "raw": "17974609851673891035",
+   "emitted": [
+    48529,
+    21443
+   ],
+   "wire_hash": "6556585625515805956",
+   "commits": "468b1b567c7d75ab9e483d4f03c34fda3262998e13fcaf9c837f75cd94e58cd5",
+   "physical": "7bdc27b668676904b7bfbd9b2992b33ef2d65d44fcb8d1ff21d11e658690ac8c",
+   "multi": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "children": "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "wrong-template": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    85.14833300000001,
+    83.779583,
+    87.297084,
+    86.358834,
+    84.45750000000001,
+    87.658584,
+    85.90337500000001,
+    90.187625
+   ],
+   "median_ms": 86.1311045,
+   "speedup": 0.27213286229250666
+  },
+  "resident": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 0,
+   "raw": "17974609851673891035",
+   "emitted": [
+    48529,
+    21443
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "468b1b567c7d75ab9e483d4f03c34fda3262998e13fcaf9c837f75cd94e58cd5",
+   "physical": "7bdc27b668676904b7bfbd9b2992b33ef2d65d44fcb8d1ff21d11e658690ac8c",
+   "multi": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "children": "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "wrong-template": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    80.938208,
+    83.27404200000001,
+    81.430167,
+    82.841791,
+    84.14141699999999,
+    84.33024999999999,
+    82.557834,
+    81.583958
+   ],
+   "median_ms": 82.69981250000001,
+   "speedup": 0.28342390740003187
+  },
+  "checked_slots": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 0,
+   "raw": "17974609851673891035",
+   "emitted": [
+    48529,
+    21443
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "468b1b567c7d75ab9e483d4f03c34fda3262998e13fcaf9c837f75cd94e58cd5",
+   "physical": "7bdc27b668676904b7bfbd9b2992b33ef2d65d44fcb8d1ff21d11e658690ac8c",
+   "multi": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "children": "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "wrong-template": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    82.45058399999999,
+    81.842208,
+    83.042,
+    83.600583,
+    82.44345799999999,
+    77.793667,
+    81.99075,
+    79.177083
+   ],
+   "median_ms": 82.217104,
+   "speedup": 0.2850879301221799
+  },
+  "vanilla": {
+   "rhs": 7265,
+   "runs": 1428,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "ms": [
+    24.754083,
+    21.506042,
+    24.582542,
+    22.187042,
+    23.367416,
+    23.510792,
+    24.097167,
+    22.119917
+   ],
+   "median_ms": 23.439104,
+   "speedup": 1.0
+  }
+ },
+ "sum-bits/1709": {
+  "full": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 19514144,
+   "raw": "11307008266237054804",
+   "emitted": [
+    48529,
+    21342
+   ],
+   "wire_hash": "2394024724257658213",
+   "commits": "1d0a972ff798b7fb2941f148c94ea81bb639789e47d00c32b63478c9b1b20d38",
+   "physical": "0a7f678d7abd4d113107408c6bee02df53b79a09d76267fbf2802a9e60a25ed0",
+   "multi": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "children": "11e823131597ab4309d4309ea6978d824ec50ae9875855d736f13cdc79b5563e",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "wrong-template": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    87.763708,
+    85.545709,
+    83.252208,
+    83.543708,
+    79.214375,
+    84.76050000000001,
+    80.133709,
+    78.846917
+   ],
+   "median_ms": 83.39795799999999,
+   "speedup": 0.26415465112467146
+  },
+  "resident": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 0,
+   "raw": "11307008266237054804",
+   "emitted": [
+    48529,
+    21342
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "1d0a972ff798b7fb2941f148c94ea81bb639789e47d00c32b63478c9b1b20d38",
+   "physical": "0a7f678d7abd4d113107408c6bee02df53b79a09d76267fbf2802a9e60a25ed0",
+   "multi": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "children": "11e823131597ab4309d4309ea6978d824ec50ae9875855d736f13cdc79b5563e",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "wrong-template": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    95.04175,
+    80.409666,
+    77.609708,
+    82.465375,
+    77.20379199999999,
+    78.30687499999999,
+    74.15691600000001,
+    74.94983400000001
+   ],
+   "median_ms": 77.9582915,
+   "speedup": 0.28258647125431163
+  },
+  "checked_slots": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 0,
+   "raw": "11307008266237054804",
+   "emitted": [
+    48529,
+    21342
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "1d0a972ff798b7fb2941f148c94ea81bb639789e47d00c32b63478c9b1b20d38",
+   "physical": "0a7f678d7abd4d113107408c6bee02df53b79a09d76267fbf2802a9e60a25ed0",
+   "multi": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+   "children": "11e823131597ab4309d4309ea6978d824ec50ae9875855d736f13cdc79b5563e",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "wrong-template": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 7265,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    81.768375,
+    79.501667,
+    79.322334,
+    75.24749999999999,
+    80.54908400000001,
+    78.544583,
+    77.426167,
+    73.964292
+   ],
+   "median_ms": 78.9334585,
+   "speedup": 0.2790953154548524
+  },
+  "vanilla": {
+   "rhs": 7265,
+   "runs": 1428,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "ms": [
+    25.053583,
+    24.056583999999997,
+    21.596542,
+    23.208709000000002,
+    22.3485,
+    20.597959,
+    21.711417,
+    21.462041000000003
+   ],
+   "median_ms": 22.0299585,
+   "speedup": 1.0
+  }
+ },
+ "dot-product/1703": {
+  "full": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "fresh": 5682,
+   "direct_cells": 5666,
+   "source_pass_rhs": 6704,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "wire_bytes": 20580800,
+   "raw": "17001018198326840834",
+   "emitted": [
+    47313,
+    21210
+   ],
+   "wire_hash": "15440836988260394282",
+   "commits": "ddaa57f7bef1389d6820342a24fa1ebabb94d815539676977ac25da92a2e3d70",
+   "physical": "a3d40f64a5a983800676a3f5555f5cf4216dffeb26f7072680dbb92eca4cdb7d",
+   "multi": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "children": "41c0095ccc47032e7a778c97ee8a6f1340b788e468ffe36c7fb108be91bfa579",
+   "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "rejected": 0,
+   "root_allocated": 5538,
+   "applied": 6704,
+   "wrong-template": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    87.736833,
+    85.811417,
+    78.349416,
+    87.433125,
+    85.47304199999999,
+    82.449417,
+    81.813542,
+    81.443292
+   ],
+   "median_ms": 83.9612295,
+   "speedup": 0.2269097905480291
+  },
+  "resident": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "fresh": 5682,
+   "direct_cells": 5666,
+   "source_pass_rhs": 6704,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "wire_bytes": 0,
+   "raw": "17001018198326840834",
+   "emitted": [
+    47313,
+    21210
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "ddaa57f7bef1389d6820342a24fa1ebabb94d815539676977ac25da92a2e3d70",
+   "physical": "a3d40f64a5a983800676a3f5555f5cf4216dffeb26f7072680dbb92eca4cdb7d",
+   "multi": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "children": "41c0095ccc47032e7a778c97ee8a6f1340b788e468ffe36c7fb108be91bfa579",
+   "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "rejected": 0,
+   "root_allocated": 5538,
+   "applied": 6704,
+   "wrong-template": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    80.317541,
+    75.800542,
+    74.628458,
+    73.95908299999999,
+    80.43425,
+    77.676583,
+    76.126,
+    78.165667
+   ],
+   "median_ms": 76.9012915,
+   "speedup": 0.24774128793402647
+  },
+  "checked_slots": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "fresh": 5682,
+   "direct_cells": 5666,
+   "source_pass_rhs": 6704,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "wire_bytes": 0,
+   "raw": "17001018198326840834",
+   "emitted": [
+    47313,
+    21210
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "ddaa57f7bef1389d6820342a24fa1ebabb94d815539676977ac25da92a2e3d70",
+   "physical": "a3d40f64a5a983800676a3f5555f5cf4216dffeb26f7072680dbb92eca4cdb7d",
+   "multi": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "children": "41c0095ccc47032e7a778c97ee8a6f1340b788e468ffe36c7fb108be91bfa579",
+   "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "rejected": 0,
+   "root_allocated": 5538,
+   "applied": 6704,
+   "wrong-template": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    82.753334,
+    77.764291,
+    74.42775,
+    72.616708,
+    77.0125,
+    76.94354100000001,
+    78.72850000000001,
+    74.58854199999999
+   ],
+   "median_ms": 76.97802050000001,
+   "speedup": 0.24749434807822834
+  },
+  "vanilla": {
+   "rhs": 6704,
+   "runs": 1535,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "ms": [
+    19.060875000000003,
+    19.789832999999998,
+    18.202416999999997,
+    18.733875,
+    20.113958,
+    19.042375,
+    20.151,
+    17.753666000000003
+   ],
+   "median_ms": 19.051625,
+   "speedup": 1.0
+  }
+ },
+ "dot-product/1709": {
+  "full": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "fresh": 5682,
+   "direct_cells": 5666,
+   "source_pass_rhs": 6704,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "wire_bytes": 20525056,
+   "raw": "116788740914070498",
+   "emitted": [
+    47313,
+    21067
+   ],
+   "wire_hash": "2939164053744296597",
+   "commits": "e2820eb41cadfbe262c50e31b0caaf5af83f3dad7f7babed1efe032b6e604956",
+   "physical": "eaff48d1b15b2e3d8fa908c5fabb4f806c88e5626d297f580a4386dcc25068b4",
+   "multi": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "children": "1e4852df4e17f61c3096ab03480eb4a7e10707462726c5944d29a2d058ae2738",
+   "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "rejected": 0,
+   "root_allocated": 5538,
+   "applied": 6704,
+   "wrong-template": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    88.663708,
+    83.559667,
+    85.009875,
+    83.474,
+    84.06583300000001,
+    80.265292,
+    86.649208,
+    81.873625
+   ],
+   "median_ms": 83.81275000000001,
+   "speedup": 0.2288683225404249
+  },
+  "resident": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "fresh": 5682,
+   "direct_cells": 5666,
+   "source_pass_rhs": 6704,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "wire_bytes": 0,
+   "raw": "116788740914070498",
+   "emitted": [
+    47313,
+    21067
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "e2820eb41cadfbe262c50e31b0caaf5af83f3dad7f7babed1efe032b6e604956",
+   "physical": "eaff48d1b15b2e3d8fa908c5fabb4f806c88e5626d297f580a4386dcc25068b4",
+   "multi": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "children": "1e4852df4e17f61c3096ab03480eb4a7e10707462726c5944d29a2d058ae2738",
+   "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "rejected": 0,
+   "root_allocated": 5538,
+   "applied": 6704,
+   "wrong-template": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    95.704084,
+    76.759042,
+    79.035125,
+    76.07320800000001,
+    76.61,
+    77.53625,
+    77.261041,
+    77.894583
+   ],
+   "median_ms": 77.3986455,
+   "speedup": 0.2478348732859931
+  },
+  "checked_slots": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "fresh": 5682,
+   "direct_cells": 5666,
+   "source_pass_rhs": 6704,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "wire_bytes": 0,
+   "raw": "116788740914070498",
+   "emitted": [
+    47313,
+    21067
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "e2820eb41cadfbe262c50e31b0caaf5af83f3dad7f7babed1efe032b6e604956",
+   "physical": "eaff48d1b15b2e3d8fa908c5fabb4f806c88e5626d297f580a4386dcc25068b4",
+   "multi": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+   "children": "1e4852df4e17f61c3096ab03480eb4a7e10707462726c5944d29a2d058ae2738",
+   "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+   "rejected": 0,
+   "root_allocated": 5538,
+   "applied": 6704,
+   "wrong-template": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 6704,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    79.681292,
+    80.97720899999999,
+    76.661958,
+    80.3625,
+    77.021417,
+    80.148334,
+    80.67825,
+    76.9545
+   ],
+   "median_ms": 79.91481300000001,
+   "speedup": 0.24003163843979713
+  },
+  "vanilla": {
+   "rhs": 6704,
+   "runs": 1535,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "ms": [
+    21.347916,
+    18.560875,
+    19.7045,
+    17.377708,
+    18.859667,
+    18.340833,
+    21.033125,
+    19.5045
+   ],
+   "median_ms": 19.1820835,
+   "speedup": 1.0
+  }
+ },
+ "jacobi-1d/1703": {
+  "full": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "fresh": 32819,
+   "direct_cells": 32721,
+   "source_pass_rhs": 41319,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "wire_bytes": 209945952,
+   "raw": "6552132521050014800",
+   "emitted": [
+    440274,
+    221274
+   ],
+   "wire_hash": "12956622074730661069",
+   "commits": "20c2ca071aef241b32e199679da945f8e0a5a91bd39c01ba1272e284ba6a6a47",
+   "physical": "a9d1c26fd25aacd4fac3cf0957755fcefd4261594e68ad9c6872dfbd2557b5eb",
+   "multi": "f59b99082db8a9ef58c3cf53aeb80e735e7ae06b2047f0659b6f606e0fb75be9",
+   "children": "1eb1e36cb1af645b9248161ee297a643972d341f3d3a8117a2ece98619dc7977",
+   "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+   "rejected": 0,
+   "root_allocated": 32316,
+   "applied": 41319,
+   "wrong-template": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    981.919083,
+    967.1695420000001,
+    958.670208,
+    926.075208,
+    947.228791,
+    981.541083,
+    963.500459,
+    900.5822909999999
+   ],
+   "median_ms": 961.0853334999999,
+   "speedup": 0.11688252810071625
+  },
+  "resident": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "fresh": 32819,
+   "direct_cells": 32721,
+   "source_pass_rhs": 41319,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "wire_bytes": 0,
+   "raw": "6552132521050014800",
+   "emitted": [
+    440274,
+    221274
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "20c2ca071aef241b32e199679da945f8e0a5a91bd39c01ba1272e284ba6a6a47",
+   "physical": "a9d1c26fd25aacd4fac3cf0957755fcefd4261594e68ad9c6872dfbd2557b5eb",
+   "multi": "f59b99082db8a9ef58c3cf53aeb80e735e7ae06b2047f0659b6f606e0fb75be9",
+   "children": "1eb1e36cb1af645b9248161ee297a643972d341f3d3a8117a2ece98619dc7977",
+   "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+   "rejected": 0,
+   "root_allocated": 32316,
+   "applied": 41319,
+   "wrong-template": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    922.7056249999999,
+    965.819292,
+    892.8430000000001,
+    868.511209,
+    920.7905,
+    945.8538749999999,
+    953.9773339999999,
+    873.1880829999999
+   ],
+   "median_ms": 921.7480625,
+   "speedup": 0.12187070206073798
+  },
+  "checked_slots": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "fresh": 32819,
+   "direct_cells": 32721,
+   "source_pass_rhs": 41319,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "wire_bytes": 0,
+   "raw": "6552132521050014800",
+   "emitted": [
+    440274,
+    221274
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "20c2ca071aef241b32e199679da945f8e0a5a91bd39c01ba1272e284ba6a6a47",
+   "physical": "a9d1c26fd25aacd4fac3cf0957755fcefd4261594e68ad9c6872dfbd2557b5eb",
+   "multi": "f59b99082db8a9ef58c3cf53aeb80e735e7ae06b2047f0659b6f606e0fb75be9",
+   "children": "1eb1e36cb1af645b9248161ee297a643972d341f3d3a8117a2ece98619dc7977",
+   "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+   "rejected": 0,
+   "root_allocated": 32316,
+   "applied": 41319,
+   "wrong-template": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    964.522084,
+    933.889,
+    942.10625,
+    893.339208,
+    891.4890829999999,
+    937.097,
+    892.297542,
+    877.0705829999999
+   ],
+   "median_ms": 913.614104,
+   "speedup": 0.12295572387529603
+  },
+  "vanilla": {
+   "rhs": 41319,
+   "runs": 1990,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "ms": [
+    110.815792,
+    122.406625,
+    110.845792,
+    112.652542,
+    115.211167,
+    114.041792,
+    112.015625,
+    105.454667
+   ],
+   "median_ms": 112.33408349999999,
+   "speedup": 1.0
+  }
+ },
+ "jacobi-1d/1709": {
+  "full": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "fresh": 32819,
+   "direct_cells": 32721,
+   "source_pass_rhs": 41319,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "wire_bytes": 202230272,
+   "raw": "3056379160161277338",
+   "emitted": [
+    440274,
+    212691
+   ],
+   "wire_hash": "15465767715529890505",
+   "commits": "5bdef0d3d38024a5e325577ddedcf35d2703afaf53199bb9209111bf8e1ce01a",
+   "physical": "213b882430f6572439e35042dc8fbad71dbfd14fbe21ce527adef9d186da7108",
+   "multi": "0728f5becbc2ae361c8d09bc934f5d4c6f6d73cc7e48de581bad72aea686895e",
+   "children": "4bc9de8d9cf444a6767b583f467945619f076de1de3397c95ccb21d803825b5a",
+   "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+   "rejected": 0,
+   "root_allocated": 32316,
+   "applied": 41319,
+   "wrong-template": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    918.4456250000001,
+    935.3767079999999,
+    941.001583,
+    937.850084,
+    960.239417,
+    948.372375,
+    928.136125,
+    937.774417
+   ],
+   "median_ms": 937.8122505,
+   "speedup": 0.11726929717687666
+  },
+  "resident": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "fresh": 32819,
+   "direct_cells": 32721,
+   "source_pass_rhs": 41319,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "wire_bytes": 0,
+   "raw": "3056379160161277338",
+   "emitted": [
+    440274,
+    212691
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "5bdef0d3d38024a5e325577ddedcf35d2703afaf53199bb9209111bf8e1ce01a",
+   "physical": "213b882430f6572439e35042dc8fbad71dbfd14fbe21ce527adef9d186da7108",
+   "multi": "0728f5becbc2ae361c8d09bc934f5d4c6f6d73cc7e48de581bad72aea686895e",
+   "children": "4bc9de8d9cf444a6767b583f467945619f076de1de3397c95ccb21d803825b5a",
+   "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+   "rejected": 0,
+   "root_allocated": 32316,
+   "applied": 41319,
+   "wrong-template": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    922.3190420000001,
+    913.11675,
+    892.235625,
+    888.97825,
+    908.908625,
+    885.928541,
+    897.97025,
+    905.924583
+   ],
+   "median_ms": 901.9474164999999,
+   "speedup": 0.12193236710712393
+  },
+  "checked_slots": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 41319,
+   "neural_rhs": 41319,
+   "fresh": 32819,
+   "direct_cells": 32721,
+   "source_pass_rhs": 41319,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "wire_bytes": 0,
+   "raw": "3056379160161277338",
+   "emitted": [
+    440274,
+    212691
+   ],
+   "wire_hash": "14695981039346656037",
+   "commits": "5bdef0d3d38024a5e325577ddedcf35d2703afaf53199bb9209111bf8e1ce01a",
+   "physical": "213b882430f6572439e35042dc8fbad71dbfd14fbe21ce527adef9d186da7108",
+   "multi": "0728f5becbc2ae361c8d09bc934f5d4c6f6d73cc7e48de581bad72aea686895e",
+   "children": "4bc9de8d9cf444a6767b583f467945619f076de1de3397c95ccb21d803825b5a",
+   "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+   "rejected": 0,
+   "root_allocated": 32316,
+   "applied": 41319,
+   "wrong-template": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "wrong-port": {
+    "rejected": 41319,
+    "applied": 0,
+    "aligned": true
+   },
+   "ms": [
+    877.815292,
+    910.250125,
+    891.965333,
+    907.0370829999999,
+    895.4045000000001,
+    887.356625,
+    902.098417,
+    908.8367910000001
+   ],
+   "median_ms": 898.7514585000001,
+   "speedup": 0.12236595830792744
+  },
+  "vanilla": {
+   "rhs": 41319,
+   "runs": 1990,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "ms": [
+    108.284916,
+    107.964709,
+    109.361625,
+    120.272084,
+    110.591542,
+    111.18525,
+    111.119166,
+    108.67629199999999
+   ],
+   "median_ms": 109.9765835,
+   "speedup": 1.0
+  }
+ }
+}

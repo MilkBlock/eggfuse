@@ -18,7 +18,7 @@ def install(name,crate,file="patch.py"):
     module.install(crate)
 
 
-def build(out,shortlist,merge_child,root_recipe):
+def build(out,shortlist,merge_child,root_recipe,cli_allocator=False,*,extensions=(),examples=()):
     if root_recipe and not (shortlist and merge_child):raise ValueError("root recipes require shortlist and merge child")
     out.mkdir(parents=True,exist_ok=False);tree=out/'tree';tree.mkdir()
     process=subprocess.Popen(['git','archive',REV,'engine/cell-runtime','engine/structural-key','Cargo.lock'],
@@ -45,21 +45,26 @@ def build(out,shortlist,merge_child,root_recipe):
         session=crate/'examples/joint_witness_session.rs'
         s=session.read_text();assert s.count('const ROOT_SUPPORT: bool = false;')==1
         session.write_text(s.replace('const ROOT_SUPPORT: bool = false;','const ROOT_SUPPORT: bool = true;'))
+    if cli_allocator:
+        driver=crate/'examples/joint_witness_session.rs'
+        with driver.open('a') as f:
+            f.write('\n#[global_allocator]\nstatic ALLOCATOR: eggfuse_cell_runtime::RuntimeAllocator = eggfuse_cell_runtime::RuntimeAllocator;\n')
+    for extension in extensions:install(extension,crate,'overlay.py')
     target=out/'target'
     subprocess.run(['cargo','metadata','--offline','--format-version','1'],cwd=tree,stdout=subprocess.DEVNULL,check=True)
     subprocess.run(['cargo','build','--locked','--offline','--release','-p','eggfuse-cell-runtime','--features',
-                    'precomputed-forest,slot-transfer-audit','--example','joint_witness_session','--target-dir',target],cwd=tree,check=True)
+                    'precomputed-forest,slot-transfer-audit','--example','joint_witness_session',*[v for name in examples for v in ('--example',name)],'--target-dir',target],cwd=tree,check=True)
     shutil.copy2(target/'release/examples/joint_witness_session',out/'session')
     sources={p.name+':'+p.parent.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in
              [HERE/'session.rs',*[HERE.parent/name/file for name,file in (('single-witness','single.rs'),('single-witness','patch.py'),
                 ('ordinary-witness','ordinary.rs'),('ordinary-witness','patch.py'))]]}
-    for name in ('ordinary-shortlist','joint-merge','joint-root-cells'):
-        if (name=='ordinary-shortlist' and shortlist) or (name=='joint-merge' and merge_child) or (name=='joint-root-cells' and root_recipe):
+    for name in ('ordinary-shortlist','joint-merge','joint-root-cells',*extensions):
+        if (name=='ordinary-shortlist' and shortlist) or (name=='joint-merge' and merge_child) or (name=='joint-root-cells' and root_recipe) or name in extensions:
             for path in (HERE.parent/name).glob('*.rs'):
                 sources[f'{name}/{path.name}']=hashlib.sha256(path.read_bytes()).hexdigest()
             path=HERE.parent/name/'overlay.py';sources[f'{name}/overlay.py']=hashlib.sha256(path.read_bytes()).hexdigest()
-    (out/'build.json').write_text(json.dumps(dict(base=REV,sources=sources,shortlist=shortlist,merge_child=merge_child,root_recipe=root_recipe),indent=1)+'\n')
+    (out/'build.json').write_text(json.dumps(dict(base=REV,sources=sources,extensions=extensions,shortlist=shortlist,merge_child=merge_child,root_recipe=root_recipe,cli_allocator=cli_allocator),indent=1)+'\n')
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('out',type=Path);p.add_argument('--shortlist',action='store_true');p.add_argument('--merge-child',action='store_true');p.add_argument('--root-recipe',action='store_true');args=p.parse_args();build(args.out,args.shortlist,args.merge_child,args.root_recipe)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('out',type=Path);p.add_argument('--shortlist',action='store_true');p.add_argument('--merge-child',action='store_true');p.add_argument('--root-recipe',action='store_true');p.add_argument('--cli-allocator',action='store_true');args=p.parse_args();build(args.out,args.shortlist,args.merge_child,args.root_recipe,args.cli_allocator)
