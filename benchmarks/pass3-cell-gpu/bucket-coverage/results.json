@@ -1,0 +1,3072 @@
+{
+ "sum-bits/1703": {
+  "unique-positive-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 106,
+   "bucket_committed": 0,
+   "residual_committed": 7159,
+   "raw": 260,
+   "tasks": 260,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 260,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 524740,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 164,
+    "remaining_route_steps": 9831,
+    "verifier_point_reads": 30,
+    "remaining_route_point_reads": 3517
+   },
+   "ms": [
+    1072.84125,
+    1076.035166,
+    1101.495791,
+    1117.359333,
+    1113.275167,
+    1102.452041
+   ],
+   "median_ms": 1101.973916,
+   "synchronized_intervals": [
+    {
+     "run": 15,
+     "wave": 0,
+     "proposals": 2,
+     "us": 248.25
+    },
+    {
+     "run": 24,
+     "wave": 0,
+     "proposals": 2,
+     "us": 980.708
+    },
+    {
+     "run": 29,
+     "wave": 0,
+     "proposals": 2,
+     "us": 228.541
+    },
+    {
+     "run": 34,
+     "wave": 0,
+     "proposals": 2,
+     "us": 835.833
+    },
+    {
+     "run": 39,
+     "wave": 0,
+     "proposals": 2,
+     "us": 247.208
+    },
+    {
+     "run": 77,
+     "wave": 0,
+     "proposals": 2,
+     "us": 231.75
+    },
+    {
+     "run": 98,
+     "wave": 0,
+     "proposals": 2,
+     "us": 247.416
+    },
+    {
+     "run": 98,
+     "wave": 1,
+     "proposals": 2,
+     "us": 200.917
+    },
+    {
+     "run": 102,
+     "wave": 0,
+     "proposals": 2,
+     "us": 260.333
+    },
+    {
+     "run": 102,
+     "wave": 1,
+     "proposals": 2,
+     "us": 198.375
+    },
+    {
+     "run": 106,
+     "wave": 0,
+     "proposals": 2,
+     "us": 252.5
+    },
+    {
+     "run": 106,
+     "wave": 1,
+     "proposals": 2,
+     "us": 212.125
+    },
+    {
+     "run": 110,
+     "wave": 0,
+     "proposals": 2,
+     "us": 231.458
+    },
+    {
+     "run": 110,
+     "wave": 1,
+     "proposals": 2,
+     "us": 210.833
+    },
+    {
+     "run": 114,
+     "wave": 0,
+     "proposals": 2,
+     "us": 223.084
+    },
+    {
+     "run": 114,
+     "wave": 1,
+     "proposals": 2,
+     "us": 193.75
+    },
+    {
+     "run": 118,
+     "wave": 0,
+     "proposals": 2,
+     "us": 227.375
+    },
+    {
+     "run": 118,
+     "wave": 1,
+     "proposals": 2,
+     "us": 199.334
+    },
+    {
+     "run": 122,
+     "wave": 0,
+     "proposals": 2,
+     "us": 245.291
+    },
+    {
+     "run": 122,
+     "wave": 1,
+     "proposals": 2,
+     "us": 220.958
+    },
+    {
+     "run": 126,
+     "wave": 0,
+     "proposals": 2,
+     "us": 209.25
+    },
+    {
+     "run": 126,
+     "wave": 1,
+     "proposals": 2,
+     "us": 203.75
+    },
+    {
+     "run": 130,
+     "wave": 0,
+     "proposals": 2,
+     "us": 251.667
+    },
+    {
+     "run": 130,
+     "wave": 1,
+     "proposals": 2,
+     "us": 214.459
+    },
+    {
+     "run": 15,
+     "wave": 2,
+     "proposals": 2,
+     "us": 185.416
+    },
+    {
+     "run": 24,
+     "wave": 2,
+     "proposals": 2,
+     "us": 220.166
+    },
+    {
+     "run": 29,
+     "wave": 2,
+     "proposals": 2,
+     "us": 276.5
+    },
+    {
+     "run": 34,
+     "wave": 2,
+     "proposals": 2,
+     "us": 200.25
+    },
+    {
+     "run": 39,
+     "wave": 2,
+     "proposals": 2,
+     "us": 291.375
+    },
+    {
+     "run": 77,
+     "wave": 2,
+     "proposals": 2,
+     "us": 175.333
+    },
+    {
+     "run": 98,
+     "wave": 2,
+     "proposals": 4,
+     "us": 260.333
+    },
+    {
+     "run": 102,
+     "wave": 2,
+     "proposals": 4,
+     "us": 248.75
+    },
+    {
+     "run": 106,
+     "wave": 2,
+     "proposals": 4,
+     "us": 211.125
+    },
+    {
+     "run": 110,
+     "wave": 2,
+     "proposals": 4,
+     "us": 326.458
+    },
+    {
+     "run": 114,
+     "wave": 2,
+     "proposals": 4,
+     "us": 191.458
+    },
+    {
+     "run": 118,
+     "wave": 2,
+     "proposals": 4,
+     "us": 226.083
+    },
+    {
+     "run": 122,
+     "wave": 2,
+     "proposals": 4,
+     "us": 227.541
+    },
+    {
+     "run": 126,
+     "wave": 2,
+     "proposals": 4,
+     "us": 209.708
+    },
+    {
+     "run": 130,
+     "wave": 2,
+     "proposals": 4,
+     "us": 223.333
+    }
+   ]
+  },
+  "unique-unique-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 106,
+   "bucket_committed": 0,
+   "residual_committed": 7159,
+   "raw": 260,
+   "tasks": 260,
+   "distinct_checked_keys": 129,
+   "distinct_whole_keys_closed": 129,
+   "distinct_retained_rows": 0,
+   "verified_pages": 260,
+   "full_key_claims": 260,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 129,
+   "repeated_accepted_claims": 131,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 1,
+   "page_witness_rows": 260,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 260,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 121,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 260,
+   "false_closures": 0,
+   "allocated_study_bytes": 2621892,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 164,
+    "remaining_route_steps": 9695,
+    "verifier_point_reads": 30,
+    "remaining_route_point_reads": 3501
+   },
+   "ms": [
+    1137.382375,
+    1113.0425,
+    1132.977041,
+    1140.83175,
+    1116.541375,
+    1112.462625
+   ],
+   "median_ms": 1124.759208,
+   "synchronized_intervals": [
+    {
+     "run": 15,
+     "wave": 0,
+     "proposals": 2,
+     "us": 915.708
+    },
+    {
+     "run": 24,
+     "wave": 0,
+     "proposals": 2,
+     "us": 276.75
+    },
+    {
+     "run": 29,
+     "wave": 0,
+     "proposals": 2,
+     "us": 220.709
+    },
+    {
+     "run": 34,
+     "wave": 0,
+     "proposals": 2,
+     "us": 216.25
+    },
+    {
+     "run": 39,
+     "wave": 0,
+     "proposals": 2,
+     "us": 233.625
+    },
+    {
+     "run": 77,
+     "wave": 0,
+     "proposals": 2,
+     "us": 239.292
+    },
+    {
+     "run": 98,
+     "wave": 0,
+     "proposals": 2,
+     "us": 1205.75
+    },
+    {
+     "run": 98,
+     "wave": 1,
+     "proposals": 2,
+     "us": 248.542
+    },
+    {
+     "run": 102,
+     "wave": 0,
+     "proposals": 2,
+     "us": 257.041
+    },
+    {
+     "run": 102,
+     "wave": 1,
+     "proposals": 2,
+     "us": 205.25
+    },
+    {
+     "run": 106,
+     "wave": 0,
+     "proposals": 2,
+     "us": 260.584
+    },
+    {
+     "run": 106,
+     "wave": 1,
+     "proposals": 2,
+     "us": 227.459
+    },
+    {
+     "run": 110,
+     "wave": 0,
+     "proposals": 2,
+     "us": 227.167
+    },
+    {
+     "run": 110,
+     "wave": 1,
+     "proposals": 2,
+     "us": 220.917
+    },
+    {
+     "run": 114,
+     "wave": 0,
+     "proposals": 2,
+     "us": 211.542
+    },
+    {
+     "run": 114,
+     "wave": 1,
+     "proposals": 2,
+     "us": 192.75
+    },
+    {
+     "run": 118,
+     "wave": 0,
+     "proposals": 2,
+     "us": 247.291
+    },
+    {
+     "run": 118,
+     "wave": 1,
+     "proposals": 2,
+     "us": 231.375
+    },
+    {
+     "run": 122,
+     "wave": 0,
+     "proposals": 2,
+     "us": 229.125
+    },
+    {
+     "run": 122,
+     "wave": 1,
+     "proposals": 2,
+     "us": 208.5
+    },
+    {
+     "run": 126,
+     "wave": 0,
+     "proposals": 2,
+     "us": 222.708
+    },
+    {
+     "run": 126,
+     "wave": 1,
+     "proposals": 2,
+     "us": 306.125
+    },
+    {
+     "run": 130,
+     "wave": 0,
+     "proposals": 2,
+     "us": 531.458
+    },
+    {
+     "run": 130,
+     "wave": 1,
+     "proposals": 2,
+     "us": 236.75
+    },
+    {
+     "run": 15,
+     "wave": 2,
+     "proposals": 2,
+     "us": 434.208
+    },
+    {
+     "run": 24,
+     "wave": 2,
+     "proposals": 2,
+     "us": 210.875
+    },
+    {
+     "run": 29,
+     "wave": 2,
+     "proposals": 2,
+     "us": 181.0
+    },
+    {
+     "run": 34,
+     "wave": 2,
+     "proposals": 2,
+     "us": 179.541
+    },
+    {
+     "run": 39,
+     "wave": 2,
+     "proposals": 2,
+     "us": 180.458
+    },
+    {
+     "run": 77,
+     "wave": 2,
+     "proposals": 2,
+     "us": 230.584
+    },
+    {
+     "run": 98,
+     "wave": 2,
+     "proposals": 4,
+     "us": 213.542
+    },
+    {
+     "run": 102,
+     "wave": 2,
+     "proposals": 4,
+     "us": 267.917
+    },
+    {
+     "run": 106,
+     "wave": 2,
+     "proposals": 4,
+     "us": 223.167
+    },
+    {
+     "run": 110,
+     "wave": 2,
+     "proposals": 4,
+     "us": 206.417
+    },
+    {
+     "run": 114,
+     "wave": 2,
+     "proposals": 4,
+     "us": 202.875
+    },
+    {
+     "run": 118,
+     "wave": 2,
+     "proposals": 4,
+     "us": 215.167
+    },
+    {
+     "run": 122,
+     "wave": 2,
+     "proposals": 4,
+     "us": 220.375
+    },
+    {
+     "run": 126,
+     "wave": 2,
+     "proposals": 4,
+     "us": 226.833
+    },
+    {
+     "run": 130,
+     "wave": 2,
+     "proposals": 4,
+     "us": 232.958
+    }
+   ]
+  },
+  "unique-range-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 106,
+   "bucket_committed": 0,
+   "residual_committed": 7159,
+   "raw": 260,
+   "tasks": 260,
+   "distinct_checked_keys": 129,
+   "distinct_whole_keys_closed": 129,
+   "distinct_retained_rows": 0,
+   "verified_pages": 260,
+   "full_key_claims": 260,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 129,
+   "repeated_accepted_claims": 131,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 1,
+   "page_witness_rows": 260,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 260,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 121,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 260,
+   "false_closures": 0,
+   "allocated_study_bytes": 3277252,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 164,
+    "remaining_route_steps": 9695,
+    "verifier_point_reads": 30,
+    "remaining_route_point_reads": 3501
+   },
+   "ms": [
+    1108.621166,
+    1096.331333,
+    1135.609416,
+    1083.049792,
+    1088.794458,
+    1089.2805
+   ],
+   "median_ms": 1092.8059165
+  },
+  "partial-positive-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 106,
+   "bucket_committed": 0,
+   "residual_committed": 7159,
+   "raw": 260,
+   "tasks": 260,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 260,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 524740,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 164,
+    "remaining_route_steps": 9831,
+    "verifier_point_reads": 30,
+    "remaining_route_point_reads": 3517
+   },
+   "ms": [
+    1071.892125,
+    1103.223125,
+    1072.131041,
+    1110.743708,
+    1075.29575,
+    1107.239917
+   ],
+   "median_ms": 1089.2594374999999
+  },
+  "partial-unique-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 106,
+   "bucket_committed": 0,
+   "residual_committed": 7159,
+   "raw": 260,
+   "tasks": 260,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 260,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 2621892,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 164,
+    "remaining_route_steps": 9831,
+    "verifier_point_reads": 30,
+    "remaining_route_point_reads": 3517
+   },
+   "ms": [
+    1079.426667,
+    1117.367292,
+    1076.491958,
+    1077.158458,
+    1098.346875,
+    1141.230209
+   ],
+   "median_ms": 1088.886771
+  },
+  "partial-range-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 106,
+   "bucket_committed": 16,
+   "residual_committed": 7143,
+   "raw": 260,
+   "tasks": 260,
+   "distinct_checked_keys": 126,
+   "distinct_whole_keys_closed": 113,
+   "distinct_retained_rows": 46,
+   "verified_pages": 260,
+   "full_key_claims": 232,
+   "partial_page_claims": 28,
+   "distinct_source_rows_closed": 247,
+   "repeated_accepted_claims": 134,
+   "outside_verified_range": 100,
+   "multirow_bucket_claims": 140,
+   "largest_observed_bucket": 8,
+   "page_witness_rows": 524,
+   "directory_build_visits": 8571,
+   "directory_enumeration_visits": 1294,
+   "independent_witness_visits": 644,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 118,
+   "accepted_extra_siblings": 16,
+   "residual_seed_checks_skipped": 222,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 260,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 182,
+    "remaining_route_steps": 9677,
+    "verifier_point_reads": 31,
+    "remaining_route_point_reads": 3500
+   },
+   "ms": [
+    1171.690125,
+    1100.334792,
+    1131.064792,
+    1090.534125,
+    1104.110875,
+    1115.084875
+   ],
+   "median_ms": 1109.597875,
+   "synchronized_intervals": [
+    {
+     "run": 15,
+     "wave": 0,
+     "proposals": 2,
+     "us": 390.208
+    },
+    {
+     "run": 24,
+     "wave": 0,
+     "proposals": 2,
+     "us": 254.0
+    },
+    {
+     "run": 29,
+     "wave": 0,
+     "proposals": 2,
+     "us": 216.625
+    },
+    {
+     "run": 34,
+     "wave": 0,
+     "proposals": 2,
+     "us": 230.083
+    },
+    {
+     "run": 39,
+     "wave": 0,
+     "proposals": 2,
+     "us": 265.458
+    },
+    {
+     "run": 77,
+     "wave": 0,
+     "proposals": 2,
+     "us": 259.333
+    },
+    {
+     "run": 98,
+     "wave": 0,
+     "proposals": 2,
+     "us": 252.083
+    },
+    {
+     "run": 98,
+     "wave": 1,
+     "proposals": 2,
+     "us": 254.959
+    },
+    {
+     "run": 102,
+     "wave": 0,
+     "proposals": 2,
+     "us": 233.167
+    },
+    {
+     "run": 102,
+     "wave": 1,
+     "proposals": 2,
+     "us": 363.792
+    },
+    {
+     "run": 106,
+     "wave": 0,
+     "proposals": 2,
+     "us": 602.833
+    },
+    {
+     "run": 106,
+     "wave": 1,
+     "proposals": 2,
+     "us": 219.125
+    },
+    {
+     "run": 110,
+     "wave": 0,
+     "proposals": 2,
+     "us": 296.292
+    },
+    {
+     "run": 110,
+     "wave": 1,
+     "proposals": 2,
+     "us": 227.042
+    },
+    {
+     "run": 114,
+     "wave": 0,
+     "proposals": 2,
+     "us": 384.083
+    },
+    {
+     "run": 114,
+     "wave": 1,
+     "proposals": 2,
+     "us": 216.625
+    },
+    {
+     "run": 118,
+     "wave": 0,
+     "proposals": 2,
+     "us": 281.125
+    },
+    {
+     "run": 118,
+     "wave": 1,
+     "proposals": 2,
+     "us": 201.958
+    },
+    {
+     "run": 122,
+     "wave": 0,
+     "proposals": 2,
+     "us": 277.791
+    },
+    {
+     "run": 122,
+     "wave": 1,
+     "proposals": 2,
+     "us": 257.083
+    },
+    {
+     "run": 126,
+     "wave": 0,
+     "proposals": 2,
+     "us": 243.125
+    },
+    {
+     "run": 126,
+     "wave": 1,
+     "proposals": 2,
+     "us": 213.833
+    },
+    {
+     "run": 130,
+     "wave": 0,
+     "proposals": 2,
+     "us": 281.5
+    },
+    {
+     "run": 130,
+     "wave": 1,
+     "proposals": 2,
+     "us": 263.708
+    },
+    {
+     "run": 15,
+     "wave": 2,
+     "proposals": 2,
+     "us": 249.333
+    },
+    {
+     "run": 24,
+     "wave": 2,
+     "proposals": 2,
+     "us": 240.75
+    },
+    {
+     "run": 29,
+     "wave": 2,
+     "proposals": 2,
+     "us": 238.084
+    },
+    {
+     "run": 34,
+     "wave": 2,
+     "proposals": 2,
+     "us": 243.292
+    },
+    {
+     "run": 39,
+     "wave": 2,
+     "proposals": 2,
+     "us": 254.375
+    },
+    {
+     "run": 77,
+     "wave": 2,
+     "proposals": 2,
+     "us": 215.125
+    },
+    {
+     "run": 98,
+     "wave": 2,
+     "proposals": 4,
+     "us": 284.208
+    },
+    {
+     "run": 102,
+     "wave": 2,
+     "proposals": 4,
+     "us": 280.291
+    },
+    {
+     "run": 106,
+     "wave": 2,
+     "proposals": 4,
+     "us": 323.375
+    },
+    {
+     "run": 110,
+     "wave": 2,
+     "proposals": 4,
+     "us": 248.875
+    },
+    {
+     "run": 114,
+     "wave": 2,
+     "proposals": 4,
+     "us": 254.959
+    },
+    {
+     "run": 118,
+     "wave": 2,
+     "proposals": 4,
+     "us": 251.333
+    },
+    {
+     "run": 122,
+     "wave": 2,
+     "proposals": 4,
+     "us": 382.709
+    },
+    {
+     "run": 126,
+     "wave": 2,
+     "proposals": 4,
+     "us": 338.917
+    },
+    {
+     "run": 130,
+     "wave": 2,
+     "proposals": 4,
+     "us": 383.542
+    }
+   ]
+  },
+  "partial-range-omit": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 106,
+   "bucket_committed": 0,
+   "residual_committed": 7159,
+   "raw": 260,
+   "tasks": 260,
+   "distinct_checked_keys": 63,
+   "distinct_whole_keys_closed": 60,
+   "distinct_retained_rows": 12,
+   "verified_pages": 126,
+   "full_key_claims": 120,
+   "partial_page_claims": 6,
+   "distinct_source_rows_closed": 63,
+   "repeated_accepted_claims": 63,
+   "outside_verified_range": 24,
+   "multirow_bucket_claims": 6,
+   "largest_observed_bucket": 8,
+   "page_witness_rows": 126,
+   "directory_build_visits": 8571,
+   "directory_enumeration_visits": 1294,
+   "independent_witness_visits": 174,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 62,
+   "rejected_missing": 134,
+   "omitted_reference_winners": 38,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 126,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 164,
+    "remaining_route_steps": 9755,
+    "verifier_point_reads": 30,
+    "remaining_route_point_reads": 3502
+   }
+  },
+  "partial-range-stale": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 106,
+   "bucket_committed": 16,
+   "residual_committed": 7143,
+   "raw": 260,
+   "tasks": 260,
+   "distinct_checked_keys": 126,
+   "distinct_whole_keys_closed": 113,
+   "distinct_retained_rows": 46,
+   "verified_pages": 190,
+   "full_key_claims": 168,
+   "partial_page_claims": 22,
+   "distinct_source_rows_closed": 247,
+   "repeated_accepted_claims": 64,
+   "outside_verified_range": 79,
+   "multirow_bucket_claims": 101,
+   "largest_observed_bucket": 8,
+   "page_witness_rows": 381,
+   "directory_build_visits": 8571,
+   "directory_enumeration_visits": 952,
+   "independent_witness_visits": 474,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 118,
+   "accepted_extra_siblings": 16,
+   "residual_seed_checks_skipped": 222,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 70,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 190,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 182,
+    "remaining_route_steps": 9677,
+    "verifier_point_reads": 31,
+    "remaining_route_point_reads": 3500
+   }
+  },
+  "partial-range-duplicate": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 106,
+   "bucket_committed": 16,
+   "residual_committed": 7143,
+   "raw": 260,
+   "tasks": 260,
+   "distinct_checked_keys": 126,
+   "distinct_whole_keys_closed": 113,
+   "distinct_retained_rows": 46,
+   "verified_pages": 260,
+   "full_key_claims": 232,
+   "partial_page_claims": 28,
+   "distinct_source_rows_closed": 247,
+   "repeated_accepted_claims": 134,
+   "outside_verified_range": 100,
+   "multirow_bucket_claims": 140,
+   "largest_observed_bucket": 8,
+   "page_witness_rows": 524,
+   "directory_build_visits": 8571,
+   "directory_enumeration_visits": 1294,
+   "independent_witness_visits": 644,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 118,
+   "accepted_extra_siblings": 16,
+   "residual_seed_checks_skipped": 222,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 260,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 182,
+    "remaining_route_steps": 9677,
+    "verifier_point_reads": 31,
+    "remaining_route_point_reads": 3500
+   }
+  },
+  "partial-range-null": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 0,
+   "bucket_committed": 0,
+   "residual_committed": 7265,
+   "raw": 0,
+   "tasks": 0,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 0,
+    "remaining_route_steps": 9831,
+    "verifier_point_reads": 0,
+    "remaining_route_point_reads": 3517
+   }
+  }
+ },
+ "sum-bits/1709": {
+  "unique-positive-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 112,
+   "bucket_committed": 0,
+   "residual_committed": 7153,
+   "raw": 306,
+   "tasks": 306,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 306,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 524740,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 255,
+    "remaining_route_steps": 9831,
+    "verifier_point_reads": 75,
+    "remaining_route_point_reads": 3517
+   },
+   "ms": [
+    1045.344959,
+    1065.001708,
+    1124.736584,
+    1084.295584,
+    1122.146333,
+    1116.094292
+   ],
+   "median_ms": 1100.194938
+  },
+  "unique-unique-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 112,
+   "bucket_committed": 0,
+   "residual_committed": 7153,
+   "raw": 306,
+   "tasks": 306,
+   "distinct_checked_keys": 152,
+   "distinct_whole_keys_closed": 152,
+   "distinct_retained_rows": 0,
+   "verified_pages": 306,
+   "full_key_claims": 306,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 152,
+   "repeated_accepted_claims": 154,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 1,
+   "page_witness_rows": 306,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 306,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 147,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 306,
+   "false_closures": 0,
+   "allocated_study_bytes": 2621892,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 255,
+    "remaining_route_steps": 9644,
+    "verifier_point_reads": 75,
+    "remaining_route_point_reads": 3476
+   },
+   "ms": [
+    1125.269208,
+    1114.54975,
+    1079.969333,
+    1127.45775,
+    1102.868625,
+    1139.672584
+   ],
+   "median_ms": 1119.909479
+  },
+  "unique-range-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 112,
+   "bucket_committed": 0,
+   "residual_committed": 7153,
+   "raw": 306,
+   "tasks": 306,
+   "distinct_checked_keys": 152,
+   "distinct_whole_keys_closed": 152,
+   "distinct_retained_rows": 0,
+   "verified_pages": 306,
+   "full_key_claims": 306,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 152,
+   "repeated_accepted_claims": 154,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 1,
+   "page_witness_rows": 306,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 306,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 147,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 306,
+   "false_closures": 0,
+   "allocated_study_bytes": 3277252,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 255,
+    "remaining_route_steps": 9644,
+    "verifier_point_reads": 75,
+    "remaining_route_point_reads": 3476
+   },
+   "ms": [
+    1064.5645,
+    1069.26475,
+    1125.134292,
+    1100.033792,
+    1072.13325,
+    1074.803458
+   ],
+   "median_ms": 1073.468354
+  },
+  "partial-positive-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 112,
+   "bucket_committed": 0,
+   "residual_committed": 7153,
+   "raw": 306,
+   "tasks": 306,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 306,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 524740,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 255,
+    "remaining_route_steps": 9831,
+    "verifier_point_reads": 75,
+    "remaining_route_point_reads": 3517
+   },
+   "ms": [
+    1051.870417,
+    1087.205459,
+    1065.304917,
+    1118.120125,
+    1112.907292,
+    1061.336417
+   ],
+   "median_ms": 1076.255188
+  },
+  "partial-unique-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 112,
+   "bucket_committed": 0,
+   "residual_committed": 7153,
+   "raw": 306,
+   "tasks": 306,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 306,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 2621892,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 255,
+    "remaining_route_steps": 9831,
+    "verifier_point_reads": 75,
+    "remaining_route_point_reads": 3517
+   },
+   "ms": [
+    1118.63125,
+    1126.174583,
+    1058.991917,
+    1120.871958,
+    1059.870208,
+    1125.082667
+   ],
+   "median_ms": 1119.751604
+  },
+  "partial-range-intact": {
+   "runs": 1428,
+   "rhs": 7265,
+   "neural_committed": 112,
+   "bucket_committed": 30,
+   "residual_committed": 7123,
+   "raw": 306,
+   "tasks": 306,
+   "distinct_checked_keys": 149,
+   "distinct_whole_keys_closed": 137,
+   "distinct_retained_rows": 45,
+   "verified_pages": 306,
+   "full_key_claims": 278,
+   "partial_page_claims": 28,
+   "distinct_source_rows_closed": 274,
+   "repeated_accepted_claims": 157,
+   "outside_verified_range": 106,
+   "multirow_bucket_claims": 142,
+   "largest_observed_bucket": 8,
+   "page_witness_rows": 576,
+   "directory_build_visits": 10263,
+   "directory_enumeration_visits": 1422,
+   "independent_witness_visits": 710,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 122,
+   "accepted_extra_siblings": 30,
+   "residual_seed_checks_skipped": 262,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 306,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 295,
+    "remaining_route_steps": 9604,
+    "verifier_point_reads": 84,
+    "remaining_route_point_reads": 3467
+   },
+   "ms": [
+    1105.894375,
+    1098.019,
+    1171.911042,
+    1082.683167,
+    1096.426709,
+    1090.064875
+   ],
+   "median_ms": 1097.2228545
+  }
+ },
+ "dot-product/1703": {
+  "unique-positive-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 85,
+   "bucket_committed": 0,
+   "residual_committed": 6619,
+   "raw": 238,
+   "tasks": 238,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 238,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 524740,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 157,
+    "remaining_route_steps": 9981,
+    "verifier_point_reads": 36,
+    "remaining_route_point_reads": 3838
+   },
+   "ms": [
+    1133.894875,
+    1065.909375,
+    1059.544083,
+    1059.402042,
+    1098.210209,
+    1175.253333
+   ],
+   "median_ms": 1082.059792,
+   "synchronized_intervals": [
+    {
+     "run": 17,
+     "wave": 0,
+     "proposals": 2,
+     "us": 267.917
+    },
+    {
+     "run": 31,
+     "wave": 0,
+     "proposals": 2,
+     "us": 292.834
+    },
+    {
+     "run": 32,
+     "wave": 0,
+     "proposals": 2,
+     "us": 962.375
+    },
+    {
+     "run": 37,
+     "wave": 0,
+     "proposals": 2,
+     "us": 238.459
+    },
+    {
+     "run": 42,
+     "wave": 0,
+     "proposals": 2,
+     "us": 290.333
+    },
+    {
+     "run": 47,
+     "wave": 0,
+     "proposals": 2,
+     "us": 254.0
+    },
+    {
+     "run": 52,
+     "wave": 0,
+     "proposals": 2,
+     "us": 251.0
+    },
+    {
+     "run": 57,
+     "wave": 0,
+     "proposals": 2,
+     "us": 251.833
+    },
+    {
+     "run": 65,
+     "wave": 0,
+     "proposals": 2,
+     "us": 237.334
+    },
+    {
+     "run": 71,
+     "wave": 0,
+     "proposals": 2,
+     "us": 217.25
+    },
+    {
+     "run": 76,
+     "wave": 0,
+     "proposals": 2,
+     "us": 251.541
+    },
+    {
+     "run": 131,
+     "wave": 0,
+     "proposals": 2,
+     "us": 313.25
+    },
+    {
+     "run": 131,
+     "wave": 1,
+     "proposals": 2,
+     "us": 2581.709
+    },
+    {
+     "run": 135,
+     "wave": 0,
+     "proposals": 2,
+     "us": 372.208
+    },
+    {
+     "run": 135,
+     "wave": 1,
+     "proposals": 2,
+     "us": 217.334
+    },
+    {
+     "run": 139,
+     "wave": 0,
+     "proposals": 2,
+     "us": 265.292
+    },
+    {
+     "run": 139,
+     "wave": 1,
+     "proposals": 2,
+     "us": 208.75
+    },
+    {
+     "run": 142,
+     "wave": 0,
+     "proposals": 2,
+     "us": 292.542
+    },
+    {
+     "run": 142,
+     "wave": 1,
+     "proposals": 2,
+     "us": 222.792
+    },
+    {
+     "run": 145,
+     "wave": 0,
+     "proposals": 2,
+     "us": 291.291
+    },
+    {
+     "run": 145,
+     "wave": 1,
+     "proposals": 2,
+     "us": 201.459
+    },
+    {
+     "run": 149,
+     "wave": 0,
+     "proposals": 2,
+     "us": 283.166
+    },
+    {
+     "run": 149,
+     "wave": 1,
+     "proposals": 2,
+     "us": 222.625
+    },
+    {
+     "run": 153,
+     "wave": 0,
+     "proposals": 2,
+     "us": 520.875
+    },
+    {
+     "run": 17,
+     "wave": 2,
+     "proposals": 2,
+     "us": 186.542
+    },
+    {
+     "run": 31,
+     "wave": 2,
+     "proposals": 2,
+     "us": 195.042
+    },
+    {
+     "run": 32,
+     "wave": 2,
+     "proposals": 2,
+     "us": 195.125
+    },
+    {
+     "run": 37,
+     "wave": 2,
+     "proposals": 2,
+     "us": 188.958
+    },
+    {
+     "run": 42,
+     "wave": 2,
+     "proposals": 2,
+     "us": 170.209
+    },
+    {
+     "run": 47,
+     "wave": 2,
+     "proposals": 2,
+     "us": 190.958
+    },
+    {
+     "run": 52,
+     "wave": 2,
+     "proposals": 2,
+     "us": 192.0
+    },
+    {
+     "run": 57,
+     "wave": 2,
+     "proposals": 2,
+     "us": 188.417
+    },
+    {
+     "run": 65,
+     "wave": 2,
+     "proposals": 2,
+     "us": 186.791
+    },
+    {
+     "run": 71,
+     "wave": 2,
+     "proposals": 2,
+     "us": 194.667
+    },
+    {
+     "run": 76,
+     "wave": 2,
+     "proposals": 2,
+     "us": 178.666
+    },
+    {
+     "run": 131,
+     "wave": 2,
+     "proposals": 4,
+     "us": 452.084
+    },
+    {
+     "run": 135,
+     "wave": 2,
+     "proposals": 4,
+     "us": 214.792
+    },
+    {
+     "run": 139,
+     "wave": 2,
+     "proposals": 4,
+     "us": 219.042
+    },
+    {
+     "run": 142,
+     "wave": 2,
+     "proposals": 4,
+     "us": 207.084
+    },
+    {
+     "run": 145,
+     "wave": 2,
+     "proposals": 4,
+     "us": 194.959
+    },
+    {
+     "run": 149,
+     "wave": 2,
+     "proposals": 4,
+     "us": 232.666
+    },
+    {
+     "run": 153,
+     "wave": 2,
+     "proposals": 4,
+     "us": 299.625
+    }
+   ]
+  },
+  "unique-unique-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 85,
+   "bucket_committed": 0,
+   "residual_committed": 6619,
+   "raw": 238,
+   "tasks": 238,
+   "distinct_checked_keys": 120,
+   "distinct_whole_keys_closed": 120,
+   "distinct_retained_rows": 0,
+   "verified_pages": 238,
+   "full_key_claims": 238,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 120,
+   "repeated_accepted_claims": 118,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 1,
+   "page_witness_rows": 238,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 243,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 103,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 238,
+   "false_closures": 0,
+   "allocated_study_bytes": 2621892,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 157,
+    "remaining_route_steps": 9860,
+    "verifier_point_reads": 36,
+    "remaining_route_point_reads": 3820
+   },
+   "ms": [
+    1087.685583,
+    1146.13425,
+    1080.203667,
+    1121.082333,
+    1072.423333,
+    1157.013375
+   ],
+   "median_ms": 1104.383958,
+   "synchronized_intervals": [
+    {
+     "run": 17,
+     "wave": 0,
+     "proposals": 2,
+     "us": 296.083
+    },
+    {
+     "run": 31,
+     "wave": 0,
+     "proposals": 2,
+     "us": 365.75
+    },
+    {
+     "run": 32,
+     "wave": 0,
+     "proposals": 2,
+     "us": 257.958
+    },
+    {
+     "run": 37,
+     "wave": 0,
+     "proposals": 2,
+     "us": 244.833
+    },
+    {
+     "run": 42,
+     "wave": 0,
+     "proposals": 2,
+     "us": 270.416
+    },
+    {
+     "run": 47,
+     "wave": 0,
+     "proposals": 2,
+     "us": 271.0
+    },
+    {
+     "run": 52,
+     "wave": 0,
+     "proposals": 2,
+     "us": 222.833
+    },
+    {
+     "run": 57,
+     "wave": 0,
+     "proposals": 2,
+     "us": 302.292
+    },
+    {
+     "run": 65,
+     "wave": 0,
+     "proposals": 2,
+     "us": 246.542
+    },
+    {
+     "run": 71,
+     "wave": 0,
+     "proposals": 2,
+     "us": 235.084
+    },
+    {
+     "run": 76,
+     "wave": 0,
+     "proposals": 2,
+     "us": 369.875
+    },
+    {
+     "run": 131,
+     "wave": 0,
+     "proposals": 2,
+     "us": 328.625
+    },
+    {
+     "run": 131,
+     "wave": 1,
+     "proposals": 2,
+     "us": 389.5
+    },
+    {
+     "run": 135,
+     "wave": 0,
+     "proposals": 2,
+     "us": 309.0
+    },
+    {
+     "run": 135,
+     "wave": 1,
+     "proposals": 2,
+     "us": 230.334
+    },
+    {
+     "run": 139,
+     "wave": 0,
+     "proposals": 2,
+     "us": 292.5
+    },
+    {
+     "run": 139,
+     "wave": 1,
+     "proposals": 2,
+     "us": 235.959
+    },
+    {
+     "run": 142,
+     "wave": 0,
+     "proposals": 2,
+     "us": 246.375
+    },
+    {
+     "run": 142,
+     "wave": 1,
+     "proposals": 2,
+     "us": 265.875
+    },
+    {
+     "run": 145,
+     "wave": 0,
+     "proposals": 2,
+     "us": 305.5
+    },
+    {
+     "run": 145,
+     "wave": 1,
+     "proposals": 2,
+     "us": 264.042
+    },
+    {
+     "run": 149,
+     "wave": 0,
+     "proposals": 2,
+     "us": 302.5
+    },
+    {
+     "run": 149,
+     "wave": 1,
+     "proposals": 2,
+     "us": 258.0
+    },
+    {
+     "run": 153,
+     "wave": 0,
+     "proposals": 2,
+     "us": 268.083
+    },
+    {
+     "run": 17,
+     "wave": 2,
+     "proposals": 2,
+     "us": 246.709
+    },
+    {
+     "run": 31,
+     "wave": 2,
+     "proposals": 2,
+     "us": 237.0
+    },
+    {
+     "run": 32,
+     "wave": 2,
+     "proposals": 2,
+     "us": 228.792
+    },
+    {
+     "run": 37,
+     "wave": 2,
+     "proposals": 2,
+     "us": 243.416
+    },
+    {
+     "run": 42,
+     "wave": 2,
+     "proposals": 2,
+     "us": 233.5
+    },
+    {
+     "run": 47,
+     "wave": 2,
+     "proposals": 2,
+     "us": 237.417
+    },
+    {
+     "run": 52,
+     "wave": 2,
+     "proposals": 2,
+     "us": 248.334
+    },
+    {
+     "run": 57,
+     "wave": 2,
+     "proposals": 2,
+     "us": 222.5
+    },
+    {
+     "run": 65,
+     "wave": 2,
+     "proposals": 2,
+     "us": 203.083
+    },
+    {
+     "run": 71,
+     "wave": 2,
+     "proposals": 2,
+     "us": 190.625
+    },
+    {
+     "run": 76,
+     "wave": 2,
+     "proposals": 2,
+     "us": 329.5
+    },
+    {
+     "run": 131,
+     "wave": 2,
+     "proposals": 4,
+     "us": 244.167
+    },
+    {
+     "run": 135,
+     "wave": 2,
+     "proposals": 4,
+     "us": 253.542
+    },
+    {
+     "run": 139,
+     "wave": 2,
+     "proposals": 4,
+     "us": 358.583
+    },
+    {
+     "run": 142,
+     "wave": 2,
+     "proposals": 4,
+     "us": 324.708
+    },
+    {
+     "run": 145,
+     "wave": 2,
+     "proposals": 4,
+     "us": 395.875
+    },
+    {
+     "run": 149,
+     "wave": 2,
+     "proposals": 4,
+     "us": 300.208
+    },
+    {
+     "run": 153,
+     "wave": 2,
+     "proposals": 4,
+     "us": 251.625
+    }
+   ]
+  },
+  "unique-range-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 85,
+   "bucket_committed": 0,
+   "residual_committed": 6619,
+   "raw": 238,
+   "tasks": 238,
+   "distinct_checked_keys": 120,
+   "distinct_whole_keys_closed": 120,
+   "distinct_retained_rows": 0,
+   "verified_pages": 238,
+   "full_key_claims": 238,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 120,
+   "repeated_accepted_claims": 118,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 1,
+   "page_witness_rows": 238,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 243,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 103,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 238,
+   "false_closures": 0,
+   "allocated_study_bytes": 3277252,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 157,
+    "remaining_route_steps": 9860,
+    "verifier_point_reads": 36,
+    "remaining_route_point_reads": 3820
+   },
+   "ms": [
+    1072.692041,
+    1143.4255,
+    1078.473375,
+    1152.988708,
+    1090.053458,
+    1164.7865
+   ],
+   "median_ms": 1116.739479
+  },
+  "partial-positive-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 85,
+   "bucket_committed": 0,
+   "residual_committed": 6619,
+   "raw": 238,
+   "tasks": 238,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 238,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 524740,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 157,
+    "remaining_route_steps": 9981,
+    "verifier_point_reads": 36,
+    "remaining_route_point_reads": 3838
+   },
+   "ms": [
+    1107.548792,
+    1062.211916,
+    1060.734166,
+    1060.599416,
+    1110.646625,
+    1188.027416
+   ],
+   "median_ms": 1084.880354
+  },
+  "partial-unique-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 85,
+   "bucket_committed": 0,
+   "residual_committed": 6619,
+   "raw": 238,
+   "tasks": 238,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 238,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 2621892,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 157,
+    "remaining_route_steps": 9981,
+    "verifier_point_reads": 36,
+    "remaining_route_point_reads": 3838
+   },
+   "ms": [
+    1148.317584,
+    1083.336583,
+    1114.538458,
+    1134.614083,
+    1057.339125,
+    1140.195875
+   ],
+   "median_ms": 1124.5762705
+  },
+  "partial-range-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 85,
+   "bucket_committed": 24,
+   "residual_committed": 6595,
+   "raw": 238,
+   "tasks": 238,
+   "distinct_checked_keys": 111,
+   "distinct_whole_keys_closed": 81,
+   "distinct_retained_rows": 352,
+   "verified_pages": 238,
+   "full_key_claims": 162,
+   "partial_page_claims": 76,
+   "distinct_source_rows_closed": 251,
+   "repeated_accepted_claims": 124,
+   "outside_verified_range": 1176,
+   "multirow_bucket_claims": 150,
+   "largest_observed_bucket": 36,
+   "page_witness_rows": 538,
+   "directory_build_visits": 7423,
+   "directory_enumeration_visits": 3516,
+   "independent_witness_visits": 1726,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 131,
+   "accepted_extra_siblings": 24,
+   "residual_seed_checks_skipped": 201,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 238,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 189,
+    "remaining_route_steps": 9828,
+    "verifier_point_reads": 40,
+    "remaining_route_point_reads": 3816
+   },
+   "ms": [
+    1095.338125,
+    1148.77425,
+    1119.453792,
+    1123.183833,
+    1153.831541,
+    1173.099083
+   ],
+   "median_ms": 1135.9790415,
+   "synchronized_intervals": [
+    {
+     "run": 17,
+     "wave": 0,
+     "proposals": 2,
+     "us": 936.417
+    },
+    {
+     "run": 31,
+     "wave": 0,
+     "proposals": 2,
+     "us": 287.208
+    },
+    {
+     "run": 32,
+     "wave": 0,
+     "proposals": 2,
+     "us": 260.25
+    },
+    {
+     "run": 37,
+     "wave": 0,
+     "proposals": 2,
+     "us": 275.917
+    },
+    {
+     "run": 42,
+     "wave": 0,
+     "proposals": 2,
+     "us": 248.084
+    },
+    {
+     "run": 47,
+     "wave": 0,
+     "proposals": 2,
+     "us": 216.083
+    },
+    {
+     "run": 52,
+     "wave": 0,
+     "proposals": 2,
+     "us": 271.083
+    },
+    {
+     "run": 57,
+     "wave": 0,
+     "proposals": 2,
+     "us": 255.292
+    },
+    {
+     "run": 65,
+     "wave": 0,
+     "proposals": 2,
+     "us": 277.333
+    },
+    {
+     "run": 71,
+     "wave": 0,
+     "proposals": 2,
+     "us": 293.583
+    },
+    {
+     "run": 76,
+     "wave": 0,
+     "proposals": 2,
+     "us": 241.875
+    },
+    {
+     "run": 131,
+     "wave": 0,
+     "proposals": 2,
+     "us": 285.833
+    },
+    {
+     "run": 131,
+     "wave": 1,
+     "proposals": 2,
+     "us": 988.5
+    },
+    {
+     "run": 135,
+     "wave": 0,
+     "proposals": 2,
+     "us": 250.0
+    },
+    {
+     "run": 135,
+     "wave": 1,
+     "proposals": 2,
+     "us": 1124.375
+    },
+    {
+     "run": 139,
+     "wave": 0,
+     "proposals": 2,
+     "us": 222.459
+    },
+    {
+     "run": 139,
+     "wave": 1,
+     "proposals": 2,
+     "us": 205.25
+    },
+    {
+     "run": 142,
+     "wave": 0,
+     "proposals": 2,
+     "us": 260.583
+    },
+    {
+     "run": 142,
+     "wave": 1,
+     "proposals": 2,
+     "us": 206.042
+    },
+    {
+     "run": 145,
+     "wave": 0,
+     "proposals": 2,
+     "us": 252.209
+    },
+    {
+     "run": 145,
+     "wave": 1,
+     "proposals": 2,
+     "us": 200.25
+    },
+    {
+     "run": 149,
+     "wave": 0,
+     "proposals": 2,
+     "us": 298.209
+    },
+    {
+     "run": 149,
+     "wave": 1,
+     "proposals": 2,
+     "us": 237.792
+    },
+    {
+     "run": 153,
+     "wave": 0,
+     "proposals": 2,
+     "us": 630.125
+    },
+    {
+     "run": 17,
+     "wave": 2,
+     "proposals": 2,
+     "us": 248.833
+    },
+    {
+     "run": 31,
+     "wave": 2,
+     "proposals": 2,
+     "us": 1554.459
+    },
+    {
+     "run": 32,
+     "wave": 2,
+     "proposals": 2,
+     "us": 235.833
+    },
+    {
+     "run": 37,
+     "wave": 2,
+     "proposals": 2,
+     "us": 236.875
+    },
+    {
+     "run": 42,
+     "wave": 2,
+     "proposals": 2,
+     "us": 236.0
+    },
+    {
+     "run": 47,
+     "wave": 2,
+     "proposals": 2,
+     "us": 230.459
+    },
+    {
+     "run": 52,
+     "wave": 2,
+     "proposals": 2,
+     "us": 246.959
+    },
+    {
+     "run": 57,
+     "wave": 2,
+     "proposals": 2,
+     "us": 299.666
+    },
+    {
+     "run": 65,
+     "wave": 2,
+     "proposals": 2,
+     "us": 257.208
+    },
+    {
+     "run": 71,
+     "wave": 2,
+     "proposals": 2,
+     "us": 239.375
+    },
+    {
+     "run": 76,
+     "wave": 2,
+     "proposals": 2,
+     "us": 227.917
+    },
+    {
+     "run": 131,
+     "wave": 2,
+     "proposals": 4,
+     "us": 273.334
+    },
+    {
+     "run": 135,
+     "wave": 2,
+     "proposals": 4,
+     "us": 354.625
+    },
+    {
+     "run": 139,
+     "wave": 2,
+     "proposals": 4,
+     "us": 344.292
+    },
+    {
+     "run": 142,
+     "wave": 2,
+     "proposals": 4,
+     "us": 253.875
+    },
+    {
+     "run": 145,
+     "wave": 2,
+     "proposals": 4,
+     "us": 335.959
+    },
+    {
+     "run": 149,
+     "wave": 2,
+     "proposals": 4,
+     "us": 365.541
+    },
+    {
+     "run": 153,
+     "wave": 2,
+     "proposals": 4,
+     "us": 410.334
+    }
+   ]
+  },
+  "partial-range-omit": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 85,
+   "bucket_committed": 0,
+   "residual_committed": 6619,
+   "raw": 238,
+   "tasks": 238,
+   "distinct_checked_keys": 49,
+   "distinct_whole_keys_closed": 44,
+   "distinct_retained_rows": 28,
+   "verified_pages": 100,
+   "full_key_claims": 88,
+   "partial_page_claims": 12,
+   "distinct_source_rows_closed": 49,
+   "repeated_accepted_claims": 51,
+   "outside_verified_range": 64,
+   "multirow_bucket_claims": 12,
+   "largest_observed_bucket": 36,
+   "page_witness_rows": 100,
+   "directory_build_visits": 7423,
+   "directory_enumeration_visits": 3516,
+   "independent_witness_visits": 206,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 49,
+   "rejected_missing": 138,
+   "omitted_reference_winners": 28,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 100,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 157,
+    "remaining_route_steps": 9922,
+    "verifier_point_reads": 36,
+    "remaining_route_point_reads": 3828
+   }
+  },
+  "partial-range-stale": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 85,
+   "bucket_committed": 22,
+   "residual_committed": 6597,
+   "raw": 238,
+   "tasks": 238,
+   "distinct_checked_keys": 109,
+   "distinct_whole_keys_closed": 81,
+   "distinct_retained_rows": 344,
+   "verified_pages": 176,
+   "full_key_claims": 114,
+   "partial_page_claims": 62,
+   "distinct_source_rows_closed": 245,
+   "repeated_accepted_claims": 64,
+   "outside_verified_range": 1038,
+   "multirow_bucket_claims": 114,
+   "largest_observed_bucket": 36,
+   "page_witness_rows": 408,
+   "directory_build_visits": 7286,
+   "directory_enumeration_visits": 2928,
+   "independent_witness_visits": 1435,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 127,
+   "accepted_extra_siblings": 22,
+   "residual_seed_checks_skipped": 195,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 62,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 176,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 187,
+    "remaining_route_steps": 9832,
+    "verifier_point_reads": 40,
+    "remaining_route_point_reads": 3816
+   }
+  },
+  "partial-range-duplicate": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 85,
+   "bucket_committed": 23,
+   "residual_committed": 6596,
+   "raw": 238,
+   "tasks": 238,
+   "distinct_checked_keys": 109,
+   "distinct_whole_keys_closed": 81,
+   "distinct_retained_rows": 344,
+   "verified_pages": 238,
+   "full_key_claims": 162,
+   "partial_page_claims": 76,
+   "distinct_source_rows_closed": 244,
+   "repeated_accepted_claims": 126,
+   "outside_verified_range": 1188,
+   "multirow_bucket_claims": 150,
+   "largest_observed_bucket": 36,
+   "page_witness_rows": 538,
+   "directory_build_visits": 7286,
+   "directory_enumeration_visits": 3536,
+   "independent_witness_visits": 1734,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 126,
+   "accepted_extra_siblings": 23,
+   "residual_seed_checks_skipped": 198,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 238,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 188,
+    "remaining_route_steps": 9830,
+    "verifier_point_reads": 40,
+    "remaining_route_point_reads": 3816
+   }
+  },
+  "partial-range-null": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 0,
+   "bucket_committed": 0,
+   "residual_committed": 6704,
+   "raw": 0,
+   "tasks": 0,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 0,
+    "remaining_route_steps": 9981,
+    "verifier_point_reads": 0,
+    "remaining_route_point_reads": 3838
+   }
+  }
+ },
+ "dot-product/1709": {
+  "unique-positive-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 86,
+   "bucket_committed": 0,
+   "residual_committed": 6618,
+   "raw": 258,
+   "tasks": 258,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 258,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 524740,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 208,
+    "remaining_route_steps": 9981,
+    "verifier_point_reads": 62,
+    "remaining_route_point_reads": 3838
+   },
+   "ms": [
+    1131.298,
+    1104.240292,
+    1108.215333,
+    1103.609583,
+    1102.978917,
+    1133.912541
+   ],
+   "median_ms": 1106.2278125
+  },
+  "unique-unique-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 86,
+   "bucket_committed": 0,
+   "residual_committed": 6618,
+   "raw": 258,
+   "tasks": 258,
+   "distinct_checked_keys": 128,
+   "distinct_whole_keys_closed": 128,
+   "distinct_retained_rows": 0,
+   "verified_pages": 258,
+   "full_key_claims": 258,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 128,
+   "repeated_accepted_claims": 130,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 1,
+   "page_witness_rows": 258,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 262,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 116,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 258,
+   "false_closures": 0,
+   "allocated_study_bytes": 2621892,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 208,
+    "remaining_route_steps": 9833,
+    "verifier_point_reads": 62,
+    "remaining_route_point_reads": 3806
+   },
+   "ms": [
+    1151.040042,
+    1157.501625,
+    1142.451792,
+    1160.60275,
+    1107.087875,
+    1136.777375
+   ],
+   "median_ms": 1146.7459170000002
+  },
+  "unique-range-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 86,
+   "bucket_committed": 0,
+   "residual_committed": 6618,
+   "raw": 258,
+   "tasks": 258,
+   "distinct_checked_keys": 128,
+   "distinct_whole_keys_closed": 128,
+   "distinct_retained_rows": 0,
+   "verified_pages": 258,
+   "full_key_claims": 258,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 128,
+   "repeated_accepted_claims": 130,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 1,
+   "page_witness_rows": 258,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 262,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 116,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 258,
+   "false_closures": 0,
+   "allocated_study_bytes": 3277252,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 208,
+    "remaining_route_steps": 9833,
+    "verifier_point_reads": 62,
+    "remaining_route_point_reads": 3806
+   },
+   "ms": [
+    1141.410667,
+    1143.911875,
+    1154.451333,
+    1162.784709,
+    1176.127666,
+    1191.538083
+   ],
+   "median_ms": 1158.618021
+  },
+  "partial-positive-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 86,
+   "bucket_committed": 0,
+   "residual_committed": 6618,
+   "raw": 258,
+   "tasks": 258,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 258,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 524740,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 208,
+    "remaining_route_steps": 9981,
+    "verifier_point_reads": 62,
+    "remaining_route_point_reads": 3838
+   },
+   "ms": [
+    1122.453167,
+    1105.703708,
+    1111.138083,
+    1177.749667,
+    1144.836,
+    1157.049667
+   ],
+   "median_ms": 1133.6445835
+  },
+  "partial-unique-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 86,
+   "bucket_committed": 0,
+   "residual_committed": 6618,
+   "raw": 258,
+   "tasks": 258,
+   "distinct_checked_keys": 0,
+   "distinct_whole_keys_closed": 0,
+   "distinct_retained_rows": 0,
+   "verified_pages": 0,
+   "full_key_claims": 0,
+   "partial_page_claims": 0,
+   "distinct_source_rows_closed": 0,
+   "repeated_accepted_claims": 0,
+   "outside_verified_range": 0,
+   "multirow_bucket_claims": 0,
+   "largest_observed_bucket": 0,
+   "page_witness_rows": 0,
+   "directory_build_visits": 0,
+   "directory_enumeration_visits": 0,
+   "independent_witness_visits": 0,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 0,
+   "accepted_extra_siblings": 0,
+   "residual_seed_checks_skipped": 0,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 258,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 0,
+   "false_closures": 0,
+   "allocated_study_bytes": 2621892,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 208,
+    "remaining_route_steps": 9981,
+    "verifier_point_reads": 62,
+    "remaining_route_point_reads": 3838
+   },
+   "ms": [
+    1148.262416,
+    1151.599125,
+    1146.000667,
+    1158.087041,
+    1201.772708,
+    1127.387291
+   ],
+   "median_ms": 1149.9307705
+  },
+  "partial-range-intact": {
+   "runs": 1535,
+   "rhs": 6704,
+   "neural_committed": 86,
+   "bucket_committed": 21,
+   "residual_committed": 6597,
+   "raw": 258,
+   "tasks": 258,
+   "distinct_checked_keys": 121,
+   "distinct_whole_keys_closed": 94,
+   "distinct_retained_rows": 306,
+   "verified_pages": 258,
+   "full_key_claims": 190,
+   "partial_page_claims": 68,
+   "distinct_source_rows_closed": 246,
+   "repeated_accepted_claims": 134,
+   "outside_verified_range": 984,
+   "multirow_bucket_claims": 142,
+   "largest_observed_bucket": 36,
+   "page_witness_rows": 522,
+   "directory_build_visits": 8974,
+   "directory_enumeration_visits": 3132,
+   "independent_witness_visits": 1550,
+   "unique_index_visits": 0,
+   "unproposed_sibling_checks": 118,
+   "accepted_extra_siblings": 21,
+   "residual_seed_checks_skipped": 210,
+   "rejected_missing": 0,
+   "omitted_reference_winners": 0,
+   "rejected_stale_after_union": 0,
+   "no_authorized_closure": 0,
+   "hidden_or_unresolved": 0,
+   "verified_extent_audits": 258,
+   "false_closures": 0,
+   "allocated_study_bytes": 5407172,
+   "route": {
+    "exact_seeds_skipped": 0,
+    "verified_steps": 237,
+    "remaining_route_steps": 9804,
+    "verifier_point_reads": 66,
+    "remaining_route_point_reads": 3802
+   },
+   "ms": [
+    1170.688542,
+    1174.736667,
+    1180.959583,
+    1178.419375,
+    1207.662792,
+    1208.925666
+   ],
+   "median_ms": 1179.6894790000001
+  }
+ }
+}

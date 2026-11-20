@@ -1,0 +1,102 @@
+{
+ "sum-bits": {
+  "omitted_same_key_winner": {
+   "run": 98,
+   "leaf": 11,
+   "rule": 65,
+   "pivot": 0,
+   "table": "Bop",
+   "bucket_extent": 2,
+   "key_columns": [
+    0
+   ],
+   "neural_seed": {
+    "row": 174,
+    "rhs_ordinal": 379,
+    "inputs": [
+     13,
+     358,
+     360,
+     361
+    ],
+    "projected_key": [
+     13
+    ]
+   },
+   "omitted": {
+    "row": 208,
+    "rhs_ordinal": 380,
+    "inputs": [
+     13,
+     392,
+     394,
+     395
+    ],
+    "projected_key": [
+     13
+    ]
+   }
+  },
+  "intact_partial_key_claims": {
+   "1703": {
+    "source_shared_or_constant": 32,
+    "leading_input_projection": 228
+   },
+   "1709": {
+    "source_shared_or_constant": 78,
+    "leading_input_projection": 222,
+    "reverse_result_projection": 6
+   }
+  }
+ },
+ "dot-product": {
+  "omitted_same_key_winner": {
+   "run": 131,
+   "leaf": 11,
+   "rule": 65,
+   "pivot": 0,
+   "table": "Bop",
+   "bucket_extent": 2,
+   "key_columns": [
+    0
+   ],
+   "neural_seed": {
+    "row": 235,
+    "rhs_ordinal": 710,
+    "inputs": [
+     36,
+     428,
+     429,
+     430
+    ],
+    "projected_key": [
+     36
+    ]
+   },
+   "omitted": {
+    "row": 237,
+    "rhs_ordinal": 709,
+    "inputs": [
+     36,
+     426,
+     431,
+     432
+    ],
+    "projected_key": [
+     36
+    ]
+   }
+  },
+  "intact_partial_key_claims": {
+   "1703": {
+    "source_shared_or_constant": 36,
+    "leading_input_projection": 202
+   },
+   "1709": {
+    "source_shared_or_constant": 60,
+    "leading_input_projection": 194,
+    "reverse_result_projection": 4
+   }
+  }
+ }
+}
