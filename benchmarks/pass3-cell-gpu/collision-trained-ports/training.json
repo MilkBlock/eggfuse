@@ -1,0 +1,42 @@
+{
+ "initial2": {
+  "bits": 2,
+  "learned_coefficients": 32,
+  "updates": 0,
+  "paired_events": 4056,
+  "unique_pairs": 258,
+  "remaining_training_collisions": 1069
+ },
+ "uniform2": {
+  "bits": 2,
+  "learned_coefficients": 32,
+  "updates": 320,
+  "paired_events": 4056,
+  "unique_pairs": 258,
+  "remaining_training_collisions": 500
+ },
+ "hard2": {
+  "bits": 2,
+  "learned_coefficients": 32,
+  "updates": 320,
+  "paired_events": 4056,
+  "unique_pairs": 258,
+  "remaining_training_collisions": 92
+ },
+ "hard4": {
+  "bits": 4,
+  "learned_coefficients": 64,
+  "updates": 320,
+  "paired_events": 4056,
+  "unique_pairs": 258,
+  "remaining_training_collisions": 1
+ },
+ "hard8": {
+  "bits": 8,
+  "learned_coefficients": 128,
+  "updates": 320,
+  "paired_events": 4056,
+  "unique_pairs": 258,
+  "remaining_training_collisions": 0
+ }
+}
