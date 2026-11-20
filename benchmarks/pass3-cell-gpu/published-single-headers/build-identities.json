@@ -1,0 +1,49 @@
+{
+ "baseline": {
+  "native_sha256": "ed1fc3d8983729ef1bfa35ac5fd629bbde359626e5d327815f7b46696a8ec269",
+  "build_sha256": "24947dab428a022c838272b69f7dc8c6b2b63baaa4db1ec34fb0fea39bbd5c88",
+  "benchmark_implementation": {
+   "published-single-headers/banks.rs": "aef0ffcce361b1d3b109408c681abfe025049352ed25e9ce4af2e085691026e4",
+   "published-single-headers/overlay.py": "6f384621fa62edf812f15544928c809446af82878fa58d8d3ddb3aa56f1f4181"
+  },
+  "source_base": "31bf7e41",
+  "native_execution": "complete",
+  "seed": 1703
+ },
+ "anchors": {
+  "native_sha256": "00ad05c3843780437d5f0c86f4396608e0bfa2e819770451371bfa499fb57623",
+  "build_sha256": "cd7c766f3ef13a1d7ed27fef0eb063a9f017ef611b78ce0538e0ce45917183a7",
+  "benchmark_implementation": {
+   "published-single-headers/reverse.rs": "0e4159c462ac9642570e826707e01865fa8bc3098b9fd8532b178ec758a4580a",
+   "published-single-headers/banks.rs": "603cd4659bead767deb5008d7aa3c8b5cca48a56d93d220f6d98a50a72c5ee4c",
+   "published-single-headers/overlay.py": "c16daf157bfd2cbd2c3760b189e4646cc1b18fa508ba2f7a3169d34f2a906d40"
+  },
+  "source_base": "31bf7e41",
+  "native_execution": "complete",
+  "seed": 1703
+ },
+ "large": {
+  "native_sha256": "00ad05c3843780437d5f0c86f4396608e0bfa2e819770451371bfa499fb57623",
+  "build_sha256": "cd7c766f3ef13a1d7ed27fef0eb063a9f017ef611b78ce0538e0ce45917183a7",
+  "benchmark_implementation": {
+   "published-single-headers/reverse.rs": "0e4159c462ac9642570e826707e01865fa8bc3098b9fd8532b178ec758a4580a",
+   "published-single-headers/banks.rs": "603cd4659bead767deb5008d7aa3c8b5cca48a56d93d220f6d98a50a72c5ee4c",
+   "published-single-headers/overlay.py": "c16daf157bfd2cbd2c3760b189e4646cc1b18fa508ba2f7a3169d34f2a906d40"
+  },
+  "source_base": "31bf7e41",
+  "native_execution": "complete",
+  "seed": 1703
+ },
+ "direct": {
+  "native_sha256": "77cf371b6c3b88dd1955c9c32bfe7ed11cb240d4270ecf967b96ba2e01cb047d",
+  "build_sha256": "cd7c766f3ef13a1d7ed27fef0eb063a9f017ef611b78ce0538e0ce45917183a7",
+  "benchmark_implementation": {
+   "published-single-headers/reverse.rs": "0e4159c462ac9642570e826707e01865fa8bc3098b9fd8532b178ec758a4580a",
+   "published-single-headers/banks.rs": "603cd4659bead767deb5008d7aa3c8b5cca48a56d93d220f6d98a50a72c5ee4c",
+   "published-single-headers/overlay.py": "c16daf157bfd2cbd2c3760b189e4646cc1b18fa508ba2f7a3169d34f2a906d40"
+  },
+  "source_base": "31bf7e41",
+  "native_execution": "complete",
+  "seed": 1703
+ }
+}
