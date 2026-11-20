@@ -1,0 +1,6 @@
+(datatype Expr (Left i64 i64) (Right i64 i64) (Joined i64 i64 i64))
+(ruleset pair)
+(rule ((= l (Left a k)) (= r (Right k b))) ((Joined a k b)) :ruleset pair)
+(Left 1 7)
+(Right 7 8)
+(run pair 1)

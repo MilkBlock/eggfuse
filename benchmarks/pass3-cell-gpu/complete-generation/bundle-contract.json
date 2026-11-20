@@ -1,0 +1,121 @@
+{
+ "complete": {
+  "rhs": 7265,
+  "neural_rhs": 7265,
+  "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+  "runs": 1428,
+  "root_recipes_applied": 7265
+ },
+ "bounded_ok": {
+  "rhs": 7265,
+  "neural_rhs": 7265,
+  "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+  "runs": 1428,
+  "root_recipes_applied": 7265
+ },
+ "bounded": {
+  "merge_child": {
+   "control": "learned",
+   "counts": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "issued": null,
+   "score_trajectory": "14695981039346656037",
+   "source_rhs": 10
+  },
+  "partial_rhs": 10,
+  "root_recipe": {
+   "allocated": 10,
+   "applied": 10,
+   "commits": [],
+   "emitted": [
+    74,
+    2
+   ],
+   "encoding": "full",
+   "fault": null,
+   "fresh": [],
+   "mode": "use",
+   "owned_slot_transfers": 0,
+   "raw_hash": "10323323479191910036",
+   "rejected": 0,
+   "rhs": 10,
+   "root_header_checks": 0,
+   "root_row_decodes": 16,
+   "sealed": 10,
+   "wire_bytes": 16832,
+   "wire_hash": "14695981039346656037"
+  },
+  "runs": 8,
+  "source_error": "incomplete multi-parent generation at Run 9, rule 279: limit 2 left an unexplored branch",
+  "unfinished_generation": {
+   "attempts": 2,
+   "limit": 2,
+   "reason": "unexplored_parent_branch",
+   "rule": 279,
+   "run": 9
+  }
+ },
+ "old": {
+  "merge_child": {
+   "control": "learned",
+   "counts": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "issued": null,
+   "score_trajectory": "14695981039346656037",
+   "source_rhs": 10
+  },
+  "partial_rhs": 10,
+  "root_recipe": {
+   "allocated": 10,
+   "applied": 10,
+   "commits": [],
+   "emitted": [
+    74,
+    2
+   ],
+   "encoding": "full",
+   "fault": null,
+   "fresh": [],
+   "mode": "use",
+   "owned_slot_transfers": 0,
+   "raw_hash": "10323323479191910036",
+   "rejected": 0,
+   "rhs": 10,
+   "root_header_checks": 0,
+   "root_row_decodes": 16,
+   "sealed": 10,
+   "wire_bytes": 16832,
+   "wire_hash": "14695981039346656037"
+  },
+  "runs": 8,
+  "source_error": "incomplete multi-parent generation at Run 9, rule 279: limit 2 left an unexplored branch",
+  "unfinished_generation": {
+   "attempts": 2,
+   "limit": 2,
+   "reason": "unexplored_parent_branch",
+   "rule": 279,
+   "run": 9
+  }
+ },
+ "invalid": {
+  "rejected": true
+ },
+ "old_archive_control": {
+  "archive_off": 4588,
+  "archive_on": 7265,
+  "rhs": 7265,
+  "same_state": true
+ }
+}

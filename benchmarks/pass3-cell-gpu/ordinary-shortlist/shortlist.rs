@@ -152,7 +152,7 @@ impl Store {
             }else{raw.push(path.clone());}
             return Ok(())
         }
-        if self.trial_attempts>=self.cap{return Ok(())}
+        if self.stop_generation(){return Ok(())}
         if c.rule.seminaive && epoch.max(c.remaining[i])<c.watermark{self.counts.stale_candidates+=1;return Ok(())}
         let d=&steps[i];
         let list=if let Some(&(col,slot))=d.shared.first(){
@@ -161,7 +161,7 @@ impl Store {
         }else{None};
         let len=list.as_ref().map_or(d.frame.rows.len(),|v|v.len());
         for pos in 0..len{
-            if self.trial_attempts>=self.cap{break}
+            if self.stop_generation(){break}
             let j=list.as_ref().map_or(pos,|v|v[pos]);let row=&d.frame.rows[j];
             let now=epoch.max(row.epoch);
             if c.rule.seminaive && now.max(c.remaining[i+1])<c.watermark{continue}

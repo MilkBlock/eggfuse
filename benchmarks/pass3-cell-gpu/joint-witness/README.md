@@ -49,3 +49,7 @@ python "$dir/prepare.py" "$PROGRAM" "$IMAGE_DIR" /tmp/eggfuse-bundle --policy ce
 ~~~
 
 将 `--policy` 设为 `high` 可运行允许少量单见证补查的对照。该程序以新的运行图计算 SHA-256 和结果计数。在线执行不加载 Python、PyTorch 或 GPU。隔离测试复制这七个包文件与 Rust 二进制，禁止读取参考卷和用户目录并禁止联网，八次运行的图摘要、根配方和子分配 ID 数均一致。[隔离运行记录](results/bundles.json)若要复现详细审计，使用 `evaluate.py` 运行已编译的二进制，以 `--sealed --shortlist --sealed-index 3xlearned --radius 2 --cap 1000000 --merge-control learned` 选择同一配置；`--arms strict` 关闭两个残余路径，`--arms target` 只保留单见证补查。原始档案目录和逐提交记录的 SHA-256 见[复现清单](results/manifest.json)。
+
+## Generation completeness
+
+`multi_generation: "complete"` exhausts the learned multi-parent choices on each current finite source view. The offline bundle compiler requests this mode for certified CPU policies. With `"bounded"` or a legacy request lacking this field, `cap` constrains pointer expansions per rule. An attempted expansion past this limit in a no-residual policy fails the run and reports the pending rule. It never reports a partial graph as a completed inference. The diagnostic count for reaching a threshold on its last candidate is separate from actually refusing to explore a branch. [Regression and original-source validation](../complete-generation/README.md)

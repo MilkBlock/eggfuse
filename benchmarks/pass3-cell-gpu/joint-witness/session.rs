@@ -84,7 +84,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 req["multi_mode"].as_str().ok_or("multi_mode")?,
                 u32::try_from(req["radius"].as_u64().ok_or("radius")?)?,
                 req["multi_residual"].as_bool().ok_or("multi_residual")?,
-                usize::try_from(req["cap"].as_u64().ok_or("cap")?)?,
+                match req.get("multi_generation").map(Value::as_str) {
+                    None | Some(Some("bounded")) => usize::try_from(req["cap"].as_u64().ok_or("cap")?)?,
+                    Some(Some("complete")) => usize::MAX,
+                    _ => return Err("unknown multi-parent generation mode".into()),
+                },
                 audit,
             )?;
 
@@ -103,6 +107,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let start = Instant::now();
         if let Err(error) = runtime.execute() {
             let mut failure = json!({"source_error":error,"runs":runtime.steps.len(),"partial_rhs":ordinary_witness::report()["total_rhs"]});
+            if let Some(pending)=ordinary_witness::unfinished_generation(){
+                failure["unfinished_generation"]=pending;
+            }
             if audit {
                 transfer_audit::set_active(false);
                 failure["rhs"] = json!(transfer_audit::take_digests());
@@ -152,10 +159,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         if one_shot {
             let single = &report["single"];
             let multi = &report["multi"];
-            let winners = single["committed"].as_array().map_or(0, |v| v.len());
+            // Historical JSON is optional in a resident build. This counter is updated
+            // only when the original source commit consumes the winning single token.
+            let winners = single["guard_counts"][4].as_u64().unwrap_or(0);
             let learned = matches!(single["mode"].as_str(), Some("learned" | "zero-state"));
             let total = multi["total_rhs"].as_u64().ok_or("missing source count")?;
-            let neural = if learned { winners as u64 } else { 0 }
+            let neural = if learned { winners } else { 0 }
                 + multi["neural_committed"].as_u64().unwrap_or(0);
             report = json!({"backend":"cpu-rust","runs":report["runs"],"rhs":total,"neural_rhs":neural,
                 "remaining_rhs":total-neural,"state_sha":report["state_sha"],"inference_ms":ms,

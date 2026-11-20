@@ -22,7 +22,15 @@ struct Ticket {run:usize,rule:usize,width:usize,anchors:Vec<Dependency>,inputs:V
 struct Store {views:usize,seal:bool,raw_digest:Sha256,model:Model,plans:Vec<Option<Plan>>,radius:u32,mode:String,residual:bool,
     detailed:bool,cap:usize,codes:HashMap<Value,Port>,frames:HashMap<usize,Rc<Frame>>,
     indexes:HashMap<(usize,usize),Rc<Index>>,counts:Counts,global_rhs:usize,by_width:BTreeMap<usize,usize>,
-    tickets:Vec<Ticket>,wins:Vec<Ticket>,run:usize,rule:usize,trial_attempts:usize}
+    tickets:Vec<Ticket>,wins:Vec<Ticket>,run:usize,rule:usize,trial_attempts:usize,unvisited_after_cap:bool}
+impl Store{
+    // Reaching the limit on the last candidate and refusing another branch are different.
+    fn stop_generation(&mut self)->bool{
+        if self.trial_attempts<self.cap{return false;}
+        self.unvisited_after_cap=true;
+        true
+    }
+}
 thread_local!{static STORE:RefCell<Option<Store>>=const{RefCell::new(None)};}
 pub fn configure(program:&Program,plan:&[u8],model:&[u8],mode:&str,radius:u32,residual:bool,cap:usize,detailed:bool)->Result<()>{
     let seal=mode.starts_with("seal");let mode=mode.strip_prefix("seal").unwrap_or(mode);
@@ -31,7 +39,7 @@ pub fn configure(program:&Program,plan:&[u8],model:&[u8],mode:&str,radius:u32,re
     let s=Store{views,seal,raw_digest:Sha256::new(),model:serde_json::from_slice(model).map_err(|e|e.to_string())?,
         plans:serde_json::from_slice(plan).map_err(|e|e.to_string())?,radius,mode:mode.into(),residual,detailed,cap,
         codes:HashMap::new(),frames:HashMap::new(),indexes:HashMap::new(),counts:Counts::default(),global_rhs:0,by_width:BTreeMap::new(),
-        tickets:vec![],wins:vec![],run:0,rule:0,trial_attempts:0};
+        tickets:vec![],wins:vec![],run:0,rule:0,trial_attempts:0,unvisited_after_cap:false};
     if s.plans.len()!=program.rules.len(){return Err("rule count mismatch".into())}
     for (r,p) in program.rules.iter().zip(&s.plans){
         let Some(p)=p else{continue};
@@ -55,6 +63,15 @@ pub fn configure(program:&Program,plan:&[u8],model:&[u8],mode:&str,radius:u32,re
         return Err("sealed mode requires all independent pointers before any verifier instruction".into())
     }
     STORE.with(|x|*x.borrow_mut()=Some(s)); Ok(())
+}
+pub fn unfinished_generation()->Option<Json>{
+    STORE.with_borrow(|cell|{
+        let s=cell.as_ref()?;
+        (s.unvisited_after_cap && !s.residual).then(||json!({
+            "run":s.run, "rule":s.rule, "attempts":s.trial_attempts, "limit":s.cap,
+            "reason":"unexplored_parent_branch"
+        }))
+    })
 }
 pub fn report()->Json{STORE.with(|x|x.borrow().as_ref().map_or(Json::Null,|s|
     json!({"generator":s.mode,"sealed_before_verifier":s.seal,"embedding_views":s.views,"raw_sha256":if s.detailed && s.seal{format!("{:x}",s.raw_digest.clone().finalize())}else{String::new()},"neural_committed":if matches!(s.mode.as_str(),"learned"|"adaptive"|"certified"){s.counts.committed}else{0},"counts":s.counts,"total_rhs":s.global_rhs,"by_width":s.by_width,"tickets":s.wins})))}
@@ -181,7 +198,7 @@ impl Store{
             }
             raw.push(p.anchors);return Ok(())
         }
-        if self.trial_attempts>=self.cap && (c.sealing || !self.seal){return Ok(())}
+        if (c.sealing || !self.seal) && self.stop_generation(){return Ok(())}
         if c.rule.seminaive && p.epoch.max(c.remaining[step])<c.watermark{self.counts.stale_candidates+=1;return Ok(())}
         if step==c.inst.len(){
             if p.picks<2{return Err("unscored source tuple".into())}
@@ -216,7 +233,7 @@ impl Store{
         let required=cols.iter().map(|&col|match &atom.args[col]{Arg::Slot(s)=>p.latents.get(s).copied().map(|port|(col,port)), _=>None})
             .collect::<Option<Vec<_>>>().ok_or("missing neural query port")?;
         let mut visit=|this:&mut Self,row:&Row|->Result<()>{
-            if this.trial_attempts>=this.cap{return Ok(())}
+            if this.stop_generation(){return Ok(())}
             if c.rule.seminaive && p.epoch.max(row.epoch).max(c.remaining[step+1])<c.watermark{return Ok(())}
             if p.picks>0{
                 this.counts.approximate_visits+=1;
@@ -285,10 +302,14 @@ pub(crate) fn proposals(g:&Graph,rid:usize,run:usize,mark:u64,known:&QueryFacts)
             remaining[i]=remaining[i+1];
             if let Call::Table(t)=rule.query[*id].call{remaining[i]=remaining[i].max(s.frame(g,t)?.max_epoch);}
         }
-        s.run=run;s.rule=rid;s.trial_attempts=0;
+        s.run=run;s.rule=rid;s.trial_attempts=0;s.unvisited_after_cap=false;
         let mut c=Context{graph:g,rule,inst:&ins,watermark:mark,known,remaining,width,pick_count:ins.iter().filter(|x|x.1==1).count(),sealing:s.seal};
         let p=Prefix{latents:BTreeMap::new(),slots:Slots::default(),witness:vec![None;rule.query.len()],anchors:vec![],epoch:0,picks:0};
         let mut out=vec![];let mut raw=vec![];s.descend(&c,0,p.clone(),&mut out,&mut raw)?;
+        if s.unvisited_after_cap && !s.residual{
+            s.counts.exhausted+=1;
+            return Err(format!("incomplete multi-parent generation at Run {run}, rule {rid}: limit {} left an unexplored branch",s.cap));
+        }
         if c.sealing{
             s.counts.peak_rule_tuples=s.counts.peak_rule_tuples.max(raw.len());c.sealing=false;
             let mut no_more=vec![];

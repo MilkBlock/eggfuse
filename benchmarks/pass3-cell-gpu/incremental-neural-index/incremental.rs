@@ -379,7 +379,7 @@ impl Store {
         let mut path = Vec::with_capacity(2);
         let n = if selective { active.len() } else { full_left };
         for pos in 0..n {
-            if self.trial_attempts >= self.cap {
+            if self.stop_generation() {
                 break;
             }
             let l = if selective { active[pos] } else { pos };
@@ -419,7 +419,7 @@ impl Store {
                 &shortlist
             };
             for &r in entries {
-                if self.trial_attempts >= self.cap {
+                if self.stop_generation() {
                     break;
                 }
                 let other = &right.frame.rows[r];
