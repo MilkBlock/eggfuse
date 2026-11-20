@@ -1,0 +1,345 @@
+{
+ "schema": "eggfuse.guard-catalog/v1",
+ "training": [
+  "affine-twins",
+  "clamped-ramp",
+  "segmented-prefix",
+  "window-laplacian"
+ ],
+ "family": {
+  "table": "SubTuple",
+  "column": 2,
+  "threshold": 1,
+  "eq": 137,
+  "gt": 138
+ },
+ "first": [
+  138,
+  5
+ ],
+ "seed_support": {
+  "affine-twins": {
+   "publications": 47,
+   "literal": 0,
+   "guard_2": 36,
+   "consumed_2": 16,
+   "guard_1": 11,
+   "self_predecessor": 16,
+   "consumed_1": 2
+  },
+  "clamped-ramp": {
+   "publications": 114,
+   "literal": 0,
+   "guard_2": 88,
+   "consumed_2": 32,
+   "guard_1": 26,
+   "self_predecessor": 32,
+   "consumed_1": 4
+  },
+  "segmented-prefix": {
+   "publications": 94,
+   "literal": 0,
+   "guard_2": 69,
+   "consumed_2": 26,
+   "guard_1": 25,
+   "self_predecessor": 26,
+   "consumed_1": 3
+  },
+  "window-laplacian": {
+   "publications": 78,
+   "literal": 0,
+   "guard_1": 20,
+   "guard_2": 58,
+   "consumed_2": 25,
+   "self_predecessor": 25,
+   "consumed_1": 4
+  }
+ },
+ "opportunities": [
+  {
+   "interface": [
+    "SubTuple",
+    2,
+    1,
+    137,
+    138,
+    143,
+    2
+   ],
+   "programs": {
+    "affine-twins": {
+     "publications": 111,
+     "literal": 111,
+     "guard_1": 111,
+     "consumed_1": 79
+    },
+    "clamped-ramp": {
+     "publications": 266,
+     "literal": 266,
+     "guard_1": 266,
+     "consumed_1": 159
+    },
+    "segmented-prefix": {
+     "publications": 193,
+     "literal": 193,
+     "guard_1": 193,
+     "consumed_1": 135
+    },
+    "window-laplacian": {
+     "publications": 205,
+     "literal": 205,
+     "guard_1": 205,
+     "consumed_1": 145
+    }
+   },
+   "dynamic_support": [],
+   "events": {
+    "publications": 775,
+    "literal": 775,
+    "guard_1": 775,
+    "consumed_1": 518
+   },
+   "realized": 518
+  },
+  {
+   "interface": [
+    "SubTuple",
+    2,
+    1,
+    137,
+    138,
+    139,
+    2
+   ],
+   "programs": {
+    "affine-twins": {
+     "publications": 1,
+     "literal": 0,
+     "guard_2": 1,
+     "consumed_2": 1
+    },
+    "clamped-ramp": {
+     "publications": 1,
+     "literal": 0,
+     "guard_2": 1,
+     "consumed_2": 1
+    },
+    "segmented-prefix": {
+     "publications": 1,
+     "literal": 0,
+     "guard_2": 1,
+     "consumed_2": 1
+    },
+    "window-laplacian": {
+     "publications": 2,
+     "literal": 0,
+     "guard_2": 2,
+     "consumed_2": 2
+    }
+   },
+   "dynamic_support": [],
+   "events": {
+    "publications": 5,
+    "guard_2": 5,
+    "consumed_2": 5
+   },
+   "realized": 5
+  },
+  {
+   "interface": [
+    "SubTuple",
+    2,
+    1,
+    137,
+    138,
+    140,
+    2
+   ],
+   "programs": {
+    "affine-twins": {
+     "publications": 1,
+     "literal": 0,
+     "guard_2": 1,
+     "consumed_2": 1
+    },
+    "clamped-ramp": {
+     "publications": 3,
+     "literal": 0,
+     "guard_2": 3,
+     "consumed_2": 3
+    },
+    "segmented-prefix": {
+     "publications": 2,
+     "literal": 0,
+     "guard_2": 2,
+     "consumed_2": 2
+    },
+    "window-laplacian": {
+     "publications": 2,
+     "literal": 0,
+     "guard_2": 2,
+     "consumed_2": 2
+    }
+   },
+   "dynamic_support": [],
+   "events": {
+    "publications": 8,
+    "guard_2": 8,
+    "consumed_2": 8
+   },
+   "realized": 8
+  },
+  {
+   "interface": [
+    "SubTuple",
+    2,
+    1,
+    137,
+    138,
+    142,
+    2
+   ],
+   "programs": {
+    "affine-twins": {
+     "publications": 2,
+     "literal": 0,
+     "guard_2": 2,
+     "consumed_2": 2
+    },
+    "clamped-ramp": {
+     "publications": 3,
+     "literal": 0,
+     "guard_2": 3,
+     "consumed_2": 3
+    },
+    "segmented-prefix": {
+     "publications": 3,
+     "literal": 0,
+     "guard_2": 3,
+     "consumed_2": 3
+    },
+    "window-laplacian": {
+     "publications": 3,
+     "literal": 0,
+     "guard_2": 3,
+     "consumed_2": 3
+    }
+   },
+   "dynamic_support": [],
+   "events": {
+    "publications": 11,
+    "guard_2": 11,
+    "consumed_2": 11
+   },
+   "realized": 11
+  },
+  {
+   "interface": [
+    "SubTuple",
+    2,
+    1,
+    137,
+    138,
+    144,
+    2
+   ],
+   "programs": {
+    "affine-twins": {
+     "publications": 52,
+     "literal": 0,
+     "guard_2": 52,
+     "consumed_2": 27
+    },
+    "clamped-ramp": {
+     "publications": 139,
+     "literal": 0,
+     "guard_2": 139,
+     "consumed_2": 75
+    },
+    "segmented-prefix": {
+     "publications": 110,
+     "literal": 0,
+     "guard_2": 110,
+     "consumed_2": 62
+    },
+    "window-laplacian": {
+     "publications": 88,
+     "literal": 0,
+     "guard_2": 88,
+     "consumed_2": 46
+    }
+   },
+   "dynamic_support": [],
+   "events": {
+    "publications": 389,
+    "guard_2": 389,
+    "consumed_2": 210
+   },
+   "realized": 210
+  },
+  {
+   "interface": [
+    "SubTuple",
+    2,
+    1,
+    137,
+    138,
+    138,
+    5
+   ],
+   "programs": {
+    "affine-twins": {
+     "publications": 47,
+     "literal": 0,
+     "guard_2": 36,
+     "consumed_2": 16,
+     "guard_1": 11,
+     "self_predecessor": 16,
+     "consumed_1": 2
+    },
+    "clamped-ramp": {
+     "publications": 114,
+     "literal": 0,
+     "guard_2": 88,
+     "consumed_2": 32,
+     "guard_1": 26,
+     "self_predecessor": 32,
+     "consumed_1": 4
+    },
+    "segmented-prefix": {
+     "publications": 94,
+     "literal": 0,
+     "guard_2": 69,
+     "consumed_2": 26,
+     "guard_1": 25,
+     "self_predecessor": 26,
+     "consumed_1": 3
+    },
+    "window-laplacian": {
+     "publications": 78,
+     "literal": 0,
+     "guard_1": 20,
+     "guard_2": 58,
+     "consumed_2": 25,
+     "self_predecessor": 25,
+     "consumed_1": 4
+    }
+   },
+   "dynamic_support": [
+    "affine-twins",
+    "clamped-ramp",
+    "segmented-prefix",
+    "window-laplacian"
+   ],
+   "events": {
+    "publications": 333,
+    "guard_2": 251,
+    "consumed_2": 99,
+    "guard_1": 82,
+    "self_predecessor": 99,
+    "consumed_1": 13
+   },
+   "realized": 112
+  }
+ ]
+}
