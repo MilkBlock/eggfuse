@@ -43,6 +43,60 @@ Before optimizing the Cell CPU path, check whether a new iteration can learn fro
   paths. A specification, shared registry or new counter alone is not a completed
   takeover or evidence of a speedup.
 
+## Recursive neural Cell generation and verification on GPU
+
+The research goal is to let the network discover and compose useful derivations
+on a real Pass 3 graph, then verify them more cheaply than matching them again.
+Iterative Bake supplies shared Cell templates, certified internal wiring and
+named boundary ports. The network chooses instances, parents and continuations.
+An instance can cite another instance's output port as a premise. One composed
+certificate can justify several rule applications when the template proves them.
+
+- **Generation.** Each neural forward consumes its own preceding GPU tokens and
+  latents. Multiple rows can propose complementary instances and address a
+  parent by row, position and port. A source Run defines visibility and effect
+  order. The generator can take several waves inside that Run and carry private
+  continuations across Runs. Row count, candidate window, wave budget and stop
+  policy are experimental choices. State them when reporting a coverage ceiling.
+- **Verification.** Support both feedback after a wave and generation of a batch
+  in which children cite pending parents. For example, a child may cite the
+  output of a Pair proposed in the preceding wave. Check its parent first, reuse
+  the verified port, and check the child's remaining boundary conditions. If a
+  premise fails or a union invalidates an observation, retire the dependent
+  proof and its descendants. Preserve independent proposals and any separately
+  supported derivations. Retain source identity, generation, epoch and original
+  Run visibility for ordered publication.
+- **Stopping.** The model may propose stopping. Closing a source obligation
+  requires a coverage proof or explicit exact completion. Carry unresolved
+  obligations forward to their legal boundary. On the pure GPU path the CPU
+  performs offline Bake and independent post-run audit. Charge all device-side
+  exact completion to the exact engine.
+- **Evidence.** On full Pass 3, attribute distinct committed RHS bindings to
+  their producer after deduplication. Report raw proposals, rejects, duplicates,
+  neural winners, exact completions and end-to-end time including verification.
+  Check ordered RHS inputs, effective writes, Spine continuations and the final
+  graph. Report what happens with exact completion disabled. For a feedback vs
+  batch comparison, hold the action library and proposal budget fixed.
+
+Consult the existing evidence before proposing these mechanisms as new:
+
+- [Pair → Chain](benchmarks/multi-row-generation/README.md) generated children
+  from generated parents and audited them afterwards.
+  [Same-stage multi-wave generation](benchmarks/multi-row-generation/streaming/README.md)
+  measured reuse of actual token history and complementary coverage.
+- [Figure 17](benchmarks/multi-row-generation/proof_ablation/README.md) checked
+  compiler-composed proofs for neural bindings.
+  [Figure 18](benchmarks/multi-row-generation/integral_ablation/README.md)
+  exercised private parent/child chains and selective retirement after union.
+  [Figure 19](benchmarks/multi-row-generation/stopping_ablation/README.md)
+  tested learned stopping against exact outstanding obligations.
+- [Figure 56](benchmarks/pass3-cell-gpu/recurrent-generator/README.md) ran a
+  restricted neural leaf proposer with exact GPU completion on full Pass 3.
+  Its 181/7,265 sum-bits ceiling counts reference winners reachable with its
+  32 leaves, eight addresses per leaf and two proposals in one wave per Run.
+  A composed certificate or a different wave budget needs its own measurement.
+  Identify who generated the bindings whenever reusing a Pass 3 result.
+
 ## Semantic acceptance
 
 - Use `python3 benchmarks/marker-handoff/choice_diagnosis.py ARTIFACT_ROOT OUTPUT.json`
