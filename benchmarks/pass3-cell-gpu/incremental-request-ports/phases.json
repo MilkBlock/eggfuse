@@ -1,0 +1,142 @@
+{
+ "conjugate-gradient": {
+  "offset": [
+   {
+    "directory_ms": 7.088715,
+    "activation_ms": 8.004837,
+    "inference_ms": 662.028583
+   },
+   {
+    "directory_ms": 6.85787,
+    "activation_ms": 7.761822,
+    "inference_ms": 656.148583
+   },
+   {
+    "directory_ms": 7.315908,
+    "activation_ms": 8.282873,
+    "inference_ms": 678.304625
+   }
+  ],
+  "rebuild": [
+   {
+    "directory_ms": 11.415458,
+    "activation_ms": 12.481214,
+    "inference_ms": 625.412291
+   },
+   {
+    "directory_ms": 12.53041,
+    "activation_ms": 13.652671,
+    "inference_ms": 671.679125
+   },
+   {
+    "directory_ms": 11.502465,
+    "activation_ms": 12.593456,
+    "inference_ms": 658.1849589999999
+   }
+  ],
+  "delta": [
+   {
+    "directory_ms": 11.248623,
+    "activation_ms": 12.355628,
+    "inference_ms": 648.4695419999999
+   },
+   {
+    "directory_ms": 11.118502,
+    "activation_ms": 12.229127,
+    "inference_ms": 674.43175
+   },
+   {
+    "directory_ms": 10.443868,
+    "activation_ms": 11.468122,
+    "inference_ms": 597.239584
+   }
+  ],
+  "union": [
+   {
+    "directory_ms": 1.166502,
+    "activation_ms": 2.30188,
+    "inference_ms": 631.4405840000001
+   },
+   {
+    "directory_ms": 1.256628,
+    "activation_ms": 2.440711,
+    "inference_ms": 656.434667
+   },
+   {
+    "directory_ms": 1.136423,
+    "activation_ms": 2.257543,
+    "inference_ms": 638.335833
+   }
+  ]
+ },
+ "3mm": {
+  "offset": [
+   {
+    "directory_ms": 27.554914,
+    "activation_ms": 30.926999,
+    "inference_ms": 1864.8951670000001
+   },
+   {
+    "directory_ms": 28.091659,
+    "activation_ms": 31.545051,
+    "inference_ms": 1963.881833
+   },
+   {
+    "directory_ms": 27.899458,
+    "activation_ms": 31.298001,
+    "inference_ms": 1889.937542
+   }
+  ],
+  "rebuild": [
+   {
+    "directory_ms": 45.634538,
+    "activation_ms": 49.443121,
+    "inference_ms": 1851.795792
+   },
+   {
+    "directory_ms": 49.812179,
+    "activation_ms": 53.77608,
+    "inference_ms": 1931.48775
+   },
+   {
+    "directory_ms": 50.145457,
+    "activation_ms": 54.202331,
+    "inference_ms": 2016.34125
+   }
+  ],
+  "delta": [
+   {
+    "directory_ms": 43.14875,
+    "activation_ms": 46.987874,
+    "inference_ms": 1821.595708
+   },
+   {
+    "directory_ms": 44.596667,
+    "activation_ms": 48.500924,
+    "inference_ms": 1901.934
+   },
+   {
+    "directory_ms": 46.106953,
+    "activation_ms": 49.99675,
+    "inference_ms": 1911.378709
+   }
+  ],
+  "union": [
+   {
+    "directory_ms": 2.985381,
+    "activation_ms": 7.005967,
+    "inference_ms": 1792.117042
+   },
+   {
+    "directory_ms": 3.178125,
+    "activation_ms": 7.359702,
+    "inference_ms": 1920.263416
+   },
+   {
+    "directory_ms": 3.403497,
+    "activation_ms": 7.976579,
+    "inference_ms": 2065.308
+   }
+  ]
+ }
+}
