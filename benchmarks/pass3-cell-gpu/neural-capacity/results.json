@@ -1,0 +1,4146 @@
+{
+ "sum-bits/1703": {
+  "40000-2": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1703,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 962.620708,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 82,
+      "correct": 79,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 114,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 107,
+      "correct": 106,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 143,
+      "correct": 139,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 93,
+   "neural_rhs": 89,
+   "exact_rhs": 7174,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 167,
+   "forward_ms": [
+    1.093125,
+    0.916875,
+    0.500292,
+    0.481166,
+    0.58625,
+    0.477875,
+    0.465917,
+    0.46325,
+    0.468709,
+    0.580375,
+    1.223666,
+    1.053375,
+    0.940583,
+    0.472375,
+    0.46425,
+    0.493625,
+    0.450458,
+    0.457458,
+    0.453833,
+    0.44625
+   ],
+   "ms": [
+    907.429334,
+    917.341708,
+    896.185125,
+    897.114291,
+    872.835708,
+    895.108375
+   ],
+   "semantic_exact": true,
+   "median_ms": 896.6497079999999
+  },
+  "40000-4": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1703,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 652.913166,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 94,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 129,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 119,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 161,
+      "correct": 142,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 107,
+   "neural_rhs": 91,
+   "exact_rhs": 7172,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 470,
+   "forward_ms": [
+    0.573625,
+    0.497667,
+    0.473583,
+    0.612959,
+    0.463208,
+    0.48175,
+    0.467,
+    0.460791,
+    0.463625,
+    0.494791,
+    0.749833,
+    1.241666,
+    0.50225,
+    0.475667,
+    0.450917,
+    0.467083,
+    0.447916,
+    0.45325,
+    0.529042,
+    0.459458
+   ],
+   "ms": [
+    943.347167,
+    954.7785,
+    905.871792,
+    919.047333,
+    923.059833,
+    909.193375
+   ],
+   "semantic_exact": true,
+   "median_ms": 921.053583
+  },
+  "160000-2": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1703,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 801.142292,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 82,
+      "correct": 79,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 115,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 108,
+      "correct": 106,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 142,
+      "correct": 139,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 93,
+   "neural_rhs": 89,
+   "exact_rhs": 7174,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 167,
+   "forward_ms": [
+    1.236292,
+    0.899334,
+    1.036,
+    1.16475,
+    0.716083,
+    0.548042,
+    0.509417,
+    1.34275,
+    0.623792,
+    0.533958,
+    1.255,
+    0.547208,
+    0.891208,
+    0.995833,
+    0.498209,
+    0.488333,
+    0.485333,
+    0.501209,
+    0.586541,
+    0.924667
+   ],
+   "ms": [
+    947.928584,
+    908.709167,
+    904.553083,
+    911.0615,
+    893.208958,
+    915.834166
+   ],
+   "semantic_exact": true,
+   "median_ms": 909.8853335
+  },
+  "160000-4": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1703,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 634.61325,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 85,
+      "correct": 80,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 118,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 110,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 148,
+      "correct": 143,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 98,
+   "neural_rhs": 90,
+   "exact_rhs": 7173,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 272,
+   "forward_ms": [
+    0.5385,
+    0.517709,
+    0.596584,
+    1.027583,
+    0.599125,
+    0.514,
+    0.5065,
+    0.612458,
+    0.614625,
+    0.756667,
+    1.005792,
+    0.522167,
+    0.512958,
+    0.497792,
+    0.484375,
+    1.376583,
+    0.542791,
+    0.507209,
+    0.526834,
+    0.486542
+   ],
+   "ms": [
+    904.16525,
+    904.997583,
+    905.757708,
+    937.679958,
+    902.527417,
+    892.429
+   ],
+   "semantic_exact": true,
+   "median_ms": 904.5814164999999
+  },
+  "640000-2": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1703,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 980.626209,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 139,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 89,
+   "neural_rhs": 89,
+   "exact_rhs": 7174,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 89,
+   "forward_ms": [
+    0.7135,
+    0.622917,
+    0.767958,
+    1.324291,
+    1.057291,
+    1.080542,
+    1.850875,
+    0.611958,
+    0.696542,
+    0.7285,
+    0.6395,
+    0.633583,
+    1.086459,
+    1.076708,
+    0.625709,
+    0.60475,
+    0.609875,
+    0.595375,
+    0.659917,
+    0.650375
+   ],
+   "ms": [
+    900.480042,
+    906.754834,
+    949.551958,
+    962.628,
+    908.900292,
+    896.600459
+   ],
+   "semantic_exact": true,
+   "median_ms": 907.827563
+  },
+  "640000-4": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1703,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 671.068125,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 141,
+      "correct": 141,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 89,
+   "neural_rhs": 89,
+   "exact_rhs": 7174,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 89,
+   "forward_ms": [
+    0.711834,
+    0.619625,
+    1.054333,
+    1.042458,
+    1.905208,
+    1.380209,
+    1.210666,
+    0.637125,
+    0.613791,
+    0.593458,
+    0.626083,
+    0.646375,
+    0.6095,
+    0.736875,
+    0.589375,
+    0.579834,
+    1.042833,
+    0.588792,
+    0.606959,
+    0.586583
+   ],
+   "ms": [
+    935.171791,
+    952.388083,
+    942.333208,
+    904.920041,
+    872.763292,
+    878.762208
+   ],
+   "semantic_exact": true,
+   "median_ms": 920.045916
+  }
+ },
+ "sum-bits/1709": {
+  "40000-2": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1709,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 665.330125,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 139,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 92,
+   "neural_rhs": 90,
+   "exact_rhs": 7173,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 96,
+   "forward_ms": [
+    0.643,
+    0.77975,
+    0.542,
+    1.300917,
+    1.129417,
+    0.995209,
+    0.50475,
+    0.470333,
+    0.471042,
+    1.38525,
+    0.579375,
+    0.509,
+    0.504916,
+    0.495,
+    0.586917,
+    0.512709,
+    1.130334,
+    1.02225,
+    0.471917,
+    0.76775
+   ],
+   "ms": [
+    891.899416,
+    890.928875,
+    946.700791,
+    921.089208,
+    892.852875,
+    904.831208
+   ],
+   "semantic_exact": true,
+   "median_ms": 898.8420415
+  },
+  "40000-4": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1709,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 595.809667,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 87,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 120,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 111,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 150,
+      "correct": 144,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 101,
+   "neural_rhs": 92,
+   "exact_rhs": 7171,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 280,
+   "forward_ms": [
+    1.200917,
+    0.982417,
+    0.64675,
+    1.0495,
+    0.956375,
+    1.033958,
+    1.882167,
+    0.526666,
+    0.504875,
+    0.531166,
+    0.601458,
+    1.023333,
+    0.953542,
+    1.008959,
+    1.038708,
+    1.1385,
+    1.031834,
+    0.556208,
+    0.547583,
+    0.533792
+   ],
+   "ms": [
+    893.489458,
+    899.530208,
+    905.614958,
+    900.475083,
+    893.419333,
+    900.947083
+   ],
+   "semantic_exact": true,
+   "median_ms": 900.0026455
+  },
+  "160000-2": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1709,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 661.122916,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 140,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 92,
+   "neural_rhs": 90,
+   "exact_rhs": 7173,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 96,
+   "forward_ms": [
+    1.117083,
+    0.552042,
+    0.581166,
+    0.657084,
+    0.567916,
+    0.615042,
+    0.531709,
+    1.119042,
+    0.552625,
+    0.535458,
+    0.522042,
+    0.5055,
+    0.555167,
+    0.965584,
+    0.569833,
+    0.5095,
+    0.520666,
+    0.766208,
+    0.982958,
+    1.022708
+   ],
+   "ms": [
+    897.287458,
+    916.578459,
+    957.080959,
+    898.329041,
+    923.124458,
+    944.882042
+   ],
+   "semantic_exact": true,
+   "median_ms": 919.8514585
+  },
+  "160000-4": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1709,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 625.766334,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 87,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 117,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 110,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 147,
+      "correct": 143,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 101,
+   "neural_rhs": 93,
+   "exact_rhs": 7170,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 255,
+   "forward_ms": [
+    1.201041,
+    0.56025,
+    0.559417,
+    0.536167,
+    0.564375,
+    1.105791,
+    1.063167,
+    1.021292,
+    0.9715,
+    0.970541,
+    0.563917,
+    0.523833,
+    0.529458,
+    0.537084,
+    0.628709,
+    0.552417,
+    1.113,
+    0.5375,
+    0.517791,
+    0.534042
+   ],
+   "ms": [
+    930.764125,
+    943.361959,
+    917.139083,
+    898.698792,
+    930.00475,
+    901.4935
+   ],
+   "semantic_exact": true,
+   "median_ms": 923.5719165
+  },
+  "640000-2": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1709,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 658.953708,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 140,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 92,
+   "neural_rhs": 90,
+   "exact_rhs": 7173,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 96,
+   "forward_ms": [
+    1.191792,
+    1.117125,
+    0.640125,
+    0.6835,
+    0.672666,
+    0.622167,
+    1.034417,
+    1.022583,
+    1.253458,
+    1.106333,
+    1.092,
+    0.713375,
+    0.625166,
+    0.615584,
+    0.607833,
+    1.198709,
+    0.634041,
+    0.61725,
+    0.619792,
+    0.627583
+   ],
+   "ms": [
+    910.4505,
+    891.923625,
+    898.950167,
+    905.437666,
+    945.237959,
+    899.662167
+   ],
+   "semantic_exact": true,
+   "median_ms": 902.5499165
+  },
+  "640000-4": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1709,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 702.3835,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 84,
+      "correct": 80,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 114,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 109,
+      "correct": 106,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 144,
+      "correct": 142,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 614,
+   "raw": 97,
+   "neural_rhs": 90,
+   "exact_rhs": 7173,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 527,
+   "runs": 1428,
+   "visits": 226,
+   "forward_ms": [
+    0.738417,
+    0.636542,
+    0.626166,
+    0.754667,
+    0.68725,
+    1.042375,
+    0.736042,
+    0.604666,
+    0.647417,
+    1.127959,
+    1.192125,
+    0.651417,
+    0.614167,
+    0.582417,
+    1.537417,
+    0.641166,
+    0.751709,
+    0.745125,
+    0.623667,
+    0.64275
+   ],
+   "ms": [
+    886.964458,
+    896.774292,
+    923.725583,
+    939.989333,
+    915.351625,
+    902.144375
+   ],
+   "semantic_exact": true,
+   "median_ms": 908.748
+  }
+ },
+ "dot-product/1703": {
+  "40000-2": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1703,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 962.620708,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 82,
+      "correct": 79,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 114,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 107,
+      "correct": 106,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 143,
+      "correct": 139,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 185,
+   "neural_rhs": 173,
+   "exact_rhs": 6529,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 173,
+   "forward_ms": [
+    0.896667,
+    1.159833,
+    0.982958,
+    0.693417,
+    0.702334,
+    0.573,
+    0.561833,
+    0.574875,
+    0.514041,
+    0.636459,
+    0.531209,
+    0.516417,
+    0.528083,
+    0.517875,
+    0.983834,
+    0.92,
+    0.502042,
+    0.502625,
+    0.497791,
+    0.498
+   ],
+   "ms": [
+    966.437458,
+    961.563209,
+    944.899375,
+    957.070917,
+    957.814125,
+    959.5885
+   ],
+   "semantic_exact": true,
+   "median_ms": 958.7013125
+  },
+  "40000-4": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1703,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 652.913166,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 94,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 129,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 119,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 161,
+      "correct": 142,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 227,
+   "neural_rhs": 188,
+   "exact_rhs": 6514,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 1037,
+   "forward_ms": [
+    0.636833,
+    0.602833,
+    0.947083,
+    0.91125,
+    0.984917,
+    0.506917,
+    0.493791,
+    0.484417,
+    0.487375,
+    0.486875,
+    0.475083,
+    0.608041,
+    0.54075,
+    0.489875,
+    0.528375,
+    0.463166,
+    0.486458,
+    0.697916,
+    1.061417,
+    0.56575
+   ],
+   "ms": [
+    977.390333,
+    945.545042,
+    978.878417,
+    941.791958,
+    973.578459,
+    938.186209
+   ],
+   "semantic_exact": true,
+   "median_ms": 959.5617505
+  },
+  "160000-2": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1703,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 801.142292,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 82,
+      "correct": 79,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 115,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 108,
+      "correct": 106,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 142,
+      "correct": 139,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 175,
+   "neural_rhs": 173,
+   "exact_rhs": 6529,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 173,
+   "forward_ms": [
+    1.053,
+    0.762125,
+    0.617625,
+    1.014167,
+    1.175584,
+    1.020792,
+    1.326333,
+    1.056625,
+    0.59675,
+    0.630458,
+    0.601542,
+    0.580875,
+    0.582916,
+    0.571584,
+    0.69975,
+    1.484,
+    0.99075,
+    1.033417,
+    0.655458,
+    0.78475
+   ],
+   "ms": [
+    948.297,
+    940.779,
+    947.863167,
+    966.035042,
+    923.427209,
+    924.954792
+   ],
+   "semantic_exact": true,
+   "median_ms": 944.3210835
+  },
+  "160000-4": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1703,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 634.61325,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 85,
+      "correct": 80,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 118,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 110,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 148,
+      "correct": 143,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 221,
+   "neural_rhs": 197,
+   "exact_rhs": 6505,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 956,
+   "forward_ms": [
+    0.663375,
+    0.582834,
+    0.654042,
+    1.401625,
+    0.6395,
+    0.572833,
+    0.56125,
+    0.566959,
+    0.547042,
+    0.528041,
+    0.636584,
+    1.032209,
+    0.551042,
+    0.532167,
+    0.5275,
+    0.576625,
+    0.926667,
+    0.617667,
+    0.542084,
+    0.6515
+   ],
+   "ms": [
+    948.784208,
+    942.619334,
+    981.328208,
+    960.583875,
+    931.579625,
+    970.613667
+   ],
+   "semantic_exact": true,
+   "median_ms": 954.6840415
+  },
+  "640000-2": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1703,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 980.626209,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 139,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 175,
+   "neural_rhs": 173,
+   "exact_rhs": 6529,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 173,
+   "forward_ms": [
+    1.29975,
+    1.227958,
+    1.222667,
+    1.331041,
+    0.792,
+    0.754875,
+    0.722292,
+    0.727875,
+    0.713333,
+    1.175667,
+    1.113,
+    1.169667,
+    1.266166,
+    0.718375,
+    0.703666,
+    0.76875,
+    0.98575,
+    0.71075,
+    0.774084,
+    0.738458
+   ],
+   "ms": [
+    960.855916,
+    974.701458,
+    964.297375,
+    962.265916,
+    935.734042,
+    955.004458
+   ],
+   "semantic_exact": true,
+   "median_ms": 961.5609159999999
+  },
+  "640000-4": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1703,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 671.068125,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 141,
+      "correct": 141,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 195,
+   "neural_rhs": 195,
+   "exact_rhs": 6507,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 195,
+   "forward_ms": [
+    0.772375,
+    0.993833,
+    0.733625,
+    0.807584,
+    0.708,
+    1.148125,
+    1.124125,
+    1.648834,
+    0.794375,
+    0.794708,
+    0.860625,
+    0.750875,
+    0.756084,
+    1.261,
+    0.728333,
+    0.699333,
+    1.235916,
+    0.792916,
+    0.696209,
+    0.706833
+   ],
+   "ms": [
+    980.663458,
+    972.116625,
+    963.977875,
+    934.447584,
+    952.804333,
+    964.188083
+   ],
+   "semantic_exact": true,
+   "median_ms": 964.082979
+  }
+ },
+ "dot-product/1709": {
+  "40000-2": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1709,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 665.330125,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 139,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 176,
+   "neural_rhs": 173,
+   "exact_rhs": 6529,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 173,
+   "forward_ms": [
+    1.124709,
+    1.051042,
+    1.077208,
+    0.989959,
+    1.096584,
+    1.1235,
+    0.568875,
+    0.521834,
+    0.695666,
+    0.915584,
+    0.73875,
+    0.501209,
+    0.528917,
+    0.514542,
+    0.521333,
+    0.527916,
+    0.515208,
+    0.519334,
+    0.495542,
+    0.532458
+   ],
+   "ms": [
+    926.971708,
+    968.350458,
+    947.48625,
+    927.748,
+    916.207792,
+    947.582208
+   ],
+   "semantic_exact": true,
+   "median_ms": 937.617125
+  },
+  "40000-4": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1709,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 595.809667,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 87,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 120,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 111,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 150,
+      "correct": 144,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 209,
+   "neural_rhs": 196,
+   "exact_rhs": 6506,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 625,
+   "forward_ms": [
+    0.637541,
+    0.6555,
+    0.546625,
+    0.565041,
+    0.978542,
+    1.225375,
+    0.603541,
+    0.533833,
+    0.536917,
+    0.986333,
+    0.513625,
+    0.483708,
+    0.495334,
+    0.556375,
+    0.518875,
+    0.511334,
+    1.15725,
+    1.126667,
+    0.764458,
+    0.565542
+   ],
+   "ms": [
+    927.824375,
+    967.398916,
+    926.859875,
+    925.8985,
+    959.11625,
+    938.085333
+   ],
+   "semantic_exact": true,
+   "median_ms": 932.9548540000001
+  },
+  "160000-2": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1709,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 661.122916,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 140,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 184,
+   "neural_rhs": 173,
+   "exact_rhs": 6529,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 173,
+   "forward_ms": [
+    0.696708,
+    0.609375,
+    0.63525,
+    0.919125,
+    1.079791,
+    1.035875,
+    1.889125,
+    1.158834,
+    0.613916,
+    0.747583,
+    0.603208,
+    0.566917,
+    1.064083,
+    0.614417,
+    0.572416,
+    0.576083,
+    0.580792,
+    0.578834,
+    0.582875,
+    0.728667
+   ],
+   "ms": [
+    983.110167,
+    954.594333,
+    995.330666,
+    972.350584,
+    938.932042,
+    966.172917
+   ],
+   "semantic_exact": true,
+   "median_ms": 969.2617505000001
+  },
+  "160000-4": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1709,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 625.766334,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 87,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 117,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 110,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 147,
+      "correct": 143,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 213,
+   "neural_rhs": 197,
+   "exact_rhs": 6505,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 725,
+   "forward_ms": [
+    0.568791,
+    0.562291,
+    0.645875,
+    0.944167,
+    1.100208,
+    0.973458,
+    0.536875,
+    0.520625,
+    0.625084,
+    0.551667,
+    0.537708,
+    0.520208,
+    0.539083,
+    0.757583,
+    0.649042,
+    0.969542,
+    1.088667,
+    0.53725,
+    0.515333,
+    0.529667
+   ],
+   "ms": [
+    937.504667,
+    992.206708,
+    988.102084,
+    937.315542,
+    979.754,
+    934.627167
+   ],
+   "semantic_exact": true,
+   "median_ms": 958.6293335
+  },
+  "640000-2": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1709,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 658.953708,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 140,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 184,
+   "neural_rhs": 173,
+   "exact_rhs": 6529,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 173,
+   "forward_ms": [
+    0.882417,
+    0.735666,
+    1.154375,
+    0.813833,
+    0.737208,
+    0.717291,
+    1.519041,
+    0.770084,
+    0.713208,
+    0.733334,
+    1.507708,
+    0.78375,
+    0.707208,
+    0.851625,
+    0.912042,
+    0.734083,
+    1.213583,
+    0.761667,
+    0.722,
+    0.723625
+   ],
+   "ms": [
+    926.993834,
+    990.110333,
+    1008.964459,
+    957.524208,
+    941.478417,
+    936.083
+   ],
+   "semantic_exact": true,
+   "median_ms": 949.5013125
+  },
+  "640000-4": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1709,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 702.3835,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 84,
+      "correct": 80,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 114,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 109,
+      "correct": 106,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 144,
+      "correct": 142,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1218,
+   "raw": 209,
+   "neural_rhs": 197,
+   "exact_rhs": 6505,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 546,
+   "runs": 1535,
+   "visits": 593,
+   "forward_ms": [
+    0.82175,
+    0.706416,
+    0.798,
+    1.092959,
+    1.123583,
+    1.229083,
+    1.201,
+    1.305958,
+    0.813958,
+    0.693333,
+    0.713833,
+    0.721209,
+    1.282209,
+    0.711833,
+    0.706792,
+    0.736625,
+    1.093375,
+    1.181334,
+    0.733833,
+    0.847292
+   ],
+   "ms": [
+    916.682792,
+    999.177458,
+    955.3515,
+    944.003958,
+    929.456042,
+    918.705125
+   ],
+   "semantic_exact": true,
+   "median_ms": 936.73
+  }
+ },
+ "gemm-bias-relu/1703": {
+  "40000-2": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1703,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 962.620708,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 82,
+      "correct": 79,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 114,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 107,
+      "correct": 106,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 143,
+      "correct": 139,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 207,
+   "neural_rhs": 207,
+   "exact_rhs": 15253,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 207,
+   "forward_ms": [
+    0.920833,
+    1.678167,
+    0.7455,
+    0.767875,
+    0.654083,
+    0.65725,
+    1.046708,
+    0.576375,
+    0.561708,
+    0.5645,
+    0.926542,
+    0.688834,
+    0.557625,
+    0.601166,
+    0.573917,
+    0.559458,
+    0.571458,
+    0.672542,
+    0.594875,
+    0.950167
+   ],
+   "ms": [
+    2925.040542,
+    2919.160291,
+    2931.573708,
+    2912.706541,
+    2918.29425,
+    2904.468416
+   ],
+   "semantic_exact": true,
+   "median_ms": 2918.7272705
+  },
+  "40000-4": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1703,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 652.913166,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 94,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 129,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 119,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 161,
+      "correct": 142,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 222,
+   "neural_rhs": 209,
+   "exact_rhs": 15251,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 303,
+   "forward_ms": [
+    0.865125,
+    1.214709,
+    1.1125,
+    1.183583,
+    0.894875,
+    0.789416,
+    0.772459,
+    0.928125,
+    0.798792,
+    0.882375,
+    1.00575,
+    1.082667,
+    1.130875,
+    0.740375,
+    0.867209,
+    2.332417,
+    0.685541,
+    0.694916,
+    0.751375,
+    1.051625
+   ],
+   "ms": [
+    2911.083125,
+    2938.214917,
+    2950.258083,
+    2930.986375,
+    2925.452708,
+    2905.767875
+   ],
+   "semantic_exact": true,
+   "median_ms": 2928.2195414999997
+  },
+  "160000-2": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1703,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 801.142292,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 82,
+      "correct": 79,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 115,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 108,
+      "correct": 106,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 142,
+      "correct": 139,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 207,
+   "neural_rhs": 207,
+   "exact_rhs": 15253,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 207,
+   "forward_ms": [
+    0.851083,
+    0.782167,
+    0.743416,
+    1.063875,
+    0.679625,
+    0.721583,
+    0.699667,
+    0.688375,
+    1.366334,
+    0.757083,
+    0.727542,
+    0.746459,
+    0.906958,
+    0.784209,
+    0.737583,
+    0.670541,
+    0.679041,
+    0.697208,
+    0.784125,
+    1.153084
+   ],
+   "ms": [
+    2936.316875,
+    2927.614792,
+    2929.354833,
+    2919.159,
+    2903.416667,
+    2897.443333
+   ],
+   "semantic_exact": true,
+   "median_ms": 2923.386896
+  },
+  "160000-4": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1703,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 634.61325,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 85,
+      "correct": 80,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 118,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 110,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 148,
+      "correct": 143,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 211,
+   "neural_rhs": 209,
+   "exact_rhs": 15251,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 291,
+   "forward_ms": [
+    0.963458,
+    0.836333,
+    1.170375,
+    0.906542,
+    0.800291,
+    1.166709,
+    1.358833,
+    1.048042,
+    1.008542,
+    1.028458,
+    0.78675,
+    0.719583,
+    0.709666,
+    0.729917,
+    0.719958,
+    1.267958,
+    0.962083,
+    1.776333,
+    1.155958,
+    1.043791
+   ],
+   "ms": [
+    2909.369084,
+    2952.607417,
+    2940.667417,
+    2936.077,
+    2907.87,
+    2938.349625
+   ],
+   "semantic_exact": true,
+   "median_ms": 2937.2133125
+  },
+  "640000-2": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1703,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 980.626209,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 139,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 207,
+   "neural_rhs": 207,
+   "exact_rhs": 15253,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 207,
+   "forward_ms": [
+    1.708625,
+    3.610625,
+    1.755667,
+    1.68125,
+    1.614292,
+    1.571,
+    2.140333,
+    1.637625,
+    1.655,
+    2.216042,
+    1.147042,
+    1.212208,
+    0.734375,
+    1.014125,
+    0.726833,
+    0.732666,
+    0.741042,
+    0.887042,
+    0.814084,
+    0.92225
+   ],
+   "ms": [
+    2928.615875,
+    2930.569458,
+    2930.274958,
+    2929.782916,
+    2919.015125,
+    2925.2315
+   ],
+   "semantic_exact": true,
+   "median_ms": 2929.1993955
+  },
+  "640000-4": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1703,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 671.068125,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 141,
+      "correct": 141,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 207,
+   "neural_rhs": 207,
+   "exact_rhs": 15253,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 207,
+   "forward_ms": [
+    2.14425,
+    1.601541,
+    1.6655,
+    1.687125,
+    1.63875,
+    1.816917,
+    1.169292,
+    1.1295,
+    1.228,
+    1.193459,
+    1.273583,
+    1.1785,
+    1.599208,
+    1.1285,
+    1.145584,
+    1.154959,
+    1.179708,
+    1.249125,
+    1.568083,
+    0.776625
+   ],
+   "ms": [
+    2924.3685,
+    2954.962916,
+    2935.598333,
+    2923.486625,
+    2919.966167,
+    2917.083334
+   ],
+   "semantic_exact": true,
+   "median_ms": 2923.9275625
+  }
+ },
+ "gemm-bias-relu/1709": {
+  "40000-2": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1709,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 665.330125,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 139,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 204,
+   "neural_rhs": 204,
+   "exact_rhs": 15256,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 204,
+   "forward_ms": [
+    1.273625,
+    0.850958,
+    0.843917,
+    0.766375,
+    3.343209,
+    1.359083,
+    0.958833,
+    0.768291,
+    0.845791,
+    0.948709,
+    2.446833,
+    1.81525,
+    0.760208,
+    0.503916,
+    0.481,
+    0.481625,
+    0.471834,
+    0.468916,
+    0.4675,
+    1.359333
+   ],
+   "ms": [
+    2943.75075,
+    2923.353334,
+    2895.484125,
+    2966.59175,
+    2978.564458,
+    2977.28775
+   ],
+   "semantic_exact": true,
+   "median_ms": 2955.1712500000003
+  },
+  "40000-4": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1709,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 595.809667,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 87,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 120,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 111,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 150,
+      "correct": 144,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 209,
+   "neural_rhs": 208,
+   "exact_rhs": 15252,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 249,
+   "forward_ms": [
+    1.117083,
+    0.6775,
+    0.829666,
+    0.766,
+    0.624,
+    0.6275,
+    0.627417,
+    0.582916,
+    0.63975,
+    0.547667,
+    0.89525,
+    1.023458,
+    0.564708,
+    0.547709,
+    1.028708,
+    0.56275,
+    0.572375,
+    0.560791,
+    0.603375,
+    0.562166
+   ],
+   "ms": [
+    2916.175333,
+    2931.36775,
+    2931.088584,
+    2969.847166,
+    2972.272458,
+    2967.537416
+   ],
+   "semantic_exact": true,
+   "median_ms": 2949.4525830000002
+  },
+  "160000-2": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1709,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 661.122916,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 140,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 207,
+   "neural_rhs": 207,
+   "exact_rhs": 15253,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 207,
+   "forward_ms": [
+    0.854125,
+    0.792042,
+    1.149375,
+    1.206292,
+    1.148541,
+    0.74025,
+    2.324333,
+    0.84125,
+    0.776042,
+    0.728416,
+    1.104583,
+    0.764792,
+    0.746166,
+    1.219792,
+    0.766042,
+    0.749667,
+    0.812417,
+    0.929917,
+    0.768167,
+    0.726041
+   ],
+   "ms": [
+    2938.744125,
+    2934.0775,
+    2920.284958,
+    2976.822,
+    2970.431625,
+    2984.892709
+   ],
+   "semantic_exact": true,
+   "median_ms": 2954.587875
+  },
+  "160000-4": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1709,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 625.766334,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 87,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 117,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 110,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 147,
+      "correct": 143,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 209,
+   "neural_rhs": 208,
+   "exact_rhs": 15252,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 249,
+   "forward_ms": [
+    1.323125,
+    2.389459,
+    1.034417,
+    1.087375,
+    1.041834,
+    1.523792,
+    1.1245,
+    1.068916,
+    0.994792,
+    0.992083,
+    0.950292,
+    1.300625,
+    0.965833,
+    0.961542,
+    0.988458,
+    1.591625,
+    1.450708,
+    1.262041,
+    1.143042,
+    0.63375
+   ],
+   "ms": [
+    2912.319,
+    2920.696583,
+    2904.397125,
+    2961.510375,
+    2977.220208,
+    2975.171291
+   ],
+   "semantic_exact": true,
+   "median_ms": 2941.103479
+  },
+  "640000-2": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1709,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 658.953708,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 140,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 207,
+   "neural_rhs": 207,
+   "exact_rhs": 15253,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 207,
+   "forward_ms": [
+    1.940583,
+    1.881875,
+    1.6725,
+    1.596,
+    1.601208,
+    1.976584,
+    1.623792,
+    2.439875,
+    1.776125,
+    1.413875,
+    0.848458,
+    0.868875,
+    0.731291,
+    0.71475,
+    0.741458,
+    1.208208,
+    1.545875,
+    0.772334,
+    1.235084,
+    0.732042
+   ],
+   "ms": [
+    2931.134291,
+    2911.601125,
+    2912.635166,
+    2972.56625,
+    2961.311041,
+    2971.383375
+   ],
+   "semantic_exact": true,
+   "median_ms": 2946.2226659999997
+  },
+  "640000-4": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1709,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 702.3835,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 84,
+      "correct": 80,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 114,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 109,
+      "correct": 106,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 144,
+      "correct": 142,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 1328,
+   "raw": 209,
+   "neural_rhs": 208,
+   "exact_rhs": 15252,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 592,
+   "runs": 1652,
+   "visits": 249,
+   "forward_ms": [
+    1.025667,
+    1.153209,
+    1.017917,
+    0.942333,
+    0.896,
+    0.920625,
+    0.965417,
+    1.284125,
+    0.92675,
+    0.935708,
+    0.916375,
+    1.274,
+    0.862291,
+    0.836916,
+    0.836208,
+    1.107958,
+    0.996667,
+    0.753709,
+    0.7355,
+    0.739917
+   ],
+   "ms": [
+    2907.666375,
+    2932.74725,
+    2921.456833,
+    2960.564708,
+    2976.020083,
+    2978.267833
+   ],
+   "semantic_exact": true,
+   "median_ms": 2946.655979
+  }
+ },
+ "stable-argmax/1703": {
+  "40000-2": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1703,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 962.620708,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 82,
+      "correct": 79,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 114,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 107,
+      "correct": 106,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 143,
+      "correct": 139,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 131,
+   "neural_rhs": 129,
+   "exact_rhs": 8059,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 185,
+   "forward_ms": [
+    1.14175,
+    0.546459,
+    0.492166,
+    0.59525,
+    0.506041,
+    1.253709,
+    1.166916,
+    0.522709,
+    0.526,
+    0.514583,
+    1.54875,
+    0.580959,
+    0.480167,
+    0.465417,
+    0.653417,
+    0.492875,
+    0.50975,
+    0.459083,
+    0.953875,
+    0.478459
+   ],
+   "ms": [
+    955.130875,
+    968.773292,
+    965.104167,
+    922.561625,
+    927.546542,
+    940.238625
+   ],
+   "semantic_exact": true,
+   "median_ms": 947.6847499999999
+  },
+  "40000-4": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1703,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 652.913166,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 94,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 129,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 119,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 161,
+      "correct": 142,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 146,
+   "neural_rhs": 130,
+   "exact_rhs": 8058,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 389,
+   "forward_ms": [
+    1.119375,
+    1.013584,
+    0.56375,
+    0.63075,
+    0.516833,
+    0.539792,
+    0.537583,
+    0.517542,
+    0.50375,
+    0.479792,
+    0.504042,
+    0.511792,
+    1.125791,
+    1.095333,
+    0.488083,
+    0.47425,
+    0.463416,
+    0.742792,
+    0.560167,
+    0.520791
+   ],
+   "ms": [
+    925.305583,
+    931.815917,
+    946.561417,
+    935.732125,
+    953.382334,
+    980.022667
+   ],
+   "semantic_exact": true,
+   "median_ms": 941.146771
+  },
+  "160000-2": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1703,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 801.142292,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 82,
+      "correct": 79,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 115,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 108,
+      "correct": 106,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 142,
+      "correct": 139,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 131,
+   "neural_rhs": 129,
+   "exact_rhs": 8059,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 185,
+   "forward_ms": [
+    1.195667,
+    0.687708,
+    0.907916,
+    1.085625,
+    0.714166,
+    1.111833,
+    0.997083,
+    0.595,
+    0.538167,
+    0.547375,
+    1.124375,
+    0.574334,
+    0.572417,
+    0.551125,
+    0.58025,
+    0.702875,
+    1.100916,
+    0.521834,
+    0.517084,
+    0.538875
+   ],
+   "ms": [
+    958.362333,
+    966.3665,
+    965.869583,
+    960.284625,
+    967.644375,
+    931.722875
+   ],
+   "semantic_exact": true,
+   "median_ms": 963.077104
+  },
+  "160000-4": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1703,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 634.61325,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 85,
+      "correct": 80,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 118,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 110,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 148,
+      "correct": 143,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 135,
+   "neural_rhs": 130,
+   "exact_rhs": 8058,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 242,
+   "forward_ms": [
+    1.137208,
+    1.089959,
+    0.614458,
+    0.557542,
+    0.59775,
+    0.591791,
+    0.540458,
+    0.542292,
+    0.722,
+    0.513208,
+    0.509291,
+    0.565042,
+    1.345417,
+    0.598208,
+    0.611333,
+    0.530042,
+    0.5485,
+    0.5375,
+    0.505167,
+    0.514875
+   ],
+   "ms": [
+    938.177416,
+    978.413167,
+    938.741584,
+    936.781041,
+    929.630083,
+    929.637584
+   ],
+   "semantic_exact": true,
+   "median_ms": 937.4792285
+  },
+  "640000-2": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1703,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 980.626209,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 139,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 128,
+   "neural_rhs": 128,
+   "exact_rhs": 8060,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 128,
+   "forward_ms": [
+    1.210917,
+    1.283084,
+    1.04175,
+    0.714791,
+    0.756334,
+    0.703208,
+    0.655875,
+    0.684542,
+    0.75675,
+    1.04375,
+    0.637458,
+    0.647458,
+    1.424166,
+    0.628583,
+    0.61975,
+    0.824417,
+    0.672083,
+    0.609625,
+    0.618125,
+    1.027125
+   ],
+   "ms": [
+    977.218583,
+    927.390209,
+    928.421583,
+    979.553208,
+    954.971125,
+    934.329667
+   ],
+   "semantic_exact": true,
+   "median_ms": 944.650396
+  },
+  "640000-4": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1703,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 671.068125,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 141,
+      "correct": 141,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 128,
+   "neural_rhs": 128,
+   "exact_rhs": 8060,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 128,
+   "forward_ms": [
+    1.188084,
+    1.792667,
+    0.661375,
+    0.617417,
+    0.779375,
+    0.622875,
+    0.662083,
+    1.113458,
+    0.607792,
+    0.722834,
+    0.646416,
+    0.641,
+    0.627375,
+    0.601625,
+    0.625834,
+    0.588625,
+    0.574459,
+    0.583958,
+    0.993459,
+    1.038375
+   ],
+   "ms": [
+    926.937833,
+    926.275583,
+    963.31725,
+    938.551292,
+    930.723167,
+    928.738083
+   ],
+   "semantic_exact": true,
+   "median_ms": 929.7306249999999
+  }
+ },
+ "stable-argmax/1709": {
+  "40000-2": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1709,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 665.330125,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 139,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 128,
+   "neural_rhs": 128,
+   "exact_rhs": 8060,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 128,
+   "forward_ms": [
+    1.150458,
+    1.1025,
+    0.620584,
+    0.593875,
+    0.537083,
+    0.960583,
+    1.130167,
+    1.105291,
+    0.5395,
+    0.515125,
+    0.527875,
+    0.524917,
+    0.519666,
+    0.528625,
+    0.477042,
+    0.533208,
+    0.61925,
+    0.526125,
+    0.487083,
+    0.4835
+   ],
+   "ms": [
+    999.247417,
+    914.157375,
+    930.473375,
+    974.445041,
+    919.026208,
+    928.545542
+   ],
+   "semantic_exact": true,
+   "median_ms": 929.5094584999999
+  },
+  "40000-4": {
+   "params": 40093,
+   "weight_bytes": 160372,
+   "training": {
+    "seed": 1709,
+    "target": 40000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 40093,
+    "bytes": 160372,
+    "train_ms": 595.809667,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 87,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 120,
+      "correct": 113,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 111,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 150,
+      "correct": 144,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 137,
+   "neural_rhs": 130,
+   "exact_rhs": 8058,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 326,
+   "forward_ms": [
+    1.091917,
+    1.02675,
+    1.02025,
+    0.93625,
+    0.522958,
+    0.623042,
+    0.488708,
+    0.51425,
+    1.148084,
+    0.5725,
+    0.664292,
+    0.498125,
+    0.948291,
+    0.890375,
+    0.489459,
+    0.492041,
+    1.266458,
+    0.580125,
+    0.519709,
+    0.516583
+   ],
+   "ms": [
+    950.874916,
+    938.562666,
+    963.069416,
+    915.535625,
+    947.088625,
+    955.266709
+   ],
+   "semantic_exact": true,
+   "median_ms": 948.9817705
+  },
+  "160000-2": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1709,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 661.122916,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 140,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 128,
+   "neural_rhs": 128,
+   "exact_rhs": 8060,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 128,
+   "forward_ms": [
+    0.628125,
+    0.6165,
+    1.241375,
+    1.131458,
+    0.607833,
+    0.576958,
+    0.568417,
+    0.547375,
+    0.561333,
+    0.540625,
+    0.504583,
+    0.49925,
+    1.509458,
+    0.771792,
+    0.58425,
+    1.035208,
+    0.538667,
+    0.521791,
+    0.711292,
+    0.667791
+   ],
+   "ms": [
+    926.794834,
+    928.571208,
+    944.784542,
+    969.88625,
+    926.647417,
+    915.08775
+   ],
+   "semantic_exact": true,
+   "median_ms": 927.683021
+  },
+  "160000-4": {
+   "params": 159633,
+   "weight_bytes": 638532,
+   "training": {
+    "seed": 1709,
+    "target": 160000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 159633,
+    "bytes": 638532,
+    "train_ms": 625.766334,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 87,
+      "correct": 81,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 117,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 110,
+      "correct": 107,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 147,
+      "correct": 143,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 134,
+   "neural_rhs": 129,
+   "exact_rhs": 8059,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 269,
+   "forward_ms": [
+    1.224125,
+    1.012084,
+    0.566458,
+    0.635625,
+    0.539334,
+    0.606792,
+    0.674833,
+    0.557125,
+    0.513375,
+    0.601333,
+    0.53925,
+    0.986375,
+    1.176916,
+    0.954833,
+    0.521667,
+    0.511917,
+    0.7205,
+    0.904125,
+    0.804292,
+    0.631083
+   ],
+   "ms": [
+    922.890916,
+    967.696583,
+    942.479125,
+    918.286667,
+    936.213875,
+    956.799042
+   ],
+   "semantic_exact": true,
+   "median_ms": 939.3465
+  },
+  "640000-2": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1709,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 658.953708,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 78,
+      "correct": 78,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 111,
+      "correct": 111,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 105,
+      "correct": 105,
+      "used_for_training": false
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 140,
+      "correct": 138,
+      "used_for_training": false
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 128,
+   "neural_rhs": 128,
+   "exact_rhs": 8060,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 128,
+   "forward_ms": [
+    1.1525,
+    0.814666,
+    1.371666,
+    1.091083,
+    1.27025,
+    1.517709,
+    1.245708,
+    1.114167,
+    0.661,
+    1.254042,
+    0.675,
+    0.647208,
+    0.625958,
+    0.664625,
+    0.677209,
+    0.697708,
+    1.137042,
+    0.779125,
+    0.64975,
+    0.662292
+   ],
+   "ms": [
+    994.558166,
+    928.611333,
+    931.317708,
+    966.687,
+    915.251,
+    904.17675
+   ],
+   "semantic_exact": true,
+   "median_ms": 929.9645204999999
+  },
+  "640000-4": {
+   "params": 640665,
+   "weight_bytes": 2562660,
+   "training": {
+    "seed": 1709,
+    "target": 640000,
+    "train": [
+     "affine-twins",
+     "clamped-ramp",
+     "segmented-prefix",
+     "window-laplacian"
+    ],
+    "parameters": 640665,
+    "bytes": 2562660,
+    "train_ms": 702.3835,
+    "updates": 400,
+    "source_graph_draws": 400,
+    "candidate_draws": 51200,
+    "train_counts": {
+     "affine-twins": {
+      "positive": 81,
+      "raw": 84,
+      "correct": 80,
+      "used_for_training": true
+     },
+     "clamped-ramp": {
+      "positive": 113,
+      "raw": 114,
+      "correct": 112,
+      "used_for_training": true
+     },
+     "segmented-prefix": {
+      "positive": 107,
+      "raw": 109,
+      "correct": 106,
+      "used_for_training": true
+     },
+     "window-laplacian": {
+      "positive": 144,
+      "raw": 144,
+      "correct": 142,
+      "used_for_training": true
+     }
+    }
+   },
+   "scoring_positions": 806,
+   "raw": 131,
+   "neural_rhs": 129,
+   "exact_rhs": 8059,
+   "static_rhs": 2,
+   "full_nonempty": 0,
+   "nonempty": 399,
+   "runs": 1149,
+   "visits": 185,
+   "forward_ms": [
+    0.656167,
+    1.504166,
+    1.091542,
+    0.637458,
+    0.720708,
+    0.775625,
+    0.634333,
+    1.119583,
+    0.721,
+    0.87025,
+    0.707292,
+    0.641417,
+    0.650875,
+    0.638208,
+    0.630083,
+    0.829792,
+    0.628875,
+    0.5925,
+    0.596417,
+    1.087416
+   ],
+   "ms": [
+    951.268917,
+    929.50325,
+    952.433125,
+    910.485292,
+    944.86625,
+    932.997708
+   ],
+   "semantic_exact": true,
+   "median_ms": 938.931979
+  }
+ }
+}
