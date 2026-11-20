@@ -94,6 +94,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "--gpu-binding-native" | "--gpu-binding-batch" | "--gpu-binding-retire" => {}
             #[cfg(feature = "gpu-bindings")]
             "--gpu-binding-python" | "--gpu-binding-service" => { flags.next().filter(|v| !v.starts_with("--")).ok_or("missing GPU binding path")?; }
+            #[cfg(feature="late-merge-ports")]
+            "--late-merge-model" => {flags.next().filter(|v|!v.starts_with("--")).ok_or("expected merge-port artifact")?;}
             #[cfg(feature="action-units")]
             "--action-policy" | "--action-kind" => {flags.next().filter(|v|!v.starts_with("--")).ok_or("missing action policy option")?;}
             #[cfg(feature="action-units")]
@@ -236,6 +238,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if overlap_completion { graph.use_overlapped_completion()?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
+    #[cfg(feature="late-merge-ports")]
+    if let Some(model)=opt("--late-merge-model"){
+        use sha2::{Digest,Sha256};
+        runtime.use_late_merge_ports(&std::fs::read(model)?,&format!("{:x}",Sha256::digest(&bytes)))?;
+    }
     #[cfg(feature="slot-transfer-audit")]
     let initial_cells=runtime.graph.stats.cells_created;
     #[cfg(feature="slot-transfer-audit")]
@@ -433,6 +440,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     runtime.write_keepers(&out)?;
     let report_start = Instant::now();
     let mut report = runtime.report();
+    #[cfg(feature="late-merge-ports")]
+    if let Some(records)=runtime.late_merge_report(){report["late_merge_ports"]=records;}
     #[cfg(feature="slot-transfer-audit")]
     if let Some(rows)=runtime.allocation_audit.take(){
         let allocation=serde_json::json!({"initial_cells":initial_cells,"final_allocations":runtime.graph.stats.cells_created,

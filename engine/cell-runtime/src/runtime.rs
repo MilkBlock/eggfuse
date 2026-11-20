@@ -2119,6 +2119,8 @@ impl Executor {
         let mut b = b;
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::rhs(rid);
+        #[cfg(feature="late-merge-ports")]
+        crate::late_merge_ports::begin_rhs(rid,self.graph.epoch,&b.values,&self.graph.program.rules[rid].inputs);
         let stage_cursor = self.stage_spine.begin_step(
             &self.graph.program,
             rid,
@@ -2674,7 +2676,21 @@ impl Executor {
             }
             #[cfg(feature = "slot-transfer-audit")]
             crate::transfer_audit::observation::watermark(rid, self.watermarks[rid]);
+            #[cfg(not(feature="late-merge-ports"))]
             let bindings = self.matches(rid, false)?;
+            #[cfg(feature="late-merge-ports")]
+            let bindings={
+                let facts=self.stage_spine.alias_query_facts(&self.graph,rid);
+                let (only,mut issued)=crate::late_merge_ports::verify(&self.graph,rid,self.watermarks[rid],&facts)?;
+                if only{
+                    self.pending[rid].clear();self.dirty[rid]=false;self.dedup_bindings(rid,issued)?
+                }else if issued.is_empty(){self.matches(rid,false)?}
+                else{
+                    let mut ordinary=self.matches(rid,false)?;
+                    crate::late_merge_ports::replace_overlaps(rid,&mut issued,&mut ordinary,&self.graph.program.rules[rid].inputs);
+                    issued.extend(ordinary);self.dedup_bindings(rid,issued)?
+                }
+            };
             #[cfg(feature = "family-survey")]
             self.survey.rule(
                 self.graph.epoch,
@@ -2960,6 +2976,12 @@ impl Executor {
     }
     #[cfg(feature="precomputed-forest")]
     pub fn precomputed_report(&self)->Option<J>{self.stage_spine.forest.as_ref().map(|f|f.report())}
+    #[cfg(feature="late-merge-ports")]
+    pub fn use_late_merge_ports(&mut self,data:&[u8],digest:&str)->Result<()>{
+        crate::late_merge_ports::configure(&self.graph.program,serde_json::from_slice(data).map_err(|e|e.to_string())?,digest)
+    }
+    #[cfg(feature="late-merge-ports")]
+    pub fn late_merge_report(&self)->Option<J>{crate::late_merge_ports::report()}
     pub fn execute(&mut self) -> Result<()> {
         self.execute_until(None)
     }

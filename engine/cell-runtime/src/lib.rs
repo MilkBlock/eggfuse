@@ -51,6 +51,8 @@ pub mod precomputed_forest;
 pub mod forest_policy;
 #[cfg(feature="action-units")]
 mod action_units;
+#[cfg(feature="late-merge-ports")]
+mod late_merge_ports;
 pub mod stage_spine;
 
 mod entry_join;

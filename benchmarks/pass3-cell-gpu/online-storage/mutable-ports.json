@@ -1,0 +1,420 @@
+{
+ "sum-bits": {
+  "stats": {
+   "source_unique_key_absence_checks": 1201,
+   "old_from_prior_effective_writer": 2183
+  },
+  "unknown": {
+   "source_less_repair": 1
+  },
+  "analysis": {
+   "rhs": 7265,
+   "tiers": {
+    "strict": {
+     "with_prior_rhs": 6621,
+     "direct_complete_with_initial_or_prior": 4781,
+     "recursively_closed": 876,
+     "max_depth": 15,
+     "top_missing_tables": [
+      [
+       5,
+       540
+      ],
+      [
+       223,
+       486
+      ],
+      [
+       329,
+       366
+      ],
+      [
+       205,
+       325
+      ],
+      [
+       170,
+       189
+      ],
+      [
+       355,
+       175
+      ]
+     ]
+    },
+    "same_physical_union": {
+     "with_prior_rhs": 7261,
+     "direct_complete_with_initial_or_prior": 7263,
+     "recursively_closed": 7254,
+     "max_depth": 69,
+     "top_missing_tables": [
+      [
+       324,
+       2
+      ]
+     ]
+    },
+    "visible_key_revalidation": {
+     "with_prior_rhs": 7261,
+     "direct_complete_with_initial_or_prior": 7263,
+     "recursively_closed": 7254,
+     "max_depth": 62,
+     "top_missing_tables": [
+      [
+       324,
+       2
+      ]
+     ]
+    },
+    "cross_address_union": {
+     "with_prior_rhs": 7261,
+     "direct_complete_with_initial_or_prior": 7263,
+     "recursively_closed": 7259,
+     "max_depth": 62,
+     "top_missing_tables": [
+      [
+       324,
+       2
+      ]
+     ]
+    }
+   },
+   "missing_examples": {
+    "strict": {
+     "run": 17,
+     "rhs": 102,
+     "rule": 576,
+     "missing_positions": [
+      1
+     ]
+    },
+    "same_physical_union": {
+     "run": 818,
+     "rhs": 4785,
+     "rule": 287,
+     "missing_positions": [
+      0
+     ]
+    },
+    "visible_key_revalidation": {
+     "run": 818,
+     "rhs": 4785,
+     "rule": 287,
+     "missing_positions": [
+      0
+     ]
+    },
+    "cross_address_union": {
+     "run": 818,
+     "rhs": 4785,
+     "rule": 287,
+     "missing_positions": [
+      0
+     ]
+    }
+   }
+  }
+ },
+ "dot-product": {
+  "stats": {
+   "source_unique_key_absence_checks": 1509,
+   "old_from_prior_effective_writer": 3071
+  },
+  "unknown": {
+   "source_less_repair": 7
+  },
+  "analysis": {
+   "rhs": 6704,
+   "tiers": {
+    "strict": {
+     "with_prior_rhs": 6445,
+     "direct_complete_with_initial_or_prior": 5393,
+     "recursively_closed": 2002,
+     "max_depth": 23,
+     "top_missing_tables": [
+      [
+       205,
+       403
+      ],
+      [
+       329,
+       236
+      ],
+      [
+       223,
+       209
+      ],
+      [
+       324,
+       157
+      ],
+      [
+       27,
+       122
+      ],
+      [
+       359,
+       62
+      ]
+     ]
+    },
+    "same_physical_union": {
+     "with_prior_rhs": 6700,
+     "direct_complete_with_initial_or_prior": 6682,
+     "recursively_closed": 5854,
+     "max_depth": 45,
+     "top_missing_tables": [
+      [
+       324,
+       18
+      ],
+      [
+       197,
+       4
+      ]
+     ]
+    },
+    "visible_key_revalidation": {
+     "with_prior_rhs": 6700,
+     "direct_complete_with_initial_or_prior": 6682,
+     "recursively_closed": 6065,
+     "max_depth": 45,
+     "top_missing_tables": [
+      [
+       324,
+       18
+      ],
+      [
+       197,
+       4
+      ]
+     ]
+    },
+    "cross_address_union": {
+     "with_prior_rhs": 6700,
+     "direct_complete_with_initial_or_prior": 6686,
+     "recursively_closed": 6589,
+     "max_depth": 55,
+     "top_missing_tables": [
+      [
+       324,
+       18
+      ]
+     ]
+    }
+   },
+   "missing_examples": {
+    "strict": {
+     "run": 19,
+     "rhs": 181,
+     "rule": 576,
+     "missing_positions": [
+      1
+     ]
+    },
+    "same_physical_union": {
+     "run": 876,
+     "rhs": 4875,
+     "rule": 287,
+     "missing_positions": [
+      0
+     ]
+    },
+    "visible_key_revalidation": {
+     "run": 876,
+     "rhs": 4875,
+     "rule": 287,
+     "missing_positions": [
+      0
+     ]
+    },
+    "cross_address_union": {
+     "run": 876,
+     "rhs": 4875,
+     "rule": 287,
+     "missing_positions": [
+      0
+     ]
+    }
+   }
+  }
+ },
+ "gemm-bias-relu": {
+  "stats": {
+   "source_unique_key_absence_checks": 2298,
+   "old_from_prior_effective_writer": 4391
+  },
+  "unknown": {
+   "source_less_repair": 4
+  },
+  "analysis": {
+   "rhs": 15462,
+   "tiers": {
+    "strict": {
+     "with_prior_rhs": 14223,
+     "direct_complete_with_initial_or_prior": 10840,
+     "recursively_closed": 3002,
+     "max_depth": 45,
+     "top_missing_tables": [
+      [
+       223,
+       1157
+      ],
+      [
+       5,
+       892
+      ],
+      [
+       329,
+       780
+      ],
+      [
+       205,
+       746
+      ],
+      [
+       355,
+       423
+      ],
+      [
+       170,
+       400
+      ]
+     ]
+    },
+    "same_physical_union": {
+     "with_prior_rhs": 15458,
+     "direct_complete_with_initial_or_prior": 15452,
+     "recursively_closed": 15082,
+     "max_depth": 55,
+     "top_missing_tables": [
+      [
+       197,
+       10
+      ]
+     ]
+    },
+    "visible_key_revalidation": {
+     "with_prior_rhs": 15458,
+     "direct_complete_with_initial_or_prior": 15452,
+     "recursively_closed": 15082,
+     "max_depth": 55,
+     "top_missing_tables": [
+      [
+       197,
+       10
+      ]
+     ]
+    },
+    "cross_address_union": {
+     "with_prior_rhs": 15458,
+     "direct_complete_with_initial_or_prior": 15462,
+     "recursively_closed": 15458,
+     "max_depth": 66,
+     "top_missing_tables": []
+    }
+   },
+   "missing_examples": {
+    "strict": {
+     "run": 22,
+     "rhs": 243,
+     "rule": 576,
+     "missing_positions": [
+      1
+     ]
+    },
+    "same_physical_union": {
+     "run": 753,
+     "rhs": 11636,
+     "rule": 154,
+     "missing_positions": [
+      1
+     ]
+    },
+    "visible_key_revalidation": {
+     "run": 753,
+     "rhs": 11636,
+     "rule": 154,
+     "missing_positions": [
+      1
+     ]
+    }
+   }
+  }
+ },
+ "stable-argmax": {
+  "stats": {
+   "source_unique_key_absence_checks": 1427,
+   "old_from_prior_effective_writer": 2762
+  },
+  "unknown": {},
+  "analysis": {
+   "rhs": 8190,
+   "tiers": {
+    "strict": {
+     "with_prior_rhs": 7588,
+     "direct_complete_with_initial_or_prior": 5834,
+     "recursively_closed": 1633,
+     "max_depth": 27,
+     "top_missing_tables": [
+      [
+       223,
+       548
+      ],
+      [
+       5,
+       511
+      ],
+      [
+       205,
+       446
+      ],
+      [
+       329,
+       383
+      ],
+      [
+       355,
+       191
+      ],
+      [
+       170,
+       144
+      ]
+     ]
+    },
+    "same_physical_union": {
+     "with_prior_rhs": 8186,
+     "direct_complete_with_initial_or_prior": 8190,
+     "recursively_closed": 8190,
+     "max_depth": 45,
+     "top_missing_tables": []
+    },
+    "visible_key_revalidation": {
+     "with_prior_rhs": 8186,
+     "direct_complete_with_initial_or_prior": 8190,
+     "recursively_closed": 8190,
+     "max_depth": 45,
+     "top_missing_tables": []
+    },
+    "cross_address_union": {
+     "with_prior_rhs": 8186,
+     "direct_complete_with_initial_or_prior": 8190,
+     "recursively_closed": 8190,
+     "max_depth": 45,
+     "top_missing_tables": []
+    }
+   },
+   "missing_examples": {
+    "strict": {
+     "run": 19,
+     "rhs": 165,
+     "rule": 576,
+     "missing_positions": [
+      1
+     ]
+    }
+   }
+  }
+ }
+}

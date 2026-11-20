@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
+late-merge-ports = ["action-units"]
 action-units = ["precomputed-forest"]
 precomputed-forest = ["iterative-bake"]
 gpu-bindings = []
@@ -83,3 +84,8 @@ required-features = ["iterative-bake", "spine-shapes"]
 [[example]]
 name = "native_forest_session"
 required-features = ["precomputed-forest"]
+
+[[example]]
+name = "actual_parent_ports"
+path = "../../benchmarks/pass3-cell-gpu/online-storage/parent_observer.rs"
+required-features = ["slot-transfer-audit"]

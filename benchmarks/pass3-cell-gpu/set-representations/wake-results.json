@@ -1,0 +1,524 @@
+{
+ "full": {
+  "mask-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 43
+  },
+  "mask-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 43
+  },
+  "segments-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 43
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 43
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 43
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 43
+  }
+ },
+ "full-probes": {
+  "mask-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 45
+  },
+  "mask-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 45
+  },
+  "segments-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 45
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 45
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 45
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 45
+  }
+ },
+ "helpers": {
+  "mask-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 12
+  },
+  "mask-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 12
+  },
+  "segments-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 12
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 12
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 12
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 12
+  }
+ },
+ "probes": {
+  "mask-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 14
+  },
+  "mask-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 14
+  },
+  "segments-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 14
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 14
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 14
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 0,
+   "actual_set_groups_woken": 0,
+   "same_key_two_to_one": 0,
+   "union_events": 14
+  }
+ },
+ "union": {
+  "mask-row": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 1
+  },
+  "mask-instance": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": 1,
+   "same_key_two_to_one": 0,
+   "union_events": 1
+  },
+  "segments-row": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 1
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": 1,
+   "same_key_two_to_one": 0,
+   "union_events": 1
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 1
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": 1,
+   "same_key_two_to_one": 0,
+   "union_events": 1
+  }
+ },
+ "dynamic": {
+  "mask-row": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 1,
+   "union_events": 1
+  },
+  "mask-instance": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": 1,
+   "same_key_two_to_one": 1,
+   "union_events": 1
+  },
+  "segments-row": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 1,
+   "union_events": 1
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": 1,
+   "same_key_two_to_one": 1,
+   "union_events": 1
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 1,
+   "union_events": 1
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 1,
+   "actual_set_groups_woken": 1,
+   "same_key_two_to_one": 1,
+   "union_events": 1
+  }
+ },
+ "n16-w2-readers1": {
+  "mask-row": {
+   "actual_set_rows_woken": 3,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 1,
+   "union_events": 2
+  },
+  "mask-instance": {
+   "actual_set_rows_woken": 3,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 1,
+   "union_events": 2
+  },
+  "segments-row": {
+   "actual_set_rows_woken": 3,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 1,
+   "union_events": 2
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 3,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 1,
+   "union_events": 2
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 3,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 1,
+   "union_events": 2
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 3,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 1,
+   "union_events": 2
+  }
+ },
+ "n16-w2-readers128": {
+  "mask-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "mask-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "segments-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  }
+ },
+ "n16-w2-readers512": {
+  "mask-row": {
+   "actual_set_rows_woken": 514,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 512,
+   "union_events": 2
+  },
+  "mask-instance": {
+   "actual_set_rows_woken": 514,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 512,
+   "union_events": 2
+  },
+  "segments-row": {
+   "actual_set_rows_woken": 514,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 512,
+   "union_events": 2
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 514,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 512,
+   "union_events": 2
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 514,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 512,
+   "union_events": 2
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 514,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 512,
+   "union_events": 2
+  }
+ },
+ "n63-w2-readers128": {
+  "mask-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "mask-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "segments-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  }
+ },
+ "n63-w63-readers128": {
+  "mask-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  },
+  "mask-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  },
+  "segments-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  }
+ },
+ "n64-w2-readers128": {
+  "segments-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  }
+ },
+ "n128-w2-readers128": {
+  "segments-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 128,
+   "union_events": 2
+  }
+ },
+ "n128-w64-readers128": {
+  "segments-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  }
+ },
+ "n256-w128-readers128": {
+  "segments-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  },
+  "segments-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  },
+  "sparse-row": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": null,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  },
+  "sparse-instance": {
+   "actual_set_rows_woken": 130,
+   "actual_set_groups_woken": 2,
+   "same_key_two_to_one": 0,
+   "union_events": 2
+  }
+ }
+}

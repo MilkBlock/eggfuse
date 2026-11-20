@@ -1274,6 +1274,8 @@ impl Programs {
                 cursor.unit_origin=None;
                 if let Some((id,child))=cursor.unit_claim.take(){
                     self.units.as_mut().unwrap().commit(id,child,values);
+                    #[cfg(feature="late-merge-ports")]
+                    if !child{crate::late_merge_ports::neural_root(id);}
                     if !child{cursor.unit_origin=Some(id);}
                 }
             }

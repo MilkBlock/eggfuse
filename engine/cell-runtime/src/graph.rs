@@ -1699,6 +1699,8 @@ impl Graph {
             .iter()
             .map(|v| canon(v, &self.parents))
             .collect::<smallvec::SmallVec<[Value; 4]>>();
+        #[cfg(feature="late-merge-ports")]
+        crate::late_merge_ports::constructing(t,&key);
         if let Some(row) = self.lookup_canonical(t, &key)? {
             return Ok(row.values.last().unwrap().clone());
         }
@@ -1913,7 +1915,11 @@ impl Graph {
         let value = self.argument(cell, v)?;
         if !self.program.tables[t].virtual_fact {
             let before = self.stats.function_updates;
+            #[cfg(feature="late-merge-ports")]
+            crate::late_merge_ports::enter(self,cell,op,t,&key,&value)?;
             let index = self.set_function_from(t, &key, value, Some((cell, op, source)))?;
+            #[cfg(feature="late-merge-ports")]
+            crate::late_merge_ports::finish(self,index)?;
             if let Some(receipt) = receipt {
                 *receipt = Some(Dependency::Function(index));
             }
@@ -2161,6 +2167,8 @@ impl Graph {
         let index = self.function_index(t, key);
         if let Some(i) = index {
             let old = canon(&self.functions[i].value, &self.parents);
+            #[cfg(feature="slot-transfer-audit")]
+            crate::transfer_audit::set_input(t,i,key,Some(&old),&value);
             let next = self.merge_value(t, old.clone(), value)?;
             if next != old {
                 self.function_decoded[i] = Some(Self::shared_fields(key, &next));
@@ -2185,6 +2193,8 @@ impl Graph {
             Ok(i)
         } else {
             let i = self.functions.len();
+            #[cfg(feature="slot-transfer-audit")]
+            crate::transfer_audit::set_input(t,i,key,None,&value);
             #[cfg(feature = "slot-transfer-audit")]
             crate::transfer_audit::effective(self.epoch, t, i, key, None, &value)?;
             let compact = if cfg!(feature = "view-storage")

@@ -51,6 +51,13 @@ pub fn enable_repair_inputs() {
 }
 pub(crate) fn repair_inputs() -> bool { REPAIR_INPUTS.get() }
 
+thread_local!{static LOG_SET_INPUTS: Cell<bool> = const {Cell::new(false)};}
+/// Extend a diagnostic native event trace with the actual prior and proposed value, including no-op sets.
+pub fn enable_set_input_observation(){LOG_SET_INPUTS.set(true);}
+pub(crate) fn set_input(t:usize,index:usize,key:&[crate::value::Value],old:Option<&crate::value::Value>,new:&crate::value::Value){
+    if LOG_SET_INPUTS.get(){event(||serde_json::json!(["set-input",SOURCE.get(),t,index,key,old,new]));}
+}
+
 pub fn enable_events() {
     EVENTS.replace(Some(Vec::new()));
 }

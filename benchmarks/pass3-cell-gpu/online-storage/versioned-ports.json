@@ -1,0 +1,446 @@
+{
+ "sum-bits": {
+  "rhs": 7265,
+  "tiers": {
+   "strict": {
+    "with_prior_rhs": 6621,
+    "direct_complete_with_initial_or_prior": 4678,
+    "recursively_closed": 867,
+    "max_depth": 15,
+    "top_missing_tables": [
+     [
+      5,
+      540
+     ],
+     [
+      223,
+      486
+     ],
+     [
+      329,
+      366
+     ],
+     [
+      205,
+      325
+     ],
+     [
+      324,
+      210
+     ],
+     [
+      170,
+      189
+     ]
+    ]
+   },
+   "same_physical_union": {
+    "with_prior_rhs": 7261,
+    "direct_complete_with_initial_or_prior": 7055,
+    "recursively_closed": 6849,
+    "max_depth": 66,
+    "top_missing_tables": [
+     [
+      324,
+      210
+     ]
+    ]
+   },
+   "visible_key_revalidation": {
+    "with_prior_rhs": 7261,
+    "direct_complete_with_initial_or_prior": 7055,
+    "recursively_closed": 6849,
+    "max_depth": 61,
+    "top_missing_tables": [
+     [
+      324,
+      210
+     ]
+    ]
+   },
+   "cross_address_union": {
+    "with_prior_rhs": 7261,
+    "direct_complete_with_initial_or_prior": 7055,
+    "recursively_closed": 6849,
+    "max_depth": 61,
+    "top_missing_tables": [
+     [
+      324,
+      210
+     ]
+    ]
+   }
+  },
+  "missing_examples": {
+   "strict": {
+    "run": 17,
+    "rhs": 102,
+    "rule": 576,
+    "missing_positions": [
+     1
+    ]
+   },
+   "same_physical_union": {
+    "run": 262,
+    "rhs": 2112,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   },
+   "visible_key_revalidation": {
+    "run": 262,
+    "rhs": 2112,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   },
+   "cross_address_union": {
+    "run": 262,
+    "rhs": 2112,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   }
+  }
+ },
+ "dot-product": {
+  "rhs": 6704,
+  "tiers": {
+   "strict": {
+    "with_prior_rhs": 6445,
+    "direct_complete_with_initial_or_prior": 5257,
+    "recursively_closed": 1963,
+    "max_depth": 23,
+    "top_missing_tables": [
+     [
+      205,
+      403
+     ],
+     [
+      324,
+      293
+     ],
+     [
+      329,
+      236
+     ],
+     [
+      223,
+      209
+     ],
+     [
+      27,
+      122
+     ],
+     [
+      359,
+      62
+     ]
+    ]
+   },
+   "same_physical_union": {
+    "with_prior_rhs": 6700,
+    "direct_complete_with_initial_or_prior": 6407,
+    "recursively_closed": 5744,
+    "max_depth": 66,
+    "top_missing_tables": [
+     [
+      324,
+      293
+     ],
+     [
+      197,
+      4
+     ]
+    ]
+   },
+   "visible_key_revalidation": {
+    "with_prior_rhs": 6700,
+    "direct_complete_with_initial_or_prior": 6407,
+    "recursively_closed": 5744,
+    "max_depth": 44,
+    "top_missing_tables": [
+     [
+      324,
+      293
+     ],
+     [
+      197,
+      4
+     ]
+    ]
+   },
+   "cross_address_union": {
+    "with_prior_rhs": 6700,
+    "direct_complete_with_initial_or_prior": 6411,
+    "recursively_closed": 6145,
+    "max_depth": 44,
+    "top_missing_tables": [
+     [
+      324,
+      293
+     ]
+    ]
+   }
+  },
+  "missing_examples": {
+   "strict": {
+    "run": 19,
+    "rhs": 181,
+    "rule": 576,
+    "missing_positions": [
+     1
+    ]
+   },
+   "same_physical_union": {
+    "run": 328,
+    "rhs": 3492,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   },
+   "visible_key_revalidation": {
+    "run": 328,
+    "rhs": 3492,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   },
+   "cross_address_union": {
+    "run": 328,
+    "rhs": 3492,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   }
+  }
+ },
+ "gemm-bias-relu": {
+  "rhs": 15462,
+  "tiers": {
+   "strict": {
+    "with_prior_rhs": 14223,
+    "direct_complete_with_initial_or_prior": 10661,
+    "recursively_closed": 3003,
+    "max_depth": 45,
+    "top_missing_tables": [
+     [
+      223,
+      1157
+     ],
+     [
+      5,
+      892
+     ],
+     [
+      329,
+      780
+     ],
+     [
+      205,
+      746
+     ],
+     [
+      355,
+      423
+     ],
+     [
+      170,
+      400
+     ]
+    ]
+   },
+   "same_physical_union": {
+    "with_prior_rhs": 15458,
+    "direct_complete_with_initial_or_prior": 15091,
+    "recursively_closed": 14380,
+    "max_depth": 55,
+    "top_missing_tables": [
+     [
+      324,
+      361
+     ],
+     [
+      197,
+      10
+     ]
+    ]
+   },
+   "visible_key_revalidation": {
+    "with_prior_rhs": 15458,
+    "direct_complete_with_initial_or_prior": 15091,
+    "recursively_closed": 14380,
+    "max_depth": 55,
+    "top_missing_tables": [
+     [
+      324,
+      361
+     ],
+     [
+      197,
+      10
+     ]
+    ]
+   },
+   "cross_address_union": {
+    "with_prior_rhs": 15458,
+    "direct_complete_with_initial_or_prior": 15101,
+    "recursively_closed": 14755,
+    "max_depth": 55,
+    "top_missing_tables": [
+     [
+      324,
+      361
+     ]
+    ]
+   }
+  },
+  "missing_examples": {
+   "strict": {
+    "run": 22,
+    "rhs": 243,
+    "rule": 576,
+    "missing_positions": [
+     1
+    ]
+   },
+   "same_physical_union": {
+    "run": 486,
+    "rhs": 8873,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   },
+   "visible_key_revalidation": {
+    "run": 486,
+    "rhs": 8873,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   },
+   "cross_address_union": {
+    "run": 486,
+    "rhs": 8873,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   }
+  }
+ },
+ "stable-argmax": {
+  "rhs": 8190,
+  "tiers": {
+   "strict": {
+    "with_prior_rhs": 7588,
+    "direct_complete_with_initial_or_prior": 5733,
+    "recursively_closed": 1621,
+    "max_depth": 27,
+    "top_missing_tables": [
+     [
+      223,
+      548
+     ],
+     [
+      5,
+      511
+     ],
+     [
+      205,
+      446
+     ],
+     [
+      329,
+      383
+     ],
+     [
+      324,
+      204
+     ],
+     [
+      355,
+      191
+     ]
+    ]
+   },
+   "same_physical_union": {
+    "with_prior_rhs": 8186,
+    "direct_complete_with_initial_or_prior": 7986,
+    "recursively_closed": 7784,
+    "max_depth": 43,
+    "top_missing_tables": [
+     [
+      324,
+      204
+     ]
+    ]
+   },
+   "visible_key_revalidation": {
+    "with_prior_rhs": 8186,
+    "direct_complete_with_initial_or_prior": 7986,
+    "recursively_closed": 7784,
+    "max_depth": 43,
+    "top_missing_tables": [
+     [
+      324,
+      204
+     ]
+    ]
+   },
+   "cross_address_union": {
+    "with_prior_rhs": 8186,
+    "direct_complete_with_initial_or_prior": 7986,
+    "recursively_closed": 7784,
+    "max_depth": 43,
+    "top_missing_tables": [
+     [
+      324,
+      204
+     ]
+    ]
+   }
+  },
+  "missing_examples": {
+   "strict": {
+    "run": 19,
+    "rhs": 165,
+    "rule": 576,
+    "missing_positions": [
+     1
+    ]
+   },
+   "same_physical_union": {
+    "run": 330,
+    "rhs": 4679,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   },
+   "visible_key_revalidation": {
+    "run": 330,
+    "rhs": 4679,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   },
+   "cross_address_union": {
+    "run": 330,
+    "rhs": 4679,
+    "rule": 287,
+    "missing_positions": [
+     0
+    ]
+   }
+  }
+ }
+}
