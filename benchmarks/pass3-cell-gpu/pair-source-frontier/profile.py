@@ -7,12 +7,13 @@ spec=importlib.util.spec_from_file_location('integrated_source',HERE.parent/'int
 base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
 def config(a,case):
     small=case in ('sum-bits','dot-product','jacobi-1d','conjugate-gradient')
-    b=(a.exp/('compact-holdouts-20261121-v1' if small else 'extra-pass3-transfer-v1'))/f'{case}-1703'
-    p=b/'program.json'; req=base.read(b/'request.json');tables=a.exp/'baked-port-packed-study-v1'
+    seed=getattr(a,'seed',1703)
+    b=(a.exp/('compact-holdouts-20261121-v1' if small else 'extra-pass3-transfer-v1'))/f'{case}-{seed}'
+    p=b/'program.json'; req=base.read(b/'request.json');tables=a.exp/('baked-port-packed-study-v1' if seed==1703 else 'baked-port-speed-v2')
     for f in ('single_config','merge_config'):req[f]=str(b/req[f])
     root=a.out/(case+'-roots.json')
     root.write_text(json.dumps(dict(control='use',encoding='checked_slots',forbid_fallback=True)))
-    req.update(multi_weights=str(tables/'sum-bits-1703-tied.json'),baked_codes=str(tables/'sum-bits-1703-tied.bin'),
+    req.update(multi_weights=str(tables/f'sum-bits-{seed}-tied.json'),baked_codes=str(tables/f'sum-bits-{seed}-tied.bin'),
                packed_lookup=True,baked_row_index=False,radius=0,root_config=str(root),early_guards='constants',
                rows=dict(action=4,max_rows=1,workers=1,batch=True,verify=2,prefilter=2),
                multi_mode='rowdeltapairguardstackseal2xlearned',multi_generation='complete')

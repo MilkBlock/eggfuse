@@ -1,0 +1,110 @@
+{
+ "off": {
+  "rhs": 6,
+  "rules": [
+   0,
+   1,
+   2
+  ],
+  "graph": "84d8b124d51c2c22031cea24c45facffb47e32711f913432d01cc2831f711f40",
+  "raw": 45,
+  "raw_digest": "f65d669406bb9e65f2de35962e033efd0dc0d79411cb4b492e38d80ec9d426d2",
+  "cells": "daaee440cc588da0b37c58c5a8f89501917d853e53fc88168da986f4deecaada",
+  "equations": {
+   "arrays_reused": 0,
+   "calls": 0,
+   "encoded_rows": 0,
+   "filtered": 0,
+   "index_builds": 0,
+   "index_probes": 0,
+   "index_reuses": 0,
+   "index_rows": 0,
+   "invalid_receipts": 0,
+   "numeric_requests": 0,
+   "pair_checks": 0,
+   "rule_plans": 0,
+   "undefined": 0
+  }
+ },
+ "early": {
+  "rhs": 6,
+  "rules": [
+   0,
+   1,
+   2
+  ],
+  "graph": "84d8b124d51c2c22031cea24c45facffb47e32711f913432d01cc2831f711f40",
+  "raw": 6,
+  "raw_digest": "3b274443200c13321b4261f949f4b9206fa88749d94406a540c503ab1e717561",
+  "cells": "daaee440cc588da0b37c58c5a8f89501917d853e53fc88168da986f4deecaada",
+  "equations": {
+   "arrays_reused": 0,
+   "calls": 3,
+   "encoded_rows": 33,
+   "filtered": 39,
+   "index_builds": 0,
+   "index_probes": 0,
+   "index_reuses": 0,
+   "index_rows": 0,
+   "invalid_receipts": 0,
+   "numeric_requests": 9,
+   "pair_checks": 45,
+   "rule_plans": 3,
+   "undefined": 1
+  }
+ },
+ "indexed": {
+  "rhs": 6,
+  "rules": [
+   0,
+   1,
+   2
+  ],
+  "graph": "84d8b124d51c2c22031cea24c45facffb47e32711f913432d01cc2831f711f40",
+  "raw": 6,
+  "raw_digest": "3b274443200c13321b4261f949f4b9206fa88749d94406a540c503ab1e717561",
+  "cells": "daaee440cc588da0b37c58c5a8f89501917d853e53fc88168da986f4deecaada",
+  "equations": {
+   "arrays_reused": 0,
+   "calls": 3,
+   "encoded_rows": 33,
+   "filtered": 0,
+   "index_builds": 3,
+   "index_probes": 14,
+   "index_reuses": 0,
+   "index_rows": 19,
+   "invalid_receipts": 0,
+   "numeric_requests": 9,
+   "pair_checks": 0,
+   "rule_plans": 3,
+   "undefined": 1
+  }
+ },
+ "unavailable": {
+  "rhs": 6,
+  "rules": [
+   0,
+   1,
+   2
+  ],
+  "graph": "84d8b124d51c2c22031cea24c45facffb47e32711f913432d01cc2831f711f40",
+  "raw": 45,
+  "raw_digest": "f65d669406bb9e65f2de35962e033efd0dc0d79411cb4b492e38d80ec9d426d2",
+  "cells": "daaee440cc588da0b37c58c5a8f89501917d853e53fc88168da986f4deecaada",
+  "equations": {
+   "arrays_reused": 0,
+   "calls": 3,
+   "encoded_rows": 0,
+   "filtered": 0,
+   "index_builds": 0,
+   "index_probes": 0,
+   "index_reuses": 0,
+   "index_rows": 0,
+   "invalid_receipts": 3,
+   "numeric_requests": 0,
+   "pair_checks": 0,
+   "rule_plans": 3,
+   "undefined": 0
+  }
+ }
+}

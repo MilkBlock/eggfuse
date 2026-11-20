@@ -42,7 +42,8 @@ def study(a,settings=choices,observe=inspect,control_trial=control):
             report={'vanilla':dict(runs=gold['runs'],rhs=gold['rhs_count'],ms=[])}
             for arm,request in cfg.items():
                 v=infer(dict(request,audit=True));q=base.summarize(v,gold);q.pop('rows');q.pop('work')
-                m=v['multi'];q.update(equations=m['equations'],counts=m['counts'])
+                q['counts']=v['multi']['counts']
+                observe(arm,v,q,report)
                 if arm!='off':
                     for k in ('single_winners','multi_winners','root_parents','root_ids','nested_ids','cells','rhs','direct_cells'):
                         assert q[k]==report['off'][k],(case,arm,k)
@@ -65,4 +66,5 @@ if __name__=='__main__':
     for k in ('exp','native','out'):p.add_argument(k,type=Path)
     p.add_argument('--cases',nargs='+',default=['sum-bits','dot-product','jacobi-1d','conjugate-gradient'])
     p.add_argument('--arms',nargs='+',choices=('early','cached','indexed'),default=['early','cached','indexed'])
+    p.add_argument('--seed',type=int,choices=(1703,1709),default=1703)
     p.add_argument('--repeats',type=int,default=6);study(p.parse_args())

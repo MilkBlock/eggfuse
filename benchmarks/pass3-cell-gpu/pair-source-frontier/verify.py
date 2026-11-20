@@ -27,6 +27,12 @@ def verify(folder):
     for case,r in profiles.items():
         for w,v in r['by_width'].items():
             assert v['raw']==sum(row['raw'] for row in r['rules'].values() if row['picks']==float(w))
+    fixture=read('fixture.json')
+    assert fixture['off']['raw']==fixture['unavailable']['raw']==45
+    assert fixture['early']['raw']==fixture['indexed']['raw']==6
+    assert fixture['early']['equations']['rule_plans']==3 and fixture['early']['equations']['undefined']>0
+    assert len({(r['rhs'],r['graph'],r['cells']) for r in fixture.values()})==1
+    assert fixture['early']['raw_digest']==fixture['indexed']['raw_digest']
     return data
 
 
