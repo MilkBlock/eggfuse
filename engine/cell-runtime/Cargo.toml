@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
+action-units = ["precomputed-forest"]
 precomputed-forest = ["iterative-bake"]
 gpu-bindings = []
 sparse-cells = ["iterative-bake"]

@@ -23,6 +23,10 @@ use std::{
 mod shapes;
 #[derive(Clone)]
 pub struct Cursor {
+    #[cfg(feature="action-units")]
+    unit_claim: Option<(usize,bool)>,
+    #[cfg(feature="action-units")]
+    unit_origin: Option<usize>,
     #[cfg(feature="precomputed-forest")]
     forest_claim: Option<usize>,
     #[cfg(feature = "iterative-bake")]
@@ -136,6 +140,10 @@ impl Cursor {
         Self {
             #[cfg(feature="precomputed-forest")]
             forest_claim: None,
+            #[cfg(feature="action-units")]
+            unit_claim: None,
+            #[cfg(feature="action-units")]
+            unit_origin: None,
             root,
             producer,
             depth: 1,
@@ -364,6 +372,10 @@ impl Started {
             *self = Self::Live(Cursor {
                 #[cfg(feature="precomputed-forest")]
                 forest_claim: None,
+            #[cfg(feature="action-units")]
+            unit_claim: None,
+            #[cfg(feature="action-units")]
+            unit_origin: None,
                 root: Rc::new(Root {
                     id: *id,
                     epoch: *epoch,
@@ -722,6 +734,8 @@ struct ReadyPublication {
     next: Option<std::num::NonZeroUsize>,
 }
 pub struct Programs {
+    #[cfg(feature="action-units")]
+    pub(crate) units: Option<crate::action_units::Policy>,
     #[cfg(feature="precomputed-forest")]
     pub(crate) forest: Option<crate::precomputed_forest::Forest>,
     #[cfg(feature = "sparse-cells")]
@@ -1033,6 +1047,8 @@ impl Programs {
         let mut s = Self {
             #[cfg(feature="precomputed-forest")]
             forest: None,
+            #[cfg(feature="action-units")]
+            units: None,
             #[cfg(feature = "sparse-cells")]
             direct_sealed_answers: false,
             enabled,
@@ -1211,6 +1227,8 @@ impl Programs {
     ) -> Option<Started> {
         #[cfg(feature="precomputed-forest")]
         if let Some(forest)=&mut self.forest {forest.issue_root(rid,epoch);}
+        #[cfg(feature="action-units")]
+        if let Some(units)=&mut self.units{units.start_rhs();}
         if !self.enabled {
             return None;
         }
@@ -1251,6 +1269,14 @@ impl Programs {
         self.stats.steps_executed += 1;
         self.stats.by_set.add(set);
         if let Some(mut cursor) = previous {
+            #[cfg(feature="action-units")]
+            {
+                cursor.unit_origin=None;
+                if let Some((id,child))=cursor.unit_claim.take(){
+                    self.units.as_mut().unwrap().commit(id,child,values);
+                    if !child{cursor.unit_origin=Some(id);}
+                }
+            }
             #[cfg(feature="precomputed-forest")]
             if let Some(id)=cursor.forest_claim.take() {
                 self.forest.as_mut().unwrap().commit(id,cursor.producer,rid,epoch);
@@ -1798,6 +1824,10 @@ impl Programs {
             return;
         }
         let cursor = self.materialize_publication(publication);
+        #[cfg(feature="action-units")]
+        if let Some(units)=&mut self.units{
+            let c=cursor.expand();units.publish(w,c.depth as usize,c.unit_origin,c.producer,c.state.output);
+        }
         #[cfg(feature="precomputed-forest")]
         if let Some(forest)=&mut self.forest {
             let (parent,effect,_)=cursor.cell_results();
@@ -2399,6 +2429,22 @@ impl Programs {
         )?;
         Ok((result.map_or_else(Vec::new, |c| c.answers), count))
     }
+    #[cfg(feature="action-units")]
+    pub(crate) fn unit_only_answers(&mut self,g:&mut Graph,rid:usize,watermark:u64,facts:&QueryFacts)->Result<Vec<Matched>>{
+        let mut routes=Vec::new();
+        for (pivot,w) in self.units.as_ref().unwrap().candidate_refs(rid){
+            let Some(published)=self.entries.get(&w) else{continue};
+            let Some(row)=g.row(w)? else{continue};
+            if row.hidden || row.epoch<watermark{continue;}
+            routes.push((pivot,Rc::new(row),published.expand()));
+        }
+        routes.sort_unstable_by_key(|(pivot,row,_)|(row.witness,*pivot));
+        let count=routes.len();
+        let result=self.finish_answers(g,rid,routes.into_iter(),BTreeSet::new(),count,true,watermark,facts,
+            #[cfg(feature="gpu-bindings")] None,
+            #[cfg(feature="sparse-cells")] None)?;
+        Ok(result.map_or_else(Vec::new,|x|x.answers))
+    }
     #[cfg(feature="precomputed-forest")]
     pub(crate) fn forest_only_answers(&mut self,g:&mut Graph,rid:usize,watermark:u64,facts:&QueryFacts)->Result<Vec<Matched>>{
         let forest=self.forest.as_ref().unwrap();
@@ -2499,6 +2545,11 @@ impl Programs {
             });
             #[cfg(feature="precomputed-forest")]
             if self.forest.as_ref().is_some_and(|f|!f.residual) && forest_claim.is_none(){continue;}
+            #[cfg(feature="action-units")]
+            let unit_claims=self.units.as_mut().filter(|_|!row.hidden && row.epoch>=watermark)
+                .map(|u|u.claims(rid,pivot,row.witness,cursor.unit_origin,cursor.state.output)).unwrap_or_default();
+            #[cfg(feature="action-units")]
+            if self.units.as_ref().is_some_and(|u|!u.residual) && unit_claims.is_empty(){continue;}
             let mut epoch = row.epoch;
             let mut local = if self.local_witness_entries[rid][pivot] {
                 #[cfg(feature = "iterative-bake")]
@@ -2550,15 +2601,34 @@ impl Programs {
                 cursor.via_block = selected;
                 self.stats.block_entries += u64::from(selected);
             }
+            #[cfg(feature="action-units")]
+            let mut unit_verified=None;
+            #[cfg(feature="action-units")]
+            if let Some(units)=self.units.as_mut(){
+                for (id,child) in unit_claims{
+                    if !child && units.kind==crate::action_units::Kind::Raw{
+                        if let Some(raw)=units.verify_raw(id,g,rid,facts,watermark)?{
+                            units.validated(id,false);
+                            cursor.unit_claim=Some((id,false));
+                            record_answer(&mut results,raw.values,raw.known,raw.epoch,cursor);
+                            continue 'answer;
+                        }
+                    }else{unit_verified=Some((id,child));break;}
+                }
+                if !units.residual && unit_verified.is_none(){continue 'answer;}
+            }
+            #[cfg(all(feature="precomputed-forest",not(feature="action-units")))]
+            let unit_verified: Option<(usize,bool)>=None;
             #[cfg(feature="precomputed-forest")]
-            if let Some(id)=forest_claim {
-                let forest=self.forest.as_mut().unwrap();
-                forest.attempts+=1;
+            if forest_claim.is_some() || unit_verified.is_some() {
+                let direct=if let Some(id)=forest_claim{
+                    let forest=self.forest.as_mut().unwrap();forest.attempts+=1;forest.direct[id]
+                }else{false};
                 let rule=g.program.rules[rid].clone();
                 let anchor=&rule.query[pivot];
                 let query=self.queries.get(rid,pivot).expect("validated forest continuation");
                 let mut known=vec![(pivot,row.witness)];
-                let slots=if forest.direct[id]{
+                let slots=if direct{
                     rule.inputs.iter().map(|&slot|{
                         let col=anchor.args.iter().position(|a|matches!(a,Arg::Slot(s) if *s==slot)).unwrap();
                         (slot,row.values[col].clone())
@@ -2572,7 +2642,9 @@ impl Programs {
                         let args=step.bind::<PortKey>(|v|v.operand(g,|col|&row.values[col],&values,None));
                         let result=args.evaluate(|key|match &step.call{
                             Call::Table(t)=>{
-                                forest.point_reads+=1;
+                                if let Some(forest)=self.forest.as_mut(){forest.point_reads+=1;}
+                                #[cfg(feature="action-units")]
+                                if let Some((_,child))=unit_verified{self.units.as_mut().unwrap().point_reads[child as usize]+=1;}
                                 let Some(found)=g.lookup(*t,&key)?.filter(|r|!r.hidden) else{return Ok(None)};
                                 known.push((step.atom,found.witness));epoch=epoch.max(found.epoch);
                                 Ok(found.values.last().cloned())
@@ -2585,7 +2657,9 @@ impl Programs {
                     rule.inputs.iter().zip(&query.inputs).map(|(&s,v)|(s,v.read(g,|col|&row.values[col],&values,None))).collect()
                 };
                 if epoch>=watermark{
-                    cursor.forest_claim=Some(id);
+                    cursor.forest_claim=forest_claim;
+                    #[cfg(feature="action-units")]
+                    {cursor.unit_claim=unit_verified;if let Some((id,child))=unit_verified{self.units.as_mut().unwrap().validated(id,child);}}
                     record_answer(&mut results,slots,facts.with_rows(known),epoch,cursor);
                 }
                 continue 'answer;

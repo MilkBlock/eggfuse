@@ -49,6 +49,8 @@ pub mod spine_blocks;
 pub mod precomputed_forest;
 #[cfg(feature="precomputed-forest")]
 pub mod forest_policy;
+#[cfg(feature="action-units")]
+mod action_units;
 pub mod stage_spine;
 
 mod entry_join;

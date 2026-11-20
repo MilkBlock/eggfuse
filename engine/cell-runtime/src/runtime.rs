@@ -1186,6 +1186,12 @@ impl Executor {
         {
             return Ok(vec![]);
         }
+        #[cfg(feature="action-units")]
+        if !probe && self.stage_spine.units.as_ref().is_some_and(|u|!u.residual){
+            let facts=self.stage_spine.alias_query_facts(&self.graph,rid);
+            self.pending[rid].clear();
+            return self.stage_spine.unit_only_answers(&mut self.graph,rid,self.watermarks[rid],&facts);
+        }
         #[cfg(feature="precomputed-forest")]
         if !probe && self.stage_spine.forest.is_some(){
             let facts=self.stage_spine.alias_query_facts(&self.graph,rid);
@@ -2560,6 +2566,8 @@ impl Executor {
         if self.progress {
             eprintln!("[cell-cpu] Run {}: {set}", self.steps.len() + 1);
         }
+        #[cfg(feature="action-units")]
+        if let Some(units)=&mut self.stage_spine.units{units.begin(&self.graph,set,&self.watermarks,self.graph.epoch)?;}
         let (set_id, rules) = if let Some(sets) = &self.ready_sets {
             let (id,rules) = sets.select(set)?;
             (Some(id),rules)
@@ -2917,6 +2925,15 @@ impl Executor {
         }
         Ok(changed)
     }
+    #[cfg(feature="action-units")]
+    pub fn use_action_units(&mut self,bytes:&[u8],digest:&str,kind:&str,residual:bool,observe:bool,corrupt:bool)->Result<()>{
+        if cfg!(feature="sparse-cells")||self.stage_spine.forest.is_some(){return Err("action trial requires default native graph and exclusive policy".into());}
+        let p:crate::action_units::Plan=serde_json::from_slice(bytes).map_err(|e|e.to_string())?;
+        if p.digest!=digest{return Err("action policy and source program mismatch".into());}
+        self.stage_spine.units=Some(crate::action_units::Policy::new(p,&self.graph,kind,residual,observe,corrupt)?);Ok(())
+    }
+    #[cfg(feature="action-units")]
+    pub fn action_report(&self)->Option<J>{self.stage_spine.units.as_ref().map(|u|u.report())}
     #[cfg(feature="precomputed-forest")]
     pub fn use_precomputed_forest(&mut self,bytes:&[u8],digest:&str,residual:bool)->Result<()>{
         self.install_forest_packet(serde_json::from_slice(bytes).map_err(|e|e.to_string())?,digest,residual)

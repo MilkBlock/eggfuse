@@ -37,6 +37,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --unique-parent point|metal|model [--parent-weights FILE] (certified complete keys)");
         #[cfg(feature = "gpu-bindings")]
         println!("  --gpu-binding-native | --gpu-binding-python PATH --gpu-binding-service PATH [--gpu-binding-retire] (native also accepts --gpu-binding-batch)");
+        #[cfg(feature="action-units")]
+        println!("  --action-policy FILE --action-kind raw|leaf|macro [--actions-only] (one source-typed proposal per row)");
         #[cfg(feature="precomputed-forest")]
         println!("  --forest-policy WEIGHTS --forest-inputs PLAN (native CPU forward and Rust verification)");
         #[cfg(feature="precomputed-forest")]
@@ -92,6 +94,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "--gpu-binding-native" | "--gpu-binding-batch" | "--gpu-binding-retire" => {}
             #[cfg(feature = "gpu-bindings")]
             "--gpu-binding-python" | "--gpu-binding-service" => { flags.next().filter(|v| !v.starts_with("--")).ok_or("missing GPU binding path")?; }
+            #[cfg(feature="action-units")]
+            "--action-policy" | "--action-kind" => {flags.next().filter(|v|!v.starts_with("--")).ok_or("missing action policy option")?;}
+            #[cfg(feature="action-units")]
+            "--actions-only" | "--action-observe" | "--action-bad-witness" => {}
             #[cfg(feature="precomputed-forest")]
             "--forest-policy" | "--forest-inputs" | "--precomputed-forest" => {flags.next().filter(|v|!v.starts_with("--")).ok_or("missing sealed packet")?;}
             #[cfg(feature="precomputed-forest")]
@@ -230,6 +236,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if overlap_completion { graph.use_overlapped_completion()?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
+    #[cfg(feature="action-units")]
+    if opt("--action-policy").is_none() && ["--action-kind","--actions-only","--action-observe","--action-bad-witness"].iter().any(|flag|args.iter().any(|v|v==flag)){
+        return Err("action options require --action-policy".into());
+    }
+    #[cfg(feature="action-units")]
+    if let Some(path)=opt("--action-policy"){
+        use sha2::{Digest,Sha256};
+        if ["--precomputed-forest","--forest-policy","--forest-inputs"].iter().any(|flag|opt(flag).is_some()){return Err("choose a single native proposal provider".into());}
+        runtime.use_action_units(&std::fs::read(path)?,&format!("{:x}",Sha256::digest(&bytes)),&opt("--action-kind").ok_or("missing --action-kind")?,
+            !args.iter().any(|v|v=="--actions-only"),args.iter().any(|v|v=="--action-observe"),args.iter().any(|v|v=="--action-bad-witness"))?;
+    }
     #[cfg(feature="precomputed-forest")]
     let policy_report = {
         use sha2::{Digest,Sha256};
@@ -412,6 +429,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     runtime.write_keepers(&out)?;
     let report_start = Instant::now();
     let mut report = runtime.report();
+    #[cfg(feature="action-units")]
+    if let Some(units)=runtime.action_report(){report["action_units"]=units;}
     #[cfg(feature="precomputed-forest")]
     if let Some(policy)=policy_report {report["neural_policy"]=policy;}
     #[cfg(feature="precomputed-forest")]
