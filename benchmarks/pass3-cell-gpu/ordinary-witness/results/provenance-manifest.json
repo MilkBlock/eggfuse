@@ -1,0 +1,42 @@
+{
+ "sum-bits/1703": {
+  "file": "sum-bits-seal3xlearned-2-only-provenance.json.gz",
+  "bytes": 96289,
+  "sha256": "cf75678a45ea0102d9a78cbed3b5fdd973dc0e8218d59e6c6afaf3ac4717ba60"
+ },
+ "dot-product/1703": {
+  "file": "dot-product-seal3xlearned-2-only-provenance.json.gz",
+  "bytes": 83632,
+  "sha256": "3b27401447774120b7d7f1900e34690a98d43d6661646195a16b43fe7a1d2984"
+ },
+ "gemm-bias-relu/1703": {
+  "file": "gemm-bias-relu-seal3xlearned-2-only-provenance.json.gz",
+  "bytes": 210269,
+  "sha256": "9b052874b157d9adfb33fed990b382f89d354066658ffc8e283599515940601b"
+ },
+ "stable-argmax/1703": {
+  "file": "stable-argmax-seal3xlearned-2-only-provenance.json.gz",
+  "bytes": 103658,
+  "sha256": "655ece0042f4ccbce321d0f5ce192d0d8f63746a116950ee3b8f53b5bed37f27"
+ },
+ "sum-bits/1709": {
+  "file": "sum-bits-seal3xlearned-2-only-provenance.json.gz",
+  "bytes": 96289,
+  "sha256": "8a75d19b0abdef5051b9f3f68dc1359eb85d3e5332526ed74e2f0bacba2a1663"
+ },
+ "dot-product/1709": {
+  "file": "dot-product-seal3xlearned-2-only-provenance.json.gz",
+  "bytes": 83632,
+  "sha256": "48d14696b20d960b4a28f76865a11b985259652081e661850255a1001c8894e8"
+ },
+ "gemm-bias-relu/1709": {
+  "file": "gemm-bias-relu-seal3xlearned-2-only-provenance.json.gz",
+  "bytes": 210269,
+  "sha256": "aabb1cb136f804ccb40e741117f7b80ec203352b5bb8ca2fae88aee7ccba0db5"
+ },
+ "stable-argmax/1709": {
+  "file": "stable-argmax-seal3xlearned-2-only-provenance.json.gz",
+  "bytes": 103658,
+  "sha256": "ef82f8601c24b4c38f45f38b135f3aa8e082c3f6d5af88105f3b4d538de3160c"
+ }
+}

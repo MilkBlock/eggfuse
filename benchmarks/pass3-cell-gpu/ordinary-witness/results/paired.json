@@ -1,0 +1,5342 @@
+{
+ "sum-bits": {
+  "native": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 4588,
+   "source_rhs_with_supported_plan": 4588,
+   "source_rhs": 7265,
+   "expected_runs": 1428,
+   "ms": [
+    24.520833,
+    23.913625,
+    24.811875,
+    24.396625,
+    24.596583000000003,
+    24.05125,
+    25.168667,
+    25.184083,
+    24.185709,
+    25.868458
+   ],
+   "sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "raw_replay_equal": true,
+   "examples": {},
+   "by_width": {},
+   "counts": {
+    "approximate_visits": 0,
+    "calls": 0,
+    "committed": 0,
+    "exhausted": 0,
+    "learned_pointers": 0,
+    "peak_rule_tuples": 0,
+    "point_reads": 0,
+    "primitive_evals": 0,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 0,
+    "raw_tuples": 0,
+    "rejected_pointers": 0,
+    "root_offers": 0,
+    "score_bucket_reads": 0,
+    "shortlisted": 0,
+    "stale_candidates": 0,
+    "table_rebuilds": 0,
+    "unsupported": 0,
+    "validated": 0,
+    "verified_parent_tuples": 0,
+    "visible_rows": 0
+   },
+   "embedding_views": 1,
+   "generator": "off",
+   "neural_committed": 0,
+   "raw_sha256": "",
+   "sealed_before_verifier": false,
+   "total_rhs": 7265,
+   "median_ms": 24.558708000000003
+  },
+  "prefix": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 4588,
+   "source_rhs_with_supported_plan": 4588,
+   "source_rhs": 7265,
+   "expected_runs": 1428,
+   "ms": [
+    94.849959,
+    96.29312499999999,
+    94.43799999999999,
+    95.160166,
+    93.580833,
+    94.145416,
+    92.95375,
+    95.220708,
+    93.798792,
+    94.974667
+   ],
+   "sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 11,
+     "rule": 279,
+     "run": 9,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 126
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781307
+      },
+      {
+       "Eq": 554050781309
+      },
+      {
+       "Eq": 554050781311
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 41,
+     "rule": 532,
+     "run": 12,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 148
+       }
+      },
+      {
+       "Fact": {
+        "cell": 968,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 791,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      },
+      {
+       "Fact": {
+        "cell": 306,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781231
+      },
+      {
+       "Eq": 554050781331
+      },
+      {
+       "Eq": 554050781333
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 4157528342535
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 3397319131143
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 1314259992583
+      }
+     ],
+     "ordinal": 1073,
+     "rule": 249,
+     "run": 114,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 3012,
+        "op": 21
+       }
+      },
+      {
+       "Fact": {
+        "cell": 3577,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2255,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 4458,
+        "op": 6
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1304,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781255
+      },
+      {
+       "Eq": 3521873182731
+      },
+      {
+       "Eq": 12936441495588
+      },
+      {
+       "Eq": 12936441495590
+      },
+      {
+       "Eq": 3530463117323
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 15320148344842
+      },
+      {
+       "Eq": 20349555048462
+      },
+      {
+       "Eq": 15324443312138
+      },
+      {
+       "Eq": 22505628631049
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 9
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 9685151252489
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 9685151252490
+      },
+      {
+       "Eq": 19146964205582
+      },
+      {
+       "Int": 9
+      },
+      {
+       "Eq": 19146964205585
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 5600637353991
+      }
+     ],
+     "ordinal": 5512,
+     "rule": 0,
+     "run": 1009,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 4374,
+    "3": 186,
+    "4": 20,
+    "5": 8
+   },
+   "counts": {
+    "approximate_visits": 113707,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 79408,
+    "peak_rule_tuples": 0,
+    "point_reads": 32158,
+    "primitive_evals": 9033,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 0,
+    "raw_tuples": 0,
+    "rejected_pointers": 64299,
+    "root_offers": 109159,
+    "score_bucket_reads": 4869020,
+    "shortlisted": 0,
+    "stale_candidates": 9250,
+    "table_rebuilds": 857,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 0,
+    "visible_rows": 58572
+   },
+   "embedding_views": 1,
+   "generator": "learned",
+   "neural_committed": 4588,
+   "raw_sha256": "",
+   "sealed_before_verifier": false,
+   "total_rhs": 7265,
+   "median_ms": 94.6439795
+  },
+  "sealed": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 4588,
+   "source_rhs_with_supported_plan": 4588,
+   "source_rhs": 7265,
+   "expected_runs": 1428,
+   "ms": [
+    105.54674999999999,
+    103.81775,
+    111.354459,
+    103.204791,
+    107.040375,
+    104.286333,
+    102.148833,
+    104.239542,
+    105.5465,
+    102.765334
+   ],
+   "sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 11,
+     "rule": 279,
+     "run": 9,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 126
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781307
+      },
+      {
+       "Eq": 554050781309
+      },
+      {
+       "Eq": 554050781311
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 41,
+     "rule": 532,
+     "run": 12,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 148
+       }
+      },
+      {
+       "Fact": {
+        "cell": 968,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 791,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      },
+      {
+       "Fact": {
+        "cell": 306,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781231
+      },
+      {
+       "Eq": 554050781331
+      },
+      {
+       "Eq": 554050781333
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 4157528342535
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 3397319131143
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 1314259992583
+      }
+     ],
+     "ordinal": 1073,
+     "rule": 249,
+     "run": 114,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 3012,
+        "op": 21
+       }
+      },
+      {
+       "Fact": {
+        "cell": 3577,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 4743,
+        "op": 0
+       }
+      },
+      {
+       "Function": 811
+      },
+      {
+       "Fact": {
+        "cell": 2255,
+        "op": 3
+       }
+      },
+      {
+       "Function": 933
+      },
+      {
+       "Fact": {
+        "cell": 4458,
+        "op": 6
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1304,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781255
+      },
+      {
+       "Eq": 3521873182731
+      },
+      {
+       "Eq": 12936441495588
+      },
+      {
+       "Eq": 12936441495590
+      },
+      {
+       "Eq": 3530463117323
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 15320148344842
+      },
+      {
+       "Eq": 20349555048462
+      },
+      {
+       "Eq": 15324443312138
+      },
+      {
+       "Eq": 22505628631049
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 9
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 9685151252489
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 9685151252490
+      },
+      {
+       "Eq": 19146964205582
+      },
+      {
+       "Int": 9
+      },
+      {
+       "Eq": 19146964205585
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 5600637353991
+      }
+     ],
+     "ordinal": 5512,
+     "rule": 0,
+     "run": 1009,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 4374,
+    "3": 186,
+    "4": 20,
+    "5": 8
+   },
+   "counts": {
+    "approximate_visits": 194271,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 40769,
+    "peak_rule_tuples": 1371,
+    "point_reads": 5374,
+    "primitive_evals": 14602,
+    "raw_parent_rejects": 445,
+    "raw_root_slots": 45432,
+    "raw_tuples": 21443,
+    "rejected_pointers": 0,
+    "root_offers": 107631,
+    "score_bucket_reads": 6603016,
+    "shortlisted": 0,
+    "stale_candidates": 1581,
+    "table_rebuilds": 857,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 20998,
+    "visible_rows": 58572
+   },
+   "embedding_views": 3,
+   "generator": "learned",
+   "neural_committed": 4588,
+   "raw_sha256": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+   "sealed_before_verifier": true,
+   "total_rhs": 7265,
+   "median_ms": 104.26293749999999
+  },
+  "adaptive": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 4588,
+   "source_rhs_with_supported_plan": 4588,
+   "source_rhs": 7265,
+   "expected_runs": 1428,
+   "ms": [
+    96.11508400000001,
+    96.930417,
+    94.008292,
+    94.96070800000001,
+    94.534125,
+    94.667708,
+    94.780875,
+    95.887917,
+    94.177708,
+    94.400417
+   ],
+   "sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 11,
+     "rule": 279,
+     "run": 9,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 126
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781307
+      },
+      {
+       "Eq": 554050781309
+      },
+      {
+       "Eq": 554050781311
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 41,
+     "rule": 532,
+     "run": 12,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 148
+       }
+      },
+      {
+       "Fact": {
+        "cell": 968,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 791,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      },
+      {
+       "Fact": {
+        "cell": 306,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781231
+      },
+      {
+       "Eq": 554050781331
+      },
+      {
+       "Eq": 554050781333
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 4157528342535
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 3397319131143
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 1314259992583
+      }
+     ],
+     "ordinal": 1073,
+     "rule": 249,
+     "run": 114,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 3012,
+        "op": 21
+       }
+      },
+      {
+       "Fact": {
+        "cell": 3577,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 4743,
+        "op": 0
+       }
+      },
+      {
+       "Function": 811
+      },
+      {
+       "Fact": {
+        "cell": 2255,
+        "op": 3
+       }
+      },
+      {
+       "Function": 933
+      },
+      {
+       "Fact": {
+        "cell": 4458,
+        "op": 6
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1304,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781255
+      },
+      {
+       "Eq": 3521873182731
+      },
+      {
+       "Eq": 12936441495588
+      },
+      {
+       "Eq": 12936441495590
+      },
+      {
+       "Eq": 3530463117323
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 15320148344842
+      },
+      {
+       "Eq": 20349555048462
+      },
+      {
+       "Eq": 15324443312138
+      },
+      {
+       "Eq": 22505628631049
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 9
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 9685151252489
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 9685151252490
+      },
+      {
+       "Eq": 19146964205582
+      },
+      {
+       "Int": 9
+      },
+      {
+       "Eq": 19146964205585
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 5600637353991
+      }
+     ],
+     "ordinal": 5512,
+     "rule": 0,
+     "run": 1009,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 4374,
+    "3": 186,
+    "4": 20,
+    "5": 8
+   },
+   "counts": {
+    "approximate_visits": 77866,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 74627,
+    "peak_rule_tuples": 1587,
+    "point_reads": 5374,
+    "primitive_evals": 14602,
+    "raw_parent_rejects": 13538,
+    "raw_root_slots": 83706,
+    "raw_tuples": 34536,
+    "rejected_pointers": 0,
+    "root_offers": 107631,
+    "score_bucket_reads": 1181776,
+    "shortlisted": 0,
+    "stale_candidates": 1581,
+    "table_rebuilds": 857,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 20998,
+    "visible_rows": 58572
+   },
+   "embedding_views": 1,
+   "generator": "adaptive",
+   "neural_committed": 4588,
+   "raw_sha256": "c4f1af6bd2645a01fce7cd44747c74c5bd0c73b7eb07446600cf22277001ab68",
+   "sealed_before_verifier": true,
+   "total_rhs": 7265,
+   "median_ms": 94.72429149999999
+  },
+  "interval": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 4588,
+   "source_rhs_with_supported_plan": 4588,
+   "source_rhs": 7265,
+   "expected_runs": 1428,
+   "ms": [
+    76.83058399999999,
+    76.092542,
+    75.33862500000001,
+    75.519208,
+    75.543083,
+    76.23625000000001,
+    77.412459,
+    76.890292,
+    78.538625,
+    77.65483300000001
+   ],
+   "sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 11,
+     "rule": 279,
+     "run": 9,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 126
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781307
+      },
+      {
+       "Eq": 554050781309
+      },
+      {
+       "Eq": 554050781311
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 41,
+     "rule": 532,
+     "run": 12,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 148
+       }
+      },
+      {
+       "Fact": {
+        "cell": 968,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 791,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      },
+      {
+       "Fact": {
+        "cell": 306,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781231
+      },
+      {
+       "Eq": 554050781331
+      },
+      {
+       "Eq": 554050781333
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 4157528342535
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 3397319131143
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781195
+      },
+      {
+       "Eq": 1314259992583
+      }
+     ],
+     "ordinal": 1073,
+     "rule": 249,
+     "run": 114,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 3012,
+        "op": 21
+       }
+      },
+      {
+       "Fact": {
+        "cell": 3577,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 4743,
+        "op": 0
+       }
+      },
+      {
+       "Function": 811
+      },
+      {
+       "Fact": {
+        "cell": 2255,
+        "op": 3
+       }
+      },
+      {
+       "Function": 933
+      },
+      {
+       "Fact": {
+        "cell": 4458,
+        "op": 6
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1304,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781255
+      },
+      {
+       "Eq": 3521873182731
+      },
+      {
+       "Eq": 12936441495588
+      },
+      {
+       "Eq": 12936441495590
+      },
+      {
+       "Eq": 3530463117323
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 15320148344842
+      },
+      {
+       "Eq": 20349555048462
+      },
+      {
+       "Eq": 15324443312138
+      },
+      {
+       "Eq": 22505628631049
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 9
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 9685151252489
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 9685151252490
+      },
+      {
+       "Eq": 19146964205582
+      },
+      {
+       "Int": 9
+      },
+      {
+       "Eq": 19146964205585
+      },
+      {
+       "Eq": 554050781201
+      },
+      {
+       "Eq": 5600637353991
+      }
+     ],
+     "ordinal": 5512,
+     "rule": 0,
+     "run": 1009,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 4374,
+    "3": 186,
+    "4": 20,
+    "5": 8
+   },
+   "counts": {
+    "approximate_visits": 51615,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 40442,
+    "peak_rule_tuples": 1366,
+    "point_reads": 5374,
+    "primitive_evals": 14602,
+    "raw_parent_rejects": 314,
+    "raw_root_slots": 45101,
+    "raw_tuples": 21312,
+    "rejected_pointers": 0,
+    "root_offers": 107631,
+    "score_bucket_reads": 447096,
+    "shortlisted": 0,
+    "stale_candidates": 1581,
+    "table_rebuilds": 857,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 20998,
+    "visible_rows": 58572
+   },
+   "embedding_views": 3,
+   "generator": "certified",
+   "neural_committed": 4588,
+   "raw_sha256": "be67c20c464c0f9ea9a811909f9ae0b475821f3f3835c12e2cca3bb1d13049d7",
+   "sealed_before_verifier": true,
+   "total_rhs": 7265,
+   "median_ms": 76.533417
+  }
+ },
+ "dot-product": {
+  "native": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 3805,
+   "source_rhs_with_supported_plan": 3805,
+   "source_rhs": 6704,
+   "expected_runs": 1535,
+   "ms": [
+    20.913292,
+    20.684417,
+    21.035959,
+    20.915125,
+    20.999582999999998,
+    21.158334,
+    20.694167,
+    21.131917,
+    21.181292,
+    22.171667
+   ],
+   "sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "raw_replay_equal": true,
+   "examples": {},
+   "by_width": {},
+   "counts": {
+    "approximate_visits": 0,
+    "calls": 0,
+    "committed": 0,
+    "exhausted": 0,
+    "learned_pointers": 0,
+    "peak_rule_tuples": 0,
+    "point_reads": 0,
+    "primitive_evals": 0,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 0,
+    "raw_tuples": 0,
+    "rejected_pointers": 0,
+    "root_offers": 0,
+    "score_bucket_reads": 0,
+    "shortlisted": 0,
+    "stale_candidates": 0,
+    "table_rebuilds": 0,
+    "unsupported": 0,
+    "validated": 0,
+    "verified_parent_tuples": 0,
+    "visible_rows": 0
+   },
+   "embedding_views": 1,
+   "generator": "off",
+   "neural_committed": 0,
+   "raw_sha256": "",
+   "sealed_before_verifier": false,
+   "total_rhs": 6704,
+   "median_ms": 21.017770999999996
+  },
+  "prefix": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 3805,
+   "source_rhs_with_supported_plan": 3805,
+   "source_rhs": 6704,
+   "expected_runs": 1535,
+   "ms": [
+    97.55274999999999,
+    97.44054200000001,
+    100.07287500000001,
+    99.695542,
+    100.202791,
+    97.700542,
+    110.553042,
+    97.27054100000001,
+    101.085667,
+    102.108583
+   ],
+   "sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 20
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Int": 5
+      }
+     ],
+     "ordinal": 15,
+     "rule": 279,
+     "run": 11,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 204
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781385
+      },
+      {
+       "Eq": 554050781387
+      },
+      {
+       "Eq": 554050781389
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 72,
+     "rule": 532,
+     "run": 14,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 272
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1595,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1765,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 480,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781363
+      },
+      {
+       "Eq": 554050781455
+      },
+      {
+       "Eq": 554050781457
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 6850472837127
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 7580617277447
+      },
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 2061584302087
+      }
+     ],
+     "ordinal": 1882,
+     "rule": 249,
+     "run": 149,
+     "width": 4
+    }
+   },
+   "by_width": {
+    "2": 3427,
+    "3": 322,
+    "4": 56
+   },
+   "counts": {
+    "approximate_visits": 141871,
+    "calls": 3818,
+    "committed": 3805,
+    "exhausted": 0,
+    "learned_pointers": 93980,
+    "peak_rule_tuples": 0,
+    "point_reads": 37002,
+    "primitive_evals": 5605,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 0,
+    "raw_tuples": 0,
+    "rejected_pointers": 70913,
+    "root_offers": 107621,
+    "score_bucket_reads": 5691638,
+    "shortlisted": 0,
+    "stale_candidates": 7822,
+    "table_rebuilds": 688,
+    "unsupported": 0,
+    "validated": 3805,
+    "verified_parent_tuples": 0,
+    "visible_rows": 57477
+   },
+   "embedding_views": 1,
+   "generator": "learned",
+   "neural_committed": 3805,
+   "raw_sha256": "",
+   "sealed_before_verifier": false,
+   "total_rhs": 6704,
+   "median_ms": 99.8842085
+  },
+  "sealed": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 3805,
+   "source_rhs_with_supported_plan": 3805,
+   "source_rhs": 6704,
+   "expected_runs": 1535,
+   "ms": [
+    116.641791,
+    119.89591700000001,
+    122.28441600000001,
+    121.9505,
+    119.063916,
+    118.813958,
+    118.83375,
+    118.060416,
+    118.558459,
+    125.616334
+   ],
+   "sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 20
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Int": 5
+      }
+     ],
+     "ordinal": 15,
+     "rule": 279,
+     "run": 11,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 204
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781385
+      },
+      {
+       "Eq": 554050781387
+      },
+      {
+       "Eq": 554050781389
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 72,
+     "rule": 532,
+     "run": 14,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 272
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1595,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1765,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 480,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781363
+      },
+      {
+       "Eq": 554050781455
+      },
+      {
+       "Eq": 554050781457
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 6850472837127
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 7580617277447
+      },
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 2061584302087
+      }
+     ],
+     "ordinal": 1882,
+     "rule": 249,
+     "run": 149,
+     "width": 4
+    }
+   },
+   "by_width": {
+    "2": 3427,
+    "3": 322,
+    "4": 56
+   },
+   "counts": {
+    "approximate_visits": 240910,
+    "calls": 3818,
+    "committed": 3805,
+    "exhausted": 0,
+    "learned_pointers": 53088,
+    "peak_rule_tuples": 1260,
+    "point_reads": 17980,
+    "primitive_evals": 8466,
+    "raw_parent_rejects": 424,
+    "raw_root_slots": 52323,
+    "raw_tuples": 21210,
+    "rejected_pointers": 0,
+    "root_offers": 104441,
+    "score_bucket_reads": 8550400,
+    "shortlisted": 0,
+    "stale_candidates": 1849,
+    "table_rebuilds": 688,
+    "unsupported": 0,
+    "validated": 3805,
+    "verified_parent_tuples": 20786,
+    "visible_rows": 57477
+   },
+   "embedding_views": 3,
+   "generator": "learned",
+   "neural_committed": 3805,
+   "raw_sha256": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+   "sealed_before_verifier": true,
+   "total_rhs": 6704,
+   "median_ms": 118.94883300000001
+  },
+  "adaptive": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 3805,
+   "source_rhs_with_supported_plan": 3805,
+   "source_rhs": 6704,
+   "expected_runs": 1535,
+   "ms": [
+    111.45462500000001,
+    112.452834,
+    114.868208,
+    114.034333,
+    112.107417,
+    114.06625,
+    111.704917,
+    113.58604199999999,
+    117.129792,
+    115.283333
+   ],
+   "sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 20
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Int": 5
+      }
+     ],
+     "ordinal": 15,
+     "rule": 279,
+     "run": 11,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 204
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781385
+      },
+      {
+       "Eq": 554050781387
+      },
+      {
+       "Eq": 554050781389
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 72,
+     "rule": 532,
+     "run": 14,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 272
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1595,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1765,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 480,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781363
+      },
+      {
+       "Eq": 554050781455
+      },
+      {
+       "Eq": 554050781457
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 6850472837127
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 7580617277447
+      },
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 2061584302087
+      }
+     ],
+     "ordinal": 1882,
+     "rule": 249,
+     "run": 149,
+     "width": 4
+    }
+   },
+   "by_width": {
+    "2": 3427,
+    "3": 322,
+    "4": 56
+   },
+   "counts": {
+    "approximate_visits": 110534,
+    "calls": 3818,
+    "committed": 3805,
+    "exhausted": 0,
+    "learned_pointers": 108332,
+    "peak_rule_tuples": 1327,
+    "point_reads": 17980,
+    "primitive_evals": 8466,
+    "raw_parent_rejects": 16423,
+    "raw_root_slots": 107228,
+    "raw_tuples": 37209,
+    "rejected_pointers": 0,
+    "root_offers": 104441,
+    "score_bucket_reads": 1404512,
+    "shortlisted": 0,
+    "stale_candidates": 1849,
+    "table_rebuilds": 688,
+    "unsupported": 0,
+    "validated": 3805,
+    "verified_parent_tuples": 20786,
+    "visible_rows": 57477
+   },
+   "embedding_views": 1,
+   "generator": "adaptive",
+   "neural_committed": 3805,
+   "raw_sha256": "9655d79d2b586059006da9111ee2d781da6087f7c500245808d40d6730c94efd",
+   "sealed_before_verifier": true,
+   "total_rhs": 6704,
+   "median_ms": 113.8101875
+  },
+  "interval": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 3805,
+   "source_rhs_with_supported_plan": 3805,
+   "source_rhs": 6704,
+   "expected_runs": 1535,
+   "ms": [
+    81.23733399999999,
+    83.0005,
+    82.071167,
+    84.377625,
+    81.88275,
+    81.535917,
+    81.46962500000001,
+    81.326542,
+    83.057625,
+    85.353792
+   ],
+   "sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 20
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Int": 5
+      }
+     ],
+     "ordinal": 15,
+     "rule": 279,
+     "run": 11,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 204
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781385
+      },
+      {
+       "Eq": 554050781387
+      },
+      {
+       "Eq": 554050781389
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 72,
+     "rule": 532,
+     "run": 14,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 272
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1595,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1765,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 480,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781363
+      },
+      {
+       "Eq": 554050781455
+      },
+      {
+       "Eq": 554050781457
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 6850472837127
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 7580617277447
+      },
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 2061584302087
+      }
+     ],
+     "ordinal": 1882,
+     "rule": 249,
+     "run": 149,
+     "width": 4
+    }
+   },
+   "by_width": {
+    "2": 3427,
+    "3": 322,
+    "4": 56
+   },
+   "counts": {
+    "approximate_visits": 64316,
+    "calls": 3818,
+    "committed": 3805,
+    "exhausted": 0,
+    "learned_pointers": 52725,
+    "peak_rule_tuples": 1260,
+    "point_reads": 17980,
+    "primitive_evals": 8466,
+    "raw_parent_rejects": 240,
+    "raw_root_slots": 51826,
+    "raw_tuples": 21026,
+    "rejected_pointers": 0,
+    "root_offers": 104441,
+    "score_bucket_reads": 369811,
+    "shortlisted": 0,
+    "stale_candidates": 1849,
+    "table_rebuilds": 688,
+    "unsupported": 0,
+    "validated": 3805,
+    "verified_parent_tuples": 20786,
+    "visible_rows": 57477
+   },
+   "embedding_views": 3,
+   "generator": "certified",
+   "neural_committed": 3805,
+   "raw_sha256": "8ab52617d801b0f51053def3d2640b2674a1f79ce311ed279c33dad5a9314b29",
+   "sealed_before_verifier": true,
+   "total_rhs": 6704,
+   "median_ms": 81.9769585
+  }
+ },
+ "gemm-bias-relu": {
+  "native": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 9561,
+   "source_rhs_with_supported_plan": 9561,
+   "source_rhs": 15462,
+   "expected_runs": 1652,
+   "ms": [
+    46.899542000000004,
+    46.872125000000004,
+    47.740833,
+    48.538583,
+    57.917375,
+    46.923417,
+    48.892292,
+    47.046459,
+    48.137083,
+    46.728542
+   ],
+   "sha": "17da4d64835c0b660c6346c0a2377f2e7a272442b5da5e746a7d69f15b41c983",
+   "raw_replay_equal": true,
+   "examples": {},
+   "by_width": {},
+   "counts": {
+    "approximate_visits": 0,
+    "calls": 0,
+    "committed": 0,
+    "exhausted": 0,
+    "learned_pointers": 0,
+    "peak_rule_tuples": 0,
+    "point_reads": 0,
+    "primitive_evals": 0,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 0,
+    "raw_tuples": 0,
+    "rejected_pointers": 0,
+    "root_offers": 0,
+    "score_bucket_reads": 0,
+    "shortlisted": 0,
+    "stale_candidates": 0,
+    "table_rebuilds": 0,
+    "unsupported": 0,
+    "validated": 0,
+    "verified_parent_tuples": 0,
+    "visible_rows": 0
+   },
+   "embedding_views": 1,
+   "generator": "off",
+   "neural_committed": 0,
+   "raw_sha256": "",
+   "sealed_before_verifier": false,
+   "total_rhs": 15462,
+   "median_ms": 47.393646000000004
+  },
+  "prefix": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 9561,
+   "source_rhs_with_supported_plan": 9561,
+   "source_rhs": 15462,
+   "expected_runs": 1652,
+   "ms": [
+    323.676041,
+    322.559583,
+    325.33462499999996,
+    329.970958,
+    335.707583,
+    324.477167,
+    330.064583,
+    325.301833,
+    325.26,
+    323.999417
+   ],
+   "sha": "17da4d64835c0b660c6346c0a2377f2e7a272442b5da5e746a7d69f15b41c983",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 28
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 554050781213
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 18,
+     "rule": 279,
+     "run": 14,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 366
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781317
+      },
+      {
+       "Eq": 554050781343
+      },
+      {
+       "Eq": 554050781551
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 94,
+     "rule": 532,
+     "run": 17,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 430
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2532,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2026,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 28
+       }
+      },
+      {
+       "Fact": {
+        "cell": 633,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781241
+      },
+      {
+       "Eq": 554050781613
+      },
+      {
+       "Eq": 554050781615
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 10874857193479
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 8701603741703
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781213
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 2718714298375
+      }
+     ],
+     "ordinal": 3148,
+     "rule": 249,
+     "run": 182,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 426
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2344,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 12936,
+        "op": 6
+       }
+      },
+      {
+       "Fact": {
+        "cell": 9018,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1632,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781267
+      },
+      {
+       "Eq": 554050781261
+      },
+      {
+       "Eq": 554050781609
+      },
+      {
+       "Eq": 554050781261
+      },
+      {
+       "Eq": 554050781611
+      },
+      {
+       "Int": 2
+      },
+      {
+       "Eq": 554050781581
+      },
+      {
+       "Eq": 53639846559753
+      },
+      {
+       "Eq": 554050781263
+      },
+      {
+       "Eq": 5733781340174
+      },
+      {
+       "Int": 3
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 55559696941070
+      },
+      {
+       "Int": 3
+      },
+      {
+       "Eq": 55559696941073
+      },
+      {
+       "Eq": 38732015075337
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 38732015075338
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 7009386627081
+      }
+     ],
+     "ordinal": 12925,
+     "rule": 0,
+     "run": 1092,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 8990,
+    "3": 488,
+    "4": 58,
+    "5": 25
+   },
+   "counts": {
+    "approximate_visits": 599809,
+    "calls": 4751,
+    "committed": 9561,
+    "exhausted": 0,
+    "learned_pointers": 437120,
+    "peak_rule_tuples": 0,
+    "point_reads": 94075,
+    "primitive_evals": 18333,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 0,
+    "raw_tuples": 0,
+    "rejected_pointers": 380809,
+    "root_offers": 281558,
+    "score_bucket_reads": 24690099,
+    "shortlisted": 0,
+    "stale_candidates": 24345,
+    "table_rebuilds": 816,
+    "unsupported": 0,
+    "validated": 9561,
+    "verified_parent_tuples": 0,
+    "visible_rows": 137339
+   },
+   "embedding_views": 1,
+   "generator": "learned",
+   "neural_committed": 9561,
+   "raw_sha256": "",
+   "sealed_before_verifier": false,
+   "total_rhs": 15462,
+   "median_ms": 325.2809165
+  },
+  "sealed": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 9561,
+   "source_rhs_with_supported_plan": 9561,
+   "source_rhs": 15462,
+   "expected_runs": 1652,
+   "ms": [
+    344.125166,
+    348.689792,
+    344.620208,
+    351.108792,
+    350.50204099999996,
+    344.619584,
+    345.850584,
+    355.282667,
+    341.043958,
+    351.140916
+   ],
+   "sha": "17da4d64835c0b660c6346c0a2377f2e7a272442b5da5e746a7d69f15b41c983",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 28
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 554050781213
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 18,
+     "rule": 279,
+     "run": 14,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 366
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781317
+      },
+      {
+       "Eq": 554050781343
+      },
+      {
+       "Eq": 554050781551
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 94,
+     "rule": 532,
+     "run": 17,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 430
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2532,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2026,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 28
+       }
+      },
+      {
+       "Fact": {
+        "cell": 633,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781241
+      },
+      {
+       "Eq": 554050781613
+      },
+      {
+       "Eq": 554050781615
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 10874857193479
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 8701603741703
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781213
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 2718714298375
+      }
+     ],
+     "ordinal": 3148,
+     "rule": 249,
+     "run": 182,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 426
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2344,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 78
+       }
+      },
+      {
+       "Function": 2336
+      },
+      {
+       "Fact": {
+        "cell": 12936,
+        "op": 6
+       }
+      },
+      {
+       "Function": 969
+      },
+      {
+       "Fact": {
+        "cell": 9018,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1632,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781267
+      },
+      {
+       "Eq": 554050781261
+      },
+      {
+       "Eq": 554050781609
+      },
+      {
+       "Eq": 554050781261
+      },
+      {
+       "Eq": 554050781611
+      },
+      {
+       "Int": 2
+      },
+      {
+       "Eq": 554050781581
+      },
+      {
+       "Eq": 53639846559753
+      },
+      {
+       "Eq": 554050781263
+      },
+      {
+       "Eq": 5733781340174
+      },
+      {
+       "Int": 3
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 55559696941070
+      },
+      {
+       "Int": 3
+      },
+      {
+       "Eq": 55559696941073
+      },
+      {
+       "Eq": 38732015075337
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 38732015075338
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 7009386627081
+      }
+     ],
+     "ordinal": 12925,
+     "rule": 0,
+     "run": 1092,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 8990,
+    "3": 488,
+    "4": 58,
+    "5": 25
+   },
+   "counts": {
+    "approximate_visits": 892867,
+    "calls": 4751,
+    "committed": 9561,
+    "exhausted": 0,
+    "learned_pointers": 140787,
+    "peak_rule_tuples": 6965,
+    "point_reads": 18737,
+    "primitive_evals": 59591,
+    "raw_parent_rejects": 1100,
+    "raw_root_slots": 168394,
+    "raw_tuples": 78407,
+    "rejected_pointers": 0,
+    "root_offers": 261690,
+    "score_bucket_reads": 31691888,
+    "shortlisted": 0,
+    "stale_candidates": 3793,
+    "table_rebuilds": 816,
+    "unsupported": 0,
+    "validated": 9561,
+    "verified_parent_tuples": 77307,
+    "visible_rows": 137339
+   },
+   "embedding_views": 3,
+   "generator": "learned",
+   "neural_committed": 9561,
+   "raw_sha256": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+   "sealed_before_verifier": true,
+   "total_rhs": 15462,
+   "median_ms": 347.270188
+  },
+  "adaptive": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 9561,
+   "source_rhs_with_supported_plan": 9561,
+   "source_rhs": 15462,
+   "expected_runs": 1652,
+   "ms": [
+    393.941458,
+    384.857167,
+    394.098875,
+    379.518625,
+    382.148333,
+    384.39883299999997,
+    383.615333,
+    381.58025000000004,
+    384.464875,
+    392.71662499999996
+   ],
+   "sha": "17da4d64835c0b660c6346c0a2377f2e7a272442b5da5e746a7d69f15b41c983",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 28
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 554050781213
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 18,
+     "rule": 279,
+     "run": 14,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 366
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781317
+      },
+      {
+       "Eq": 554050781343
+      },
+      {
+       "Eq": 554050781551
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 94,
+     "rule": 532,
+     "run": 17,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 430
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2532,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2026,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 28
+       }
+      },
+      {
+       "Fact": {
+        "cell": 633,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781241
+      },
+      {
+       "Eq": 554050781613
+      },
+      {
+       "Eq": 554050781615
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 10874857193479
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 8701603741703
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781213
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 2718714298375
+      }
+     ],
+     "ordinal": 3148,
+     "rule": 249,
+     "run": 182,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 426
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2344,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 78
+       }
+      },
+      {
+       "Function": 2336
+      },
+      {
+       "Fact": {
+        "cell": 12936,
+        "op": 6
+       }
+      },
+      {
+       "Function": 969
+      },
+      {
+       "Fact": {
+        "cell": 9018,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1632,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781267
+      },
+      {
+       "Eq": 554050781261
+      },
+      {
+       "Eq": 554050781609
+      },
+      {
+       "Eq": 554050781261
+      },
+      {
+       "Eq": 554050781611
+      },
+      {
+       "Int": 2
+      },
+      {
+       "Eq": 554050781581
+      },
+      {
+       "Eq": 53639846559753
+      },
+      {
+       "Eq": 554050781263
+      },
+      {
+       "Eq": 5733781340174
+      },
+      {
+       "Int": 3
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 55559696941070
+      },
+      {
+       "Int": 3
+      },
+      {
+       "Eq": 55559696941073
+      },
+      {
+       "Eq": 38732015075337
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 38732015075338
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 7009386627081
+      }
+     ],
+     "ordinal": 12925,
+     "rule": 0,
+     "run": 1092,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 8990,
+    "3": 488,
+    "4": 58,
+    "5": 25
+   },
+   "counts": {
+    "approximate_visits": 509560,
+    "calls": 4751,
+    "committed": 9561,
+    "exhausted": 0,
+    "learned_pointers": 496617,
+    "peak_rule_tuples": 19732,
+    "point_reads": 18737,
+    "primitive_evals": 59591,
+    "raw_parent_rejects": 153461,
+    "raw_root_slots": 871512,
+    "raw_tuples": 230768,
+    "rejected_pointers": 0,
+    "root_offers": 261690,
+    "score_bucket_reads": 4220312,
+    "shortlisted": 0,
+    "stale_candidates": 3793,
+    "table_rebuilds": 816,
+    "unsupported": 0,
+    "validated": 9561,
+    "verified_parent_tuples": 77307,
+    "visible_rows": 137339
+   },
+   "embedding_views": 1,
+   "generator": "adaptive",
+   "neural_committed": 9561,
+   "raw_sha256": "779b1405f11c2f372fe1c673fbff2b4a12620c645dbe0f895c5a91605b5cde54",
+   "sealed_before_verifier": true,
+   "total_rhs": 15462,
+   "median_ms": 384.431854
+  },
+  "interval": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 9561,
+   "source_rhs_with_supported_plan": 9561,
+   "source_rhs": 15462,
+   "expected_runs": 1652,
+   "ms": [
+    198.87929100000002,
+    202.445917,
+    200.626667,
+    202.13,
+    207.20274999999998,
+    199.104625,
+    199.536125,
+    205.36075,
+    205.947375,
+    199.833708
+   ],
+   "sha": "17da4d64835c0b660c6346c0a2377f2e7a272442b5da5e746a7d69f15b41c983",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 28
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 26
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 554050781213
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 18,
+     "rule": 279,
+     "run": 14,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 366
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781317
+      },
+      {
+       "Eq": 554050781343
+      },
+      {
+       "Eq": 554050781551
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 94,
+     "rule": 532,
+     "run": 17,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 430
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2532,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2026,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 28
+       }
+      },
+      {
+       "Fact": {
+        "cell": 633,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781241
+      },
+      {
+       "Eq": 554050781613
+      },
+      {
+       "Eq": 554050781615
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 10874857193479
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 8701603741703
+      },
+      {
+       "Eq": 554050781211
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781213
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 2718714298375
+      }
+     ],
+     "ordinal": 3148,
+     "rule": 249,
+     "run": 182,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 426
+       }
+      },
+      {
+       "Fact": {
+        "cell": 2344,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 78
+       }
+      },
+      {
+       "Function": 2336
+      },
+      {
+       "Fact": {
+        "cell": 12936,
+        "op": 6
+       }
+      },
+      {
+       "Function": 969
+      },
+      {
+       "Fact": {
+        "cell": 9018,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1632,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781267
+      },
+      {
+       "Eq": 554050781261
+      },
+      {
+       "Eq": 554050781609
+      },
+      {
+       "Eq": 554050781261
+      },
+      {
+       "Eq": 554050781611
+      },
+      {
+       "Int": 2
+      },
+      {
+       "Eq": 554050781581
+      },
+      {
+       "Eq": 53639846559753
+      },
+      {
+       "Eq": 554050781263
+      },
+      {
+       "Eq": 5733781340174
+      },
+      {
+       "Int": 3
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 55559696941070
+      },
+      {
+       "Int": 3
+      },
+      {
+       "Eq": 55559696941073
+      },
+      {
+       "Eq": 38732015075337
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 38732015075338
+      },
+      {
+       "Eq": 554050781203
+      },
+      {
+       "Eq": 7009386627081
+      }
+     ],
+     "ordinal": 12925,
+     "rule": 0,
+     "run": 1092,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 8990,
+    "3": 488,
+    "4": 58,
+    "5": 25
+   },
+   "counts": {
+    "approximate_visits": 197085,
+    "calls": 4751,
+    "committed": 9561,
+    "exhausted": 0,
+    "learned_pointers": 139808,
+    "peak_rule_tuples": 6965,
+    "point_reads": 18737,
+    "primitive_evals": 59591,
+    "raw_parent_rejects": 657,
+    "raw_root_slots": 167152,
+    "raw_tuples": 77964,
+    "rejected_pointers": 0,
+    "root_offers": 261690,
+    "score_bucket_reads": 906649,
+    "shortlisted": 0,
+    "stale_candidates": 3793,
+    "table_rebuilds": 816,
+    "unsupported": 0,
+    "validated": 9561,
+    "verified_parent_tuples": 77307,
+    "visible_rows": 137339
+   },
+   "embedding_views": 3,
+   "generator": "certified",
+   "neural_committed": 9561,
+   "raw_sha256": "0c57598994f37c5d9dc86941d3ecb8187f38f40fac73bce54e43deba9900b71f",
+   "sealed_before_verifier": true,
+   "total_rhs": 15462,
+   "median_ms": 201.3783335
+  }
+ },
+ "stable-argmax": {
+  "native": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 4912,
+   "source_rhs_with_supported_plan": 4912,
+   "source_rhs": 8190,
+   "expected_runs": 1149,
+   "ms": [
+    26.958,
+    26.314083,
+    25.39875,
+    24.893292000000002,
+    25.70625,
+    24.402417,
+    25.635292,
+    26.1925,
+    24.905084000000002,
+    26.029166999999998
+   ],
+   "sha": "40ca93637eb8ee4d7bde32f752a7f4e30d7bd713cea47da81aac0b586c37561a",
+   "raw_replay_equal": true,
+   "examples": {},
+   "by_width": {},
+   "counts": {
+    "approximate_visits": 0,
+    "calls": 0,
+    "committed": 0,
+    "exhausted": 0,
+    "learned_pointers": 0,
+    "peak_rule_tuples": 0,
+    "point_reads": 0,
+    "primitive_evals": 0,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 0,
+    "raw_tuples": 0,
+    "rejected_pointers": 0,
+    "root_offers": 0,
+    "score_bucket_reads": 0,
+    "shortlisted": 0,
+    "stale_candidates": 0,
+    "table_rebuilds": 0,
+    "unsupported": 0,
+    "validated": 0,
+    "verified_parent_tuples": 0,
+    "visible_rows": 0
+   },
+   "embedding_views": 1,
+   "generator": "off",
+   "neural_committed": 0,
+   "raw_sha256": "",
+   "sealed_before_verifier": false,
+   "total_rhs": 8190,
+   "median_ms": 25.670771000000002
+  },
+  "prefix": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 4912,
+   "source_rhs_with_supported_plan": 4912,
+   "source_rhs": 8190,
+   "expected_runs": 1149,
+   "ms": [
+    92.7365,
+    94.936041,
+    91.2875,
+    91.782333,
+    92.066333,
+    91.343291,
+    93.378708,
+    92.55337499999999,
+    95.99920900000001,
+    91.5955
+   ],
+   "sha": "40ca93637eb8ee4d7bde32f752a7f4e30d7bd713cea47da81aac0b586c37561a",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 20
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 14,
+     "rule": 279,
+     "run": 11,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 92
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781273
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 554050781277
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 65,
+     "rule": 532,
+     "run": 14,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 260
+       }
+      },
+      {
+       "Fact": {
+        "cell": 778,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1840,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 202,
+        "op": 3
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781269
+      },
+      {
+       "Eq": 554050781443
+      },
+      {
+       "Eq": 554050781445
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 3341484556293
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 7902739824647
+      },
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781267
+      },
+      {
+       "Eq": 867583393799
+      }
+     ],
+     "ordinal": 2140,
+     "rule": 249,
+     "run": 128,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 262
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1978,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 4834,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 4834,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1274,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781215
+      },
+      {
+       "Eq": 554050781251
+      },
+      {
+       "Eq": 554050781445
+      },
+      {
+       "Eq": 554050781269
+      },
+      {
+       "Eq": 554050781447
+      },
+      {
+       "Int": 4
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 3590592659470
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 3590592659470
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 20761871908873
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 20761871908874
+      },
+      {
+       "Eq": 20761871908873
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 20761871908874
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 5471788335113
+      }
+     ],
+     "ordinal": 6333,
+     "rule": 0,
+     "run": 736,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 4660,
+    "3": 200,
+    "4": 36,
+    "5": 16
+   },
+   "counts": {
+    "approximate_visits": 124777,
+    "calls": 3226,
+    "committed": 4912,
+    "exhausted": 0,
+    "learned_pointers": 96694,
+    "peak_rule_tuples": 0,
+    "point_reads": 29066,
+    "primitive_evals": 6154,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 0,
+    "raw_tuples": 0,
+    "rejected_pointers": 81193,
+    "root_offers": 89335,
+    "score_bucket_reads": 5247716,
+    "shortlisted": 0,
+    "stale_candidates": 8309,
+    "table_rebuilds": 588,
+    "unsupported": 0,
+    "validated": 4912,
+    "verified_parent_tuples": 0,
+    "visible_rows": 51793
+   },
+   "embedding_views": 1,
+   "generator": "learned",
+   "neural_committed": 4912,
+   "raw_sha256": "",
+   "sealed_before_verifier": false,
+   "total_rhs": 8190,
+   "median_ms": 92.309854
+  },
+  "sealed": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 4912,
+   "source_rhs_with_supported_plan": 4912,
+   "source_rhs": 8190,
+   "expected_runs": 1149,
+   "ms": [
+    95.977042,
+    96.612541,
+    99.902333,
+    95.385708,
+    95.248459,
+    94.186916,
+    94.64425,
+    95.088416,
+    95.31299999999999,
+    93.324708
+   ],
+   "sha": "40ca93637eb8ee4d7bde32f752a7f4e30d7bd713cea47da81aac0b586c37561a",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 20
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 14,
+     "rule": 279,
+     "run": 11,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 92
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781273
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 554050781277
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 65,
+     "rule": 532,
+     "run": 14,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 260
+       }
+      },
+      {
+       "Fact": {
+        "cell": 778,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1840,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 202,
+        "op": 3
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781269
+      },
+      {
+       "Eq": 554050781443
+      },
+      {
+       "Eq": 554050781445
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 3341484556293
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 7902739824647
+      },
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781267
+      },
+      {
+       "Eq": 867583393799
+      }
+     ],
+     "ordinal": 2140,
+     "rule": 249,
+     "run": 128,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 262
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1978,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 90
+       }
+      },
+      {
+       "Function": 594
+      },
+      {
+       "Fact": {
+        "cell": 4834,
+        "op": 3
+       }
+      },
+      {
+       "Function": 594
+      },
+      {
+       "Fact": {
+        "cell": 4834,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1274,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781215
+      },
+      {
+       "Eq": 554050781251
+      },
+      {
+       "Eq": 554050781445
+      },
+      {
+       "Eq": 554050781269
+      },
+      {
+       "Eq": 554050781447
+      },
+      {
+       "Int": 4
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 3590592659470
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 3590592659470
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 20761871908873
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 20761871908874
+      },
+      {
+       "Eq": 20761871908873
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 20761871908874
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 5471788335113
+      }
+     ],
+     "ordinal": 6333,
+     "rule": 0,
+     "run": 736,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 4660,
+    "3": 200,
+    "4": 36,
+    "5": 16
+   },
+   "counts": {
+    "approximate_visits": 192516,
+    "calls": 3226,
+    "committed": 4912,
+    "exhausted": 0,
+    "learned_pointers": 37637,
+    "peak_rule_tuples": 2544,
+    "point_reads": 3927,
+    "primitive_evals": 14312,
+    "raw_parent_rejects": 422,
+    "raw_root_slots": 44178,
+    "raw_tuples": 20607,
+    "rejected_pointers": 0,
+    "root_offers": 82882,
+    "score_bucket_reads": 6614731,
+    "shortlisted": 0,
+    "stale_candidates": 946,
+    "table_rebuilds": 588,
+    "unsupported": 0,
+    "validated": 4912,
+    "verified_parent_tuples": 20185,
+    "visible_rows": 51793
+   },
+   "embedding_views": 3,
+   "generator": "learned",
+   "neural_committed": 4912,
+   "raw_sha256": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+   "sealed_before_verifier": true,
+   "total_rhs": 8190,
+   "median_ms": 95.28072949999999
+  },
+  "adaptive": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 4912,
+   "source_rhs_with_supported_plan": 4912,
+   "source_rhs": 8190,
+   "expected_runs": 1149,
+   "ms": [
+    89.51925,
+    88.99112500000001,
+    89.282167,
+    88.02958299999999,
+    87.950875,
+    87.349875,
+    87.071416,
+    88.85825,
+    86.979417,
+    87.66262499999999
+   ],
+   "sha": "40ca93637eb8ee4d7bde32f752a7f4e30d7bd713cea47da81aac0b586c37561a",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 20
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 14,
+     "rule": 279,
+     "run": 11,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 92
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781273
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 554050781277
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 65,
+     "rule": 532,
+     "run": 14,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 260
+       }
+      },
+      {
+       "Fact": {
+        "cell": 778,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1840,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 202,
+        "op": 3
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781269
+      },
+      {
+       "Eq": 554050781443
+      },
+      {
+       "Eq": 554050781445
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 3341484556293
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 7902739824647
+      },
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781267
+      },
+      {
+       "Eq": 867583393799
+      }
+     ],
+     "ordinal": 2140,
+     "rule": 249,
+     "run": 128,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 262
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1978,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 90
+       }
+      },
+      {
+       "Function": 594
+      },
+      {
+       "Fact": {
+        "cell": 4834,
+        "op": 3
+       }
+      },
+      {
+       "Function": 594
+      },
+      {
+       "Fact": {
+        "cell": 4834,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1274,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781215
+      },
+      {
+       "Eq": 554050781251
+      },
+      {
+       "Eq": 554050781445
+      },
+      {
+       "Eq": 554050781269
+      },
+      {
+       "Eq": 554050781447
+      },
+      {
+       "Int": 4
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 3590592659470
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 3590592659470
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 20761871908873
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 20761871908874
+      },
+      {
+       "Eq": 20761871908873
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 20761871908874
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 5471788335113
+      }
+     ],
+     "ordinal": 6333,
+     "rule": 0,
+     "run": 736,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 4660,
+    "3": 200,
+    "4": 36,
+    "5": 16
+   },
+   "counts": {
+    "approximate_visits": 82866,
+    "calls": 3226,
+    "committed": 4912,
+    "exhausted": 0,
+    "learned_pointers": 78788,
+    "peak_rule_tuples": 2808,
+    "point_reads": 3927,
+    "primitive_evals": 14312,
+    "raw_parent_rejects": 16580,
+    "raw_root_slots": 103683,
+    "raw_tuples": 36765,
+    "rejected_pointers": 0,
+    "root_offers": 82882,
+    "score_bucket_reads": 999240,
+    "shortlisted": 0,
+    "stale_candidates": 946,
+    "table_rebuilds": 588,
+    "unsupported": 0,
+    "validated": 4912,
+    "verified_parent_tuples": 20185,
+    "visible_rows": 51793
+   },
+   "embedding_views": 1,
+   "generator": "adaptive",
+   "neural_committed": 4912,
+   "raw_sha256": "8e08aa974a072806ae45c8ec79132d441f2a72ba9cb541441c3815690317bb00",
+   "sealed_before_verifier": true,
+   "total_rhs": 8190,
+   "median_ms": 87.990229
+  },
+  "interval": {
+   "exact": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "unions": true,
+    "graph": true
+   },
+   "first_different_rhs_run": null,
+   "expected_multi_rhs": 4912,
+   "source_rhs_with_supported_plan": 4912,
+   "source_rhs": 8190,
+   "expected_runs": 1149,
+   "ms": [
+    70.30575,
+    66.201125,
+    68.83925,
+    67.33175,
+    65.194625,
+    65.44075000000001,
+    64.890834,
+    66.552542,
+    67.94749999999999,
+    64.514958
+   ],
+   "sha": "40ca93637eb8ee4d7bde32f752a7f4e30d7bd713cea47da81aac0b586c37561a",
+   "raw_replay_equal": true,
+   "examples": {
+    "2": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 20
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Int": 0
+      }
+     ],
+     "ordinal": 14,
+     "rule": 279,
+     "run": 11,
+     "width": 2
+    },
+    "3": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 92
+       }
+      },
+      {
+       "Fact": {
+        "cell": 68,
+        "op": 0
+       }
+      },
+      {
+       "Fact": {
+        "cell": 43,
+        "op": 0
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781273
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 554050781277
+      },
+      {
+       "Eq": 4
+      },
+      {
+       "Eq": 68
+      },
+      {
+       "Text": "Add"
+      },
+      {
+       "Eq": 43
+      }
+     ],
+     "ordinal": 65,
+     "rule": 532,
+     "run": 14,
+     "width": 3
+    },
+    "4": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 260
+       }
+      },
+      {
+       "Fact": {
+        "cell": 778,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1840,
+        "op": 1
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 24
+       }
+      },
+      {
+       "Fact": {
+        "cell": 202,
+        "op": 3
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781269
+      },
+      {
+       "Eq": 554050781443
+      },
+      {
+       "Eq": 554050781445
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 3341484556293
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 7902739824647
+      },
+      {
+       "Eq": 554050781205
+      },
+      {
+       "Eq": 554050781197
+      },
+      {
+       "Eq": 554050781209
+      },
+      {
+       "Eq": 554050781267
+      },
+      {
+       "Eq": 867583393799
+      }
+     ],
+     "ordinal": 2140,
+     "rule": 249,
+     "run": 128,
+     "width": 4
+    },
+    "5": {
+     "anchors": [
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 262
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1978,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 129,
+        "op": 90
+       }
+      },
+      {
+       "Function": 594
+      },
+      {
+       "Fact": {
+        "cell": 4834,
+        "op": 3
+       }
+      },
+      {
+       "Function": 594
+      },
+      {
+       "Fact": {
+        "cell": 4834,
+        "op": 3
+       }
+      },
+      {
+       "Fact": {
+        "cell": 1274,
+        "op": 1
+       }
+      }
+     ],
+     "inputs": [
+      {
+       "Eq": 554050781215
+      },
+      {
+       "Eq": 554050781251
+      },
+      {
+       "Eq": 554050781445
+      },
+      {
+       "Eq": 554050781269
+      },
+      {
+       "Eq": 554050781447
+      },
+      {
+       "Int": 4
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 3590592659470
+      },
+      {
+       "Eq": 554050781275
+      },
+      {
+       "Eq": 3590592659470
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 20761871908873
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 20761871908874
+      },
+      {
+       "Eq": 20761871908873
+      },
+      {
+       "Int": 1
+      },
+      {
+       "Eq": 20761871908874
+      },
+      {
+       "Eq": 554050781207
+      },
+      {
+       "Eq": 5471788335113
+      }
+     ],
+     "ordinal": 6333,
+     "rule": 0,
+     "run": 736,
+     "width": 5
+    }
+   },
+   "by_width": {
+    "2": 4660,
+    "3": 200,
+    "4": 36,
+    "5": 16
+   },
+   "counts": {
+    "approximate_visits": 46915,
+    "calls": 3226,
+    "committed": 4912,
+    "exhausted": 0,
+    "learned_pointers": 37490,
+    "peak_rule_tuples": 2544,
+    "point_reads": 3927,
+    "primitive_evals": 14312,
+    "raw_parent_rejects": 318,
+    "raw_root_slots": 43916,
+    "raw_tuples": 20503,
+    "rejected_pointers": 0,
+    "root_offers": 82882,
+    "score_bucket_reads": 323886,
+    "shortlisted": 0,
+    "stale_candidates": 946,
+    "table_rebuilds": 588,
+    "unsupported": 0,
+    "validated": 4912,
+    "verified_parent_tuples": 20185,
+    "visible_rows": 51793
+   },
+   "embedding_views": 3,
+   "generator": "certified",
+   "neural_committed": 4912,
+   "raw_sha256": "ce1b2e3f2e35bc0562523b3aaf014ee111507671277d77e77e27ac695c46ac77",
+   "sealed_before_verifier": true,
+   "total_rhs": 8190,
+   "median_ms": 66.3768335
+  }
+ }
+}

@@ -1,0 +1,286 @@
+{
+ "gemm-bias-relu/learned-2-only": {
+  "exact": true,
+  "checks": {
+   "rhs": true,
+   "writes": true,
+   "resumes": true,
+   "unions": true,
+   "graph": true
+  },
+  "first_different_rhs_run": null,
+  "expected_multi_rhs": 9561,
+  "source_rhs": 15462,
+  "expected_runs": 1652,
+  "by_width": {
+   "2": 8990,
+   "3": 488,
+   "4": 58,
+   "5": 25
+  },
+  "counts": {
+   "approximate_visits": 599809,
+   "calls": 4751,
+   "committed": 9561,
+   "exhausted": 0,
+   "learned_pointers": 437120,
+   "point_reads": 94075,
+   "primitive_evals": 18333,
+   "rejected_pointers": 380809,
+   "root_offers": 281558,
+   "score_bucket_reads": 24690099,
+   "shortlisted": 0,
+   "stale_candidates": 24345,
+   "table_rebuilds": 816,
+   "unsupported": 0,
+   "validated": 9561,
+   "visible_rows": 137339
+  },
+  "generator": "learned",
+  "neural_committed": 9561,
+  "total_rhs": 15462,
+  "one_audit_ms": 279.6505,
+  "runs": 1652,
+  "state_sha": "17da4d64835c0b660c6346c0a2377f2e7a272442b5da5e746a7d69f15b41c983",
+  "ms": [
+   271.27854099999996,
+   270.115709
+  ],
+  "median_ms": 270.69712499999997
+ },
+ "gemm-bias-relu/learned-2-assist": {
+  "exact": true,
+  "checks": {
+   "rhs": true,
+   "writes": true,
+   "resumes": true,
+   "unions": true,
+   "graph": true
+  },
+  "first_different_rhs_run": null,
+  "expected_multi_rhs": 9561,
+  "source_rhs": 15462,
+  "expected_runs": 1652,
+  "by_width": {
+   "2": 8990,
+   "3": 488,
+   "4": 58,
+   "5": 25
+  },
+  "counts": {
+   "approximate_visits": 599809,
+   "calls": 4751,
+   "committed": 9561,
+   "exhausted": 0,
+   "learned_pointers": 437120,
+   "point_reads": 94075,
+   "primitive_evals": 18333,
+   "rejected_pointers": 380809,
+   "root_offers": 281558,
+   "score_bucket_reads": 24690099,
+   "shortlisted": 0,
+   "stale_candidates": 24345,
+   "table_rebuilds": 816,
+   "unsupported": 0,
+   "validated": 9561,
+   "visible_rows": 137339
+  },
+  "generator": "learned",
+  "neural_committed": 9561,
+  "total_rhs": 15462,
+  "one_audit_ms": 304.71370800000005,
+  "runs": 1652,
+  "state_sha": "17da4d64835c0b660c6346c0a2377f2e7a272442b5da5e746a7d69f15b41c983",
+  "ms": [
+   289.63341599999995,
+   285.36820800000004
+  ],
+  "median_ms": 287.500812
+ },
+ "gemm-bias-relu/wrong-2-assist": {
+  "exact": true,
+  "checks": {
+   "rhs": true,
+   "writes": true,
+   "resumes": true,
+   "unions": true,
+   "graph": true
+  },
+  "first_different_rhs_run": null,
+  "expected_multi_rhs": 9561,
+  "source_rhs": 15462,
+  "expected_runs": 1652,
+  "by_width": {},
+  "counts": {
+   "approximate_visits": 397158,
+   "calls": 4751,
+   "committed": 0,
+   "exhausted": 0,
+   "learned_pointers": 288395,
+   "point_reads": 79577,
+   "primitive_evals": 16066,
+   "rejected_pointers": 288395,
+   "root_offers": 281558,
+   "score_bucket_reads": 22109223,
+   "shortlisted": 0,
+   "stale_candidates": 21358,
+   "table_rebuilds": 816,
+   "unsupported": 0,
+   "validated": 0,
+   "visible_rows": 137339
+  },
+  "generator": "wrong",
+  "neural_committed": 0,
+  "total_rhs": 15462,
+  "one_audit_ms": 261.78704200000004,
+  "runs": 1652,
+  "state_sha": "17da4d64835c0b660c6346c0a2377f2e7a272442b5da5e746a7d69f15b41c983",
+  "ms": [
+   232.401,
+   234.655875
+  ],
+  "median_ms": 233.5284375
+ },
+ "stable-argmax/learned-2-only": {
+  "exact": true,
+  "checks": {
+   "rhs": true,
+   "writes": true,
+   "resumes": true,
+   "unions": true,
+   "graph": true
+  },
+  "first_different_rhs_run": null,
+  "expected_multi_rhs": 4912,
+  "source_rhs": 8190,
+  "expected_runs": 1149,
+  "by_width": {
+   "2": 4660,
+   "3": 200,
+   "4": 36,
+   "5": 16
+  },
+  "counts": {
+   "approximate_visits": 124777,
+   "calls": 3226,
+   "committed": 4912,
+   "exhausted": 0,
+   "learned_pointers": 96694,
+   "point_reads": 29066,
+   "primitive_evals": 6154,
+   "rejected_pointers": 81193,
+   "root_offers": 89335,
+   "score_bucket_reads": 5247716,
+   "shortlisted": 0,
+   "stale_candidates": 8309,
+   "table_rebuilds": 588,
+   "unsupported": 0,
+   "validated": 4912,
+   "visible_rows": 51793
+  },
+  "generator": "learned",
+  "neural_committed": 4912,
+  "total_rhs": 8190,
+  "one_audit_ms": 79.631833,
+  "runs": 1149,
+  "state_sha": "40ca93637eb8ee4d7bde32f752a7f4e30d7bd713cea47da81aac0b586c37561a",
+  "ms": [
+   72.171916,
+   72.22025
+  ],
+  "median_ms": 72.19608299999999
+ },
+ "stable-argmax/learned-2-assist": {
+  "exact": true,
+  "checks": {
+   "rhs": true,
+   "writes": true,
+   "resumes": true,
+   "unions": true,
+   "graph": true
+  },
+  "first_different_rhs_run": null,
+  "expected_multi_rhs": 4912,
+  "source_rhs": 8190,
+  "expected_runs": 1149,
+  "by_width": {
+   "2": 4660,
+   "3": 200,
+   "4": 36,
+   "5": 16
+  },
+  "counts": {
+   "approximate_visits": 124777,
+   "calls": 3226,
+   "committed": 4912,
+   "exhausted": 0,
+   "learned_pointers": 96694,
+   "point_reads": 29066,
+   "primitive_evals": 6154,
+   "rejected_pointers": 81193,
+   "root_offers": 89335,
+   "score_bucket_reads": 5247716,
+   "shortlisted": 0,
+   "stale_candidates": 8309,
+   "table_rebuilds": 588,
+   "unsupported": 0,
+   "validated": 4912,
+   "visible_rows": 51793
+  },
+  "generator": "learned",
+  "neural_committed": 4912,
+  "total_rhs": 8190,
+  "one_audit_ms": 90.367084,
+  "runs": 1149,
+  "state_sha": "40ca93637eb8ee4d7bde32f752a7f4e30d7bd713cea47da81aac0b586c37561a",
+  "ms": [
+   82.798791,
+   82.640167
+  ],
+  "median_ms": 82.719479
+ },
+ "stable-argmax/wrong-2-assist": {
+  "exact": true,
+  "checks": {
+   "rhs": true,
+   "writes": true,
+   "resumes": true,
+   "unions": true,
+   "graph": true
+  },
+  "first_different_rhs_run": null,
+  "expected_multi_rhs": 4912,
+  "source_rhs": 8190,
+  "expected_runs": 1149,
+  "by_width": {},
+  "counts": {
+   "approximate_visits": 78031,
+   "calls": 3226,
+   "committed": 0,
+   "exhausted": 0,
+   "learned_pointers": 66822,
+   "point_reads": 26283,
+   "primitive_evals": 4850,
+   "rejected_pointers": 66822,
+   "root_offers": 89335,
+   "score_bucket_reads": 4815893,
+   "shortlisted": 0,
+   "stale_candidates": 7657,
+   "table_rebuilds": 588,
+   "unsupported": 0,
+   "validated": 0,
+   "visible_rows": 51793
+  },
+  "generator": "wrong",
+  "neural_committed": 0,
+  "total_rhs": 8190,
+  "one_audit_ms": 79.422666,
+  "runs": 1149,
+  "state_sha": "40ca93637eb8ee4d7bde32f752a7f4e30d7bd713cea47da81aac0b586c37561a",
+  "ms": [
+   71.81541700000001,
+   72.535083
+  ],
+  "median_ms": 72.17525
+ }
+}
