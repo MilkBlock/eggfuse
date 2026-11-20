@@ -1,12 +1,18 @@
 """Small scheduled two-Cell episodes for gate pretraining. No native timing labels."""
+import json
+from pathlib import Path
 import random
 
-INTERFACES=((138,5),(144,2),(142,2),(140,2))
+LIBRARY=Path(__file__).resolve().parents[1]/'higher-order-bake'
+FAMILY=json.loads((LIBRARY/'catalog.json').read_bytes())['family']
+INTERFACES=tuple(tuple(v) for v in json.loads((LIBRARY/'growth.json').read_bytes())['second_round'])
+THRESHOLD=FAMILY['threshold']
+RECURSIVE=FAMILY['gt']
 
 
 def ports(producer,effect,value,depth):
     return [1.,(producer%64)/63,min(effect,15)/15,max(-32,min(32,value))/32,
-            min(depth,16)/16,float(value==1),float(value>1),float(depth>1)]
+            min(depth,16)/16,float(value==THRESHOLD),float(value>THRESHOLD),float(depth>1)]
 
 
 def replay(publications, events):
@@ -28,7 +34,7 @@ def replay(publications, events):
                 for idx in live.values():rows[idx]['counts'][3]+=1
                 dirty=False
             for idx in live.values():
-                p=rows[idx];v=p['value'];branch=2 if v>1 else 1 if v==1 else 0
+                p=rows[idx];v=p['value'];branch=2 if v>THRESHOLD else 1 if v==THRESHOLD else 0
                 c=p['counts'];c[0]+=1
                 if arg==branch and p['epoch']>=watermarks[arg]:
                     c[1]+=1
@@ -46,15 +52,15 @@ def sample(seed, episodes):
         for epoch in range(1,epochs+1):
             if parents:
                 observed,_=replay(parents,events)
-                ready=[p for p in observed if p['counts'][2] and p['value']>1 and not p.get('used')]
+                ready=[p for p in observed if p['counts'][2] and p['value']>THRESHOLD and not p.get('used')]
             for _ in range(rng.randrange(1,6)):
                 producer,effect=rng.choice(INTERFACES);addr=rng.randrange(8)
-                if producer==138 and ready:
+                if producer==RECURSIVE and ready:
                     prev=ready.pop(rng.randrange(len(ready)))
                     parents[prev['id']]['used']=True
                     value,depth=prev['value']-1,prev['depth']+1
                 else:
-                    value=rng.randrange(1 if producer==138 else 0,10);depth=1
+                    value=rng.randrange(THRESHOLD if producer==RECURSIVE else THRESHOLD-1,THRESHOLD+9);depth=1
                 parents.append(dict(id=len(parents),address=addr,result=rng.randrange(8),epoch=epoch,value=value,depth=depth,
                                     features=ports(producer,effect,value,depth)))
                 events.append(('publish',len(parents)-1,epoch))
@@ -68,7 +74,7 @@ def sample(seed, episodes):
 
 
 def check():
-    base=dict(address=4,result=9,epoch=1,value=2,features=ports(138,5,2,1))
+    base=dict(address=4,result=9,epoch=1,value=2,features=ports(*INTERFACES[0],2,1))
     a,b,c=base,dict(base,address=5),dict(base,value=1,epoch=2)
     rows,readers=replay([a,b,c],[('publish',0,1),('publish',1,1),('read',4,1),('consumer',2,1),
                                  ('publish',2,2),('invalidate',4,2),('consumer',1,2)])
