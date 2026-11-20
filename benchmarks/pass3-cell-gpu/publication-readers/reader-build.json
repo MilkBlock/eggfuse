@@ -1,0 +1,13 @@
+{
+ "base": "31bf7e41",
+ "integration": "6e3bdcd1",
+ "executable_sha256": "297388805ff7be59eb59163a0287eb906043af32d83c5a6cdaa8312ebfe78656",
+ "installed": {
+  "src/runtime.rs": "327d8099b4464cbe19afec0404e45b015a32ec5ce23dac46ff62ae107ccbe861",
+  "src/runtime_completion.rs": "dc168305f3df30fdf713956d76641eaeca120aa18685129556c770c8b09089fa",
+  "src/strict_publication_readers.rs": "1ee8e3ef25aebc4d36840898e19477e14b99890deec483d5de7bd14dd3feb633",
+  "src/entry_schedule.rs": "baeb38ca00fba425087ce1f40e5b6d598376c9bef58218980f7b46cc73edffa7",
+  "src/stage_spine.rs": "dd660e014635cfc65dcac2f132e2f2fa04e9efa6370cb1074ad484fa11440411",
+  "examples/joint_witness_session.rs": "c2b487e272cc431853a3d1b2e3e46b8388c4364b85667523cbfad4f1e8c417b6"
+ }
+}
