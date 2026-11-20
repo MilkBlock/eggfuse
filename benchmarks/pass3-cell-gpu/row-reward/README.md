@@ -27,3 +27,18 @@ The calibration fits paired Run times on the four training programs, winsorizing
 The team objective increased distinct commits on both anchor programs and seeds, modestly relative to the remaining full-program gap. The weighted policies reduce actual coverage in those four pairs. The common small action vocabulary and eight-slot ceiling dominate these improvements. All arms have source-aligned ordered RHS, writes, Spine, unions and final graph. Disabling residual search misses initialization at Run 1. Timings include ten ordered pairs of native full Pass 3 executions (timed arm order rotates and reverses). [Raw work, missing known roots and timings](results.json)
 
 Reproduce with the external workspace PyTorch environment during training and the default native CPU during evaluation. Use `capture.py CORPUS REFERENCE ACTION_MODELS COMPOSE_TARGETS AUDIT_BINARY OUT` then `train.py OUT ACTION_WEIGHTS DONOR_PROGRAM TRAIN_OUT`. Run `evaluate.py AUDIT_BINARY REFERENCE CORPUS TRAIN_OUT ROW_ADMISSION_REFERENCE RESULTS_OUT`. All output directories must be new.
+
+## Eight-slot macro opportunity
+
+A diagnostic native census tries every presented leaf/address on the same source trajectory. It contributes zero learned RHS. The comparison below permits at most one root and one later child per issued action. A binary optimization uses the census winning roots, matching cross-Run source publication/effect/consumer links from the same Bake library, and any alternative root or child actually won by the four deployed policies. It caps each epoch at eight free slots or four slots per hashed owner. Each source RHS ordinal is counted at most once globally. A singleton root remains available when child conclusions overlap.
+
+| Workload | Best demonstrated static policy | Fixed-trace static optimum (roots + children) | Free optimum | Conservative static upper |
+|---|---:|---:|---:|---:|
+| sum-bits | 456 | 481 + 95 = 576 | 579 | 658 |
+| dot-product | 426 | 408 + 67 = 475 | 477 | 500 |
+| gemm-bias-relu | 452 | 426 + 96 = 522 | 523 | 544 |
+| stable-argmax | 377 | 352 + 74 = 426 | 426 | 446 |
+
+The middle columns are exact optima for that **recorded outcome set**. Another choice of source origin can change which child wins. The demonstrated lower bound comes from a single real native arm. The separate upper bound allows every census-verified task to win and every compatible originating leaf a distinct child, even where no such child was observed. Neither bound is credited to the network. [Rebuild the census, solve the budget and report each policy’s roots/children](budget_oracle.py)
+
+Calibration price and measured time answer different questions. For sum-bits seed 1703, team achieved 363 roots + 86 children, weighted 301 + 81. Their action-dependent training proxies were −1,045.94 and −438.68 µs respectively, omitting common fixed terms. Their actual full native medians were 34.38 and 34.29 ms. On held-out GEMM the weighted proxy also favors fewer actions, yet the measured time rose from 59.40 to 59.53 ms. The price orders estimated marginal work and is not a wall-clock speedup or a multiplicative reward-coverage denominator.
