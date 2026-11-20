@@ -101,7 +101,7 @@ def validate_hoist(state):
     return chosen
 
 
-def diagnose(left, right, schemas):
+def diagnose(left, right, schemas, normalize=normalize_commutative, identities=None):
     core = {t['name'] for t in schemas if not t['name'].startswith('CellSpine')
             and t['name'] != 'to-hoist' and not any(s['name'] in TERM_SORTS for s in t['schema'])}
     mapping = {}
@@ -111,12 +111,12 @@ def diagnose(left, right, schemas):
     if not lt.selected or not rt.selected:
         raise Inconclusive('missing final extraction results')
     def inventory(terms, translate):
-        return {key([translate(json.loads(expr)), normalize_commutative(terms.render(json.loads(tc)))])
+        return {key([translate(json.loads(expr)), normalize(terms.render(json.loads(tc)))])
                 for expr, candidates in terms.candidates.items() for tc in candidates}
     left_candidates = inventory(lt, lambda v: mapped(v, mapping))
     right_candidates = inventory(rt, lambda v: v)
     candidates = {'normalized_candidates': len(left_candidates),
-                  'normalization': 'existing Add/Mul commutativity only; per Expr and cost',
+                  'normalization': identities or 'existing Add/Mul commutativity only; per Expr and cost',
                   'left_raw_candidates': sum(map(len, lt.candidates.values())),
                   'right_raw_candidates': sum(map(len, rt.candidates.values())),
                   'equal_sets': True}
@@ -127,7 +127,7 @@ def diagnose(left, right, schemas):
         rhs = rt.selected[key(mapped(json.loads(expr), mapping))]
         a, b = lt.render(tc), rt.render(rhs)
         assert a[-1] == b[-1], 'selected costs differ'
-        if normalize_commutative(a) != normalize_commutative(b):
+        if normalize(a) != normalize(b):
             raise Inconclusive('selected terms need identities beyond the supported proof')
         if a != b:
             differences.append({'left_expr': json.loads(expr), 'right_expr': mapped(json.loads(expr), mapping),
@@ -143,14 +143,14 @@ def diagnose(left, right, schemas):
         if mapped(item['expr'], mapping) != other['expr']:
             changed.append({'left': item, 'right': other})
     return {'core': {**proof, 'tables': len(core), 'includes_Expr_equality_and_visibility': True},
-            'candidate_inventory_modulo_Add_Mul': candidates, 'selected_expressions': n,
+            ('candidate_inventory_modulo_source_identities' if identities else 'candidate_inventory_modulo_Add_Mul'): candidates, 'selected_expressions': n,
             'all_selected_candidates_are_current_minima': True, 'selected_cost_differences': 0,
-            'selected_term_differences': len(differences), 'all_explained_by_existing_Add_Mul_commutativity': True,
+            'selected_term_differences': len(differences), ('all_explained_by_reviewed_identities' if identities else 'all_explained_by_existing_Add_Mul_commutativity'): True,
             'first_term_difference': differences[:1], 'hoist_choices': len(lh), 'hoist_differences': changed,
             'limits': 'Final saved sum-bits states only. No complete cross-engine per-Run or generated-code execution proof. Smaller, caches, TermSubst and marker history are not claimed identical.'}
 
 
-def check_pair(left, right, schemas):
+def check_pair(left, right, schemas, *, normalize=normalize_commutative, identities=None):
     try:
         if not __debug__:
             raise Inconclusive('run without python -O; assertions are part of the validator')
@@ -165,7 +165,7 @@ def check_pair(left, right, schemas):
                 if columns is None or len(columns) != len(row['values']) or any(
                         v['sort'] != c['name'] for v, c in zip(row['values'], columns)):
                     raise Inconclusive('unknown table or incompatible row schema: ' + row['table'])
-        return {'status': 'pass', 'proof': diagnose(left, right, schemas)}
+        return {'status': 'pass', 'proof': diagnose(left, right, schemas, normalize, identities)}
     except (Inconclusive, UnresolvedState, KeyError, TypeError, ValueError, RecursionError) as error:
         return {'status': 'inconclusive', 'reason': str(error)}
     except AssertionError as error:

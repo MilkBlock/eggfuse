@@ -1,0 +1,242 @@
+{
+ "affine-twins": {
+  "core": "c360d284fab571187f00961dd2c5885f1327604bd6b71d8fc61013794ebb8ce4",
+  "status": "pass",
+  "checks": {
+   "unmarked_vs_marked": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 70,
+    "inventory": {
+     "normalized_candidates": 111,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 124,
+     "right_raw_candidates": 124,
+     "equal_sets": true
+    }
+   },
+   "marked_vs_cell": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 70,
+    "inventory": {
+     "normalized_candidates": 111,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 124,
+     "right_raw_candidates": 124,
+     "equal_sets": true
+    }
+   }
+  }
+ },
+ "clamped-ramp": {
+  "core": "5fb9aa2c3f67741385cc045d9704044ccd8468f27ade609c19d03e14ba8e341e",
+  "status": "pass",
+  "checks": {
+   "unmarked_vs_marked": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 123,
+    "inventory": {
+     "normalized_candidates": 240,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 247,
+     "right_raw_candidates": 247,
+     "equal_sets": true
+    }
+   },
+   "marked_vs_cell": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 123,
+    "inventory": {
+     "normalized_candidates": 240,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 247,
+     "right_raw_candidates": 247,
+     "equal_sets": true
+    }
+   }
+  }
+ },
+ "segmented-prefix": {
+  "core": "94eeef50a2721abf04dc364998ac5e1f3392f6f768036ad413a7fcb92f9024a8",
+  "status": "pass",
+  "checks": {
+   "unmarked_vs_marked": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 105,
+    "inventory": {
+     "normalized_candidates": 191,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 200,
+     "right_raw_candidates": 200,
+     "equal_sets": true
+    }
+   },
+   "marked_vs_cell": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 105,
+    "inventory": {
+     "normalized_candidates": 191,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 200,
+     "right_raw_candidates": 200,
+     "equal_sets": true
+    }
+   }
+  }
+ },
+ "window-laplacian": {
+  "core": "8aa8f139dce21dbc19deb61d6bc7cac173726957c0afe0181fad1930cc52b092",
+  "status": "pass",
+  "checks": {
+   "unmarked_vs_marked": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 114,
+    "inventory": {
+     "normalized_candidates": 234,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 264,
+     "right_raw_candidates": 264,
+     "equal_sets": true
+    }
+   },
+   "marked_vs_cell": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 114,
+    "inventory": {
+     "normalized_candidates": 234,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 264,
+     "right_raw_candidates": 264,
+     "equal_sets": true
+    }
+   }
+  }
+ },
+ "histogram-scatter": {
+  "core": "8509dbcf15aa1fdfcd1860a39b2d257c4ce190834dfc3638fd88bb9b46e6f0cb",
+  "status": "pass",
+  "checks": {
+   "unmarked_vs_marked": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 102,
+    "inventory": {
+     "normalized_candidates": 171,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 182,
+     "right_raw_candidates": 182,
+     "equal_sets": true
+    }
+   },
+   "marked_vs_cell": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 102,
+    "inventory": {
+     "normalized_candidates": 171,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 182,
+     "right_raw_candidates": 182,
+     "equal_sets": true
+    }
+   }
+  }
+ },
+ "gated-state": {
+  "core": "a4152be3f7c69b66b820bcb65c87f438ff8db1137dc30c5def2a74c8f39e1d47",
+  "status": "pass",
+  "checks": {
+   "unmarked_vs_marked": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 95,
+    "inventory": {
+     "normalized_candidates": 170,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 175,
+     "right_raw_candidates": 175,
+     "equal_sets": true
+    }
+   },
+   "marked_vs_cell": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 95,
+    "inventory": {
+     "normalized_candidates": 170,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 175,
+     "right_raw_candidates": 175,
+     "equal_sets": true
+    }
+   }
+  }
+ },
+ "gemm-bias-relu": {
+  "core": "2007ecd353cca701726a272ca70cd5620905576e28376649caf62cedf4a94233",
+  "status": "pass",
+  "checks": {
+   "unmarked_vs_marked": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 191,
+    "inventory": {
+     "normalized_candidates": 311,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 344,
+     "right_raw_candidates": 344,
+     "equal_sets": true
+    }
+   },
+   "marked_vs_cell": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 191,
+    "inventory": {
+     "normalized_candidates": 311,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 344,
+     "right_raw_candidates": 344,
+     "equal_sets": true
+    }
+   }
+  }
+ },
+ "stable-argmax": {
+  "core": "5903d5e64fb2f63bfc44f2c2e02f5c302ea758021193961c0a3807511ddd1082",
+  "status": "pass",
+  "checks": {
+   "unmarked_vs_marked": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 125,
+    "inventory": {
+     "normalized_candidates": 233,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 238,
+     "right_raw_candidates": 238,
+     "equal_sets": true
+    }
+   },
+   "marked_vs_cell": {
+    "status": "pass",
+    "core_tables": 239,
+    "selected": 125,
+    "inventory": {
+     "normalized_candidates": 233,
+     "normalization": "Add/Mul commute, ordered Concat reassociation, and the two source Add/Sub peepholes",
+     "left_raw_candidates": 238,
+     "right_raw_candidates": 238,
+     "equal_sets": true
+    }
+   }
+  }
+ }
+}
