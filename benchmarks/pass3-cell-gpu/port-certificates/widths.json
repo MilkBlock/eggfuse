@@ -1,0 +1,512 @@
+{
+ "schema": "cell-port-width-census/1",
+ "training_template_count": 24,
+ "cases": {
+  "affine-twins": {
+   "split": "train",
+   "program": "f3fa8b84e6d0a6c9f0d2c2ec8a7b55e1f99584df1b13aec701cd6a2beb51690d",
+   "rules": 64,
+   "active_rules": 20,
+   "active_templates": 20,
+   "bindings": 523,
+   "width_counts": [
+    [
+     4,
+     3,
+     1,
+     96
+    ],
+    [
+     5,
+     4,
+     1,
+     288
+    ],
+    [
+     6,
+     3,
+     1,
+     41
+    ],
+    [
+     6,
+     4,
+     1,
+     91
+    ],
+    [
+     6,
+     5,
+     1,
+     4
+    ],
+    [
+     7,
+     6,
+     1,
+     3
+    ]
+   ],
+   "cold_bindings": 0,
+   "active_cold_templates": 0,
+   "width5_overflow": 139,
+   "width8_overflow": 0
+  },
+  "clamped-ramp": {
+   "split": "train",
+   "program": "96a4d2c049004adc219a62fb35b6d7922be6977eba4966feda72482a37a6e485",
+   "rules": 64,
+   "active_rules": 20,
+   "active_templates": 20,
+   "bindings": 1381,
+   "width_counts": [
+    [
+     4,
+     3,
+     1,
+     194
+    ],
+    [
+     5,
+     4,
+     1,
+     761
+    ],
+    [
+     6,
+     3,
+     1,
+     72
+    ],
+    [
+     6,
+     4,
+     1,
+     340
+    ],
+    [
+     6,
+     5,
+     1,
+     7
+    ],
+    [
+     7,
+     6,
+     1,
+     7
+    ]
+   ],
+   "cold_bindings": 0,
+   "active_cold_templates": 0,
+   "width5_overflow": 426,
+   "width8_overflow": 0
+  },
+  "segmented-prefix": {
+   "split": "train",
+   "program": "00b1d59ecc0acae767b54d84f97918540fe04f61c3f3d16b067001d9cdc985b1",
+   "rules": 64,
+   "active_rules": 20,
+   "active_templates": 20,
+   "bindings": 1162,
+   "width_counts": [
+    [
+     4,
+     3,
+     1,
+     194
+    ],
+    [
+     5,
+     4,
+     1,
+     656
+    ],
+    [
+     6,
+     3,
+     1,
+     64
+    ],
+    [
+     6,
+     4,
+     1,
+     234
+    ],
+    [
+     6,
+     5,
+     1,
+     6
+    ],
+    [
+     7,
+     6,
+     1,
+     8
+    ]
+   ],
+   "cold_bindings": 0,
+   "active_cold_templates": 0,
+   "width5_overflow": 312,
+   "width8_overflow": 0
+  },
+  "window-laplacian": {
+   "split": "train",
+   "program": "d09745430b914a5d779b893e728b89bdd07c81ccff7565f4afc98a19c0199c2a",
+   "rules": 64,
+   "active_rules": 24,
+   "active_templates": 24,
+   "bindings": 1040,
+   "width_counts": [
+    [
+     4,
+     3,
+     1,
+     201
+    ],
+    [
+     5,
+     4,
+     1,
+     622
+    ],
+    [
+     6,
+     3,
+     1,
+     74
+    ],
+    [
+     6,
+     4,
+     1,
+     123
+    ],
+    [
+     6,
+     5,
+     1,
+     10
+    ],
+    [
+     7,
+     6,
+     1,
+     10
+    ]
+   ],
+   "cold_bindings": 0,
+   "active_cold_templates": 0,
+   "width5_overflow": 217,
+   "width8_overflow": 0
+  },
+  "histogram-scatter": {
+   "split": "development",
+   "program": "63419c066fdb21fa1d806812b5e54dccf9a070ea9c5574831ac3bfa7e12cdd93",
+   "rules": 64,
+   "active_rules": 24,
+   "active_templates": 24,
+   "bindings": 894,
+   "width_counts": [
+    [
+     4,
+     3,
+     1,
+     168
+    ],
+    [
+     5,
+     4,
+     1,
+     520
+    ],
+    [
+     6,
+     3,
+     1,
+     70
+    ],
+    [
+     6,
+     4,
+     1,
+     121
+    ],
+    [
+     6,
+     5,
+     1,
+     8
+    ],
+    [
+     7,
+     6,
+     1,
+     7
+    ]
+   ],
+   "cold_bindings": 0,
+   "active_cold_templates": 0,
+   "width5_overflow": 206,
+   "width8_overflow": 0
+  },
+  "gated-state": {
+   "split": "development",
+   "program": "dfd4a66d482c4d69d82d8dc22a54647f1fc8a02c1ba8775d8b28063d8b8dc240",
+   "rules": 64,
+   "active_rules": 20,
+   "active_templates": 20,
+   "bindings": 933,
+   "width_counts": [
+    [
+     4,
+     3,
+     1,
+     154
+    ],
+    [
+     5,
+     4,
+     1,
+     526
+    ],
+    [
+     6,
+     3,
+     1,
+     56
+    ],
+    [
+     6,
+     4,
+     1,
+     184
+    ],
+    [
+     6,
+     5,
+     1,
+     6
+    ],
+    [
+     7,
+     6,
+     1,
+     7
+    ]
+   ],
+   "cold_bindings": 0,
+   "active_cold_templates": 0,
+   "width5_overflow": 253,
+   "width8_overflow": 0
+  },
+  "gemm-bias-relu": {
+   "split": "heldout",
+   "program": "83c66481f465ab7bc0790e447cd665a4f8b0a2b1bec7a471f6c54bb95d7580c5",
+   "rules": 64,
+   "active_rules": 20,
+   "active_templates": 20,
+   "bindings": 2103,
+   "width_counts": [
+    [
+     4,
+     3,
+     1,
+     332
+    ],
+    [
+     5,
+     4,
+     1,
+     1275
+    ],
+    [
+     6,
+     3,
+     1,
+     129
+    ],
+    [
+     6,
+     4,
+     1,
+     343
+    ],
+    [
+     6,
+     5,
+     1,
+     14
+    ],
+    [
+     7,
+     6,
+     1,
+     10
+    ]
+   ],
+   "cold_bindings": 0,
+   "active_cold_templates": 0,
+   "width5_overflow": 496,
+   "width8_overflow": 0
+  },
+  "stable-argmax": {
+   "split": "heldout",
+   "program": "491b90013a12e8789cc7f15eeac5686cb955d2b2eb126bafe9a29bd964c11030",
+   "rules": 64,
+   "active_rules": 20,
+   "active_templates": 20,
+   "bindings": 1266,
+   "width_counts": [
+    [
+     4,
+     3,
+     1,
+     213
+    ],
+    [
+     5,
+     4,
+     1,
+     781
+    ],
+    [
+     6,
+     3,
+     1,
+     71
+    ],
+    [
+     6,
+     4,
+     1,
+     183
+    ],
+    [
+     6,
+     5,
+     1,
+     8
+    ],
+    [
+     7,
+     6,
+     1,
+     10
+    ]
+   ],
+   "cold_bindings": 0,
+   "active_cold_templates": 0,
+   "width5_overflow": 272,
+   "width8_overflow": 0
+  },
+  "sum-bits": {
+   "split": "anchor",
+   "program": "113bf552297d47dd75b29ad281c2965d5d16e51cff54bd96c63c011125674cff",
+   "rules": 64,
+   "active_rules": 29,
+   "active_templates": 29,
+   "bindings": 889,
+   "width_counts": [
+    [
+     4,
+     3,
+     1,
+     126
+    ],
+    [
+     5,
+     4,
+     1,
+     438
+    ],
+    [
+     6,
+     3,
+     1,
+     63
+    ],
+    [
+     6,
+     4,
+     1,
+     199
+    ],
+    [
+     6,
+     5,
+     1,
+     19
+    ],
+    [
+     7,
+     6,
+     1,
+     42
+    ],
+    [
+     10,
+     6,
+     1,
+     2
+    ]
+   ],
+   "cold_bindings": 56,
+   "active_cold_templates": 9,
+   "width5_overflow": 325,
+   "width8_overflow": 2
+  },
+  "dot-product": {
+   "split": "anchor",
+   "program": "71f70f4e733db6414355af86ed649eac88baceeff7c261fdfb75f6056d3eb846",
+   "rules": 64,
+   "active_rules": 22,
+   "active_templates": 22,
+   "bindings": 952,
+   "width_counts": [
+    [
+     4,
+     3,
+     1,
+     197
+    ],
+    [
+     5,
+     4,
+     1,
+     637
+    ],
+    [
+     6,
+     3,
+     1,
+     60
+    ],
+    [
+     6,
+     4,
+     1,
+     32
+    ],
+    [
+     6,
+     5,
+     1,
+     7
+    ],
+    [
+     7,
+     6,
+     1,
+     19
+    ]
+   ],
+   "cold_bindings": 0,
+   "active_cold_templates": 0,
+   "width5_overflow": 118,
+   "width8_overflow": 0
+  }
+ }
+}

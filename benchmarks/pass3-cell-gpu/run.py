@@ -268,6 +268,15 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         record['co_repair']=dict(mode=mode,members=members,counters=st[group_counter:],
                                  extra_meta_bytes=(group_words-group_base)*4,
                                  extra_summary_bytes=uf_size*((cap//32+31)//32)*4 if grouping.get('sparse_words') else 0)
+    record['execution_roles'] = {
+        'binding_generator': 'exact_metal_search',
+        'rhs_inputs_from_exact_search': st[9],
+        'rhs_inputs_from_recurrent_neural_proposals': 0,
+        'next_run_state': 'committed_device_graph_indexes_and_spine',
+        'recurrent_neural_token_input': False,
+        'ingress_reader': reader,
+        'learned_entry_router': router is not None,
+    }
     (root/'run.json').write_text(json.dumps(record,indent=1)+'\n')
     print({k:record[k] for k in ('lanes','completed','fault','fault_rule','finished')},flush=True)
     if st[5]:raise SystemExit(2)
