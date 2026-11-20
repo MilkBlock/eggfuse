@@ -32,7 +32,7 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==75
+    assert len(plates)==77
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and all(p[k] for k in ('q','arms','fix','measure','note','src'))
         if i<=37:
@@ -264,7 +264,9 @@ def check():
         assert arms['fixed-bits']['neural_multi']==0
     final=runpy.run_path(str(gpu/'coverage-target/final_check.py'))['check'](gpu/'coverage-target')
     assert final==json.loads((gpu/'coverage-target/final.json').read_text())
-    print('Verified 75 measured plates, including their workload, oracle and source-coverage boundaries.')
+    runpy.run_path(str(gpu/'higher-order-bake/verify.py'))['check'](gpu/'higher-order-bake')
+    runpy.run_path(str(gpu/'baked-port-codes/check_results.py'),run_name='__main__')
+    print('Verified 77 measured plates, including their workload, oracle and source-coverage boundaries.')
 
 
 

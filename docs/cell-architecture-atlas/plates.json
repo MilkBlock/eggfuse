@@ -3624,5 +3624,171 @@
         ]
       }
     ]
+  },
+  {
+    "id": "76-request-bake",
+    "section": "请求驱动的模板增长",
+    "title": "父请求能跨几个 Run，能省多少工作？",
+    "status": "已测 · 四负载双种子",
+    "q": "SubTuple 的长度由真实父端口决定。能否复用同一份模板，在源消费者的 Run 进入不同子块？",
+    "arms": "a　普通 Rust 在原 Run 分派。b　首轮只 Bake 138 的效果 5。c　第二轮纳入三个实际向该入口供值的父接口，同一模板可递归接续。",
+    "fix": "四个独立训练程序选模板。冻结库、权重、签发预算和源调度，检查有序 RHS、有效写入、Spine、union、最终图及实际新 Cell。",
+    "measure": "首轮→第二轮的子 RHS 分别为 sum-bits 14→90、dot-product 15→44、GEMM 63→194、stable-argmax 30→95。最长实际链分别为 5、6、10、7 步。",
+    "note": "sum-bits 普通分派与递归高阶模板，种子 1703 为 104.64→105.83 ms，1709 为 103.34→100.39 ms。两个种子的耗时方向不同。",
+    "src": "S66",
+    "diagram": [
+      {
+        "title": "Source dispatch",
+        "layers": [
+          [
+            [
+              "s",
+              "published parent"
+            ]
+          ],
+          [
+            [
+              "v",
+              "read guard each Run"
+            ]
+          ],
+          [
+            [
+              "w",
+              "child RHS"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Bake round 1",
+        "layers": [
+          [
+            [
+              "n",
+              "parent + effect 5"
+            ]
+          ],
+          [
+            [
+              "v",
+              "resolve length"
+            ]
+          ],
+          [
+            [
+              "w",
+              "137 or 138"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Grow and recurse",
+        "layers": [
+          [
+            [
+              "n",
+              "3 new parent ports"
+            ]
+          ],
+          [
+            [
+              "v",
+              "resolve at source Run"
+            ]
+          ],
+          [
+            [
+              "w",
+              "next typed parent"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "77-finite-port-codes",
+    "section": "学习端口的 CPU 代价",
+    "title": "学习过的端口投影能提前算多少？",
+    "status": "已测 · 完整 Pass 3",
+    "q": "每个视图只读 16 个二值特征。离线计算所有输入的 Q/K 签名后，线上还剩多少成本？",
+    "arms": "a　逐端口执行训练后的投影。b　查询共享权重表，再生成候选。c　零半径下按拼接签名直接取桶，精确验证所有发出的父元组。",
+    "fix": "同一家族内固定权重、特征、选择阈值和父来源。CPU 分配器与 vanilla 相同；逐项对齐原始提案、获胜父、实际分配和源调度。",
+    "measure": "种子 1703，原投影→表与桶。sum-bits 68.6→58.3 ms；dot-product 66.7→55.7 ms；Jacobi 574.8→481.8 ms；共轭梯度 2868.8→2445.7 ms。",
+    "note": "每份权重的共享表占 262,216 字节。以上为常驻完整推理，同组 vanilla 分别为 21.5、18.7、111.7、369.2 ms。",
+    "src": "S67",
+    "diagram": [
+      {
+        "title": "Dense projection",
+        "layers": [
+          [
+            [
+              "s",
+              "source port"
+            ]
+          ],
+          [
+            [
+              "n",
+              "learned Q/K"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify parents"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Frozen table",
+        "layers": [
+          [
+            [
+              "s",
+              "16 input bits"
+            ]
+          ],
+          [
+            [
+              "n",
+              "shared Q/K table"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify parents"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Packed lookup",
+        "layers": [
+          [
+            [
+              "n",
+              "joint signature"
+            ]
+          ],
+          [
+            [
+              "s",
+              "address bucket"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify collisions"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
