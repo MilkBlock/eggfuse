@@ -1,0 +1,338 @@
+{
+ "interfaces": {
+  "1": {
+   "picks": 8,
+   "paths": [
+    {
+     "producer": 0,
+     "consumers": [
+      5
+     ],
+     "atoms": [
+      1
+     ],
+     "final_call": "Get",
+     "output": 3
+    }
+   ]
+  },
+  "6": {
+   "picks": 8,
+   "paths": [
+    {
+     "producer": 3,
+     "consumers": [
+      4,
+      5
+     ],
+     "atoms": [
+      6
+     ],
+     "final_call": "hi-bound",
+     "output": 12
+    }
+   ]
+  },
+  "7": {
+   "picks": 8,
+   "paths": [
+    {
+     "producer": 3,
+     "consumers": [
+      4,
+      5
+     ],
+     "atoms": [
+      6
+     ],
+     "final_call": "hi-bound",
+     "output": 12
+    }
+   ]
+  },
+  "11": {
+   "picks": 12,
+   "paths": [
+    {
+     "producer": 9,
+     "consumers": [
+      11
+     ],
+     "atoms": [
+      17
+     ],
+     "final_call": "ExtractedExpr",
+     "output": 29
+    }
+   ]
+  },
+  "12": {
+   "picks": 12,
+   "paths": [
+    {
+     "producer": 7,
+     "consumers": [
+      11
+     ],
+     "atoms": [
+      18
+     ],
+     "final_call": "ExtractedExpr",
+     "output": 32
+    }
+   ]
+  },
+  "15": {
+   "picks": 8,
+   "paths": [
+    {
+     "producer": 7,
+     "consumers": [
+      6
+     ],
+     "atoms": [
+      8
+     ],
+     "final_call": "+",
+     "output": 19
+    }
+   ]
+  },
+  "144": {
+   "picks": 2,
+   "paths": [
+    {
+     "producer": 0,
+     "consumers": [
+      1
+     ],
+     "atoms": [
+      1
+     ],
+     "final_call": "+",
+     "output": 4
+    }
+   ]
+  },
+  "390": {
+   "picks": 5,
+   "paths": [
+    {
+     "producer": 0,
+     "consumers": [
+      1,
+      2
+     ],
+     "atoms": [
+      4
+     ],
+     "final_call": "hi-bound",
+     "output": 5
+    },
+    {
+     "producer": 0,
+     "consumers": [
+      3,
+      4
+     ],
+     "atoms": [
+      7
+     ],
+     "final_call": "hi-bound",
+     "output": 7
+    }
+   ]
+  },
+  "405": {
+   "picks": 4,
+   "paths": [
+    {
+     "producer": 2,
+     "consumers": [
+      0,
+      1
+     ],
+     "atoms": [
+      2
+     ],
+     "final_call": "hi-bound",
+     "output": 1
+    },
+    {
+     "producer": 3,
+     "consumers": [
+      0,
+      1
+     ],
+     "atoms": [
+      2
+     ],
+     "final_call": "hi-bound",
+     "output": 1
+    }
+   ]
+  },
+  "406": {
+   "picks": 4,
+   "paths": [
+    {
+     "producer": 2,
+     "consumers": [
+      0,
+      1
+     ],
+     "atoms": [
+      2
+     ],
+     "final_call": "hi-bound",
+     "output": 1
+    },
+    {
+     "producer": 3,
+     "consumers": [
+      0,
+      1
+     ],
+     "atoms": [
+      2
+     ],
+     "final_call": "hi-bound",
+     "output": 1
+    }
+   ]
+  },
+  "417": {
+   "picks": 2,
+   "paths": [
+    {
+     "producer": 1,
+     "consumers": [
+      0
+     ],
+     "atoms": [
+      0,
+      1
+     ],
+     "final_call": "Get",
+     "output": 3
+    }
+   ]
+  },
+  "418": {
+   "picks": 2,
+   "paths": [
+    {
+     "producer": 1,
+     "consumers": [
+      0
+     ],
+     "atoms": [
+      0,
+      1
+     ],
+     "final_call": "Get",
+     "output": 3
+    }
+   ]
+  },
+  "438": {
+   "picks": 8,
+   "paths": [
+    {
+     "producer": 0,
+     "consumers": [
+      5
+     ],
+     "atoms": [
+      1
+     ],
+     "final_call": "Get",
+     "output": 3
+    }
+   ]
+  },
+  "439": {
+   "picks": 8,
+   "paths": [
+    {
+     "producer": 0,
+     "consumers": [
+      5
+     ],
+     "atoms": [
+      1
+     ],
+     "final_call": "Get",
+     "output": 3
+    }
+   ]
+  },
+  "459": {
+   "picks": 3,
+   "paths": [
+    {
+     "producer": 2,
+     "consumers": [
+      1
+     ],
+     "atoms": [
+      4
+     ],
+     "final_call": "+",
+     "output": 7
+    }
+   ]
+  }
+ },
+ "profiles": {
+  "jacobi-1d": {
+   "active": {
+    "1": 0,
+    "144": 18134,
+    "390": 0,
+    "405": 125,
+    "406": 30,
+    "438": 0,
+    "439": 0
+   },
+   "raw_parent_tuples": 18289
+  },
+  "conjugate-gradient": {
+   "active": {
+    "1": 0,
+    "144": 46944,
+    "390": 0,
+    "405": 225,
+    "406": 140,
+    "438": 0,
+    "439": 0
+   },
+   "raw_parent_tuples": 47309
+  },
+  "3mm": {
+   "active": {
+    "1": 0,
+    "144": 267175,
+    "390": 14,
+    "405": 228,
+    "406": 16,
+    "438": 0,
+    "439": 0
+   },
+   "raw_parent_tuples": 267433
+  },
+  "deriche": {
+   "active": {
+    "1": 17,
+    "144": 277385,
+    "390": 0,
+    "405": 641,
+    "406": 98,
+    "438": 17,
+    "439": 0,
+    "459": 34
+   },
+   "raw_parent_tuples": 278192
+  }
+ }
+}

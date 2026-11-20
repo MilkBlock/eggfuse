@@ -25,3 +25,5 @@ python benchmarks/pass3-cell-gpu/pair-source-frontier/study.py "$EXP" "$EXP/pair
 python benchmarks/pass3-cell-gpu/pair-source-frontier/study.py "$EXP" "$EXP/pair-equations/session" "$EXP/arithmetic-transfer" --cases 3mm deriche --arms cached indexed --repeats 4
 python benchmarks/pass3-cell-gpu/pair-source-frontier/verify.py
 ```
+
+A broader static survey allows recursively connected unique lookup and primitive outputs from any one of the independent parents, including rules with more than two parents. It finds 15 candidate interfaces on the shared source rules. In 3mm only seven were active: they account for 267,433 raw tuples and 267,175 of these already belong to the directly supported arithmetic rule. Deriche had eight active interfaces and 277,385 of their 278,192 raw tuples belonged to the same rule. These counts describe reachable shapes and total receipts at their rules, not additional eliminated work. The wider lookup chains are not enabled by this experiment. [Static interfaces and observed support](opportunities.json)
