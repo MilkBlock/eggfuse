@@ -39,7 +39,7 @@
   card([证据起点],[开放父引用时，静态投影加训练期字段头在两个种子下通过 65、67 张非空碰撞图，共 512 张。这个基线给分工留下了很大的改进空间。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–32 为真实 Pass 3 集成、验收与性能归因。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–34 为真实 Pass 3 集成、性能归因与 GPU／CPU 分工。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -179,6 +179,7 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S24","图 21–22 初图与多行执行","benchmarks/pass3-cell-gpu/README.md")
 #src("S25","图 23–29 逐 Run 验收与耗时","benchmarks/pass3-cell-gpu/ACCEPTANCE.md")
 #src("S26","图 30–32 常驻与阶段归因","benchmarks/pass3-cell-gpu/profile/README.md")
+#src("S27","图 33–34 混合路径","benchmarks/pass3-cell-gpu/hybrid/README.md")
 #v(1mm)
 #linebar()
 #label[两篇用于构造对照的原始文献]

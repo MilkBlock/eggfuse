@@ -338,6 +338,19 @@ PLATES.extend([
         ('Table + prefix', ['last fresh source', 'inspect row epoch', 'skip stale suffix', '13M / 15M loops'])], pass3_path),
 ])
 
+PLATES.extend([
+    ('33-hybrid-witness', [
+        ('CPU source', ['changed table', 'Sieve / Free Join', 'ordered apply', 'CPU owns graph']),
+        ('GPU witnesses', ['frozen CPU rows', 'Metal tests row pairs', 'row refs to RHS', '3043 / 2092 bindings']),
+        ('Prune listeners', ['all readers covered?', 'remove 19 listeners', 'keep shared nodes', 'same live packets']),
+    ], pass3_path),
+    ('34-hybrid-batching', [
+        ('PyTorch service', ['encode request', 'dispatch per rule', 'return witness refs', 'IPC + MPS']),
+        ('Native Metal', ['shared input', 'dispatch per rule', 'read witness bank', 'one CPU wait per tile']),
+        ('Frozen Run batch', ['pack rule domains', 'dispatch joint tiles', 'split by rule ID', 'commit in source order']),
+    ], pass3_path),
+])
+
 def synthesis():
     a=Art();W,H=1100,335;a.rect(0,0,W,H,BG,r=0)
     for x,w,h in [(10,316,"SHARED TEMPLATE"),(338,374,"INSTANCE POLICY"),(723,367,"JOINT OUTCOME")]:

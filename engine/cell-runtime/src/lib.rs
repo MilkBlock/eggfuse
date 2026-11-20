@@ -35,6 +35,8 @@ pub mod program;
 pub mod proof_audit;
 pub mod query;
 pub mod gpu_selector;
+#[cfg(feature = "gpu-bindings")]
+pub mod gpu_bindings;
 
 pub mod schedule;
 pub mod value;

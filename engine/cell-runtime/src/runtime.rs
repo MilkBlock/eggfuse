@@ -131,6 +131,8 @@ impl CellResultObserver {
 }
 
 pub struct Executor {
+    #[cfg(feature = "gpu-bindings")]
+    pub gpu_bindings: Option<crate::gpu_bindings::Producer>,
     pub gpu_selector: Option<crate::gpu_selector::Selector>,
     #[cfg(feature = "sparse-cells")]
     query_workers: Option<query_workers::Workers>,
@@ -392,6 +394,8 @@ impl Executor {
             audit,
             snapshots: vec![],
             binding_audit: vec![],
+            #[cfg(feature = "gpu-bindings")]
+            gpu_bindings: None,
             gpu_selector: None,
             binding_observer: None,
             result_observer: None,
@@ -439,6 +443,26 @@ impl Executor {
     pub fn use_cell_entry_reverse(&mut self) -> Result<()> {
         if !self.steps.is_empty() { return Err("configure Cell Entry selection before execution".into()); }
         self.sieve.reverse_enabled = true;
+        Ok(())
+    }
+    #[cfg(feature = "gpu-bindings")]
+    pub fn use_gpu_bindings(&mut self, python_service: Option<(&str, &str)>, retire: bool, batch: bool) -> Result<()> {
+        if !self.steps.is_empty() || self.gpu_bindings.is_some() {
+            return Err("configure the GPU binding producer once before execution".into());
+        }
+        if batch && python_service.is_some() {
+            return Err("Run batches require native Metal".into());
+        }
+        let mut gpu = crate::gpu_bindings::Producer::start(&self.graph.program, python_service)?;
+        gpu.batch = batch;
+        if retire {
+            let mut dedicated: Vec<_> = (0..self.graph.program.rules.len()).map(|rid| gpu.accepts(rid)).collect();
+            for &(rid, _, _) in &self.graph.program.multi_stage.stage_entries {
+                dedicated[rid] = false;
+            }
+            gpu.stats.retired_entry_nodes = self.entry_schedule.retire_dedicated(&dedicated);
+        }
+        self.gpu_bindings = Some(gpu);
         Ok(())
     }
     fn deliver(&mut self) {
@@ -1153,6 +1177,16 @@ impl Executor {
             tables.swap(0,pos);
             if !probe { self.pending[rid].clear(); }
             return Ok(Vec::new());
+        }
+        #[cfg(feature = "gpu-bindings")]
+        if !probe && let Some(producer) = &mut self.gpu_bindings && producer.accepts(rid)
+            && !self.stage_spine.active_for_rule(rid) {
+            let facts = self.stage_spine.alias_query_facts(&self.graph, rid);
+            let rows = producer.generate(&self.graph, rid, self.watermarks[rid], &facts)?;
+            self.pending[rid].clear();
+            let bindings = self.dedup_bindings(rid, rows)?;
+            self.gpu_bindings.as_mut().unwrap().stats.admitted_bindings += bindings.len() as u64;
+            return Ok(bindings);
         }
         let rule = self.graph.program.rules[rid].clone();
         #[cfg(feature = "view-consumers")]
@@ -2534,6 +2568,21 @@ impl Executor {
             .structural
             .measure_bindings()
             .then(|| self.watermarks.clone());
+        #[cfg(all(feature = "gpu-bindings", target_os = "macos"))]
+        if let Some(gpu) = &mut self.gpu_bindings && gpu.batch {
+            let jobs = rules.iter().copied().filter(|&rid| {
+                gpu.accepts(rid)
+                    && (self.dirty[rid] || !self.graph.program.rules[rid].seminaive)
+                    && !self.stage_spine.active_for_rule(rid)
+                    && self.required_tables[rid].iter().all(|&t| self.graph.witness_count(t) > 0)
+            }).map(|rid| {
+                let watermark = self.ready_sets.as_ref().map_or(self.watermarks[rid], |sets| {
+                    self.watermarks[rid].max(sets.watermark(rid))
+                });
+                (rid, watermark, self.stage_spine.alias_query_facts(&self.graph, rid))
+            }).collect();
+            gpu.prepare_run(&self.graph, jobs)?;
+        }
         let mut count = 0;
         #[cfg(feature = "cell-absorption")]
         let mut absorbed_matches = 0;

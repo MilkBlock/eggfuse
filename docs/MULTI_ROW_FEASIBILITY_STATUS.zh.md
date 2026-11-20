@@ -166,3 +166,5 @@ IID 4×2 完整图为 63→78、55→156、84→138、115→101；收益不稳�
 图 23–29 在实际 sum-bits／dot-product 上补齐源 Run 可见性、已发布键和设备 Spine。1,428／1,535 个 Run 的有序 RHS、有效写入、接续及最终完整类型化图都通过。去重前两行独占 3,369＋3,868／3,572＋3,126 项绑定，另有 28／6 项两行都提出。固定总遍历并行度后，多行带来了互补贡献，但没有稳定端到端加速。相同终态的冷启动 CLI 为 GPU 2.423／4.263 秒、Rust Cell CPU 0.126／0.126 秒。两种学习分工也通过所有观察。全新目录重新 Bake、隔离运行、原生终态检查与 CPU 审计再次通过。[正式验收](../benchmarks/pass3-cell-gpu/ACCEPTANCE.md)
 
 图 30–32 的完整 Pass 3 测量已分离冷启动、常驻推理与设备阶段。增量前缀早筛使 sum-bits／dot-product 的常驻推理分别加速 1.84×／3.73×。RHS、有效写入、Spine 和终图通过两例逐 Run 验收。[测量与复现](../benchmarks/pass3-cell-gpu/profile/README.md)
+
+图 33–34 将符合条件的一／二关系查询交给 GPU 输出见证引用，Rust Cell CPU 消费这些引用。两例分别有 3,043／2,092 个实际 RHS 绑定来自 GPU；其余规则含原有 Spine 路径。五臂消融同时记录 CPU 候选、入口维护、设备行对、交接及独立终图审计。[混合路径结果](../benchmarks/pass3-cell-gpu/hybrid/README.md)

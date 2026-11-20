@@ -32,6 +32,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
         #[cfg(feature = "slot-transfer-audit")]
         println!("  --audit-events (save ordered birth, union, function write and Spine witnesses)");
+        #[cfg(feature = "gpu-bindings")]
+        println!("  --gpu-binding-native | --gpu-binding-python PATH --gpu-binding-service PATH [--gpu-binding-retire] (native also accepts --gpu-binding-batch)");
         println!("  --gpu-selector-python PATH --gpu-selector-service PATH [--gpu-selector-min-rows N] (experimental exact Metal query filtering)");
         println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor and scalar Unit matcher)");
         println!("  --congruence-cells (experimental equality expressions and persistent completion cells)");
@@ -75,6 +77,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         match flag.as_str() {
             #[cfg(feature = "slot-transfer-audit")]
             "--audit-events" => {}
+            #[cfg(feature = "gpu-bindings")]
+            "--gpu-binding-native" | "--gpu-binding-batch" | "--gpu-binding-retire" => {}
+            #[cfg(feature = "gpu-bindings")]
+            "--gpu-binding-python" | "--gpu-binding-service" => { flags.next().filter(|v| !v.starts_with("--")).ok_or("missing GPU binding path")?; }
             "--gpu-selector-python" | "--gpu-selector-service" | "--gpu-selector-min-rows" | "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" | "--completion-batch-tasks" | "--query-workers" | "--query-grain" => {
                 flags
                     .next()
@@ -209,6 +215,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if overlap_completion { graph.use_overlapped_completion()?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
+    #[cfg(feature = "gpu-bindings")]
+    {
+        let native = args.iter().any(|x| x == "--gpu-binding-native");
+        let batch = args.iter().any(|x| x == "--gpu-binding-batch");
+        let retire = args.iter().any(|x| x == "--gpu-binding-retire");
+        match (opt("--gpu-binding-python"), opt("--gpu-binding-service"), native) {
+            (None, None, true) => runtime.use_gpu_bindings(None, retire, batch)?,
+            (Some(python), Some(service), false) if !batch => runtime.use_gpu_bindings(Some((&python, &service)), retire, false)?,
+            (None, None, false) if !retire && !batch => {}
+            _ => return Err("choose native Metal (optionally batched) or supply both Python service arguments".into()),
+        }
+    }
     match (opt("--gpu-selector-python"), opt("--gpu-selector-service")) {
         (Some(python), Some(service)) => {
             let min_rows = opt("--gpu-selector-min-rows").map(|v| v.parse::<usize>()).transpose()?.unwrap_or(2);
@@ -352,6 +370,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     runtime.write_keepers(&out)?;
     let report_start = Instant::now();
     let mut report = runtime.report();
+    #[cfg(feature = "gpu-bindings")]
+    if let Some(gpu) = &runtime.gpu_bindings {
+        report["backend"] = "cell-cpu-gpu-bindings".into();
+        report["gpu_bindings"] = serde_json::to_value(&gpu.stats)?;
+    }
     #[cfg(feature = "allocation-metrics")]
     {
         report["setup_allocations"] = setup_allocation_delta.report();

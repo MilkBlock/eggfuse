@@ -32,7 +32,7 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==32
+    assert len(plates)==34
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and p['arms'] and p['measure'] and p['status'].startswith(('已测','实跑'))
         assert p['title'] in md and (HERE/'figures'/f"{p['id']}.svg").is_file()
@@ -127,7 +127,25 @@ def check():
             assert item['checks'][arm]['acceptance']=='pass'
         assert item['modes']['prefix']['work']['dfs_iterations']<item['modes']['baseline']['work']['dfs_iterations']
         assert len(item['cold']['prefix']['samples'])==8
-    print('Verified all 32 plates, including two full ordered Pass 3 audits, row contributions and paired CLI timings.')
+    hybrid=json.loads((folder.parent/'hybrid/results.json').read_text())
+    for n,runs,hits in [('sum-bits',1428,3043),('dot-product',1535,2092)]:
+        lanes=hybrid[n]
+        for lane,trial in lanes.items():
+            assert trial['state_sha256']==lanes['cpu']['state_sha256'] and trial['audit']==lanes['cpu']['audit']
+            assert all(trial['audit'][k]['runs']==runs for k in ('rhs','writes','resumes'))
+            assert len(trial['samples'])==10
+            if lane!='cpu':
+                assert all(s['admitted']==hits and s['tokens']==hits and s['device_dispatches']>0 for s in trial['samples'])
+        cpu, batch=lanes['cpu']['median'],lanes['batched']['median']
+        if n=='sum-bits':
+            assert (cpu['residual_candidates'],batch['residual_candidates'],batch['device_dispatches'],batch['device_pairs'])==(8769,5583,369,4824849)
+        else:
+            assert (cpu['residual_candidates'],batch['residual_candidates'],batch['device_dispatches'],batch['device_pairs'])==(8022,5834,324,5156042)
+        assert lanes['retired']['median']['retired_nodes']==19
+        assert lanes['batched']['median']['device_dispatches']<lanes['native']['median']['device_dispatches']
+        for k in ('residual_candidates','entry_packets','node_notifications','parameter_copies'):
+            assert lanes['retired']['median'][k]==lanes['native']['median'][k]<lanes['cpu']['median'][k]
+    print('Verified all 34 plates, including two full ordered Pass 3 audits, row contributions and paired CLI timings.')
 
 
 if __name__=='__main__':check()

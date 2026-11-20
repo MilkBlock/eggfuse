@@ -683,6 +683,26 @@ impl Scheduler {
             stats: Stats::default(),
         }
     }
+    // Keep all shared subscribers and publication owners. Exclusive GPU nodes
+    // will never request a seed, so their per-change notifications can retire.
+    #[cfg(feature = "gpu-bindings")]
+    pub(crate) fn retire_dedicated(&mut self, dedicated: &[bool]) -> usize {
+        let mut keep = vec![false; self.plan.nodes.len()];
+        for (rid, consumers) in self.plan.rules.iter().enumerate() {
+            if !dedicated[rid] {
+                for c in consumers { keep[c.node] = true; }
+            }
+        }
+        #[cfg(feature = "sparse-cells")]
+        for &id in self.publication_nodes.iter().flatten() { keep[id] = true; }
+        let mut retired = 0;
+        for nodes in &mut self.plan.tables {
+            let original = nodes.len();
+            nodes.retain(|id| keep[*id]);
+            retired += original - nodes.len();
+        }
+        retired
+    }
     pub fn accepts(&self, rid: usize) -> bool {
         self.enabled && self.plan.rules.get(rid).is_some_and(|x| !x.is_empty())
     }

@@ -87,3 +87,5 @@ rotary=/Volumes/EggFuseWorkspace/experiments/rotary-axes-20261119/packed-1703/fi
 在 `reproduce.py` 生成的目录中，`release-input-CASE/device.json` 是同一套选项的输入。图 23 使用 `--no-spine --union immediate|fenced --directory canonical|published --lookup scan` 隔离有序写入。图 24 用 `--no-spine` 和 `--prune-routed` 对照默认 Spine。图 25 使用 `--scalars integer|guarded|lossy --profile-prims` 与独立 `primitive_audit.py`。图 26 固定分片数，改变 `--lookup scan|point|hash`。图 27 的 Run 融合对照固定 `--tiles 1 --arena private --token-layout dense` 并改变 `--batch-runs 0|1|4|16`；入口并行则固定独立 dispatch，改变 `--tiles`。图 28 改变 `--token-layout dense|packed`、`--arena private|shared` 和 `--token-cap`。图 29 的 `--row-audit` 另外导出提交前的行间排他、共有和行内重复计数。上述竖线表示互斥选项。诊断结果和正式计时保存在不同目录。
 
 图 29 的 CLI 对应优化前的入口。新默认采用表水位和增量前缀剪枝，完整复验及冷／热测量见[图 30–32 的性能报告](profile/README.md)。
+
+另设 GPU 生成见证、Rust CPU 提交的对照，涵盖进程间 MPS、进程内 Metal、静态入口退订和同 Run 合批。两条引擎路径分别进行完整语义验收。[图 33–34 的混合消融](hybrid/README.md)

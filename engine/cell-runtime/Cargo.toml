@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
+gpu-bindings = []
 sparse-cells = ["iterative-bake"]
 cell-absorption = ["sparse-cells"]
 cell-entry-reverse = ["sparse-cells"]
