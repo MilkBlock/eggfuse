@@ -3,7 +3,8 @@ import json
 from pathlib import Path
 from statistics import median
 from feature_support import counts
-from synthetic import check
+from synthetic import INTERFACES, check, ports
+from struct import pack
 
 
 def verify(folder):
@@ -13,6 +14,11 @@ def verify(folder):
     assert set(train)==set(policy['train_cases'])=={'affine-twins','clamped-ramp','segmented-prefix','window-laplacian'}
     allrows=[r for d in train.values() for r in d['charges']]
     assert counts(allrows)==read('feature-support.json')['pooled']
+    for row in allrows:
+        assert (row['producer'],row['effect']) in INTERFACES
+        projected=ports(row['producer'],row['effect'],row['value'],row['depth'])
+        assert pack('<8f',*projected)==pack('<8f',*row['features'])
+    assert sum(row['counts'][0]-row['counts'][1] for row in allrows if not row['counts'][2])==7632
     assert policy['native_events']==len(allrows)==689 and policy['native_child_wins']==sum(d['children'] for d in train.values())==295
     assert policy['updates']==120 and policy['warm']==80
     for case,d in train.items():
