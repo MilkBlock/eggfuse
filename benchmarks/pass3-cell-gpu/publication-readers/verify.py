@@ -33,6 +33,10 @@ def verify(name):
                 assert s['retired_nodes'] and s['removed_node_visits'] and s['spine_kept']
             if label in ('clean','clean-only'):
                 assert s['already_dirty']+s['dirty_transitions']==s['unique_wakes']
+                h=s['hot_totals']
+                assert h[2]==a['entry']['stats']['node_notifications'] and h[3]+h[4]==h[2]
+                assert all(sum(v[i] for v in s['hot_by_table'].values())==h[i] for i in range(5))
+                assert a['proof']['spine_events']>0 and a['proof']['effective_writes']>0
             if a.get('equality'):
                 e=a['equality']
                 assert e['empty_records']<=e['row_records'] and e['empty_retired']<=e['empty_records']
@@ -46,4 +50,4 @@ def verify(name):
 
 if __name__=='__main__':
     verify('readers.json')
-    if (HERE/'clean.json').exists():verify('clean.json')
+    verify('clean.json')

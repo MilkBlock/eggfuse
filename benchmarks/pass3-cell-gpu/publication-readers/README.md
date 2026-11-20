@@ -37,3 +37,50 @@ The baseline learned configuration had zero column, range and neighbour row upda
 | deriche | 82,989 / 76,616 / 30,227 | 1621.67 / 3881.85 / 3858.23 / 3765.63 / 3801.22 / 3777.78 / 3882.98 |
 
 Sampling uses four rotating resident samples per arm after warm-up. Deriche completed all 635,818 source RHS ordinals. The original learned timings contain medians of 2,945.5 ms for search, 572.9 ms for RHS, 168.3 ms for repair, 161.0 ms for query publication and 33.6 ms for delivery plus GC. An arm that removed zero address copies also had a lower inference median than the original learned run. These differences do not support an end-to-end speedup claim from retiring addresses. The actual work eliminated at this layer was limited to cold dispatch and duplicate readiness visits. [Build fingerprint](reader-build.json)
+
+## Testing only genuine readiness transitions
+
+A rule that was already dirty needs no second source wake before its next legal read. The clean-mask arm initializes a second bitmap from the actual source flags. The two instructions that consume a seminaive rule and clear its source flag also mark it clean in this bitmap. After the changed-table reader masks have been united, the executor intersects them with the clean bitmap. Only those selected rules change state and set a bit in the original ReadySets. Each audited delivery and final exit checks the bitmap against every original source flag. The clean-only control preserves all ordinary graph subscriptions and changes just readiness delivery. The full clean arm also applies the previously proved exclusive Entry and private pending cuts. [Native change](clean.py) · [Instrumented build](clean-build.json)
+
+The independent clock separately measures Spine publication, shared Entry publication, learned frame change notification, ordinary column/range/neighbour maintenance and Sieve, source dirty delivery, change-buffer clear and garbage collection. Each clocked request generates the reference graph. Three samples per configuration are excluded from the normal interleaved timing matrix. The equality inventory is a final audit scan. It counts graph records whose equality subscription set is already empty without deleting or redirecting any of them.
+
+| Source | Already-dirty probes omitted | Original learned / table masks / clean masks / clean only / independent vanilla (ms) |
+|---|---:|---:|
+| sum-bits | 10,331 | 34.25 / 33.36 / 34.15 / 33.93 / 21.80 |
+| dot-product | 7,202 | 32.89 / 33.30 / 31.73 / 32.44 / 19.85 |
+| deriche | 46,389 | 3804.65 / 3783.79 / 3800.09 / 3787.13 / 1570.98 |
+
+Deriche’s whole-source result included 635,818 RHS bindings, 265,407 effective writes and 112,378 independently audited Spine events. The neural root and nested cells retained 450,414 of 452,913 direct fresh physical identities. Compiling true readiness transitions avoided 46,389 checks, but saved only about 0.20 ms in the isolated source-delivery clock. The full-pass observations do not support introducing the second bitmap as a default speed improvement. [Root, stage and phase evidence](clean.json)
+
+| Source / observed control | Spine publication | Shared Entry | Learned frame changes | Exact indexes and Sieve | Dirty delivery | Clear change buffer | Garbage collection |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| sum-bits / observed | 1.231 | 0.225 | 0.268 | 0.037 | 0.095 | 0.031 | 0.097 |
+| sum-bits / clean | 1.353 | 0.228 | 0.275 | 0.047 | 0.078 | 0.033 | 0.100 |
+| dot-product / observed | 1.063 | 0.192 | 0.236 | 0.046 | 0.086 | 0.032 | 0.103 |
+| dot-product / clean | 0.976 | 0.181 | 0.233 | 0.038 | 0.068 | 0.033 | 0.101 |
+| deriche / observed | 104.979 | 21.956 | 25.324 | 0.287 | 0.885 | 0.178 | 31.145 |
+| deriche / clean | 113.368 | 23.053 | 26.572 | 0.366 | 0.686 | 0.199 | 33.060 |
+
+The times above are milliseconds. On Deriche the measured source Spine publisher installed 451,688 anchors from 451,718 distinct keys. The live-cursor publisher checked 357,532 changed addresses for retirement. These required native consumers and the learned frame notifier account for substantially more time than dispatch of ordinary exact indexes. Their actual work remains charged in each whole-pass arm.
+
+| Source | Actual hot Entry insertions | Distinct changed addresses receiving those insertions within a batch | Repeated insertion into another hot node | Retired owners with empty equality subscriptions / all owner records |
+|---|---:|---:|---:|---:|
+| sum-bits | 3,793 | 3,235 | 558 | 994 / 5,039 |
+| dot-product | 2,968 | 2,676 | 292 | 541 / 4,798 |
+| deriche | 353,953 | 335,767 | 18,186 | 49,880 / 213,546 |
+
+The hot-node audit checks actual pending membership before the native insertion. On Deriche, 18,186 of 353,953 accepted hot Entry insertions wrote a second copy of the same changed address in the same batch. Three siblings were hot at the maximum. This is a work-count ceiling for that specific form of sharing. The physical addresses may still serve different later source Runs. The equality inventory found 49,880 empty retired owner records alongside 446,700 recorded equality edges. The experiment retained both sets of structures. The sparse engine already avoids empty equality records by construction.
+
+## Reproduction
+
+All results use the frozen 1703 checkpoint and a complete two-view producer on the original external Deriche bundle. The ordinary exact run on the same instrumented binary verifies its full trajectory against the separately compiled default-feature reference. Timed requests omit the detailed ownership and graph inventory. Setup, export and request round-trip samples are archived alongside native inference. The selective phases use separate runs.
+
+```sh
+dir=benchmarks/pass3-cell-gpu/publication-readers
+e="$EGGFUSE_ARTIFACT_ROOT"
+python "$dir/build.py" "$e/NEW-publication-readers"
+python "$dir/bench.py" "$e/NEW-publication-readers/session" "$e" "$e/extra-pass3-transfer-v1" "$e/NEW-reader-study"
+python "$dir/build_clean.py" "$e/NEW-publication-clean"
+python "$dir/bench.py" "$e/NEW-publication-clean/session" "$e" "$e/extra-pass3-transfer-v1" "$e/NEW-clean-study" --arms original masks clean clean-only
+python "$dir/verify.py"
+```

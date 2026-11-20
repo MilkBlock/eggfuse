@@ -63,7 +63,7 @@ def run(a):
                     if mode==3:assert sum(by_source)+s['origin_missing']==s['pending_omitted']
                     s['table_names']={n:[ts[int(n)]['name'],ts[int(n)]['kind']] for n in s['by_table']}
                 arms[name]=dict(ms=[],aligned=v['aligned'],fresh=v['fresh'],proof=proof,
-                    reader=s,equality=report.get('equality'),publication=report['publication'],columns=report['columns'],entry=report['entry'])
+                    reader=s,equality=report.get('equality'),spine=report.get('spine'),publication=report['publication'],columns=report['columns'],entry=report['entry'])
                 del raw
             names=list(arms)
             for trial in range(a.repeats+1):
