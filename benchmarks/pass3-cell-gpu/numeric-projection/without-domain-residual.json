@@ -1,0 +1,62 @@
+{
+ "sum-bits/1703/structural": {
+  "first_divergence": 102,
+  "domain_committed": 9,
+  "concat_committed": 0
+ },
+ "sum-bits/1703/predict": {
+  "first_divergence": 102,
+  "domain_committed": 9,
+  "concat_committed": 0
+ },
+ "sum-bits/1703/wrong": {
+  "first_divergence": 98,
+  "domain_committed": 0,
+  "concat_committed": 0
+ },
+ "sum-bits/1709/structural": {
+  "first_divergence": 102,
+  "domain_committed": 9,
+  "concat_committed": 0
+ },
+ "sum-bits/1709/predict": {
+  "first_divergence": 102,
+  "domain_committed": 9,
+  "concat_committed": 0
+ },
+ "sum-bits/1709/wrong": {
+  "first_divergence": 98,
+  "domain_committed": 0,
+  "concat_committed": 0
+ },
+ "dot-product/1703/structural": {
+  "first_divergence": 135,
+  "domain_committed": 46,
+  "concat_committed": 0
+ },
+ "dot-product/1703/predict": {
+  "first_divergence": 135,
+  "domain_committed": 46,
+  "concat_committed": 0
+ },
+ "dot-product/1703/wrong": {
+  "first_divergence": 131,
+  "domain_committed": 0,
+  "concat_committed": 0
+ },
+ "dot-product/1709/structural": {
+  "first_divergence": 135,
+  "domain_committed": 34,
+  "concat_committed": 0
+ },
+ "dot-product/1709/predict": {
+  "first_divergence": 135,
+  "domain_committed": 34,
+  "concat_committed": 0
+ },
+ "dot-product/1709/wrong": {
+  "first_divergence": 131,
+  "domain_committed": 0,
+  "concat_committed": 0
+ }
+}

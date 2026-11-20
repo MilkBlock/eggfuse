@@ -1,0 +1,3130 @@
+{
+ "sum-bits/1703": {
+  "engine": {
+   "ms": [
+    841.728125,
+    870.651125,
+    827.938416,
+    846.088625,
+    907.324167,
+    874.643,
+    835.434708,
+    841.933541,
+    849.644375,
+    865.800959
+   ],
+   "median_ms": 847.8665
+  },
+  "trace-control": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "old_eq_candidate": 70,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 0,
+    "routes_passed_for_selected": 0
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 0,
+    "routes_passed_for_selected": 0
+   },
+   "ports": [
+    403,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    894.294667,
+    848.520041,
+    866.412916,
+    835.551125,
+    839.289583,
+    868.636708,
+    889.070167,
+    858.20625,
+    835.040042,
+    832.406084
+   ],
+   "median_ms": 853.3631455
+  },
+  "predicted": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "structural_winners": 98,
+    "admitted": 98,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 62,
+    "old_eq_candidate": 70,
+    "physical_operand_refs": 116,
+    "validated_parent_ports": 116,
+    "parent_port_from_admitted_token": 17,
+    "parent_candidate_differs_from_visible": 22,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 368,
+    "routes_passed_for_selected": 99
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "structural_winners": 5,
+    "admitted": 5,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 3,
+    "physical_operand_refs": 10,
+    "validated_parent_ports": 10,
+    "parent_port_from_admitted_token": 7,
+    "parent_candidate_differs_from_visible": 0,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 45,
+    "routes_passed_for_selected": 5
+   },
+   "ports": [
+    403,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": true,
+     "predicted": 2,
+     "disposition": 1
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": true,
+     "predicted": 2,
+     "disposition": 1
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    913.91025,
+    868.545334,
+    902.927625,
+    831.288917,
+    865.33525,
+    835.389166,
+    881.916084,
+    895.173958,
+    841.736417,
+    885.300459
+   ],
+   "median_ms": 875.2307089999999
+  },
+  "structural": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "structural_winners": 98,
+    "admitted": 98,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 62,
+    "old_eq_candidate": 70,
+    "physical_operand_refs": 116,
+    "validated_parent_ports": 116,
+    "parent_port_from_admitted_token": 17,
+    "parent_candidate_differs_from_visible": 22,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 368,
+    "routes_passed_for_selected": 99
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "structural_winners": 5,
+    "admitted": 5,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 3,
+    "physical_operand_refs": 10,
+    "validated_parent_ports": 10,
+    "parent_port_from_admitted_token": 7,
+    "parent_candidate_differs_from_visible": 0,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 45,
+    "routes_passed_for_selected": 5
+   },
+   "ports": [
+    403,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    889.7075,
+    923.139333,
+    919.764958,
+    839.918916,
+    844.902959,
+    876.751625,
+    844.481667,
+    892.04625,
+    950.252875,
+    929.82375
+   ],
+   "median_ms": 890.8768749999999
+  },
+  "visible-port": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "structural_winners": 98,
+    "admitted": 98,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 62,
+    "old_eq_candidate": 70,
+    "physical_operand_refs": 116,
+    "validated_parent_ports": 116,
+    "parent_port_from_admitted_token": 17,
+    "parent_candidate_differs_from_visible": 22,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 368,
+    "routes_passed_for_selected": 99
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "structural_winners": 5,
+    "admitted": 5,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 3,
+    "physical_operand_refs": 10,
+    "validated_parent_ports": 10,
+    "parent_port_from_admitted_token": 7,
+    "parent_candidate_differs_from_visible": 0,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 45,
+    "routes_passed_for_selected": 5
+   },
+   "ports": [
+    403,
+    107,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    829.525166,
+    869.710083,
+    860.646333,
+    916.9775,
+    863.351125,
+    867.995625,
+    838.887667,
+    837.74025,
+    917.987375,
+    885.242375
+   ],
+   "median_ms": 865.6733750000001
+  },
+  "candidate-as-visible": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "structural_winners": 98,
+    "admitted": 98,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 62,
+    "old_eq_candidate": 70,
+    "physical_operand_refs": 116,
+    "validated_parent_ports": 116,
+    "parent_port_from_admitted_token": 17,
+    "parent_candidate_differs_from_visible": 22,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 368,
+    "routes_passed_for_selected": 99
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "structural_winners": 5,
+    "admitted": 5,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 3,
+    "physical_operand_refs": 10,
+    "validated_parent_ports": 10,
+    "parent_port_from_admitted_token": 7,
+    "parent_candidate_differs_from_visible": 0,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 45,
+    "routes_passed_for_selected": 5
+   },
+   "ports": [
+    403,
+    80,
+    27,
+    27
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ]
+  },
+  "forced-wrong": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "structural_winners": 98,
+    "admitted": 0,
+    "numeric_rejected_and_recovered": 98,
+    "admitted_writes": 0,
+    "old_eq_candidate": 70,
+    "physical_operand_refs": 116,
+    "validated_parent_ports": 116,
+    "parent_port_from_admitted_token": 0,
+    "parent_candidate_differs_from_visible": 22,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 368,
+    "routes_passed_for_selected": 99
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "structural_winners": 5,
+    "admitted": 0,
+    "numeric_rejected_and_recovered": 5,
+    "admitted_writes": 0,
+    "physical_operand_refs": 10,
+    "validated_parent_ports": 10,
+    "parent_port_from_admitted_token": 0,
+    "parent_candidate_differs_from_visible": 0,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 45,
+    "routes_passed_for_selected": 5
+   },
+   "ports": [
+    403,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": true,
+     "predicted": -9223372036854775808,
+     "disposition": 2
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": true,
+     "predicted": -9223372036854775808,
+     "disposition": 2
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ]
+  }
+ },
+ "sum-bits/1709": {
+  "engine": {
+   "ms": [
+    935.678084,
+    924.663041,
+    879.118667,
+    854.731334,
+    857.840708,
+    888.967584,
+    858.648,
+    869.465916,
+    877.028375,
+    886.552375
+   ],
+   "median_ms": 878.073521
+  },
+  "trace-control": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "old_eq_candidate": 70,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 0,
+    "routes_passed_for_selected": 0
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 0,
+    "routes_passed_for_selected": 0
+   },
+   "ports": [
+    403,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    906.968167,
+    921.556709,
+    870.974667,
+    854.615875,
+    867.749916,
+    853.141792,
+    887.120208,
+    870.723167,
+    899.686959,
+    878.360167
+   ],
+   "median_ms": 874.667417
+  },
+  "predicted": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "structural_winners": 98,
+    "admitted": 98,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 62,
+    "old_eq_candidate": 70,
+    "physical_operand_refs": 116,
+    "validated_parent_ports": 116,
+    "parent_port_from_admitted_token": 17,
+    "parent_candidate_differs_from_visible": 22,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 368,
+    "routes_passed_for_selected": 99
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "structural_winners": 5,
+    "admitted": 5,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 3,
+    "physical_operand_refs": 10,
+    "validated_parent_ports": 10,
+    "parent_port_from_admitted_token": 7,
+    "parent_candidate_differs_from_visible": 0,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 45,
+    "routes_passed_for_selected": 5
+   },
+   "ports": [
+    403,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": true,
+     "predicted": 2,
+     "disposition": 1
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": true,
+     "predicted": 2,
+     "disposition": 1
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    834.917834,
+    869.78875,
+    908.932583,
+    858.105917,
+    861.65025,
+    858.025625,
+    892.546542,
+    886.717958,
+    881.772,
+    888.9005
+   ],
+   "median_ms": 875.780375
+  },
+  "structural": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "structural_winners": 98,
+    "admitted": 98,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 62,
+    "old_eq_candidate": 70,
+    "physical_operand_refs": 116,
+    "validated_parent_ports": 116,
+    "parent_port_from_admitted_token": 17,
+    "parent_candidate_differs_from_visible": 22,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 368,
+    "routes_passed_for_selected": 99
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "structural_winners": 5,
+    "admitted": 5,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 3,
+    "physical_operand_refs": 10,
+    "validated_parent_ports": 10,
+    "parent_port_from_admitted_token": 7,
+    "parent_candidate_differs_from_visible": 0,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 45,
+    "routes_passed_for_selected": 5
+   },
+   "ports": [
+    403,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    878.243458,
+    881.610417,
+    921.667292,
+    892.411625,
+    877.958375,
+    850.275833,
+    889.034958,
+    905.5015,
+    876.683042,
+    892.418458
+   ],
+   "median_ms": 885.3226875
+  },
+  "visible-port": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "structural_winners": 98,
+    "admitted": 98,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 62,
+    "old_eq_candidate": 70,
+    "physical_operand_refs": 116,
+    "validated_parent_ports": 116,
+    "parent_port_from_admitted_token": 17,
+    "parent_candidate_differs_from_visible": 22,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 368,
+    "routes_passed_for_selected": 99
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "structural_winners": 5,
+    "admitted": 5,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 3,
+    "physical_operand_refs": 10,
+    "validated_parent_ports": 10,
+    "parent_port_from_admitted_token": 7,
+    "parent_candidate_differs_from_visible": 0,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 45,
+    "routes_passed_for_selected": 5
+   },
+   "ports": [
+    403,
+    107,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    922.571917,
+    953.908666,
+    869.643875,
+    873.711875,
+    888.920083,
+    866.593209,
+    870.413667,
+    875.382292,
+    879.834541,
+    889.542208
+   ],
+   "median_ms": 877.6084165
+  },
+  "candidate-as-visible": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "structural_winners": 98,
+    "admitted": 98,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 62,
+    "old_eq_candidate": 70,
+    "physical_operand_refs": 116,
+    "validated_parent_ports": 116,
+    "parent_port_from_admitted_token": 17,
+    "parent_candidate_differs_from_visible": 22,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 368,
+    "routes_passed_for_selected": 99
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "structural_winners": 5,
+    "admitted": 5,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 3,
+    "physical_operand_refs": 10,
+    "validated_parent_ports": 10,
+    "parent_port_from_admitted_token": 7,
+    "parent_candidate_differs_from_visible": 0,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 45,
+    "routes_passed_for_selected": 5
+   },
+   "ports": [
+    403,
+    80,
+    27,
+    27
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ]
+  },
+  "forced-wrong": {
+   "all": {
+    "total": 291,
+    "wrote": 155,
+    "noop": 136,
+    "first": 140,
+    "structural_winners": 98,
+    "admitted": 0,
+    "numeric_rejected_and_recovered": 98,
+    "admitted_writes": 0,
+    "old_eq_candidate": 70,
+    "physical_operand_refs": 116,
+    "validated_parent_ports": 116,
+    "parent_port_from_admitted_token": 0,
+    "parent_candidate_differs_from_visible": 22,
+    "old_lt_candidate": 66,
+    "old_gt_candidate": 15,
+    "presented": 518,
+    "structural_proposals": 368,
+    "routes_passed_for_selected": 99
+   },
+   "concat": {
+    "total": 55,
+    "wrote": 33,
+    "noop": 22,
+    "first": 27,
+    "old_lt_candidate": 15,
+    "structural_winners": 5,
+    "admitted": 0,
+    "numeric_rejected_and_recovered": 5,
+    "admitted_writes": 0,
+    "physical_operand_refs": 10,
+    "validated_parent_ports": 10,
+    "parent_port_from_admitted_token": 0,
+    "parent_candidate_differs_from_visible": 0,
+    "old_gt_candidate": 6,
+    "old_eq_candidate": 7,
+    "presented": 58,
+    "structural_proposals": 45,
+    "routes_passed_for_selected": 5
+   },
+   "ports": [
+    403,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 110,
+     "rhs": 906,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      860,
+      861
+     ],
+     "source_rhs_ports": [
+      739,
+      740
+     ],
+     "old": 1,
+     "candidate": 2,
+     "visible": 1,
+     "write": false,
+     "selected": true,
+     "predicted": -9223372036854775808,
+     "disposition": 2
+    },
+    {
+     "run": 114,
+     "rhs": 1070,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      869,
+      868
+     ],
+     "source_rhs_ports": [
+      748,
+      747
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": true,
+     "predicted": -9223372036854775808,
+     "disposition": 2
+    },
+    {
+     "run": 118,
+     "rhs": 1220,
+     "rule": 154,
+     "operands": [
+      2,
+      1
+     ],
+     "parent_rows": [
+      958,
+      862
+     ],
+     "source_rhs_ports": [
+      909,
+      741
+     ],
+     "old": null,
+     "candidate": 3,
+     "visible": 3,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ]
+  }
+ },
+ "dot-product/1703": {
+  "engine": {
+   "ms": [
+    896.709375,
+    869.946584,
+    897.481042,
+    905.562208,
+    857.748083,
+    947.086875,
+    875.476416,
+    928.307375,
+    938.965042,
+    941.825458
+   ],
+   "median_ms": 901.5216250000001
+  },
+  "trace-control": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "old_eq_candidate": 106,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 0,
+    "routes_passed_for_selected": 0
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 0,
+    "routes_passed_for_selected": 0
+   },
+   "ports": [
+    311,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    925.013958,
+    914.222958,
+    885.6935,
+    880.537625,
+    843.091834,
+    908.45775,
+    957.385583,
+    916.036208,
+    907.612625,
+    940.772125
+   ],
+   "median_ms": 911.3403539999999
+  },
+  "predicted": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "structural_winners": 186,
+    "admitted": 186,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 157,
+    "old_eq_candidate": 106,
+    "physical_operand_refs": 193,
+    "validated_parent_ports": 191,
+    "parent_port_from_admitted_token": 35,
+    "parent_candidate_differs_from_visible": 66,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 560,
+    "routes_passed_for_selected": 186
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "structural_winners": 6,
+    "admitted": 6,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 5,
+    "physical_operand_refs": 12,
+    "validated_parent_ports": 11,
+    "parent_port_from_admitted_token": 3,
+    "parent_candidate_differs_from_visible": 0,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 12,
+    "routes_passed_for_selected": 6
+   },
+   "ports": [
+    311,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": true,
+     "predicted": 4,
+     "disposition": 1
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    932.26575,
+    899.815458,
+    935.603125,
+    925.222708,
+    865.556875,
+    905.53625,
+    961.520792,
+    938.359375,
+    918.614,
+    930.448542
+   ],
+   "median_ms": 927.8356249999999
+  },
+  "structural": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "structural_winners": 186,
+    "admitted": 186,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 157,
+    "old_eq_candidate": 106,
+    "physical_operand_refs": 193,
+    "validated_parent_ports": 191,
+    "parent_port_from_admitted_token": 35,
+    "parent_candidate_differs_from_visible": 66,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 560,
+    "routes_passed_for_selected": 186
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "structural_winners": 6,
+    "admitted": 6,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 5,
+    "physical_operand_refs": 12,
+    "validated_parent_ports": 11,
+    "parent_port_from_admitted_token": 3,
+    "parent_candidate_differs_from_visible": 0,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 12,
+    "routes_passed_for_selected": 6
+   },
+   "ports": [
+    311,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    938.995625,
+    941.653375,
+    913.793917,
+    856.409333,
+    909.534875,
+    900.226583,
+    952.390917,
+    946.991625,
+    931.454,
+    912.583792
+   ],
+   "median_ms": 922.6239585
+  },
+  "visible-port": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "structural_winners": 186,
+    "admitted": 186,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 157,
+    "old_eq_candidate": 106,
+    "physical_operand_refs": 193,
+    "validated_parent_ports": 191,
+    "parent_port_from_admitted_token": 35,
+    "parent_candidate_differs_from_visible": 66,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 560,
+    "routes_passed_for_selected": 186
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "structural_winners": 6,
+    "admitted": 6,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 5,
+    "physical_operand_refs": 12,
+    "validated_parent_ports": 11,
+    "parent_port_from_admitted_token": 3,
+    "parent_candidate_differs_from_visible": 0,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 12,
+    "routes_passed_for_selected": 6
+   },
+   "ports": [
+    311,
+    97,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    931.764541,
+    911.138917,
+    922.091958,
+    881.786542,
+    886.471292,
+    939.846917,
+    903.566083,
+    923.221417,
+    937.340333,
+    924.258167
+   ],
+   "median_ms": 922.6566875
+  },
+  "candidate-as-visible": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "structural_winners": 186,
+    "admitted": 186,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 157,
+    "old_eq_candidate": 106,
+    "physical_operand_refs": 193,
+    "validated_parent_ports": 191,
+    "parent_port_from_admitted_token": 35,
+    "parent_candidate_differs_from_visible": 66,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 560,
+    "routes_passed_for_selected": 186
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "structural_winners": 6,
+    "admitted": 6,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 5,
+    "physical_operand_refs": 12,
+    "validated_parent_ports": 11,
+    "parent_port_from_admitted_token": 3,
+    "parent_candidate_differs_from_visible": 0,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 12,
+    "routes_passed_for_selected": 6
+   },
+   "ports": [
+    311,
+    56,
+    41,
+    82
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ]
+  },
+  "forced-wrong": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "structural_winners": 186,
+    "admitted": 0,
+    "numeric_rejected_and_recovered": 186,
+    "admitted_writes": 0,
+    "old_eq_candidate": 106,
+    "physical_operand_refs": 193,
+    "validated_parent_ports": 191,
+    "parent_port_from_admitted_token": 0,
+    "parent_candidate_differs_from_visible": 66,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 560,
+    "routes_passed_for_selected": 186
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "structural_winners": 6,
+    "admitted": 0,
+    "numeric_rejected_and_recovered": 6,
+    "admitted_writes": 0,
+    "physical_operand_refs": 12,
+    "validated_parent_ports": 11,
+    "parent_port_from_admitted_token": 0,
+    "parent_candidate_differs_from_visible": 0,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 12,
+    "routes_passed_for_selected": 6
+   },
+   "ports": [
+    311,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": true,
+     "predicted": -9223372036854775808,
+     "disposition": 2
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ]
+  }
+ },
+ "dot-product/1709": {
+  "engine": {
+   "ms": [
+    920.648375,
+    915.48075,
+    929.663375,
+    928.975959,
+    948.093875,
+    971.218584,
+    972.50675,
+    933.291334,
+    961.232208,
+    957.822
+   ],
+   "median_ms": 940.6926045
+  },
+  "trace-control": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "old_eq_candidate": 106,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 0,
+    "routes_passed_for_selected": 0
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 0,
+    "routes_passed_for_selected": 0
+   },
+   "ports": [
+    311,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    921.567834,
+    912.152667,
+    915.652417,
+    951.774583,
+    947.895209,
+    952.112333,
+    952.883459,
+    948.3945,
+    968.465541,
+    955.137833
+   ],
+   "median_ms": 950.0845415
+  },
+  "predicted": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "structural_winners": 174,
+    "admitted": 174,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 145,
+    "old_eq_candidate": 106,
+    "physical_operand_refs": 193,
+    "validated_parent_ports": 191,
+    "parent_port_from_admitted_token": 35,
+    "parent_candidate_differs_from_visible": 66,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 548,
+    "routes_passed_for_selected": 174
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "structural_winners": 6,
+    "admitted": 6,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 5,
+    "physical_operand_refs": 12,
+    "validated_parent_ports": 11,
+    "parent_port_from_admitted_token": 3,
+    "parent_candidate_differs_from_visible": 0,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 12,
+    "routes_passed_for_selected": 6
+   },
+   "ports": [
+    311,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": true,
+     "predicted": 4,
+     "disposition": 1
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    964.377666,
+    950.467125,
+    953.075416,
+    988.227917,
+    967.646584,
+    956.851833,
+    931.230375,
+    957.962708,
+    935.947667,
+    950.832834
+   ],
+   "median_ms": 954.9636245
+  },
+  "structural": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "structural_winners": 174,
+    "admitted": 174,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 145,
+    "old_eq_candidate": 106,
+    "physical_operand_refs": 193,
+    "validated_parent_ports": 191,
+    "parent_port_from_admitted_token": 35,
+    "parent_candidate_differs_from_visible": 66,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 548,
+    "routes_passed_for_selected": 174
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "structural_winners": 6,
+    "admitted": 6,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 5,
+    "physical_operand_refs": 12,
+    "validated_parent_ports": 11,
+    "parent_port_from_admitted_token": 3,
+    "parent_candidate_differs_from_visible": 0,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 12,
+    "routes_passed_for_selected": 6
+   },
+   "ports": [
+    311,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    929.303625,
+    941.222917,
+    933.578042,
+    963.435875,
+    963.864916,
+    954.259709,
+    938.157875,
+    959.115958,
+    963.237792,
+    947.870334
+   ],
+   "median_ms": 951.0650215000001
+  },
+  "visible-port": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "structural_winners": 174,
+    "admitted": 174,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 145,
+    "old_eq_candidate": 106,
+    "physical_operand_refs": 193,
+    "validated_parent_ports": 191,
+    "parent_port_from_admitted_token": 35,
+    "parent_candidate_differs_from_visible": 66,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 548,
+    "routes_passed_for_selected": 174
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "structural_winners": 6,
+    "admitted": 6,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 5,
+    "physical_operand_refs": 12,
+    "validated_parent_ports": 11,
+    "parent_port_from_admitted_token": 3,
+    "parent_candidate_differs_from_visible": 0,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 12,
+    "routes_passed_for_selected": 6
+   },
+   "ports": [
+    311,
+    97,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ],
+   "ms": [
+    917.90375,
+    921.370417,
+    931.923583,
+    911.476292,
+    954.761,
+    943.217333,
+    959.697917,
+    942.789375,
+    974.500917,
+    982.801917
+   ],
+   "median_ms": 943.003354
+  },
+  "candidate-as-visible": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "structural_winners": 174,
+    "admitted": 174,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 145,
+    "old_eq_candidate": 106,
+    "physical_operand_refs": 193,
+    "validated_parent_ports": 191,
+    "parent_port_from_admitted_token": 35,
+    "parent_candidate_differs_from_visible": 66,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 548,
+    "routes_passed_for_selected": 174
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "structural_winners": 6,
+    "admitted": 6,
+    "numeric_rejected_and_recovered": 0,
+    "admitted_writes": 5,
+    "physical_operand_refs": 12,
+    "validated_parent_ports": 11,
+    "parent_port_from_admitted_token": 3,
+    "parent_candidate_differs_from_visible": 0,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 12,
+    "routes_passed_for_selected": 6
+   },
+   "ports": [
+    311,
+    56,
+    41,
+    82
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": true,
+     "predicted": null,
+     "disposition": 1
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ]
+  },
+  "forced-wrong": {
+   "all": {
+    "total": 928,
+    "wrote": 546,
+    "noop": 382,
+    "first": 196,
+    "structural_winners": 174,
+    "admitted": 0,
+    "numeric_rejected_and_recovered": 174,
+    "admitted_writes": 0,
+    "old_eq_candidate": 106,
+    "physical_operand_refs": 193,
+    "validated_parent_ports": 191,
+    "parent_port_from_admitted_token": 0,
+    "parent_candidate_differs_from_visible": 66,
+    "old_lt_candidate": 276,
+    "old_gt_candidate": 350,
+    "presented": 841,
+    "structural_proposals": 548,
+    "routes_passed_for_selected": 174
+   },
+   "concat": {
+    "total": 197,
+    "wrote": 161,
+    "noop": 36,
+    "first": 39,
+    "structural_winners": 6,
+    "admitted": 0,
+    "numeric_rejected_and_recovered": 6,
+    "admitted_writes": 0,
+    "physical_operand_refs": 12,
+    "validated_parent_ports": 11,
+    "parent_port_from_admitted_token": 0,
+    "parent_candidate_differs_from_visible": 0,
+    "old_lt_candidate": 36,
+    "old_gt_candidate": 122,
+    "presented": 29,
+    "structural_proposals": 12,
+    "routes_passed_for_selected": 6
+   },
+   "ports": [
+    311,
+    0,
+    0,
+    0
+   ],
+   "examples": [
+    {
+     "run": 145,
+     "rhs": 1698,
+     "rule": 154,
+     "operands": [
+      2,
+      2
+     ],
+     "parent_rows": [
+      1539,
+      1541
+     ],
+     "source_rhs_ports": [
+      1544,
+      1546
+     ],
+     "old": null,
+     "candidate": 4,
+     "visible": 4,
+     "write": true,
+     "selected": true,
+     "predicted": -9223372036854775808,
+     "disposition": 2
+    },
+    {
+     "run": 145,
+     "rhs": 1701,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1430,
+      1439
+     ],
+     "source_rhs_ports": [
+      1347,
+      1356
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    },
+    {
+     "run": 149,
+     "rhs": 1875,
+     "rule": 154,
+     "operands": [
+      1,
+      1
+     ],
+     "parent_rows": [
+      1440,
+      1441
+     ],
+     "source_rhs_ports": [
+      1357,
+      1358
+     ],
+     "old": null,
+     "candidate": 2,
+     "visible": 2,
+     "write": true,
+     "selected": false,
+     "predicted": null,
+     "disposition": 0
+    }
+   ]
+  }
+ }
+}

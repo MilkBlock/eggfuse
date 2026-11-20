@@ -1,0 +1,173 @@
+{
+ "point": {
+  "numeric_prediction": [],
+  "writes": [
+   [
+    9,
+    11,
+    9,
+    false
+   ],
+   [
+    15,
+    11,
+    11,
+    true
+   ]
+  ],
+  "consumer_visible_ports": [
+   {
+    "rhs": 5,
+    "visible": 9,
+    "parents": [
+     3
+    ]
+   },
+   {
+    "rhs": 6,
+    "visible": 11,
+    "parents": [
+     4
+    ]
+   }
+  ],
+  "port_counts": [
+   6,
+   0,
+   0,
+   0
+  ],
+  "source_checked": true
+ },
+ "visible": {
+  "numeric_prediction": [],
+  "writes": [
+   [
+    9,
+    11,
+    9,
+    false
+   ],
+   [
+    15,
+    11,
+    11,
+    true
+   ]
+  ],
+  "consumer_visible_ports": [
+   {
+    "rhs": 5,
+    "visible": 9,
+    "parents": [
+     3
+    ]
+   },
+   {
+    "rhs": 6,
+    "visible": 11,
+    "parents": [
+     4
+    ]
+   }
+  ],
+  "port_counts": [
+   6,
+   2,
+   0,
+   0
+  ],
+  "source_checked": true
+ },
+ "wrong-field": {
+  "numeric_prediction": [],
+  "writes": [
+   [
+    9,
+    11,
+    9,
+    false
+   ],
+   [
+    15,
+    11,
+    11,
+    true
+   ]
+  ],
+  "consumer_visible_ports": [
+   {
+    "rhs": 5,
+    "visible": 9,
+    "parents": [
+     3
+    ]
+   },
+   {
+    "rhs": 6,
+    "visible": 11,
+    "parents": [
+     4
+    ]
+   }
+  ],
+  "port_counts": [
+   6,
+   1,
+   1,
+   2
+  ],
+  "source_checked": true
+ },
+ "predicted": {
+  "numeric_prediction": [
+   [
+    11,
+    11,
+    1
+   ],
+   [
+    11,
+    11,
+    1
+   ]
+  ],
+  "writes": [
+   [
+    9,
+    11,
+    9,
+    false
+   ],
+   [
+    15,
+    11,
+    11,
+    true
+   ]
+  ],
+  "consumer_visible_ports": [
+   {
+    "rhs": 5,
+    "visible": 9,
+    "parents": [
+     3
+    ]
+   },
+   {
+    "rhs": 6,
+    "visible": 11,
+    "parents": [
+     4
+    ]
+   }
+  ],
+  "port_counts": [
+   6,
+   2,
+   0,
+   0
+  ],
+  "source_checked": true
+ }
+}

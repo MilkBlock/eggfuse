@@ -1,0 +1,173 @@
+{
+ "point": {
+  "numeric_prediction": [],
+  "writes": [
+   [
+    30000000,
+    16777223,
+    16777223,
+    true
+   ],
+   [
+    30000000,
+    16777224,
+    16777224,
+    true
+   ]
+  ],
+  "consumer_visible_ports": [
+   {
+    "rhs": 5,
+    "visible": 16777223,
+    "parents": [
+     3
+    ]
+   },
+   {
+    "rhs": 6,
+    "visible": 16777224,
+    "parents": [
+     4
+    ]
+   }
+  ],
+  "port_counts": [
+   6,
+   0,
+   0,
+   0
+  ],
+  "source_checked": true
+ },
+ "visible": {
+  "numeric_prediction": [],
+  "writes": [
+   [
+    30000000,
+    16777223,
+    16777223,
+    true
+   ],
+   [
+    30000000,
+    16777224,
+    16777224,
+    true
+   ]
+  ],
+  "consumer_visible_ports": [
+   {
+    "rhs": 5,
+    "visible": 16777223,
+    "parents": [
+     3
+    ]
+   },
+   {
+    "rhs": 6,
+    "visible": 16777224,
+    "parents": [
+     4
+    ]
+   }
+  ],
+  "port_counts": [
+   6,
+   2,
+   0,
+   0
+  ],
+  "source_checked": true
+ },
+ "wrong-field": {
+  "numeric_prediction": [],
+  "writes": [
+   [
+    30000000,
+    16777223,
+    16777223,
+    true
+   ],
+   [
+    30000000,
+    16777224,
+    16777224,
+    true
+   ]
+  ],
+  "consumer_visible_ports": [
+   {
+    "rhs": 5,
+    "visible": 16777223,
+    "parents": [
+     3
+    ]
+   },
+   {
+    "rhs": 6,
+    "visible": 16777224,
+    "parents": [
+     4
+    ]
+   }
+  ],
+  "port_counts": [
+   6,
+   2,
+   0,
+   0
+  ],
+  "source_checked": true
+ },
+ "predicted": {
+  "numeric_prediction": [
+   [
+    16777113,
+    16777223,
+    2
+   ],
+   [
+    16777113,
+    16777224,
+    2
+   ]
+  ],
+  "writes": [
+   [
+    30000000,
+    16777223,
+    16777223,
+    true
+   ],
+   [
+    30000000,
+    16777224,
+    16777224,
+    true
+   ]
+  ],
+  "consumer_visible_ports": [
+   {
+    "rhs": 5,
+    "visible": 16777223,
+    "parents": [
+     3
+    ]
+   },
+   {
+    "rhs": 6,
+    "visible": 16777224,
+    "parents": [
+     4
+    ]
+   }
+  ],
+  "port_counts": [
+   6,
+   2,
+   0,
+   0
+  ],
+  "source_checked": true
+ }
+}
