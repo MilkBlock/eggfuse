@@ -32,13 +32,13 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==63
+    assert len(plates)==69
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and all(p[k] for k in ('q','arms','fix','measure','note','src'))
         if i<=37:
             assert p['status'].startswith(('已测','实跑'))
         else:
-            if i in (38,39,40,41,46,50,55,56,57,58,59,60,61):assert p['status'].startswith('已测')
+            if i in (38,39,40,41,45,46,47,48,50,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69):assert p['status'].startswith('已测')
             else:assert p['status']=='待验证 · 实验设计'
             arms=p['diagram']
             assert len(arms)>=2 and len({a['title'] for a in arms})==len(arms)
@@ -222,7 +222,29 @@ def check():
             assert a['work']['exact_seeds_skipped']==a['accepted'] and b['work']['exact_seeds_skipped']==0
             assert arms['shadow']['won']==arms['all-null']['raw']==0
     runpy.run_path(str(rec/'receipts/verify.py'))['check']()
-    print('Verified 50 measured plates, 13 pending designs, and neural versus exact attribution.')
+    runpy.run_path(str(rec/'pending/verify.py'))['check']()
+    gpu=rec.parent
+    runpy.run_path(str(gpu/'bucket-coverage/verify_evidence.py'))['check'](gpu/'bucket-coverage')
+    runpy.run_path(str(gpu/'proof-retirement/verify.py'))['verify'](gpu/'proof-retirement')
+    runpy.run_path(str(gpu/'whole-pass-generation/check_results.py'))['main'](gpu/'whole-pass-generation')
+    runpy.run_path(str(gpu/'numeric-projection/check_results.py'))['check'](gpu/'numeric-projection')
+    runpy.run_path(str(gpu/'neural-device/check_results.py'))['verify'](gpu/'neural-device')
+    runpy.run_path(str(gpu/'verifier-placement/check_results.py'))['verify'](gpu/'verifier-placement')
+    runpy.run_path(str(gpu/'native-forest/check_results.py'))['check'](gpu/'native-forest/results.json')
+    runpy.run_path(str(gpu/'cold-templates/verify.py'))['verify'](gpu/'cold-templates')
+    runpy.run_path(str(gpu/'interactive-policy/verify_evidence.py'),run_name='__main__')
+    capacities=json.loads((gpu/'neural-capacity/results.json').read_text())
+    assert len(capacities)==8
+    for arms in capacities.values():
+        assert len(arms)==6
+        for name,trial in arms.items():
+            width,families=map(int,name.split('-'))
+            assert abs(trial['params']-width)<1000 and trial['weight_bytes']==4*trial['params']
+            assert trial['semantic_exact'] and len(trial['training']['train'])==families
+            assert trial['training']['candidate_draws']==51200 and len(trial['ms'])==6
+    coverage=json.loads((gpu/'coverage-certificate/learned-results.json').read_text())
+    assert set(coverage['learned'])=={'1703','1709'}
+    print('Verified 61 measured plates and 8 pending designs, including scoped prefixes and complete source passes.')
 
 
 if __name__=='__main__':check()

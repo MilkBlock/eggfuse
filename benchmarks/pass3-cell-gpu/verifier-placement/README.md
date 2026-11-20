@@ -37,6 +37,12 @@ We replay exact historical publication events on a Rust integer snapshot. A smal
 
 The named neural-origin cohort is smaller. Of these events, 35 / 18 on the two anchors came from the seed-1703 pending-parent actor's winning RHS. All these events had compile-time literal length. The corrected 42 / 10 choices occur in the broader source publication stream. No subsequent expensive neural generation was charged in this replay. The empirical conditional entropy of the legal threshold branch given producer rule and effect is 0.195 / 0.130 bits on the anchors. The exact ternary reply determines the branch in this restricted pair, while unrelated premises and endpoint coverage remain unknown. Nine rotated timing samples per arm include all device synchronizations. [Raw requests and timings](transactions.json)
 
+For sum-bits the epoch-batched reply adds 16.39 ms over a single deferred evaluation. As a break-even thought experiment, if only the 42 corrected blind choices would have triggered useless downstream generation, each would have to save about 0.39 ms to repay the extra boundary crossings. Dot-product would need about 0.74 ms per corrected choice. These are conditional cost thresholds from the replay, not measured savings or a decision rule learned from downstream work.
+
+A useful analogy with a tool-using agent is that the learned policy can issue a request, observe its result, then choose a continuation. Here the contract is considerably narrower: the compiler fixes the operations and types, the graph determines the authoritative answer, and the source schedule determines when an effect may become visible. The protocol can therefore reject stale reads, batch independent calls and replace purely deterministic branches with compiled instructions.
+
+A separate [learned continuation study](../interactive-policy/README.md) keeps the generation weights learned, then compares which future consumer obligations appear in the source trace. An exact integer can determine a local branch while giving no guarantee that its consumer will actually run. The study distinguishes absolute coverage from changes at an equal action budget.
+
 ## Reproduction
 
 ```sh

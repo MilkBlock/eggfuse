@@ -31,16 +31,16 @@
 #v(1mm)
 #text(size:13pt,fill:muted)[共享模板如何说明端口，多行策略如何分配同一张图的推导义务]
 #v(2mm)
-#align(center,image("figures/00-overview.svg",width:92%))
+#align(center,image("figures/00-overview.svg",width:87%))
 #v(1mm)
 #small[图 00　早期受控两规则 PyTorch 原型。离线计划提供编译器确定的端口接线；make 预测绑定，finish 直接读取 GPU 上的 Pair。独立 CPU 审计核对来源与覆盖。完整 Pass 3 的递归提案与补查见图 56。]
 #v(2mm)
 #grid(columns:(1fr,1fr),gutter:9mm,
   card([研究问题],[网络能否从上一 Run 生成的 token 继续提出 Cell，并以少量验证关闭真实义务，使整轮加速？]),
-  card([现有边界],[sum-bits 共 7,265 个 RHS。图 61 用两行生成 16 波，网络贡献 126／158 个。图 60 单列组合证书的机会量，图 62 的在线批验待测。]))
+  card([现有边界],[图 62 测待验父子，图 64 在第一个 Run 前完成生成。两图均按来源区分神经提交与精确补查。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–63 含后续实验。图 56 单列真实 Pass 3 的神经提案和精确补查。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–69 含后续实验。图 56 单列真实 Pass 3 的神经提案和精确补查。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -92,7 +92,7 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
 #for (i,p) in plates.enumerate() {
   pagebreak()
   if p.id == "38-repair-bake" {
-    kicker[讨论回顾   /   图 38–63 的实验动机]
+    kicker[讨论回顾   /   图 38–69 的实验动机]
     v(2mm)
     title(guide.title)
     v(2mm)
@@ -105,7 +105,7 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
     table(columns:(37mm,24mm,1fr),stroke:(bottom:0.45pt+hair),inset:(x:4pt,y:3.1pt),
       ..guide.order.map(r => (text(size:9pt,weight:"bold",r.at(0)),text(size:9pt,fill:teal,r.at(1)),text(size:9pt,r.at(2)))).flatten())
     v(1fr)
-    small[本节数字来自既有实验 S8、S10、S12、S24、S28–S30。图 38–41、46、50、55–61 已有实测，其余待测图单列。]
+    small[本节数字来自既有实验 S8、S10、S12、S24、S28–S30。图 38–41、45–48、50、55–69 已有不同作用域的实测，其余待测图单列。]
     pagebreak()
     kicker[实验协议   /   共享的正确性和计时口径]
     v(2mm)
@@ -229,8 +229,25 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S37","组合上限与多波生成","benchmarks/pass3-cell-gpu/recurrent-generator/receipts/composable-proposals.md")
 #v(5mm)
 #linebar()
+#pagebreak()
+#kicker[证据目录   /   生成与验证]
+#title[整段生成、精确投影与设备放置]
+#v(5mm)
+#src("S38","待验父端口与交叉重放","benchmarks/pass3-cell-gpu/recurrent-generator/pending/README.md")
+#src("S39","真实失效与多重支持","benchmarks/pass3-cell-gpu/proof-retirement/README.md")
+#src("S40","整段神经生成","benchmarks/pass3-cell-gpu/whole-pass-generation/README.md")
+#src("S41","一次检查封闭饱和前缀","benchmarks/pass3-cell-gpu/coverage-certificate/README.md")
+#src("S42","结构见证与精确整数投影","benchmarks/pass3-cell-gpu/numeric-projection/README.md")
+#src("S43","神经策略在 CPU 和 GPU 的放置","benchmarks/pass3-cell-gpu/neural-device/README.md")
+#src("S44","容量与训练来源","benchmarks/pass3-cell-gpu/neural-capacity/README.md")
+#src("S45","三组部署与整数事务","benchmarks/pass3-cell-gpu/verifier-placement/README.md")
+#src("S46","单项见证与桶覆盖","benchmarks/pass3-cell-gpu/bucket-coverage/README.md")
+#src("S47","Rust 与 Metal 验证器","benchmarks/pass3-cell-gpu/native-forest/README.md")
+#src("S48","冷模板与零更新的库增长","benchmarks/pass3-cell-gpu/cold-templates/README.md")
+#src("S49","整数回执与后继选择","benchmarks/pass3-cell-gpu/interactive-policy/README.md")
+#v(4mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
 #text(size:9pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。#link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文]。 *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。#link("https://arxiv.org/abs/1705.08926")[论文原文]。]
 #v(1fr)
-#small[版次 23　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
+#small[版次 24　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
