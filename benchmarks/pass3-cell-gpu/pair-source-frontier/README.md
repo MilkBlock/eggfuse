@@ -37,3 +37,13 @@ The separate seed-1709 deployment used the same frozen compiler strategy on thre
 | sum-bits | 7,966 → 5,908 | 34.57 / 35.96 |
 | dot-product | 8,662 → 7,205 | 30.87 / 30.78 |
 | jacobi-1d | 50,231 → 33,296 | 189.36 / 185.97 |
+
+## A parent pair first connected by a later union
+
+The source fixture has one arithmetic consumer so the default compiler retains its two-parent addition plan. Run 1 publishes two matches. The parent carrying `4, 5` and the target carrying `9, 27` belong to different groups. Run 2 unites their groups. Run 3 issues the addition binding using the original fact addresses `(8, 0)` and `(17, 0)`. The integer overflow on another input yields no binding.
+
+The ordinary issuer sealed 16 two-parent proposals. The early filter and compound index each sealed three, including the Run 3 proposal. Withdrawing projected evidence restored all 16. All four arms reproduced the reference's 2 / 1 / 1 ordered RHS occurrences, effective writes, Spine and union ledgers, and final graph. The four arms also agreed on both parents of every accepted two-parent ticket and the physical Cell allocation ledger. This is a constructed semantic check of the native Cell CPU executor. [Source](late-union.egg) · [Run ledgers and tickets](union-fixture.json)
+
+```sh
+python benchmarks/pass3-cell-gpu/pair-source-frontier/fixture.py "$EXP" "$EXP/pair-equations/session" "$EXP/late-union-study" --union
+```

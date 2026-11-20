@@ -1,0 +1,654 @@
+{
+ "off": {
+  "rhs": 4,
+  "rules": [
+   0
+  ],
+  "graph": "1b8dfbe220e42c1ae03d3e8f999c1da58f90899575e0ae040c955aa834b8158b",
+  "raw": 16,
+  "native_unions": 1,
+  "winner_runs": [
+   1,
+   3
+  ],
+  "raw_digest": "4bdc8517231a99363deda82780430181f71e02faa1562bc394b9d1c1116de699",
+  "cells": "e087c90cd0071c628dd55eaf33844de1ea2ac6118c283786d953d84f452caf1f",
+  "equations": {
+   "arrays_reused": 0,
+   "calls": 0,
+   "encoded_rows": 0,
+   "filtered": 0,
+   "index_builds": 0,
+   "index_probes": 0,
+   "index_reuses": 0,
+   "index_rows": 0,
+   "invalid_receipts": 0,
+   "numeric_requests": 0,
+   "pair_checks": 0,
+   "rule_plans": 0,
+   "undefined": 0
+  },
+  "marked_winner": {
+   "ordinal": 4,
+   "rule": 0,
+   "run": 3,
+   "anchors": [
+    {
+     "Fact": {
+      "cell": 8,
+      "op": 0
+     }
+    },
+    {
+     "Fact": {
+      "cell": 17,
+      "op": 0
+     }
+    }
+   ],
+   "inputs": [
+    {
+     "Eq": 3
+    },
+    {
+     "Int": 4
+    },
+    {
+     "Int": 5
+    },
+    {
+     "Eq": 8
+    },
+    {
+     "Int": 9
+    },
+    {
+     "Int": 27
+    },
+    {
+     "Eq": 17
+    }
+   ]
+  },
+  "source_runs": {
+   "rhs": [
+    "19b9d87bc49fdf7995b10ed5ab0c8a873e1d5a95ca7813319855bf53ed92e1ba",
+    "8d40587ba4eec21e048d0554944090356e8aeaed6f2ad1f9af75a3345298bfd9",
+    "7b5174552d62b614d9fd6e5ead4a14d3659d8f2cdeb517f1aa89bcd1ab8f7416"
+   ],
+   "writes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "schedule": [
+    [
+     "derive",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     2,
+     true
+    ],
+    [
+     "merge-groups",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "derive",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ]
+   ],
+   "unions": [
+    [],
+    [
+     [
+      "union",
+      4,
+      3
+     ]
+    ],
+    []
+   ]
+  },
+  "winners": "541541335a68bdd071f487f49bf1dec0fb0feb8065e224febfb2dc57ae3f68ec"
+ },
+ "early": {
+  "rhs": 4,
+  "rules": [
+   0
+  ],
+  "graph": "1b8dfbe220e42c1ae03d3e8f999c1da58f90899575e0ae040c955aa834b8158b",
+  "raw": 3,
+  "native_unions": 1,
+  "winner_runs": [
+   1,
+   3
+  ],
+  "raw_digest": "12541c6d91e5e5c017740ddcbc331331d2e14fcc530e573b9ff265e40a48253a",
+  "cells": "e087c90cd0071c628dd55eaf33844de1ea2ac6118c283786d953d84f452caf1f",
+  "equations": {
+   "arrays_reused": 1,
+   "calls": 2,
+   "encoded_rows": 22,
+   "filtered": 13,
+   "index_builds": 0,
+   "index_probes": 0,
+   "index_reuses": 0,
+   "index_rows": 0,
+   "invalid_receipts": 0,
+   "numeric_requests": 4,
+   "pair_checks": 16,
+   "rule_plans": 1,
+   "undefined": 1
+  },
+  "marked_winner": {
+   "ordinal": 4,
+   "rule": 0,
+   "run": 3,
+   "anchors": [
+    {
+     "Fact": {
+      "cell": 8,
+      "op": 0
+     }
+    },
+    {
+     "Fact": {
+      "cell": 17,
+      "op": 0
+     }
+    }
+   ],
+   "inputs": [
+    {
+     "Eq": 3
+    },
+    {
+     "Int": 4
+    },
+    {
+     "Int": 5
+    },
+    {
+     "Eq": 8
+    },
+    {
+     "Int": 9
+    },
+    {
+     "Int": 27
+    },
+    {
+     "Eq": 17
+    }
+   ]
+  },
+  "source_runs": {
+   "rhs": [
+    "19b9d87bc49fdf7995b10ed5ab0c8a873e1d5a95ca7813319855bf53ed92e1ba",
+    "8d40587ba4eec21e048d0554944090356e8aeaed6f2ad1f9af75a3345298bfd9",
+    "7b5174552d62b614d9fd6e5ead4a14d3659d8f2cdeb517f1aa89bcd1ab8f7416"
+   ],
+   "writes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "schedule": [
+    [
+     "derive",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     2,
+     true
+    ],
+    [
+     "merge-groups",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "derive",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ]
+   ],
+   "unions": [
+    [],
+    [
+     [
+      "union",
+      4,
+      3
+     ]
+    ],
+    []
+   ]
+  },
+  "winners": "541541335a68bdd071f487f49bf1dec0fb0feb8065e224febfb2dc57ae3f68ec"
+ },
+ "indexed": {
+  "rhs": 4,
+  "rules": [
+   0
+  ],
+  "graph": "1b8dfbe220e42c1ae03d3e8f999c1da58f90899575e0ae040c955aa834b8158b",
+  "raw": 3,
+  "native_unions": 1,
+  "winner_runs": [
+   1,
+   3
+  ],
+  "raw_digest": "12541c6d91e5e5c017740ddcbc331331d2e14fcc530e573b9ff265e40a48253a",
+  "cells": "e087c90cd0071c628dd55eaf33844de1ea2ac6118c283786d953d84f452caf1f",
+  "equations": {
+   "arrays_reused": 1,
+   "calls": 2,
+   "encoded_rows": 22,
+   "filtered": 0,
+   "index_builds": 2,
+   "index_probes": 4,
+   "index_reuses": 0,
+   "index_rows": 18,
+   "invalid_receipts": 0,
+   "numeric_requests": 4,
+   "pair_checks": 1,
+   "rule_plans": 1,
+   "undefined": 1
+  },
+  "marked_winner": {
+   "ordinal": 4,
+   "rule": 0,
+   "run": 3,
+   "anchors": [
+    {
+     "Fact": {
+      "cell": 8,
+      "op": 0
+     }
+    },
+    {
+     "Fact": {
+      "cell": 17,
+      "op": 0
+     }
+    }
+   ],
+   "inputs": [
+    {
+     "Eq": 3
+    },
+    {
+     "Int": 4
+    },
+    {
+     "Int": 5
+    },
+    {
+     "Eq": 8
+    },
+    {
+     "Int": 9
+    },
+    {
+     "Int": 27
+    },
+    {
+     "Eq": 17
+    }
+   ]
+  },
+  "source_runs": {
+   "rhs": [
+    "19b9d87bc49fdf7995b10ed5ab0c8a873e1d5a95ca7813319855bf53ed92e1ba",
+    "8d40587ba4eec21e048d0554944090356e8aeaed6f2ad1f9af75a3345298bfd9",
+    "7b5174552d62b614d9fd6e5ead4a14d3659d8f2cdeb517f1aa89bcd1ab8f7416"
+   ],
+   "writes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "schedule": [
+    [
+     "derive",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     2,
+     true
+    ],
+    [
+     "merge-groups",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "derive",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ]
+   ],
+   "unions": [
+    [],
+    [
+     [
+      "union",
+      4,
+      3
+     ]
+    ],
+    []
+   ]
+  },
+  "winners": "541541335a68bdd071f487f49bf1dec0fb0feb8065e224febfb2dc57ae3f68ec"
+ },
+ "unavailable": {
+  "rhs": 4,
+  "rules": [
+   0
+  ],
+  "graph": "1b8dfbe220e42c1ae03d3e8f999c1da58f90899575e0ae040c955aa834b8158b",
+  "raw": 16,
+  "native_unions": 1,
+  "winner_runs": [
+   1,
+   3
+  ],
+  "raw_digest": "4bdc8517231a99363deda82780430181f71e02faa1562bc394b9d1c1116de699",
+  "cells": "e087c90cd0071c628dd55eaf33844de1ea2ac6118c283786d953d84f452caf1f",
+  "equations": {
+   "arrays_reused": 0,
+   "calls": 2,
+   "encoded_rows": 0,
+   "filtered": 0,
+   "index_builds": 0,
+   "index_probes": 0,
+   "index_reuses": 0,
+   "index_rows": 0,
+   "invalid_receipts": 2,
+   "numeric_requests": 0,
+   "pair_checks": 0,
+   "rule_plans": 1,
+   "undefined": 0
+  },
+  "marked_winner": {
+   "ordinal": 4,
+   "rule": 0,
+   "run": 3,
+   "anchors": [
+    {
+     "Fact": {
+      "cell": 8,
+      "op": 0
+     }
+    },
+    {
+     "Fact": {
+      "cell": 17,
+      "op": 0
+     }
+    }
+   ],
+   "inputs": [
+    {
+     "Eq": 3
+    },
+    {
+     "Int": 4
+    },
+    {
+     "Int": 5
+    },
+    {
+     "Eq": 8
+    },
+    {
+     "Int": 9
+    },
+    {
+     "Int": 27
+    },
+    {
+     "Eq": 17
+    }
+   ]
+  },
+  "source_runs": {
+   "rhs": [
+    "19b9d87bc49fdf7995b10ed5ab0c8a873e1d5a95ca7813319855bf53ed92e1ba",
+    "8d40587ba4eec21e048d0554944090356e8aeaed6f2ad1f9af75a3345298bfd9",
+    "7b5174552d62b614d9fd6e5ead4a14d3659d8f2cdeb517f1aa89bcd1ab8f7416"
+   ],
+   "writes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "schedule": [
+    [
+     "derive",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     2,
+     true
+    ],
+    [
+     "merge-groups",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "derive",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ]
+   ],
+   "unions": [
+    [],
+    [
+     [
+      "union",
+      4,
+      3
+     ]
+    ],
+    []
+   ]
+  },
+  "winners": "541541335a68bdd071f487f49bf1dec0fb0feb8065e224febfb2dc57ae3f68ec"
+ }
+}

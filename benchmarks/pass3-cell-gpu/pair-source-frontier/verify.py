@@ -43,6 +43,20 @@ def verify(folder):
     assert fixture['early']['equations']['rule_plans']==3 and fixture['early']['equations']['undefined']>0
     assert len({(r['rhs'],r['graph'],r['cells']) for r in fixture.values()})==1
     assert fixture['early']['raw_digest']==fixture['indexed']['raw_digest']
+    late=read('union-fixture.json')
+    original=late['off']
+    assert set(late)=={'off','early','indexed','unavailable'}
+    assert late['unavailable']['raw_digest']==original['raw_digest']
+    assert late['early']['raw_digest']==late['indexed']['raw_digest']
+    for mode,res in late.items():
+        for key in ('rhs','graph','cells','marked_winner','winners','source_runs','winner_runs'):
+            assert res[key]==original[key],(mode,key)
+        assert len(res['marked_winner']['anchors'])==2
+        assert res['marked_winner']['run']==3 and {'Int':27} in res['marked_winner']['inputs']
+        assert [len(events) for events in res['source_runs']['unions']]==[0,1,0]
+        if mode in ('early','indexed'):
+            assert res['equations']['rule_plans']==1 and res['equations']['undefined']>0
+            assert res['raw']<original['raw']
     return data
 
 
