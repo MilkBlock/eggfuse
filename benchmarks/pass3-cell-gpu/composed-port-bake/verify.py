@@ -39,3 +39,18 @@ if __name__=='__main__':
             assert arm['direct']*100>=arm['fresh_cells']*98
             assert arm['wins']==413 and arm['max_chain']==11 and len(arm['ms'])==8
         assert arms['delta']['net_entry_after_rebuild']==22907
+
+    retirement=json.loads((HERE/'retirement.json').read_bytes())
+    assert len(retirement)==4
+    for key,arms in retirement.items():
+        leaf,delta=arms['leaf-retire'],arms['delta-retire']
+        assert leaf['identity']==delta['identity'] and leaf['source_exact'] and delta['source_exact']
+        assert leaf['winners']==delta['winners'] and delta['net_entry_after_rebuild']>0
+        assert delta['initial_row_decodes_saved']>0 and len(delta['ms'])==4
+        assert leaf['native_fact_decodes']==delta['native_fact_decodes']
+    counters=json.loads((HERE/'native-decodes.json').read_bytes())
+    assert counters.keys()==retirement.keys()
+    for key,arms in counters.items():
+        assert arms['delta']['entry_row_reads_saved']>0
+        assert arms['leaf']['graph']==arms['delta']['graph']
+        assert arms['leaf']['fact_decode_calls']==arms['delta']['fact_decode_calls']

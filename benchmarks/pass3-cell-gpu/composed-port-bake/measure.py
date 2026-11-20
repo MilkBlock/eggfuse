@@ -18,8 +18,12 @@ def variants(a):
     off=dict(bias=-1,threshold=0,weights=[0.]*8)
     # Accept recursive parent steps only. This uses information already supplied at publication.
     mixed=dict(bias=-0.5,threshold=0,weights=[0.,0.,0.,0.,0.,0.,0.,1.])
-    return {n:dict(anchor,composed=c,**({'macro_policy':p} if p else {})) for n,c,p in
+    choices={n:dict(anchor,composed=c,**({'macro_policy':p} if p else {})) for n,c,p in
         [('leaf',0,None),('frontier',1,None),('seal',2,None),('inline',3,None),('none',3,off),('mixed',3,mixed),('delta',4,None),('delta-none',4,off),('delta-mixed',4,mixed)]}
+    choices['leaf-retire']=dict(choices['leaf'],recycle=True)
+    choices['delta-retire']=dict(choices['delta'],recycle=True)
+    return choices
+
 
 
 def study(a):
@@ -66,6 +70,9 @@ def study(a):
                     for name in order if trial%2 else order[::-1]:
                         r=rpc(proc,dict(req,audit=False,higher_config=states[name]))
                         assert r['state_sha']==arms[name]['graph'] and r['higher']['boundary']==arms[name]['boundary']
+                        if 'inference_fact_decodes' in r:
+                            actual=r['inference_fact_decodes']
+                            assert arms[name].setdefault('native_fact_decodes',actual)==actual
                         if trial:arms[name]['ms'].append(r['ms'])
                 for name,v in arms.items():v['median_ms']=median(v['ms'])
             finally:proc.stdin.close();proc.wait()

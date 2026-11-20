@@ -1,0 +1,110 @@
+{
+ "sum-bits/1703": {
+  "leaf": {
+   "fact_decode_calls": 2623,
+   "entry_row_reads_saved": 0,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "inline": {
+   "fact_decode_calls": 2623,
+   "entry_row_reads_saved": 4468,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "delta": {
+   "fact_decode_calls": 2623,
+   "entry_row_reads_saved": 4468,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "delta-none": {
+   "fact_decode_calls": 2623,
+   "entry_row_reads_saved": 0,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "delta-mixed": {
+   "fact_decode_calls": 2623,
+   "entry_row_reads_saved": 2146,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  }
+ },
+ "sum-bits/1709": {
+  "leaf": {
+   "fact_decode_calls": 2623,
+   "entry_row_reads_saved": 0,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "inline": {
+   "fact_decode_calls": 2623,
+   "entry_row_reads_saved": 4468,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "delta": {
+   "fact_decode_calls": 2623,
+   "entry_row_reads_saved": 4468,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "delta-none": {
+   "fact_decode_calls": 2623,
+   "entry_row_reads_saved": 0,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "delta-mixed": {
+   "fact_decode_calls": 2623,
+   "entry_row_reads_saved": 2146,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  }
+ },
+ "dot-product/1703": {
+  "leaf": {
+   "fact_decode_calls": 1196,
+   "entry_row_reads_saved": 0,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "inline": {
+   "fact_decode_calls": 1196,
+   "entry_row_reads_saved": 1242,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "delta": {
+   "fact_decode_calls": 1196,
+   "entry_row_reads_saved": 1242,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "delta-none": {
+   "fact_decode_calls": 1196,
+   "entry_row_reads_saved": 0,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "delta-mixed": {
+   "fact_decode_calls": 1196,
+   "entry_row_reads_saved": 544,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  }
+ },
+ "dot-product/1709": {
+  "leaf": {
+   "fact_decode_calls": 1196,
+   "entry_row_reads_saved": 0,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "inline": {
+   "fact_decode_calls": 1196,
+   "entry_row_reads_saved": 1242,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "delta": {
+   "fact_decode_calls": 1196,
+   "entry_row_reads_saved": 1242,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "delta-none": {
+   "fact_decode_calls": 1196,
+   "entry_row_reads_saved": 0,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "delta-mixed": {
+   "fact_decode_calls": 1196,
+   "entry_row_reads_saved": 544,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  }
+ }
+}

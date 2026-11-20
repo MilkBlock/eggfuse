@@ -22,12 +22,18 @@ def install(crate):
     change(h,'            s.last_child = Some((ordinal, c));','            s.last_child=Some((ordinal,c));if s.profile{s.charges[c.generation as usize-1].counts[2]+=1;}')
     change(h,'    if s.pending.remove(&w).is_some() {','    if let Some(old)=s.pending.remove(&w) {if s.profile{s.charges[old.generation as usize-1].superseded+=1;}')
     change(h,'        if c.version != row.epoch || s.mode == Mode::Stale || row.hidden {','        if c.version != row.epoch || s.mode == Mode::Stale || row.hidden {if s.profile && (c.version!=row.epoch||row.hidden){s.charges[c.generation as usize-1].visible_version_misses+=1;}')
+    change(h,'            s.pending.remove(&prior.source);','            s.pending.remove(&prior.source);if s.composed==4 && s.delta.version.is_some(){s.delta.dirty.insert(prior.source);}')
+    change(h,'    if c.transaction_batch > 32 {','    if c.composed>4 || c.macro_policy.as_ref().is_some_and(|p|!p.bias.is_finite() || !p.threshold.is_finite() || p.weights.iter().any(|v|!v.is_finite())){return Err("invalid composed gate".into());}\n    if c.transaction_batch > 32 {')
     change(h,'    s.tx.completed += 1;','    s.tx.completed += 1;if s.composed==4 && s.delta.version.is_some(){s.delta.dirty.insert(w);}')
     q=src/'runtime_completion.rs'
     change(q,'        self.publication.publish(','        crate::higher::changes(&self.graph);\n        self.publication.publish(')
     shutil.copy2(HERE/'delta.rs',src/'composed_delta.rs')
     shutil.copy2(HERE/'boundary.rs',src/'composed_boundary.rs')
     with h.open('a') as f:f.write('\ninclude!("composed_boundary.rs");\ninclude!("composed_delta.rs");\n')
+    driver=crate/'examples/joint_witness_session.rs'
+    change(driver,'        let start = Instant::now();','        let initial_decodes=runtime.graph.fact_decode_calls.get();\n        let start = Instant::now();')
+    change(driver,'        let mut state = vec![];','        let inference_decodes=runtime.graph.fact_decode_calls.get()-initial_decodes;\n        let mut state = vec![];')
+    change(driver,'        report["higher"]=','        report["inference_fact_decodes"]=json!(inference_decodes);\n        report["higher"]=')
     p=src/'single_witness.rs'
     change(p,'struct Token{higher:', 'struct Token{reserved:u64,higher:')
     code=p.read_text().replace('Token{higher:','Token{reserved:0,higher:')
