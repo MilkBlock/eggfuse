@@ -16,12 +16,38 @@ def install(crate):
         file.write_all(&table)?;
         return Ok(());
     }''')
+    old_settings='    let encoded = FROZEN_BUNDLE_SETTINGS.ok_or("unsupported compiled CPU bundle profile")?;\n    let options: Value = serde_json::from_str(encoded)?;'
+    if s.count(old_settings)!=1:raise ValueError(old_settings)
+    s=s.replace(old_settings,'''    let name=request["cpu_profile"].as_str().ok_or("invalid CPU bundle profile")?;
+    let options=profile_options(name)?;
+    // These fields only became executable when this binary linked the composed modules.
+    if name=="frozen-ports/v1" && ["header_mode","derived_ports","lazy_equations"].iter().any(|k|request.get(k).is_some()) {
+        return Err("composed settings are not part of the frozen profile".into());
+    }''')
+    anchor='        if one_shot && req["full_audit_report"] != true {'
+    if s.count(anchor)!=1:raise ValueError(anchor)
+    s=s.replace('let profile_work = req.get("cpu_profile")','let mut profile_work = req.get("cpu_profile")')
+    s=s.replace(anchor,'''        if req["cpu_profile"]=="composed-ports/v1" && let Some(work)=&mut profile_work {
+            work["published_header_updates"]=report["header_view"]["delta_updates"].clone();
+            work["lazy_arithmetic_evaluations"]=report["multi"]["lazy_eq"]["computed"].clone();
+            work["signature_cache_hits"]=report["multi"]["lazy_eq"]["table_hits"].clone();
+        }
+'''+anchor)
     comp='''    if args.first().is_some_and(|v|v=="--compile-bundle"){
-        let seed=match args.len(){
-            3=>1703,4=>args[3].to_str().ok_or("invalid seed")?.parse::<u16>()?,
-            _=>return Err("use --compile-bundle PROGRAM.json NEW_DIR [1703|1709]".into()),
+        let usage="use --compile-bundle PROGRAM.json NEW_DIR [1703|1709] [--profile NAME]";
+        if args.len()<3 {return Err(usage.into());}
+        let mut extra=&args[3..];
+        let mut seed=1703;
+        if let Some(first)=extra.first() && first!="--profile" {
+            seed=first.to_str().ok_or("invalid seed")?.parse::<u16>()?;
+            extra=&extra[1..];
+        }
+        let profile=match extra {
+            []=>"frozen-ports/v1",
+            [flag,name] if flag=="--profile"=>name.to_str().ok_or("invalid profile name")?,
+            _=>return Err(usage.into()),
         };
-        return compile_frozen_bundle(Path::new(&args[1]),Path::new(&args[2]),seed);
+        return compile_frozen_bundle(Path::new(&args[1]),Path::new(&args[2]),seed,profile);
     }'''
     s=s.replace(marker,marker+'\n'+comp)
     p.write_text(s+'\ninclude!("native_bundle.rs");\n')

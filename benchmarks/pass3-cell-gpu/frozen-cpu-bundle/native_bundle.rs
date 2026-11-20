@@ -31,12 +31,30 @@ fn json_bytes(v: &Value) -> Result<Vec<u8>, serde_json::Error> {
     bytes.push(b'\n');
     Ok(bytes)
 }
+fn profile_options(profile: &str) -> Result<Value, Box<dyn std::error::Error>> {
+    let mut request: Value =
+        serde_json::from_str(FROZEN_BUNDLE_SETTINGS.ok_or("frozen settings unavailable")?)?;
+    match profile {
+        "frozen-ports/v1" => (),
+        "composed-ports/v1" => {
+            request["cpu_profile"] = json!(profile);
+            request["header_mode"] = json!(3);
+            request["derived_ports"] = json!({"mode":1, "cache":true});
+            request["lazy_equations"] = json!(4);
+        }
+        _ => return Err(format!("unknown CPU bundle profile {profile}").into()),
+    }
+    Ok(request)
+}
+
 fn compile_frozen_bundle(
     source: &Path,
     out: &Path,
     seed: u16,
+    profile: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let (sweights, mweights, cweights) = network_files(seed)?;
+    let mut request = profile_options(profile)?;
     if out.exists() {
         return Err(format!("bundle destination already exists: {}", out.display()).into());
     }
@@ -65,8 +83,6 @@ fn compile_frozen_bundle(
     let gate: Value = serde_json::from_slice(cweights)?;
     let merge = json!({"program_sha256":program.artifact["sha256"],"weights":gate["weights"],"control":"learned","allow_empty":true});
     let root = json!({"control":"use","forbid_fallback":true,"encoding":"checked_slots"});
-    let mut request: Value =
-        serde_json::from_str(FROZEN_BUNDLE_SETTINGS.ok_or("frozen settings unavailable")?)?;
     for (field, file) in [
         ("single_config", "single.json"),
         ("multi_weights", "multi.json"),

@@ -48,6 +48,25 @@ def verify_native(folder):
     return reports
 
 
+def verify_composed(folder):
+    result=json.loads((folder/'composed-profile.json').read_bytes())
+    truth={}
+    for filename in ('core.json','large.json'):
+        truth.update(json.loads((folder.parent/'composed-cpu'/filename).read_bytes()))
+    assert set(result)==set(truth)
+    for name,row in result.items():
+        ref=truth[name]['combined-lazy']
+        assert row['common_files']==7 and row['rhs']==ref['rhs'] and row['state']==ref['state_sha']
+        assert row['root_allocated']==ref['root_allocated'] and row['runs']==truth[name]['vanilla']['runs']
+        assert row['execution']['sealed_tuples']==ref['counts']['raw_tuples']
+        assert row['execution']['published_header_updates']==ref['header']['delta_updates']>0
+        assert row['execution']['lazy_arithmetic_evaluations']==ref['lazy']['computed']>0
+        assert row['execution']['signature_cache_hits']==ref['lazy']['table_hits']>0
+        assert row.get('full_audit',False)==(name in ('sum-bits','conjugate-gradient'))
+    assert result['sum-bits']['default_profile_byte_identical'] and result['sum-bits']['mismatches_rejected']==3
+    return result
+
+
 if __name__=='__main__':
     folder=Path(__file__).resolve().parent
-    print('Verified',len(verify_native(folder)),'source-only bundle compilations and both relocated runtime checks')
+    print('Verified',len(verify_native(folder)),'frozen compilations and',len(verify_composed(folder)),'relocated composed programs')

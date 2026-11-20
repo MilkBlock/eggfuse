@@ -10,7 +10,7 @@ if __name__=='__main__':
     joint.build(out,True,True,True,cli_allocator=True,extensions=(
         'incremental-neural-index','baked-port-codes','adaptive-row-policy','witness-production-profile',
         'multi-root-pages','transaction-guards','single-signature-frontier','integrated-cpu-policy',
-        'learned-prefix-feasibility','projected-single-verifier','prepared-port-blocks','learned-atom-constraints','tiered-port-projections','complete-generation','pair-source-frontier',HERE.name))
+        'learned-prefix-feasibility','projected-single-verifier','prepared-port-blocks','learned-atom-constraints','tiered-port-projections','complete-generation','pair-source-frontier','lazy-equation-ports','published-single-headers',HERE.name))
     manifest=out/'build.json';info=json.loads(manifest.read_bytes())
     info['frozen_settings_sha256']=hashlib.sha256((HERE/'frozen-options.json').read_bytes()).hexdigest()
     embedded=out/'tree/engine/cell-runtime/examples/frozen-weights'

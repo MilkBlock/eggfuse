@@ -1,0 +1,114 @@
+{
+ "sum-bits": {
+  "common_files": 7,
+  "rhs": 7265,
+  "runs": 1428,
+  "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+  "root_allocated": 5764,
+  "execution": {
+   "lazy_arithmetic_evaluations": 947,
+   "multi_policy": "learned",
+   "prefix_probes": 52335,
+   "published_header_updates": 400,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 5912,
+   "signature_cache_hits": 3230,
+   "single_policy": "learned",
+   "views": 2
+  },
+  "full_audit": true,
+  "default_profile_byte_identical": true,
+  "mismatches_rejected": 3
+ },
+ "dot-product": {
+  "common_files": 7,
+  "rhs": 6704,
+  "runs": 1535,
+  "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+  "root_allocated": 5538,
+  "execution": {
+   "lazy_arithmetic_evaluations": 636,
+   "multi_policy": "learned",
+   "prefix_probes": 52925,
+   "published_header_updates": 363,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 7207,
+   "signature_cache_hits": 2222,
+   "single_policy": "learned",
+   "views": 2
+  }
+ },
+ "jacobi-1d": {
+  "common_files": 7,
+  "rhs": 41319,
+  "runs": 1990,
+  "state": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+  "root_allocated": 32316,
+  "execution": {
+   "lazy_arithmetic_evaluations": 5426,
+   "multi_policy": "learned",
+   "prefix_probes": 473147,
+   "published_header_updates": 605,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 33250,
+   "signature_cache_hits": 23547,
+   "single_policy": "learned",
+   "views": 2
+  }
+ },
+ "conjugate-gradient": {
+  "common_files": 7,
+  "rhs": 131371,
+  "runs": 2896,
+  "state": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+  "root_allocated": 96535,
+  "execution": {
+   "lazy_arithmetic_evaluations": 16083,
+   "multi_policy": "learned",
+   "prefix_probes": 2439662,
+   "published_header_updates": 1040,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 83313,
+   "signature_cache_hits": 63013,
+   "single_policy": "learned",
+   "views": 2
+  },
+  "full_audit": true
+ },
+ "3mm": {
+  "common_files": 7,
+  "rhs": 294917,
+  "runs": 4260,
+  "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+  "root_allocated": 228095,
+  "execution": {
+   "lazy_arithmetic_evaluations": 70190,
+   "multi_policy": "learned",
+   "prefix_probes": 7581141,
+   "published_header_updates": 1828,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 220972,
+   "signature_cache_hits": 337340,
+   "single_policy": "learned",
+   "views": 2
+  }
+ },
+ "deriche": {
+  "common_files": 7,
+  "rhs": 635818,
+  "runs": 5687,
+  "state": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+  "root_allocated": 447949,
+  "execution": {
+   "lazy_arithmetic_evaluations": 69120,
+   "multi_policy": "learned",
+   "prefix_probes": 8229947,
+   "published_header_updates": 2100,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 309277,
+   "signature_cache_hits": 346479,
+   "single_policy": "learned",
+   "views": 2
+  }
+ }
+}

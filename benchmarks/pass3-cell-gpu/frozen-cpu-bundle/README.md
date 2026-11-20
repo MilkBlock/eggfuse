@@ -39,3 +39,21 @@ python "$dir/verify.py"
 ```
 
 Nine compilations covered six real Pass 3 programs and the one-rule two-parent fixture. Each Pass 3 program contained 582 rules and compiled 341 sealed multi-parent plans. The six independently timed native compilations at seed 1703 took 1.62–2.00 s each, including port-table construction and disk output. These are single offline observations per program. Compaction and inference have their own timing boundary. Both sparse-slot unit checks passed. [Compiler and runtime checks](native-parity.json)
+
+## Compile the measured joint CPU configuration
+
+With the same binary and compiled source, select the composed profile to use shared published single-parent headers and delayed arithmetic ports during multi-parent issuance. The default profile remains frozen-ports/v1. Native compilation and inference require no Python interpreter after the experiment executable has been built.
+
+```sh
+"$EXP/frozen-cpu/session" --compile-bundle "$EXP/app-compiled/program.json" "$EXP/composed-bundle" --profile composed-ports/v1
+"$EXP/frozen-cpu/session" --bundle "$EXP/composed-bundle"
+"$EXP/frozen-cpu/session" --audit-bundle "$EXP/composed-bundle"
+```
+
+The optional checkpoint seed precedes the profile flag. Both profiles use the same program, proof plans, trained weights, root configuration and compiled port table. The request and its hash manifest identify the chosen execution strategy. The compact execution report includes the actual number of published header updates, lazy arithmetic evaluations and signature cache hits on the composed path.
+
+Six relocated real Pass 3 bundles reproduced the exact counts and final states of the measured joint CPU configuration, including its computed ports and header publications. The independent full source, raw-receipt and fresh Cell-ledger audits were repeated on sum-bits and conjugate-gradient. Recompiling sum-bits without a profile flag reproduced the original native bundle byte for byte. Separate negative controls covered a rehashed modified composed setting, a rehashed composed-only override on the frozen profile and an unknown compilation profile. [Measured portable execution](composed-profile.json)
+
+```sh
+python benchmarks/pass3-cell-gpu/frozen-cpu-bundle/check_composed.py "$EXP" "$EXP/frozen-cpu/session" "$EXP/check-composed"
+```
