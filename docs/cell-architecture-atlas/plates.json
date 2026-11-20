@@ -4537,5 +4537,254 @@
         ]
       }
     ]
+  },
+  {
+    "id": "87-port-collisions",
+    "section": "候选父引用的精度",
+    "title": "为什么大图仍有几十万份失败提案？",
+    "status": "已测 · 四负载完整源审计",
+    "q": "在原验证器记录第一个失败字段，分开统计字面量、同原子重复槽和跨父相等。再用第二个输入视图检验主因。",
+    "arms": "a　用原十比特签名提案。b　在选父时检查已知字面量和重复槽的学习签名。c　把同一组冻结权重应用于第二种带盐输入，用联合签名选择父。",
+    "fix": "源真值、完整独立父元组、原始提交顺序和新 Cell 分配全部核对。额外视图仅增加计算，权重数量保持不变。各运行使用种子 1703。",
+    "measure": "共轭梯度的 531,346 个完整元组中，353,391 个首先败在跨父相等；第二视图把这种失败降到 196 个。不开局部筛时，原／双视图 769.00／683.79 ms，同组 vanilla 为 345.10 ms。",
+    "note": "三视图叠加局部检查后，126,855 个封存元组均通过父检查，最后获胜的多父 RHS 仍为 57,695。剩余后缀和原 Run 的去重继续执行。",
+    "src": "S76",
+    "diagram": [
+      {
+        "title": "One view",
+        "layers": [
+          [
+            [
+              "n",
+              "10-bit signatures"
+            ]
+          ],
+          [
+            [
+              "w",
+              "seal parent tuple"
+            ]
+          ],
+          [
+            [
+              "v",
+              "exact fields"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Local tests",
+        "layers": [
+          [
+            [
+              "s",
+              "literal or tied slot"
+            ]
+          ],
+          [
+            [
+              "n",
+              "screen at parent"
+            ]
+          ],
+          [
+            [
+              "w",
+              "seal survivors"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Two views",
+        "layers": [
+          [
+            [
+              "n",
+              "two input salts"
+            ]
+          ],
+          [
+            [
+              "s",
+              "joint signature"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify real parents"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "88-refinement-width",
+    "section": "模型参数与困难负例",
+    "title": "从真实错父样本多学几位，划算吗？",
+    "status": "已测 · 冻结模型迁移",
+    "q": "让额外的学习投影区分已经被原生验证拒绝的父值，同等训练次数下比较均匀合成负例和实际失败对。",
+    "arms": "a　随机或仅用均匀负例训练两位。b　用源程序失败对与合成对共同训练两／四／八位。c　使用第二输入盐直接复用原十位权重。",
+    "fix": "四个训练家族提供 4,056 个失败事件、258 个不同值对。共享 Q/K，真相等始终可通过。原图、验证器、提案预算与原调度由独立 CPU 执行复核。",
+    "measure": "两位投影在训练失败事件中残留的碰撞为随机 1,069、合成训练 500、加入真实负例 92。共轭梯度的 32／64／128 个新增参数分别产生 179,337／140,017／127,968 份提案。",
+    "note": "在同一完整负载上，源负例两／四／八位推理为 724.62／696.54／708.26 ms；复用原十位为 700.61 ms。训练集碰撞最少的头没有取得最快墙钟。",
+    "src": "S77",
+    "diagram": [
+      {
+        "title": "Uniform negatives",
+        "layers": [
+          [
+            [
+              "s",
+              "synthetic key pairs"
+            ]
+          ],
+          [
+            [
+              "n",
+              "two trained bits"
+            ]
+          ],
+          [
+            [
+              "v",
+              "native replay"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Hard negatives",
+        "layers": [
+          [
+            [
+              "s",
+              "rejected parent pairs"
+            ]
+          ],
+          [
+            [
+              "n",
+              "2 / 4 / 8 bits"
+            ]
+          ],
+          [
+            [
+              "w",
+              "refined buckets"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Reuse head",
+        "layers": [
+          [
+            [
+              "n",
+              "same ten filters"
+            ]
+          ],
+          [
+            [
+              "s",
+              "new salted features"
+            ]
+          ],
+          [
+            [
+              "v",
+              "native replay"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "89-larger-prefix-transfer",
+    "section": "新负载上的完整性",
+    "title": "冻结后的计划能跑对更大的 Pass 3 吗？",
+    "status": "已测 · 3mm 与 Deriche",
+    "q": "按源文件大小预先选两个未参与训练、调参的 eggcc 负载，分别核验默认 CPU、旧生成配置和被冻结的学习端口计划。",
+    "arms": "a　原始精确 Rust 执行器。b　原单视图神经生成基线。c　双视图、双列必要条件与有界的索引维护，后续每个签发仍用原源语义验证。",
+    "fix": "先比较逐 Run RHS、有效写入、Spine、union 和终图，并按成功证书核验真实新 Cell。发现分叉的组单列，速度比较只用源结果正确的两臂。",
+    "measure": "3mm 的 294,917 个 RHS 全对齐，神经两臂 5.09→2.19 s，原始 CPU 0.94 s。Deriche 的冻结方案对齐 635,818 个 RHS，3.91 s，原始 CPU 1.60 s。",
+    "note": "Deriche 旧基线在 Run 819 漏了 3,120 个合法绑定，不能列入加速比。冻结方案中两个负载直接分配 229,311／229,880 和 450,414／452,913 个新 Cell。",
+    "src": "S78",
+    "diagram": [
+      {
+        "title": "Vanilla",
+        "layers": [
+          [
+            [
+              "s",
+              "original source"
+            ]
+          ],
+          [
+            [
+              "v",
+              "exact search"
+            ]
+          ],
+          [
+            [
+              "w",
+              "source ledger"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Legacy",
+        "layers": [
+          [
+            [
+              "n",
+              "bounded indices"
+            ]
+          ],
+          [
+            [
+              "s",
+              "per-rule cutoff"
+            ]
+          ],
+          [
+            [
+              "v",
+              "compare each Run"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Frozen transfer",
+        "layers": [
+          [
+            [
+              "n",
+              "joint signatures"
+            ]
+          ],
+          [
+            [
+              "v",
+              "complete receipts"
+            ]
+          ],
+          [
+            [
+              "w",
+              "new Cell IDs"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]

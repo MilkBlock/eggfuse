@@ -32,7 +32,7 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==86
+    assert len(plates)==89
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and all(p[k] for k in ('q','arms','fix','measure','note','src'))
         if i<=37:
@@ -273,9 +273,9 @@ def check():
     assert set(tx)=={f'{name}/{seed}' for name in ('sum-bits','dot-product','jacobi-1d') for seed in SEEDS}
     assert tuple(tx['jacobi-1d/1703']['parents-8']['requests'][field] for field in ('reused_parents','reused_rows','reused_scalars'))==(188118,31645,16859)
     import subprocess
-    for group in ('merge-reward','physical-composition-reward','existing-owner-transfer','learned-prefix-feasibility'):
+    for group in ('merge-reward','physical-composition-reward','existing-owner-transfer','learned-prefix-feasibility','learned-atom-constraints','collision-trained-ports','prefix-transfer'):
         subprocess.run([sys.executable,str(gpu/group/'verify.py')],check=True)
-    print('Verified 86 measured plates, including their workload, oracle and source-coverage boundaries.')
+    print('Verified 89 measured plates, including their workload, oracle and source-coverage boundaries.')
 
 
 
