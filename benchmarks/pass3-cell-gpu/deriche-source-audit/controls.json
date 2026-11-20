@@ -1,0 +1,58 @@
+{
+ "same_build_exact": {
+  "runs": 5687,
+  "rhs_count": 635818,
+  "gold_state": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+  "state": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+  "diff": {
+   "rhs": null,
+   "writes": null,
+   "resumes": null,
+   "schedule": null,
+   "unions": null
+  },
+  "new_cells": 453543,
+  "cell_ids": "1beb800a7c21dd1b9337cd8b3e2ad4d39c767ebb36e2a607e0e1e2d83c011d07"
+ },
+ "legacy_joint": {
+  "runs": 5687,
+  "rhs_count": 635818,
+  "gold_state": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+  "state": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+  "diff": {
+   "rhs": null,
+   "writes": null,
+   "resumes": null,
+   "schedule": null,
+   "unions": null
+  },
+  "new_cells": 452913,
+  "cell_ids": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+  "rhs": 635818,
+  "neural_rhs": 635818,
+  "fresh": 452913,
+  "direct_cells": 450414,
+  "root_allocated": 447949,
+  "checks": {
+   "rhs": true,
+   "writes": true,
+   "resumes": true,
+   "state_sha": true,
+   "schedule": true,
+   "runs": true,
+   "unions": true
+  },
+  "aligned": true,
+  "exhausted": 2,
+  "single_work": [
+   13986726,
+   12000382,
+   12000382,
+   15202224,
+   3071982,
+   434921,
+   0,
+   0
+  ]
+ }
+}
