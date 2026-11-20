@@ -31,7 +31,7 @@ def pointer(weight,physical,dev):
 
 
 @torch.inference_mode()
-def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False,block_study=None,maintenance_repeat=1,maintenance_control=False):
+def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False,block_study=None,neural=None,maintenance_repeat=1,maintenance_control=False):
     if os.environ.get('PYTORCH_ENABLE_MPS_FALLBACK','0')!='0' or not torch.backends.mps.is_available():
         raise RuntimeError('Metal GPU required')
     if steps<0 or steps>4096:raise ValueError('Run budget outside trace capacity')
@@ -102,6 +102,15 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
             limits.update(CO_FIELDS=group_words,CO_EDGES=group_words+cap*layout['WIDTH'],
                           CO_EVENTS=group_words+2*cap*layout['WIDTH'])
             group_words=limits['CO_EVENTS']+3*limits['TRACE_CAP']
+    if neural is not None:
+        if block_study or batch_runs or arena!='shared' or not spine:raise ValueError('neural proposer requires split, shared Spine executor')
+        ranks=neural['ranks'];nr=neural['rows'];hidden=neural['hidden'];leaves=len(neural['catalog'])
+        if min(ranks,nr,hidden,leaves)<1:raise ValueError('invalid neural dimensions')
+        ncapture=neural.get('capture',False)
+        nbase=limits['BLOCK_BASE']
+        limits.update(NEURAL_ORDINAL=1,NEURAL_ACTIVE=int(not ncapture),NEURAL_CAPTURE=int(ncapture),NEURAL_BASE=nbase,
+                      NEURAL_ROWS=nr,NEURAL_RANKS=ranks,NEURAL_LEAVES=leaves,NEURAL_ACTIONS=ranks*leaves,NEURAL_H=hidden,
+                      NEURAL_CLOSE=int(neural.get('close',True)),NEURAL_SHADOW=int(neural.get('shadow',False)),NEURAL_INTERVENTION=neural.get('intervention',0))
     constants='\n'.join(f'#define {k} {v}' for k,v in {**layout,**limits}.items())
     if block_study:
         for name,values in [('bake_entries',block_study['entries']),('repair_shapes',block_study['shapes']),('bake_pivots',block_study['pivots']),('bake_tables',block_study['tables'])]:
@@ -126,6 +135,13 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
             producers={r[0] for r in edges}
             constants+='\nconstant int co_producer_table[]={'+','.join(str(int(t in producers)) for t in range(layout['TABLES']))+'};'
         shader=shader.replace('// CO_REPAIR_DEVICE_FUNCTIONS',(HERE/'co-repair/owner.metal').read_text())
+    if neural is not None:
+        catalog=','.join(str(int(i)) for row in neural['catalog'] for i in row)
+        constants+='\nconstant int neural_catalog[]={'+catalog+'};'
+        module=HERE/'recurrent-generator'
+        kernels=(module/'features.metal').read_text()
+        if not ncapture:kernels+='\n'+(module/'actor.metal').read_text()
+        shader=shader.replace('// NEURAL_DEVICE_KERNELS',kernels)
     lib=torch.mps.compile_shader(constants+'\n'+shader)
     def ints(v):return torch.tensor(v,dtype=torch.int32,device=dev)
     def zeros(n,t=torch.int32):return torch.zeros(n,device=dev,dtype=t)
@@ -133,9 +149,10 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     cap=limits['ROW_CAP'];uf_size=cap+layout['NSYMBOLS']+2
     union_log=6*cap+2*uf_size+2*limits['TRACE_CAP']
     birth_run=union_log+4*uf_size
-    state=zeros(reg_counter+7 if region else group_counter+16 if grouping else 88+3*len(block_study['ids'])+2*(1+max(block_study['shapes'])) if block_study else 69 if sets_enabled else 56);regs=zeros(layout['REGS'])
+    state=zeros(74 if neural is not None else reg_counter+7 if region else group_counter+16 if grouping else 88+3*len(block_study['ids'])+2*(1+max(block_study['shapes'])) if block_study else 69 if sets_enabled else 56);regs=zeros(layout['REGS'])
     meta_words=birth_run+(10*cap if router else 9*cap if tiles>1 else (6+2*int(lookup=='hash'))*cap)
     if sets_enabled:meta_words=set_base+126
+    if neural is not None:meta_words=nbase+(limits['TRACE_CAP'] if ncapture else (4+steps)*nr)
     if block_study:meta_words=limits['BLOCK_BASE']+3*cap+layout["TABLES"]*lanes*tiles
     if region:
         region_windows=steps//window+1
@@ -185,21 +202,38 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         uf=meta.view(-1)[6*limits['ROW_CAP']:6*limits['ROW_CAP']+limits['ROW_CAP']+layout['NSYMBOLS']+2]
         snapshots.append((bank,meta[:1024].clone(),state.clone(),uf.clone()))
     if capture:observe()
+    if neural is not None:
+        feats=zeros((steps if ncapture else 1,leaves*ranks,8))
+        if not ncapture:
+            # Both banks stay on device. Only the initial neural frontier is seeded.
+            frontier=torch.zeros((2,nr,hidden+4),device=dev,dtype=torch.float32)
+            policy=torch.tensor(neural['weights'],device=dev,dtype=torch.float32)
+            raw_trace=torch.zeros((steps,nr,hidden+4),device=dev,dtype=torch.float32)
+            verdict=zeros((steps,nr,4))
     def infer():
         if batch_runs:
             for base in range(0,steps,batch_runs):
                 lib.run_batch(prog,literal,state,regs,meta,dyn,head,wm,count,tokens,rhs,writes,runs,resumes,
                               lanes,min(steps-base,batch_runs),threads=32,group_size=32,arg_casts={14:'int32',15:'int32'})
         else:
-            for _ in range(steps):
+            for iteration in range(steps):
                 if arena=='shared':count.zero_()
                 lib.next_run(prog,state,regs,count,threads=1)
-                lib.search(prog,literal,state,meta,dyn,head,wm,count,tokens,lanes,threads=width,arg_casts={9:'int32'})
+                if neural is not None:
+                    lib.neural_features(prog,state,meta,head,wm,feats,threads=leaves*ranks)
+                    if not ncapture:
+                        previous=frontier[iteration%2];current=frontier[1-iteration%2]
+                        lib.neural_propose(state,feats,policy,previous,current,raw_trace,threads=nr)
+                        lib.neural_verify(prog,literal,state,meta,dyn,head,wm,count,tokens,current,verdict,threads=1)
+                if neural is None or neural.get('complete_residual',True):
+                    lib.search(prog,literal,state,meta,dyn,head,wm,count,tokens,lanes,threads=width,arg_casts={9:'int32'})
                 lib.commit(prog,literal,state,meta,dyn,head,wm,count,tokens,rhs,writes,runs,resumes,lanes,threads=1,arg_casts={13:'int32'})
                 if capture:observe()
     if measure_resident is not None:
         buffers=dict(prog=prog,literal=literal,state=state,regs=regs,meta=meta,dyn=dyn,head=head,
                      wm=wm,count=count,tokens=tokens,rhs=rhs,writes=writes,runs=runs,resumes=resumes)
+        if neural is not None and not ncapture:
+            buffers.update(frontier=frontier,raw_trace=raw_trace,verdict=verdict)
         measure_resident(infer,buffers,constants,width,steps,lanes)
         after_init=perf_counter_ns()
     infer()
@@ -225,6 +259,16 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
             owner=mem[group_base:group_base+n].cpu().numpy(),
             first=mem[group_base+cap:group_base+cap+n].cpu().numpy(),
             second=mem[group_base+2*cap:group_base+2*cap+n].cpu().numpy())
+    if neural is not None:
+        if ncapture:
+            np.savez_compressed(root/'neural-inputs.npz',features=feats[:st[11]].cpu().numpy(),
+                                pivot=meta.view(-1)[nbase:nbase+st[9]].cpu().numpy())
+        else:
+            flags=meta.view(-1)[nbase+4*nr:nbase+(4+st[11])*nr].reshape(-1,nr)
+            neural_wins=int((flags!=0).sum().item())
+            np.savez_compressed(root/'neural-output.npz',raw=raw_trace[:st[11]].cpu().numpy(),
+                                verdict=verdict[:st[11]].cpu().numpy(),committed=(flags!=0).cpu().numpy(),
+                                rhs_ordinal=flags.cpu().numpy())
     if grouping and trace:
         mem=meta.view(-1)
         logged=st[group_counter+12]
@@ -277,6 +321,14 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         'ingress_reader': reader,
         'learned_entry_router': router is not None,
     }
+    if neural is not None and not ncapture:
+        record['neural_work_counts']=dict(zip(('exact_seeds_skipped','verified_steps','remaining_route_steps',
+                                               'verifier_point_reads','remaining_route_point_reads'),st[69:74]))
+        residual=neural.get('complete_residual',True)
+        if not residual and st[9]!=neural_wins:raise ValueError('unattributed RHS in neural-only control')
+        record['execution_roles'].update(binding_generator='recurrent_neural_proposals_and_exact_metal_completion' if residual else 'recurrent_neural_proposals_only',
+            rhs_inputs_from_exact_search=st[9]-neural_wins,rhs_inputs_from_recurrent_neural_proposals=neural_wins,
+            next_run_state='generated_device_token_and_committed_graph',recurrent_neural_token_input=True)
     (root/'run.json').write_text(json.dumps(record,indent=1)+'\n')
     print({k:record[k] for k in ('lanes','completed','fault','fault_rule','finished')},flush=True)
     if st[5]:raise SystemExit(2)

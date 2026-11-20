@@ -434,11 +434,11 @@ inline int reserve_token(device int *count){
     if(pos<0 || pos>=(SHARED_ARENA?2:1)*TOKEN_CAP){token_error(count,-2);return -1;}
     return pos;
 }
-template<bool CERT=false>
+template<bool CERT=false,bool ONE=false>
 inline void route(device int *state,device const int *rom,device const long *lits,device const int *meta,
                   device const long *dyn,device const int *head,device const int *rule,
                   device const int *path,int pivot,int last,int lane,int lanes,
-                  device int *cnt,device long *bank,device int *certs){
+                  device int *cnt,device long *bank,device int *certs,int requested=-1){
     int table0=path[0];
     int first=(TILES>1 || LEARN_OWNER)?head[SHARD_HEAD+table0*PARTS+lane]:head[table0];
 #if BLOCK_STUDY
@@ -446,7 +446,8 @@ inline void route(device int *state,device const int *rom,device const long *lit
     bool indexed=SELECT_BLOCKS && leaf>=0;
     if(indexed){first=meta[BLOCK_BASE+3*ROW_CAP+table0*PARTS+lane]-1;study_add(state,78);}
 #endif
-    for(int seed=first;seed>=0;seed=
+    if(ONE)first=requested;
+    for(int seed=first;seed>=0;seed=ONE?-1:
 #if BLOCK_STUDY
         indexed?meta[BLOCK_BASE+ROW_CAP+seed]-1:
 #endif
@@ -457,12 +458,30 @@ inline void route(device int *state,device const int *rom,device const long *lit
         if(leaf>=0)study_add(state,88+LIBRARY_SIZE+leaf);
         if(indexed && meta[BLOCK_BASE+seed]<last)break;
 #endif
+#if NEURAL_ACTIVE
+        if(!ONE && NEURAL_CLOSE){
+            bool closed=false;
+            for(int n=0;n<NEURAL_ROWS;n++){
+                device const int *mark=meta+NEURAL_BASE+4*n;
+                if(mark[0]==int((rule-rom-RULE)/7) && mark[1]==pivot && mark[2]==seed){
+                    closed=true;break;
+                }
+            }
+            if(closed){
+                if(COUNT_WORK)atomic_fetch_add_explicit((device atomic_int *)(state+69),1,memory_order_relaxed);
+                continue;
+            }
+        }
+#endif
         if(shard_of(meta,seed)!=lane || meta[6*seed+3] || !h[0] || meta[6*seed+4]<last)continue;
 #if BLOCK_STUDY
         if(leaf>=0)study_add(state,88+2*LIBRARY_SIZE+leaf);
 #endif
         long env[MAXSLOTS];int witness[DEPTH];bool matched=true;
         for(int pos=0;pos<rule[0] && matched;pos++){
+#if NEURAL_ACTIVE
+            if(COUNT_WORK)atomic_fetch_add_explicit((device atomic_int *)(state+(ONE?70:71)),1,memory_order_relaxed);
+#endif
             device const int *op=path+4*pos,*args=rom+op[2];int t=op[0],n=op[1],row=seed;
             if(t<0){
                 long v=0;matched=eval_op(state,meta,-1-t,args,n-1,env,lits,v);
@@ -472,6 +491,9 @@ inline void route(device int *state,device const int *rom,device const long *lit
             }else{
                 if(pos){
                     long key[WIDTH];for(int j=0;j<n-1;j++)key[j]=operand(args[j],env,lits);
+#if NEURAL_ACTIVE
+                    if(COUNT_WORK)atomic_fetch_add_explicit((device atomic_int *)(state+(ONE?72:73)),1,memory_order_relaxed);
+#endif
                     row=find_key(rom,lits,meta,dyn,head,t,n-1,key);
                     if(row<0 || meta[6*row+3]){matched=false;break;}
                 }
@@ -497,6 +519,7 @@ inline void route(device int *state,device const int *rom,device const long *lit
         out[width+4]=long((table(rom,table0)[1]?0:ROW_CAP)+seed)*DEPTH+pivot;
     }
 }
+// NEURAL_DEVICE_KERNELS
 template<int PART=0,bool CERT=false>
 inline void do_search(device const int *rom,device const long *lits,device int *state,
                    device const int *meta,device const long *dyn,device const int *head,
@@ -908,6 +931,21 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
 #endif
 #if CO_TRACE
             state[CO_COUNTER+10]=values[width+1]?int(values[width])+1:0;
+#endif
+#if NEURAL_ACTIVE
+            for(int n=0;n<NEURAL_ROWS;n++){
+                device const int *mark=meta+NEURAL_BASE+4*n;
+                if(mark[0]==rid && mark[3]==pos){
+#if NEURAL_ORDINAL
+                    meta[NEURAL_BASE+4*NEURAL_ROWS+NEURAL_ROWS*(run-1)+n]=state[9];
+#else
+                    meta[NEURAL_BASE+4*NEURAL_ROWS+NEURAL_ROWS*(run-1)+n]=1;
+#endif
+                }
+            }
+#endif
+#if NEURAL_CAPTURE
+            meta[NEURAL_BASE+state[9]-1]=values[width+1]?int(values[width+4]%DEPTH)+1:0;
 #endif
             log[0]=run;log[1]=rid;log[2]=values[width]<0?0:shard_of(meta,int(values[width]))%lanes;log[3]=values[width];
             for(int j=0;j<rule[4];j++){env[rom[rule[5]+j]]=values[j];log[4+j]=values[j];}

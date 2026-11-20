@@ -1,0 +1,112 @@
+{
+ "affine-twins": {
+  "split": "train",
+  "runs": 1058,
+  "all_rhs": 4215,
+  "eligible": 835,
+  "presented": 13384,
+  "positive": 498,
+  "positive_runs": 70,
+  "two_slot_upper": 115,
+  "admitted_leaves": 31
+ },
+ "clamped-ramp": {
+  "split": "train",
+  "runs": 1544,
+  "all_rhs": 9471,
+  "eligible": 1865,
+  "presented": 23156,
+  "positive": 581,
+  "positive_runs": 81,
+  "two_slot_upper": 132,
+  "admitted_leaves": 31
+ },
+ "segmented-prefix": {
+  "split": "train",
+  "runs": 1228,
+  "all_rhs": 7425,
+  "eligible": 1456,
+  "presented": 18120,
+  "positive": 571,
+  "positive_runs": 76,
+  "two_slot_upper": 122,
+  "admitted_leaves": 31
+ },
+ "window-laplacian": {
+  "split": "train",
+  "runs": 1387,
+  "all_rhs": 8005,
+  "eligible": 1556,
+  "presented": 16853,
+  "positive": 620,
+  "positive_runs": 89,
+  "two_slot_upper": 148,
+  "admitted_leaves": 30
+ },
+ "histogram-scatter": {
+  "split": "development",
+  "runs": 1195,
+  "all_rhs": 6742,
+  "eligible": 1349,
+  "presented": 14898,
+  "positive": 530,
+  "positive_runs": 76,
+  "two_slot_upper": 122,
+  "admitted_leaves": 30
+ },
+ "gated-state": {
+  "split": "development",
+  "runs": 1163,
+  "all_rhs": 6118,
+  "eligible": 1277,
+  "presented": 16097,
+  "positive": 505,
+  "positive_runs": 69,
+  "two_slot_upper": 112,
+  "admitted_leaves": 31
+ },
+ "gemm-bias-relu": {
+  "split": "heldout",
+  "runs": 1652,
+  "all_rhs": 15462,
+  "eligible": 3043,
+  "presented": 28238,
+  "positive": 655,
+  "positive_runs": 93,
+  "two_slot_upper": 154,
+  "admitted_leaves": 31
+ },
+ "stable-argmax": {
+  "split": "heldout",
+  "runs": 1149,
+  "all_rhs": 8190,
+  "eligible": 1682,
+  "presented": 16963,
+  "positive": 547,
+  "positive_runs": 70,
+  "two_slot_upper": 117,
+  "admitted_leaves": 31
+ },
+ "sum-bits": {
+  "split": "anchor",
+  "runs": 1428,
+  "all_rhs": 7265,
+  "eligible": 1428,
+  "presented": 17692,
+  "positive": 742,
+  "positive_runs": 105,
+  "two_slot_upper": 181,
+  "admitted_leaves": 32
+ },
+ "dot-product": {
+  "split": "anchor",
+  "runs": 1535,
+  "all_rhs": 6704,
+  "eligible": 1401,
+  "presented": 19496,
+  "positive": 654,
+  "positive_runs": 95,
+  "two_slot_upper": 161,
+  "admitted_leaves": 30
+ }
+}

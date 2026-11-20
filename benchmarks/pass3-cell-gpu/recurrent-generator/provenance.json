@@ -1,0 +1,42 @@
+{
+ "sum-bits/1703": {
+  "unique_rhs_ordinals": 58,
+  "source_rule_and_anchor_agree": true,
+  "checked_runs": 1428
+ },
+ "sum-bits/1709": {
+  "unique_rhs_ordinals": 59,
+  "source_rule_and_anchor_agree": true,
+  "checked_runs": 1428
+ },
+ "dot-product/1703": {
+  "unique_rhs_ordinals": 48,
+  "source_rule_and_anchor_agree": true,
+  "checked_runs": 1535
+ },
+ "dot-product/1709": {
+  "unique_rhs_ordinals": 47,
+  "source_rule_and_anchor_agree": true,
+  "checked_runs": 1535
+ },
+ "gemm-bias-relu/1703": {
+  "unique_rhs_ordinals": 44,
+  "source_rule_and_anchor_agree": true,
+  "checked_runs": 1652
+ },
+ "gemm-bias-relu/1709": {
+  "unique_rhs_ordinals": 43,
+  "source_rule_and_anchor_agree": true,
+  "checked_runs": 1652
+ },
+ "stable-argmax/1703": {
+  "unique_rhs_ordinals": 35,
+  "source_rule_and_anchor_agree": true,
+  "checked_runs": 1149
+ },
+ "stable-argmax/1709": {
+  "unique_rhs_ordinals": 34,
+  "source_rule_and_anchor_agree": true,
+  "checked_runs": 1149
+ }
+}

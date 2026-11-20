@@ -1,0 +1,138 @@
+{
+ "sum-bits/1703": {
+  "intact": {
+   "discrete_differences": 0,
+   "max_latent_difference": 2.086162567138672e-07,
+   "runs": 1428
+  },
+  "zero-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.7881393432617188e-07,
+   "runs": 1428
+  },
+  "swap-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1428
+  }
+ },
+ "sum-bits/1709": {
+  "intact": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.7881393432617188e-07,
+   "runs": 1428
+  },
+  "zero-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1428
+  },
+  "swap-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1428
+  }
+ },
+ "dot-product/1703": {
+  "intact": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.4901161193847656e-07,
+   "runs": 1535
+  },
+  "zero-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1535
+  },
+  "swap-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.4901161193847656e-07,
+   "runs": 1535
+  }
+ },
+ "dot-product/1709": {
+  "intact": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1535
+  },
+  "zero-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1535
+  },
+  "swap-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1535
+  }
+ },
+ "gemm-bias-relu/1703": {
+  "intact": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1652
+  },
+  "zero-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1652
+  },
+  "swap-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.7881393432617188e-07,
+   "runs": 1652
+  }
+ },
+ "gemm-bias-relu/1709": {
+  "intact": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1652
+  },
+  "zero-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.7881393432617188e-07,
+   "runs": 1652
+  },
+  "swap-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1652
+  }
+ },
+ "stable-argmax/1703": {
+  "intact": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.7881393432617188e-07,
+   "runs": 1149
+  },
+  "zero-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1149
+  },
+  "swap-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1149
+  }
+ },
+ "stable-argmax/1709": {
+  "intact": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1149
+  },
+  "zero-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1149
+  },
+  "swap-latent": {
+   "discrete_differences": 0,
+   "max_latent_difference": 1.1920928955078125e-07,
+   "runs": 1149
+  }
+ }
+}
