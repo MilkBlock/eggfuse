@@ -1,0 +1,9 @@
+{
+ "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+ "source_sha256": "fea7d32394332fe931b0ae406262f0460577a239e982c4885c7b069fd4b8c816",
+ "emitted_bytes": 108096,
+ "bootstrap_bytes": 6347232,
+ "linked_bytes": 6579952,
+ "native_generation_s": 0.4493063329719007,
+ "native_generation_and_relink_s": 17.537045083008707
+}

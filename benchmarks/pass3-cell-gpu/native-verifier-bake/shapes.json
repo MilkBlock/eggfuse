@@ -1,0 +1,337 @@
+[
+  {
+    "rules": 5,
+    "shape": "VerifierShape { ops: [], outputs: [Anchor(0), Anchor(1)] }",
+    "steps": 0
+  },
+  {
+    "rules": 32,
+    "shape": "VerifierShape { ops: [], outputs: [Anchor(0), Anchor(1), Anchor(2)] }",
+    "steps": 0
+  },
+  {
+    "rules": 15,
+    "shape": "VerifierShape { ops: [], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3)] }",
+    "steps": 0
+  },
+  {
+    "rules": 8,
+    "shape": "VerifierShape { ops: [], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4)] }",
+    "steps": 0
+  },
+  {
+    "rules": 5,
+    "shape": "VerifierShape { ops: [], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Anchor(5)] }",
+    "steps": 0
+  },
+  {
+    "rules": 2,
+    "shape": "VerifierShape { ops: [], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Anchor(5), Anchor(6)] }",
+    "steps": 0
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [], outputs: [Anchor(0), Anchor(1), Anchor(3)] }",
+    "steps": 0
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: false, keys: [Anchor(2), Literal], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: false, keys: [Anchor(4), Literal], check: None }], outputs: [Anchor(4), Prior(0), Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(5)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: None }, Operation { table: true, keys: [Prior(0)], check: None }, Operation { table: true, keys: [Anchor(1), Prior(1)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0), Prior(1), Prior(2)] }",
+    "steps": 3
+  },
+  {
+    "rules": 3,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: None }, Operation { table: true, keys: [Prior(0)], check: None }, Operation { table: true, keys: [Anchor(2), Prior(1)], check: None }], outputs: [Prior(0), Prior(1), Anchor(2), Prior(2), Anchor(0), Anchor(1), Anchor(3)] }",
+    "steps": 3
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: None }, Operation { table: true, keys: [Prior(0), Anchor(2), Anchor(1)], check: None }], outputs: [Prior(0), Anchor(2), Anchor(1), Prior(1), Anchor(0), Anchor(3), Anchor(4), Anchor(5)] }",
+    "steps": 2
+  },
+  {
+    "rules": 16,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(0)) }], outputs: [Anchor(0), Anchor(1), Anchor(2)] }",
+    "steps": 1
+  },
+  {
+    "rules": 8,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(0)) }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3)] }",
+    "steps": 1
+  },
+  {
+    "rules": 2,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(0)) }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(0)) }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(4)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(0)) }], outputs: [Anchor(0), Anchor(2), Anchor(3)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(0)) }, Operation { table: true, keys: [], check: None }, Operation { table: true, keys: [Prior(1)], check: None }, Operation { table: true, keys: [Anchor(1), Prior(2)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(1), Prior(2), Prior(3)] }",
+    "steps": 4
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(0)) }, Operation { table: true, keys: [], check: None }, Operation { table: true, keys: [Prior(1)], check: None }, Operation { table: true, keys: [Anchor(1), Prior(2)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(2), Prior(3), Prior(1)] }",
+    "steps": 4
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(0)) }, Operation { table: true, keys: [Anchor(0), Anchor(1), Anchor(3)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(1)] }",
+    "steps": 2
+  },
+  {
+    "rules": 11,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(1)) }], outputs: [Anchor(1), Anchor(0), Anchor(2)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(1)) }], outputs: [Anchor(1), Anchor(0), Anchor(2), Anchor(3)] }",
+    "steps": 1
+  },
+  {
+    "rules": 3,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(1)) }], outputs: [Anchor(1), Anchor(0), Anchor(2), Anchor(3), Anchor(4)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(2)) }], outputs: [Anchor(0), Anchor(1), Anchor(2)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(2)) }], outputs: [Anchor(2), Anchor(0), Anchor(1), Anchor(3)] }",
+    "steps": 1
+  },
+  {
+    "rules": 3,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(2)) }], outputs: [Anchor(2), Anchor(0), Anchor(1), Anchor(3), Anchor(4)] }",
+    "steps": 1
+  },
+  {
+    "rules": 2,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [], check: Some(Anchor(4)) }], outputs: [Anchor(4), Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(5)] }",
+    "steps": 1
+  },
+  {
+    "rules": 5,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 7,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0)], check: None }], outputs: [Anchor(0), Anchor(1), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 2,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0)], check: None }], outputs: [Anchor(0), Prior(0), Anchor(1), Anchor(2)] }",
+    "steps": 1
+  },
+  {
+    "rules": 2,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0)], check: None }, Operation { table: false, keys: [Anchor(1), Prior(0)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Prior(0), Prior(1)] }",
+    "steps": 2
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0)], check: None }, Operation { table: false, keys: [Prior(0), Literal], check: None }], outputs: [Anchor(0), Anchor(1), Prior(0), Prior(1)] }",
+    "steps": 2
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0)], check: None }, Operation { table: true, keys: [Anchor(0)], check: None }, Operation { table: false, keys: [Anchor(1), Literal], check: None }, Operation { table: false, keys: [Prior(2), Prior(1)], check: None }], outputs: [Anchor(0), Prior(0), Prior(1), Anchor(1), Anchor(2), Prior(2), Prior(3)] }",
+    "steps": 4
+  },
+  {
+    "rules": 8,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0)], check: None }, Operation { table: true, keys: [Anchor(1)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Prior(0), Prior(1)] }",
+    "steps": 2
+  },
+  {
+    "rules": 3,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0)], check: None }, Operation { table: true, keys: [Anchor(1)], check: None }, Operation { table: true, keys: [Anchor(2)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(0), Prior(1), Prior(2)] }",
+    "steps": 3
+  },
+  {
+    "rules": 3,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0)], check: None }, Operation { table: true, keys: [Anchor(1)], check: None }, Operation { table: true, keys: [Anchor(2)], check: None }, Operation { table: true, keys: [Anchor(3)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0), Prior(1), Prior(2), Prior(3)] }",
+    "steps": 4
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0)], check: Some(Anchor(2)) }], outputs: [Anchor(0), Anchor(2), Anchor(3)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0), Anchor(1), Anchor(2), Anchor(3)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0), Anchor(2)], check: None }], outputs: [Anchor(0), Anchor(2), Prior(0), Anchor(1)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(0), Literal], check: None }], outputs: [Anchor(0), Anchor(2), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 2,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 7,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 2,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: None }], outputs: [Anchor(0), Anchor(1), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: None }, Operation { table: false, keys: [Anchor(3), Prior(0)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0), Prior(1)] }",
+    "steps": 2
+  },
+  {
+    "rules": 3,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: None }, Operation { table: true, keys: [Anchor(0)], check: None }, Operation { table: false, keys: [Prior(0), Prior(1)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Prior(0), Prior(1), Prior(2)] }",
+    "steps": 3
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: None }, Operation { table: true, keys: [Anchor(2)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0), Prior(1)] }",
+    "steps": 2
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: None }, Operation { table: true, keys: [Anchor(2)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(0), Prior(1)] }",
+    "steps": 2
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: None }, Operation { table: true, keys: [Anchor(2)], check: None }, Operation { table: true, keys: [Anchor(0)], check: None }, Operation { table: false, keys: [Prior(1), Prior(2)], check: None }, Operation { table: false, keys: [Prior(0), Prior(3)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(0), Prior(1), Prior(2), Prior(3), Prior(4)] }",
+    "steps": 5
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: None }, Operation { table: true, keys: [Anchor(2)], check: None }, Operation { table: true, keys: [Anchor(3)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0), Prior(1), Prior(2)] }",
+    "steps": 3
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: None }, Operation { table: true, keys: [Anchor(3)], check: None }, Operation { table: true, keys: [Anchor(2)], check: None }, Operation { table: true, keys: [Anchor(0)], check: None }, Operation { table: false, keys: [Prior(2), Prior(3)], check: None }, Operation { table: false, keys: [Prior(1), Prior(4)], check: None }, Operation { table: false, keys: [Prior(0), Prior(5)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0), Prior(1), Prior(2), Prior(3), Prior(4), Prior(5), Prior(6)] }",
+    "steps": 7
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1)], check: Some(Anchor(2)) }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(1), Anchor(2)], check: None }, Operation { table: true, keys: [Anchor(0), Prior(0)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(0), Prior(1)] }",
+    "steps": 2
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(2)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 10,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(2)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(2)], check: None }], outputs: [Anchor(2), Prior(0), Anchor(0), Anchor(1), Anchor(3), Anchor(4)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(2)], check: None }, Operation { table: true, keys: [Anchor(1)], check: None }, Operation { table: false, keys: [Prior(0), Prior(1)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(0), Prior(1), Prior(2)] }",
+    "steps": 3
+  },
+  {
+    "rules": 2,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(2)], check: None }, Operation { table: true, keys: [Anchor(3)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0), Prior(1)] }",
+    "steps": 2
+  },
+  {
+    "rules": 2,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(2), Literal], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 3,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(3)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 4,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(3)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(3)], check: None }, Operation { table: true, keys: [Anchor(2)], check: None }, Operation { table: true, keys: [Anchor(1)], check: None }, Operation { table: false, keys: [Prior(1), Prior(2)], check: None }, Operation { table: false, keys: [Prior(0), Prior(3)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0), Prior(1), Prior(2), Prior(3), Prior(4)] }",
+    "steps": 5
+  },
+  {
+    "rules": 6,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(4)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Anchor(5), Anchor(4)], check: None }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3), Anchor(4), Anchor(5), Anchor(6), Anchor(7), Anchor(8), Prior(0)] }",
+    "steps": 1
+  },
+  {
+    "rules": 5,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Literal], check: Some(Anchor(0)) }], outputs: [Anchor(0), Anchor(1), Anchor(2), Anchor(3)] }",
+    "steps": 1
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Literal], check: Some(Anchor(1)) }, Operation { table: true, keys: [Literal], check: None }, Operation { table: true, keys: [Anchor(0)], check: Some(Prior(1)) }], outputs: [Anchor(1), Anchor(0), Prior(1)] }",
+    "steps": 3
+  },
+  {
+    "rules": 1,
+    "shape": "VerifierShape { ops: [Operation { table: true, keys: [Literal, Anchor(1), Anchor(2)], check: None }], outputs: [Anchor(1), Anchor(2), Anchor(3), Prior(0)] }",
+    "steps": 1
+  }
+]

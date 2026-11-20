@@ -1,0 +1,90 @@
+{
+ "conjugate-gradient": {
+  "off": [
+   {
+    "check_and_assemble_ms": 93.220535,
+    "inference_ms": 648.379375
+   },
+   {
+    "check_and_assemble_ms": 92.258719,
+    "inference_ms": 646.5275
+   },
+   {
+    "check_and_assemble_ms": 100.579806,
+    "inference_ms": 768.962375
+   }
+  ],
+  "projected": [
+   {
+    "check_and_assemble_ms": 83.68777,
+    "inference_ms": 644.506333
+   },
+   {
+    "check_and_assemble_ms": 83.102294,
+    "inference_ms": 638.531917
+   },
+   {
+    "check_and_assemble_ms": 82.142355,
+    "inference_ms": 642.4845409999999
+   }
+  ],
+  "all": [
+   {
+    "check_and_assemble_ms": 75.599529,
+    "inference_ms": 633.6599170000001
+   },
+   {
+    "check_and_assemble_ms": 74.869752,
+    "inference_ms": 639.573708
+   },
+   {
+    "check_and_assemble_ms": 76.957982,
+    "inference_ms": 657.4669170000001
+   }
+  ]
+ },
+ "3mm": {
+  "off": [
+   {
+    "check_and_assemble_ms": 327.026531,
+    "inference_ms": 1976.29275
+   },
+   {
+    "check_and_assemble_ms": 331.8586,
+    "inference_ms": 1953.096333
+   },
+   {
+    "check_and_assemble_ms": 322.026652,
+    "inference_ms": 1955.298208
+   }
+  ],
+  "projected": [
+   {
+    "check_and_assemble_ms": 302.654444,
+    "inference_ms": 1994.7255
+   },
+   {
+    "check_and_assemble_ms": 287.595055,
+    "inference_ms": 1938.7115829999998
+   },
+   {
+    "check_and_assemble_ms": 282.166874,
+    "inference_ms": 1922.8961249999998
+   }
+  ],
+  "all": [
+   {
+    "check_and_assemble_ms": 264.203193,
+    "inference_ms": 1937.604125
+   },
+   {
+    "check_and_assemble_ms": 256.245233,
+    "inference_ms": 1888.390041
+   },
+   {
+    "check_and_assemble_ms": 258.395938,
+    "inference_ms": 1872.251958
+   }
+  ]
+ }
+}
