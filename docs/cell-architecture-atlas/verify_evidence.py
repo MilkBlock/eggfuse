@@ -32,13 +32,14 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==54
+    assert len(plates)==55
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and all(p[k] for k in ('q','arms','fix','measure','note','src'))
         if i<=37:
             assert p['status'].startswith(('已测','实跑'))
         else:
-            assert p['status']=='待验证 · 实验设计'
+            if i in (38,39,40,46,55):assert p['status'].startswith('已测')
+            else:assert p['status']=='待验证 · 实验设计'
             arms=p['diagram']
             assert len(arms)>=2 and len({a['title'] for a in arms})==len(arms)
             for a in arms:
@@ -179,7 +180,20 @@ def check():
         assert t['repair_with_incidence_ceiling']==rep==base['repair_scan']-end['repair_scan']
         assert base['outside_scan']==end['outside_scan'] and t['dispatches_saved']==0 and end['final']
         assert end['aligned']['writes']==end['aligned']['rhs']==end['aligned']['spine']==t['source_runs']
-    print('Verified evidence for 37 measured plates and design records, sources and SVGs for 17 proposed ablations.')
+    import runpy
+    repair=folder.parent/'co-repair'
+    runpy.run_path(str(repair/'verify.py'))['verify'](repair)
+    signals=json.loads((folder.parent/'key-signals/results.json').read_text())
+    for seed in SEEDS:
+        for case in ('sum-bits','dot-product','gemm-bias-relu','stable-argmax'):
+            lanes=signals[f'{case}/{seed}']; baseline=lanes['single-8']; target=lanes['double_hash-8']
+            assert target['counts']['ambiguous_present_keys']<baseline['counts']['ambiguous_present_keys']
+            assert baseline['counts']['ambiguous_present_keys']==lanes['single-16']['counts']['ambiguous_present_keys']
+            for arm,data in lanes.items():
+                assert len(data['samples'])==10 and data['counts']['bindings']==baseline['counts']['bindings']
+                assert all(data[k]==baseline[k] for k in ('rhs','writes','spine','final','runs'))
+        assert signals[f'sum-bits/{seed}']['double_hash-8']['counts']['from_proposal']==889
+    print('Verified 42 measured plates, 13 pending designs, and all diagrams.')
 
 
 if __name__=='__main__':check()

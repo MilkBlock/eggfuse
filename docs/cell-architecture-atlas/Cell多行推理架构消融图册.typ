@@ -40,7 +40,7 @@
   card([证据起点],[开放父引用时，静态投影加训练期字段头在两个种子下通过 65、67 张非空碰撞图，共 512 张。这个基线给分工留下了很大的改进空间。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–54 为下一轮待验证设计，见第 41 页。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–55 含后续实测和待验证设计，见第 41 页。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -92,7 +92,7 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
 #for (i,p) in plates.enumerate() {
   pagebreak()
   if p.id == "38-repair-bake" {
-    kicker[讨论回顾   /   图 38–54 的实验动机]
+    kicker[讨论回顾   /   图 38–55 的实验动机]
     v(2mm)
     title(guide.title)
     v(2mm)
@@ -105,7 +105,7 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
     table(columns:(37mm,24mm,1fr),stroke:(bottom:0.45pt+hair),inset:(x:4pt,y:3.1pt),
       ..guide.order.map(r => (text(size:9pt,weight:"bold",r.at(0)),text(size:9pt,fill:teal,r.at(1)),text(size:9pt,r.at(2)))).flatten())
     v(1fr)
-    small[本节数字来自既有实验 S8、S10、S12、S24、S28–S30。后续图的各臂均为实验设计。]
+    small[本节数字来自既有实验 S8、S10、S12、S24、S28–S30。图 38–40、46、55 已有实测，其余待测图单列。]
     pagebreak()
     kicker[实验协议   /   共享的正确性和计时口径]
     v(2mm)
@@ -174,7 +174,7 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #v(1.5mm)
 #text(size:10.5pt)[*端口 GNN（图 01）*　若在整族留出的组合模板上无法超过编译器角色特征，就无需为该任务增加图编码成本。 *零样本展开（图 04）*　若单 row 自身不能在非空图上完整推导，先记录单行瓶颈；多行失败不能全部归因于同步。 *RL 分工（图 05）*　若同预算多行监督达到同等或更高的正确吞吐，则 RL 的额外采样与信用估计没有得到收益证明。]
 #v(3mm)
-#small[真实负载扩展：新增 8 个 Bril 源码家族已取得原生 eggcc Pass 3 输入。4 个训练、2 个开发、2 个留出。原生执行通过只验证工作负载材料；纳入学习前仍需生成可信的逐 Run 标签与独立验收。档案 S8。]
+#small[真实负载扩展：新增的 8 个 Bril 家族均已取得逐 Run 来源、union 前订阅和键修复记录，完成 CPU／GPU 核对与原生终图验收。4 个训练、2 个开发、2 个留出。档案 S8、S31。]
 
 #pagebreak()
 #kicker[证据目录   /   复核路径]
@@ -215,9 +215,18 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S28","图 35 常驻端口选择父行","benchmarks/pass3-cell-gpu/unique-parent/README.md")
 #src("S29","图 36 集合与 union","benchmarks/pass3-cell-gpu/set-memory/README.md")
 #src("S30","图 37 块级上限","benchmarks/pass3-cell-gpu/block-ceiling/README.md")
+#pagebreak()
+#kicker[新增实测   /   数据与源码]
+#v(2mm)
+#title[复核共同修复与父引用实验]
+#v(4mm)
+#src("S31","真实程序与 union 观察","benchmarks/pass3-cell-gpu/co-repair/CORPUS.md")
+#src("S32","图 38–40、55 成本消融","benchmarks/pass3-cell-gpu/co-repair/README.md")
+#src("S33","图 46 输入编码与宽度","benchmarks/pass3-cell-gpu/key-signals/README.md")
+#v(5mm)
 #linebar()
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
 #text(size:9pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。#link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文]。 *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。#link("https://arxiv.org/abs/1705.08926")[论文原文]。]
 #v(1fr)
-#small[版次 19　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
+#small[版次 20　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
