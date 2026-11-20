@@ -1,0 +1,2630 @@
+{
+ "3mm": {
+  "vanilla": {
+   "runs": 4260,
+   "rhs": 294917,
+   "ms": [
+    874.872667,
+    904.063541,
+    944.7995,
+    947.32925
+   ],
+   "median_ms": 924.4315205
+  },
+  "off": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1988.134458,
+    2206.0139579999995,
+    2120.600542,
+    2156.4310830000004
+   ],
+   "equations": {
+    "arrays_reused": 0,
+    "calls": 70,
+    "encoded_rows": 833646,
+    "filtered": 1542118,
+    "index_builds": 0,
+    "index_probes": 0,
+    "index_reuses": 0,
+    "index_rows": 0,
+    "invalid_receipts": 0,
+    "numeric_requests": 416823,
+    "pair_checks": 1608658,
+    "rule_plans": 1,
+    "undefined": 0
+   },
+   "counts": {
+    "approximate_visits": 1327608,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1265810,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104197,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 704,
+    "raw_root_slots": 526429,
+    "raw_tuples": 220972,
+    "rejected_pointers": 0,
+    "root_offers": 5121580,
+    "score_bucket_reads": 1414931,
+    "shortlisted": 0,
+    "stale_candidates": 13704,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220268,
+    "visible_rows": 29379
+   },
+   "median_ms": 2138.5158125000003,
+   "sparse": {
+    "admitted": 0,
+    "age_tests": 0,
+    "considered": 0,
+    "emits": 0,
+    "learned_build_rows": 0,
+    "learned_probes": 0,
+    "left_stale": 0,
+    "mixed": 0,
+    "pair_rules": {},
+    "right_rows": 0,
+    "unneeded_epoch_sorts": 0
+   }
+  },
+  "epochs": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1946.048958,
+    2179.7201250000003,
+    2122.4705,
+    2089.587666
+   ],
+   "equations": {
+    "arrays_reused": 0,
+    "calls": 70,
+    "encoded_rows": 833646,
+    "filtered": 1542118,
+    "index_builds": 0,
+    "index_probes": 0,
+    "index_reuses": 0,
+    "index_rows": 0,
+    "invalid_receipts": 0,
+    "numeric_requests": 416823,
+    "pair_checks": 1608658,
+    "rule_plans": 1,
+    "undefined": 0
+   },
+   "counts": {
+    "approximate_visits": 1327608,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1265810,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104197,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 704,
+    "raw_root_slots": 526429,
+    "raw_tuples": 220972,
+    "rejected_pointers": 0,
+    "root_offers": 5121580,
+    "score_bucket_reads": 1414931,
+    "shortlisted": 0,
+    "stale_candidates": 13704,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220268,
+    "visible_rows": 29379
+   },
+   "median_ms": 2106.029083,
+   "sparse": {
+    "admitted": 0,
+    "age_tests": 0,
+    "considered": 4280,
+    "emits": 0,
+    "learned_build_rows": 0,
+    "learned_probes": 0,
+    "left_stale": 0,
+    "mixed": 0,
+    "pair_rules": {},
+    "right_rows": 0,
+    "unneeded_epoch_sorts": 1050
+   }
+  },
+  "narrow": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1942.795625,
+    2060.2156250000003,
+    2153.784709,
+    2084.747666
+   ],
+   "equations": {
+    "arrays_reused": 0,
+    "calls": 70,
+    "encoded_rows": 833646,
+    "filtered": 1542118,
+    "index_builds": 0,
+    "index_probes": 0,
+    "index_reuses": 0,
+    "index_rows": 0,
+    "invalid_receipts": 0,
+    "numeric_requests": 416823,
+    "pair_checks": 1608658,
+    "rule_plans": 1,
+    "undefined": 0
+   },
+   "counts": {
+    "approximate_visits": 1327608,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1265810,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104197,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 704,
+    "raw_root_slots": 526429,
+    "raw_tuples": 220972,
+    "rejected_pointers": 0,
+    "root_offers": 5117221,
+    "score_bucket_reads": 1409687,
+    "shortlisted": 0,
+    "stale_candidates": 13704,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220268,
+    "visible_rows": 29379
+   },
+   "median_ms": 2072.4816455,
+   "sparse": {
+    "admitted": 2461,
+    "age_tests": 15546069,
+    "considered": 4280,
+    "emits": 25570,
+    "learned_build_rows": 337320,
+    "learned_probes": 1024500,
+    "left_stale": 2461,
+    "mixed": 0,
+    "pair_rules": {
+     "116": [
+      28,
+      772,
+      123593,
+      12
+     ],
+     "117": [
+      28,
+      772,
+      123593,
+      12
+     ],
+     "118": [
+      28,
+      772,
+      123593,
+      8
+     ],
+     "119": [
+      24,
+      4454,
+      114208,
+      64
+     ],
+     "120": [
+      24,
+      4454,
+      114208,
+      75
+     ],
+     "122": [
+      3,
+      11198,
+      14665,
+      0
+     ],
+     "123": [
+      6,
+      15279,
+      30065,
+      2
+     ],
+     "124": [
+      6,
+      15279,
+      30065,
+      8
+     ],
+     "127": [
+      33,
+      957,
+      140999,
+      29
+     ],
+     "128": [
+      33,
+      957,
+      140999,
+      29
+     ],
+     "129": [
+      33,
+      1056,
+      140999,
+      32
+     ],
+     "130": [
+      33,
+      132,
+      140999,
+      4
+     ],
+     "131": [
+      32,
+      256,
+      139064,
+      4
+     ],
+     "132": [
+      32,
+      256,
+      139064,
+      3
+     ],
+     "243": [
+      1,
+      32,
+      875,
+      1
+     ],
+     "251": [
+      2,
+      498,
+      654,
+      3
+     ],
+     "287": [
+      47,
+      55513,
+      76834,
+      1
+     ],
+     "289": [
+      35,
+      945,
+      117477,
+      3
+     ],
+     "294": [
+      34,
+      11112,
+      115062,
+      1192
+     ],
+     "296": [
+      33,
+      8317,
+      112227,
+      207
+     ],
+     "318": [
+      29,
+      783,
+      58346,
+      14
+     ],
+     "319": [
+      25,
+      8600,
+      57690,
+      74
+     ],
+     "321": [
+      13,
+      1627,
+      34293,
+      26
+     ],
+     "322": [
+      17,
+      4151,
+      47617,
+      44
+     ],
+     "325": [
+      24,
+      222,
+      50062,
+      10
+     ],
+     "326": [
+      29,
+      116,
+      58346,
+      0
+     ],
+     "327": [
+      1,
+      1142,
+      2512,
+      3
+     ],
+     "328": [
+      1,
+      2504,
+      2512,
+      38
+     ],
+     "332": [
+      24,
+      742,
+      50608,
+      31
+     ],
+     "333": [
+      24,
+      861,
+      51379,
+      24
+     ],
+     "351": [
+      4,
+      1304,
+      19992,
+      3
+     ],
+     "353": [
+      4,
+      108,
+      19992,
+      0
+     ],
+     "364": [
+      3,
+      810,
+      14666,
+      1
+     ],
+     "486": [
+      3,
+      411,
+      14429,
+      0
+     ],
+     "49": [
+      3,
+      810,
+      14666,
+      1
+     ],
+     "490": [
+      4,
+      139,
+      529,
+      0
+     ],
+     "496": [
+      2,
+      256,
+      274,
+      0
+     ],
+     "505": [
+      1,
+      1789,
+      2152,
+      1
+     ],
+     "509": [
+      4,
+      876,
+      876,
+      346
+     ],
+     "510": [
+      4,
+      876,
+      876,
+      346
+     ],
+     "511": [
+      4,
+      876,
+      876,
+      0
+     ],
+     "513": [
+      27,
+      4979,
+      84530,
+      170
+     ],
+     "514": [
+      27,
+      4979,
+      84530,
+      177
+     ],
+     "515": [
+      28,
+      772,
+      84617,
+      16
+     ],
+     "516": [
+      28,
+      772,
+      84617,
+      16
+     ],
+     "517": [
+      28,
+      772,
+      84617,
+      16
+     ],
+     "518": [
+      26,
+      44301,
+      84029,
+      1249
+     ],
+     "519": [
+      28,
+      224,
+      84617,
+      8
+     ],
+     "520": [
+      29,
+      116,
+      87255,
+      4
+     ],
+     "522": [
+      26,
+      34918,
+      84029,
+      1509
+     ],
+     "523": [
+      26,
+      34918,
+      84029,
+      2273
+     ],
+     "524": [
+      29,
+      841,
+      87255,
+      29
+     ],
+     "525": [
+      29,
+      928,
+      87255,
+      32
+     ],
+     "526": [
+      5,
+      50,
+      1623,
+      125
+     ],
+     "528": [
+      202,
+      35604,
+      557848,
+      170
+     ],
+     "539": [
+      202,
+      1008,
+      557472,
+      1758
+     ],
+     "573": [
+      132,
+      33565,
+      64789,
+      437
+     ],
+     "577": [
+      48,
+      11551,
+      93843,
+      5206
+     ],
+     "59": [
+      28,
+      72401,
+      167008,
+      1075
+     ],
+     "60": [
+      32,
+      42952,
+      189518,
+      2429
+     ],
+     "87": [
+      90,
+      1656,
+      1200035,
+      49
+     ],
+     "88": [
+      87,
+      18873,
+      1198095,
+      446
+     ],
+     "90": [
+      66,
+      250309,
+      991639,
+      2650
+     ],
+     "91": [
+      68,
+      173545,
+      1018081,
+      1724
+     ],
+     "92": [
+      69,
+      85452,
+      1035447,
+      1118
+     ],
+     "94": [
+      96,
+      2784,
+      1252034,
+      111
+     ],
+     "95": [
+      96,
+      3072,
+      1252034,
+      94
+     ],
+     "96": [
+      96,
+      384,
+      1252034,
+      20
+     ],
+     "98": [
+      95,
+      760,
+      1251253,
+      8
+     ]
+    },
+    "right_rows": 15546069,
+    "unneeded_epoch_sorts": 1050
+   }
+  },
+  "mixed": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    2002.0365,
+    2147.757875,
+    2046.3959580000003,
+    2077.852334
+   ],
+   "equations": {
+    "arrays_reused": 0,
+    "calls": 70,
+    "encoded_rows": 833646,
+    "filtered": 1542118,
+    "index_builds": 0,
+    "index_probes": 0,
+    "index_reuses": 0,
+    "index_rows": 0,
+    "invalid_receipts": 0,
+    "numeric_requests": 416823,
+    "pair_checks": 1608658,
+    "rule_plans": 1,
+    "undefined": 0
+   },
+   "counts": {
+    "approximate_visits": 1327608,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1265810,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104197,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 704,
+    "raw_root_slots": 526429,
+    "raw_tuples": 220972,
+    "rejected_pointers": 0,
+    "root_offers": 5102043,
+    "score_bucket_reads": 1380438,
+    "shortlisted": 0,
+    "stale_candidates": 13704,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220268,
+    "visible_rows": 29379
+   },
+   "median_ms": 2062.124146,
+   "sparse": {
+    "admitted": 3046,
+    "age_tests": 17520600,
+    "considered": 4280,
+    "emits": 74501,
+    "learned_build_rows": 2311851,
+    "learned_probes": 1810497,
+    "left_stale": 2461,
+    "mixed": 585,
+    "pair_rules": {
+     "116": [
+      33,
+      1068,
+      140999,
+      40
+     ],
+     "117": [
+      33,
+      1068,
+      140999,
+      41
+     ],
+     "118": [
+      33,
+      1068,
+      140999,
+      40
+     ],
+     "119": [
+      32,
+      6044,
+      140921,
+      226
+     ],
+     "120": [
+      32,
+      6044,
+      140921,
+      229
+     ],
+     "122": [
+      28,
+      101724,
+      134913,
+      3440
+     ],
+     "123": [
+      30,
+      70779,
+      139403,
+      2208
+     ],
+     "124": [
+      30,
+      70779,
+      139403,
+      2610
+     ],
+     "127": [
+      33,
+      957,
+      140999,
+      29
+     ],
+     "128": [
+      33,
+      957,
+      140999,
+      29
+     ],
+     "129": [
+      33,
+      1056,
+      140999,
+      32
+     ],
+     "130": [
+      33,
+      132,
+      140999,
+      4
+     ],
+     "131": [
+      33,
+      264,
+      140999,
+      9
+     ],
+     "132": [
+      33,
+      264,
+      140999,
+      8
+     ],
+     "133": [
+      30,
+      66927,
+      66927,
+      690
+     ],
+     "21": [
+      1,
+      239,
+      239,
+      6
+     ],
+     "22": [
+      1,
+      239,
+      239,
+      6
+     ],
+     "24": [
+      1,
+      239,
+      239,
+      0
+     ],
+     "243": [
+      1,
+      32,
+      875,
+      1
+     ],
+     "251": [
+      2,
+      498,
+      654,
+      3
+     ],
+     "287": [
+      47,
+      55513,
+      76834,
+      1
+     ],
+     "289": [
+      35,
+      945,
+      117477,
+      3
+     ],
+     "294": [
+      35,
+      11439,
+      117477,
+      1231
+     ],
+     "296": [
+      35,
+      8710,
+      117477,
+      218
+     ],
+     "306": [
+      47,
+      76834,
+      76834,
+      2301
+     ],
+     "318": [
+      29,
+      783,
+      58346,
+      14
+     ],
+     "319": [
+      25,
+      8600,
+      57690,
+      74
+     ],
+     "321": [
+      27,
+      3463,
+      58174,
+      280
+     ],
+     "322": [
+      26,
+      6404,
+      57981,
+      224
+     ],
+     "325": [
+      29,
+      293,
+      58346,
+      33
+     ],
+     "326": [
+      29,
+      116,
+      58346,
+      0
+     ],
+     "327": [
+      21,
+      25819,
+      54839,
+      1782
+     ],
+     "328": [
+      4,
+      10772,
+      10802,
+      307
+     ],
+     "332": [
+      29,
+      955,
+      58346,
+      90
+     ],
+     "333": [
+      29,
+      1053,
+      58346,
+      40
+     ],
+     "351": [
+      4,
+      1304,
+      19992,
+      3
+     ],
+     "353": [
+      4,
+      108,
+      19992,
+      0
+     ],
+     "364": [
+      4,
+      1080,
+      19992,
+      1872
+     ],
+     "371": [
+      5,
+      24203,
+      24203,
+      125
+     ],
+     "407": [
+      1,
+      4762,
+      4762,
+      44
+     ],
+     "408": [
+      1,
+      4762,
+      4762,
+      44
+     ],
+     "486": [
+      4,
+      548,
+      19325,
+      19
+     ],
+     "49": [
+      4,
+      1080,
+      19992,
+      1872
+     ],
+     "490": [
+      4,
+      139,
+      529,
+      0
+     ],
+     "496": [
+      2,
+      256,
+      274,
+      0
+     ],
+     "505": [
+      37,
+      51887,
+      69737,
+      2969
+     ],
+     "509": [
+      4,
+      876,
+      876,
+      346
+     ],
+     "510": [
+      4,
+      876,
+      876,
+      346
+     ],
+     "511": [
+      4,
+      876,
+      876,
+      0
+     ],
+     "513": [
+      28,
+      5154,
+      87168,
+      249
+     ],
+     "514": [
+      28,
+      5154,
+      87168,
+      256
+     ],
+     "515": [
+      29,
+      788,
+      87255,
+      32
+     ],
+     "516": [
+      29,
+      788,
+      87255,
+      32
+     ],
+     "517": [
+      29,
+      788,
+      87255,
+      32
+     ],
+     "518": [
+      26,
+      44301,
+      84029,
+      1249
+     ],
+     "519": [
+      29,
+      232,
+      87255,
+      14
+     ],
+     "520": [
+      29,
+      116,
+      87255,
+      4
+     ],
+     "522": [
+      27,
+      37514,
+      86667,
+      2613
+     ],
+     "523": [
+      27,
+      37514,
+      86667,
+      2695
+     ],
+     "524": [
+      29,
+      841,
+      87255,
+      29
+     ],
+     "525": [
+      29,
+      928,
+      87255,
+      32
+     ],
+     "526": [
+      5,
+      50,
+      1623,
+      125
+     ],
+     "528": [
+      202,
+      35604,
+      557848,
+      170
+     ],
+     "539": [
+      203,
+      1013,
+      557926,
+      2083
+     ],
+     "573": [
+      261,
+      66761,
+      126810,
+      632
+     ],
+     "577": [
+      62,
+      15144,
+      122238,
+      5226
+     ],
+     "59": [
+      55,
+      135503,
+      286507,
+      3726
+     ],
+     "60": [
+      57,
+      75674,
+      289199,
+      4617
+     ],
+     "87": [
+      96,
+      2076,
+      1252034,
+      490
+     ],
+     "88": [
+      95,
+      20463,
+      1251949,
+      635
+     ],
+     "90": [
+      90,
+      338152,
+      1246843,
+      12307
+     ],
+     "91": [
+      91,
+      228250,
+      1249143,
+      8729
+     ],
+     "92": [
+      92,
+      115847,
+      1250632,
+      4402
+     ],
+     "94": [
+      96,
+      2784,
+      1252034,
+      111
+     ],
+     "95": [
+      96,
+      3072,
+      1252034,
+      94
+     ],
+     "96": [
+      96,
+      384,
+      1252034,
+      20
+     ],
+     "98": [
+      96,
+      768,
+      1252034,
+      8
+     ]
+    },
+    "right_rows": 17520600,
+    "unneeded_epoch_sorts": 1050
+   }
+  }
+ },
+ "deriche": {
+  "vanilla": {
+   "runs": 5687,
+   "rhs": 635818,
+   "ms": [
+    1560.832834,
+    1573.658166,
+    1591.3988749999999,
+    1581.981375
+   ],
+   "median_ms": 1577.8197705
+  },
+  "off": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 635818,
+   "neural_rhs": 635818,
+   "fresh": 452913,
+   "direct_cells": 450414,
+   "source_pass_rhs": 635818,
+   "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+   "wire_bytes": 56351264,
+   "root_row_decodes": 0,
+   "root_header_checks": 4106478,
+   "owned_slot_transfers": 635818,
+   "raw": "17443949038528751042",
+   "emitted": [
+    2319092,
+    309277
+   ],
+   "wire_hash": "5607461076826839441",
+   "commits": "cb14bd5d2d6ddcc21394f93933f3a636809886721261db313df504a02132f670",
+   "physical": "533b722cb8d446aecccd643ca5eb8c99b52b5e0945376d31c16771ec8757f2e5",
+   "multi": "208f23744aa875711e3da4b3ba921a0787a44139088512d8f125580a15655f1f",
+   "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+   "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+   "rejected": 0,
+   "root_allocated": 447949,
+   "applied": 635818,
+   "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+   "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+   "root_parents": "375fd17ace78384b65e6eea4753025eea3d630fec633912a48a1f9309c914f75",
+   "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+   "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+   "ms": [
+    3539.515417,
+    3760.083208,
+    3786.855375,
+    3792.467208
+   ],
+   "equations": {
+    "arrays_reused": 4,
+    "calls": 85,
+    "encoded_rows": 1021502,
+    "filtered": 1542870,
+    "index_builds": 0,
+    "index_probes": 0,
+    "index_reuses": 0,
+    "index_rows": 0,
+    "invalid_receipts": 0,
+    "numeric_requests": 510751,
+    "pair_checks": 1611130,
+    "rule_plans": 1,
+    "undefined": 0
+   },
+   "counts": {
+    "approximate_visits": 1881054,
+    "calls": 13267,
+    "committed": 200897,
+    "exhausted": 0,
+    "learned_pointers": 1852836,
+    "peak_rule_tuples": 12420,
+    "point_reads": 121695,
+    "primitive_evals": 71587,
+    "raw_parent_rejects": 4440,
+    "raw_root_slots": 792674,
+    "raw_tuples": 309277,
+    "rejected_pointers": 0,
+    "root_offers": 5663740,
+    "score_bucket_reads": 2182573,
+    "shortlisted": 0,
+    "stale_candidates": 16825,
+    "table_rebuilds": 95,
+    "unsupported": 0,
+    "validated": 200897,
+    "verified_parent_tuples": 304837,
+    "visible_rows": 39488
+   },
+   "median_ms": 3773.4692915,
+   "sparse": {
+    "admitted": 0,
+    "age_tests": 0,
+    "considered": 0,
+    "emits": 0,
+    "learned_build_rows": 0,
+    "learned_probes": 0,
+    "left_stale": 0,
+    "mixed": 0,
+    "pair_rules": {},
+    "right_rows": 0,
+    "unneeded_epoch_sorts": 0
+   }
+  },
+  "epochs": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 635818,
+   "neural_rhs": 635818,
+   "fresh": 452913,
+   "direct_cells": 450414,
+   "source_pass_rhs": 635818,
+   "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+   "wire_bytes": 56351264,
+   "root_row_decodes": 0,
+   "root_header_checks": 4106478,
+   "owned_slot_transfers": 635818,
+   "raw": "17443949038528751042",
+   "emitted": [
+    2319092,
+    309277
+   ],
+   "wire_hash": "5607461076826839441",
+   "commits": "cb14bd5d2d6ddcc21394f93933f3a636809886721261db313df504a02132f670",
+   "physical": "533b722cb8d446aecccd643ca5eb8c99b52b5e0945376d31c16771ec8757f2e5",
+   "multi": "208f23744aa875711e3da4b3ba921a0787a44139088512d8f125580a15655f1f",
+   "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+   "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+   "rejected": 0,
+   "root_allocated": 447949,
+   "applied": 635818,
+   "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+   "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+   "root_parents": "375fd17ace78384b65e6eea4753025eea3d630fec633912a48a1f9309c914f75",
+   "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+   "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+   "ms": [
+    3571.961417,
+    3819.017375,
+    3794.4805,
+    3725.8825829999996
+   ],
+   "equations": {
+    "arrays_reused": 4,
+    "calls": 85,
+    "encoded_rows": 1021502,
+    "filtered": 1542870,
+    "index_builds": 0,
+    "index_probes": 0,
+    "index_reuses": 0,
+    "index_rows": 0,
+    "invalid_receipts": 0,
+    "numeric_requests": 510751,
+    "pair_checks": 1611130,
+    "rule_plans": 1,
+    "undefined": 0
+   },
+   "counts": {
+    "approximate_visits": 1881054,
+    "calls": 13267,
+    "committed": 200897,
+    "exhausted": 0,
+    "learned_pointers": 1852836,
+    "peak_rule_tuples": 12420,
+    "point_reads": 121695,
+    "primitive_evals": 71587,
+    "raw_parent_rejects": 4440,
+    "raw_root_slots": 792674,
+    "raw_tuples": 309277,
+    "rejected_pointers": 0,
+    "root_offers": 5663740,
+    "score_bucket_reads": 2182573,
+    "shortlisted": 0,
+    "stale_candidates": 16825,
+    "table_rebuilds": 95,
+    "unsupported": 0,
+    "validated": 200897,
+    "verified_parent_tuples": 304837,
+    "visible_rows": 39488
+   },
+   "median_ms": 3760.1815415,
+   "sparse": {
+    "admitted": 0,
+    "age_tests": 0,
+    "considered": 5158,
+    "emits": 0,
+    "learned_build_rows": 0,
+    "learned_probes": 0,
+    "left_stale": 0,
+    "mixed": 0,
+    "pair_rules": {},
+    "right_rows": 0,
+    "unneeded_epoch_sorts": 966
+   }
+  },
+  "narrow": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 635818,
+   "neural_rhs": 635818,
+   "fresh": 452913,
+   "direct_cells": 450414,
+   "source_pass_rhs": 635818,
+   "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+   "wire_bytes": 56351264,
+   "root_row_decodes": 0,
+   "root_header_checks": 4106478,
+   "owned_slot_transfers": 635818,
+   "raw": "17443949038528751042",
+   "emitted": [
+    2319092,
+    309277
+   ],
+   "wire_hash": "5607461076826839441",
+   "commits": "cb14bd5d2d6ddcc21394f93933f3a636809886721261db313df504a02132f670",
+   "physical": "533b722cb8d446aecccd643ca5eb8c99b52b5e0945376d31c16771ec8757f2e5",
+   "multi": "208f23744aa875711e3da4b3ba921a0787a44139088512d8f125580a15655f1f",
+   "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+   "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+   "rejected": 0,
+   "root_allocated": 447949,
+   "applied": 635818,
+   "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+   "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+   "root_parents": "375fd17ace78384b65e6eea4753025eea3d630fec633912a48a1f9309c914f75",
+   "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+   "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+   "ms": [
+    3816.3769580000003,
+    3747.326208,
+    3759.723,
+    3822.989416
+   ],
+   "equations": {
+    "arrays_reused": 4,
+    "calls": 85,
+    "encoded_rows": 1021502,
+    "filtered": 1542870,
+    "index_builds": 0,
+    "index_probes": 0,
+    "index_reuses": 0,
+    "index_rows": 0,
+    "invalid_receipts": 0,
+    "numeric_requests": 510751,
+    "pair_checks": 1611130,
+    "rule_plans": 1,
+    "undefined": 0
+   },
+   "counts": {
+    "approximate_visits": 1881054,
+    "calls": 13267,
+    "committed": 200897,
+    "exhausted": 0,
+    "learned_pointers": 1852836,
+    "peak_rule_tuples": 12420,
+    "point_reads": 121695,
+    "primitive_evals": 71587,
+    "raw_parent_rejects": 4440,
+    "raw_root_slots": 792674,
+    "raw_tuples": 309277,
+    "rejected_pointers": 0,
+    "root_offers": 5658693,
+    "score_bucket_reads": 2176915,
+    "shortlisted": 0,
+    "stale_candidates": 16825,
+    "table_rebuilds": 95,
+    "unsupported": 0,
+    "validated": 200897,
+    "verified_parent_tuples": 304837,
+    "visible_rows": 39488
+   },
+   "median_ms": 3788.0499790000003,
+   "sparse": {
+    "admitted": 2507,
+    "age_tests": 12978171,
+    "considered": 5158,
+    "emits": 26581,
+    "learned_build_rows": 335911,
+    "learned_probes": 1214328,
+    "left_stale": 2507,
+    "mixed": 0,
+    "pair_rules": {
+     "116": [
+      42,
+      1006,
+      212480,
+      6
+     ],
+     "117": [
+      42,
+      1006,
+      212480,
+      11
+     ],
+     "118": [
+      42,
+      1006,
+      212480,
+      13
+     ],
+     "119": [
+      39,
+      10639,
+      206714,
+      135
+     ],
+     "120": [
+      39,
+      10639,
+      206714,
+      159
+     ],
+     "122": [
+      9,
+      35274,
+      50203,
+      340
+     ],
+     "123": [
+      12,
+      35335,
+      67325,
+      530
+     ],
+     "124": [
+      12,
+      35335,
+      67325,
+      733
+     ],
+     "127": [
+      42,
+      1981,
+      208570,
+      49
+     ],
+     "128": [
+      42,
+      1981,
+      208570,
+      52
+     ],
+     "129": [
+      44,
+      1694,
+      219402,
+      36
+     ],
+     "131": [
+      44,
+      396,
+      219402,
+      9
+     ],
+     "132": [
+      44,
+      396,
+      219402,
+      9
+     ],
+     "134": [
+      7,
+      12,
+      20241,
+      3
+     ],
+     "135": [
+      7,
+      12,
+      20241,
+      0
+     ],
+     "243": [
+      2,
+      104,
+      1287,
+      2
+     ],
+     "251": [
+      3,
+      870,
+      1015,
+      5
+     ],
+     "287": [
+      72,
+      140847,
+      190134,
+      12
+     ],
+     "289": [
+      46,
+      1438,
+      163463,
+      1
+     ],
+     "294": [
+      47,
+      15860,
+      167332,
+      884
+     ],
+     "296": [
+      43,
+      15100,
+      153420,
+      260
+     ],
+     "318": [
+      38,
+      1216,
+      112627,
+      28
+     ],
+     "319": [
+      33,
+      13188,
+      108635,
+      99
+     ],
+     "320": [
+      38,
+      76,
+      112627,
+      4
+     ],
+     "321": [
+      23,
+      2073,
+      80313,
+      3
+     ],
+     "322": [
+      15,
+      4926,
+      51545,
+      20
+     ],
+     "325": [
+      36,
+      327,
+      111047,
+      13
+     ],
+     "327": [
+      5,
+      6330,
+      16330,
+      4
+     ],
+     "332": [
+      32,
+      1564,
+      105445,
+      26
+     ],
+     "333": [
+      27,
+      1724,
+      87809,
+      32
+     ],
+     "349": [
+      1,
+      8,
+      339,
+      0
+     ],
+     "350": [
+      1,
+      8,
+      339,
+      0
+     ],
+     "351": [
+      4,
+      1555,
+      22514,
+      2
+     ],
+     "353": [
+      7,
+      222,
+      39156,
+      0
+     ],
+     "364": [
+      2,
+      596,
+      11335,
+      0
+     ],
+     "467": [
+      3,
+      0,
+      18699,
+      0
+     ],
+     "472": [
+      7,
+      821,
+      1214,
+      2
+     ],
+     "476": [
+      11,
+      99,
+      1857,
+      0
+     ],
+     "482": [
+      9,
+      558,
+      1734,
+      0
+     ],
+     "483": [
+      11,
+      66,
+      1857,
+      0
+     ],
+     "486": [
+      1,
+      147,
+      5523,
+      0
+     ],
+     "49": [
+      7,
+      2086,
+      39027,
+      446
+     ],
+     "490": [
+      4,
+      48,
+      551,
+      0
+     ],
+     "505": [
+      2,
+      4136,
+      4876,
+      2
+     ],
+     "509": [
+      4,
+      890,
+      890,
+      392
+     ],
+     "510": [
+      4,
+      890,
+      890,
+      392
+     ],
+     "511": [
+      4,
+      890,
+      890,
+      0
+     ],
+     "513": [
+      29,
+      8091,
+      125856,
+      241
+     ],
+     "514": [
+      29,
+      8091,
+      125856,
+      217
+     ],
+     "515": [
+      30,
+      875,
+      125966,
+      17
+     ],
+     "516": [
+      30,
+      875,
+      125966,
+      17
+     ],
+     "517": [
+      30,
+      875,
+      125966,
+      17
+     ],
+     "518": [
+      26,
+      71510,
+      114384,
+      1202
+     ],
+     "519": [
+      33,
+      297,
+      140065,
+      9
+     ],
+     "522": [
+      27,
+      58336,
+      119924,
+      1521
+     ],
+     "523": [
+      27,
+      58336,
+      119924,
+      2407
+     ],
+     "524": [
+      32,
+      1514,
+      134745,
+      49
+     ],
+     "525": [
+      32,
+      1288,
+      134270,
+      36
+     ],
+     "526": [
+      6,
+      60,
+      2426,
+      207
+     ],
+     "528": [
+      225,
+      59049,
+      719699,
+      247
+     ],
+     "539": [
+      225,
+      1347,
+      719319,
+      1836
+     ],
+     "573": [
+      75,
+      21924,
+      43033,
+      498
+     ],
+     "577": [
+      38,
+      9369,
+      71269,
+      4573
+     ],
+     "59": [
+      37,
+      104140,
+      216886,
+      1876
+     ],
+     "60": [
+      39,
+      55707,
+      231318,
+      1725
+     ],
+     "87": [
+      77,
+      1919,
+      778025,
+      67
+     ],
+     "88": [
+      74,
+      20380,
+      787816,
+      689
+     ],
+     "90": [
+      42,
+      164331,
+      502275,
+      1316
+     ],
+     "91": [
+      48,
+      134436,
+      575557,
+      2266
+     ],
+     "92": [
+      49,
+      68697,
+      585746,
+      632
+     ],
+     "94": [
+      78,
+      3708,
+      779571,
+      115
+     ],
+     "95": [
+      80,
+      3078,
+      803020,
+      70
+     ],
+     "98": [
+      80,
+      720,
+      803020,
+      17
+     ]
+    },
+    "right_rows": 12978171,
+    "unneeded_epoch_sorts": 966
+   }
+  },
+  "mixed": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 635818,
+   "neural_rhs": 635818,
+   "fresh": 452913,
+   "direct_cells": 450414,
+   "source_pass_rhs": 635818,
+   "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+   "wire_bytes": 56351264,
+   "root_row_decodes": 0,
+   "root_header_checks": 4106478,
+   "owned_slot_transfers": 635818,
+   "raw": "17443949038528751042",
+   "emitted": [
+    2319092,
+    309277
+   ],
+   "wire_hash": "5607461076826839441",
+   "commits": "cb14bd5d2d6ddcc21394f93933f3a636809886721261db313df504a02132f670",
+   "physical": "533b722cb8d446aecccd643ca5eb8c99b52b5e0945376d31c16771ec8757f2e5",
+   "multi": "208f23744aa875711e3da4b3ba921a0787a44139088512d8f125580a15655f1f",
+   "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+   "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+   "rejected": 0,
+   "root_allocated": 447949,
+   "applied": 635818,
+   "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+   "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+   "root_parents": "375fd17ace78384b65e6eea4753025eea3d630fec633912a48a1f9309c914f75",
+   "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+   "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+   "ms": [
+    3766.802459,
+    3796.8732919999998,
+    3818.713584,
+    3663.579666
+   ],
+   "equations": {
+    "arrays_reused": 4,
+    "calls": 85,
+    "encoded_rows": 1021502,
+    "filtered": 1542870,
+    "index_builds": 0,
+    "index_probes": 0,
+    "index_reuses": 0,
+    "index_rows": 0,
+    "invalid_receipts": 0,
+    "numeric_requests": 510751,
+    "pair_checks": 1611130,
+    "rule_plans": 1,
+    "undefined": 0
+   },
+   "counts": {
+    "approximate_visits": 1881054,
+    "calls": 13267,
+    "committed": 200897,
+    "exhausted": 0,
+    "learned_pointers": 1852836,
+    "peak_rule_tuples": 12420,
+    "point_reads": 121695,
+    "primitive_evals": 71587,
+    "raw_parent_rejects": 4440,
+    "raw_root_slots": 792674,
+    "raw_tuples": 309277,
+    "rejected_pointers": 0,
+    "root_offers": 5643339,
+    "score_bucket_reads": 2136451,
+    "shortlisted": 0,
+    "stale_candidates": 16825,
+    "table_rebuilds": 95,
+    "unsupported": 0,
+    "validated": 200897,
+    "verified_parent_tuples": 304837,
+    "visible_rows": 39488
+   },
+   "median_ms": 3781.8378755,
+   "sparse": {
+    "admitted": 3222,
+    "age_tests": 15691974,
+    "considered": 5158,
+    "emits": 85538,
+    "learned_build_rows": 3049714,
+    "learned_probes": 2398375,
+    "left_stale": 2507,
+    "mixed": 715,
+    "pair_rules": {
+     "116": [
+      44,
+      1113,
+      219402,
+      23
+     ],
+     "117": [
+      44,
+      1113,
+      219402,
+      24
+     ],
+     "118": [
+      44,
+      1113,
+      219402,
+      23
+     ],
+     "119": [
+      43,
+      11740,
+      219298,
+      312
+     ],
+     "120": [
+      43,
+      11740,
+      219298,
+      290
+     ],
+     "122": [
+      40,
+      150206,
+      214795,
+      4153
+     ],
+     "123": [
+      41,
+      108392,
+      217278,
+      2854
+     ],
+     "124": [
+      41,
+      108392,
+      217278,
+      3391
+     ],
+     "127": [
+      44,
+      2079,
+      219402,
+      51
+     ],
+     "128": [
+      44,
+      2079,
+      219402,
+      53
+     ],
+     "129": [
+      44,
+      1694,
+      219402,
+      36
+     ],
+     "131": [
+      44,
+      396,
+      219402,
+      9
+     ],
+     "132": [
+      44,
+      396,
+      219402,
+      9
+     ],
+     "133": [
+      36,
+      88566,
+      88566,
+      1887
+     ],
+     "134": [
+      9,
+      15,
+      25620,
+      9
+     ],
+     "135": [
+      9,
+      15,
+      25620,
+      0
+     ],
+     "21": [
+      2,
+      658,
+      658,
+      65
+     ],
+     "22": [
+      2,
+      658,
+      658,
+      65
+     ],
+     "24": [
+      2,
+      658,
+      658,
+      17
+     ],
+     "243": [
+      2,
+      104,
+      1287,
+      2
+     ],
+     "251": [
+      3,
+      870,
+      1015,
+      5
+     ],
+     "287": [
+      72,
+      140847,
+      190134,
+      12
+     ],
+     "289": [
+      49,
+      1534,
+      175101,
+      7
+     ],
+     "294": [
+      49,
+      16538,
+      175101,
+      908
+     ],
+     "296": [
+      49,
+      17242,
+      175101,
+      360
+     ],
+     "306": [
+      72,
+      190134,
+      190134,
+      5758
+     ],
+     "318": [
+      38,
+      1216,
+      112627,
+      28
+     ],
+     "319": [
+      34,
+      13624,
+      111846,
+      104
+     ],
+     "320": [
+      38,
+      76,
+      112627,
+      4
+     ],
+     "321": [
+      37,
+      3421,
+      112582,
+      224
+     ],
+     "322": [
+      34,
+      11734,
+      111846,
+      533
+     ],
+     "325": [
+      38,
+      358,
+      112627,
+      18
+     ],
+     "327": [
+      31,
+      44000,
+      108905,
+      2395
+     ],
+     "328": [
+      6,
+      23697,
+      24474,
+      1155
+     ],
+     "332": [
+      37,
+      1928,
+      112582,
+      141
+     ],
+     "333": [
+      37,
+      2490,
+      112582,
+      144
+     ],
+     "349": [
+      3,
+      51,
+      1017,
+      3
+     ],
+     "350": [
+      3,
+      51,
+      1017,
+      3
+     ],
+     "351": [
+      7,
+      2767,
+      39344,
+      68
+     ],
+     "353": [
+      8,
+      254,
+      44696,
+      1
+     ],
+     "364": [
+      4,
+      1191,
+      22514,
+      1975
+     ],
+     "371": [
+      5,
+      27723,
+      27723,
+      586
+     ],
+     "407": [
+      4,
+      22211,
+      22211,
+      586
+     ],
+     "408": [
+      4,
+      22211,
+      22211,
+      586
+     ],
+     "467": [
+      19,
+      1865,
+      124279,
+      1969
+     ],
+     "472": [
+      9,
+      1064,
+      1734,
+      9
+     ],
+     "476": [
+      11,
+      99,
+      1857,
+      0
+     ],
+     "482": [
+      10,
+      620,
+      1812,
+      0
+     ],
+     "483": [
+      11,
+      66,
+      1857,
+      0
+     ],
+     "486": [
+      4,
+      588,
+      22210,
+      184
+     ],
+     "49": [
+      9,
+      2681,
+      50206,
+      2421
+     ],
+     "490": [
+      4,
+      48,
+      551,
+      0
+     ],
+     "505": [
+      50,
+      82447,
+      110752,
+      3584
+     ],
+     "509": [
+      4,
+      890,
+      890,
+      392
+     ],
+     "510": [
+      4,
+      890,
+      890,
+      392
+     ],
+     "511": [
+      4,
+      890,
+      890,
+      0
+     ],
+     "513": [
+      32,
+      9006,
+      139955,
+      360
+     ],
+     "514": [
+      32,
+      9006,
+      139955,
+      338
+     ],
+     "515": [
+      33,
+      1072,
+      140065,
+      97
+     ],
+     "516": [
+      33,
+      1072,
+      140065,
+      98
+     ],
+     "517": [
+      33,
+      1072,
+      140065,
+      97
+     ],
+     "518": [
+      30,
+      87040,
+      136542,
+      1777
+     ],
+     "519": [
+      33,
+      297,
+      140065,
+      9
+     ],
+     "522": [
+      31,
+      70546,
+      139343,
+      3677
+     ],
+     "523": [
+      31,
+      70546,
+      139343,
+      3827
+     ],
+     "524": [
+      33,
+      1564,
+      140065,
+      50
+     ],
+     "525": [
+      33,
+      1350,
+      140065,
+      64
+     ],
+     "526": [
+      6,
+      60,
+      2426,
+      207
+     ],
+     "528": [
+      226,
+      59376,
+      725194,
+      297
+     ],
+     "539": [
+      226,
+      1353,
+      719803,
+      2174
+     ],
+     "573": [
+      178,
+      52336,
+      94201,
+      826
+     ],
+     "577": [
+      56,
+      14399,
+      106484,
+      4938
+     ],
+     "59": [
+      63,
+      170053,
+      325823,
+      3549
+     ],
+     "60": [
+      69,
+      97787,
+      348864,
+      4560
+     ],
+     "87": [
+      80,
+      2142,
+      803020,
+      363
+     ],
+     "88": [
+      78,
+      21481,
+      802749,
+      885
+     ],
+     "90": [
+      72,
+      278552,
+      792541,
+      7950
+     ],
+     "91": [
+      75,
+      203831,
+      800367,
+      7948
+     ],
+     "92": [
+      76,
+      107387,
+      801739,
+      3412
+     ],
+     "94": [
+      80,
+      3806,
+      803020,
+      120
+     ],
+     "95": [
+      80,
+      3078,
+      803020,
+      70
+     ],
+     "98": [
+      80,
+      720,
+      803020,
+      17
+     ]
+    },
+    "right_rows": 15691974,
+    "unneeded_epoch_sorts": 966
+   }
+  }
+ }
+}

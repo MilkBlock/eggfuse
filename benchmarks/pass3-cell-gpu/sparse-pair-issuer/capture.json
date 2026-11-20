@@ -1,0 +1,10 @@
+{
+ "core": {
+  "timing_sha256": "f52dd5eb1f3d77a2ab72fb0feba96e5fc0c1639d2345ab42a44f65c3bea4471a",
+  "binary_sha256": "cd6413902b6170464131eff3c5827733c61986baf168467be71eb6d7d0d983ab"
+ },
+ "transfer": {
+  "timing_sha256": "adc200e33266c089cf2a7d574a5ab1ff6ca3a066f8ae0daca1f3c3fc453a1e24",
+  "binary_sha256": "cd6413902b6170464131eff3c5827733c61986baf168467be71eb6d7d0d983ab"
+ }
+}
