@@ -38,3 +38,17 @@ Offline replay of the earlier numeric-projection trace supplies a separate bound
 ```sh
 python benchmarks/pass3-cell-gpu/request-transactions/min_replay.py "$EXP/numeric-projection-study" "$EXP/min-transactions.json"
 ```
+
+## Larger holdout and peak resident memory
+
+On conjugate-gradient/1703 with the same policy and allocator, immediate was 1,452.40 ms and delayed width eight with full sharing was 1,434.51 ms (faster in four of six paired blocks). The equal-budget streaming arm took 1,474.39 ms, width 32 took 1,453.13 ms, and true vanilla took 364.73 ms. Width eight eliminated 898,495 parent decodes, 49,418 table reads and 41,726 scalar evaluations. This is a single-seed larger holdout. All original source and certificate identities, positive and negative requests and physical ownership were verified independently. [Raw measurements](conjugate.json)
+
+Fresh subprocess peak RSS uses Darwin's maximum resident set size and includes program load, inference and export; the OS page cache was not purged. Values below are three-run medians in MiB. Fresh wall measurements include the different report sizes returned by each backend. [Per-process samples](footprint.json)
+
+| Input | Vanilla | Immediate | Stream / 8 | Defer / 8 | Defer / 32 |
+|---|---:|---:|---:|---:|---:|
+| sum-bits | 285.42 | 277.12 | 277.30 | 277.27 | 277.27 |
+| dot-product | 308.64 | 300.84 | 300.92 | 300.84 | 300.91 |
+| jacobi-1d | 353.41 | 381.38 | 381.50 | 381.45 | 381.53 |
+
+The high-water mark includes more than the local request buffers. There is no measured material peak-RSS saving from changing the batch size on these inputs.
