@@ -1,0 +1,554 @@
+{
+ "sum-bits/1703/id": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 7206,
+   "rhs_inputs_from_recurrent_neural_proposals": 59,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 56,
+   "child_rhs": 3,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "sum-bits/1709/id": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 7209,
+   "rhs_inputs_from_recurrent_neural_proposals": 56,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 54,
+   "child_rhs": 2,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "sum-bits/1703/graph": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 7204,
+   "rhs_inputs_from_recurrent_neural_proposals": 61,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 57,
+   "child_rhs": 4,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "sum-bits/1709/graph": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 7209,
+   "rhs_inputs_from_recurrent_neural_proposals": 56,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 54,
+   "child_rhs": 2,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "sum-bits/1703/compose": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 7204,
+   "rhs_inputs_from_recurrent_neural_proposals": 61,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 57,
+   "child_rhs": 4,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "sum-bits/1709/compose": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 7209,
+   "rhs_inputs_from_recurrent_neural_proposals": 56,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 53,
+   "child_rhs": 3,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "dot-product/1703/id": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 6655,
+   "rhs_inputs_from_recurrent_neural_proposals": 49,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 49,
+   "child_rhs": 0,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "dot-product/1709/id": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 6651,
+   "rhs_inputs_from_recurrent_neural_proposals": 53,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 53,
+   "child_rhs": 0,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "dot-product/1703/graph": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 6654,
+   "rhs_inputs_from_recurrent_neural_proposals": 50,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 50,
+   "child_rhs": 0,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "dot-product/1709/graph": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 6650,
+   "rhs_inputs_from_recurrent_neural_proposals": 54,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 54,
+   "child_rhs": 0,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "dot-product/1703/compose": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 6654,
+   "rhs_inputs_from_recurrent_neural_proposals": 50,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 50,
+   "child_rhs": 0,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "dot-product/1709/compose": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 6650,
+   "rhs_inputs_from_recurrent_neural_proposals": 54,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 54,
+   "child_rhs": 0,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "gemm-bias-relu/1703/id": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 15408,
+   "rhs_inputs_from_recurrent_neural_proposals": 54,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 46,
+   "child_rhs": 8,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "gemm-bias-relu/1709/id": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 15410,
+   "rhs_inputs_from_recurrent_neural_proposals": 52,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 45,
+   "child_rhs": 7,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "gemm-bias-relu/1703/graph": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 15410,
+   "rhs_inputs_from_recurrent_neural_proposals": 52,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 45,
+   "child_rhs": 7,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "gemm-bias-relu/1709/graph": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 15404,
+   "rhs_inputs_from_recurrent_neural_proposals": 58,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 50,
+   "child_rhs": 8,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "gemm-bias-relu/1703/compose": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 15410,
+   "rhs_inputs_from_recurrent_neural_proposals": 52,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 45,
+   "child_rhs": 7,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "gemm-bias-relu/1709/compose": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 15408,
+   "rhs_inputs_from_recurrent_neural_proposals": 54,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 47,
+   "child_rhs": 7,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "stable-argmax/1703/id": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 8149,
+   "rhs_inputs_from_recurrent_neural_proposals": 41,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 36,
+   "child_rhs": 5,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "stable-argmax/1709/id": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 8150,
+   "rhs_inputs_from_recurrent_neural_proposals": 40,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 35,
+   "child_rhs": 5,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "stable-argmax/1703/graph": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 8149,
+   "rhs_inputs_from_recurrent_neural_proposals": 41,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 36,
+   "child_rhs": 5,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "stable-argmax/1709/graph": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 8150,
+   "rhs_inputs_from_recurrent_neural_proposals": 40,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 35,
+   "child_rhs": 5,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "stable-argmax/1703/compose": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 8149,
+   "rhs_inputs_from_recurrent_neural_proposals": 41,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 36,
+   "child_rhs": 5,
+   "verification": "pending_parent_batch"
+  }
+ },
+ "stable-argmax/1709/compose": {
+  "opened": [
+   "actor.json",
+   "catalog.json",
+   "device.json",
+   "device.npz",
+   "ports.pt",
+   "reader.pt"
+  ],
+  "source_aligned": true,
+  "roles": {
+   "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+   "rhs_inputs_from_exact_search": 8150,
+   "rhs_inputs_from_recurrent_neural_proposals": 40,
+   "next_run_state": "generated_device_token_and_committed_graph",
+   "recurrent_neural_token_input": true,
+   "ingress_reader": "learned",
+   "learned_entry_router": false,
+   "root_rhs": 35,
+   "child_rhs": 5,
+   "verification": "pending_parent_batch"
+  }
+ }
+}
