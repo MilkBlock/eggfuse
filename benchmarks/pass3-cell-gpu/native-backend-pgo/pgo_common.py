@@ -27,3 +27,7 @@ def file_digest(path):
         for chunk in iter(lambda: fp.read(1 << 20), b''):
             h.update(chunk)
         return h.hexdigest()
+
+ARMS=('vanilla-release','learned-release','vanilla-plain','learned-plain','vanilla-use','learned-use')
+PROOFS=('raw','multi','commits','physical','children','cells','single_winners','multi_winners',
+        'root_parents','root_ids','nested_ids','state_sha','rhs','fresh','direct_cells')

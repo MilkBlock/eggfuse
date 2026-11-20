@@ -6,16 +6,15 @@ import json
 from pathlib import Path
 from statistics import median
 from time import perf_counter_ns
-from pgo_common import DONORS,HERE,HOLDOUTS,file_digest,inputs,session,source
+from pgo_common import ARMS,PROOFS,DONORS,HERE,HOLDOUTS,file_digest,inputs,session,source
 
-ARMS=('vanilla-release','learned-release','vanilla-plain','learned-plain','vanilla-use','learned-use')
+
 
 def binary(a,arm):
     if arm=='vanilla-release':return a.exp/'compact-vanilla-20261121/vanilla'
     if arm=='learned-release':return a.exp/'composed-cpu-profile-v1/session'
     return a.build/arm
-PROOFS=('raw','multi','commits','physical','children','cells','single_winners','multi_winners',
-        'root_parents','root_ids','nested_ids','state_sha','rhs','fresh','direct_cells')
+
 
 
 def audit(a,program,plan,request,case):

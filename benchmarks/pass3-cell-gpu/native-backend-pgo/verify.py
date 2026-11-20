@@ -2,8 +2,7 @@
 import json
 from pathlib import Path
 from statistics import median
-from study import ARMS,PROOFS
-from pgo_common import DONORS,HOLDOUTS
+from pgo_common import ARMS,PROOFS,DONORS,HOLDOUTS
 
 HERE=Path(__file__).resolve().parent
 
