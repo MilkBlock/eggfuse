@@ -27,6 +27,17 @@ All times are median resident inference ms. The combined path reduced the 3mm me
 
 Each arm preserved raw proposed tuples and their order, single- and multi-parent winners, actual root and nested physical IDs, ordered source RHS and writes, union events, Spine resumes, schedule, and final graph. All source RHS had neural provenance with exact completion disabled. The withdrawal check in each receipt arm rejected a missing input before ordered consumption.
 
+## Whole-process high-water RSS
+
+Each macOS sample is one native child that imports the program and graph, performs one complete unaudited inference and exports the result. Three rotating samples per arm follow one warmup. The high-water mark includes code, initialization, model, graph, verifier, export and teardown. The child also checks Run/RHS totals, final graph and direct root count against the audited execution.
+
+| Source | Off MiB | Run tickets MiB | All MiB |
+|---|---:|---:|---:|
+| sum-bits | 271.66 | 269.89 | 269.86 |
+| 3mm | 747.14 | 693.50 | 699.66 |
+
+On 3mm the isolated Run directory reduced the full process high-water mark. The handoff timings and RSS come from distinct executions. [Per-process byte measurements](rss.json)
+
 ## Reproduction
 
 Use the existing external Pass 3 inputs, native vanilla executable and frozen weights. Each output directory must be new.
@@ -35,5 +46,6 @@ Use the existing external Pass 3 inputs, native vanilla executable and frozen we
 d=benchmarks/pass3-cell-gpu/verified-binding-transfer
 python "$d/build.py" "$EXP/binding-transfer"
 python "$d/study.py" "$EXP" "$EXP/binding-transfer/session" "$EXP/binding-transfer-results"
+python "$d/peak.py" "$EXP" "$EXP/binding-transfer/session" "$EXP/binding-transfer-results/results.json" "$EXP/binding-transfer-rss"
 python "$d/verify.py"
 ```

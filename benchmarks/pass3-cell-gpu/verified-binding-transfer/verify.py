@@ -1,4 +1,6 @@
 """Check source ledgers and physical Cell IDs separately from timing or resident memory."""
+import json
+from statistics import median
 from pathlib import Path
 import sys
 
@@ -27,6 +29,12 @@ def verify(folder):
             key={'move':'winning_marks_moved','receipt':'receipt_fields'}.get(name)
             if key:assert arms['all']['transfer'][key]==arms[name]['transfer'][key]
         assert arms['all']['ticket_peak']==arms['run-tickets']['ticket_peak']
+    rss=json.loads((folder/'rss.json').read_bytes())
+    assert set(rss)==set(data)
+    for sample in rss.values():
+        assert set(sample)=={'off','run-tickets','all'}
+        for v in sample.values():
+            assert len(v['bytes'])==3 and all(b>0 for b in v['bytes']) and median(v['bytes'])==v['median']
     return data
 
 if __name__=='__main__':print('Verified source/winner orders, physical roots, slot corruption and ticket lifetime for',len(verify(HERE)),'complete programs.')
