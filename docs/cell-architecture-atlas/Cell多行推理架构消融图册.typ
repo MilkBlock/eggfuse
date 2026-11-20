@@ -40,7 +40,7 @@
   card([现有边界],[图 71 的选择性模型覆盖 99.83%–99.97% 的源 RHS，图 75 的根／子配方直接构造超过 99% 的新 Cell。整轮仍慢于精确 Rust。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–89 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–90 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -279,6 +279,7 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S76","封存元组的错误归因与多视图","benchmarks/pass3-cell-gpu/learned-atom-constraints/README.md")
 #src("S77","训练负例和额外二进制端口容量","benchmarks/pass3-cell-gpu/collision-trained-ports/README.md")
 #src("S78","冻结程序在两个更大负载上的源核对","benchmarks/pass3-cell-gpu/prefix-transfer/README.md")
+#src("S79","Deriche 完整枚举、预算与分页","benchmarks/pass3-cell-gpu/complete-generation/README.md")
 #v(2mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)

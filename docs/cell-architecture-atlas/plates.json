@@ -4786,5 +4786,88 @@
         ]
       }
     ]
+  },
+  {
+    "id": "90-complete-generation",
+    "section": "有限预算与已封存凭证",
+    "title": "预算已用完，这个 Run 真的完整吗？",
+    "status": "已测 · Deriche 与边界用例",
+    "q": "Deriche 的 Run 819 中，五次独立选父的规则 249 截断后漏了 3,120 个合法 RHS。用最后一个候选和仍有分支的两个真实用例区分阈值与未完成工作。",
+    "arms": "a　有限预算若留下未探分支，返回 Run、规则和未完成原因。b　在原顺序完整生成。c　把完整提案分成有限大小的页，全数封存后由原验证器消费。",
+    "fix": "保留编译器签发的源程序、神经端口和有序提交。分小页与单页须逐项复现全部原始地址和版本；独立默认 CPU 核对每 Run、最终图和实际分配身份。",
+    "measure": "Deriche 完整旧配置／每页最多 8,192 组／冻结双视图分别为 15.05／14.70／3.93 s，原生为 1.60 s。三种正确神经执行都得到 635,818 个源 RHS。",
+    "note": "旧配置的最大页有 7,192,696 个元组。三次独立新进程测得峰值 RSS 分别为 4,253／2,341／879 MiB，vanilla 为 886 MiB。",
+    "src": "S79",
+    "diagram": [
+      {
+        "title": "Bounded",
+        "layers": [
+          [
+            [
+              "n",
+              "pointer budget"
+            ]
+          ],
+          [
+            [
+              "v",
+              "unexplored branch?"
+            ]
+          ],
+          [
+            [
+              "s",
+              "report pending rule"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Complete",
+        "layers": [
+          [
+            [
+              "n",
+              "all learned choices"
+            ]
+          ],
+          [
+            [
+              "w",
+              "immutable receipts"
+            ]
+          ],
+          [
+            [
+              "v",
+              "ordered source check"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Paged",
+        "layers": [
+          [
+            [
+              "n",
+              "seal bounded chunks"
+            ]
+          ],
+          [
+            [
+              "s",
+              "same address sequence"
+            ]
+          ],
+          [
+            [
+              "v",
+              "ordered source check"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
