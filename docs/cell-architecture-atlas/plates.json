@@ -4122,5 +4122,254 @@
         ]
       }
     ]
+  },
+  {
+    "id": "82-merge-reward",
+    "section": "组合 Cell 的信用分配",
+    "title": "该奖励一次合并，还是它省掉的工作？",
+    "status": "已测 · 四负载双种子",
+    "q": "在同一真实父发布处，让九参数门控选择逐叶验证或编译组合。所有合法子 RHS 仍在原 Run 执行。",
+    "arms": "a　仅用后续子 RHS 归属做监督。b　额外奖励提出合并，或只奖励真正赢得的子 RHS。c　按省去的入口、重复检查和独立票据计价，分别扣局部或完整索引维护。",
+    "fix": "冻结父模型、模板库、预算和验证器。四个训练程序之外的 4 个工作负载 × 2 种子，一共给出 1,944 次机会。原始 RHS、有效写入、Spine、union、物理 ID 与最终图逐项一致。",
+    "measure": "真实预训练下，基础监督选 721 次、兑现 427 次；奖励提出选 1,764 次、兑现 844 次；奖励兑现选 1,740 次、兑现 834 次。只扣局部成本会选全部 1,944 次。",
+    "note": "原全表重建实现中，完整维护成本使门控在实测输入上全拒绝，但索引仍刷新。合并信用与入口遍历、物理记录退役、整轮耗时各自记录。",
+    "src": "S72",
+    "diagram": [
+      {
+        "title": "Supervision",
+        "layers": [
+          [
+            [
+              "s",
+              "published parent"
+            ]
+          ],
+          [
+            [
+              "n",
+              "merge gate"
+            ]
+          ],
+          [
+            [
+              "w",
+              "child winner"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Action or outcome",
+        "layers": [
+          [
+            [
+              "n",
+              "issue composite"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check original Run"
+            ]
+          ],
+          [
+            [
+              "w",
+              "unique child RHS"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Charged work",
+        "layers": [
+          [
+            [
+              "s",
+              "leaf vs composite"
+            ]
+          ],
+          [
+            [
+              "v",
+              "visits and receipts"
+            ]
+          ],
+          [
+            [
+              "w",
+              "charge index work"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "83-synthetic-merge",
+    "section": "合成课程与真实反馈",
+    "title": "需要先合成 Cell 轨迹，才能学合并吗？",
+    "status": "已测 · 完整与少样本对照",
+    "q": "固定优化器和更新次数，只替换预训练样本。两组随后收到完全相同的真实执行反馈。",
+    "arms": "a　直接从父发布票据学习。b　在小型解释器中生成带版本的父发布、重复认领、地址替换及后续消费，再用真实样本更新。c　在真实 Rust Pass 3 对比逐实例决策与端到端结果。",
+    "fix": "真实组用 689 个发布，其中 295 个后来赢得子 RHS。合成预训练 80 次更新，随后两组均用真实数据更新 120 次。额外将真样本缩至 96 个发布、41 个获胜。",
+    "measure": "奖励真实子 RHS、奖励局部工作、扣完整维护成本三组，两种预训练在 8／8 个负载–种子配对上选择完全相同。96 样本对照中，兑现奖励和完整成本奖励也在 4／4 对上相同。",
+    "note": "689 个发布只有 52 个不同输入向量，其中 21 种同时出现获胜与未获胜。即使记住全部向量，也至少错分 181 次。这里测试的是已知模板家族的门控。",
+    "src": "S72",
+    "diagram": [
+      {
+        "title": "Native warm start",
+        "layers": [
+          [
+            [
+              "s",
+              "source publications"
+            ]
+          ],
+          [
+            [
+              "n",
+              "80 warm updates"
+            ]
+          ],
+          [
+            [
+              "w",
+              "gate weights"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Synthetic warm start",
+        "layers": [
+          [
+            [
+              "s",
+              "versioned episodes"
+            ]
+          ],
+          [
+            [
+              "n",
+              "80 warm updates"
+            ]
+          ],
+          [
+            [
+              "w",
+              "gate weights"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Same real reward",
+        "layers": [
+          [
+            [
+              "s",
+              "native receipts"
+            ]
+          ],
+          [
+            [
+              "n",
+              "120 real updates"
+            ]
+          ],
+          [
+            [
+              "v",
+              "held-out Rust pass"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "84-physical-merge-reward",
+    "section": "物理存储的奖励",
+    "title": "少一个 owner，会少几条活记录？",
+    "status": "已测 · 原生存储对照",
+    "q": "已存在的实例接纳新成员时，目标可以是少建一个 owner、退役确实无外部读者的旧视图，或减少含库开销的净字节。",
+    "arms": "a　按少用的 owner 选模板。b　用源轨迹核实旧视图退役，再给候选信用。c　连同外部句柄、实例头和库一起计费，也允许保留空库。",
+    "fix": "四族提供训练证据，固定库预算和测试准入。旧原生精确执行器负责本组绑定；本页的物理节省归因于存储动作，神经签发贡献为零。",
+    "measure": "dot-product 的两个奖励都少 52 个 owner，但只有退役奖励再消除 9 个旧视图。stable-argmax 中前者少 100 个 owner、额外退役 0；后者少 63 个 owner、额外退役 6。",
+    "note": "计入库与运行时状态后，上述配对的实测内存均增加。按训练净字节选会拒绝 12 个候选。吸收新生子成员与合并两个已各有 owner 的实例须分别验收。",
+    "src": "S73",
+    "diagram": [
+      {
+        "title": "Owner count",
+        "layers": [
+          [
+            [
+              "s",
+              "parent + new child"
+            ]
+          ],
+          [
+            [
+              "v",
+              "physical attach"
+            ]
+          ],
+          [
+            [
+              "w",
+              "fewer owners"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Retired view",
+        "layers": [
+          [
+            [
+              "s",
+              "external readers"
+            ]
+          ],
+          [
+            [
+              "v",
+              "lifetime proof"
+            ]
+          ],
+          [
+            [
+              "w",
+              "retirement receipt"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Net bytes",
+        "layers": [
+          [
+            [
+              "s",
+              "library + graph"
+            ]
+          ],
+          [
+            [
+              "v",
+              "charged layout"
+            ]
+          ],
+          [
+            [
+              "w",
+              "admit or abstain"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
