@@ -38,11 +38,16 @@ def align(program,packet,device,oracle,detail):
     def value(sort,v,parent):
         k=sort['kind'];v=int(v)
         if k=='eq':return {'Eq':root(parent,origin[v])}
+        if k=='set':
+            ids=sorted(root(parent,origin[int(x)]) for i,x in enumerate(bits) if v&(1<<i))
+            if len(ids)!=len(set(ids)):raise ValueError('device event contains duplicated set members')
+            return {'Set':[{'Eq':i} for i in ids]}
         if k=='String':return {'Text':gpu['strings'][v]}
         if k=='f64':return {'Float':v}
         return {'Int':v}
     parent={};device_parent={};matrices=[];unresolved=[];details={}
     with np.load(device/'output.npz') as z:
+        bits=z.get('set_members',())
         births=z['birth_runs'];cells=z['birth_fields'];table_id=z['meta'][:,0];tables=p['tables']
         functions={}
         for row,tid in enumerate(table_id):

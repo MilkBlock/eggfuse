@@ -68,8 +68,18 @@ def encode(rows,tables,*,compose=True):
     return templates,instances,symbols
 
 
-def primitive(call,eq_sorts):
-    name=call['primitive'];a,b=call['inputs'];out=call['output']
+def primitive(call,eq_sorts,sets=None):
+    name=call['primitive'];inputs=call['inputs'];out=call['output']
+    containers=sets or {}
+    if name.startswith('set-'):
+        operand_sort=out if name in ('set-of','set-empty') else inputs[0]
+        elem=containers.get(operand_sort)
+        signatures={'set-insert':([operand_sort,elem],operand_sort),'set-intersect':([operand_sort]*2,operand_sort),
+                    'set-union':([operand_sort]*2,operand_sort),'set-length':([operand_sort],'i64'),
+                    'set-empty':([],operand_sort),'set-of':([elem]*len(inputs),operand_sort)}
+        if elem in eq_sorts and signatures.get(name)==(inputs,out):return name
+        raise ValueError(f'unsupported device Set signature: {call}')
+    a,b=inputs
     if a!=b:raise ValueError(f'unhandled mixed-type primitive: {call}')
     if name=='!=' and out=='Unit' and a in eq_sorts:
         return 'eq-id-!='
@@ -84,6 +94,7 @@ def primitive(call,eq_sorts):
 def packet(program,root,compose=True):
     r=json.loads(program.read_text());p=r['recipe'];tables=p['tables'];idx={t['name']:i for i,t in enumerate(tables)}
     eq_sorts={s['name'] for t in tables for s in t['schema'] if s['kind']=='eq'}
+    containers={s['name']:s['element']['name'] for t in tables for s in t['schema'] if s['kind']=='set' and s['element']['kind']=='eq'}
     templates,cells,symbols=encode(r['initial'],tables,compose=compose)
     literal={canonical(v):i for i,v in enumerate(symbols)}
     def operand(a):
@@ -99,23 +110,30 @@ def packet(program,root,compose=True):
     for rule in p['rules']:
         atoms=[];effects=[]
         for q in rule['query']:
-            call=q['call'];atoms.append([idx[call['table']] if 'table' in call else primitive(call,eq_sorts),
+            call=q['call'];atoms.append([idx[call['table']] if 'table' in call else primitive(call,eq_sorts,containers),
                                           [operand(a) for a in q['args']]])
         for e in rule['effects']:
             call=e.get('call',{});args=list(e.get('args',[]))
             if 'arg' in e:args=[e['arg']]
             if 'value' in e:args.append(e['value'])
-            effects.append([e['kind'],idx[call['table']] if 'table' in call else (primitive(call,eq_sorts) if 'primitive' in call else -1),
+            effects.append([e['kind'],idx[call['table']] if 'table' in call else (primitive(call,eq_sorts,containers) if 'primitive' in call else -1),
                             e.get('dst',-1),[operand(a) for a in args]])
         rules.append(dict(q=atoms,e=effects,n=len(rule['slots']),inputs=[i for i,s in enumerate(rule['slots']) if s['definition']=='query'],
                           semi=rule['metadata']['seminaive']))
+        set_inputs=[j for j,i in enumerate(rules[-1]['inputs']) if rule['slots'][i]['sort']['kind']=='set']
+        if set_inputs:rules[-1]['set_inputs']=set_inputs
     root.mkdir(parents=True,exist_ok=True)
     # Preserve the source engine's public import precedence separately from
     # the canonical Cell layout. It affects ordered commits after matching.
     rank={}
+    # Import nested identities in the CPU input's traversal order as well.
+    def visit(v):
+        if 'eq' in v:
+            k=canonical(v);rank.setdefault(k,len(rank)+1)
+            if k not in literal:literal[k]=len(symbols);symbols.append(v)
+        for element in v.get('elements',[]):visit(element)
     for row in r['initial']:
-        for v in row['values']:
-            if 'eq' in v:rank.setdefault(canonical(v),len(rank)+1)
+        for v in row['values']:visit(v)
     eq_order=[rank.get(canonical(v),0) for v in symbols]
     result=dict(eq_order=eq_order,format='eggfuse.cell-ingress/1',tables=tables,symbols=symbols,templates=templates,instances=cells,
                 sets=sets,control=schedule,rules=rules,stage_entries=r['multi_stage']['stage_entries'],program_sha256=digest(program),recipe_sha256=p['sha256'])

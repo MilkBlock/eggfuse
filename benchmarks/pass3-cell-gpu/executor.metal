@@ -32,6 +32,91 @@ inline int root_id(device const int *meta,int v){
     while(parent[v])v=parent[v];
     return v;
 }
+#if HAS_SETS
+// 63 immutable element slots. The second array maps each slot to its current
+// canonical bit. Only ordered commit changes parents or alias forwarding.
+inline int set_element(device const int *meta,int i){
+    return atomic_load_explicit((device const atomic_int *)(meta+SET_BASE+i),memory_order_relaxed);
+}
+inline ulong normalized_mask_once(device const int *meta,ulong mask){
+    ulong result=0;
+    while(mask){int i=ctz(mask);mask&=mask-1;result|=1UL<<meta[SET_BASE+63+i];}
+    return result;
+}
+inline int member_bit(device const int *meta,device int *state,int value){
+    if(value<=0 || value>=UF_SIZE){state[5]=20;return -1;}
+    int root=root_id(meta,value);
+    for(int i=0;i<63;i++){
+        int raw=set_element(meta,i);
+        if(!raw){
+            int empty=0;
+            device atomic_int *slot=(device atomic_int *)(const_cast<device int *>(meta)+SET_BASE+i);
+            while(!atomic_compare_exchange_weak_explicit(slot,&empty,root,memory_order_relaxed,memory_order_relaxed) && !empty){}
+            raw=empty?empty:root;
+        }
+        if(root_id(meta,raw)==root)return meta[SET_BASE+63+i];
+    }
+    state[5]=20;return -1;
+}
+inline void set_count(device int *state,int n){
+    if(COUNT_WORK)atomic_fetch_add_explicit((device atomic_int *)(state+56+n),1,memory_order_relaxed);
+}
+inline void repair_set_aliases_once(device int *meta,device int *state,int hi,int lo){
+    int first=-1;
+    for(int i=0;i<63;i++){
+        int raw=set_element(meta,i);if(!raw)break;
+        if(root_id(meta,raw)!=lo)continue;
+        if(first<0)first=i;
+        if(meta[SET_BASE+63+i]!=first){meta[SET_BASE+63+i]=first;set_count(state,6);}
+    }
+}
+inline bool set_changed_once(device const int *meta,ulong mask,int epoch){
+    while(mask){int bit=ctz(mask);mask&=mask-1;
+        for(int v=set_element(meta,bit);meta[6*ROW_CAP+v];v=meta[6*ROW_CAP+v])
+            if(meta[6*ROW_CAP+UF_SIZE+v]==epoch)return true;
+    }
+    return false;
+}
+// Diagnostic paired amplification. Each operation still executes once on
+// live state. Volatile inputs keep the replicated reads inside the kernel.
+inline ulong normalized_mask(device const int *meta,ulong mask){
+    ulong result=normalized_mask_once(meta,mask);
+#if SET_MAINT_REPEAT>1
+    volatile ulong input=mask,sink=0;
+    for(int j=1;j<SET_MAINT_REPEAT;j++){
+        ulong x=input;sink=SET_MAINT_CONTROL?x:normalized_mask_once(meta,x);
+    }
+#endif
+    return result;
+}
+inline bool set_changed(device const int *meta,ulong mask,int epoch){
+    bool result=set_changed_once(meta,mask,epoch);
+#if SET_MAINT_REPEAT>1
+    volatile ulong input=mask,sink=0;
+    for(int j=1;j<SET_MAINT_REPEAT;j++){
+        ulong x=input;sink=SET_MAINT_CONTROL?x:ulong(set_changed_once(meta,x,epoch));
+    }
+#endif
+    return result;
+}
+inline void repair_set_aliases(device int *meta,device int *state,int hi,int lo){
+    repair_set_aliases_once(meta,state,hi,lo);
+#if SET_MAINT_REPEAT>1
+    volatile int input=lo,sink=0;
+    for(int j=1;j<SET_MAINT_REPEAT;j++){
+        int x=input;sink=x;if(!SET_MAINT_CONTROL)repair_set_aliases_once(meta,state,hi,x);
+    }
+#endif
+}
+inline int take_min_member(device const int *meta,thread ulong &mask){
+    int smallest=INT_MAX,slot=-1;
+    for(ulong m=mask;m;m&=m-1){
+        int i=ctz(m),v=root_id(meta,set_element(meta,i));
+        if(v<smallest){smallest=v;slot=i;}
+    }
+    mask&=~(1UL<<slot);return smallest;
+}
+#endif
 inline bool unite(device int *state,device int *meta,long a,long b){
     if(a<=0 || b<=0 || a>=UF_SIZE || b>=UF_SIZE){state[5]=14;return false;}
     int x=root_id(meta,int(a)),y=root_id(meta,int(b));
@@ -42,6 +127,9 @@ inline bool unite(device int *state,device int *meta,long a,long b){
     device int *u=meta+UNION_LOG+4*log;
     u[0]=state[3];u[1]=state[0];u[2]=hi;u[3]=lo;
     meta[6*ROW_CAP+hi]=lo;
+    #if HAS_SETS
+    repair_set_aliases(meta,state,hi,lo);
+#endif
     meta[6*ROW_CAP+UF_SIZE+hi]=state[3];state[8]=1;state[12]=1;
     return true;
 }
@@ -58,6 +146,9 @@ inline void submit_union(device int *state,device int *meta,long a,long b){
 inline long field(device const int *rom,device const long *lits,device const int *meta,
                   device const long *dyn,int row,int col){
     long v=rawfield(rom,lits,meta,dyn,row,col);
+#if HAS_SETS
+    if(rom[SET_COLS+meta[6*row]]&(1<<col))return long(normalized_mask(meta,ulong(v)));
+#endif
     return (table(rom,meta[6*row])[3]&(1<<col))?long(root_id(meta,int(v))):v;
 }
 constant int SHARD_NEXT=BIRTH_RUN+8*ROW_CAP;
@@ -89,6 +180,9 @@ inline void append_shard(device const int *rom,device int *meta,device int *head
 kernel void inject(device const int *rom,device const int *slots,device int *state,device int *meta,
                    device int *head,device int *order,device const long *lits,device const long *dyn,uint gid [[thread_position_in_grid]]){
     if(gid)return;
+#if HAS_SETS
+    for(int i=0;i<63;i++){meta[SET_BASE+i]=i<NSET_SEEDS?rom[SET_SEEDS+i]:0;meta[SET_BASE+63+i]=i;}
+#endif
     for(int t=0;t<TABLES;t++)head[t]=-1;
     if(TILES>1 || LEARN_OWNER)for(int j=0;j<TABLES*PARTS;j++)head[SHARD_HEAD+j]=-1;
     for(int i=0;i<NINST;i++){
@@ -101,7 +195,8 @@ kernel void inject(device const int *rom,device const int *slots,device int *sta
             int t=rom[tp[1]+3*j],id=state[0]++;
             if(id>=ROW_CAP){state[5]=2;return;}
             device int *m=meta+6*id;
-            m[0]=t;m[1]=cell;m[2]=j;m[3]=(inst[2]>>j)&1;m[4]=0;m[5]=head[t];head[t]=id;append_shard(rom,meta,head,id,t,(LEARN_OWNER && table(rom,t)[0]>1)?rawfield(rom,lits,meta,dyn,id,0):0);
+            m[0]=t;m[1]=cell;m[2]=j;m[3]=(inst[2]>>j)&1;m[4]=0;m[5]=head[t];head[t]=id;
+            append_shard(rom,meta,head,id,t,(LEARN_OWNER && table(rom,t)[0]>1)?rawfield(rom,lits,meta,dyn,id,0):0);
         }
     }
 }
@@ -171,6 +266,31 @@ kernel void primitive_probe(device const long *inputs,device long *answers,devic
     bool ok=prim(stats,int(in[0]),in[1],in[2],value);
     answers[2*gid]=int(ok);answers[2*gid+1]=ok?value:0;
 }
+inline bool eval_op(device int *state,device const int *meta,int op,
+                    device const int *args,int n,thread long *env,device const long *lits,thread long &out){
+#if HAS_SETS
+    if(op>=16){
+        set_count(state,op-16);
+        ulong a=0,b=0;
+        if(op>=18)a=normalized_mask(meta,ulong(operand(args[0],env,lits)));
+        if(op==19 || op==20)b=normalized_mask(meta,ulong(operand(args[1],env,lits)));
+        if(op==16)out=0;
+        else if(op==17 || op==18){
+            for(int j=op==18?1:0;j<n;j++){
+                int slot=member_bit(meta,state,int(operand(args[j],env,lits)));
+                if(slot<0)return false;
+                a|=1UL<<slot;
+            }
+            out=long(a);
+        }else if(op==19)out=long(a&b);
+        else if(op==20)out=long(a|b);
+        else if(op==21)out=long(popcount(a));
+        else return false;
+        return true;
+    }
+#endif
+    return prim(state,op,operand(args[0],env,lits),operand(args[1],env,lits),out);
+}
 inline void do_next_run(device const int *rom,device int *state,device int *regs,device int *counts,uint gid){
     if(gid||state[5]||state[7])return;
     while(state[1]<NCTRL){
@@ -219,14 +339,16 @@ inline void route(device int *state,device const int *rom,device const long *lit
                   device const int *path,int pivot,int last,int lane,int lanes,
                   device int *cnt,device long *bank,device int *certs){
     int table0=path[0];
-    for(int seed=(TILES>1 || LEARN_OWNER)?head[SHARD_HEAD+table0*PARTS+lane]:head[table0];seed>=0;seed=(TILES>1 || LEARN_OWNER)?meta[SHARD_NEXT+seed]:meta[6*seed+5]){
+    int first=(TILES>1 || LEARN_OWNER)?head[SHARD_HEAD+table0*PARTS+lane]:head[table0];
+    for(int seed=first;seed>=0;seed=
+        (TILES>1 || LEARN_OWNER)?meta[SHARD_NEXT+seed]:meta[6*seed+5]){
         device const int *h=anchor(meta,seed);
         if(shard_of(meta,seed)!=lane || meta[6*seed+3] || !h[0] || meta[6*seed+4]<last)continue;
         long env[MAXSLOTS];int witness[DEPTH];bool matched=true;
         for(int pos=0;pos<rule[0] && matched;pos++){
             device const int *op=path+4*pos,*args=rom+op[2];int t=op[0],n=op[1],row=seed;
             if(t<0){
-                long v=0;matched=prim(state,-1-t,operand(args[0],env,lits),operand(args[1],env,lits),v);
+                long v=0;matched=eval_op(state,meta,-1-t,args,n-1,env,lits,v);
                 if(CERT)witness[pos]=-1;
                 if(op[3]&(1<<(n-1)))env[args[n-1]]=v;
                 else matched &= operand(args[n-1],env,lits)==v;
@@ -324,7 +446,7 @@ inline void do_search(device const int *rom,device const long *lits,device int *
         if(t<0){
             if(CERT)witness[depth]=-1;
             cur[depth]=-1;long val=0;
-            ok=prim(state,-1-t,operand(args[0],env,lits),operand(args[1],env,lits),val);
+            ok=eval_op(state,meta,-1-t,args,op[1]-1,env,lits,val);
             int lastcol=op[1]-1,key=args[lastcol];
             if(op[3]&(1<<lastcol))env[key]=val;
             else ok &= operand(key,env,lits)==val;
@@ -342,7 +464,8 @@ inline void do_search(device const int *rom,device const long *lits,device int *
             }
             version=max(version,m[4]);witness[depth]=row;
         }
-        if(ok){routed[depth+1]=routed[depth] || (SPINE_ON && t>=0 && (sp[2]&(1<<depth)) && meta[6*row+4]>=last && anchor(meta,row)[0]);
+        if(ok){
+            routed[depth+1]=routed[depth] || (SPINE_ON && t>=0 && (sp[2]&(1<<depth)) && meta[6*row+4]>=last && anchor(meta,row)[0]);
             depth++;epoch[depth]=version;cur[depth]=-2;}
     }
     count_work(state,3,visits);
@@ -416,8 +539,20 @@ inline int insert_row(device const int *rom,device int *state,device int *meta,d
     if(USE_INDEX)link_key(meta,head,id,t,key_bucket(values,n-1));
     state[8]=1;return id;
 }
-inline int compare(device const long *a,device const long *b,int n){
-    for(int j=0;j<n;j++){if(a[j]<b[j])return -1;if(a[j]>b[j])return 1;}return 0;
+inline int compare(device const long *a,device const long *b,int n,device const int *rom,device const int *meta,int rid){
+    for(int j=0;j<n;j++){
+        if(a[j]==b[j])continue;
+#if HAS_SETS
+        if(rom[SET_INPUTS+rid]&(1<<j)){
+            ulong x=ulong(a[j]),y=ulong(b[j]);
+            while(x && y){int l=take_min_member(meta,x),r=take_min_member(meta,y);if(l!=r)return l<r?-1:1;}
+            if(x || y)return x?1:-1;
+            continue;
+        }
+#endif
+        return a[j]<b[j]?-1:1;
+    }
+    return 0;
 }
 inline long merge_value(device const int *rom,device const long *lits,device int *state,device int *meta,
                         device long *dyn,device int *head,int t,long old,long v){
@@ -466,6 +601,14 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
                     v=meta[6*ROW_CAP+v];
                 }
             }
+#if HAS_SETS
+            for(int j=0;j<=last;j++)if(rom[SET_COLS+t]&(1<<j)){
+                set_count(state,7);
+                if(set_changed(meta,ulong(rawfield(rom,lits,meta,dyn,row,j)),state[3])){
+                    changed=true;key_changed|=j<last;set_count(state,8);
+                }
+            }
+#endif
             if(!changed)continue;
             touch_row(meta,head,row,t,state[3]);if(!key_changed)continue;
             long key[WIDTH];
@@ -485,7 +628,9 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
                 if(meta[6*drop+3]==1){meta[6*keep+3]=1;touch_row(meta,head,keep,t,state[3]);}
                 if(SPINE_ON){
                     device int *lost=anchor(meta,drop),*saved=anchor(meta,keep);
-                    if(lost[3]==state[3] && lost[4]>saved[4])for(int j=0;j<5;j++)saved[j]=lost[j];
+                    if(lost[3]==state[3] && lost[4]>saved[4]){
+                        for(int j=0;j<5;j++)saved[j]=lost[j];
+                    }
                 }
                 if(USE_INDEX)unlink_key(meta,head,drop,t);
                 meta[6*drop+3]=2;if(drop==row)break;
@@ -523,7 +668,7 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                 int pos=lane*TOKEN_CAP+i,at=n;
                 while(at>0){
                     device const long *a=bank+ordered[at-1]*stride,*b=bank+pos*stride;
-                    int order=compare(a,b,rule[4]);
+                    int order=compare(a,b,rule[4],rom,meta,rid);
                     bool priority=a[width+3]<b[width+3] || (a[width+3]==b[width+3] && a[width+4]>b[width+4]);
                     if(order<0 || (order==0 && !priority))break;
                     ordered[at]=ordered[at-1];at--;
@@ -534,7 +679,7 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
         if(PART==1){
             int unique=0;
             for(int i=0;i<n;i++){
-                if(i && compare(bank+ordered[i]*stride,bank+ordered[i-1]*stride,rule[4])==0)continue;
+                if(i && compare(bank+ordered[i]*stride,bank+ordered[i-1]*stride,rule[4],rom,meta,rid)==0)continue;
                 scratch[rid*513+1+unique++]=ordered[i];
             }
             scratch[rid*513]=unique;continue;
@@ -543,12 +688,12 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
         for(int i=0;i<n;i++){
             int pos=PART==2?scratch[rid*513+1+i]:ordered[i];
             device const long *values=bank+pos*stride;
-            if(PART!=2 && i && compare(values,bank+ordered[i-1]*stride,rule[4])==0)continue;
+            if(PART!=2 && i && compare(values,bank+ordered[i-1]*stride,rule[4],rom,meta,rid)==0)continue;
 #if AUDIT_ROWS
             int proposals[2]={0,0};
             for(int j=i;j<n;j++){
                 device const long *candidate=bank+ordered[j]*stride;
-                if(compare(values,candidate,rule[4])!=0)break;
+                if(compare(values,candidate,rule[4],rom,meta,rid)!=0)break;
                 int row=candidate[width]<0?0:shard_of(meta,int(candidate[width]))%lanes;
                 proposals[row]++;
             }
@@ -577,10 +722,10 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
             }
             for(int k=0;k<rule[2];k++){
                 device const int *op=rom+rule[3]+5*k;
-                for(int j=0;j<op[3];j++)args[j]=operand(rom[op[4]+j],env,lits);
                 int kind=op[0],t=op[1],arity=op[3];
+                if(kind==3){long v;if(!eval_op(state,meta,t,rom+op[4],arity,env,lits,v)){if(!state[5])state[5]=8;state[6]=rid;return;}env[op[2]]=v;continue;}
+                for(int j=0;j<arity;j++)args[j]=operand(rom[op[4]+j],env,lits);
                 if(kind==0){env[op[2]]=args[0];continue;}
-                if(kind==3){long v;if(!prim(state,t,args[0],args[1],v)){state[5]=8;state[6]=rid;return;}env[op[2]]=v;continue;}
                 if(kind==4){submit_union(state,meta,args[0],args[1]);if(state[5])return;continue;}
                 if(kind==6){state[5]=10;state[6]=rid;return;}
                 device const int *schema=table(rom,t);
@@ -706,7 +851,7 @@ kernel void emit_tokens(device const int *rom,device const long *lits,device int
                 int j=op[1]-1;
                 if(op[3]&(1<<j)){
                     long v=0;
-                    if(!prim(state,-1-op[0],operand(args[0],env,lits),operand(args[1],env,lits),v)){state[5]=8;return;}
+                    if(!eval_op(state,meta,-1-op[0],args,j,env,lits,v)){state[5]=8;return;}
                     env[args[j]]=v;
                 }
             }else{

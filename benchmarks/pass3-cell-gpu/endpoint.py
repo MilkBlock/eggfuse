@@ -19,7 +19,7 @@ def endpoint(packet,output,reference,ordered=None):
         active=z['meta'][:,3]!=2
         result.update(device_rows=int(active.sum()),reference_rows=len(ref['rows']))
         try:
-            _,match=graph(z['rows'],z['meta'],ref,p,run['strings'],z['parents'])
+            _,match=graph(z['rows'],z['meta'],ref,p,run['strings'],z['parents'],z.get('set_members',()))
             result['full_typed_graph_equal']=match
         except (ValueError,KeyError,AssertionError) as exc:
             result.update(full_typed_graph_equal=False,graph_difference=str(exc))

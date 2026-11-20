@@ -8,6 +8,8 @@ _control=module_from_spec(_spec);_spec.loader.exec_module(_control)
 control_code=_control.lower
 
 PRIMS=['!=','%','*','+','-','/','<','<=','>','>=','and','bool-<','max','min','or','eq-id-!=']
+SET_PRIMS=['set-empty','set-of','set-insert','set-intersect','set-union','set-length']
+OPCODES=PRIMS+SET_PRIMS
 EFFECTS=['copy','construct','set','compute','union','subsume','panic']
 
 
@@ -39,10 +41,22 @@ def compile_image(p):
     section('INSTANCE',data)
     strings=sorted({v['value'] for v in p['symbols'] if v['sort']=='String'})
     string_ids={v:i for i,v in enumerate(strings)}
+    has_sets=any('elements' in v for v in p['symbols']) or any(
+        op in SET_PRIMS for r in p['rules'] for op in [*(a[0] for a in r['q']),*(e[1] for e in r['e'])])
+    seed_ids=[]
+    if has_sets:
+        layout['HAS_SETS']=1
+        section('SET_COLS',[sum(1<<i for i,s in enumerate(t['schema']) if s['kind']=='set') for t in tables])
+        section('SET_INPUTS',[sum(1<<i for i in r.get('set_inputs',[])) for r in p['rules']])
+        if any(i>=31 for r in p['rules'] for i in r.get('set_inputs',[])):raise ValueError("set input index exceeds device mask")
+        identities={(v['sort'],v['eq']):rank for v,rank in zip(p['symbols'],p['eq_order']) if 'eq' in v}
+        seed_ids=sorted({identities[x['sort'],x['eq']] for v in p['symbols'] for x in v.get('elements',[])})
+        if len(seed_ids)>63:raise ValueError("set member dictionary exceeds device capacity")
+        section('SET_SEEDS',seed_ids);layout['NSET_SEEDS']=len(seed_ids)
     def scalar(i,v):
         if 'eq' in v:return p['eq_order'][i]
         if v['sort']=='String':return string_ids[v['value']]
-        if 'elements' in v:raise ValueError('container symbol requires a device container codec')
+        if 'elements' in v:return sum(1<<i for i in {seed_ids.index(identities[x['sort'],x['eq']]) for x in v['elements']})
         return int(v['value'])
     literals=[scalar(i,v) for i,v in enumerate(p['symbols'])]
     routes_by_rule=[[] for _ in p['rules']]
@@ -63,7 +77,7 @@ def compile_image(p):
             flags=0
             for k,v in enumerate(args):
                 if v>=0 and v not in seen:flags|=1<<k;seen.add(v)
-            f=op if isinstance(op,int) else -1-PRIMS.index(op)
+            f=op if isinstance(op,int) else -1-OPCODES.index(op)
             atoms.extend([f,len(args),words(args),flags])
         entries=routes_by_rule[rid];pairs=[];covered=0
         for entry in entries:
@@ -78,13 +92,13 @@ def compile_image(p):
                 flag=0
                 for j,x in enumerate(args):
                     if x>=0 and x not in bound:bound.add(x);flag|=1<<j
-                ops.extend([call if isinstance(call,int) else -1-PRIMS.index(call),len(args),words(args),flag])
+                ops.extend([call if isinstance(call,int) else -1-OPCODES.index(call),len(args),words(args),flag])
             pairs.extend([pivot,words(ops)])
         produces=any(op in ('construct','set') and t in demanded for op,t,_,_ in r['e'])
         routes.extend([len(entries),words(pairs),covered,int(produces)])
         query=words(atoms);effects=[]
         for kind,fn,dst,args in r['e']:
-            fn=fn if isinstance(fn,int) else PRIMS.index(fn)
+            fn=fn if isinstance(fn,int) else OPCODES.index(fn)
             effects.extend([EFFECTS.index(kind),fn,dst,len(args),words(args)])
         rules.extend([len(r['q']),query,len(r['e']),words(effects),len(r['inputs']),words(r['inputs']),int(r['semi'])])
     section('RULE',rules);section('SPINE',routes)

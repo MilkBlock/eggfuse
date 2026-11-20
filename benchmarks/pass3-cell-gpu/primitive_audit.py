@@ -37,7 +37,7 @@ def main(out):
     wanted=np.array([reference(*v) for v in cases],np.int64)
     inputs=torch.tensor(cases,dtype=torch.int64,device='mps')
     program=Path(__file__).with_name('executor.metal').read_text()
-    code=program[program.index('inline bool exact_prim'):program.index('inline void do_next_run')]
+    code=program[program.index('inline bool exact_prim'):program.index('inline bool eval_op')]
     records={}
     for i,name in enumerate(('integer','guarded','lossy')):
         lib=torch.mps.compile_shader(f'#include <metal_stdlib>\nusing namespace metal;\n#define SCALAR_MODE {i}\n#define PROFILE_PRIMS 1\n'+code)

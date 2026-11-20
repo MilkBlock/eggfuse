@@ -31,7 +31,7 @@ def pointer(weight,physical,dev):
 
 
 @torch.inference_mode()
-def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False):
+def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False,maintenance_repeat=1,maintenance_control=False):
     if os.environ.get('PYTORCH_ENABLE_MPS_FALLBACK','0')!='0' or not torch.backends.mps.is_available():
         raise RuntimeError('Metal GPU required')
     if steps<0 or steps>4096:raise ValueError('Run budget outside trace capacity')
@@ -59,6 +59,12 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         ROW_CAP=16384, TOKEN_CAP=token_cap, TRACE_CAP=65536, SEARCH_CAP=3000000,
         TOKEN_WIDTH=layout['NINPUT']+5,
     )
+    sets_enabled=bool(layout.get('HAS_SETS'))
+    set_base=6*limits['ROW_CAP']+6*(limits['ROW_CAP']+layout['NSYMBOLS']+2)+2*limits['TRACE_CAP']+10*limits['ROW_CAP']
+    limits['SET_BASE']=set_base
+    if maintenance_repeat<1:raise ValueError('invalid maintenance replay count')
+    limits['SET_MAINT_REPEAT']=maintenance_repeat
+    limits['SET_MAINT_CONTROL']=int(maintenance_control)
     constants='\n'.join(f'#define {k} {v}' for k,v in {**layout,**limits}.items())
     lib=torch.mps.compile_shader(constants+'\n'+(HERE/'executor.metal').read_text())
     def ints(v):return torch.tensor(v,dtype=torch.int32,device=dev)
@@ -67,11 +73,14 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     cap=limits['ROW_CAP'];uf_size=cap+layout['NSYMBOLS']+2
     union_log=6*cap+2*uf_size+2*limits['TRACE_CAP']
     birth_run=union_log+4*uf_size
-    state=zeros(56);regs=zeros(layout['REGS'])
-    meta=zeros(((birth_run+(10*cap if router else 9*cap if tiles>1 else (6*cap+(2*cap if lookup=='hash' else 0)))+5)//6,6))
+    state=zeros(69 if sets_enabled else 56);regs=zeros(layout['REGS'])
+    meta_words=birth_run+(10*cap if router else 9*cap if tiles>1 else (6+2*int(lookup=='hash'))*cap)
+    if sets_enabled:meta_words=set_base+126
+    meta=zeros(((meta_words+5)//6,6))
     head_words=(257 if lookup=='hash' else 1)+(lanes*tiles if tiles>1 or router else 0)
     head_words+=int(hot_filter>0)+(lanes*tiles if hot_filter in (2,3) else 0)
-    head=zeros(layout['TABLES']*head_words)
+    head_size=layout['TABLES']*head_words
+    head=zeros(head_size)
     dyn=zeros((cap*(2 if directory=='published' else 1),layout['WIDTH']),torch.int64);wm=zeros(layout['RULES'])-1
     banks=2 if arena=='shared' else lanes*tiles
     count=zeros((layout['RULES'],banks));cols=layout['TOTAL_TOKEN_COLS'] if token_layout=='packed' else layout['RULES']*limits['TOKEN_WIDTH']
@@ -132,6 +141,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     st=state.cpu().tolist();n=st[0]
     root.mkdir(parents=True,exist_ok=True)
     def take(t,stop):return t[:stop].cpu().numpy()
+    set_members=meta.view(-1)[set_base:set_base+63].cpu().numpy() if sets_enabled else np.empty(0,np.int32)
     if export_only:
         from export_graph import export
         schema_path=packet.with_name('export-schema.json')
@@ -139,10 +149,10 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
             raise ValueError('export schema digest differs')
         schema=json.loads(schema_path.read_text())
         ids=zeros(uf_size);lib.export_roots(meta,ids,threads=uf_size)
-        logical=export(schema,schema['tables'],take(out,n),take(meta,n),ids.cpu().numpy(),strings)
+        logical=export(schema,schema['tables'],take(out,n),take(meta,n),ids.cpu().numpy(),strings,set_members)
         (root/'state.json').write_text(json.dumps(logical,ensure_ascii=False,separators=(',',':')))
     else:
-        np.savez_compressed(root/'output.npz',rows=take(out,n),meta=take(meta,n),rhs=take(rhs,st[9]),writes=take(writes,st[10]),
+        np.savez_compressed(root/'output.npz',set_members=set_members,rows=take(out,n),meta=take(meta,n),rhs=take(rhs,st[9]),writes=take(writes,st[10]),
                         runs=take(runs,st[11]),parents=meta.view(-1)[6*limits['ROW_CAP']:6*limits['ROW_CAP']+n+layout['NSYMBOLS']+2].cpu().numpy(),
                         birth_runs=meta.view(-1)[birth_run:birth_run+n].cpu().numpy(),
                         birth_fields=take(dyn,n),
