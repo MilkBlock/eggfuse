@@ -9,17 +9,17 @@ from runpy import run_path
 driver=run_path(str(Path(__file__).with_name('study.py')))
 base,choices=driver['base'],driver['choices']
 
-def run(a):
+def run(a, compare_arms=('off','run-tickets','all'), configure=choices):
     a.out.mkdir(parents=True,exist_ok=False)
     measured=json.loads(a.timing.read_bytes())
     results={}
     for case,g in measured.items():
         p,plan,req=base.common.config(a,case)
-        arms=choices(req,a)
-        samples={name:[] for name in ('off','run-tickets','all')}
+        arms=configure(req,a)
+        samples={name:[] for name in compare_arms}
         for i in range(4):
             names=list(samples)
-            names=names[i%3:]+names[:i%3]
+            names=names[i%len(names):]+names[:i%len(names)]
             for name in names:
                 cmd=['/usr/bin/time','-l',a.native,p,plan]
                 done=subprocess.run(cmd,input=json.dumps(dict(arms[name],audit=False))+'\n',text=True,capture_output=True,check=True)
