@@ -40,7 +40,7 @@
   card([现有边界],[图 71 的选择性模型覆盖 99.83%–99.97% 的源 RHS，图 75 的根／子配方直接构造超过 99% 的新 Cell。整轮仍慢于精确 Rust。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–77 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–80 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -268,9 +268,12 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S65","实际根配方与物理 ID","benchmarks/pass3-cell-gpu/joint-root-cells/README.md")
 #src("S66","真实父发布 → 子 RHS 与下一轮库增长","benchmarks/pass3-cell-gpu/higher-order-bake/README.md")
 #src("S67","冻结端口投影、签名桶与完整源执行","benchmarks/pass3-cell-gpu/baked-port-codes/README.md")
+#src("S68","真实 CPU 行数与策略梯度","benchmarks/pass3-cell-gpu/adaptive-row-policy/README.md")
+#src("S69","源水位选择编译入口","benchmarks/pass3-cell-gpu/fresh-entrances/README.md")
+#src("S70","增量多父签名与过期剪枝","benchmarks/pass3-cell-gpu/incremental-neural-index/README.md")
 #v(2mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
 #text(size:9pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。#link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文]。 *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。#link("https://arxiv.org/abs/1705.08926")[论文原文]。]
 #v(1fr)
-#small[版次 26　·　2026 年 11 月 21 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
+#small[版次 27　·　2026 年 11 月 21 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]

@@ -3790,5 +3790,254 @@
         ]
       }
     ]
+  },
+  {
+    "id": "78-policy-row-width",
+    "section": "CPU 策略的计算粒度",
+    "title": "RL 应当打开几个真实评分 worker？",
+    "status": "已测 · 四负载双种子与两组大样本",
+    "q": "多行共同处理同一条规则的候选地址。共享相同输入的分数以后，更多 worker 是否还能节省整轮时间？",
+    "arms": "a　固定单行，等价输入复用分数。b　固定 2、4 或 8 个 worker，分配互斥地址区间。c　策略梯度训练的控制器选择行数与评分方式。",
+    "fix": "同一源规则、模型阈值、前一隐状态和地址顺序。执行后合并各行发出的 token，再更新一次状态。记录实际 worker 参与、父来源、物理 Cell 与逐 Run 结果。",
+    "measure": "sum-bits／1703 的 1、2、4、8 worker 为 85.1、106.3、124.4、160.1 ms。四负载双种子全覆盖模式下，120 参数 RL 比原版快 9.4%，静态单行共享快 9.6%。",
+    "note": "控制器扩到 456 参数未显示额外收益。此结论只覆盖一条规则内的评分分工，其他规则间并行和跨图吞吐须分别测量。",
+    "src": "S68",
+    "diagram": [
+      {
+        "title": "One worker",
+        "layers": [
+          [
+            [
+              "s",
+              "ordered address set"
+            ]
+          ],
+          [
+            [
+              "n",
+              "shared scores"
+            ]
+          ],
+          [
+            [
+              "w",
+              "root receipts"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Fixed workers",
+        "layers": [
+          [
+            [
+              "s",
+              "disjoint ranges"
+            ]
+          ],
+          [
+            [
+              "n",
+              "2 / 4 / 8 workers"
+            ]
+          ],
+          [
+            [
+              "w",
+              "ordered merge"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Learned width",
+        "layers": [
+          [
+            [
+              "n",
+              "prior latent + size"
+            ]
+          ],
+          [
+            [
+              "n",
+              "row action"
+            ]
+          ],
+          [
+            [
+              "w",
+              "ordered merge"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "79-fresh-parents",
+    "section": "编译器与多父见证",
+    "title": "哪一个源端口应该先签发？",
+    "status": "已测 · 三负载原调度",
+    "q": "当一个且仅一个关系有新行时，允许它充当神经入口，检验额外选择一个父是否能减少最终需验真的元组。",
+    "arms": "a　冻结原指针计划。b　从唯一新关系进入，保持独立父数。c　在固定的额外父预算内可以改用原先位于点查后缀的关系。",
+    "fix": "同一绑定阈值、单视图签名、源水位与分配器。多个原子可供新增量时走原计划。第一组共用计划但不切换的额外对照要求原始发行哈希相等。",
+    "measure": "种子 1703，允许多选一个父后，sum-bits 的密封提案 22,707→19,342，dot-product 为 22,840→21,851，Jacobi 为 274,827→245,700。",
+    "note": "同组完整 ms 分别为 56.17→52.65、54.75→53.26、483.46→476.22。三个负载均逐 Run 对齐，仍慢于精确 Rust。",
+    "src": "S69",
+    "diagram": [
+      {
+        "title": "Fixed entrance",
+        "layers": [
+          [
+            [
+              "s",
+              "original source"
+            ]
+          ],
+          [
+            [
+              "n",
+              "pointer sequence"
+            ]
+          ],
+          [
+            [
+              "v",
+              "sealed tuple"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Fixed width",
+        "layers": [
+          [
+            [
+              "s",
+              "fresh source"
+            ]
+          ],
+          [
+            [
+              "n",
+              "reordered pointers"
+            ]
+          ],
+          [
+            [
+              "v",
+              "sealed tuple"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Extra pointer",
+        "layers": [
+          [
+            [
+              "s",
+              "fresh source"
+            ]
+          ],
+          [
+            [
+              "n",
+              "one more parent"
+            ]
+          ],
+          [
+            [
+              "v",
+              "shorter suffix"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "80-incremental-port-index",
+    "section": "增量生成与维护",
+    "title": "旧的候选对该重新生成吗？",
+    "status": "已测 · 完整运行与大样本",
+    "q": "保存已发元组、维护签名列和阻止必定过期的提案，这三种方式分别节约哪些工作？",
+    "arms": "a　按源版本缓存整批候选。b　在正确方向连接新行与旧行，按原顺序签发。c　由后缀的最大可见 epoch 排除缺少新支持的父对。",
+    "fix": "真实表变更触发快照维护。哈希碰撞不能作为存在证明。原始元组可因安全剪枝减少，保留的获胜父、子、实际新 Cell 与源端点逐项一致。",
+    "measure": "种子 1703，packed 基线→增量与水位筛选，Jacobi 464.80→400.85 ms，共轭梯度 2315.81→1922.96 ms。对应 vanilla 为 110.78 和 360.52 ms。",
+    "note": "sum-bits 的整批元组缓存只在 3,180 次非空规则调用中命中 104 次。共轭梯度保留 131,371 个源 RHS 和 97,026／97,139 个直接由模型配方分配的新 Cell。",
+    "src": "S70",
+    "diagram": [
+      {
+        "title": "Cache tuples",
+        "layers": [
+          [
+            [
+              "n",
+              "sealed addresses"
+            ]
+          ],
+          [
+            [
+              "s",
+              "table versions"
+            ]
+          ],
+          [
+            [
+              "v",
+              "reuse or rebuild"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Delta join",
+        "layers": [
+          [
+            [
+              "s",
+              "fresh typed rows"
+            ]
+          ],
+          [
+            [
+              "n",
+              "learned signatures"
+            ]
+          ],
+          [
+            [
+              "w",
+              "ordered tuples"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Expiry bound",
+        "layers": [
+          [
+            [
+              "s",
+              "suffix epochs"
+            ]
+          ],
+          [
+            [
+              "v",
+              "freshness check"
+            ]
+          ],
+          [
+            [
+              "w",
+              "eligible tuples"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
