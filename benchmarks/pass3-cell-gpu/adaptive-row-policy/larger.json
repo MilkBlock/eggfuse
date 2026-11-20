@@ -1,0 +1,690 @@
+{
+ "jacobi-1d/1703/certified": {
+  "semantic": "74182987d5953f2a74b3a9c039af40bc6767658697cc17f28ae6107e7e1acd57",
+  "raw_single": "7469183732488585499",
+  "raw_multi": "f59b99082db8a9ef58c3cf53aeb80e735e7ae06b2047f0659b6f606e0fb75be9",
+  "rhs": 41319,
+  "fresh_cells": 32819,
+  "direct": 32721,
+  "neural": 41319,
+  "arms": {
+   "exact": {
+    "median_ms": 136.347354,
+    "ms": [
+     134.038125,
+     138.656583,
+     147.390042,
+     132.60275
+    ]
+   },
+   "native": {
+    "median_ms": 1082.8801665,
+    "ms": [
+     1076.336125,
+     1096.897,
+     1089.4242080000001,
+     1064.095291
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 209945952,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "shared-1": {
+    "median_ms": 1016.3499999999999,
+    "ms": [
+     1019.2542920000001,
+     1013.4457079999999,
+     1024.741584,
+     976.713792
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0,
+     0,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 3879,
+    "invocations": 4294,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 209945952,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "shared-4": {
+    "median_ms": 1143.206646,
+    "ms": [
+     1130.845709,
+     1155.567583,
+     1109.342917,
+     1175.2542079999998
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 12272,
+    "invocations": 4294,
+    "peak_workers": 4,
+    "real_parallel_calls": 410,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 209945952,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "page-1": {
+    "median_ms": 949.6349579999999,
+    "ms": [
+     938.0745000000001,
+     954.1017499999999,
+     945.1681659999999,
+     983.739667
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0,
+     0,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 3879,
+    "invocations": 4294,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 115651472,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "policy-gradient-h8-r8": {
+    "median_ms": 1012.2520835,
+    "ms": [
+     1010.413292,
+     1026.766,
+     1014.090875,
+     996.4791670000001
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0,
+     0,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 3879,
+    "invocations": 4294,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 209945952,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "verify-4": {
+    "median_ms": 964.2751045,
+    "ms": [
+     940.411458,
+     967.284875,
+     961.265334,
+     995.681375
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0,
+     0,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 3879,
+    "invocations": 4294,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 115651472,
+    "verification": {
+     "cache_resets": 4292,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 537,
+     "negative_hits": 0,
+     "peak_points_per_table": 874,
+     "peak_proofs_per_rule": 951,
+     "peak_source_rows_per_table": 951,
+     "point_hits": 216319,
+     "point_reads": 195615,
+     "positive_hits": 0,
+     "pruned_by_suffix": 114870,
+     "source_hits": 267187,
+     "source_reads": 58202
+    }
+   }
+  }
+ },
+ "jacobi-1d/1709/certified": {
+  "semantic": "74182987d5953f2a74b3a9c039af40bc6767658697cc17f28ae6107e7e1acd57",
+  "raw_single": "8376575175928269274",
+  "raw_multi": "0728f5becbc2ae361c8d09bc934f5d4c6f6d73cc7e48de581bad72aea686895e",
+  "rhs": 41319,
+  "fresh_cells": 32819,
+  "direct": 32721,
+  "neural": 41319,
+  "arms": {
+   "exact": {
+    "median_ms": 130.94316650000002,
+    "ms": [
+     133.85666600000002,
+     122.053333,
+     128.02966700000002,
+     139.657834
+    ]
+   },
+   "native": {
+    "median_ms": 1041.3243335000002,
+    "ms": [
+     1077.751708,
+     996.44275,
+     1030.644708,
+     1052.0039590000001
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 202230272,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "shared-1": {
+    "median_ms": 948.1492920000001,
+    "ms": [
+     1014.8192499999999,
+     942.980084,
+     924.07975,
+     953.3185
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0,
+     0,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 3879,
+    "invocations": 4294,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 202230272,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "shared-4": {
+    "median_ms": 1091.4107915,
+    "ms": [
+     1118.219458,
+     1133.877791,
+     1064.602125,
+     1006.463834
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 12272,
+    "invocations": 4294,
+    "peak_workers": 4,
+    "real_parallel_calls": 675,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 202230272,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "page-1": {
+    "median_ms": 935.2342915,
+    "ms": [
+     971.665333,
+     977.62,
+     888.6040840000001,
+     898.80325
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0,
+     0,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 3879,
+    "invocations": 4294,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 107935792,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "policy-gradient-h8-r8": {
+    "median_ms": 976.8505829999999,
+    "ms": [
+     967.434083,
+     994.612125,
+     946.371667,
+     986.267083
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0,
+     0,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 3879,
+    "invocations": 4294,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 202230272,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "verify-4": {
+    "median_ms": 904.2550415000001,
+    "ms": [
+     930.126833,
+     891.666833,
+     894.888542,
+     913.6215410000001
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0,
+     0,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 3879,
+    "invocations": 4294,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 107935792,
+    "verification": {
+     "cache_resets": 4292,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 537,
+     "negative_hits": 0,
+     "peak_points_per_table": 874,
+     "peak_proofs_per_rule": 951,
+     "peak_source_rows_per_table": 951,
+     "point_hits": 216319,
+     "point_reads": 195615,
+     "positive_hits": 0,
+     "pruned_by_suffix": 114870,
+     "source_hits": 267187,
+     "source_reads": 58202
+    }
+   }
+  }
+ }
+}

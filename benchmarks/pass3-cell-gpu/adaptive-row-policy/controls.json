@@ -1,0 +1,366 @@
+{
+ "sum-bits": {
+  "full/use": {
+   "allocated": 5764,
+   "applied": 7265,
+   "sealed": 7265,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 9316696,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "full/wrong-port": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 7265,
+   "proposal_hash": "17974609851673891035",
+   "wire": 9316696,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "full/wrong-template": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 7265,
+   "proposal_hash": "17974609851673891035",
+   "wire": 9316696,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "full/shadow": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 7265,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 9316696,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "full/withhold": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 0,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "shared_wire/use": {
+   "allocated": 5764,
+   "applied": 7265,
+   "sealed": 7265,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 3934848,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "shared_wire/wrong-port": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 7265,
+   "proposal_hash": "17974609851673891035",
+   "wire": 3934848,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "shared_wire/wrong-template": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 7265,
+   "proposal_hash": "17974609851673891035",
+   "wire": 3934848,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "shared_wire/shadow": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 7265,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 3934848,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "shared_wire/withhold": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 0,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "resident/use": {
+   "allocated": 5764,
+   "applied": 7265,
+   "sealed": 7265,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 1280216,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "resident/wrong-port": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 7265,
+   "proposal_hash": "17974609851673891035",
+   "wire": 1280216,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "resident/wrong-template": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 7265,
+   "proposal_hash": "17974609851673891035",
+   "wire": 1280216,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "resident/shadow": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 7265,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 1280216,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "resident/withhold": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 0,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "checked_slots/use": {
+   "allocated": 5764,
+   "applied": 7265,
+   "sealed": 7265,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 1280216,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "checked_slots/wrong-port": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 7265,
+   "proposal_hash": "17974609851673891035",
+   "wire": 1280216,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "checked_slots/wrong-template": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 7265,
+   "proposal_hash": "17974609851673891035",
+   "wire": 1280216,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "checked_slots/shadow": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 7265,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 1280216,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "checked_slots/withhold": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 0,
+   "proposal_hash": "17974609851673891035",
+   "wire": 0,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  }
+ },
+ "dot-product": {
+  "full/use": {
+   "allocated": 5538,
+   "applied": 6704,
+   "sealed": 6704,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 10318264,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "full/wrong-port": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 6704,
+   "proposal_hash": "17001018198326840834",
+   "wire": 10318264,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "full/wrong-template": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 6704,
+   "proposal_hash": "17001018198326840834",
+   "wire": 10318264,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "full/shadow": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 6704,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 10318264,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "full/withhold": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 0,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "shared_wire/use": {
+   "allocated": 5538,
+   "applied": 6704,
+   "sealed": 6704,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 4092584,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "shared_wire/wrong-port": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 6704,
+   "proposal_hash": "17001018198326840834",
+   "wire": 4092584,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "shared_wire/wrong-template": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 6704,
+   "proposal_hash": "17001018198326840834",
+   "wire": 4092584,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "shared_wire/shadow": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 6704,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 4092584,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "shared_wire/withhold": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 0,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "resident/use": {
+   "allocated": 5538,
+   "applied": 6704,
+   "sealed": 6704,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 1230488,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "resident/wrong-port": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 6704,
+   "proposal_hash": "17001018198326840834",
+   "wire": 1230488,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "resident/wrong-template": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 6704,
+   "proposal_hash": "17001018198326840834",
+   "wire": 1230488,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "resident/shadow": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 6704,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 1230488,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "resident/withhold": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 0,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "checked_slots/use": {
+   "allocated": 5538,
+   "applied": 6704,
+   "sealed": 6704,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 1230488,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "checked_slots/wrong-port": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 6704,
+   "proposal_hash": "17001018198326840834",
+   "wire": 1230488,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "checked_slots/wrong-template": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 6704,
+   "proposal_hash": "17001018198326840834",
+   "wire": 1230488,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "checked_slots/shadow": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 6704,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 1230488,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "checked_slots/withhold": {
+   "allocated": 0,
+   "applied": 0,
+   "sealed": 0,
+   "rejected": 0,
+   "proposal_hash": "17001018198326840834",
+   "wire": 0,
+   "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  }
+ }
+}

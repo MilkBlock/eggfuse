@@ -1,0 +1,58 @@
+{
+ "programs": [
+  "affine-twins",
+  "clamped-ramp",
+  "segmented-prefix",
+  "window-laplacian"
+ ],
+ "reward_samples": {
+  "high": {
+   "samples": 4118,
+   "size_quantiles": [
+    1.0,
+    15.0,
+    135.0,
+    222.0,
+    245.0
+   ],
+   "single_address": 874,
+   "nonsingle_fastest": [
+    500,
+    0,
+    0,
+    0,
+    2744,
+    0,
+    0,
+    0
+   ]
+  },
+  "certified": {
+   "samples": 4118,
+   "size_quantiles": [
+    1.0,
+    15.0,
+    135.0,
+    222.0,
+    245.0
+   ],
+   "single_address": 874,
+   "nonsingle_fastest": [
+    86,
+    0,
+    0,
+    0,
+    3158,
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "measured_actions": 8,
+ "seeds": [
+  1703,
+  1709
+ ],
+ "timed_repetitions_per_context": 1
+}

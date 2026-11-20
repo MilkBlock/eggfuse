@@ -1,0 +1,514 @@
+{
+ "jacobi-1d/1703/certified": {
+  "semantic": "74182987d5953f2a74b3a9c039af40bc6767658697cc17f28ae6107e7e1acd57",
+  "raw_single": "7469183732488585499",
+  "raw_multi": "f59b99082db8a9ef58c3cf53aeb80e735e7ae06b2047f0659b6f606e0fb75be9",
+  "rhs": 41319,
+  "fresh_cells": 32819,
+  "direct": 32721,
+  "neural": 41319,
+  "arms": {
+   "vanilla": {
+    "median_ms": 119.289479,
+    "ms": [
+     113.382083,
+     122.396709,
+     119.633583,
+     118.94537500000001
+    ]
+   },
+   "native": {
+    "median_ms": 1063.1868955,
+    "ms": [
+     1068.577166,
+     1052.140542,
+     1057.796625,
+     1082.32725
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 0,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "verify-2": {
+    "median_ms": 944.5478335,
+    "ms": [
+     894.988542,
+     953.537375,
+     942.1417090000001,
+     946.9539580000001
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0,
+     0,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 3879,
+    "invocations": 4294,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 10761392,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 537,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 114870,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   }
+  }
+ },
+ "jacobi-1d/1709/certified": {
+  "semantic": "74182987d5953f2a74b3a9c039af40bc6767658697cc17f28ae6107e7e1acd57",
+  "raw_single": "8376575175928269274",
+  "raw_multi": "0728f5becbc2ae361c8d09bc934f5d4c6f6d73cc7e48de581bad72aea686895e",
+  "rhs": 41319,
+  "fresh_cells": 32819,
+  "direct": 32721,
+  "neural": 41319,
+  "arms": {
+   "vanilla": {
+    "median_ms": 119.92275000000001,
+    "ms": [
+     122.59358300000001,
+     117.25191699999999,
+     117.043459,
+     124.064792
+    ]
+   },
+   "native": {
+    "median_ms": 1037.561625,
+    "ms": [
+     1028.841042,
+     1023.7453750000001,
+     1085.408375,
+     1046.282208
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 0,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "verify-2": {
+    "median_ms": 932.8170835000001,
+    "ms": [
+     936.505042,
+     889.881625,
+     967.69275,
+     929.129125
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     559782,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     4294,
+     0,
+     0,
+     0
+    ],
+    "emitted": 440274,
+    "evaluations": 3879,
+    "invocations": 4294,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 535,
+    "snapshot_reuses": 3744,
+    "source_headers": 559782,
+    "stale_proofs": 0,
+    "wire_bytes": 10761392,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 537,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 114870,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   }
+  }
+ },
+ "conjugate-gradient/1703/certified": {
+  "semantic": "073b159aa4369f25993773cdd3de1ac542ec5b8db6376caf7701c9c22eea97a6",
+  "raw_single": "12986267118930382025",
+  "raw_multi": "bc956a5fb1e6c9e714a9c2f1234ef43299a81cac944595336cd27ab97b025860",
+  "rhs": 131371,
+  "fresh_cells": 97139,
+  "direct": 97026,
+  "neural": 131371,
+  "arms": {
+   "vanilla": {
+    "median_ms": 356.69683299999997,
+    "ms": [
+     365.50704099999996,
+     375.827,
+     347.886625,
+     341.464833
+    ]
+   },
+   "native": {
+    "median_ms": 6412.700125,
+    "ms": [
+     6488.035166000001,
+     6407.424875000001,
+     6417.975375,
+     5968.114125
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 0,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "verify-2": {
+    "median_ms": 5749.5845415,
+    "ms": [
+     5704.884375,
+     5824.623166,
+     5794.284708,
+     5349.5448750000005
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     2698159,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     8088,
+     0,
+     0,
+     0
+    ],
+    "emitted": 2234678,
+    "evaluations": 7540,
+    "invocations": 8088,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 759,
+    "snapshot_reuses": 7314,
+    "source_headers": 2698159,
+    "stale_proofs": 0,
+    "wire_bytes": 54034576,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 900,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 549266,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   }
+  }
+ },
+ "conjugate-gradient/1709/certified": {
+  "semantic": "073b159aa4369f25993773cdd3de1ac542ec5b8db6376caf7701c9c22eea97a6",
+  "raw_single": "9025540655358713566",
+  "raw_multi": "cf5b75f08c8bd947901e2a0b4cc8c90a4edb0de580928f10a5829f8de3d602a5",
+  "rhs": 131371,
+  "fresh_cells": 97139,
+  "direct": 97026,
+  "neural": 131371,
+  "arms": {
+   "vanilla": {
+    "median_ms": 345.3576665,
+    "ms": [
+     355.768667,
+     362.909,
+     322.456667,
+     334.946666
+    ]
+   },
+   "native": {
+    "median_ms": 6333.364917,
+    "ms": [
+     6395.049666,
+     6385.896417,
+     6280.833417,
+     6032.869374999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 0,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 0,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 0,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   },
+   "verify-2": {
+    "median_ms": 5712.309604,
+    "ms": [
+     5742.994000000001,
+     5681.6252079999995,
+     5746.51675,
+     5424.383374999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     2698159,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     8088,
+     0,
+     0,
+     0
+    ],
+    "emitted": 2234678,
+    "evaluations": 7540,
+    "invocations": 8088,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 759,
+    "snapshot_reuses": 7314,
+    "source_headers": 2698159,
+    "stale_proofs": 0,
+    "wire_bytes": 54034576,
+    "verification": {
+     "cache_resets": 0,
+     "displaced_positive": 0,
+     "fresh_table_rebuild": 900,
+     "negative_hits": 0,
+     "peak_points_per_table": 0,
+     "peak_proofs_per_rule": 0,
+     "peak_source_rows_per_table": 0,
+     "point_hits": 0,
+     "point_reads": 0,
+     "positive_hits": 0,
+     "pruned_by_suffix": 549266,
+     "source_hits": 0,
+     "source_reads": 0
+    }
+   }
+  }
+ }
+}

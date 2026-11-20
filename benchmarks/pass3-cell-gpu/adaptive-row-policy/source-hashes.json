@@ -1,0 +1,38 @@
+{
+ "sum-bits": {
+  "sha256": "81f7f634bda660f8e2936bf6b6cdc0ab375afd1776a65fb195749dfcebd07fdd",
+  "runs": 1428,
+  "rhs": 7265,
+  "graph_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+ },
+ "dot-product": {
+  "sha256": "e2564d6218f37055685394f4de7e9d09e1df0fb79134b73000c069d8c79efb6d",
+  "runs": 1535,
+  "rhs": 6704,
+  "graph_sha256": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+ },
+ "gemm-bias-relu": {
+  "sha256": "7d37db802cea0b434bc1e483bf29a459c3804b963515b388a41966439bc84fdf",
+  "runs": 1652,
+  "rhs": 15462,
+  "graph_sha256": "17da4d64835c0b660c6346c0a2377f2e7a272442b5da5e746a7d69f15b41c983"
+ },
+ "stable-argmax": {
+  "sha256": "7404218bf9f05f5e92a51e5efbec1ca36c3e55a5fe2272c4d5159dbce944e1bf",
+  "runs": 1149,
+  "rhs": 8190,
+  "graph_sha256": "40ca93637eb8ee4d7bde32f752a7f4e30d7bd713cea47da81aac0b586c37561a"
+ },
+ "jacobi-1d": {
+  "sha256": "74182987d5953f2a74b3a9c039af40bc6767658697cc17f28ae6107e7e1acd57",
+  "runs": 1990,
+  "rhs": 41319,
+  "graph_sha256": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5"
+ },
+ "conjugate-gradient": {
+  "sha256": "073b159aa4369f25993773cdd3de1ac542ec5b8db6376caf7701c9c22eea97a6",
+  "runs": 2896,
+  "rhs": 131371,
+  "graph_sha256": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05"
+ }
+}

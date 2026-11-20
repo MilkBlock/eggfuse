@@ -1,0 +1,4290 @@
+{
+ "sum-bits/1703/certified": {
+  "semantic": "81f7f634bda660f8e2936bf6b6cdc0ab375afd1776a65fb195749dfcebd07fdd",
+  "raw_single": "12778317276983662948",
+  "raw_multi": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+  "rhs": 7265,
+  "fresh_cells": 5868,
+  "direct": 5867,
+  "neural": 7265,
+  "arms": {
+   "exact": {
+    "median_ms": 25.655499999999996,
+    "ms": [
+     25.888832999999998,
+     25.422166999999998,
+     25.170042,
+     27.56275,
+     25.348875,
+     27.104375
+    ]
+   },
+   "native": {
+    "median_ms": 95.691104,
+    "ms": [
+     95.872333,
+     91.59425,
+     96.613292,
+     95.509875,
+     91.882458,
+     102.70879199999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 6924704
+   },
+   "shared-1": {
+    "median_ms": 83.62702049999999,
+    "ms": [
+     83.398958,
+     81.513917,
+     89.286709,
+     83.855083,
+     82.832958,
+     92.40929200000001
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0,
+     0
+    ],
+    "emitted": 48529,
+    "evaluations": 2584,
+    "invocations": 2569,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 0,
+    "wire_bytes": 6924704
+   },
+   "page-1": {
+    "median_ms": 81.0780625,
+    "ms": [
+     86.482458,
+     81.525875,
+     80.30570800000001,
+     80.63025,
+     79.698375,
+     89.489208
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0,
+     0
+    ],
+    "emitted": 48529,
+    "evaluations": 2584,
+    "invocations": 2569,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 0,
+    "wire_bytes": 3934848
+   },
+   "page-2": {
+    "median_ms": 103.7010415,
+    "ms": [
+     105.173542,
+     100.901125,
+     101.38270800000001,
+     103.6175,
+     103.784583,
+     107.938334
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0
+    ],
+    "emitted": 48529,
+    "evaluations": 4078,
+    "invocations": 2569,
+    "peak_workers": 2,
+    "real_parallel_calls": 96,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 0,
+    "wire_bytes": 4026688
+   },
+   "page-4": {
+    "median_ms": 123.68599950000001,
+    "ms": [
+     120.46433300000001,
+     112.515084,
+     130.880541,
+     115.31770800000001,
+     128.022459,
+     126.907666
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0
+    ],
+    "emitted": 48529,
+    "evaluations": 6511,
+    "invocations": 2569,
+    "peak_workers": 4,
+    "real_parallel_calls": 205,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 0,
+    "wire_bytes": 4166528
+   },
+   "page-8": {
+    "median_ms": 159.375583,
+    "ms": [
+     163.18875,
+     150.631166,
+     159.441875,
+     163.152666,
+     158.75870799999998,
+     159.309291
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569
+    ],
+    "emitted": 48529,
+    "evaluations": 10546,
+    "invocations": 2569,
+    "peak_workers": 7,
+    "real_parallel_calls": 1066,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 0,
+    "wire_bytes": 4384320
+   }
+  }
+ },
+ "sum-bits/1703/high": {
+  "semantic": "81f7f634bda660f8e2936bf6b6cdc0ab375afd1776a65fb195749dfcebd07fdd",
+  "raw_single": "10387836524267083191",
+  "raw_multi": "fc710c08c8a2634059cffc1204725e2cc9c9f7c699b27018f8a3369613ff708f",
+  "rhs": 7265,
+  "fresh_cells": 5868,
+  "direct": 5857,
+  "neural": 7253,
+  "arms": {
+   "exact": {
+    "median_ms": 26.6863125,
+    "ms": [
+     28.34875,
+     27.529457999999998,
+     25.610500000000002,
+     25.281625,
+     26.224625000000003,
+     27.148
+    ]
+   },
+   "native": {
+    "median_ms": 99.1354585,
+    "ms": [
+     106.565875,
+     103.453709,
+     97.66095800000001,
+     95.800291,
+     100.609959,
+     97.023583
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 8026376
+   },
+   "shared-1": {
+    "median_ms": 88.3823955,
+    "ms": [
+     91.965458,
+     88.43266700000001,
+     88.398625,
+     85.21237500000001,
+     86.9115,
+     88.36616599999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0,
+     0
+    ],
+    "emitted": 61048,
+    "evaluations": 8682,
+    "invocations": 2569,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 21837,
+    "wire_bytes": 8026376
+   },
+   "page-1": {
+    "median_ms": 84.023917,
+    "ms": [
+     87.171791,
+     86.188209,
+     84.472584,
+     82.016,
+     82.600542,
+     83.57525
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0,
+     0
+    ],
+    "emitted": 61048,
+    "evaluations": 8682,
+    "invocations": 2569,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 21837,
+    "wire_bytes": 4232040
+   },
+   "page-2": {
+    "median_ms": 108.57825,
+    "ms": [
+     108.6245,
+     118.369666,
+     106.301833,
+     104.153667,
+     112.076667,
+     108.532
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0
+    ],
+    "emitted": 61048,
+    "evaluations": 11674,
+    "invocations": 2569,
+    "peak_workers": 2,
+    "real_parallel_calls": 179,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 21837,
+    "wire_bytes": 4319528
+   },
+   "page-4": {
+    "median_ms": 121.765479,
+    "ms": [
+     135.475875,
+     125.564292,
+     116.04029200000001,
+     117.966666,
+     117.666584,
+     127.20475
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0
+    ],
+    "emitted": 61048,
+    "evaluations": 16053,
+    "invocations": 2569,
+    "peak_workers": 4,
+    "real_parallel_calls": 572,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 21837,
+    "wire_bytes": 4460648
+   },
+   "page-8": {
+    "median_ms": 161.49099999999999,
+    "ms": [
+     161.442583,
+     176.15841700000001,
+     156.249958,
+     161.539417,
+     157.09645799999998,
+     162.048708
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569
+    ],
+    "emitted": 61048,
+    "evaluations": 22527,
+    "invocations": 2569,
+    "peak_workers": 8,
+    "real_parallel_calls": 1106,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 21837,
+    "wire_bytes": 4694056
+   }
+  }
+ },
+ "sum-bits/1709/certified": {
+  "semantic": "81f7f634bda660f8e2936bf6b6cdc0ab375afd1776a65fb195749dfcebd07fdd",
+  "raw_single": "15882569006365882120",
+  "raw_multi": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+  "rhs": 7265,
+  "fresh_cells": 5868,
+  "direct": 5867,
+  "neural": 7265,
+  "arms": {
+   "exact": {
+    "median_ms": 25.661583,
+    "ms": [
+     27.619834,
+     25.354084,
+     25.6855,
+     28.118209,
+     25.637666,
+     25.188542
+    ]
+   },
+   "native": {
+    "median_ms": 93.04329150000001,
+    "ms": [
+     94.064125,
+     91.20599999999999,
+     100.401583,
+     100.30808300000001,
+     92.022458,
+     91.40712500000001
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 6910600
+   },
+   "shared-1": {
+    "median_ms": 84.26135400000001,
+    "ms": [
+     84.604625,
+     82.914667,
+     83.66883299999999,
+     85.96454100000001,
+     83.91808300000001,
+     85.229917
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0,
+     0
+    ],
+    "emitted": 48529,
+    "evaluations": 2584,
+    "invocations": 2569,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 0,
+    "wire_bytes": 6910600
+   },
+   "page-1": {
+    "median_ms": 80.508146,
+    "ms": [
+     80.524959,
+     80.012625,
+     81.00854100000001,
+     81.883042,
+     80.491333,
+     79.660292
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0,
+     0
+    ],
+    "emitted": 48529,
+    "evaluations": 2584,
+    "invocations": 2569,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 0,
+    "wire_bytes": 3920744
+   },
+   "page-2": {
+    "median_ms": 102.5254795,
+    "ms": [
+     102.476042,
+     102.574917,
+     101.74175000000001,
+     114.52829200000001,
+     105.07391700000001,
+     100.18716599999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0
+    ],
+    "emitted": 48529,
+    "evaluations": 4078,
+    "invocations": 2569,
+    "peak_workers": 2,
+    "real_parallel_calls": 90,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 0,
+    "wire_bytes": 4012584
+   },
+   "page-4": {
+    "median_ms": 119.7600415,
+    "ms": [
+     113.718667,
+     123.11241700000001,
+     116.916125,
+     122.603958,
+     125.63179099999999,
+     113.15454199999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0
+    ],
+    "emitted": 48529,
+    "evaluations": 6511,
+    "invocations": 2569,
+    "peak_workers": 4,
+    "real_parallel_calls": 206,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 0,
+    "wire_bytes": 4152424
+   },
+   "page-8": {
+    "median_ms": 154.6249165,
+    "ms": [
+     157.1175,
+     147.482292,
+     155.023167,
+     160.479292,
+     154.22666600000002,
+     151.627667
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569
+    ],
+    "emitted": 48529,
+    "evaluations": 10546,
+    "invocations": 2569,
+    "peak_workers": 7,
+    "real_parallel_calls": 972,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 0,
+    "wire_bytes": 4370216
+   }
+  }
+ },
+ "sum-bits/1709/high": {
+  "semantic": "81f7f634bda660f8e2936bf6b6cdc0ab375afd1776a65fb195749dfcebd07fdd",
+  "raw_single": "3507357979152924359",
+  "raw_multi": "7e1ee4377d31453cff015962f2a21a1ba1759ce584fdcdbea9fba34cf5ab14f6",
+  "rhs": 7265,
+  "fresh_cells": 5868,
+  "direct": 5860,
+  "neural": 7257,
+  "arms": {
+   "exact": {
+    "median_ms": 25.800145999999998,
+    "ms": [
+     30.1645,
+     26.08675,
+     25.473375,
+     25.513542,
+     26.512209,
+     24.691959
+    ]
+   },
+   "native": {
+    "median_ms": 98.19368800000001,
+    "ms": [
+     102.025375,
+     104.04433300000001,
+     98.416459,
+     97.957667,
+     97.970917,
+     93.728667
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 8141456
+   },
+   "shared-1": {
+    "median_ms": 88.1234995,
+    "ms": [
+     87.826708,
+     86.411166,
+     94.497292,
+     88.713708,
+     86.263042,
+     88.42029099999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0,
+     0
+    ],
+    "emitted": 62516,
+    "evaluations": 8682,
+    "invocations": 2569,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 21837,
+    "wire_bytes": 8141456
+   },
+   "page-1": {
+    "median_ms": 85.4336665,
+    "ms": [
+     85.534667,
+     85.332666,
+     90.0985,
+     84.590875,
+     83.43591599999999,
+     86.65825000000001
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0,
+     0
+    ],
+    "emitted": 62516,
+    "evaluations": 8682,
+    "invocations": 2569,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 21837,
+    "wire_bytes": 4250288
+   },
+   "page-2": {
+    "median_ms": 109.9091665,
+    "ms": [
+     110.759833,
+     106.81625,
+     111.677417,
+     105.532958,
+     109.05850000000001,
+     110.991291
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0,
+     0
+    ],
+    "emitted": 62516,
+    "evaluations": 11674,
+    "invocations": 2569,
+    "peak_workers": 2,
+    "real_parallel_calls": 195,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 21837,
+    "wire_bytes": 4338736
+   },
+   "page-4": {
+    "median_ms": 124.86754149999999,
+    "ms": [
+     126.15370800000001,
+     128.281125,
+     125.54120799999998,
+     119.300459,
+     119.939833,
+     124.19387499999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569,
+     0
+    ],
+    "emitted": 62516,
+    "evaluations": 16053,
+    "invocations": 2569,
+    "peak_workers": 4,
+    "real_parallel_calls": 525,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 21837,
+    "wire_bytes": 4483056
+   },
+   "page-8": {
+    "median_ms": 160.970458,
+    "ms": [
+     157.144375,
+     163.72637500000002,
+     152.785542,
+     160.665875,
+     161.27504100000002,
+     163.037791
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     70366
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2569
+    ],
+    "emitted": 62516,
+    "evaluations": 22527,
+    "invocations": 2569,
+    "peak_workers": 7,
+    "real_parallel_calls": 1134,
+    "snapshot_builds": 469,
+    "snapshot_reuses": 2085,
+    "source_headers": 70366,
+    "stale_proofs": 21837,
+    "wire_bytes": 4718576
+   }
+  }
+ },
+ "dot-product/1703/certified": {
+  "semantic": "e2564d6218f37055685394f4de7e9d09e1df0fb79134b73000c069d8c79efb6d",
+  "raw_single": "12070267040812855322",
+  "raw_multi": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+  "rhs": 6704,
+  "fresh_cells": 5682,
+  "direct": 5666,
+  "neural": 6704,
+  "arms": {
+   "exact": {
+    "median_ms": 21.365499999999997,
+    "ms": [
+     21.494374999999998,
+     20.248167000000002,
+     21.159750000000003,
+     21.509292,
+     22.040042,
+     21.236625
+    ]
+   },
+   "native": {
+    "median_ms": 90.856229,
+    "ms": [
+     93.35845900000001,
+     95.37025,
+     88.166125,
+     89.889583,
+     91.822875,
+     88.746375
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 7025160
+   },
+   "shared-1": {
+    "median_ms": 81.493084,
+    "ms": [
+     83.158333,
+     81.237584,
+     80.40237499999999,
+     80.11725,
+     82.309042,
+     81.748584
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0,
+     0
+    ],
+    "emitted": 47313,
+    "evaluations": 1995,
+    "invocations": 2281,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 0,
+    "wire_bytes": 7025160
+   },
+   "page-1": {
+    "median_ms": 77.951021,
+    "ms": [
+     78.033167,
+     78.751334,
+     78.005292,
+     77.89675,
+     77.656583,
+     77.73845899999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0,
+     0
+    ],
+    "emitted": 47313,
+    "evaluations": 1995,
+    "invocations": 2281,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 0,
+    "wire_bytes": 4092584
+   },
+   "page-2": {
+    "median_ms": 98.080354,
+    "ms": [
+     98.733333,
+     97.23287499999999,
+     97.21549999999999,
+     97.718458,
+     108.87070899999999,
+     98.44225
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0
+    ],
+    "emitted": 47313,
+    "evaluations": 3508,
+    "invocations": 2281,
+    "peak_workers": 2,
+    "real_parallel_calls": 77,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 0,
+    "wire_bytes": 4185576
+   },
+   "page-4": {
+    "median_ms": 108.42460449999999,
+    "ms": [
+     107.13354199999999,
+     106.190042,
+     109.715667,
+     106.148666,
+     113.198458,
+     116.128334
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0
+    ],
+    "emitted": 47313,
+    "evaluations": 5751,
+    "invocations": 2281,
+    "peak_workers": 3,
+    "real_parallel_calls": 149,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 0,
+    "wire_bytes": 4319208
+   },
+   "page-8": {
+    "median_ms": 148.09439600000002,
+    "ms": [
+     145.21029099999998,
+     138.304542,
+     149.611416,
+     150.44191700000002,
+     146.966292,
+     149.2225
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281
+    ],
+    "emitted": 47313,
+    "evaluations": 9641,
+    "invocations": 2281,
+    "peak_workers": 7,
+    "real_parallel_calls": 919,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 0,
+    "wire_bytes": 4541288
+   }
+  }
+ },
+ "dot-product/1703/high": {
+  "semantic": "e2564d6218f37055685394f4de7e9d09e1df0fb79134b73000c069d8c79efb6d",
+  "raw_single": "3688457416620963448",
+  "raw_multi": "443bfd91d64fdc1d1876f0160732c621b9334082a23f844e58fe37424c91a4ca",
+  "rhs": 6704,
+  "fresh_cells": 5682,
+  "direct": 5664,
+  "neural": 6702,
+  "arms": {
+   "exact": {
+    "median_ms": 21.425061999999997,
+    "ms": [
+     21.589707999999998,
+     21.186291999999998,
+     21.197416999999998,
+     21.260416,
+     21.671625,
+     25.293665999999998
+    ]
+   },
+   "native": {
+    "median_ms": 92.578396,
+    "ms": [
+     92.7255,
+     92.431292,
+     91.21,
+     90.293667,
+     93.210791,
+     99.779458
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 7773864
+   },
+   "shared-1": {
+    "median_ms": 83.3764165,
+    "ms": [
+     83.303333,
+     82.64125,
+     81.455833,
+     83.4495,
+     87.066125,
+     84.614959
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0,
+     0
+    ],
+    "emitted": 55821,
+    "evaluations": 7074,
+    "invocations": 2281,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 15245,
+    "wire_bytes": 7773864
+   },
+   "page-1": {
+    "median_ms": 82.0435,
+    "ms": [
+     81.818583,
+     82.268417,
+     79.03016699999999,
+     79.308958,
+     85.68974999999999,
+     82.799292
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0,
+     0
+    ],
+    "emitted": 55821,
+    "evaluations": 7074,
+    "invocations": 2281,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 15245,
+    "wire_bytes": 4296200
+   },
+   "page-2": {
+    "median_ms": 103.02347950000001,
+    "ms": [
+     104.79674999999999,
+     106.283459,
+     98.50525,
+     99.767834,
+     102.288167,
+     103.758792
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0
+    ],
+    "emitted": 55821,
+    "evaluations": 9524,
+    "invocations": 2281,
+    "peak_workers": 2,
+    "real_parallel_calls": 135,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 15245,
+    "wire_bytes": 4384968
+   },
+   "page-4": {
+    "median_ms": 116.196875,
+    "ms": [
+     110.577875,
+     114.5955,
+     108.072958,
+     122.31083299999999,
+     122.02187500000001,
+     117.79825
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0
+    ],
+    "emitted": 55821,
+    "evaluations": 12668,
+    "invocations": 2281,
+    "peak_workers": 4,
+    "real_parallel_calls": 708,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 15245,
+    "wire_bytes": 4517192
+   },
+   "page-8": {
+    "median_ms": 151.08472949999998,
+    "ms": [
+     145.198709,
+     155.136583,
+     149.353209,
+     148.542709,
+     152.81625,
+     153.813959
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281
+    ],
+    "emitted": 55821,
+    "evaluations": 17424,
+    "invocations": 2281,
+    "peak_workers": 7,
+    "real_parallel_calls": 1036,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 15245,
+    "wire_bytes": 4747144
+   }
+  }
+ },
+ "dot-product/1709/certified": {
+  "semantic": "e2564d6218f37055685394f4de7e9d09e1df0fb79134b73000c069d8c79efb6d",
+  "raw_single": "3481005357044940097",
+  "raw_multi": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+  "rhs": 6704,
+  "fresh_cells": 5682,
+  "direct": 5666,
+  "neural": 6704,
+  "arms": {
+   "exact": {
+    "median_ms": 21.960771,
+    "ms": [
+     22.027166,
+     22.873916,
+     22.003667,
+     21.917875,
+     21.700167,
+     21.338875
+    ]
+   },
+   "native": {
+    "median_ms": 92.382271,
+    "ms": [
+     97.16970900000001,
+     93.78470899999999,
+     90.37125,
+     92.149042,
+     90.927167,
+     92.6155
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 7004576
+   },
+   "shared-1": {
+    "median_ms": 82.943792,
+    "ms": [
+     82.741084,
+     82.541,
+     82.194708,
+     83.18100000000001,
+     83.1465,
+     83.757416
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0,
+     0
+    ],
+    "emitted": 47313,
+    "evaluations": 1995,
+    "invocations": 2281,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 0,
+    "wire_bytes": 7004576
+   },
+   "page-1": {
+    "median_ms": 80.45402049999998,
+    "ms": [
+     81.07945799999999,
+     79.828583,
+     79.126458,
+     85.721667,
+     82.177625,
+     78.692792
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0,
+     0
+    ],
+    "emitted": 47313,
+    "evaluations": 1995,
+    "invocations": 2281,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 0,
+    "wire_bytes": 4072000
+   },
+   "page-2": {
+    "median_ms": 101.241312,
+    "ms": [
+     105.6245,
+     102.53325000000001,
+     101.73141600000001,
+     100.634708,
+     100.75120799999999,
+     100.53379199999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0
+    ],
+    "emitted": 47313,
+    "evaluations": 3508,
+    "invocations": 2281,
+    "peak_workers": 2,
+    "real_parallel_calls": 58,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 0,
+    "wire_bytes": 4164992
+   },
+   "page-4": {
+    "median_ms": 112.14895849999999,
+    "ms": [
+     115.429333,
+     112.42604200000001,
+     109.351708,
+     113.021916,
+     108.886417,
+     111.87187499999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0
+    ],
+    "emitted": 47313,
+    "evaluations": 5751,
+    "invocations": 2281,
+    "peak_workers": 4,
+    "real_parallel_calls": 175,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 0,
+    "wire_bytes": 4298624
+   },
+   "page-8": {
+    "median_ms": 148.724646,
+    "ms": [
+     150.444792,
+     154.025083,
+     143.872667,
+     138.07549999999998,
+     147.0045,
+     150.78329100000002
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281
+    ],
+    "emitted": 47313,
+    "evaluations": 9641,
+    "invocations": 2281,
+    "peak_workers": 7,
+    "real_parallel_calls": 965,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 0,
+    "wire_bytes": 4520704
+   }
+  }
+ },
+ "dot-product/1709/high": {
+  "semantic": "e2564d6218f37055685394f4de7e9d09e1df0fb79134b73000c069d8c79efb6d",
+  "raw_single": "8691201130279632907",
+  "raw_multi": "defac1c154ad9d468cf6d85f603e5e7f53abe44826ff695c9ded7ca1dc2f7664",
+  "rhs": 6704,
+  "fresh_cells": 5682,
+  "direct": 5664,
+  "neural": 6702,
+  "arms": {
+   "exact": {
+    "median_ms": 22.636103999999996,
+    "ms": [
+     21.439584,
+     21.870957999999998,
+     21.656708000000002,
+     26.8835,
+     23.688750000000002,
+     23.401249999999997
+    ]
+   },
+   "native": {
+    "median_ms": 100.944563,
+    "ms": [
+     94.74070900000001,
+     105.011542,
+     97.84675,
+     102.732083,
+     101.72179200000001,
+     100.167334
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 7926640
+   },
+   "shared-1": {
+    "median_ms": 91.473604,
+    "ms": [
+     84.045833,
+     84.64087500000001,
+     92.656625,
+     94.77287500000001,
+     90.758667,
+     92.188541
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0,
+     0
+    ],
+    "emitted": 57791,
+    "evaluations": 7074,
+    "invocations": 2281,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 15245,
+    "wire_bytes": 7926640
+   },
+   "page-1": {
+    "median_ms": 84.688688,
+    "ms": [
+     80.990958,
+     82.172083,
+     101.277292,
+     90.95787499999999,
+     82.601917,
+     86.775459
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0,
+     0
+    ],
+    "emitted": 57791,
+    "evaluations": 7074,
+    "invocations": 2281,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 15245,
+    "wire_bytes": 4322832
+   },
+   "page-2": {
+    "median_ms": 106.0091035,
+    "ms": [
+     103.38374999999999,
+     100.770041,
+     106.635166,
+     111.77216700000001,
+     105.38304099999999,
+     118.685334
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0,
+     0
+    ],
+    "emitted": 57791,
+    "evaluations": 9524,
+    "invocations": 2281,
+    "peak_workers": 2,
+    "real_parallel_calls": 145,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 15245,
+    "wire_bytes": 4412240
+   },
+   "page-4": {
+    "median_ms": 124.26720849999998,
+    "ms": [
+     113.59712499999999,
+     112.32995799999999,
+     125.98325,
+     125.93595899999998,
+     122.598458,
+     136.9325
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281,
+     0
+    ],
+    "emitted": 57791,
+    "evaluations": 12668,
+    "invocations": 2281,
+    "peak_workers": 4,
+    "real_parallel_calls": 399,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 15245,
+    "wire_bytes": 4545744
+   },
+   "page-8": {
+    "median_ms": 157.05293749999998,
+    "ms": [
+     147.063167,
+     150.49325,
+     154.070333,
+     167.72075,
+     160.035542,
+     164.428875
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     62558
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2281
+    ],
+    "emitted": 57791,
+    "evaluations": 17424,
+    "invocations": 2281,
+    "peak_workers": 7,
+    "real_parallel_calls": 1023,
+    "snapshot_builds": 359,
+    "snapshot_reuses": 1907,
+    "source_headers": 62558,
+    "stale_proofs": 15245,
+    "wire_bytes": 4778896
+   }
+  }
+ },
+ "gemm-bias-relu/1703/certified": {
+  "semantic": "7d37db802cea0b434bc1e483bf29a459c3804b963515b388a41966439bc84fdf",
+  "raw_single": "16568991312171106356",
+  "raw_multi": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+  "rhs": 15462,
+  "fresh_cells": 12869,
+  "direct": 12866,
+  "neural": 15462,
+  "arms": {
+   "exact": {
+    "median_ms": 56.090645499999994,
+    "ms": [
+     57.756875,
+     55.390958,
+     54.23525,
+     50.359584,
+     56.790333,
+     61.711875
+    ]
+   },
+   "native": {
+    "median_ms": 291.9713125,
+    "ms": [
+     301.25875,
+     287.205458,
+     286.791583,
+     275.206375,
+     305.04008300000004,
+     296.737167
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 23403080
+   },
+   "shared-1": {
+    "median_ms": 267.269271,
+    "ms": [
+     271.2365,
+     272.2135,
+     254.49570799999998,
+     256.65004200000004,
+     277.345042,
+     263.30204200000003
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0,
+     0
+    ],
+    "emitted": 154820,
+    "evaluations": 2638,
+    "invocations": 3377,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 0,
+    "wire_bytes": 23403080
+   },
+   "page-1": {
+    "median_ms": 254.9089795,
+    "ms": [
+     257.29504199999997,
+     262.832209,
+     249.90504199999998,
+     247.79399999999998,
+     252.522917,
+     265.35358399999996
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0,
+     0
+    ],
+    "emitted": 154820,
+    "evaluations": 2638,
+    "invocations": 3377,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 0,
+    "wire_bytes": 13623336
+   },
+   "page-2": {
+    "median_ms": 290.8026875,
+    "ms": [
+     325.776958,
+     289.973416,
+     276.236917,
+     286.8645,
+     291.631959,
+     314.22625
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0
+    ],
+    "emitted": 154820,
+    "evaluations": 4499,
+    "invocations": 3377,
+    "peak_workers": 2,
+    "real_parallel_calls": 74,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 0,
+    "wire_bytes": 13737896
+   },
+   "page-4": {
+    "median_ms": 321.38877049999996,
+    "ms": [
+     308.64658299999996,
+     349.31933300000003,
+     301.386833,
+     309.384458,
+     336.99741700000004,
+     333.393083
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0
+    ],
+    "emitted": 154820,
+    "evaluations": 8032,
+    "invocations": 3377,
+    "peak_workers": 4,
+    "real_parallel_calls": 341,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 0,
+    "wire_bytes": 13948264
+   },
+   "page-8": {
+    "median_ms": 374.3833125,
+    "ms": [
+     389.203792,
+     376.12341599999996,
+     372.64320899999996,
+     353.9555,
+     378.50958299999996,
+     355.520792
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377
+    ],
+    "emitted": 154820,
+    "evaluations": 13419,
+    "invocations": 3377,
+    "peak_workers": 7,
+    "real_parallel_calls": 1331,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 0,
+    "wire_bytes": 14265192
+   }
+  }
+ },
+ "gemm-bias-relu/1703/high": {
+  "semantic": "7d37db802cea0b434bc1e483bf29a459c3804b963515b388a41966439bc84fdf",
+  "raw_single": "10908752160148703911",
+  "raw_multi": "e9ff1d9726fb5c8a6750f245f74e69bea55ea899e73b2f1d908e263a38e64cd5",
+  "rhs": 15462,
+  "fresh_cells": 12869,
+  "direct": 12855,
+  "neural": 15451,
+  "arms": {
+   "exact": {
+    "median_ms": 49.821438,
+    "ms": [
+     51.780917,
+     51.039792,
+     57.233542,
+     46.430667,
+     47.626042,
+     48.603083999999996
+    ]
+   },
+   "native": {
+    "median_ms": 277.3873335,
+    "ms": [
+     298.823417,
+     301.250625,
+     283.247792,
+     269.69187500000004,
+     271.526875,
+     269.968291
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 24965784
+   },
+   "shared-1": {
+    "median_ms": 255.04475000000002,
+    "ms": [
+     272.980375,
+     273.060542,
+     261.704791,
+     238.967709,
+     247.471708,
+     248.38470900000002
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0,
+     0
+    ],
+    "emitted": 172578,
+    "evaluations": 14157,
+    "invocations": 3377,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 41445,
+    "wire_bytes": 24965784
+   },
+   "page-1": {
+    "median_ms": 236.007271,
+    "ms": [
+     265.072791,
+     268.146041,
+     237.302583,
+     232.678541,
+     234.41179200000002,
+     234.711959
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0,
+     0
+    ],
+    "emitted": 172578,
+    "evaluations": 14157,
+    "invocations": 3377,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 41445,
+    "wire_bytes": 14041784
+   },
+   "page-2": {
+    "median_ms": 278.37945850000006,
+    "ms": [
+     288.91387499999996,
+     312.32225,
+     283.63125,
+     266.65883299999996,
+     269.955375,
+     273.12766700000003
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0
+    ],
+    "emitted": 172578,
+    "evaluations": 18891,
+    "invocations": 3377,
+    "peak_workers": 2,
+    "real_parallel_calls": 202,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 41445,
+    "wire_bytes": 14144888
+   },
+   "page-4": {
+    "median_ms": 302.2173335,
+    "ms": [
+     338.49037500000003,
+     322.3135,
+     307.346334,
+     284.412792,
+     297.088333,
+     272.904291
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0
+    ],
+    "emitted": 172578,
+    "evaluations": 25721,
+    "invocations": 3377,
+    "peak_workers": 4,
+    "real_parallel_calls": 811,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 41445,
+    "wire_bytes": 14337016
+   },
+   "page-8": {
+    "median_ms": 354.125354,
+    "ms": [
+     360.248875,
+     367.26950000000005,
+     359.3235,
+     340.011375,
+     348.927208,
+     342.039375
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377
+    ],
+    "emitted": 172578,
+    "evaluations": 35313,
+    "invocations": 3377,
+    "peak_workers": 8,
+    "real_parallel_calls": 1511,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 41445,
+    "wire_bytes": 14650104
+   }
+  }
+ },
+ "gemm-bias-relu/1709/certified": {
+  "semantic": "7d37db802cea0b434bc1e483bf29a459c3804b963515b388a41966439bc84fdf",
+  "raw_single": "6655157236821798068",
+  "raw_multi": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+  "rhs": 15462,
+  "fresh_cells": 12869,
+  "direct": 12866,
+  "neural": 15462,
+  "arms": {
+   "exact": {
+    "median_ms": 49.958646,
+    "ms": [
+     47.848834,
+     47.542916999999996,
+     61.560083,
+     50.309125,
+     49.608167,
+     54.985209
+    ]
+   },
+   "native": {
+    "median_ms": 276.6571665,
+    "ms": [
+     266.47820900000005,
+     264.28070799999995,
+     284.77750000000003,
+     273.49600000000004,
+     279.818333,
+     304.87129200000004
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 23554976
+   },
+   "shared-1": {
+    "median_ms": 248.796917,
+    "ms": [
+     247.053084,
+     240.404208,
+     268.79325,
+     246.7715,
+     250.54074999999997,
+     251.205375
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0,
+     0
+    ],
+    "emitted": 154820,
+    "evaluations": 2638,
+    "invocations": 3377,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 0,
+    "wire_bytes": 23554976
+   },
+   "page-1": {
+    "median_ms": 247.79674999999997,
+    "ms": [
+     236.821834,
+     229.78875000000002,
+     257.207875,
+     255.62099999999998,
+     239.9725,
+     262.938042
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0,
+     0
+    ],
+    "emitted": 154820,
+    "evaluations": 2638,
+    "invocations": 3377,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 0,
+    "wire_bytes": 13775232
+   },
+   "page-2": {
+    "median_ms": 270.320375,
+    "ms": [
+     273.92083299999996,
+     259.287292,
+     268.86787499999997,
+     267.554334,
+     271.772875,
+     315.27675
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0
+    ],
+    "emitted": 154820,
+    "evaluations": 4499,
+    "invocations": 3377,
+    "peak_workers": 2,
+    "real_parallel_calls": 84,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 0,
+    "wire_bytes": 13889792
+   },
+   "page-4": {
+    "median_ms": 291.7024165,
+    "ms": [
+     271.220417,
+     280.49237500000004,
+     282.276542,
+     309.44875,
+     301.128291,
+     331.462708
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0
+    ],
+    "emitted": 154820,
+    "evaluations": 8032,
+    "invocations": 3377,
+    "peak_workers": 4,
+    "real_parallel_calls": 209,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 0,
+    "wire_bytes": 14100160
+   },
+   "page-8": {
+    "median_ms": 355.479187,
+    "ms": [
+     344.357917,
+     341.924917,
+     352.884208,
+     358.07416600000005,
+     359.054167,
+     371.230459
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377
+    ],
+    "emitted": 154820,
+    "evaluations": 13419,
+    "invocations": 3377,
+    "peak_workers": 7,
+    "real_parallel_calls": 1226,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 0,
+    "wire_bytes": 14417088
+   }
+  }
+ },
+ "gemm-bias-relu/1709/high": {
+  "semantic": "7d37db802cea0b434bc1e483bf29a459c3804b963515b388a41966439bc84fdf",
+  "raw_single": "5312093614884470678",
+  "raw_multi": "9ead87dfefc0b312b90c35f628404ccb209b85d1f84b96058b72984316386119",
+  "rhs": 15462,
+  "fresh_cells": 12869,
+  "direct": 12857,
+  "neural": 15453,
+  "arms": {
+   "exact": {
+    "median_ms": 50.1324585,
+    "ms": [
+     60.872834,
+     49.68525,
+     48.1485,
+     50.37425,
+     49.890667,
+     52.644749999999995
+    ]
+   },
+   "native": {
+    "median_ms": 283.9305,
+    "ms": [
+     321.199666,
+     279.26725000000005,
+     284.870875,
+     282.340125,
+     286.021583,
+     282.990125
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 25714584
+   },
+   "shared-1": {
+    "median_ms": 255.9577085,
+    "ms": [
+     260.99791700000003,
+     247.26441599999998,
+     261.130083,
+     255.243834,
+     253.017,
+     256.671583
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0,
+     0
+    ],
+    "emitted": 179361,
+    "evaluations": 14157,
+    "invocations": 3377,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 41445,
+    "wire_bytes": 25714584
+   },
+   "page-1": {
+    "median_ms": 250.3555,
+    "ms": [
+     276.480458,
+     254.07579200000004,
+     251.16375000000002,
+     246.427042,
+     247.147583,
+     249.54725
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0,
+     0
+    ],
+    "emitted": 179361,
+    "evaluations": 14157,
+    "invocations": 3377,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 41445,
+    "wire_bytes": 14358392
+   },
+   "page-2": {
+    "median_ms": 280.9244585,
+    "ms": [
+     350.664334,
+     281.315042,
+     280.53387499999997,
+     272.103042,
+     291.378375,
+     273.55875000000003
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0,
+     0
+    ],
+    "emitted": 179361,
+    "evaluations": 18891,
+    "invocations": 3377,
+    "peak_workers": 2,
+    "real_parallel_calls": 162,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 41445,
+    "wire_bytes": 14464312
+   },
+   "page-4": {
+    "median_ms": 305.246917,
+    "ms": [
+     303.836667,
+     331.37275,
+     324.068292,
+     299.99341699999997,
+     306.657167,
+     303.614291
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377,
+     0
+    ],
+    "emitted": 179361,
+    "evaluations": 25721,
+    "invocations": 3377,
+    "peak_workers": 4,
+    "real_parallel_calls": 786,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 41445,
+    "wire_bytes": 14661944
+   },
+   "page-8": {
+    "median_ms": 361.2083955,
+    "ms": [
+     363.66829099999995,
+     373.59895900000004,
+     358.33512499999995,
+     354.288333,
+     358.888458,
+     363.528333
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     196265
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     3377
+    ],
+    "emitted": 179361,
+    "evaluations": 35313,
+    "invocations": 3377,
+    "peak_workers": 8,
+    "real_parallel_calls": 1428,
+    "snapshot_builds": 423,
+    "snapshot_reuses": 2939,
+    "source_headers": 196265,
+    "stale_proofs": 41445,
+    "wire_bytes": 14979960
+   }
+  }
+ },
+ "stable-argmax/1703/certified": {
+  "semantic": "7404218bf9f05f5e92a51e5efbec1ca36c3e55a5fe2272c4d5159dbce944e1bf",
+  "raw_single": "15235478998760151878",
+  "raw_multi": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+  "rhs": 8190,
+  "fresh_cells": 6841,
+  "direct": 6841,
+  "neural": 8190,
+  "arms": {
+   "exact": {
+    "median_ms": 25.473167000000004,
+    "ms": [
+     28.765708,
+     25.561084,
+     25.385250000000003,
+     25.291,
+     25.259166,
+     26.404875
+    ]
+   },
+   "native": {
+    "median_ms": 87.981667,
+    "ms": [
+     87.967542,
+     87.680166,
+     87.658292,
+     89.872208,
+     88.109708,
+     87.99579200000001
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 6980496
+   },
+   "shared-1": {
+    "median_ms": 78.76985450000001,
+    "ms": [
+     82.12195799999999,
+     80.02479199999999,
+     78.637458,
+     78.88733400000001,
+     78.503875,
+     78.65237499999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0,
+     0
+    ],
+    "emitted": 50151,
+    "evaluations": 1635,
+    "invocations": 2079,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 0,
+    "wire_bytes": 6980496
+   },
+   "page-1": {
+    "median_ms": 76.0074375,
+    "ms": [
+     75.95837499999999,
+     75.616958,
+     76.0565,
+     76.477958,
+     75.303667,
+     76.878083
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0,
+     0
+    ],
+    "emitted": 50151,
+    "evaluations": 1635,
+    "invocations": 2079,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 0,
+    "wire_bytes": 3850928
+   },
+   "page-2": {
+    "median_ms": 92.041896,
+    "ms": [
+     91.527625,
+     92.55616699999999,
+     91.440792,
+     93.866083,
+     90.955083,
+     93.209708
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0
+    ],
+    "emitted": 50151,
+    "evaluations": 2679,
+    "invocations": 2079,
+    "peak_workers": 2,
+    "real_parallel_calls": 66,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 0,
+    "wire_bytes": 3915888
+   },
+   "page-4": {
+    "median_ms": 101.5241665,
+    "ms": [
+     106.119917,
+     109.861292,
+     97.773417,
+     103.368541,
+     99.679792,
+     98.436625
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0
+    ],
+    "emitted": 50151,
+    "evaluations": 4633,
+    "invocations": 2079,
+    "peak_workers": 4,
+    "real_parallel_calls": 139,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 0,
+    "wire_bytes": 4033840
+   },
+   "page-8": {
+    "median_ms": 133.5060205,
+    "ms": [
+     134.807083,
+     138.17495799999998,
+     135.034,
+     129.55979200000002,
+     132.06045899999998,
+     132.204958
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079
+    ],
+    "emitted": 50151,
+    "evaluations": 7924,
+    "invocations": 2079,
+    "peak_workers": 7,
+    "real_parallel_calls": 783,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 0,
+    "wire_bytes": 4228144
+   }
+  }
+ },
+ "stable-argmax/1703/high": {
+  "semantic": "7404218bf9f05f5e92a51e5efbec1ca36c3e55a5fe2272c4d5159dbce944e1bf",
+  "raw_single": "17280358631002703134",
+  "raw_multi": "c0e37c5c0459de5bccb8ff0d7afe59ab0ed19ef837ed656e18e05889c4242903",
+  "rhs": 8190,
+  "fresh_cells": 6841,
+  "direct": 6832,
+  "neural": 8181,
+  "arms": {
+   "exact": {
+    "median_ms": 26.0788545,
+    "ms": [
+     26.031625,
+     26.1195,
+     26.072084,
+     26.085625,
+     31.337457999999998,
+     25.594915999999998
+    ]
+   },
+   "native": {
+    "median_ms": 93.6022295,
+    "ms": [
+     98.75883300000001,
+     92.0425,
+     91.576958,
+     93.316709,
+     96.59704099999999,
+     93.88775000000001
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 7615416
+   },
+   "shared-1": {
+    "median_ms": 82.5545,
+    "ms": [
+     90.533,
+     82.380875,
+     81.783125,
+     80.85508399999999,
+     82.728125,
+     83.26195799999999
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0,
+     0
+    ],
+    "emitted": 57366,
+    "evaluations": 7469,
+    "invocations": 2079,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 15498,
+    "wire_bytes": 7615416
+   },
+   "page-1": {
+    "median_ms": 79.646417,
+    "ms": [
+     86.13841699999999,
+     88.681334,
+     78.485625,
+     78.340417,
+     80.807209,
+     78.443084
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0,
+     0
+    ],
+    "emitted": 57366,
+    "evaluations": 7469,
+    "invocations": 2079,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 15498,
+    "wire_bytes": 4020184
+   },
+   "page-2": {
+    "median_ms": 95.861458,
+    "ms": [
+     94.3635,
+     102.425958,
+     105.167209,
+     94.24591699999999,
+     96.51820799999999,
+     95.204708
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0
+    ],
+    "emitted": 57366,
+    "evaluations": 9496,
+    "invocations": 2079,
+    "peak_workers": 2,
+    "real_parallel_calls": 120,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 15498,
+    "wire_bytes": 4078616
+   },
+   "page-4": {
+    "median_ms": 111.0689375,
+    "ms": [
+     103.413625,
+     114.953583,
+     107.875792,
+     113.445209,
+     109.909708,
+     112.228167
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0
+    ],
+    "emitted": 57366,
+    "evaluations": 12700,
+    "invocations": 2079,
+    "peak_workers": 4,
+    "real_parallel_calls": 347,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 15498,
+    "wire_bytes": 4189016
+   },
+   "page-8": {
+    "median_ms": 141.56322899999998,
+    "ms": [
+     134.610125,
+     151.894667,
+     153.95275,
+     141.671416,
+     139.445792,
+     141.455042
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079
+    ],
+    "emitted": 57366,
+    "evaluations": 17681,
+    "invocations": 2079,
+    "peak_workers": 7,
+    "real_parallel_calls": 830,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 15498,
+    "wire_bytes": 4380568
+   }
+  }
+ },
+ "stable-argmax/1709/certified": {
+  "semantic": "7404218bf9f05f5e92a51e5efbec1ca36c3e55a5fe2272c4d5159dbce944e1bf",
+  "raw_single": "15481100319478701119",
+  "raw_multi": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+  "rhs": 8190,
+  "fresh_cells": 6841,
+  "direct": 6841,
+  "neural": 8190,
+  "arms": {
+   "exact": {
+    "median_ms": 26.404125,
+    "ms": [
+     26.379709000000002,
+     25.426458,
+     27.896375000000003,
+     24.624541999999998,
+     27.757792,
+     26.428541
+    ]
+   },
+   "native": {
+    "median_ms": 89.773125,
+    "ms": [
+     94.811666,
+     93.292208,
+     88.30925,
+     87.208541,
+     91.237,
+     85.613
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 6994288
+   },
+   "shared-1": {
+    "median_ms": 80.4996875,
+    "ms": [
+     80.43025,
+     83.079583,
+     80.569125,
+     77.413709,
+     79.518583,
+     87.044125
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0,
+     0
+    ],
+    "emitted": 50151,
+    "evaluations": 1635,
+    "invocations": 2079,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 0,
+    "wire_bytes": 6994288
+   },
+   "page-1": {
+    "median_ms": 78.109958,
+    "ms": [
+     77.39375,
+     81.015709,
+     82.614,
+     73.94683400000001,
+     77.087667,
+     78.826166
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0,
+     0
+    ],
+    "emitted": 50151,
+    "evaluations": 1635,
+    "invocations": 2079,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 0,
+    "wire_bytes": 3864720
+   },
+   "page-2": {
+    "median_ms": 93.708854,
+    "ms": [
+     97.939375,
+     98.66583299999999,
+     93.44891700000001,
+     88.64058299999999,
+     93.968791,
+     91.740458
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0
+    ],
+    "emitted": 50151,
+    "evaluations": 2679,
+    "invocations": 2079,
+    "peak_workers": 2,
+    "real_parallel_calls": 52,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 0,
+    "wire_bytes": 3929680
+   },
+   "page-4": {
+    "median_ms": 108.36474999999999,
+    "ms": [
+     107.114667,
+     109.61483299999999,
+     112.513125,
+     95.207875,
+     110.40237499999999,
+     104.446834
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0
+    ],
+    "emitted": 50151,
+    "evaluations": 4633,
+    "invocations": 2079,
+    "peak_workers": 4,
+    "real_parallel_calls": 132,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 0,
+    "wire_bytes": 4047632
+   },
+   "page-8": {
+    "median_ms": 138.127813,
+    "ms": [
+     145.002417,
+     137.31658399999998,
+     146.970708,
+     134.60037499999999,
+     138.939042,
+     131.518875
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079
+    ],
+    "emitted": 50151,
+    "evaluations": 7924,
+    "invocations": 2079,
+    "peak_workers": 7,
+    "real_parallel_calls": 804,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 0,
+    "wire_bytes": 4241936
+   }
+  }
+ },
+ "stable-argmax/1709/high": {
+  "semantic": "7404218bf9f05f5e92a51e5efbec1ca36c3e55a5fe2272c4d5159dbce944e1bf",
+  "raw_single": "18246666859688828204",
+  "raw_multi": "e117d2838e976cd4a1d8a3c35be968fdd2a6502c83b1e2b493d649f9e2218674",
+  "rhs": 8190,
+  "fresh_cells": 6841,
+  "direct": 6834,
+  "neural": 8183,
+  "arms": {
+   "exact": {
+    "median_ms": 28.200646,
+    "ms": [
+     26.972209,
+     30.790875,
+     26.931375,
+     27.108375,
+     30.308458,
+     29.292917000000003
+    ]
+   },
+   "native": {
+    "median_ms": 101.42193750000001,
+    "ms": [
+     101.53225,
+     101.311625,
+     141.754167,
+     90.753458,
+     101.842834,
+     100.785958
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "emitted": 0,
+    "evaluations": 0,
+    "invocations": 0,
+    "peak_workers": 0,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 0,
+    "snapshot_reuses": 0,
+    "source_headers": 0,
+    "stale_proofs": 0,
+    "wire_bytes": 7889160
+   },
+   "shared-1": {
+    "median_ms": 90.029854,
+    "ms": [
+     87.945167,
+     95.44862499999999,
+     88.007416,
+     86.467291,
+     92.052292,
+     92.89729200000001
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0,
+     0
+    ],
+    "emitted": 60320,
+    "evaluations": 7469,
+    "invocations": 2079,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 15498,
+    "wire_bytes": 7889160
+   },
+   "page-1": {
+    "median_ms": 87.15043700000001,
+    "ms": [
+     86.1645,
+     91.083625,
+     87.000583,
+     82.633041,
+     87.300291,
+     87.457666
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0,
+     0
+    ],
+    "emitted": 60320,
+    "evaluations": 7469,
+    "invocations": 2079,
+    "peak_workers": 1,
+    "real_parallel_calls": 0,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 15498,
+    "wire_bytes": 4105384
+   },
+   "page-2": {
+    "median_ms": 105.430229,
+    "ms": [
+     103.68154200000001,
+     97.519042,
+     109.855125,
+     106.412166,
+     113.82308400000001,
+     104.448292
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0,
+     0
+    ],
+    "emitted": 60320,
+    "evaluations": 9496,
+    "invocations": 2079,
+    "peak_workers": 2,
+    "real_parallel_calls": 107,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 15498,
+    "wire_bytes": 4165864
+   },
+   "page-4": {
+    "median_ms": 120.51272900000001,
+    "ms": [
+     115.42120899999999,
+     118.966833,
+     124.423541,
+     130.44966599999998,
+     113.64679199999999,
+     122.058625
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649,
+     0
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079,
+     0
+    ],
+    "emitted": 60320,
+    "evaluations": 12700,
+    "invocations": 2079,
+    "peak_workers": 4,
+    "real_parallel_calls": 373,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 15498,
+    "wire_bytes": 4279144
+   },
+   "page-8": {
+    "median_ms": 146.4640835,
+    "ms": [
+     151.579792,
+     141.69375,
+     136.40375,
+     143.337458,
+     150.473583,
+     149.59070899999998
+    ],
+    "addressed": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     65649
+    ],
+    "calls": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     2079
+    ],
+    "emitted": 60320,
+    "evaluations": 17681,
+    "invocations": 2079,
+    "peak_workers": 8,
+    "real_parallel_calls": 797,
+    "snapshot_builds": 327,
+    "snapshot_reuses": 1737,
+    "source_headers": 65649,
+    "stale_proofs": 15498,
+    "wire_bytes": 4474536
+   }
+  }
+ }
+}
