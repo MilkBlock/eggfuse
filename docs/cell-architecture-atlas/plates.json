@@ -4869,5 +4869,88 @@
         ]
       }
     ]
+  },
+  {
+    "id": "91-arithmetic-port",
+    "section": "编译器提取计算端口",
+    "title": "父 Cell 的整数结果能提前用来选另一个父吗？",
+    "status": "已测 · 六个真实 Pass 3",
+    "q": "若一个后缀的整数运算只读一方的端口，而结果已出现在另一方，编译器可以将这条必要等式用于神经候选筛选。",
+    "arms": "a　先按 Expr 等共享槽签发双父，随后检查算术。b　计算第一段的起点加长度，按训练后的端口签名与第二段的起点比较。c　给原共享键和算术签名建复合索引。",
+    "fix": "原程序、冻结权重、可见版本、候选发行顺序和精确验证器相同。保留所有获胜来源、RHS、有效写入、Spine、union 和物理 Cell。规则号不进入编译准入条件。",
+    "measure": "3mm 的完整提案 477,862→220,972，整轮 2,090.02→2,024.65 ms；Deriche 为 574,416→309,277 和 3,847.03→3,827.85 ms。较小负载中，共轭梯度 712.53→672.44 ms。",
+    "note": "当前 Pass 3 规则集有一个接口符合此条件。复合索引与缓存过滤留下的原始元组完全相同，但 3mm 的复合索引要 2,116.66 ms。",
+    "src": "S80",
+    "diagram": [
+      {
+        "title": "Original suffix",
+        "layers": [
+          [
+            [
+              "n",
+              "two source parents"
+            ]
+          ],
+          [
+            [
+              "w",
+              "seal pair"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify arithmetic"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Derived port",
+        "layers": [
+          [
+            [
+              "s",
+              "start and length"
+            ]
+          ],
+          [
+            [
+              "n",
+              "compare port codes"
+            ]
+          ],
+          [
+            [
+              "w",
+              "seal survivors"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Compound bucket",
+        "layers": [
+          [
+            [
+              "n",
+              "join and scalar codes"
+            ]
+          ],
+          [
+            [
+              "s",
+              "ordered bucket"
+            ]
+          ],
+          [
+            [
+              "v",
+              "exact suffix"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
