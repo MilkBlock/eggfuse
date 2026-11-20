@@ -1186,6 +1186,19 @@ impl Executor {
         {
             return Ok(vec![]);
         }
+        #[cfg(feature="precomputed-forest")]
+        if !probe && self.stage_spine.forest.is_some(){
+            let facts=self.stage_spine.alias_query_facts(&self.graph,rid);
+            let forest=self.stage_spine.forest.as_mut().unwrap();
+            if forest.propose_root(rid){
+                self.pending[rid].clear();
+                return Ok(vec![Binding::matched(crate::slots::Slots::default(),facts,self.graph.epoch)]);
+            }
+            if !forest.residual{
+                self.pending[rid].clear();
+                return self.stage_spine.forest_only_answers(&mut self.graph,rid,self.watermarks[rid],&facts);
+            }
+        }
         let tables = &mut self.required_tables[rid];
         if let Some(pos) = tables.iter().position(|&t| self.graph.witness_count(t) == 0) {
             // Retest the last empty input first, using current storage. No
@@ -2904,6 +2917,21 @@ impl Executor {
         }
         Ok(changed)
     }
+    #[cfg(feature="precomputed-forest")]
+    pub fn use_precomputed_forest(&mut self,bytes:&[u8],digest:&str,residual:bool)->Result<()>{
+        if cfg!(feature="sparse-cells"){return Err("native forest trial uses the default CPU Cell representation".into());}
+        self.stage_spine.forest=Some(crate::precomputed_forest::Forest::load(&self.graph.program,
+            serde_json::from_slice(bytes).map_err(|e|e.to_string())?,digest,residual)?);
+        Ok(())
+    }
+    #[cfg(feature="precomputed-forest")]
+    pub fn use_precomputed_words(&mut self,layout:&crate::precomputed_forest::SealedLayout,words:&[u8],digest:&str)->Result<()>{
+        if cfg!(feature="sparse-cells"){return Err("native forest trial uses the default CPU Cell representation".into());}
+        self.stage_spine.forest=Some(crate::precomputed_forest::Forest::load(&self.graph.program,layout.unpack(words)?,digest,true)?);
+        Ok(())
+    }
+    #[cfg(feature="precomputed-forest")]
+    pub fn precomputed_report(&self)->Option<J>{self.stage_spine.forest.as_ref().map(|f|f.report())}
     pub fn execute(&mut self) -> Result<()> {
         self.execute_until(None)
     }

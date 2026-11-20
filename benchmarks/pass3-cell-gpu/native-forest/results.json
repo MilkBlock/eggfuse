@@ -1,0 +1,990 @@
+{
+ "sum-bits/1703": {
+  "native-reference": {
+   "inference_ms": 33.104209000000004,
+   "runs": 1428,
+   "runtime_sha256": "c944470a7fc813037a7a9e4b152a098e25c4acd565dc64fdf3535e4bc64f4045",
+   "service_sha256": "29efd9ab7f57dafc02133e48f2f0fbe61bdc2d3038594e957097f494fd5d5725"
+  },
+  "cpu-rust": {
+   "runs": 1428,
+   "rhs": 7265,
+   "children": 91,
+   "compiler_roots": 2,
+   "exact": 7172,
+   "first_divergence": null,
+   "attempts": 94,
+   "point_reads": 5,
+   "certificate": {
+    "emit_and_readback_ms": 0.541625,
+    "encode_ms": 0.48975,
+    "sha256": "5a2802e0bca701b6b2fa61a30b1a1656ee56ac39859f7e1f0ba98e7d00629b0f",
+    "active": 94,
+    "bytes": 14736
+   },
+   "cold_cli_ms": 153.612917,
+   "timings": [
+    {
+     "total_ms": 25.354667,
+     "forward_ms": 0.488875,
+     "copy_and_pack_ms": 0.010625,
+     "children": 91,
+     "inference_ms": 24.689541,
+     "rhs": 7265,
+     "validation_ms": 0.032792
+    },
+    {
+     "total_ms": 26.005792,
+     "forward_ms": 0.319875,
+     "copy_and_pack_ms": 0.005167,
+     "children": 91,
+     "inference_ms": 25.557959,
+     "rhs": 7265,
+     "validation_ms": 0.044041000000000004
+    },
+    {
+     "total_ms": 26.593042,
+     "forward_ms": 0.302834,
+     "copy_and_pack_ms": 0.004541,
+     "children": 91,
+     "inference_ms": 26.164417,
+     "rhs": 7265,
+     "validation_ms": 0.043458000000000004
+    },
+    {
+     "total_ms": 24.545583,
+     "forward_ms": 0.377458,
+     "copy_and_pack_ms": 0.06125,
+     "children": 91,
+     "inference_ms": 23.991666,
+     "rhs": 7265,
+     "validation_ms": 0.040209
+    },
+    {
+     "total_ms": 24.154416,
+     "forward_ms": 0.337708,
+     "copy_and_pack_ms": 0.011708,
+     "children": 91,
+     "inference_ms": 23.705167,
+     "rhs": 7265,
+     "validation_ms": 0.030667000000000003
+    },
+    {
+     "total_ms": 25.364792,
+     "forward_ms": 0.342625,
+     "copy_and_pack_ms": 0.011459,
+     "children": 91,
+     "inference_ms": 24.909792,
+     "rhs": 7265,
+     "validation_ms": 0.031792
+    }
+   ],
+   "median_ms": 25.3597295
+  },
+  "mps-rust": {
+   "runs": 1428,
+   "rhs": 7265,
+   "children": 91,
+   "compiler_roots": 2,
+   "exact": 7172,
+   "first_divergence": null,
+   "attempts": 94,
+   "point_reads": 5,
+   "certificate": {
+    "emit_and_readback_ms": 11.306917,
+    "encode_ms": 0.5985,
+    "sha256": "5a2802e0bca701b6b2fa61a30b1a1656ee56ac39859f7e1f0ba98e7d00629b0f",
+    "active": 94,
+    "bytes": 14736
+   },
+   "cold_cli_ms": 156.039375,
+   "timings": [
+    {
+     "total_ms": 31.882167,
+     "forward_ms": 6.810708,
+     "copy_and_pack_ms": 0.632459,
+     "children": 91,
+     "inference_ms": 24.312417,
+     "rhs": 7265,
+     "validation_ms": 0.041582999999999995
+    },
+    {
+     "total_ms": 26.559583,
+     "forward_ms": 0.686166,
+     "copy_and_pack_ms": 0.214792,
+     "children": 91,
+     "inference_ms": 25.519,
+     "rhs": 7265,
+     "validation_ms": 0.049666999999999996
+    },
+    {
+     "total_ms": 26.580875,
+     "forward_ms": 1.344292,
+     "copy_and_pack_ms": 0.283625,
+     "children": 91,
+     "inference_ms": 24.839292,
+     "rhs": 7265,
+     "validation_ms": 0.033374999999999995
+    },
+    {
+     "total_ms": 25.839875,
+     "forward_ms": 0.710167,
+     "copy_and_pack_ms": 0.223666,
+     "children": 91,
+     "inference_ms": 24.764792,
+     "rhs": 7265,
+     "validation_ms": 0.05525
+    },
+    {
+     "total_ms": 25.432084,
+     "forward_ms": 1.324375,
+     "copy_and_pack_ms": 0.199917,
+     "children": 91,
+     "inference_ms": 23.778750000000002,
+     "rhs": 7265,
+     "validation_ms": 0.0465
+    },
+    {
+     "total_ms": 26.629625,
+     "forward_ms": 0.818125,
+     "copy_and_pack_ms": 0.271333,
+     "children": 91,
+     "inference_ms": 25.429042,
+     "rhs": 7265,
+     "validation_ms": 0.036958
+    }
+   ],
+   "median_ms": 26.570228999999998
+  },
+  "rust-no-residual": {
+   "runs": 275,
+   "rhs": 93,
+   "children": 91,
+   "compiler_roots": 2,
+   "exact": 0,
+   "first_divergence": 3,
+   "attempts": 94,
+   "point_reads": 5
+  },
+  "rust-wrong-parent": {
+   "runs": 1428,
+   "rhs": 7265,
+   "children": 0,
+   "compiler_roots": 2,
+   "exact": 7263,
+   "first_divergence": null,
+   "attempts": 0,
+   "point_reads": 0
+  },
+  "mps-metal": {
+   "runs": 1428,
+   "rhs": 7265,
+   "children": 91,
+   "compiler_roots": 2,
+   "exact": 7172,
+   "first_divergence": null,
+   "timings": [
+    {
+     "total_ms": 907.8505
+    },
+    {
+     "total_ms": 898.95225
+    },
+    {
+     "total_ms": 875.536
+    },
+    {
+     "total_ms": 877.259125
+    },
+    {
+     "total_ms": 890.796583
+    },
+    {
+     "total_ms": 884.853917
+    }
+   ],
+   "median_ms": 887.8252500000001
+  },
+  "metal-no-residual": {
+   "runs": 275,
+   "rhs": 93,
+   "children": 91,
+   "compiler_roots": 2,
+   "exact": 0,
+   "first_divergence": 3
+  },
+  "cross-assisted": {
+   "acceptance": "pass",
+   "runs": 1428,
+   "aligned": {
+    "schedule": 1428,
+    "rhs": 1428,
+    "writes": 1428,
+    "spine": 1428,
+    "known_class_roots": 1428,
+    "write_count": 1428
+   },
+   "typed_graph": true
+  },
+  "cross-no-residual": {
+   "acceptance": "pass",
+   "runs": 275,
+   "aligned": {
+    "schedule": 275,
+    "rhs": 275,
+    "writes": 275,
+    "spine": 275,
+    "known_class_roots": 275,
+    "write_count": 275
+   },
+   "typed_graph": true
+  },
+  "origins": {
+   "same_source_rhs": 91,
+   "only_native": [],
+   "only_metal": [],
+   "different_ordinal": []
+  }
+ },
+ "sum-bits/1709": {
+  "native-reference": {
+   "inference_ms": 33.104209000000004,
+   "runs": 1428,
+   "runtime_sha256": "c944470a7fc813037a7a9e4b152a098e25c4acd565dc64fdf3535e4bc64f4045",
+   "service_sha256": "29efd9ab7f57dafc02133e48f2f0fbe61bdc2d3038594e957097f494fd5d5725"
+  },
+  "cpu-rust": {
+   "runs": 1428,
+   "rhs": 7265,
+   "children": 92,
+   "compiler_roots": 2,
+   "exact": 7171,
+   "first_divergence": null,
+   "attempts": 97,
+   "point_reads": 7,
+   "certificate": {
+    "emit_and_readback_ms": 0.352708,
+    "encode_ms": 0.487917,
+    "sha256": "5d7375ad128fd02a491489ef02eceb621edf35345bb188ced17d1b8f5d9d5e84",
+    "active": 98,
+    "bytes": 14736
+   },
+   "cold_cli_ms": 152.269875,
+   "timings": [
+    {
+     "total_ms": 25.366334,
+     "forward_ms": 0.59825,
+     "copy_and_pack_ms": 0.01925,
+     "children": 92,
+     "inference_ms": 24.572167,
+     "rhs": 7265,
+     "validation_ms": 0.044291
+    },
+    {
+     "total_ms": 25.622834,
+     "forward_ms": 0.3005,
+     "copy_and_pack_ms": 0.004584,
+     "children": 92,
+     "inference_ms": 25.180042,
+     "rhs": 7265,
+     "validation_ms": 0.053041000000000005
+    },
+    {
+     "total_ms": 27.2155,
+     "forward_ms": 0.313042,
+     "copy_and_pack_ms": 0.004292,
+     "children": 92,
+     "inference_ms": 26.714667000000002,
+     "rhs": 7265,
+     "validation_ms": 0.09000000000000001
+    },
+    {
+     "total_ms": 25.939917,
+     "forward_ms": 0.429792,
+     "copy_and_pack_ms": 0.023541,
+     "children": 92,
+     "inference_ms": 25.359917,
+     "rhs": 7265,
+     "validation_ms": 0.040874999999999995
+    },
+    {
+     "total_ms": 25.633209,
+     "forward_ms": 0.324917,
+     "copy_and_pack_ms": 0.011625,
+     "children": 92,
+     "inference_ms": 25.189458000000002,
+     "rhs": 7265,
+     "validation_ms": 0.0375
+    },
+    {
+     "total_ms": 24.270166,
+     "forward_ms": 0.33975,
+     "copy_and_pack_ms": 0.011958,
+     "children": 92,
+     "inference_ms": 23.806792,
+     "rhs": 7265,
+     "validation_ms": 0.039583
+    }
+   ],
+   "median_ms": 25.628021500000003
+  },
+  "mps-rust": {
+   "runs": 1428,
+   "rhs": 7265,
+   "children": 92,
+   "compiler_roots": 2,
+   "exact": 7171,
+   "first_divergence": null,
+   "attempts": 97,
+   "point_reads": 7,
+   "certificate": {
+    "emit_and_readback_ms": 2.298125,
+    "encode_ms": 0.547458,
+    "sha256": "5d7375ad128fd02a491489ef02eceb621edf35345bb188ced17d1b8f5d9d5e84",
+    "active": 98,
+    "bytes": 14736
+   },
+   "cold_cli_ms": 153.844,
+   "timings": [
+    {
+     "total_ms": 32.811334,
+     "forward_ms": 7.286375,
+     "copy_and_pack_ms": 0.58925,
+     "children": 92,
+     "inference_ms": 24.801792,
+     "rhs": 7265,
+     "validation_ms": 0.047375
+    },
+    {
+     "total_ms": 25.641167,
+     "forward_ms": 0.673042,
+     "copy_and_pack_ms": 0.224583,
+     "children": 92,
+     "inference_ms": 24.601000000000003,
+     "rhs": 7265,
+     "validation_ms": 0.048084
+    },
+    {
+     "total_ms": 29.611667,
+     "forward_ms": 1.310917,
+     "copy_and_pack_ms": 0.267833,
+     "children": 92,
+     "inference_ms": 27.9085,
+     "rhs": 7265,
+     "validation_ms": 0.03975
+    },
+    {
+     "total_ms": 26.810458,
+     "forward_ms": 0.690458,
+     "copy_and_pack_ms": 0.200458,
+     "children": 92,
+     "inference_ms": 25.784083,
+     "rhs": 7265,
+     "validation_ms": 0.055167
+    },
+    {
+     "total_ms": 25.410333,
+     "forward_ms": 0.696,
+     "copy_and_pack_ms": 0.220583,
+     "children": 92,
+     "inference_ms": 24.358584,
+     "rhs": 7265,
+     "validation_ms": 0.053708
+    },
+    {
+     "total_ms": 26.083458,
+     "forward_ms": 1.500791,
+     "copy_and_pack_ms": 0.275125,
+     "children": 92,
+     "inference_ms": 24.175292000000002,
+     "rhs": 7265,
+     "validation_ms": 0.037208
+    }
+   ],
+   "median_ms": 26.446958000000002
+  },
+  "rust-no-residual": {
+   "runs": 275,
+   "rhs": 94,
+   "children": 92,
+   "compiler_roots": 2,
+   "exact": 0,
+   "first_divergence": 3,
+   "attempts": 98,
+   "point_reads": 8
+  },
+  "rust-wrong-parent": {
+   "runs": 1428,
+   "rhs": 7265,
+   "children": 0,
+   "compiler_roots": 2,
+   "exact": 7263,
+   "first_divergence": null,
+   "attempts": 0,
+   "point_reads": 0
+  },
+  "mps-metal": {
+   "runs": 1428,
+   "rhs": 7265,
+   "children": 92,
+   "compiler_roots": 2,
+   "exact": 7171,
+   "first_divergence": null,
+   "timings": [
+    {
+     "total_ms": 886.948875
+    },
+    {
+     "total_ms": 874.359583
+    },
+    {
+     "total_ms": 878.005458
+    },
+    {
+     "total_ms": 893.885417
+    },
+    {
+     "total_ms": 888.577
+    },
+    {
+     "total_ms": 880.465958
+    }
+   ],
+   "median_ms": 883.7074165
+  },
+  "metal-no-residual": {
+   "runs": 275,
+   "rhs": 94,
+   "children": 92,
+   "compiler_roots": 2,
+   "exact": 0,
+   "first_divergence": 3
+  },
+  "cross-assisted": {
+   "acceptance": "pass",
+   "runs": 1428,
+   "aligned": {
+    "schedule": 1428,
+    "rhs": 1428,
+    "writes": 1428,
+    "spine": 1428,
+    "known_class_roots": 1428,
+    "write_count": 1428
+   },
+   "typed_graph": true
+  },
+  "cross-no-residual": {
+   "acceptance": "pass",
+   "runs": 275,
+   "aligned": {
+    "schedule": 275,
+    "rhs": 275,
+    "writes": 275,
+    "spine": 275,
+    "known_class_roots": 275,
+    "write_count": 275
+   },
+   "typed_graph": true
+  },
+  "origins": {
+   "same_source_rhs": 92,
+   "only_native": [],
+   "only_metal": [],
+   "different_ordinal": []
+  }
+ },
+ "dot-product/1703": {
+  "native-reference": {
+   "inference_ms": 26.889375,
+   "runs": 1535,
+   "runtime_sha256": "c944470a7fc813037a7a9e4b152a098e25c4acd565dc64fdf3535e4bc64f4045",
+   "service_sha256": "29efd9ab7f57dafc02133e48f2f0fbe61bdc2d3038594e957097f494fd5d5725"
+  },
+  "cpu-rust": {
+   "runs": 1535,
+   "rhs": 6704,
+   "children": 195,
+   "compiler_roots": 2,
+   "exact": 6507,
+   "first_divergence": null,
+   "attempts": 195,
+   "point_reads": 10,
+   "certificate": {
+    "emit_and_readback_ms": 0.457834,
+    "encode_ms": 0.746375,
+    "sha256": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+    "active": 195,
+    "bytes": 29232
+   },
+   "cold_cli_ms": 150.27475,
+   "timings": [
+    {
+     "total_ms": 21.310417,
+     "forward_ms": 0.577584,
+     "copy_and_pack_ms": 0.0125,
+     "children": 195,
+     "inference_ms": 20.539208,
+     "rhs": 6704,
+     "validation_ms": 0.047167
+    },
+    {
+     "total_ms": 22.720542,
+     "forward_ms": 0.40175,
+     "copy_and_pack_ms": 0.00575,
+     "children": 195,
+     "inference_ms": 22.172459,
+     "rhs": 6704,
+     "validation_ms": 0.060541000000000005
+    },
+    {
+     "total_ms": 20.455708,
+     "forward_ms": 0.451292,
+     "copy_and_pack_ms": 0.00725,
+     "children": 195,
+     "inference_ms": 19.856916,
+     "rhs": 6704,
+     "validation_ms": 0.059459
+    },
+    {
+     "total_ms": 20.624292,
+     "forward_ms": 0.413542,
+     "copy_and_pack_ms": 0.011041,
+     "children": 195,
+     "inference_ms": 20.086375,
+     "rhs": 6704,
+     "validation_ms": 0.042375
+    },
+    {
+     "total_ms": 20.734167,
+     "forward_ms": 0.464542,
+     "copy_and_pack_ms": 0.014167,
+     "children": 195,
+     "inference_ms": 20.132375,
+     "rhs": 6704,
+     "validation_ms": 0.049875
+    },
+    {
+     "total_ms": 20.471458,
+     "forward_ms": 0.44075,
+     "copy_and_pack_ms": 0.0115,
+     "children": 195,
+     "inference_ms": 19.892166,
+     "rhs": 6704,
+     "validation_ms": 0.051667
+    }
+   ],
+   "median_ms": 20.679229499999998
+  },
+  "mps-rust": {
+   "runs": 1535,
+   "rhs": 6704,
+   "children": 195,
+   "compiler_roots": 2,
+   "exact": 6507,
+   "first_divergence": null,
+   "attempts": 195,
+   "point_reads": 10,
+   "certificate": {
+    "emit_and_readback_ms": 2.841208,
+    "encode_ms": 0.777375,
+    "sha256": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+    "active": 195,
+    "bytes": 29232
+   },
+   "cold_cli_ms": 151.994125,
+   "timings": [
+    {
+     "total_ms": 31.553334,
+     "forward_ms": 10.641375,
+     "copy_and_pack_ms": 1.137625,
+     "children": 195,
+     "inference_ms": 19.641167,
+     "rhs": 6704,
+     "validation_ms": 0.058625000000000003
+    },
+    {
+     "total_ms": 21.892333,
+     "forward_ms": 0.689375,
+     "copy_and_pack_ms": 0.228083,
+     "children": 195,
+     "inference_ms": 20.826584,
+     "rhs": 6704,
+     "validation_ms": 0.063
+    },
+    {
+     "total_ms": 22.29225,
+     "forward_ms": 1.404709,
+     "copy_and_pack_ms": 0.337,
+     "children": 195,
+     "inference_ms": 20.422833,
+     "rhs": 6704,
+     "validation_ms": 0.049042
+    },
+    {
+     "total_ms": 21.983625,
+     "forward_ms": 0.722416,
+     "copy_and_pack_ms": 0.246875,
+     "children": 195,
+     "inference_ms": 20.875125,
+     "rhs": 6704,
+     "validation_ms": 0.059833000000000004
+    },
+    {
+     "total_ms": 22.443792,
+     "forward_ms": 1.419667,
+     "copy_and_pack_ms": 0.245416,
+     "children": 195,
+     "inference_ms": 20.63325,
+     "rhs": 6704,
+     "validation_ms": 0.06195899999999999
+    },
+    {
+     "total_ms": 21.389875,
+     "forward_ms": 1.261958,
+     "copy_and_pack_ms": 0.274042,
+     "children": 195,
+     "inference_ms": 19.727375,
+     "rhs": 6704,
+     "validation_ms": 0.050875000000000004
+    }
+   ],
+   "median_ms": 22.1379375
+  },
+  "rust-no-residual": {
+   "runs": 276,
+   "rhs": 197,
+   "children": 195,
+   "compiler_roots": 2,
+   "exact": 0,
+   "first_divergence": 3,
+   "attempts": 195,
+   "point_reads": 10
+  },
+  "rust-wrong-parent": {
+   "runs": 1535,
+   "rhs": 6704,
+   "children": 0,
+   "compiler_roots": 2,
+   "exact": 6702,
+   "first_divergence": null,
+   "attempts": 0,
+   "point_reads": 0
+  },
+  "mps-metal": {
+   "runs": 1535,
+   "rhs": 6704,
+   "children": 195,
+   "compiler_roots": 2,
+   "exact": 6507,
+   "first_divergence": null,
+   "timings": [
+    {
+     "total_ms": 941.501875
+    },
+    {
+     "total_ms": 951.701875
+    },
+    {
+     "total_ms": 931.787291
+    },
+    {
+     "total_ms": 932.223458
+    },
+    {
+     "total_ms": 940.030708
+    },
+    {
+     "total_ms": 947.598959
+    }
+   ],
+   "median_ms": 940.7662915000001
+  },
+  "metal-no-residual": {
+   "runs": 276,
+   "rhs": 197,
+   "children": 195,
+   "compiler_roots": 2,
+   "exact": 0,
+   "first_divergence": 3
+  },
+  "cross-assisted": {
+   "acceptance": "pass",
+   "runs": 1535,
+   "aligned": {
+    "schedule": 1535,
+    "rhs": 1535,
+    "writes": 1535,
+    "spine": 1535,
+    "known_class_roots": 1535,
+    "write_count": 1535
+   },
+   "typed_graph": true
+  },
+  "cross-no-residual": {
+   "acceptance": "pass",
+   "runs": 276,
+   "aligned": {
+    "schedule": 276,
+    "rhs": 276,
+    "writes": 276,
+    "spine": 276,
+    "known_class_roots": 276,
+    "write_count": 276
+   },
+   "typed_graph": true
+  },
+  "origins": {
+   "same_source_rhs": 195,
+   "only_native": [],
+   "only_metal": [],
+   "different_ordinal": []
+  }
+ },
+ "dot-product/1709": {
+  "native-reference": {
+   "inference_ms": 26.889375,
+   "runs": 1535,
+   "runtime_sha256": "c944470a7fc813037a7a9e4b152a098e25c4acd565dc64fdf3535e4bc64f4045",
+   "service_sha256": "29efd9ab7f57dafc02133e48f2f0fbe61bdc2d3038594e957097f494fd5d5725"
+  },
+  "cpu-rust": {
+   "runs": 1535,
+   "rhs": 6704,
+   "children": 195,
+   "compiler_roots": 2,
+   "exact": 6507,
+   "first_divergence": null,
+   "attempts": 195,
+   "point_reads": 10,
+   "certificate": {
+    "emit_and_readback_ms": 0.4065,
+    "encode_ms": 1.035208,
+    "sha256": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+    "active": 195,
+    "bytes": 29232
+   },
+   "cold_cli_ms": 159.903291,
+   "timings": [
+    {
+     "total_ms": 21.231167,
+     "forward_ms": 0.565625,
+     "copy_and_pack_ms": 0.014208,
+     "children": 195,
+     "inference_ms": 20.463666,
+     "rhs": 6704,
+     "validation_ms": 0.046834
+    },
+    {
+     "total_ms": 20.902042,
+     "forward_ms": 0.411,
+     "copy_and_pack_ms": 0.00625,
+     "children": 195,
+     "inference_ms": 20.328834,
+     "rhs": 6704,
+     "validation_ms": 0.064416
+    },
+    {
+     "total_ms": 24.811167,
+     "forward_ms": 0.420042,
+     "copy_and_pack_ms": 0.006791,
+     "children": 195,
+     "inference_ms": 24.203833,
+     "rhs": 6704,
+     "validation_ms": 0.081834
+    },
+    {
+     "total_ms": 21.390625,
+     "forward_ms": 0.447292,
+     "copy_and_pack_ms": 0.012833,
+     "children": 195,
+     "inference_ms": 20.812458,
+     "rhs": 6704,
+     "validation_ms": 0.046084
+    },
+    {
+     "total_ms": 22.093958,
+     "forward_ms": 0.440791,
+     "copy_and_pack_ms": 0.013,
+     "children": 195,
+     "inference_ms": 21.507583,
+     "rhs": 6704,
+     "validation_ms": 0.047084
+    },
+    {
+     "total_ms": 21.517042,
+     "forward_ms": 0.443375,
+     "copy_and_pack_ms": 0.012292,
+     "children": 195,
+     "inference_ms": 20.937333,
+     "rhs": 6704,
+     "validation_ms": 0.047459
+    }
+   ],
+   "median_ms": 21.453833500000002
+  },
+  "mps-rust": {
+   "runs": 1535,
+   "rhs": 6704,
+   "children": 195,
+   "compiler_roots": 2,
+   "exact": 6507,
+   "first_divergence": null,
+   "attempts": 195,
+   "point_reads": 10,
+   "certificate": {
+    "emit_and_readback_ms": 2.478667,
+    "encode_ms": 0.781208,
+    "sha256": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+    "active": 195,
+    "bytes": 29232
+   },
+   "cold_cli_ms": 150.89425,
+   "timings": [
+    {
+     "total_ms": 32.288875,
+     "forward_ms": 9.510333,
+     "copy_and_pack_ms": 0.342125,
+     "children": 195,
+     "inference_ms": 22.278291,
+     "rhs": 6704,
+     "validation_ms": 0.060167000000000005
+    },
+    {
+     "total_ms": 21.913791,
+     "forward_ms": 0.671833,
+     "copy_and_pack_ms": 0.826458,
+     "children": 195,
+     "inference_ms": 20.269958000000003,
+     "rhs": 6704,
+     "validation_ms": 0.060375
+    },
+    {
+     "total_ms": 24.965041,
+     "forward_ms": 0.976625,
+     "copy_and_pack_ms": 0.341125,
+     "children": 195,
+     "inference_ms": 23.409584000000002,
+     "rhs": 6704,
+     "validation_ms": 0.134916
+    },
+    {
+     "total_ms": 22.145542,
+     "forward_ms": 0.696167,
+     "copy_and_pack_ms": 0.221166,
+     "children": 195,
+     "inference_ms": 21.072083,
+     "rhs": 6704,
+     "validation_ms": 0.068625
+    },
+    {
+     "total_ms": 21.555875,
+     "forward_ms": 0.689708,
+     "copy_and_pack_ms": 0.215917,
+     "children": 195,
+     "inference_ms": 20.496167,
+     "rhs": 6704,
+     "validation_ms": 0.065208
+    },
+    {
+     "total_ms": 23.00975,
+     "forward_ms": 1.331625,
+     "copy_and_pack_ms": 0.29375,
+     "children": 195,
+     "inference_ms": 21.249292,
+     "rhs": 6704,
+     "validation_ms": 0.053708
+    }
+   ],
+   "median_ms": 22.577646
+  },
+  "rust-no-residual": {
+   "runs": 276,
+   "rhs": 197,
+   "children": 195,
+   "compiler_roots": 2,
+   "exact": 0,
+   "first_divergence": 3,
+   "attempts": 195,
+   "point_reads": 10
+  },
+  "rust-wrong-parent": {
+   "runs": 1535,
+   "rhs": 6704,
+   "children": 0,
+   "compiler_roots": 2,
+   "exact": 6702,
+   "first_divergence": null,
+   "attempts": 0,
+   "point_reads": 0
+  },
+  "mps-metal": {
+   "runs": 1535,
+   "rhs": 6704,
+   "children": 195,
+   "compiler_roots": 2,
+   "exact": 6507,
+   "first_divergence": null,
+   "timings": [
+    {
+     "total_ms": 947.01525
+    },
+    {
+     "total_ms": 928.773875
+    },
+    {
+     "total_ms": 944.620583
+    },
+    {
+     "total_ms": 948.809958
+    },
+    {
+     "total_ms": 939.546458
+    },
+    {
+     "total_ms": 944.027708
+    }
+   ],
+   "median_ms": 944.3241455
+  },
+  "metal-no-residual": {
+   "runs": 276,
+   "rhs": 197,
+   "children": 195,
+   "compiler_roots": 2,
+   "exact": 0,
+   "first_divergence": 3
+  },
+  "cross-assisted": {
+   "acceptance": "pass",
+   "runs": 1535,
+   "aligned": {
+    "schedule": 1535,
+    "rhs": 1535,
+    "writes": 1535,
+    "spine": 1535,
+    "known_class_roots": 1535,
+    "write_count": 1535
+   },
+   "typed_graph": true
+  },
+  "cross-no-residual": {
+   "acceptance": "pass",
+   "runs": 276,
+   "aligned": {
+    "schedule": 276,
+    "rhs": 276,
+    "writes": 276,
+    "spine": 276,
+    "known_class_roots": 276,
+    "write_count": 276
+   },
+   "typed_graph": true
+  },
+  "origins": {
+   "same_source_rhs": 195,
+   "only_native": [],
+   "only_metal": [],
+   "different_ordinal": []
+  }
+ }
+}

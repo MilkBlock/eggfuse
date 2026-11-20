@@ -37,6 +37,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("  --unique-parent point|metal|model [--parent-weights FILE] (certified complete keys)");
         #[cfg(feature = "gpu-bindings")]
         println!("  --gpu-binding-native | --gpu-binding-python PATH --gpu-binding-service PATH [--gpu-binding-retire] (native also accepts --gpu-binding-batch)");
+        #[cfg(feature="precomputed-forest")]
+        println!("  --precomputed-forest FILE [--forest-only] (sealed source-typed proof packets)");
         println!("  --gpu-selector-python PATH --gpu-selector-service PATH [--gpu-selector-min-rows N] (experimental exact Metal query filtering)");
         println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor and scalar Unit matcher)");
         println!("  --congruence-cells (experimental equality expressions and persistent completion cells)");
@@ -88,6 +90,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "--gpu-binding-native" | "--gpu-binding-batch" | "--gpu-binding-retire" => {}
             #[cfg(feature = "gpu-bindings")]
             "--gpu-binding-python" | "--gpu-binding-service" => { flags.next().filter(|v| !v.starts_with("--")).ok_or("missing GPU binding path")?; }
+            #[cfg(feature="precomputed-forest")]
+            "--precomputed-forest" => {flags.next().filter(|v|!v.starts_with("--")).ok_or("missing sealed packet")?;}
+            #[cfg(feature="precomputed-forest")]
+            "--forest-only" => {}
             "--gpu-selector-python" | "--gpu-selector-service" | "--gpu-selector-min-rows" | "--program" | "--output" | "--extract-unit-cost" | "--union-digest-hash-bits" | "--guard-workers" | "--guard-grain" | "--completion-batch-tasks" | "--query-workers" | "--query-grain" => {
                 flags
                     .next()
@@ -222,6 +228,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if overlap_completion { graph.use_overlapped_completion()?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
+    #[cfg(feature="precomputed-forest")]
+    if opt("--precomputed-forest").is_none() && args.iter().any(|v|v=="--forest-only"){return Err("--forest-only requires a sealed packet".into());}
+    #[cfg(feature="precomputed-forest")]
+    if let Some(file)=opt("--precomputed-forest"){
+        use sha2::{Digest,Sha256};
+        runtime.use_precomputed_forest(&std::fs::read(file)?,&format!("{:x}",Sha256::digest(&bytes)),!args.iter().any(|v|v=="--forest-only"))?;
+    }
     #[cfg(feature = "gpu-bindings")]
     {
         let native = args.iter().any(|x| x == "--gpu-binding-native");
@@ -386,6 +399,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     runtime.write_keepers(&out)?;
     let report_start = Instant::now();
     let mut report = runtime.report();
+    #[cfg(feature="precomputed-forest")]
+    if let Some(forest)=runtime.precomputed_report(){report["precomputed_forest"]=forest;}
     #[cfg(feature = "gpu-bindings")]
     if let Some(gpu) = &runtime.gpu_bindings {
         report["backend"] = gpu.backend().into();

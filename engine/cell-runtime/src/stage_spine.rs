@@ -23,6 +23,8 @@ use std::{
 mod shapes;
 #[derive(Clone)]
 pub struct Cursor {
+    #[cfg(feature="precomputed-forest")]
+    forest_claim: Option<usize>,
     #[cfg(feature = "iterative-bake")]
     state: crate::iterative::State,
     #[cfg(feature = "spine-blocks")]
@@ -132,6 +134,8 @@ impl Cursor {
 impl Cursor {
     fn fresh(root: Rc<Root>, producer: usize) -> Self {
         Self {
+            #[cfg(feature="precomputed-forest")]
+            forest_claim: None,
             root,
             producer,
             depth: 1,
@@ -358,6 +362,8 @@ impl Started {
         } = self
         {
             *self = Self::Live(Cursor {
+                #[cfg(feature="precomputed-forest")]
+                forest_claim: None,
                 root: Rc::new(Root {
                     id: *id,
                     epoch: *epoch,
@@ -716,6 +722,8 @@ struct ReadyPublication {
     next: Option<std::num::NonZeroUsize>,
 }
 pub struct Programs {
+    #[cfg(feature="precomputed-forest")]
+    pub(crate) forest: Option<crate::precomputed_forest::Forest>,
     #[cfg(feature = "sparse-cells")]
     pub(crate) direct_sealed_answers: bool,
     #[cfg(feature = "structural-depth")]
@@ -1023,6 +1031,8 @@ impl Programs {
             v
         };
         let mut s = Self {
+            #[cfg(feature="precomputed-forest")]
+            forest: None,
             #[cfg(feature = "sparse-cells")]
             direct_sealed_answers: false,
             enabled,
@@ -1199,6 +1209,8 @@ impl Programs {
         epoch: u64,
         #[cfg(feature = "iterative-bake")] direct: Option<DirectOrigin>,
     ) -> Option<Started> {
+        #[cfg(feature="precomputed-forest")]
+        if let Some(forest)=&mut self.forest {forest.issue_root(rid,epoch);}
         if !self.enabled {
             return None;
         }
@@ -1239,6 +1251,10 @@ impl Programs {
         self.stats.steps_executed += 1;
         self.stats.by_set.add(set);
         if let Some(mut cursor) = previous {
+            #[cfg(feature="precomputed-forest")]
+            if let Some(id)=cursor.forest_claim.take() {
+                self.forest.as_mut().unwrap().commit(id,cursor.producer,rid,epoch);
+            }
             self.stats.resumed_steps += 1;
             #[cfg(feature = "slot-transfer-audit")]
             crate::transfer_audit::resume(cursor.root.id, cursor.producer, rid, cursor.depth);
@@ -1782,6 +1798,11 @@ impl Programs {
             return;
         }
         let cursor = self.materialize_publication(publication);
+        #[cfg(feature="precomputed-forest")]
+        if let Some(forest)=&mut self.forest {
+            let (parent,effect,_)=cursor.cell_results();
+            if forest.root_live(parent){forest.published.insert((parent,effect),w);}
+        }
         self.stats.legacy_entry_writes += 1;
         if self.entries.insert(w, cursor).is_none() {
             if self.active_tables[table] == 0 {
@@ -2378,6 +2399,29 @@ impl Programs {
         )?;
         Ok((result.map_or_else(Vec::new, |c| c.answers), count))
     }
+    #[cfg(feature="precomputed-forest")]
+    pub(crate) fn forest_only_answers(&mut self,g:&mut Graph,rid:usize,watermark:u64,facts:&QueryFacts)->Result<Vec<Matched>>{
+        let forest=self.forest.as_ref().unwrap();
+        let mut routes=Vec::new();
+        if let Some(entries)=forest.by_rule.get(&rid){
+            for &(parent,effect,pivot,_) in entries{
+                if forest.claim(parent,effect,rid,pivot).is_none(){continue;}
+                let Some(&w)=forest.published.get(&(parent,effect)) else {continue};
+                let Some(published)=self.entries.get(&w) else {continue};
+                let (current,port,_)=published.cell_results();
+                if (current,port)!=(parent,effect){continue;}
+                let Some(row)=g.row(w)? else{continue};
+                if row.hidden || row.epoch<watermark{continue;}
+                routes.push((pivot,Rc::new(row),published.expand()));
+            }
+        }
+        routes.sort_unstable_by_key(|(pivot,row,_)|(row.witness,*pivot));
+        let count=routes.len();
+        let result=self.finish_answers(g,rid,routes.into_iter(),BTreeSet::new(),count,true,watermark,facts,
+            #[cfg(feature="gpu-bindings")] None,
+            #[cfg(feature="sparse-cells")] None)?;
+        Ok(result.map_or_else(Vec::new,|v|v.answers))
+    }
     pub(crate) fn answers_routed(
         &mut self,
         g: &mut Graph,
@@ -2447,6 +2491,14 @@ impl Programs {
         #[cfg(feature = "sparse-cells")]
         let mut ordinals = Vec::new();
         'answer: for (_ordinal, (pivot, row, cursor)) in ready.into_iter().enumerate() {
+            #[cfg(feature="precomputed-forest")]
+            let forest_claim=self.forest.as_ref().and_then(|forest|{
+                (!row.hidden && row.epoch>=watermark &&
+                 forest.published.get(&(cursor.producer,cursor.state.output))==Some(&row.witness))
+                    .then(||forest.claim(cursor.producer,cursor.state.output,rid,pivot)).flatten()
+            });
+            #[cfg(feature="precomputed-forest")]
+            if self.forest.as_ref().is_some_and(|f|!f.residual) && forest_claim.is_none(){continue;}
             let mut epoch = row.epoch;
             let mut local = if self.local_witness_entries[rid][pivot] {
                 #[cfg(feature = "iterative-bake")]
@@ -2497,6 +2549,46 @@ impl Programs {
                 // alone does not authorize a composed cross-stage continuation.
                 cursor.via_block = selected;
                 self.stats.block_entries += u64::from(selected);
+            }
+            #[cfg(feature="precomputed-forest")]
+            if let Some(id)=forest_claim {
+                let forest=self.forest.as_mut().unwrap();
+                forest.attempts+=1;
+                let rule=g.program.rules[rid].clone();
+                let anchor=&rule.query[pivot];
+                let query=self.queries.get(rid,pivot).expect("validated forest continuation");
+                let mut known=vec![(pivot,row.witness)];
+                let slots=if forest.direct[id]{
+                    rule.inputs.iter().map(|&slot|{
+                        let col=anchor.args.iter().position(|a|matches!(a,Arg::Slot(s) if *s==slot)).unwrap();
+                        (slot,row.values[col].clone())
+                    }).collect()
+                }else{
+                    // Execute only the exact keys proved by this particular parent/entry certificate.
+                    let mut env=BTreeMap::new();
+                    if !anchor.args.iter().zip(row.values.iter()).all(|(a,v)|bind(a,v,&mut env,g)){continue 'answer;}
+                    let mut values=Vec::new();
+                    for (i,step) in query.steps.iter().enumerate(){
+                        let args=step.bind::<PortKey>(|v|v.operand(g,|col|&row.values[col],&values,None));
+                        let result=args.evaluate(|key|match &step.call{
+                            Call::Table(t)=>{
+                                forest.point_reads+=1;
+                                let Some(found)=g.lookup(*t,&key)?.filter(|r|!r.hidden) else{return Ok(None)};
+                                known.push((step.atom,found.witness));epoch=epoch.max(found.epoch);
+                                Ok(found.values.last().cloned())
+                            }
+                            Call::Primitive(op,ty)=>g.primitive(op,&key,ty),
+                        })?;
+                        let Some(value)=result else{continue 'answer};
+                        if i<query.result_slots(){values.push(value);}
+                    }
+                    rule.inputs.iter().zip(&query.inputs).map(|(&s,v)|(s,v.read(g,|col|&row.values[col],&values,None))).collect()
+                };
+                if epoch>=watermark{
+                    cursor.forest_claim=Some(id);
+                    record_answer(&mut results,slots,facts.with_rows(known),epoch,cursor);
+                }
+                continue 'answer;
             }
             #[cfg(feature="gpu-bindings")]
             if let Some((by_port,matched))=verified {

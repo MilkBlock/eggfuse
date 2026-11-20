@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
+precomputed-forest = ["iterative-bake"]
 gpu-bindings = []
 sparse-cells = ["iterative-bake"]
 cell-absorption = ["sparse-cells"]
@@ -77,3 +78,7 @@ required-features = ["sparse-cells", "slot-transfer-audit"]
 [[example]]
 name = "bake_synthetic_capture"
 required-features = ["iterative-bake", "spine-shapes"]
+
+[[example]]
+name = "native_forest_session"
+required-features = ["precomputed-forest"]
