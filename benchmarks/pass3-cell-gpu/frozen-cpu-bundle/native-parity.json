@@ -1,0 +1,187 @@
+{
+ "sum-bits/1703": {
+  "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+  "rules": 582,
+  "active_plans": 341,
+  "plan_sha256": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+  "table_sha256": "b7d5fb882a297e1775071e25d060326aab7473fe7ddfbccb0248fbd05c2d4223",
+  "native_compile_ms": 2004.506,
+  "python_reference_ms": 2675.743167,
+  "source_rhs": 7265,
+  "runs": 1428,
+  "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+  "profile_execution": {
+   "multi_policy": "learned",
+   "prefix_probes": 52335,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 7970,
+   "single_policy": "learned",
+   "views": 2
+  },
+  "per_run_aligned": true
+ },
+ "sum-bits/1709": {
+  "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+  "rules": 582,
+  "active_plans": 341,
+  "plan_sha256": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+  "table_sha256": "21c67617100b6474f027920a68210491130c8abfbbd155c7e7d18edbe17f97b5",
+  "native_compile_ms": 1681.81125,
+  "python_reference_ms": 2745.345209,
+  "source_rhs": 7265,
+  "runs": 1428,
+  "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+  "profile_execution": {
+   "multi_policy": "learned",
+   "prefix_probes": 52296,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 7966,
+   "single_policy": "learned",
+   "views": 2
+  },
+  "per_run_aligned": true
+ },
+ "dot-product/1703": {
+  "program_sha256": "c0d1da51c3aca3e61c945b39dc7da9e3ed135d77c57330ffd34dbbed8adc1159",
+  "rules": 582,
+  "active_plans": 341,
+  "plan_sha256": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+  "table_sha256": "b7d5fb882a297e1775071e25d060326aab7473fe7ddfbccb0248fbd05c2d4223",
+  "native_compile_ms": 1623.063042,
+  "python_reference_ms": 2824.265041,
+  "source_rhs": 6704,
+  "runs": 1535,
+  "state": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+  "profile_execution": {
+   "multi_policy": "learned",
+   "prefix_probes": 52925,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 8664,
+   "single_policy": "learned",
+   "views": 2
+  }
+ },
+ "jacobi-1d/1703": {
+  "program_sha256": "36394e6af88e962527a232db783fbb39e8ffb95e0fabf8087c68c013f4c43a95",
+  "rules": 582,
+  "active_plans": 341,
+  "plan_sha256": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+  "table_sha256": "b7d5fb882a297e1775071e25d060326aab7473fe7ddfbccb0248fbd05c2d4223",
+  "native_compile_ms": 1691.563209,
+  "python_reference_ms": 2862.946875,
+  "source_rhs": 41319,
+  "runs": 1990,
+  "state": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+  "profile_execution": {
+   "multi_policy": "learned",
+   "prefix_probes": 473147,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 50140,
+   "single_policy": "learned",
+   "views": 2
+  }
+ },
+ "conjugate-gradient/1703": {
+  "program_sha256": "decf722a0df14dddb3ed40eeadee5fad00743eceb695bdf7237932eddb94e428",
+  "rules": 582,
+  "active_plans": 341,
+  "plan_sha256": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+  "table_sha256": "b7d5fb882a297e1775071e25d060326aab7473fe7ddfbccb0248fbd05c2d4223",
+  "native_compile_ms": 1671.654625,
+  "python_reference_ms": 2814.209,
+  "source_rhs": 131371,
+  "runs": 2896,
+  "state": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+  "profile_execution": {
+   "multi_policy": "learned",
+   "prefix_probes": 2439662,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 127051,
+   "single_policy": "learned",
+   "views": 2
+  }
+ },
+ "3mm/1703": {
+  "program_sha256": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+  "rules": 582,
+  "active_plans": 341,
+  "plan_sha256": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+  "table_sha256": "b7d5fb882a297e1775071e25d060326aab7473fe7ddfbccb0248fbd05c2d4223",
+  "native_compile_ms": 1685.24725,
+  "python_reference_ms": 2855.731417,
+  "source_rhs": 294917,
+  "runs": 4260,
+  "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+  "profile_execution": {
+   "multi_policy": "learned",
+   "prefix_probes": 7581141,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 477862,
+   "single_policy": "learned",
+   "views": 2
+  }
+ },
+ "deriche/1703": {
+  "program_sha256": "78e06bc3718067d2214d5d1eecf4676139bdd1b678e3bcb2a22464f0c50700ab",
+  "rules": 582,
+  "active_plans": 341,
+  "plan_sha256": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+  "table_sha256": "b7d5fb882a297e1775071e25d060326aab7473fe7ddfbccb0248fbd05c2d4223",
+  "native_compile_ms": 1742.085667,
+  "python_reference_ms": 2866.378584,
+  "source_rhs": 635818,
+  "runs": 5687,
+  "state": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+  "profile_execution": {
+   "multi_policy": "learned",
+   "prefix_probes": 8229947,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 574416,
+   "single_policy": "learned",
+   "views": 2
+  }
+ },
+ "pair/1703": {
+  "program_sha256": "2b2f71394e56ccdae01d642d7a7e455e8da468ea9cdbae5773f4e0222395250b",
+  "rules": 1,
+  "active_plans": 1,
+  "plan_sha256": "6389986e5c3aa9259cffebfc572df8d5c6933ea5bd73ad9c7232412d48fcd759",
+  "table_sha256": "b7d5fb882a297e1775071e25d060326aab7473fe7ddfbccb0248fbd05c2d4223",
+  "native_compile_ms": 18.489875,
+  "python_reference_ms": 28.5475,
+  "source_rhs": 2,
+  "runs": 1,
+  "state": "9ce077939edd25065c266e94d75493cf2a851d41dd52b4c1a787125b3de7ecdd",
+  "profile_execution": {
+   "multi_policy": "learned",
+   "prefix_probes": 0,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 2,
+   "single_policy": "learned",
+   "views": 2
+  },
+  "per_run_aligned": true,
+  "errors_preserve_destination": true
+ },
+ "pair/1709": {
+  "program_sha256": "2b2f71394e56ccdae01d642d7a7e455e8da468ea9cdbae5773f4e0222395250b",
+  "rules": 1,
+  "active_plans": 1,
+  "plan_sha256": "6389986e5c3aa9259cffebfc572df8d5c6933ea5bd73ad9c7232412d48fcd759",
+  "table_sha256": "21c67617100b6474f027920a68210491130c8abfbbd155c7e7d18edbe17f97b5",
+  "native_compile_ms": 18.711875,
+  "python_reference_ms": 23.298875,
+  "source_rhs": 2,
+  "runs": 1,
+  "state": "9ce077939edd25065c266e94d75493cf2a851d41dd52b4c1a787125b3de7ecdd",
+  "profile_execution": {
+   "multi_policy": "learned",
+   "prefix_probes": 0,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 2,
+   "single_policy": "learned",
+   "views": 2
+  },
+  "per_run_aligned": true
+ }
+}

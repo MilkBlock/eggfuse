@@ -13,4 +13,7 @@ if __name__=='__main__':
         'learned-prefix-feasibility','projected-single-verifier','prepared-port-blocks','learned-atom-constraints','tiered-port-projections','complete-generation','pair-source-frontier',HERE.name))
     manifest=out/'build.json';info=json.loads(manifest.read_bytes())
     info['frozen_settings_sha256']=hashlib.sha256((HERE/'frozen-options.json').read_bytes()).hexdigest()
+    embedded=out/'tree/engine/cell-runtime/examples/frozen-weights'
+    if embedded.is_dir():
+        info['embedded_checkpoints']={f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(embedded.glob('*.json'))}
     manifest.write_text(json.dumps(info,indent=1)+'\n')
