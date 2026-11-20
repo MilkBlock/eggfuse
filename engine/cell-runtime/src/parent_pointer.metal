@@ -9,7 +9,7 @@ kernel void propose_parent(device const int *anchors, device const int *parents,
                            uint i [[thread_position_in_grid]]) {
     device const int *a = anchors + i*cfg[0];
     int best = -1;
-    float high = weights[128*8];
+    float high = weights[PORT_BOOKS*128*PORT_DIM];
     if (a[0]) {
         for (int p=0; p<cfg[2]; p++) {
             device const int *row = parents + p*cfg[1];
@@ -19,9 +19,13 @@ kernel void propose_parent(device const int *anchors, device const int *parents,
                 int c = cols[k];
                 int q = c<0 ? -1-c : a[c+1];
                 int v = row[k+1];
-                for (int d=0; d<8; d++) score += weights[8*q+d]*weights[8*v+d];
+                for (int book=0; book<PORT_BOOKS; book++) {
+                    int qbase=PORT_DIM*(book*128+((q>>(7*book))&127));
+                    int vbase=PORT_DIM*(book*128+((v>>(7*book))&127));
+                    for (int d=0; d<PORT_DIM; d++) score+=weights[qbase+d]*weights[vbase+d];
+                }
             }
-            score /= float(cfg[3]);
+            score /= float(cfg[3]*PORT_BOOKS);
             if (score>high) { high=score; best=p; }
         }
     }

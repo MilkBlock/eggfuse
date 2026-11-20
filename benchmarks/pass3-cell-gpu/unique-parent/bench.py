@@ -39,7 +39,7 @@ def build_report(root,out):
             if lane in ('point','model'):
                 metrics=trace['unique_parent']
                 assert not metrics['fine_timing']
-                data['counts']={k:v for k,v in metrics.items() if not k.endswith('_seconds') and k not in ('fine_timing','audited_parent_addresses')}
+                data['counts']={k:v for k,v in metrics.items() if not k.endswith('_seconds') and k not in ('fine_timing','audited_parent_addresses','ambiguous_present_keys','absent_parent_keys','wrong_identical_code','wrong_primary_only','wrong_other_score','true_parent_code_mismatch')}
                 if lane=='model':
                     assert metrics['audited_parent_addresses']==metrics['proposals']
                     data['audited_parent_addresses']=metrics['audited_parent_addresses']

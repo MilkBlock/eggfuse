@@ -4,7 +4,7 @@
 use crate::{
     cell::{Instance, QueryFacts, bind_query, query_operand},
     graph::{Dependency, Graph},
-    program::{Arg, Call, Program, Result},
+    program::{Arg, Call, Op, Program, Result},
     value::{Value, canon},
 };
 use serde::{Deserialize, Serialize};
@@ -74,6 +74,18 @@ pub struct Counts {
     pub verified_parent: u64,
     #[cfg(feature = "slot-transfer-audit")]
     pub audited_parent_addresses: u64,
+    #[cfg(feature = "slot-transfer-audit")]
+    pub ambiguous_present_keys: u64,
+    #[cfg(feature = "slot-transfer-audit")]
+    pub true_parent_code_mismatch: u64,
+    #[cfg(feature = "slot-transfer-audit")]
+    pub absent_parent_keys: u64,
+    #[cfg(feature = "slot-transfer-audit")]
+    pub wrong_identical_code: u64,
+    #[cfg(feature = "slot-transfer-audit")]
+    pub wrong_primary_only: u64,
+    #[cfg(feature = "slot-transfer-audit")]
+    pub wrong_other_score: u64,
     pub wrong_parent: u64,
     pub exact_probes: u64,
     pub fallback_probes: u64,
@@ -98,6 +110,8 @@ pub struct Counts {
 struct Bank {
     initialized: bool,
     refs: Vec<Dependency>,
+    #[cfg(feature = "slot-transfer-audit")]
+    codes: Vec<Vec<i32>>,
     ids: BTreeMap<Dependency, usize>,
     changed: BTreeSet<Dependency>,
 }
@@ -125,15 +139,73 @@ unsafe extern "C" {
     ) -> i32;
 }
 
+#[derive(Clone, Copy, Default, Deserialize, PartialEq)]
+#[serde(rename_all = "snake_case")]
+enum Signal {
+    #[default]
+    Single,
+    DoubleHash,
+    SourceRole,
+}
+impl Signal {
+    fn books(self) -> usize {
+        if self == Self::Single { 1 } else { 2 }
+    }
+
+    fn encode(self, g: &Graph, v: &Value) -> i32 {
+        let mut h = DefaultHasher::new();
+        v.hash(&mut h);
+        let hash = h.finish();
+        let second = match self {
+            Self::Single => 0,
+            Self::DoubleHash => {
+                let mut second = DefaultHasher::new();
+                0x7072_6f76_656e_616eu64.hash(&mut second);
+                v.hash(&mut second);
+                (second.finish() & 127) as i32
+            }
+            Self::SourceRole => self.role(g, v),
+        };
+        (hash as i32 & 127) | (second << 7)
+    }
+
+    // A dynamic constructor output carries its originating frame and SSA slot.
+    // Imported roots and released frames have an explicit unknown role.
+    fn role(self, g: &Graph, v: &Value) -> i32 {
+        let Value::Eq(id) = v else { return 0 };
+        let cell = (id >> 32) as u32;
+        let slot = (*id as u32).checked_sub(1);
+        if cell == 0 {
+            return 0;
+        }
+        let Some(frame) = g.cells.get(&cell) else {
+            return 0;
+        };
+        let template = &g.program.templates[frame.template];
+        let Some(op) = slot.and_then(|s| template.defs.get(&(s as usize))) else {
+            return 0;
+        };
+        let Op::Let(_, Call::Table(t), _) = &template.ops[*op] else {
+            return 0;
+        };
+        let mut h = DefaultHasher::new();
+        g.program.tables[*t].name.hash(&mut h);
+        (h.finish() % 127 + 1) as i32
+    }
+}
+
 #[derive(Deserialize)]
 struct Weights {
     schema: String,
+    #[serde(default)]
+    signal: Signal,
     dim: usize,
     buckets: usize,
     embedding: Vec<Vec<f32>>,
     null: f32,
 }
 struct Model {
+    signal: Signal,
     device: NonNull<c_void>,
     banks: Vec<Bank>,
 }
@@ -141,11 +213,6 @@ impl Drop for Model {
     fn drop(&mut self) {
         unsafe { cell_gpu_close(self.device.as_ptr()) }
     }
-}
-fn bucket(v: &Value) -> i32 {
-    let mut hasher = DefaultHasher::new();
-    v.hash(&mut hasher);
-    (hasher.finish() % 128) as i32
 }
 fn addr(n: usize) -> Result<i32> {
     i32::try_from(n).map_err(|_| "resident port address overflow".into())
@@ -155,25 +222,37 @@ impl Model {
         let weights: Weights =
             serde_json::from_slice(&std::fs::read(path).map_err(|e| e.to_string())?)
                 .map_err(|e| e.to_string())?;
-        if weights.schema != "port-pointer/v1"
+        let books = weights.signal.books();
+        let supported = match weights.schema.as_str() {
+            "port-pointer/v1" => weights.signal == Signal::Single && weights.dim == 8,
+            "port-pointer/v2" => matches!((books, weights.dim), (1, 8 | 16) | (2, 8)),
+            _ => false,
+        };
+        if !supported
             || weights.buckets != 128
-            || weights.dim != 8
-            || weights.embedding.len() != 128
+            || weights.embedding.len() != 128 * books
             || !weights.null.is_finite()
             || !weights
                 .embedding
                 .iter()
-                .all(|v| v.len() == 8 && v.iter().all(|x| x.is_finite()))
+                .all(|v| v.len() == weights.dim && v.iter().all(|x| x.is_finite()))
         {
             return Err("invalid parent pointer weights".into());
         }
         let mut values: Vec<_> = weights.embedding.into_iter().flatten().collect();
         values.push(weights.null);
-        let code = CString::new(include_str!("parent_pointer.metal")).unwrap();
+        let code = CString::new(format!(
+            "#define PORT_DIM {}\n#define PORT_BOOKS {}\n{}",
+            weights.dim,
+            books,
+            include_str!("parent_pointer.metal")
+        ))
+        .unwrap();
         let device =
             NonNull::new(unsafe { cell_ports_open(code.as_ptr(), values.as_ptr(), values.len()) })
                 .ok_or("cannot initialize resident parent model")?;
         Ok(Self {
+            signal: weights.signal,
             device,
             banks: (0..tables).map(|_| Bank::default()).collect(),
         })
@@ -210,9 +289,16 @@ impl Model {
                     return Err("resident port schema mismatch".into());
                 }
                 data.push(1);
-                data.extend(row.values.iter().map(bucket));
+                data.extend(row.values.iter().map(|v| self.signal.encode(g, v)));
             } else {
                 data.resize(data.len() + width, 0);
+            }
+            #[cfg(feature = "slot-transfer-audit")]
+            {
+                if bank.codes.len() <= slot {
+                    bank.codes.resize_with(slot + 1, Vec::new);
+                }
+                bank.codes[slot] = data[data.len() - width..].to_vec();
             }
         }
         if unsafe {
@@ -273,7 +359,7 @@ impl Model {
             for op in &p.columns {
                 cols.push(match op {
                     Arg::Slot(i) => addr(*i)?,
-                    Arg::Literal(v) => -1 - bucket(&canon(v, &g.parents)),
+                    Arg::Literal(v) => -1 - self.signal.encode(g, &canon(v, &g.parents)),
                 });
             }
             sizes.push(a);
@@ -410,6 +496,41 @@ impl Trial {
                         .and_then(|i| result.as_ref()?.get(*i))
                         .copied()
                         .unwrap_or(-1);
+                    #[cfg(feature = "slot-transfer-audit")]
+                    let audit_codes = {
+                        let src = &model.banks[p.source];
+                        let target = &model.banks[p.target];
+                        let input = &src.codes[*src
+                            .ids
+                            .get(&source)
+                            .ok_or("missing audited resident anchor")?];
+                        let query = p
+                            .columns
+                            .iter()
+                            .map(|a| match a {
+                                Arg::Slot(col) => input[1 + col],
+                                Arg::Literal(v) => model.signal.encode(g, &canon(v, &g.parents)),
+                            })
+                            .collect::<Vec<_>>();
+                        let truth = g.lookup_canonical(p.target, &key)?.filter(|r| !r.hidden);
+                        if let Some(ref parent) = truth {
+                            let exact_slot = target
+                                .ids
+                                .get(&parent.witness)
+                                .ok_or("live truth missing from resident bank")?;
+                            let exact_code = &target.codes[*exact_slot][1..1 + key_width];
+                            if exact_code != query.as_slice() {
+                                c.true_parent_code_mismatch += 1;
+                            } else if target.codes.iter().enumerate().any(|(i, row)| {
+                                i != *exact_slot && row[0] != 0 && row[1..1 + key_width] == query
+                            }) {
+                                c.ambiguous_present_keys += 1;
+                            }
+                        } else {
+                            c.absent_parent_keys += 1;
+                        }
+                        (truth, query)
+                    };
                     let checked = if hint >= 0 {
                         proposed = true;
                         c.proposals += 1;
@@ -424,13 +545,27 @@ impl Trial {
                         // against a separate directory read. Never select its row.
                         #[cfg(feature = "slot-transfer-audit")]
                         {
-                            let reference =
-                                g.lookup_canonical(p.target, &key)?.filter(|r| !r.hidden);
+                            let (reference, query) = &audit_codes;
                             let same = reference.as_ref().is_some_and(|r| r.witness == *w);
                             if same != current.is_some() {
                                 return Err(
                                     "verified parent identity differs from directory".into()
                                 );
+                            }
+                            if !same {
+                                let candidate =
+                                    &model.banks[p.target].codes[hint as usize][1..1 + key_width];
+                                if candidate == query.as_slice() {
+                                    c.wrong_identical_code += 1;
+                                } else if candidate
+                                    .iter()
+                                    .zip(query)
+                                    .all(|(a, b)| (a & 127) == (b & 127))
+                                {
+                                    c.wrong_primary_only += 1;
+                                } else {
+                                    c.wrong_other_score += 1;
+                                }
                             }
                             c.audited_parent_addresses += 1;
                         }
