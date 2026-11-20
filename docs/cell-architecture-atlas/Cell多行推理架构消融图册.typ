@@ -40,7 +40,7 @@
   card([现有边界],[图 71 的选择性模型覆盖 99.83%–99.97% 的源 RHS，图 75 的根／子配方直接构造超过 99% 的新 Cell。整轮仍慢于精确 Rust。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–99 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–106 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -289,6 +289,12 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S86","水位证明的阈值与代次","benchmarks/pass3-cell-gpu/suffix-watermarks/README.md")
 #src("S87","已存 owner 的真实配对回报","benchmarks/pass3-cell-gpu/owner-action-policy/README.md")
 #src("S88","在父选择之间插入完整键请求","benchmarks/pass3-cell-gpu/connected-request-plans/README.md")
+#src("S89","按变更端口激活连接请求","benchmarks/pass3-cell-gpu/changed-request-roots/README.md")
+#src("S90","修补订阅签名与 union 依赖","benchmarks/pass3-cell-gpu/incremental-request-ports/README.md")
+#src("S91","学习两种父生成器的条件回报","benchmarks/pass3-cell-gpu/request-route-policy/README.md")
+#src("S92","跨规则共享前缀或完整属性键","benchmarks/pass3-cell-gpu/shared-verifier-prefix/README.md")
+#src("S93","自然放置、物理动作与真实训练回报","benchmarks/pass3-cell-gpu/prospective-owner-placement/README.md")
+#src("S94","部署路径的类型化密封回执","benchmarks/pass3-cell-gpu/lean-root-receipts/README.md")
 #v(2mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)

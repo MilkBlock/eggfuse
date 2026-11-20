@@ -5606,5 +5606,562 @@
         ]
       }
     ]
+  },
+  {
+    "id": "100-changed-request-roots",
+    "section": "增量请求",
+    "title": "哪些根需要再次发起函数请求？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "一个连接请求涉及根、函数结果、目标父和原规则的后缀。后缀早于水位时，只有前三者至少一项为新，才需要重新签发。",
+    "arms": "a　逐根发起完整键点查。b　从新函数键，以及与新目标签名相容的函数结果，反向查找订阅根，并加上新根。c　把仍可核验的函数来源随根交给签发器。",
+    "fix": "完整 CPU Pass 3。三条路线共享权重和三地址证书，独立核对原始提案流、获胜父、物理 Cell 及所有源 Run 边界。",
+    "measure": "3mm 根访问 629,433→18,925，点查 613,362→10,510。Deriche 根访问 1,118,651→42,773，点查 1,106,732→15,100。",
+    "note": "移交回执的 3mm 整轮为 1,939.86 ms，逐根点查为 1,991.17 ms。订阅索引仍处理了 551,695 行。",
+    "src": "S89",
+    "diagram": [
+      {
+        "title": "Forward request",
+        "layers": [
+          [
+            [
+              "s",
+              "all source rows"
+            ]
+          ],
+          [
+            [
+              "v",
+              "lookup function"
+            ]
+          ],
+          [
+            [
+              "n",
+              "select final parent"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Reverse activation",
+        "layers": [
+          [
+            [
+              "s",
+              "changed output ports"
+            ]
+          ],
+          [
+            [
+              "n",
+              "root subscribers"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check full key"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Carry receipt",
+        "layers": [
+          [
+            [
+              "s",
+              "fresh roots + subscribers"
+            ]
+          ],
+          [
+            [
+              "s",
+              "physical function row"
+            ]
+          ],
+          [
+            [
+              "v",
+              "seal old-order triple"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "101-union-request-subscriptions",
+    "section": "union 与跨阶段接续",
+    "title": "一个根的等价类改变后，要重建整张订阅表吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "订阅桶原先保存行偏移，插入新行会改变偏移。改存稳定的事实地址后，更新只需要追踪帧的实际变化与被替换的类。",
+    "arms": "a　按当前帧重建模型签名→行偏移。b　按稳定地址修补行变更，遇到 union 重建。c　记录被替换的类，只重新计算受影响订阅者的签名。",
+    "fix": "同一组反向激活和密封凭证。完整性依赖连续的帧更新与 union 历史；缺失时重建。详细审计从当前原始值重算每行投影。",
+    "measure": "3mm 中，不可变目录处理 551,695 行。追踪 union 后完整构建 10,326 行，另修补 10,365 个地址。整轮中位数 1,947.98→1,865.65 ms。",
+    "note": "独立 Deriche 对照中，四组均变快，3,488.20→3,319.68 ms，默认 CPU 为 1,483.97 ms。Run 6 发生 union 的专门用例在 Run 7 仍产生预期绑定。",
+    "src": "S90",
+    "diagram": [
+      {
+        "title": "Frame offsets",
+        "layers": [
+          [
+            [
+              "s",
+              "table version"
+            ]
+          ],
+          [
+            [
+              "s",
+              "rebuild all buckets"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Stable addresses",
+        "layers": [
+          [
+            [
+              "s",
+              "changed rows"
+            ]
+          ],
+          [
+            [
+              "v",
+              "patch membership"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Union aware",
+        "layers": [
+          [
+            [
+              "s",
+              "displaced classes"
+            ]
+          ],
+          [
+            [
+              "v",
+              "resolve subscribers"
+            ]
+          ],
+          [
+            [
+              "s",
+              "update learned codes"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "102-request-route-reward",
+    "section": "调度奖励",
+    "title": "让模型决定哪次调用适合反向激活，收益有多大？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "在同一规则、Run 和输入状态下分别计时两种完整父生成器。把签发加验真的时间差反馈给部署在 CPU 的小门控。",
+    "arms": "a　固定原路径或始终反向激活。b　九或八十一参数的门控直接优化期望回报。c　同等更新数回归每次原生执行的时间差。",
+    "fix": "三个训练程序，共 393 个配对状态。在 conjugate-gradient 和 3mm 上冻结评估。模型只能看调用前的表大小和新鲜度，两个种子独立训练。",
+    "measure": "期望回报头都能静态证明始终选择反向激活。81 参数回归在 3mm 选择 151／200 次，冻结后估计取得 9.1 ms 净条件收益。",
+    "note": "3mm 的独立配对中，把所有正收益相加仅 12.75 ms；两个强制执行的缓存历史有区别。整轮收益以真实混合调度计时为准。",
+    "src": "S91",
+    "diagram": [
+      {
+        "title": "Paired calls",
+        "layers": [
+          [
+            [
+              "s",
+              "same source features"
+            ]
+          ],
+          [
+            [
+              "v",
+              "time both routes"
+            ]
+          ],
+          [
+            [
+              "t",
+              "signed benefit"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Expected return",
+        "layers": [
+          [
+            [
+              "n",
+              "Bernoulli gate"
+            ]
+          ],
+          [
+            [
+              "v",
+              "bound score"
+            ]
+          ],
+          [
+            [
+              "s",
+              "always wake"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Return regression",
+        "layers": [
+          [
+            [
+              "n",
+              "predict native delta"
+            ]
+          ],
+          [
+            [
+              "s",
+              "dispatch issuer"
+            ]
+          ],
+          [
+            [
+              "v",
+              "source audit"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "103-shared-property-read",
+    "section": "共享验证",
+    "title": "兄弟规则可以共享多细的一次证明？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "在原 Run 内，多条规则可能读同一父的属性，也可能通过不同构造器读到同一属性。共享哪一层会真正减少源点查？",
+    "arms": "a　复用按槽号规范化的 LHS 前缀。b　共享一元属性及完整类型化键的读取，将规则各自的剩余条件单独验证。c　限制只能跨规则采用已验证的属性回执。",
+    "fix": "每个原始绑定仍需自己签发。按可见版本核对返回值、源地址、每个规则的输入和物理 Cell 归属。",
+    "measure": "3mm 复用完整前缀 193,015 次，只少 7 次后续点查。缩到属性＋键后，CG 的点查从 317,345 降至 226,016；其中 Get 向 Concat 复用 12,325 次 Expr-size。",
+    "note": "CG 在属性复用的四组配对中三组变快，中位数 649.95→641.13 ms；sum-bits 为 32.94→33.82 ms。",
+    "src": "S92",
+    "diagram": [
+      {
+        "title": "Rule prefix",
+        "layers": [
+          [
+            [
+              "s",
+              "shared pivot"
+            ]
+          ],
+          [
+            [
+              "v",
+              "restore bound slots"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Attribute + key",
+        "layers": [
+          [
+            [
+              "n",
+              "proposed parent"
+            ]
+          ],
+          [
+            [
+              "s",
+              "typed value receipt"
+            ]
+          ],
+          [
+            [
+              "v",
+              "rule-specific tail"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Sibling only",
+        "layers": [
+          [
+            [
+              "s",
+              "different rule"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check same key"
+            ]
+          ],
+          [
+            [
+              "v",
+              "resume consumer"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "104-prospective-placement",
+    "section": "Cell 放置与真实奖励",
+    "title": "能否让两个已分配 owner 在正常执行中获得合并机会？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "旧布局把无关成员一起池化，一个可组合的片段通常只覆盖各自 owner 的一部分。提前改变成员首次放置，后续合并会遇到不同的训练分布。",
+    "arms": "a　保持原池化。b　对可延伸的多成员前缀保留独立 owner，把后续到达的成员独立放置。c　在完整覆盖出现时，用训练过的门控决定是否接管。",
+    "fix": "沿用原源规则和调度，未注入预分割的 owner 对。检查旧引用、后续 union、物理回执、完整逻辑图及最终图堆。不同策略的后续实例历史可以不同。",
+    "measure": "dot-product 的原池化没有合格对。窄前缀放置产生 22 个不同的完整对，其中 20 个具有外部读者；固定保留时图堆多用 184 B。",
+    "note": "更宽的放置产生了 401 个完整对，但固定保留时图堆多用 128,836 B。单次接管返还的字节与整图的放置代价要分别衡量。",
+    "src": "S93",
+    "diagram": [
+      {
+        "title": "Pooled",
+        "layers": [
+          [
+            [
+              "s",
+              "mixed backings"
+            ]
+          ],
+          [
+            [
+              "v",
+              "partial cover"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Prospective",
+        "layers": [
+          [
+            [
+              "s",
+              "extendable prefix"
+            ]
+          ],
+          [
+            [
+              "s",
+              "place arrivals"
+            ]
+          ],
+          [
+            [
+              "v",
+              "full owner cover"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Native return",
+        "layers": [
+          [
+            [
+              "n",
+              "keep or merge"
+            ]
+          ],
+          [
+            [
+              "v",
+              "old refs checked"
+            ]
+          ],
+          [
+            [
+              "s",
+              "measure graph heap"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "105-natural-owner-rewards",
+    "section": "训练数据的来源",
+    "title": "用自然发生的物理合并训练，能改善新程序的决策吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "改变放置后，程序会自行产生旧 owner 对。可以直接用这些真实动作的分配回执，检验先前依赖合成和准备状态的训练结论。",
+    "arms": "a　冻结用准备状态训练的九参数回归头。b　保留输入、参数量和损失，在 dot-product 与 stable-argmax 的真实动作上重训。c　在两个留出程序由 Rust 实际执行每个选择。",
+    "fix": "只在原 Run 已完整覆盖两份旧 owner 且有可核对的外部读者时行动。不同策略改变未来可用的 owner，对其自身完整轨迹分别计费。",
+    "measure": "408 次自然执行的训练回报使 GEMM-bias-ReLU 上的即时分配收益从 −6,344 变为 +8,632 B；gated-state 从 −3,896 变为 −1,668 B。",
+    "note": "重训后两套宽布局的最终图仍分别比原池化多 332,564 与 139,132 B。策略预测改善与整图净压缩是两个独立观测。",
+    "src": "S93",
+    "diagram": [
+      {
+        "title": "Prepared states",
+        "layers": [
+          [
+            [
+              "s",
+              "seeded owner pairs"
+            ]
+          ],
+          [
+            [
+              "t",
+              "paired return"
+            ]
+          ],
+          [
+            [
+              "n",
+              "frozen gate"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Natural data",
+        "layers": [
+          [
+            [
+              "s",
+              "normal source Runs"
+            ]
+          ],
+          [
+            [
+              "t",
+              "408 real moves"
+            ]
+          ],
+          [
+            [
+              "n",
+              "refit same gate"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Held-out runs",
+        "layers": [
+          [
+            [
+              "n",
+              "keep or merge"
+            ]
+          ],
+          [
+            [
+              "v",
+              "native receipts"
+            ]
+          ],
+          [
+            [
+              "s",
+              "full graph heap"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "106-lean-sealed-receipts",
+    "section": "部署时的证明开销",
+    "title": "完成核验后还必须保存每一份父引用吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "核验、发布和事后审计使用同一份证明，但需要数据的时间不同。减少发行页的重打包和核验后的复制，能省多少实际工作？",
+    "arms": "a　完整记录哈希并复制父数组。b　保留密封页的只读来源，移动单父批次缓冲。c　把同一来源所需的表和可见性检查集中执行一次。",
+    "fix": "同一 CPU 生成器、相同独立父、原 Run 提交及物理分配。详细审计保留原始证明，故意损坏来源或端口的用例必须被拒绝。",
+    "measure": "3mm 完成 510,693 次来源检查，核验后留存的引用副本为零。避免约 20.8 MB 的单父重复打包，物理表检查由 2,031,145 降至 688,003。",
+    "note": "整轮中位数 1,909.24→1,888.46 ms，四组中两组更快。sum-bits 为 30.80→30.83 ms。",
+    "src": "S94",
+    "diagram": [
+      {
+        "title": "Packed history",
+        "layers": [
+          [
+            [
+              "n",
+              "issue parents"
+            ]
+          ],
+          [
+            [
+              "s",
+              "pack and copy"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify source"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Typed page",
+        "layers": [
+          [
+            [
+              "n",
+              "issue parents"
+            ]
+          ],
+          [
+            [
+              "s",
+              "borrow sealed refs"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify source"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Release after check",
+        "layers": [
+          [
+            [
+              "v",
+              "group checks"
+            ]
+          ],
+          [
+            [
+              "s",
+              "keep source ticket"
+            ]
+          ],
+          [
+            [
+              "v",
+              "ordered commit"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
