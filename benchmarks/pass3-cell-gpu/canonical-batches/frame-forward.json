@@ -1,0 +1,2462 @@
+{
+ "3mm": {
+  "vanilla": {
+   "ms": [
+    864.319541,
+    920.679,
+    857.9125829999999,
+    937.003917
+   ],
+   "wall": [
+    1097.1603330690414,
+    1159.7415420692414,
+    1093.7215419253334,
+    1176.353415939957
+   ],
+   "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917,
+   "median_ms": 892.4992705,
+   "median_wall": 1128.4509375691414
+  },
+  "tree": {
+   "ms": [
+    2137.223459,
+    2059.601917,
+    2145.150292,
+    2054.080333
+   ],
+   "wall": [
+    2396.918624988757,
+    2293.24866598472,
+    2407.879834063351,
+    2287.834709044546
+   ],
+   "phases": [
+    [
+     1625.4032769999803,
+     317.49383600001056,
+     106.27056299999472,
+     78.17384299999942,
+     8.322811000000007
+    ],
+    [
+     1565.8451279999845,
+     304.6991670000106,
+     103.21686799999455,
+     76.4475679999995,
+     7.93853299999994
+    ],
+    [
+     1623.927881999987,
+     324.4587720000104,
+     106.32620599999474,
+     80.50056199999912,
+     8.38397700000004
+    ],
+    [
+     1558.4715639999895,
+     307.31693500001006,
+     102.42555299999594,
+     76.54859299999941,
+     7.869344999999943
+    ]
+   ],
+   "peak_rss_bytes": [
+    773931008,
+    783728640
+   ],
+   "identity": {
+    "rhs": 294917,
+    "fresh": 229880,
+    "direct_cells": 229311,
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "raw": "7363030495765407397",
+    "multi": "96ed5f9b67982f9845f1eee02b7fe8b8200224223121ed09602225907ecb0df9",
+    "physical": "81d51ecbd0b05110f7c1387c910e0da2cc7f8972dacac3eabea71991cfa6d45a",
+    "commits": "ce2f66e7b855c0d490bef448812715226814e017b417f728968d53ecfbae92dd",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "per_rhs": "ca59cd58570600f4dfc6f1fd5f35282fa867c9e604f8db5238630bdb0812402e",
+    "new_cells": 229880
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 321407,
+    "forward_hash_capacity": 229376,
+    "forward_histogram": [
+     29904,
+     10274,
+     40987,
+     47123,
+     20025,
+     1538,
+     0
+    ],
+    "native": {
+     "dependency_headers": 149851,
+     "reverse_headers": 75452,
+     "stats": {
+      "live_reverse_edges": 321407,
+      "peak_reverse_edges": 321407,
+      "repair_candidate_checks": 26845,
+      "repair_key_probes": 50259,
+      "reverse_edges_coalesced": 10572,
+      "reverse_edges_created": 409947,
+      "reverse_edges_removed": 77968,
+      "reverse_insert_attempts": 476962,
+      "reverse_merge_inserts": 815544,
+      "reverse_remove_attempts": 80809,
+      "subscription_calls": 215018,
+      "subscription_value_visits": 618081,
+      "union_frontier_probes": 28142,
+      "union_redirected_edges": 65816,
+      "union_wake_visits": 65816
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 111430
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     1423068,
+     1423068,
+     0,
+     0,
+     0,
+     0,
+     1423068,
+     0,
+     0,
+     0
+    ],
+    [
+     526483,
+     718101,
+     191618,
+     0,
+     0,
+     0,
+     350168,
+     15050,
+     25,
+     5
+    ]
+   ],
+   "extra_contains": [
+    0,
+    413119,
+    70228
+   ],
+   "frame": {
+    "activations": 0,
+    "checked": false,
+    "derived_roles": 0,
+    "input_roles": 0,
+    "mode": 0,
+    "reads": [
+     0,
+     0
+    ],
+    "static_bytes": 0
+   },
+   "median_ms": 2098.412688,
+   "median_wall": 2345.0836454867385,
+   "phase_medians": [
+    1594.8865049999858,
+    312.4053855000103,
+    104.74371549999464,
+    77.36121799999941,
+    8.130671999999974
+   ]
+  },
+  "sealed_inputs": {
+   "ms": [
+    2170.43525,
+    2128.2390410000003,
+    2152.927708,
+    2057.5972079999997
+   ],
+   "wall": [
+    2431.1382920714095,
+    2392.1333749312907,
+    2422.51091694925,
+    2315.5287080444396
+   ],
+   "phases": [
+    [
+     1648.2876369999788,
+     319.24361800001,
+     109.1880519999947,
+     83.58831699999892,
+     8.547618000000098
+    ],
+    [
+     1628.5992239999841,
+     303.2340270000097,
+     107.11575799999471,
+     79.10957499999924,
+     8.57041300000008
+    ],
+    [
+     1635.0892249999818,
+     317.7509770000103,
+     109.91069599999469,
+     80.03788899999924,
+     8.542598000000059
+    ],
+    [
+     1577.394565999977,
+     293.8967210000083,
+     101.05705099999565,
+     76.1232059999996,
+     7.6214229999999406
+    ]
+   ],
+   "peak_rss_bytes": [],
+   "identity": {
+    "rhs": 294917,
+    "fresh": 229880,
+    "direct_cells": 229311,
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "raw": "7363030495765407397",
+    "multi": "96ed5f9b67982f9845f1eee02b7fe8b8200224223121ed09602225907ecb0df9",
+    "physical": "81d51ecbd0b05110f7c1387c910e0da2cc7f8972dacac3eabea71991cfa6d45a",
+    "commits": "ce2f66e7b855c0d490bef448812715226814e017b417f728968d53ecfbae92dd",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "per_rhs": "ca59cd58570600f4dfc6f1fd5f35282fa867c9e604f8db5238630bdb0812402e",
+    "new_cells": 229880
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 321407,
+    "forward_hash_capacity": 229376,
+    "forward_histogram": [
+     29904,
+     10274,
+     40987,
+     47123,
+     20025,
+     1538,
+     0
+    ],
+    "native": {
+     "dependency_headers": 149851,
+     "reverse_headers": 75452,
+     "stats": {
+      "live_reverse_edges": 321407,
+      "peak_reverse_edges": 321407,
+      "repair_candidate_checks": 26845,
+      "repair_key_probes": 50259,
+      "reverse_edges_coalesced": 10572,
+      "reverse_edges_created": 409947,
+      "reverse_edges_removed": 77968,
+      "reverse_insert_attempts": 476962,
+      "reverse_merge_inserts": 815544,
+      "reverse_remove_attempts": 80809,
+      "subscription_calls": 215018,
+      "subscription_value_visits": 618081,
+      "union_frontier_probes": 28142,
+      "union_redirected_edges": 65816,
+      "union_wake_visits": 65816
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 111430
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     399138,
+     399138,
+     0,
+     0,
+     0,
+     0,
+     399138,
+     0,
+     0,
+     0
+    ],
+    [
+     526483,
+     718101,
+     191618,
+     0,
+     0,
+     0,
+     350168,
+     15050,
+     25,
+     5
+    ]
+   ],
+   "extra_contains": [
+    0,
+    413119,
+    70228
+   ],
+   "frame": {
+    "activations": 284787,
+    "checked": false,
+    "derived_roles": 2059,
+    "input_roles": 4151,
+    "mode": 1,
+    "reads": [
+     1023930,
+     0
+    ],
+    "static_bytes": 27936
+   },
+   "median_ms": 2140.5833745,
+   "median_wall": 2407.3221459402703,
+   "phase_medians": [
+    1631.8442244999828,
+    310.49250200001,
+    108.15190499999471,
+    79.57373199999924,
+    8.545108000000077
+   ]
+  },
+  "derived": {
+   "ms": [
+    2148.0704579999997,
+    2109.913042,
+    2166.9020410000003,
+    1989.468459
+   ],
+   "wall": [
+    2416.2245839834213,
+    2385.399791994132,
+    2436.297333915718,
+    2245.73712493293
+   ],
+   "phases": [
+    [
+     1651.7837919999897,
+     299.97154200000887,
+     105.93698899999478,
+     79.70266199999934,
+     8.987792000000074
+    ],
+    [
+     1609.9383689999845,
+     306.30623700001036,
+     105.65270799999428,
+     78.49878999999926,
+     7.9761979999999415
+    ],
+    [
+     1648.4189679999722,
+     315.4823420000098,
+     110.77994499999464,
+     82.07884699999929,
+     8.400698000000018
+    ],
+    [
+     1521.7993909999825,
+     282.66504200000867,
+     99.43904299999632,
+     76.83981699999899,
+     7.263448999999945
+    ]
+   ],
+   "peak_rss_bytes": [],
+   "identity": {
+    "rhs": 294917,
+    "fresh": 229880,
+    "direct_cells": 229311,
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "raw": "7363030495765407397",
+    "multi": "96ed5f9b67982f9845f1eee02b7fe8b8200224223121ed09602225907ecb0df9",
+    "physical": "81d51ecbd0b05110f7c1387c910e0da2cc7f8972dacac3eabea71991cfa6d45a",
+    "commits": "ce2f66e7b855c0d490bef448812715226814e017b417f728968d53ecfbae92dd",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "per_rhs": "ca59cd58570600f4dfc6f1fd5f35282fa867c9e604f8db5238630bdb0812402e",
+    "new_cells": 229880
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 321407,
+    "forward_hash_capacity": 229376,
+    "forward_histogram": [
+     29904,
+     10274,
+     40987,
+     47123,
+     20025,
+     1538,
+     0
+    ],
+    "native": {
+     "dependency_headers": 149851,
+     "reverse_headers": 75452,
+     "stats": {
+      "live_reverse_edges": 321407,
+      "peak_reverse_edges": 321407,
+      "repair_candidate_checks": 26845,
+      "repair_key_probes": 50259,
+      "reverse_edges_coalesced": 10572,
+      "reverse_edges_created": 409947,
+      "reverse_edges_removed": 77968,
+      "reverse_insert_attempts": 476962,
+      "reverse_merge_inserts": 815544,
+      "reverse_remove_attempts": 80809,
+      "subscription_calls": 215018,
+      "subscription_value_visits": 618081,
+      "union_frontier_probes": 28142,
+      "union_redirected_edges": 65816,
+      "union_wake_visits": 65816
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 111430
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     226829,
+     226829,
+     0,
+     0,
+     0,
+     0,
+     226829,
+     0,
+     0,
+     0
+    ],
+    [
+     526483,
+     718101,
+     191618,
+     0,
+     0,
+     0,
+     350168,
+     15050,
+     25,
+     5
+    ]
+   ],
+   "extra_contains": [
+    0,
+    413119,
+    70228
+   ],
+   "frame": {
+    "activations": 284789,
+    "checked": false,
+    "derived_roles": 2059,
+    "input_roles": 4151,
+    "mode": 2,
+    "reads": [
+     1023930,
+     172309
+    ],
+    "static_bytes": 27936
+   },
+   "median_ms": 2128.99175,
+   "median_wall": 2400.8121879887767,
+   "phase_medians": [
+    1629.1786684999784,
+    303.1388895000096,
+    105.79484849999453,
+    79.1007259999993,
+    8.18844799999998
+   ]
+  },
+  "derived_direct": {
+   "ms": [
+    2183.5139169999998,
+    2131.491542,
+    2062.239708,
+    2122.693458
+   ],
+   "wall": [
+    2420.124666998163,
+    2396.0308340610936,
+    2298.7154580187052,
+    2386.7009590612724
+   ],
+   "phases": [
+    [
+     1663.845125999982,
+     319.9008270000096,
+     107.36499699999437,
+     82.15387199999891,
+     8.597954000000067
+    ],
+    [
+     1630.850318999985,
+     305.50640600000827,
+     106.03443299999446,
+     78.85589399999942,
+     8.603616000000066
+    ],
+    [
+     1573.565252999987,
+     296.90505900001006,
+     103.6424689999945,
+     78.78310199999909,
+     7.813872999999947
+    ],
+    [
+     1614.7948919999878,
+     311.8156700000108,
+     105.72464499999445,
+     80.32008999999884,
+     8.482220000000062
+    ]
+   ],
+   "peak_rss_bytes": [],
+   "identity": {
+    "rhs": 294917,
+    "fresh": 229880,
+    "direct_cells": 229311,
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "raw": "7363030495765407397",
+    "multi": "96ed5f9b67982f9845f1eee02b7fe8b8200224223121ed09602225907ecb0df9",
+    "physical": "81d51ecbd0b05110f7c1387c910e0da2cc7f8972dacac3eabea71991cfa6d45a",
+    "commits": "ce2f66e7b855c0d490bef448812715226814e017b417f728968d53ecfbae92dd",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "per_rhs": "ca59cd58570600f4dfc6f1fd5f35282fa867c9e604f8db5238630bdb0812402e",
+    "new_cells": 229880
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 321407,
+    "forward_hash_capacity": 229376,
+    "forward_histogram": [
+     29904,
+     10274,
+     40987,
+     47123,
+     20025,
+     1538,
+     0
+    ],
+    "native": {
+     "dependency_headers": 149851,
+     "reverse_headers": 75452,
+     "stats": {
+      "live_reverse_edges": 321407,
+      "peak_reverse_edges": 321407,
+      "repair_candidate_checks": 26845,
+      "repair_key_probes": 50259,
+      "reverse_edges_coalesced": 10572,
+      "reverse_edges_created": 409947,
+      "reverse_edges_removed": 77968,
+      "reverse_insert_attempts": 476962,
+      "reverse_merge_inserts": 815544,
+      "reverse_remove_attempts": 80809,
+      "subscription_calls": 215018,
+      "subscription_value_visits": 618081,
+      "union_frontier_probes": 28142,
+      "union_redirected_edges": 65816,
+      "union_wake_visits": 65816
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 111430
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     226829,
+     12675,
+     0,
+     0,
+     214154,
+     0,
+     226829,
+     0,
+     0,
+     0
+    ],
+    [
+     526483,
+     208302,
+     191618,
+     160577,
+     349222,
+     0,
+     350168,
+     15050,
+     25,
+     5
+    ]
+   ],
+   "extra_contains": [
+    0,
+    413119,
+    70228
+   ],
+   "frame": {
+    "activations": 284789,
+    "checked": false,
+    "derived_roles": 2059,
+    "input_roles": 4151,
+    "mode": 2,
+    "reads": [
+     1023930,
+     172309
+    ],
+    "static_bytes": 27936
+   },
+   "median_ms": 2127.0925,
+   "median_wall": 2391.365896561183,
+   "phase_medians": [
+    1622.8226054999864,
+    308.6610380000095,
+    105.87953899999445,
+    79.58799199999913,
+    8.540087000000064
+   ]
+  },
+  "compact": {
+   "ms": [
+    2078.3481250000004,
+    2133.582625,
+    2171.101333,
+    2071.409666
+   ],
+   "wall": [
+    2338.550625019707,
+    2362.276416970417,
+    2426.5228749718517,
+    2304.9330840585753
+   ],
+   "phases": [
+    [
+     1590.8412139999893,
+     301.9440060000101,
+     98.2060539999968,
+     77.65064999999942,
+     8.088759999999978
+    ],
+    [
+     1616.27883699999,
+     323.16048400000994,
+     102.364003999996,
+     81.56363399999921,
+     8.55747000000009
+    ],
+    [
+     1655.2736129999857,
+     318.94569700000955,
+     104.44974299999635,
+     81.43941199999927,
+     9.210619000000108
+    ],
+    [
+     1585.3591509999885,
+     302.56951000001,
+     97.12129399999608,
+     76.93036899999971,
+     7.908780999999954
+    ]
+   ],
+   "peak_rss_bytes": [
+    764182528,
+    768622592
+   ],
+   "identity": {
+    "rhs": 294917,
+    "fresh": 229880,
+    "direct_cells": 229311,
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "raw": "7363030495765407397",
+    "multi": "96ed5f9b67982f9845f1eee02b7fe8b8200224223121ed09602225907ecb0df9",
+    "physical": "81d51ecbd0b05110f7c1387c910e0da2cc7f8972dacac3eabea71991cfa6d45a",
+    "commits": "ce2f66e7b855c0d490bef448812715226814e017b417f728968d53ecfbae92dd",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "per_rhs": "ca59cd58570600f4dfc6f1fd5f35282fa867c9e604f8db5238630bdb0812402e",
+    "new_cells": 229880
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 321407,
+    "forward_hash_capacity": 228338,
+    "forward_histogram": [
+     0,
+     10274,
+     40987,
+     47123,
+     20025,
+     1538,
+     0
+    ],
+    "native": {
+     "dependency_headers": 119947,
+     "reverse_headers": 75452,
+     "stats": {
+      "live_reverse_edges": 321407,
+      "peak_reverse_edges": 321407,
+      "repair_candidate_checks": 26845,
+      "repair_key_probes": 50259,
+      "reverse_edges_coalesced": 10572,
+      "reverse_edges_created": 409947,
+      "reverse_edges_removed": 77968,
+      "reverse_insert_attempts": 409947,
+      "reverse_merge_inserts": 815544,
+      "reverse_remove_attempts": 80809,
+      "subscription_calls": 215018,
+      "subscription_value_visits": 618081,
+      "union_frontier_probes": 28142,
+      "union_redirected_edges": 65816,
+      "union_wake_visits": 65816
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 111430
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     1845965,
+     1845965,
+     0,
+     0,
+     0,
+     0,
+     1845965,
+     0,
+     0,
+     0
+    ],
+    [
+     606667,
+     798285,
+     191618,
+     0,
+     0,
+     0,
+     430352,
+     15050,
+     25,
+     5
+    ]
+   ],
+   "extra_contains": [
+    0,
+    0,
+    0
+   ],
+   "frame": {
+    "activations": 0,
+    "checked": false,
+    "derived_roles": 0,
+    "input_roles": 0,
+    "mode": 0,
+    "reads": [
+     0,
+     0
+    ],
+    "static_bytes": 0
+   },
+   "median_ms": 2105.965375,
+   "median_wall": 2350.413520995062,
+   "phase_medians": [
+    1603.5600254999897,
+    310.75760350000974,
+    100.2850289999964,
+    79.54503099999934,
+    8.323115000000033
+   ]
+  },
+  "compact_frames": {
+   "ms": [
+    2093.265959,
+    2060.3775,
+    2106.652,
+    2129.741917
+   ],
+   "wall": [
+    2347.47808391694,
+    2318.0289580486715,
+    2370.786416926421,
+    2389.943041955121
+   ],
+   "phases": [
+    [
+     1609.0866119999853,
+     298.1791000000087,
+     98.21349099999635,
+     77.76660499999927,
+     8.347230000000025
+    ],
+    [
+     1588.8259939999855,
+     287.69153100000835,
+     97.37865599999638,
+     76.95088199999934,
+     7.942622999999946
+    ],
+    [
+     1613.2524209999815,
+     306.2647570000109,
+     98.12080199999622,
+     79.49182799999912,
+     7.950787999999971
+    ],
+    [
+     1625.1311699999765,
+     310.6167240000107,
+     103.3699279999953,
+     80.57399599999937,
+     8.392699000000025
+    ]
+   ],
+   "peak_rss_bytes": [],
+   "identity": {
+    "rhs": 294917,
+    "fresh": 229880,
+    "direct_cells": 229311,
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "raw": "7363030495765407397",
+    "multi": "96ed5f9b67982f9845f1eee02b7fe8b8200224223121ed09602225907ecb0df9",
+    "physical": "81d51ecbd0b05110f7c1387c910e0da2cc7f8972dacac3eabea71991cfa6d45a",
+    "commits": "ce2f66e7b855c0d490bef448812715226814e017b417f728968d53ecfbae92dd",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "per_rhs": "ca59cd58570600f4dfc6f1fd5f35282fa867c9e604f8db5238630bdb0812402e",
+    "new_cells": 229880
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 321407,
+    "forward_hash_capacity": 228338,
+    "forward_histogram": [
+     0,
+     10274,
+     40987,
+     47123,
+     20025,
+     1538,
+     0
+    ],
+    "native": {
+     "dependency_headers": 119947,
+     "reverse_headers": 75452,
+     "stats": {
+      "live_reverse_edges": 321407,
+      "peak_reverse_edges": 321407,
+      "repair_candidate_checks": 26845,
+      "repair_key_probes": 50259,
+      "reverse_edges_coalesced": 10572,
+      "reverse_edges_created": 409947,
+      "reverse_edges_removed": 77968,
+      "reverse_insert_attempts": 409947,
+      "reverse_merge_inserts": 815544,
+      "reverse_remove_attempts": 80809,
+      "subscription_calls": 215018,
+      "subscription_value_visits": 618081,
+      "union_frontier_probes": 28142,
+      "union_redirected_edges": 65816,
+      "union_wake_visits": 65816
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 111430
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     649726,
+     649726,
+     0,
+     0,
+     0,
+     0,
+     649726,
+     0,
+     0,
+     0
+    ],
+    [
+     606667,
+     798285,
+     191618,
+     0,
+     0,
+     0,
+     430352,
+     15050,
+     25,
+     5
+    ]
+   ],
+   "extra_contains": [
+    0,
+    0,
+    0
+   ],
+   "frame": {
+    "activations": 284789,
+    "checked": false,
+    "derived_roles": 2059,
+    "input_roles": 4151,
+    "mode": 2,
+    "reads": [
+     1023930,
+     172309
+    ],
+    "static_bytes": 27936
+   },
+   "median_ms": 2099.9589795,
+   "median_wall": 2359.1322504216805,
+   "phase_medians": [
+    1611.1695164999833,
+    302.22192850000977,
+    98.16714649999628,
+    78.62921649999919,
+    8.149008999999998
+   ]
+  },
+  "compact_both": {
+   "ms": [
+    2030.7103749999999,
+    2112.369708,
+    2116.9444999999996,
+    2066.062875
+   ],
+   "wall": [
+    2253.1931250123307,
+    2371.6039169812575,
+    2350.4372499883175,
+    2336.223665974103
+   ],
+   "phases": [
+    [
+     1557.6751659999866,
+     289.11634600000866,
+     97.02588999999645,
+     77.44886099999933,
+     7.9391539999999505
+    ],
+    [
+     1612.8625529999856,
+     308.79269000001005,
+     100.04883099999627,
+     80.6606299999993,
+     8.401040000000028
+    ],
+    [
+     1615.262998999988,
+     310.1408890000101,
+     101.427018999996,
+     80.31458099999902,
+     8.11797999999999
+    ],
+    [
+     1589.5722739999894,
+     293.15167800000813,
+     96.0424999999962,
+     77.44249199999926,
+     8.338946000000037
+    ]
+   ],
+   "peak_rss_bytes": [],
+   "identity": {
+    "rhs": 294917,
+    "fresh": 229880,
+    "direct_cells": 229311,
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "raw": "7363030495765407397",
+    "multi": "96ed5f9b67982f9845f1eee02b7fe8b8200224223121ed09602225907ecb0df9",
+    "physical": "81d51ecbd0b05110f7c1387c910e0da2cc7f8972dacac3eabea71991cfa6d45a",
+    "commits": "ce2f66e7b855c0d490bef448812715226814e017b417f728968d53ecfbae92dd",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "per_rhs": "ca59cd58570600f4dfc6f1fd5f35282fa867c9e604f8db5238630bdb0812402e",
+    "new_cells": 229880
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 321407,
+    "forward_hash_capacity": 228338,
+    "forward_histogram": [
+     0,
+     10274,
+     40987,
+     47123,
+     20025,
+     1538,
+     0
+    ],
+    "native": {
+     "dependency_headers": 119947,
+     "reverse_headers": 75452,
+     "stats": {
+      "live_reverse_edges": 321407,
+      "peak_reverse_edges": 321407,
+      "repair_candidate_checks": 26845,
+      "repair_key_probes": 50259,
+      "reverse_edges_coalesced": 10572,
+      "reverse_edges_created": 409947,
+      "reverse_edges_removed": 77968,
+      "reverse_insert_attempts": 409947,
+      "reverse_merge_inserts": 815544,
+      "reverse_remove_attempts": 80809,
+      "subscription_calls": 215018,
+      "subscription_value_visits": 618081,
+      "union_frontier_probes": 28142,
+      "union_redirected_edges": 65816,
+      "union_wake_visits": 65816
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 111430
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     649726,
+     48832,
+     0,
+     0,
+     222564,
+     378330,
+     649726,
+     0,
+     0,
+     0
+    ],
+    [
+     606667,
+     82811,
+     62737,
+     51788,
+     140842,
+     393963,
+     430352,
+     6619,
+     22,
+     5
+    ]
+   ],
+   "extra_contains": [
+    0,
+    0,
+    0
+   ],
+   "frame": {
+    "activations": 284789,
+    "checked": false,
+    "derived_roles": 2059,
+    "input_roles": 4151,
+    "mode": 2,
+    "reads": [
+     1023930,
+     172309
+    ],
+    "static_bytes": 27936
+   },
+   "median_ms": 2089.2162915,
+   "median_wall": 2343.33045798121,
+   "phase_medians": [
+    1601.2174134999875,
+    300.97218400000907,
+    98.53736049999637,
+    78.88172099999917,
+    8.228463000000014
+   ]
+  }
+ },
+ "deriche": {
+  "vanilla": {
+   "ms": [
+    1453.9118330000001,
+    1594.99425,
+    1534.031541,
+    1623.88325
+   ],
+   "wall": [
+    1761.5376668982208,
+    1923.8941670628265,
+    1847.8994579054415,
+    1937.9248339682817
+   ],
+   "state": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+   "rhs": 635818,
+   "median_ms": 1564.5128955,
+   "median_wall": 1885.896812484134
+  },
+  "tree": {
+   "ms": [
+    3799.473708,
+    3938.294375,
+    3902.244542,
+    4037.3695410000005
+   ],
+   "wall": [
+    4149.2651250446215,
+    4246.348707936704,
+    4249.045958044007,
+    4353.962167049758
+   ],
+   "phases": [
+    [
+     2875.1385599999876,
+     565.1738730000142,
+     169.1161900000092,
+     155.8957109999926,
+     31.816933000000134
+    ],
+    [
+     2980.817608999979,
+     587.5121010000155,
+     172.81301400000598,
+     161.20997299999254,
+     33.419585000000474
+    ],
+    [
+     2961.216454999997,
+     575.6308230000116,
+     170.27628400000805,
+     158.736481999994,
+     33.76568900000053
+    ],
+    [
+     3061.537853999991,
+     591.9225390000144,
+     181.3054710000083,
+     165.435495999992,
+     34.51078800000051
+    ]
+   ],
+   "peak_rss_bytes": [
+    921026560,
+    922304512
+   ],
+   "identity": {
+    "rhs": 635818,
+    "fresh": 452913,
+    "direct_cells": 450414,
+    "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+    "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+    "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+    "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+    "raw": "6585087630915189294",
+    "multi": "b79fe44e292a8cfb6c5893d9c7fe8f6c95f0af7a92c884206029c96bb25f0a6b",
+    "physical": "324e172a0054b195e70f6e3bf1e42cbfb3863ce712cd68ee38a68ce0942cd849",
+    "commits": "bb7cc8fb0833aac0dd83cf16155a3d8888fa34e9facaf4fb3a81037145c2416f",
+    "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+    "per_rhs": "27c55a46911df6174d24b7d5e8a85fa1ba80e13281a8c84a6d46bc7b5ffd881b",
+    "new_cells": 452913
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 446700,
+    "forward_hash_capacity": 229376,
+    "forward_histogram": [
+     49880,
+     11671,
+     59587,
+     55107,
+     35972,
+     1328,
+     1
+    ],
+    "native": {
+     "dependency_headers": 213546,
+     "reverse_headers": 99099,
+     "stats": {
+      "live_reverse_edges": 446700,
+      "peak_reverse_edges": 446700,
+      "repair_candidate_checks": 43267,
+      "repair_key_probes": 80373,
+      "reverse_edges_coalesced": 21185,
+      "reverse_edges_created": 608405,
+      "reverse_edges_removed": 140520,
+      "reverse_insert_attempts": 726595,
+      "reverse_merge_inserts": 1171446,
+      "reverse_remove_attempts": 148178,
+      "subscription_calls": 324519,
+      "subscription_value_visits": 952690,
+      "union_frontier_probes": 46146,
+      "union_redirected_edges": 109304,
+      "union_wake_visits": 109304
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 109580
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     2337207,
+     2337207,
+     0,
+     0,
+     0,
+     0,
+     2337207,
+     0,
+     0,
+     0
+    ],
+    [
+     882735,
+     1203469,
+     320734,
+     0,
+     0,
+     0,
+     586126,
+     23408,
+     0,
+     3
+    ]
+   ],
+   "extra_contains": [
+    0,
+    615272,
+    128119
+   ],
+   "frame": {
+    "activations": 0,
+    "checked": false,
+    "derived_roles": 0,
+    "input_roles": 0,
+    "mode": 0,
+    "reads": [
+     0,
+     0
+    ],
+    "static_bytes": 0
+   },
+   "median_ms": 3920.2694585,
+   "median_wall": 4247.697332990356,
+   "phase_medians": [
+    2971.017031999988,
+    581.5714620000135,
+    171.544649000007,
+    159.97322749999327,
+    33.5926370000005
+   ]
+  },
+  "sealed_inputs": {
+   "ms": [
+    3785.309416,
+    3898.060584,
+    3874.6805000000004,
+    4010.4103750000004
+   ],
+   "wall": [
+    4133.807541918941,
+    4254.74508292973,
+    4220.397917088121,
+    4371.2959169643
+   ],
+   "phases": [
+    [
+     2874.5946399999766,
+     551.7254210000149,
+     166.6757580000088,
+     156.36174499999282,
+     33.72925100000047
+    ],
+    [
+     2973.991548999984,
+     562.2195880000143,
+     166.6783380000085,
+     159.16477199999412,
+     33.605442000000416
+    ],
+    [
+     2938.2826469999764,
+     571.7145930000144,
+     170.32104100000566,
+     159.435875999993,
+     32.42693600000036
+    ],
+    [
+     3041.5524639999885,
+     583.7505970000136,
+     181.56923900000834,
+     165.5035289999938,
+     35.189418000000515
+    ]
+   ],
+   "peak_rss_bytes": [],
+   "identity": {
+    "rhs": 635818,
+    "fresh": 452913,
+    "direct_cells": 450414,
+    "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+    "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+    "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+    "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+    "raw": "6585087630915189294",
+    "multi": "b79fe44e292a8cfb6c5893d9c7fe8f6c95f0af7a92c884206029c96bb25f0a6b",
+    "physical": "324e172a0054b195e70f6e3bf1e42cbfb3863ce712cd68ee38a68ce0942cd849",
+    "commits": "bb7cc8fb0833aac0dd83cf16155a3d8888fa34e9facaf4fb3a81037145c2416f",
+    "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+    "per_rhs": "27c55a46911df6174d24b7d5e8a85fa1ba80e13281a8c84a6d46bc7b5ffd881b",
+    "new_cells": 452913
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 446700,
+    "forward_hash_capacity": 229376,
+    "forward_histogram": [
+     49880,
+     11671,
+     59587,
+     55107,
+     35972,
+     1328,
+     1
+    ],
+    "native": {
+     "dependency_headers": 213546,
+     "reverse_headers": 99099,
+     "stats": {
+      "live_reverse_edges": 446700,
+      "peak_reverse_edges": 446700,
+      "repair_candidate_checks": 43267,
+      "repair_key_probes": 80373,
+      "reverse_edges_coalesced": 21185,
+      "reverse_edges_created": 608405,
+      "reverse_edges_removed": 140520,
+      "reverse_insert_attempts": 726595,
+      "reverse_merge_inserts": 1171446,
+      "reverse_remove_attempts": 148178,
+      "subscription_calls": 324519,
+      "subscription_value_visits": 952690,
+      "union_frontier_probes": 46146,
+      "union_redirected_edges": 109304,
+      "union_wake_visits": 109304
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 109580
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     623573,
+     623573,
+     0,
+     0,
+     0,
+     0,
+     623573,
+     0,
+     0,
+     0
+    ],
+    [
+     882735,
+     1203469,
+     320734,
+     0,
+     0,
+     0,
+     586126,
+     23408,
+     0,
+     3
+    ]
+   ],
+   "extra_contains": [
+    0,
+    615272,
+    128119
+   ],
+   "frame": {
+    "activations": 618239,
+    "checked": false,
+    "derived_roles": 2059,
+    "input_roles": 4151,
+    "mode": 1,
+    "reads": [
+     1713634,
+     0
+    ],
+    "static_bytes": 27936
+   },
+   "median_ms": 3886.370542,
+   "median_wall": 4237.571500008926,
+   "phase_medians": [
+    2956.13709799998,
+    566.9670905000144,
+    168.4996895000071,
+    159.30032399999357,
+    33.66734650000044
+   ]
+  },
+  "derived": {
+   "ms": [
+    3747.3058340000002,
+    3861.9359170000002,
+    3663.450625,
+    3930.221125
+   ],
+   "wall": [
+    4091.520208050497,
+    4210.200750036165,
+    4003.2022499945015,
+    4295.256417011842
+   ],
+   "phases": [
+    [
+     2850.8038629999864,
+     545.1307080000145,
+     164.3784290000068,
+     153.7597559999928,
+     31.070666000000127
+    ],
+    [
+     2929.813528999997,
+     564.6758480000142,
+     172.21120400000888,
+     159.89667699999336,
+     32.949552000000445
+    ],
+    [
+     2785.8487949999885,
+     533.4039190000137,
+     164.004515000009,
+     148.62634499999345,
+     29.26327500000015
+    ],
+    [
+     2999.979886999981,
+     559.3378750000145,
+     169.36951600000796,
+     164.50771499999308,
+     34.4774980000005
+    ]
+   ],
+   "peak_rss_bytes": [],
+   "identity": {
+    "rhs": 635818,
+    "fresh": 452913,
+    "direct_cells": 450414,
+    "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+    "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+    "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+    "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+    "raw": "6585087630915189294",
+    "multi": "b79fe44e292a8cfb6c5893d9c7fe8f6c95f0af7a92c884206029c96bb25f0a6b",
+    "physical": "324e172a0054b195e70f6e3bf1e42cbfb3863ce712cd68ee38a68ce0942cd849",
+    "commits": "bb7cc8fb0833aac0dd83cf16155a3d8888fa34e9facaf4fb3a81037145c2416f",
+    "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+    "per_rhs": "27c55a46911df6174d24b7d5e8a85fa1ba80e13281a8c84a6d46bc7b5ffd881b",
+    "new_cells": 452913
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 446700,
+    "forward_hash_capacity": 229376,
+    "forward_histogram": [
+     49880,
+     11671,
+     59587,
+     55107,
+     35972,
+     1328,
+     1
+    ],
+    "native": {
+     "dependency_headers": 213546,
+     "reverse_headers": 99099,
+     "stats": {
+      "live_reverse_edges": 446700,
+      "peak_reverse_edges": 446700,
+      "repair_candidate_checks": 43267,
+      "repair_key_probes": 80373,
+      "reverse_edges_coalesced": 21185,
+      "reverse_edges_created": 608405,
+      "reverse_edges_removed": 140520,
+      "reverse_insert_attempts": 726595,
+      "reverse_merge_inserts": 1171446,
+      "reverse_remove_attempts": 148178,
+      "subscription_calls": 324519,
+      "subscription_value_visits": 952690,
+      "union_frontier_probes": 46146,
+      "union_redirected_edges": 109304,
+      "union_wake_visits": 109304
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 109580
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     374456,
+     374456,
+     0,
+     0,
+     0,
+     0,
+     374456,
+     0,
+     0,
+     0
+    ],
+    [
+     882735,
+     1203469,
+     320734,
+     0,
+     0,
+     0,
+     586126,
+     23408,
+     0,
+     3
+    ]
+   ],
+   "extra_contains": [
+    0,
+    615272,
+    128119
+   ],
+   "frame": {
+    "activations": 618241,
+    "checked": false,
+    "derived_roles": 2059,
+    "input_roles": 4151,
+    "mode": 2,
+    "reads": [
+     1713634,
+     249117
+    ],
+    "static_bytes": 27936
+   },
+   "median_ms": 3804.6208755000002,
+   "median_wall": 4150.860479043331,
+   "phase_medians": [
+    2890.308695999992,
+    552.2342915000145,
+    166.87397250000737,
+    156.82821649999306,
+    32.010109000000284
+   ]
+  },
+  "derived_direct": {
+   "ms": [
+    3822.9499159999996,
+    3886.7447500000003,
+    3553.1942910000002,
+    3893.875583
+   ],
+   "wall": [
+    4132.46341701597,
+    4237.670042086393,
+    3861.440874985419,
+    4242.732957936823
+   ],
+   "phases": [
+    [
+     2895.85596299998,
+     560.7390280000136,
+     174.38448300000664,
+     156.48748799999348,
+     33.19098900000046
+    ],
+    [
+     2950.685467999981,
+     563.6096220000138,
+     177.26931600000643,
+     159.78380799999294,
+     33.04833200000051
+    ],
+    [
+     2698.1678779999847,
+     522.6773110000145,
+     159.17127500000356,
+     143.94054899999344,
+     27.185750000000205
+    ],
+    [
+     2961.608537999972,
+     565.3791420000149,
+     171.70355300000614,
+     159.80232399999292,
+     32.906223000000494
+    ]
+   ],
+   "peak_rss_bytes": [],
+   "identity": {
+    "rhs": 635818,
+    "fresh": 452913,
+    "direct_cells": 450414,
+    "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+    "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+    "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+    "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+    "raw": "6585087630915189294",
+    "multi": "b79fe44e292a8cfb6c5893d9c7fe8f6c95f0af7a92c884206029c96bb25f0a6b",
+    "physical": "324e172a0054b195e70f6e3bf1e42cbfb3863ce712cd68ee38a68ce0942cd849",
+    "commits": "bb7cc8fb0833aac0dd83cf16155a3d8888fa34e9facaf4fb3a81037145c2416f",
+    "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+    "per_rhs": "27c55a46911df6174d24b7d5e8a85fa1ba80e13281a8c84a6d46bc7b5ffd881b",
+    "new_cells": 452913
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 446700,
+    "forward_hash_capacity": 229376,
+    "forward_histogram": [
+     49880,
+     11671,
+     59587,
+     55107,
+     35972,
+     1328,
+     1
+    ],
+    "native": {
+     "dependency_headers": 213546,
+     "reverse_headers": 99099,
+     "stats": {
+      "live_reverse_edges": 446700,
+      "peak_reverse_edges": 446700,
+      "repair_candidate_checks": 43267,
+      "repair_key_probes": 80373,
+      "reverse_edges_coalesced": 21185,
+      "reverse_edges_created": 608405,
+      "reverse_edges_removed": 140520,
+      "reverse_insert_attempts": 726595,
+      "reverse_merge_inserts": 1171446,
+      "reverse_remove_attempts": 148178,
+      "subscription_calls": 324519,
+      "subscription_value_visits": 952690,
+      "union_frontier_probes": 46146,
+      "union_redirected_edges": 109304,
+      "union_wake_visits": 109304
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 109580
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     374456,
+     24379,
+     0,
+     0,
+     350077,
+     0,
+     374456,
+     0,
+     0,
+     0
+    ],
+    [
+     882735,
+     287609,
+     320734,
+     256510,
+     659350,
+     0,
+     586126,
+     23408,
+     0,
+     3
+    ]
+   ],
+   "extra_contains": [
+    0,
+    615272,
+    128119
+   ],
+   "frame": {
+    "activations": 618241,
+    "checked": false,
+    "derived_roles": 2059,
+    "input_roles": 4151,
+    "mode": 2,
+    "reads": [
+     1713634,
+     249117
+    ],
+    "static_bytes": 27936
+   },
+   "median_ms": 3854.8473329999997,
+   "median_wall": 4185.066729551181,
+   "phase_medians": [
+    2923.2707154999807,
+    562.1743250000137,
+    173.0440180000064,
+    158.1356479999932,
+    32.9772775000005
+   ]
+  },
+  "compact": {
+   "ms": [
+    3634.3448750000002,
+    3839.58075,
+    3654.457584,
+    3876.6104170000003
+   ],
+   "wall": [
+    3973.3362500555813,
+    4160.7494589407,
+    3997.6669589523226,
+    4193.866709014401
+   ],
+   "phases": [
+    [
+     2756.16413899999,
+     543.284595000011,
+     151.0478440000032,
+     150.8503639999933,
+     30.947354000000203
+    ],
+    [
+     2923.5654539999846,
+     564.9190260000111,
+     158.84014600000694,
+     157.1192459999931,
+     32.7452910000005
+    ],
+    [
+     2772.455034999989,
+     545.5942590000108,
+     153.2239560000028,
+     150.36050799999373,
+     30.717716000000145
+    ],
+    [
+     2937.008639999989,
+     580.3787610000157,
+     161.2255870000077,
+     162.41598499999273,
+     33.23886600000043
+    ]
+   ],
+   "peak_rss_bytes": [
+    917651456,
+    905986048
+   ],
+   "identity": {
+    "rhs": 635818,
+    "fresh": 452913,
+    "direct_cells": 450414,
+    "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+    "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+    "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+    "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+    "raw": "6585087630915189294",
+    "multi": "b79fe44e292a8cfb6c5893d9c7fe8f6c95f0af7a92c884206029c96bb25f0a6b",
+    "physical": "324e172a0054b195e70f6e3bf1e42cbfb3863ce712cd68ee38a68ce0942cd849",
+    "commits": "bb7cc8fb0833aac0dd83cf16155a3d8888fa34e9facaf4fb3a81037145c2416f",
+    "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+    "per_rhs": "27c55a46911df6174d24b7d5e8a85fa1ba80e13281a8c84a6d46bc7b5ffd881b",
+    "new_cells": 452913
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 446700,
+    "forward_hash_capacity": 226920,
+    "forward_histogram": [
+     0,
+     11671,
+     59587,
+     55107,
+     35972,
+     1328,
+     1
+    ],
+    "native": {
+     "dependency_headers": 163666,
+     "reverse_headers": 99099,
+     "stats": {
+      "live_reverse_edges": 446700,
+      "peak_reverse_edges": 446700,
+      "repair_candidate_checks": 43267,
+      "repair_key_probes": 80373,
+      "reverse_edges_coalesced": 21185,
+      "reverse_edges_created": 608405,
+      "reverse_edges_removed": 140520,
+      "reverse_insert_attempts": 608405,
+      "reverse_merge_inserts": 1171446,
+      "reverse_remove_attempts": 148178,
+      "subscription_calls": 324519,
+      "subscription_value_visits": 952690,
+      "union_frontier_probes": 46146,
+      "union_redirected_edges": 109304,
+      "union_wake_visits": 109304
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 109580
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     2968574,
+     2968574,
+     0,
+     0,
+     0,
+     0,
+     2968574,
+     0,
+     0,
+     0
+    ],
+    [
+     1030187,
+     1350921,
+     320734,
+     0,
+     0,
+     0,
+     733578,
+     23408,
+     0,
+     3
+    ]
+   ],
+   "extra_contains": [
+    0,
+    0,
+    0
+   ],
+   "frame": {
+    "activations": 0,
+    "checked": false,
+    "derived_roles": 0,
+    "input_roles": 0,
+    "mode": 0,
+    "reads": [
+     0,
+     0
+    ],
+    "static_bytes": 0
+   },
+   "median_ms": 3747.0191670000004,
+   "median_wall": 4079.208208946511,
+   "phase_medians": [
+    2848.0102444999866,
+    555.2566425000109,
+    156.03205100000486,
+    153.9848049999932,
+    31.84632250000035
+   ]
+  },
+  "compact_frames": {
+   "ms": [
+    3559.1935000000003,
+    3817.520459,
+    3518.044,
+    3830.185958
+   ],
+   "wall": [
+    3893.132666940801,
+    4172.0991670154035,
+    3848.8427080446854,
+    4183.614999987185
+   ],
+   "phases": [
+    [
+     2709.3260259999715,
+     525.8534780000136,
+     150.17927000000276,
+     144.45771699999315,
+     27.361158000000117
+    ],
+    [
+     2911.497293999986,
+     552.9759530000151,
+     159.91977000000801,
+     157.67514699999302,
+     33.15473100000042
+    ],
+    [
+     2687.191285999984,
+     508.09643100001153,
+     149.27150200000332,
+     143.74979899999303,
+     27.666351000000187
+    ],
+    [
+     2906.2826029999915,
+     559.551090000011,
+     167.04413300000851,
+     161.17044699999377,
+     33.79124600000039
+    ]
+   ],
+   "peak_rss_bytes": [],
+   "identity": {
+    "rhs": 635818,
+    "fresh": 452913,
+    "direct_cells": 450414,
+    "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+    "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+    "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+    "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+    "raw": "6585087630915189294",
+    "multi": "b79fe44e292a8cfb6c5893d9c7fe8f6c95f0af7a92c884206029c96bb25f0a6b",
+    "physical": "324e172a0054b195e70f6e3bf1e42cbfb3863ce712cd68ee38a68ce0942cd849",
+    "commits": "bb7cc8fb0833aac0dd83cf16155a3d8888fa34e9facaf4fb3a81037145c2416f",
+    "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+    "per_rhs": "27c55a46911df6174d24b7d5e8a85fa1ba80e13281a8c84a6d46bc7b5ffd881b",
+    "new_cells": 452913
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 446700,
+    "forward_hash_capacity": 226920,
+    "forward_histogram": [
+     0,
+     11671,
+     59587,
+     55107,
+     35972,
+     1328,
+     1
+    ],
+    "native": {
+     "dependency_headers": 163666,
+     "reverse_headers": 99099,
+     "stats": {
+      "live_reverse_edges": 446700,
+      "peak_reverse_edges": 446700,
+      "repair_candidate_checks": 43267,
+      "repair_key_probes": 80373,
+      "reverse_edges_coalesced": 21185,
+      "reverse_edges_created": 608405,
+      "reverse_edges_removed": 140520,
+      "reverse_insert_attempts": 608405,
+      "reverse_merge_inserts": 1171446,
+      "reverse_remove_attempts": 148178,
+      "subscription_calls": 324519,
+      "subscription_value_visits": 952690,
+      "union_frontier_probes": 46146,
+      "union_redirected_edges": 109304,
+      "union_wake_visits": 109304
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 109580
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     1005823,
+     1005823,
+     0,
+     0,
+     0,
+     0,
+     1005823,
+     0,
+     0,
+     0
+    ],
+    [
+     1030187,
+     1350921,
+     320734,
+     0,
+     0,
+     0,
+     733578,
+     23408,
+     0,
+     3
+    ]
+   ],
+   "extra_contains": [
+    0,
+    0,
+    0
+   ],
+   "frame": {
+    "activations": 618241,
+    "checked": false,
+    "derived_roles": 2059,
+    "input_roles": 4151,
+    "mode": 2,
+    "reads": [
+     1713634,
+     249117
+    ],
+    "static_bytes": 27936
+   },
+   "median_ms": 3688.3569795000003,
+   "median_wall": 4032.615916978102,
+   "phase_medians": [
+    2807.8043144999815,
+    539.4147155000144,
+    155.04952000000537,
+    151.06643199999309,
+    30.4105410000003
+   ]
+  },
+  "compact_both": {
+   "ms": [
+    3469.211625,
+    3726.588,
+    3564.2377500000002,
+    3733.738
+   ],
+   "wall": [
+    3773.638791986741,
+    4070.23312500678,
+    3883.047707960941,
+    4079.748957999982
+   ],
+   "phases": [
+    [
+     2649.7102289999643,
+     502.4591270000113,
+     147.01251100000331,
+     141.39237799999353,
+     26.76469700000016
+    ],
+    [
+     2838.715031999977,
+     542.9373200000155,
+     155.35545300000274,
+     156.09315999999265,
+     31.27019000000017
+    ],
+    [
+     2716.4409099999675,
+     523.4680170000111,
+     149.8169090000024,
+     144.86142499999295,
+     27.665154000000133
+    ],
+    [
+     2853.8477069999826,
+     537.1692050000106,
+     155.1861530000026,
+     153.90427999999366,
+     31.486998000000156
+    ]
+   ],
+   "peak_rss_bytes": [],
+   "identity": {
+    "rhs": 635818,
+    "fresh": 452913,
+    "direct_cells": 450414,
+    "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+    "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+    "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+    "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+    "raw": "6585087630915189294",
+    "multi": "b79fe44e292a8cfb6c5893d9c7fe8f6c95f0af7a92c884206029c96bb25f0a6b",
+    "physical": "324e172a0054b195e70f6e3bf1e42cbfb3863ce712cd68ee38a68ce0942cd849",
+    "commits": "bb7cc8fb0833aac0dd83cf16155a3d8888fa34e9facaf4fb3a81037145c2416f",
+    "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+    "per_rhs": "27c55a46911df6174d24b7d5e8a85fa1ba80e13281a8c84a6d46bc7b5ffd881b",
+    "new_cells": 452913
+   },
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "subscriptions": {
+    "forward_edges": 446700,
+    "forward_hash_capacity": 226920,
+    "forward_histogram": [
+     0,
+     11671,
+     59587,
+     55107,
+     35972,
+     1328,
+     1
+    ],
+    "native": {
+     "dependency_headers": 163666,
+     "reverse_headers": 99099,
+     "stats": {
+      "live_reverse_edges": 446700,
+      "peak_reverse_edges": 446700,
+      "repair_candidate_checks": 43267,
+      "repair_key_probes": 80373,
+      "reverse_edges_coalesced": 21185,
+      "reverse_edges_created": 608405,
+      "reverse_edges_removed": 140520,
+      "reverse_insert_attempts": 608405,
+      "reverse_merge_inserts": 1171446,
+      "reverse_remove_attempts": 148178,
+      "subscription_calls": 324519,
+      "subscription_value_visits": 952690,
+      "union_frontier_probes": 46146,
+      "union_redirected_edges": 109304,
+      "union_wake_visits": 109304
+     },
+     "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+    },
+    "reverse_hash_capacity": 109580
+   },
+   "parent_root_phase": [
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     1005823,
+     56478,
+     0,
+     0,
+     343406,
+     605939,
+     1005823,
+     0,
+     0,
+     0
+    ],
+    [
+     1030187,
+     113166,
+     104885,
+     80506,
+     262561,
+     678839,
+     733578,
+     10674,
+     0,
+     3
+    ]
+   ],
+   "extra_contains": [
+    0,
+    0,
+    0
+   ],
+   "frame": {
+    "activations": 618241,
+    "checked": false,
+    "derived_roles": 2059,
+    "input_roles": 4151,
+    "mode": 2,
+    "reads": [
+     1713634,
+     249117
+    ],
+    "static_bytes": 27936
+   },
+   "median_ms": 3645.412875,
+   "median_wall": 3976.6404164838605,
+   "phase_medians": [
+    2777.5779709999724,
+    530.3186110000108,
+    152.5015310000025,
+    149.3828524999933,
+    29.46767200000015
+   ]
+  }
+ }
+}

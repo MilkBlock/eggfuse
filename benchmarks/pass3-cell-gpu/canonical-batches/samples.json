@@ -1,0 +1,466 @@
+{
+ "deriche": {
+  "main_thread": 7312,
+  "scopes": {
+   "rhs": {
+    "btree": 133,
+    "other_or_inlined": 278,
+    "allocation": 14,
+    "subscriptions": 21,
+    "hash_map": 23,
+    "constructor": 26,
+    "canonical_value": 25,
+    "graph_store": 63,
+    "mutable_write": 36,
+    "root_recipe": 20
+   },
+   "repair": {
+    "btree": 127,
+    "other_or_inlined": 84,
+    "canonical_value": 20,
+    "hash_map": 11,
+    "subscriptions": 7,
+    "graph_store": 20,
+    "allocation": 11
+   },
+   "other_exec": {
+    "all": 5803
+   },
+   "outside_exec": {
+    "all": 590
+   }
+  },
+  "source_owners": {
+   "rhs": {
+    "btree": [
+     [
+      "eggfuse_cell_runtime::graph::Graph::subscribe_edges",
+      121
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::activate",
+      25
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::function_origin",
+      15
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::set_function_from",
+      3
+     ]
+    ],
+    "alloc": [
+     [
+      "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert",
+      6
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::apply_write",
+      6
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::shared_fields",
+      2
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::activate",
+      2
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::subscribe_edges",
+      1
+     ]
+    ]
+   },
+   "repair": {
+    "btree": [
+     [
+      "eggfuse_cell_runtime::graph::Graph::union",
+      80
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::subscribe_edges",
+      35
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::commit_constructor_collision",
+      15
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::retire",
+      14
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::repair_selected",
+      12
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::complete_cell_collision",
+      1
+     ],
+     [
+      "eggfuse_cell_runtime::graph::cell_ownership::ports::publication::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::commit_union_batch",
+      1
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::function_origin",
+      1
+     ]
+    ],
+    "alloc": [
+     [
+      "eggfuse_cell_runtime::graph::Graph::decode_fact",
+      4
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::complete_cell_collision",
+      1
+     ]
+    ]
+   }
+  },
+  "named_canonical_subtree": {
+   "rhs": 25,
+   "repair": 20
+  },
+  "top": {
+   "rhs": [
+    [
+     "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+     124
+    ],
+    [
+     "_platform_memcmp",
+     26
+    ],
+    [
+     "eggfuse_cell_runtime::value::parent_epoch::Parents::selected_root",
+     23
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::subscribe_edges",
+     21
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::slot_fields",
+     21
+    ],
+    [
+     "_$LT$smallvec..SmallVec$LT$A$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LT$A$u20$as$u20$smallvec..Array$GT$..Item$GT$$GT$::extend",
+     20
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::lookup_canonical",
+     20
+    ],
+    [
+     "_$LT$eggfuse_cell_runtime..value..Value$u20$as$u20$core..cmp..PartialEq$GT$::eq",
+     20
+    ],
+    [
+     "eggfuse_cell_runtime::joint_root::consume",
+     20
+    ],
+    [
+     "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+     18
+    ],
+    [
+     "core::iter::adapters::try_process",
+     18
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::fact",
+     18
+    ]
+   ],
+   "repair": [
+    [
+     "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+     70
+    ],
+    [
+     "_platform_memmove",
+     23
+    ],
+    [
+     "eggfuse_cell_runtime::value::parent_epoch::Parents::selected_root",
+     20
+    ],
+    [
+     "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::remove",
+     19
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::union",
+     18
+    ],
+    [
+     "alloc::collections::btree::node::Handle$LT$alloc..collections..btree..node..NodeRef$LT$alloc..collections..btree..node..marker..Mut$C$K$C$V$C$alloc..collections..btree..node..marker..Leaf$GT$$C$alloc..collections..btree..node..marker..Edge$GT$::insert_recursing",
+     12
+    ],
+    [
+     "<deduplicated_symbol>",
+     11
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::slot_fields",
+     11
+    ],
+    [
+     "alloc::collections::btree::remove::_$LT$impl$u20$alloc..collections..btree..node..Handle$LT$alloc..collections..btree..node..NodeRef$LT$alloc..collections..btree..node..marker..Mut$C$K$C$V$C$alloc..collections..btree..node..marker..Leaf$GT$$C$alloc..collections..btree..node..marker..KV$GT$$GT$::remove_leaf_kv",
+     9
+    ],
+    [
+     "alloc::collections::btree::map::entry::VacantEntry$LT$K$C$V$C$A$GT$::insert_entry",
+     8
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::subscribe_edges",
+     7
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::commit_constructor_collision",
+     7
+    ]
+   ]
+  }
+ },
+ "3mm": {
+  "main_thread": 7343,
+  "scopes": {
+   "rhs": {
+    "btree": 124,
+    "other_or_inlined": 220,
+    "allocation": 16,
+    "subscriptions": 30,
+    "hash_map": 34,
+    "constructor": 23,
+    "canonical_value": 48,
+    "graph_store": 78,
+    "mutable_write": 15,
+    "root_recipe": 17
+   },
+   "repair": {
+    "btree": 151,
+    "other_or_inlined": 113,
+    "allocation": 11,
+    "canonical_value": 41,
+    "hash_map": 8,
+    "subscriptions": 6,
+    "graph_store": 21
+   },
+   "other_exec": {
+    "all": 5740
+   },
+   "outside_exec": {
+    "all": 647
+   }
+  },
+  "source_owners": {
+   "rhs": {
+    "btree": [
+     [
+      "eggfuse_cell_runtime::graph::Graph::subscribe_edges",
+      128
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::activate",
+      16
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::function_origin",
+      6
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::insert_constructor",
+      1
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::set_function_from",
+      1
+     ]
+    ],
+    "alloc": [
+     [
+      "eggfuse_cell_runtime::graph::Graph::shared_fields",
+      8
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::set_function_from",
+      5
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::subscribe_edges",
+      1
+     ],
+     [
+      "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert",
+      1
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::set_inner",
+      1
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::inline_arguments",
+      1
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::lookup",
+      1
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::apply_write",
+      1
+     ]
+    ]
+   },
+   "repair": {
+    "btree": [
+     [
+      "eggfuse_cell_runtime::graph::Graph::union",
+      104
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::subscribe_edges",
+      49
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::commit_constructor_collision",
+      14
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::repair_selected",
+      12
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::retire",
+      7
+     ],
+     [
+      "eggfuse_cell_runtime::graph::cell_ownership::ports::publication::_$LT$impl$u20$eggfuse_cell_runtime..graph..Graph$GT$::commit_union_batch",
+      2
+     ]
+    ],
+    "alloc": [
+     [
+      "eggfuse_cell_runtime::graph::Graph::fact",
+      1
+     ],
+     [
+      "eggfuse_cell_runtime::graph::Graph::repair_selected",
+      1
+     ]
+    ]
+   }
+  },
+  "named_canonical_subtree": {
+   "rhs": 48,
+   "repair": 41
+  },
+  "top": {
+   "rhs": [
+    [
+     "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+     117
+    ],
+    [
+     "eggfuse_cell_runtime::value::parent_epoch::Parents::selected_root",
+     42
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::subscribe_edges",
+     30
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::fact",
+     28
+    ],
+    [
+     "_$LT$smallvec..SmallVec$LT$A$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LT$A$u20$as$u20$smallvec..Array$GT$..Item$GT$$GT$::extend",
+     27
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::lookup_canonical",
+     23
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::slot_fields",
+     22
+    ],
+    [
+     "hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::insert",
+     18
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::construct_inner",
+     17
+    ],
+    [
+     "eggfuse_cell_runtime::joint_root::consume",
+     15
+    ],
+    [
+     "hashbrown::raw::RawTable$LT$T$C$A$GT$::reserve_rehash",
+     14
+    ],
+    [
+     "_$LT$eggfuse_cell_runtime..value..Value$u20$as$u20$core..cmp..PartialEq$GT$::eq",
+     14
+    ]
+   ],
+   "repair": [
+    [
+     "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert",
+     91
+    ],
+    [
+     "eggfuse_cell_runtime::value::parent_epoch::Parents::selected_root",
+     40
+    ],
+    [
+     "_platform_memmove",
+     26
+    ],
+    [
+     "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::remove",
+     26
+    ],
+    [
+     "<deduplicated_symbol>",
+     17
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::union",
+     16
+    ],
+    [
+     "alloc::collections::btree::node::Handle$LT$alloc..collections..btree..node..NodeRef$LT$alloc..collections..btree..node..marker..Mut$C$K$C$V$C$alloc..collections..btree..node..marker..Leaf$GT$$C$alloc..collections..btree..node..marker..Edge$GT$::insert_recursing",
+     13
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::slot_fields",
+     9
+    ],
+    [
+     "alloc::collections::btree::remove::_$LT$impl$u20$alloc..collections..btree..node..Handle$LT$alloc..collections..btree..node..NodeRef$LT$alloc..collections..btree..node..marker..Mut$C$K$C$V$C$alloc..collections..btree..node..marker..Leaf$GT$$C$alloc..collections..btree..node..marker..KV$GT$$GT$::remove_leaf_kv",
+     7
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::fact",
+     7
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::subscribe_edges",
+     6
+    ],
+    [
+     "eggfuse_cell_runtime::graph::Graph::commit_constructor_collision",
+     6
+    ]
+   ]
+  }
+ }
+}
