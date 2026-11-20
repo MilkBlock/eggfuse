@@ -1,0 +1,74 @@
+{
+ "histogram-scatter": {
+  "row-sparse": {
+   "summary_reads": 4662,
+   "summary_updates": 11290,
+   "summary_bytes": 1060608
+  },
+  "mask-sparse": {
+   "summary_reads": 4632,
+   "summary_updates": 11260,
+   "summary_bytes": 1060608
+  }
+ },
+ "gated-state": {
+  "row-sparse": {
+   "summary_reads": 4309,
+   "summary_updates": 10467,
+   "summary_bytes": 1060608
+  },
+  "mask-sparse": {
+   "summary_reads": 4282,
+   "summary_updates": 10440,
+   "summary_bytes": 1060608
+  }
+ },
+ "gemm-bias-relu": {
+  "row-sparse": {
+   "summary_reads": 19941,
+   "summary_updates": 24829,
+   "summary_bytes": 1060800
+  },
+  "mask-sparse": {
+   "summary_reads": 19813,
+   "summary_updates": 24695,
+   "summary_bytes": 1060800
+  }
+ },
+ "stable-argmax": {
+  "row-sparse": {
+   "summary_reads": 6881,
+   "summary_updates": 13448,
+   "summary_bytes": 1060608
+  },
+  "mask-sparse": {
+   "summary_reads": 6833,
+   "summary_updates": 13394,
+   "summary_bytes": 1060608
+  }
+ },
+ "sum-bits": {
+  "row-sparse": {
+   "summary_reads": 4756,
+   "summary_updates": 11797,
+   "summary_bytes": 1060608
+  },
+  "mask-sparse": {
+   "summary_reads": 4758,
+   "summary_updates": 11781,
+   "summary_bytes": 1060608
+  }
+ },
+ "dot-product": {
+  "row-sparse": {
+   "summary_reads": 2673,
+   "summary_updates": 9479,
+   "summary_bytes": 1061120
+  },
+  "mask-sparse": {
+   "summary_reads": 2655,
+   "summary_updates": 9458,
+   "summary_bytes": 1061120
+  }
+ }
+}

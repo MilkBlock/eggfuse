@@ -1,0 +1,54 @@
+{
+ "demand-0": {
+  "arms": {
+   "producer": {
+    "readers": 0,
+    "notifications": 5,
+    "key_probes": 2,
+    "collision_tests": 2,
+    "collisions": 2
+   },
+   "one": {
+    "readers": 2,
+    "notifications": 4,
+    "key_probes": 2,
+    "collision_tests": 2,
+    "collisions": 2
+   },
+   "two": {
+    "readers": 4,
+    "notifications": 3,
+    "key_probes": 2,
+    "collision_tests": 2,
+    "collisions": 2
+   }
+  },
+  "exact": "pass"
+ },
+ "demand-1": {
+  "arms": {
+   "producer": {
+    "readers": 0,
+    "notifications": 6,
+    "key_probes": 4,
+    "collision_tests": 2,
+    "collisions": 2
+   },
+   "one": {
+    "readers": 2,
+    "notifications": 5,
+    "key_probes": 4,
+    "collision_tests": 2,
+    "collisions": 2
+   },
+   "two": {
+    "readers": 4,
+    "notifications": 4,
+    "key_probes": 4,
+    "collision_tests": 2,
+    "collisions": 2
+   }
+  },
+  "exact": "pass"
+ }
+}

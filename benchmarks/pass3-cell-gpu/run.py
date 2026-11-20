@@ -70,27 +70,59 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     if block_study:
         limits.update(BLOCK_STUDY=1,SELECT_BLOCKS=int(block_study['select']),INDEX_NOTIFY=int(block_study['notify']),
                       LIBRARY_SIZE=len(block_study['ids']))
+    grouping=block_study.get('group') if block_study else None
+    if grouping:
+        mode=grouping['mode'];trace=grouping.get('trace',False)
+        if mode not in (1,2,3,4) or not block_study['notify'] or (trace and mode!=1):
+            raise ValueError('invalid co-repair mode')
+        edges=grouping['edges'];members=grouping['members']
+        if members not in (1,2,3):raise ValueError('unsupported member limit')
+        group_base=limits['BLOCK_BASE']+3*limits['ROW_CAP']+layout['TABLES']*lanes*tiles
+        group_counter=88+3*len(block_study['ids'])+2*(1+max(block_study['shapes']))
+        cap=limits['ROW_CAP']
+        group_words=group_base if mode==1 else group_base+(7 if mode==3 else 3)*cap+cap//32
+        dict_words=1+4*members*layout['WIDTH']
+        solo=grouping.get('solo',False)
+        if solo and mode!=3:raise ValueError('solo result variant requires port masks')
+        if mode==3:group_words+=(cap if solo else cap//2)*dict_words
+        limits.update(CO_SOLO=int(solo),CO_NESTED=int(grouping.get('nested',False)),CO_SPARSE_WORDS=int(grouping.get('sparse_words',False)),CO_MODE=mode,CO_MEMBERS=members,CO_BASE=group_base,CO_COUNTER=group_counter,
+                      CO_LIBRARY=len(edges),CO_TRACE=int(trace),CO_DICT_WORDS=dict_words)
+        if trace:
+            limits.update(CO_FIELDS=group_words,CO_EDGES=group_words+cap*layout['WIDTH'],
+                          CO_EVENTS=group_words+2*cap*layout['WIDTH'])
+            group_words=limits['CO_EVENTS']+3*limits['TRACE_CAP']
     constants='\n'.join(f'#define {k} {v}' for k,v in {**layout,**limits}.items())
     if block_study:
         for name,values in [('bake_entries',block_study['entries']),('repair_shapes',block_study['shapes']),('bake_pivots',block_study['pivots']),('bake_tables',block_study['tables'])]:
             constants+='\nconstant int '+name+'[]={'+','.join(map(str,values))+'};'
-    lib=torch.mps.compile_shader(constants+'\n'+(HERE/'executor.metal').read_text())
+    shader=(HERE/'executor.metal').read_text()
+    if grouping:
+        values=[str(int(v)) for edge in edges for v in edge] or ['-1']
+        constants+='\nconstant int co_library[]={'+','.join(values)+'};'
+        if grouping.get('nested') or solo:
+            producers={r[0] for r in edges}
+            constants+='\nconstant int co_producer_table[]={'+','.join(str(int(t in producers)) for t in range(layout['TABLES']))+'};'
+        shader=shader.replace('// CO_REPAIR_DEVICE_FUNCTIONS',(HERE/'co-repair/owner.metal').read_text())
+    lib=torch.mps.compile_shader(constants+'\n'+shader)
     def ints(v):return torch.tensor(v,dtype=torch.int32,device=dev)
     def zeros(n,t=torch.int32):return torch.zeros(n,device=dev,dtype=t)
     prog=ints(rom);literal=torch.tensor(lits,device=dev,dtype=torch.int64)
     cap=limits['ROW_CAP'];uf_size=cap+layout['NSYMBOLS']+2
     union_log=6*cap+2*uf_size+2*limits['TRACE_CAP']
     birth_run=union_log+4*uf_size
-    state=zeros(88+3*len(block_study['ids'])+2*(1+max(block_study['shapes'])) if block_study else 69 if sets_enabled else 56);regs=zeros(layout['REGS'])
+    state=zeros(group_counter+16 if grouping else 88+3*len(block_study['ids'])+2*(1+max(block_study['shapes'])) if block_study else 69 if sets_enabled else 56);regs=zeros(layout['REGS'])
     meta_words=birth_run+(10*cap if router else 9*cap if tiles>1 else (6+2*int(lookup=='hash'))*cap)
     if sets_enabled:meta_words=set_base+126
     if block_study:meta_words=limits['BLOCK_BASE']+3*cap+layout["TABLES"]*lanes*tiles
+    if grouping:meta_words=group_words
     meta=zeros(((meta_words+5)//6,6))
     head_words=(257 if lookup=='hash' else 1)+(lanes*tiles if tiles>1 or router else 0)
     head_words+=int(hot_filter>0)+(lanes*tiles if hot_filter in (2,3) else 0)
     head_size=layout['TABLES']*head_words
     if block_study and block_study['notify']:
         head_size+=(cap//32)*(uf_size+2)
+    if grouping and grouping.get('sparse_words'):
+        head_size+=uf_size*((cap//32+31)//32)
     head=zeros(head_size)
     dyn=zeros((cap*(2 if directory=='published' else 1),layout['WIDTH']),torch.int64);wm=zeros(layout['RULES'])-1
     banks=2 if arena=='shared' else lanes*tiles
@@ -153,6 +185,19 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     root.mkdir(parents=True,exist_ok=True)
     def take(t,stop):return t[:stop].cpu().numpy()
     set_members=meta.view(-1)[set_base:set_base+63].cpu().numpy() if sets_enabled else np.empty(0,np.int32)
+    if grouping and count_work and mode>=2 and not st[5]:
+        mem=meta.view(-1)
+        np.savez_compressed(root/'owners.npz',
+            owner=mem[group_base:group_base+n].cpu().numpy(),
+            first=mem[group_base+cap:group_base+cap+n].cpu().numpy(),
+            second=mem[group_base+2*cap:group_base+2*cap+n].cpu().numpy())
+    if grouping and trace:
+        mem=meta.view(-1)
+        logged=st[group_counter+12]
+        if not st[5] and logged<=limits['TRACE_CAP']:
+            edges_out=mem[limits['CO_EDGES']:limits['CO_EDGES']+n*layout['WIDTH']].reshape(n,-1)
+            events=mem[limits['CO_EVENTS']:limits['CO_EVENTS']+3*logged].reshape(-1,3)
+            np.savez_compressed(root/'co-repair.npz',edges=edges_out.cpu().numpy(),events=events.cpu().numpy())
     if export_only:
         from export_graph import export
         schema_path=packet.with_name('export-schema.json')
@@ -182,6 +227,10 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
                 fault_rule=st[6] if st[5] else None,sets=sets,strings=strings,
                 setup_ms=(after_init-start)/1e6,inference_ms=(after_exec-after_init)/1e6,
                 total_ms=(perf_counter_ns()-start)/1e6)
+    if grouping:
+        record['co_repair']=dict(mode=mode,members=members,counters=st[group_counter:],
+                                 extra_meta_bytes=(group_words-group_base)*4,
+                                 extra_summary_bytes=uf_size*((cap//32+31)//32)*4 if grouping.get('sparse_words') else 0)
     (root/'run.json').write_text(json.dumps(record,indent=1)+'\n')
     print({k:record[k] for k in ('lanes','completed','fault','fault_rule','finished')},flush=True)
     if st[5]:raise SystemExit(2)

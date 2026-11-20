@@ -128,22 +128,55 @@ inline void study_add(device int *s,int index,int n=1){
 // Uncovered functions/tables always stay in the ordinary ordered scan.
 constant int ROW_WORDS=ROW_CAP/32;
 constant int NOTIFY_BASE=TABLES*((USE_INDEX?257:1)+((TILES>1||LEARN_OWNER)?PARTS:0)+(HOT_FILTER>0)+((HOT_FILTER==2||HOT_FILTER==3)?PARTS:0));
+#if CO_SPARSE_WORDS
+constant int SUMMARY_WORDS=(ROW_WORDS+31)/32;
+inline device uint *active_words(device uint *bits,int root){
+    return bits+(2+UF_SIZE)*ROW_WORDS+root*SUMMARY_WORDS;
+}
+#endif
+// CO_REPAIR_DEVICE_FUNCTIONS
 inline void subscribe_row(device const int *rom,device const long *lits,device int *meta,device long const *dyn,
                           device int *head,device int *state,int row,int t){
     device uint *bits=(device uint *)(head+NOTIFY_BASE);
     uint mask=1u<<(row%32);int word=row/32;
     if(repair_shapes[t]<0){bits[word]|=mask;return;}
+#if CO_MODE
+    int owner=co_owner(rom,lits,meta,dyn,state,row,t);
+    mask=1u<<(owner%32);word=owner/32;
+#endif
     device const int *spec=table(rom,t);
     for(int j=0;j<spec[0];j++)if(spec[3]&(1<<j)){
         int v=root_id(meta,int(rawfield(rom,lits,meta,dyn,row,j)));
         bits[(2+v)*ROW_WORDS+word]|=mask;study_add(state,73);
+#if CO_SPARSE_WORDS
+        active_words(bits,v)[word/32]|=1u<<(word%32);
+        co_count(state,15);
+#endif
     }
 }
-inline void notify_roots(device int *head,device int *state,int hi,int lo){
+inline void notify_roots(device int *meta,device int *head,device int *state,int hi,int lo){
     device uint *bits=(device uint *)(head+NOTIFY_BASE);
-    for(int w=0;w<(state[0]+31)/32;w++){
+    int end=(state[0]+31)/32;
+    for(int w=0;w<end;w++){
+#if CO_SPARSE_WORDS
+        co_count(state,14);
+        uint present=active_words(bits,hi)[w/32] & (~0u<<(w%32));
+        if(!present){w=(w/32+1)*32-1;continue;}
+        w=(w/32)*32+ctz(present);
+#endif
         uint affected=bits[(2+hi)*ROW_WORDS+w];
-        if(affected){bits[ROW_WORDS+w]|=affected;bits[(2+lo)*ROW_WORDS+w]|=affected;}
+        if(affected){
+#if CO_MODE
+            uint rows=co_notify(meta,bits+ROW_WORDS,state,w,affected,hi,lo);
+#else
+            uint rows=affected;
+#endif
+            bits[ROW_WORDS+w]|=rows;bits[(2+lo)*ROW_WORDS+w]|=affected;
+#if CO_SPARSE_WORDS
+            active_words(bits,lo)[w/32]|=1u<<(w%32);
+            co_count(state,15);
+#endif
+        }
         if(COUNT_WORK)state[74]++;
     }
 }
@@ -158,7 +191,7 @@ inline bool unite(device int *state,device int *meta,long a,long b,device int *h
     device int *u=meta+UNION_LOG+4*log;
     u[0]=state[3];u[1]=state[0];u[2]=hi;u[3]=lo;
 #if INDEX_NOTIFY
-    notify_roots(head,state,hi,lo);
+    notify_roots(meta,head,state,hi,lo);
 #endif
     meta[6*ROW_CAP+hi]=lo;
     #if HAS_SETS
@@ -705,6 +738,14 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
             int t=m[0];device const int *spec=table(rom,t);int last=spec[0]-1;
             count_work(state,4,1);
             bool changed=false,key_changed=false;
+#if CO_MODE==3
+            if(meta[CO_EPOCH+row]==state[3] && meta[CO_JOIN+row]!=state[3]){
+                int ports=meta[CO_PORTS+row];
+                changed=ports!=0;key_changed=(ports&((1<<last)-1))!=0;
+                co_count(state,6);
+                if(!key_changed)co_count(state,13);
+            }else
+#endif
             for(int j=0;j<=last;j++)if(spec[3]&(1<<j)){
                 int v=int(rawfield(rom,lits,meta,dyn,row,j));
                 while(meta[6*ROW_CAP+v]){
@@ -731,13 +772,22 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
 #endif
             if(!changed)continue;
             touch_row(state,meta,head,row,t,state[3]);if(!key_changed)continue;
+#if CO_MODE
+            co_count(state,7);
+#endif
             long key[WIDTH];
             for(int j=0;j<last;j++)key[j]=field(rom,lits,meta,dyn,row,j);
             int start=INDEX_REPAIR?head[TABLES+t*256+key_bucket(key,last)]:head[t];
             for(int other=start;other>=0;other=INDEX_REPAIR?meta[INDEX_NEXT+other]:meta[6*other+5]){
                 if(other==row || meta[6*other+3]==2)continue;
+#if CO_MODE
+                co_count(state,8);
+#endif
                 bool same=true;for(int j=0;j<last;j++)if(key[j]!=directory_key(rom,lits,meta,dyn,other,j)){same=false;break;}
                 if(!same)continue;
+#if CO_MODE
+                co_count(state,9);
+#endif
                 int keep=PUBLISHED_KEYS?other:min(row,other),drop=PUBLISHED_KEYS?row:max(row,other);
                 long old=field(rom,lits,meta,dyn,keep,last),v=field(rom,lits,meta,dyn,drop,last);
                 if(spec[1])unite(state,meta,old,v,head);
@@ -839,6 +889,9 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                 bool certified=values[width+1]!=0 && bake_pivots[rid*DEPTH+pivot]>=0;
                 runs[(RUN_CAP+run-1)*6+int(certified)]++;
             }
+#endif
+#if CO_TRACE
+            state[CO_COUNTER+10]=values[width+1]?int(values[width])+1:0;
 #endif
             log[0]=run;log[1]=rid;log[2]=values[width]<0?0:shard_of(meta,int(values[width]))%lanes;log[3]=values[width];
             for(int j=0;j<rule[4];j++){env[rom[rule[5]+j]]=values[j];log[4+j]=values[j];}
