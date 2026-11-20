@@ -31,7 +31,7 @@ def pointer(weight,physical,dev):
 
 
 @torch.inference_mode()
-def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False,maintenance_repeat=1,maintenance_control=False):
+def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False,block_study=None,maintenance_repeat=1,maintenance_control=False):
     if os.environ.get('PYTORCH_ENABLE_MPS_FALLBACK','0')!='0' or not torch.backends.mps.is_available():
         raise RuntimeError('Metal GPU required')
     if steps<0 or steps>4096:raise ValueError('Run budget outside trace capacity')
@@ -62,10 +62,18 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     sets_enabled=bool(layout.get('HAS_SETS'))
     set_base=6*limits['ROW_CAP']+6*(limits['ROW_CAP']+layout['NSYMBOLS']+2)+2*limits['TRACE_CAP']+10*limits['ROW_CAP']
     limits['SET_BASE']=set_base
+    limits['BLOCK_BASE']=set_base+(126 if sets_enabled else 0)
     if maintenance_repeat<1:raise ValueError('invalid maintenance replay count')
     limits['SET_MAINT_REPEAT']=maintenance_repeat
     limits['SET_MAINT_CONTROL']=int(maintenance_control)
+    if block_study and row_audit:raise ValueError("separate block-credit and row-contribution audits")
+    if block_study:
+        limits.update(BLOCK_STUDY=1,SELECT_BLOCKS=int(block_study['select']),INDEX_NOTIFY=int(block_study['notify']),
+                      LIBRARY_SIZE=len(block_study['ids']))
     constants='\n'.join(f'#define {k} {v}' for k,v in {**layout,**limits}.items())
+    if block_study:
+        for name,values in [('bake_entries',block_study['entries']),('repair_shapes',block_study['shapes']),('bake_pivots',block_study['pivots']),('bake_tables',block_study['tables'])]:
+            constants+='\nconstant int '+name+'[]={'+','.join(map(str,values))+'};'
     lib=torch.mps.compile_shader(constants+'\n'+(HERE/'executor.metal').read_text())
     def ints(v):return torch.tensor(v,dtype=torch.int32,device=dev)
     def zeros(n,t=torch.int32):return torch.zeros(n,device=dev,dtype=t)
@@ -73,20 +81,23 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     cap=limits['ROW_CAP'];uf_size=cap+layout['NSYMBOLS']+2
     union_log=6*cap+2*uf_size+2*limits['TRACE_CAP']
     birth_run=union_log+4*uf_size
-    state=zeros(69 if sets_enabled else 56);regs=zeros(layout['REGS'])
+    state=zeros(88+3*len(block_study['ids'])+2*(1+max(block_study['shapes'])) if block_study else 69 if sets_enabled else 56);regs=zeros(layout['REGS'])
     meta_words=birth_run+(10*cap if router else 9*cap if tiles>1 else (6+2*int(lookup=='hash'))*cap)
     if sets_enabled:meta_words=set_base+126
+    if block_study:meta_words=limits['BLOCK_BASE']+3*cap+layout["TABLES"]*lanes*tiles
     meta=zeros(((meta_words+5)//6,6))
     head_words=(257 if lookup=='hash' else 1)+(lanes*tiles if tiles>1 or router else 0)
     head_words+=int(hot_filter>0)+(lanes*tiles if hot_filter in (2,3) else 0)
     head_size=layout['TABLES']*head_words
+    if block_study and block_study['notify']:
+        head_size+=(cap//32)*(uf_size+2)
     head=zeros(head_size)
     dyn=zeros((cap*(2 if directory=='published' else 1),layout['WIDTH']),torch.int64);wm=zeros(layout['RULES'])-1
     banks=2 if arena=='shared' else lanes*tiles
     count=zeros((layout['RULES'],banks));cols=layout['TOTAL_TOKEN_COLS'] if token_layout=='packed' else layout['RULES']*limits['TOKEN_WIDTH']
     tokens=zeros(cols*banks*limits['TOKEN_CAP'],torch.int64)
     rhs=zeros((limits['TRACE_CAP'],layout['NINPUT']+4),torch.int64)
-    writes=zeros((limits['TRACE_CAP'],layout['WIDTH']+7),torch.int64);runs=zeros((max(1,steps)*(2 if row_audit else 1),6))
+    writes=zeros((limits['TRACE_CAP'],layout['WIDTH']+7),torch.int64);runs=zeros((max(1,steps)*(2 if row_audit or block_study else 1),6))
     resumes=zeros((limits['TRACE_CAP'],6));order=zeros(layout['NINST'])
     physical=torch.as_tensor(image['physical_order'],device=dev).long()
     if reader=='learned':
@@ -157,7 +168,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
                         birth_runs=meta.view(-1)[birth_run:birth_run+n].cpu().numpy(),
                         birth_fields=take(dyn,n),
                         unions=meta.view(-1)[union_log:union_log+4*st[14]].reshape(-1,4).cpu().numpy(),
-                        resumes=take(resumes,st[16]),contributions=take(runs[max(1,steps):],st[11]) if row_audit else np.empty((0,6),np.int32),selected=selected.cpu().numpy())
+                        resumes=take(resumes,st[16]),block_coverage=take(runs[max(1,steps):],st[11]) if block_study else np.empty((0,6),np.int32),contributions=take(runs[max(1,steps):],st[11]) if row_audit else np.empty((0,6),np.int32),selected=selected.cpu().numpy())
     if capture:
         frames={}
         for j,(bank,m,st_dev,uf) in enumerate(snapshots):

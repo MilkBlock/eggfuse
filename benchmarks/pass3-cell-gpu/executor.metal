@@ -117,7 +117,38 @@ inline int take_min_member(device const int *meta,thread ulong &mask){
     mask&=~(1UL<<slot);return smallest;
 }
 #endif
-inline bool unite(device int *state,device int *meta,long a,long b){
+#if BLOCK_STUDY
+inline void study_add(device int *s,int index,int n=1){
+    if(COUNT_WORK)atomic_fetch_add_explicit((device atomic_int *)(s+index),n,memory_order_relaxed);
+}
+#endif
+#if INDEX_NOTIFY
+// A constructor's direct fields never lose a dependency except by retirement
+// or union. Moving (and retaining) reverse bits is conservative across both.
+// Uncovered functions/tables always stay in the ordinary ordered scan.
+constant int ROW_WORDS=ROW_CAP/32;
+constant int NOTIFY_BASE=TABLES*((USE_INDEX?257:1)+((TILES>1||LEARN_OWNER)?PARTS:0)+(HOT_FILTER>0)+((HOT_FILTER==2||HOT_FILTER==3)?PARTS:0));
+inline void subscribe_row(device const int *rom,device const long *lits,device int *meta,device long const *dyn,
+                          device int *head,device int *state,int row,int t){
+    device uint *bits=(device uint *)(head+NOTIFY_BASE);
+    uint mask=1u<<(row%32);int word=row/32;
+    if(repair_shapes[t]<0){bits[word]|=mask;return;}
+    device const int *spec=table(rom,t);
+    for(int j=0;j<spec[0];j++)if(spec[3]&(1<<j)){
+        int v=root_id(meta,int(rawfield(rom,lits,meta,dyn,row,j)));
+        bits[(2+v)*ROW_WORDS+word]|=mask;study_add(state,73);
+    }
+}
+inline void notify_roots(device int *head,device int *state,int hi,int lo){
+    device uint *bits=(device uint *)(head+NOTIFY_BASE);
+    for(int w=0;w<(state[0]+31)/32;w++){
+        uint affected=bits[(2+hi)*ROW_WORDS+w];
+        if(affected){bits[ROW_WORDS+w]|=affected;bits[(2+lo)*ROW_WORDS+w]|=affected;}
+        if(COUNT_WORK)state[74]++;
+    }
+}
+#endif
+inline bool unite(device int *state,device int *meta,long a,long b,device int *head){
     if(a<=0 || b<=0 || a>=UF_SIZE || b>=UF_SIZE){state[5]=14;return false;}
     int x=root_id(meta,int(a)),y=root_id(meta,int(b));
     if(x==y)return false;
@@ -126,6 +157,9 @@ inline bool unite(device int *state,device int *meta,long a,long b){
     if(log>=UF_SIZE){state[5]=17;return false;}
     device int *u=meta+UNION_LOG+4*log;
     u[0]=state[3];u[1]=state[0];u[2]=hi;u[3]=lo;
+#if INDEX_NOTIFY
+    notify_roots(head,state,hi,lo);
+#endif
     meta[6*ROW_CAP+hi]=lo;
     #if HAS_SETS
     repair_set_aliases(meta,state,hi,lo);
@@ -134,13 +168,13 @@ inline bool unite(device int *state,device int *meta,long a,long b){
     return true;
 }
 // The source queues explicit RHS unions until all matches of this Run commit.
-inline void submit_union(device int *state,device int *meta,long a,long b){
+inline void submit_union(device int *state,device int *meta,long a,long b,device int *head){
 #if FENCE_UNIONS
     int n=state[13];if(n>=TRACE_CAP){state[5]=16;return;}
     device int *queue=meta+6*ROW_CAP+2*UF_SIZE;
     queue[2*n]=int(a);queue[2*n+1]=int(b);state[13]++;
 #else
-    unite(state,meta,a,b);
+    unite(state,meta,a,b,head);
 #endif
 }
 inline long field(device const int *rom,device const long *lits,device const int *meta,
@@ -158,8 +192,29 @@ inline int shard_of(device const int *meta,int row){return LEARN_OWNER?meta[ROW_
 // Conservative upper bounds, never reset on retirement. Every write to a
 // row's matching epoch must also update its table and (when enabled) shard.
 constant int HIGH_WATER=SHARD_HEAD+((TILES>1 || LEARN_OWNER)?TABLES*PARTS:0);
-inline void touch_row(device int *meta,device int *head,int row,int t,int epoch){
+#if BLOCK_STUDY
+// One persistent cursor list per table/shard; a refresh moves a row to the
+// front. Its time is an upper bound on the row epoch, so a tail can stop
+// early. A newer publication alone never makes an old fact match.
+inline void refresh_cursor(device int *meta,device int *state,int t,int row,int epoch){
+    if(!SELECT_BLOCKS || !bake_tables[t])return;
+    device int *stamp=meta+BLOCK_BASE,*next=stamp+ROW_CAP,*prev=next+ROW_CAP;
+    device int *head=prev+ROW_CAP+t*PARTS+shard_of(meta,row);
+    if(stamp[row]==epoch)return;
+    if(stamp[row]){
+        if(prev[row])next[prev[row]-1]=next[row];else *head=next[row];
+        if(next[row])prev[next[row]-1]=prev[row];
+    }
+    stamp[row]=epoch;prev[row]=0;next[row]=*head;
+    if(*head)prev[*head-1]=row+1;
+    *head=row+1;study_add(state,77);
+}
+#endif
+inline void touch_row(device int *state,device int *meta,device int *head,int row,int t,int epoch){
     meta[6*row+4]=epoch;
+#if BLOCK_STUDY
+    if(meta[BIRTH_RUN+ROW_CAP+5*row])refresh_cursor(meta,state,t,row,epoch);
+#endif
     if(HOT_FILTER)head[HIGH_WATER+t]=epoch;
     if((HOT_FILTER==2 || HOT_FILTER==3))head[HIGH_WATER+TABLES+t*PARTS+shard_of(meta,row)]=epoch;
 }
@@ -196,6 +251,9 @@ kernel void inject(device const int *rom,device const int *slots,device int *sta
             if(id>=ROW_CAP){state[5]=2;return;}
             device int *m=meta+6*id;
             m[0]=t;m[1]=cell;m[2]=j;m[3]=(inst[2]>>j)&1;m[4]=0;m[5]=head[t];head[t]=id;
+#if INDEX_NOTIFY
+            subscribe_row(rom,lits,meta,dyn,head,state,id,t);
+#endif
             append_shard(rom,meta,head,id,t,(LEARN_OWNER && table(rom,t)[0]>1)?rawfield(rom,lits,meta,dyn,id,0):0);
         }
     }
@@ -319,6 +377,9 @@ inline void publish_anchor(device const int *rom,device int *state,device int *m
     }
     device int *h=anchor(meta,row);
     h[0]=root;h[1]=producer;h[2]=depth;h[3]=state[3];h[4]=++state[17];
+#if BLOCK_STUDY
+    refresh_cursor(meta,state,t,row,state[3]);
+#endif
 }
 inline int input_width(device const int *rule){return PACK_TOKENS?rule[4]:NINPUT;}
 inline int token_offset(device const int *rom,int rid){
@@ -340,10 +401,26 @@ inline void route(device int *state,device const int *rom,device const long *lit
                   device int *cnt,device long *bank,device int *certs){
     int table0=path[0];
     int first=(TILES>1 || LEARN_OWNER)?head[SHARD_HEAD+table0*PARTS+lane]:head[table0];
+#if BLOCK_STUDY
+    int rid=int((rule-rom-RULE)/7),leaf=bake_pivots[rid*DEPTH+pivot];
+    bool indexed=SELECT_BLOCKS && leaf>=0;
+    if(indexed){first=meta[BLOCK_BASE+3*ROW_CAP+table0*PARTS+lane]-1;study_add(state,78);}
+#endif
     for(int seed=first;seed>=0;seed=
+#if BLOCK_STUDY
+        indexed?meta[BLOCK_BASE+ROW_CAP+seed]-1:
+#endif
         (TILES>1 || LEARN_OWNER)?meta[SHARD_NEXT+seed]:meta[6*seed+5]){
         device const int *h=anchor(meta,seed);
+#if BLOCK_STUDY
+        study_add(state,79);
+        if(leaf>=0)study_add(state,88+LIBRARY_SIZE+leaf);
+        if(indexed && meta[BLOCK_BASE+seed]<last)break;
+#endif
         if(shard_of(meta,seed)!=lane || meta[6*seed+3] || !h[0] || meta[6*seed+4]<last)continue;
+#if BLOCK_STUDY
+        if(leaf>=0)study_add(state,88+2*LIBRARY_SIZE+leaf);
+#endif
         long env[MAXSLOTS];int witness[DEPTH];bool matched=true;
         for(int pos=0;pos<rule[0] && matched;pos++){
             device const int *op=path+4*pos,*args=rom+op[2];int t=op[0],n=op[1],row=seed;
@@ -414,8 +491,15 @@ inline void do_search(device const int *rom,device const long *lits,device int *
     if(PART==2)return;
     bool routed[DEPTH];routed[0]=false;
     long env[MAXSLOTS];int cur[DEPTH],epoch[DEPTH],witness[DEPTH];cur[0]=-2;epoch[0]=0;
+#if BLOCK_STUDY
+    int owner[DEPTH];owner[0]=-1;
+#endif
     int depth=0,visits=0;
     while(depth>=0){
+#if BLOCK_STUDY
+        int next_owner=owner[depth];
+        if(next_owner>=0)study_add(state,88+next_owner);
+#endif
         if(++visits>SEARCH_CAP){token_error(count+bank,-1);return;}
         if(depth==q){
             if(!routed[depth] && (!rule[6] || epoch[depth]>=last)){
@@ -456,6 +540,16 @@ inline void do_search(device const int *rom,device const long *lits,device int *
             if((HOT_FILTER==2 || HOT_FILTER==4) && rule[6] && depth==last_fresh && version<last && m[4]<last)continue;
             // A certified functional continuation owns every suffix from this
             // specific published witness. Other pivots remain in the residual join.
+#if BLOCK_STUDY
+            int leaf=bake_entries[r*DEPTH+depth];
+            if(leaf>=0 && next_owner<0 && SPINE_ON && (sp[2]&(1<<depth)) && m[4]>=last && anchor(meta,row)[0]){
+                // The routed solver still does the key reads, version checks
+                // and ordered publication. Only redundant residual work goes.
+                study_add(state,69);
+                if(SELECT_BLOCKS)continue;
+                next_owner=leaf;
+            }
+#endif
             if(PRUNE_ROUTED && SPINE_ON && (sp[2]&(1<<depth)) && m[4]>=last && anchor(meta,row)[0])continue;
             for(int j=0;j<op[1];j++){
                 long v=field(rom,lits,meta,dyn,row,j);int key=args[j];
@@ -465,6 +559,9 @@ inline void do_search(device const int *rom,device const long *lits,device int *
             version=max(version,m[4]);witness[depth]=row;
         }
         if(ok){
+#if BLOCK_STUDY
+            owner[depth+1]=next_owner;
+#endif
             routed[depth+1]=routed[depth] || (SPINE_ON && t>=0 && (sp[2]&(1<<depth)) && meta[6*row+4]>=last && anchor(meta,row)[0]);
             depth++;epoch[depth]=version;cur[depth]=-2;}
     }
@@ -528,7 +625,7 @@ inline int find_key(device const int *rom,device const long *lits,device const i
 inline int insert_row(device const int *rom,device int *state,device int *meta,device long *dyn,device int *head,
                       int t,int n,thread long *values){
     int id=state[0];if(id>=ROW_CAP){state[5]=2;return -1;}
-    state[0]++;device int *m=meta+6*id;m[0]=t;m[1]=-1;m[2]=0;m[3]=0;m[5]=head[t];head[t]=id;append_shard(rom,meta,head,id,t,n>1?values[0]:0);touch_row(meta,head,id,t,state[3]);
+    state[0]++;device int *m=meta+6*id;m[0]=t;m[1]=-1;m[2]=0;m[3]=0;m[5]=head[t];head[t]=id;append_shard(rom,meta,head,id,t,n>1?values[0]:0);touch_row(state,meta,head,id,t,state[3]);
     meta[BIRTH_RUN+id]=state[18]?-state[3]:state[3];
     for(int j=0;j<n;j++){
         dyn[id*WIDTH+j]=values[j];
@@ -536,6 +633,9 @@ inline int insert_row(device const int *rom,device int *state,device int *meta,d
         if(j<n-1)dyn[(ROW_CAP+id)*WIDTH+j]=values[j];
 #endif
     }
+#if INDEX_NOTIFY
+    subscribe_row(rom,nullptr,meta,dyn,head,state,id,t);
+#endif
     if(USE_INDEX)link_key(meta,head,id,t,key_bucket(values,n-1));
     state[8]=1;return id;
 }
@@ -582,7 +682,7 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
                    device long *dyn,device int *head,device long *writes){
 #if FENCE_UNIONS
     device const int *queue=meta+6*ROW_CAP+2*UF_SIZE;
-    for(int j=0;j<state[13];j++)unite(state,meta,queue[2*j],queue[2*j+1]);
+    for(int j=0;j<state[13];j++)unite(state,meta,queue[2*j],queue[2*j+1],head);
     state[13]=0;
 #endif
     int passes=0;
@@ -590,6 +690,17 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
         if(++passes>ROW_CAP){state[5]=15;return;}
         state[12]=0;
         for(int row=0;row<state[0];row++){
+#if INDEX_NOTIFY
+            // Consume in original physical order. Re-read the current word
+            // after each affected row because a collision can add later rows.
+            int w=row/32;
+            device uint *bits=(device uint *)(head+NOTIFY_BASE);
+            uint mask=(bits[w]|bits[ROW_WORDS+w]) & (~0u<<(row%32));
+            if(COUNT_WORK)state[75]++;
+            if(!mask){row=32*w+31;continue;}
+            row=32*w+ctz(mask);
+            if(row>=state[0])break;
+#endif
             device int *m=meta+6*row;if(m[3]==2)continue;
             int t=m[0];device const int *spec=table(rom,t);int last=spec[0]-1;
             count_work(state,4,1);
@@ -609,8 +720,17 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
                 }
             }
 #endif
+#if BLOCK_STUDY
+            if(repair_shapes[t]>=0){
+                if(COUNT_WORK){
+                    state[70]++;
+                    state[88+3*LIBRARY_SIZE+2*repair_shapes[t]+int(changed)]++;
+                }
+                if(COUNT_WORK && changed){state[71]++;state[72]+=int(key_changed);}
+            }else {if(COUNT_WORK)state[76]++;}
+#endif
             if(!changed)continue;
-            touch_row(meta,head,row,t,state[3]);if(!key_changed)continue;
+            touch_row(state,meta,head,row,t,state[3]);if(!key_changed)continue;
             long key[WIDTH];
             for(int j=0;j<last;j++)key[j]=field(rom,lits,meta,dyn,row,j);
             int start=INDEX_REPAIR?head[TABLES+t*256+key_bucket(key,last)]:head[t];
@@ -620,16 +740,19 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
                 if(!same)continue;
                 int keep=PUBLISHED_KEYS?other:min(row,other),drop=PUBLISHED_KEYS?row:max(row,other);
                 long old=field(rom,lits,meta,dyn,keep,last),v=field(rom,lits,meta,dyn,drop,last);
-                if(spec[1])unite(state,meta,old,v);
+                if(spec[1])unite(state,meta,old,v,head);
                 else{
                     long next=merge_value(rom,lits,state,meta,dyn,head,t,old,v);
-                    if(next!=old){if(meta[6*keep+1]>=0){state[5]=13;return;}log_write(state,writes,-1,-1,t,keep,key,last,true,old,next);dyn[keep*WIDTH+last]=next;touch_row(meta,head,keep,t,state[3]);}
+                    if(next!=old){if(meta[6*keep+1]>=0){state[5]=13;return;}log_write(state,writes,-1,-1,t,keep,key,last,true,old,next);dyn[keep*WIDTH+last]=next;touch_row(state,meta,head,keep,t,state[3]);}
                 }
-                if(meta[6*drop+3]==1){meta[6*keep+3]=1;touch_row(meta,head,keep,t,state[3]);}
+                if(meta[6*drop+3]==1){meta[6*keep+3]=1;touch_row(state,meta,head,keep,t,state[3]);}
                 if(SPINE_ON){
                     device int *lost=anchor(meta,drop),*saved=anchor(meta,keep);
                     if(lost[3]==state[3] && lost[4]>saved[4]){
                         for(int j=0;j<5;j++)saved[j]=lost[j];
+#if BLOCK_STUDY
+                        refresh_cursor(meta,state,t,keep,state[3]);
+#endif
                     }
                 }
                 if(USE_INDEX)unlink_key(meta,head,drop,t);
@@ -645,6 +768,9 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
 #endif
         }
     }
+#if INDEX_NOTIFY
+    if(passes)for(int w=0;w<(state[0]+31)/32;w++)head[NOTIFY_BASE+ROW_WORDS+w]=0;
+#endif
 }
 template<int PART=0>
 inline void do_commit(device const int *rom,device const long *lits,device int *state,device int *meta,
@@ -707,6 +833,13 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
             if(state[9]>=TRACE_CAP){state[5]=5;return;}
             long env[MAXSLOTS],args[WIDTH+2];
             device long *log=rhs+(state[9]++)*(NINPUT+4);
+#if BLOCK_STUDY
+            if(COUNT_WORK){
+                int pivot=int(values[width+4]%DEPTH);
+                bool certified=values[width+1]!=0 && bake_pivots[rid*DEPTH+pivot]>=0;
+                runs[(RUN_CAP+run-1)*6+int(certified)]++;
+            }
+#endif
             log[0]=run;log[1]=rid;log[2]=values[width]<0?0:shard_of(meta,int(values[width]))%lanes;log[3]=values[width];
             for(int j=0;j<rule[4];j++){env[rom[rule[5]+j]]=values[j];log[4+j]=values[j];}
             int cursor=0,depth=0;
@@ -726,7 +859,7 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                 if(kind==3){long v;if(!eval_op(state,meta,t,rom+op[4],arity,env,lits,v)){if(!state[5])state[5]=8;state[6]=rid;return;}env[op[2]]=v;continue;}
                 for(int j=0;j<arity;j++)args[j]=operand(rom[op[4]+j],env,lits);
                 if(kind==0){env[op[2]]=args[0];continue;}
-                if(kind==4){submit_union(state,meta,args[0],args[1]);if(state[5])return;continue;}
+                if(kind==4){submit_union(state,meta,args[0],args[1],head);if(state[5])return;continue;}
                 if(kind==6){state[5]=10;state[6]=rid;return;}
                 device const int *schema=table(rom,t);
                 if(kind==2)arity--;
@@ -737,13 +870,13 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                     if(found<0)return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);env[op[2]]=field(rom,lits,meta,dyn,found,arity);continue;
                 }
                 if(kind==5){
-                    if(found>=0 && !meta[6*found+3]){meta[6*found+3]=1;touch_row(meta,head,found,t,run);state[8]=1;}
+                    if(found>=0 && !meta[6*found+3]){meta[6*found+3]=1;touch_row(state,meta,head,found,t,run);state[8]=1;}
                     continue;
                 }
                 if(kind!=2){state[5]=11;state[6]=rid;return;}
                 if(schema[1]){
                     if(found<0)found=insert_row(rom,state,meta,dyn,head,t,arity+1,args);
-                    else submit_union(state,meta,field(rom,lits,meta,dyn,found,arity),args[arity]);
+                    else submit_union(state,meta,field(rom,lits,meta,dyn,found,arity),args[arity],head);
                     if(state[5])return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);
                     continue;
                 }
@@ -754,7 +887,7 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                     if(state[5]){state[6]=rid;return;}
                     if(old==v){publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);continue;}
                     if(meta[6*found+1]>=0){state[5]=13;state[6]=rid;return;}
-                    dyn[found*WIDTH+arity]=v;touch_row(meta,head,found,t,run);state[8]=1;
+                    dyn[found*WIDTH+arity]=v;touch_row(state,meta,head,found,t,run);state[8]=1;
                 }else{found=insert_row(rom,state,meta,dyn,head,t,arity+1,args);if(found<0)return;}
                 publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);
                 log_write(state,writes,rid,state[9]-base_rhs-1,t,found,args,arity,had_old,previous,

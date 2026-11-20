@@ -357,6 +357,19 @@ PLATES.append(('35-unique-parent', [
     ('Metal search', ['same source rules', 'test row pairs', 'ordered RHS', '91.61 / 83.52 ms']),
 ], pass3_path))
 
+PLATES.extend([
+    ('36-device-sets', [
+        ('Upstream memory test', ['load after write', 'memory helpers', '4 actual bindings', '835 source Runs']),
+        ('Observed set operators', ['seed sets of Expr', 'insert / meet / join', 'read cardinality', 'four primitives active']),
+        ('Union two members', ['size = 2', 'forward member bit', 'publish size = 1', 'no-merge conflicts']),
+    ], pass3_path),
+    ('37-block-ceiling', [
+        ('Priced residual', ['certified leaf', 'first covered prefix', 'charge descendants', '2605 / 2119 steps']),
+        ('Published cursor list', ['epoch + visibility', 'keep boundary reads', 'skip stale seeds', '23789 / 19666 visits']),
+        ('Repair subscribers', ['record class uses', 'notify displaced root', 'repair in source order', '72.5% / 71.4% fewer rows']),
+    ], pass3_path),
+])
+
 def synthesis():
     a=Art();W,H=1100,335;a.rect(0,0,W,H,BG,r=0)
     for x,w,h in [(10,316,"SHARED TEMPLATE"),(338,374,"INSTANCE POLICY"),(723,367,"JOINT OUTCOME")]:

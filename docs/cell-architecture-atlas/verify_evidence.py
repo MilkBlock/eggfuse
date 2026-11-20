@@ -32,7 +32,7 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==35
+    assert len(plates)==37
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and p['arms'] and p['measure'] and p['status'].startswith(('已测','实跑'))
         assert p['title'] in md and (HERE/'figures'/f"{p['id']}.svg").is_file()
@@ -155,7 +155,22 @@ def check():
         for k in ('point','model','metal'):
             assert lanes[k]['admitted_bindings']==hits and lanes[k]['audit']==lanes['cpu']['audit']
             assert lanes[k]['state_sha256']==lanes['cpu']['state_sha256'] and len(lanes[k]['samples'])==8
-    print('Verified all 35 plates, including two full ordered Pass 3 audits, row contributions and paired CLI timings.')
+    sets=json.loads((folder.parent/'set-memory/results.json').read_text())
+    for lane in ('full','full-probes','union','dynamic'):
+        c=sets['cases'][lane]
+        assert c['audit']['acceptance']=='pass' and c['audit']['full_typed_graph_equal']
+        assert len(c['isolated']['opened'])==5
+    assert sets['cases']['full']['helper_rhs']==4 and sets['cases']['full-probes']['audit']['completed']==835
+    assert sets['cases']['dynamic']['integer_writes'][-1]['old']=={'Int':2}
+    assert sets['cases']['dynamic']['integer_writes'][-1]['new']=={'Int':1} and sets['negative']['gpu_fault']==12
+    block=json.loads((folder.parent/'block-ceiling/results.json').read_text())
+    for n,dfs,rep in [('sum-bits',2605,284230),('dot-product',2119,224346)]:
+        t=block[n];base=t['records']['tally'];end=t['records']['notified']
+        assert t['dfs_saved']==dfs==sum(base['credits']) and base['dfs']-end['dfs']==dfs
+        assert t['repair_with_incidence_ceiling']==rep==base['repair_scan']-end['repair_scan']
+        assert base['outside_scan']==end['outside_scan'] and t['dispatches_saved']==0 and end['final']
+        assert end['aligned']['writes']==end['aligned']['rhs']==end['aligned']['spine']==t['source_runs']
+    print('Verified all 37 plates, including two full ordered Pass 3 audits, row contributions and paired CLI timings.')
 
 
 if __name__=='__main__':check()
