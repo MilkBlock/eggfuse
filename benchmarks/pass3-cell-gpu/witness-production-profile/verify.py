@@ -7,6 +7,7 @@ base=Path(__file__).resolve().parent
 sampling=json.loads((base/'samples.json').read_text())
 cases=json.loads((base/'results.json').read_text())
 profiles=json.loads((base/'tuned-phases.json').read_text())
+detailed=json.loads((base/'tuned-production-phases.json').read_text())
 for case,study in cases.items():
     proof=study['audit']
     assert proof['rhs']==proof['neural_rhs'] and proof['direct_cells']*100>=98*proof['fresh']
@@ -14,6 +15,10 @@ for case,study in cases.items():
     assert actual['state_sha']==proof['state_sha'] and actual['runs']==study['runs']
     assert list(actual['median_ms'].values())==list(map(median,zip(*actual['samples_ms'])))
     assert actual['median_ms']['multi_issue_seal']>actual['median_ms']['multi_frames']>0
+    second=detailed[case]
+    assert second['state_sha']==proof['state_sha'] and second['runs']==study['runs']
+    assert list(second['median_ms'].values())==list(map(median,zip(*second['samples_ms'])))
+    assert second['median_ms']['single_verify_attach']>second['median_ms']['single_policy_score']>0
     arms=study['arms']
     archive,production=arms['archive'],arms['production']
     assert production['archived_winners']==0
