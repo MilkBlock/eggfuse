@@ -1,0 +1,1144 @@
+{
+  "conjugate-gradient-resident": {
+    "main_thread_samples": 4817,
+    "inclusive_scopes": {
+      "Trial::generate": 2242,
+      "joint_root::bind": 52,
+      "Programs::resume_tokens": 99,
+      "Scheduler::batches": 64,
+      "Store::seal_raw": 208,
+      "Store::emit_stack": 695,
+      "RhsFrame::execute": 128,
+      "Graph::repair_selected": 91
+    },
+    "categories": {
+      "execute": {
+        "single_generation": 2218,
+        "multi_witness": 1322,
+        "root_recipe": 66,
+        "entry_schedule": 76,
+        "spine": 126,
+        "binding_dedup": 40,
+        "run_self": 178,
+        "graph_write": 151,
+        "publication": 22,
+        "ordered_rhs": 18,
+        "source_repair": 89,
+        "audit_hook": 2,
+        "single_commit": 30,
+        "outer_schedule": 1
+      },
+      "outside_execute": {
+        "blocked_on_request": 110,
+        "graph_export": 84,
+        "other_load_report_drop_or_io": 241,
+        "response_io": 1,
+        "report": 30,
+        "model_setup": 9,
+        "initial_graph": 3
+      }
+    },
+    "top_symbols": [
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "<deduplicated_symbol>",
+        "samples": 625
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::single_witness::Trial::generate::h6a0774293f42642f",
+        "samples": 489
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::emit_stack::hb83227ee2500af1f",
+        "samples": 251
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::shortlist::h42f937b54cbe0ff4",
+        "samples": 135
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::cell::binding::bind_operand::he9ac779732fe0a22",
+        "samples": 123
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::fact::h8694c2715ca8d473",
+        "samples": 120
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "tanhf",
+        "samples": 112
+      },
+      {
+        "region": "outside_execute",
+        "category": "blocked_on_request",
+        "symbol": "read",
+        "samples": 110
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "alloc::collections::btree::node::Handle$LT$alloc..collections..btree..node..NodeRef$LT$alloc..collections..btree..node..marker..Mut$C$K$C$V$C$alloc..collections..btree..node..marker..Leaf$GT$$C$alloc..collections..btree..node..marker..Edge$GT$::insert_recursing::h66f5d4707787230f",
+        "samples": 108
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::index::h4742569a54b1a5b0",
+        "samples": 78
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "alloc::collections::btree::map::entry::VacantEntry$LT$K$C$V$C$A$GT$::insert_entry::h31a025fa0d3328e9",
+        "samples": 69
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::write::h11d0b4bcea735385",
+        "samples": 64
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::visible_epoch::hf873a55d524d93be",
+        "samples": 61
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::value::root::hcbf0f43f29a97bba",
+        "samples": 57
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "mi_malloc_aligned",
+        "samples": 54
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "mi_free",
+        "samples": 52
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold::hdcbcb79205c815e7",
+        "samples": 51
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::emit_two::h868081bd8bcfa591",
+        "samples": 47
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "DYLD-STUB$$tanhf",
+        "samples": 46
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::code::hfc97e341bdc4d239",
+        "samples": 46
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::bind::ha05338e670e76e84",
+        "samples": 46
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert::hfd64e0fdbf49e8a1",
+        "samples": 44
+      },
+      {
+        "region": "execute",
+        "category": "run_self",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::fact::h8694c2715ca8d473",
+        "samples": 37
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "sha2::sha256::compress256::hf56de240756913b4",
+        "samples": 36
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::lookup_canonical::h7533f9d04006e7ca",
+        "samples": 35
+      }
+    ],
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "completed_requests": 3
+  },
+  "conjugate-gradient-tuned": {
+    "main_thread_samples": 4829,
+    "inclusive_scopes": {
+      "Store::seal_raw": 275,
+      "Store::emit_stack": 885,
+      "joint_root::bind": 71,
+      "Trial::generate": 1486,
+      "Programs::resume_tokens": 133,
+      "Scheduler::batches": 95,
+      "RhsFrame::execute": 133,
+      "Graph::repair_selected": 125
+    },
+    "categories": {
+      "execute": {
+        "multi_witness": 1659,
+        "run_self": 261,
+        "root_recipe": 71,
+        "single_generation": 1412,
+        "single_verification": 31,
+        "single_score": 13,
+        "entry_schedule": 108,
+        "spine": 163,
+        "binding_dedup": 40,
+        "graph_write": 176,
+        "publication": 30,
+        "ordered_rhs": 20,
+        "source_repair": 123,
+        "single_commit": 39,
+        "audit_hook": 2,
+        "outer_schedule": 3
+      },
+      "outside_execute": {
+        "blocked_on_request": 171,
+        "graph_export": 126,
+        "other_load_report_drop_or_io": 325,
+        "response_io": 2,
+        "report": 40,
+        "model_setup": 10,
+        "initial_graph": 4
+      }
+    },
+    "top_symbols": [
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::single_witness::Trial::generate::h90e9222156df5441",
+        "samples": 440
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::emit_stack::h3f570011991e371e",
+        "samples": 329
+      },
+      {
+        "region": "outside_execute",
+        "category": "blocked_on_request",
+        "symbol": "read",
+        "samples": 171
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold::h9ec2da2c7b28323f",
+        "samples": 156
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::shortlist::h74c63c5b7357fdea",
+        "samples": 149
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::index::h50521dbc8546664c",
+        "samples": 110
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::get::h057ae9c7ce411604",
+        "samples": 88
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::visible_epoch::hf873a55d524d93be",
+        "samples": 78
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "std::thread::local::LocalKey$LT$T$GT$::with::hdcd1d285f887b4f1",
+        "samples": 77
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::code::he58e0d04d9367e68",
+        "samples": 75
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::cell::binding::bind_operand::h5e70af3d14478c2c",
+        "samples": 66
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::value::root::hcbf0f43f29a97bba",
+        "samples": 65
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::fact::h8694c2715ca8d473",
+        "samples": 64
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::write::h11d0b4bcea735385",
+        "samples": 63
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::bind::ha05338e670e76e84",
+        "samples": 60
+      },
+      {
+        "region": "execute",
+        "category": "run_self",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::fact::h8694c2715ca8d473",
+        "samples": 56
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::emit_two::h1cdd9363e00eccbc",
+        "samples": 53
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "sha2::sha256::compress256::hf56de240756913b4",
+        "samples": 53
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "_$LT$smallvec..SmallVec$LT$A$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LT$A$u20$as$u20$smallvec..Array$GT$..Item$GT$$GT$::extend::h4f51c94f22af9684",
+        "samples": 51
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "std::thread::local::LocalKey$LT$T$GT$::with::hb695b1b7bf7ffad7",
+        "samples": 46
+      },
+      {
+        "region": "execute",
+        "category": "entry_schedule",
+        "symbol": "<deduplicated_symbol>",
+        "samples": 46
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert::hfd64e0fdbf49e8a1",
+        "samples": 45
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::lookup_canonical::h7533f9d04006e7ca",
+        "samples": 45
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "core::iter::adapters::try_process::h717de1921d0494fc",
+        "samples": 40
+      },
+      {
+        "region": "execute",
+        "category": "spine",
+        "symbol": "eggfuse_cell_runtime::stage_spine::Programs::publish_impl::h1d1fd48fcb8f20bb",
+        "samples": 40
+      }
+    ],
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "completed_requests": 4
+  },
+  "conjugate-gradient-vanilla": {
+    "main_thread_samples": 4761,
+    "inclusive_scopes": {
+      "Scheduler::batches": 830,
+      "RhsFrame::execute": 486,
+      "Graph::repair_selected": 375
+    },
+    "categories": {
+      "execute": {
+        "other_matching": 1007,
+        "spine": 541,
+        "entry_schedule": 352,
+        "run_self": 138,
+        "publication": 441,
+        "graph_write": 576,
+        "ordered_rhs": 69,
+        "source_repair": 373,
+        "outer_schedule": 4
+      },
+      "outside_execute": {
+        "graph_export": 432,
+        "other_load_report_drop_or_io": 708,
+        "report": 104,
+        "initial_graph": 16
+      }
+    },
+    "top_symbols": [
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "sha2::sha256::compress256::hf56de240756913b4",
+        "samples": 172
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "mi_free",
+        "samples": 135
+      },
+      {
+        "region": "execute",
+        "category": "entry_schedule",
+        "symbol": "<deduplicated_symbol>",
+        "samples": 99
+      },
+      {
+        "region": "execute",
+        "category": "graph_write",
+        "symbol": "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert::h5a8b289275bb53f7",
+        "samples": 93
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit::hf87698208a490865",
+        "samples": 71
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$::hbd6973da9a43a29d",
+        "samples": 64
+      },
+      {
+        "region": "outside_execute",
+        "category": "graph_export",
+        "symbol": "_$LT$eggfuse_cell_runtime..graph..Graph..write_export..Rows$u20$as$u20$serde_core..ser..Serialize$GT$::serialize::hcbe2b1452317d7e5",
+        "samples": 62
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "eggfuse_cell_runtime::query::QueryIndexes::probe::h37c7e4116c5dd5e9",
+        "samples": 58
+      },
+      {
+        "region": "execute",
+        "category": "source_repair",
+        "symbol": "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert::h5a8b289275bb53f7",
+        "samples": 58
+      },
+      {
+        "region": "outside_execute",
+        "category": "graph_export",
+        "symbol": "_platform_memmove",
+        "samples": 58
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "_platform_memmove",
+        "samples": 52
+      },
+      {
+        "region": "execute",
+        "category": "spine",
+        "symbol": "eggfuse_cell_runtime::stage_spine::Programs::finish_answers::h0b0af5955a4cbedd",
+        "samples": 48
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "alloc::collections::btree::map::IntoIter$LT$K$C$V$C$A$GT$::dying_next::h497ad8658fda26c7",
+        "samples": 48
+      },
+      {
+        "region": "execute",
+        "category": "run_self",
+        "symbol": "eggfuse_cell_runtime::executor::Executor::run::h77c7173314db09f4",
+        "samples": 47
+      },
+      {
+        "region": "execute",
+        "category": "entry_schedule",
+        "symbol": "eggfuse_cell_runtime::entry_schedule::Scheduler::refresh::h5d3c3ab74b349e31",
+        "samples": 46
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::write::h0fe2663994034dbc",
+        "samples": 43
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::visible_epoch::h2e29ec2a7673ffc5",
+        "samples": 42
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "hashbrown::rustc_entry::_$LT$impl$u20$hashbrown..map..HashMap$LT$K$C$V$C$S$C$A$GT$$GT$::rustc_entry::h17a4f2738b292177",
+        "samples": 41
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "eggfuse_cell_runtime::query::QueryIndexes::hashes::h853f91ba4bd80fb2",
+        "samples": 41
+      },
+      {
+        "region": "execute",
+        "category": "spine",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::live_table::he79bf673f2b7432f",
+        "samples": 40
+      },
+      {
+        "region": "execute",
+        "category": "publication",
+        "symbol": "eggfuse_cell_runtime::query::Columns::put::h14c67dd35e01bfe7",
+        "samples": 40
+      },
+      {
+        "region": "execute",
+        "category": "spine",
+        "symbol": "eggfuse_cell_runtime::stage_spine::Programs::publish_impl::h8851a534409eaa93",
+        "samples": 39
+      },
+      {
+        "region": "execute",
+        "category": "source_repair",
+        "symbol": "eggfuse_cell_runtime::value::root::h189e5ddcd749e366",
+        "samples": 38
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "eggfuse_cell_runtime::executor::execute_kernel::Frame::step::h01714a4c09eee22a",
+        "samples": 37
+      },
+      {
+        "region": "execute",
+        "category": "publication",
+        "symbol": "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert::h5a8b289275bb53f7",
+        "samples": 37
+      }
+    ],
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "completed_requests": 11
+  },
+  "jacobi-1d-resident": {
+    "main_thread_samples": 4729,
+    "inclusive_scopes": {
+      "Trial::generate": 1855,
+      "joint_root::bind": 80,
+      "Programs::resume_tokens": 88,
+      "Scheduler::batches": 52,
+      "Store::seal_raw": 118,
+      "Store::emit_stack": 506,
+      "RhsFrame::execute": 188,
+      "Graph::repair_selected": 117
+    },
+    "categories": {
+      "execute": {
+        "single_generation": 1823,
+        "root_recipe": 94,
+        "multi_witness": 1212,
+        "entry_schedule": 70,
+        "spine": 160,
+        "binding_dedup": 35,
+        "run_self": 145,
+        "graph_write": 214,
+        "publication": 20,
+        "audit_hook": 4,
+        "ordered_rhs": 13,
+        "source_repair": 115,
+        "single_commit": 24,
+        "outer_schedule": 8
+      },
+      "outside_execute": {
+        "graph_export": 198,
+        "other_load_report_drop_or_io": 499,
+        "response_io": 3,
+        "report": 36,
+        "blocked_on_request": 20,
+        "model_setup": 22,
+        "initial_graph": 14
+      }
+    },
+    "top_symbols": [
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "<deduplicated_symbol>",
+        "samples": 459
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::single_witness::Trial::generate::h6a0774293f42642f",
+        "samples": 438
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::emit_stack::hb83227ee2500af1f",
+        "samples": 204
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "tanhf",
+        "samples": 113
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::fact::h8694c2715ca8d473",
+        "samples": 110
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::index::h4742569a54b1a5b0",
+        "samples": 106
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "alloc::collections::btree::node::Handle$LT$alloc..collections..btree..node..NodeRef$LT$alloc..collections..btree..node..marker..Mut$C$K$C$V$C$alloc..collections..btree..node..marker..Leaf$GT$$C$alloc..collections..btree..node..marker..Edge$GT$::insert_recursing::h66f5d4707787230f",
+        "samples": 94
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "sha2::sha256::compress256::hf56de240756913b4",
+        "samples": 88
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::shortlist::h42f937b54cbe0ff4",
+        "samples": 86
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::cell::binding::bind_operand::he9ac779732fe0a22",
+        "samples": 85
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::emit_two::h868081bd8bcfa591",
+        "samples": 69
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::code::hfc97e341bdc4d239",
+        "samples": 61
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "mi_free",
+        "samples": 54
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "_platform_memmove",
+        "samples": 49
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::write::h11d0b4bcea735385",
+        "samples": 48
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "alloc::collections::btree::map::entry::VacantEntry$LT$K$C$V$C$A$GT$::insert_entry::h31a025fa0d3328e9",
+        "samples": 47
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold::hdcbcb79205c815e7",
+        "samples": 47
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::bind::ha05338e670e76e84",
+        "samples": 45
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::lookup_canonical::h7533f9d04006e7ca",
+        "samples": 44
+      },
+      {
+        "region": "execute",
+        "category": "entry_schedule",
+        "symbol": "<deduplicated_symbol>",
+        "samples": 42
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert::hfd64e0fdbf49e8a1",
+        "samples": 40
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "DYLD-STUB$$tanhf",
+        "samples": 36
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "mi_free",
+        "samples": 36
+      },
+      {
+        "region": "execute",
+        "category": "graph_write",
+        "symbol": "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert::h6bda509141db79c3",
+        "samples": 36
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::visible_epoch::hf873a55d524d93be",
+        "samples": 35
+      }
+    ],
+    "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+    "completed_requests": 11
+  },
+  "jacobi-1d-tuned": {
+    "main_thread_samples": 4792,
+    "inclusive_scopes": {
+      "Store::seal_raw": 167,
+      "Store::emit_stack": 597,
+      "joint_root::bind": 102,
+      "Trial::generate": 1072,
+      "Programs::resume_tokens": 127,
+      "Scheduler::batches": 70,
+      "RhsFrame::execute": 227,
+      "Graph::repair_selected": 151
+    },
+    "categories": {
+      "execute": {
+        "multi_witness": 1484,
+        "run_self": 260,
+        "root_recipe": 102,
+        "single_generation": 1018,
+        "single_verification": 17,
+        "single_score": 7,
+        "entry_schedule": 82,
+        "spine": 213,
+        "binding_dedup": 37,
+        "graph_write": 263,
+        "publication": 41,
+        "ordered_rhs": 27,
+        "audit_hook": 2,
+        "source_repair": 149,
+        "single_commit": 33,
+        "outer_schedule": 9
+      },
+      "outside_execute": {
+        "graph_export": 255,
+        "other_load_report_drop_or_io": 675,
+        "response_io": 4,
+        "report": 46,
+        "model_setup": 29,
+        "blocked_on_request": 18,
+        "initial_graph": 21
+      }
+    },
+    "top_symbols": [
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::single_witness::Trial::generate::h90e9222156df5441",
+        "samples": 312
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::emit_stack::h3f570011991e371e",
+        "samples": 230
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "sha2::sha256::compress256::hf56de240756913b4",
+        "samples": 110
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::shortlist::h74c63c5b7357fdea",
+        "samples": 96
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::index::h50521dbc8546664c",
+        "samples": 96
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "_$LT$core..iter..adapters..map..Map$LT$I$C$F$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold::h9ec2da2c7b28323f",
+        "samples": 94
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "mi_free",
+        "samples": 89
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::emit_two::h1cdd9363e00eccbc",
+        "samples": 70
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "_platform_memmove",
+        "samples": 70
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::bind::ha05338e670e76e84",
+        "samples": 69
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::write::h11d0b4bcea735385",
+        "samples": 68
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::Store::code::he58e0d04d9367e68",
+        "samples": 64
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::visible_epoch::hf873a55d524d93be",
+        "samples": 57
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::get::h057ae9c7ce411604",
+        "samples": 54
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "std::thread::local::LocalKey$LT$T$GT$::with::hdcd1d285f887b4f1",
+        "samples": 53
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::fact::h8694c2715ca8d473",
+        "samples": 50
+      },
+      {
+        "region": "execute",
+        "category": "run_self",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::fact::h8694c2715ca8d473",
+        "samples": 49
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::ordinary_witness::extend::h1ec13f96087b2cb7",
+        "samples": 47
+      },
+      {
+        "region": "execute",
+        "category": "spine",
+        "symbol": "eggfuse_cell_runtime::stage_spine::Programs::publish_impl::h1d1fd48fcb8f20bb",
+        "samples": 46
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "_$LT$$u5b$T$u5d$$u20$as$u20$core..slice..specialize..SpecFill$LT$T$GT$$GT$::spec_fill::hd1d6ec7d9403f323",
+        "samples": 44
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "core::hash::BuildHasher::hash_one::h630eaaffb6e3244e",
+        "samples": 43
+      },
+      {
+        "region": "execute",
+        "category": "multi_witness",
+        "symbol": "eggfuse_cell_runtime::slots::FrameMap$LT$K$C$V$GT$::insert::hfd64e0fdbf49e8a1",
+        "samples": 43
+      },
+      {
+        "region": "execute",
+        "category": "graph_write",
+        "symbol": "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert::h6bda509141db79c3",
+        "samples": 41
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "eggfuse_cell_runtime::cell::binding::bind_operand::h5e70af3d14478c2c",
+        "samples": 40
+      },
+      {
+        "region": "execute",
+        "category": "single_generation",
+        "symbol": "_$LT$smallvec..SmallVec$LT$A$GT$$u20$as$u20$core..iter..traits..collect..Extend$LT$$LT$A$u20$as$u20$smallvec..Array$GT$..Item$GT$$GT$::extend::h4f51c94f22af9684",
+        "samples": 39
+      }
+    ],
+    "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+    "completed_requests": 14
+  },
+  "jacobi-1d-vanilla": {
+    "main_thread_samples": 4743,
+    "inclusive_scopes": {
+      "Scheduler::batches": 660,
+      "RhsFrame::execute": 405,
+      "Graph::repair_selected": 322
+    },
+    "categories": {
+      "execute": {
+        "other_matching": 844,
+        "spine": 392,
+        "entry_schedule": 279,
+        "run_self": 99,
+        "publication": 360,
+        "graph_write": 458,
+        "ordered_rhs": 51,
+        "source_repair": 321,
+        "outer_schedule": 7
+      },
+      "outside_execute": {
+        "graph_export": 522,
+        "other_load_report_drop_or_io": 1160,
+        "report": 206,
+        "initial_graph": 44
+      }
+    },
+    "top_symbols": [
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "sha2::sha256::compress256::hf56de240756913b4",
+        "samples": 218
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "mi_free",
+        "samples": 180
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "_platform_memmove",
+        "samples": 116
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "alloc::collections::btree::map::IntoIter$LT$K$C$V$C$A$GT$::dying_next::h497ad8658fda26c7",
+        "samples": 105
+      },
+      {
+        "region": "execute",
+        "category": "graph_write",
+        "symbol": "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert::h5a8b289275bb53f7",
+        "samples": 66
+      },
+      {
+        "region": "outside_execute",
+        "category": "graph_export",
+        "symbol": "_platform_memmove",
+        "samples": 62
+      },
+      {
+        "region": "outside_execute",
+        "category": "graph_export",
+        "symbol": "_$LT$eggfuse_cell_runtime..graph..Graph..write_export..Rows$u20$as$u20$serde_core..ser..Serialize$GT$::serialize::hcbe2b1452317d7e5",
+        "samples": 58
+      },
+      {
+        "region": "execute",
+        "category": "entry_schedule",
+        "symbol": "<deduplicated_symbol>",
+        "samples": 57
+      },
+      {
+        "region": "execute",
+        "category": "source_repair",
+        "symbol": "alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert::h5a8b289275bb53f7",
+        "samples": 56
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "mi_malloc_aligned",
+        "samples": 56
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "_$LT$alloc..collections..btree..map..BTreeMap$LT$K$C$V$C$A$GT$$u20$as$u20$core..clone..Clone$GT$::clone::clone_subtree::he8722a3a6d264103",
+        "samples": 49
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "eggfuse_cell_runtime::executor::free_join::FreeJoin::admit::hf87698208a490865",
+        "samples": 47
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "eggfuse_cell_runtime::executor::Executor::matches::_$u7b$$u7b$closure$u7d$$u7d$::_$u7b$$u7b$closure$u7d$$u7d$::hbd6973da9a43a29d",
+        "samples": 46
+      },
+      {
+        "region": "outside_execute",
+        "category": "graph_export",
+        "symbol": "serde_json::ser::format_escaped_str::hea2bab9b39580490",
+        "samples": 45
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "OUTLINED_FUNCTION_58",
+        "samples": 45
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "eggfuse_cell_runtime::query::QueryIndexes::probe::h37c7e4116c5dd5e9",
+        "samples": 44
+      },
+      {
+        "region": "execute",
+        "category": "entry_schedule",
+        "symbol": "eggfuse_cell_runtime::entry_schedule::Scheduler::refresh::h5d3c3ab74b349e31",
+        "samples": 44
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "_$LT$alloc..string..String$u20$as$u20$core..clone..Clone$GT$::clone::h65381f6df886e978",
+        "samples": 43
+      },
+      {
+        "region": "execute",
+        "category": "run_self",
+        "symbol": "eggfuse_cell_runtime::executor::Executor::run::h77c7173314db09f4",
+        "samples": 41
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "eggfuse_cell_runtime::query::QueryIndexes::hashes::h853f91ba4bd80fb2",
+        "samples": 39
+      },
+      {
+        "region": "execute",
+        "category": "other_matching",
+        "symbol": "eggfuse_cell_runtime::sieve::Sieve::allow::hc47571cf4f648d98",
+        "samples": 39
+      },
+      {
+        "region": "execute",
+        "category": "graph_write",
+        "symbol": "eggfuse_cell_runtime::graph::Graph::subscribe_edges::hd2903e170c8e3162",
+        "samples": 38
+      },
+      {
+        "region": "execute",
+        "category": "publication",
+        "symbol": "eggfuse_cell_runtime::sieve::Sieve::admit::h715d434dc3212a92",
+        "samples": 36
+      },
+      {
+        "region": "execute",
+        "category": "publication",
+        "symbol": "eggfuse_cell_runtime::sieve::Sieve::publish::hb035afff2097a5e4",
+        "samples": 35
+      },
+      {
+        "region": "outside_execute",
+        "category": "other_load_report_drop_or_io",
+        "symbol": "_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..clone..Clone$GT$::clone::hebf4f19507848e2c",
+        "samples": 35
+      }
+    ],
+    "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+    "completed_requests": 28
+  }
+}
