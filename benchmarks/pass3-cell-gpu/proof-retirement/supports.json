@@ -1,0 +1,782 @@
+{
+ "sum-bits/1703": {
+  "exhaustive_single_root_withdrawals": 95,
+  "shape": {
+   "proofs": 120,
+   "learned_parent_edges": 25,
+   "source_anchor_edges": 8,
+   "source_edges_after_anchor_forwarding": 2,
+   "depth_with_source_edges": 4,
+   "constructor_facts": 119,
+   "known_multi_support": 10,
+   "published_constructor_records": 147,
+   "published_multi_support": 13,
+   "checked_post_rebuild_visibility": true,
+   "shared_ancestor_diamonds": 9,
+   "disjoint_support_groups": 1
+  },
+  "policies": {
+   "batch": {
+    "retired_proofs": 243,
+    "surviving_proofs": 11157,
+    "unsupported_constructor_facts": 236,
+    "dirty_memberships": 240,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 258,
+    "full_stream_counterfactual_group_ms": [
+     4.662291,
+     3.91475,
+     4.084125,
+     3.903667,
+     4.002583,
+     3.917791,
+     3.964334,
+     3.933666,
+     4.206125,
+     3.891,
+     4.040625,
+     3.90525
+    ],
+    "median_ms": 3.949
+   },
+   "dependencies": {
+    "retired_proofs": 130,
+    "surviving_proofs": 11270,
+    "unsupported_constructor_facts": 132,
+    "dirty_memberships": 136,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 146,
+    "full_stream_counterfactual_group_ms": [
+     0.334083,
+     0.3125,
+     0.332959,
+     0.295584,
+     0.278333,
+     0.2915,
+     0.305833,
+     0.292334,
+     0.305292,
+     0.271,
+     0.2735,
+     0.299292
+    ],
+    "median_ms": 0.297438
+   },
+   "supports": {
+    "retired_proofs": 130,
+    "surviving_proofs": 11270,
+    "unsupported_constructor_facts": 132,
+    "dirty_memberships": 0,
+    "immediately_retained_alternatives": 4,
+    "source_rechecks": 0,
+    "full_stream_counterfactual_group_ms": [
+     0.33975,
+     0.306,
+     0.328291,
+     0.273125,
+     0.267833,
+     0.304292,
+     0.449209,
+     0.295375,
+     0.296666,
+     0.518708,
+     0.28,
+     0.307292
+    ],
+    "median_ms": 0.30514600000000003
+   }
+  },
+  "examples": [
+   {
+    "withdrawn_root": 3136,
+    "source_run": 486,
+    "table": 223,
+    "physical_row": 2462,
+    "lost_rhs": [
+     3136
+    ],
+    "surviving_rhs": [
+     3133
+    ]
+   }
+  ],
+  "mps": true,
+  "independent_oracle": true
+ },
+ "sum-bits/1709": {
+  "exhaustive_single_root_withdrawals": 91,
+  "shape": {
+   "proofs": 117,
+   "learned_parent_edges": 26,
+   "source_anchor_edges": 2,
+   "source_edges_after_anchor_forwarding": 0,
+   "depth_with_source_edges": 3,
+   "constructor_facts": 124,
+   "known_multi_support": 4,
+   "published_constructor_records": 149,
+   "published_multi_support": 4,
+   "checked_post_rebuild_visibility": true,
+   "shared_ancestor_diamonds": 3,
+   "disjoint_support_groups": 1
+  },
+  "policies": {
+   "batch": {
+    "retired_proofs": 211,
+    "surviving_proofs": 10436,
+    "unsupported_constructor_facts": 208,
+    "dirty_memberships": 212,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 219,
+    "full_stream_counterfactual_group_ms": [
+     3.266,
+     2.785583,
+     2.950292,
+     2.786209,
+     2.834125,
+     2.76025,
+     2.769334,
+     2.814583,
+     2.776167,
+     2.786958,
+     2.789917,
+     2.789625
+    ],
+    "median_ms": 2.7882914999999997
+   },
+   "dependencies": {
+    "retired_proofs": 119,
+    "surviving_proofs": 10528,
+    "unsupported_constructor_facts": 127,
+    "dirty_memberships": 131,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 135,
+    "full_stream_counterfactual_group_ms": [
+     0.2855,
+     0.246416,
+     0.281291,
+     0.263584,
+     0.242708,
+     0.263708,
+     0.260583,
+     0.23125,
+     0.25875,
+     0.277083,
+     0.250875,
+     0.385292
+    ],
+    "median_ms": 0.2620835
+   },
+   "supports": {
+    "retired_proofs": 119,
+    "surviving_proofs": 10528,
+    "unsupported_constructor_facts": 127,
+    "dirty_memberships": 0,
+    "immediately_retained_alternatives": 4,
+    "source_rechecks": 0,
+    "full_stream_counterfactual_group_ms": [
+     0.24675,
+     0.241541,
+     0.815042,
+     0.244708,
+     0.240083,
+     0.29225,
+     0.230209,
+     0.683042,
+     0.255292,
+     0.239792,
+     0.248208,
+     0.323792
+    ],
+    "median_ms": 0.247479
+   }
+  },
+  "examples": [
+   {
+    "withdrawn_root": 3136,
+    "source_run": 486,
+    "table": 223,
+    "physical_row": 2462,
+    "lost_rhs": [
+     3136
+    ],
+    "surviving_rhs": [
+     3133
+    ]
+   }
+  ],
+  "mps": true,
+  "independent_oracle": true
+ },
+ "dot-product/1703": {
+  "exhaustive_single_root_withdrawals": 88,
+  "shape": {
+   "proofs": 105,
+   "learned_parent_edges": 17,
+   "source_anchor_edges": 6,
+   "source_edges_after_anchor_forwarding": 0,
+   "depth_with_source_edges": 3,
+   "constructor_facts": 81,
+   "known_multi_support": 6,
+   "published_constructor_records": 92,
+   "published_multi_support": 8,
+   "checked_post_rebuild_visibility": true,
+   "shared_ancestor_diamonds": 6,
+   "disjoint_support_groups": 0
+  },
+  "policies": {
+   "batch": {
+    "retired_proofs": 194,
+    "surviving_proofs": 9046,
+    "unsupported_constructor_facts": 143,
+    "dirty_memberships": 143,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 152,
+    "full_stream_counterfactual_group_ms": [
+     3.616333,
+     3.210375,
+     3.16325,
+     3.210917,
+     3.24025,
+     3.128292,
+     3.240833,
+     3.220333,
+     3.365666,
+     3.169208,
+     3.147958,
+     3.113333
+    ],
+    "median_ms": 3.2106459999999997
+   },
+   "dependencies": {
+    "retired_proofs": 111,
+    "surviving_proofs": 9129,
+    "unsupported_constructor_facts": 88,
+    "dirty_memberships": 88,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 94,
+    "full_stream_counterfactual_group_ms": [
+     0.299458,
+     0.286459,
+     0.317041,
+     0.315292,
+     0.299084,
+     0.2705,
+     0.345375,
+     0.274125,
+     0.318042,
+     0.281708,
+     0.247375,
+     0.270625
+    ],
+    "median_ms": 0.2927715
+   },
+   "supports": {
+    "retired_proofs": 111,
+    "surviving_proofs": 9129,
+    "unsupported_constructor_facts": 88,
+    "dirty_memberships": 0,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 0,
+    "full_stream_counterfactual_group_ms": [
+     0.304125,
+     0.276958,
+     0.289708,
+     0.311041,
+     0.272167,
+     0.28775,
+     0.293375,
+     0.246,
+     0.283291,
+     0.244375,
+     0.240375,
+     0.271875
+    ],
+    "median_ms": 0.2801245
+   }
+  },
+  "examples": [],
+  "mps": true,
+  "independent_oracle": true
+ },
+ "dot-product/1709": {
+  "exhaustive_single_root_withdrawals": 74,
+  "shape": {
+   "proofs": 90,
+   "learned_parent_edges": 16,
+   "source_anchor_edges": 1,
+   "source_edges_after_anchor_forwarding": 0,
+   "depth_with_source_edges": 3,
+   "constructor_facts": 79,
+   "known_multi_support": 1,
+   "published_constructor_records": 84,
+   "published_multi_support": 1,
+   "checked_post_rebuild_visibility": true,
+   "shared_ancestor_diamonds": 1,
+   "disjoint_support_groups": 0
+  },
+  "policies": {
+   "batch": {
+    "retired_proofs": 161,
+    "surviving_proofs": 6499,
+    "unsupported_constructor_facts": 141,
+    "dirty_memberships": 141,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 142,
+    "full_stream_counterfactual_group_ms": [
+     2.366208,
+     1.823875,
+     1.808416,
+     1.800709,
+     1.811,
+     1.830875,
+     1.853417,
+     1.798167,
+     1.81275,
+     1.81525,
+     1.830958,
+     1.828791
+    ],
+    "median_ms": 1.8195625
+   },
+   "dependencies": {
+    "retired_proofs": 91,
+    "surviving_proofs": 6569,
+    "unsupported_constructor_facts": 82,
+    "dirty_memberships": 82,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 83,
+    "full_stream_counterfactual_group_ms": [
+     0.299916,
+     0.274083,
+     0.261167,
+     0.248708,
+     0.848167,
+     0.271292,
+     0.260375,
+     0.247042,
+     0.270125,
+     0.25875,
+     0.256542,
+     0.271458
+    ],
+    "median_ms": 0.265646
+   },
+   "supports": {
+    "retired_proofs": 91,
+    "surviving_proofs": 6569,
+    "unsupported_constructor_facts": 82,
+    "dirty_memberships": 0,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 0,
+    "full_stream_counterfactual_group_ms": [
+     0.313166,
+     0.245375,
+     0.268625,
+     0.435875,
+     0.246709,
+     0.256792,
+     0.244542,
+     0.243583,
+     0.246625,
+     0.246792,
+     0.23475,
+     0.260875
+    ],
+    "median_ms": 0.2467505
+   }
+  },
+  "examples": [],
+  "mps": true,
+  "independent_oracle": true
+ },
+ "gemm-bias-relu/1703": {
+  "exhaustive_single_root_withdrawals": 70,
+  "shape": {
+   "proofs": 93,
+   "learned_parent_edges": 23,
+   "source_anchor_edges": 3,
+   "source_edges_after_anchor_forwarding": 0,
+   "depth_with_source_edges": 4,
+   "constructor_facts": 101,
+   "known_multi_support": 8,
+   "published_constructor_records": 105,
+   "published_multi_support": 10,
+   "checked_post_rebuild_visibility": true,
+   "shared_ancestor_diamonds": 6,
+   "disjoint_support_groups": 2
+  },
+  "policies": {
+   "batch": {
+    "retired_proofs": 166,
+    "surviving_proofs": 6344,
+    "unsupported_constructor_facts": 173,
+    "dirty_memberships": 177,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 190,
+    "full_stream_counterfactual_group_ms": [
+     2.764417,
+     2.019291,
+     2.063209,
+     2.152625,
+     1.998625,
+     1.986041,
+     2.008167,
+     2.001917,
+     2.0165,
+     2.046083,
+     2.014458,
+     2.030917
+    ],
+    "median_ms": 2.0178955
+   },
+   "dependencies": {
+    "retired_proofs": 98,
+    "surviving_proofs": 6412,
+    "unsupported_constructor_facts": 110,
+    "dirty_memberships": 114,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 122,
+    "full_stream_counterfactual_group_ms": [
+     0.333125,
+     0.340667,
+     0.944667,
+     0.328,
+     0.282625,
+     1.002708,
+     0.280458,
+     0.626125,
+     0.308,
+     0.285458,
+     0.996625,
+     0.315583
+    ],
+    "median_ms": 0.3305625
+   },
+   "supports": {
+    "retired_proofs": 98,
+    "surviving_proofs": 6412,
+    "unsupported_constructor_facts": 110,
+    "dirty_memberships": 0,
+    "immediately_retained_alternatives": 4,
+    "source_rechecks": 0,
+    "full_stream_counterfactual_group_ms": [
+     0.286708,
+     0.287917,
+     0.846625,
+     0.283583,
+     0.281,
+     0.296792,
+     0.325625,
+     0.283875,
+     0.287375,
+     0.258625,
+     0.307084,
+     0.403209
+    ],
+    "median_ms": 0.28764599999999996
+   }
+  },
+  "examples": [
+   {
+    "withdrawn_root": 6154,
+    "source_run": 753,
+    "table": 223,
+    "physical_row": 4311,
+    "lost_rhs": [
+     11522
+    ],
+    "surviving_rhs": [
+     11555
+    ]
+   }
+  ],
+  "mps": true,
+  "independent_oracle": true
+ },
+ "gemm-bias-relu/1709": {
+  "exhaustive_single_root_withdrawals": 66,
+  "shape": {
+   "proofs": 86,
+   "learned_parent_edges": 20,
+   "source_anchor_edges": 0,
+   "source_edges_after_anchor_forwarding": 0,
+   "depth_with_source_edges": 2,
+   "constructor_facts": 96,
+   "known_multi_support": 3,
+   "published_constructor_records": 101,
+   "published_multi_support": 3,
+   "checked_post_rebuild_visibility": true,
+   "shared_ancestor_diamonds": 1,
+   "disjoint_support_groups": 2
+  },
+  "policies": {
+   "batch": {
+    "retired_proofs": 148,
+    "surviving_proofs": 5528,
+    "unsupported_constructor_facts": 150,
+    "dirty_memberships": 154,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 158,
+    "full_stream_counterfactual_group_ms": [
+     3.354083,
+     2.971542,
+     2.87375,
+     3.406875,
+     2.863709,
+     1.717,
+     2.045375,
+     1.740416,
+     1.74025,
+     1.710625,
+     1.71275,
+     1.724625
+    ],
+    "median_ms": 1.8928954999999998
+   },
+   "dependencies": {
+    "retired_proofs": 86,
+    "surviving_proofs": 5590,
+    "unsupported_constructor_facts": 94,
+    "dirty_memberships": 98,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 101,
+    "full_stream_counterfactual_group_ms": [
+     0.36325,
+     0.338166,
+     0.879542,
+     0.406875,
+     0.307333,
+     0.260375,
+     0.26125,
+     0.249125,
+     0.255709,
+     0.251,
+     0.239833,
+     0.253709
+    ],
+    "median_ms": 0.2608125
+   },
+   "supports": {
+    "retired_proofs": 86,
+    "surviving_proofs": 5590,
+    "unsupported_constructor_facts": 94,
+    "dirty_memberships": 0,
+    "immediately_retained_alternatives": 4,
+    "source_rechecks": 0,
+    "full_stream_counterfactual_group_ms": [
+     0.320792,
+     0.31975,
+     0.322625,
+     0.301375,
+     0.32275,
+     0.437125,
+     0.235292,
+     0.248791,
+     0.263583,
+     0.231917,
+     0.231041,
+     0.249916
+    ],
+    "median_ms": 0.28247900000000004
+   }
+  },
+  "examples": [
+   {
+    "withdrawn_root": 6154,
+    "source_run": 753,
+    "table": 223,
+    "physical_row": 4311,
+    "lost_rhs": [
+     11522
+    ],
+    "surviving_rhs": [
+     11555
+    ]
+   }
+  ],
+  "mps": true,
+  "independent_oracle": true
+ },
+ "stable-argmax/1703": {
+  "exhaustive_single_root_withdrawals": 60,
+  "shape": {
+   "proofs": 77,
+   "learned_parent_edges": 17,
+   "source_anchor_edges": 1,
+   "source_edges_after_anchor_forwarding": 0,
+   "depth_with_source_edges": 4,
+   "constructor_facts": 76,
+   "known_multi_support": 3,
+   "published_constructor_records": 82,
+   "published_multi_support": 5,
+   "checked_post_rebuild_visibility": true,
+   "shared_ancestor_diamonds": 3,
+   "disjoint_support_groups": 0
+  },
+  "policies": {
+   "batch": {
+    "retired_proofs": 146,
+    "surviving_proofs": 4474,
+    "unsupported_constructor_facts": 137,
+    "dirty_memberships": 137,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 142,
+    "full_stream_counterfactual_group_ms": [
+     3.879541,
+     1.55675,
+     1.605417,
+     1.557667,
+     1.659917,
+     1.533042,
+     1.6665,
+     1.522,
+     1.5675,
+     1.447167,
+     1.445125,
+     1.455833
+    ],
+    "median_ms": 1.5572085
+   },
+   "dependencies": {
+    "retired_proofs": 79,
+    "surviving_proofs": 4541,
+    "unsupported_constructor_facts": 81,
+    "dirty_memberships": 81,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 84,
+    "full_stream_counterfactual_group_ms": [
+     0.380542,
+     0.424,
+     0.5215,
+     0.266166,
+     0.259375,
+     0.271,
+     0.275334,
+     0.247667,
+     0.256417,
+     0.247167,
+     0.243167,
+     0.25425
+    ],
+    "median_ms": 0.2627705
+   },
+   "supports": {
+    "retired_proofs": 79,
+    "surviving_proofs": 4541,
+    "unsupported_constructor_facts": 81,
+    "dirty_memberships": 0,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 0,
+    "full_stream_counterfactual_group_ms": [
+     0.3255,
+     0.341792,
+     0.271167,
+     0.248583,
+     0.258,
+     0.261042,
+     0.242292,
+     0.240916,
+     0.263292,
+     0.2325,
+     0.238917,
+     0.23475
+    ],
+    "median_ms": 0.2532915
+   }
+  },
+  "examples": [],
+  "mps": true,
+  "independent_oracle": true
+ },
+ "stable-argmax/1709": {
+  "exhaustive_single_root_withdrawals": 59,
+  "shape": {
+   "proofs": 77,
+   "learned_parent_edges": 18,
+   "source_anchor_edges": 0,
+   "source_edges_after_anchor_forwarding": 0,
+   "depth_with_source_edges": 2,
+   "constructor_facts": 82,
+   "known_multi_support": 1,
+   "published_constructor_records": 87,
+   "published_multi_support": 1,
+   "checked_post_rebuild_visibility": true,
+   "shared_ancestor_diamonds": 1,
+   "disjoint_support_groups": 0
+  },
+  "policies": {
+   "batch": {
+    "retired_proofs": 141,
+    "surviving_proofs": 4402,
+    "unsupported_constructor_facts": 137,
+    "dirty_memberships": 137,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 138,
+    "full_stream_counterfactual_group_ms": [
+     3.744584,
+     3.993458,
+     2.217708,
+     1.477,
+     1.447667,
+     1.46375,
+     1.461209,
+     1.476833,
+     1.467166,
+     1.827917,
+     1.4645,
+     1.4775
+    ],
+    "median_ms": 1.4769165000000002
+   },
+   "dependencies": {
+    "retired_proofs": 77,
+    "surviving_proofs": 4466,
+    "unsupported_constructor_facts": 82,
+    "dirty_memberships": 82,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 83,
+    "full_stream_counterfactual_group_ms": [
+     0.488958,
+     0.468917,
+     0.297584,
+     0.27575,
+     0.244958,
+     0.251333,
+     0.250042,
+     0.245584,
+     0.251292,
+     0.28175,
+     0.245959,
+     0.263791
+    ],
+    "median_ms": 0.25756199999999996
+   },
+   "supports": {
+    "retired_proofs": 77,
+    "surviving_proofs": 4466,
+    "unsupported_constructor_facts": 82,
+    "dirty_memberships": 0,
+    "immediately_retained_alternatives": 0,
+    "source_rechecks": 0,
+    "full_stream_counterfactual_group_ms": [
+     0.442875,
+     0.434041,
+     0.349584,
+     0.242,
+     0.24,
+     0.298292,
+     0.235833,
+     0.240583,
+     0.242292,
+     0.240167,
+     0.236958,
+     0.28475
+    ],
+    "median_ms": 0.242146
+   }
+  },
+  "examples": [],
+  "mps": true,
+  "independent_oracle": true
+ }
+}

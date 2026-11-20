@@ -1,0 +1,271 @@
+{
+ "sum-bits/1703": {
+  "offered_winners": 25,
+  "equal_class_wrong_source": 4,
+  "wrong_sources_accepted": 0,
+  "remaining_child_winners": 21,
+  "source_aligned": true,
+  "other_winner_changes": 0,
+  "examples": [
+   {
+    "issue": 130,
+    "release": 133,
+    "valid_row": 1284,
+    "claimed_ticket": 2105,
+    "wrong_row": 1209,
+    "wrong_ticket": 2102,
+    "original_rhs": 1552
+   },
+   {
+    "issue": 483,
+    "release": 486,
+    "valid_row": 2489,
+    "claimed_ticket": 3515,
+    "wrong_row": 1139,
+    "wrong_ticket": 1727,
+    "original_rhs": 3133
+   },
+   {
+    "issue": 810,
+    "release": 813,
+    "valid_row": 3464,
+    "claimed_ticket": 5303,
+    "wrong_row": 3473,
+    "wrong_ticket": 5330,
+    "original_rhs": 4638
+   }
+  ]
+ },
+ "sum-bits/1709": {
+  "offered_winners": 26,
+  "equal_class_wrong_source": 8,
+  "wrong_sources_accepted": 0,
+  "remaining_child_winners": 18,
+  "source_aligned": true,
+  "other_winner_changes": 0,
+  "examples": [
+   {
+    "issue": 126,
+    "release": 130,
+    "valid_row": 1259,
+    "claimed_ticket": 2021,
+    "wrong_row": 1138,
+    "wrong_ticket": 2018,
+    "original_rhs": 1517
+   },
+   {
+    "issue": 130,
+    "release": 133,
+    "valid_row": 1284,
+    "claimed_ticket": 2105,
+    "wrong_row": 1209,
+    "wrong_ticket": 2102,
+    "original_rhs": 1552
+   },
+   {
+    "issue": 483,
+    "release": 486,
+    "valid_row": 2489,
+    "claimed_ticket": 3515,
+    "wrong_row": 1139,
+    "wrong_ticket": 1727,
+    "original_rhs": 3133
+   }
+  ]
+ },
+ "dot-product/1703": {
+  "offered_winners": 17,
+  "equal_class_wrong_source": 1,
+  "wrong_sources_accepted": 0,
+  "remaining_child_winners": 16,
+  "source_aligned": true,
+  "other_winner_changes": 0,
+  "examples": [
+   {
+    "issue": 135,
+    "release": 139,
+    "valid_row": 1274,
+    "claimed_ticket": 1552,
+    "wrong_row": 1054,
+    "wrong_ticket": 1140,
+    "original_rhs": 1272
+   }
+  ]
+ },
+ "dot-product/1709": {
+  "offered_winners": 16,
+  "equal_class_wrong_source": 2,
+  "wrong_sources_accepted": 0,
+  "remaining_child_winners": 14,
+  "source_aligned": true,
+  "other_winner_changes": 0,
+  "examples": [
+   {
+    "issue": 135,
+    "release": 139,
+    "valid_row": 1274,
+    "claimed_ticket": 1552,
+    "wrong_row": 1054,
+    "wrong_ticket": 1140,
+    "original_rhs": 1272
+   },
+   {
+    "issue": 135,
+    "release": 139,
+    "valid_row": 1275,
+    "claimed_ticket": 1555,
+    "wrong_row": 1059,
+    "wrong_ticket": 1155,
+    "original_rhs": 1273
+   }
+  ]
+ },
+ "gemm-bias-relu/1703": {
+  "offered_winners": 23,
+  "equal_class_wrong_source": 6,
+  "wrong_sources_accepted": 0,
+  "remaining_child_winners": 17,
+  "source_aligned": true,
+  "other_winner_changes": 0,
+  "examples": [
+   {
+    "issue": 171,
+    "release": 175,
+    "valid_row": 1799,
+    "claimed_ticket": 2327,
+    "wrong_row": 1408,
+    "wrong_ticket": 1665,
+    "original_rhs": 2007
+   },
+   {
+    "issue": 190,
+    "release": 194,
+    "valid_row": 3433,
+    "claimed_ticket": 6052,
+    "wrong_row": 1778,
+    "wrong_ticket": 2264,
+    "original_rhs": 4587
+   },
+   {
+    "issue": 194,
+    "release": 198,
+    "valid_row": 3751,
+    "claimed_ticket": 6750,
+    "wrong_row": 1781,
+    "wrong_ticket": 2273,
+    "original_rhs": 5078
+   }
+  ]
+ },
+ "gemm-bias-relu/1709": {
+  "offered_winners": 20,
+  "equal_class_wrong_source": 8,
+  "wrong_sources_accepted": 0,
+  "remaining_child_winners": 12,
+  "source_aligned": true,
+  "other_winner_changes": 0,
+  "examples": [
+   {
+    "issue": 171,
+    "release": 175,
+    "valid_row": 1799,
+    "claimed_ticket": 2327,
+    "wrong_row": 1408,
+    "wrong_ticket": 1665,
+    "original_rhs": 2007
+   },
+   {
+    "issue": 171,
+    "release": 175,
+    "valid_row": 1800,
+    "claimed_ticket": 2330,
+    "wrong_row": 1409,
+    "wrong_ticket": 1668,
+    "original_rhs": 2008
+   },
+   {
+    "issue": 190,
+    "release": 194,
+    "valid_row": 3433,
+    "claimed_ticket": 6052,
+    "wrong_row": 1778,
+    "wrong_ticket": 2264,
+    "original_rhs": 4587
+   }
+  ]
+ },
+ "stable-argmax/1703": {
+  "offered_winners": 17,
+  "equal_class_wrong_source": 6,
+  "wrong_sources_accepted": 0,
+  "remaining_child_winners": 11,
+  "source_aligned": true,
+  "other_winner_changes": 0,
+  "examples": [
+   {
+    "issue": 114,
+    "release": 117,
+    "valid_row": 1135,
+    "claimed_ticket": 1365,
+    "wrong_row": 891,
+    "wrong_ticket": 969,
+    "original_rhs": 1174
+   },
+   {
+    "issue": 128,
+    "release": 132,
+    "valid_row": 1930,
+    "claimed_ticket": 3137,
+    "wrong_row": 1137,
+    "wrong_ticket": 1371,
+    "original_rhs": 2419
+   },
+   {
+    "issue": 136,
+    "release": 140,
+    "valid_row": 2304,
+    "claimed_ticket": 4018,
+    "wrong_row": 2293,
+    "wrong_ticket": 3985,
+    "original_rhs": 2989
+   }
+  ]
+ },
+ "stable-argmax/1709": {
+  "offered_winners": 18,
+  "equal_class_wrong_source": 8,
+  "wrong_sources_accepted": 0,
+  "remaining_child_winners": 10,
+  "source_aligned": true,
+  "other_winner_changes": 0,
+  "examples": [
+   {
+    "issue": 114,
+    "release": 117,
+    "valid_row": 1135,
+    "claimed_ticket": 1365,
+    "wrong_row": 891,
+    "wrong_ticket": 969,
+    "original_rhs": 1174
+   },
+   {
+    "issue": 114,
+    "release": 117,
+    "valid_row": 1136,
+    "claimed_ticket": 1368,
+    "wrong_row": 892,
+    "wrong_ticket": 972,
+    "original_rhs": 1175
+   },
+   {
+    "issue": 128,
+    "release": 132,
+    "valid_row": 1930,
+    "claimed_ticket": 3137,
+    "wrong_row": 1137,
+    "wrong_ticket": 1371,
+    "original_rhs": 2419
+   }
+  ]
+ }
+}

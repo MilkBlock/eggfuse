@@ -1,0 +1,194 @@
+{
+ "sum-bits/1703/observed": {
+  "batch": {
+   "verified_child_source_tickets": 23,
+   "verified_root_and_child_ordinals": 118,
+   "stale_sources_checked": 17,
+   "failed_parents_checked": 26,
+   "exact_residual": 7147
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 25,
+   "verified_root_and_child_ordinals": 120,
+   "stale_sources_checked": 19,
+   "failed_parents_checked": 26,
+   "exact_residual": 7145
+  }
+ },
+ "sum-bits/1709/observed": {
+  "batch": {
+   "verified_child_source_tickets": 15,
+   "verified_root_and_child_ordinals": 106,
+   "stale_sources_checked": 5,
+   "failed_parents_checked": 35,
+   "exact_residual": 7159
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 26,
+   "verified_root_and_child_ordinals": 117,
+   "stale_sources_checked": 9,
+   "failed_parents_checked": 35,
+   "exact_residual": 7148
+  }
+ },
+ "sum-bits/1709/reject-parent": {
+  "batch": {
+   "verified_child_source_tickets": 13,
+   "verified_root_and_child_ordinals": 103,
+   "stale_sources_checked": 5,
+   "failed_parents_checked": 36,
+   "exact_residual": 7162
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 25,
+   "verified_root_and_child_ordinals": 115,
+   "stale_sources_checked": 9,
+   "failed_parents_checked": 36,
+   "exact_residual": 7150
+  }
+ },
+ "dot-product/1703/observed": {
+  "batch": {
+   "verified_child_source_tickets": 17,
+   "verified_root_and_child_ordinals": 105,
+   "stale_sources_checked": 3,
+   "failed_parents_checked": 5,
+   "exact_residual": 6599
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 17,
+   "verified_root_and_child_ordinals": 105,
+   "stale_sources_checked": 4,
+   "failed_parents_checked": 5,
+   "exact_residual": 6599
+  }
+ },
+ "dot-product/1709/observed": {
+  "batch": {
+   "verified_child_source_tickets": 14,
+   "verified_root_and_child_ordinals": 88,
+   "stale_sources_checked": 0,
+   "failed_parents_checked": 10,
+   "exact_residual": 6616
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 16,
+   "verified_root_and_child_ordinals": 90,
+   "stale_sources_checked": 2,
+   "failed_parents_checked": 10,
+   "exact_residual": 6614
+  }
+ },
+ "dot-product/1709/reject-parent": {
+  "batch": {
+   "verified_child_source_tickets": 12,
+   "verified_root_and_child_ordinals": 85,
+   "stale_sources_checked": 0,
+   "failed_parents_checked": 11,
+   "exact_residual": 6619
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 15,
+   "verified_root_and_child_ordinals": 88,
+   "stale_sources_checked": 2,
+   "failed_parents_checked": 11,
+   "exact_residual": 6616
+  }
+ },
+ "gemm-bias-relu/1703/observed": {
+  "batch": {
+   "verified_child_source_tickets": 23,
+   "verified_root_and_child_ordinals": 93,
+   "stale_sources_checked": 5,
+   "failed_parents_checked": 7,
+   "exact_residual": 15369
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 23,
+   "verified_root_and_child_ordinals": 93,
+   "stale_sources_checked": 5,
+   "failed_parents_checked": 7,
+   "exact_residual": 15369
+  }
+ },
+ "gemm-bias-relu/1709/observed": {
+  "batch": {
+   "verified_child_source_tickets": 12,
+   "verified_root_and_child_ordinals": 78,
+   "stale_sources_checked": 0,
+   "failed_parents_checked": 19,
+   "exact_residual": 15384
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 20,
+   "verified_root_and_child_ordinals": 86,
+   "stale_sources_checked": 0,
+   "failed_parents_checked": 19,
+   "exact_residual": 15376
+  }
+ },
+ "gemm-bias-relu/1709/reject-parent": {
+  "batch": {
+   "verified_child_source_tickets": 10,
+   "verified_root_and_child_ordinals": 75,
+   "stale_sources_checked": 0,
+   "failed_parents_checked": 20,
+   "exact_residual": 15387
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 19,
+   "verified_root_and_child_ordinals": 84,
+   "stale_sources_checked": 0,
+   "failed_parents_checked": 20,
+   "exact_residual": 15378
+  }
+ },
+ "stable-argmax/1703/observed": {
+  "batch": {
+   "verified_child_source_tickets": 16,
+   "verified_root_and_child_ordinals": 76,
+   "stale_sources_checked": 5,
+   "failed_parents_checked": 11,
+   "exact_residual": 8114
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 17,
+   "verified_root_and_child_ordinals": 77,
+   "stale_sources_checked": 5,
+   "failed_parents_checked": 11,
+   "exact_residual": 8113
+  }
+ },
+ "stable-argmax/1709/observed": {
+  "batch": {
+   "verified_child_source_tickets": 14,
+   "verified_root_and_child_ordinals": 73,
+   "stale_sources_checked": 0,
+   "failed_parents_checked": 16,
+   "exact_residual": 8117
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 18,
+   "verified_root_and_child_ordinals": 77,
+   "stale_sources_checked": 0,
+   "failed_parents_checked": 16,
+   "exact_residual": 8113
+  }
+ },
+ "stable-argmax/1709/reject-parent": {
+  "batch": {
+   "verified_child_source_tickets": 12,
+   "verified_root_and_child_ordinals": 70,
+   "stale_sources_checked": 0,
+   "failed_parents_checked": 17,
+   "exact_residual": 8120
+  },
+  "dependencies": {
+   "verified_child_source_tickets": 17,
+   "verified_root_and_child_ordinals": 75,
+   "stale_sources_checked": 0,
+   "failed_parents_checked": 17,
+   "exact_residual": 8115
+  }
+ }
+}
