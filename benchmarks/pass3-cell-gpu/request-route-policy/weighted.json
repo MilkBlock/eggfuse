@@ -1,0 +1,118 @@
+{
+ "conjugate-gradient": {
+  "occurrences": 177,
+  "positive_calls": 98,
+  "opportunity_us": 3748.368,
+  "distinct_inputs": 37,
+  "mixed_inputs": 8,
+  "best_by_input_us": 3596.871,
+  "policies": {
+   "wake": {
+    "wins": 98,
+    "picked": 177,
+    "captured_us": 3748.368,
+    "penalty_us": 1674.415,
+    "net_us": 2073.953,
+    "gain_coverage": 1.0
+   },
+   "size-rule": {
+    "wins": 98,
+    "picked": 146,
+    "captured_us": 3748.368,
+    "penalty_us": 1023.54,
+    "net_us": 2724.828,
+    "gain_coverage": 1.0
+   },
+   "bandit-0": {
+    "wins": 98,
+    "picked": 177,
+    "captured_us": 3748.368,
+    "penalty_us": 1674.415,
+    "net_us": 2073.953,
+    "gain_coverage": 1.0
+   },
+   "return-0": {
+    "wins": 97,
+    "picked": 171,
+    "captured_us": 3746.868,
+    "penalty_us": 1608.874,
+    "net_us": 2137.994,
+    "gain_coverage": 0.9995998258442074
+   },
+   "bandit-8": {
+    "wins": 98,
+    "picked": 177,
+    "captured_us": 3748.368,
+    "penalty_us": 1674.415,
+    "net_us": 2073.953,
+    "gain_coverage": 1.0
+   },
+   "return-8": {
+    "wins": 87,
+    "picked": 115,
+    "captured_us": 3703.411,
+    "penalty_us": 506.918,
+    "net_us": 3196.493,
+    "gain_coverage": 0.9880062469853547
+   }
+  }
+ },
+ "3mm": {
+  "occurrences": 200,
+  "positive_calls": 90,
+  "opportunity_us": 12745.835,
+  "distinct_inputs": 41,
+  "mixed_inputs": 6,
+  "best_by_input_us": 11973.627,
+  "policies": {
+   "wake": {
+    "wins": 90,
+    "picked": 200,
+    "captured_us": 12745.835,
+    "penalty_us": 8775.375,
+    "net_us": 3970.46,
+    "gain_coverage": 1.0
+   },
+   "size-rule": {
+    "wins": 89,
+    "picked": 193,
+    "captured_us": 12694.294,
+    "penalty_us": 8659.584,
+    "net_us": 4034.71,
+    "gain_coverage": 0.995956247668356
+   },
+   "bandit-0": {
+    "wins": 90,
+    "picked": 200,
+    "captured_us": 12745.835,
+    "penalty_us": 8775.375,
+    "net_us": 3970.46,
+    "gain_coverage": 1.0
+   },
+   "return-0": {
+    "wins": 88,
+    "picked": 196,
+    "captured_us": 12742.335,
+    "penalty_us": 8750.584,
+    "net_us": 3991.751,
+    "gain_coverage": 0.999725400493573
+   },
+   "bandit-8": {
+    "wins": 90,
+    "picked": 200,
+    "captured_us": 12745.835,
+    "penalty_us": 8775.375,
+    "net_us": 3970.46,
+    "gain_coverage": 1.0
+   },
+   "return-8": {
+    "wins": 90,
+    "picked": 151,
+    "captured_us": 12745.835,
+    "penalty_us": 3694.209,
+    "net_us": 9051.626,
+    "gain_coverage": 1.0
+   }
+  }
+ }
+}
