@@ -1,0 +1,2015 @@
+{
+ "fixture": {
+  "census-pooled": {
+   "source_runs": 8,
+   "per_run_domain": [
+    24,
+    15,
+    2,
+    8,
+    8,
+    0,
+    0
+   ],
+   "admissible_run_count": 0,
+   "ordered_source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "final_graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "credited_to_model": false
+  },
+  "census-unpooled": {
+   "source_runs": 8,
+   "per_run_domain": [
+    24,
+    15,
+    2,
+    8,
+    0,
+    0,
+    0
+   ],
+   "admissible_run_count": 0,
+   "ordered_source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "final_graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "credited_to_model": false
+  },
+  "merge-pooled": {
+   "source_runs": 8,
+   "per_run_domain": [
+    24,
+    15,
+    2,
+    8,
+    8,
+    0,
+    0
+   ],
+   "admissible_run_count": 0,
+   "ordered_source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "final_graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "credited_to_model": false
+  },
+  "split-keep-pooled": {
+   "source_runs": 8,
+   "per_run_domain": [
+    24,
+    15,
+    8,
+    6,
+    4,
+    4,
+    4
+   ],
+   "admissible_run_count": 4,
+   "ordered_source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "final_graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "later_source_unions": 7,
+   "later_reads": 4,
+   "later_read_hash": "db1a65c015b0cad9e60c4c77412b57c6961eaaadb7146229ebf0ec04526957d3",
+   "action_run": 5,
+   "shape": 12,
+   "issued_epoch": 5,
+   "source_templates": [
+    10,
+    0,
+    1,
+    5
+   ],
+   "old_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     7,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     7,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "retired_owners": [],
+   "effect": {
+    "control": "keep_both"
+   },
+   "old_external_reader_count": 1,
+   "old_live_refs": 6,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "credited_to_model": false
+  },
+  "split-merge-pooled": {
+   "source_runs": 8,
+   "per_run_domain": [
+    24,
+    15,
+    8,
+    6,
+    1,
+    1,
+    1
+   ],
+   "admissible_run_count": 1,
+   "ordered_source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "final_graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "later_source_unions": 7,
+   "later_reads": 4,
+   "later_read_hash": "db1a65c015b0cad9e60c4c77412b57c6961eaaadb7146229ebf0ec04526957d3",
+   "action_run": 5,
+   "shape": 12,
+   "issued_epoch": 5,
+   "source_templates": [
+    10,
+    0,
+    1,
+    5
+   ],
+   "old_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     7,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     7,
+     0
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "retired_owners": [
+    1
+   ],
+   "effect": {
+    "added": 0,
+    "merged": 1,
+    "copied_slots": 2,
+    "copied_fact_states": 6
+   },
+   "old_external_reader_count": 1,
+   "old_live_refs": 6,
+   "live_owner_credit": 1,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": -192,
+   "net_live_byte_credit": -224,
+   "new_bytes": 744,
+   "freed_bytes": 520,
+   "peak_extra_requested_bytes": 576,
+   "credited_to_model": false
+  },
+  "split-stale-pooled": {
+   "source_runs": 8,
+   "per_run_domain": [
+    24,
+    15,
+    8,
+    6,
+    4,
+    4,
+    4
+   ],
+   "admissible_run_count": 4,
+   "ordered_source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "final_graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "later_source_unions": 7,
+   "later_reads": 4,
+   "later_read_hash": "db1a65c015b0cad9e60c4c77412b57c6961eaaadb7146229ebf0ec04526957d3",
+   "action_run": 5,
+   "shape": 12,
+   "issued_epoch": 5,
+   "source_templates": [
+    10,
+    0,
+    1,
+    5
+   ],
+   "old_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     7,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     7,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "retired_owners": [],
+   "effect": {
+    "rejected": "epoch",
+    "offered_epoch": 4
+   },
+   "old_external_reader_count": 1,
+   "old_live_refs": 6,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "credited_to_model": false
+  },
+  "split-partial-pooled": {
+   "source_runs": 8,
+   "per_run_domain": [
+    24,
+    15,
+    8,
+    6,
+    4,
+    4,
+    4
+   ],
+   "admissible_run_count": 4,
+   "ordered_source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "final_graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "later_source_unions": 7,
+   "later_reads": 4,
+   "later_read_hash": "db1a65c015b0cad9e60c4c77412b57c6961eaaadb7146229ebf0ec04526957d3",
+   "action_run": 5,
+   "shape": 12,
+   "issued_epoch": 5,
+   "source_templates": [
+    10,
+    0,
+    1,
+    5
+   ],
+   "old_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     7,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     7,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "retired_owners": [],
+   "effect": {
+    "rejected": "incomplete_old_group",
+    "offered": [
+     3,
+     5,
+     7
+    ]
+   },
+   "old_external_reader_count": 1,
+   "old_live_refs": 6,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "credited_to_model": false
+  },
+  "split-keep-probe-pooled": {
+   "source_runs": 5,
+   "per_run_domain": [
+    14,
+    10,
+    8,
+    2,
+    1,
+    1,
+    1
+   ],
+   "admissible_run_count": 1,
+   "ordered_source_sha": "b62c4dce362a85e1ba5ff0f43dc11ddb44939ecf52247685bcc9ac38ff71b2e8",
+   "final_graph": "727e97cdd32d44da9b322bd53709ab64bcabea8d72c9671642818f8be7332943",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "action_run": 5,
+   "shape": 12,
+   "issued_epoch": 5,
+   "source_templates": [
+    10,
+    0,
+    1,
+    5
+   ],
+   "old_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     7,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     7,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "retired_owners": [],
+   "effect": {
+    "control": "keep_both"
+   },
+   "old_external_reader_count": 1,
+   "old_live_refs": 6,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "controlled_union": {
+    "sort": "{\"name\":\"E\",\"kind\":\"eq\"}",
+    "left": [
+     1,
+     {
+      "cell": 1,
+      "op": 0
+     },
+     1
+    ],
+    "right": [
+     12884901893,
+     {
+      "cell": 5,
+      "op": 1
+     },
+     0
+    ],
+    "previous_owners": [
+     0,
+     1
+    ],
+    "index": 0,
+    "candidates": 5,
+    "union_delta": 1,
+    "canonical": 1
+   },
+   "injected_controls": [
+    {
+     "sort": "{\"name\":\"E\",\"kind\":\"eq\"}",
+     "left": [
+      1,
+      {
+       "cell": 1,
+       "op": 0
+      },
+      1
+     ],
+     "right": [
+      12884901893,
+      {
+       "cell": 5,
+       "op": 1
+      },
+      0
+     ],
+     "previous_owners": [
+      0,
+      1
+     ],
+     "index": 0,
+     "candidates": 5,
+     "union_delta": 1,
+     "canonical": 1
+    }
+   ],
+   "repaired_graph": "727e97cdd32d44da9b322bd53709ab64bcabea8d72c9671642818f8be7332943",
+   "post_union_external_readers": 1,
+   "credited_to_model": false
+  },
+  "split-merge-probe-pooled": {
+   "source_runs": 5,
+   "per_run_domain": [
+    14,
+    10,
+    8,
+    2,
+    1,
+    1,
+    1
+   ],
+   "admissible_run_count": 1,
+   "ordered_source_sha": "b62c4dce362a85e1ba5ff0f43dc11ddb44939ecf52247685bcc9ac38ff71b2e8",
+   "final_graph": "727e97cdd32d44da9b322bd53709ab64bcabea8d72c9671642818f8be7332943",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "action_run": 5,
+   "shape": 12,
+   "issued_epoch": 5,
+   "source_templates": [
+    10,
+    0,
+    1,
+    5
+   ],
+   "old_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     7,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     7,
+     0
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "retired_owners": [
+    1
+   ],
+   "effect": {
+    "added": 0,
+    "merged": 1,
+    "copied_slots": 2,
+    "copied_fact_states": 6
+   },
+   "old_external_reader_count": 1,
+   "old_live_refs": 6,
+   "live_owner_credit": 1,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": -192,
+   "net_live_byte_credit": -224,
+   "new_bytes": 744,
+   "freed_bytes": 520,
+   "peak_extra_requested_bytes": 576,
+   "controlled_union": {
+    "sort": "{\"name\":\"E\",\"kind\":\"eq\"}",
+    "left": [
+     1,
+     {
+      "cell": 1,
+      "op": 0
+     },
+     1
+    ],
+    "right": [
+     12884901893,
+     {
+      "cell": 5,
+      "op": 1
+     },
+     0
+    ],
+    "previous_owners": [
+     0,
+     1
+    ],
+    "index": 0,
+    "candidates": 5,
+    "union_delta": 1,
+    "canonical": 1
+   },
+   "injected_controls": [
+    {
+     "sort": "{\"name\":\"E\",\"kind\":\"eq\"}",
+     "left": [
+      1,
+      {
+       "cell": 1,
+       "op": 0
+      },
+      1
+     ],
+     "right": [
+      12884901893,
+      {
+       "cell": 5,
+       "op": 1
+      },
+      0
+     ],
+     "previous_owners": [
+      0,
+      1
+     ],
+     "index": 0,
+     "candidates": 5,
+     "union_delta": 1,
+     "canonical": 1
+    }
+   ],
+   "repaired_graph": "727e97cdd32d44da9b322bd53709ab64bcabea8d72c9671642818f8be7332943",
+   "post_union_external_readers": 1,
+   "credited_to_model": false
+  }
+ },
+ "dot-product": {
+  "census-pooled": {
+   "source_runs": 1535,
+   "per_run_domain": [
+    1776825,
+    511941,
+    36,
+    487366,
+    461442,
+    278811,
+    0
+   ],
+   "admissible_run_count": 0,
+   "ordered_source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "final_graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "credited_to_model": false
+  },
+  "census-unpooled": {
+   "source_runs": 1535,
+   "per_run_domain": [
+    1776825,
+    511941,
+    36,
+    487366,
+    0,
+    0,
+    0
+   ],
+   "admissible_run_count": 0,
+   "ordered_source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "final_graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "credited_to_model": false
+  },
+  "merge-pooled": {
+   "source_runs": 1535,
+   "per_run_domain": [
+    1776825,
+    511941,
+    36,
+    487366,
+    461442,
+    278811,
+    0
+   ],
+   "admissible_run_count": 0,
+   "ordered_source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "final_graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "credited_to_model": false
+  },
+  "split-keep-pooled": {
+   "source_runs": 1535,
+   "per_run_domain": [
+    1776825,
+    511941,
+    123,
+    487315,
+    431024,
+    265011,
+    1516
+   ],
+   "admissible_run_count": 1516,
+   "ordered_source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "final_graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "later_source_unions": 593,
+   "later_reads": 1516,
+   "later_read_hash": "603f5947db7e0ab81e449135a452f5200341811439b6f6625dc58cfdbcb21d78",
+   "action_run": 20,
+   "shape": 423,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [],
+   "effect": {
+    "control": "keep_both"
+   },
+   "old_external_reader_count": 3,
+   "old_live_refs": 4,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "credited_to_model": false
+  },
+  "split-merge-pooled": {
+   "source_runs": 1535,
+   "per_run_domain": [
+    1776825,
+    511941,
+    123,
+    487315,
+    429509,
+    263496,
+    1
+   ],
+   "admissible_run_count": 1,
+   "ordered_source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "final_graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "later_source_unions": 593,
+   "later_reads": 1516,
+   "later_read_hash": "603f5947db7e0ab81e449135a452f5200341811439b6f6625dc58cfdbcb21d78",
+   "action_run": 20,
+   "shape": 423,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     0
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [
+    1
+   ],
+   "effect": {
+    "added": 0,
+    "merged": 1,
+    "copied_slots": 5,
+    "copied_fact_states": 4
+   },
+   "old_external_reader_count": 3,
+   "old_live_refs": 4,
+   "live_owner_credit": 1,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 124,
+   "net_live_byte_credit": 124,
+   "new_bytes": 528,
+   "freed_bytes": 652,
+   "peak_extra_requested_bytes": 304,
+   "credited_to_model": false
+  },
+  "split-stale-pooled": {
+   "source_runs": 1535,
+   "per_run_domain": [
+    1776825,
+    511941,
+    123,
+    487315,
+    431024,
+    265011,
+    1516
+   ],
+   "admissible_run_count": 1516,
+   "ordered_source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "final_graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "later_source_unions": 593,
+   "later_reads": 1516,
+   "later_read_hash": "603f5947db7e0ab81e449135a452f5200341811439b6f6625dc58cfdbcb21d78",
+   "action_run": 20,
+   "shape": 423,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [],
+   "effect": {
+    "rejected": "epoch",
+    "offered_epoch": 19
+   },
+   "old_external_reader_count": 3,
+   "old_live_refs": 4,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "credited_to_model": false
+  },
+  "split-partial-pooled": {
+   "source_runs": 1535,
+   "per_run_domain": [
+    1776825,
+    511941,
+    123,
+    487315,
+    431024,
+    265011,
+    1516
+   ],
+   "admissible_run_count": 1516,
+   "ordered_source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "final_graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "later_source_unions": 593,
+   "later_reads": 1516,
+   "later_read_hash": "603f5947db7e0ab81e449135a452f5200341811439b6f6625dc58cfdbcb21d78",
+   "action_run": 20,
+   "shape": 423,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [],
+   "effect": {
+    "rejected": "incomplete_old_group",
+    "offered": [
+     298,
+     314
+    ]
+   },
+   "old_external_reader_count": 3,
+   "old_live_refs": 4,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "credited_to_model": false
+  },
+  "split-keep-probe-pooled": {
+   "source_runs": 20,
+   "per_run_domain": [
+    2909,
+    119,
+    88,
+    27,
+    1,
+    1,
+    1
+   ],
+   "admissible_run_count": 1,
+   "ordered_source_sha": "4733d40f8209cd4c36a5377d26d6917fe2a3d7736a6f0bab51844111abddc7f9",
+   "final_graph": "854f0cbb014338483d7284d15aee9b94d2388b9bc66075ff0604bc2db3c104b3",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "action_run": 20,
+   "shape": 423,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [],
+   "effect": {
+    "control": "keep_both"
+   },
+   "old_external_reader_count": 3,
+   "old_live_refs": 4,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "controlled_union": {
+    "exhausted_candidates": 2
+   },
+   "injected_controls": [
+    {
+     "sort": "{\"name\":\"TypeList\",\"kind\":\"eq\"}",
+     "left": [
+      554050781191,
+      {
+       "cell": 314,
+       "op": 2
+      },
+      0
+     ],
+     "right": [
+      554050781195,
+      {
+       "cell": 275,
+       "op": 1
+      },
+      0
+     ],
+     "previous_owners": [
+      1,
+      0
+     ],
+     "index": 0,
+     "candidates": 2,
+     "rejected_by_source": "conflicting function TypeList-length without merge"
+    },
+    {
+     "sort": "{\"name\":\"TypeList\",\"kind\":\"eq\"}",
+     "left": [
+      554050781191,
+      {
+       "cell": 314,
+       "op": 2
+      },
+      0
+     ],
+     "right": [
+      554050781193,
+      {
+       "cell": 298,
+       "op": 2
+      },
+      0
+     ],
+     "previous_owners": [
+      1,
+      0
+     ],
+     "index": 1,
+     "candidates": 2,
+     "rejected_by_source": "conflicting function TypeList-length without merge"
+    },
+    {
+     "exhausted_candidates": 2
+    }
+   ],
+   "credited_to_model": false
+  },
+  "split-merge-probe-pooled": {
+   "source_runs": 20,
+   "per_run_domain": [
+    2909,
+    119,
+    88,
+    27,
+    1,
+    1,
+    1
+   ],
+   "admissible_run_count": 1,
+   "ordered_source_sha": "4733d40f8209cd4c36a5377d26d6917fe2a3d7736a6f0bab51844111abddc7f9",
+   "final_graph": "854f0cbb014338483d7284d15aee9b94d2388b9bc66075ff0604bc2db3c104b3",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "action_run": 20,
+   "shape": 423,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     275,
+     0
+    ],
+    [
+     298,
+     0
+    ],
+    [
+     314,
+     0
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [
+    1
+   ],
+   "effect": {
+    "added": 0,
+    "merged": 1,
+    "copied_slots": 5,
+    "copied_fact_states": 4
+   },
+   "old_external_reader_count": 3,
+   "old_live_refs": 4,
+   "live_owner_credit": 1,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 124,
+   "net_live_byte_credit": 124,
+   "new_bytes": 528,
+   "freed_bytes": 652,
+   "peak_extra_requested_bytes": 304,
+   "controlled_union": {
+    "exhausted_candidates": 2
+   },
+   "injected_controls": [
+    {
+     "sort": "{\"name\":\"TypeList\",\"kind\":\"eq\"}",
+     "left": [
+      554050781191,
+      {
+       "cell": 314,
+       "op": 2
+      },
+      0
+     ],
+     "right": [
+      554050781195,
+      {
+       "cell": 275,
+       "op": 1
+      },
+      0
+     ],
+     "previous_owners": [
+      1,
+      0
+     ],
+     "index": 0,
+     "candidates": 2,
+     "rejected_by_source": "conflicting function TypeList-length without merge"
+    },
+    {
+     "sort": "{\"name\":\"TypeList\",\"kind\":\"eq\"}",
+     "left": [
+      554050781191,
+      {
+       "cell": 314,
+       "op": 2
+      },
+      0
+     ],
+     "right": [
+      554050781193,
+      {
+       "cell": 298,
+       "op": 2
+      },
+      0
+     ],
+     "previous_owners": [
+      1,
+      0
+     ],
+     "index": 1,
+     "candidates": 2,
+     "rejected_by_source": "conflicting function TypeList-length without merge"
+    },
+    {
+     "exhausted_candidates": 2
+    }
+   ],
+   "credited_to_model": false
+  }
+ },
+ "stable-argmax": {
+  "census-pooled": {
+   "source_runs": 1149,
+   "per_run_domain": [
+    1378167,
+    433835,
+    50,
+    404722,
+    380294,
+    219754,
+    0
+   ],
+   "admissible_run_count": 0,
+   "ordered_source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "final_graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "credited_to_model": false
+  },
+  "census-unpooled": {
+   "source_runs": 1149,
+   "per_run_domain": [
+    1378167,
+    433835,
+    50,
+    404722,
+    0,
+    0,
+    0
+   ],
+   "admissible_run_count": 0,
+   "ordered_source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "final_graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "credited_to_model": false
+  },
+  "merge-pooled": {
+   "source_runs": 1149,
+   "per_run_domain": [
+    1378167,
+    433835,
+    50,
+    404722,
+    380294,
+    219754,
+    0
+   ],
+   "admissible_run_count": 0,
+   "ordered_source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "final_graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "credited_to_model": false
+  },
+  "split-keep-pooled": {
+   "source_runs": 1149,
+   "per_run_domain": [
+    1378167,
+    433835,
+    96,
+    404695,
+    368969,
+    214076,
+    1130
+   ],
+   "admissible_run_count": 1130,
+   "ordered_source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "final_graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "later_source_unions": 1191,
+   "later_reads": 1130,
+   "later_read_hash": "6d369618879dbe7ee703b4dc3cc5ac08be6b9b97f3ce934958879527e4f05de7",
+   "action_run": 20,
+   "shape": 455,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [],
+   "effect": {
+    "control": "keep_both"
+   },
+   "old_external_reader_count": 11,
+   "old_live_refs": 4,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "credited_to_model": false
+  },
+  "split-merge-pooled": {
+   "source_runs": 1149,
+   "per_run_domain": [
+    1378167,
+    433835,
+    96,
+    404695,
+    367840,
+    212947,
+    1
+   ],
+   "admissible_run_count": 1,
+   "ordered_source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "final_graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "later_source_unions": 1191,
+   "later_reads": 1130,
+   "later_read_hash": "6d369618879dbe7ee703b4dc3cc5ac08be6b9b97f3ce934958879527e4f05de7",
+   "action_run": 20,
+   "shape": 455,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     0
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [
+    1
+   ],
+   "effect": {
+    "added": 0,
+    "merged": 1,
+    "copied_slots": 5,
+    "copied_fact_states": 4
+   },
+   "old_external_reader_count": 11,
+   "old_live_refs": 4,
+   "live_owner_credit": 1,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 96,
+   "net_live_byte_credit": 96,
+   "new_bytes": 456,
+   "freed_bytes": 552,
+   "peak_extra_requested_bytes": 304,
+   "credited_to_model": false
+  },
+  "split-stale-pooled": {
+   "source_runs": 1149,
+   "per_run_domain": [
+    1378167,
+    433835,
+    96,
+    404695,
+    368969,
+    214076,
+    1130
+   ],
+   "admissible_run_count": 1130,
+   "ordered_source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "final_graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "later_source_unions": 1191,
+   "later_reads": 1130,
+   "later_read_hash": "6d369618879dbe7ee703b4dc3cc5ac08be6b9b97f3ce934958879527e4f05de7",
+   "action_run": 20,
+   "shape": 455,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [],
+   "effect": {
+    "rejected": "epoch",
+    "offered_epoch": 19
+   },
+   "old_external_reader_count": 11,
+   "old_live_refs": 4,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "credited_to_model": false
+  },
+  "split-partial-pooled": {
+   "source_runs": 1149,
+   "per_run_domain": [
+    1378167,
+    433835,
+    96,
+    404695,
+    368969,
+    214076,
+    1130
+   ],
+   "admissible_run_count": 1130,
+   "ordered_source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "final_graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "later_source_unions": 1191,
+   "later_reads": 1130,
+   "later_read_hash": "6d369618879dbe7ee703b4dc3cc5ac08be6b9b97f3ce934958879527e4f05de7",
+   "action_run": 20,
+   "shape": 455,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [],
+   "effect": {
+    "rejected": "incomplete_old_group",
+    "offered": [
+     276,
+     299
+    ]
+   },
+   "old_external_reader_count": 11,
+   "old_live_refs": 4,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "credited_to_model": false
+  },
+  "split-keep-probe-pooled": {
+   "source_runs": 20,
+   "per_run_domain": [
+    2871,
+    62,
+    47,
+    12,
+    1,
+    1,
+    1
+   ],
+   "admissible_run_count": 1,
+   "ordered_source_sha": "cee7f6053d8b6c14680841c2f7cecffb96650d92c0a142d71d10d3260bf9ee0c",
+   "final_graph": "3c0bce6e96e216ce9b09c36f5f705a679591e1e3e715b272f00550fe75908503",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "action_run": 20,
+   "shape": 455,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     1
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [],
+   "effect": {
+    "control": "keep_both"
+   },
+   "old_external_reader_count": 11,
+   "old_live_refs": 4,
+   "live_owner_credit": 0,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 0,
+   "controlled_union": {
+    "exhausted_candidates": 2
+   },
+   "injected_controls": [
+    {
+     "sort": "{\"name\":\"TypeList\",\"kind\":\"eq\"}",
+     "left": [
+      554050781259,
+      {
+       "cell": 299,
+       "op": 2
+      },
+      0
+     ],
+     "right": [
+      554050781263,
+      {
+       "cell": 253,
+       "op": 1
+      },
+      0
+     ],
+     "previous_owners": [
+      1,
+      0
+     ],
+     "index": 0,
+     "candidates": 2,
+     "rejected_by_source": "conflicting function TypeList-length without merge"
+    },
+    {
+     "sort": "{\"name\":\"TypeList\",\"kind\":\"eq\"}",
+     "left": [
+      554050781259,
+      {
+       "cell": 299,
+       "op": 2
+      },
+      0
+     ],
+     "right": [
+      554050781261,
+      {
+       "cell": 276,
+       "op": 2
+      },
+      0
+     ],
+     "previous_owners": [
+      1,
+      0
+     ],
+     "index": 1,
+     "candidates": 2,
+     "rejected_by_source": "conflicting function TypeList-length without merge"
+    },
+    {
+     "exhausted_candidates": 2
+    }
+   ],
+   "credited_to_model": false
+  },
+  "split-merge-probe-pooled": {
+   "source_runs": 20,
+   "per_run_domain": [
+    2871,
+    62,
+    47,
+    12,
+    1,
+    1,
+    1
+   ],
+   "admissible_run_count": 1,
+   "ordered_source_sha": "cee7f6053d8b6c14680841c2f7cecffb96650d92c0a142d71d10d3260bf9ee0c",
+   "final_graph": "3c0bce6e96e216ce9b09c36f5f705a679591e1e3e715b272f00550fe75908503",
+   "later_source_unions": 0,
+   "later_reads": 0,
+   "later_read_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "action_run": 20,
+   "shape": 455,
+   "issued_epoch": 20,
+   "source_templates": [
+    538,
+    577,
+    577
+   ],
+   "old_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     1
+    ]
+   ],
+   "new_members": [
+    [
+     253,
+     0
+    ],
+    [
+     276,
+     0
+    ],
+    [
+     299,
+     0
+    ]
+   ],
+   "previous_owners": [
+    0,
+    1
+   ],
+   "destination": 0,
+   "old_frame_birth_epochs": [
+    17,
+    18,
+    19
+   ],
+   "retired_owners": [
+    1
+   ],
+   "effect": {
+    "added": 0,
+    "merged": 1,
+    "copied_slots": 5,
+    "copied_fact_states": 4
+   },
+   "old_external_reader_count": 11,
+   "old_live_refs": 4,
+   "live_owner_credit": 1,
+   "owner_vector_slots_freed": 0,
+   "source_descriptors_freed": 0,
+   "component_storage_delta": 96,
+   "net_live_byte_credit": 96,
+   "new_bytes": 456,
+   "freed_bytes": 552,
+   "peak_extra_requested_bytes": 304,
+   "controlled_union": {
+    "exhausted_candidates": 2
+   },
+   "injected_controls": [
+    {
+     "sort": "{\"name\":\"TypeList\",\"kind\":\"eq\"}",
+     "left": [
+      554050781259,
+      {
+       "cell": 299,
+       "op": 2
+      },
+      0
+     ],
+     "right": [
+      554050781263,
+      {
+       "cell": 253,
+       "op": 1
+      },
+      0
+     ],
+     "previous_owners": [
+      1,
+      0
+     ],
+     "index": 0,
+     "candidates": 2,
+     "rejected_by_source": "conflicting function TypeList-length without merge"
+    },
+    {
+     "sort": "{\"name\":\"TypeList\",\"kind\":\"eq\"}",
+     "left": [
+      554050781259,
+      {
+       "cell": 299,
+       "op": 2
+      },
+      0
+     ],
+     "right": [
+      554050781261,
+      {
+       "cell": 276,
+       "op": 2
+      },
+      0
+     ],
+     "previous_owners": [
+      1,
+      0
+     ],
+     "index": 1,
+     "candidates": 2,
+     "rejected_by_source": "conflicting function TypeList-length without merge"
+    },
+    {
+     "exhausted_candidates": 2
+    }
+   ],
+   "credited_to_model": false
+  }
+ }
+}

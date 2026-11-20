@@ -1,0 +1,5716 @@
+{
+ "fixture": {
+  "split-merge-pooled": {
+   "seed": {
+    "source_run": 4,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 0,
+     "shape": 12,
+     "epoch": 4,
+     "members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       7,
+       1
+      ]
+     ],
+     "ids": [
+      1,
+      3,
+      5,
+      7
+     ]
+    }
+   },
+   "action": {
+    "source_run": 5,
+    "event": {
+     "kind": "existing_pair",
+     "component": 0,
+     "shape": 12,
+     "old_epoch": 5,
+     "new_epoch": 5,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      1,
+      3,
+      5,
+      7
+     ],
+     "old_members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       7,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       0
+      ],
+      [
+       7,
+       0
+      ]
+     ],
+     "member_source_templates": [
+      10,
+      0,
+      1,
+      5
+     ],
+     "member_birth_epochs": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "retired_owner_ids": [
+      1
+     ],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 1,
+         "op": 0
+        },
+        "table": 4,
+        "fields": [
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 0,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 1
+        },
+        "table": 1,
+        "fields": [
+         {
+          "Eq": 1
+         },
+         {
+          "Eq": 12884901892
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 2
+        },
+        "table": 2,
+        "fields": [
+         {
+          "Eq": 12884901892
+         },
+         {
+          "Eq": 12884901893
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 5,
+         "op": 1
+        },
+        "table": 3,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 21474836484
+         }
+        ],
+        "epoch": 2,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 1
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 21474836484
+         },
+         {
+          "Eq": 30064771076
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 2
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 30064771077
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 9,
+          "op": 1
+         }
+        },
+        6,
+        0,
+        21474836484,
+        {
+         "cell": 5,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 1,
+         "op": 0
+        },
+        "table": 4,
+        "fields": [
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 0,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 1
+        },
+        "table": 1,
+        "fields": [
+         {
+          "Eq": 1
+         },
+         {
+          "Eq": 12884901892
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 2
+        },
+        "table": 2,
+        "fields": [
+         {
+          "Eq": 12884901892
+         },
+         {
+          "Eq": 12884901893
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 5,
+         "op": 1
+        },
+        "table": 3,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 21474836484
+         }
+        ],
+        "epoch": 2,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 1
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 21474836484
+         },
+         {
+          "Eq": 30064771076
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 2
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 30064771077
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 9,
+          "op": 1
+         }
+        },
+        6,
+        0,
+        21474836484,
+        {
+         "cell": 5,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      3,
+      3,
+      10,
+      2164,
+      64,
+      144,
+      2372
+     ],
+     "new_charge": [
+      2,
+      3,
+      10,
+      2332,
+      64,
+      168,
+      2564
+     ],
+     "allocation": [
+      [
+       901963,
+       1962634,
+       1060671,
+       901963
+      ],
+      [
+       902187,
+       1963378,
+       1061191,
+       902539
+      ]
+     ],
+     "outcome": {
+      "added": 0,
+      "merged": 1,
+      "copied_slots": 2,
+      "copied_fact_states": 6
+     }
+    }
+   },
+   "post_union": null
+  },
+  "split-stale-pooled": {
+   "seed": {
+    "source_run": 4,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 0,
+     "shape": 12,
+     "epoch": 4,
+     "members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       7,
+       1
+      ]
+     ],
+     "ids": [
+      1,
+      3,
+      5,
+      7
+     ]
+    }
+   },
+   "action": {
+    "source_run": 5,
+    "event": {
+     "kind": "existing_pair",
+     "component": 0,
+     "shape": 12,
+     "old_epoch": 5,
+     "new_epoch": 5,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      1,
+      3,
+      5,
+      7
+     ],
+     "old_members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       7,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       7,
+       1
+      ]
+     ],
+     "member_source_templates": [
+      10,
+      0,
+      1,
+      5
+     ],
+     "member_birth_epochs": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "retired_owner_ids": [],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 1,
+         "op": 0
+        },
+        "table": 4,
+        "fields": [
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 0,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 1
+        },
+        "table": 1,
+        "fields": [
+         {
+          "Eq": 1
+         },
+         {
+          "Eq": 12884901892
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 2
+        },
+        "table": 2,
+        "fields": [
+         {
+          "Eq": 12884901892
+         },
+         {
+          "Eq": 12884901893
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 5,
+         "op": 1
+        },
+        "table": 3,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 21474836484
+         }
+        ],
+        "epoch": 2,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 1
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 21474836484
+         },
+         {
+          "Eq": 30064771076
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 2
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 30064771077
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 9,
+          "op": 1
+         }
+        },
+        6,
+        0,
+        21474836484,
+        {
+         "cell": 5,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 1,
+         "op": 0
+        },
+        "table": 4,
+        "fields": [
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 0,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 1
+        },
+        "table": 1,
+        "fields": [
+         {
+          "Eq": 1
+         },
+         {
+          "Eq": 12884901892
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 2
+        },
+        "table": 2,
+        "fields": [
+         {
+          "Eq": 12884901892
+         },
+         {
+          "Eq": 12884901893
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 5,
+         "op": 1
+        },
+        "table": 3,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 21474836484
+         }
+        ],
+        "epoch": 2,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 1
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 21474836484
+         },
+         {
+          "Eq": 30064771076
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 2
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 30064771077
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 9,
+          "op": 1
+         }
+        },
+        6,
+        0,
+        21474836484,
+        {
+         "cell": 5,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      3,
+      3,
+      10,
+      2164,
+      64,
+      144,
+      2372
+     ],
+     "new_charge": [
+      3,
+      3,
+      10,
+      2164,
+      64,
+      144,
+      2372
+     ],
+     "allocation": null,
+     "outcome": {
+      "rejected": "epoch",
+      "offered_epoch": 4
+     }
+    }
+   },
+   "post_union": null
+  },
+  "split-partial-pooled": {
+   "seed": {
+    "source_run": 4,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 0,
+     "shape": 12,
+     "epoch": 4,
+     "members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       7,
+       1
+      ]
+     ],
+     "ids": [
+      1,
+      3,
+      5,
+      7
+     ]
+    }
+   },
+   "action": {
+    "source_run": 5,
+    "event": {
+     "kind": "existing_pair",
+     "component": 0,
+     "shape": 12,
+     "old_epoch": 5,
+     "new_epoch": 5,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      1,
+      3,
+      5,
+      7
+     ],
+     "old_members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       7,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       7,
+       1
+      ]
+     ],
+     "member_source_templates": [
+      10,
+      0,
+      1,
+      5
+     ],
+     "member_birth_epochs": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "retired_owner_ids": [],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 1,
+         "op": 0
+        },
+        "table": 4,
+        "fields": [
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 0,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 1
+        },
+        "table": 1,
+        "fields": [
+         {
+          "Eq": 1
+         },
+         {
+          "Eq": 12884901892
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 2
+        },
+        "table": 2,
+        "fields": [
+         {
+          "Eq": 12884901892
+         },
+         {
+          "Eq": 12884901893
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 5,
+         "op": 1
+        },
+        "table": 3,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 21474836484
+         }
+        ],
+        "epoch": 2,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 1
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 21474836484
+         },
+         {
+          "Eq": 30064771076
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 2
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 30064771077
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 9,
+          "op": 1
+         }
+        },
+        6,
+        0,
+        21474836484,
+        {
+         "cell": 5,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 1,
+         "op": 0
+        },
+        "table": 4,
+        "fields": [
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 0,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 1
+        },
+        "table": 1,
+        "fields": [
+         {
+          "Eq": 1
+         },
+         {
+          "Eq": 12884901892
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 2
+        },
+        "table": 2,
+        "fields": [
+         {
+          "Eq": 12884901892
+         },
+         {
+          "Eq": 12884901893
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 5,
+         "op": 1
+        },
+        "table": 3,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 21474836484
+         }
+        ],
+        "epoch": 2,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 1
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 21474836484
+         },
+         {
+          "Eq": 30064771076
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 2
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 30064771077
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 9,
+          "op": 1
+         }
+        },
+        6,
+        0,
+        21474836484,
+        {
+         "cell": 5,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      3,
+      3,
+      10,
+      2164,
+      64,
+      144,
+      2372
+     ],
+     "new_charge": [
+      3,
+      3,
+      10,
+      2164,
+      64,
+      144,
+      2372
+     ],
+     "allocation": null,
+     "outcome": {
+      "rejected": "incomplete_old_group",
+      "offered": [
+       3,
+       5,
+       7
+      ]
+     }
+    }
+   },
+   "post_union": null
+  },
+  "split-merge-probe-pooled": {
+   "seed": {
+    "source_run": 4,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 0,
+     "shape": 12,
+     "epoch": 4,
+     "members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       7,
+       1
+      ]
+     ],
+     "ids": [
+      1,
+      3,
+      5,
+      7
+     ]
+    }
+   },
+   "action": {
+    "source_run": 5,
+    "event": {
+     "kind": "existing_pair",
+     "component": 0,
+     "shape": 12,
+     "old_epoch": 5,
+     "new_epoch": 5,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      1,
+      3,
+      5,
+      7
+     ],
+     "old_members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       7,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       5,
+       0
+      ],
+      [
+       7,
+       0
+      ]
+     ],
+     "member_source_templates": [
+      10,
+      0,
+      1,
+      5
+     ],
+     "member_birth_epochs": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "retired_owner_ids": [
+      1
+     ],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 1,
+         "op": 0
+        },
+        "table": 4,
+        "fields": [
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 0,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 1
+        },
+        "table": 1,
+        "fields": [
+         {
+          "Eq": 1
+         },
+         {
+          "Eq": 12884901892
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 2
+        },
+        "table": 2,
+        "fields": [
+         {
+          "Eq": 12884901892
+         },
+         {
+          "Eq": 12884901893
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 5,
+         "op": 1
+        },
+        "table": 3,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 21474836484
+         }
+        ],
+        "epoch": 2,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 1
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 21474836484
+         },
+         {
+          "Eq": 30064771076
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 2
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 30064771077
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 9,
+          "op": 1
+         }
+        },
+        6,
+        0,
+        21474836484,
+        {
+         "cell": 5,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 1,
+         "op": 0
+        },
+        "table": 4,
+        "fields": [
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 0,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 1
+        },
+        "table": 1,
+        "fields": [
+         {
+          "Eq": 1
+         },
+         {
+          "Eq": 12884901892
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 3,
+         "op": 2
+        },
+        "table": 2,
+        "fields": [
+         {
+          "Eq": 12884901892
+         },
+         {
+          "Eq": 12884901893
+         }
+        ],
+        "epoch": 1,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 5,
+         "op": 1
+        },
+        "table": 3,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 21474836484
+         }
+        ],
+        "epoch": 2,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 1
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 21474836484
+         },
+         {
+          "Eq": 30064771076
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 7,
+         "op": 2
+        },
+        "table": 5,
+        "fields": [
+         {
+          "Eq": 12884901893
+         },
+         {
+          "Eq": 30064771077
+         }
+        ],
+        "epoch": 3,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 9,
+          "op": 1
+         }
+        },
+        6,
+        0,
+        21474836484,
+        {
+         "cell": 5,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      3,
+      3,
+      10,
+      2164,
+      64,
+      144,
+      2372
+     ],
+     "new_charge": [
+      2,
+      3,
+      10,
+      2332,
+      64,
+      168,
+      2564
+     ],
+     "allocation": [
+      [
+       901975,
+       1962658,
+       1060683,
+       901975
+      ],
+      [
+       902199,
+       1963402,
+       1061203,
+       902551
+      ]
+     ],
+     "outcome": {
+      "added": 0,
+      "merged": 1,
+      "copied_slots": 2,
+      "copied_fact_states": 6
+     }
+    }
+   },
+   "post_union": {
+    "effect": {
+     "sort": "{\"name\":\"E\",\"kind\":\"eq\"}",
+     "left": [
+      1,
+      {
+       "cell": 1,
+       "op": 0
+      },
+      1
+     ],
+     "right": [
+      12884901893,
+      {
+       "cell": 5,
+       "op": 1
+      },
+      0
+     ],
+     "previous_owners": [
+      0,
+      1
+     ],
+     "index": 0,
+     "candidates": 5,
+     "union_delta": 1,
+     "canonical": 1
+    },
+    "read": {
+     "old_refs": [
+      {
+       "ref": {
+        "cell": 1,
+        "op": 0
+       },
+       "table": 4,
+       "fields": [
+        {
+         "Int": 0
+        },
+        {
+         "Eq": 1
+        }
+       ],
+       "epoch": 0,
+       "hidden": false
+      },
+      {
+       "ref": {
+        "cell": 3,
+        "op": 1
+       },
+       "table": 1,
+       "fields": [
+        {
+         "Eq": 1
+        },
+        {
+         "Eq": 12884901892
+        }
+       ],
+       "epoch": 1,
+       "hidden": false
+      },
+      {
+       "ref": {
+        "cell": 3,
+        "op": 2
+       },
+       "table": 2,
+       "fields": [
+        {
+         "Eq": 12884901892
+        },
+        {
+         "Eq": 1
+        }
+       ],
+       "epoch": 5,
+       "hidden": false
+      },
+      {
+       "ref": {
+        "cell": 5,
+        "op": 1
+       },
+       "table": 3,
+       "fields": [
+        {
+         "Eq": 1
+        },
+        {
+         "Eq": 21474836484
+        }
+       ],
+       "epoch": 5,
+       "hidden": false
+      },
+      {
+       "ref": {
+        "cell": 7,
+        "op": 1
+       },
+       "table": 5,
+       "fields": [
+        {
+         "Eq": 21474836484
+        },
+        {
+         "Eq": 30064771076
+        }
+       ],
+       "epoch": 3,
+       "hidden": false
+      },
+      {
+       "ref": {
+        "cell": 7,
+        "op": 2
+       },
+       "table": 5,
+       "fields": [
+        {
+         "Eq": 1
+        },
+        {
+         "Eq": 30064771077
+        }
+       ],
+       "epoch": 5,
+       "hidden": false
+      }
+     ],
+     "external_readers": [
+      [
+       {
+        "Fact": {
+         "cell": 9,
+         "op": 1
+        }
+       },
+       6,
+       0,
+       21474836484,
+       {
+        "cell": 5,
+        "op": 1
+       }
+      ]
+     ]
+    },
+    "graph": "727e97cdd32d44da9b322bd53709ab64bcabea8d72c9671642818f8be7332943"
+   }
+  }
+ },
+ "dot-product": {
+  "split-merge-pooled": {
+   "seed": {
+    "source_run": 19,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 175,
+     "shape": 423,
+     "epoch": 19,
+     "members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       1
+      ]
+     ],
+     "ids": [
+      275,
+      298,
+      314
+     ]
+    }
+   },
+   "action": {
+    "source_run": 20,
+    "event": {
+     "kind": "existing_pair",
+     "component": 175,
+     "shape": 423,
+     "old_epoch": 20,
+     "new_epoch": 20,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      275,
+      298,
+      314
+     ],
+     "old_members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       0
+      ]
+     ],
+     "member_source_templates": [
+      538,
+      577,
+      577
+     ],
+     "member_birth_epochs": [
+      17,
+      18,
+      19
+     ],
+     "retired_owner_ids": [
+      1
+     ],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 275,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781195
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 275,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781213
+         },
+         {
+          "Eq": 1181116006409
+         },
+         {
+          "Eq": 1181116006410
+         }
+        ],
+        "epoch": 17,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 298,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781193
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 314,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781191
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 194
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 6
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 276,
+          "op": 2
+         }
+        },
+        18,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 275,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781195
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 275,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781213
+         },
+         {
+          "Eq": 1181116006409
+         },
+         {
+          "Eq": 1181116006410
+         }
+        ],
+        "epoch": 17,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 298,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781193
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 314,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781191
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 194
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 6
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 276,
+          "op": 2
+         }
+        },
+        18,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      19,
+      19,
+      236,
+      30212,
+      2800,
+      4704,
+      37716
+     ],
+     "new_charge": [
+      18,
+      19,
+      236,
+      30212,
+      2800,
+      4580,
+      37592
+     ],
+     "allocation": [
+      [
+       119569243,
+       265768473,
+       146199230,
+       119569243
+      ],
+      [
+       119569119,
+       265769001,
+       146199882,
+       119569547
+      ]
+     ],
+     "outcome": {
+      "added": 0,
+      "merged": 1,
+      "copied_slots": 5,
+      "copied_fact_states": 4
+     }
+    }
+   },
+   "post_union": null
+  },
+  "split-stale-pooled": {
+   "seed": {
+    "source_run": 19,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 175,
+     "shape": 423,
+     "epoch": 19,
+     "members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       1
+      ]
+     ],
+     "ids": [
+      275,
+      298,
+      314
+     ]
+    }
+   },
+   "action": {
+    "source_run": 20,
+    "event": {
+     "kind": "existing_pair",
+     "component": 175,
+     "shape": 423,
+     "old_epoch": 20,
+     "new_epoch": 20,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      275,
+      298,
+      314
+     ],
+     "old_members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       1
+      ]
+     ],
+     "member_source_templates": [
+      538,
+      577,
+      577
+     ],
+     "member_birth_epochs": [
+      17,
+      18,
+      19
+     ],
+     "retired_owner_ids": [],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 275,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781195
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 275,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781213
+         },
+         {
+          "Eq": 1181116006409
+         },
+         {
+          "Eq": 1181116006410
+         }
+        ],
+        "epoch": 17,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 298,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781193
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 314,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781191
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 194
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 6
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 276,
+          "op": 2
+         }
+        },
+        18,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 275,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781195
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 275,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781213
+         },
+         {
+          "Eq": 1181116006409
+         },
+         {
+          "Eq": 1181116006410
+         }
+        ],
+        "epoch": 17,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 298,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781193
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 314,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781191
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 194
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 6
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 276,
+          "op": 2
+         }
+        },
+        18,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      19,
+      19,
+      236,
+      30212,
+      2800,
+      4704,
+      37716
+     ],
+     "new_charge": [
+      19,
+      19,
+      236,
+      30212,
+      2800,
+      4704,
+      37716
+     ],
+     "allocation": null,
+     "outcome": {
+      "rejected": "epoch",
+      "offered_epoch": 19
+     }
+    }
+   },
+   "post_union": null
+  },
+  "split-partial-pooled": {
+   "seed": {
+    "source_run": 19,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 175,
+     "shape": 423,
+     "epoch": 19,
+     "members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       1
+      ]
+     ],
+     "ids": [
+      275,
+      298,
+      314
+     ]
+    }
+   },
+   "action": {
+    "source_run": 20,
+    "event": {
+     "kind": "existing_pair",
+     "component": 175,
+     "shape": 423,
+     "old_epoch": 20,
+     "new_epoch": 20,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      275,
+      298,
+      314
+     ],
+     "old_members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       1
+      ]
+     ],
+     "member_source_templates": [
+      538,
+      577,
+      577
+     ],
+     "member_birth_epochs": [
+      17,
+      18,
+      19
+     ],
+     "retired_owner_ids": [],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 275,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781195
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 275,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781213
+         },
+         {
+          "Eq": 1181116006409
+         },
+         {
+          "Eq": 1181116006410
+         }
+        ],
+        "epoch": 17,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 298,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781193
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 314,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781191
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 194
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 6
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 276,
+          "op": 2
+         }
+        },
+        18,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 275,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781195
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 275,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781213
+         },
+         {
+          "Eq": 1181116006409
+         },
+         {
+          "Eq": 1181116006410
+         }
+        ],
+        "epoch": 17,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 298,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781193
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 314,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781191
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 194
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 6
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 276,
+          "op": 2
+         }
+        },
+        18,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      19,
+      19,
+      236,
+      30212,
+      2800,
+      4704,
+      37716
+     ],
+     "new_charge": [
+      19,
+      19,
+      236,
+      30212,
+      2800,
+      4704,
+      37716
+     ],
+     "allocation": null,
+     "outcome": {
+      "rejected": "incomplete_old_group",
+      "offered": [
+       298,
+       314
+      ]
+     }
+    }
+   },
+   "post_union": null
+  },
+  "split-merge-probe-pooled": {
+   "seed": {
+    "source_run": 19,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 175,
+     "shape": 423,
+     "epoch": 19,
+     "members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       1
+      ]
+     ],
+     "ids": [
+      275,
+      298,
+      314
+     ]
+    }
+   },
+   "action": {
+    "source_run": 20,
+    "event": {
+     "kind": "existing_pair",
+     "component": 175,
+     "shape": 423,
+     "old_epoch": 20,
+     "new_epoch": 20,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      275,
+      298,
+      314
+     ],
+     "old_members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       275,
+       0
+      ],
+      [
+       298,
+       0
+      ],
+      [
+       314,
+       0
+      ]
+     ],
+     "member_source_templates": [
+      538,
+      577,
+      577
+     ],
+     "member_birth_epochs": [
+      17,
+      18,
+      19
+     ],
+     "retired_owner_ids": [
+      1
+     ],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 275,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781195
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 275,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781213
+         },
+         {
+          "Eq": 1181116006409
+         },
+         {
+          "Eq": 1181116006410
+         }
+        ],
+        "epoch": 17,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 298,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781193
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 314,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781191
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 194
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 6
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 276,
+          "op": 2
+         }
+        },
+        18,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 275,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781195
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 275,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781213
+         },
+         {
+          "Eq": 1181116006409
+         },
+         {
+          "Eq": 1181116006410
+         }
+        ],
+        "epoch": 17,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 298,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781193
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 314,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781191
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 554050781187
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 194
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 6
+         }
+        },
+        335,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 276,
+          "op": 2
+         }
+        },
+        18,
+        0,
+        554050781187,
+        {
+         "cell": 275,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      19,
+      19,
+      236,
+      30212,
+      2800,
+      4704,
+      37716
+     ],
+     "new_charge": [
+      18,
+      19,
+      236,
+      30212,
+      2800,
+      4580,
+      37592
+     ],
+     "allocation": [
+      [
+       119569255,
+       265768497,
+       146199242,
+       119569255
+      ],
+      [
+       119569131,
+       265769025,
+       146199894,
+       119569559
+      ]
+     ],
+     "outcome": {
+      "added": 0,
+      "merged": 1,
+      "copied_slots": 5,
+      "copied_fact_states": 4
+     }
+    }
+   },
+   "post_union": {
+    "effect": {
+     "exhausted_candidates": 2
+    }
+   }
+  }
+ },
+ "stable-argmax": {
+  "split-merge-pooled": {
+   "seed": {
+    "source_run": 19,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 174,
+     "shape": 455,
+     "epoch": 19,
+     "members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       1
+      ]
+     ],
+     "ids": [
+      253,
+      276,
+      299
+     ]
+    }
+   },
+   "action": {
+    "source_run": 20,
+    "event": {
+     "kind": "existing_pair",
+     "component": 174,
+     "shape": 455,
+     "old_epoch": 20,
+     "new_epoch": 20,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      253,
+      276,
+      299
+     ],
+     "old_members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       0
+      ]
+     ],
+     "member_source_templates": [
+      538,
+      577,
+      577
+     ],
+     "member_birth_epochs": [
+      17,
+      18,
+      19
+     ],
+     "retired_owner_ids": [
+      1
+     ],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 253,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781263
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 253,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781331
+         },
+         {
+          "Eq": 4
+         },
+         {
+          "Eq": 1086626725898
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 276,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781261
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 299,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781259
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 10
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 190
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 68
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 70
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 72
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 74
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 76
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 78
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 8
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 4,
+          "op": 0
+         }
+        },
+        18,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 92,
+          "op": 0
+         }
+        },
+        306,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 253,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781263
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 253,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781331
+         },
+         {
+          "Eq": 4
+         },
+         {
+          "Eq": 1086626725898
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 276,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781261
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 299,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781259
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 10
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 190
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 68
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 70
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 72
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 74
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 76
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 78
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 8
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 4,
+          "op": 0
+         }
+        },
+        18,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 92,
+          "op": 0
+         }
+        },
+        306,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      18,
+      18,
+      217,
+      29488,
+      2528,
+      4584,
+      36600
+     ],
+     "new_charge": [
+      17,
+      18,
+      217,
+      29488,
+      2528,
+      4488,
+      36504
+     ],
+     "allocation": [
+      [
+       118839899,
+       263878133,
+       145038234,
+       118839899
+      ],
+      [
+       118839803,
+       263878589,
+       145038786,
+       118840203
+      ]
+     ],
+     "outcome": {
+      "added": 0,
+      "merged": 1,
+      "copied_slots": 5,
+      "copied_fact_states": 4
+     }
+    }
+   },
+   "post_union": null
+  },
+  "split-stale-pooled": {
+   "seed": {
+    "source_run": 19,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 174,
+     "shape": 455,
+     "epoch": 19,
+     "members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       1
+      ]
+     ],
+     "ids": [
+      253,
+      276,
+      299
+     ]
+    }
+   },
+   "action": {
+    "source_run": 20,
+    "event": {
+     "kind": "existing_pair",
+     "component": 174,
+     "shape": 455,
+     "old_epoch": 20,
+     "new_epoch": 20,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      253,
+      276,
+      299
+     ],
+     "old_members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       1
+      ]
+     ],
+     "member_source_templates": [
+      538,
+      577,
+      577
+     ],
+     "member_birth_epochs": [
+      17,
+      18,
+      19
+     ],
+     "retired_owner_ids": [],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 253,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781263
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 253,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781331
+         },
+         {
+          "Eq": 4
+         },
+         {
+          "Eq": 1086626725898
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 276,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781261
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 299,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781259
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 10
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 190
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 68
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 70
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 72
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 74
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 76
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 78
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 8
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 4,
+          "op": 0
+         }
+        },
+        18,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 92,
+          "op": 0
+         }
+        },
+        306,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 253,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781263
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 253,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781331
+         },
+         {
+          "Eq": 4
+         },
+         {
+          "Eq": 1086626725898
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 276,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781261
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 299,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781259
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 10
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 190
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 68
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 70
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 72
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 74
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 76
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 78
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 8
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 4,
+          "op": 0
+         }
+        },
+        18,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 92,
+          "op": 0
+         }
+        },
+        306,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      18,
+      18,
+      217,
+      29488,
+      2528,
+      4584,
+      36600
+     ],
+     "new_charge": [
+      18,
+      18,
+      217,
+      29488,
+      2528,
+      4584,
+      36600
+     ],
+     "allocation": null,
+     "outcome": {
+      "rejected": "epoch",
+      "offered_epoch": 19
+     }
+    }
+   },
+   "post_union": null
+  },
+  "split-partial-pooled": {
+   "seed": {
+    "source_run": 19,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 174,
+     "shape": 455,
+     "epoch": 19,
+     "members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       1
+      ]
+     ],
+     "ids": [
+      253,
+      276,
+      299
+     ]
+    }
+   },
+   "action": {
+    "source_run": 20,
+    "event": {
+     "kind": "existing_pair",
+     "component": 174,
+     "shape": 455,
+     "old_epoch": 20,
+     "new_epoch": 20,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      253,
+      276,
+      299
+     ],
+     "old_members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       1
+      ]
+     ],
+     "member_source_templates": [
+      538,
+      577,
+      577
+     ],
+     "member_birth_epochs": [
+      17,
+      18,
+      19
+     ],
+     "retired_owner_ids": [],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 253,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781263
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 253,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781331
+         },
+         {
+          "Eq": 4
+         },
+         {
+          "Eq": 1086626725898
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 276,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781261
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 299,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781259
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 10
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 190
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 68
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 70
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 72
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 74
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 76
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 78
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 8
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 4,
+          "op": 0
+         }
+        },
+        18,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 92,
+          "op": 0
+         }
+        },
+        306,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 253,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781263
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 253,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781331
+         },
+         {
+          "Eq": 4
+         },
+         {
+          "Eq": 1086626725898
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 276,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781261
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 299,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781259
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 10
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 190
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 68
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 70
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 72
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 74
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 76
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 78
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 8
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 4,
+          "op": 0
+         }
+        },
+        18,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 92,
+          "op": 0
+         }
+        },
+        306,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      18,
+      18,
+      217,
+      29488,
+      2528,
+      4584,
+      36600
+     ],
+     "new_charge": [
+      18,
+      18,
+      217,
+      29488,
+      2528,
+      4584,
+      36600
+     ],
+     "allocation": null,
+     "outcome": {
+      "rejected": "incomplete_old_group",
+      "offered": [
+       276,
+       299
+      ]
+     }
+    }
+   },
+   "post_union": null
+  },
+  "split-merge-probe-pooled": {
+   "seed": {
+    "source_run": 19,
+    "event": {
+     "kind": "seed_existing_owners",
+     "component": 174,
+     "shape": 455,
+     "epoch": 19,
+     "members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       1
+      ]
+     ],
+     "ids": [
+      253,
+      276,
+      299
+     ]
+    }
+   },
+   "action": {
+    "source_run": 20,
+    "event": {
+     "kind": "existing_pair",
+     "component": 174,
+     "shape": 455,
+     "old_epoch": 20,
+     "new_epoch": 20,
+     "left_owner": 0,
+     "right_owner": 1,
+     "destination": 0,
+     "ids": [
+      253,
+      276,
+      299
+     ],
+     "old_members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       1
+      ]
+     ],
+     "new_members": [
+      [
+       253,
+       0
+      ],
+      [
+       276,
+       0
+      ],
+      [
+       299,
+       0
+      ]
+     ],
+     "member_source_templates": [
+      538,
+      577,
+      577
+     ],
+     "member_birth_epochs": [
+      17,
+      18,
+      19
+     ],
+     "retired_owner_ids": [
+      1
+     ],
+     "old": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 253,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781263
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 253,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781331
+         },
+         {
+          "Eq": 4
+         },
+         {
+          "Eq": 1086626725898
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 276,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781261
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 299,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781259
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 10
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 190
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 68
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 70
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 72
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 74
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 76
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 78
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 8
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 4,
+          "op": 0
+         }
+        },
+        18,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 92,
+          "op": 0
+         }
+        },
+        306,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "new": {
+      "old_refs": [
+       {
+        "ref": {
+         "cell": 253,
+         "op": 1
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781263
+         },
+         {
+          "Int": 2
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 253,
+         "op": 3
+        },
+        "table": 228,
+        "fields": [
+         {
+          "Eq": 554050781331
+         },
+         {
+          "Eq": 4
+         },
+         {
+          "Eq": 1086626725898
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 276,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781261
+         },
+         {
+          "Int": 1
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       },
+       {
+        "ref": {
+         "cell": 299,
+         "op": 2
+        },
+        "table": 359,
+        "fields": [
+         {
+          "Eq": 554050781259
+         },
+         {
+          "Int": 0
+         },
+         {
+          "Eq": 1
+         }
+        ],
+        "epoch": 20,
+        "hidden": false
+       }
+      ],
+      "external_readers": [
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 10
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 190
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 68
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 70
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 72
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 74
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 76
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 78
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 129,
+          "op": 8
+         }
+        },
+        335,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 4,
+          "op": 0
+         }
+        },
+        18,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ],
+       [
+        {
+         "Fact": {
+          "cell": 92,
+          "op": 0
+         }
+        },
+        306,
+        0,
+        1,
+        {
+         "cell": 253,
+         "op": 1
+        }
+       ]
+      ]
+     },
+     "old_charge": [
+      18,
+      18,
+      217,
+      29488,
+      2528,
+      4584,
+      36600
+     ],
+     "new_charge": [
+      17,
+      18,
+      217,
+      29488,
+      2528,
+      4488,
+      36504
+     ],
+     "allocation": [
+      [
+       118839911,
+       263878157,
+       145038246,
+       118839911
+      ],
+      [
+       118839815,
+       263878613,
+       145038798,
+       118840215
+      ]
+     ],
+     "outcome": {
+      "added": 0,
+      "merged": 1,
+      "copied_slots": 5,
+      "copied_fact_states": 4
+     }
+    }
+   },
+   "post_union": {
+    "effect": {
+     "exhausted_candidates": 2
+    }
+   }
+  }
+ }
+}

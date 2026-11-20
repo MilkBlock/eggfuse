@@ -1,0 +1,68 @@
+{
+ "dot-product": {
+  "census-pooled": {
+   "runs": 1535,
+   "domain": [
+    2695109,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "source_check_digest": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "natural_candidate_runs": 0
+  },
+  "census-unpooled": {
+   "runs": 1535,
+   "domain": [
+    2695109,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "source_check_digest": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "natural_candidate_runs": 0
+  },
+  "diagnostic_catalog_templates": 203
+ },
+ "stable-argmax": {
+  "census-pooled": {
+   "runs": 1149,
+   "domain": [
+    2219731,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "source_check_digest": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "natural_candidate_runs": 0
+  },
+  "census-unpooled": {
+   "runs": 1149,
+   "domain": [
+    2219731,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "source_check_digest": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "natural_candidate_runs": 0
+  },
+  "diagnostic_catalog_templates": 240
+ }
+}
