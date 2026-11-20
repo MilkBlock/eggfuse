@@ -26,6 +26,10 @@ Every positive arm has the same complete ordered source RHS, effective writes, a
 
 The native request byte counter describes a logical envelope, not total RSS or saved allocations. The first-round overlay uses a typed request attached to a Rust recipe and a live table of pending source generations. A compact child can reuse static projection fields; a skipped numerical comparison and a reduced root wire are separate counters. Full root-wire serialization remains enabled outside the taken-over region. Pure provenance diagnostics run outside the paired timer.
 
+## Does the next owner retire the intermediate persistent record?
+
+A separate round-two control checks the source table generation, the exact previously consumed port and its version, and that the consuming monotone watermark advanced beyond that immutable source version. Only then can the next published child remove the old family's pending descriptor. Independent ordinary graph readers and their physical data remain accessible. In sum-bits the source delivered 82 such retirements per seed. The peak number of pending descriptors changed from 104 to 85 (12,480 to 10,200 bytes of occupied payload); dot-product delivered 43 retirements and the peak changed from 56 to 51. GEMM delivered 181 retirements (peak 228 to 203), stable-argmax 91 (116 to 99). The native hash map also reports allocated capacity separately: occupied payload is not RSS. The release arms preserve every child winner, but the paired complete timings are mixed. [Paired descriptor retirement](retirement.json)
+
 ## Reproduction
 
 Use the external workspace environment with the frozen source families and image exports. Every output directory must be new. The builder checks out the joint experiment installer from `6c2e1583` and builds the corresponding native crate privately with Cargo. Executing the compiled session requires no Python inference.

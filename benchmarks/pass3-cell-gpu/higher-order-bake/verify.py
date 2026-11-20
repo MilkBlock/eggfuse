@@ -16,6 +16,13 @@ def check(folder):
             assert grown['winners']==d['grown-flat']['winners']==d['grown-baked']['projected']==winners
             assert d['r1-baked']['winners']<winners and grown['max_chain']==depth
             assert max(grown['counts'][10:14])>0 and not d['stale']['winners'] and not d['shadow']['winners']
+    retired=read('retirement.json')
+    for key,arms in retired.items():
+        before,after=(arms[k] for k in ('grown-recursive','grown-recycle'))
+        assert before['retired']==0 and after['retired']>0
+        assert before['winners']==after['winners']==results[key]['grown-recursive']['winners']
+        assert after['peak_pending']<before['peak_pending'] and after['final_pending']<before['final_pending']
+        assert after['root_wire_bytes']==before['root_wire_bytes'] and after['source_exact']
     print('Verified train-only guarded growth, native cross-stage source attribution and complete matched graph runs.')
 
 

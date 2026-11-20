@@ -99,7 +99,7 @@ def main(a):
             variants={'base':None,'r1-flat':config(a,'flat',initial),'r1-dispatch':config(a,'dispatch',initial),
                       'r1-baked':config(a,'baked',initial),'grown-flat':config(a,'flat',expanded),
                       'grown-dispatch':config(a,'dispatch',expanded),'grown-baked':config(a,'baked',expanded),
-                      'grown-recursive':config(a,'baked',expanded,True),'stale':config(a,'stale',expanded),
+                      'grown-recursive':config(a,'baked',expanded,True),'grown-recycle':dict(config(a,'baked',expanded,True),recycle=True),'stale':config(a,'stale',expanded),
                       'shadow':config(a,'shadow',expanded)}
             if a.arms:variants={k:variants[k] for k in a.arms}
             reports={}

@@ -27,6 +27,8 @@ struct Config {
     recursive: bool,
     #[serde(default)]
     profile: bool,
+    #[serde(default)]
+    recycle: bool,
 }
 #[derive(Clone, Copy, Debug)]
 pub struct Request {
@@ -44,7 +46,7 @@ pub struct Origin {
     serial: u64,
     owner: u64,
     admitted: bool,
-    inherited: Option<(usize, i64)>,
+    inherited: Option<Child>,
 }
 #[derive(Clone, Copy, Debug)]
 pub struct Child {
@@ -90,6 +92,7 @@ struct State {
     mode: Mode,
     recursive: bool,
     profile: bool,
+    recycle: bool,
     active: Option<Origin>,
     last_child: Option<(usize, Child)>,
     pending: FxHashMap<Dependency, Child>,
@@ -101,6 +104,7 @@ struct State {
     projected: u64,
     issued_bytes: u64,
     peak: usize,
+    peak_capacity: usize,
     depth: usize,
     root_ord: usize,
 }
@@ -236,6 +240,7 @@ pub fn configure(p: &Program, data: Option<&[u8]>) -> Result<()> {
             mode,
             recursive: c.recursive,
             profile: c.profile,
+            recycle: c.recycle,
             active: None,
             last_child: None,
             pending: Default::default(),
@@ -247,6 +252,7 @@ pub fn configure(p: &Program, data: Option<&[u8]>) -> Result<()> {
             projected: 0,
             issued_bytes: 0,
             peak: 0,
+            peak_capacity: 0,
             depth: 0,
             root_ord: 0,
         })
@@ -309,7 +315,7 @@ pub fn activate(
         let inherited = s
             .last_child
             .take()
-            .and_then(|(o, c)| (s.recursive && o == ordinal).then_some((c.depth, c.value)));
+            .and_then(|(o, c)| (s.recursive && o == ordinal).then_some(c));
         s.root_ord = ordinal;
         s.active = Some(Origin {
             ordinal,
@@ -380,19 +386,31 @@ pub fn publish(
             _ => return Err("invalid published integer".into()),
         };
         let mut depth = 1;
-        let inherited = o.inherited.and_then(|(n, v)| {
+        let inherited = o.inherited.and_then(|prior| {
             let dec = s.parents[o.rid]
                 .iter()
                 .find(|(idx, _)| *idx == o.effect)?
                 .1?;
-            Some((n + 1, v.wrapping_sub(dec)))
+            Some((prior, prior.value.wrapping_sub(dec)))
         });
-        if let Some((n, expected)) = inherited {
+        if let Some((prior, expected)) = inherited {
             if expected != value {
                 return Err("inherited port disagrees with actual source return".into());
             }
-            depth = n;
+            depth = prior.depth + 1;
             s.counts[10] += 1;
+            // Only the greater branch can emit this checked subtraction, and its successful
+            // source Run has already advanced that consumer watermark to o.epoch. An immutable
+            // older constructor generation can no longer enable either exclusive branch.
+            if s.recycle
+                && prior.version < o.epoch
+                && s.pending
+                    .get(&prior.source)
+                    .is_some_and(|v| v.generation == prior.generation)
+            {
+                s.pending.remove(&prior.source);
+                s.counts[14] += 1;
+            }
         }
         s.generation += 1;
         s.counts[1] += 1;
@@ -421,6 +439,7 @@ pub fn publish(
         };
         s.pending.insert(w, c);
         s.peak = s.peak.max(s.pending.len());
+        s.peak_capacity = s.peak_capacity.max(s.pending.capacity());
         s.depth = s.depth.max(depth);
         Ok(())
     })
@@ -556,7 +575,7 @@ pub fn commit(rid: usize, run: u64, ordinal: usize, w: Option<Dependency>, c: Op
 }
 pub fn report() -> J {
     STATE.with_borrow(|state|state.as_ref().map_or(J::Null,|s|json!({
-    "counts":s.counts,"projected":s.projected,"peak_pending":s.peak,"max_chain":s.depth,"request_logical_bytes":s.issued_bytes,
+    "counts":s.counts,"retired":s.counts[14],"peak_payload_bytes":s.peak*std::mem::size_of::<(Dependency,Child)>(),"peak_hash_capacity":s.peak_capacity,"final_pending":s.pending.len(),"projected":s.projected,"peak_pending":s.peak,"max_chain":s.depth,"request_logical_bytes":s.issued_bytes,
     "winners":s.winners,"observed":s.opportunities.iter().map(|(&(rid,e),counts)|json!([rid,e,counts])).collect::<Vec<_>>()
 })))
 }
