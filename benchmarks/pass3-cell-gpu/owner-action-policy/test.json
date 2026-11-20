@@ -1,0 +1,1436 @@
+{
+ "fixture": {
+  "keep": {
+   "source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "runs": 8,
+   "domain": [
+    24,
+    15,
+    8,
+    6,
+    4,
+    4,
+    4
+   ],
+   "readers_sha": "db1a65c015b0cad9e60c4c77412b57c6961eaaadb7146229ebf0ec04526957d3",
+   "later_reads": 4,
+   "later_unions": 7,
+   "source_run": 5,
+   "token": {
+    "epoch": 5,
+    "shape": 12,
+    "members": [
+     [
+      1,
+      0
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      5,
+      1
+     ],
+     [
+      7,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     2,
+     1,
+     1,
+     3,
+     3,
+     4,
+     4
+    ],
+    "score": null,
+    "compose": false,
+    "checkpoint": null
+   },
+   "token_id": "99e6a99707fa08e467b7751e15481bd0e27b450a9f08233f091833b2ee0856e9",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325",
+   "source_after": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325"
+  },
+  "compose": {
+   "source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "runs": 8,
+   "domain": [
+    24,
+    15,
+    8,
+    6,
+    1,
+    1,
+    1
+   ],
+   "readers_sha": "db1a65c015b0cad9e60c4c77412b57c6961eaaadb7146229ebf0ec04526957d3",
+   "later_reads": 4,
+   "later_unions": 7,
+   "source_run": 5,
+   "token": {
+    "epoch": 5,
+    "shape": 12,
+    "members": [
+     [
+      1,
+      0
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      5,
+      1
+     ],
+     [
+      7,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     2,
+     1,
+     1,
+     3,
+     3,
+     4,
+     4
+    ],
+    "score": null,
+    "compose": true,
+    "checkpoint": null
+   },
+   "token_id": "073c4d1c731da454ef50656a8c03ed12306d947cf8e00d7b7454235a62e3c631",
+   "saved_bytes": -224,
+   "peak_bytes": 576,
+   "retired_owners": [
+    1
+   ],
+   "source_before": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325",
+   "source_after": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325"
+  },
+  "real": {
+   "source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "runs": 8,
+   "domain": [
+    24,
+    15,
+    8,
+    6,
+    1,
+    1,
+    1
+   ],
+   "readers_sha": "db1a65c015b0cad9e60c4c77412b57c6961eaaadb7146229ebf0ec04526957d3",
+   "later_reads": 4,
+   "later_unions": 7,
+   "source_run": 5,
+   "token": {
+    "epoch": 5,
+    "shape": 12,
+    "members": [
+     [
+      1,
+      0
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      5,
+      1
+     ],
+     [
+      7,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     2,
+     1,
+     1,
+     3,
+     3,
+     4,
+     4
+    ],
+    "score": 4.009033203125,
+    "compose": true,
+    "checkpoint": [
+     [
+      0.142333984375,
+      0.120849609375,
+      0.2236328125,
+      0.120849609375,
+      0.19384765625,
+      0.120849609375,
+      0.20654296875,
+      0.16455078125
+     ],
+     0.709716796875
+    ]
+   },
+   "token_id": "afeb34db553da300ad43fe2bac6d84d21e63b78c772301cf2529b1dcac1ff26a",
+   "saved_bytes": -224,
+   "peak_bytes": 576,
+   "retired_owners": [
+    1
+   ],
+   "source_before": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325",
+   "source_after": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325"
+  },
+  "synthetic": {
+   "source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "runs": 8,
+   "domain": [
+    24,
+    15,
+    8,
+    6,
+    4,
+    4,
+    4
+   ],
+   "readers_sha": "db1a65c015b0cad9e60c4c77412b57c6961eaaadb7146229ebf0ec04526957d3",
+   "later_reads": 4,
+   "later_unions": 7,
+   "source_run": 5,
+   "token": {
+    "epoch": 5,
+    "shape": 12,
+    "members": [
+     [
+      1,
+      0
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      5,
+      1
+     ],
+     [
+      7,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     2,
+     1,
+     1,
+     3,
+     3,
+     4,
+     4
+    ],
+    "score": -5.003662109375,
+    "compose": false,
+    "checkpoint": [
+     [
+      -0.183837890625,
+      -0.18896484375,
+      -0.17822265625,
+      0.0,
+      -0.185546875,
+      -0.18798828125,
+      -0.191650390625,
+      -0.191650390625
+     ],
+     -1.426025390625
+    ]
+   },
+   "token_id": "c390394f6d8b436db0602d376c6687b13103be16386084288816dc4ce98b9426",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325",
+   "source_after": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325"
+  },
+  "mixed": {
+   "source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "runs": 8,
+   "domain": [
+    24,
+    15,
+    8,
+    6,
+    4,
+    4,
+    4
+   ],
+   "readers_sha": "db1a65c015b0cad9e60c4c77412b57c6961eaaadb7146229ebf0ec04526957d3",
+   "later_reads": 4,
+   "later_unions": 7,
+   "source_run": 5,
+   "token": {
+    "epoch": 5,
+    "shape": 12,
+    "members": [
+     [
+      1,
+      0
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      5,
+      1
+     ],
+     [
+      7,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     2,
+     1,
+     1,
+     3,
+     3,
+     4,
+     4
+    ],
+    "score": -4.040771484375,
+    "compose": false,
+    "checkpoint": [
+     [
+      -0.152099609375,
+      -0.160400390625,
+      -0.131103515625,
+      0.15478515625,
+      -0.156494140625,
+      -0.163818359375,
+      -0.16162109375,
+      -0.163330078125
+     ],
+     -1.1787109375
+    ]
+   },
+   "token_id": "c76b809ef9b4fcf84ae5ff6c02ede90a9947f6f3bee1d11d6c8a6767163bd026",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325",
+   "source_after": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325"
+  },
+  "replay": {
+   "source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "runs": 8,
+   "domain": [
+    24,
+    15,
+    8,
+    6,
+    4,
+    4,
+    4
+   ],
+   "readers_sha": "db1a65c015b0cad9e60c4c77412b57c6961eaaadb7146229ebf0ec04526957d3",
+   "later_reads": 4,
+   "later_unions": 7,
+   "source_run": 5,
+   "token": {
+    "epoch": 5,
+    "shape": 12,
+    "members": [
+     [
+      1,
+      0
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      5,
+      1
+     ],
+     [
+      7,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     2,
+     1,
+     1,
+     3,
+     3,
+     4,
+     4
+    ],
+    "score": -4.79833984375,
+    "compose": false,
+    "checkpoint": [
+     [
+      -0.175048828125,
+      -0.185791015625,
+      -0.150390625,
+      0.032958984375,
+      -0.18115234375,
+      -0.18896484375,
+      -0.189208984375,
+      -0.1904296875
+     ],
+     -1.330322265625
+    ]
+   },
+   "token_id": "c22f513325a8f94bb9773e6a1568f6bde4c9a04b4dcb4a0045a24c2fd7467b09",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325",
+   "source_after": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325"
+  },
+  "regression": {
+   "source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "runs": 8,
+   "domain": [
+    24,
+    15,
+    8,
+    6,
+    4,
+    4,
+    4
+   ],
+   "readers_sha": "db1a65c015b0cad9e60c4c77412b57c6961eaaadb7146229ebf0ec04526957d3",
+   "later_reads": 4,
+   "later_unions": 7,
+   "source_run": 5,
+   "token": {
+    "epoch": 5,
+    "shape": 12,
+    "members": [
+     [
+      1,
+      0
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      5,
+      1
+     ],
+     [
+      7,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     2,
+     1,
+     1,
+     3,
+     3,
+     4,
+     4
+    ],
+    "score": -0.5224609375,
+    "compose": false,
+    "checkpoint": [
+     [
+      0.012939453125,
+      0.010009765625,
+      0.09130859375,
+      0.128173828125,
+      -0.1435546875,
+      -0.175537109375,
+      0.011474609375,
+      -0.01318359375
+     ],
+     0.17626953125
+    ]
+   },
+   "token_id": "72c4947c906bde1cd2fe1ee8d5e4497b510a8476ccb5cce0bd0990f7f85dc2e5",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325",
+   "source_after": "891482760a4c7f9667daa61a0bf916074eb689541bf053dd281901e144160325"
+  },
+  "natural": {
+   "source_sha": "95fcd8768927ff88e147fedfc78e4cf790bb8852fcc6a63e1589c45a1ff3776c",
+   "graph": "e551e1244e2d80d86fd885e88eb87bffb256a3e20ca39e7c05ff60249e8887cf",
+   "runs": 8,
+   "domain": [
+    24,
+    15,
+    2,
+    8,
+    8,
+    0,
+    0
+   ],
+   "readers_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "later_reads": 0,
+   "later_unions": 0
+  }
+ },
+ "dot-product": {
+  "keep": {
+   "source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    123,
+    487315,
+    431024,
+    265011,
+    1516
+   ],
+   "readers_sha": "603f5947db7e0ab81e449135a452f5200341811439b6f6625dc58cfdbcb21d78",
+   "later_reads": 1516,
+   "later_unions": 593,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 423,
+    "members": [
+     [
+      275,
+      0
+     ],
+     [
+      298,
+      0
+     ],
+     [
+      314,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     4,
+     1,
+     3,
+     2
+    ],
+    "score": null,
+    "compose": false,
+    "checkpoint": null
+   },
+   "token_id": "6a8f1e8dc2bbc84c8bebcbc938ee47451775b6d0b37ea9d8904c08c3e986abc7",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40",
+   "source_after": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40"
+  },
+  "compose": {
+   "source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    123,
+    487315,
+    429509,
+    263496,
+    1
+   ],
+   "readers_sha": "603f5947db7e0ab81e449135a452f5200341811439b6f6625dc58cfdbcb21d78",
+   "later_reads": 1516,
+   "later_unions": 593,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 423,
+    "members": [
+     [
+      275,
+      0
+     ],
+     [
+      298,
+      0
+     ],
+     [
+      314,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     4,
+     1,
+     3,
+     2
+    ],
+    "score": null,
+    "compose": true,
+    "checkpoint": null
+   },
+   "token_id": "39a58bf5580fa5b976725cd08aa54ea38d96f6538146b68bb4199d57e9c37d46",
+   "saved_bytes": 124,
+   "peak_bytes": 304,
+   "retired_owners": [
+    1
+   ],
+   "source_before": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40",
+   "source_after": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40"
+  },
+  "real": {
+   "source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    123,
+    487315,
+    429509,
+    263496,
+    1
+   ],
+   "readers_sha": "603f5947db7e0ab81e449135a452f5200341811439b6f6625dc58cfdbcb21d78",
+   "later_reads": 1516,
+   "later_unions": 593,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 423,
+    "members": [
+     [
+      275,
+      0
+     ],
+     [
+      298,
+      0
+     ],
+     [
+      314,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     4,
+     1,
+     3,
+     2
+    ],
+    "score": 3.9755859375,
+    "compose": true,
+    "checkpoint": [
+     [
+      0.142333984375,
+      0.120849609375,
+      0.2236328125,
+      0.120849609375,
+      0.19384765625,
+      0.120849609375,
+      0.20654296875,
+      0.16455078125
+     ],
+     0.709716796875
+    ]
+   },
+   "token_id": "52a5dee76f63ef6ef2833cb66b572c5349b656075b82f4fc71900e321a299e8e",
+   "saved_bytes": 124,
+   "peak_bytes": 304,
+   "retired_owners": [
+    1
+   ],
+   "source_before": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40",
+   "source_after": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40"
+  },
+  "synthetic": {
+   "source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    123,
+    487315,
+    431024,
+    265011,
+    1516
+   ],
+   "readers_sha": "603f5947db7e0ab81e449135a452f5200341811439b6f6625dc58cfdbcb21d78",
+   "later_reads": 1516,
+   "later_unions": 593,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 423,
+    "members": [
+     [
+      275,
+      0
+     ],
+     [
+      298,
+      0
+     ],
+     [
+      314,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     4,
+     1,
+     3,
+     2
+    ],
+    "score": -4.583984375,
+    "compose": false,
+    "checkpoint": [
+     [
+      -0.183837890625,
+      -0.18896484375,
+      -0.17822265625,
+      0.0,
+      -0.185546875,
+      -0.18798828125,
+      -0.191650390625,
+      -0.191650390625
+     ],
+     -1.426025390625
+    ]
+   },
+   "token_id": "bc0759787c501eac509fcd9386507d827a5bb64ea0336a4568c4ed6a15bfcd52",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40",
+   "source_after": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40"
+  },
+  "mixed": {
+   "source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    123,
+    487315,
+    431024,
+    265011,
+    1516
+   ],
+   "readers_sha": "603f5947db7e0ab81e449135a452f5200341811439b6f6625dc58cfdbcb21d78",
+   "later_reads": 1516,
+   "later_unions": 593,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 423,
+    "members": [
+     [
+      275,
+      0
+     ],
+     [
+      298,
+      0
+     ],
+     [
+      314,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     4,
+     1,
+     3,
+     2
+    ],
+    "score": -3.6142578125,
+    "compose": false,
+    "checkpoint": [
+     [
+      -0.152099609375,
+      -0.160400390625,
+      -0.131103515625,
+      0.15478515625,
+      -0.156494140625,
+      -0.163818359375,
+      -0.16162109375,
+      -0.163330078125
+     ],
+     -1.1787109375
+    ]
+   },
+   "token_id": "e3955f89a98b2e46dc00e9739fb55c497718753e60d66c46588bade70597ddac",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40",
+   "source_after": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40"
+  },
+  "replay": {
+   "source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    123,
+    487315,
+    431024,
+    265011,
+    1516
+   ],
+   "readers_sha": "603f5947db7e0ab81e449135a452f5200341811439b6f6625dc58cfdbcb21d78",
+   "later_reads": 1516,
+   "later_unions": 593,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 423,
+    "members": [
+     [
+      275,
+      0
+     ],
+     [
+      298,
+      0
+     ],
+     [
+      314,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     4,
+     1,
+     3,
+     2
+    ],
+    "score": -4.296875,
+    "compose": false,
+    "checkpoint": [
+     [
+      -0.175048828125,
+      -0.185791015625,
+      -0.150390625,
+      0.032958984375,
+      -0.18115234375,
+      -0.18896484375,
+      -0.189208984375,
+      -0.1904296875
+     ],
+     -1.330322265625
+    ]
+   },
+   "token_id": "0a886096c226d65240243374352e9a20ae1e4c128111fa2d147faf783dd10e00",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40",
+   "source_after": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40"
+  },
+  "regression": {
+   "source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    123,
+    487315,
+    431024,
+    265011,
+    1516
+   ],
+   "readers_sha": "603f5947db7e0ab81e449135a452f5200341811439b6f6625dc58cfdbcb21d78",
+   "later_reads": 1516,
+   "later_unions": 593,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 423,
+    "members": [
+     [
+      275,
+      0
+     ],
+     [
+      298,
+      0
+     ],
+     [
+      314,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     4,
+     1,
+     3,
+     2
+    ],
+    "score": -0.0361328125,
+    "compose": false,
+    "checkpoint": [
+     [
+      0.012939453125,
+      0.010009765625,
+      0.09130859375,
+      0.128173828125,
+      -0.1435546875,
+      -0.175537109375,
+      0.011474609375,
+      -0.01318359375
+     ],
+     0.17626953125
+    ]
+   },
+   "token_id": "314edde2806a18b873ebed72b607cce5583e8f523ffd3c567f47f392808f0a5d",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40",
+   "source_after": "bf75a10c407762e1f6af275eda1eaff55f736a948ee05cb29dbda01de6532c40"
+  },
+  "natural": {
+   "source_sha": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    36,
+    487366,
+    461442,
+    278811,
+    0
+   ],
+   "readers_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "later_reads": 0,
+   "later_unions": 0
+  }
+ },
+ "stable-argmax": {
+  "keep": {
+   "source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    96,
+    404695,
+    368969,
+    214076,
+    1130
+   ],
+   "readers_sha": "6d369618879dbe7ee703b4dc3cc5ac08be6b9b97f3ce934958879527e4f05de7",
+   "later_reads": 1130,
+   "later_unions": 1191,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 455,
+    "members": [
+     [
+      253,
+      0
+     ],
+     [
+      276,
+      0
+     ],
+     [
+      299,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     3,
+     1,
+     3,
+     2
+    ],
+    "score": null,
+    "compose": false,
+    "checkpoint": null
+   },
+   "token_id": "2fae3397b211ff0fd46be8c927c96e5df277436fec60a41948348c59280b3079",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10",
+   "source_after": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10"
+  },
+  "compose": {
+   "source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    96,
+    404695,
+    367840,
+    212947,
+    1
+   ],
+   "readers_sha": "6d369618879dbe7ee703b4dc3cc5ac08be6b9b97f3ce934958879527e4f05de7",
+   "later_reads": 1130,
+   "later_unions": 1191,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 455,
+    "members": [
+     [
+      253,
+      0
+     ],
+     [
+      276,
+      0
+     ],
+     [
+      299,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     3,
+     1,
+     3,
+     2
+    ],
+    "score": null,
+    "compose": true,
+    "checkpoint": null
+   },
+   "token_id": "67bdc882e97974f046b345b3a3a02be4f349c7e59a027837f88849cd678c4644",
+   "saved_bytes": 96,
+   "peak_bytes": 304,
+   "retired_owners": [
+    1
+   ],
+   "source_before": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10",
+   "source_after": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10"
+  },
+  "real": {
+   "source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    96,
+    404695,
+    367840,
+    212947,
+    1
+   ],
+   "readers_sha": "6d369618879dbe7ee703b4dc3cc5ac08be6b9b97f3ce934958879527e4f05de7",
+   "later_reads": 1130,
+   "later_unions": 1191,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 455,
+    "members": [
+     [
+      253,
+      0
+     ],
+     [
+      276,
+      0
+     ],
+     [
+      299,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     3,
+     1,
+     3,
+     2
+    ],
+    "score": 3.78173828125,
+    "compose": true,
+    "checkpoint": [
+     [
+      0.142333984375,
+      0.120849609375,
+      0.2236328125,
+      0.120849609375,
+      0.19384765625,
+      0.120849609375,
+      0.20654296875,
+      0.16455078125
+     ],
+     0.709716796875
+    ]
+   },
+   "token_id": "7f85df2a4910d94fea13d72b756e9a41cec3b0480d63e8b995e8204f64b26d38",
+   "saved_bytes": 96,
+   "peak_bytes": 304,
+   "retired_owners": [
+    1
+   ],
+   "source_before": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10",
+   "source_after": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10"
+  },
+  "synthetic": {
+   "source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    96,
+    404695,
+    368969,
+    214076,
+    1130
+   ],
+   "readers_sha": "6d369618879dbe7ee703b4dc3cc5ac08be6b9b97f3ce934958879527e4f05de7",
+   "later_reads": 1130,
+   "later_unions": 1191,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 455,
+    "members": [
+     [
+      253,
+      0
+     ],
+     [
+      276,
+      0
+     ],
+     [
+      299,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     3,
+     1,
+     3,
+     2
+    ],
+    "score": -4.3984375,
+    "compose": false,
+    "checkpoint": [
+     [
+      -0.183837890625,
+      -0.18896484375,
+      -0.17822265625,
+      0.0,
+      -0.185546875,
+      -0.18798828125,
+      -0.191650390625,
+      -0.191650390625
+     ],
+     -1.426025390625
+    ]
+   },
+   "token_id": "f2ba3de04a4235030be4d4f73b6eac427d6ece8feb91c26918859483841f9f90",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10",
+   "source_after": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10"
+  },
+  "mixed": {
+   "source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    96,
+    404695,
+    368969,
+    214076,
+    1130
+   ],
+   "readers_sha": "6d369618879dbe7ee703b4dc3cc5ac08be6b9b97f3ce934958879527e4f05de7",
+   "later_reads": 1130,
+   "later_unions": 1191,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 455,
+    "members": [
+     [
+      253,
+      0
+     ],
+     [
+      276,
+      0
+     ],
+     [
+      299,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     3,
+     1,
+     3,
+     2
+    ],
+    "score": -3.457763671875,
+    "compose": false,
+    "checkpoint": [
+     [
+      -0.152099609375,
+      -0.160400390625,
+      -0.131103515625,
+      0.15478515625,
+      -0.156494140625,
+      -0.163818359375,
+      -0.16162109375,
+      -0.163330078125
+     ],
+     -1.1787109375
+    ]
+   },
+   "token_id": "7c4abad98662953ed8efe2cde416172460263b78f1b309e5ace57cbd9df6286a",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10",
+   "source_after": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10"
+  },
+  "replay": {
+   "source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    96,
+    404695,
+    368969,
+    214076,
+    1130
+   ],
+   "readers_sha": "6d369618879dbe7ee703b4dc3cc5ac08be6b9b97f3ce934958879527e4f05de7",
+   "later_reads": 1130,
+   "later_unions": 1191,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 455,
+    "members": [
+     [
+      253,
+      0
+     ],
+     [
+      276,
+      0
+     ],
+     [
+      299,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     3,
+     1,
+     3,
+     2
+    ],
+    "score": -4.11572265625,
+    "compose": false,
+    "checkpoint": [
+     [
+      -0.175048828125,
+      -0.185791015625,
+      -0.150390625,
+      0.032958984375,
+      -0.18115234375,
+      -0.18896484375,
+      -0.189208984375,
+      -0.1904296875
+     ],
+     -1.330322265625
+    ]
+   },
+   "token_id": "dcba1908a9a290eb7709eb43c37a995807e3dc815d17a7403f0a759105ac2f8f",
+   "saved_bytes": 0,
+   "peak_bytes": 0,
+   "retired_owners": [],
+   "source_before": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10",
+   "source_after": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10"
+  },
+  "regression": {
+   "source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    96,
+    404695,
+    367840,
+    212947,
+    1
+   ],
+   "readers_sha": "6d369618879dbe7ee703b4dc3cc5ac08be6b9b97f3ce934958879527e4f05de7",
+   "later_reads": 1130,
+   "later_unions": 1191,
+   "source_run": 20,
+   "token": {
+    "epoch": 20,
+    "shape": 455,
+    "members": [
+     [
+      253,
+      0
+     ],
+     [
+      276,
+      0
+     ],
+     [
+      299,
+      1
+     ]
+    ],
+    "features": [
+     2,
+     1,
+     4,
+     1,
+     3,
+     1,
+     3,
+     2
+    ],
+    "score": 0.107421875,
+    "compose": true,
+    "checkpoint": [
+     [
+      0.012939453125,
+      0.010009765625,
+      0.09130859375,
+      0.128173828125,
+      -0.1435546875,
+      -0.175537109375,
+      0.011474609375,
+      -0.01318359375
+     ],
+     0.17626953125
+    ]
+   },
+   "token_id": "8b3ab109eeb7a2a46d6f1c8bcc74d3ffa041ebdeccb97fe7620f33d493b80e96",
+   "saved_bytes": 96,
+   "peak_bytes": 304,
+   "retired_owners": [
+    1
+   ],
+   "source_before": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10",
+   "source_after": "2833d05c4c65da79bac1c0d9e65869576de29fe17ed767c3166390d832506e10"
+  },
+  "natural": {
+   "source_sha": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    50,
+    404722,
+    380294,
+    219754,
+    0
+   ],
+   "readers_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "later_reads": 0,
+   "later_unions": 0
+  }
+ }
+}
