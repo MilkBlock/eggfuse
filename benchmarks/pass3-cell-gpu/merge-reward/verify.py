@@ -38,7 +38,7 @@ def verify(folder):
     spec=read('scarce-policies.json')
     assert spec['train_cases']==['affine-twins'] and spec['native_events']==96 and spec['native_child_wins']==41
     assert summarize(read('scarce-results.json'))==read('scarce-comparison.json')
-    for fname,expected in [('scarce-results.json',4)]:
+    for fname,expected in [('scarce-results.json',4),('delta-transfer.json',4)]:
         other=read(fname);assert len(other)==expected
         for case,group in other.items():
             for arm,row in group.items():
