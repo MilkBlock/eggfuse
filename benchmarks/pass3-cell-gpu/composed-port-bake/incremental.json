@@ -1,0 +1,1230 @@
+{
+ "sum-bits/1703": {
+  "leaf": {
+   "ms": [
+    107.52258300000001,
+    109.89475,
+    114.388083,
+    110.969792,
+    114.515416,
+    111.383208,
+    112.989708,
+    113.25925000000001
+   ],
+   "source_exact": true,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "direct": 5867,
+   "fresh": 5868,
+   "runs": 1428,
+   "winners": 90,
+   "max_chain": 5,
+   "identity": [
+    "b8490a3779eb96d8ee3adaec6e3bd4c7aa4ed5c7b4692bc9ed1f4044534dc2fa",
+    "d11dba0eb5ae4005dd5c7f0d26f1c85fba69bb8e01cc1d2a05c9e4027fb8fa2a",
+    "0943e7032631101a74bb85534a0f06ee3943746c5a148a11475bbd86879c5c10",
+    "c7f4f5fcc817fb9109d023b51afa3fd6e9a2417eb205b38c2ee208072f7c859b",
+    "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+    "07dbfef9a4b4534dd85917e7772d36044dc8b881ebcad427d5270bc208b9dc96"
+   ],
+   "boundary": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 12108,
+   "publications": 194,
+   "admitted": 0,
+   "net_entry_after_rebuild": 0,
+   "initial_row_decodes_saved": 0,
+   "selected_wins": 0,
+   "root_wire_bytes": 19511200,
+   "source_owned_refreshes": 0,
+   "family_guard_counts": {
+    "selected": 90,
+    "wrong_fresh_branch": 90,
+    "stale": 4288,
+    "stale_version": 14
+   },
+   "median_ms": 112.18645799999999
+  },
+  "inline": {
+   "ms": [
+    109.499167,
+    104.3255,
+    112.480417,
+    113.110209,
+    113.523042,
+    111.19999999999999,
+    108.015917,
+    112.803875
+   ],
+   "source_exact": true,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "direct": 5867,
+   "fresh": 5868,
+   "runs": 1428,
+   "winners": 90,
+   "max_chain": 5,
+   "identity": [
+    "b8490a3779eb96d8ee3adaec6e3bd4c7aa4ed5c7b4692bc9ed1f4044534dc2fa",
+    "d11dba0eb5ae4005dd5c7f0d26f1c85fba69bb8e01cc1d2a05c9e4027fb8fa2a",
+    "0943e7032631101a74bb85534a0f06ee3943746c5a148a11475bbd86879c5c10",
+    "c7f4f5fcc817fb9109d023b51afa3fd6e9a2417eb205b38c2ee208072f7c859b",
+    "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+    "07dbfef9a4b4534dd85917e7772d36044dc8b881ebcad427d5270bc208b9dc96"
+   ],
+   "boundary": [
+    45,
+    6054,
+    12108,
+    7730,
+    90,
+    7640,
+    90,
+    446,
+    90
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 12108,
+   "publications": 194,
+   "admitted": 194,
+   "net_entry_after_rebuild": -1676,
+   "initial_row_decodes_saved": 4468,
+   "selected_wins": 90,
+   "root_wire_bytes": 19511200,
+   "source_owned_refreshes": 2234,
+   "family_guard_counts": {
+    "selected": 90,
+    "wrong_fresh_branch": 90,
+    "stale": 4288,
+    "stale_version": 14
+   },
+   "median_ms": 111.84020849999999
+  },
+  "delta": {
+   "ms": [
+    102.171125,
+    113.37887500000001,
+    110.753625,
+    112.02833399999999,
+    112.36904100000001,
+    110.69295799999999,
+    114.476125,
+    114.467959
+   ],
+   "source_exact": true,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "direct": 5867,
+   "fresh": 5868,
+   "runs": 1428,
+   "winners": 90,
+   "max_chain": 5,
+   "identity": [
+    "b8490a3779eb96d8ee3adaec6e3bd4c7aa4ed5c7b4692bc9ed1f4044534dc2fa",
+    "d11dba0eb5ae4005dd5c7f0d26f1c85fba69bb8e01cc1d2a05c9e4027fb8fa2a",
+    "0943e7032631101a74bb85534a0f06ee3943746c5a148a11475bbd86879c5c10",
+    "c7f4f5fcc817fb9109d023b51afa3fd6e9a2417eb205b38c2ee208072f7c859b",
+    "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+    "07dbfef9a4b4534dd85917e7772d36044dc8b881ebcad427d5270bc208b9dc96"
+   ],
+   "boundary": [
+    1,
+    512,
+    12072,
+    7694,
+    90,
+    7604,
+    90,
+    446,
+    90
+   ],
+   "delta": [
+    293,
+    471,
+    7694,
+    239,
+    86
+   ],
+   "leaf_entry": 12108,
+   "publications": 194,
+   "admitted": 194,
+   "net_entry_after_rebuild": 3866,
+   "initial_row_decodes_saved": 4468,
+   "selected_wins": 90,
+   "root_wire_bytes": 19511200,
+   "source_owned_refreshes": 193,
+   "family_guard_counts": {
+    "selected": 90,
+    "wrong_fresh_branch": 90,
+    "stale": 4288,
+    "stale_version": 14
+   },
+   "median_ms": 112.1986875
+  },
+  "delta-none": {
+   "ms": [
+    102.39574999999999,
+    111.503125,
+    111.88891600000001,
+    113.963333,
+    115.218792,
+    114.100375,
+    107.626458,
+    115.693958
+   ],
+   "source_exact": true,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "direct": 5867,
+   "fresh": 5868,
+   "runs": 1428,
+   "winners": 90,
+   "max_chain": 5,
+   "identity": [
+    "b8490a3779eb96d8ee3adaec6e3bd4c7aa4ed5c7b4692bc9ed1f4044534dc2fa",
+    "d11dba0eb5ae4005dd5c7f0d26f1c85fba69bb8e01cc1d2a05c9e4027fb8fa2a",
+    "0943e7032631101a74bb85534a0f06ee3943746c5a148a11475bbd86879c5c10",
+    "c7f4f5fcc817fb9109d023b51afa3fd6e9a2417eb205b38c2ee208072f7c859b",
+    "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+    "07dbfef9a4b4534dd85917e7772d36044dc8b881ebcad427d5270bc208b9dc96"
+   ],
+   "boundary": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 12108,
+   "publications": 194,
+   "admitted": 0,
+   "net_entry_after_rebuild": 0,
+   "initial_row_decodes_saved": 0,
+   "selected_wins": 0,
+   "root_wire_bytes": 19511200,
+   "source_owned_refreshes": 0,
+   "family_guard_counts": {
+    "selected": 90,
+    "wrong_fresh_branch": 90,
+    "stale": 4288,
+    "stale_version": 14
+   },
+   "median_ms": 112.92612450000001
+  },
+  "delta-mixed": {
+   "ms": [
+    103.008792,
+    111.293042,
+    110.959709,
+    114.7915,
+    114.011667,
+    111.609542,
+    111.276208,
+    114.576334
+   ],
+   "source_exact": true,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "direct": 5867,
+   "fresh": 5868,
+   "runs": 1428,
+   "winners": 90,
+   "max_chain": 5,
+   "identity": [
+    "b8490a3779eb96d8ee3adaec6e3bd4c7aa4ed5c7b4692bc9ed1f4044534dc2fa",
+    "d11dba0eb5ae4005dd5c7f0d26f1c85fba69bb8e01cc1d2a05c9e4027fb8fa2a",
+    "0943e7032631101a74bb85534a0f06ee3943746c5a148a11475bbd86879c5c10",
+    "c7f4f5fcc817fb9109d023b51afa3fd6e9a2417eb205b38c2ee208072f7c859b",
+    "eaecaf9bfee501a40d5a0073640315cc173d7364d7a84a621b6b2436632c03ad",
+    "07dbfef9a4b4534dd85917e7772d36044dc8b881ebcad427d5270bc208b9dc96"
+   ],
+   "boundary": [
+    1,
+    498,
+    11990,
+    9857,
+    13,
+    9844,
+    13,
+    61,
+    13
+   ],
+   "delta": [
+    270,
+    464,
+    9857,
+    239,
+    84
+   ],
+   "leaf_entry": 12108,
+   "publications": 194,
+   "admitted": 83,
+   "net_entry_after_rebuild": 1635,
+   "initial_row_decodes_saved": 2146,
+   "selected_wins": 13,
+   "root_wire_bytes": 19511200,
+   "source_owned_refreshes": 82,
+   "family_guard_counts": {
+    "selected": 90,
+    "wrong_fresh_branch": 90,
+    "stale": 4288,
+    "stale_version": 14
+   },
+   "median_ms": 111.451292
+  }
+ },
+ "sum-bits/1709": {
+  "leaf": {
+   "ms": [
+    108.842709,
+    111.032916,
+    110.187625,
+    111.89012500000001,
+    112.00475,
+    106.877708,
+    106.587292,
+    111.319209
+   ],
+   "source_exact": true,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "direct": 5867,
+   "fresh": 5868,
+   "runs": 1428,
+   "winners": 90,
+   "max_chain": 5,
+   "identity": [
+    "f4e62866b73e7e38d5dada50c35ff7dd8b7ff03e8d15e923f24a1eff4b8d6425",
+    "669e7fb5869d29ae1e6db78209ec17c8f6bed9c95b49d2f3f1b511032039ac2b",
+    "9569193b26762758e804e62133c6c26ca52840ee6fd1fad80a23416043130270",
+    "f96693b896f41bfe71527b36fb300d45335b6e6b204fff137707aff0b65e1a38",
+    "11e823131597ab4309d4309ea6978d824ec50ae9875855d736f13cdc79b5563e",
+    "5fd47aad08e8086ce99c7586aad36380e82110da6e2d32c2382fc45bf4de0fd5"
+   ],
+   "boundary": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 12108,
+   "publications": 194,
+   "admitted": 0,
+   "net_entry_after_rebuild": 0,
+   "initial_row_decodes_saved": 0,
+   "selected_wins": 0,
+   "root_wire_bytes": 19473824,
+   "source_owned_refreshes": 0,
+   "family_guard_counts": {
+    "selected": 90,
+    "wrong_fresh_branch": 90,
+    "stale": 4288,
+    "stale_version": 14
+   },
+   "median_ms": 110.6102705
+  },
+  "inline": {
+   "ms": [
+    112.637875,
+    111.054333,
+    112.424625,
+    115.49129099999999,
+    107.376083,
+    113.316084,
+    104.391875,
+    108.38737499999999
+   ],
+   "source_exact": true,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "direct": 5867,
+   "fresh": 5868,
+   "runs": 1428,
+   "winners": 90,
+   "max_chain": 5,
+   "identity": [
+    "f4e62866b73e7e38d5dada50c35ff7dd8b7ff03e8d15e923f24a1eff4b8d6425",
+    "669e7fb5869d29ae1e6db78209ec17c8f6bed9c95b49d2f3f1b511032039ac2b",
+    "9569193b26762758e804e62133c6c26ca52840ee6fd1fad80a23416043130270",
+    "f96693b896f41bfe71527b36fb300d45335b6e6b204fff137707aff0b65e1a38",
+    "11e823131597ab4309d4309ea6978d824ec50ae9875855d736f13cdc79b5563e",
+    "5fd47aad08e8086ce99c7586aad36380e82110da6e2d32c2382fc45bf4de0fd5"
+   ],
+   "boundary": [
+    45,
+    6054,
+    12108,
+    7730,
+    90,
+    7640,
+    90,
+    446,
+    90
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 12108,
+   "publications": 194,
+   "admitted": 194,
+   "net_entry_after_rebuild": -1676,
+   "initial_row_decodes_saved": 4468,
+   "selected_wins": 90,
+   "root_wire_bytes": 19473824,
+   "source_owned_refreshes": 2234,
+   "family_guard_counts": {
+    "selected": 90,
+    "wrong_fresh_branch": 90,
+    "stale": 4288,
+    "stale_version": 14
+   },
+   "median_ms": 111.739479
+  },
+  "delta": {
+   "ms": [
+    109.75295799999999,
+    106.77416600000001,
+    113.512667,
+    111.870833,
+    110.873333,
+    115.446042,
+    110.896125,
+    109.85962500000001
+   ],
+   "source_exact": true,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "direct": 5867,
+   "fresh": 5868,
+   "runs": 1428,
+   "winners": 90,
+   "max_chain": 5,
+   "identity": [
+    "f4e62866b73e7e38d5dada50c35ff7dd8b7ff03e8d15e923f24a1eff4b8d6425",
+    "669e7fb5869d29ae1e6db78209ec17c8f6bed9c95b49d2f3f1b511032039ac2b",
+    "9569193b26762758e804e62133c6c26ca52840ee6fd1fad80a23416043130270",
+    "f96693b896f41bfe71527b36fb300d45335b6e6b204fff137707aff0b65e1a38",
+    "11e823131597ab4309d4309ea6978d824ec50ae9875855d736f13cdc79b5563e",
+    "5fd47aad08e8086ce99c7586aad36380e82110da6e2d32c2382fc45bf4de0fd5"
+   ],
+   "boundary": [
+    1,
+    512,
+    12072,
+    7694,
+    90,
+    7604,
+    90,
+    446,
+    90
+   ],
+   "delta": [
+    293,
+    471,
+    7694,
+    239,
+    86
+   ],
+   "leaf_entry": 12108,
+   "publications": 194,
+   "admitted": 194,
+   "net_entry_after_rebuild": 3866,
+   "initial_row_decodes_saved": 4468,
+   "selected_wins": 90,
+   "root_wire_bytes": 19473824,
+   "source_owned_refreshes": 193,
+   "family_guard_counts": {
+    "selected": 90,
+    "wrong_fresh_branch": 90,
+    "stale": 4288,
+    "stale_version": 14
+   },
+   "median_ms": 110.884729
+  },
+  "delta-none": {
+   "ms": [
+    109.670709,
+    108.168834,
+    104.781542,
+    110.53012500000001,
+    112.41666599999999,
+    109.83037499999999,
+    109.710833,
+    111.90591699999999
+   ],
+   "source_exact": true,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "direct": 5867,
+   "fresh": 5868,
+   "runs": 1428,
+   "winners": 90,
+   "max_chain": 5,
+   "identity": [
+    "f4e62866b73e7e38d5dada50c35ff7dd8b7ff03e8d15e923f24a1eff4b8d6425",
+    "669e7fb5869d29ae1e6db78209ec17c8f6bed9c95b49d2f3f1b511032039ac2b",
+    "9569193b26762758e804e62133c6c26ca52840ee6fd1fad80a23416043130270",
+    "f96693b896f41bfe71527b36fb300d45335b6e6b204fff137707aff0b65e1a38",
+    "11e823131597ab4309d4309ea6978d824ec50ae9875855d736f13cdc79b5563e",
+    "5fd47aad08e8086ce99c7586aad36380e82110da6e2d32c2382fc45bf4de0fd5"
+   ],
+   "boundary": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 12108,
+   "publications": 194,
+   "admitted": 0,
+   "net_entry_after_rebuild": 0,
+   "initial_row_decodes_saved": 0,
+   "selected_wins": 0,
+   "root_wire_bytes": 19473824,
+   "source_owned_refreshes": 0,
+   "family_guard_counts": {
+    "selected": 90,
+    "wrong_fresh_branch": 90,
+    "stale": 4288,
+    "stale_version": 14
+   },
+   "median_ms": 109.77060399999999
+  },
+  "delta-mixed": {
+   "ms": [
+    112.98712499999999,
+    109.248667,
+    120.508084,
+    109.973291,
+    112.360875,
+    110.84225,
+    110.29825,
+    115.2705
+   ],
+   "source_exact": true,
+   "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "direct": 5867,
+   "fresh": 5868,
+   "runs": 1428,
+   "winners": 90,
+   "max_chain": 5,
+   "identity": [
+    "f4e62866b73e7e38d5dada50c35ff7dd8b7ff03e8d15e923f24a1eff4b8d6425",
+    "669e7fb5869d29ae1e6db78209ec17c8f6bed9c95b49d2f3f1b511032039ac2b",
+    "9569193b26762758e804e62133c6c26ca52840ee6fd1fad80a23416043130270",
+    "f96693b896f41bfe71527b36fb300d45335b6e6b204fff137707aff0b65e1a38",
+    "11e823131597ab4309d4309ea6978d824ec50ae9875855d736f13cdc79b5563e",
+    "5fd47aad08e8086ce99c7586aad36380e82110da6e2d32c2382fc45bf4de0fd5"
+   ],
+   "boundary": [
+    1,
+    498,
+    11990,
+    9857,
+    13,
+    9844,
+    13,
+    61,
+    13
+   ],
+   "delta": [
+    270,
+    464,
+    9857,
+    239,
+    84
+   ],
+   "leaf_entry": 12108,
+   "publications": 194,
+   "admitted": 83,
+   "net_entry_after_rebuild": 1635,
+   "initial_row_decodes_saved": 2146,
+   "selected_wins": 13,
+   "root_wire_bytes": 19473824,
+   "source_owned_refreshes": 82,
+   "family_guard_counts": {
+    "selected": 90,
+    "wrong_fresh_branch": 90,
+    "stale": 4288,
+    "stale_version": 14
+   },
+   "median_ms": 111.6015625
+  }
+ },
+ "dot-product/1703": {
+  "leaf": {
+   "ms": [
+    118.026708,
+    117.787958,
+    111.207166,
+    113.147667,
+    107.597542,
+    104.97874999999999,
+    110.8425,
+    108.161042
+   ],
+   "source_exact": true,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "direct": 5666,
+   "fresh": 5682,
+   "runs": 1535,
+   "winners": 44,
+   "max_chain": 6,
+   "identity": [
+    "ae4d4749d55a758a879b63149183c3ba61e34634298ef3ad1b043339ec176dc2",
+    "ad6502a8805fb3bc723bd708b8d2904366dd0a656cf90eea5a467766e845eabe",
+    "d67db049c15631ecf7fd83b16c48b28c906ab5e06d4b337706b44cd8513bf5db",
+    "bd95b73b05ce18accc34ed3038e7f6c44fe53aca562d605521d64c1f032bb913",
+    "41c0095ccc47032e7a778c97ee8a6f1340b788e468ffe36c7fb108be91bfa579",
+    "6ea099d5259e46adde1a9857eb55abe4f3af72f2d6b1723d2cfc8192d3b7f1b6"
+   ],
+   "boundary": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 4474,
+   "publications": 100,
+   "admitted": 0,
+   "net_entry_after_rebuild": 0,
+   "initial_row_decodes_saved": 0,
+   "selected_wins": 0,
+   "root_wire_bytes": 20561088,
+   "source_owned_refreshes": 0,
+   "family_guard_counts": {
+    "selected": 44,
+    "wrong_fresh_branch": 44,
+    "stale": 1154,
+    "stale_version": 0
+   },
+   "median_ms": 111.024833
+  },
+  "inline": {
+   "ms": [
+    112.660666,
+    113.86250000000001,
+    119.29325,
+    112.530333,
+    105.802041,
+    104.704583,
+    109.378458,
+    109.332208
+   ],
+   "source_exact": true,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "direct": 5666,
+   "fresh": 5682,
+   "runs": 1535,
+   "winners": 44,
+   "max_chain": 6,
+   "identity": [
+    "ae4d4749d55a758a879b63149183c3ba61e34634298ef3ad1b043339ec176dc2",
+    "ad6502a8805fb3bc723bd708b8d2904366dd0a656cf90eea5a467766e845eabe",
+    "d67db049c15631ecf7fd83b16c48b28c906ab5e06d4b337706b44cd8513bf5db",
+    "bd95b73b05ce18accc34ed3038e7f6c44fe53aca562d605521d64c1f032bb913",
+    "41c0095ccc47032e7a778c97ee8a6f1340b788e468ffe36c7fb108be91bfa579",
+    "6ea099d5259e46adde1a9857eb55abe4f3af72f2d6b1723d2cfc8192d3b7f1b6"
+   ],
+   "boundary": [
+    19,
+    2237,
+    4474,
+    3276,
+    44,
+    3232,
+    44,
+    220,
+    44
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 4474,
+   "publications": 100,
+   "admitted": 100,
+   "net_entry_after_rebuild": -1039,
+   "initial_row_decodes_saved": 1242,
+   "selected_wins": 44,
+   "root_wire_bytes": 20561088,
+   "source_owned_refreshes": 621,
+   "family_guard_counts": {
+    "selected": 44,
+    "wrong_fresh_branch": 44,
+    "stale": 1154,
+    "stale_version": 0
+   },
+   "median_ms": 110.9543955
+  },
+  "delta": {
+   "ms": [
+    110.935167,
+    111.586708,
+    111.071334,
+    111.938,
+    107.59575000000001,
+    106.861041,
+    108.7195,
+    111.908042
+   ],
+   "source_exact": true,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "direct": 5666,
+   "fresh": 5682,
+   "runs": 1535,
+   "winners": 44,
+   "max_chain": 6,
+   "identity": [
+    "ae4d4749d55a758a879b63149183c3ba61e34634298ef3ad1b043339ec176dc2",
+    "ad6502a8805fb3bc723bd708b8d2904366dd0a656cf90eea5a467766e845eabe",
+    "d67db049c15631ecf7fd83b16c48b28c906ab5e06d4b337706b44cd8513bf5db",
+    "bd95b73b05ce18accc34ed3038e7f6c44fe53aca562d605521d64c1f032bb913",
+    "41c0095ccc47032e7a778c97ee8a6f1340b788e468ffe36c7fb108be91bfa579",
+    "6ea099d5259e46adde1a9857eb55abe4f3af72f2d6b1723d2cfc8192d3b7f1b6"
+   ],
+   "boundary": [
+    1,
+    320,
+    4408,
+    3210,
+    44,
+    3166,
+    44,
+    220,
+    44
+   ],
+   "delta": [
+    150,
+    458,
+    3210,
+    156,
+    34
+   ],
+   "leaf_entry": 4474,
+   "publications": 100,
+   "admitted": 100,
+   "net_entry_after_rebuild": 878,
+   "initial_row_decodes_saved": 1242,
+   "selected_wins": 44,
+   "root_wire_bytes": 20561088,
+   "source_owned_refreshes": 99,
+   "family_guard_counts": {
+    "selected": 44,
+    "wrong_fresh_branch": 44,
+    "stale": 1154,
+    "stale_version": 0
+   },
+   "median_ms": 111.00325050000001
+  },
+  "delta-none": {
+   "ms": [
+    116.940833,
+    110.259416,
+    114.47512499999999,
+    116.008292,
+    104.819417,
+    108.97045800000001,
+    113.01383299999999,
+    106.83754099999999
+   ],
+   "source_exact": true,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "direct": 5666,
+   "fresh": 5682,
+   "runs": 1535,
+   "winners": 44,
+   "max_chain": 6,
+   "identity": [
+    "ae4d4749d55a758a879b63149183c3ba61e34634298ef3ad1b043339ec176dc2",
+    "ad6502a8805fb3bc723bd708b8d2904366dd0a656cf90eea5a467766e845eabe",
+    "d67db049c15631ecf7fd83b16c48b28c906ab5e06d4b337706b44cd8513bf5db",
+    "bd95b73b05ce18accc34ed3038e7f6c44fe53aca562d605521d64c1f032bb913",
+    "41c0095ccc47032e7a778c97ee8a6f1340b788e468ffe36c7fb108be91bfa579",
+    "6ea099d5259e46adde1a9857eb55abe4f3af72f2d6b1723d2cfc8192d3b7f1b6"
+   ],
+   "boundary": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 4474,
+   "publications": 100,
+   "admitted": 0,
+   "net_entry_after_rebuild": 0,
+   "initial_row_decodes_saved": 0,
+   "selected_wins": 0,
+   "root_wire_bytes": 20561088,
+   "source_owned_refreshes": 0,
+   "family_guard_counts": {
+    "selected": 44,
+    "wrong_fresh_branch": 44,
+    "stale": 1154,
+    "stale_version": 0
+   },
+   "median_ms": 111.6366245
+  },
+  "delta-mixed": {
+   "ms": [
+    114.63879200000001,
+    118.695208,
+    118.00475,
+    110.799333,
+    106.58687499999999,
+    110.000583,
+    107.789417,
+    109.17833300000001
+   ],
+   "source_exact": true,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "direct": 5666,
+   "fresh": 5682,
+   "runs": 1535,
+   "winners": 44,
+   "max_chain": 6,
+   "identity": [
+    "ae4d4749d55a758a879b63149183c3ba61e34634298ef3ad1b043339ec176dc2",
+    "ad6502a8805fb3bc723bd708b8d2904366dd0a656cf90eea5a467766e845eabe",
+    "d67db049c15631ecf7fd83b16c48b28c906ab5e06d4b337706b44cd8513bf5db",
+    "bd95b73b05ce18accc34ed3038e7f6c44fe53aca562d605521d64c1f032bb913",
+    "41c0095ccc47032e7a778c97ee8a6f1340b788e468ffe36c7fb108be91bfa579",
+    "6ea099d5259e46adde1a9857eb55abe4f3af72f2d6b1723d2cfc8192d3b7f1b6"
+   ],
+   "boundary": [
+    1,
+    307,
+    4272,
+    3741,
+    13,
+    3728,
+    13,
+    65,
+    13
+   ],
+   "delta": [
+    120,
+    438,
+    3741,
+    156,
+    32
+   ],
+   "leaf_entry": 4474,
+   "publications": 100,
+   "admitted": 44,
+   "net_entry_after_rebuild": 224,
+   "initial_row_decodes_saved": 544,
+   "selected_wins": 13,
+   "root_wire_bytes": 20561088,
+   "source_owned_refreshes": 44,
+   "family_guard_counts": {
+    "selected": 44,
+    "wrong_fresh_branch": 44,
+    "stale": 1154,
+    "stale_version": 0
+   },
+   "median_ms": 110.399958
+  }
+ },
+ "dot-product/1709": {
+  "leaf": {
+   "ms": [
+    111.6495,
+    117.145917,
+    112.05125000000001,
+    111.94245799999999,
+    104.849583,
+    115.189292,
+    116.303,
+    109.833958
+   ],
+   "source_exact": true,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "direct": 5666,
+   "fresh": 5682,
+   "runs": 1535,
+   "winners": 44,
+   "max_chain": 6,
+   "identity": [
+    "8ed3e11d6a325f0c4a2156bde03fc1677a331408fd676cc323136351cd3707b6",
+    "de836af2e988fdd70f6217f8149d81a8eed95e19946a1cd38f24dc88ecb5feee",
+    "62bf539b744400dddb4dc1eccecea274bb2a944c83d2d1342e6254bd98228f64",
+    "e5615f369b4cbac46355a4adcde0961190be1f810e09a7ee7e00058ed0a877fb",
+    "1e4852df4e17f61c3096ab03480eb4a7e10707462726c5944d29a2d058ae2738",
+    "c7cb8f940c949399e8d8397d5bf22b40841cf618bd201678577f9fb043321e0f"
+   ],
+   "boundary": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 4474,
+   "publications": 100,
+   "admitted": 0,
+   "net_entry_after_rebuild": 0,
+   "initial_row_decodes_saved": 0,
+   "selected_wins": 0,
+   "root_wire_bytes": 20505344,
+   "source_owned_refreshes": 0,
+   "family_guard_counts": {
+    "selected": 44,
+    "wrong_fresh_branch": 44,
+    "stale": 1154,
+    "stale_version": 0
+   },
+   "median_ms": 111.996854
+  },
+  "inline": {
+   "ms": [
+    109.575209,
+    113.226917,
+    110.29420900000001,
+    108.830792,
+    113.10258300000001,
+    112.542209,
+    108.900584,
+    111.80624999999999
+   ],
+   "source_exact": true,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "direct": 5666,
+   "fresh": 5682,
+   "runs": 1535,
+   "winners": 44,
+   "max_chain": 6,
+   "identity": [
+    "8ed3e11d6a325f0c4a2156bde03fc1677a331408fd676cc323136351cd3707b6",
+    "de836af2e988fdd70f6217f8149d81a8eed95e19946a1cd38f24dc88ecb5feee",
+    "62bf539b744400dddb4dc1eccecea274bb2a944c83d2d1342e6254bd98228f64",
+    "e5615f369b4cbac46355a4adcde0961190be1f810e09a7ee7e00058ed0a877fb",
+    "1e4852df4e17f61c3096ab03480eb4a7e10707462726c5944d29a2d058ae2738",
+    "c7cb8f940c949399e8d8397d5bf22b40841cf618bd201678577f9fb043321e0f"
+   ],
+   "boundary": [
+    19,
+    2237,
+    4474,
+    3276,
+    44,
+    3232,
+    44,
+    220,
+    44
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 4474,
+   "publications": 100,
+   "admitted": 100,
+   "net_entry_after_rebuild": -1039,
+   "initial_row_decodes_saved": 1242,
+   "selected_wins": 44,
+   "root_wire_bytes": 20505344,
+   "source_owned_refreshes": 621,
+   "family_guard_counts": {
+    "selected": 44,
+    "wrong_fresh_branch": 44,
+    "stale": 1154,
+    "stale_version": 0
+   },
+   "median_ms": 111.0502295
+  },
+  "delta": {
+   "ms": [
+    114.613333,
+    110.209667,
+    116.901125,
+    109.34079200000001,
+    112.25075,
+    110.385541,
+    110.753042,
+    109.577834
+   ],
+   "source_exact": true,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "direct": 5666,
+   "fresh": 5682,
+   "runs": 1535,
+   "winners": 44,
+   "max_chain": 6,
+   "identity": [
+    "8ed3e11d6a325f0c4a2156bde03fc1677a331408fd676cc323136351cd3707b6",
+    "de836af2e988fdd70f6217f8149d81a8eed95e19946a1cd38f24dc88ecb5feee",
+    "62bf539b744400dddb4dc1eccecea274bb2a944c83d2d1342e6254bd98228f64",
+    "e5615f369b4cbac46355a4adcde0961190be1f810e09a7ee7e00058ed0a877fb",
+    "1e4852df4e17f61c3096ab03480eb4a7e10707462726c5944d29a2d058ae2738",
+    "c7cb8f940c949399e8d8397d5bf22b40841cf618bd201678577f9fb043321e0f"
+   ],
+   "boundary": [
+    1,
+    320,
+    4408,
+    3210,
+    44,
+    3166,
+    44,
+    220,
+    44
+   ],
+   "delta": [
+    150,
+    458,
+    3210,
+    156,
+    34
+   ],
+   "leaf_entry": 4474,
+   "publications": 100,
+   "admitted": 100,
+   "net_entry_after_rebuild": 878,
+   "initial_row_decodes_saved": 1242,
+   "selected_wins": 44,
+   "root_wire_bytes": 20505344,
+   "source_owned_refreshes": 99,
+   "family_guard_counts": {
+    "selected": 44,
+    "wrong_fresh_branch": 44,
+    "stale": 1154,
+    "stale_version": 0
+   },
+   "median_ms": 110.56929149999999
+  },
+  "delta-none": {
+   "ms": [
+    110.329959,
+    110.466959,
+    114.883042,
+    115.276125,
+    107.93516699999999,
+    115.467792,
+    114.489833,
+    112.9845
+   ],
+   "source_exact": true,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "direct": 5666,
+   "fresh": 5682,
+   "runs": 1535,
+   "winners": 44,
+   "max_chain": 6,
+   "identity": [
+    "8ed3e11d6a325f0c4a2156bde03fc1677a331408fd676cc323136351cd3707b6",
+    "de836af2e988fdd70f6217f8149d81a8eed95e19946a1cd38f24dc88ecb5feee",
+    "62bf539b744400dddb4dc1eccecea274bb2a944c83d2d1342e6254bd98228f64",
+    "e5615f369b4cbac46355a4adcde0961190be1f810e09a7ee7e00058ed0a877fb",
+    "1e4852df4e17f61c3096ab03480eb4a7e10707462726c5944d29a2d058ae2738",
+    "c7cb8f940c949399e8d8397d5bf22b40841cf618bd201678577f9fb043321e0f"
+   ],
+   "boundary": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "delta": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "leaf_entry": 4474,
+   "publications": 100,
+   "admitted": 0,
+   "net_entry_after_rebuild": 0,
+   "initial_row_decodes_saved": 0,
+   "selected_wins": 0,
+   "root_wire_bytes": 20505344,
+   "source_owned_refreshes": 0,
+   "family_guard_counts": {
+    "selected": 44,
+    "wrong_fresh_branch": 44,
+    "stale": 1154,
+    "stale_version": 0
+   },
+   "median_ms": 113.7371665
+  },
+  "delta-mixed": {
+   "ms": [
+    112.171,
+    111.18829099999999,
+    114.145792,
+    110.243792,
+    113.010667,
+    115.518,
+    114.401292,
+    112.440958
+   ],
+   "source_exact": true,
+   "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "direct": 5666,
+   "fresh": 5682,
+   "runs": 1535,
+   "winners": 44,
+   "max_chain": 6,
+   "identity": [
+    "8ed3e11d6a325f0c4a2156bde03fc1677a331408fd676cc323136351cd3707b6",
+    "de836af2e988fdd70f6217f8149d81a8eed95e19946a1cd38f24dc88ecb5feee",
+    "62bf539b744400dddb4dc1eccecea274bb2a944c83d2d1342e6254bd98228f64",
+    "e5615f369b4cbac46355a4adcde0961190be1f810e09a7ee7e00058ed0a877fb",
+    "1e4852df4e17f61c3096ab03480eb4a7e10707462726c5944d29a2d058ae2738",
+    "c7cb8f940c949399e8d8397d5bf22b40841cf618bd201678577f9fb043321e0f"
+   ],
+   "boundary": [
+    1,
+    307,
+    4272,
+    3741,
+    13,
+    3728,
+    13,
+    65,
+    13
+   ],
+   "delta": [
+    120,
+    438,
+    3741,
+    156,
+    32
+   ],
+   "leaf_entry": 4474,
+   "publications": 100,
+   "admitted": 44,
+   "net_entry_after_rebuild": 224,
+   "initial_row_decodes_saved": 544,
+   "selected_wins": 13,
+   "root_wire_bytes": 20505344,
+   "source_owned_refreshes": 44,
+   "family_guard_counts": {
+    "selected": 44,
+    "wrong_fresh_branch": 44,
+    "stale": 1154,
+    "stale_version": 0
+   },
+   "median_ms": 112.72581249999999
+  }
+ }
+}

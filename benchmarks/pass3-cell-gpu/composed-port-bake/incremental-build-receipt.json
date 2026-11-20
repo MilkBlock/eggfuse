@@ -1,0 +1,17 @@
+{
+ "installer_revision": "6c2e1583",
+ "native_revision": "31bf7e41",
+ "executable_sha256": "9c0fceeb0afb1bd41def0ebf5c5baf4a923c40b3fd58f1fd3087ce19f610a717",
+ "compiled_files": {
+  "src/higher.rs": "91017d068ebafeb48e94d990f847690ad9851ec401cbecccf738817b70c05c2b",
+  "src/stage_spine.rs": "a955b90e9644c2d9036153c0ae1af1a92a88644b55c5e9e55ab77758c8777503",
+  "src/joint_root.rs": "deea6a2fb35c7600cbf0cbd649e488ac1a2ae27cb0b7fa0df8954a81d171086e",
+  "src/single_witness.rs": "1475a07ab823981e00179411a25e8a3fcd5637bed96587d4b6e777d4f18c3a3c",
+  "src/runtime.rs": "6e5eec1455e5a675985d6c067c300cc9261933942eec2caa4ce39570cee9fcec",
+  "examples/joint_witness_session.rs": "ac4badb4cbad7f21fa6b8405785cdb7ec5abe71eab96f3cf2ea028f974e780f8",
+  "src/composed_boundary.rs": "30b990ad8fb8a49681c7de928510181d7050794cf8847581f859b65fd210d894",
+  "src/composed_delta.rs": "978269beaeb34bab6d034d98735f85d6a94e1ff2ca68fec92d8b8b90bad6478e",
+  "src/runtime_completion.rs": "789996919a45e565114a53728705e3f9447e10caa7f895ae15405e5d9603c3af"
+ },
+ "guard_revision": "4e16008a"
+}
