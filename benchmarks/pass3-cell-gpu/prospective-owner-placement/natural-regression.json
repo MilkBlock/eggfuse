@@ -1,0 +1,25 @@
+{
+ "weights": [
+  0.05029296875,
+  -0.165283203125,
+  0.003662109375,
+  -0.009521484375,
+  -0.0478515625,
+  0.04296875,
+  0.014892578125,
+  -0.095947265625
+ ],
+ "intercept": 0.40234375,
+ "training": {
+  "dot-product": {
+   "events": 188,
+   "source": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "samples_sha": "2f0396a49fe83805e8c8b08225a06107c41d59fb6ae2830078fdaae20227b3b2"
+  },
+  "stable-argmax": {
+   "events": 220,
+   "source": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "samples_sha": "452248f4f56093ef08f48350f05d8243acf0f7cbeb5377f543f5fdcdc8c4752c"
+  }
+ }
+}

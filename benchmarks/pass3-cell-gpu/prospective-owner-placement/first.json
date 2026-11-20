@@ -1,0 +1,706 @@
+{
+ "dot-product": {
+  "pooled/keep": {
+   "source": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    36,
+    487366,
+    461442,
+    278811,
+    0
+   ],
+   "placement": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "final_charge": [
+    286,
+    289,
+    2122,
+    217812,
+    70064,
+    30520,
+    318396
+   ],
+   "peak_charge": [
+    286,
+    289,
+    2122,
+    217812,
+    70064,
+    30520,
+    318396
+   ],
+   "later_refs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "later_runs": 0,
+   "later_unions": 0
+  },
+  "isolate/keep": {
+   "source": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    36,
+    487366,
+    231,
+    231,
+    0
+   ],
+   "placement": [
+    957,
+    978,
+    597,
+    0,
+    0
+   ],
+   "final_charge": [
+    962,
+    1051,
+    2122,
+    310336,
+    65872,
+    37084,
+    413292
+   ],
+   "peak_charge": [
+    962,
+    1051,
+    2122,
+    310336,
+    65872,
+    37084,
+    413292
+   ],
+   "later_refs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "later_runs": 0,
+   "later_unions": 0
+  },
+  "defer/keep": {
+   "source": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    36,
+    487366,
+    465244,
+    282214,
+    281983
+   ],
+   "placement": [
+    957,
+    978,
+    597,
+    596,
+    744
+   ],
+   "final_charge": [
+    1499,
+    1647,
+    2122,
+    339348,
+    65008,
+    43132,
+    447488
+   ],
+   "peak_charge": [
+    1499,
+    1647,
+    2122,
+    339348,
+    65120,
+    43132,
+    447488
+   ],
+   "later_refs": "ae37bf9992ab0dd3dc6d1dbc077823351f29533fd154c6bd3602524d987531cb",
+   "later_runs": 1517,
+   "later_unions": 597,
+   "action": {
+    "run": 19,
+    "shape": 391,
+    "members": [
+     [
+      274,
+      127
+     ],
+     [
+      297,
+      144
+     ]
+    ],
+    "new_members": [
+     [
+      274,
+      127
+     ],
+     [
+      297,
+      144
+     ]
+    ],
+    "epoch": 19,
+    "births": [
+     17,
+     18
+    ],
+    "readers": 10,
+    "old_refs": "9d7f40543d01561ca20f6a933762a082e323131afbe92ec9ff1e4c6ab862030c",
+    "features": [
+     1,
+     1,
+     3,
+     1,
+     3,
+     1,
+     2,
+     2
+    ],
+    "score": null,
+    "selected": false,
+    "saved_bytes": 0,
+    "temp_peak": 0,
+    "retired_owners": []
+   }
+  },
+  "defer/merge": {
+   "source": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    36,
+    487366,
+    463728,
+    280698,
+    280467
+   ],
+   "placement": [
+    957,
+    978,
+    597,
+    596,
+    744
+   ],
+   "final_charge": [
+    1498,
+    1647,
+    2122,
+    339452,
+    65008,
+    43008,
+    447468
+   ],
+   "peak_charge": [
+    1498,
+    1647,
+    2122,
+    339452,
+    65120,
+    43008,
+    447468
+   ],
+   "later_refs": "ae37bf9992ab0dd3dc6d1dbc077823351f29533fd154c6bd3602524d987531cb",
+   "later_runs": 1517,
+   "later_unions": 597,
+   "action": {
+    "run": 19,
+    "shape": 391,
+    "members": [
+     [
+      274,
+      127
+     ],
+     [
+      297,
+      144
+     ]
+    ],
+    "new_members": [
+     [
+      274,
+      127
+     ],
+     [
+      297,
+      127
+     ]
+    ],
+    "epoch": 19,
+    "births": [
+     17,
+     18
+    ],
+    "readers": 10,
+    "old_refs": "9d7f40543d01561ca20f6a933762a082e323131afbe92ec9ff1e4c6ab862030c",
+    "features": [
+     1,
+     1,
+     3,
+     1,
+     3,
+     1,
+     2,
+     2
+    ],
+    "score": null,
+    "selected": true,
+    "saved_bytes": -88,
+    "temp_peak": 448,
+    "retired_owners": [
+     144
+    ]
+   }
+  },
+  "defer/policy": {
+   "source": "cfe4455d88e535e88412ef2f16f13b81ece1d439f23d28b4bc8d3391225593f0",
+   "graph": "23a4d0821dcc601397b19349108174fe9bcc7de99aebe89fe6820471e11ecb70",
+   "runs": 1535,
+   "domain": [
+    1776825,
+    511941,
+    36,
+    487366,
+    465244,
+    282214,
+    281983
+   ],
+   "placement": [
+    957,
+    978,
+    597,
+    596,
+    744
+   ],
+   "final_charge": [
+    1499,
+    1647,
+    2122,
+    339348,
+    65008,
+    43132,
+    447488
+   ],
+   "peak_charge": [
+    1499,
+    1647,
+    2122,
+    339348,
+    65120,
+    43132,
+    447488
+   ],
+   "later_refs": "ae37bf9992ab0dd3dc6d1dbc077823351f29533fd154c6bd3602524d987531cb",
+   "later_runs": 1517,
+   "later_unions": 597,
+   "action": {
+    "run": 19,
+    "shape": 391,
+    "members": [
+     [
+      274,
+      127
+     ],
+     [
+      297,
+      144
+     ]
+    ],
+    "new_members": [
+     [
+      274,
+      127
+     ],
+     [
+      297,
+      144
+     ]
+    ],
+    "epoch": 19,
+    "births": [
+     17,
+     18
+    ],
+    "readers": 10,
+    "old_refs": "9d7f40543d01561ca20f6a933762a082e323131afbe92ec9ff1e4c6ab862030c",
+    "features": [
+     1,
+     1,
+     3,
+     1,
+     3,
+     1,
+     2,
+     2
+    ],
+    "score": -0.00830078125,
+    "selected": false,
+    "saved_bytes": 0,
+    "temp_peak": 0,
+    "retired_owners": []
+   }
+  }
+ },
+ "stable-argmax": {
+  "pooled/keep": {
+   "source": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    50,
+    404722,
+    380294,
+    219754,
+    0
+   ],
+   "placement": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "final_charge": [
+    287,
+    290,
+    2316,
+    237564,
+    80960,
+    40128,
+    358652
+   ],
+   "peak_charge": [
+    287,
+    290,
+    2381,
+    238800,
+    80960,
+    40128,
+    358652
+   ],
+   "later_refs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "later_runs": 0,
+   "later_unions": 0
+  },
+  "isolate/keep": {
+   "source": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    50,
+    404722,
+    0,
+    0,
+    0
+   ],
+   "placement": [
+    1177,
+    1223,
+    757,
+    0,
+    0
+   ],
+   "final_charge": [
+    1059,
+    1271,
+    2316,
+    341840,
+    72240,
+    44296,
+    458376
+   ],
+   "peak_charge": [
+    1059,
+    1271,
+    2381,
+    342944,
+    72384,
+    44296,
+    458432
+   ],
+   "later_refs": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "later_runs": 0,
+   "later_unions": 0
+  },
+  "defer/keep": {
+   "source": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    50,
+    404722,
+    381350,
+    222084,
+    222084
+   ],
+   "placement": [
+    1177,
+    1223,
+    757,
+    757,
+    997
+   ],
+   "final_charge": [
+    1691,
+    2028,
+    2316,
+    396132,
+    70912,
+    51276,
+    518320
+   ],
+   "peak_charge": [
+    1696,
+    2028,
+    2381,
+    396908,
+    71104,
+    51276,
+    518320
+   ],
+   "later_refs": "6442d50c84eb2cb223588424f467b80838936193e7e362fdc48cec10ad8c7eb2",
+   "later_runs": 1135,
+   "later_unions": 1230,
+   "action": {
+    "run": 15,
+    "shape": 529,
+    "members": [
+     [
+      4,
+      3
+     ],
+     [
+      210,
+      103
+     ]
+    ],
+    "new_members": [
+     [
+      4,
+      3
+     ],
+     [
+      210,
+      103
+     ]
+    ],
+    "epoch": 15,
+    "births": [
+     0,
+     14
+    ],
+    "readers": 25,
+    "old_refs": "721268edb2c925461a980d43dad046fecdd8812cb2dd39795e2d062d579ee505",
+    "features": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     2,
+     2,
+     2
+    ],
+    "score": null,
+    "selected": false,
+    "saved_bytes": 0,
+    "temp_peak": 0,
+    "retired_owners": []
+   }
+  },
+  "defer/merge": {
+   "source": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    50,
+    404722,
+    380216,
+    220950,
+    220950
+   ],
+   "placement": [
+    1177,
+    1223,
+    757,
+    757,
+    997
+   ],
+   "final_charge": [
+    1690,
+    2028,
+    2316,
+    396132,
+    70912,
+    51276,
+    518320
+   ],
+   "peak_charge": [
+    1695,
+    2028,
+    2381,
+    396908,
+    71104,
+    51276,
+    518320
+   ],
+   "later_refs": "6442d50c84eb2cb223588424f467b80838936193e7e362fdc48cec10ad8c7eb2",
+   "later_runs": 1135,
+   "later_unions": 1230,
+   "action": {
+    "run": 15,
+    "shape": 529,
+    "members": [
+     [
+      4,
+      3
+     ],
+     [
+      210,
+      103
+     ]
+    ],
+    "new_members": [
+     [
+      4,
+      3
+     ],
+     [
+      210,
+      3
+     ]
+    ],
+    "epoch": 15,
+    "births": [
+     0,
+     14
+    ],
+    "readers": 25,
+    "old_refs": "721268edb2c925461a980d43dad046fecdd8812cb2dd39795e2d062d579ee505",
+    "features": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     2,
+     2,
+     2
+    ],
+    "score": null,
+    "selected": true,
+    "saved_bytes": -108,
+    "temp_peak": 184,
+    "retired_owners": [
+     103
+    ]
+   }
+  },
+  "defer/policy": {
+   "source": "b5ef54c441113722048ce1f3746ebd81c142db08d5ce21a51090d56ab18a9692",
+   "graph": "bbfa088d1bd24f0e5d7ce09d9b02616de25bab1d1e8bb62f741daad127cc9119",
+   "runs": 1149,
+   "domain": [
+    1378167,
+    433835,
+    50,
+    404722,
+    381350,
+    222084,
+    222084
+   ],
+   "placement": [
+    1177,
+    1223,
+    757,
+    757,
+    997
+   ],
+   "final_charge": [
+    1691,
+    2028,
+    2316,
+    396100,
+    70912,
+    51276,
+    518288
+   ],
+   "peak_charge": [
+    1696,
+    2028,
+    2381,
+    396908,
+    71104,
+    51276,
+    518288
+   ],
+   "later_refs": "6442d50c84eb2cb223588424f467b80838936193e7e362fdc48cec10ad8c7eb2",
+   "later_runs": 1135,
+   "later_unions": 1230,
+   "action": {
+    "run": 15,
+    "shape": 529,
+    "members": [
+     [
+      4,
+      3
+     ],
+     [
+      210,
+      103
+     ]
+    ],
+    "new_members": [
+     [
+      4,
+      3
+     ],
+     [
+      210,
+      103
+     ]
+    ],
+    "epoch": 15,
+    "births": [
+     0,
+     14
+    ],
+    "readers": 25,
+    "old_refs": "721268edb2c925461a980d43dad046fecdd8812cb2dd39795e2d062d579ee505",
+    "features": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     2,
+     2,
+     2
+    ],
+    "score": -0.298828125,
+    "selected": false,
+    "saved_bytes": 0,
+    "temp_peak": 0,
+    "retired_owners": []
+   }
+  }
+ }
+}

@@ -1,0 +1,50 @@
+{
+ "dot-product": {
+  "moves": 188,
+  "features": 50,
+  "positive": 41,
+  "negative": 8,
+  "net": 900,
+  "mixed_sign_features": 2,
+  "positive_only": 3712,
+  "best_by_features": 3500,
+  "prepared_gate": 52,
+  "natural_gate": 3300
+ },
+ "stable-argmax": {
+  "moves": 220,
+  "features": 63,
+  "positive": 52,
+  "negative": 7,
+  "net": -760,
+  "mixed_sign_features": 1,
+  "positive_only": 4724,
+  "best_by_features": 4372,
+  "prepared_gate": -1920,
+  "natural_gate": 3548
+ },
+ "gemm-bias-relu": {
+  "moves": 431,
+  "features": 76,
+  "positive": 120,
+  "negative": 9,
+  "net": -16028,
+  "mixed_sign_features": 2,
+  "positive_only": 11144,
+  "best_by_features": 10236,
+  "prepared_gate": -5332,
+  "natural_gate": -9560
+ },
+ "gated-state": {
+  "moves": 184,
+  "features": 58,
+  "positive": 46,
+  "negative": 4,
+  "net": 2536,
+  "mixed_sign_features": 2,
+  "positive_only": 4164,
+  "best_by_features": 3516,
+  "prepared_gate": 716,
+  "natural_gate": 2044
+ }
+}
