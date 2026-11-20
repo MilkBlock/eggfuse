@@ -1,0 +1,12 @@
+{
+ "dot-product": {
+  "source_runs": 1535,
+  "ordered_arms": 5,
+  "final_exports": 5
+ },
+ "stable-argmax": {
+  "source_runs": 1149,
+  "ordered_arms": 5,
+  "final_exports": 5
+ }
+}

@@ -1,0 +1,86 @@
+{
+ "dot-product": {
+  "empty": {
+   "execution_and_takeover_peak_bytes": 123793108,
+   "cumulative_request_bytes_at_completion": 32212260,
+   "integral_instance_teardown_bytes": 39432,
+   "integral_library_teardown_bytes": 378714,
+   "graph_owned_teardown_bytes": 2108787,
+   "retained_program_teardown_bytes": 115852244
+  },
+  "published": {
+   "execution_and_takeover_peak_bytes": 123798800,
+   "cumulative_request_bytes_at_completion": 32213204,
+   "integral_instance_teardown_bytes": 39432,
+   "integral_library_teardown_bytes": 378714,
+   "graph_owned_teardown_bytes": 2114471,
+   "retained_program_teardown_bytes": 115852244
+  },
+  "owner_reward": {
+   "execution_and_takeover_peak_bytes": 123798806,
+   "cumulative_request_bytes_at_completion": 32213204,
+   "integral_instance_teardown_bytes": 39432,
+   "integral_library_teardown_bytes": 378714,
+   "graph_owned_teardown_bytes": 2114471,
+   "retained_program_teardown_bytes": 115852244
+  },
+  "retirement_reward": {
+   "execution_and_takeover_peak_bytes": 123799220,
+   "cumulative_request_bytes_at_completion": 32214556,
+   "integral_instance_teardown_bytes": 39432,
+   "integral_library_teardown_bytes": 379130,
+   "graph_owned_teardown_bytes": 2114459,
+   "retained_program_teardown_bytes": 115852244
+  },
+  "net_bytes": {
+   "execution_and_takeover_peak_bytes": 123793116,
+   "cumulative_request_bytes_at_completion": 32212260,
+   "integral_instance_teardown_bytes": 39432,
+   "integral_library_teardown_bytes": 378714,
+   "graph_owned_teardown_bytes": 2108787,
+   "retained_program_teardown_bytes": 115852244
+  }
+ },
+ "stable-argmax": {
+  "empty": {
+   "execution_and_takeover_peak_bytes": 123533129,
+   "cumulative_request_bytes_at_completion": 34677070,
+   "integral_instance_teardown_bytes": 36360,
+   "integral_library_teardown_bytes": 384666,
+   "graph_owned_teardown_bytes": 2270987,
+   "retained_program_teardown_bytes": 114931062
+  },
+  "published": {
+   "execution_and_takeover_peak_bytes": 123540245,
+   "cumulative_request_bytes_at_completion": 34678150,
+   "integral_instance_teardown_bytes": 36360,
+   "integral_library_teardown_bytes": 385082,
+   "graph_owned_teardown_bytes": 2277679,
+   "retained_program_teardown_bytes": 114931062
+  },
+  "owner_reward": {
+   "execution_and_takeover_peak_bytes": 123540251,
+   "cumulative_request_bytes_at_completion": 34678150,
+   "integral_instance_teardown_bytes": 36360,
+   "integral_library_teardown_bytes": 385082,
+   "graph_owned_teardown_bytes": 2277679,
+   "retained_program_teardown_bytes": 114931062
+  },
+  "retirement_reward": {
+   "execution_and_takeover_peak_bytes": 123537833,
+   "cumulative_request_bytes_at_completion": 34680870,
+   "integral_instance_teardown_bytes": 36360,
+   "integral_library_teardown_bytes": 385082,
+   "graph_owned_teardown_bytes": 2275251,
+   "retained_program_teardown_bytes": 114931062
+  },
+  "net_bytes": {
+   "execution_and_takeover_peak_bytes": 123533137,
+   "cumulative_request_bytes_at_completion": 34677070,
+   "integral_instance_teardown_bytes": 36360,
+   "integral_library_teardown_bytes": 384666,
+   "graph_owned_teardown_bytes": 2270987,
+   "retained_program_teardown_bytes": 114931062
+  }
+ }
+}
