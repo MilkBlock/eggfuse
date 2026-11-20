@@ -1,0 +1,25 @@
+{
+ "parameters": {
+  "bytes": 65536,
+  "min_old": 16,
+  "density": 50,
+  "scan_ratio": 2
+ },
+ "training": {
+  "cases": [
+   "affine-twins",
+   "clamped-ramp",
+   "segmented-prefix",
+   "window-laplacian"
+  ],
+  "scores": {
+   "off": 1.0,
+   "resident": 1.0081798104000521,
+   "budget8": 0.9946718049473171,
+   "budget64": 0.9037864863606095,
+   "budget256": 0.9088169829318216,
+   "select64": 0.9622164118724047
+  },
+  "selected": "budget64"
+ }
+}
