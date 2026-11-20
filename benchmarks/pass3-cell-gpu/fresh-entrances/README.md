@@ -10,6 +10,14 @@ The study uses the full Rust research executor on real Pass 3 with the tied lear
 | dot-product | 22,840 → 21,851 | 17 | 54.75 / 55.78 / 53.37 / 53.26 | 19.04 |
 | jacobi-1d | 274,827 → 245,700 | 52 | 483.46 / 480.44 / 481.22 / 476.22 | 116.67 |
 
+A second frozen seed independently reproduced the reduction in sealed candidate tuples on all three programs.
+
+| Seed 1709 | Fixed → extra pointer tuples | Fixed → extra pointer median (ms) |
+|---|---:|---:|
+| sum-bits | 22,557 → 19,220 | 59.10 → 57.12 |
+| dot-product | 22,845 → 21,848 | 55.83 → 53.77 |
+| jacobi-1d | 317,676 → 288,179 | 502.36 → 482.81 |
+
 This experiment isolates the plan switch relative to a fixed learned entrance. The table does not stack the independent reverse two-parent traversal or the higher-order guard experiment.
 
 Run from the worktree after preparing the inputs in compact-recipes and the tied tables in baked-port-codes. Set EXP to the directory containing those artifacts and choose new build and output directories.

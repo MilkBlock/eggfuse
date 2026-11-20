@@ -26,5 +26,7 @@ def verify(path):
     return rows
 
 if __name__ == '__main__':
-    verify(Path(__file__).parent/'results.json')
+    first=verify(Path(__file__).parent/'results.json')
+    second=verify(Path(__file__).parent/'second-seed.json')
+    assert all(k.endswith('/1703') for k in first) and all(k.endswith('/1709') for k in second)
     print('Verified sealed parent routing, original source schedule, physical attribution and ten timing samples.')
