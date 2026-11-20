@@ -104,6 +104,7 @@ def study(a,native):
             trial=dict(controls=negative_controls(check,raw),placements={})
             arms={'cpu1/cpu':('cpu',1,'cpu'),'cpu4/cpu':('cpu',4,'cpu'),'mps/mps':('mps',1,'mps'),
                   'mps/cpu':('mps',1,'cpu'),'cpu1/mps':('cpu',1,'mps'),'cpu1-absorbing/cpu':('cpu',1,'cpu')}
+            if hasattr(a,'arms'):arms={k:arms[k] for k in a.arms}
             def evaluate(placement,record):
                 gen,threads,verify=arms[placement]
                 torch.set_num_threads(threads)
