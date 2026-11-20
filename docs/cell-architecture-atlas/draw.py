@@ -1,6 +1,7 @@
 """Generate editable SVG small multiples for the Cell architecture atlas (stdlib only)."""
 from pathlib import Path
 from html import escape
+import json
 
 OUT = Path(__file__).parent / "figures"
 INK="#162f42"; SUB="#496478"; LINE="#8396a1"; BG="#f5f7f7"
@@ -370,6 +371,39 @@ PLATES.extend([
     ], pass3_path),
 ])
 
+def planned_flow(a, layers):
+    """Show every intervention as its own data path on the same panel scale."""
+    levels = []
+    for i, layer in enumerate(layers):
+        y = 32 + i * 146 / (len(layers) - 1)
+        xs = [155] if len(layer) == 1 else [80, 230]
+        levels.append([(x, y, kind, text) for x, (kind, text) in zip(xs, layer)])
+    for current, following in zip(levels, levels[1:]):
+        for x, y, kind, _ in current:
+            for xx, yy, target, _ in following:
+                training = kind == 't' or target == 't'
+                a.link(x, y + 16, xx, yy - 18,
+                       c=PALETTE['t'][1] if training else LINE, dash=training)
+    for row in levels:
+        for x, y, kind, text in row:
+            a.node(x, y, 228 if len(row) == 1 else 142, text, kind)
+
+
+def repair_boundary(a, inside):
+    # All three fields depend on the same losing representative.
+    # Enclose more readers without implying a data edge between the readers.
+    a.node(155, 33, 160, 'union(a,b)', 'w')
+    a.rect(5, 83, [95, 197, 300][inside], 80, '#edf7f3', '#247568', r=7)
+    a.txt(13, 102, 'Cell', 13, PALETTE['s'][1], anchor='start', bold=True)
+    for i, (x, name) in enumerate([(52, 'Get.result'), (154, 'Single.key'), (257, 'ContextOf.key')]):
+        a.path([(155, 49), (155, 65), (x, 65), (x, 114)])
+        kind = 's' if i <= inside else 'v'
+        fill, stroke = PALETTE[kind]
+        a.rect(x - 46, 116, 92, 30, fill, stroke, r=5)
+        a.txt(x, 136, name, 12.5, stroke, bold=True)
+    a.txt(155, 197, 'external key collision check', 15, PALETTE['v'][1])
+
+
 def synthesis():
     a=Art();W,H=1100,335;a.rect(0,0,W,H,BG,r=0)
     for x,w,h in [(10,316,"SHARED TEMPLATE"),(338,374,"INSTANCE POLICY"),(723,367,"JOINT OUTCOME")]:
@@ -415,3 +449,11 @@ def paired_results():
 if __name__=="__main__":
     OUT.mkdir(exist_ok=True);overview();synthesis();paired_results()
     for name,arms,fn in PLATES:plate(name,arms,fn)
+    for panel in json.loads((OUT.parent/'plates.json').read_text()):
+        if 'diagram' not in panel:
+            continue
+        arms = panel['diagram']
+        if panel['id'] == '39-reader-growth':
+            plate(panel['id'], [(v['title'], i) for i, v in enumerate(arms)], repair_boundary)
+        else:
+            plate(panel['id'], [(v['title'], v['layers']) for v in arms], planned_flow)

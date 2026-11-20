@@ -23,6 +23,7 @@
   #label(name) #linebreak() #text(size:10pt,body)
 ]
 #let plates = json("plates.json")
+#let guide = json("planned-guide.json")
 
 #kicker[研究图册   /   神经 e-graph 执行]
 #v(2mm)
@@ -39,7 +40,7 @@
   card([证据起点],[开放父引用时，静态投影加训练期字段头在两个种子下通过 65、67 张非空碰撞图，共 512 张。这个基线给分工留下了很大的改进空间。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载集成、GPU／CPU 分工、集合语义和块级上限。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–54 为下一轮待验证设计，见第 41 页。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -90,6 +91,37 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
 
 #for (i,p) in plates.enumerate() {
   pagebreak()
+  if p.id == "38-repair-bake" {
+    kicker[讨论回顾   /   图 38–54 的实验动机]
+    v(2mm)
+    title(guide.title)
+    v(2mm)
+    for item in guide.findings {
+      card(item.at(0),item.at(1))
+      v(1.7mm)
+    }
+    label[实验次序]
+    v(1.5mm)
+    table(columns:(37mm,24mm,1fr),stroke:(bottom:0.45pt+hair),inset:(x:4pt,y:3.1pt),
+      ..guide.order.map(r => (text(size:9pt,weight:"bold",r.at(0)),text(size:9pt,fill:teal,r.at(1)),text(size:9pt,r.at(2)))).flatten())
+    v(1fr)
+    small[本节数字来自既有实验 S8、S10、S12、S24、S28–S30。后续图的各臂均为实验设计。]
+    pagebreak()
+    kicker[实验协议   /   共享的正确性和计时口径]
+    v(2mm)
+    title[怎样判定一次 Cell 提案值得执行？]
+    v(3mm)
+    for item in guide.contract {
+      card(item.at(0),item.at(1))
+      v(3mm)
+    }
+    label[选择、验证与发布]
+    v(1mm)
+    text(size:10pt)[同一个 union 待办已含旧类、新类和实例地址。一行若选择只改结果槽的变体，验证器仍要检查外部读者及键碰撞。另一行若重复认领，只给实际关闭的工作记一次收益。GPU 单独执行的实验须在设备上完成补查。]
+    v(1fr)
+    small[拟测容量写参数个数，库大小另报模板数与字节；每实例状态、训练集基础组和生成样本分别计数。]
+    pagebreak()
+  }
   let n = str(i+1)
   if n.len()==1 { n="0"+n }
   grid(columns:(1fr,auto),align:(left+horizon,right+horizon), kicker([图 #n　/　#p.section]),tag(p.status,color:if p.status.starts-with("待") {violet} else {teal}))
@@ -102,7 +134,7 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
   v(1.8mm)
   text(size:10pt,p.arms)
   v(3.5mm)
-  grid(columns:(1fr,1fr),gutter:8mm, card([固定条件],p.fix), card([判据与读数],p.measure))
+  grid(columns:(1fr,1fr),gutter:8mm, card([固定条件],p.fix), card(if p.status.starts-with("待") {[验收指标]} else {[判据与读数]},p.measure))
   v(1fr)
   linebar()
   grid(columns:(1fr,auto),gutter:5mm,small(p.note),text(size:8.2pt,fill:teal,[#p.src]))
@@ -188,4 +220,4 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #v(1.5mm)
 #text(size:9pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。#link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文]。 *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。#link("https://arxiv.org/abs/1705.08926")[论文原文]。]
 #v(1fr)
-#small[版次 18　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
+#small[版次 19　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]

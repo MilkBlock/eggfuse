@@ -442,5 +442,1536 @@
     "measure": "DFS 只少 2,605／2,119 步。通知后可少检查 284,230／224,346 个 repair 行（72.5%／71.4%），实际达到该条件上限。源内核发射减少 0 次。",
     "note": "六种交错顺序：基线 895.77／934.98 ms，块＋锚点列表 918.53／966.05 ms，再加反向通知 604.99／715.13 ms。反向目录约 32.4 MiB，未训练网络。",
     "src": "S30"
+  },
+  {
+    "id": "38-repair-bake",
+    "section": "repair 与迭代 Bake",
+    "title": "按共同修复选择模板，能否把 repair 收进 Cell？",
+    "status": "待验证 · 实验设计",
+    "q": "同一 union 改变 Get 的结果，也可能改变 Single 的键。哪种轨迹最能发现值得放进同一实例的成员？",
+    "arms": "a　按跨 Run 接续支持数选块。b　按同一次 union 中共同受影响的端口次数选块。c　在同一候选并集中，按可省外部通知、键更新和碰撞探测的净时间选块。",
+    "fix": "固定候选生成器、库字节、深度、轮数及运行时通知索引。以已定位的受影响依赖为分母，冻结训练家族的成本系数。",
+    "measure": "逐轮报告内部完成及边界残留的受影响工作、真实净节省与整轮耗时。若扫描下降但外部键维护与时间持平，不能据此保留新目标。",
+    "note": "图 37 的 72.5%／71.4% 是可跳过的干净行检查；这里另算真正发生的 repair 有多少在实例内完成。",
+    "src": "S30",
+    "diagram": [
+      {
+        "title": "Continuation frequency",
+        "layers": [
+          [
+            [
+              "s",
+              "Run A"
+            ],
+            [
+              "s",
+              "Run B"
+            ]
+          ],
+          [
+            [
+              "t",
+              "count continuations"
+            ]
+          ],
+          [
+            [
+              "s",
+              "choose template"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Co-repair frequency",
+        "layers": [
+          [
+            [
+              "w",
+              "union(a,b)"
+            ]
+          ],
+          [
+            [
+              "s",
+              "Get.result"
+            ],
+            [
+              "s",
+              "Single.key"
+            ]
+          ],
+          [
+            [
+              "t",
+              "count joint changes"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Net repair savings",
+        "layers": [
+          [
+            [
+              "s",
+              "joint candidates"
+            ]
+          ],
+          [
+            [
+              "w",
+              "internal"
+            ],
+            [
+              "w",
+              "boundary"
+            ]
+          ],
+          [
+            [
+              "t",
+              "price net work"
+            ]
+          ],
+          [
+            [
+              "s",
+              "choose template"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "39-reader-growth",
+    "section": "repair 与迭代 Bake",
+    "title": "读者多一层，扩大 Cell 还能省多少？",
+    "status": "待验证 · 实验设计",
+    "q": "执行 union(a,b) 后，Get 的结果、Single 的键和 ContextOf 的键都引用了被替换的代表元。将哪些读者一同纳入实例才合算？",
+    "arms": "a　只切换生产者的结果槽变体。b　组合一个共同受影响的读者。c　把 b 当作下一轮的基本单元，再加入第二个读者。",
+    "fix": "沿同一组已确认发生的 union 做嵌套对照。构造只差一个外部读者的配对输入，同时记录等库预算下被挤出的其他模板。",
+    "measure": "分别数本地槽重定向、有效外部通知、整键碰撞检查和转发。只有新增成员带来的边界成本下降超过布局与守卫成本，才继续扩张。",
+    "note": "即使所有已知成员均在块内，外部键目录仍可能存在同键节点。该检查和原有碰撞胜者顺序在三臂中都要保留。",
+    "src": "S19 / S30",
+    "diagram": [
+      {
+        "title": "Producer cell",
+        "layers": [
+          [
+            [
+              "w",
+              "union"
+            ]
+          ],
+          [
+            [
+              "s",
+              "Get.result"
+            ]
+          ],
+          [
+            [
+              "v",
+              "Single"
+            ],
+            [
+              "v",
+              "ContextOf"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "One reader inside",
+        "layers": [
+          [
+            [
+              "w",
+              "union"
+            ]
+          ],
+          [
+            [
+              "s",
+              "Get + Single"
+            ]
+          ],
+          [
+            [
+              "v",
+              "ContextOf"
+            ],
+            [
+              "v",
+              "key index"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Next Bake round",
+        "layers": [
+          [
+            [
+              "s",
+              "prior cell"
+            ],
+            [
+              "s",
+              "ContextOf"
+            ]
+          ],
+          [
+            [
+              "s",
+              "composed repair"
+            ]
+          ],
+          [
+            [
+              "v",
+              "external key index"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "40-subscriptions",
+    "section": "repair 与迭代 Bake",
+    "title": "把反向订阅记到实例，能否少发通知？",
+    "status": "待验证 · 实验设计",
+    "q": "多个成员同时订阅同一代表元时，一次实例级通知能否承担原来的逐行唤醒？",
+    "arms": "a　保留图 37 的根到行位图。b　根指向 Cell 实例，实例内按模板检测受影响端口。c　实例订阅再携带端口掩码，仅访问被标记的位置。",
+    "fix": "固定 Cell 划分、union 序列和受影响行集合。外部函数与集合键沿原 repair 路径；三个分支均验证碰撞、退役及旧引用转发。",
+    "measure": "计根订阅字节、每次 union 的通知字访问、重复唤醒、实例内部读数和整轮延迟。单独列出多成员同时命中与单位置命中。",
+    "note": "图 37 的反向目录约 32.4 MiB；目录缩小后若增加大量实例内部扫描，要在相同源 Run 上一起计价。",
+    "src": "S29 / S30",
+    "diagram": [
+      {
+        "title": "Row bitmap",
+        "layers": [
+          [
+            [
+              "w",
+              "losing root"
+            ]
+          ],
+          [
+            [
+              "s",
+              "row 4"
+            ],
+            [
+              "s",
+              "row 5"
+            ]
+          ],
+          [
+            [
+              "v",
+              "two checks"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Instance directory",
+        "layers": [
+          [
+            [
+              "w",
+              "losing root"
+            ]
+          ],
+          [
+            [
+              "s",
+              "Cell 7"
+            ]
+          ],
+          [
+            [
+              "v",
+              "all member ports"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Instance + port mask",
+        "layers": [
+          [
+            [
+              "w",
+              "losing root"
+            ]
+          ],
+          [
+            [
+              "s",
+              "Cell 7 / bits 01"
+            ]
+          ],
+          [
+            [
+              "v",
+              "marked ports"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "41-region-policy",
+    "section": "repair 与迭代 Bake",
+    "title": "哪些局部区域值得常驻反向目录？",
+    "status": "待验证 · 实验设计",
+    "q": "高扇出区域能回收登记成本，低频区域也要付费。区域选择需要学习吗？",
+    "arms": "a　所有合格区域登记。b　在固定空间预算内按训练集标定的扇出和复用阈值登记。c　同预算下让共享策略选登记、保留或退出。",
+    "fix": "统一索引格式、同一候选区域及迁移时机。策略仅看当前已发布统计；离线全知选择器用于估计上限。未登记区域始终由通用路径处理。",
+    "measure": "报告净节省、峰值字节、首次建表与退出成本，并按扇出分层。模型只有在留出程序上超过静态阈值且覆盖正确时才保留。",
+    "note": "全知上限也须支付索引建立、外部读者通知和退役费用。部署时计入策略前向与等待。",
+    "src": "S26 / S30",
+    "diagram": [
+      {
+        "title": "Always register",
+        "layers": [
+          [
+            [
+              "s",
+              "eligible regions"
+            ]
+          ],
+          [
+            [
+              "s",
+              "register all"
+            ]
+          ],
+          [
+            [
+              "v",
+              "notify"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Static admission",
+        "layers": [
+          [
+            [
+              "w",
+              "fanout + reuse"
+            ]
+          ],
+          [
+            [
+              "s",
+              "budgeted threshold"
+            ]
+          ],
+          [
+            [
+              "s",
+              "index"
+            ],
+            [
+              "w",
+              "scan"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Learned admission",
+        "layers": [
+          [
+            [
+              "w",
+              "local state"
+            ]
+          ],
+          [
+            [
+              "n",
+              "shared policy"
+            ]
+          ],
+          [
+            [
+              "s",
+              "index"
+            ],
+            [
+              "w",
+              "scan"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "42-block-actions",
+    "section": "实例生成与验证",
+    "title": "一次模型提案应承担几个规则步骤？",
+    "status": "待验证 · 实验设计",
+    "q": "一次设备前向的成本能否由一个完整组合块内的多个合法操作摊薄？",
+    "arms": "a　每次提一个规则绑定。b　每次提一个已证叶块。c　可提库中已证的跨 Run 组合及其边界引用；到原 Run 才发布各项效果。",
+    "fix": "使用同一冻结库、图快照、可见端口和训练轨迹，同一批义务在三种粒度下展开。直接点查和原调度继续作为执行参照。",
+    "measure": "记录每次前向实际关闭的义务、边界点查、消掉的中间记录、设备提交、未覆盖补查和整轮耗时。组合命中必须兑现为可测的净节省。",
+    "note": "图 35 的完整键点查总共约 1 ms。图 37 中仅靠选块少发的源内核为 0；本实验显式测量能否跨过这一限制。",
+    "src": "S21 / S28 / S30",
+    "diagram": [
+      {
+        "title": "One binding",
+        "layers": [
+          [
+            [
+              "n",
+              "choose parents"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify binding"
+            ]
+          ],
+          [
+            [
+              "w",
+              "one RHS"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "One leaf",
+        "layers": [
+          [
+            [
+              "n",
+              "leaf + anchor"
+            ]
+          ],
+          [
+            [
+              "s",
+              "leaf verifier"
+            ]
+          ],
+          [
+            [
+              "w",
+              "leaf effects"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Composed block",
+        "layers": [
+          [
+            [
+              "n",
+              "block + boundary"
+            ]
+          ],
+          [
+            [
+              "s",
+              "verify shared ports"
+            ]
+          ],
+          [
+            [
+              "v",
+              "Run A"
+            ],
+            [
+              "v",
+              "Run B"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "43-var-ports",
+    "section": "实例生成与验证",
+    "title": "生成可变端口实例，必须预测哪些引用？",
+    "status": "待验证 · 实验设计",
+    "q": "模板 5 存四个实例参数，其中 Base 的结果可直接接给第二个成员。模型是否还需要输出这条内部连线？",
+    "arms": "a　固定宽度输出全部字段及引用，超出预算的项计作未完成。b　先选模板，再输出每个逻辑端口的引用。c　同样先选模板，仅填编译器不能唯一确定的边界端口，其余静态投影。",
+    "fix": "同一批模板选择、有效实例、指针地址空间与精确验证器。逐项区分成员字段数、实例参数数和待预测数；按这三种宽度及冷模板分层。",
+    "measure": "报告每个有效实例生成的指针数、填充或截断、字节、错父和非空图完整率。计入变长分配、解码和同步；分开看模板选错与填槽错误。",
+    "note": "旧 GNN 实验的 Pair 为 56 个 FP32 分量。sum-bits 初图的 46 种模板用于编码 89 个实例；最终 4,045 条活行也包括运行中新建的动态行。",
+    "src": "S12 / S24 / S25",
+    "diagram": [
+      {
+        "title": "Fixed record",
+        "layers": [
+          [
+            [
+              "n",
+              "latent + fixed slots"
+            ]
+          ],
+          [
+            [
+              "n",
+              "all fields"
+            ]
+          ],
+          [
+            [
+              "v",
+              "decode + verify"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Template + all ports",
+        "layers": [
+          [
+            [
+              "n",
+              "choose template"
+            ]
+          ],
+          [
+            [
+              "n",
+              "p0, p1, p2, p3"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify wiring"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Boundary only",
+        "layers": [
+          [
+            [
+              "n",
+              "choose template"
+            ]
+          ],
+          [
+            [
+              "n",
+              "free refs"
+            ],
+            [
+              "s",
+              "wired ports"
+            ]
+          ],
+          [
+            [
+              "v",
+              "instantiate"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "44-online-cells",
+    "section": "实例生成与验证",
+    "title": "Pass 3 新建事实何时进入组合 Cell？",
+    "status": "待验证 · 实验设计",
+    "q": "初图可以绑定模板，RHS 新建事实目前写动态行。在运行中改变它们的所有权，收益出现在哪一步？",
+    "arms": "a　新事实写入动态行。b　命中叶模板时立即保存实例描述符和参数。c　在 b 上按已验证的组合替换小实例，在原 Run 只开放已有成员视图。",
+    "fix": "固定相同库与精确准入，先排除模型误差。转移后屏蔽旧载荷，保留带代数的旧端口转发。未覆盖形状走同一动态行路径。",
+    "measure": "逐 Run 画分配曲线，统计同时承载不同 Run 成员的活实例、真实退役记录、索引／转发字节及全程耗时。用旧引用仍能找到正确父作为验收。",
+    "note": "图 21 已验证入口编码；本页从第一次 RHS 写入开始计量，库和 Graph 分开列账。",
+    "src": "S20 / S22 / S24",
+    "diagram": [
+      {
+        "title": "Dynamic rows",
+        "layers": [
+          [
+            [
+              "w",
+              "RHS"
+            ]
+          ],
+          [
+            [
+              "w",
+              "row A"
+            ],
+            [
+              "w",
+              "row B"
+            ]
+          ],
+          [
+            [
+              "v",
+              "published rows"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Leaf instances",
+        "layers": [
+          [
+            [
+              "w",
+              "RHS"
+            ]
+          ],
+          [
+            [
+              "s",
+              "leaf template"
+            ]
+          ],
+          [
+            [
+              "w",
+              "instance + args"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Replace small cells",
+        "layers": [
+          [
+            [
+              "w",
+              "leaf A"
+            ],
+            [
+              "w",
+              "leaf B"
+            ]
+          ],
+          [
+            [
+              "s",
+              "large cell"
+            ]
+          ],
+          [
+            [
+              "v",
+              "old port"
+            ],
+            [
+              "v",
+              "Run view"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "45-cover-proof",
+    "section": "实例生成与验证",
+    "title": "一批短证书何时足以关闭整项待办？",
+    "status": "待验证 · 实验设计",
+    "q": "单条合法绑定容易核对，但另一个合法父可能仍在同一键桶里。如何知道没有遗漏？",
+    "arms": "a　只验证每条正例的来源，随后精确扫描补齐覆盖。b　token 认领待办，由完整唯一键点查关闭该键。c　对非唯一键，以有版本的精确桶范围及其枚举见证关闭该段。",
+    "fix": "三臂都跑相同的唯一键与一对多面板。b 遇多值键同 a 补查；c 的剩余区间继续排队。全弃权、重复认领、漏一个同键父、union 后旧版本都作反例。",
+    "measure": "分别测单条引用核验时间、每项待办读取的事实数、精确关闭比例、补查和错误关闭次数。任一未完义务被关闭即判失败。",
+    "note": "Run 和版本由执行器提供；已知模板内的端口映射由编译器恢复。完整性证据由可信目录或枚举产生。",
+    "src": "S21 / S23 / S28",
+    "diagram": [
+      {
+        "title": "Positive witnesses",
+        "layers": [
+          [
+            [
+              "n",
+              "parent refs"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check each"
+            ]
+          ],
+          [
+            [
+              "w",
+              "scan remainder"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Unique obligation",
+        "layers": [
+          [
+            [
+              "n",
+              "task + reference"
+            ]
+          ],
+          [
+            [
+              "s",
+              "one exact key"
+            ]
+          ],
+          [
+            [
+              "v",
+              "close or retry"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Bucket coverage",
+        "layers": [
+          [
+            [
+              "n",
+              "task + range"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify epoch + range"
+            ]
+          ],
+          [
+            [
+              "s",
+              "closed"
+            ],
+            [
+              "w",
+              "pending"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "46-key-signals",
+    "section": "训练、容量与多行分工",
+    "title": "错父来自桶碰撞，还是模型容量不足？",
+    "status": "待验证 · 实验设计",
+    "q": "当两个不同父在所有键列上落入相同桶时，现有指针头收到相同输入。应改变哪些特征？",
+    "arms": "a　沿用 128 桶。b　保留相同桶身份，加宽共享向量。c　保持与 b 相近的参数和打分预算，加入独立散列或编译器来源端口角色；两种新特征分别测。",
+    "fix": "共享候选集、训练步数、随机种子和精确补查。单列同桶不同父、近似键及真正空键；再对候选银行分片时固定召回义务。",
+    "measure": "对每个碰撞组量可区分率、错指、弃权后漏掉的有效 RHS、前向和补查时间。额外特征仍无法区分的等价输入单列。",
+    "note": "1,025 参数头的既有比较是合成键训练、真实 Pass 3 验收；本页只检验父行区分能力，图 48 单独测整网容量。",
+    "src": "S10 / S28",
+    "diagram": [
+      {
+        "title": "One hash",
+        "layers": [
+          [
+            [
+              "s",
+              "key -> bucket"
+            ]
+          ],
+          [
+            [
+              "n",
+              "8-D embedding"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check parent"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Wider vector",
+        "layers": [
+          [
+            [
+              "s",
+              "same bucket"
+            ]
+          ],
+          [
+            [
+              "n",
+              "wide embedding"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check parent"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Extra input signal",
+        "layers": [
+          [
+            [
+              "s",
+              "bucket"
+            ],
+            [
+              "s",
+              "hash 2 / role"
+            ]
+          ],
+          [
+            [
+              "n",
+              "shared score"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check parent"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "47-library-scale",
+    "section": "训练、容量与多行分工",
+    "title": "库越大，是否需要更多独立 embedding？",
+    "status": "待验证 · 实验设计",
+    "q": "迭代 Bake 加入未训练过的组合时，同一套权重能否立即对新模板打分？",
+    "arms": "a　每模板一个可学 ID 向量，冷 ID 使用固定未知向量。b　所有模板共享结构编码器，缓存各自的端口向量。c　由左右子模板、接线和保留端口直接组合出大模板向量。",
+    "fix": "三臂读取同一候选库；分别在冻结的小、中、大库快照上交叉比较。训练中见过的叶块、未见组合及未见整族分别统计，策略主干和实例数固定。",
+    "measure": "逐库大小记录权重、模板缓存、首次编码、每实例打分成本和冷模板完整覆盖。只在旧模板提升时，不能据此判定模型支持库扩展。",
+    "note": "图 01 已比较固定库的 ID、角色与 GNN。此处改变的是库增长与新模板的生成方式。",
+    "src": "S10 / S12 / S30",
+    "diagram": [
+      {
+        "title": "Per-template ID",
+        "layers": [
+          [
+            [
+              "s",
+              "library IDs"
+            ]
+          ],
+          [
+            [
+              "n",
+              "embedding table"
+            ]
+          ],
+          [
+            [
+              "w",
+              "new ID = unknown"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Shared encoder",
+        "layers": [
+          [
+            [
+              "s",
+              "port graph"
+            ]
+          ],
+          [
+            [
+              "n",
+              "one encoder"
+            ]
+          ],
+          [
+            [
+              "s",
+              "cache by version"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Compose children",
+        "layers": [
+          [
+            [
+              "s",
+              "child A"
+            ],
+            [
+              "s",
+              "child B"
+            ]
+          ],
+          [
+            [
+              "n",
+              "compose via wiring"
+            ]
+          ],
+          [
+            [
+              "s",
+              "new template vector"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "48-capacity-data",
+    "section": "训练、容量与多行分工",
+    "title": "加模型参数与加真实家族，分别解决什么？",
+    "status": "待验证 · 实验设计",
+    "q": "在相同短证书任务上交叉改变模型规模与训练来源，定位欠拟合、数据覆盖不足和前向开销。",
+    "arms": "a–c　共享策略总参数拟设约 40k、160k、640k。每档都在少家族、多家族两套数据上训练，形成 3×2 矩阵；记录实际可训练参数及权重字节。",
+    "fix": "固定端口特征、库、输出格式与两个种子 1703/1709。主对照匹配更新数、图数和抽样预算，另报告训练算力。测试集与成本标定在实验前冻结。",
+    "measure": "报告训练／留出差距、非空完整率、按实际工作计的覆盖、候选打分数、前向与整轮时间；分别读同列扩容效应和同行增广效应。",
+    "note": "唯一键头有 1,025 个参数，packed 地址模型有 28,560 个，端口 GNN 实验整网有 39,412 个。三者任务不同。表中三个容量档位均待测。",
+    "src": "S8 / S10 / S12 / S13 / S28",
+    "diagram": [
+      {
+        "title": "~40k parameters",
+        "layers": [
+          [
+            [
+              "t",
+              "few families"
+            ],
+            [
+              "t",
+              "many families"
+            ]
+          ],
+          [
+            [
+              "n",
+              "shared backbone"
+            ]
+          ],
+          [
+            [
+              "v",
+              "same held-out set"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "~160k parameters",
+        "layers": [
+          [
+            [
+              "t",
+              "few families"
+            ],
+            [
+              "t",
+              "many families"
+            ]
+          ],
+          [
+            [
+              "n",
+              "shared backbone"
+            ]
+          ],
+          [
+            [
+              "v",
+              "same held-out set"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "~640k parameters",
+        "layers": [
+          [
+            [
+              "t",
+              "few families"
+            ],
+            [
+              "t",
+              "many families"
+            ]
+          ],
+          [
+            [
+              "n",
+              "shared backbone"
+            ]
+          ],
+          [
+            [
+              "v",
+              "same held-out set"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "49-training-corpus",
+    "section": "训练、容量与多行分工",
+    "title": "哪些训练样本能教会模型识别 repair 边界？",
+    "status": "待验证 · 实验设计",
+    "q": "完全相同的模板与 union 位置，只多一个外部 Single 读者时，模型是否会留下正确的通知义务？",
+    "arms": "a　合成边界实例。b　由真实程序逐 Run 采集待办、候选、来源和净成本。c　在 b 的相同样本预算中替换一部分为配对反例，只改外部读者、同键父或另一行是否已认领。",
+    "fix": "先按程序家族拆分，再 Bake、截取 Run 窗口和重编号。反例两半同 split，整模板族另留出。8 个现有 Bril 家族按 4／2／2 分组，先采标签并独立复验。",
+    "measure": "测留出程序的边界漏报、只改一项输入时的动作翻转率、正确通知率及净时间；单列罕见高成本 repair 与短链／长链。",
+    "note": "两叶数据的 12,288 张训练图来自 12 个模板、9 个结构族的合成实例。新增的真实程序输入仍需逐 Run 标注。",
+    "src": "S8 / S10 / S30",
+    "diagram": [
+      {
+        "title": "Synthetic instances",
+        "layers": [
+          [
+            [
+              "s",
+              "template family"
+            ]
+          ],
+          [
+            [
+              "t",
+              "sample boundaries"
+            ]
+          ],
+          [
+            [
+              "n",
+              "train"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Real Run traces",
+        "layers": [
+          [
+            [
+              "w",
+              "program family"
+            ]
+          ],
+          [
+            [
+              "t",
+              "trace + cost label"
+            ]
+          ],
+          [
+            [
+              "n",
+              "train"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Counterfactual pairs",
+        "layers": [
+          [
+            [
+              "w",
+              "same Cell + union"
+            ]
+          ],
+          [
+            [
+              "t",
+              "reader off"
+            ],
+            [
+              "t",
+              "reader on"
+            ]
+          ],
+          [
+            [
+              "n",
+              "train both"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "50-verified-feedback",
+    "section": "实例生成与验证",
+    "title": "下一轮 latent 需要读到哪些验证结果？",
+    "status": "待验证 · 实验设计",
+    "q": "两行同时认领同一待办时，下一轮如何知道已关闭哪一项、哪一项仍在等待？",
+    "arms": "a　下一次前向只读上轮生成的 latent 和来源引用。b　附上每条提案的验收位。c　再附上设备生成的已关闭或仍待办的义务 ID，与失败的版本或边界原因。",
+    "fix": "同一初始 latent、批预算、验证器、待办账本与真实回退路径。逐轮直接消费设备上的输出，不把事后 CPU 标签作为反馈。加打乱反馈的冻结反事实。",
+    "measure": "测第二轮重领、跨 row 遗漏、失效证书重试、额外反馈字节和净延迟；若多出的反馈只降低训练损失而未增加有效完成量，选更短格式。",
+    "note": "不同于图 13 的自由历史 token：这里反馈的是执行器已验证的状态。对旧代数引用继续严格检查。",
+    "src": "S5 / S20 / S23",
+    "diagram": [
+      {
+        "title": "Latent only",
+        "layers": [
+          [
+            [
+              "n",
+              "row proposals"
+            ]
+          ],
+          [
+            [
+              "n",
+              "generated latent"
+            ]
+          ],
+          [
+            [
+              "n",
+              "next rows"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Acceptance bits",
+        "layers": [
+          [
+            [
+              "n",
+              "latent"
+            ],
+            [
+              "v",
+              "accept bits"
+            ]
+          ],
+          [
+            [
+              "n",
+              "next policy"
+            ]
+          ],
+          [
+            [
+              "w",
+              "next claims"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Closed task IDs",
+        "layers": [
+          [
+            [
+              "v",
+              "closed IDs"
+            ],
+            [
+              "w",
+              "pending IDs"
+            ]
+          ],
+          [
+            [
+              "n",
+              "latent + receipts"
+            ]
+          ],
+          [
+            [
+              "w",
+              "next claims"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "51-row-ownership",
+    "section": "训练、容量与多行分工",
+    "title": "同一批待办应由谁分给多个 row？",
+    "status": "待验证 · 实验设计",
+    "q": "固定相同可见输入和总输出槽，比较自由认领、静态分区与可转交的认领。",
+    "arms": "a　各行自由提案，提交前去重。b　按稳定待办键静态分区，每项有一行可选。c　同行先独占认领，边界允许转交未完项并携带旧来源和版本。",
+    "fix": "先用单行验证共同证书，再以 2×4 为主对照，1×8 与 4×2 做等槽预算复核。保持同一读视图、有序提交和资源预算；串行轨迹不提供 row 标签。",
+    "measure": "对非空 Run 测各行独占的已验证工作、重复、遗漏、冲突等待与转交字节；另报第一次有空闲行但仍存在重待办的时刻。",
+    "note": "用同键不同父、两行同时选同一 repair、生产者与外部消费者必须配合三类反例。多个提案通过仍可能只关闭一项义务。",
+    "src": "S14 / S15 / S20 / S25",
+    "diagram": [
+      {
+        "title": "Free claims",
+        "layers": [
+          [
+            [
+              "n",
+              "row 0"
+            ],
+            [
+              "n",
+              "row 1"
+            ]
+          ],
+          [
+            [
+              "v",
+              "deduplicate"
+            ]
+          ],
+          [
+            [
+              "s",
+              "commit"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Static owner",
+        "layers": [
+          [
+            [
+              "s",
+              "partition task keys"
+            ]
+          ],
+          [
+            [
+              "n",
+              "row 0"
+            ],
+            [
+              "n",
+              "row 1"
+            ]
+          ],
+          [
+            [
+              "s",
+              "commit"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Transfer pending",
+        "layers": [
+          [
+            [
+              "n",
+              "claim task"
+            ]
+          ],
+          [
+            [
+              "v",
+              "versioned handoff"
+            ]
+          ],
+          [
+            [
+              "n",
+              "recipient row"
+            ]
+          ],
+          [
+            [
+              "s",
+              "commit"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "52-row-reward",
+    "section": "训练、容量与多行分工",
+    "title": "用净节省给多 row 分配信用，能否超过集合监督？",
+    "status": "待验证 · 实验设计",
+    "q": "在程序没有天然并行标签时，哪种信号能鼓励两行共同关闭昂贵待办？",
+    "arms": "a　仅用无序集合监督。b　从同一监督检查点出发，用成功关闭的不同待办数给团队奖励。c　相同 RL 预算下，以真实净节省加权；同一项工作只计一次。",
+    "fix": "固定图 51 的分工机制、前向预算、优化步数及 rollout 数。另在加权臂内固定其他行动，比较有／无逐行反事实基线。成本只用训练 split 标定。",
+    "measure": "按家族报告相对可实现上限的工作覆盖、完整率、遗漏产生的后续补查、吞吐和整轮时间。奖励扣除前向、验证、通知与边界等待。",
+    "note": "图 05 的 768 张非空图上，两种子集合监督完成 175／347 张，团队 RL 为 96／27。新动作和奖励的效果仍待真实轨迹检验。",
+    "src": "S15 / S23 / S30",
+    "diagram": [
+      {
+        "title": "Set supervision",
+        "layers": [
+          [
+            [
+              "t",
+              "unordered targets"
+            ]
+          ],
+          [
+            [
+              "n",
+              "shared row policy"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verified tasks"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "RL: task count",
+        "layers": [
+          [
+            [
+              "n",
+              "joint proposals"
+            ]
+          ],
+          [
+            [
+              "v",
+              "unique closures"
+            ]
+          ],
+          [
+            [
+              "t",
+              "team count"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "RL: net work",
+        "layers": [
+          [
+            [
+              "n",
+              "joint proposals"
+            ]
+          ],
+          [
+            [
+              "v",
+              "work saved - costs"
+            ]
+          ],
+          [
+            [
+              "t",
+              "shared / marginal"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "53-verifier-location",
+    "section": "执行位置与集合表示",
+    "title": "同一张块证书在 CPU 还是 GPU 验证更划算？",
+    "status": "待验证 · 实验设计",
+    "q": "在提案内容完全相同时，把短证书送到事实所有者核验，和维护设备增量视图分别要付多少成本？",
+    "arms": "a　CPU 权威图按稳定引用验证并提交。b　CPU 发布逐 epoch 端口增量，GPU 批量验证，CPU 按原序提交。c　设备持有权威图，验证与提交均在 GPU。",
+    "fix": "先在隔离回放中喂入同一合法／错父／过期证书流，明确离线上限；再用同一冻结模型在线独立生成。记录行号重映射和跨设备传输，两轮数值分开。",
+    "measure": "拆开输入打包、增量维护、验证、补查、同步和提交。主判据为相同可见性和终图下的常驻全程时间，冷 CLI 另报。GPU 权威臂遇错在设备处理或显式中止。",
+    "note": "图 33–34 测的是精确 Metal 匹配后的交接；图 35 测的是单父提案。这里固定组合证书以辨别验证位置的成本。",
+    "src": "S26 / S27 / S28",
+    "diagram": [
+      {
+        "title": "CPU authority",
+        "layers": [
+          [
+            [
+              "n",
+              "block certificate"
+            ]
+          ],
+          [
+            [
+              "v",
+              "CPU verify"
+            ]
+          ],
+          [
+            [
+              "w",
+              "CPU commit"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "GPU mirror",
+        "layers": [
+          [
+            [
+              "s",
+              "epoch delta"
+            ],
+            [
+              "n",
+              "certificate"
+            ]
+          ],
+          [
+            [
+              "v",
+              "GPU verify"
+            ]
+          ],
+          [
+            [
+              "w",
+              "CPU commit"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "GPU authority",
+        "layers": [
+          [
+            [
+              "n",
+              "block certificate"
+            ]
+          ],
+          [
+            [
+              "v",
+              "GPU verify"
+            ]
+          ],
+          [
+            [
+              "w",
+              "GPU commit"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "54-set-repair",
+    "section": "执行位置与集合表示",
+    "title": "集合成员增多时，哪种 Cell 表示仍适合局部 repair？",
+    "status": "待验证 · 实验设计",
+    "q": "许多实例持有同一对刚合并的 Expr 时，集合存储与订阅粒度如何影响修复净收益？",
+    "arms": "a　现行单掩码与成员转发。b　分段掩码与活跃段索引。c　稀疏有序成员向量。对通过同一容量条件的分支再分别测试逐行和实例订阅。",
+    "fix": "以真实 memory-helpers 调度为基线，另设显式观察输入与密度／成员数阶梯。63 槽以内做同支持域配对，64 槽及以上报告容量失败或成功，不混入速度均值。",
+    "measure": "量规范化、受影响行定位、扩容与字节、原 Run 的长度写入和整轮耗时。min merge 的同键 2→1 与 :no-merge 的同键冲突均须复现。",
+    "note": "图 36 带集合观察的 835 Run 已测约 40.11 µs 维护时间；共享者多、集合大的条件仍缺结果。",
+    "src": "S29 / S30",
+    "diagram": [
+      {
+        "title": "One mask",
+        "layers": [
+          [
+            [
+              "s",
+              "member bit"
+            ]
+          ],
+          [
+            [
+              "w",
+              "63-slot mask"
+            ]
+          ],
+          [
+            [
+              "v",
+              "canonical size"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Segmented masks",
+        "layers": [
+          [
+            [
+              "s",
+              "segment directory"
+            ]
+          ],
+          [
+            [
+              "w",
+              "word 0"
+            ],
+            [
+              "w",
+              "word k"
+            ]
+          ],
+          [
+            [
+              "v",
+              "dedup + size"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Sparse members",
+        "layers": [
+          [
+            [
+              "s",
+              "class handles"
+            ]
+          ],
+          [
+            [
+              "w",
+              "ordered vector"
+            ]
+          ],
+          [
+            [
+              "v",
+              "dedup + size"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]

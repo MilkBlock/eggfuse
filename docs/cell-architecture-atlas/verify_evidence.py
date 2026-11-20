@@ -32,9 +32,18 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==37
+    assert len(plates)==54
     for i,p in enumerate(plates,1):
-        assert p['id'].startswith(f'{i:02}-') and p['arms'] and p['measure'] and p['status'].startswith(('已测','实跑'))
+        assert p['id'].startswith(f'{i:02}-') and all(p[k] for k in ('q','arms','fix','measure','note','src'))
+        if i<=37:
+            assert p['status'].startswith(('已测','实跑'))
+        else:
+            assert p['status']=='待验证 · 实验设计'
+            arms=p['diagram']
+            assert len(arms)>=2 and len({a['title'] for a in arms})==len(arms)
+            for a in arms:
+                assert 2<=len(a['layers'])<=4
+                assert all(1<=len(layer)<=2 and all(k in 'nswvt' and txt for k,txt in layer) for layer in a['layers'])
         assert p['title'] in md and (HERE/'figures'/f"{p['id']}.svg").is_file()
         ElementTree.parse(HERE/'figures'/f"{p['id']}.svg")
         for key in re.findall(r'S\d+',p['src']):assert (HERE/evidence[key]).is_file()
@@ -170,7 +179,7 @@ def check():
         assert t['repair_with_incidence_ceiling']==rep==base['repair_scan']-end['repair_scan']
         assert base['outside_scan']==end['outside_scan'] and t['dispatches_saved']==0 and end['final']
         assert end['aligned']['writes']==end['aligned']['rhs']==end['aligned']['spine']==t['source_runs']
-    print('Verified all 37 plates, including two full ordered Pass 3 audits, row contributions and paired CLI timings.')
+    print('Verified evidence for 37 measured plates and design records, sources and SVGs for 17 proposed ablations.')
 
 
 if __name__=='__main__':check()
