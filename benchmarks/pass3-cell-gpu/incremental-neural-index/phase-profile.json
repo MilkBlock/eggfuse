@@ -1,0 +1,398 @@
+{
+  "sum-bits": {
+    "full_ms": 56.4076045,
+    "phases": {
+      "frame_ms": 0.8906325000000002,
+      "issuance_ms": 11.629068,
+      "validation_ms": 3.7851920000000003
+    },
+    "rules_sampled": 188,
+    "highest_issuance_ms": {
+      "507": {
+        "calls": 73.0,
+        "checks": 355.0,
+        "frame_ms": 0.054749500000000034,
+        "issuance_ms": 0.9138970000000002,
+        "picks": 3.0,
+        "raw": 451.0,
+        "root_visits": 6477.0,
+        "signature_visits": 2749.0,
+        "validation_ms": 0.1609779999999999
+      },
+      "144": {
+        "calls": 47.0,
+        "checks": 2290.0,
+        "frame_ms": 0.0047925,
+        "issuance_ms": 0.7504985000000002,
+        "picks": 2.0,
+        "raw": 2312.0,
+        "root_visits": 997.0,
+        "signature_visits": 2312.0,
+        "validation_ms": 0.5967499999999999
+      },
+      "136": {
+        "calls": 51.0,
+        "checks": 9.0,
+        "frame_ms": 0.05235750000000003,
+        "issuance_ms": 0.565291,
+        "picks": 3.0,
+        "raw": 417.0,
+        "root_visits": 4400.0,
+        "signature_visits": 4150.0,
+        "validation_ms": 0.04131550000000002
+      },
+      "286": {
+        "calls": 29.0,
+        "checks": 193.0,
+        "frame_ms": 0.04801950000000002,
+        "issuance_ms": 0.40366799999999997,
+        "picks": 2.0,
+        "raw": 232.0,
+        "root_visits": 218.0,
+        "signature_visits": 232.0,
+        "validation_ms": 0.08108300000000003
+      },
+      "509": {
+        "calls": 83.0,
+        "checks": 206.0,
+        "frame_ms": 0.03908450000000002,
+        "issuance_ms": 0.35157999999999995,
+        "picks": 2.0,
+        "raw": 212.0,
+        "root_visits": 256.0,
+        "signature_visits": 212.0,
+        "validation_ms": 0.07873100000000005
+      },
+      "59": {
+        "calls": 37.0,
+        "checks": 119.0,
+        "frame_ms": 0.05508100000000002,
+        "issuance_ms": 0.3051045,
+        "picks": 2.0,
+        "raw": 133.0,
+        "root_visits": 160.0,
+        "signature_visits": 133.0,
+        "validation_ms": 0.07568300000000001
+      },
+      "306": {
+        "calls": 27.0,
+        "checks": 160.0,
+        "frame_ms": 0.001145,
+        "issuance_ms": 0.3017065,
+        "picks": 2.0,
+        "raw": 188.0,
+        "root_visits": 173.0,
+        "signature_visits": 188.0,
+        "validation_ms": 0.06537700000000002
+      },
+      "88": {
+        "calls": 37.0,
+        "checks": 60.0,
+        "frame_ms": 0.040416500000000015,
+        "issuance_ms": 0.300999,
+        "picks": 2.0,
+        "raw": 62.0,
+        "root_visits": 54.0,
+        "signature_visits": 62.0,
+        "validation_ms": 0.031561000000000006
+      }
+    }
+  },
+  "dot-product": {
+    "full_ms": 54.591145999999995,
+    "phases": {
+      "frame_ms": 0.7868850000000003,
+      "issuance_ms": 11.9590305,
+      "validation_ms": 5.303354000000001
+    },
+    "rules_sampled": 144,
+    "highest_issuance_ms": {
+      "507": {
+        "calls": 73.0,
+        "checks": 438.0,
+        "frame_ms": 0.06383550000000004,
+        "issuance_ms": 1.078064,
+        "picks": 3.0,
+        "raw": 505.0,
+        "root_visits": 7114.0,
+        "signature_visits": 3630.0,
+        "validation_ms": 0.18258449999999982
+      },
+      "509": {
+        "calls": 94.0,
+        "checks": 266.0,
+        "frame_ms": 0.05370550000000003,
+        "issuance_ms": 0.4938519999999999,
+        "picks": 2.0,
+        "raw": 282.0,
+        "root_visits": 288.0,
+        "signature_visits": 282.0,
+        "validation_ms": 0.10854600000000007
+      },
+      "286": {
+        "calls": 34.0,
+        "checks": 206.0,
+        "frame_ms": 0.05600050000000002,
+        "issuance_ms": 0.4695014999999999,
+        "picks": 2.0,
+        "raw": 235.0,
+        "root_visits": 222.0,
+        "signature_visits": 235.0,
+        "validation_ms": 0.08556100000000005
+      },
+      "528": {
+        "calls": 46.0,
+        "checks": 83.0,
+        "frame_ms": 0.042333500000000024,
+        "issuance_ms": 0.45837449999999996,
+        "picks": 2.0,
+        "raw": 100.0,
+        "root_visits": 87.0,
+        "signature_visits": 100.0,
+        "validation_ms": 0.021789000000000006
+      },
+      "498": {
+        "calls": 35.0,
+        "checks": 53.0,
+        "frame_ms": 0.0068535,
+        "issuance_ms": 0.41296,
+        "picks": 5.0,
+        "raw": 81.0,
+        "root_visits": 1355.0,
+        "signature_visits": 1976.0,
+        "validation_ms": 0.04903900000000001
+      },
+      "306": {
+        "calls": 30.0,
+        "checks": 155.0,
+        "frame_ms": 0.0013765000000000001,
+        "issuance_ms": 0.36514599999999997,
+        "picks": 2.0,
+        "raw": 187.0,
+        "root_visits": 168.0,
+        "signature_visits": 187.0,
+        "validation_ms": 0.06592000000000002
+      },
+      "144": {
+        "calls": 18.0,
+        "checks": 1595.0,
+        "frame_ms": 0.0017909999999999996,
+        "issuance_ms": 0.3421465,
+        "picks": 2.0,
+        "raw": 1603.0,
+        "root_visits": 669.0,
+        "signature_visits": 1603.0,
+        "validation_ms": 0.3936645000000001
+      },
+      "504": {
+        "calls": 34.0,
+        "checks": 86.0,
+        "frame_ms": 0.0028735,
+        "issuance_ms": 0.3360835000000001,
+        "picks": 3.0,
+        "raw": 121.0,
+        "root_visits": 3524.0,
+        "signature_visits": 1771.0,
+        "validation_ms": 0.05548050000000001
+      }
+    }
+  },
+  "jacobi-1d": {
+    "full_ms": 425.36452099999997,
+    "phases": {
+      "frame_ms": 4.076368,
+      "issuance_ms": 89.95707949999999,
+      "validation_ms": 41.062192499999995
+    },
+    "rules_sampled": 205,
+    "highest_issuance_ms": {
+      "10": {
+        "calls": 2.0,
+        "checks": 16400.0,
+        "frame_ms": 0.082958,
+        "issuance_ms": 6.9186665000000005,
+        "picks": 7.0,
+        "raw": 30340.0,
+        "root_visits": 20.0,
+        "signature_visits": 113136.0,
+        "validation_ms": 9.385208500000001
+      },
+      "507": {
+        "calls": 82.0,
+        "checks": 1839.0,
+        "frame_ms": 0.24783449999999993,
+        "issuance_ms": 5.3954555,
+        "picks": 3.0,
+        "raw": 3416.0,
+        "root_visits": 29577.0,
+        "signature_visits": 22733.0,
+        "validation_ms": 0.8631439999999997
+      },
+      "144": {
+        "calls": 38.0,
+        "checks": 18134.0,
+        "frame_ms": 0.00398,
+        "issuance_ms": 4.220479,
+        "picks": 2.0,
+        "raw": 20202.0,
+        "root_visits": 5979.0,
+        "signature_visits": 20202.0,
+        "validation_ms": 4.809853
+      },
+      "501": {
+        "calls": 37.0,
+        "checks": 232.0,
+        "frame_ms": 0.0046455,
+        "issuance_ms": 4.07448,
+        "picks": 5.0,
+        "raw": 1648.0,
+        "root_visits": 13355.0,
+        "signature_visits": 53727.0,
+        "validation_ms": 0.383458
+      },
+      "540": {
+        "calls": 72.0,
+        "checks": 494.0,
+        "frame_ms": 0.0083125,
+        "issuance_ms": 3.5284210000000003,
+        "picks": 5.0,
+        "raw": 1270.0,
+        "root_visits": 13527.0,
+        "signature_visits": 43674.0,
+        "validation_ms": 0.5157444999999999
+      },
+      "87": {
+        "calls": 46.0,
+        "checks": 98.0,
+        "frame_ms": 0.5057475,
+        "issuance_ms": 3.2088760000000005,
+        "picks": 2.0,
+        "raw": 158.0,
+        "root_visits": 66.0,
+        "signature_visits": 158.0,
+        "validation_ms": 0.06574900000000002
+      },
+      "136": {
+        "calls": 39.0,
+        "checks": 0.0,
+        "frame_ms": 0.26081199999999993,
+        "issuance_ms": 3.1052494999999993,
+        "picks": 3.0,
+        "raw": 5619.0,
+        "root_visits": 14626.0,
+        "signature_visits": 24915.0,
+        "validation_ms": 0.4268369999999999
+      },
+      "241": {
+        "calls": 42.0,
+        "checks": 5660.0,
+        "frame_ms": 0.004709,
+        "issuance_ms": 2.9790425000000003,
+        "picks": 3.0,
+        "raw": 9095.0,
+        "root_visits": 26634.0,
+        "signature_visits": 19586.0,
+        "validation_ms": 2.2593959999999997
+      }
+    }
+  },
+  "conjugate-gradient": {
+    "full_ms": 1933.7485,
+    "phases": {
+      "frame_ms": 12.506694,
+      "issuance_ms": 441.476996,
+      "validation_ms": 168.000562
+    },
+    "rules_sampled": 217,
+    "highest_issuance_ms": {
+      "10": {
+        "calls": 2.0,
+        "checks": 13916.0,
+        "frame_ms": 0.15425,
+        "issuance_ms": 40.043041,
+        "picks": 7.0,
+        "raw": 187440.0,
+        "root_visits": 28.0,
+        "signature_visits": 614240.0,
+        "validation_ms": 28.6661255
+      },
+      "136": {
+        "calls": 64.0,
+        "checks": 0.0,
+        "frame_ms": 1.2309990000000006,
+        "issuance_ms": 31.366729999999997,
+        "picks": 3.0,
+        "raw": 50989.0,
+        "root_visits": 96572.0,
+        "signature_visits": 307091.0,
+        "validation_ms": 3.6251880000000005
+      },
+      "540": {
+        "calls": 154.0,
+        "checks": 1189.0,
+        "frame_ms": 0.016287500000000003,
+        "issuance_ms": 29.1604385,
+        "picks": 5.0,
+        "raw": 8342.0,
+        "root_visits": 78609.0,
+        "signature_visits": 408374.0,
+        "validation_ms": 1.9357329999999995
+      },
+      "249": {
+        "calls": 41.0,
+        "checks": 1988.0,
+        "frame_ms": 0.0073774999999999995,
+        "issuance_ms": 24.559184999999996,
+        "picks": 5.0,
+        "raw": 166518.0,
+        "root_visits": 574.0,
+        "signature_visits": 323718.0,
+        "validation_ms": 18.564812500000006
+      },
+      "241": {
+        "calls": 64.0,
+        "checks": 26242.0,
+        "frame_ms": 0.0099745,
+        "issuance_ms": 24.111606499999994,
+        "picks": 3.0,
+        "raw": 82839.0,
+        "root_visits": 194003.0,
+        "signature_visits": 140796.0,
+        "validation_ms": 17.577024
+      },
+      "242": {
+        "calls": 63.0,
+        "checks": 14373.0,
+        "frame_ms": 0.011228000000000002,
+        "issuance_ms": 21.531312999999997,
+        "picks": 3.0,
+        "raw": 45624.0,
+        "root_visits": 206388.0,
+        "signature_visits": 107459.0,
+        "validation_ms": 11.275792500000001
+      },
+      "501": {
+        "calls": 43.0,
+        "checks": 380.0,
+        "frame_ms": 0.005250500000000002,
+        "issuance_ms": 15.834229500000001,
+        "picks": 5.0,
+        "raw": 7610.0,
+        "root_visits": 36961.0,
+        "signature_visits": 227229.0,
+        "validation_ms": 1.2560405000000001
+      },
+      "144": {
+        "calls": 59.0,
+        "checks": 46944.0,
+        "frame_ms": 0.018039,
+        "issuance_ms": 14.4562895,
+        "picks": 2.0,
+        "raw": 56012.0,
+        "root_visits": 18936.0,
+        "signature_visits": 56012.0,
+        "validation_ms": 12.931001499999997
+      }
+    }
+  }
+}
