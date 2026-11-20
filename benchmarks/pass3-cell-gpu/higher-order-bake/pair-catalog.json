@@ -1,0 +1,46 @@
+{
+ "pairs": [
+  [
+   509,
+   510
+  ]
+ ],
+ "training": {
+  "(349, 350)": {
+   "affine-twins": [
+    0,
+    0
+   ],
+   "clamped-ramp": [
+    0,
+    0
+   ],
+   "segmented-prefix": [
+    0,
+    0
+   ],
+   "window-laplacian": [
+    0,
+    0
+   ]
+  },
+  "(509, 510)": {
+   "affine-twins": [
+    42,
+    120
+   ],
+   "clamped-ramp": [
+    44,
+    188
+   ],
+   "segmented-prefix": [
+    46,
+    154
+   ],
+   "window-laplacian": [
+    122,
+    238
+   ]
+  }
+ }
+}

@@ -11,7 +11,7 @@ def load(name,path):
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 
 
-def build(out):
+def build(out,pairs):
     with tempfile.TemporaryDirectory() as temp:
         root=Path(temp)
         folders=['joint-witness','single-witness','ordinary-witness','ordinary-shortlist','joint-merge','joint-root-cells']
@@ -23,10 +23,15 @@ def build(out):
         source=inspect.getsource(joint.build).replace('cwd=HERE.parents[2]','cwd=worktree')
         anchor="    target=out/'target'";assert source.count(anchor)==1
         src=source.replace(anchor,'    higher_install(crate)\n'+anchor)
-        scope=dict(joint.__dict__,higher_install=overlay.install,worktree=HERE.parents[2])
+        def install_experiment(crate):
+            overlay.install(crate)
+            if pairs:
+                sys.path.insert(0,str(HERE))
+                load('branch_overlay',HERE/'pair_overlay.py').install(crate)
+        scope=dict(joint.__dict__,higher_install=install_experiment,worktree=HERE.parents[2])
         exec(compile(src,str(joint.__file__),'exec'),scope)
         scope['build'](out,True,True,True)
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('out',type=Path);a=p.parse_args();build(a.out)
+    p=argparse.ArgumentParser();p.add_argument('out',type=Path);p.add_argument('--pairs',action='store_true');a=p.parse_args();build(a.out,a.pairs)

@@ -1,0 +1,6810 @@
+{
+ "sum-bits/1703": {
+  "base": {
+   "ms": [
+    113.683708,
+    112.04725,
+    113.351416,
+    112.70020799999999,
+    112.9665,
+    117.732834,
+    115.182625,
+    112.11720799999999
+   ],
+   "rhs": 7265,
+   "actual": 7265,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5867,
+   "fresh_cells": 5868,
+   "multituples": 21443,
+   "candidate_visits": 42972,
+   "source_comparisons": 14602,
+   "guarded": null,
+   "request_ms": [
+    173.317291,
+    172.599542,
+    178.938083,
+    175.267541,
+    174.938083,
+    178.774792,
+    174.532708,
+    175.792291
+   ],
+   "median_ms": 113.158958
+  },
+  "independent": {
+   "ms": [
+    115.934125,
+    111.622584,
+    118.240167,
+    112.241792,
+    111.69900000000001,
+    117.233041,
+    117.31275,
+    113.33425
+   ],
+   "rhs": 7265,
+   "actual": 7265,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5867,
+   "fresh_cells": 5868,
+   "multituples": 21443,
+   "candidate_visits": 42972,
+   "source_comparisons": 14602,
+   "guarded": {
+    "committed": 200,
+    "comparisons": 0,
+    "cross_stage": 100,
+    "eq": 0,
+    "first_visits": 166,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      48,
+      24
+     ],
+     "510": [
+      152,
+      76
+     ]
+    },
+    "published_source_ports": 206,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      266,
+      510,
+      2121,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 263
+       }
+      ],
+      [
+       [
+        {
+         "Function": 263
+        },
+        [
+         2116,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2122,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 265
+       }
+      ],
+      [
+       [
+        {
+         "Function": 265
+        },
+        [
+         2117,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2123,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 261
+       }
+      ],
+      [
+       [
+        {
+         "Function": 261
+        },
+        [
+         2115,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2200,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 321
+       }
+      ],
+      [
+       [
+        {
+         "Function": 321
+        },
+        [
+         2188,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2201,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 317
+       }
+      ],
+      [
+       [
+        {
+         "Function": 317
+        },
+        [
+         2186,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "c1fc950d2bc1c1fed0c342059887920fa5cee3b758afd8423c2e943524e30320"
+   },
+   "request_ms": [
+    179.434708,
+    171.296292,
+    178.303625,
+    171.109375,
+    171.720583,
+    180.258875,
+    178.852042,
+    171.52825
+   ],
+   "median_ms": 114.6341875
+  },
+  "raw": {
+   "ms": [
+    111.716459,
+    112.839875,
+    112.412875,
+    112.31875,
+    112.74945799999999,
+    112.082375,
+    118.409084,
+    111.255333
+   ],
+   "rhs": 7265,
+   "actual": 7265,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5867,
+   "fresh_cells": 5868,
+   "multituples": 21237,
+   "candidate_visits": 42766,
+   "source_comparisons": 14602,
+   "guarded": {
+    "committed": 200,
+    "comparisons": 0,
+    "cross_stage": 100,
+    "eq": 0,
+    "first_visits": 83,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      48,
+      24
+     ],
+     "510": [
+      152,
+      76
+     ]
+    },
+    "published_source_ports": 206,
+    "reused_sibling_runs": 83,
+    "shared_raw_tuples": 206,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      266,
+      510,
+      2121,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 263
+       }
+      ],
+      [
+       [
+        {
+         "Function": 263
+        },
+        [
+         2116,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2122,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 265
+       }
+      ],
+      [
+       [
+        {
+         "Function": 265
+        },
+        [
+         2117,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2123,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 261
+       }
+      ],
+      [
+       [
+        {
+         "Function": 261
+        },
+        [
+         2115,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2200,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 321
+       }
+      ],
+      [
+       [
+        {
+         "Function": 321
+        },
+        [
+         2188,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2201,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 317
+       }
+      ],
+      [
+       [
+        {
+         "Function": 317
+        },
+        [
+         2186,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "c1fc950d2bc1c1fed0c342059887920fa5cee3b758afd8423c2e943524e30320"
+   },
+   "request_ms": [
+    171.882583,
+    172.35525,
+    171.192917,
+    173.530458,
+    175.05225,
+    175.419958,
+    178.732334,
+    170.819875
+   ],
+   "median_ms": 112.3658125
+  },
+  "verified": {
+   "ms": [
+    114.772708,
+    114.085458,
+    111.00462499999999,
+    114.15225,
+    119.49275,
+    110.755208,
+    117.333958,
+    110.597875
+   ],
+   "rhs": 7265,
+   "actual": 7265,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5867,
+   "fresh_cells": 5868,
+   "multituples": 21237,
+   "candidate_visits": 42766,
+   "source_comparisons": 14190,
+   "guarded": {
+    "committed": 200,
+    "comparisons": 206,
+    "cross_stage": 100,
+    "eq": 6,
+    "first_visits": 83,
+    "gt": 152,
+    "lt": 48,
+    "per_rule": {
+     "509": [
+      48,
+      24
+     ],
+     "510": [
+      152,
+      76
+     ]
+    },
+    "published_source_ports": 206,
+    "reused_sibling_runs": 83,
+    "shared_raw_tuples": 206,
+    "shared_verified_tuples": 152,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      266,
+      510,
+      2121,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 263
+       }
+      ],
+      [
+       [
+        {
+         "Function": 263
+        },
+        [
+         2116,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2122,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 265
+       }
+      ],
+      [
+       [
+        {
+         "Function": 265
+        },
+        [
+         2117,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2123,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 261
+       }
+      ],
+      [
+       [
+        {
+         "Function": 261
+        },
+        [
+         2115,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2200,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 321
+       }
+      ],
+      [
+       [
+        {
+         "Function": 321
+        },
+        [
+         2188,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2201,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 317
+       }
+      ],
+      [
+       [
+        {
+         "Function": 317
+        },
+        [
+         2186,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "c1fc950d2bc1c1fed0c342059887920fa5cee3b758afd8423c2e943524e30320"
+   },
+   "request_ms": [
+    175.668125,
+    174.9175,
+    172.372667,
+    172.281209,
+    178.658292,
+    171.778584,
+    180.3545,
+    170.106625
+   ],
+   "median_ms": 114.118854
+  },
+  "stale": {
+   "ms": [],
+   "rhs": 7265,
+   "actual": 7265,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5867,
+   "fresh_cells": 5868,
+   "multituples": 21443,
+   "candidate_visits": 42972,
+   "source_comparisons": 14602,
+   "guarded": {
+    "committed": 200,
+    "comparisons": 0,
+    "cross_stage": 100,
+    "eq": 0,
+    "first_visits": 166,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      48,
+      24
+     ],
+     "510": [
+      152,
+      76
+     ]
+    },
+    "published_source_ports": 206,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 165,
+    "sample_commits": [
+     [
+      266,
+      510,
+      2121,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 263
+       }
+      ],
+      [
+       [
+        {
+         "Function": 263
+        },
+        [
+         2116,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2122,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 265
+       }
+      ],
+      [
+       [
+        {
+         "Function": 265
+        },
+        [
+         2117,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2123,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 261
+       }
+      ],
+      [
+       [
+        {
+         "Function": 261
+        },
+        [
+         2115,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2200,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 321
+       }
+      ],
+      [
+       [
+        {
+         "Function": 321
+        },
+        [
+         2188,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2201,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 317
+       }
+      ],
+      [
+       [
+        {
+         "Function": 317
+        },
+        [
+         2186,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "c1fc950d2bc1c1fed0c342059887920fa5cee3b758afd8423c2e943524e30320"
+   }
+  }
+ },
+ "sum-bits/1709": {
+  "base": {
+   "ms": [
+    111.10758299999999,
+    114.990375,
+    121.510542,
+    114.21025,
+    112.540208,
+    113.077166,
+    113.212292,
+    110.833708
+   ],
+   "rhs": 7265,
+   "actual": 7265,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5867,
+   "fresh_cells": 5868,
+   "multituples": 21342,
+   "candidate_visits": 42689,
+   "source_comparisons": 14602,
+   "guarded": null,
+   "request_ms": [
+    177.46925,
+    172.954333,
+    183.828792,
+    175.288709,
+    173.15775,
+    172.266042,
+    172.740917,
+    170.884
+   ],
+   "median_ms": 113.14472900000001
+  },
+  "independent": {
+   "ms": [
+    110.767583,
+    116.97637499999999,
+    113.287292,
+    117.60475,
+    115.359458,
+    139.859458,
+    118.841458,
+    116.368208
+   ],
+   "rhs": 7265,
+   "actual": 7265,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5867,
+   "fresh_cells": 5868,
+   "multituples": 21342,
+   "candidate_visits": 42689,
+   "source_comparisons": 14602,
+   "guarded": {
+    "committed": 200,
+    "comparisons": 0,
+    "cross_stage": 100,
+    "eq": 0,
+    "first_visits": 166,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      48,
+      24
+     ],
+     "510": [
+      152,
+      76
+     ]
+    },
+    "published_source_ports": 206,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      266,
+      510,
+      2121,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 263
+       }
+      ],
+      [
+       [
+        {
+         "Function": 263
+        },
+        [
+         2116,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2122,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 265
+       }
+      ],
+      [
+       [
+        {
+         "Function": 265
+        },
+        [
+         2117,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2123,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 261
+       }
+      ],
+      [
+       [
+        {
+         "Function": 261
+        },
+        [
+         2115,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2200,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 321
+       }
+      ],
+      [
+       [
+        {
+         "Function": 321
+        },
+        [
+         2188,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2201,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 317
+       }
+      ],
+      [
+       [
+        {
+         "Function": 317
+        },
+        [
+         2186,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "c1fc950d2bc1c1fed0c342059887920fa5cee3b758afd8423c2e943524e30320"
+   },
+   "request_ms": [
+    169.856833,
+    180.561041,
+    171.140375,
+    181.207666,
+    175.391292,
+    200.702917,
+    181.467208,
+    183.363958
+   ],
+   "median_ms": 116.6722915
+  },
+  "raw": {
+   "ms": [
+    114.434458,
+    108.066542,
+    109.89699999999999,
+    116.06287499999999,
+    113.7135,
+    110.226791,
+    112.549792,
+    115.760416
+   ],
+   "rhs": 7265,
+   "actual": 7265,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5867,
+   "fresh_cells": 5868,
+   "multituples": 21135,
+   "candidate_visits": 42482,
+   "source_comparisons": 14602,
+   "guarded": {
+    "committed": 200,
+    "comparisons": 0,
+    "cross_stage": 100,
+    "eq": 0,
+    "first_visits": 83,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      48,
+      24
+     ],
+     "510": [
+      152,
+      76
+     ]
+    },
+    "published_source_ports": 206,
+    "reused_sibling_runs": 83,
+    "shared_raw_tuples": 207,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      266,
+      510,
+      2121,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 263
+       }
+      ],
+      [
+       [
+        {
+         "Function": 263
+        },
+        [
+         2116,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2122,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 265
+       }
+      ],
+      [
+       [
+        {
+         "Function": 265
+        },
+        [
+         2117,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2123,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 261
+       }
+      ],
+      [
+       [
+        {
+         "Function": 261
+        },
+        [
+         2115,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2200,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 321
+       }
+      ],
+      [
+       [
+        {
+         "Function": 321
+        },
+        [
+         2188,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2201,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 317
+       }
+      ],
+      [
+       [
+        {
+         "Function": 317
+        },
+        [
+         2186,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "c1fc950d2bc1c1fed0c342059887920fa5cee3b758afd8423c2e943524e30320"
+   },
+   "request_ms": [
+    175.596709,
+    168.419083,
+    173.29975,
+    174.845958,
+    173.804833,
+    172.546917,
+    171.47475,
+    172.702333
+   ],
+   "median_ms": 113.13164599999999
+  },
+  "verified": {
+   "ms": [
+    116.045709,
+    111.54145799999999,
+    113.656875,
+    111.281708,
+    110.135542,
+    115.18675,
+    110.015416,
+    108.30495800000001
+   ],
+   "rhs": 7265,
+   "actual": 7265,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5867,
+   "fresh_cells": 5868,
+   "multituples": 21135,
+   "candidate_visits": 42482,
+   "source_comparisons": 14190,
+   "guarded": {
+    "committed": 200,
+    "comparisons": 206,
+    "cross_stage": 100,
+    "eq": 6,
+    "first_visits": 83,
+    "gt": 152,
+    "lt": 48,
+    "per_rule": {
+     "509": [
+      48,
+      24
+     ],
+     "510": [
+      152,
+      76
+     ]
+    },
+    "published_source_ports": 206,
+    "reused_sibling_runs": 83,
+    "shared_raw_tuples": 207,
+    "shared_verified_tuples": 152,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      266,
+      510,
+      2121,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 263
+       }
+      ],
+      [
+       [
+        {
+         "Function": 263
+        },
+        [
+         2116,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2122,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 265
+       }
+      ],
+      [
+       [
+        {
+         "Function": 265
+        },
+        [
+         2117,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2123,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 261
+       }
+      ],
+      [
+       [
+        {
+         "Function": 261
+        },
+        [
+         2115,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2200,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 321
+       }
+      ],
+      [
+       [
+        {
+         "Function": 321
+        },
+        [
+         2188,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2201,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 317
+       }
+      ],
+      [
+       [
+        {
+         "Function": 317
+        },
+        [
+         2186,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "c1fc950d2bc1c1fed0c342059887920fa5cee3b758afd8423c2e943524e30320"
+   },
+   "request_ms": [
+    177.463,
+    169.377042,
+    173.182208,
+    174.313625,
+    171.4605,
+    175.244042,
+    168.855459,
+    169.763667
+   ],
+   "median_ms": 111.411583
+  },
+  "stale": {
+   "ms": [],
+   "rhs": 7265,
+   "actual": 7265,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5867,
+   "fresh_cells": 5868,
+   "multituples": 21342,
+   "candidate_visits": 42689,
+   "source_comparisons": 14602,
+   "guarded": {
+    "committed": 200,
+    "comparisons": 0,
+    "cross_stage": 100,
+    "eq": 0,
+    "first_visits": 166,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      48,
+      24
+     ],
+     "510": [
+      152,
+      76
+     ]
+    },
+    "published_source_ports": 206,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 165,
+    "sample_commits": [
+     [
+      266,
+      510,
+      2121,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 263
+       }
+      ],
+      [
+       [
+        {
+         "Function": 263
+        },
+        [
+         2116,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2122,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 265
+       }
+      ],
+      [
+       [
+        {
+         "Function": 265
+        },
+        [
+         2117,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      266,
+      510,
+      2123,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 261
+       }
+      ],
+      [
+       [
+        {
+         "Function": 261
+        },
+        [
+         2115,
+         264,
+         510,
+         2,
+         264
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2200,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 321
+       }
+      ],
+      [
+       [
+        {
+         "Function": 321
+        },
+        [
+         2188,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ],
+     [
+      282,
+      510,
+      2201,
+      [
+       {
+        "Fact": {
+         "cell": 2225,
+         "op": 1
+        }
+       },
+       {
+        "Function": 317
+       }
+      ],
+      [
+       [
+        {
+         "Function": 317
+        },
+        [
+         2186,
+         280,
+         510,
+         2,
+         280
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "c1fc950d2bc1c1fed0c342059887920fa5cee3b758afd8423c2e943524e30320"
+   }
+  }
+ },
+ "dot-product/1703": {
+  "base": {
+   "ms": [
+    110.223792,
+    110.124875,
+    111.33016699999999,
+    107.883083,
+    111.14629199999999,
+    110.224292,
+    111.92595800000001,
+    112.661417
+   ],
+   "rhs": 6704,
+   "actual": 6704,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5666,
+   "fresh_cells": 5682,
+   "multituples": 21210,
+   "candidate_visits": 55085,
+   "source_comparisons": 8466,
+   "guarded": null,
+   "request_ms": [
+    173.925041,
+    174.677208,
+    178.370416,
+    173.51,
+    175.720042,
+    173.292542,
+    179.211709,
+    177.557708
+   ],
+   "median_ms": 110.685292
+  },
+  "independent": {
+   "ms": [
+    108.88258300000001,
+    109.308417,
+    109.238542,
+    110.011584,
+    109.148542,
+    111.602042,
+    112.420333,
+    109.468125
+   ],
+   "rhs": 6704,
+   "actual": 6704,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5666,
+   "fresh_cells": 5682,
+   "multituples": 21210,
+   "candidate_visits": 55085,
+   "source_comparisons": 8466,
+   "guarded": {
+    "committed": 260,
+    "comparisons": 0,
+    "cross_stage": 130,
+    "eq": 0,
+    "first_visits": 188,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      178,
+      89
+     ]
+    },
+    "published_source_ports": 266,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      332,
+      510,
+      3531,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 574
+       }
+      ],
+      [
+       [
+        {
+         "Function": 574
+        },
+        [
+         3505,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3532,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 578
+       }
+      ],
+      [
+       [
+        {
+         "Function": 578
+        },
+        [
+         3507,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3533,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 580
+       }
+      ],
+      [
+       [
+        {
+         "Function": 580
+        },
+        [
+         3508,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3534,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 582
+       }
+      ],
+      [
+       [
+        {
+         "Function": 582
+        },
+        [
+         3509,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3535,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 584
+       }
+      ],
+      [
+       [
+        {
+         "Function": 584
+        },
+        [
+         3510,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "538e77c7a1f766c4c7b9889e9344b1e68a40e4782b8d8baeeb0a54ce1bef335c"
+   },
+   "request_ms": [
+    169.165542,
+    172.090667,
+    170.905541,
+    175.760875,
+    171.249917,
+    175.207416,
+    178.401833,
+    174.969417
+   ],
+   "median_ms": 109.388271
+  },
+  "raw": {
+   "ms": [
+    105.93575,
+    106.120542,
+    110.200834,
+    112.818875,
+    109.661625,
+    107.465042,
+    113.09958300000001,
+    108.101
+   ],
+   "rhs": 6704,
+   "actual": 6704,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5666,
+   "fresh_cells": 5682,
+   "multituples": 20943,
+   "candidate_visits": 54818,
+   "source_comparisons": 8466,
+   "guarded": {
+    "committed": 260,
+    "comparisons": 0,
+    "cross_stage": 130,
+    "eq": 0,
+    "first_visits": 94,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      178,
+      89
+     ]
+    },
+    "published_source_ports": 266,
+    "reused_sibling_runs": 94,
+    "shared_raw_tuples": 267,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      332,
+      510,
+      3531,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 574
+       }
+      ],
+      [
+       [
+        {
+         "Function": 574
+        },
+        [
+         3505,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3532,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 578
+       }
+      ],
+      [
+       [
+        {
+         "Function": 578
+        },
+        [
+         3507,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3533,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 580
+       }
+      ],
+      [
+       [
+        {
+         "Function": 580
+        },
+        [
+         3508,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3534,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 582
+       }
+      ],
+      [
+       [
+        {
+         "Function": 582
+        },
+        [
+         3509,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3535,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 584
+       }
+      ],
+      [
+       [
+        {
+         "Function": 584
+        },
+        [
+         3510,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "538e77c7a1f766c4c7b9889e9344b1e68a40e4782b8d8baeeb0a54ce1bef335c"
+   },
+   "request_ms": [
+    164.024916,
+    167.281291,
+    178.182542,
+    177.281583,
+    174.441708,
+    170.428625,
+    178.512625,
+    173.4255
+   ],
+   "median_ms": 108.8813125
+  },
+  "verified": {
+   "ms": [
+    109.424208,
+    111.071625,
+    114.106167,
+    107.53016699999999,
+    104.88775,
+    109.227042,
+    109.325,
+    107.986334
+   ],
+   "rhs": 6704,
+   "actual": 6704,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5666,
+   "fresh_cells": 5682,
+   "multituples": 20943,
+   "candidate_visits": 54818,
+   "source_comparisons": 7934,
+   "guarded": {
+    "committed": 260,
+    "comparisons": 266,
+    "cross_stage": 130,
+    "eq": 6,
+    "first_visits": 94,
+    "gt": 178,
+    "lt": 82,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      178,
+      89
+     ]
+    },
+    "published_source_ports": 266,
+    "reused_sibling_runs": 94,
+    "shared_raw_tuples": 267,
+    "shared_verified_tuples": 178,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      332,
+      510,
+      3531,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 574
+       }
+      ],
+      [
+       [
+        {
+         "Function": 574
+        },
+        [
+         3505,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3532,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 578
+       }
+      ],
+      [
+       [
+        {
+         "Function": 578
+        },
+        [
+         3507,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3533,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 580
+       }
+      ],
+      [
+       [
+        {
+         "Function": 580
+        },
+        [
+         3508,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3534,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 582
+       }
+      ],
+      [
+       [
+        {
+         "Function": 582
+        },
+        [
+         3509,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3535,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 584
+       }
+      ],
+      [
+       [
+        {
+         "Function": 584
+        },
+        [
+         3510,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "538e77c7a1f766c4c7b9889e9344b1e68a40e4782b8d8baeeb0a54ce1bef335c"
+   },
+   "request_ms": [
+    178.339542,
+    177.834708,
+    177.616334,
+    175.81775,
+    169.444583,
+    173.212709,
+    167.027833,
+    174.719583
+   ],
+   "median_ms": 109.276021
+  },
+  "stale": {
+   "ms": [],
+   "rhs": 6704,
+   "actual": 6704,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5666,
+   "fresh_cells": 5682,
+   "multituples": 21210,
+   "candidate_visits": 55085,
+   "source_comparisons": 8466,
+   "guarded": {
+    "committed": 260,
+    "comparisons": 0,
+    "cross_stage": 130,
+    "eq": 0,
+    "first_visits": 188,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      178,
+      89
+     ]
+    },
+    "published_source_ports": 266,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 187,
+    "sample_commits": [
+     [
+      332,
+      510,
+      3531,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 574
+       }
+      ],
+      [
+       [
+        {
+         "Function": 574
+        },
+        [
+         3505,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3532,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 578
+       }
+      ],
+      [
+       [
+        {
+         "Function": 578
+        },
+        [
+         3507,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3533,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 580
+       }
+      ],
+      [
+       [
+        {
+         "Function": 580
+        },
+        [
+         3508,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3534,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 582
+       }
+      ],
+      [
+       [
+        {
+         "Function": 582
+        },
+        [
+         3509,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3535,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 584
+       }
+      ],
+      [
+       [
+        {
+         "Function": 584
+        },
+        [
+         3510,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "538e77c7a1f766c4c7b9889e9344b1e68a40e4782b8d8baeeb0a54ce1bef335c"
+   }
+  }
+ },
+ "dot-product/1709": {
+  "base": {
+   "ms": [
+    114.977666,
+    130.88304200000002,
+    111.590333,
+    108.018167,
+    108.420166,
+    115.873375,
+    111.95070899999999,
+    104.899625
+   ],
+   "rhs": 6704,
+   "actual": 6704,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5666,
+   "fresh_cells": 5682,
+   "multituples": 21067,
+   "candidate_visits": 54850,
+   "source_comparisons": 8466,
+   "guarded": null,
+   "request_ms": [
+    174.714708,
+    193.581209,
+    173.649958,
+    168.200958,
+    168.342208,
+    175.213916,
+    173.497542,
+    162.923792
+   ],
+   "median_ms": 111.770521
+  },
+  "independent": {
+   "ms": [
+    110.817208,
+    106.253792,
+    117.97608299999999,
+    111.534875,
+    110.10175,
+    109.776042,
+    107.999125,
+    106.370833
+   ],
+   "rhs": 6704,
+   "actual": 6704,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5666,
+   "fresh_cells": 5682,
+   "multituples": 21067,
+   "candidate_visits": 54850,
+   "source_comparisons": 8466,
+   "guarded": {
+    "committed": 260,
+    "comparisons": 0,
+    "cross_stage": 130,
+    "eq": 0,
+    "first_visits": 188,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      178,
+      89
+     ]
+    },
+    "published_source_ports": 266,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      332,
+      510,
+      3531,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 574
+       }
+      ],
+      [
+       [
+        {
+         "Function": 574
+        },
+        [
+         3505,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3532,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 578
+       }
+      ],
+      [
+       [
+        {
+         "Function": 578
+        },
+        [
+         3507,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3533,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 580
+       }
+      ],
+      [
+       [
+        {
+         "Function": 580
+        },
+        [
+         3508,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3534,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 582
+       }
+      ],
+      [
+       [
+        {
+         "Function": 582
+        },
+        [
+         3509,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3535,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 584
+       }
+      ],
+      [
+       [
+        {
+         "Function": 584
+        },
+        [
+         3510,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "538e77c7a1f766c4c7b9889e9344b1e68a40e4782b8d8baeeb0a54ce1bef335c"
+   },
+   "request_ms": [
+    171.124125,
+    168.3655,
+    174.356875,
+    172.158958,
+    172.900209,
+    175.265542,
+    173.383542,
+    167.586333
+   ],
+   "median_ms": 109.938896
+  },
+  "raw": {
+   "ms": [
+    111.28325,
+    111.66725,
+    109.772084,
+    111.17120899999999,
+    110.477042,
+    113.687834,
+    110.33900000000001,
+    108.2975
+   ],
+   "rhs": 6704,
+   "actual": 6704,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5666,
+   "fresh_cells": 5682,
+   "multituples": 20799,
+   "candidate_visits": 54582,
+   "source_comparisons": 8466,
+   "guarded": {
+    "committed": 260,
+    "comparisons": 0,
+    "cross_stage": 130,
+    "eq": 0,
+    "first_visits": 94,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      178,
+      89
+     ]
+    },
+    "published_source_ports": 266,
+    "reused_sibling_runs": 94,
+    "shared_raw_tuples": 268,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      332,
+      510,
+      3531,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 574
+       }
+      ],
+      [
+       [
+        {
+         "Function": 574
+        },
+        [
+         3505,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3532,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 578
+       }
+      ],
+      [
+       [
+        {
+         "Function": 578
+        },
+        [
+         3507,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3533,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 580
+       }
+      ],
+      [
+       [
+        {
+         "Function": 580
+        },
+        [
+         3508,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3534,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 582
+       }
+      ],
+      [
+       [
+        {
+         "Function": 582
+        },
+        [
+         3509,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3535,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 584
+       }
+      ],
+      [
+       [
+        {
+         "Function": 584
+        },
+        [
+         3510,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "538e77c7a1f766c4c7b9889e9344b1e68a40e4782b8d8baeeb0a54ce1bef335c"
+   },
+   "request_ms": [
+    172.287292,
+    175.363916,
+    175.946292,
+    172.087,
+    169.779208,
+    174.421875,
+    170.515833,
+    165.642167
+   ],
+   "median_ms": 110.8241255
+  },
+  "verified": {
+   "ms": [
+    109.356,
+    103.862583,
+    113.279666,
+    111.16145800000001,
+    112.585792,
+    114.3275,
+    107.213584,
+    103.425834
+   ],
+   "rhs": 6704,
+   "actual": 6704,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5666,
+   "fresh_cells": 5682,
+   "multituples": 20799,
+   "candidate_visits": 54582,
+   "source_comparisons": 7934,
+   "guarded": {
+    "committed": 260,
+    "comparisons": 266,
+    "cross_stage": 130,
+    "eq": 6,
+    "first_visits": 94,
+    "gt": 178,
+    "lt": 82,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      178,
+      89
+     ]
+    },
+    "published_source_ports": 266,
+    "reused_sibling_runs": 94,
+    "shared_raw_tuples": 268,
+    "shared_verified_tuples": 178,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      332,
+      510,
+      3531,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 574
+       }
+      ],
+      [
+       [
+        {
+         "Function": 574
+        },
+        [
+         3505,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3532,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 578
+       }
+      ],
+      [
+       [
+        {
+         "Function": 578
+        },
+        [
+         3507,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3533,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 580
+       }
+      ],
+      [
+       [
+        {
+         "Function": 580
+        },
+        [
+         3508,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3534,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 582
+       }
+      ],
+      [
+       [
+        {
+         "Function": 582
+        },
+        [
+         3509,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3535,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 584
+       }
+      ],
+      [
+       [
+        {
+         "Function": 584
+        },
+        [
+         3510,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "538e77c7a1f766c4c7b9889e9344b1e68a40e4782b8d8baeeb0a54ce1bef335c"
+   },
+   "request_ms": [
+    169.940833,
+    164.321917,
+    178.769167,
+    173.185458,
+    174.232083,
+    177.353,
+    169.463708,
+    166.3925
+   ],
+   "median_ms": 110.258729
+  },
+  "stale": {
+   "ms": [],
+   "rhs": 6704,
+   "actual": 6704,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 5666,
+   "fresh_cells": 5682,
+   "multituples": 21067,
+   "candidate_visits": 54850,
+   "source_comparisons": 8466,
+   "guarded": {
+    "committed": 260,
+    "comparisons": 0,
+    "cross_stage": 130,
+    "eq": 0,
+    "first_visits": 188,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      178,
+      89
+     ]
+    },
+    "published_source_ports": 266,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 187,
+    "sample_commits": [
+     [
+      332,
+      510,
+      3531,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 574
+       }
+      ],
+      [
+       [
+        {
+         "Function": 574
+        },
+        [
+         3505,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3532,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 578
+       }
+      ],
+      [
+       [
+        {
+         "Function": 578
+        },
+        [
+         3507,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3533,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 580
+       }
+      ],
+      [
+       [
+        {
+         "Function": 580
+        },
+        [
+         3508,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3534,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 582
+       }
+      ],
+      [
+       [
+        {
+         "Function": 582
+        },
+        [
+         3509,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ],
+     [
+      332,
+      510,
+      3535,
+      [
+       {
+        "Fact": {
+         "cell": 3565,
+         "op": 1
+        }
+       },
+       {
+        "Function": 584
+       }
+      ],
+      [
+       [
+        {
+         "Function": 584
+        },
+        [
+         3510,
+         330,
+         510,
+         2,
+         330
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "538e77c7a1f766c4c7b9889e9344b1e68a40e4782b8d8baeeb0a54ce1bef335c"
+   }
+  }
+ },
+ "gemm-bias-relu/1703": {
+  "base": {
+   "ms": [
+    334.015125,
+    339.688875,
+    329.226292,
+    335.85841700000003,
+    310.61004199999996,
+    336.025334,
+    322.666458,
+    317.703542
+   ],
+   "rhs": 15462,
+   "actual": 15462,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 12866,
+   "fresh_cells": 12869,
+   "multituples": 78407,
+   "candidate_visits": 146316,
+   "source_comparisons": 59591,
+   "guarded": null,
+   "request_ms": [
+    410.533834,
+    412.193042,
+    404.232417,
+    414.754667,
+    387.720333,
+    409.356291,
+    397.874541,
+    391.913708
+   ],
+   "median_ms": 331.6207085
+  },
+  "independent": {
+   "ms": [
+    334.76316699999995,
+    336.47837499999997,
+    327.30258299999997,
+    332.76462499999997,
+    333.80725,
+    330.29358399999995,
+    329.88120799999996,
+    317.637292
+   ],
+   "rhs": 15462,
+   "actual": 15462,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 12866,
+   "fresh_cells": 12869,
+   "multituples": 78407,
+   "candidate_visits": 146316,
+   "source_comparisons": 59591,
+   "guarded": {
+    "committed": 328,
+    "comparisons": 0,
+    "cross_stage": 164,
+    "eq": 0,
+    "first_visits": 158,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      246,
+      123
+     ]
+    },
+    "published_source_ports": 346,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      490,
+      510,
+      8882,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 910
+       }
+      ],
+      [
+       [
+        {
+         "Function": 910
+        },
+        [
+         8877,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8883,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 912
+       }
+      ],
+      [
+       [
+        {
+         "Function": 912
+        },
+        [
+         8878,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8884,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 908
+       }
+      ],
+      [
+       [
+        {
+         "Function": 908
+        },
+        [
+         8876,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9085,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1060
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1060
+        },
+        [
+         9065,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9086,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1058
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1058
+        },
+        [
+         9064,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "a57789a7ba047207d927c07d59ac59a09a97dba0fa53e88d3e7c1cbdd7fad31f"
+   },
+   "request_ms": [
+    405.584833,
+    410.895625,
+    403.030208,
+    406.367541,
+    406.545542,
+    404.984791,
+    404.692042,
+    391.095416
+   ],
+   "median_ms": 331.52910449999996
+  },
+  "raw": {
+   "ms": [
+    321.315375,
+    321.342667,
+    347.540709,
+    334.153375,
+    313.398042,
+    330.742291,
+    330.610958,
+    313.04875
+   ],
+   "rhs": 15462,
+   "actual": 15462,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 12866,
+   "fresh_cells": 12869,
+   "multituples": 78059,
+   "candidate_visits": 145968,
+   "source_comparisons": 59591,
+   "guarded": {
+    "committed": 328,
+    "comparisons": 0,
+    "cross_stage": 164,
+    "eq": 0,
+    "first_visits": 79,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      246,
+      123
+     ]
+    },
+    "published_source_ports": 346,
+    "reused_sibling_runs": 79,
+    "shared_raw_tuples": 348,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      490,
+      510,
+      8882,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 910
+       }
+      ],
+      [
+       [
+        {
+         "Function": 910
+        },
+        [
+         8877,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8883,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 912
+       }
+      ],
+      [
+       [
+        {
+         "Function": 912
+        },
+        [
+         8878,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8884,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 908
+       }
+      ],
+      [
+       [
+        {
+         "Function": 908
+        },
+        [
+         8876,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9085,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1060
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1060
+        },
+        [
+         9065,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9086,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1058
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1058
+        },
+        [
+         9064,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "a57789a7ba047207d927c07d59ac59a09a97dba0fa53e88d3e7c1cbdd7fad31f"
+   },
+   "request_ms": [
+    393.409584,
+    394.808167,
+    421.478042,
+    412.248417,
+    386.38025,
+    406.497125,
+    407.044584,
+    385.420875
+   ],
+   "median_ms": 325.9768125
+  },
+  "verified": {
+   "ms": [
+    329.46912499999996,
+    328.521458,
+    330.895959,
+    319.94183300000003,
+    301.954,
+    324.275084,
+    339.248958,
+    321.188125
+   ],
+   "rhs": 15462,
+   "actual": 15462,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 12866,
+   "fresh_cells": 12869,
+   "multituples": 78059,
+   "candidate_visits": 145968,
+   "source_comparisons": 58899,
+   "guarded": {
+    "committed": 328,
+    "comparisons": 346,
+    "cross_stage": 164,
+    "eq": 18,
+    "first_visits": 79,
+    "gt": 246,
+    "lt": 82,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      246,
+      123
+     ]
+    },
+    "published_source_ports": 346,
+    "reused_sibling_runs": 79,
+    "shared_raw_tuples": 348,
+    "shared_verified_tuples": 246,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      490,
+      510,
+      8882,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 910
+       }
+      ],
+      [
+       [
+        {
+         "Function": 910
+        },
+        [
+         8877,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8883,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 912
+       }
+      ],
+      [
+       [
+        {
+         "Function": 912
+        },
+        [
+         8878,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8884,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 908
+       }
+      ],
+      [
+       [
+        {
+         "Function": 908
+        },
+        [
+         8876,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9085,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1060
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1060
+        },
+        [
+         9065,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9086,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1058
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1058
+        },
+        [
+         9064,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "a57789a7ba047207d927c07d59ac59a09a97dba0fa53e88d3e7c1cbdd7fad31f"
+   },
+   "request_ms": [
+    406.810292,
+    400.907875,
+    403.819167,
+    392.380042,
+    372.288708,
+    402.25475,
+    411.965208,
+    394.013959
+   ],
+   "median_ms": 326.398271
+  },
+  "stale": {
+   "ms": [],
+   "rhs": 15462,
+   "actual": 15462,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 12866,
+   "fresh_cells": 12869,
+   "multituples": 78407,
+   "candidate_visits": 146316,
+   "source_comparisons": 59591,
+   "guarded": {
+    "committed": 328,
+    "comparisons": 0,
+    "cross_stage": 164,
+    "eq": 0,
+    "first_visits": 158,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      246,
+      123
+     ]
+    },
+    "published_source_ports": 346,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 157,
+    "sample_commits": [
+     [
+      490,
+      510,
+      8882,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 910
+       }
+      ],
+      [
+       [
+        {
+         "Function": 910
+        },
+        [
+         8877,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8883,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 912
+       }
+      ],
+      [
+       [
+        {
+         "Function": 912
+        },
+        [
+         8878,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8884,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 908
+       }
+      ],
+      [
+       [
+        {
+         "Function": 908
+        },
+        [
+         8876,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9085,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1060
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1060
+        },
+        [
+         9065,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9086,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1058
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1058
+        },
+        [
+         9064,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "a57789a7ba047207d927c07d59ac59a09a97dba0fa53e88d3e7c1cbdd7fad31f"
+   }
+  }
+ },
+ "gemm-bias-relu/1709": {
+  "base": {
+   "ms": [
+    316.872166,
+    316.508459,
+    321.55687500000005,
+    332.256125,
+    338.344625,
+    330.491292,
+    312.571709,
+    324.159042
+   ],
+   "rhs": 15462,
+   "actual": 15462,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 12866,
+   "fresh_cells": 12869,
+   "multituples": 79572,
+   "candidate_visits": 149268,
+   "source_comparisons": 59591,
+   "guarded": null,
+   "request_ms": [
+    387.517209,
+    390.503667,
+    398.362792,
+    406.638125,
+    413.219333,
+    404.87525,
+    384.462667,
+    396.324917
+   ],
+   "median_ms": 322.8579585
+  },
+  "independent": {
+   "ms": [
+    331.24208300000004,
+    331.320041,
+    334.219833,
+    321.705375,
+    338.810583,
+    325.833167,
+    319.53029100000003,
+    332.284917
+   ],
+   "rhs": 15462,
+   "actual": 15462,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 12866,
+   "fresh_cells": 12869,
+   "multituples": 79572,
+   "candidate_visits": 149268,
+   "source_comparisons": 59591,
+   "guarded": {
+    "committed": 328,
+    "comparisons": 0,
+    "cross_stage": 164,
+    "eq": 0,
+    "first_visits": 158,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      246,
+      123
+     ]
+    },
+    "published_source_ports": 346,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      490,
+      510,
+      8882,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 910
+       }
+      ],
+      [
+       [
+        {
+         "Function": 910
+        },
+        [
+         8877,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8883,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 912
+       }
+      ],
+      [
+       [
+        {
+         "Function": 912
+        },
+        [
+         8878,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8884,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 908
+       }
+      ],
+      [
+       [
+        {
+         "Function": 908
+        },
+        [
+         8876,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9085,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1060
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1060
+        },
+        [
+         9065,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9086,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1058
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1058
+        },
+        [
+         9064,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "a57789a7ba047207d927c07d59ac59a09a97dba0fa53e88d3e7c1cbdd7fad31f"
+   },
+   "request_ms": [
+    405.436125,
+    407.710416,
+    409.098458,
+    397.218291,
+    416.50425,
+    403.961625,
+    390.873042,
+    404.793625
+   ],
+   "median_ms": 331.281062
+  },
+  "raw": {
+   "ms": [
+    320.000875,
+    338.755916,
+    337.499709,
+    342.567166,
+    340.272792,
+    341.56316599999997,
+    315.270083,
+    332.417458
+   ],
+   "rhs": 15462,
+   "actual": 15462,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 12866,
+   "fresh_cells": 12869,
+   "multituples": 79223,
+   "candidate_visits": 148919,
+   "source_comparisons": 59591,
+   "guarded": {
+    "committed": 328,
+    "comparisons": 0,
+    "cross_stage": 164,
+    "eq": 0,
+    "first_visits": 79,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      246,
+      123
+     ]
+    },
+    "published_source_ports": 346,
+    "reused_sibling_runs": 79,
+    "shared_raw_tuples": 349,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      490,
+      510,
+      8882,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 910
+       }
+      ],
+      [
+       [
+        {
+         "Function": 910
+        },
+        [
+         8877,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8883,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 912
+       }
+      ],
+      [
+       [
+        {
+         "Function": 912
+        },
+        [
+         8878,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8884,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 908
+       }
+      ],
+      [
+       [
+        {
+         "Function": 908
+        },
+        [
+         8876,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9085,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1060
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1060
+        },
+        [
+         9065,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9086,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1058
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1058
+        },
+        [
+         9064,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "a57789a7ba047207d927c07d59ac59a09a97dba0fa53e88d3e7c1cbdd7fad31f"
+   },
+   "request_ms": [
+    390.500584,
+    416.257667,
+    414.560333,
+    418.470167,
+    413.428583,
+    415.910459,
+    387.22325,
+    411.538709
+   ],
+   "median_ms": 338.1278125
+  },
+  "verified": {
+   "ms": [
+    310.199375,
+    327.740417,
+    329.10475,
+    338.455666,
+    326.272625,
+    333.052167,
+    321.59670800000004,
+    336.29875
+   ],
+   "rhs": 15462,
+   "actual": 15462,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 12866,
+   "fresh_cells": 12869,
+   "multituples": 79223,
+   "candidate_visits": 148919,
+   "source_comparisons": 58899,
+   "guarded": {
+    "committed": 328,
+    "comparisons": 346,
+    "cross_stage": 164,
+    "eq": 18,
+    "first_visits": 79,
+    "gt": 246,
+    "lt": 82,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      246,
+      123
+     ]
+    },
+    "published_source_ports": 346,
+    "reused_sibling_runs": 79,
+    "shared_raw_tuples": 349,
+    "shared_verified_tuples": 246,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      490,
+      510,
+      8882,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 910
+       }
+      ],
+      [
+       [
+        {
+         "Function": 910
+        },
+        [
+         8877,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8883,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 912
+       }
+      ],
+      [
+       [
+        {
+         "Function": 912
+        },
+        [
+         8878,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8884,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 908
+       }
+      ],
+      [
+       [
+        {
+         "Function": 908
+        },
+        [
+         8876,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9085,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1060
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1060
+        },
+        [
+         9065,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9086,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1058
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1058
+        },
+        [
+         9064,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "a57789a7ba047207d927c07d59ac59a09a97dba0fa53e88d3e7c1cbdd7fad31f"
+   },
+   "request_ms": [
+    383.470833,
+    403.1415,
+    402.202708,
+    413.495292,
+    405.451209,
+    408.486209,
+    392.228542,
+    414.727708
+   ],
+   "median_ms": 328.4225835
+  },
+  "stale": {
+   "ms": [],
+   "rhs": 15462,
+   "actual": 15462,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 12866,
+   "fresh_cells": 12869,
+   "multituples": 79572,
+   "candidate_visits": 149268,
+   "source_comparisons": 59591,
+   "guarded": {
+    "committed": 328,
+    "comparisons": 0,
+    "cross_stage": 164,
+    "eq": 0,
+    "first_visits": 158,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      82,
+      41
+     ],
+     "510": [
+      246,
+      123
+     ]
+    },
+    "published_source_ports": 346,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 157,
+    "sample_commits": [
+     [
+      490,
+      510,
+      8882,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 910
+       }
+      ],
+      [
+       [
+        {
+         "Function": 910
+        },
+        [
+         8877,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8883,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 912
+       }
+      ],
+      [
+       [
+        {
+         "Function": 912
+        },
+        [
+         8878,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      490,
+      510,
+      8884,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 908
+       }
+      ],
+      [
+       [
+        {
+         "Function": 908
+        },
+        [
+         8876,
+         488,
+         510,
+         2,
+         488
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9085,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1060
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1060
+        },
+        [
+         9065,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ],
+     [
+      506,
+      510,
+      9086,
+      [
+       {
+        "Fact": {
+         "cell": 8978,
+         "op": 1
+        }
+       },
+       {
+        "Function": 1058
+       }
+      ],
+      [
+       [
+        {
+         "Function": 1058
+        },
+        [
+         9064,
+         504,
+         510,
+         2,
+         504
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "a57789a7ba047207d927c07d59ac59a09a97dba0fa53e88d3e7c1cbdd7fad31f"
+   }
+  }
+ },
+ "stable-argmax/1703": {
+  "base": {
+   "ms": [
+    108.450958,
+    102.144917,
+    110.378125,
+    111.796541,
+    107.319833,
+    109.463458,
+    106.202541,
+    100.466417
+   ],
+   "rhs": 8190,
+   "actual": 8190,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 6841,
+   "fresh_cells": 6841,
+   "multituples": 20607,
+   "candidate_visits": 39858,
+   "source_comparisons": 14312,
+   "guarded": null,
+   "request_ms": [
+    173.233125,
+    161.296875,
+    170.001375,
+    171.272875,
+    167.671792,
+    171.147208,
+    164.560833,
+    162.415916
+   ],
+   "median_ms": 107.8853955
+  },
+  "independent": {
+   "ms": [
+    107.77525,
+    105.50099999999999,
+    109.629542,
+    109.861917,
+    104.134625,
+    106.413833,
+    101.625375,
+    107.21354099999999
+   ],
+   "rhs": 8190,
+   "actual": 8190,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 6841,
+   "fresh_cells": 6841,
+   "multituples": 20607,
+   "candidate_visits": 39858,
+   "source_comparisons": 14312,
+   "guarded": {
+    "committed": 198,
+    "comparisons": 0,
+    "cross_stage": 99,
+    "eq": 0,
+    "first_visits": 124,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      36,
+      18
+     ],
+     "510": [
+      162,
+      81
+     ]
+    },
+    "published_source_ports": 202,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      334,
+      510,
+      4691,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 543
+       }
+      ],
+      [
+       [
+        {
+         "Function": 543
+        },
+        [
+         4683,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4692,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 547
+       }
+      ],
+      [
+       [
+        {
+         "Function": 547
+        },
+        [
+         4685,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4693,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 549
+       }
+      ],
+      [
+       [
+        {
+         "Function": 549
+        },
+        [
+         4686,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4694,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 545
+       }
+      ],
+      [
+       [
+        {
+         "Function": 545
+        },
+        [
+         4684,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      350,
+      510,
+      4839,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 649
+       }
+      ],
+      [
+       [
+        {
+         "Function": 649
+        },
+        [
+         4819,
+         348,
+         510,
+         2,
+         348
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "400908a85bcafe27c2de7c2b3bc673fd72d4cd34a881d03f13fa6bacc2579323"
+   },
+   "request_ms": [
+    171.867875,
+    164.121458,
+    172.824167,
+    173.263084,
+    166.784125,
+    167.210042,
+    161.224125,
+    173.151875
+   ],
+   "median_ms": 106.81368699999999
+  },
+  "raw": {
+   "ms": [
+    110.154166,
+    107.09108400000001,
+    105.98766699999999,
+    107.57891599999999,
+    105.377084,
+    105.66779199999999,
+    104.822791,
+    109.678625
+   ],
+   "rhs": 8190,
+   "actual": 8190,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 6841,
+   "fresh_cells": 6841,
+   "multituples": 20405,
+   "candidate_visits": 39656,
+   "source_comparisons": 14312,
+   "guarded": {
+    "committed": 198,
+    "comparisons": 0,
+    "cross_stage": 99,
+    "eq": 0,
+    "first_visits": 62,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      36,
+      18
+     ],
+     "510": [
+      162,
+      81
+     ]
+    },
+    "published_source_ports": 202,
+    "reused_sibling_runs": 62,
+    "shared_raw_tuples": 202,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      334,
+      510,
+      4691,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 543
+       }
+      ],
+      [
+       [
+        {
+         "Function": 543
+        },
+        [
+         4683,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4692,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 547
+       }
+      ],
+      [
+       [
+        {
+         "Function": 547
+        },
+        [
+         4685,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4693,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 549
+       }
+      ],
+      [
+       [
+        {
+         "Function": 549
+        },
+        [
+         4686,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4694,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 545
+       }
+      ],
+      [
+       [
+        {
+         "Function": 545
+        },
+        [
+         4684,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      350,
+      510,
+      4839,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 649
+       }
+      ],
+      [
+       [
+        {
+         "Function": 649
+        },
+        [
+         4819,
+         348,
+         510,
+         2,
+         348
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "400908a85bcafe27c2de7c2b3bc673fd72d4cd34a881d03f13fa6bacc2579323"
+   },
+   "request_ms": [
+    174.081125,
+    167.167791,
+    165.996875,
+    168.116708,
+    167.836459,
+    167.403541,
+    164.584875,
+    163.674833
+   ],
+   "median_ms": 106.5393755
+  },
+  "verified": {
+   "ms": [
+    113.18400000000001,
+    103.48579099999999,
+    110.2585,
+    105.689542,
+    106.870292,
+    107.11870900000001,
+    100.977209,
+    111.95329199999999
+   ],
+   "rhs": 8190,
+   "actual": 8190,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 6841,
+   "fresh_cells": 6841,
+   "multituples": 20405,
+   "candidate_visits": 39656,
+   "source_comparisons": 13908,
+   "guarded": {
+    "committed": 198,
+    "comparisons": 202,
+    "cross_stage": 99,
+    "eq": 4,
+    "first_visits": 62,
+    "gt": 162,
+    "lt": 36,
+    "per_rule": {
+     "509": [
+      36,
+      18
+     ],
+     "510": [
+      162,
+      81
+     ]
+    },
+    "published_source_ports": 202,
+    "reused_sibling_runs": 62,
+    "shared_raw_tuples": 202,
+    "shared_verified_tuples": 162,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      334,
+      510,
+      4691,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 543
+       }
+      ],
+      [
+       [
+        {
+         "Function": 543
+        },
+        [
+         4683,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4692,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 547
+       }
+      ],
+      [
+       [
+        {
+         "Function": 547
+        },
+        [
+         4685,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4693,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 549
+       }
+      ],
+      [
+       [
+        {
+         "Function": 549
+        },
+        [
+         4686,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4694,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 545
+       }
+      ],
+      [
+       [
+        {
+         "Function": 545
+        },
+        [
+         4684,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      350,
+      510,
+      4839,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 649
+       }
+      ],
+      [
+       [
+        {
+         "Function": 649
+        },
+        [
+         4819,
+         348,
+         510,
+         2,
+         348
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "400908a85bcafe27c2de7c2b3bc673fd72d4cd34a881d03f13fa6bacc2579323"
+   },
+   "request_ms": [
+    175.644917,
+    163.323917,
+    174.306917,
+    166.184542,
+    170.306584,
+    167.466583,
+    161.313958,
+    174.647583
+   ],
+   "median_ms": 106.99450050000002
+  },
+  "stale": {
+   "ms": [],
+   "rhs": 8190,
+   "actual": 8190,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 6841,
+   "fresh_cells": 6841,
+   "multituples": 20607,
+   "candidate_visits": 39858,
+   "source_comparisons": 14312,
+   "guarded": {
+    "committed": 198,
+    "comparisons": 0,
+    "cross_stage": 99,
+    "eq": 0,
+    "first_visits": 124,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      36,
+      18
+     ],
+     "510": [
+      162,
+      81
+     ]
+    },
+    "published_source_ports": 202,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 123,
+    "sample_commits": [
+     [
+      334,
+      510,
+      4691,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 543
+       }
+      ],
+      [
+       [
+        {
+         "Function": 543
+        },
+        [
+         4683,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4692,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 547
+       }
+      ],
+      [
+       [
+        {
+         "Function": 547
+        },
+        [
+         4685,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4693,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 549
+       }
+      ],
+      [
+       [
+        {
+         "Function": 549
+        },
+        [
+         4686,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4694,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 545
+       }
+      ],
+      [
+       [
+        {
+         "Function": 545
+        },
+        [
+         4684,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      350,
+      510,
+      4839,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 649
+       }
+      ],
+      [
+       [
+        {
+         "Function": 649
+        },
+        [
+         4819,
+         348,
+         510,
+         2,
+         348
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "400908a85bcafe27c2de7c2b3bc673fd72d4cd34a881d03f13fa6bacc2579323"
+   }
+  }
+ },
+ "stable-argmax/1709": {
+  "base": {
+   "ms": [
+    108.04374999999999,
+    107.89245799999999,
+    111.53699999999999,
+    113.055,
+    111.67025,
+    109.011458,
+    105.887417,
+    105.530125
+   ],
+   "rhs": 8190,
+   "actual": 8190,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 6841,
+   "fresh_cells": 6841,
+   "multituples": 20691,
+   "candidate_visits": 40195,
+   "source_comparisons": 14312,
+   "guarded": null,
+   "request_ms": [
+    173.793084,
+    175.440083,
+    173.284625,
+    183.546625,
+    181.125542,
+    175.643958,
+    171.969125,
+    171.411375
+   ],
+   "median_ms": 108.527604
+  },
+  "independent": {
+   "ms": [
+    109.397834,
+    109.635583,
+    114.019084,
+    109.042417,
+    107.433834,
+    111.52404100000001,
+    105.965375,
+    112.77199999999999
+   ],
+   "rhs": 8190,
+   "actual": 8190,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 6841,
+   "fresh_cells": 6841,
+   "multituples": 20691,
+   "candidate_visits": 40195,
+   "source_comparisons": 14312,
+   "guarded": {
+    "committed": 198,
+    "comparisons": 0,
+    "cross_stage": 99,
+    "eq": 0,
+    "first_visits": 124,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      36,
+      18
+     ],
+     "510": [
+      162,
+      81
+     ]
+    },
+    "published_source_ports": 202,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      334,
+      510,
+      4691,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 543
+       }
+      ],
+      [
+       [
+        {
+         "Function": 543
+        },
+        [
+         4683,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4692,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 547
+       }
+      ],
+      [
+       [
+        {
+         "Function": 547
+        },
+        [
+         4685,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4693,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 549
+       }
+      ],
+      [
+       [
+        {
+         "Function": 549
+        },
+        [
+         4686,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4694,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 545
+       }
+      ],
+      [
+       [
+        {
+         "Function": 545
+        },
+        [
+         4684,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      350,
+      510,
+      4839,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 649
+       }
+      ],
+      [
+       [
+        {
+         "Function": 649
+        },
+        [
+         4819,
+         348,
+         510,
+         2,
+         348
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "400908a85bcafe27c2de7c2b3bc673fd72d4cd34a881d03f13fa6bacc2579323"
+   },
+   "request_ms": [
+    176.828291,
+    178.224792,
+    190.028333,
+    180.831334,
+    175.6605,
+    179.469042,
+    173.1575,
+    183.33625
+   ],
+   "median_ms": 109.5167085
+  },
+  "raw": {
+   "ms": [
+    110.531083,
+    108.595292,
+    112.70654200000001,
+    102.87837499999999,
+    110.137958,
+    108.201166,
+    110.233334,
+    112.054
+   ],
+   "rhs": 8190,
+   "actual": 8190,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 6841,
+   "fresh_cells": 6841,
+   "multituples": 20484,
+   "candidate_visits": 39988,
+   "source_comparisons": 14312,
+   "guarded": {
+    "committed": 198,
+    "comparisons": 0,
+    "cross_stage": 99,
+    "eq": 0,
+    "first_visits": 62,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      36,
+      18
+     ],
+     "510": [
+      162,
+      81
+     ]
+    },
+    "published_source_ports": 202,
+    "reused_sibling_runs": 62,
+    "shared_raw_tuples": 207,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      334,
+      510,
+      4691,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 543
+       }
+      ],
+      [
+       [
+        {
+         "Function": 543
+        },
+        [
+         4683,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4692,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 547
+       }
+      ],
+      [
+       [
+        {
+         "Function": 547
+        },
+        [
+         4685,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4693,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 549
+       }
+      ],
+      [
+       [
+        {
+         "Function": 549
+        },
+        [
+         4686,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4694,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 545
+       }
+      ],
+      [
+       [
+        {
+         "Function": 545
+        },
+        [
+         4684,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      350,
+      510,
+      4839,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 649
+       }
+      ],
+      [
+       [
+        {
+         "Function": 649
+        },
+        [
+         4819,
+         348,
+         510,
+         2,
+         348
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "400908a85bcafe27c2de7c2b3bc673fd72d4cd34a881d03f13fa6bacc2579323"
+   },
+   "request_ms": [
+    181.450458,
+    179.072,
+    180.604375,
+    171.604417,
+    179.45475,
+    181.917542,
+    182.116792,
+    177.458792
+   ],
+   "median_ms": 110.18564599999999
+  },
+  "verified": {
+   "ms": [
+    114.159292,
+    108.933125,
+    106.408458,
+    106.633667,
+    110.11987500000001,
+    116.12825000000001,
+    105.509083,
+    108.9105
+   ],
+   "rhs": 8190,
+   "actual": 8190,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 6841,
+   "fresh_cells": 6841,
+   "multituples": 20484,
+   "candidate_visits": 39988,
+   "source_comparisons": 13908,
+   "guarded": {
+    "committed": 198,
+    "comparisons": 202,
+    "cross_stage": 99,
+    "eq": 4,
+    "first_visits": 62,
+    "gt": 162,
+    "lt": 36,
+    "per_rule": {
+     "509": [
+      36,
+      18
+     ],
+     "510": [
+      162,
+      81
+     ]
+    },
+    "published_source_ports": 202,
+    "reused_sibling_runs": 62,
+    "shared_raw_tuples": 207,
+    "shared_verified_tuples": 162,
+    "snapshot_misses": 0,
+    "sample_commits": [
+     [
+      334,
+      510,
+      4691,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 543
+       }
+      ],
+      [
+       [
+        {
+         "Function": 543
+        },
+        [
+         4683,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4692,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 547
+       }
+      ],
+      [
+       [
+        {
+         "Function": 547
+        },
+        [
+         4685,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4693,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 549
+       }
+      ],
+      [
+       [
+        {
+         "Function": 549
+        },
+        [
+         4686,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4694,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 545
+       }
+      ],
+      [
+       [
+        {
+         "Function": 545
+        },
+        [
+         4684,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      350,
+      510,
+      4839,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 649
+       }
+      ],
+      [
+       [
+        {
+         "Function": 649
+        },
+        [
+         4819,
+         348,
+         510,
+         2,
+         348
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "400908a85bcafe27c2de7c2b3bc673fd72d4cd34a881d03f13fa6bacc2579323"
+   },
+   "request_ms": [
+    182.504625,
+    177.030958,
+    174.309291,
+    173.263084,
+    182.938666,
+    183.722083,
+    172.365833,
+    178.022
+   ],
+   "median_ms": 108.9218125
+  },
+  "stale": {
+   "ms": [],
+   "rhs": 8190,
+   "actual": 8190,
+   "graph_exact": true,
+   "source_aligned": true,
+   "direct_cells": 6841,
+   "fresh_cells": 6841,
+   "multituples": 20691,
+   "candidate_visits": 40195,
+   "source_comparisons": 14312,
+   "guarded": {
+    "committed": 198,
+    "comparisons": 0,
+    "cross_stage": 99,
+    "eq": 0,
+    "first_visits": 124,
+    "gt": 0,
+    "lt": 0,
+    "per_rule": {
+     "509": [
+      36,
+      18
+     ],
+     "510": [
+      162,
+      81
+     ]
+    },
+    "published_source_ports": 202,
+    "reused_sibling_runs": 0,
+    "shared_raw_tuples": 0,
+    "shared_verified_tuples": 0,
+    "snapshot_misses": 123,
+    "sample_commits": [
+     [
+      334,
+      510,
+      4691,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 543
+       }
+      ],
+      [
+       [
+        {
+         "Function": 543
+        },
+        [
+         4683,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4692,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 547
+       }
+      ],
+      [
+       [
+        {
+         "Function": 547
+        },
+        [
+         4685,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4693,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 549
+       }
+      ],
+      [
+       [
+        {
+         "Function": 549
+        },
+        [
+         4686,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      334,
+      510,
+      4694,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 545
+       }
+      ],
+      [
+       [
+        {
+         "Function": 545
+        },
+        [
+         4684,
+         332,
+         510,
+         2,
+         332
+        ]
+       ]
+      ]
+     ],
+     [
+      350,
+      510,
+      4839,
+      [
+       {
+        "Fact": {
+         "cell": 4786,
+         "op": 1
+        }
+       },
+       {
+        "Function": 649
+       }
+      ],
+      [
+       [
+        {
+         "Function": 649
+        },
+        [
+         4819,
+         348,
+         510,
+         2,
+         348
+        ]
+       ]
+      ]
+     ]
+    ],
+    "commit_identity": "400908a85bcafe27c2de7c2b3bc673fd72d4cd34a881d03f13fa6bacc2579323"
+   }
+  }
+ }
+}
