@@ -5118,5 +5118,96 @@
         ]
       }
     ]
+  },
+  {
+    "id": "94-composed-cpu",
+    "section": "联合推理路径",
+    "title": "两种端口优化合起来，整轮推理能省多少？",
+    "status": "已测 · 六个真实 Pass 3",
+    "q": "同一推理器能在单父入口复用发布的行头，并在双父入口推迟算术端口的计算。联合测试检查两处节省能否在同一负载上兑现。",
+    "arms": "a　冻结双视图配置，按源版本读取父行。b　单独启用发布行头或按需算术端口。c　同时开启两项优化。默认精确 Rust 另作完整程序基线。",
+    "fix": "种子 1703，六份真实源程序。保持神经权重、原 Run 调度和验真义务一致，核对有序 RHS、写入、Spine、union、物理 Cell 归属与最终图。",
+    "measure": "3mm 整轮从 2,144.36 降到 1,924.21 ms，默认 CPU 为 894.72 ms。Deriche 从 3,806.96 降到 3,626.14 ms，默认 CPU 为 1,594.99 ms。dot-product 为 30.91 与 30.93 ms。",
+    "note": "数据为同组常驻推理中位数。两个大程序各四次计时，其余各六次。净收益随工作负载变化，联合配置尚未达到默认 CPU 的速度。",
+    "src": "S83",
+    "diagram": [
+      {
+        "title": "Frozen issuer",
+        "layers": [
+          [
+            [
+              "s",
+              "read source rows"
+            ]
+          ],
+          [
+            [
+              "n",
+              "issue parent tuple"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check and commit"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Individual ablations",
+        "layers": [
+          [
+            [
+              "s",
+              "choose one switch"
+            ]
+          ],
+          [
+            [
+              "s",
+              "row headers"
+            ],
+            [
+              "s",
+              "lazy i64"
+            ]
+          ],
+          [
+            [
+              "n",
+              "issue parent tuple"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Both switches",
+        "layers": [
+          [
+            [
+              "s",
+              "visible source changes"
+            ]
+          ],
+          [
+            [
+              "s",
+              "row headers"
+            ],
+            [
+              "s",
+              "lazy i64"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify in source Run"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
