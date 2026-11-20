@@ -1,8 +1,8 @@
 // Candidate construction uses the scheduled ruleset and typed table address
 // space. No LHS predicate, suffix lookup or previous oracle token is read.
-kernel void neural_features(device const int *rom,device const int *state,device const int *meta,
+inline void read_features(device const int *rom,device const int *state,device int *meta,
                             device const int *head,device const int *wm,device int *features,
-                            uint gid [[thread_position_in_grid]]) {
+                            uint gid) {
     if(state[5]||state[7])return;
     int leaf=int(gid)/NEURAL_RANKS,rank=int(gid)%NEURAL_RANKS;
     constant int *entry=neural_catalog+4*leaf;
@@ -21,4 +21,21 @@ kernel void neural_features(device const int *rom,device const int *state,device
     f[0]=row; f[2]=min(run-m[4],32); f[3]=clamp(m[4]-wm[rid],-32,32);
     f[4]=m[3]; f[5]=min(h[2],16); f[6]=h[0]?min(run-h[3],32):32;
     f[7]=min(table(rom,table_id)[0],16);
+#if NEURAL_LABELS
+    int reason=m[3]?-3:m[4]<wm[rid]?-4:!h[0]?-5:-6;
+    meta[NEURAL_BASE+TRACE_CAP+(run-1)*NEURAL_ACTIONS+gid]=reason;
+#endif
 }
+
+kernel void neural_features(device const int *rom,device const int *state,device int *meta,
+                            device const int *head,device const int *wm,device int *features,
+                            uint gid [[thread_position_in_grid]]){
+    read_features(rom,state,meta,head,wm,features,gid);
+}
+
+#if NEURAL_EDGES
+// All searches for this Run observe these exact publications, before any RHS writes.
+kernel void neural_snapshot_anchors(device const int *state,device int *meta,uint row [[thread_position_in_grid]]){
+    if(!state[5] && !state[7] && row<uint(state[0]))meta[EDGE_BEFORE+row]=anchor(meta,row)[4];
+}
+#endif

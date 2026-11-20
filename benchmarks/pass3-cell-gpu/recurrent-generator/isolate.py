@@ -18,7 +18,7 @@ def worker(root,forbid,completion):
 if __name__=='__main__':
     p=argparse.ArgumentParser()
     for k in ('corpus','ref','reader','capture','out'):p.add_argument(k,type=Path)
-    p.add_argument('--worker',action='store_true');p.add_argument('--no-exact',action='store_true');a=p.parse_args()
+    p.add_argument('--checkpoint',default='train-1703/actor.json');p.add_argument('--worker',action='store_true');p.add_argument('--no-exact',action='store_true');a=p.parse_args()
     if a.worker:worker(a.corpus.resolve(),a.ref.resolve(),not a.no_exact);sys.exit()
     from capture import inputs,verify
     import numpy as np
@@ -29,7 +29,7 @@ if __name__=='__main__':
             with tempfile.TemporaryDirectory() as tmp:
                 root=Path(tmp).resolve()
                 for name in ('device.json','device.npz'):shutil.copyfile(image/name,root/name)
-                for path,name in [(a.reader,'reader.pt'),(a.ref/'ports-1703.pt','ports.pt'),(a.capture/'train-1703/actor.json','actor.json')]:
+                for path,name in [(a.reader,'reader.pt'),(a.ref/'ports-1703.pt','ports.pt'),(a.capture/a.checkpoint,'actor.json')]:
                     shutil.copyfile(path,root/name)
                 entries=load_catalog(image,program,a.ref/'sum-bits/program.json')
                 (root/'catalog.json').write_text(json.dumps(dict(schema='eggfuse.leaf-catalog/v1',entries=entries,image_sha256=sha(image/'device.json'))))

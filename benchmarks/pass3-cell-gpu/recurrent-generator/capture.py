@@ -22,7 +22,7 @@ def verify(dest,gold,image):
             at=now['meta'][:,0]==i;w=len(t['schema'])
             np.testing.assert_array_equal(now['rows'][at,:w],old['rows'][at,:w])
 
-def capture(corpus,ref,weights,out):
+def capture(corpus,ref,weights,out,receipts=False):
     out.mkdir(parents=True,exist_ok=False)
     report={}
     for n,case in read(corpus/'collection.json').items():
@@ -30,7 +30,7 @@ def capture(corpus,ref,weights,out):
         cat=load_catalog(image,p,ref/'sum-bits/program.json')
         dest=out/n; ranks=8
         execute(image/'device.json',weights,ref/'ports-1703.pt',2048,2,dest,
-                neural=dict(catalog=cat,rows=2,ranks=ranks,hidden=8,capture=True))
+                neural=dict(catalog=cat,rows=2,ranks=ranks,hidden=8,capture=True,receipt_labels=receipts))
         verify(dest,gold,image)
         with np.load(dest/'neural-inputs.npz') as obs,np.load(dest/'output.npz') as z:
             f=obs['features'];base=z['rhs'];piv=obs['pivot']
@@ -43,7 +43,12 @@ def capture(corpus,ref,weights,out):
                 eligible+=1
                 idx=np.flatnonzero(f[t,leaf*ranks:(leaf+1)*ranks,0]==int(token[3]))
                 if len(idx):positive[t,leaf*ranks+idx]=True
-            np.savez_compressed(dest/'training.npz',features=f,positive=positive)
+            extra={}
+            if receipts:
+                actual=obs['receipt']
+                assert (actual[positive]==1).all() and (actual[f[:,:,0]<0]==0).all()
+                extra['receipt']=actual
+            np.savez_compressed(dest/'training.npz',features=f,positive=positive,**extra)
             report[n]=dict(split=case['split'],runs=len(f),all_rhs=len(base),eligible=eligible,
                            presented=int((f[:,:,0]>=0).sum()),positive=int(positive.sum()),
                            positive_runs=int(positive.any(1).sum()),two_slot_upper=int(np.minimum(2,positive.sum(1)).sum()),
@@ -52,4 +57,5 @@ def capture(corpus,ref,weights,out):
 if __name__=='__main__':
     p=argparse.ArgumentParser()
     for k in ('corpus','ref','weights','out'):p.add_argument(k,type=Path)
-    a=p.parse_args();capture(a.corpus,a.ref,a.weights,a.out)
+    p.add_argument('--receipts',action='store_true')
+    a=p.parse_args();capture(a.corpus,a.ref,a.weights,a.out,a.receipts)

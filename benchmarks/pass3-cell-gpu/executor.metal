@@ -407,7 +407,7 @@ inline int find_key(device const int *,device const long *,device const int *,de
 inline device const int *anchor(device const int *meta,int row){return meta+BIRTH_RUN+ROW_CAP+5*row;}
 inline device int *anchor(device int *meta,int row){return meta+BIRTH_RUN+ROW_CAP+5*row;}
 inline void publish_anchor(device const int *rom,device int *state,device int *meta,int t,int row,
-                           int root,int producer,int depth,device int *pending=nullptr){
+                           int root,int producer,int depth,device int *pending=nullptr,int effect=-1){
     if(!SPINE_ON || row<0 || !root || !rom[DEMANDED+t])return;
     if(pending){
         int n=pending[0]++;
@@ -416,6 +416,11 @@ inline void publish_anchor(device const int *rom,device int *state,device int *m
         return;
     }
     device int *h=anchor(meta,row);
+#if NEURAL_EDGES
+    if(state[17]>=TRACE_CAP || effect<0){state[5]=19;return;}
+    device int *pub=meta+EDGE_PUBLISHED+4*state[17];
+    pub[0]=state[9];pub[1]=effect;pub[2]=row;pub[3]=t;
+#endif
     h[0]=root;h[1]=producer;h[2]=depth;h[3]=state[3];h[4]=++state[17];
 #if BLOCK_STUDY
     refresh_cursor(meta,state,t,row,state[3]);
@@ -461,7 +466,7 @@ inline void route(device int *state,device const int *rom,device const long *lit
 #if NEURAL_ACTIVE
         if(!ONE && NEURAL_CLOSE){
             bool closed=false;
-            for(int n=0;n<NEURAL_ROWS;n++){
+            for(int n=0;n<NEURAL_SLOTS;n++){
                 device const int *mark=meta+NEURAL_BASE+4*n;
                 if(mark[0]==int((rule-rom-RULE)/7) && mark[1]==pivot && mark[2]==seed){
                     closed=true;break;
@@ -506,6 +511,19 @@ inline void route(device int *state,device const int *rom,device const long *lit
             }
         }
         if(!matched)continue;
+#if NEURAL_LABELS
+        // Diagnostic labels are written only after a real certified path succeeds.
+        // The features bank consumed by the actor cannot address this storage.
+        for(int l=0;l<NEURAL_LEAVES;l++){
+            if(neural_catalog[4*l]!=int((rule-rom-RULE)/7) || neural_catalog[4*l+1]!=pivot)continue;
+            int k=0;for(int r=head[table0];r>=0 && k<NEURAL_RANKS;r=meta[6*r+5],k++){
+                if(r==seed){
+                    device int *labels=const_cast<device int *>(meta)+NEURAL_BASE+TRACE_CAP+(state[3]-1)*NEURAL_ACTIONS;
+                    labels[l*NEURAL_RANKS+k]=1;break;
+                }
+            }
+        }
+#endif
         int j=reserve_token(cnt);if(j<0)return;
         if(CERT){
             device int *dst=certs+j*(DEPTH+3);
@@ -530,6 +548,9 @@ inline void do_search(device const int *rom,device const long *lits,device int *
     if(idx>=rs[0])return;
     count_work(state,0,1);
     int r=rom[rs[1]+idx];device const int *rule=rom+RULE+7*r;
+#if NEURAL_BOOTSTRAP_ONLY
+    if(rule[0]!=0)return;
+#endif
     int bank=SHARED_ARENA?2*r:r*PARTS+lane;if(!SHARED_ARENA)count[bank]=0;
     int width=input_width(rule);device long *target=tok+token_offset(rom,r)+(SHARED_ARENA?0:lane)*TOKEN_CAP*(width+5);
     int q=rule[0],pivot=-1,last=wm[r],last_fresh=-1;
@@ -933,16 +954,19 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
             state[CO_COUNTER+10]=values[width+1]?int(values[width])+1:0;
 #endif
 #if NEURAL_ACTIVE
-            for(int n=0;n<NEURAL_ROWS;n++){
+            for(int n=0;n<NEURAL_SLOTS;n++){
                 device const int *mark=meta+NEURAL_BASE+4*n;
                 if(mark[0]==rid && mark[3]==pos){
 #if NEURAL_ORDINAL
-                    meta[NEURAL_BASE+4*NEURAL_ROWS+NEURAL_ROWS*(run-1)+n]=state[9];
+                    meta[NEURAL_BASE+4*NEURAL_SLOTS+NEURAL_SLOTS*(run-1)+n]=state[9];
 #else
-                    meta[NEURAL_BASE+4*NEURAL_ROWS+NEURAL_ROWS*(run-1)+n]=1;
+                    meta[NEURAL_BASE+4*NEURAL_SLOTS+NEURAL_SLOTS*(run-1)+n]=1;
 #endif
                 }
             }
+#endif
+#if NEURAL_EDGES
+            if(values[width+1])meta[EDGE_CONSUMED+state[9]-1]=meta[EDGE_BEFORE+values[width]];
 #endif
 #if NEURAL_CAPTURE
             meta[NEURAL_BASE+state[9]-1]=values[width+1]?int(values[width+4]%DEPTH)+1:0;
@@ -974,7 +998,7 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                 int found=find_key(rom,lits,meta,dyn,head,t,arity,args);
                 if(kind==1){
                     if(found<0){args[arity]=long(NSYMBOLS+1+state[0]);found=insert_row(rom,state,meta,dyn,head,t,arity+1,args);}
-                    if(found<0)return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);env[op[2]]=field(rom,lits,meta,dyn,found,arity);continue;
+                    if(found<0)return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k);env[op[2]]=field(rom,lits,meta,dyn,found,arity);continue;
                 }
                 if(kind==5){
                     if(found>=0 && !meta[6*found+3]){meta[6*found+3]=1;touch_row(state,meta,head,found,t,run);state[8]=1;}
@@ -984,7 +1008,7 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                 if(schema[1]){
                     if(found<0)found=insert_row(rom,state,meta,dyn,head,t,arity+1,args);
                     else submit_union(state,meta,field(rom,lits,meta,dyn,found,arity),args[arity],head);
-                    if(state[5])return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);
+                    if(state[5])return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k);
                     continue;
                 }
                 bool had_old=found>=0;long previous=0;
@@ -992,11 +1016,11 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                     long old=field(rom,lits,meta,dyn,found,arity),v=args[arity];
                     previous=old;v=merge_value(rom,lits,state,meta,dyn,head,t,old,v);
                     if(state[5]){state[6]=rid;return;}
-                    if(old==v){publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);continue;}
+                    if(old==v){publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k);continue;}
                     if(meta[6*found+1]>=0){state[5]=13;state[6]=rid;return;}
                     dyn[found*WIDTH+arity]=v;touch_row(state,meta,head,found,t,run);state[8]=1;
                 }else{found=insert_row(rom,state,meta,dyn,head,t,arity+1,args);if(found<0)return;}
-                publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);
+                publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k);
                 log_write(state,writes,rid,state[9]-base_rhs-1,t,found,args,arity,had_old,previous,
                           field(rom,lits,meta,dyn,found,arity));if(state[5])return;
             }

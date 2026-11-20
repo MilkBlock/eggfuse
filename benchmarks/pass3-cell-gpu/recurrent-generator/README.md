@@ -23,6 +23,10 @@ On sum-bits seed 1703 the actor emitted 136 non-null proposals. The verifier rej
 
 The clearest next comparison is to expand executable proposal coverage, including initialization/ordinary entries, and expose validated task closures to the next neural wave. Measure accepted novel work, duplicated work, exact completion and whole-pass time separately. These results do not establish the diagram 42 composed-action or diagram 43 variable-port comparison.
 
+## Full Pass 3 follow-ups
+
+The [receipt study](receipts/README.md) follows the generated token across several waves of the same source Run. The [composed-certificate study](receipts/composable-proposals.md) gives a separate coverage denominator for multiple RHS per certificate, with an example tied to the actual producer effect ports, and measures frozen policies over 1–16 waves. It also registers the pending-parent versus wave-verified comparison; that online comparison remains open.
+
 ## Reproduction
 
 Use the external workspace environment with MPS fallback disabled. Each output directory below must be new.

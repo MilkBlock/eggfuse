@@ -1,0 +1,68 @@
+{
+ "affine-twins": {
+  "split": "train",
+  "paths": {
+   "1": 498,
+   "3": 101,
+   "2": 202,
+   "4": 18
+  },
+  "rhs": 4215,
+  "checked_spine_inputs": 1129
+ },
+ "clamped-ramp": {
+  "split": "train",
+  "paths": {
+   "1": 581,
+   "3": 163,
+   "2": 344,
+   "4": 32
+  },
+  "rhs": 9471,
+  "checked_spine_inputs": 2519
+ },
+ "segmented-prefix": {
+  "split": "train",
+  "paths": {
+   "1": 571,
+   "2": 292,
+   "3": 148,
+   "4": 28
+  },
+  "rhs": 7425,
+  "checked_spine_inputs": 1931
+ },
+ "window-laplacian": {
+  "split": "train",
+  "paths": {
+   "3": 148,
+   "1": 620,
+   "2": 283,
+   "4": 28
+  },
+  "rhs": 8005,
+  "checked_spine_inputs": 2015
+ },
+ "histogram-scatter": {
+  "split": "development",
+  "paths": {
+   "1": 530,
+   "3": 150,
+   "4": 29,
+   "2": 286
+  },
+  "rhs": 6742,
+  "checked_spine_inputs": 1779
+ },
+ "gated-state": {
+  "split": "development",
+  "paths": {
+   "2": 275,
+   "1": 505,
+   "3": 137,
+   "4": 18
+  },
+  "rhs": 6118,
+  "checked_spine_inputs": 1666
+ }
+}

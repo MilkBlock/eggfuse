@@ -1,0 +1,210 @@
+{
+ "sum-bits": {
+  "neural_only": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1428,
+   "actual_runs": 208,
+   "source_rhs": 7265,
+   "actual_rhs": 0,
+   "first_schedule_or_count_difference": 1,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_only",
+    "rhs_inputs_from_exact_search": 0,
+    "rhs_inputs_from_recurrent_neural_proposals": 0,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false
+   },
+   "device_stopped": true
+  },
+  "assisted": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1428,
+   "actual_runs": 1428,
+   "source_rhs": 7265,
+   "actual_rhs": 7265,
+   "first_schedule_or_count_difference": null,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+    "rhs_inputs_from_exact_search": 7159,
+    "rhs_inputs_from_recurrent_neural_proposals": 106,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false
+   },
+   "device_stopped": true
+  }
+ },
+ "dot-product": {
+  "neural_only": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1535,
+   "actual_runs": 208,
+   "source_rhs": 6704,
+   "actual_rhs": 0,
+   "first_schedule_or_count_difference": 1,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_only",
+    "rhs_inputs_from_exact_search": 0,
+    "rhs_inputs_from_recurrent_neural_proposals": 0,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false
+   },
+   "device_stopped": true
+  },
+  "assisted": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1535,
+   "actual_runs": 1535,
+   "source_rhs": 6704,
+   "actual_rhs": 6704,
+   "first_schedule_or_count_difference": null,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+    "rhs_inputs_from_exact_search": 6619,
+    "rhs_inputs_from_recurrent_neural_proposals": 85,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false
+   },
+   "device_stopped": true
+  }
+ },
+ "gemm-bias-relu": {
+  "neural_only": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1652,
+   "actual_runs": 208,
+   "source_rhs": 15462,
+   "actual_rhs": 0,
+   "first_schedule_or_count_difference": 1,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_only",
+    "rhs_inputs_from_exact_search": 0,
+    "rhs_inputs_from_recurrent_neural_proposals": 0,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false
+   },
+   "device_stopped": true
+  },
+  "assisted": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1652,
+   "actual_runs": 1652,
+   "source_rhs": 15462,
+   "actual_rhs": 15462,
+   "first_schedule_or_count_difference": null,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+    "rhs_inputs_from_exact_search": 15382,
+    "rhs_inputs_from_recurrent_neural_proposals": 80,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false
+   },
+   "device_stopped": true
+  }
+ },
+ "stable-argmax": {
+  "neural_only": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1149,
+   "actual_runs": 208,
+   "source_rhs": 8190,
+   "actual_rhs": 0,
+   "first_schedule_or_count_difference": 1,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_only",
+    "rhs_inputs_from_exact_search": 0,
+    "rhs_inputs_from_recurrent_neural_proposals": 0,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false
+   },
+   "device_stopped": true
+  },
+  "assisted": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1149,
+   "actual_runs": 1149,
+   "source_rhs": 8190,
+   "actual_rhs": 8190,
+   "first_schedule_or_count_difference": null,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+    "rhs_inputs_from_exact_search": 8123,
+    "rhs_inputs_from_recurrent_neural_proposals": 67,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false
+   },
+   "device_stopped": true
+  }
+ }
+}

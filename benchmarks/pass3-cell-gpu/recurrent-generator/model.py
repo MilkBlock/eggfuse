@@ -20,7 +20,7 @@ class Actor(nn.Module):
         self.abstain=matrix(HIDDEN+1)
         self.register_buffer('scale',torch.tensor([32.,32.,2.,16.,32.,16.]),persistent=False)
 
-    def step(self,observations,previous,intervention='intact'):
+    def step(self,observations,previous,intervention='intact',context_adjust=None,score_adjust=None,forbidden=None):
         batch=observations.shape[0]
         latent=previous[:,:,:HIDDEN]
         if intervention=='zero-latent':latent=torch.zeros_like(latent)
@@ -29,12 +29,16 @@ class Actor(nn.Module):
         prev_values=previous[:,:,HIDDEN+1:]/previous.new_tensor([16384.,float(RANKS),1.])
         stage=observations[:,0,1].long()%SETS
         state=(latent@self.recurrent.T+prev_values@self.previous.T+
-               self.templates[leaf]+self.stages[stage,None,:]+self.rows).tanh()
+               self.templates[leaf]+self.stages[stage,None,:]+self.rows)
+        if context_adjust is not None:state=state+context_adjust
+        state=state.tanh()
         features=observations[:,:,2:].float()/self.scale
         static=(self.templates[1:,None]+self.positions).reshape(1,LEAVES*RANKS,HIDDEN)
         keys=(static+features@self.read.T).tanh()
         score=state@keys.transpose(1,2)+self.bias.repeat_interleave(RANKS)+ (features@self.local_score)[:,None]
+        if score_adjust is not None:score=score+score_adjust
         score=score.masked_fill(observations[:,None,:,0]<0,-1e4)
+        if forbidden is not None:score=score.masked_fill(forbidden[:,None],-1e4)
         null=(state@self.abstain[:HIDDEN]+self.abstain[-1])[:,:,None]
         logits=torch.cat([null,score],dim=-1)
         choice=logits.argmax(-1);idx=(choice-1).clamp_min(0)

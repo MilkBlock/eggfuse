@@ -1,0 +1,1506 @@
+{
+ "sum-bits/1703": {
+  "one": {
+   "waves": 1,
+   "adaptive": false,
+   "issued": 2856,
+   "actual_forward_waves": 1428,
+   "raw": 140,
+   "accepted": 58,
+   "rejected": 28,
+   "duplicate": 54,
+   "committed": 58,
+   "exact_rhs": 7207,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 1,
+   "per_wave": [
+    [
+     56,
+     2
+    ]
+   ],
+   "reference_winner_bound": 181,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 2048,
+   "ms": [
+    1040.5975,
+    1025.162125,
+    1034.520291,
+    1031.025208,
+    1033.812625,
+    1035.106125
+   ],
+   "semantic_exact": true,
+   "median_ms": 1034.1664580000001
+  },
+  "two": {
+   "waves": 2,
+   "adaptive": false,
+   "issued": 5712,
+   "actual_forward_waves": 2856,
+   "raw": 260,
+   "accepted": 106,
+   "rejected": 46,
+   "duplicate": 108,
+   "committed": 106,
+   "exact_rhs": 7159,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 4,
+   "per_wave": [
+    [
+     56,
+     0
+    ],
+    [
+     50,
+     0
+    ]
+   ],
+   "reference_winner_bound": 305,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 4096,
+   "ms": [
+    1138.03675,
+    1134.551875,
+    1158.676792,
+    1156.784834,
+    1143.398375,
+    1125.059292
+   ],
+   "semantic_exact": true,
+   "median_ms": 1140.7175625
+  },
+  "four": {
+   "waves": 4,
+   "adaptive": false,
+   "issued": 11424,
+   "actual_forward_waves": 5712,
+   "raw": 520,
+   "accepted": 126,
+   "rejected": 92,
+   "duplicate": 302,
+   "committed": 126,
+   "exact_rhs": 7139,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 4,
+   "per_wave": [
+    [
+     56,
+     0
+    ],
+    [
+     50,
+     0
+    ],
+    [
+     20,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 470,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 8192,
+   "ms": [
+    1357.969583,
+    1342.470042,
+    1359.568542,
+    1322.722042,
+    1346.327708,
+    1321.098042
+   ],
+   "semantic_exact": true,
+   "median_ms": 1344.3988749999999
+  },
+  "eight": {
+   "waves": 8,
+   "adaptive": false,
+   "issued": 22848,
+   "actual_forward_waves": 11424,
+   "raw": 1040,
+   "accepted": 126,
+   "rejected": 184,
+   "duplicate": 730,
+   "committed": 126,
+   "exact_rhs": 7139,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 4,
+   "per_wave": [
+    [
+     56,
+     0
+    ],
+    [
+     50,
+     0
+    ],
+    [
+     20,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 594,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 16384,
+   "ms": [
+    1721.918125,
+    1734.825791,
+    1728.11825,
+    1728.125417,
+    1726.417,
+    1712.340125
+   ],
+   "semantic_exact": true,
+   "median_ms": 1727.267625
+  },
+  "sixteen": {
+   "waves": 16,
+   "adaptive": false,
+   "issued": 45696,
+   "actual_forward_waves": 22848,
+   "raw": 2080,
+   "accepted": 126,
+   "rejected": 368,
+   "duplicate": 1586,
+   "committed": 126,
+   "exact_rhs": 7139,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 4,
+   "per_wave": [
+    [
+     56,
+     0
+    ],
+    [
+     50,
+     0
+    ],
+    [
+     20,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 705,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 32768,
+   "ms": [
+    2555.6065,
+    2554.71025,
+    2558.58975,
+    2555.433792,
+    2557.165875,
+    2515.35175
+   ],
+   "semantic_exact": true,
+   "median_ms": 2555.520146
+  },
+  "null-stop": {
+   "waves": 16,
+   "adaptive": true,
+   "issued": 4676,
+   "actual_forward_waves": 2338,
+   "raw": 1940,
+   "accepted": 126,
+   "rejected": 284,
+   "duplicate": 1530,
+   "committed": 126,
+   "exact_rhs": 7139,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 4,
+   "per_wave": [
+    [
+     56,
+     3
+    ],
+    [
+     50,
+     0
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 705,
+   "unclaimed_at_stop": 119,
+   "stops_with_unclaimed": 47,
+   "device_kernel_slots": 32768,
+   "ms": [
+    1462.433292,
+    1463.116667,
+    1446.463833,
+    1461.473333,
+    1446.191708,
+    1461.861833
+   ],
+   "semantic_exact": true,
+   "median_ms": 1461.667583
+  }
+ },
+ "sum-bits/1709": {
+  "one": {
+   "waves": 1,
+   "adaptive": false,
+   "issued": 2856,
+   "actual_forward_waves": 1428,
+   "raw": 176,
+   "accepted": 59,
+   "rejected": 58,
+   "duplicate": 59,
+   "committed": 59,
+   "exact_rhs": 7206,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 2,
+   "per_wave": [
+    [
+     59,
+     0
+    ]
+   ],
+   "reference_winner_bound": 181,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 2048,
+   "ms": [
+    1035.607042,
+    1022.489875,
+    1019.389125,
+    1025.6445,
+    1019.59325,
+    1051.48425
+   ],
+   "semantic_exact": true,
+   "median_ms": 1024.0671875
+  },
+  "two": {
+   "waves": 2,
+   "adaptive": false,
+   "issued": 5712,
+   "actual_forward_waves": 2856,
+   "raw": 306,
+   "accepted": 112,
+   "rejected": 80,
+   "duplicate": 114,
+   "committed": 112,
+   "exact_rhs": 7153,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 5,
+   "per_wave": [
+    [
+     59,
+     0
+    ],
+    [
+     53,
+     0
+    ]
+   ],
+   "reference_winner_bound": 305,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 4096,
+   "ms": [
+    1150.541542,
+    1189.988917,
+    1134.649666,
+    1129.740791,
+    1123.215209,
+    1132.932375
+   ],
+   "semantic_exact": true,
+   "median_ms": 1133.7910205
+  },
+  "four": {
+   "waves": 4,
+   "adaptive": false,
+   "issued": 11424,
+   "actual_forward_waves": 5712,
+   "raw": 608,
+   "accepted": 156,
+   "rejected": 156,
+   "duplicate": 296,
+   "committed": 156,
+   "exact_rhs": 7109,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 5,
+   "per_wave": [
+    [
+     59,
+     0
+    ],
+    [
+     53,
+     0
+    ],
+    [
+     34,
+     6
+    ],
+    [
+     1,
+     3
+    ]
+   ],
+   "reference_winner_bound": 470,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 8192,
+   "ms": [
+    1342.948166,
+    1333.505583,
+    1344.451333,
+    1351.835958,
+    1355.494542,
+    1331.730583
+   ],
+   "semantic_exact": true,
+   "median_ms": 1343.6997495
+  },
+  "eight": {
+   "waves": 8,
+   "adaptive": false,
+   "issued": 22848,
+   "actual_forward_waves": 11424,
+   "raw": 1212,
+   "accepted": 158,
+   "rejected": 308,
+   "duplicate": 746,
+   "committed": 158,
+   "exact_rhs": 7107,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 5,
+   "per_wave": [
+    [
+     59,
+     0
+    ],
+    [
+     53,
+     0
+    ],
+    [
+     34,
+     6
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 594,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 16384,
+   "ms": [
+    1766.109708,
+    1706.831166,
+    1751.638667,
+    1751.057209,
+    1738.03,
+    1762.979625
+   ],
+   "semantic_exact": true,
+   "median_ms": 1751.3479379999999
+  },
+  "sixteen": {
+   "waves": 16,
+   "adaptive": false,
+   "issued": 45696,
+   "actual_forward_waves": 22848,
+   "raw": 2420,
+   "accepted": 158,
+   "rejected": 612,
+   "duplicate": 1650,
+   "committed": 158,
+   "exact_rhs": 7107,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 5,
+   "per_wave": [
+    [
+     59,
+     0
+    ],
+    [
+     53,
+     0
+    ],
+    [
+     34,
+     6
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 705,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 32768,
+   "ms": [
+    2562.521584,
+    2648.760583,
+    2544.28175,
+    2547.180625,
+    2544.635125,
+    2529.462125
+   ],
+   "semantic_exact": true,
+   "median_ms": 2545.907875
+  },
+  "null-stop": {
+   "waves": 16,
+   "adaptive": true,
+   "issued": 4852,
+   "actual_forward_waves": 2426,
+   "raw": 2126,
+   "accepted": 158,
+   "rejected": 360,
+   "duplicate": 1608,
+   "committed": 158,
+   "exact_rhs": 7107,
+   "rhs": 7265,
+   "nonempty": 527,
+   "full_nonempty": 5,
+   "per_wave": [
+    [
+     59,
+     0
+    ],
+    [
+     53,
+     0
+    ],
+    [
+     34,
+     6
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 705,
+   "unclaimed_at_stop": 109,
+   "stops_with_unclaimed": 43,
+   "device_kernel_slots": 32768,
+   "ms": [
+    1495.96875,
+    1463.30725,
+    1466.991042,
+    1461.160041,
+    1480.116916,
+    1448.002375
+   ],
+   "semantic_exact": true,
+   "median_ms": 1465.1491460000002
+  }
+ },
+ "dot-product/1703": {
+  "one": {
+   "waves": 1,
+   "adaptive": false,
+   "issued": 3070,
+   "actual_forward_waves": 1535,
+   "raw": 138,
+   "accepted": 49,
+   "rejected": 46,
+   "duplicate": 43,
+   "committed": 49,
+   "exact_rhs": 6655,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 3,
+   "per_wave": [
+    [
+     46,
+     3
+    ]
+   ],
+   "reference_winner_bound": 161,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 2048,
+   "ms": [
+    1074.794667,
+    1041.805167,
+    1028.026,
+    995.434834,
+    1125.013958,
+    1081.540083
+   ],
+   "semantic_exact": true,
+   "median_ms": 1058.2999169999998
+  },
+  "two": {
+   "waves": 2,
+   "adaptive": false,
+   "issued": 6140,
+   "actual_forward_waves": 3070,
+   "raw": 238,
+   "accepted": 85,
+   "rejected": 68,
+   "duplicate": 85,
+   "committed": 85,
+   "exact_rhs": 6619,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 5,
+   "per_wave": [
+    [
+     46,
+     1
+    ],
+    [
+     38,
+     0
+    ]
+   ],
+   "reference_winner_bound": 257,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 4096,
+   "ms": [
+    1112.584875,
+    1105.170792,
+    1157.955375,
+    1060.591625,
+    1132.007667,
+    1131.08275
+   ],
+   "semantic_exact": true,
+   "median_ms": 1121.8338125
+  },
+  "four": {
+   "waves": 4,
+   "adaptive": false,
+   "issued": 12280,
+   "actual_forward_waves": 6140,
+   "raw": 475,
+   "accepted": 101,
+   "rejected": 137,
+   "duplicate": 237,
+   "committed": 101,
+   "exact_rhs": 6603,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 5,
+   "per_wave": [
+    [
+     46,
+     1
+    ],
+    [
+     38,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 404,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 8192,
+   "ms": [
+    1311.421167,
+    1307.958083,
+    1454.41975,
+    1266.75775,
+    1437.939416,
+    1335.142542
+   ],
+   "semantic_exact": true,
+   "median_ms": 1323.2818545
+  },
+  "eight": {
+   "waves": 8,
+   "adaptive": false,
+   "issued": 24560,
+   "actual_forward_waves": 12280,
+   "raw": 951,
+   "accepted": 101,
+   "rejected": 277,
+   "duplicate": 573,
+   "committed": 101,
+   "exact_rhs": 6603,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 5,
+   "per_wave": [
+    [
+     46,
+     1
+    ],
+    [
+     38,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 486,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 16384,
+   "ms": [
+    1743.035916,
+    1752.649458,
+    1843.281459,
+    1755.210125,
+    1948.711125,
+    1797.692042
+   ],
+   "semantic_exact": true,
+   "median_ms": 1776.4510835
+  },
+  "sixteen": {
+   "waves": 16,
+   "adaptive": false,
+   "issued": 49120,
+   "actual_forward_waves": 24560,
+   "raw": 1903,
+   "accepted": 101,
+   "rejected": 557,
+   "duplicate": 1245,
+   "committed": 101,
+   "exact_rhs": 6603,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 5,
+   "per_wave": [
+    [
+     46,
+     1
+    ],
+    [
+     38,
+     0
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 595,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 32768,
+   "ms": [
+    2524.269042,
+    2674.354375,
+    2762.982833,
+    2590.582459,
+    2603.116416,
+    2632.924292
+   ],
+   "semantic_exact": true,
+   "median_ms": 2618.020354
+  },
+  "null-stop": {
+   "waves": 16,
+   "adaptive": true,
+   "issued": 4582,
+   "actual_forward_waves": 2291,
+   "raw": 1609,
+   "accepted": 101,
+   "rejected": 347,
+   "duplicate": 1161,
+   "committed": 101,
+   "exact_rhs": 6603,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 5,
+   "per_wave": [
+    [
+     46,
+     3
+    ],
+    [
+     38,
+     0
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 595,
+   "unclaimed_at_stop": 135,
+   "stops_with_unclaimed": 47,
+   "device_kernel_slots": 32768,
+   "ms": [
+    1434.619708,
+    1483.099208,
+    1462.47875,
+    1413.644209,
+    1527.181292,
+    1580.059167
+   ],
+   "semantic_exact": true,
+   "median_ms": 1472.788979
+  }
+ },
+ "dot-product/1709": {
+  "one": {
+   "waves": 1,
+   "adaptive": false,
+   "issued": 3070,
+   "actual_forward_waves": 1535,
+   "raw": 156,
+   "accepted": 47,
+   "rejected": 62,
+   "duplicate": 47,
+   "committed": 47,
+   "exact_rhs": 6657,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 3,
+   "per_wave": [
+    [
+     47,
+     0
+    ]
+   ],
+   "reference_winner_bound": 161,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 2048,
+   "ms": [
+    1059.318917,
+    1008.288875,
+    1002.688,
+    976.656708,
+    1019.621416,
+    962.0855
+   ],
+   "semantic_exact": true,
+   "median_ms": 1005.4884374999999
+  },
+  "two": {
+   "waves": 2,
+   "adaptive": false,
+   "issued": 6140,
+   "actual_forward_waves": 3070,
+   "raw": 258,
+   "accepted": 86,
+   "rejected": 84,
+   "duplicate": 88,
+   "committed": 86,
+   "exact_rhs": 6618,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 5,
+   "per_wave": [
+    [
+     47,
+     0
+    ],
+    [
+     39,
+     0
+    ]
+   ],
+   "reference_winner_bound": 257,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 4096,
+   "ms": [
+    1096.714667,
+    1197.426708,
+    1098.796209,
+    1067.242083,
+    1068.232334,
+    1072.889458
+   ],
+   "semantic_exact": true,
+   "median_ms": 1084.8020625
+  },
+  "four": {
+   "waves": 4,
+   "adaptive": false,
+   "issued": 12280,
+   "actual_forward_waves": 6140,
+   "raw": 512,
+   "accepted": 122,
+   "rejected": 166,
+   "duplicate": 224,
+   "committed": 122,
+   "exact_rhs": 6582,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 6,
+   "per_wave": [
+    [
+     47,
+     0
+    ],
+    [
+     39,
+     0
+    ],
+    [
+     29,
+     4
+    ],
+    [
+     0,
+     3
+    ]
+   ],
+   "reference_winner_bound": 404,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 8192,
+   "ms": [
+    1314.9395,
+    1365.39475,
+    1339.827875,
+    1261.114083,
+    1271.354792,
+    1319.02725
+   ],
+   "semantic_exact": true,
+   "median_ms": 1316.983375
+  },
+  "eight": {
+   "waves": 8,
+   "adaptive": false,
+   "issued": 24560,
+   "actual_forward_waves": 12280,
+   "raw": 1020,
+   "accepted": 126,
+   "rejected": 326,
+   "duplicate": 568,
+   "committed": 126,
+   "exact_rhs": 6578,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 6,
+   "per_wave": [
+    [
+     47,
+     0
+    ],
+    [
+     39,
+     0
+    ],
+    [
+     29,
+     4
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 486,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 16384,
+   "ms": [
+    1779.555875,
+    1825.201708,
+    1717.202208,
+    1723.796709,
+    1684.22175,
+    1726.093792
+   ],
+   "semantic_exact": true,
+   "median_ms": 1724.9452505
+  },
+  "sixteen": {
+   "waves": 16,
+   "adaptive": false,
+   "issued": 49120,
+   "actual_forward_waves": 24560,
+   "raw": 2036,
+   "accepted": 126,
+   "rejected": 650,
+   "duplicate": 1260,
+   "committed": 126,
+   "exact_rhs": 6578,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 6,
+   "per_wave": [
+    [
+     47,
+     0
+    ],
+    [
+     39,
+     0
+    ],
+    [
+     29,
+     4
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 595,
+   "unclaimed_at_stop": 0,
+   "stops_with_unclaimed": 0,
+   "device_kernel_slots": 32768,
+   "ms": [
+    2566.682208,
+    2649.486875,
+    2486.113959,
+    2518.680417,
+    2488.884333,
+    2623.262125
+   ],
+   "semantic_exact": true,
+   "median_ms": 2542.6813125
+  },
+  "null-stop": {
+   "waves": 16,
+   "adaptive": true,
+   "issued": 4654,
+   "actual_forward_waves": 2327,
+   "raw": 1686,
+   "accepted": 126,
+   "rejected": 384,
+   "duplicate": 1176,
+   "committed": 126,
+   "exact_rhs": 6578,
+   "rhs": 6704,
+   "nonempty": 546,
+   "full_nonempty": 6,
+   "per_wave": [
+    [
+     47,
+     0
+    ],
+    [
+     39,
+     0
+    ],
+    [
+     29,
+     4
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     0
+    ]
+   ],
+   "reference_winner_bound": 595,
+   "unclaimed_at_stop": 128,
+   "stops_with_unclaimed": 45,
+   "device_kernel_slots": 32768,
+   "ms": [
+    1496.836125,
+    1459.845084,
+    1372.6975,
+    1352.73325,
+    1435.973375,
+    1345.030625
+   ],
+   "semantic_exact": true,
+   "median_ms": 1404.3354375
+  }
+ }
+}
