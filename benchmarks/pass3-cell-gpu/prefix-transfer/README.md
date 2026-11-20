@@ -20,3 +20,14 @@ python benchmarks/pass3-cell-gpu/prefix-transfer/verify.py
 ```
 
 Use the original research build for the legacy divergence. The complete-generation study checks the corrected finite and unlimited contracts.
+
+## Instrumented workload phases
+
+Three resident samples on the complete-generation build separately measured each original source phase. The following inner search clocks are inclusive in the outer search time. Initial graph setup and final export remain outside inference.
+
+| Workload | Measured inference / search | Multi-parent issuance / verification | Single-parent header / score | Outside search | Half vanilla transfer median (ms) |
+|---|---:|---:|---:|---:|---:|
+| 3mm | 1966.1 / 1499.1 | 601.7 / 163.1 | 251.8 / 1.7 | 467.0 | 472.4 |
+| Deriche | 3604.1 / 2740.8 | 796.4 / 209.1 | 450.7 / 3.4 | 870.7 | 800.1 |
+
+On these samples, removing every measured search interval would leave about five milliseconds of headroom for 3mm's 2× target and exceed Deriche's by about 71 ms. These approximate limits compare an instrumented phase study and the separate matched, uninstrumented vanilla transfer timing. They identify the size of the remaining joint search/ordered-work problem; they do not measure a zero-search implementation. [Recorded phase samples](phases.json)
