@@ -465,6 +465,22 @@ impl Executor {
         self.gpu_bindings = Some(gpu);
         Ok(())
     }
+    #[cfg(all(feature = "gpu-bindings", target_os = "macos"))]
+    pub fn use_unique_parent(
+        &mut self,
+        mode: &str,
+        weights: Option<&std::path::Path>,
+    ) -> Result<()> {
+        if self.gpu_bindings.is_some() || !self.steps.is_empty() {
+            return Err("choose a single source binding provider".into());
+        }
+        self.gpu_bindings = Some(crate::gpu_bindings::Producer::complete_key(
+            &self.graph.program,
+            mode,
+            weights,
+        )?);
+        Ok(())
+    }
     fn deliver(&mut self) {
         use crate::change_batch::Change;
         let batch = &self.graph.changes;
@@ -1180,9 +1196,20 @@ impl Executor {
         }
         #[cfg(feature = "gpu-bindings")]
         if !probe && let Some(producer) = &mut self.gpu_bindings && producer.accepts(rid)
-            && !self.stage_spine.active_for_rule(rid) {
+            && (producer.owns_keyed_entries() || !self.stage_spine.active_for_rule(rid)) {
             let facts = self.stage_spine.alias_query_facts(&self.graph, rid);
-            let rows = producer.generate(&self.graph, rid, self.watermarks[rid], &facts)?;
+            let mut rows = producer.generate(&self.graph, rid, self.watermarks[rid], &facts)?;
+            if producer.owns_keyed_entries() {
+                let (mut origins, count) = self.stage_spine.resume_tokens(
+                    &mut self.graph, &mut self.entry_schedule, rid, self.watermarks[rid], &rows, &facts,
+                )?;
+                producer.stats.spine_token_routes += count as u64;
+                for b in &mut rows {
+                    b.known = facts.with_rows((0..2).map(|i| (i, b.known.receipt(i).expect("complete verified pair"))));
+                }
+                origins.append(&mut rows);
+                rows = origins;
+            }
             self.pending[rid].clear();
             let bindings = self.dedup_bindings(rid, rows)?;
             self.gpu_bindings.as_mut().unwrap().stats.admitted_bindings += bindings.len() as u64;
@@ -2573,13 +2600,17 @@ impl Executor {
             let jobs = rules.iter().copied().filter(|&rid| {
                 gpu.accepts(rid)
                     && (self.dirty[rid] || !self.graph.program.rules[rid].seminaive)
-                    && !self.stage_spine.active_for_rule(rid)
+                    && (gpu.owns_keyed_entries() || !self.stage_spine.active_for_rule(rid))
                     && self.required_tables[rid].iter().all(|&t| self.graph.witness_count(t) > 0)
             }).map(|rid| {
                 let watermark = self.ready_sets.as_ref().map_or(self.watermarks[rid], |sets| {
                     self.watermarks[rid].max(sets.watermark(rid))
                 });
-                (rid, watermark, self.stage_spine.alias_query_facts(&self.graph, rid))
+                (rid, watermark, if gpu.owns_keyed_entries() {
+                    QueryFacts::Ports(vec![None; 2])
+                } else {
+                    self.stage_spine.alias_query_facts(&self.graph, rid)
+                })
             }).collect();
             gpu.prepare_run(&self.graph, jobs)?;
         }

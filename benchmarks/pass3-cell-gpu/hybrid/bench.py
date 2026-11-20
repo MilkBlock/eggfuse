@@ -20,7 +20,7 @@ def read(p):
 def sha(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
-def bench(reference,out):
+def bench(reference,out,lanes=None,backends=None):
     out.mkdir(parents=True,exist_ok=False)
     runtime = Path(os.environ.get('CARGO_TARGET_DIR', REPO/'target'))/'release/eggfuse-cell-runtime'
     def build(features):
@@ -30,7 +30,7 @@ def bench(reference,out):
         return dest
     audited = build('gpu-bindings,slot-transfer-audit')
     plain = build('gpu-bindings')
-    lanes={'cpu':[], 'pytorch':['--gpu-binding-python',sys.executable,'--gpu-binding-service',HERE/'service.py'],
+    lanes=lanes or {'cpu':[], 'pytorch':['--gpu-binding-python',sys.executable,'--gpu-binding-service',HERE/'service.py'],
            'native':['--gpu-binding-native'], 'retired':['--gpu-binding-native','--gpu-binding-retire'],
            'batched':['--gpu-binding-native','--gpu-binding-retire','--gpu-binding-batch']}
     study={}
@@ -51,7 +51,7 @@ def bench(reference,out):
                 for k in ('ordinal','ruleset','path','iterations','changed','executed_bindings'):
                     assert a[k]==b[k],(case,lane,k,a['ordinal'])
             if lane!='cpu':
-                assert report['backend']=='cell-cpu-gpu-bindings' and report['gpu_bindings']['admitted_bindings']>0
+                assert report['backend']==(backends or {}).get(lane,'cell-cpu-gpu-bindings') and report['gpu_bindings']['admitted_bindings']>0
             return folder,report,wall
         case_study={}
         for lane in lanes:

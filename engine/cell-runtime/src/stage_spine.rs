@@ -2239,6 +2239,7 @@ impl Programs {
             complete,
             watermark,
             facts,
+            #[cfg(feature="gpu-bindings")] None,
             #[cfg(feature = "sparse-cells")] workers,
         )
     }
@@ -2299,6 +2300,84 @@ impl Programs {
         .then_some(&self.entries)
     }
 
+    /// Reattach original cursor priority to already verified two-atom bindings.
+    /// Each routed pivot has its own exhaustive compiler certificate. Delta
+    /// ownership and ties follow the ordinary Entry scheduler.
+    #[cfg(feature = "gpu-bindings")]
+    pub(crate) fn resume_tokens(
+        &mut self,
+        g: &mut Graph,
+        entries: &mut crate::entry_schedule::Scheduler,
+        rid: usize,
+        watermark: u64,
+        rows: &[Matched],
+        facts: &QueryFacts,
+    ) -> Result<(Vec<Matched>, usize)> {
+        if rows.is_empty() || !self.active_for_rule(rid) {
+            return Ok((Vec::new(), 0));
+        }
+        let mut by_port = BTreeMap::new();
+        for (i, row) in rows.iter().enumerate() {
+            for atom in 0..2 {
+                if self.queries.get(rid, atom).is_none() {
+                    continue;
+                }
+                let witness = row
+                    .known
+                    .receipt(atom)
+                    .ok_or("missing source port for verified binding")?;
+                if let Some(old) = by_port.insert((atom, witness), i)
+                    && rows[old].values != row.values
+                {
+                    return Err("certified pivot resolved to different bindings".into());
+                }
+            }
+        }
+        let mut routed = Vec::new();
+        let mut owned = BTreeSet::new();
+        entries.batches(g, rid, watermark, |batch, _| {
+            let atom = batch.atom();
+            let cursors = self.scheduled_cursors(rid, atom, batch.table);
+            for &(_, w) in batch.delta() {
+                let Some(&i) = by_port.get(&(atom, w)) else {
+                    continue;
+                };
+                let entry = batch.entry(w).ok_or("missing current delta entry")?;
+                #[cfg(feature = "sparse-cells")]
+                let cursor = if self.entry_owns(rid, atom, batch.table) {
+                    entry.published()
+                } else {
+                    cursors.and_then(|map| map.get(&w))
+                };
+                #[cfg(not(feature = "sparse-cells"))]
+                let cursor = cursors.and_then(|map| map.get(&w));
+                if let Some(cursor) = cursor {
+                    routed.push((atom, entry.row.clone(), cursor.expand()));
+                    owned.insert(i);
+                }
+            }
+            Ok(())
+        })?;
+        let count = routed.len();
+        if count == 0 {
+            return Ok((Vec::new(), 0));
+        }
+        routed.sort_unstable_by_key(|(pivot, row, _)| (row.witness, *pivot));
+        let result = self.finish_answers(
+            g,
+            rid,
+            routed.into_iter(),
+            BTreeSet::new(),
+            count,
+            owned.len() == rows.len(),
+            watermark,
+            facts,
+            Some((&by_port, rows)),
+            #[cfg(feature = "sparse-cells")]
+            None,
+        )?;
+        Ok((result.map_or_else(Vec::new, |c| c.answers), count))
+    }
     pub(crate) fn answers_routed(
         &mut self,
         g: &mut Graph,
@@ -2338,6 +2417,7 @@ impl Programs {
         }
         let covered_count = routes.len();
         let result = self.finish_answers(g, rid, routes.into_iter(), covered, covered_count, complete, watermark, facts,
+            #[cfg(feature="gpu-bindings")] None,
             #[cfg(feature = "sparse-cells")] workers);
         self.stats.query_seconds += clock.elapsed().as_secs_f64();
         result
@@ -2352,6 +2432,7 @@ impl Programs {
         complete: bool,
         watermark: u64,
         facts: &QueryFacts,
+        #[cfg(feature="gpu-bindings")] verified: Option<(&BTreeMap<(usize,Dependency),usize>, &[Matched])>,
         #[cfg(feature = "sparse-cells")] workers: Option<&mut crate::executor::query_workers::Workers>,
     ) -> Result<Option<Coverage>> {
         if !complete && covered_count == 0 {
@@ -2416,6 +2497,13 @@ impl Programs {
                 // alone does not authorize a composed cross-stage continuation.
                 cursor.via_block = selected;
                 self.stats.block_entries += u64::from(selected);
+            }
+            #[cfg(feature="gpu-bindings")]
+            if let Some((by_port,matched))=verified {
+                let supplied=&matched[by_port[&(pivot,row.witness)]];
+                let projected=facts.with_rows((0..2).map(|i|(i,supplied.known.receipt(i).expect("verified witness"))));
+                record_answer(&mut results,supplied.values.clone(),projected,supplied.epoch,cursor);
+                continue;
             }
             #[cfg(feature = "iterative-bake")]
             let local_results = if local.is_some() {

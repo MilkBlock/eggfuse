@@ -39,7 +39,7 @@
   card([证据起点],[开放父引用时，静态投影加训练期字段头在两个种子下通过 65、67 张非空碰撞图，共 512 张。这个基线给分工留下了很大的改进空间。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–34 为真实 Pass 3 集成、性能归因与 GPU／CPU 分工。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–35 为真实 Pass 3 集成、性能归因与 GPU／CPU 分工。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -151,8 +151,8 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #v(2mm)
 #small[下列仓库路径相对 EggFuse 根目录。配套 README 提供可点击链接；以 68193237 的源码和冻结记录为本图册基线。]
 #v(3mm)
-#set par(spacing: 0.26em)
-#let src(k,l,p) = grid(columns:(10mm,50mm,1fr),gutter:3mm,text(fill:teal,weight:"bold",k),text(size:9.5pt,l),text(font:("Menlo","Arial"),size:7.8pt,p))
+#set par(spacing: 0.18em)
+#let src(k,l,p) = grid(columns:(10mm,55mm,1fr),gutter:3mm,text(fill:teal,weight:"bold",k),text(size:8.9pt,l),text(font:("Menlo","Arial"),size:7.8pt,p))
 #src("S1","PyTorch 独立前向、MPS/MLX 对照","benchmarks/multi-row-generation/torch_crossrun/README.md")
 #src("S2","跨 Run、两种子、父碰撞和掩码","benchmarks/multi-row-generation/crossrun/results/metrics.tsv")
 #src("S3","自由槽、遗漏、重复与重放","benchmarks/multi-row-generation/allocation/README.md")
@@ -180,10 +180,11 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S25","图 23–29 逐 Run 验收与耗时","benchmarks/pass3-cell-gpu/ACCEPTANCE.md")
 #src("S26","图 30–32 常驻与阶段归因","benchmarks/pass3-cell-gpu/profile/README.md")
 #src("S27","图 33–34 混合路径","benchmarks/pass3-cell-gpu/hybrid/README.md")
+#src("S28","图 35 常驻端口选择父行","benchmarks/pass3-cell-gpu/unique-parent/README.md")
 #v(1mm)
 #linebar()
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
 #text(size:9pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。#link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文]。 *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。#link("https://arxiv.org/abs/1705.08926")[论文原文]。]
 #v(1fr)
-#small[版次 16　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
+#small[版次 17　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]

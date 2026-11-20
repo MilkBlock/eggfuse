@@ -32,7 +32,7 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==34
+    assert len(plates)==35
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and p['arms'] and p['measure'] and p['status'].startswith(('已测','实跑'))
         assert p['title'] in md and (HERE/'figures'/f"{p['id']}.svg").is_file()
@@ -145,7 +145,17 @@ def check():
         assert lanes['batched']['median']['device_dispatches']<lanes['native']['median']['device_dispatches']
         for k in ('residual_candidates','entry_packets','node_notifications','parameter_copies'):
             assert lanes['retired']['median'][k]==lanes['native']['median'][k]<lanes['cpu']['median'][k]
-    print('Verified all 34 plates, including two full ordered Pass 3 audits, row contributions and paired CLI timings.')
+    unique=json.loads((folder.parent/'unique-parent/results.json').read_text())
+    for n,hits,wrong,recovered in [('sum-bits',889,6509,209),('dot-product',952,8176,389)]:
+        lanes=unique['cases'][n]; model=lanes['model']; counts=model['counts']
+        assert lanes['native_status']=='pass' and lanes['null_control']['coverage']==hits
+        assert counts['wrong_parent']==wrong and counts['recovered_wrong_parent']==recovered
+        assert counts['from_proposal']+recovered==hits and counts['missed_by_abstention']==0
+        assert model['audited_parent_addresses']==counts['proposals']
+        for k in ('point','model','metal'):
+            assert lanes[k]['admitted_bindings']==hits and lanes[k]['audit']==lanes['cpu']['audit']
+            assert lanes[k]['state_sha256']==lanes['cpu']['state_sha256'] and len(lanes[k]['samples'])==8
+    print('Verified all 35 plates, including two full ordered Pass 3 audits, row contributions and paired CLI timings.')
 
 
 if __name__=='__main__':check()

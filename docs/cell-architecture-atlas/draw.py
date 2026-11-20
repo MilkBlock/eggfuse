@@ -351,6 +351,12 @@ PLATES.extend([
     ], pass3_path),
 ])
 
+PLATES.append(('35-unique-parent', [
+    ('Direct key', ['frozen anchor ports', 'unique key lookup', 'ordered RHS', '25.39 / 22.16 ms']),
+    ('Resident pointer', ['choose parent or null', 'verify / complete key', 'ordered RHS', '112.15 / 123.24 ms']),
+    ('Metal search', ['same source rules', 'test row pairs', 'ordered RHS', '91.61 / 83.52 ms']),
+], pass3_path))
+
 def synthesis():
     a=Art();W,H=1100,335;a.rect(0,0,W,H,BG,r=0)
     for x,w,h in [(10,316,"SHARED TEMPLATE"),(338,374,"INSTANCE POLICY"),(723,367,"JOINT OUTCOME")]:

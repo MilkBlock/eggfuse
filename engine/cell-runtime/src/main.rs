@@ -33,6 +33,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         #[cfg(feature = "slot-transfer-audit")]
         println!("  --audit-events (save ordered birth, union, function write and Spine witnesses)");
         #[cfg(feature = "gpu-bindings")]
+        #[cfg(target_os = "macos")]
+        println!("  --unique-parent point|metal|model [--parent-weights FILE] (certified complete keys)");
+        #[cfg(feature = "gpu-bindings")]
         println!("  --gpu-binding-native | --gpu-binding-python PATH --gpu-binding-service PATH [--gpu-binding-retire] (native also accepts --gpu-binding-batch)");
         println!("  --gpu-selector-python PATH --gpu-selector-service PATH [--gpu-selector-min-rows N] (experimental exact Metal query filtering)");
         println!("  --union-digest [--union-digest-hash-bits 0..64] (experimental constructor and scalar Unit matcher)");
@@ -77,6 +80,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         match flag.as_str() {
             #[cfg(feature = "slot-transfer-audit")]
             "--audit-events" => {}
+            #[cfg(all(feature = "gpu-bindings", target_os = "macos"))]
+            "--unique-parent" | "--parent-weights" => {
+                flags.next().filter(|v| !v.starts_with("--")).ok_or("missing unique-parent option")?;
+            }
             #[cfg(feature = "gpu-bindings")]
             "--gpu-binding-native" | "--gpu-binding-batch" | "--gpu-binding-retire" => {}
             #[cfg(feature = "gpu-bindings")]
@@ -227,6 +234,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             _ => return Err("choose native Metal (optionally batched) or supply both Python service arguments".into()),
         }
     }
+    #[cfg(all(feature = "gpu-bindings", target_os = "macos"))]
+    match (opt("--unique-parent"), opt("--parent-weights")) {
+        (Some(mode), weights) => runtime.use_unique_parent(&mode, weights.as_deref().map(std::path::Path::new))?,
+        (None, Some(_)) => return Err("--parent-weights requires --unique-parent model".into()),
+        _ => {}
+    }
     match (opt("--gpu-selector-python"), opt("--gpu-selector-service")) {
         (Some(python), Some(service)) => {
             let min_rows = opt("--gpu-selector-min-rows").map(|v| v.parse::<usize>()).transpose()?.unwrap_or(2);
@@ -372,8 +385,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut report = runtime.report();
     #[cfg(feature = "gpu-bindings")]
     if let Some(gpu) = &runtime.gpu_bindings {
-        report["backend"] = "cell-cpu-gpu-bindings".into();
+        report["backend"] = gpu.backend().into();
         report["gpu_bindings"] = serde_json::to_value(&gpu.stats)?;
+        #[cfg(target_os = "macos")]
+        if let Some(metrics) = gpu.parent_report() { report["unique_parent"] = metrics; }
     }
     #[cfg(feature = "allocation-metrics")]
     {

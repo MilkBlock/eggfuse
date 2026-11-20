@@ -24,6 +24,7 @@ pub struct Stats {
     pub tested_pairs: u64,
     pub tokens: u64,
     pub admitted_bindings: u64,
+    pub spine_token_routes: u64,
     pub request_bytes: u64,
     pub response_bytes: u64,
     pub preparation_seconds: f64,
@@ -35,7 +36,12 @@ pub struct Stats {
 #[cfg(target_os = "macos")]
 #[path = "gpu_bindings_native.rs"]
 mod native;
+#[cfg(target_os = "macos")]
+#[path = "unique_parent.rs"]
+mod unique_parent;
 enum Transport {
+    #[cfg(target_os = "macos")]
+    Keyed,
     Python(Service),
     #[cfg(target_os = "macos")]
     Metal(native::Native),
@@ -47,6 +53,8 @@ struct Service {
 }
 pub struct Producer {
     transport: Transport,
+    #[cfg(target_os = "macos")]
+    keyed: Option<unique_parent::Trial>,
     eligible: Vec<bool>,
     pub(crate) batch: bool,
     ready: BTreeMap<usize, Vec<Instance>>,
@@ -126,11 +134,72 @@ impl Producer {
         };
         Ok(Self {
             transport,
+            #[cfg(target_os = "macos")]
+            keyed: None,
             batch: false,
             ready: Default::default(),
             eligible,
             stats,
         })
+    }
+    #[cfg(target_os = "macos")]
+    pub(crate) fn complete_key(
+        p: &Program,
+        mode: &str,
+        weights: Option<&std::path::Path>,
+    ) -> Result<Self> {
+        if !matches!(mode, "metal" | "point" | "model") || (mode == "model") != weights.is_some() {
+            return Err("choose metal, point, or model with --parent-weights".into());
+        }
+        let trial = unique_parent::Trial::new(p, weights)?;
+        let eligible = trial.eligible();
+        let transport = if mode == "metal" {
+            Transport::Metal(native::Native::new()?)
+        } else {
+            Transport::Keyed
+        };
+        Ok(Self {
+            transport,
+            keyed: Some(trial),
+            batch: true,
+            ready: Default::default(),
+            stats: Stats {
+                eligible_rules: eligible.iter().filter(|b| **b).count(),
+                ..Stats::default()
+            },
+            eligible,
+        })
+    }
+    #[cfg(target_os = "macos")]
+    pub(crate) fn publish_ports(&mut self, g: &Graph) {
+        if let Some(t) = &mut self.keyed {
+            t.publish(g);
+        }
+    }
+    #[cfg(target_os = "macos")]
+    pub fn parent_report(&self) -> Option<serde_json::Value> {
+        self.keyed.as_ref().map(|t| serde_json::json!(t.counts))
+    }
+    pub fn backend(&self) -> &'static str {
+        #[cfg(target_os = "macos")]
+        if matches!(self.transport, Transport::Keyed) {
+            return if self.keyed.as_ref().is_some_and(|t| t.models_parents()) {
+                "cell-cpu-resident-parent-model"
+            } else {
+                "cell-cpu-unique-point"
+            };
+        }
+        "cell-cpu-gpu-bindings"
+    }
+    pub(crate) fn owns_keyed_entries(&self) -> bool {
+        #[cfg(target_os = "macos")]
+        {
+            self.keyed.is_some()
+        }
+        #[cfg(not(target_os = "macos"))]
+        {
+            false
+        }
     }
     pub(crate) fn accepts(&self, rid: usize) -> bool {
         self.eligible[rid]
@@ -228,6 +297,8 @@ impl Producer {
         self.stats.device_dispatches += frame.pairs().div_ceil(65536) as u64;
         let start = Instant::now();
         let (tokens, service, request_bytes, response_bytes) = match &mut self.transport {
+            #[cfg(target_os = "macos")]
+            Transport::Keyed => return Err("key trial requires Run batching".into()),
             Transport::Python(pipe) => {
                 let mut request =
                     serde_json::to_vec(&(&encoded[0], &encoded[1], &checks, widths[0], widths[1]))
@@ -301,6 +372,14 @@ impl Producer {
             return Err("unconsumed GPU Run results".into());
         }
         if jobs.is_empty() {
+            return Ok(());
+        }
+        if matches!(&self.transport, Transport::Keyed) {
+            self.stats.tokens += self
+                .keyed
+                .as_mut()
+                .unwrap()
+                .run(graph, jobs, &mut self.ready)?;
             return Ok(());
         }
         let mut frames = Vec::with_capacity(jobs.len());

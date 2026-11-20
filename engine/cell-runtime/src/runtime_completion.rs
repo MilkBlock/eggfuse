@@ -576,6 +576,8 @@ impl Executor {
         #[cfg(feature = "family-replay")]
         self.replay
             .publish(&self.graph, _unions_before != self.graph.stats.unions)?;
+        #[cfg(all(feature = "gpu-bindings", target_os = "macos"))]
+        if let Some(gpu) = &mut self.gpu_bindings { gpu.publish_ports(&self.graph); }
         self.graph.changes.clear();
         if !matched {
             self.graph.collect_garbage();
