@@ -1,0 +1,1566 @@
+{
+ "reference": {
+  "runs": 1652,
+  "source": "307c91a80e5424853ec9dd1f3971f658d33f92a4c5861bc3b47f9793410835c9",
+  "mismatched_stages": null,
+  "graph": "564948df2940dafd9111b28e1b12a61a0181b8729fcfebc1265aaca3abc0830a",
+  "terminal_graph_bytes": 119248227,
+  "graph_curve": [],
+  "final_probe": null,
+  "physical": {
+   "extensions": 12,
+   "extended_frames": 12,
+   "merged_owners": 0,
+   "focus_backing_max": 0,
+   "focus_later_growth_steps": 0,
+   "focus_final": []
+  },
+  "terminal_owner_charge": [
+   487,
+   492,
+   4150,
+   392368,
+   149888,
+   74516,
+   616772
+  ],
+  "owner_byte_runs": 825385396,
+  "owner_peak": 616772,
+  "pre_owner_byte_runs": 0,
+  "count": 2163,
+  "selected": 0,
+  "trace": [],
+  "focus": null,
+  "port_runs": 0,
+  "later_ports": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "placement": [
+   0,
+   0,
+   1560,
+   0,
+   0
+  ]
+ },
+ "episodes": [
+  {
+   "id": 2036,
+   "run": 1128,
+   "shape": 171,
+   "members": [
+    13660
+   ],
+   "x": [
+    1,
+    2,
+    2,
+    0,
+    0,
+    4,
+    1,
+    0
+   ],
+   "census_features": [
+    1,
+    2,
+    2,
+    0,
+    0,
+    4,
+    1,
+    0
+   ],
+   "source_ports": [
+    [
+     13660,
+     1
+    ],
+    [
+     13660,
+     4
+    ]
+   ],
+   "port_digest": "dd128f174e55c074cfbaf6955e0106270ebbb53e7a80a80628789b23e5d9f62a",
+   "port_runs": 525,
+   "old_owner": [
+    454,
+    16
+   ],
+   "private_owner": [
+    454,
+    1
+   ],
+   "birth_saving": 0,
+   "terminal_saving": -344,
+   "owner_area_saving": -178568,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825384644,
+     "pre_owner_byte_runs": 502308908,
+     "owner_peak": 616772,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392368,
+      149888,
+      74516,
+      616772
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 16,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       null
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248571,
+     "owner_byte_runs": 825563212,
+     "pre_owner_byte_runs": 502308908,
+     "owner_peak": 617116,
+     "terminal_owner_charge": [
+      487,
+      493,
+      4150,
+      392368,
+      149856,
+      74892,
+      617116
+     ],
+     "placement": [
+      1,
+      1,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 1,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       null
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": 1579,
+   "run": 511,
+   "shape": 279,
+   "members": [
+    9245
+   ],
+   "x": [
+    1,
+    1,
+    3,
+    7,
+    984,
+    1,
+    1,
+    0
+   ],
+   "census_features": [
+    1,
+    1,
+    3,
+    7,
+    984,
+    1,
+    1,
+    0
+   ],
+   "source_ports": [
+    [
+     9245,
+     3
+    ],
+    [
+     9245,
+     6
+    ],
+    [
+     9245,
+     7
+    ]
+   ],
+   "port_digest": "dadfe6f64e2216a5f06f8c2f51a9047f3e0795ad32a3a6d437fcb2d61733544c",
+   "port_runs": 1142,
+   "old_owner": [
+    345,
+    15
+   ],
+   "private_owner": [
+    345,
+    1
+   ],
+   "birth_saving": 0,
+   "terminal_saving": 0,
+   "owner_area_saving": -86016,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825386316,
+     "pre_owner_byte_runs": 154378248,
+     "owner_peak": 616772,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392368,
+      149888,
+      74516,
+      616772
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 15,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        345,
+        15
+       ]
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825472332,
+     "pre_owner_byte_runs": 154378248,
+     "owner_peak": 616772,
+     "terminal_owner_charge": [
+      488,
+      493,
+      4150,
+      392368,
+      149888,
+      74516,
+      616772
+     ],
+     "placement": [
+      1,
+      1,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 13,
+      "extended_frames": 13,
+      "merged_owners": 0,
+      "focus_backing_max": 2,
+      "focus_later_growth_steps": 1,
+      "focus_final": [
+       [
+        345,
+        2
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": 810,
+   "run": 186,
+   "shape": 96,
+   "members": [
+    3743
+   ],
+   "x": [
+    1,
+    3,
+    1,
+    10,
+    1392,
+    4,
+    1,
+    0
+   ],
+   "census_features": [
+    1,
+    3,
+    1,
+    10,
+    1392,
+    4,
+    1,
+    0
+   ],
+   "source_ports": [
+    [
+     3743,
+     2
+    ]
+   ],
+   "port_digest": "2f816cf0700d0cb3d5ab9859ae0e1e74a16b3c61dda0385de47302649c16654d",
+   "port_runs": 1467,
+   "old_owner": [
+    168,
+    16
+   ],
+   "private_owner": [
+    168,
+    1
+   ],
+   "birth_saving": 0,
+   "terminal_saving": -96,
+   "owner_area_saving": -48192,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825390612,
+     "pre_owner_byte_runs": 16225976,
+     "owner_peak": 616788,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392384,
+      149888,
+      74516,
+      616788
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 16,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        168,
+        12
+       ]
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248323,
+     "owner_byte_runs": 825438804,
+     "pre_owner_byte_runs": 16225976,
+     "owner_peak": 616884,
+     "terminal_owner_charge": [
+      488,
+      493,
+      4150,
+      392384,
+      149888,
+      74612,
+      616884
+     ],
+     "placement": [
+      1,
+      1,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 1,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        168,
+        1
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": 719,
+   "run": 182,
+   "shape": 85,
+   "members": [
+    3164
+   ],
+   "x": [
+    1,
+    4,
+    1,
+    14,
+    1720,
+    2,
+    1,
+    0
+   ],
+   "census_features": [
+    1,
+    4,
+    1,
+    14,
+    1720,
+    2,
+    1,
+    0
+   ],
+   "source_ports": [
+    [
+     3164,
+     1
+    ]
+   ],
+   "port_digest": "52d2a69abc55c17023f5582816c30299c2371bc456811ea4557be0b8dd607c7b",
+   "port_runs": 1471,
+   "old_owner": [
+    151,
+    16
+   ],
+   "private_owner": [
+    151,
+    1
+   ],
+   "birth_saving": 0,
+   "terminal_saving": -96,
+   "owner_area_saving": -90720,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825386540,
+     "pre_owner_byte_runs": 15251824,
+     "owner_peak": 616780,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392376,
+      149888,
+      74516,
+      616780
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 16,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        151,
+        12
+       ]
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248323,
+     "owner_byte_runs": 825477260,
+     "pre_owner_byte_runs": 15251824,
+     "owner_peak": 616876,
+     "terminal_owner_charge": [
+      488,
+      493,
+      4150,
+      392376,
+      149888,
+      74612,
+      616876
+     ],
+     "placement": [
+      1,
+      1,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 13,
+      "extended_frames": 13,
+      "merged_owners": 0,
+      "focus_backing_max": 2,
+      "focus_later_growth_steps": 1,
+      "focus_final": [
+       [
+        151,
+        2
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": 919,
+   "run": 190,
+   "shape": 436,
+   "members": [
+    4240,
+    4266
+   ],
+   "x": [
+    2,
+    5,
+    4,
+    2,
+    248,
+    1,
+    2,
+    0
+   ],
+   "census_features": [
+    2,
+    5,
+    4,
+    2,
+    248,
+    1,
+    2,
+    0
+   ],
+   "source_ports": [
+    [
+     4240,
+     2
+    ],
+    [
+     4240,
+     5
+    ],
+    [
+     4240,
+     6
+    ],
+    [
+     4266,
+     2
+    ]
+   ],
+   "port_digest": "b86e212fc6ed81e14a428f14f8c9b03be337fee94260566416a7fd438e929e59",
+   "port_runs": 1463,
+   "old_owner": [
+    183,
+    16
+   ],
+   "private_owner": [
+    183,
+    2
+   ],
+   "birth_saving": 0,
+   "terminal_saving": 0,
+   "owner_area_saving": -29952,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825392804,
+     "pre_owner_byte_runs": 17321616,
+     "owner_peak": 616788,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392384,
+      149888,
+      74516,
+      616788
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 16,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        183,
+        16
+       ],
+       [
+        183,
+        16
+       ]
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825422756,
+     "pre_owner_byte_runs": 17321616,
+     "owner_peak": 616788,
+     "terminal_owner_charge": [
+      488,
+      493,
+      4150,
+      392384,
+      149888,
+      74516,
+      616788
+     ],
+     "placement": [
+      1,
+      2,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 13,
+      "extended_frames": 14,
+      "merged_owners": 0,
+      "focus_backing_max": 4,
+      "focus_later_growth_steps": 1,
+      "focus_final": [
+       [
+        183,
+        4
+       ],
+       [
+        183,
+        4
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": 726,
+   "run": 182,
+   "shape": 436,
+   "members": [
+    3207,
+    3226
+   ],
+   "x": [
+    2,
+    5,
+    4,
+    7,
+    976,
+    1,
+    2,
+    0
+   ],
+   "census_features": [
+    2,
+    5,
+    4,
+    7,
+    976,
+    1,
+    2,
+    0
+   ],
+   "source_ports": [
+    [
+     3207,
+     2
+    ],
+    [
+     3207,
+     5
+    ],
+    [
+     3207,
+     6
+    ],
+    [
+     3226,
+     2
+    ]
+   ],
+   "port_digest": "5af9602c371e2846f1fc618b15a6507e59a090ec0cbd9a9a76fb3846c238f63f",
+   "port_runs": 1471,
+   "old_owner": [
+    152,
+    16
+   ],
+   "private_owner": [
+    152,
+    2
+   ],
+   "birth_saving": 0,
+   "terminal_saving": -192,
+   "owner_area_saving": -238560,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825379252,
+     "pre_owner_byte_runs": 15251792,
+     "owner_peak": 616764,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392360,
+      149888,
+      74516,
+      616764
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 16,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        152,
+        16
+       ],
+       [
+        152,
+        16
+       ]
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248419,
+     "owner_byte_runs": 825617812,
+     "pre_owner_byte_runs": 15251792,
+     "owner_peak": 616956,
+     "terminal_owner_charge": [
+      488,
+      493,
+      4150,
+      392360,
+      149888,
+      74708,
+      616956
+     ],
+     "placement": [
+      1,
+      2,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 13,
+      "extended_frames": 14,
+      "merged_owners": 0,
+      "focus_backing_max": 4,
+      "focus_later_growth_steps": 1,
+      "focus_final": [
+       [
+        152,
+        4
+       ],
+       [
+        152,
+        4
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": 1626,
+   "run": 531,
+   "shape": 506,
+   "members": [
+    9554,
+    9559
+   ],
+   "x": [
+    2,
+    4,
+    4,
+    11,
+    1784,
+    1,
+    1,
+    0
+   ],
+   "census_features": [
+    2,
+    4,
+    4,
+    11,
+    1784,
+    1,
+    1,
+    0
+   ],
+   "source_ports": [
+    [
+     9554,
+     3
+    ],
+    [
+     9554,
+     5
+    ],
+    [
+     9554,
+     6
+    ],
+    [
+     9559,
+     6
+    ]
+   ],
+   "port_digest": "b19dff910b865cd8c6f499281e292b0be9cc1011ec418af7f0df90cde1d917b5",
+   "port_runs": 1122,
+   "old_owner": [
+    352,
+    15
+   ],
+   "private_owner": [
+    352,
+    2
+   ],
+   "birth_saving": 0,
+   "terminal_saving": 0,
+   "owner_area_saving": -86016,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825385460,
+     "pre_owner_byte_runs": 164404008,
+     "owner_peak": 616788,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392384,
+      149888,
+      74516,
+      616788
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 15,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        352,
+        15
+       ],
+       [
+        352,
+        15
+       ]
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825471476,
+     "pre_owner_byte_runs": 164404008,
+     "owner_peak": 616788,
+     "terminal_owner_charge": [
+      488,
+      493,
+      4150,
+      392384,
+      149888,
+      74516,
+      616788
+     ],
+     "placement": [
+      1,
+      2,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 13,
+      "extended_frames": 13,
+      "merged_owners": 0,
+      "focus_backing_max": 3,
+      "focus_later_growth_steps": 1,
+      "focus_final": [
+       [
+        352,
+        3
+       ],
+       [
+        352,
+        3
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": 1167,
+   "run": 206,
+   "shape": 436,
+   "members": [
+    6032,
+    6039
+   ],
+   "x": [
+    2,
+    5,
+    4,
+    14,
+    1216,
+    1,
+    2,
+    0
+   ],
+   "census_features": [
+    2,
+    5,
+    4,
+    14,
+    1216,
+    1,
+    2,
+    0
+   ],
+   "source_ports": [
+    [
+     6032,
+     2
+    ],
+    [
+     6032,
+     5
+    ],
+    [
+     6032,
+     6
+    ],
+    [
+     6039,
+     2
+    ]
+   ],
+   "port_digest": "108e3817f08d7db6f6047621882c0478e91e20123cceaf26a44e848ec11a9a79",
+   "port_runs": 1447,
+   "old_owner": [
+    224,
+    16
+   ],
+   "private_owner": [
+    224,
+    2
+   ],
+   "birth_saving": 0,
+   "terminal_saving": 0,
+   "owner_area_saving": -60936,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825383484,
+     "pre_owner_byte_runs": 22586512,
+     "owner_peak": 616772,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392368,
+      149888,
+      74516,
+      616772
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 16,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        224,
+        8
+       ],
+       [
+        224,
+        8
+       ]
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825444420,
+     "pre_owner_byte_runs": 22586512,
+     "owner_peak": 616748,
+     "terminal_owner_charge": [
+      488,
+      493,
+      4150,
+      392344,
+      149888,
+      74516,
+      616748
+     ],
+     "placement": [
+      1,
+      2,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 13,
+      "extended_frames": 14,
+      "merged_owners": 0,
+      "focus_backing_max": 4,
+      "focus_later_growth_steps": 1,
+      "focus_final": [
+       [
+        224,
+        2
+       ],
+       [
+        224,
+        2
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": 818,
+   "run": 186,
+   "shape": 144,
+   "members": [
+    3790
+   ],
+   "x": [
+    1,
+    8,
+    1,
+    2,
+    448,
+    1,
+    1,
+    0
+   ],
+   "census_features": [
+    1,
+    8,
+    1,
+    2,
+    448,
+    1,
+    1,
+    0
+   ],
+   "source_ports": [
+    [
+     3790,
+     3
+    ]
+   ],
+   "port_digest": "1f6e24d0fc133add183b26e6db1cc568757305bea088f1937c5d4a0ef604a5ef",
+   "port_runs": 1467,
+   "old_owner": [
+    169,
+    9
+   ],
+   "private_owner": [
+    169,
+    1
+   ],
+   "birth_saving": 0,
+   "terminal_saving": 0,
+   "owner_area_saving": -86016,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825374812,
+     "pre_owner_byte_runs": 16225976,
+     "owner_peak": 616756,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392352,
+      149888,
+      74516,
+      616756
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 9,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        169,
+        9
+       ]
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825460828,
+     "pre_owner_byte_runs": 16225976,
+     "owner_peak": 616756,
+     "terminal_owner_charge": [
+      488,
+      493,
+      4150,
+      392352,
+      149888,
+      74516,
+      616756
+     ],
+     "placement": [
+      1,
+      1,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 1,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        169,
+        1
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": 197,
+   "run": 33,
+   "shape": 306,
+   "members": [
+    686
+   ],
+   "x": [
+    1,
+    3,
+    1,
+    5,
+    560,
+    1,
+    1,
+    0
+   ],
+   "census_features": [
+    1,
+    3,
+    1,
+    5,
+    560,
+    1,
+    1,
+    0
+   ],
+   "source_ports": [
+    [
+     686,
+     4
+    ]
+   ],
+   "port_digest": "89165e9ca4c7d35f37d0d775ce558883b8d6635e72a1755a39bd6f6ec05bea70",
+   "port_runs": 1620,
+   "old_owner": [
+    33,
+    16
+   ],
+   "private_owner": [
+    33,
+    1
+   ],
+   "birth_saving": 0,
+   "terminal_saving": 0,
+   "owner_area_saving": -104448,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825380780,
+     "pre_owner_byte_runs": 1206508,
+     "owner_peak": 616764,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392360,
+      149888,
+      74516,
+      616764
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 16,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        33,
+        16
+       ]
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825485228,
+     "pre_owner_byte_runs": 1206508,
+     "owner_peak": 616764,
+     "terminal_owner_charge": [
+      488,
+      493,
+      4150,
+      392360,
+      149888,
+      74516,
+      616764
+     ],
+     "placement": [
+      1,
+      1,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 1,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        33,
+        1
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": 1322,
+   "run": 325,
+   "shape": 305,
+   "members": [
+    7364
+   ],
+   "x": [
+    1,
+    5,
+    1,
+    8,
+    1312,
+    2,
+    1,
+    0
+   ],
+   "census_features": [
+    1,
+    5,
+    1,
+    8,
+    1312,
+    2,
+    1,
+    0
+   ],
+   "source_ports": [
+    [
+     7364,
+     3
+    ]
+   ],
+   "port_digest": "4c21d938dd9e15e56567b9f785587b05faeea62166501336874d8bf2f59b8a9c",
+   "port_runs": 1328,
+   "old_owner": [
+    251,
+    16
+   ],
+   "private_owner": [
+    251,
+    1
+   ],
+   "birth_saving": 0,
+   "terminal_saving": 84,
+   "owner_area_saving": -9660,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825358732,
+     "pre_owner_byte_runs": 68154336,
+     "owner_peak": 616732,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392328,
+      149888,
+      74516,
+      616732
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 16,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       null
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248143,
+     "owner_byte_runs": 825368392,
+     "pre_owner_byte_runs": 68154336,
+     "owner_peak": 616648,
+     "terminal_owner_charge": [
+      487,
+      493,
+      4150,
+      392328,
+      149808,
+      74512,
+      616648
+     ],
+     "placement": [
+      1,
+      1,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 1,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       null
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": 491,
+   "run": 175,
+   "shape": 42,
+   "members": [
+    1827
+   ],
+   "x": [
+    1,
+    3,
+    1,
+    15,
+    1728,
+    5,
+    1,
+    0
+   ],
+   "census_features": [
+    1,
+    3,
+    1,
+    15,
+    1728,
+    5,
+    1,
+    0
+   ],
+   "source_ports": [
+    [
+     1827,
+     3
+    ]
+   ],
+   "port_digest": "04a1f90f48463facf207a9aca2a2086ed3c1ecfce3c4ba4cd10ff04ed5284315",
+   "port_runs": 1478,
+   "old_owner": [
+    117,
+    16
+   ],
+   "private_owner": [
+    117,
+    1
+   ],
+   "birth_saving": 0,
+   "terminal_saving": 0,
+   "owner_area_saving": -94272,
+   "outcomes": [
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825385604,
+     "pre_owner_byte_runs": 13889384,
+     "owner_peak": 616772,
+     "terminal_owner_charge": [
+      487,
+      492,
+      4150,
+      392368,
+      149888,
+      74516,
+      616772
+     ],
+     "placement": [
+      0,
+      0,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 12,
+      "extended_frames": 12,
+      "merged_owners": 0,
+      "focus_backing_max": 16,
+      "focus_later_growth_steps": 0,
+      "focus_final": [
+       [
+        117,
+        16
+       ]
+      ]
+     }
+    },
+    {
+     "terminal_graph_bytes": 119248227,
+     "owner_byte_runs": 825479876,
+     "pre_owner_byte_runs": 13889384,
+     "owner_peak": 616772,
+     "terminal_owner_charge": [
+      488,
+      493,
+      4150,
+      392368,
+      149888,
+      74516,
+      616772
+     ],
+     "placement": [
+      1,
+      1,
+      1560,
+      0,
+      0
+     ],
+     "physical": {
+      "extensions": 13,
+      "extended_frames": 15,
+      "merged_owners": 0,
+      "focus_backing_max": 4,
+      "focus_later_growth_steps": 1,
+      "focus_final": [
+       [
+        117,
+        4
+       ]
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "sham": {
+  "source": "307c91a80e5424853ec9dd1f3971f658d33f92a4c5861bc3b47f9793410835c9",
+  "graph": "564948df2940dafd9111b28e1b12a61a0181b8729fcfebc1265aaca3abc0830a",
+  "terminal_graph_bytes": 119248227,
+  "owner_byte_runs": 825391788,
+  "later_ports": "dd128f174e55c074cfbaf6955e0106270ebbb53e7a80a80628789b23e5d9f62a"
+ },
+ "sham_identical": true
+}

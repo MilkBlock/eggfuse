@@ -1,0 +1,13 @@
+{
+ "input": {
+  "engine/cell-runtime/src/shared_owner_transfer.rs": "e5db8da6a4704d7c182909e215b8b6481d639d7c96a114624b679ec72ff23a87",
+  "tools/cell-compiler/examples/existing_owner_transfer.rs": "a60892e6b39afb7292540546062a48501918647b144afd4d33a64e34cb3c8f9e",
+  "Cargo.lock": "cdaf1206f6f9830db0006fc5c61c3c13ead06f81507dc49e23129678006027fa"
+ },
+ "output": {
+  "engine/cell-runtime/src/shared_owner_transfer.rs": "8f0e2aaa90ef985e187c0f2404f6bef72c78601f314a73354043b95c89ebb624",
+  "tools/cell-compiler/examples/existing_owner_transfer.rs": "2a01209079eeb3305c9e1e2d93c2af98df0725454e5878686ce62ba2f6848ebf"
+ },
+ "engine": "60c0ca7a8905e0568e16d2308c47bde5c84b980d408a69049f44e819b87cba1e",
+ "diagnostic": "7df679bd71f2f1d69ec2fd279b33245efecb0f6fe034394b27ca9c1405d7440d"
+}
