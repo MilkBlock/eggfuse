@@ -1,0 +1,258 @@
+{
+ "sum-bits/1703": {
+  "no_residual": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "5a2802e0bca701b6b2fa61a30b1a1656ee56ac39859f7e1f0ba98e7d00629b0f",
+   "child_winners": 91,
+   "static_roots": 2,
+   "exact_residual": 0,
+   "first_divergence": 3
+  },
+  "assisted": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "5a2802e0bca701b6b2fa61a30b1a1656ee56ac39859f7e1f0ba98e7d00629b0f",
+   "child_winners": 91,
+   "static_roots": 2,
+   "exact_residual": 7172,
+   "first_divergence": null
+  }
+ },
+ "sum-bits/1709": {
+  "no_residual": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "5d7375ad128fd02a491489ef02eceb621edf35345bb188ced17d1b8f5d9d5e84",
+   "child_winners": 92,
+   "static_roots": 2,
+   "exact_residual": 0,
+   "first_divergence": 3
+  },
+  "assisted": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "5d7375ad128fd02a491489ef02eceb621edf35345bb188ced17d1b8f5d9d5e84",
+   "child_winners": 92,
+   "static_roots": 2,
+   "exact_residual": 7171,
+   "first_divergence": null
+  }
+ },
+ "dot-product/1703": {
+  "no_residual": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+   "child_winners": 195,
+   "static_roots": 2,
+   "exact_residual": 0,
+   "first_divergence": 3
+  },
+  "assisted": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+   "child_winners": 195,
+   "static_roots": 2,
+   "exact_residual": 6507,
+   "first_divergence": null
+  }
+ },
+ "dot-product/1709": {
+  "no_residual": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+   "child_winners": 195,
+   "static_roots": 2,
+   "exact_residual": 0,
+   "first_divergence": 3
+  },
+  "assisted": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "beb6fb2dc935080f8f30f917e2b45692563fe4dd560ce694b7a8e0a78ba5964b",
+   "child_winners": 195,
+   "static_roots": 2,
+   "exact_residual": 6507,
+   "first_divergence": null
+  }
+ },
+ "gemm-bias-relu/1703": {
+  "no_residual": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "80aa9cb3c3cc41b088395486bc04695c1842892924d587771b208b6a567c94ef",
+   "child_winners": 207,
+   "static_roots": 2,
+   "exact_residual": 0,
+   "first_divergence": 3
+  },
+  "assisted": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "80aa9cb3c3cc41b088395486bc04695c1842892924d587771b208b6a567c94ef",
+   "child_winners": 207,
+   "static_roots": 2,
+   "exact_residual": 15253,
+   "first_divergence": null
+  }
+ },
+ "gemm-bias-relu/1709": {
+  "no_residual": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "80aa9cb3c3cc41b088395486bc04695c1842892924d587771b208b6a567c94ef",
+   "child_winners": 207,
+   "static_roots": 2,
+   "exact_residual": 0,
+   "first_divergence": 3
+  },
+  "assisted": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "80aa9cb3c3cc41b088395486bc04695c1842892924d587771b208b6a567c94ef",
+   "child_winners": 207,
+   "static_roots": 2,
+   "exact_residual": 15253,
+   "first_divergence": null
+  }
+ },
+ "stable-argmax/1703": {
+  "no_residual": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "a2578382d77c250d01e14dc7f33f328cdfb742a5f9a2c1ddab1eb787311b2660",
+   "child_winners": 128,
+   "static_roots": 2,
+   "exact_residual": 0,
+   "first_divergence": 3
+  },
+  "assisted": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "a2578382d77c250d01e14dc7f33f328cdfb742a5f9a2c1ddab1eb787311b2660",
+   "child_winners": 128,
+   "static_roots": 2,
+   "exact_residual": 8060,
+   "first_divergence": null
+  }
+ },
+ "stable-argmax/1709": {
+  "no_residual": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "bbac74a5a65337bdd6dd3ee6c2ed8cb6317a60a7fba9600433d84e43e385a67f",
+   "child_winners": 128,
+   "static_roots": 2,
+   "exact_residual": 0,
+   "first_divergence": 3
+  },
+  "assisted": {
+   "opened": [
+    "device.json",
+    "device.npz",
+    "forest-plan.npz",
+    "model.pt",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "sha256": "bbac74a5a65337bdd6dd3ee6c2ed8cb6317a60a7fba9600433d84e43e385a67f",
+   "child_winners": 128,
+   "static_roots": 2,
+   "exact_residual": 8060,
+   "first_divergence": null
+  }
+ }
+}

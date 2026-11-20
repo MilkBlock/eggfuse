@@ -1,0 +1,402 @@
+{
+ "sum-bits/1703": {
+  "exact": {
+   "ms": [
+    845.858834,
+    849.519625,
+    856.794792,
+    847.61175,
+    859.209542,
+    849.336291,
+    848.960167,
+    840.354041
+   ],
+   "median_ms": 849.1482289999999
+  },
+  "dense": {
+   "winners": 91,
+   "visits": 57422,
+   "attempts": 169,
+   "exact_residual": 7172,
+   "declined_missing_suffix": 0,
+   "ms": [
+    882.9795,
+    905.01925,
+    878.049208,
+    937.747583,
+    929.598791,
+    928.066291,
+    873.309083,
+    878.171666
+   ],
+   "median_ms": 893.9993750000001
+  },
+  "events": {
+   "winners": 91,
+   "visits": 263,
+   "attempts": 169,
+   "exact_residual": 7172,
+   "declined_missing_suffix": 0,
+   "ms": [
+    887.043834,
+    867.781417,
+    905.68725,
+    875.682042,
+    870.227667,
+    872.619208,
+    922.110959,
+    882.17575
+   ],
+   "median_ms": 878.928896
+  },
+  "proof-only": {
+   "winners": 89,
+   "visits": 178,
+   "attempts": 89,
+   "exact_residual": 7174,
+   "declined_missing_suffix": 5,
+   "ms": [
+    895.237625,
+    876.915208,
+    929.733834,
+    869.099,
+    874.097875,
+    888.97225,
+    878.608125,
+    884.47725
+   ],
+   "median_ms": 881.5426875
+  },
+  "proof-only-no-residual": {
+   "static_roots": 2,
+   "child_winners": 89,
+   "first_divergence": 3,
+   "actual_rhs": 91
+  },
+  "generation_and_global_sweep": {
+   "ms": [
+    0.493334,
+    0.462292,
+    0.444667,
+    0.43625,
+    0.533625,
+    1.143083,
+    0.629416,
+    0.526166,
+    1.052416,
+    0.664375,
+    0.53,
+    0.54525,
+    0.610708,
+    0.500542,
+    0.460792,
+    0.454666
+   ],
+   "median_ms": 0.5280830000000001,
+   "static_root_count": 2,
+   "candidate_slots": 614,
+   "active_children": 94,
+   "emitted_tensor_bytes": 14840
+  }
+ },
+ "sum-bits/1709": {
+  "exact": {
+   "ms": [
+    843.918875,
+    862.967083,
+    832.063792,
+    876.919041,
+    869.452375,
+    868.419625,
+    893.6465,
+    908.200875
+   ],
+   "median_ms": 868.9359999999999
+  },
+  "dense": {
+   "winners": 92,
+   "visits": 57422,
+   "attempts": 222,
+   "exact_residual": 7171,
+   "declined_missing_suffix": 0,
+   "ms": [
+    884.057167,
+    879.880042,
+    883.894833,
+    901.2985,
+    906.273958,
+    912.821459,
+    906.888625,
+    920.278625
+   ],
+   "median_ms": 903.786229
+  },
+  "events": {
+   "winners": 92,
+   "visits": 320,
+   "attempts": 222,
+   "exact_residual": 7171,
+   "declined_missing_suffix": 0,
+   "ms": [
+    867.415833,
+    870.825708,
+    908.332209,
+    894.965292,
+    929.499875,
+    902.625125,
+    899.099417,
+    904.155875
+   ],
+   "median_ms": 900.862271
+  },
+  "proof-only": {
+   "winners": 90,
+   "visits": 180,
+   "attempts": 90,
+   "exact_residual": 7173,
+   "declined_missing_suffix": 8,
+   "ms": [
+    921.175125,
+    875.9375,
+    858.94525,
+    930.182875,
+    916.992167,
+    950.031459,
+    916.177125,
+    898.186917
+   ],
+   "median_ms": 916.584646
+  },
+  "proof-only-no-residual": {
+   "static_roots": 2,
+   "child_winners": 90,
+   "first_divergence": 3,
+   "actual_rhs": 92
+  },
+  "generation_and_global_sweep": {
+   "ms": [
+    0.497459,
+    0.558541,
+    0.517083,
+    0.469917,
+    0.500625,
+    0.606166,
+    0.441083,
+    0.420083,
+    0.444041,
+    0.420625,
+    0.432875,
+    0.432958,
+    0.446625,
+    0.43175,
+    0.474458,
+    0.475417
+   ],
+   "median_ms": 0.458271,
+   "static_root_count": 2,
+   "candidate_slots": 614,
+   "active_children": 98,
+   "emitted_tensor_bytes": 14840
+  }
+ },
+ "dot-product/1703": {
+  "exact": {
+   "ms": [
+    920.549792,
+    938.343625,
+    914.766583,
+    946.077541,
+    923.792625,
+    913.484,
+    913.992666,
+    950.662833
+   ],
+   "median_ms": 922.1712085
+  },
+  "dense": {
+   "winners": 195,
+   "visits": 138850,
+   "attempts": 195,
+   "exact_residual": 6507,
+   "declined_missing_suffix": 0,
+   "ms": [
+    970.456,
+    975.845625,
+    983.315041,
+    985.829875,
+    991.556167,
+    969.739542,
+    965.023667,
+    959.950791
+   ],
+   "median_ms": 973.1508125
+  },
+  "events": {
+   "winners": 195,
+   "visits": 390,
+   "attempts": 195,
+   "exact_residual": 6507,
+   "declined_missing_suffix": 0,
+   "ms": [
+    942.02725,
+    938.500375,
+    968.645167,
+    940.568625,
+    956.576375,
+    980.622125,
+    949.5855,
+    942.834667
+   ],
+   "median_ms": 946.2100835
+  },
+  "proof-only": {
+   "winners": 185,
+   "visits": 370,
+   "attempts": 185,
+   "exact_residual": 6517,
+   "declined_missing_suffix": 10,
+   "ms": [
+    970.683542,
+    946.084458,
+    948.804417,
+    973.757834,
+    945.199209,
+    948.462083,
+    987.829541,
+    949.357958
+   ],
+   "median_ms": 949.0811874999999
+  },
+  "proof-only-no-residual": {
+   "static_roots": 2,
+   "child_winners": 185,
+   "first_divergence": 3,
+   "actual_rhs": 187
+  },
+  "generation_and_global_sweep": {
+   "ms": [
+    0.477625,
+    0.492709,
+    0.471167,
+    0.458542,
+    0.461875,
+    0.438459,
+    0.489791,
+    0.558084,
+    0.518542,
+    0.482375,
+    0.4555,
+    0.470875,
+    0.442292,
+    0.564125,
+    0.477292,
+    0.46925
+   ],
+   "median_ms": 0.47422949999999997,
+   "static_root_count": 2,
+   "candidate_slots": 1218,
+   "active_children": 195,
+   "emitted_tensor_bytes": 29336
+  }
+ },
+ "dot-product/1709": {
+  "exact": {
+   "ms": [
+    887.667709,
+    890.583167,
+    923.859417,
+    902.314458,
+    901.279416,
+    894.676917,
+    889.563541,
+    976.086542
+   ],
+   "median_ms": 897.9781665
+  },
+  "dense": {
+   "winners": 195,
+   "visits": 138850,
+   "attempts": 195,
+   "exact_residual": 6507,
+   "declined_missing_suffix": 0,
+   "ms": [
+    989.027958,
+    936.23825,
+    951.214708,
+    996.816875,
+    1001.2715,
+    968.563209,
+    944.809292,
+    934.244042
+   ],
+   "median_ms": 959.8889585
+  },
+  "events": {
+   "winners": 195,
+   "visits": 390,
+   "attempts": 195,
+   "exact_residual": 6507,
+   "declined_missing_suffix": 0,
+   "ms": [
+    916.9545,
+    948.792375,
+    937.151958,
+    932.464333,
+    941.671,
+    960.833041,
+    956.690125,
+    952.356791
+   ],
+   "median_ms": 945.2316875
+  },
+  "proof-only": {
+   "winners": 185,
+   "visits": 370,
+   "attempts": 185,
+   "exact_residual": 6517,
+   "declined_missing_suffix": 10,
+   "ms": [
+    913.88125,
+    933.574,
+    941.51975,
+    930.256584,
+    928.506083,
+    930.212083,
+    938.197125,
+    1030.327792
+   ],
+   "median_ms": 931.9152919999999
+  },
+  "proof-only-no-residual": {
+   "static_roots": 2,
+   "child_winners": 185,
+   "first_divergence": 3,
+   "actual_rhs": 187
+  },
+  "generation_and_global_sweep": {
+   "ms": [
+    0.58725,
+    0.480375,
+    0.484709,
+    0.501083,
+    0.977625,
+    0.492042,
+    0.479459,
+    0.595417,
+    0.496417,
+    0.517958,
+    0.506208,
+    0.481042,
+    1.613917,
+    0.6215,
+    0.486083,
+    0.636583
+   ],
+   "median_ms": 0.5036455,
+   "static_root_count": 2,
+   "candidate_slots": 1218,
+   "active_children": 195,
+   "emitted_tensor_bytes": 29336
+  }
+ }
+}
