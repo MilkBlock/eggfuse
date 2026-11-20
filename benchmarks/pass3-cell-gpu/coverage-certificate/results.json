@@ -1,0 +1,278 @@
+{
+ "sum-bits": {
+  "build": {
+   "initial_rows": 129,
+   "initialized_rows": 223,
+   "initializer_effects": 220,
+   "helper_rules": 10,
+   "abstractly_enabled_rules": [
+    574,
+    575
+   ]
+  },
+  "rule_ids": [
+   375,
+   574,
+   575
+  ],
+  "naive_helper_scans": 7,
+  "naive_edge_key_probes": 56,
+  "proof": {
+   "controls": {
+    "complete": {
+     "illegal": 0,
+     "uncovered": 0,
+     "all_emitted_legal": true,
+     "complete": true
+    },
+    "delete_valid_leaf": {
+     "illegal": 0,
+     "uncovered": 1,
+     "all_emitted_legal": true,
+     "complete": false
+    },
+    "abstain": {
+     "illegal": 0,
+     "uncovered": 9,
+     "all_emitted_legal": true,
+     "complete": false
+    },
+    "publish_early": {
+     "illegal": 1,
+     "uncovered": 0,
+     "all_emitted_legal": false,
+     "complete": false
+    },
+    "wrong_value": {
+     "illegal": 1,
+     "uncovered": 0,
+     "all_emitted_legal": false,
+     "complete": false
+    },
+    "wrong_parent_same_value": {
+     "illegal": 1,
+     "uncovered": 0,
+     "all_emitted_legal": false,
+     "complete": false
+    },
+    "duplicate_seed_at_member_address": {
+     "illegal": 1,
+     "uncovered": 0,
+     "all_emitted_legal": false,
+     "complete": false
+    }
+   },
+   "resident_check_and_host_read_us": [
+    780.167,
+    787.333,
+    750.291,
+    729.375,
+    757.334,
+    2050.417,
+    1337.958,
+    430.667,
+    456.625,
+    474.667,
+    443.875,
+    1627.459,
+    417.959,
+    426.792,
+    418.917
+   ],
+   "median_us": 729.375,
+   "token_bytes": 360,
+   "domain_bytes": 144,
+   "semantic_waves": 7,
+   "device_checker_dispatches": 1,
+   "local_parent_token_reads": 8,
+   "covered_member_slots": 9,
+   "supplemental_rhs_from_checker": 0
+  },
+  "audit": {
+   "later_bindings": [
+    {
+     "run": 34,
+     "constructor_key": [
+      2,
+      317
+     ],
+     "output": 620,
+     "tail": 317,
+     "reused_constructor_key": false,
+     "reused_result": false,
+     "used_initial_tail": true
+    },
+    {
+     "run": 79,
+     "constructor_key": [
+      2,
+      342
+     ],
+     "output": 674,
+     "tail": 342,
+     "reused_constructor_key": false,
+     "reused_result": false,
+     "used_initial_tail": true
+    }
+   ],
+   "full_pass_empty_lhs_rhs": 2,
+   "source_runs": 1428,
+   "source_rhs": 7265,
+   "aligned_prefix_runs": 8,
+   "ordered_prefix_rhs": 10,
+   "ordered_prefix_effective_writes": 15,
+   "prefix_spine_resumes": 0,
+   "later_same_step_rhs": 2
+  }
+ },
+ "dot-product": {
+  "build": {
+   "initial_rows": 129,
+   "initialized_rows": 320,
+   "initializer_effects": 411,
+   "helper_rules": 10,
+   "abstractly_enabled_rules": [
+    574,
+    575
+   ]
+  },
+  "rule_ids": [
+   375,
+   574,
+   575
+  ],
+  "naive_helper_scans": 9,
+  "naive_edge_key_probes": 108,
+  "proof": {
+   "controls": {
+    "complete": {
+     "illegal": 0,
+     "uncovered": 0,
+     "all_emitted_legal": true,
+     "complete": true
+    },
+    "delete_valid_leaf": {
+     "illegal": 0,
+     "uncovered": 1,
+     "all_emitted_legal": true,
+     "complete": false
+    },
+    "abstain": {
+     "illegal": 0,
+     "uncovered": 13,
+     "all_emitted_legal": true,
+     "complete": false
+    },
+    "publish_early": {
+     "illegal": 1,
+     "uncovered": 0,
+     "all_emitted_legal": false,
+     "complete": false
+    },
+    "wrong_value": {
+     "illegal": 1,
+     "uncovered": 0,
+     "all_emitted_legal": false,
+     "complete": false
+    },
+    "wrong_parent_same_value": {
+     "illegal": 1,
+     "uncovered": 0,
+     "all_emitted_legal": false,
+     "complete": false
+    },
+    "duplicate_seed_at_member_address": {
+     "illegal": 1,
+     "uncovered": 0,
+     "all_emitted_legal": false,
+     "complete": false
+    }
+   },
+   "resident_check_and_host_read_us": [
+    386.0,
+    371.083,
+    400.667,
+    417.541,
+    542.333,
+    375.792,
+    361.208,
+    359.417,
+    371.959,
+    368.458,
+    363.583,
+    1218.083,
+    394.667,
+    403.667,
+    362.417
+   ],
+   "median_us": 375.792,
+   "token_bytes": 520,
+   "domain_bytes": 208,
+   "semantic_waves": 9,
+   "device_checker_dispatches": 1,
+   "local_parent_token_reads": 12,
+   "covered_member_slots": 13,
+   "supplemental_rhs_from_checker": 0
+  },
+  "audit": {
+   "later_bindings": [
+    {
+     "run": 18,
+     "constructor_key": [
+      1,
+      325
+     ],
+     "output": 724,
+     "tail": 325,
+     "reused_constructor_key": false,
+     "reused_result": false,
+     "used_initial_tail": true
+    },
+    {
+     "run": 18,
+     "constructor_key": [
+      336,
+      326
+     ],
+     "output": 678,
+     "tail": 326,
+     "reused_constructor_key": false,
+     "reused_result": false,
+     "used_initial_tail": true
+    },
+    {
+     "run": 37,
+     "constructor_key": [
+      2,
+      325
+     ],
+     "output": 861,
+     "tail": 325,
+     "reused_constructor_key": false,
+     "reused_result": false,
+     "used_initial_tail": true
+    },
+    {
+     "run": 67,
+     "constructor_key": [
+      2,
+      416
+     ],
+     "output": 974,
+     "tail": 416,
+     "reused_constructor_key": false,
+     "reused_result": false,
+     "used_initial_tail": true
+    }
+   ],
+   "full_pass_empty_lhs_rhs": 2,
+   "source_runs": 1535,
+   "source_rhs": 6704,
+   "aligned_prefix_runs": 10,
+   "ordered_prefix_rhs": 14,
+   "ordered_prefix_effective_writes": 28,
+   "prefix_spine_resumes": 0,
+   "later_same_step_rhs": 4
+  }
+ }
+}

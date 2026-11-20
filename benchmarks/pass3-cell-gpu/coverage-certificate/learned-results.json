@@ -1,0 +1,2534 @@
+{
+ "torch_version": "2.15.0",
+ "training": [
+  "affine-twins",
+  "clamped-ramp",
+  "segmented-prefix",
+  "window-laplacian"
+ ],
+ "heldout": [
+  "gemm-bias-relu",
+  "stable-argmax"
+ ],
+ "training_updates": 350,
+ "learned": {
+  "1703": {
+   "loss_every_50": [
+    7.166892051696777,
+    0.24278458952903748,
+    0.04691367223858833,
+    0.020886726677417755,
+    0.014336674474179745,
+    0.0073070162907242775,
+    0.007494539022445679
+   ],
+   "weight_sha256": "56cc5f78e581ee8d5ff2ea3771b18e100476a455c947568612fa76adbe7e1891",
+   "trainable_parameters": 1193,
+   "fixed_symbol_codebook_bytes": 786432,
+   "results": {
+    "sum-bits": {
+     "intact": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 9,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       375.762333,
+       6.391625,
+       6.810583,
+       5.897125,
+       5.408334,
+       5.18275,
+       5.012125
+      ],
+      "median_ms": 5.897125,
+      "raw_tokens": [
+       [
+        1,
+        317,
+        -1,
+        0,
+        0
+       ],
+       [
+        1,
+        318,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        319,
+        1,
+        2,
+        2
+       ],
+       [
+        1,
+        338,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        339,
+        3,
+        2,
+        2
+       ],
+       [
+        1,
+        340,
+        4,
+        3,
+        3
+       ],
+       [
+        1,
+        341,
+        5,
+        4,
+        4
+       ],
+       [
+        1,
+        342,
+        6,
+        5,
+        5
+       ],
+       [
+        1,
+        388,
+        2,
+        3,
+        3
+       ]
+      ],
+      "source_domain": [
+       [
+        317,
+        -1
+       ],
+       [
+        318,
+        317
+       ],
+       [
+        319,
+        318
+       ],
+       [
+        338,
+        317
+       ],
+       [
+        339,
+        338
+       ],
+       [
+        340,
+        339
+       ],
+       [
+        341,
+        340
+       ],
+       [
+        342,
+        341
+       ],
+       [
+        388,
+        319
+       ]
+      ],
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 34,
+         "constructor_key": [
+          2,
+          317
+         ],
+         "output": 620,
+         "tail": 317,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 79,
+         "constructor_key": [
+          2,
+          342
+         ],
+         "output": 674,
+         "tail": 342,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1428,
+       "source_rhs": 7265,
+       "aligned_prefix_runs": 8,
+       "ordered_prefix_rhs": 10,
+       "ordered_prefix_effective_writes": 15,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 2
+      }
+     },
+     "permuted-rows": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 9,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       6.874625
+      ],
+      "median_ms": 6.874625,
+      "same_tokens_after_inverse_permutation": true,
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 34,
+         "constructor_key": [
+          2,
+          317
+         ],
+         "output": 620,
+         "tail": 317,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 79,
+         "constructor_key": [
+          2,
+          342
+         ],
+         "output": 674,
+         "tail": 342,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1428,
+       "source_rhs": 7265,
+       "aligned_prefix_runs": 8,
+       "ordered_prefix_rhs": 10,
+       "ordered_prefix_effective_writes": 15,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 2
+      }
+     },
+     "zero-parent-token": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 8,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.352375
+      ],
+      "median_ms": 5.352375
+     },
+     "rotate-parent": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 8,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.248667
+      ],
+      "median_ms": 5.248667
+     }
+    },
+    "dot-product": {
+     "intact": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 13,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       160.205,
+       6.232917,
+       6.000917,
+       5.940541,
+       5.391542,
+       5.841792,
+       5.878792
+      ],
+      "median_ms": 5.940541,
+      "raw_tokens": [
+       [
+        1,
+        325,
+        -1,
+        0,
+        0
+       ],
+       [
+        1,
+        326,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        327,
+        1,
+        2,
+        2
+       ],
+       [
+        1,
+        328,
+        2,
+        3,
+        3
+       ],
+       [
+        1,
+        410,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        411,
+        4,
+        2,
+        2
+       ],
+       [
+        1,
+        412,
+        5,
+        3,
+        3
+       ],
+       [
+        1,
+        413,
+        6,
+        4,
+        4
+       ],
+       [
+        1,
+        414,
+        7,
+        5,
+        5
+       ],
+       [
+        1,
+        415,
+        8,
+        6,
+        6
+       ],
+       [
+        1,
+        416,
+        9,
+        7,
+        7
+       ],
+       [
+        1,
+        468,
+        2,
+        3,
+        3
+       ],
+       [
+        1,
+        469,
+        11,
+        4,
+        4
+       ]
+      ],
+      "source_domain": [
+       [
+        325,
+        -1
+       ],
+       [
+        326,
+        325
+       ],
+       [
+        327,
+        326
+       ],
+       [
+        328,
+        327
+       ],
+       [
+        410,
+        325
+       ],
+       [
+        411,
+        410
+       ],
+       [
+        412,
+        411
+       ],
+       [
+        413,
+        412
+       ],
+       [
+        414,
+        413
+       ],
+       [
+        415,
+        414
+       ],
+       [
+        416,
+        415
+       ],
+       [
+        468,
+        327
+       ],
+       [
+        469,
+        468
+       ]
+      ],
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 18,
+         "constructor_key": [
+          1,
+          325
+         ],
+         "output": 724,
+         "tail": 325,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 18,
+         "constructor_key": [
+          336,
+          326
+         ],
+         "output": 678,
+         "tail": 326,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 37,
+         "constructor_key": [
+          2,
+          325
+         ],
+         "output": 861,
+         "tail": 325,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 67,
+         "constructor_key": [
+          2,
+          416
+         ],
+         "output": 974,
+         "tail": 416,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1535,
+       "source_rhs": 6704,
+       "aligned_prefix_runs": 10,
+       "ordered_prefix_rhs": 14,
+       "ordered_prefix_effective_writes": 28,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 4
+      }
+     },
+     "permuted-rows": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 13,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.436875
+      ],
+      "median_ms": 5.436875,
+      "same_tokens_after_inverse_permutation": true,
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 18,
+         "constructor_key": [
+          1,
+          325
+         ],
+         "output": 724,
+         "tail": 325,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 18,
+         "constructor_key": [
+          336,
+          326
+         ],
+         "output": 678,
+         "tail": 326,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 37,
+         "constructor_key": [
+          2,
+          325
+         ],
+         "output": 861,
+         "tail": 325,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 67,
+         "constructor_key": [
+          2,
+          416
+         ],
+         "output": 974,
+         "tail": 416,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1535,
+       "source_rhs": 6704,
+       "aligned_prefix_runs": 10,
+       "ordered_prefix_rhs": 14,
+       "ordered_prefix_effective_writes": 28,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 4
+      }
+     },
+     "zero-parent-token": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 12,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       6.386917
+      ],
+      "median_ms": 6.386917
+     },
+     "rotate-parent": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 12,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.798708
+      ],
+      "median_ms": 5.798708
+     }
+    },
+    "gemm-bias-relu": {
+     "intact": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 16,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       81.556209,
+       6.931708,
+       5.5865,
+       5.596,
+       5.469208,
+       5.224375,
+       5.195417
+      ],
+      "median_ms": 5.5865,
+      "raw_tokens": [
+       [
+        1,
+        320,
+        -1,
+        0,
+        0
+       ],
+       [
+        1,
+        321,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        322,
+        1,
+        2,
+        2
+       ],
+       [
+        1,
+        323,
+        2,
+        3,
+        3
+       ],
+       [
+        1,
+        346,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        347,
+        4,
+        2,
+        2
+       ],
+       [
+        1,
+        348,
+        5,
+        3,
+        3
+       ],
+       [
+        1,
+        349,
+        6,
+        4,
+        4
+       ],
+       [
+        1,
+        350,
+        7,
+        5,
+        5
+       ],
+       [
+        1,
+        351,
+        8,
+        6,
+        6
+       ],
+       [
+        1,
+        352,
+        9,
+        7,
+        7
+       ],
+       [
+        1,
+        378,
+        9,
+        7,
+        7
+       ],
+       [
+        1,
+        379,
+        11,
+        8,
+        8
+       ],
+       [
+        1,
+        410,
+        11,
+        8,
+        8
+       ],
+       [
+        1,
+        411,
+        13,
+        9,
+        9
+       ],
+       [
+        1,
+        412,
+        14,
+        10,
+        10
+       ]
+      ],
+      "source_domain": [
+       [
+        320,
+        -1
+       ],
+       [
+        321,
+        320
+       ],
+       [
+        322,
+        321
+       ],
+       [
+        323,
+        322
+       ],
+       [
+        346,
+        320
+       ],
+       [
+        347,
+        346
+       ],
+       [
+        348,
+        347
+       ],
+       [
+        349,
+        348
+       ],
+       [
+        350,
+        349
+       ],
+       [
+        351,
+        350
+       ],
+       [
+        352,
+        351
+       ],
+       [
+        378,
+        351
+       ],
+       [
+        379,
+        378
+       ],
+       [
+        410,
+        378
+       ],
+       [
+        411,
+        410
+       ],
+       [
+        412,
+        411
+       ]
+      ],
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 34,
+         "constructor_key": [
+          2,
+          320
+         ],
+         "output": 1018,
+         "tail": 320,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 70,
+         "constructor_key": [
+          2,
+          412
+         ],
+         "output": 1188,
+         "tail": 412,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 111,
+         "constructor_key": [
+          2,
+          379
+         ],
+         "output": 1229,
+         "tail": 379,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 148,
+         "constructor_key": [
+          2,
+          352
+         ],
+         "output": 1261,
+         "tail": 352,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1652,
+       "source_rhs": 15462,
+       "aligned_prefix_runs": 13,
+       "ordered_prefix_rhs": 17,
+       "ordered_prefix_effective_writes": 20,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 4
+      }
+     },
+     "permuted-rows": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 16,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.186542
+      ],
+      "median_ms": 5.186542,
+      "same_tokens_after_inverse_permutation": true,
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 34,
+         "constructor_key": [
+          2,
+          320
+         ],
+         "output": 1018,
+         "tail": 320,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 70,
+         "constructor_key": [
+          2,
+          412
+         ],
+         "output": 1188,
+         "tail": 412,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 111,
+         "constructor_key": [
+          2,
+          379
+         ],
+         "output": 1229,
+         "tail": 379,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 148,
+         "constructor_key": [
+          2,
+          352
+         ],
+         "output": 1261,
+         "tail": 352,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1652,
+       "source_rhs": 15462,
+       "aligned_prefix_runs": 13,
+       "ordered_prefix_rhs": 17,
+       "ordered_prefix_effective_writes": 20,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 4
+      }
+     },
+     "zero-parent-token": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 15,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.491917
+      ],
+      "median_ms": 5.491917
+     },
+     "rotate-parent": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 15,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.245583
+      ],
+      "median_ms": 5.245583
+     }
+    },
+    "stable-argmax": {
+     "intact": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 12,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       10.503417,
+       6.460125,
+       5.4195,
+       5.041416,
+       6.20125,
+       5.6885,
+       4.84025
+      ],
+      "median_ms": 5.6885,
+      "raw_tokens": [
+       [
+        1,
+        317,
+        -1,
+        0,
+        0
+       ],
+       [
+        1,
+        318,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        319,
+        1,
+        2,
+        2
+       ],
+       [
+        1,
+        320,
+        2,
+        3,
+        3
+       ],
+       [
+        1,
+        347,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        348,
+        4,
+        2,
+        2
+       ],
+       [
+        1,
+        349,
+        5,
+        3,
+        3
+       ],
+       [
+        1,
+        350,
+        6,
+        4,
+        4
+       ],
+       [
+        1,
+        351,
+        7,
+        5,
+        5
+       ],
+       [
+        1,
+        352,
+        8,
+        6,
+        6
+       ],
+       [
+        1,
+        353,
+        9,
+        7,
+        7
+       ],
+       [
+        1,
+        407,
+        9,
+        7,
+        7
+       ]
+      ],
+      "source_domain": [
+       [
+        317,
+        -1
+       ],
+       [
+        318,
+        317
+       ],
+       [
+        319,
+        318
+       ],
+       [
+        320,
+        319
+       ],
+       [
+        347,
+        317
+       ],
+       [
+        348,
+        347
+       ],
+       [
+        349,
+        348
+       ],
+       [
+        350,
+        349
+       ],
+       [
+        351,
+        350
+       ],
+       [
+        352,
+        351
+       ],
+       [
+        353,
+        352
+       ],
+       [
+        407,
+        352
+       ]
+      ],
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 35,
+         "constructor_key": [
+          2,
+          317
+         ],
+         "output": 787,
+         "tail": 317,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 88,
+         "constructor_key": [
+          2,
+          353
+         ],
+         "output": 868,
+         "tail": 353,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1149,
+       "source_rhs": 8190,
+       "aligned_prefix_runs": 10,
+       "ordered_prefix_rhs": 13,
+       "ordered_prefix_effective_writes": 17,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 2
+      }
+     },
+     "permuted-rows": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 12,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.166166
+      ],
+      "median_ms": 5.166166,
+      "same_tokens_after_inverse_permutation": true,
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 35,
+         "constructor_key": [
+          2,
+          317
+         ],
+         "output": 787,
+         "tail": 317,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 88,
+         "constructor_key": [
+          2,
+          353
+         ],
+         "output": 868,
+         "tail": 353,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1149,
+       "source_rhs": 8190,
+       "aligned_prefix_runs": 10,
+       "ordered_prefix_rhs": 13,
+       "ordered_prefix_effective_writes": 17,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 2
+      }
+     },
+     "zero-parent-token": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 11,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.686083
+      ],
+      "median_ms": 5.686083
+     },
+     "rotate-parent": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 11,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.50775
+      ],
+      "median_ms": 5.50775
+     }
+    }
+   }
+  },
+  "1709": {
+   "loss_every_50": [
+    6.391674041748047,
+    0.28683868050575256,
+    0.039970070123672485,
+    0.015888677909970284,
+    0.010591218248009682,
+    0.00689020985737443,
+    0.00747491791844368
+   ],
+   "weight_sha256": "e4158b87141b3191074bb6b3b73d1b6323462e4b635e70de2c989b0bf1b95b73",
+   "trainable_parameters": 1193,
+   "fixed_symbol_codebook_bytes": 786432,
+   "results": {
+    "sum-bits": {
+     "intact": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 9,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       7.758708,
+       5.442583,
+       4.951792,
+       5.532708,
+       4.99075,
+       5.107666,
+       4.911375
+      ],
+      "median_ms": 5.107666,
+      "raw_tokens": [
+       [
+        1,
+        317,
+        -1,
+        0,
+        0
+       ],
+       [
+        1,
+        318,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        319,
+        1,
+        2,
+        2
+       ],
+       [
+        1,
+        338,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        339,
+        3,
+        2,
+        2
+       ],
+       [
+        1,
+        340,
+        4,
+        3,
+        3
+       ],
+       [
+        1,
+        341,
+        5,
+        4,
+        4
+       ],
+       [
+        1,
+        342,
+        6,
+        5,
+        5
+       ],
+       [
+        1,
+        388,
+        2,
+        3,
+        3
+       ]
+      ],
+      "source_domain": [
+       [
+        317,
+        -1
+       ],
+       [
+        318,
+        317
+       ],
+       [
+        319,
+        318
+       ],
+       [
+        338,
+        317
+       ],
+       [
+        339,
+        338
+       ],
+       [
+        340,
+        339
+       ],
+       [
+        341,
+        340
+       ],
+       [
+        342,
+        341
+       ],
+       [
+        388,
+        319
+       ]
+      ],
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 34,
+         "constructor_key": [
+          2,
+          317
+         ],
+         "output": 620,
+         "tail": 317,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 79,
+         "constructor_key": [
+          2,
+          342
+         ],
+         "output": 674,
+         "tail": 342,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1428,
+       "source_rhs": 7265,
+       "aligned_prefix_runs": 8,
+       "ordered_prefix_rhs": 10,
+       "ordered_prefix_effective_writes": 15,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 2
+      }
+     },
+     "permuted-rows": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 9,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.286875
+      ],
+      "median_ms": 5.286875,
+      "same_tokens_after_inverse_permutation": true,
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 34,
+         "constructor_key": [
+          2,
+          317
+         ],
+         "output": 620,
+         "tail": 317,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 79,
+         "constructor_key": [
+          2,
+          342
+         ],
+         "output": 674,
+         "tail": 342,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1428,
+       "source_rhs": 7265,
+       "aligned_prefix_runs": 8,
+       "ordered_prefix_rhs": 10,
+       "ordered_prefix_effective_writes": 15,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 2
+      }
+     },
+     "zero-parent-token": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 8,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.17575
+      ],
+      "median_ms": 5.17575
+     },
+     "rotate-parent": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 8,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.721125
+      ],
+      "median_ms": 5.721125
+     }
+    },
+    "dot-product": {
+     "intact": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 13,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       4.967666,
+       6.271334,
+       5.73125,
+       4.994833,
+       5.724458,
+       5.089041,
+       4.922583
+      ],
+      "median_ms": 5.089041,
+      "raw_tokens": [
+       [
+        1,
+        325,
+        -1,
+        0,
+        0
+       ],
+       [
+        1,
+        326,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        327,
+        1,
+        2,
+        2
+       ],
+       [
+        1,
+        328,
+        2,
+        3,
+        3
+       ],
+       [
+        1,
+        410,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        411,
+        4,
+        2,
+        2
+       ],
+       [
+        1,
+        412,
+        5,
+        3,
+        3
+       ],
+       [
+        1,
+        413,
+        6,
+        4,
+        4
+       ],
+       [
+        1,
+        414,
+        7,
+        5,
+        5
+       ],
+       [
+        1,
+        415,
+        8,
+        6,
+        6
+       ],
+       [
+        1,
+        416,
+        9,
+        7,
+        7
+       ],
+       [
+        1,
+        468,
+        2,
+        3,
+        3
+       ],
+       [
+        1,
+        469,
+        11,
+        4,
+        4
+       ]
+      ],
+      "source_domain": [
+       [
+        325,
+        -1
+       ],
+       [
+        326,
+        325
+       ],
+       [
+        327,
+        326
+       ],
+       [
+        328,
+        327
+       ],
+       [
+        410,
+        325
+       ],
+       [
+        411,
+        410
+       ],
+       [
+        412,
+        411
+       ],
+       [
+        413,
+        412
+       ],
+       [
+        414,
+        413
+       ],
+       [
+        415,
+        414
+       ],
+       [
+        416,
+        415
+       ],
+       [
+        468,
+        327
+       ],
+       [
+        469,
+        468
+       ]
+      ],
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 18,
+         "constructor_key": [
+          1,
+          325
+         ],
+         "output": 724,
+         "tail": 325,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 18,
+         "constructor_key": [
+          336,
+          326
+         ],
+         "output": 678,
+         "tail": 326,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 37,
+         "constructor_key": [
+          2,
+          325
+         ],
+         "output": 861,
+         "tail": 325,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 67,
+         "constructor_key": [
+          2,
+          416
+         ],
+         "output": 974,
+         "tail": 416,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1535,
+       "source_rhs": 6704,
+       "aligned_prefix_runs": 10,
+       "ordered_prefix_rhs": 14,
+       "ordered_prefix_effective_writes": 28,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 4
+      }
+     },
+     "permuted-rows": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 13,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.348416
+      ],
+      "median_ms": 5.348416,
+      "same_tokens_after_inverse_permutation": true,
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 18,
+         "constructor_key": [
+          1,
+          325
+         ],
+         "output": 724,
+         "tail": 325,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 18,
+         "constructor_key": [
+          336,
+          326
+         ],
+         "output": 678,
+         "tail": 326,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 37,
+         "constructor_key": [
+          2,
+          325
+         ],
+         "output": 861,
+         "tail": 325,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 67,
+         "constructor_key": [
+          2,
+          416
+         ],
+         "output": 974,
+         "tail": 416,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1535,
+       "source_rhs": 6704,
+       "aligned_prefix_runs": 10,
+       "ordered_prefix_rhs": 14,
+       "ordered_prefix_effective_writes": 28,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 4
+      }
+     },
+     "zero-parent-token": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 12,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.4975
+      ],
+      "median_ms": 5.4975
+     },
+     "rotate-parent": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 12,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       4.874291
+      ],
+      "median_ms": 4.874291
+     }
+    },
+    "gemm-bias-relu": {
+     "intact": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 16,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.271292,
+       5.17775,
+       5.57575,
+       4.839209,
+       6.122833,
+       5.345417,
+       5.200667
+      ],
+      "median_ms": 5.271292,
+      "raw_tokens": [
+       [
+        1,
+        320,
+        -1,
+        0,
+        0
+       ],
+       [
+        1,
+        321,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        322,
+        1,
+        2,
+        2
+       ],
+       [
+        1,
+        323,
+        2,
+        3,
+        3
+       ],
+       [
+        1,
+        346,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        347,
+        4,
+        2,
+        2
+       ],
+       [
+        1,
+        348,
+        5,
+        3,
+        3
+       ],
+       [
+        1,
+        349,
+        6,
+        4,
+        4
+       ],
+       [
+        1,
+        350,
+        7,
+        5,
+        5
+       ],
+       [
+        1,
+        351,
+        8,
+        6,
+        6
+       ],
+       [
+        1,
+        352,
+        9,
+        7,
+        7
+       ],
+       [
+        1,
+        378,
+        9,
+        7,
+        7
+       ],
+       [
+        1,
+        379,
+        11,
+        8,
+        8
+       ],
+       [
+        1,
+        410,
+        11,
+        8,
+        8
+       ],
+       [
+        1,
+        411,
+        13,
+        9,
+        9
+       ],
+       [
+        1,
+        412,
+        14,
+        10,
+        10
+       ]
+      ],
+      "source_domain": [
+       [
+        320,
+        -1
+       ],
+       [
+        321,
+        320
+       ],
+       [
+        322,
+        321
+       ],
+       [
+        323,
+        322
+       ],
+       [
+        346,
+        320
+       ],
+       [
+        347,
+        346
+       ],
+       [
+        348,
+        347
+       ],
+       [
+        349,
+        348
+       ],
+       [
+        350,
+        349
+       ],
+       [
+        351,
+        350
+       ],
+       [
+        352,
+        351
+       ],
+       [
+        378,
+        351
+       ],
+       [
+        379,
+        378
+       ],
+       [
+        410,
+        378
+       ],
+       [
+        411,
+        410
+       ],
+       [
+        412,
+        411
+       ]
+      ],
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 34,
+         "constructor_key": [
+          2,
+          320
+         ],
+         "output": 1018,
+         "tail": 320,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 70,
+         "constructor_key": [
+          2,
+          412
+         ],
+         "output": 1188,
+         "tail": 412,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 111,
+         "constructor_key": [
+          2,
+          379
+         ],
+         "output": 1229,
+         "tail": 379,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 148,
+         "constructor_key": [
+          2,
+          352
+         ],
+         "output": 1261,
+         "tail": 352,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1652,
+       "source_rhs": 15462,
+       "aligned_prefix_runs": 13,
+       "ordered_prefix_rhs": 17,
+       "ordered_prefix_effective_writes": 20,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 4
+      }
+     },
+     "permuted-rows": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 16,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.706667
+      ],
+      "median_ms": 5.706667,
+      "same_tokens_after_inverse_permutation": true,
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 34,
+         "constructor_key": [
+          2,
+          320
+         ],
+         "output": 1018,
+         "tail": 320,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 70,
+         "constructor_key": [
+          2,
+          412
+         ],
+         "output": 1188,
+         "tail": 412,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 111,
+         "constructor_key": [
+          2,
+          379
+         ],
+         "output": 1229,
+         "tail": 379,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 148,
+         "constructor_key": [
+          2,
+          352
+         ],
+         "output": 1261,
+         "tail": 352,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1652,
+       "source_rhs": 15462,
+       "aligned_prefix_runs": 13,
+       "ordered_prefix_rhs": 17,
+       "ordered_prefix_effective_writes": 20,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 4
+      }
+     },
+     "zero-parent-token": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 15,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.321584
+      ],
+      "median_ms": 5.321584
+     },
+     "rotate-parent": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 15,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.45075
+      ],
+      "median_ms": 5.45075
+     }
+    },
+    "stable-argmax": {
+     "intact": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 12,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.76525,
+       4.760417,
+       4.83725,
+       4.864209,
+       5.060333,
+       5.133458,
+       6.033125
+      ],
+      "median_ms": 5.060333,
+      "raw_tokens": [
+       [
+        1,
+        317,
+        -1,
+        0,
+        0
+       ],
+       [
+        1,
+        318,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        319,
+        1,
+        2,
+        2
+       ],
+       [
+        1,
+        320,
+        2,
+        3,
+        3
+       ],
+       [
+        1,
+        347,
+        0,
+        1,
+        1
+       ],
+       [
+        1,
+        348,
+        4,
+        2,
+        2
+       ],
+       [
+        1,
+        349,
+        5,
+        3,
+        3
+       ],
+       [
+        1,
+        350,
+        6,
+        4,
+        4
+       ],
+       [
+        1,
+        351,
+        7,
+        5,
+        5
+       ],
+       [
+        1,
+        352,
+        8,
+        6,
+        6
+       ],
+       [
+        1,
+        353,
+        9,
+        7,
+        7
+       ],
+       [
+        1,
+        407,
+        9,
+        7,
+        7
+       ]
+      ],
+      "source_domain": [
+       [
+        317,
+        -1
+       ],
+       [
+        318,
+        317
+       ],
+       [
+        319,
+        318
+       ],
+       [
+        320,
+        319
+       ],
+       [
+        347,
+        317
+       ],
+       [
+        348,
+        347
+       ],
+       [
+        349,
+        348
+       ],
+       [
+        350,
+        349
+       ],
+       [
+        351,
+        350
+       ],
+       [
+        352,
+        351
+       ],
+       [
+        353,
+        352
+       ],
+       [
+        407,
+        352
+       ]
+      ],
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 35,
+         "constructor_key": [
+          2,
+          317
+         ],
+         "output": 787,
+         "tail": 317,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 88,
+         "constructor_key": [
+          2,
+          353
+         ],
+         "output": 868,
+         "tail": 353,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1149,
+       "source_rhs": 8190,
+       "aligned_prefix_runs": 10,
+       "ordered_prefix_rhs": 13,
+       "ordered_prefix_effective_writes": 17,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 2
+      }
+     },
+     "permuted-rows": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 12,
+      "illegal": 0,
+      "uncovered": 0,
+      "complete": true,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.032167
+      ],
+      "median_ms": 5.032167,
+      "same_tokens_after_inverse_permutation": true,
+      "ordered_prefix_audit": {
+       "later_bindings": [
+        {
+         "run": 35,
+         "constructor_key": [
+          2,
+          317
+         ],
+         "output": 787,
+         "tail": 317,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        },
+        {
+         "run": 88,
+         "constructor_key": [
+          2,
+          353
+         ],
+         "output": 868,
+         "tail": 353,
+         "reused_constructor_key": false,
+         "reused_result": false,
+         "used_initial_tail": true
+        }
+       ],
+       "full_pass_empty_lhs_rhs": 2,
+       "source_runs": 1149,
+       "source_rhs": 8190,
+       "aligned_prefix_runs": 10,
+       "ordered_prefix_rhs": 13,
+       "ordered_prefix_effective_writes": 17,
+       "prefix_spine_resumes": 0,
+       "later_same_step_rhs": 2
+      }
+     },
+     "zero-parent-token": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 11,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.329958
+      ],
+      "median_ms": 5.329958
+     },
+     "rotate-parent": {
+      "offline_initializer_rhs": 1,
+      "full_pass_integrated": false,
+      "wrong_parent_among_issued": 0,
+      "issued": 1,
+      "illegal": 0,
+      "uncovered": 11,
+      "complete": false,
+      "checker_dispatches": 1,
+      "generator_waves": 24,
+      "field_copy": "own identity; depth and value from selected previous parent",
+      "gpu_generate_and_check_ms": [
+       5.120417
+      ],
+      "median_ms": 5.120417
+     }
+    }
+   }
+  }
+ },
+ "architectural_budget": 24,
+ "cold_setup_excluded": true
+}
