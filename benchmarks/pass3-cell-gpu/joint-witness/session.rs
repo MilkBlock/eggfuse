@@ -11,6 +11,90 @@ use std::{
     time::Instant,
 };
 
+const FROZEN_BUNDLE_SETTINGS: Option<&str> = None;
+const FILE_FIELDS: &[&str] = &[
+    "single_config",
+    "multi_weights",
+    "merge_config",
+    "root_config",
+    "baked_codes",
+    "secondary_weights",
+    "secondary_codes",
+];
+
+fn verify_profile(request: &Value) -> Result<(), Box<dyn std::error::Error>> {
+    if request.get("cpu_profile").is_none() {
+        return Ok(());
+    }
+    let encoded = FROZEN_BUNDLE_SETTINGS.ok_or("unsupported compiled CPU bundle profile")?;
+    let options: Value = serde_json::from_str(encoded)?;
+    for (field, value) in options
+        .as_object()
+        .ok_or("invalid compiled backend settings")?
+    {
+        if request.get(field) != Some(value) {
+            return Err(format!("CPU bundle profile field mismatch: {field}").into());
+        }
+    }
+    for field in [
+        "single_config",
+        "multi_weights",
+        "merge_config",
+        "root_config",
+        "baked_codes",
+    ] {
+        if request[field].as_str().is_none() {
+            return Err(format!("missing frozen bundle file: {field}").into());
+        }
+    }
+    Ok(())
+}
+
+fn verify_bundle(root: &Path, request: &Value) -> Result<(), Box<dyn std::error::Error>> {
+    let manifest = root.join("bundle-manifest.json");
+    if !manifest.exists() && request.get("cpu_profile").is_none() {
+        return Ok(());
+    }
+    let profile = request["cpu_profile"]
+        .as_str()
+        .ok_or("profile missing from versioned bundle")?;
+    verify_profile(request)?;
+    let data: Value = serde_json::from_slice(&std::fs::read(manifest)?)?;
+    if data["profile"].as_str() != Some(profile) || data["format"] != "eggfuse.cpu-bundle/v1" {
+        return Err("CPU bundle manifest does not match request".into());
+    }
+    let files = data["files"]
+        .as_object()
+        .ok_or("incomplete CPU bundle manifest")?;
+    let mut required =
+        std::collections::BTreeSet::from(["program.json", "plans.json", "request.json"]);
+    for &field in FILE_FIELDS {
+        if let Some(value) = request.get(field) {
+            let name = value.as_str().ok_or("invalid bundle file reference")?;
+            if Path::new(name).file_name().and_then(|part| part.to_str()) != Some(name) {
+                return Err("profile file must be a bundle-local filename".into());
+            }
+            required.insert(name);
+        }
+    }
+    if files.len() != required.len() {
+        return Err("bundle file list differs from request".into());
+    }
+    for name in required {
+        let expected = files
+            .get(name)
+            .and_then(Value::as_str)
+            .ok_or("missing bundle file digest")?;
+        let mut file = std::fs::File::open(root.join(name))?;
+        let mut hash = Sha256::new();
+        std::io::copy(&mut file, &mut hash)?;
+        if format!("{:x}", hash.finalize()) != expected {
+            return Err(format!("bundle digest mismatch: {name}").into());
+        }
+    }
+    Ok(())
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
     let (program_path, plan_path, requests, one_shot): (
@@ -20,16 +104,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         _,
     ) =
         match args.as_slice() {
-            [flag, folder] if flag == "--bundle" => {
+            [flag, folder] if flag == "--bundle" || flag == "--audit-bundle" => {
                 let root = Path::new(folder);
                 let mut request: Value =
                     serde_json::from_slice(&std::fs::read(root.join("request.json"))?)?;
-                for field in [
-                    "single_config",
-                    "multi_weights",
-                    "merge_config",
-                    "root_config",
-                ] {
+                verify_bundle(root, &request)?;
+                if flag == "--audit-bundle" {
+                    request["audit"] = json!(true);
+                    request["full_audit_report"] = json!(true);
+                }
+                for &field in FILE_FIELDS {
                     if let Some(file) = request[field].as_str() {
                         request[field] = json!(root.join(file));
                     }
@@ -48,7 +132,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 false,
             ),
             _ => return Err(
-                "use --bundle DIR for native inference, or PROGRAM PLANS for a persistent session"
+                "use --bundle DIR for inference, --audit-bundle DIR for full source receipts, or PROGRAM PLANS for a persistent session"
                     .into(),
             ),
         };
@@ -62,6 +146,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         if one_shot && req["source_sha256"].as_str() != Some(digest.as_str()) {
             return Err("program digest differs from the compiled bundle".into());
         }
+        verify_profile(&req)?;
         const ROOT_SUPPORT: bool = false;
         if req["root_config"].is_string() && !ROOT_SUPPORT {
             return Err("this binary has no root Cell recipe decoder".into());
@@ -156,7 +241,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .collect::<Vec<_>>()
             );
         }
-        if one_shot {
+        let profile_work = req.get("cpu_profile").map(|_| json!({
+            "single_policy": report["single"]["mode"],
+            "multi_policy": report["multi"]["generator"],
+            "views": report["multi"]["embedding_views"],
+            "sealed_before_verifier": report["multi"]["sealed_before_verifier"],
+            "sealed_tuples": report["multi"]["paged_tuples"],
+            "prefix_probes": report["multi"]["forward"]["probes"]
+        }));
+        if one_shot && req["full_audit_report"] != true {
             let single = &report["single"];
             let multi = &report["multi"];
             // Historical JSON is optional in a resident build. This counter is updated
@@ -170,6 +263,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "remaining_rhs":total-neural,"state_sha":report["state_sha"],"inference_ms":ms,
                 "multi_raw_tuples":multi["counts"]["raw_tuples"],"single_scored":single["work"][0],
                 "single_emitted":single["work"][1],"root_recipes_applied":report["root_recipe"]["applied"],"root_cells_allocated":report["root_recipe"]["allocated"],"merge_counts":report["merge_child"]["counts"]});
+        }
+        if one_shot && let Some(profile) = req.get("cpu_profile") {
+            report["cpu_profile"] = profile.clone();
+            report["profile_execution"] = profile_work.unwrap();
         }
         writeln!(out, "{}", report)?;
         out.flush()?;

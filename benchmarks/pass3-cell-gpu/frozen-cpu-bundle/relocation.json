@@ -1,0 +1,69 @@
+{
+ "sum-bits": {
+  "rhs": 7265,
+  "runs": 1428,
+  "profile": "frozen-ports/v1",
+  "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+  "directly_allocated": 5867,
+  "all_fresh": 5868,
+  "sealed": 7970,
+  "execution": {
+   "multi_policy": "learned",
+   "prefix_probes": 52335,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 7970,
+   "single_policy": "learned",
+   "views": 2
+  },
+  "cold_ms": [
+   186.538416,
+   185.887417,
+   183.286542
+  ],
+  "inference_ms": [
+   33.470417000000005,
+   32.682959,
+   31.314208000000004
+  ],
+  "median_cold_ms": 185.887417,
+  "files": 8,
+  "compiled_plan": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+  "corruptions_rejected": {
+   "ports.bin": true,
+   "plans.json": true,
+   "request.json": true,
+   "incompatible_settings": true
+  }
+ },
+ "pair": {
+  "rhs": 2,
+  "runs": 1,
+  "profile": "frozen-ports/v1",
+  "state": "9ce077939edd25065c266e94d75493cf2a851d41dd52b4c1a787125b3de7ecdd",
+  "directly_allocated": 2,
+  "all_fresh": 2,
+  "sealed": 2,
+  "execution": {
+   "multi_policy": "learned",
+   "prefix_probes": 0,
+   "sealed_before_verifier": true,
+   "sealed_tuples": 2,
+   "single_policy": "learned",
+   "views": 2
+  },
+  "cold_ms": [
+   8.188583,
+   7.910875,
+   7.507458
+  ],
+  "inference_ms": [
+   0.042542,
+   0.037959,
+   0.034917
+  ],
+  "median_cold_ms": 7.910875,
+  "files": 8,
+  "compiled_plan": "6389986e5c3aa9259cffebfc572df8d5c6933ea5bd73ad9c7232412d48fcd759",
+  "foreign_image_rejected": true
+ }
+}

@@ -10,6 +10,8 @@ use std::{cell::RefCell, collections::BTreeMap};
 
 #[derive(Deserialize)]
 pub struct Config {
+    #[serde(default)]
+    allow_empty: bool,
     pub program_sha256: String,
     pub weights: [f32; 7],
     pub control: String,
@@ -148,7 +150,7 @@ pub fn configure(p: &Program, data: Option<&[u8]>, audit: bool) -> Result<()> {
             );
         }
     }
-    if routes.is_empty() {
+    if routes.is_empty() && !c.allow_empty {
         return Err("no function-constructor merge routes".into());
     }
     let nested = routes.values().map(|r| (r.ctor, r.template)).collect();

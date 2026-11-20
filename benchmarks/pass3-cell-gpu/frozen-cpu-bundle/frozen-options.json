@@ -1,0 +1,46 @@
+{
+  "cpu_profile": "frozen-ports/v1",
+  "multi_generation": "complete",
+  "multi_residual": false,
+  "multi_mode": "rowdeltapairguardstackseal2xlearned",
+  "radius": 0,
+  "packed_lookup": true,
+  "baked_row_index": false,
+  "early_guards": "constants",
+  "atom_constraints": 2,
+  "multi_root_pages": true,
+  "multi_page_tuples": 8192,
+  "archive_single_winners": false,
+  "rows": {
+    "action": 4,
+    "max_rows": 1,
+    "workers": 1,
+    "batch": true,
+    "verify": 2,
+    "prefilter": 2,
+    "signature_frontier": true
+  },
+  "signature_frontier": {
+    "bytes": 65536,
+    "min_old": 16,
+    "density": 50,
+    "scan_ratio": 2,
+    "typed_bytes": 262144,
+    "changed_ports": true,
+    "changed_epochs": true,
+    "fresh_build": true
+  },
+  "forward": {
+    "columns": 2,
+    "budget": 4194304,
+    "existence": true,
+    "freshness": true,
+    "min_candidates": 8
+  },
+  "tiered_ports": {
+    "primary": true,
+    "columns": true,
+    "evidence_views": 1,
+    "bytes": 1048576
+  }
+}
