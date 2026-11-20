@@ -68,7 +68,13 @@ pub fn use_forward(value: Json) -> Result<()> {
     }
     STORE.with_borrow_mut(|cell| {
         let s = cell.as_mut().ok_or("missing learned pointer proposer")?;
-        if s.mode != "learned" || !s.seal || s.accel != 4 || s.radius != 0 || !s.packed_lookup {
+        if s.mode != "learned"
+            || !s.seal
+            || s.accel != 4
+            || s.radius != 0
+            || !s.packed_lookup
+            || s.raw_cache.enabled
+        {
             return Err(
                 "forward viability requires packed, sealed, zero-radius neural proposals".into(),
             );
