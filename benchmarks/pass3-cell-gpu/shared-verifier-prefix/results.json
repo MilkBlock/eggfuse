@@ -1,0 +1,2926 @@
+{
+ "sum-bits": {
+  "vanilla": {
+   "runs": 1428,
+   "rhs": 7265,
+   "ms": [
+    22.09875,
+    23.702958,
+    22.849999999999998,
+    23.419375
+   ],
+   "median_ms": 23.1346875
+  },
+  "off": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 287128,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "1887539998069040838",
+   "emitted": [
+    7889,
+    5912
+   ],
+   "wire_hash": "3278675624561861664",
+   "commits": "d3bf6bfe9f3c52136a334c99e80947d38f49702f89187433e093279d1383c28a",
+   "physical": "59b9964552965041b40118e5d7c0fb4111f7c6306514954f82d1fee672690414",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    35.195666,
+    36.12575,
+    32.687875,
+    33.22975
+   ],
+   "counts": {
+    "approximate_visits": 16879,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 15039,
+    "peak_rule_tuples": 89,
+    "point_reads": 1627,
+    "primitive_evals": 1356,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 13260,
+    "raw_tuples": 5912,
+    "rejected_pointers": 0,
+    "root_offers": 50414,
+    "score_bucket_reads": 14780,
+    "shortlisted": 0,
+    "stale_candidates": 87,
+    "table_rebuilds": 85,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 5912,
+    "visible_rows": 793
+   },
+   "family": {
+    "accesses": 0,
+    "audit_checks": 0,
+    "audit_collisions": 0,
+    "audit_sibling_pairs": {},
+    "audit_stamp_misses": 0,
+    "changed_epoch": 0,
+    "cold_entries": 0,
+    "families": 0,
+    "full_slots": 0,
+    "hits": 0,
+    "misses": 0,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 0,
+    "restored_values": 0,
+    "rules": 0,
+    "sibling": 0,
+    "sibling_changed_epoch": 0,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 0,
+    "stored_values": 0
+   },
+   "single_work": [
+    7889,
+    7889,
+    7889,
+    8270,
+    1677,
+    2677,
+    0,
+    0
+   ],
+   "decisions": "15576378264816477716",
+   "median_ms": 34.212708000000006
+  },
+  "anchor": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 287128,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "1887539998069040838",
+   "emitted": [
+    7889,
+    5912
+   ],
+   "wire_hash": "3278675624561861664",
+   "commits": "d3bf6bfe9f3c52136a334c99e80947d38f49702f89187433e093279d1383c28a",
+   "physical": "59b9964552965041b40118e5d7c0fb4111f7c6306514954f82d1fee672690414",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    33.897499999999994,
+    33.145041,
+    32.70375,
+    32.799457999999994
+   ],
+   "counts": {
+    "approximate_visits": 16879,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 15039,
+    "peak_rule_tuples": 89,
+    "point_reads": 1627,
+    "primitive_evals": 1356,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 13260,
+    "raw_tuples": 5912,
+    "rejected_pointers": 0,
+    "root_offers": 50414,
+    "score_bucket_reads": 14780,
+    "shortlisted": 0,
+    "stale_candidates": 87,
+    "table_rebuilds": 85,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 5912,
+    "visible_rows": 793
+   },
+   "family": {
+    "accesses": 5188,
+    "audit_checks": 2973,
+    "audit_collisions": 118,
+    "audit_sibling_pairs": {
+     "100": {
+      "114": 5,
+      "149": 5
+     },
+     "102": {
+      "151": 379,
+      "270": 8,
+      "271": 8,
+      "272": 8,
+      "273": 8,
+      "274": 8,
+      "275": 8,
+      "358": 30,
+      "360": 30,
+      "422": 21,
+      "447": 21
+     },
+     "103": {
+      "153": 17
+     },
+     "104": {
+      "154": 116
+     },
+     "105": {
+      "155": 12
+     },
+     "107": {
+      "140": 5,
+      "157": 77,
+      "399": 7,
+      "400": 7,
+      "428": 2
+     },
+     "108": {
+      "139": 2,
+      "158": 36,
+      "429": 1
+     },
+     "110": {
+      "115": 2,
+      "161": 2
+     },
+     "139": {
+      "158": 1,
+      "429": 18
+     },
+     "140": {
+      "157": 3,
+      "428": 18
+     },
+     "142": {
+      "430": 3,
+      "503": 3
+     },
+     "146": {
+      "147": 21
+     },
+     "148": {
+      "419": 2
+     },
+     "151": {
+      "270": 4,
+      "271": 4,
+      "272": 4,
+      "273": 4,
+      "274": 4,
+      "275": 4,
+      "422": 21
+     },
+     "152": {
+      "423": 4
+     },
+     "157": {
+      "428": 3
+     },
+     "158": {
+      "429": 1
+     },
+     "270": {
+      "102": 2,
+      "151": 2,
+      "271": 15,
+      "272": 15,
+      "273": 15,
+      "274": 15,
+      "275": 15,
+      "358": 2,
+      "360": 2,
+      "422": 2,
+      "447": 6,
+      "453": 2,
+      "65": 2
+     },
+     "281": {
+      "282": 3,
+      "283": 3,
+      "288": 3,
+      "423": 13
+     },
+     "284": {
+      "101": 16,
+      "150": 16,
+      "421": 24,
+      "64": 8
+     },
+     "297": {
+      "298": 6,
+      "307": 6,
+      "420": 1,
+      "502": 1
+     },
+     "358": {
+      "360": 26,
+      "422": 170
+     },
+     "399": {
+      "400": 1
+     },
+     "420": {
+      "502": 4
+     },
+     "430": {
+      "503": 1
+     },
+     "447": {
+      "453": 4
+     },
+     "50": {
+      "70": 1,
+      "86": 1
+     },
+     "51": {
+      "107": 3,
+      "140": 3,
+      "157": 3,
+      "69": 4,
+      "85": 4
+     },
+     "527": {
+      "432": 2
+     },
+     "54": {
+      "113": 5,
+      "142": 2,
+      "159": 5,
+      "63": 5
+     },
+     "541": {
+      "107": 2,
+      "140": 4,
+      "157": 4,
+      "428": 28,
+      "51": 2,
+      "69": 2,
+      "85": 2
+     },
+     "544": {
+      "430": 1,
+      "503": 1
+     },
+     "55": {
+      "105": 53,
+      "155": 53
+     },
+     "559": {
+      "560": 1
+     },
+     "560": {
+      "559": 1
+     },
+     "57": {
+      "103": 194,
+      "143": 194,
+      "153": 206,
+      "424": 20,
+      "58": 194
+     },
+     "575": {
+      "554": 9,
+      "576": 27
+     },
+     "576": {
+      "554": 8
+     },
+     "58": {
+      "143": 18
+     },
+     "64": {
+      "101": 8,
+      "150": 8
+     },
+     "65": {
+      "102": 24,
+      "151": 28,
+      "358": 4,
+      "360": 4,
+      "422": 8
+     },
+     "67": {
+      "152": 1
+     },
+     "99": {
+      "148": 72,
+      "419": 2
+     }
+    },
+    "audit_stamp_misses": 1643,
+    "changed_epoch": 1281,
+    "cold_entries": 454,
+    "families": 41,
+    "full_slots": 668,
+    "hits": 2973,
+    "misses": 2215,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 1761,
+    "restored_values": 10757,
+    "rules": 177,
+    "sibling": 2569,
+    "sibling_changed_epoch": 877,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 668,
+    "stored_values": 7323
+   },
+   "single_work": [
+    7889,
+    7889,
+    7889,
+    8270,
+    1677,
+    2677,
+    0,
+    0
+   ],
+   "decisions": "15576378264816477716",
+   "median_ms": 32.9722495
+  },
+  "prefix": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 287128,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "1887539998069040838",
+   "emitted": [
+    7889,
+    5912
+   ],
+   "wire_hash": "3278675624561861664",
+   "commits": "d3bf6bfe9f3c52136a334c99e80947d38f49702f89187433e093279d1383c28a",
+   "physical": "59b9964552965041b40118e5d7c0fb4111f7c6306514954f82d1fee672690414",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    32.500208,
+    33.902208,
+    33.532292,
+    33.593792
+   ],
+   "counts": {
+    "approximate_visits": 16879,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 15039,
+    "peak_rule_tuples": 89,
+    "point_reads": 1627,
+    "primitive_evals": 1356,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 13260,
+    "raw_tuples": 5912,
+    "rejected_pointers": 0,
+    "root_offers": 50414,
+    "score_bucket_reads": 14780,
+    "shortlisted": 0,
+    "stale_candidates": 87,
+    "table_rebuilds": 85,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 5912,
+    "visible_rows": 793
+   },
+   "family": {
+    "accesses": 5188,
+    "audit_checks": 2909,
+    "audit_collisions": 118,
+    "audit_sibling_pairs": {
+     "100": {
+      "114": 5,
+      "149": 5
+     },
+     "102": {
+      "151": 379,
+      "270": 8,
+      "271": 8,
+      "272": 8,
+      "273": 8,
+      "274": 8,
+      "275": 8,
+      "358": 30,
+      "422": 21
+     },
+     "103": {
+      "153": 17
+     },
+     "104": {
+      "154": 116
+     },
+     "105": {
+      "155": 12
+     },
+     "107": {
+      "140": 5,
+      "157": 77,
+      "399": 7,
+      "400": 7,
+      "428": 2
+     },
+     "108": {
+      "139": 2,
+      "158": 36,
+      "429": 1
+     },
+     "110": {
+      "115": 2,
+      "161": 2
+     },
+     "139": {
+      "158": 1,
+      "429": 18
+     },
+     "140": {
+      "157": 3,
+      "428": 18
+     },
+     "142": {
+      "430": 3,
+      "503": 3
+     },
+     "146": {
+      "147": 21
+     },
+     "148": {
+      "419": 2
+     },
+     "151": {
+      "270": 4,
+      "271": 4,
+      "272": 4,
+      "273": 4,
+      "274": 4,
+      "275": 4,
+      "422": 21
+     },
+     "152": {
+      "423": 4
+     },
+     "157": {
+      "428": 3
+     },
+     "158": {
+      "429": 1
+     },
+     "270": {
+      "102": 2,
+      "151": 2,
+      "271": 15,
+      "272": 15,
+      "273": 15,
+      "274": 15,
+      "275": 15,
+      "358": 2,
+      "422": 2,
+      "65": 2
+     },
+     "281": {
+      "282": 3,
+      "283": 3,
+      "288": 3,
+      "423": 13
+     },
+     "284": {
+      "101": 16,
+      "150": 16,
+      "421": 24,
+      "64": 8
+     },
+     "297": {
+      "298": 6,
+      "307": 6,
+      "420": 1,
+      "502": 1
+     },
+     "358": {
+      "422": 170
+     },
+     "360": {
+      "447": 21
+     },
+     "399": {
+      "400": 1
+     },
+     "420": {
+      "502": 4
+     },
+     "430": {
+      "503": 1
+     },
+     "447": {
+      "360": 2,
+      "453": 6
+     },
+     "50": {
+      "70": 1,
+      "86": 1
+     },
+     "51": {
+      "107": 3,
+      "140": 3,
+      "157": 3,
+      "69": 4,
+      "85": 4
+     },
+     "527": {
+      "432": 2
+     },
+     "54": {
+      "113": 5,
+      "142": 2,
+      "159": 5,
+      "63": 5
+     },
+     "541": {
+      "107": 2,
+      "140": 4,
+      "157": 4,
+      "428": 28,
+      "51": 2,
+      "69": 2,
+      "85": 2
+     },
+     "544": {
+      "430": 1,
+      "503": 1
+     },
+     "55": {
+      "105": 53,
+      "155": 53
+     },
+     "559": {
+      "560": 1
+     },
+     "560": {
+      "559": 1
+     },
+     "57": {
+      "103": 194,
+      "143": 194,
+      "153": 206,
+      "424": 20,
+      "58": 194
+     },
+     "575": {
+      "554": 9,
+      "576": 27
+     },
+     "576": {
+      "554": 8
+     },
+     "58": {
+      "143": 18
+     },
+     "64": {
+      "101": 8,
+      "150": 8
+     },
+     "65": {
+      "102": 24,
+      "151": 28,
+      "358": 4,
+      "422": 8
+     },
+     "67": {
+      "152": 1
+     },
+     "99": {
+      "148": 72,
+      "419": 2
+     }
+    },
+    "audit_stamp_misses": 1680,
+    "changed_epoch": 1237,
+    "cold_entries": 481,
+    "families": 42,
+    "full_slots": 670,
+    "hits": 2909,
+    "misses": 2279,
+    "negative": 33,
+    "prefix_rules": 5,
+    "replacements": 1798,
+    "restored_values": 10392,
+    "rules": 177,
+    "sibling": 2503,
+    "sibling_changed_epoch": 831,
+    "sibling_negative": 29,
+    "step_hits": 54,
+    "stored_slots": 670,
+    "stored_values": 7214
+   },
+   "single_work": [
+    7889,
+    7889,
+    7889,
+    8216,
+    1677,
+    2677,
+    0,
+    0
+   ],
+   "decisions": "15576378264816477716",
+   "median_ms": 33.563041999999996
+  },
+  "sibling": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 287128,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "1887539998069040838",
+   "emitted": [
+    7889,
+    5912
+   ],
+   "wire_hash": "3278675624561861664",
+   "commits": "d3bf6bfe9f3c52136a334c99e80947d38f49702f89187433e093279d1383c28a",
+   "physical": "59b9964552965041b40118e5d7c0fb4111f7c6306514954f82d1fee672690414",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    33.345167000000004,
+    35.79025,
+    33.115292,
+    34.932583
+   ],
+   "counts": {
+    "approximate_visits": 16879,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 15039,
+    "peak_rule_tuples": 89,
+    "point_reads": 1627,
+    "primitive_evals": 1356,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 13260,
+    "raw_tuples": 5912,
+    "rejected_pointers": 0,
+    "root_offers": 50414,
+    "score_bucket_reads": 14780,
+    "shortlisted": 0,
+    "stale_candidates": 87,
+    "table_rebuilds": 85,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 5912,
+    "visible_rows": 793
+   },
+   "family": {
+    "accesses": 5188,
+    "audit_checks": 2503,
+    "audit_collisions": 118,
+    "audit_sibling_pairs": {
+     "100": {
+      "114": 5,
+      "149": 5
+     },
+     "102": {
+      "151": 379,
+      "270": 8,
+      "271": 8,
+      "272": 8,
+      "273": 8,
+      "274": 8,
+      "275": 8,
+      "358": 30,
+      "422": 21
+     },
+     "103": {
+      "153": 17
+     },
+     "104": {
+      "154": 116
+     },
+     "105": {
+      "155": 12
+     },
+     "107": {
+      "140": 5,
+      "157": 77,
+      "399": 7,
+      "400": 7,
+      "428": 2
+     },
+     "108": {
+      "139": 2,
+      "158": 36,
+      "429": 1
+     },
+     "110": {
+      "115": 2,
+      "161": 2
+     },
+     "139": {
+      "158": 1,
+      "429": 18
+     },
+     "140": {
+      "157": 3,
+      "428": 18
+     },
+     "142": {
+      "430": 3,
+      "503": 3
+     },
+     "146": {
+      "147": 21
+     },
+     "148": {
+      "419": 2
+     },
+     "151": {
+      "270": 4,
+      "271": 4,
+      "272": 4,
+      "273": 4,
+      "274": 4,
+      "275": 4,
+      "422": 21
+     },
+     "152": {
+      "423": 4
+     },
+     "157": {
+      "428": 3
+     },
+     "158": {
+      "429": 1
+     },
+     "270": {
+      "102": 2,
+      "151": 2,
+      "271": 15,
+      "272": 15,
+      "273": 15,
+      "274": 15,
+      "275": 15,
+      "358": 2,
+      "422": 2,
+      "65": 2
+     },
+     "281": {
+      "282": 3,
+      "283": 3,
+      "288": 3,
+      "423": 13
+     },
+     "284": {
+      "101": 16,
+      "150": 16,
+      "421": 24,
+      "64": 8
+     },
+     "297": {
+      "298": 6,
+      "307": 6,
+      "420": 1,
+      "502": 1
+     },
+     "358": {
+      "422": 170
+     },
+     "360": {
+      "447": 21
+     },
+     "399": {
+      "400": 1
+     },
+     "420": {
+      "502": 4
+     },
+     "430": {
+      "503": 1
+     },
+     "447": {
+      "360": 2,
+      "453": 6
+     },
+     "50": {
+      "70": 1,
+      "86": 1
+     },
+     "51": {
+      "107": 3,
+      "140": 3,
+      "157": 3,
+      "69": 4,
+      "85": 4
+     },
+     "527": {
+      "432": 2
+     },
+     "54": {
+      "113": 5,
+      "142": 2,
+      "159": 5,
+      "63": 5
+     },
+     "541": {
+      "107": 2,
+      "140": 4,
+      "157": 4,
+      "428": 28,
+      "51": 2,
+      "69": 2,
+      "85": 2
+     },
+     "544": {
+      "430": 1,
+      "503": 1
+     },
+     "55": {
+      "105": 53,
+      "155": 53
+     },
+     "559": {
+      "560": 1
+     },
+     "560": {
+      "559": 1
+     },
+     "57": {
+      "103": 194,
+      "143": 194,
+      "153": 206,
+      "424": 20,
+      "58": 194
+     },
+     "575": {
+      "554": 9,
+      "576": 27
+     },
+     "576": {
+      "554": 8
+     },
+     "58": {
+      "143": 18
+     },
+     "64": {
+      "101": 8,
+      "150": 8
+     },
+     "65": {
+      "102": 24,
+      "151": 28,
+      "358": 4,
+      "422": 8
+     },
+     "67": {
+      "152": 1
+     },
+     "99": {
+      "148": 72,
+      "419": 2
+     }
+    },
+    "audit_stamp_misses": 1680,
+    "changed_epoch": 795,
+    "cold_entries": 481,
+    "families": 42,
+    "full_slots": 670,
+    "hits": 2503,
+    "misses": 2685,
+    "negative": 29,
+    "prefix_rules": 5,
+    "replacements": 2204,
+    "restored_values": 8877,
+    "rules": 177,
+    "sibling": 2503,
+    "sibling_changed_epoch": 795,
+    "sibling_negative": 29,
+    "step_hits": 50,
+    "stored_slots": 670,
+    "stored_values": 8729
+   },
+   "single_work": [
+    7889,
+    7889,
+    7889,
+    8220,
+    1677,
+    2677,
+    0,
+    0
+   ],
+   "decisions": "15576378264816477716",
+   "median_ms": 34.138875
+  },
+  "negative": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 287128,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "1887539998069040838",
+   "emitted": [
+    7889,
+    5912
+   ],
+   "wire_hash": "3278675624561861664",
+   "commits": "d3bf6bfe9f3c52136a334c99e80947d38f49702f89187433e093279d1383c28a",
+   "physical": "59b9964552965041b40118e5d7c0fb4111f7c6306514954f82d1fee672690414",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    35.588292,
+    34.816792,
+    33.13675,
+    37.56875
+   ],
+   "counts": {
+    "approximate_visits": 16879,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 15039,
+    "peak_rule_tuples": 89,
+    "point_reads": 1627,
+    "primitive_evals": 1356,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 13260,
+    "raw_tuples": 5912,
+    "rejected_pointers": 0,
+    "root_offers": 50414,
+    "score_bucket_reads": 14780,
+    "shortlisted": 0,
+    "stale_candidates": 87,
+    "table_rebuilds": 85,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 5912,
+    "visible_rows": 793
+   },
+   "family": {
+    "accesses": 5188,
+    "audit_checks": 33,
+    "audit_collisions": 0,
+    "audit_sibling_pairs": {
+     "360": {
+      "447": 21
+     },
+     "447": {
+      "360": 2,
+      "453": 6
+     }
+    },
+    "audit_stamp_misses": 69,
+    "changed_epoch": 33,
+    "cold_entries": 27,
+    "families": 42,
+    "full_slots": 670,
+    "hits": 33,
+    "misses": 5155,
+    "negative": 33,
+    "prefix_rules": 5,
+    "replacements": 69,
+    "restored_values": 0,
+    "rules": 177,
+    "sibling": 29,
+    "sibling_changed_epoch": 29,
+    "sibling_negative": 29,
+    "step_hits": 33,
+    "stored_slots": 670,
+    "stored_values": 0
+   },
+   "single_work": [
+    7889,
+    7889,
+    7889,
+    8237,
+    1677,
+    2677,
+    0,
+    0
+   ],
+   "decisions": "15576378264816477716",
+   "median_ms": 35.202542
+  },
+  "live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 287128,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "1887539998069040838",
+   "emitted": [
+    7889,
+    5912
+   ],
+   "wire_hash": "3278675624561861664",
+   "commits": "d3bf6bfe9f3c52136a334c99e80947d38f49702f89187433e093279d1383c28a",
+   "physical": "59b9964552965041b40118e5d7c0fb4111f7c6306514954f82d1fee672690414",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    32.837708,
+    33.44475,
+    36.008792,
+    37.356792
+   ],
+   "counts": {
+    "approximate_visits": 16879,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 15039,
+    "peak_rule_tuples": 89,
+    "point_reads": 1627,
+    "primitive_evals": 1356,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 13260,
+    "raw_tuples": 5912,
+    "rejected_pointers": 0,
+    "root_offers": 50414,
+    "score_bucket_reads": 14780,
+    "shortlisted": 0,
+    "stale_candidates": 87,
+    "table_rebuilds": 85,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 5912,
+    "visible_rows": 793
+   },
+   "family": {
+    "accesses": 5188,
+    "audit_checks": 2909,
+    "audit_collisions": 118,
+    "audit_sibling_pairs": {
+     "100": {
+      "114": 5,
+      "149": 5
+     },
+     "102": {
+      "151": 379,
+      "270": 8,
+      "271": 8,
+      "272": 8,
+      "273": 8,
+      "274": 8,
+      "275": 8,
+      "358": 30,
+      "422": 21
+     },
+     "103": {
+      "153": 17
+     },
+     "104": {
+      "154": 116
+     },
+     "105": {
+      "155": 12
+     },
+     "107": {
+      "140": 5,
+      "157": 77,
+      "399": 7,
+      "400": 7,
+      "428": 2
+     },
+     "108": {
+      "139": 2,
+      "158": 36,
+      "429": 1
+     },
+     "110": {
+      "115": 2,
+      "161": 2
+     },
+     "139": {
+      "158": 1,
+      "429": 18
+     },
+     "140": {
+      "157": 3,
+      "428": 18
+     },
+     "142": {
+      "430": 3,
+      "503": 3
+     },
+     "146": {
+      "147": 21
+     },
+     "148": {
+      "419": 2
+     },
+     "151": {
+      "270": 4,
+      "271": 4,
+      "272": 4,
+      "273": 4,
+      "274": 4,
+      "275": 4,
+      "422": 21
+     },
+     "152": {
+      "423": 4
+     },
+     "157": {
+      "428": 3
+     },
+     "158": {
+      "429": 1
+     },
+     "270": {
+      "102": 2,
+      "151": 2,
+      "271": 15,
+      "272": 15,
+      "273": 15,
+      "274": 15,
+      "275": 15,
+      "358": 2,
+      "422": 2,
+      "65": 2
+     },
+     "281": {
+      "282": 3,
+      "283": 3,
+      "288": 3,
+      "423": 13
+     },
+     "284": {
+      "101": 16,
+      "150": 16,
+      "421": 24,
+      "64": 8
+     },
+     "297": {
+      "298": 6,
+      "307": 6,
+      "420": 1,
+      "502": 1
+     },
+     "358": {
+      "422": 170
+     },
+     "360": {
+      "447": 21
+     },
+     "399": {
+      "400": 1
+     },
+     "420": {
+      "502": 4
+     },
+     "430": {
+      "503": 1
+     },
+     "447": {
+      "360": 2,
+      "453": 6
+     },
+     "50": {
+      "70": 1,
+      "86": 1
+     },
+     "51": {
+      "107": 3,
+      "140": 3,
+      "157": 3,
+      "69": 4,
+      "85": 4
+     },
+     "527": {
+      "432": 2
+     },
+     "54": {
+      "113": 5,
+      "142": 2,
+      "159": 5,
+      "63": 5
+     },
+     "541": {
+      "107": 2,
+      "140": 4,
+      "157": 4,
+      "428": 28,
+      "51": 2,
+      "69": 2,
+      "85": 2
+     },
+     "544": {
+      "430": 1,
+      "503": 1
+     },
+     "55": {
+      "105": 53,
+      "155": 53
+     },
+     "559": {
+      "560": 1
+     },
+     "560": {
+      "559": 1
+     },
+     "57": {
+      "103": 194,
+      "143": 194,
+      "153": 206,
+      "424": 20,
+      "58": 194
+     },
+     "575": {
+      "554": 9,
+      "576": 27
+     },
+     "576": {
+      "554": 8
+     },
+     "58": {
+      "143": 18
+     },
+     "64": {
+      "101": 8,
+      "150": 8
+     },
+     "65": {
+      "102": 24,
+      "151": 28,
+      "358": 4,
+      "422": 8
+     },
+     "67": {
+      "152": 1
+     },
+     "99": {
+      "148": 72,
+      "419": 2
+     }
+    },
+    "audit_stamp_misses": 1680,
+    "changed_epoch": 1237,
+    "cold_entries": 481,
+    "families": 42,
+    "full_slots": 670,
+    "hits": 2909,
+    "misses": 2279,
+    "negative": 33,
+    "prefix_rules": 5,
+    "replacements": 1798,
+    "restored_values": 10392,
+    "rules": 177,
+    "sibling": 2503,
+    "sibling_changed_epoch": 831,
+    "sibling_negative": 29,
+    "step_hits": 54,
+    "stored_slots": 670,
+    "stored_values": 7214
+   },
+   "single_work": [
+    7889,
+    7889,
+    7889,
+    8216,
+    1677,
+    2677,
+    0,
+    0
+   ],
+   "decisions": "15576378264816477716",
+   "median_ms": 34.726771
+  }
+ },
+ "3mm": {
+  "vanilla": {
+   "runs": 4260,
+   "rhs": 294917,
+   "ms": [
+    843.2608329999999,
+    863.0684170000001,
+    949.7251669999999,
+    944.407959
+   ],
+   "median_ms": 903.738188
+  },
+  "off": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1916.1950000000002,
+    1816.1035000000002,
+    1927.007709,
+    2004.211917
+   ],
+   "counts": {
+    "approximate_visits": 1327608,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1265810,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104197,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 704,
+    "raw_root_slots": 526429,
+    "raw_tuples": 220972,
+    "rejected_pointers": 0,
+    "root_offers": 5121580,
+    "score_bucket_reads": 1414931,
+    "shortlisted": 0,
+    "stale_candidates": 13704,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220268,
+    "visible_rows": 29379
+   },
+   "family": {
+    "accesses": 0,
+    "audit_checks": 0,
+    "audit_collisions": 0,
+    "audit_sibling_pairs": {},
+    "audit_stamp_misses": 0,
+    "changed_epoch": 0,
+    "cold_entries": 0,
+    "families": 0,
+    "full_slots": 0,
+    "hits": 0,
+    "misses": 0,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 0,
+    "restored_values": 0,
+    "rules": 0,
+    "sibling": 0,
+    "sibling_changed_epoch": 0,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 0,
+    "stored_values": 0
+   },
+   "single_work": [
+    845168,
+    845168,
+    845168,
+    1125727,
+    315993,
+    147952,
+    0,
+    0
+   ],
+   "decisions": "16767102213097954485",
+   "median_ms": 1921.6013545
+  },
+  "anchor": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1998.2179580000002,
+    1834.390333,
+    1961.86175,
+    2017.008417
+   ],
+   "counts": {
+    "approximate_visits": 1327608,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1265810,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104197,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 704,
+    "raw_root_slots": 526429,
+    "raw_tuples": 220972,
+    "rejected_pointers": 0,
+    "root_offers": 5121580,
+    "score_bucket_reads": 1414931,
+    "shortlisted": 0,
+    "stale_candidates": 13704,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220268,
+    "visible_rows": 29379
+   },
+   "family": {
+    "accesses": 743659,
+    "audit_checks": 193418,
+    "audit_collisions": 526515,
+    "audit_sibling_pairs": {
+     "100": {
+      "114": 52,
+      "149": 52
+     },
+     "101": {
+      "150": 1876,
+      "421": 294
+     },
+     "102": {
+      "151": 6399,
+      "358": 171,
+      "360": 171,
+      "422": 1033,
+      "453": 117
+     },
+     "103": {
+      "143": 797,
+      "153": 1304,
+      "424": 42
+     },
+     "104": {
+      "154": 3223,
+      "425": 87
+     },
+     "105": {
+      "155": 1027,
+      "426": 50
+     },
+     "107": {
+      "140": 20,
+      "157": 178,
+      "428": 2
+     },
+     "108": {
+      "139": 17,
+      "158": 66,
+      "429": 3
+     },
+     "139": {
+      "158": 5,
+      "429": 208
+     },
+     "140": {
+      "157": 6,
+      "428": 397
+     },
+     "142": {
+      "430": 22,
+      "503": 22
+     },
+     "143": {
+      "153": 45
+     },
+     "148": {
+      "419": 54,
+      "99": 18
+     },
+     "150": {
+      "101": 117,
+      "421": 242
+     },
+     "151": {
+      "102": 189,
+      "358": 52,
+      "360": 27,
+      "422": 507,
+      "453": 11
+     },
+     "153": {
+      "103": 27,
+      "424": 85
+     },
+     "154": {
+      "104": 46,
+      "425": 150
+     },
+     "155": {
+      "105": 8,
+      "426": 35
+     },
+     "157": {
+      "107": 3,
+      "428": 2
+     },
+     "158": {
+      "108": 1,
+      "429": 2
+     },
+     "160": {
+      "431": 28
+     },
+     "164": {
+      "435": 56,
+      "536": 6,
+      "537": 38
+     },
+     "270": {
+      "271": 161,
+      "272": 161,
+      "273": 161,
+      "274": 161,
+      "275": 161,
+      "447": 12
+     },
+     "284": {
+      "101": 126,
+      "150": 124,
+      "285": 228,
+      "421": 175,
+      "64": 124
+     },
+     "297": {
+      "100": 288,
+      "114": 288,
+      "149": 288,
+      "298": 340,
+      "299": 43,
+      "300": 43,
+      "307": 340,
+      "420": 105,
+      "502": 105
+     },
+     "358": {
+      "360": 17,
+      "422": 9
+     },
+     "360": {
+      "422": 9
+     },
+     "399": {
+      "107": 8,
+      "157": 205,
+      "400": 104,
+      "428": 8
+     },
+     "403": {
+      "557": 2
+     },
+     "404": {
+      "558": 1
+     },
+     "420": {
+      "502": 164
+     },
+     "430": {
+      "503": 1
+     },
+     "447": {
+      "102": 2,
+      "151": 7,
+      "422": 2
+     },
+     "50": {
+      "70": 25,
+      "86": 25
+     },
+     "51": {
+      "69": 25,
+      "85": 25
+     },
+     "536": {
+      "537": 8
+     },
+     "537": {
+      "435": 1320
+     },
+     "54": {
+      "113": 23,
+      "159": 23,
+      "63": 23
+     },
+     "55": {
+      "105": 1164,
+      "155": 1005,
+      "426": 1
+     },
+     "554": {
+      "576": 8
+     },
+     "57": {
+      "103": 2358,
+      "143": 2301,
+      "153": 1941,
+      "424": 88,
+      "58": 3161
+     },
+     "575": {
+      "554": 45,
+      "576": 468
+     },
+     "576": {
+      "554": 1
+     },
+     "58": {
+      "143": 39
+     },
+     "64": {
+      "101": 175,
+      "150": 197
+     },
+     "65": {
+      "102": 193,
+      "151": 1258,
+      "358": 52,
+      "360": 52,
+      "422": 89
+     },
+     "99": {
+      "148": 2232,
+      "419": 1494
+     }
+    },
+    "audit_stamp_misses": 20805,
+    "changed_epoch": 169959,
+    "cold_entries": 2921,
+    "families": 41,
+    "full_slots": 668,
+    "hits": 193418,
+    "misses": 550241,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 547320,
+    "restored_values": 622578,
+    "rules": 177,
+    "sibling": 43182,
+    "sibling_changed_epoch": 19723,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 668,
+    "stored_values": 1630314
+   },
+   "single_work": [
+    845168,
+    845168,
+    845168,
+    1125727,
+    315993,
+    147952,
+    0,
+    0
+   ],
+   "decisions": "16767102213097954485",
+   "median_ms": 1980.039854
+  },
+  "prefix": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1961.142333,
+    1849.672875,
+    1902.73275,
+    2006.788834
+   ],
+   "counts": {
+    "approximate_visits": 1327608,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1265810,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104197,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 704,
+    "raw_root_slots": 526429,
+    "raw_tuples": 220972,
+    "rejected_pointers": 0,
+    "root_offers": 5121580,
+    "score_bucket_reads": 1414931,
+    "shortlisted": 0,
+    "stale_candidates": 13704,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220268,
+    "visible_rows": 29379
+   },
+   "family": {
+    "accesses": 743659,
+    "audit_checks": 193015,
+    "audit_collisions": 526465,
+    "audit_sibling_pairs": {
+     "100": {
+      "114": 52,
+      "149": 52
+     },
+     "101": {
+      "150": 1876,
+      "421": 294
+     },
+     "102": {
+      "151": 6399,
+      "358": 171,
+      "422": 1033
+     },
+     "103": {
+      "143": 797,
+      "153": 1304,
+      "424": 42
+     },
+     "104": {
+      "154": 3223,
+      "425": 87
+     },
+     "105": {
+      "155": 1027,
+      "426": 50
+     },
+     "107": {
+      "140": 20,
+      "157": 178,
+      "428": 2
+     },
+     "108": {
+      "139": 17,
+      "158": 66,
+      "429": 3
+     },
+     "139": {
+      "158": 5,
+      "429": 208
+     },
+     "140": {
+      "157": 6,
+      "428": 397
+     },
+     "142": {
+      "430": 22,
+      "503": 22
+     },
+     "143": {
+      "153": 45
+     },
+     "148": {
+      "419": 54,
+      "99": 18
+     },
+     "150": {
+      "101": 117,
+      "421": 242
+     },
+     "151": {
+      "102": 191,
+      "358": 52,
+      "422": 509
+     },
+     "153": {
+      "103": 27,
+      "424": 85
+     },
+     "154": {
+      "104": 46,
+      "425": 150
+     },
+     "155": {
+      "105": 8,
+      "426": 35
+     },
+     "157": {
+      "107": 3,
+      "428": 2
+     },
+     "158": {
+      "108": 1,
+      "429": 2
+     },
+     "160": {
+      "431": 28
+     },
+     "164": {
+      "435": 56,
+      "536": 6,
+      "537": 38
+     },
+     "270": {
+      "271": 161,
+      "272": 161,
+      "273": 161,
+      "274": 161,
+      "275": 161
+     },
+     "284": {
+      "101": 126,
+      "150": 124,
+      "285": 228,
+      "421": 175,
+      "64": 124
+     },
+     "297": {
+      "100": 288,
+      "114": 288,
+      "149": 288,
+      "298": 340,
+      "299": 43,
+      "300": 43,
+      "307": 340,
+      "420": 105,
+      "502": 105
+     },
+     "358": {
+      "422": 18
+     },
+     "399": {
+      "107": 8,
+      "157": 205,
+      "400": 104,
+      "428": 8
+     },
+     "403": {
+      "557": 2
+     },
+     "404": {
+      "558": 1
+     },
+     "420": {
+      "502": 164
+     },
+     "430": {
+      "503": 1
+     },
+     "50": {
+      "70": 25,
+      "86": 25
+     },
+     "51": {
+      "69": 25,
+      "85": 25
+     },
+     "536": {
+      "537": 8
+     },
+     "537": {
+      "435": 1320
+     },
+     "54": {
+      "113": 23,
+      "159": 23,
+      "63": 23
+     },
+     "55": {
+      "105": 1164,
+      "155": 1005,
+      "426": 1
+     },
+     "554": {
+      "576": 8
+     },
+     "57": {
+      "103": 2358,
+      "143": 2301,
+      "153": 1941,
+      "424": 88,
+      "58": 3161
+     },
+     "575": {
+      "554": 45,
+      "576": 468
+     },
+     "576": {
+      "554": 1
+     },
+     "58": {
+      "143": 39
+     },
+     "64": {
+      "101": 175,
+      "150": 197
+     },
+     "65": {
+      "102": 193,
+      "151": 1258,
+      "358": 52,
+      "422": 89
+     },
+     "99": {
+      "148": 2232,
+      "419": 1494
+     }
+    },
+    "audit_stamp_misses": 21085,
+    "changed_epoch": 169572,
+    "cold_entries": 3094,
+    "families": 42,
+    "full_slots": 670,
+    "hits": 193015,
+    "misses": 550644,
+    "negative": 6,
+    "prefix_rules": 5,
+    "replacements": 547550,
+    "restored_values": 620942,
+    "rules": 177,
+    "sibling": 42768,
+    "sibling_changed_epoch": 19325,
+    "sibling_negative": 0,
+    "step_hits": 7,
+    "stored_slots": 670,
+    "stored_values": 1628446
+   },
+   "single_work": [
+    845168,
+    845168,
+    845168,
+    1125720,
+    315993,
+    147952,
+    0,
+    0
+   ],
+   "decisions": "16767102213097954485",
+   "median_ms": 1931.9375415
+  },
+  "sibling": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1980.832166,
+    1850.218375,
+    1932.407666,
+    1970.753
+   ],
+   "counts": {
+    "approximate_visits": 1327608,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1265810,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104197,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 704,
+    "raw_root_slots": 526429,
+    "raw_tuples": 220972,
+    "rejected_pointers": 0,
+    "root_offers": 5121580,
+    "score_bucket_reads": 1414931,
+    "shortlisted": 0,
+    "stale_candidates": 13704,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220268,
+    "visible_rows": 29379
+   },
+   "family": {
+    "accesses": 743659,
+    "audit_checks": 42768,
+    "audit_collisions": 526465,
+    "audit_sibling_pairs": {
+     "100": {
+      "114": 52,
+      "149": 52
+     },
+     "101": {
+      "150": 1876,
+      "421": 294
+     },
+     "102": {
+      "151": 6399,
+      "358": 171,
+      "422": 1033
+     },
+     "103": {
+      "143": 797,
+      "153": 1304,
+      "424": 42
+     },
+     "104": {
+      "154": 3223,
+      "425": 87
+     },
+     "105": {
+      "155": 1027,
+      "426": 50
+     },
+     "107": {
+      "140": 20,
+      "157": 178,
+      "428": 2
+     },
+     "108": {
+      "139": 17,
+      "158": 66,
+      "429": 3
+     },
+     "139": {
+      "158": 5,
+      "429": 208
+     },
+     "140": {
+      "157": 6,
+      "428": 397
+     },
+     "142": {
+      "430": 22,
+      "503": 22
+     },
+     "143": {
+      "153": 45
+     },
+     "148": {
+      "419": 54,
+      "99": 18
+     },
+     "150": {
+      "101": 117,
+      "421": 242
+     },
+     "151": {
+      "102": 191,
+      "358": 52,
+      "422": 509
+     },
+     "153": {
+      "103": 27,
+      "424": 85
+     },
+     "154": {
+      "104": 46,
+      "425": 150
+     },
+     "155": {
+      "105": 8,
+      "426": 35
+     },
+     "157": {
+      "107": 3,
+      "428": 2
+     },
+     "158": {
+      "108": 1,
+      "429": 2
+     },
+     "160": {
+      "431": 28
+     },
+     "164": {
+      "435": 56,
+      "536": 6,
+      "537": 38
+     },
+     "270": {
+      "271": 161,
+      "272": 161,
+      "273": 161,
+      "274": 161,
+      "275": 161
+     },
+     "284": {
+      "101": 126,
+      "150": 124,
+      "285": 228,
+      "421": 175,
+      "64": 124
+     },
+     "297": {
+      "100": 288,
+      "114": 288,
+      "149": 288,
+      "298": 340,
+      "299": 43,
+      "300": 43,
+      "307": 340,
+      "420": 105,
+      "502": 105
+     },
+     "358": {
+      "422": 18
+     },
+     "399": {
+      "107": 8,
+      "157": 205,
+      "400": 104,
+      "428": 8
+     },
+     "403": {
+      "557": 2
+     },
+     "404": {
+      "558": 1
+     },
+     "420": {
+      "502": 164
+     },
+     "430": {
+      "503": 1
+     },
+     "50": {
+      "70": 25,
+      "86": 25
+     },
+     "51": {
+      "69": 25,
+      "85": 25
+     },
+     "536": {
+      "537": 8
+     },
+     "537": {
+      "435": 1320
+     },
+     "54": {
+      "113": 23,
+      "159": 23,
+      "63": 23
+     },
+     "55": {
+      "105": 1164,
+      "155": 1005,
+      "426": 1
+     },
+     "554": {
+      "576": 8
+     },
+     "57": {
+      "103": 2358,
+      "143": 2301,
+      "153": 1941,
+      "424": 88,
+      "58": 3161
+     },
+     "575": {
+      "554": 45,
+      "576": 468
+     },
+     "576": {
+      "554": 1
+     },
+     "58": {
+      "143": 39
+     },
+     "64": {
+      "101": 175,
+      "150": 197
+     },
+     "65": {
+      "102": 193,
+      "151": 1258,
+      "358": 52,
+      "422": 89
+     },
+     "99": {
+      "148": 2232,
+      "419": 1494
+     }
+    },
+    "audit_stamp_misses": 21085,
+    "changed_epoch": 19239,
+    "cold_entries": 3094,
+    "families": 42,
+    "full_slots": 670,
+    "hits": 42768,
+    "misses": 700891,
+    "negative": 0,
+    "prefix_rules": 5,
+    "replacements": 697797,
+    "restored_values": 157675,
+    "rules": 177,
+    "sibling": 42768,
+    "sibling_changed_epoch": 19239,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 670,
+    "stored_values": 2091713
+   },
+   "single_work": [
+    845168,
+    845168,
+    845168,
+    1125727,
+    315993,
+    147952,
+    0,
+    0
+   ],
+   "decisions": "16767102213097954485",
+   "median_ms": 1951.5803329999999
+  },
+  "negative": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1998.3274159999999,
+    1869.8876659999999,
+    2006.2155000000002,
+    1977.7185
+   ],
+   "counts": {
+    "approximate_visits": 1327608,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1265810,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104197,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 704,
+    "raw_root_slots": 526429,
+    "raw_tuples": 220972,
+    "rejected_pointers": 0,
+    "root_offers": 5121580,
+    "score_bucket_reads": 1414931,
+    "shortlisted": 0,
+    "stale_candidates": 13704,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220268,
+    "visible_rows": 29379
+   },
+   "family": {
+    "accesses": 743659,
+    "audit_checks": 6,
+    "audit_collisions": 354,
+    "audit_sibling_pairs": {},
+    "audit_stamp_misses": 378,
+    "changed_epoch": 6,
+    "cold_entries": 168,
+    "families": 42,
+    "full_slots": 670,
+    "hits": 6,
+    "misses": 743653,
+    "negative": 6,
+    "prefix_rules": 5,
+    "replacements": 702,
+    "restored_values": 0,
+    "rules": 177,
+    "sibling": 0,
+    "sibling_changed_epoch": 0,
+    "sibling_negative": 0,
+    "step_hits": 6,
+    "stored_slots": 670,
+    "stored_values": 0
+   },
+   "single_work": [
+    845168,
+    845168,
+    845168,
+    1125721,
+    315993,
+    147952,
+    0,
+    0
+   ],
+   "decisions": "16767102213097954485",
+   "median_ms": 1988.022958
+  },
+  "live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1914.1971250000001,
+    1868.778542,
+    2003.923333,
+    2000.433625
+   ],
+   "counts": {
+    "approximate_visits": 1327608,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1265810,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104197,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 704,
+    "raw_root_slots": 526429,
+    "raw_tuples": 220972,
+    "rejected_pointers": 0,
+    "root_offers": 5121580,
+    "score_bucket_reads": 1414931,
+    "shortlisted": 0,
+    "stale_candidates": 13704,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220268,
+    "visible_rows": 29379
+   },
+   "family": {
+    "accesses": 743659,
+    "audit_checks": 193015,
+    "audit_collisions": 526465,
+    "audit_sibling_pairs": {
+     "100": {
+      "114": 52,
+      "149": 52
+     },
+     "101": {
+      "150": 1876,
+      "421": 294
+     },
+     "102": {
+      "151": 6399,
+      "358": 171,
+      "422": 1033
+     },
+     "103": {
+      "143": 797,
+      "153": 1304,
+      "424": 42
+     },
+     "104": {
+      "154": 3223,
+      "425": 87
+     },
+     "105": {
+      "155": 1027,
+      "426": 50
+     },
+     "107": {
+      "140": 20,
+      "157": 178,
+      "428": 2
+     },
+     "108": {
+      "139": 17,
+      "158": 66,
+      "429": 3
+     },
+     "139": {
+      "158": 5,
+      "429": 208
+     },
+     "140": {
+      "157": 6,
+      "428": 397
+     },
+     "142": {
+      "430": 22,
+      "503": 22
+     },
+     "143": {
+      "153": 45
+     },
+     "148": {
+      "419": 54,
+      "99": 18
+     },
+     "150": {
+      "101": 117,
+      "421": 242
+     },
+     "151": {
+      "102": 191,
+      "358": 52,
+      "422": 509
+     },
+     "153": {
+      "103": 27,
+      "424": 85
+     },
+     "154": {
+      "104": 46,
+      "425": 150
+     },
+     "155": {
+      "105": 8,
+      "426": 35
+     },
+     "157": {
+      "107": 3,
+      "428": 2
+     },
+     "158": {
+      "108": 1,
+      "429": 2
+     },
+     "160": {
+      "431": 28
+     },
+     "164": {
+      "435": 56,
+      "536": 6,
+      "537": 38
+     },
+     "270": {
+      "271": 161,
+      "272": 161,
+      "273": 161,
+      "274": 161,
+      "275": 161
+     },
+     "284": {
+      "101": 126,
+      "150": 124,
+      "285": 228,
+      "421": 175,
+      "64": 124
+     },
+     "297": {
+      "100": 288,
+      "114": 288,
+      "149": 288,
+      "298": 340,
+      "299": 43,
+      "300": 43,
+      "307": 340,
+      "420": 105,
+      "502": 105
+     },
+     "358": {
+      "422": 18
+     },
+     "399": {
+      "107": 8,
+      "157": 205,
+      "400": 104,
+      "428": 8
+     },
+     "403": {
+      "557": 2
+     },
+     "404": {
+      "558": 1
+     },
+     "420": {
+      "502": 164
+     },
+     "430": {
+      "503": 1
+     },
+     "50": {
+      "70": 25,
+      "86": 25
+     },
+     "51": {
+      "69": 25,
+      "85": 25
+     },
+     "536": {
+      "537": 8
+     },
+     "537": {
+      "435": 1320
+     },
+     "54": {
+      "113": 23,
+      "159": 23,
+      "63": 23
+     },
+     "55": {
+      "105": 1164,
+      "155": 1005,
+      "426": 1
+     },
+     "554": {
+      "576": 8
+     },
+     "57": {
+      "103": 2358,
+      "143": 2301,
+      "153": 1941,
+      "424": 88,
+      "58": 3161
+     },
+     "575": {
+      "554": 45,
+      "576": 468
+     },
+     "576": {
+      "554": 1
+     },
+     "58": {
+      "143": 39
+     },
+     "64": {
+      "101": 175,
+      "150": 197
+     },
+     "65": {
+      "102": 193,
+      "151": 1258,
+      "358": 52,
+      "422": 89
+     },
+     "99": {
+      "148": 2232,
+      "419": 1494
+     }
+    },
+    "audit_stamp_misses": 21085,
+    "changed_epoch": 169572,
+    "cold_entries": 3094,
+    "families": 42,
+    "full_slots": 670,
+    "hits": 193015,
+    "misses": 550644,
+    "negative": 6,
+    "prefix_rules": 5,
+    "replacements": 547550,
+    "restored_values": 620942,
+    "rules": 177,
+    "sibling": 42768,
+    "sibling_changed_epoch": 19325,
+    "sibling_negative": 0,
+    "step_hits": 7,
+    "stored_slots": 670,
+    "stored_values": 1628446
+   },
+   "single_work": [
+    845168,
+    845168,
+    845168,
+    1125720,
+    315993,
+    147952,
+    0,
+    0
+   ],
+   "decisions": "16767102213097954485",
+   "median_ms": 1957.3153750000001
+  }
+ }
+}
