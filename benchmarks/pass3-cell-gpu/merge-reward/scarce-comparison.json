@@ -1,0 +1,71 @@
+{
+ "groups": 4,
+ "arms": {
+  "all": {
+   "offers": 588,
+   "completed": 268,
+   "work": -4894,
+   "median_time_ratio_to_leaf": 1.0092001605599137
+  },
+  "leaf": {
+   "offers": 0,
+   "completed": 0,
+   "work": 0,
+   "median_time_ratio_to_leaf": 1.0
+  },
+  "real-charged": {
+   "offers": 0,
+   "completed": 0,
+   "work": -16582,
+   "median_time_ratio_to_leaf": 0.9875956429642282
+  },
+  "real-prior": {
+   "offers": 21,
+   "completed": 17,
+   "work": -16359,
+   "median_time_ratio_to_leaf": 1.0054806678548434
+  },
+  "real-settled": {
+   "offers": 516,
+   "completed": 264,
+   "work": -7206,
+   "median_time_ratio_to_leaf": 1.0034526880822794
+  },
+  "synthetic-charged": {
+   "offers": 0,
+   "completed": 0,
+   "work": -16582,
+   "median_time_ratio_to_leaf": 0.9899327588056259
+  },
+  "synthetic-prior": {
+   "offers": 29,
+   "completed": 16,
+   "work": -16326,
+   "median_time_ratio_to_leaf": 0.9871489912769323
+  },
+  "synthetic-settled": {
+   "offers": 516,
+   "completed": 264,
+   "work": -7206,
+   "median_time_ratio_to_leaf": 0.9872210222263865
+  }
+ },
+ "comparison": {
+  "prior": {
+   "same": 1,
+   "changed": [
+    "sum-bits/1703",
+    "dot-product/1703",
+    "dot-product/1709"
+   ]
+  },
+  "settled": {
+   "same": 4,
+   "changed": []
+  },
+  "charged": {
+   "same": 4,
+   "changed": []
+  }
+ }
+}

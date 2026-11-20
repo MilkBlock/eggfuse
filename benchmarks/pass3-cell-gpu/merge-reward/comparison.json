@@ -1,0 +1,110 @@
+{
+ "groups": 8,
+ "arms": {
+  "all": {
+   "offers": 1944,
+   "completed": 846,
+   "work": -9824,
+   "median_time_ratio_to_leaf": 0.9878343615952441
+  },
+  "leaf": {
+   "offers": 0,
+   "completed": 0,
+   "work": 0,
+   "median_time_ratio_to_leaf": 1.0
+  },
+  "real-charged": {
+   "offers": 0,
+   "completed": 0,
+   "work": -46562,
+   "median_time_ratio_to_leaf": 0.9882200818270301
+  },
+  "real-offer": {
+   "offers": 1764,
+   "completed": 844,
+   "work": -15622,
+   "median_time_ratio_to_leaf": 0.9917744770028851
+  },
+  "real-prior": {
+   "offers": 721,
+   "completed": 427,
+   "work": -34527,
+   "median_time_ratio_to_leaf": 0.9894221357180718
+  },
+  "real-settled": {
+   "offers": 1740,
+   "completed": 834,
+   "work": -16012,
+   "median_time_ratio_to_leaf": 0.9827782641266523
+  },
+  "real-work": {
+   "offers": 1944,
+   "completed": 846,
+   "work": -9824,
+   "median_time_ratio_to_leaf": 0.986319195330275
+  },
+  "synthetic-charged": {
+   "offers": 0,
+   "completed": 0,
+   "work": -46562,
+   "median_time_ratio_to_leaf": 0.9905636865677839
+  },
+  "synthetic-offer": {
+   "offers": 1763,
+   "completed": 843,
+   "work": -15625,
+   "median_time_ratio_to_leaf": 0.9977619278270844
+  },
+  "synthetic-prior": {
+   "offers": 568,
+   "completed": 305,
+   "work": -36355,
+   "median_time_ratio_to_leaf": 0.9916959306221735
+  },
+  "synthetic-settled": {
+   "offers": 1740,
+   "completed": 834,
+   "work": -16012,
+   "median_time_ratio_to_leaf": 0.986368709759204
+  },
+  "synthetic-work": {
+   "offers": 1944,
+   "completed": 846,
+   "work": -9824,
+   "median_time_ratio_to_leaf": 0.9885229821511804
+  }
+ },
+ "comparison": {
+  "prior": {
+   "same": 0,
+   "changed": [
+    "sum-bits/1703",
+    "sum-bits/1709",
+    "dot-product/1703",
+    "dot-product/1709",
+    "gemm-bias-relu/1703",
+    "gemm-bias-relu/1709",
+    "stable-argmax/1703",
+    "stable-argmax/1709"
+   ]
+  },
+  "offer": {
+   "same": 7,
+   "changed": [
+    "sum-bits/1703"
+   ]
+  },
+  "settled": {
+   "same": 8,
+   "changed": []
+  },
+  "work": {
+   "same": 8,
+   "changed": []
+  },
+  "charged": {
+   "same": 8,
+   "changed": []
+  }
+ }
+}

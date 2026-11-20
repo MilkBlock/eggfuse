@@ -1,0 +1,47 @@
+{
+ "affine-twins": {
+  "offers": 96,
+  "won": 41,
+  "distinct_feature_rows": 32,
+  "ambiguous_groups": 11,
+  "offers_in_ambiguous_groups": 64,
+  "classification_errors_even_if_memorized": 24,
+  "max_depth": 8
+ },
+ "clamped-ramp": {
+  "offers": 237,
+  "won": 101,
+  "distinct_feature_rows": 32,
+  "ambiguous_groups": 13,
+  "offers_in_ambiguous_groups": 173,
+  "classification_errors_even_if_memorized": 62,
+  "max_depth": 8
+ },
+ "segmented-prefix": {
+  "offers": 195,
+  "won": 85,
+  "distinct_feature_rows": 38,
+  "ambiguous_groups": 13,
+  "offers_in_ambiguous_groups": 127,
+  "classification_errors_even_if_memorized": 49,
+  "max_depth": 9
+ },
+ "window-laplacian": {
+  "offers": 161,
+  "won": 68,
+  "distinct_feature_rows": 27,
+  "ambiguous_groups": 10,
+  "offers_in_ambiguous_groups": 107,
+  "classification_errors_even_if_memorized": 40,
+  "max_depth": 7
+ },
+ "pooled": {
+  "offers": 689,
+  "won": 295,
+  "distinct_feature_rows": 52,
+  "ambiguous_groups": 21,
+  "offers_in_ambiguous_groups": 525,
+  "classification_errors_even_if_memorized": 181,
+  "max_depth": 9
+ }
+}
