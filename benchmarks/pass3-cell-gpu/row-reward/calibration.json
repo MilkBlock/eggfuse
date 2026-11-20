@@ -1,0 +1,48 @@
+{
+ "components": [
+  "run",
+  "present_address",
+  "attempt",
+  "one_atom_win",
+  "two_atom_win",
+  "child_win",
+  "duplicate"
+ ],
+ "net_us": [
+  -1.7254401744377008,
+  -0.3001987320022643,
+  -1.5936975927681212,
+  0.8124116848655051,
+  -0.7596061302570766,
+  -0.4495131214322366,
+  0.8066237878369166
+ ],
+ "r2": 0.8037149339491291,
+ "clipped_us": [
+  -59.167,
+  4.166999999999989
+ ],
+ "programs": {
+  "affine-twins": {
+   "runs": 1058,
+   "available_winners": 521,
+   "positive_macro_links": 181
+  },
+  "clamped-ramp": {
+   "runs": 1544,
+   "available_winners": 644,
+   "positive_macro_links": 292
+  },
+  "segmented-prefix": {
+   "runs": 1228,
+   "available_winners": 612,
+   "positive_macro_links": 256
+  },
+  "window-laplacian": {
+   "runs": 1387,
+   "available_winners": 660,
+   "positive_macro_links": 250
+  }
+ },
+ "rows": 93906
+}
