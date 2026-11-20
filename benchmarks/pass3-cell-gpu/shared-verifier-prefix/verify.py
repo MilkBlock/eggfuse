@@ -33,6 +33,27 @@ def verify(folder=HERE):
         for key in ("accesses","misses","hits","sibling","negative","audit_sibling_pairs"):
             assert live[key]==full[key]
         assert live["stored_values"]<=full["stored_values"] and live["restored_values"]<=full["restored_values"]
+    attr=checked(folder,["attributes.json"],["sum-bits","conjugate-gradient"])
+    for case,arms in attr.items():
+        assert set(arms)=={"vanilla","off","attr","different","joint"}
+        for arm in ("attr","different","joint"):
+            a=arms[arm]["attributes"]
+            assert a["admitted_tables"]>0 and a["compiled_uses"]>a["admitted_tables"]
+            assert a["calls"]>=a["hits"]==a["audit_checks"]>0
+            assert sum(sum(row.values()) for row in a["pairs"].values())==a["hits"]
+            assert 0<a["different_pivot_table"]<=a["different_rule"]<=a["hits"]
+            assert a["hits"]==arms["off"]["single_work"][3]-arms[arm]["single_work"][3]
+            if arm=="different":assert a["hits"]==a["different_rule"]
+            assert arms[arm]["decisions"]==arms["off"]["decisions"]
+        assert arms["attr"]["attributes"]["pairs"]==arms["joint"]["attributes"]["pairs"]
+    import json
+    phases=json.loads((folder/"phases.json").read_bytes())
+    assert set(phases)==set(data)
+    from statistics import median
+    for arms in phases.values():
+        assert set(arms)=={"off","prefix","live"}
+        for v in arms.values():
+            assert len(v["samples"])==3 and v["ms"]==list(map(median,zip(*v["samples"])))
     return data
 
 if __name__=="__main__":

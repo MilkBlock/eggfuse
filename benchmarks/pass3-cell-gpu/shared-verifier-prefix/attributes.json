@@ -1,0 +1,2445 @@
+{
+ "sum-bits": {
+  "vanilla": {
+   "runs": 1428,
+   "rhs": 7265,
+   "ms": [
+    21.830834,
+    22.060625,
+    20.787916,
+    22.242916
+   ],
+   "median_ms": 21.9457295
+  },
+  "off": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 287128,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "1887539998069040838",
+   "emitted": [
+    7889,
+    5912
+   ],
+   "wire_hash": "3278675624561861664",
+   "commits": "d3bf6bfe9f3c52136a334c99e80947d38f49702f89187433e093279d1383c28a",
+   "physical": "59b9964552965041b40118e5d7c0fb4111f7c6306514954f82d1fee672690414",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    31.89025,
+    33.310291,
+    32.567084,
+    35.327334
+   ],
+   "counts": {
+    "approximate_visits": 16879,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 15039,
+    "peak_rule_tuples": 89,
+    "point_reads": 1627,
+    "primitive_evals": 1356,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 13260,
+    "raw_tuples": 5912,
+    "rejected_pointers": 0,
+    "root_offers": 50414,
+    "score_bucket_reads": 14780,
+    "shortlisted": 0,
+    "stale_candidates": 87,
+    "table_rebuilds": 85,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 5912,
+    "visible_rows": 793
+   },
+   "family": {
+    "accesses": 0,
+    "audit_checks": 0,
+    "audit_collisions": 0,
+    "audit_sibling_pairs": {},
+    "audit_stamp_misses": 0,
+    "changed_epoch": 0,
+    "cold_entries": 0,
+    "families": 0,
+    "full_slots": 0,
+    "hits": 0,
+    "misses": 0,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 0,
+    "restored_values": 0,
+    "rules": 0,
+    "sibling": 0,
+    "sibling_changed_epoch": 0,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 0,
+    "stored_values": 0
+   },
+   "single_work": [
+    7889,
+    7889,
+    7889,
+    8270,
+    1677,
+    2677,
+    0,
+    0
+   ],
+   "attributes": {
+    "admitted_tables": 0,
+    "audit_checks": 0,
+    "calls": 0,
+    "collisions": 0,
+    "compiled_uses": 0,
+    "different_epoch": 0,
+    "different_pivot_table": 0,
+    "different_rule": 0,
+    "hits": 0,
+    "negative_hits": 0,
+    "pairs": {},
+    "populated": 0,
+    "stale_generations": 0
+   },
+   "decisions": "15576378264816477716",
+   "median_ms": 32.9386875
+  },
+  "attr": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 287128,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "1887539998069040838",
+   "emitted": [
+    7889,
+    5912
+   ],
+   "wire_hash": "3278675624561861664",
+   "commits": "d3bf6bfe9f3c52136a334c99e80947d38f49702f89187433e093279d1383c28a",
+   "physical": "59b9964552965041b40118e5d7c0fb4111f7c6306514954f82d1fee672690414",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    33.721708,
+    34.876625000000004,
+    31.842583,
+    33.913084000000005
+   ],
+   "counts": {
+    "approximate_visits": 16879,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 15039,
+    "peak_rule_tuples": 89,
+    "point_reads": 1627,
+    "primitive_evals": 1356,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 13260,
+    "raw_tuples": 5912,
+    "rejected_pointers": 0,
+    "root_offers": 50414,
+    "score_bucket_reads": 14780,
+    "shortlisted": 0,
+    "stale_candidates": 87,
+    "table_rebuilds": 85,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 5912,
+    "visible_rows": 793
+   },
+   "family": {
+    "accesses": 0,
+    "audit_checks": 0,
+    "audit_collisions": 0,
+    "audit_sibling_pairs": {},
+    "audit_stamp_misses": 0,
+    "changed_epoch": 0,
+    "cold_entries": 0,
+    "families": 0,
+    "full_slots": 0,
+    "hits": 0,
+    "misses": 0,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 0,
+    "restored_values": 0,
+    "rules": 0,
+    "sibling": 0,
+    "sibling_changed_epoch": 0,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 0,
+    "stored_values": 0
+   },
+   "single_work": [
+    7889,
+    7889,
+    7889,
+    6029,
+    1677,
+    2677,
+    0,
+    0
+   ],
+   "attributes": {
+    "admitted_tables": 18,
+    "audit_checks": 2241,
+    "calls": 6352,
+    "collisions": 305,
+    "compiled_uses": 122,
+    "different_epoch": 92,
+    "different_pivot_table": 795,
+    "different_rule": 802,
+    "hits": 2241,
+    "negative_hits": 436,
+    "pairs": {
+     "101": {
+      "101": 22,
+      "107": 2,
+      "250": 2
+     },
+     "102": {
+      "102": 225,
+      "105": 21
+     },
+     "103": {
+      "103": 91,
+      "104": 67,
+      "107": 17,
+      "108": 7
+     },
+     "104": {
+      "103": 2,
+      "104": 15,
+      "107": 2
+     },
+     "107": {
+      "107": 48,
+      "250": 37
+     },
+     "140": {
+      "56": 1
+     },
+     "145": {
+      "145": 7,
+      "146": 2,
+      "147": 2
+     },
+     "146": {
+      "145": 2,
+      "147": 7
+     },
+     "148": {
+      "153": 2
+     },
+     "150": {
+      "150": 40,
+      "151": 22,
+      "152": 6,
+      "157": 6
+     },
+     "151": {
+      "151": 307,
+      "155": 27
+     },
+     "152": {
+      "157": 44
+     },
+     "153": {
+      "153": 125,
+      "154": 65,
+      "157": 34,
+      "158": 8
+     },
+     "154": {
+      "153": 2,
+      "154": 11,
+      "157": 6
+     },
+     "157": {
+      "157": 55
+     },
+     "297": {
+      "297": 3
+     },
+     "298": {
+      "298": 3
+     },
+     "307": {
+      "307": 3
+     },
+     "314": {
+      "315": 2
+     },
+     "400": {
+      "400": 3
+     },
+     "419": {
+      "424": 1
+     },
+     "421": {
+      "421": 22,
+      "423": 2,
+      "428": 2
+     },
+     "422": {
+      "422": 133,
+      "426": 22
+     },
+     "423": {
+      "315": 1,
+      "428": 72
+     },
+     "424": {
+      "424": 110,
+      "425": 73,
+      "428": 12,
+      "429": 2
+     },
+     "425": {
+      "315": 3,
+      "425": 14,
+      "428": 4
+     },
+     "428": {
+      "314": 2,
+      "315": 4,
+      "428": 51
+     },
+     "521": {
+      "125": 4
+     },
+     "551": {
+      "554": 8
+     },
+     "552": {
+      "554": 24
+     },
+     "554": {
+      "554": 32
+     },
+     "559": {
+      "559": 39
+     },
+     "56": {
+      "139": 5,
+      "140": 13,
+      "142": 17,
+      "145": 18,
+      "146": 11,
+      "147": 11,
+      "57": 40,
+      "62": 8
+     },
+     "57": {
+      "145": 17,
+      "146": 1,
+      "147": 1,
+      "57": 25,
+      "62": 21
+     },
+     "575": {
+      "575": 10,
+      "578": 2
+     },
+     "578": {
+      "578": 22
+     },
+     "62": {
+      "142": 1,
+      "145": 4,
+      "62": 23
+     },
+     "99": {
+      "103": 1
+     }
+    },
+    "populated": 717,
+    "stale_generations": 3089
+   },
+   "decisions": "15576378264816477716",
+   "median_ms": 33.817396
+  },
+  "different": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 287128,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "1887539998069040838",
+   "emitted": [
+    7889,
+    5912
+   ],
+   "wire_hash": "3278675624561861664",
+   "commits": "d3bf6bfe9f3c52136a334c99e80947d38f49702f89187433e093279d1383c28a",
+   "physical": "59b9964552965041b40118e5d7c0fb4111f7c6306514954f82d1fee672690414",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    32.45875,
+    33.48775,
+    33.787458,
+    32.673666
+   ],
+   "counts": {
+    "approximate_visits": 16879,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 15039,
+    "peak_rule_tuples": 89,
+    "point_reads": 1627,
+    "primitive_evals": 1356,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 13260,
+    "raw_tuples": 5912,
+    "rejected_pointers": 0,
+    "root_offers": 50414,
+    "score_bucket_reads": 14780,
+    "shortlisted": 0,
+    "stale_candidates": 87,
+    "table_rebuilds": 85,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 5912,
+    "visible_rows": 793
+   },
+   "family": {
+    "accesses": 0,
+    "audit_checks": 0,
+    "audit_collisions": 0,
+    "audit_sibling_pairs": {},
+    "audit_stamp_misses": 0,
+    "changed_epoch": 0,
+    "cold_entries": 0,
+    "families": 0,
+    "full_slots": 0,
+    "hits": 0,
+    "misses": 0,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 0,
+    "restored_values": 0,
+    "rules": 0,
+    "sibling": 0,
+    "sibling_changed_epoch": 0,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 0,
+    "stored_values": 0
+   },
+   "single_work": [
+    7889,
+    7889,
+    7889,
+    7468,
+    1677,
+    2677,
+    0,
+    0
+   ],
+   "attributes": {
+    "admitted_tables": 18,
+    "audit_checks": 802,
+    "calls": 6352,
+    "collisions": 305,
+    "compiled_uses": 122,
+    "different_epoch": 45,
+    "different_pivot_table": 795,
+    "different_rule": 802,
+    "hits": 802,
+    "negative_hits": 185,
+    "pairs": {
+     "101": {
+      "107": 2,
+      "250": 2
+     },
+     "102": {
+      "105": 21
+     },
+     "103": {
+      "104": 67,
+      "107": 17,
+      "108": 7
+     },
+     "104": {
+      "103": 2,
+      "107": 2
+     },
+     "107": {
+      "250": 37
+     },
+     "140": {
+      "56": 1
+     },
+     "145": {
+      "146": 2,
+      "147": 2
+     },
+     "146": {
+      "145": 2,
+      "147": 7
+     },
+     "148": {
+      "153": 2
+     },
+     "150": {
+      "151": 22,
+      "152": 6,
+      "157": 6
+     },
+     "151": {
+      "155": 27
+     },
+     "152": {
+      "157": 44
+     },
+     "153": {
+      "154": 65,
+      "157": 34,
+      "158": 8
+     },
+     "154": {
+      "153": 2,
+      "157": 6
+     },
+     "314": {
+      "315": 2
+     },
+     "419": {
+      "424": 1
+     },
+     "421": {
+      "423": 2,
+      "428": 2
+     },
+     "422": {
+      "426": 22
+     },
+     "423": {
+      "315": 1,
+      "428": 72
+     },
+     "424": {
+      "425": 73,
+      "428": 12,
+      "429": 2
+     },
+     "425": {
+      "315": 3,
+      "428": 4
+     },
+     "428": {
+      "314": 2,
+      "315": 4
+     },
+     "521": {
+      "125": 4
+     },
+     "551": {
+      "554": 8
+     },
+     "552": {
+      "554": 24
+     },
+     "56": {
+      "139": 5,
+      "140": 13,
+      "142": 17,
+      "145": 18,
+      "146": 11,
+      "147": 11,
+      "57": 40,
+      "62": 8
+     },
+     "57": {
+      "145": 17,
+      "146": 1,
+      "147": 1,
+      "62": 21
+     },
+     "575": {
+      "578": 2
+     },
+     "62": {
+      "142": 1,
+      "145": 4
+     },
+     "99": {
+      "103": 1
+     }
+    },
+    "populated": 717,
+    "stale_generations": 3089
+   },
+   "decisions": "15576378264816477716",
+   "median_ms": 33.080708
+  },
+  "joint": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 287128,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "1887539998069040838",
+   "emitted": [
+    7889,
+    5912
+   ],
+   "wire_hash": "3278675624561861664",
+   "commits": "d3bf6bfe9f3c52136a334c99e80947d38f49702f89187433e093279d1383c28a",
+   "physical": "59b9964552965041b40118e5d7c0fb4111f7c6306514954f82d1fee672690414",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    34.190083,
+    33.219458,
+    32.183958,
+    34.052417
+   ],
+   "counts": {
+    "approximate_visits": 16879,
+    "calls": 5084,
+    "committed": 4588,
+    "exhausted": 0,
+    "learned_pointers": 15039,
+    "peak_rule_tuples": 89,
+    "point_reads": 1627,
+    "primitive_evals": 1356,
+    "raw_parent_rejects": 0,
+    "raw_root_slots": 13260,
+    "raw_tuples": 5912,
+    "rejected_pointers": 0,
+    "root_offers": 50414,
+    "score_bucket_reads": 14780,
+    "shortlisted": 0,
+    "stale_candidates": 87,
+    "table_rebuilds": 85,
+    "unsupported": 0,
+    "validated": 4588,
+    "verified_parent_tuples": 5912,
+    "visible_rows": 793
+   },
+   "family": {
+    "accesses": 5188,
+    "audit_checks": 2973,
+    "audit_collisions": 118,
+    "audit_sibling_pairs": {
+     "100": {
+      "114": 5,
+      "149": 5
+     },
+     "102": {
+      "151": 379,
+      "270": 8,
+      "271": 8,
+      "272": 8,
+      "273": 8,
+      "274": 8,
+      "275": 8,
+      "358": 30,
+      "360": 30,
+      "422": 21,
+      "447": 21
+     },
+     "103": {
+      "153": 17
+     },
+     "104": {
+      "154": 116
+     },
+     "105": {
+      "155": 12
+     },
+     "107": {
+      "140": 5,
+      "157": 77,
+      "399": 7,
+      "400": 7,
+      "428": 2
+     },
+     "108": {
+      "139": 2,
+      "158": 36,
+      "429": 1
+     },
+     "110": {
+      "115": 2,
+      "161": 2
+     },
+     "139": {
+      "158": 1,
+      "429": 18
+     },
+     "140": {
+      "157": 3,
+      "428": 18
+     },
+     "142": {
+      "430": 3,
+      "503": 3
+     },
+     "146": {
+      "147": 21
+     },
+     "148": {
+      "419": 2
+     },
+     "151": {
+      "270": 4,
+      "271": 4,
+      "272": 4,
+      "273": 4,
+      "274": 4,
+      "275": 4,
+      "422": 21
+     },
+     "152": {
+      "423": 4
+     },
+     "157": {
+      "428": 3
+     },
+     "158": {
+      "429": 1
+     },
+     "270": {
+      "102": 2,
+      "151": 2,
+      "271": 15,
+      "272": 15,
+      "273": 15,
+      "274": 15,
+      "275": 15,
+      "358": 2,
+      "360": 2,
+      "422": 2,
+      "447": 6,
+      "453": 2,
+      "65": 2
+     },
+     "281": {
+      "282": 3,
+      "283": 3,
+      "288": 3,
+      "423": 13
+     },
+     "284": {
+      "101": 16,
+      "150": 16,
+      "421": 24,
+      "64": 8
+     },
+     "297": {
+      "298": 6,
+      "307": 6,
+      "420": 1,
+      "502": 1
+     },
+     "358": {
+      "360": 26,
+      "422": 170
+     },
+     "399": {
+      "400": 1
+     },
+     "420": {
+      "502": 4
+     },
+     "430": {
+      "503": 1
+     },
+     "447": {
+      "453": 4
+     },
+     "50": {
+      "70": 1,
+      "86": 1
+     },
+     "51": {
+      "107": 3,
+      "140": 3,
+      "157": 3,
+      "69": 4,
+      "85": 4
+     },
+     "527": {
+      "432": 2
+     },
+     "54": {
+      "113": 5,
+      "142": 2,
+      "159": 5,
+      "63": 5
+     },
+     "541": {
+      "107": 2,
+      "140": 4,
+      "157": 4,
+      "428": 28,
+      "51": 2,
+      "69": 2,
+      "85": 2
+     },
+     "544": {
+      "430": 1,
+      "503": 1
+     },
+     "55": {
+      "105": 53,
+      "155": 53
+     },
+     "559": {
+      "560": 1
+     },
+     "560": {
+      "559": 1
+     },
+     "57": {
+      "103": 194,
+      "143": 194,
+      "153": 206,
+      "424": 20,
+      "58": 194
+     },
+     "575": {
+      "554": 9,
+      "576": 27
+     },
+     "576": {
+      "554": 8
+     },
+     "58": {
+      "143": 18
+     },
+     "64": {
+      "101": 8,
+      "150": 8
+     },
+     "65": {
+      "102": 24,
+      "151": 28,
+      "358": 4,
+      "360": 4,
+      "422": 8
+     },
+     "67": {
+      "152": 1
+     },
+     "99": {
+      "148": 72,
+      "419": 2
+     }
+    },
+    "audit_stamp_misses": 1643,
+    "changed_epoch": 1281,
+    "cold_entries": 454,
+    "families": 41,
+    "full_slots": 668,
+    "hits": 2973,
+    "misses": 2215,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 1761,
+    "restored_values": 10757,
+    "rules": 177,
+    "sibling": 2569,
+    "sibling_changed_epoch": 877,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 668,
+    "stored_values": 7323
+   },
+   "single_work": [
+    7889,
+    7889,
+    7889,
+    6029,
+    1677,
+    2677,
+    0,
+    0
+   ],
+   "attributes": {
+    "admitted_tables": 18,
+    "audit_checks": 2241,
+    "calls": 6352,
+    "collisions": 305,
+    "compiled_uses": 122,
+    "different_epoch": 92,
+    "different_pivot_table": 795,
+    "different_rule": 802,
+    "hits": 2241,
+    "negative_hits": 436,
+    "pairs": {
+     "101": {
+      "101": 22,
+      "107": 2,
+      "250": 2
+     },
+     "102": {
+      "102": 225,
+      "105": 21
+     },
+     "103": {
+      "103": 91,
+      "104": 67,
+      "107": 17,
+      "108": 7
+     },
+     "104": {
+      "103": 2,
+      "104": 15,
+      "107": 2
+     },
+     "107": {
+      "107": 48,
+      "250": 37
+     },
+     "140": {
+      "56": 1
+     },
+     "145": {
+      "145": 7,
+      "146": 2,
+      "147": 2
+     },
+     "146": {
+      "145": 2,
+      "147": 7
+     },
+     "148": {
+      "153": 2
+     },
+     "150": {
+      "150": 40,
+      "151": 22,
+      "152": 6,
+      "157": 6
+     },
+     "151": {
+      "151": 307,
+      "155": 27
+     },
+     "152": {
+      "157": 44
+     },
+     "153": {
+      "153": 125,
+      "154": 65,
+      "157": 34,
+      "158": 8
+     },
+     "154": {
+      "153": 2,
+      "154": 11,
+      "157": 6
+     },
+     "157": {
+      "157": 55
+     },
+     "297": {
+      "297": 3
+     },
+     "298": {
+      "298": 3
+     },
+     "307": {
+      "307": 3
+     },
+     "314": {
+      "315": 2
+     },
+     "400": {
+      "400": 3
+     },
+     "419": {
+      "424": 1
+     },
+     "421": {
+      "421": 22,
+      "423": 2,
+      "428": 2
+     },
+     "422": {
+      "422": 133,
+      "426": 22
+     },
+     "423": {
+      "315": 1,
+      "428": 72
+     },
+     "424": {
+      "424": 110,
+      "425": 73,
+      "428": 12,
+      "429": 2
+     },
+     "425": {
+      "315": 3,
+      "425": 14,
+      "428": 4
+     },
+     "428": {
+      "314": 2,
+      "315": 4,
+      "428": 51
+     },
+     "521": {
+      "125": 4
+     },
+     "551": {
+      "554": 8
+     },
+     "552": {
+      "554": 24
+     },
+     "554": {
+      "554": 32
+     },
+     "559": {
+      "559": 39
+     },
+     "56": {
+      "139": 5,
+      "140": 13,
+      "142": 17,
+      "145": 18,
+      "146": 11,
+      "147": 11,
+      "57": 40,
+      "62": 8
+     },
+     "57": {
+      "145": 17,
+      "146": 1,
+      "147": 1,
+      "57": 25,
+      "62": 21
+     },
+     "575": {
+      "575": 10,
+      "578": 2
+     },
+     "578": {
+      "578": 22
+     },
+     "62": {
+      "142": 1,
+      "145": 4,
+      "62": 23
+     },
+     "99": {
+      "103": 1
+     }
+    },
+    "populated": 717,
+    "stale_generations": 3089
+   },
+   "decisions": "15576378264816477716",
+   "median_ms": 33.6359375
+  }
+ },
+ "conjugate-gradient": {
+  "vanilla": {
+   "runs": 2896,
+   "rhs": 131371,
+   "ms": [
+    360.169916,
+    370.888333,
+    341.82245900000004,
+    361.68675
+   ],
+   "median_ms": 360.928333
+  },
+  "off": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": [
+    243383,
+    83313
+   ],
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    656.0706670000001,
+    628.105958,
+    664.738708,
+    643.833208
+   ],
+   "counts": {
+    "approximate_visits": 407758,
+    "calls": 8494,
+    "committed": 57695,
+    "exhausted": 0,
+    "learned_pointers": 381563,
+    "peak_rule_tuples": 2283,
+    "point_reads": 37475,
+    "primitive_evals": 12928,
+    "raw_parent_rejects": 196,
+    "raw_root_slots": 189794,
+    "raw_tuples": 83313,
+    "rejected_pointers": 0,
+    "root_offers": 1920295,
+    "score_bucket_reads": 392920,
+    "shortlisted": 0,
+    "stale_candidates": 3814,
+    "table_rebuilds": 91,
+    "unsupported": 0,
+    "validated": 57695,
+    "verified_parent_tuples": 83117,
+    "visible_rows": 10593
+   },
+   "family": {
+    "accesses": 0,
+    "audit_checks": 0,
+    "audit_collisions": 0,
+    "audit_sibling_pairs": {},
+    "audit_stamp_misses": 0,
+    "changed_epoch": 0,
+    "cold_entries": 0,
+    "families": 0,
+    "full_slots": 0,
+    "hits": 0,
+    "misses": 0,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 0,
+    "restored_values": 0,
+    "rules": 0,
+    "sibling": 0,
+    "sibling_changed_epoch": 0,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 0,
+    "stored_values": 0
+   },
+   "single_work": [
+    243383,
+    243383,
+    243383,
+    317345,
+    90336,
+    73676,
+    0,
+    0
+   ],
+   "attributes": {
+    "admitted_tables": 0,
+    "audit_checks": 0,
+    "calls": 0,
+    "collisions": 0,
+    "compiled_uses": 0,
+    "different_epoch": 0,
+    "different_pivot_table": 0,
+    "different_rule": 0,
+    "hits": 0,
+    "negative_hits": 0,
+    "pairs": {},
+    "populated": 0,
+    "stale_generations": 0
+   },
+   "decisions": "7920110403220796580",
+   "median_ms": 649.9519375
+  },
+  "attr": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": [
+    243383,
+    83313
+   ],
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    648.8930419999999,
+    626.29775,
+    665.024917,
+    633.359584
+   ],
+   "counts": {
+    "approximate_visits": 407758,
+    "calls": 8494,
+    "committed": 57695,
+    "exhausted": 0,
+    "learned_pointers": 381563,
+    "peak_rule_tuples": 2283,
+    "point_reads": 37475,
+    "primitive_evals": 12928,
+    "raw_parent_rejects": 196,
+    "raw_root_slots": 189794,
+    "raw_tuples": 83313,
+    "rejected_pointers": 0,
+    "root_offers": 1920295,
+    "score_bucket_reads": 392920,
+    "shortlisted": 0,
+    "stale_candidates": 3814,
+    "table_rebuilds": 91,
+    "unsupported": 0,
+    "validated": 57695,
+    "verified_parent_tuples": 83117,
+    "visible_rows": 10593
+   },
+   "family": {
+    "accesses": 0,
+    "audit_checks": 0,
+    "audit_collisions": 0,
+    "audit_sibling_pairs": {},
+    "audit_stamp_misses": 0,
+    "changed_epoch": 0,
+    "cold_entries": 0,
+    "families": 0,
+    "full_slots": 0,
+    "hits": 0,
+    "misses": 0,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 0,
+    "restored_values": 0,
+    "rules": 0,
+    "sibling": 0,
+    "sibling_changed_epoch": 0,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 0,
+    "stored_values": 0
+   },
+   "single_work": [
+    243383,
+    243383,
+    243383,
+    226016,
+    90336,
+    73676,
+    0,
+    0
+   ],
+   "attributes": {
+    "admitted_tables": 18,
+    "audit_checks": 91329,
+    "calls": 290386,
+    "collisions": 154275,
+    "compiled_uses": 122,
+    "different_epoch": 133,
+    "different_pivot_table": 21348,
+    "different_rule": 21383,
+    "hits": 91329,
+    "negative_hits": 5118,
+    "pairs": {
+     "101": {
+      "101": 294,
+      "102": 17,
+      "107": 3
+     },
+     "102": {
+      "102": 649,
+      "105": 13
+     },
+     "103": {
+      "103": 744,
+      "104": 313,
+      "107": 16,
+      "108": 37
+     },
+     "104": {
+      "104": 441
+     },
+     "105": {
+      "107": 1
+     },
+     "107": {
+      "107": 47,
+      "108": 4,
+      "250": 2
+     },
+     "125": {
+      "521": 18
+     },
+     "140": {
+      "145": 5,
+      "56": 2
+     },
+     "142": {
+      "145": 1
+     },
+     "145": {
+      "145": 23
+     },
+     "146": {
+      "145": 2,
+      "147": 3
+     },
+     "148": {
+      "153": 99
+     },
+     "150": {
+      "150": 6956,
+      "151": 1677,
+      "152": 30,
+      "155": 43,
+      "157": 17,
+      "164": 2
+     },
+     "151": {
+      "151": 5811,
+      "155": 612,
+      "164": 23
+     },
+     "152": {
+      "157": 37
+     },
+     "153": {
+      "153": 28541,
+      "154": 12325,
+      "157": 333,
+      "158": 271,
+      "160": 27
+     },
+     "154": {
+      "154": 14891
+     },
+     "155": {
+      "157": 34,
+      "164": 46
+     },
+     "157": {
+      "157": 2643,
+      "158": 773
+     },
+     "158": {
+      "158": 792
+     },
+     "164": {
+      "164": 481
+     },
+     "232": {
+      "232": 16,
+      "233": 56
+     },
+     "297": {
+      "297": 138
+     },
+     "298": {
+      "298": 138
+     },
+     "299": {
+      "299": 138
+     },
+     "300": {
+      "300": 138
+     },
+     "307": {
+      "307": 138
+     },
+     "358": {
+      "358": 108,
+      "360": 32,
+      "537": 19
+     },
+     "360": {
+      "360": 2
+     },
+     "400": {
+      "400": 20
+     },
+     "419": {
+      "424": 27
+     },
+     "421": {
+      "421": 464,
+      "422": 67,
+      "426": 9,
+      "428": 1
+     },
+     "422": {
+      "422": 364,
+      "426": 242,
+      "435": 8
+     },
+     "423": {
+      "428": 4
+     },
+     "424": {
+      "424": 3208,
+      "425": 2424,
+      "428": 143,
+      "429": 52,
+      "431": 3
+     },
+     "425": {
+      "425": 815
+     },
+     "426": {
+      "428": 3,
+      "435": 70
+     },
+     "428": {
+      "428": 178,
+      "429": 95
+     },
+     "429": {
+      "429": 301
+     },
+     "435": {
+      "435": 34
+     },
+     "521": {
+      "125": 14
+     },
+     "537": {
+      "358": 19,
+      "360": 5,
+      "537": 76
+     },
+     "551": {
+      "554": 2
+     },
+     "552": {
+      "554": 1
+     },
+     "554": {
+      "554": 11
+     },
+     "559": {
+      "559": 10
+     },
+     "56": {
+      "139": 27,
+      "140": 36,
+      "142": 36,
+      "145": 88,
+      "146": 3,
+      "147": 3,
+      "57": 505,
+      "62": 171
+     },
+     "57": {
+      "139": 2,
+      "140": 12,
+      "142": 3,
+      "145": 116,
+      "146": 2,
+      "147": 2,
+      "57": 471,
+      "62": 237
+     },
+     "575": {
+      "575": 29,
+      "578": 20
+     },
+     "578": {
+      "578": 811
+     },
+     "62": {
+      "139": 1,
+      "140": 1,
+      "145": 24,
+      "62": 25
+     },
+     "99": {
+      "103": 12
+     }
+    },
+    "populated": 2736,
+    "stale_generations": 42046
+   },
+   "decisions": "7920110403220796580",
+   "median_ms": 641.126313
+  },
+  "different": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": [
+    243383,
+    83313
+   ],
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    679.0877079999999,
+    676.217792,
+    633.598167,
+    651.8204159999999
+   ],
+   "counts": {
+    "approximate_visits": 407758,
+    "calls": 8494,
+    "committed": 57695,
+    "exhausted": 0,
+    "learned_pointers": 381563,
+    "peak_rule_tuples": 2283,
+    "point_reads": 37475,
+    "primitive_evals": 12928,
+    "raw_parent_rejects": 196,
+    "raw_root_slots": 189794,
+    "raw_tuples": 83313,
+    "rejected_pointers": 0,
+    "root_offers": 1920295,
+    "score_bucket_reads": 392920,
+    "shortlisted": 0,
+    "stale_candidates": 3814,
+    "table_rebuilds": 91,
+    "unsupported": 0,
+    "validated": 57695,
+    "verified_parent_tuples": 83117,
+    "visible_rows": 10593
+   },
+   "family": {
+    "accesses": 0,
+    "audit_checks": 0,
+    "audit_collisions": 0,
+    "audit_sibling_pairs": {},
+    "audit_stamp_misses": 0,
+    "changed_epoch": 0,
+    "cold_entries": 0,
+    "families": 0,
+    "full_slots": 0,
+    "hits": 0,
+    "misses": 0,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 0,
+    "restored_values": 0,
+    "rules": 0,
+    "sibling": 0,
+    "sibling_changed_epoch": 0,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 0,
+    "stored_values": 0
+   },
+   "single_work": [
+    243383,
+    243383,
+    243383,
+    295962,
+    90336,
+    73676,
+    0,
+    0
+   ],
+   "attributes": {
+    "admitted_tables": 18,
+    "audit_checks": 21383,
+    "calls": 290386,
+    "collisions": 154275,
+    "compiled_uses": 122,
+    "different_epoch": 87,
+    "different_pivot_table": 21348,
+    "different_rule": 21383,
+    "hits": 21383,
+    "negative_hits": 1166,
+    "pairs": {
+     "101": {
+      "102": 17,
+      "107": 3
+     },
+     "102": {
+      "105": 13
+     },
+     "103": {
+      "104": 313,
+      "107": 16,
+      "108": 37
+     },
+     "105": {
+      "107": 1
+     },
+     "107": {
+      "108": 4,
+      "250": 2
+     },
+     "125": {
+      "521": 18
+     },
+     "140": {
+      "145": 5,
+      "56": 2
+     },
+     "142": {
+      "145": 1
+     },
+     "146": {
+      "145": 2,
+      "147": 3
+     },
+     "148": {
+      "153": 99
+     },
+     "150": {
+      "151": 1677,
+      "152": 30,
+      "155": 43,
+      "157": 17,
+      "164": 2
+     },
+     "151": {
+      "155": 612,
+      "164": 23
+     },
+     "152": {
+      "157": 37
+     },
+     "153": {
+      "154": 12325,
+      "157": 333,
+      "158": 271,
+      "160": 27
+     },
+     "155": {
+      "157": 34,
+      "164": 46
+     },
+     "157": {
+      "158": 773
+     },
+     "232": {
+      "233": 56
+     },
+     "358": {
+      "360": 32,
+      "537": 19
+     },
+     "419": {
+      "424": 27
+     },
+     "421": {
+      "422": 67,
+      "426": 9,
+      "428": 1
+     },
+     "422": {
+      "426": 242,
+      "435": 8
+     },
+     "423": {
+      "428": 4
+     },
+     "424": {
+      "425": 2424,
+      "428": 143,
+      "429": 52,
+      "431": 3
+     },
+     "426": {
+      "428": 3,
+      "435": 70
+     },
+     "428": {
+      "429": 95
+     },
+     "521": {
+      "125": 14
+     },
+     "537": {
+      "358": 19,
+      "360": 5
+     },
+     "551": {
+      "554": 2
+     },
+     "552": {
+      "554": 1
+     },
+     "56": {
+      "139": 27,
+      "140": 36,
+      "142": 36,
+      "145": 88,
+      "146": 3,
+      "147": 3,
+      "57": 505,
+      "62": 171
+     },
+     "57": {
+      "139": 2,
+      "140": 12,
+      "142": 3,
+      "145": 116,
+      "146": 2,
+      "147": 2,
+      "62": 237
+     },
+     "575": {
+      "578": 20
+     },
+     "62": {
+      "139": 1,
+      "140": 1,
+      "145": 24
+     },
+     "99": {
+      "103": 12
+     }
+    },
+    "populated": 2736,
+    "stale_generations": 42046
+   },
+   "decisions": "7920110403220796580",
+   "median_ms": 664.019104
+  },
+  "joint": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": [
+    243383,
+    83313
+   ],
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    636.9635420000001,
+    680.1199999999999,
+    647.396292,
+    687.887333
+   ],
+   "counts": {
+    "approximate_visits": 407758,
+    "calls": 8494,
+    "committed": 57695,
+    "exhausted": 0,
+    "learned_pointers": 381563,
+    "peak_rule_tuples": 2283,
+    "point_reads": 37475,
+    "primitive_evals": 12928,
+    "raw_parent_rejects": 196,
+    "raw_root_slots": 189794,
+    "raw_tuples": 83313,
+    "rejected_pointers": 0,
+    "root_offers": 1920295,
+    "score_bucket_reads": 392920,
+    "shortlisted": 0,
+    "stale_candidates": 3814,
+    "table_rebuilds": 91,
+    "unsupported": 0,
+    "validated": 57695,
+    "verified_parent_tuples": 83117,
+    "visible_rows": 10593
+   },
+   "family": {
+    "accesses": 204744,
+    "audit_checks": 92789,
+    "audit_collisions": 96223,
+    "audit_sibling_pairs": {
+     "100": {
+      "114": 33,
+      "149": 33
+     },
+     "101": {
+      "150": 815,
+      "421": 5
+     },
+     "102": {
+      "151": 1781,
+      "270": 4,
+      "271": 4,
+      "272": 4,
+      "273": 4,
+      "274": 4,
+      "275": 4,
+      "358": 168,
+      "360": 168,
+      "422": 89
+     },
+     "103": {
+      "143": 154,
+      "153": 380,
+      "424": 9
+     },
+     "104": {
+      "154": 1529,
+      "425": 31
+     },
+     "105": {
+      "155": 213
+     },
+     "107": {
+      "140": 11,
+      "157": 179,
+      "428": 9
+     },
+     "108": {
+      "139": 14,
+      "158": 1764,
+      "429": 14
+     },
+     "139": {
+      "429": 1638
+     },
+     "140": {
+      "157": 15,
+      "428": 130
+     },
+     "142": {
+      "430": 13,
+      "503": 13
+     },
+     "143": {
+      "153": 9
+     },
+     "146": {
+      "147": 8
+     },
+     "148": {
+      "419": 72,
+      "99": 48
+     },
+     "150": {
+      "101": 28,
+      "421": 90
+     },
+     "151": {
+      "102": 94,
+      "358": 192,
+      "360": 185,
+      "422": 207
+     },
+     "152": {
+      "423": 16
+     },
+     "153": {
+      "424": 15
+     },
+     "154": {
+      "104": 1,
+      "425": 75
+     },
+     "155": {
+      "426": 9
+     },
+     "157": {
+      "107": 1,
+      "541": 12
+     },
+     "158": {
+      "108": 56,
+      "429": 84
+     },
+     "160": {
+      "431": 56
+     },
+     "164": {
+      "536": 14,
+      "537": 17
+     },
+     "270": {
+      "271": 101,
+      "272": 101,
+      "273": 101,
+      "274": 101,
+      "275": 101,
+      "447": 8,
+      "453": 4
+     },
+     "281": {
+      "152": 10,
+      "282": 2,
+      "283": 2,
+      "288": 2,
+      "67": 2
+     },
+     "284": {
+      "101": 164,
+      "150": 287,
+      "285": 143,
+      "421": 264,
+      "64": 84
+     },
+     "297": {
+      "100": 93,
+      "114": 93,
+      "149": 93,
+      "298": 126,
+      "299": 126,
+      "300": 126,
+      "307": 126
+     },
+     "358": {
+      "360": 62,
+      "422": 403
+     },
+     "360": {
+      "270": 2,
+      "271": 2,
+      "272": 2,
+      "273": 2,
+      "274": 2,
+      "275": 2,
+      "422": 2
+     },
+     "399": {
+      "400": 29
+     },
+     "420": {
+      "502": 116
+     },
+     "447": {
+      "453": 5
+     },
+     "50": {
+      "70": 14,
+      "86": 14
+     },
+     "51": {
+      "107": 11,
+      "140": 11,
+      "157": 11,
+      "69": 38,
+      "85": 38
+     },
+     "536": {
+      "537": 6
+     },
+     "537": {
+      "435": 48
+     },
+     "54": {
+      "113": 13,
+      "159": 13,
+      "63": 13
+     },
+     "541": {
+      "107": 2,
+      "140": 2,
+      "157": 3,
+      "51": 2,
+      "69": 2,
+      "85": 2
+     },
+     "55": {
+      "105": 641,
+      "155": 661,
+      "426": 3
+     },
+     "559": {
+      "560": 2
+     },
+     "57": {
+      "103": 1628,
+      "143": 1611,
+      "153": 1383,
+      "424": 303,
+      "58": 1777
+     },
+     "575": {
+      "554": 25,
+      "576": 149
+     },
+     "576": {
+      "554": 3
+     },
+     "58": {
+      "143": 88
+     },
+     "64": {
+      "101": 102,
+      "150": 103
+     },
+     "65": {
+      "102": 75,
+      "151": 432,
+      "270": 1,
+      "271": 1,
+      "272": 1,
+      "273": 1,
+      "274": 1,
+      "275": 1,
+      "358": 11,
+      "360": 11,
+      "422": 14
+     },
+     "99": {
+      "148": 1512,
+      "419": 12
+     }
+    },
+    "audit_stamp_misses": 13623,
+    "changed_epoch": 79331,
+    "cold_entries": 2109,
+    "families": 41,
+    "full_slots": 668,
+    "hits": 92789,
+    "misses": 111955,
+    "negative": 0,
+    "prefix_rules": 0,
+    "replacements": 109846,
+    "restored_values": 309242,
+    "rules": 177,
+    "sibling": 24205,
+    "sibling_changed_epoch": 10747,
+    "sibling_negative": 0,
+    "step_hits": 0,
+    "stored_slots": 668,
+    "stored_values": 338901
+   },
+   "single_work": [
+    243383,
+    243383,
+    243383,
+    226016,
+    90336,
+    73676,
+    0,
+    0
+   ],
+   "attributes": {
+    "admitted_tables": 18,
+    "audit_checks": 91329,
+    "calls": 290386,
+    "collisions": 154275,
+    "compiled_uses": 122,
+    "different_epoch": 133,
+    "different_pivot_table": 21348,
+    "different_rule": 21383,
+    "hits": 91329,
+    "negative_hits": 5118,
+    "pairs": {
+     "101": {
+      "101": 294,
+      "102": 17,
+      "107": 3
+     },
+     "102": {
+      "102": 649,
+      "105": 13
+     },
+     "103": {
+      "103": 744,
+      "104": 313,
+      "107": 16,
+      "108": 37
+     },
+     "104": {
+      "104": 441
+     },
+     "105": {
+      "107": 1
+     },
+     "107": {
+      "107": 47,
+      "108": 4,
+      "250": 2
+     },
+     "125": {
+      "521": 18
+     },
+     "140": {
+      "145": 5,
+      "56": 2
+     },
+     "142": {
+      "145": 1
+     },
+     "145": {
+      "145": 23
+     },
+     "146": {
+      "145": 2,
+      "147": 3
+     },
+     "148": {
+      "153": 99
+     },
+     "150": {
+      "150": 6956,
+      "151": 1677,
+      "152": 30,
+      "155": 43,
+      "157": 17,
+      "164": 2
+     },
+     "151": {
+      "151": 5811,
+      "155": 612,
+      "164": 23
+     },
+     "152": {
+      "157": 37
+     },
+     "153": {
+      "153": 28541,
+      "154": 12325,
+      "157": 333,
+      "158": 271,
+      "160": 27
+     },
+     "154": {
+      "154": 14891
+     },
+     "155": {
+      "157": 34,
+      "164": 46
+     },
+     "157": {
+      "157": 2643,
+      "158": 773
+     },
+     "158": {
+      "158": 792
+     },
+     "164": {
+      "164": 481
+     },
+     "232": {
+      "232": 16,
+      "233": 56
+     },
+     "297": {
+      "297": 138
+     },
+     "298": {
+      "298": 138
+     },
+     "299": {
+      "299": 138
+     },
+     "300": {
+      "300": 138
+     },
+     "307": {
+      "307": 138
+     },
+     "358": {
+      "358": 108,
+      "360": 32,
+      "537": 19
+     },
+     "360": {
+      "360": 2
+     },
+     "400": {
+      "400": 20
+     },
+     "419": {
+      "424": 27
+     },
+     "421": {
+      "421": 464,
+      "422": 67,
+      "426": 9,
+      "428": 1
+     },
+     "422": {
+      "422": 364,
+      "426": 242,
+      "435": 8
+     },
+     "423": {
+      "428": 4
+     },
+     "424": {
+      "424": 3208,
+      "425": 2424,
+      "428": 143,
+      "429": 52,
+      "431": 3
+     },
+     "425": {
+      "425": 815
+     },
+     "426": {
+      "428": 3,
+      "435": 70
+     },
+     "428": {
+      "428": 178,
+      "429": 95
+     },
+     "429": {
+      "429": 301
+     },
+     "435": {
+      "435": 34
+     },
+     "521": {
+      "125": 14
+     },
+     "537": {
+      "358": 19,
+      "360": 5,
+      "537": 76
+     },
+     "551": {
+      "554": 2
+     },
+     "552": {
+      "554": 1
+     },
+     "554": {
+      "554": 11
+     },
+     "559": {
+      "559": 10
+     },
+     "56": {
+      "139": 27,
+      "140": 36,
+      "142": 36,
+      "145": 88,
+      "146": 3,
+      "147": 3,
+      "57": 505,
+      "62": 171
+     },
+     "57": {
+      "139": 2,
+      "140": 12,
+      "142": 3,
+      "145": 116,
+      "146": 2,
+      "147": 2,
+      "57": 471,
+      "62": 237
+     },
+     "575": {
+      "575": 29,
+      "578": 20
+     },
+     "578": {
+      "578": 811
+     },
+     "62": {
+      "139": 1,
+      "140": 1,
+      "145": 24,
+      "62": 25
+     },
+     "99": {
+      "103": 12
+     }
+    },
+    "populated": 2736,
+    "stale_generations": 42046
+   },
+   "decisions": "7920110403220796580",
+   "median_ms": 663.7581459999999
+  }
+ }
+}

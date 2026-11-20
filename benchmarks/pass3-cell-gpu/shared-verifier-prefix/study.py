@@ -14,15 +14,17 @@ MODES={"off":0, "anchor":1, "prefix":2, "sibling":3, "negative":4, "live":5}
 
 def settings(req,args):
     off=dict(req,header_mode=3,derived_ports=dict(mode=1,cache=True),lazy_equations=4)
-    return {name:dict(off,shared_prefix=mode) for name,mode in MODES.items()}
+    modes={"off":0,"attr":6,"different":7,"joint":8} if args.attributes else MODES
+    return {name:dict(off,shared_prefix=mode) for name,mode in modes.items()}
 
 def record(arm,output,row,report):
     single=output["single"]
     row["family"]=single["adaptive_rows"]["family"]
     row["single_work"]=single["work"]
+    row["attributes"]=single["adaptive_rows"].get("attributes",{})
     row["decisions"]=single["adaptive_rows"]["decision_digest"]
     if arm!="off":
-        assert row["family"]["hits"]>0
+        assert row["family"]["hits"]+row["attributes"].get("hits",0)>0
         assert row["family"]["hits"]==row["family"]["audit_checks"]
         for name in ("raw","physical","commits","multi","children","cells","decisions"):
             assert row[name]==report["off"][name],(arm,name)
@@ -35,7 +37,7 @@ def profile(args):
         configs=settings(req,args)
         with base.base.session(args.exp/"compact-vanilla-20261121/vanilla",program) as native:
             gold=native({})
-        arms=("off","prefix","live")
+        arms=("off","attr","joint") if args.attributes else ("off","prefix","live")
         samples={k:[] for k in arms}
         with base.base.session(args.native,program,plan) as infer:
             for rep in range(args.repeats+1):
@@ -59,6 +61,7 @@ if __name__=="__main__":
     p.add_argument("--cases",nargs="+",default=["sum-bits","3mm"])
     p.add_argument("--seed",type=int,default=1703)
     p.add_argument("--repeats",type=int,default=4)
+    p.add_argument("--attributes",action="store_true")
     p.add_argument("--profile",action="store_true")
     args=p.parse_args()
     if args.profile:profile(args)

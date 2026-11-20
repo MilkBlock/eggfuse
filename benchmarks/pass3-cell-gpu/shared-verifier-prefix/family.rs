@@ -135,12 +135,22 @@ impl Trial {
         if mode == 0 {
             return Ok(());
         }
-        if !(1..=5).contains(&mode)
+        if !(1..=8).contains(&mode)
             || self.rows.verify.mode != 2
             || self.rows.verify.projected.mode != 0
         {
             return Err("sibling prefixes require the ordinary watermark verifier".into());
         }
+        if mode >= 6 {
+            self.rows
+                .verify
+                .attr
+                .compile(prog, &self.plans, mode, self.rows.detailed);
+            if mode != 8 {
+                return Ok(());
+            }
+        }
+        let mode = if mode == 8 { 1 } else { mode };
         let state = &mut self.rows.verify.family;
         state.mode = mode;
         state.audit = self.rows.detailed;

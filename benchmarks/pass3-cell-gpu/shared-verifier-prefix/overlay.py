@@ -32,7 +32,23 @@ impl VerifiedRows {
             let Some(e)=self.check_family(g,r,p,tok,work,reg,&mut witnesses,&layout)? else {return Ok(None)};
             epoch=e;
         } else ''' + s[start:loop].lstrip() + s[loop:].replace('        for &i in &p.order {','        for &i in &p.order[completed..] {',1)
-    path.write_text(s+'\ninclude!("shared_verifier_prefix.rs");\n'+helper)
+    s = change(s, '    family: FamilyChecks,', '    family: FamilyChecks,\n    attr: Attributes,')
+    tail='        for &i in &p.order[completed..] {'
+    s=change(s,tail,tail+"""
+            if self.attr.mode!=0 && let Some(&(Some((table,pivot))))=self.attr.operations[tok.rid].get(i){
+                let atom=&r.query[i];
+                let key=query_operand(&atom.args[0], reg, g).ok_or("unknown attribute input")?;
+                let raw=match key {Value::Eq(x)=>Some(x),Value::Int(x)=>Some(x as u64),_=>None};
+                if let Some(raw)=raw {
+                    let Some(v)=self.attr.get(g,table,pivot,key,raw,tok.rid,work)? else{return Ok(None)};
+                    witnesses[i]=Some(v.witness);
+                    epoch=epoch.max(v.epoch);
+                    if !bind_query(&atom.args[1],&v.result,reg,g){return Ok(None)}
+                    continue;
+                }
+            }""")
+    path.write_text(s+'\ninclude!("shared_verifier_prefix.rs");\ninclude!("shared_attribute.rs");\n'+helper)
+    copyfile(HERE/'attribute.rs',src/'shared_attribute.rs')
     copyfile(HERE/'family.rs',src/'shared_verifier_prefix.rs')
     p=src/'runtime.rs'
     anchor='    pub fn single_report(&self)'
@@ -42,7 +58,7 @@ impl VerifiedRows {
     }
 '''+anchor))
     p=src/'adaptive_rows.rs'
-    p.write_text(change(p.read_text(),'"projection":self.verify.projected.stats,','"family":self.verify.family.stats,"projection":self.verify.projected.stats,'))
+    p.write_text(change(p.read_text(),'"projection":self.verify.projected.stats,','"family":self.verify.family.stats,"attributes":self.verify.attr.stats,"projection":self.verify.projected.stats,'))
     p=crate/'examples/joint_witness_session.rs';anchor='        let initial_cells = runtime.graph.stats.cells_created;'
     p.write_text(change(p.read_text(),anchor,'''        if let Some(mode)=req["shared_prefix"].as_u64(){runtime.configure_shared_prefix(mode)?;}
 '''+anchor))
