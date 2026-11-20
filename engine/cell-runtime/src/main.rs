@@ -31,7 +31,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "eggfuse-cell-runtime --program FILE [--inspect-program | --output DIR] [--audit-stages] [--extract-unit-cost OPERATOR]"
         );
         #[cfg(feature = "slot-transfer-audit")]
-        println!("  --audit-events (save ordered birth, union, function write and Spine witnesses)");
+        println!("  --audit-events | --audit-repair-inputs (include pre-union dependencies and ordered key repairs)");
         #[cfg(feature = "gpu-bindings")]
         #[cfg(target_os = "macos")]
         println!("  --unique-parent point|metal|model [--parent-weights FILE] (certified complete keys)");
@@ -79,7 +79,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         match flag.as_str() {
             #[cfg(feature = "slot-transfer-audit")]
-            "--audit-events" => {}
+            "--audit-events" | "--audit-repair-inputs" => {}
             #[cfg(all(feature = "gpu-bindings", target_os = "macos"))]
             "--unique-parent" | "--parent-weights" => {
                 flags.next().filter(|v| !v.starts_with("--")).ok_or("missing unique-parent option")?;
@@ -314,7 +314,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     {
         eggfuse_cell_runtime::transfer_audit::set_active(true);
         eggfuse_cell_runtime::transfer_audit::enable_write_audit();
-        if args.iter().any(|arg| arg == "--audit-events") {
+        if args.iter().any(|arg| arg == "--audit-repair-inputs") {
+            std::fs::write(out.join("repair-inputs.json"), serde_json::to_vec(&runtime.graph.repair_input_snapshot()?)?)?;
+            eggfuse_cell_runtime::transfer_audit::enable_repair_inputs();
+        } else if args.iter().any(|arg| arg == "--audit-events") {
             eggfuse_cell_runtime::transfer_audit::enable_events();
         }
     }

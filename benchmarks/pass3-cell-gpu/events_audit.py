@@ -19,7 +19,7 @@ def root(parent,v):
     return v
 
 
-def align(program,packet,device,oracle,detail):
+def align(program,packet,device,oracle,detail,initial_snapshot=None):
     raw=load(program);p=load(packet);gpu=load(device/'run.json')
     if hashlib.sha256(program.read_bytes()).hexdigest()!=p['program_sha256']:
         raise ValueError('offline Cell packet belongs to a different source program')
@@ -28,12 +28,18 @@ def align(program,packet,device,oracle,detail):
         raise ValueError('device execution and offline Cell packet differ')
     if any(load(folder/'report.json')['program_sha256']!=raw['sha256'] for folder in (oracle,detail)):
         raise ValueError('CPU reference program revision differs')
-    cpu=load(detail/'events.json');reference=load(oracle/'binding-audit.json')
+    cpu=load(detail/'events.json')
+    if initial_snapshot is None:
+        initial=load(oracle/'binding-audit.json')['initial']
+    else:
+        initial=load(initial_snapshot)
+        if initial['schema']!='eggfuse-repair-inputs/v1' or initial['program_sha256']!=raw['sha256']:
+            raise ValueError('repair snapshot belongs to a different program')
     for file in ('rhs.json','writes.json','resumes.json'):
         if (detail/file).read_bytes()!=(oracle/file).read_bytes():
             raise ValueError(f'event collection changed {file}')
     rhs_digest=load(oracle/'rhs.json');writes_digest=load(oracle/'writes.json');resume_digest=load(oracle/'resumes.json')
-    anchors={(v['sort'],v['old']):int(v['now'][5:-1]) for v in reference['initial']['anchors']}
+    anchors={(v['sort'],v['old']):int(v['now'][5:-1]) for v in initial['anchors']}
     origin={p['eq_order'][i]:anchors[v['sort'],v['eq']] for i,v in enumerate(p['symbols']) if 'eq' in v}
     def value(sort,v,parent):
         k=sort['kind'];v=int(v)
@@ -122,6 +128,7 @@ def align(program,packet,device,oracle,detail):
     keys=('schedule','rhs','writes','spine','known_class_roots','write_count')
     provenance={str(path.name):hashlib.sha256(path.read_bytes()).hexdigest() for path in
                 (program,packet,device/'output.npz',oracle/'rhs.json',oracle/'writes.json',oracle/'resumes.json',detail/'events.json')}
+    if initial_snapshot is not None:provenance['initial_snapshot']=hashlib.sha256(initial_snapshot.read_bytes()).hexdigest()
     return dict(provenance=provenance,source_runs=len(cpu),device_runs=gpu['completed'],compared=len(matrices),mapped_classes=len(origin),
                 unmapped_birth_count=len(unresolved),unmapped_sample=unresolved[:5],first_difference=details,
                 aligned_by_ordinal={k:sum(r[k] for r in matrices) for k in keys},

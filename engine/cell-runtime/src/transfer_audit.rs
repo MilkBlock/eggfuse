@@ -4,11 +4,13 @@ use std::cell::Cell;
 pub mod observation;
 thread_local! {
     static DIGESTS: std::cell::RefCell<Vec<String>> = const { std::cell::RefCell::new(Vec::new()) };
+    static REPAIR_INPUTS: Cell<bool> = const { Cell::new(false) };
     static ACTIVE: Cell<bool> = const { Cell::new(false) };
 }
 pub fn set_active(on: bool) {
     ACTIVE.set(on);
     if !on {
+        REPAIR_INPUTS.set(false);
         WRITE_ACTIVE.set(false);
         SOURCE.set(None);
     }
@@ -42,6 +44,12 @@ thread_local! {
     static EVENTS: std::cell::RefCell<Option<Vec<Vec<serde_json::Value>>>> =
         const { std::cell::RefCell::new(None) };
 }
+
+pub fn enable_repair_inputs() {
+    REPAIR_INPUTS.set(true);
+    enable_events();
+}
+pub(crate) fn repair_inputs() -> bool { REPAIR_INPUTS.get() }
 
 pub fn enable_events() {
     EVENTS.replace(Some(Vec::new()));

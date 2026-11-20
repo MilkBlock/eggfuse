@@ -1724,6 +1724,46 @@ impl Graph {
 
         Ok(())
     }
+    #[cfg(feature = "slot-transfer-audit")]
+    fn audit_displaced_ports(&self, hi: u64, lo: u64) -> Result<()> {
+        if !crate::transfer_audit::repair_inputs() { return Ok(()); }
+        fn touches(v: &Value, hi: u64, parents: &Parents) -> bool {
+            match v {
+                Value::Eq(id) => root(parents, *id) == hi,
+                Value::Set(items) => items.iter().any(|item| touches(item, hi, parents)),
+                _ => false,
+            }
+        }
+        // Capture before the link. A cached row may still contain an older
+        // non-root. Preserve every registered subscriber, even a stale one.
+        let mut ports = Vec::new();
+        if let Some(uses) = self.uses.get(&hi) {
+            for &dep in uses.iter() {
+                let row = self.row(dep)?;
+                let fields = row.as_ref().map(|r| r.values.iter().enumerate()
+                    .filter_map(|(i,v)| touches(v, hi, &self.parents).then_some(i))
+                    .collect::<Vec<_>>());
+                ports.push(json!([dep, row.as_ref().map(|r| r.table), fields]));
+            }
+        }
+        crate::transfer_audit::event(|| json!(["displaced", hi, lo, ports]));
+        Ok(())
+    }
+
+    #[cfg(feature = "slot-transfer-audit")]
+    pub fn repair_input_snapshot(&self) -> Result<J> {
+        let mut facts = Vec::new();
+        for table in 0..self.program.tables.len() {
+            for w in self.witnesses(table) {
+                if let Some(row) = self.row(w)? {
+                    facts.push(json!([w, table, row.values, row.hidden]));
+                }
+            }
+        }
+        let anchors = self.anchors.iter().map(|(sort, old, id)|
+            json!({"sort":sort,"old":old,"now":format!("Cell({})",root(&self.parents,*id))})).collect::<Vec<_>>();
+        Ok(json!({"schema":"eggfuse-repair-inputs/v1","program_sha256":self.program.artifact["sha256"],"facts":facts,"anchors":anchors}))
+    }
     fn union(&mut self, a: u64, b: u64) -> Result<()> {
         let a = root(&self.parents, a);
         let b = root(&self.parents, b);
@@ -1731,6 +1771,8 @@ impl Graph {
             return Ok(());
         }
         let (lo, hi) = (a.min(b), a.max(b));
+        #[cfg(feature = "slot-transfer-audit")]
+        self.audit_displaced_ports(hi, lo)?;
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::event(|| serde_json::json!(["union", hi, lo]));
 
@@ -2191,6 +2233,10 @@ impl Graph {
     }
     fn retire(&mut self, f: FactRef) -> Result<()> {
         if let Some(r) = self.fact(f)? {
+            #[cfg(feature = "slot-transfer-audit")]
+            if crate::transfer_audit::repair_inputs() {
+                crate::transfer_audit::event(|| json!(["retire", f.ordered_id()]));
+            }
             let owned=self.retire_owned(f,r.table);
             let local = self.cells[&f.cell].facts[&f.op].local_union_owned;
             self.end_local_ownership(f, r.table, true);
@@ -2344,6 +2390,10 @@ impl Graph {
         found: Option<Row>,
         result: Option<Value>,
     ) -> Result<()> {
+        #[cfg(feature = "slot-transfer-audit")]
+        if crate::transfer_audit::repair_inputs() {
+            crate::transfer_audit::event(|| json!(["key-check",f.ordered_id(),found.as_ref().map(|r|r.witness)]));
+        }
         self.join_constructor_epoch(&row, found.as_ref());
         // Port-key coverage already proves this is a constructor. Canonical
         // repair also serves relation facts, whose outputs must not be unioned.
