@@ -1533,13 +1533,13 @@
     "id": "50-verified-feedback",
     "section": "实例生成与验证",
     "title": "下一轮 latent 需要读到哪些验证结果？",
-    "status": "待验证 · 实验设计",
-    "q": "两行同时认领同一待办时，下一轮如何知道已关闭哪一项、哪一项仍在等待？",
-    "arms": "a　下一次前向只读上轮生成的 latent 和来源引用。b　附上每条提案的验收位。c　再附上设备生成的已关闭或仍待办的义务 ID，与失败的版本或边界原因。",
-    "fix": "同一初始 latent、批预算、验证器、待办账本与真实回退路径。逐轮直接消费设备上的输出，不把事后 CPU 标签作为反馈。加打乱反馈的冻结反事实。",
-    "measure": "测第二轮重领、跨 row 遗漏、失效证书重试、额外反馈字节和净延迟；若多出的反馈只降低训练损失而未增加有效完成量，选更短格式。",
-    "note": "不同于图 13 的自由历史 token：这里反馈的是执行器已验证的状态。对旧代数引用继续严格检查。",
-    "src": "S5 / S20 / S23",
+    "status": "已测 · 两波设备端提案",
+    "q": "每个 Run 里，两行各提案两次。第一波已经通过验真的地址，第二波还要再领一次吗？",
+    "arms": "a　盲读上轮生成的 token。b　再读两行的验收位。c　再读任务地址和拒绝、过期、重复状态。同一个 c 权重另测屏蔽全部回执及互换两行回执的地址。",
+    "fix": "三个训练臂使用相同的四个训练家族、样本窗口、480 次更新和双种子。每 Run 四个提案槽，两波验真后仅做一次精确补查。各臂的 CPU 审计均在推理结束后执行。",
+    "measure": "sum-bits 的第二波实际 RHS（1703／1709）为盲读 32／1、验收位 35／49、任务回执 50／53。dot-product 分别为 25／1、27／37、38／39。索引、验证和补查均计入常驻墙钟。",
+    "note": "即使第二波贡献增长，带回执的 sum-bits 仍仅供齐 4／5 个非空 Run，分母为 527。相同权重的屏蔽结果及四个程序的完整读数见 S36。",
+    "src": "S36",
     "diagram": [
       {
         "title": "Latent only",
@@ -2155,5 +2155,581 @@
         ]
       }
     ]
+  },
+  {
+    "id": "57-closed-mask",
+    "section": "递归生成器与验证器",
+    "title": "屏蔽已经验真的地址，能替代多少学习？",
+    "status": "已测 · 冻结策略与硬排除",
+    "q": "图 50 的第二波更少重领同一地址。比较两种机制对最终提交量及耗时的独立贡献。",
+    "arms": "a　盲读权重自由选择。b　相同权重，第二波禁止再选第一波已关闭的地址。c　带回执的学习策略。d　同一回执权重再加确定性排除。",
+    "fix": "冻结模型，用同一 Run、叶块、物理来源三者标识义务。排除只对本 Run 第二波有效；拒绝、过期及同类不同来源继续可选。",
+    "measure": "sum-bits 盲读网络加确定性排除后，神经提交从 88／59 提高到 105／110（两个种子）。dot-product 从 72／46 提高到 85／83。带任务回执的模型分别为 106／112、85／86。",
+    "note": "同一波的两行仍并行提案。该对照单独测量跨波协调，没有预设同行已能分工。",
+    "src": "S36",
+    "diagram": [
+      {
+        "title": "Blind",
+        "layers": [
+          [
+            [
+              "n",
+              "blind policy"
+            ]
+          ],
+          [
+            [
+              "w",
+              "free proposal"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Blind + guard",
+        "layers": [
+          [
+            [
+              "n",
+              "blind policy"
+            ]
+          ],
+          [
+            [
+              "v",
+              "mask closed"
+            ]
+          ],
+          [
+            [
+              "w",
+              "next proposal"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Learned IDs",
+        "layers": [
+          [
+            [
+              "v",
+              "task receipts"
+            ]
+          ],
+          [
+            [
+              "n",
+              "learned scores"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "IDs + guard",
+        "layers": [
+          [
+            [
+              "n",
+              "learned scores"
+            ]
+          ],
+          [
+            [
+              "v",
+              "mask closed"
+            ]
+          ],
+          [
+            [
+              "w",
+              "next proposal"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "58-bootstrap",
+    "section": "递归生成器与验证器",
+    "title": "只补空 LHS 初始化，能推到哪一个 Run？",
+    "status": "已测 · 部分补查反事实",
+    "q": "完全关闭精确补查后，图 56 的神经策略在第一个 Run 没生成 RHS。定位初始化之后的第一个缺口。",
+    "arms": "a　仅验真神经提案。b　额外允许精确引擎执行空 LHS 规则。c　允许完整精确补查。网络、输入和编译产物相同。",
+    "fix": "冻结图 50 的任务回执权重。保留真实源调度和原序发布。按有序 RHS、有效写入、Spine 和 Run 计数定位首次分叉。",
+    "measure": "四个程序两种子都在纯模型时从 Run 1 分叉。只开放两条空 LHS 规则后，前两个 Run 对齐，Run 3 缺少规则 575 的绑定。该规则有两个 LHS 原子，且有入口被收录。",
+    "note": "部分补查只开放编译器可判定的空 LHS；它能定位下一项障碍，不能为模型记入初始化绑定。",
+    "src": "S36",
+    "diagram": [
+      {
+        "title": "Actor only",
+        "layers": [
+          [
+            [
+              "n",
+              "propose"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify"
+            ]
+          ],
+          [
+            [
+              "w",
+              "commit"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Bootstrap",
+        "layers": [
+          [
+            [
+              "n",
+              "propose"
+            ],
+            [
+              "s",
+              "empty LHS"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify + order"
+            ]
+          ],
+          [
+            [
+              "w",
+              "commit"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Full residual",
+        "layers": [
+          [
+            [
+              "n",
+              "propose"
+            ],
+            [
+              "s",
+              "exact search"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify + order"
+            ]
+          ],
+          [
+            [
+              "w",
+              "commit"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "59-device-exchange",
+    "section": "递归生成器与验证器",
+    "title": "两波提案与验真之间要提交几次 GPU 工作？",
+    "status": "已测 · 相同权重与回执",
+    "q": "相同的网络和验证器能否通过减少 Metal 提交缩短整轮，而不改变生成历史？",
+    "arms": "a　分开提交两波前向与验真。b　在一个线程组内完成两波，保留单独的候选特征核。c　同一线程组也负责特征构造。另测完整精确引擎。",
+    "fix": "冻结回执模型、两行两波、每个候选、边界检查、原序提交和精确补查。线程组内屏障保持上一波输出和回执可见。",
+    "measure": "sum-bits 种子 1703 的分开提交、合并两波、再并入特征分别为 1,072、1,029、1,073 ms，纯精确为 888 ms。dot-product 分别为 1,118、1,077、1,116、901 ms。",
+    "note": "该实验固定生成质量，单独检验网络和精确验证器之间的数据交接成本。",
+    "src": "S36",
+    "diagram": [
+      {
+        "title": "Separate",
+        "layers": [
+          [
+            [
+              "s",
+              "features"
+            ]
+          ],
+          [
+            [
+              "n",
+              "2 x propose"
+            ]
+          ],
+          [
+            [
+              "v",
+              "2 x verify"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Fused waves",
+        "layers": [
+          [
+            [
+              "s",
+              "features"
+            ]
+          ],
+          [
+            [
+              "n",
+              "propose + verify"
+            ]
+          ],
+          [
+            [
+              "n",
+              "second wave"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Single group",
+        "layers": [
+          [
+            [
+              "s",
+              "read addresses"
+            ]
+          ],
+          [
+            [
+              "n",
+              "both waves"
+            ]
+          ],
+          [
+            [
+              "v",
+              "exact receipts"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "60-composed-ceiling",
+    "title": "每 Run 两份证书，能覆盖多少不同 RHS？",
+    "section": "可引用的组合证明",
+    "status": "已测 · 冻结轨迹最优解",
+    "q": "固定起点地址与预算，让每份证书能引用父端口，解释多个源 Run 的结果。",
+    "arms": "a　单叶只解释一个参考获胜绑定。b　从相同位置签发迭代 Bake 组合，后继沿指定效果端口进入，仍到原 Run 才公开。",
+    "fix": "搜索前保存实际发布序号，回溯唯一的父 RHS 与效果位置。整数规划对重叠链全局去重。",
+    "measure": "单叶 → 组合，sum-bits 为 181 → 246、dot-product 为 161 → 207，两种留出程序分别为 154 → 222、117 → 166。",
+    "note": "使用参考获胜轨迹和事后选择器，未计在线模型发现率与验证成本。",
+    "diagram": [
+      {
+        "title": "One leaf",
+        "layers": [
+          [
+            [
+              "s",
+              "leaf + anchor"
+            ]
+          ],
+          [
+            [
+              "w",
+              "one RHS"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Baked path",
+        "layers": [
+          [
+            [
+              "s",
+              "parent effect port"
+            ]
+          ],
+          [
+            [
+              "w",
+              "ordered RHS chain"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Overlap",
+        "layers": [
+          [
+            [
+              "w",
+              "intersecting chains"
+            ]
+          ],
+          [
+            [
+              "v",
+              "unique RHS ordinals"
+            ]
+          ]
+        ]
+      }
+    ],
+    "src": "S37"
+  },
+  {
+    "id": "61-run-waves",
+    "title": "在同一个源 Run 内，继续生成还有收益吗？",
+    "section": "可引用的组合证明",
+    "status": "已测 · 真实 GPU 多波",
+    "q": "让上一波的 token 和验证回执直接进入下一波，直到固定上限或两行同时弃权。",
+    "arms": "a　每 Run 1、2、4、8、16 波。b　上限 16，两行全弃权则停止前向。结束后才做精确补查。",
+    "fix": "同一两波训练模型、32 叶、8 候选、2 行。停止后保留最后生成的 token，固定上限内的空提交仍计时。",
+    "measure": "sum-bits 的神经提交（1703／1709）为 1 波 58／59、2 波 106／112、4 波 126／156、16 波 126／158。dot-product 的 16 波为 101／126。",
+    "note": "双行全弃权时 sum-bits 仍遗漏 119／109 个窗口内参考获胜项。结束生成不能关闭这些义务。",
+    "diagram": [
+      {
+        "title": "One wave",
+        "layers": [
+          [
+            [
+              "n",
+              "two rows"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify"
+            ]
+          ],
+          [
+            [
+              "s",
+              "residual"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "More waves",
+        "layers": [
+          [
+            [
+              "n",
+              "generated latent"
+            ]
+          ],
+          [
+            [
+              "v",
+              "next-wave receipt"
+            ]
+          ],
+          [
+            [
+              "s",
+              "residual"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Abstention",
+        "layers": [
+          [
+            [
+              "n",
+              "two nulls"
+            ]
+          ],
+          [
+            [
+              "v",
+              "end proposal loop"
+            ]
+          ],
+          [
+            [
+              "s",
+              "check remainder"
+            ]
+          ]
+        ]
+      }
+    ],
+    "src": "S37"
+  },
+  {
+    "id": "62-pending-proof-batch",
+    "title": "验证回执何时应当返回给递归生成器？",
+    "section": "可引用的组合证明",
+    "status": "待验证 · 实验设计",
+    "q": "把 Pair → Chain 已有的待验父引用接回真实 Pass 3，比逐波回执与依赖批验。",
+    "arms": "a　每波验真。b　后波子 Cell 引用待验父端口，按批拓扑验真。c　冻结同一份神经提案 DAG，交叉重放两种验证器。",
+    "fix": "相同权重、可组合模板、每 Run 总槽数、原调度及端口版本。模型能区分待验与已接受。",
+    "measure": "分开统计共享父验证、错父、失效后代、每证书不同 RHS、残余补查、整轮耗时。关闭补查记录首次分叉。",
+    "note": "图 59 合并设备提交，其中每波仍立即验真。图 62 必须观测到模型实际引用待验父。",
+    "diagram": [
+      {
+        "title": "Per wave",
+        "layers": [
+          [
+            [
+              "n",
+              "propose parent"
+            ]
+          ],
+          [
+            [
+              "v",
+              "return receipt"
+            ]
+          ],
+          [
+            [
+              "n",
+              "propose child"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Pending parents",
+        "layers": [
+          [
+            [
+              "n",
+              "parent token"
+            ]
+          ],
+          [
+            [
+              "n",
+              "child cites port"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify DAG"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Frozen DAG",
+        "layers": [
+          [
+            [
+              "s",
+              "same neural DAG"
+            ]
+          ],
+          [
+            [
+              "v",
+              "two verifiers"
+            ]
+          ],
+          [
+            [
+              "w",
+              "same ordinals"
+            ]
+          ]
+        ]
+      }
+    ],
+    "src": "S37"
+  },
+  {
+    "id": "63-proof-retirement",
+    "title": "父证明失效，要退役哪些后继？",
+    "section": "可引用的组合证明",
+    "status": "待验证 · 实验设计",
+    "q": "在同一批待验神经提案中区分父拒绝、union 与代数过期的影响。",
+    "arms": "a　整批退役。b　沿实际依赖退役。c　若结论还有独立支持，保留受支持的结论及后继。",
+    "fix": "使用有共享祖先、替代证明与独立分支的批次。真实失效和注入反例分表。记录来源身份、当前类、原 Run 和版本。",
+    "measure": "精确比对退役集合，量误杀、非法幸存、重复验证、补查、延迟及可见性。非法发布直接判失败。",
+    "note": "图 18 用编译器私有链验证过局部撤销，此处要求神经生成的、具有多重支持的 Pass 3 证明。",
+    "diagram": [
+      {
+        "title": "Batch",
+        "layers": [
+          [
+            [
+              "v",
+              "failed premise"
+            ]
+          ],
+          [
+            [
+              "w",
+              "retire batch"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Dependencies",
+        "layers": [
+          [
+            [
+              "v",
+              "failed premise"
+            ]
+          ],
+          [
+            [
+              "s",
+              "affected children"
+            ]
+          ],
+          [
+            [
+              "w",
+              "retire proofs"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Other support",
+        "layers": [
+          [
+            [
+              "s",
+              "second proof"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check support"
+            ]
+          ],
+          [
+            [
+              "w",
+              "preserve result"
+            ]
+          ]
+        ]
+      }
+    ],
+    "src": "S37"
   }
 ]

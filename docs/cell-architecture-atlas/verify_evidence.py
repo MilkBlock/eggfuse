@@ -32,13 +32,13 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==56
+    assert len(plates)==63
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and all(p[k] for k in ('q','arms','fix','measure','note','src'))
         if i<=37:
             assert p['status'].startswith(('已测','实跑'))
         else:
-            if i in (38,39,40,41,46,55,56):assert p['status'].startswith('已测')
+            if i in (38,39,40,41,46,50,55,56,57,58,59,60,61):assert p['status'].startswith('已测')
             else:assert p['status']=='待验证 · 实验设计'
             arms=p['diagram']
             assert len(arms)>=2 and len({a['title'] for a in arms})==len(arms)
@@ -221,7 +221,8 @@ def check():
             assert b['changed_discrete_vs_intact']==0 and arms['zero-latent']['changed_discrete_vs_intact']>0
             assert a['work']['exact_seeds_skipped']==a['accepted'] and b['work']['exact_seeds_skipped']==0
             assert arms['shadow']['won']==arms['all-null']['raw']==0
-    print('Verified 44 measured plates, 12 pending designs, and neural versus exact attribution.')
+    runpy.run_path(str(rec/'receipts/verify.py'))['check']()
+    print('Verified 50 measured plates, 13 pending designs, and neural versus exact attribution.')
 
 
 if __name__=='__main__':check()
