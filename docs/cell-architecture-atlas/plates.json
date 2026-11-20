@@ -4039,5 +4039,88 @@
         ]
       }
     ]
+  },
+  {
+    "id": "81-request-transactions",
+    "section": "Cell 计算请求的调度",
+    "title": "延迟凑批和共享答案，各自省了什么？",
+    "status": "已测 · 三负载双种子",
+    "q": "一批 Cell 已经各自选定父端口。对同一源视图的查表和整数计算，是立即回答、复用上个答案，还是等待同伴一起计算？",
+    "arms": "a　即时求值。b　每八份封存提案共用缓存，各实例就绪即执行。c　使用相同缓存，将八份提案按同一指令逐层求值，再按原序交回各自的 RHS。",
+    "fix": "CPU 策略、权重、发行预算、父引用和原 Run 固定。两个共享版本必须对每条源指令得到相同的操作数、成功或失败结果、真实行票据和版本。以未经修改的 vanilla 单列墙钟。",
+    "measure": "Jacobi／1703，批宽 8 少解码父行 188,118 次、少查表 31,645 次、少算标量 16,859 次。即时／流式共享／延迟八条为 313.56／317.54／315.86 ms；vanilla 为 112.60 ms。",
+    "note": "sum-bits 两个种子的延迟八条为 38.94／39.49 ms，即时为 38.98／38.60 ms。各实例继续在原提交点执行 min、union 和有效写入。",
+    "src": "S71",
+    "diagram": [
+      {
+        "title": "Immediate",
+        "layers": [
+          [
+            [
+              "n",
+              "sealed parents"
+            ]
+          ],
+          [
+            [
+              "v",
+              "answer per lane"
+            ]
+          ],
+          [
+            [
+              "w",
+              "ordered effects"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Stream with cache",
+        "layers": [
+          [
+            [
+              "n",
+              "ready lane"
+            ]
+          ],
+          [
+            [
+              "s",
+              "8-packet read scope"
+            ]
+          ],
+          [
+            [
+              "w",
+              "ordered effects"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Deferred transaction",
+        "layers": [
+          [
+            [
+              "n",
+              "up to 8 sealed lanes"
+            ]
+          ],
+          [
+            [
+              "v",
+              "one instruction wave"
+            ]
+          ],
+          [
+            [
+              "w",
+              "ordered effects"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
