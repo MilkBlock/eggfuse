@@ -1,0 +1,1077 @@
+{
+ "0": [
+  {
+   "atom": 2,
+   "table": "ExprIsPure",
+   "owner_atom": 1,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 4,
+   "table": "ExprIsPure",
+   "owner_atom": 3,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 5,
+   "table": "Expr-size",
+   "owner_atom": 1,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 7,
+   "table": "Expr-size",
+   "owner_atom": 3,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "1": [
+  {
+   "atom": 1,
+   "table": "Get",
+   "owner_atom": 0,
+   "key_arity": 2,
+   "checks_result": false
+  },
+  {
+   "atom": 3,
+   "table": "Add",
+   "owner_atom": 4,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 5,
+   "table": "LessThan",
+   "owner_atom": 6,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 7,
+   "table": "tuple-length",
+   "owner_atom": 0,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 13,
+   "table": "LoopNumItersGuess",
+   "owner_atom": 0,
+   "key_arity": 2,
+   "checks_result": false
+  },
+  {
+   "atom": 14,
+   "table": "DUMMYCTX",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "10": [
+  {
+   "atom": 3,
+   "table": "Add",
+   "owner_atom": 4,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 6,
+   "table": "Mul",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  },
+  {
+   "atom": 12,
+   "table": "tuple-length",
+   "owner_atom": 0,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 13,
+   "table": "DUMMYCTX",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "11": [
+  {
+   "atom": 8,
+   "table": "ExprIsPure",
+   "owner_atom": 9,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 12,
+   "table": "ExprIsPure",
+   "owner_atom": 10,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 15,
+   "table": "Expr-size",
+   "owner_atom": 9,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 17,
+   "table": "ExtractedExpr",
+   "owner_atom": 10,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 18,
+   "table": "Expr-size",
+   "owner_atom": 10,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 20,
+   "table": "TypeList-length",
+   "owner_atom": 1,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "12": [
+  {
+   "atom": 10,
+   "table": "ExprIsPure",
+   "owner_atom": 6,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 14,
+   "table": "ExprIsPure",
+   "owner_atom": 9,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 16,
+   "table": "Expr-size",
+   "owner_atom": 6,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 18,
+   "table": "ExtractedExpr",
+   "owner_atom": 9,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 19,
+   "table": "Expr-size",
+   "owner_atom": 9,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 21,
+   "table": "TypeList-length",
+   "owner_atom": 2,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "14": [
+  {
+   "atom": 4,
+   "table": "Div",
+   "owner_atom": 5,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 6,
+   "table": "Get",
+   "owner_atom": 3,
+   "key_arity": 2,
+   "checks_result": false
+  }
+ ],
+ "15": [
+  {
+   "atom": 3,
+   "table": "StateT",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  },
+  {
+   "atom": 11,
+   "table": "tuple-length",
+   "owner_atom": 1,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 12,
+   "table": "DUMMYCTX",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "16": [
+  {
+   "atom": 4,
+   "table": "Mul",
+   "owner_atom": 5,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "2": [
+  {
+   "atom": 0,
+   "table": "LessThan",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "227": [
+  {
+   "atom": 3,
+   "table": "Length-List<PtrPointees>",
+   "owner_atom": 0,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 4,
+   "table": "Length-List<PtrPointees>",
+   "owner_atom": 1,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "240": [
+  {
+   "atom": 3,
+   "table": "BinaryOpIsPure",
+   "owner_atom": 2,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "246": [
+  {
+   "atom": 4,
+   "table": "ExprIsPure",
+   "owner_atom": 0,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "247": [
+  {
+   "atom": 4,
+   "table": "ExprIsPure",
+   "owner_atom": 0,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "268": [
+  {
+   "atom": 4,
+   "table": "Expr-size",
+   "owner_atom": 0,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 5,
+   "table": "to-hoist-size",
+   "owner_atom": 1,
+   "key_arity": 2,
+   "checks_result": false
+  }
+ ],
+ "269": [
+  {
+   "atom": 4,
+   "table": "Expr-size",
+   "owner_atom": 0,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "276": [
+  {
+   "atom": 0,
+   "table": "GreaterEq",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "277": [
+  {
+   "atom": 0,
+   "table": "LessEq",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "3": [
+  {
+   "atom": 0,
+   "table": "LessThan",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "357": [
+  {
+   "atom": 0,
+   "table": "Print",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "359": [
+  {
+   "atom": 0,
+   "table": "Free",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "361": [
+  {
+   "atom": 0,
+   "table": "Load",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "362": [
+  {
+   "atom": 3,
+   "table": "TypeList-length",
+   "owner_atom": 1,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "363": [
+  {
+   "atom": 3,
+   "table": "TypeList-length",
+   "owner_atom": 1,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "365": [
+  {
+   "atom": 1,
+   "table": "BoolT",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "370": [
+  {
+   "atom": 3,
+   "table": "BoolT",
+   "owner_atom": 4,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "374": [
+  {
+   "atom": 0,
+   "table": "IntT",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "386": [
+  {
+   "atom": 0,
+   "table": "Add",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "387": [
+  {
+   "atom": 0,
+   "table": "Add",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "388": [
+  {
+   "atom": 0,
+   "table": "Sub",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "389": [
+  {
+   "atom": 0,
+   "table": "Sub",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "390": [
+  {
+   "atom": 0,
+   "table": "Mul",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 4,
+   "table": "hi-bound",
+   "owner_atom": 1,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 7,
+   "table": "hi-bound",
+   "owner_atom": 1,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "391": [
+  {
+   "atom": 0,
+   "table": "Mul",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "392": [
+  {
+   "atom": 0,
+   "table": "Mul",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "393": [
+  {
+   "atom": 0,
+   "table": "Mul",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "394": [
+  {
+   "atom": 0,
+   "table": "Mul",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "395": [
+  {
+   "atom": 0,
+   "table": "Mul",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "396": [
+  {
+   "atom": 0,
+   "table": "Mul",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "397": [
+  {
+   "atom": 0,
+   "table": "LessThan",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "398": [
+  {
+   "atom": 0,
+   "table": "LessThan",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "405": [
+  {
+   "atom": 2,
+   "table": "hi-bound",
+   "owner_atom": 1,
+   "key_arity": 1,
+   "checks_result": true
+  }
+ ],
+ "406": [
+  {
+   "atom": 2,
+   "table": "hi-bound",
+   "owner_atom": 1,
+   "key_arity": 1,
+   "checks_result": true
+  }
+ ],
+ "409": [
+  {
+   "atom": 0,
+   "table": "LessThan",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "41": [
+  {
+   "atom": 0,
+   "table": "Sub",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "410": [
+  {
+   "atom": 0,
+   "table": "LessThan",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "411": [
+  {
+   "atom": 0,
+   "table": "LessThan",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "412": [
+  {
+   "atom": 0,
+   "table": "LessThan",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "413": [
+  {
+   "atom": 3,
+   "table": "lo-bound",
+   "owner_atom": 4,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "414": [
+  {
+   "atom": 3,
+   "table": "hi-bound",
+   "owner_atom": 4,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "415": [
+  {
+   "atom": 0,
+   "table": "Eq",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "416": [
+  {
+   "atom": 0,
+   "table": "Eq",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "42": [
+  {
+   "atom": 0,
+   "table": "Add",
+   "owner_atom": 3,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 1,
+   "table": "Mul",
+   "owner_atom": 2,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "43": [
+  {
+   "atom": 0,
+   "table": "Add",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "438": [
+  {
+   "atom": 1,
+   "table": "Get",
+   "owner_atom": 0,
+   "key_arity": 2,
+   "checks_result": false
+  },
+  {
+   "atom": 3,
+   "table": "Add",
+   "owner_atom": 4,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 5,
+   "table": "LessThan",
+   "owner_atom": 6,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "439": [
+  {
+   "atom": 1,
+   "table": "Get",
+   "owner_atom": 0,
+   "key_arity": 2,
+   "checks_result": false
+  },
+  {
+   "atom": 3,
+   "table": "Add",
+   "owner_atom": 4,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 5,
+   "table": "LessThan",
+   "owner_atom": 6,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "440": [
+  {
+   "atom": 0,
+   "table": "PtrAdd",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "441": [
+  {
+   "atom": 0,
+   "table": "PtrAdd",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "442": [
+  {
+   "atom": 0,
+   "table": "PtrAdd",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 2,
+   "table": "Add",
+   "owner_atom": 3,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "443": [
+  {
+   "atom": 0,
+   "table": "PtrAdd",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 2,
+   "table": "Add",
+   "owner_atom": 3,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "444": [
+  {
+   "atom": 0,
+   "table": "PtrAdd",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 2,
+   "table": "Sub",
+   "owner_atom": 3,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "445": [
+  {
+   "atom": 0,
+   "table": "PtrAdd",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 2,
+   "table": "Sub",
+   "owner_atom": 3,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "454": [
+  {
+   "atom": 3,
+   "table": "tuple-length",
+   "owner_atom": 0,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 4,
+   "table": "LoopNumItersGuess",
+   "owner_atom": 0,
+   "key_arity": 2,
+   "checks_result": false
+  },
+  {
+   "atom": 5,
+   "table": "LoopIsFinite",
+   "owner_atom": 0,
+   "key_arity": 2,
+   "checks_result": false
+  },
+  {
+   "atom": 7,
+   "table": "DUMMYCTX",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "458": [
+  {
+   "atom": 1,
+   "table": "StateT",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "459": [
+  {
+   "atom": 1,
+   "table": "LoopIsFinite",
+   "owner_atom": 0,
+   "key_arity": 2,
+   "checks_result": false
+  },
+  {
+   "atom": 2,
+   "table": "StateT",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "460": [
+  {
+   "atom": 3,
+   "table": "PureType",
+   "owner_atom": 2,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "461": [
+  {
+   "atom": 2,
+   "table": "StateT",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  },
+  {
+   "atom": 4,
+   "table": "ListExpr-length",
+   "owner_atom": 8,
+   "key_arity": 1,
+   "checks_result": true
+  }
+ ],
+ "462": [
+  {
+   "atom": 1,
+   "table": "ListExpr-length",
+   "owner_atom": 4,
+   "key_arity": 1,
+   "checks_result": true
+  }
+ ],
+ "463": [
+  {
+   "atom": 2,
+   "table": "StateT",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "464": [
+  {
+   "atom": 1,
+   "table": "Bool",
+   "owner_atom": 3,
+   "key_arity": 1,
+   "checks_result": true
+  },
+  {
+   "atom": 2,
+   "table": "Bool",
+   "owner_atom": 4,
+   "key_arity": 1,
+   "checks_result": true
+  }
+ ],
+ "466": [
+  {
+   "atom": 1,
+   "table": "StateT",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  },
+  {
+   "atom": 4,
+   "table": "DUMMYCTX",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "468": [
+  {
+   "atom": 4,
+   "table": "TmpType",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "529": [
+  {
+   "atom": 0,
+   "table": "Free",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "530": [
+  {
+   "atom": 0,
+   "table": "Load",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  }
+ ],
+ "535": [
+  {
+   "atom": 0,
+   "table": "PtrAdd",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 5,
+   "table": "IntT",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "547": [
+  {
+   "atom": 3,
+   "table": "BoolT",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "567": [
+  {
+   "atom": 0,
+   "table": "PointerT",
+   "owner_atom": 3,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "6": [
+  {
+   "atom": 6,
+   "table": "hi-bound",
+   "owner_atom": 3,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "7": [
+  {
+   "atom": 6,
+   "table": "hi-bound",
+   "owner_atom": 3,
+   "key_arity": 1,
+   "checks_result": false
+  }
+ ],
+ "8": [
+  {
+   "atom": 0,
+   "table": "And",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 5,
+   "table": "tuple-length",
+   "owner_atom": 2,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 6,
+   "table": "Expr-size",
+   "owner_atom": 2,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 8,
+   "table": "DUMMYCTX",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ],
+ "9": [
+  {
+   "atom": 0,
+   "table": "Or",
+   "owner_atom": 1,
+   "key_arity": 0,
+   "checks_result": true
+  },
+  {
+   "atom": 5,
+   "table": "tuple-length",
+   "owner_atom": 2,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 6,
+   "table": "Expr-size",
+   "owner_atom": 2,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 8,
+   "table": "Expr-size",
+   "owner_atom": 2,
+   "key_arity": 1,
+   "checks_result": false
+  },
+  {
+   "atom": 10,
+   "table": "DUMMYCTX",
+   "owner_atom": null,
+   "key_arity": 0,
+   "checks_result": false
+  }
+ ]
+}
