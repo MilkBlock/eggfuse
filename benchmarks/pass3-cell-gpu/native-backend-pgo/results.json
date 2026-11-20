@@ -1,0 +1,562 @@
+{
+ "conjugate-gradient": {
+  "program_sha256": "decf722a0df14dddb3ed40eeadee5fad00743eceb695bdf7237932eddb94e428",
+  "sealed_sha256": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+  "orders": [
+   [
+    "vanilla-release",
+    "learned-release",
+    "vanilla-plain",
+    "learned-plain",
+    "vanilla-use",
+    "learned-use"
+   ],
+   [
+    "learned-release",
+    "vanilla-plain",
+    "learned-plain",
+    "vanilla-use",
+    "learned-use",
+    "vanilla-release"
+   ],
+   [
+    "vanilla-plain",
+    "learned-plain",
+    "vanilla-use",
+    "learned-use",
+    "vanilla-release",
+    "learned-release"
+   ],
+   [
+    "learned-plain",
+    "vanilla-use",
+    "learned-use",
+    "vanilla-release",
+    "learned-release",
+    "vanilla-plain"
+   ],
+   [
+    "vanilla-use",
+    "learned-use",
+    "vanilla-release",
+    "learned-release",
+    "vanilla-plain",
+    "learned-plain"
+   ],
+   [
+    "learned-use",
+    "vanilla-release",
+    "learned-release",
+    "vanilla-plain",
+    "learned-plain",
+    "vanilla-use"
+   ]
+  ],
+  "arms": {
+   "vanilla-release": {
+    "runs": 2896,
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "rhs": 131371,
+    "ms": [
+     381.584125,
+     345.388666,
+     369.95575,
+     346.608,
+     361.34679200000005,
+     345.734333
+    ],
+    "roundtrip_ms": [
+     494.163792,
+     453.785375,
+     480.055834,
+     452.6795,
+     468.161667,
+     455.363791
+    ],
+    "median_ms": 353.977396,
+    "median_roundtrip_ms": 461.76272900000004
+   },
+   "learned-release": {
+    "raw": "10431860128350219007",
+    "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+    "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+    "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+    "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+    "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+    "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+    "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+    "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+    "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+    "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "rhs": 131371,
+    "fresh": 97139,
+    "direct_cells": 97026,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "remaining_rhs": 0,
+    "root_allocated": 96535,
+    "multi_tuples": 83313,
+    "header_updates": 1040,
+    "arithmetic": 16083,
+    "ms": [
+     665.9026660000001,
+     667.349042,
+     680.098083,
+     655.53625,
+     650.975291,
+     666.141541
+    ],
+    "roundtrip_ms": [
+     772.282167,
+     779.568416,
+     783.846417,
+     760.147667,
+     754.460459,
+     772.684458
+    ],
+    "median_ms": 666.0221035,
+    "median_roundtrip_ms": 772.4833125
+   },
+   "vanilla-plain": {
+    "runs": 2896,
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "rhs": 131371,
+    "ms": [
+     341.434083,
+     341.57966600000003,
+     350.284417,
+     378.8935,
+     343.92695899999995,
+     342.18575
+    ],
+    "roundtrip_ms": [
+     448.619542,
+     454.274167,
+     458.795459,
+     490.101708,
+     450.619459,
+     448.241166
+    ],
+    "median_ms": 343.0563545,
+    "median_roundtrip_ms": 452.446813
+   },
+   "learned-plain": {
+    "raw": "10431860128350219007",
+    "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+    "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+    "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+    "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+    "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+    "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+    "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+    "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+    "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+    "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "rhs": 131371,
+    "fresh": 97139,
+    "direct_cells": 97026,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "remaining_rhs": 0,
+    "root_allocated": 96535,
+    "multi_tuples": 83313,
+    "header_updates": 1040,
+    "arithmetic": 16083,
+    "ms": [
+     658.1965,
+     639.1181660000001,
+     624.029333,
+     637.904125,
+     654.713333,
+     652.31975
+    ],
+    "roundtrip_ms": [
+     765.368083,
+     745.687125,
+     727.46575,
+     744.346083,
+     758.927583,
+     758.701959
+    ],
+    "median_ms": 645.718958,
+    "median_roundtrip_ms": 752.194542
+   },
+   "vanilla-use": {
+    "runs": 2896,
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "rhs": 131371,
+    "ms": [
+     313.255209,
+     312.265,
+     330.603042,
+     303.852375,
+     310.954333,
+     304.199459
+    ],
+    "roundtrip_ms": [
+     412.968584,
+     411.125459,
+     428.275042,
+     403.112333,
+     411.244417,
+     407.57525
+    ],
+    "median_ms": 311.6096665,
+    "median_roundtrip_ms": 411.184938
+   },
+   "learned-use": {
+    "raw": "10431860128350219007",
+    "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+    "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+    "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+    "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+    "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+    "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+    "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+    "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+    "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+    "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "rhs": 131371,
+    "fresh": 97139,
+    "direct_cells": 97026,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "remaining_rhs": 0,
+    "root_allocated": 96535,
+    "multi_tuples": 83313,
+    "header_updates": 1040,
+    "arithmetic": 16083,
+    "ms": [
+     566.0285,
+     561.090041,
+     583.6631249999999,
+     569.764167,
+     569.755709,
+     571.871334
+    ],
+    "roundtrip_ms": [
+     665.83775,
+     656.272792,
+     676.228459,
+     664.447958,
+     663.752334,
+     667.776708
+    ],
+    "median_ms": 569.759938,
+    "median_roundtrip_ms": 665.1428539999999
+   }
+  },
+  "binaries": {
+   "vanilla-release": "1822363e36639a27e708f0f85318f0f91f4b919bfb85e2c51446c4239fa9bb40",
+   "learned-release": "145fb6bd388a05660090b12c38d25ee1ca8fd2aa3a084294e7784b26fde08d26",
+   "vanilla-plain": "767fb8022f137f4943857cdd37afe79e052a0487d94e919ef61d6cd662a19741",
+   "learned-plain": "e5f7dfa3c1906b7a9a8ef036ca94b9e4906a2a80252f2c64d8d676c87587962a",
+   "vanilla-use": "a64fbb4d1d7efe5201ffe139003c40d2e6eafae6dfa5e81234b2bf2af39a22ca",
+   "learned-use": "9136068575c6379c9dc1ed058838ccc5b81ae0c0ecafb04eb20e811d51297c8f"
+  }
+ },
+ "3mm": {
+  "program_sha256": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+  "sealed_sha256": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+  "orders": [
+   [
+    "vanilla-release",
+    "learned-release",
+    "vanilla-plain",
+    "learned-plain",
+    "vanilla-use",
+    "learned-use"
+   ],
+   [
+    "learned-release",
+    "vanilla-plain",
+    "learned-plain",
+    "vanilla-use",
+    "learned-use",
+    "vanilla-release"
+   ],
+   [
+    "vanilla-plain",
+    "learned-plain",
+    "vanilla-use",
+    "learned-use",
+    "vanilla-release",
+    "learned-release"
+   ],
+   [
+    "learned-plain",
+    "vanilla-use",
+    "learned-use",
+    "vanilla-release",
+    "learned-release",
+    "vanilla-plain"
+   ],
+   [
+    "vanilla-use",
+    "learned-use",
+    "vanilla-release",
+    "learned-release",
+    "vanilla-plain",
+    "learned-plain"
+   ],
+   [
+    "learned-use",
+    "vanilla-release",
+    "learned-release",
+    "vanilla-plain",
+    "learned-plain",
+    "vanilla-use"
+   ]
+  ],
+  "arms": {
+   "vanilla-release": {
+    "runs": 4260,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "rhs": 294917,
+    "ms": [
+     860.968333,
+     921.908208,
+     947.984084,
+     899.5215,
+     936.441916,
+     929.177583
+    ],
+    "roundtrip_ms": [
+     1093.850041,
+     1158.7185,
+     1191.30725,
+     1133.077042,
+     1177.672708,
+     1169.067041
+    ],
+    "median_ms": 925.5428955,
+    "median_roundtrip_ms": 1163.8927705
+   },
+   "learned-release": {
+    "raw": "7377151213120924531",
+    "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+    "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+    "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "rhs": 294917,
+    "fresh": 229880,
+    "direct_cells": 229311,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "remaining_rhs": 0,
+    "root_allocated": 228095,
+    "multi_tuples": 220972,
+    "header_updates": 1828,
+    "arithmetic": 70190,
+    "ms": [
+     1885.159042,
+     2006.393042,
+     1938.5494159999998,
+     2013.4355,
+     1957.718916,
+     2003.678791
+    ],
+    "roundtrip_ms": [
+     2108.0335,
+     2240.420791,
+     2169.880666,
+     2247.184666,
+     2190.679208,
+     2232.837708
+    ],
+    "median_ms": 1980.6988535,
+    "median_roundtrip_ms": 2211.7584580000002
+   },
+   "vanilla-plain": {
+    "runs": 4260,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "rhs": 294917,
+    "ms": [
+     812.284125,
+     874.674166,
+     889.843708,
+     863.98825,
+     958.9515,
+     889.354333
+    ],
+    "roundtrip_ms": [
+     1038.812083,
+     1105.621459,
+     1124.9685,
+     1095.043875,
+     1198.431791,
+     1119.851875
+    ],
+    "median_ms": 882.0142495,
+    "median_roundtrip_ms": 1112.7366670000001
+   },
+   "learned-plain": {
+    "raw": "7377151213120924531",
+    "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+    "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+    "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "rhs": 294917,
+    "fresh": 229880,
+    "direct_cells": 229311,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "remaining_rhs": 0,
+    "root_allocated": 228095,
+    "multi_tuples": 220972,
+    "header_updates": 1828,
+    "arithmetic": 70190,
+    "ms": [
+     1831.823333,
+     1955.7406660000001,
+     1980.752542,
+     1981.538625,
+     1957.444084,
+     1926.201084
+    ],
+    "roundtrip_ms": [
+     2065.20925,
+     2194.167875,
+     2215.016542,
+     2215.3045,
+     2189.525458,
+     2166.821417
+    ],
+    "median_ms": 1956.5923750000002,
+    "median_roundtrip_ms": 2191.8466665
+   },
+   "vanilla-use": {
+    "runs": 4260,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "rhs": 294917,
+    "ms": [
+     797.233584,
+     802.5458749999999,
+     817.0096249999999,
+     809.71875,
+     790.879042,
+     823.957292
+    ],
+    "roundtrip_ms": [
+     1004.273458,
+     1015.781666,
+     1029.000625,
+     1026.574167,
+     998.567208,
+     1035.38025
+    ],
+    "median_ms": 806.1323124999999,
+    "median_roundtrip_ms": 1021.1779165
+   },
+   "learned-use": {
+    "raw": "7377151213120924531",
+    "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+    "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+    "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "rhs": 294917,
+    "fresh": 229880,
+    "direct_cells": 229311,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "remaining_rhs": 0,
+    "root_allocated": 228095,
+    "multi_tuples": 220972,
+    "header_updates": 1828,
+    "arithmetic": 70190,
+    "ms": [
+     1724.521375,
+     1717.350167,
+     1726.489792,
+     1747.152875,
+     1733.933125,
+     1768.3591669999998
+    ],
+    "roundtrip_ms": [
+     1927.487375,
+     1921.165709,
+     1936.520625,
+     1955.300416,
+     1945.725166,
+     1972.991583
+    ],
+    "median_ms": 1730.2114585,
+    "median_roundtrip_ms": 1941.1228955000001
+   }
+  },
+  "binaries": {
+   "vanilla-release": "1822363e36639a27e708f0f85318f0f91f4b919bfb85e2c51446c4239fa9bb40",
+   "learned-release": "145fb6bd388a05660090b12c38d25ee1ca8fd2aa3a084294e7784b26fde08d26",
+   "vanilla-plain": "767fb8022f137f4943857cdd37afe79e052a0487d94e919ef61d6cd662a19741",
+   "learned-plain": "e5f7dfa3c1906b7a9a8ef036ca94b9e4906a2a80252f2c64d8d676c87587962a",
+   "vanilla-use": "a64fbb4d1d7efe5201ffe139003c40d2e6eafae6dfa5e81234b2bf2af39a22ca",
+   "learned-use": "9136068575c6379c9dc1ed058838ccc5b81ae0c0ecafb04eb20e811d51297c8f"
+  }
+ }
+}

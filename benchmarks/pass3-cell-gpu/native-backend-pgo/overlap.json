@@ -1,0 +1,38 @@
+{
+ "conjugate-gradient": {
+  "learned": {
+   "edge_percent": 76.724,
+   "donor_edges": 1250964695,
+   "test_edges": 820349690,
+   "overlap_functions": 6210,
+   "donor_sha256": "f9929beca18692656e70d310bded0b2165b8d80781131438a854fc6aa964bd46",
+   "heldout_sha256": "45fdf14a0be87001e9d47878431ca16eecece2a802b47d49b487b8a499e38c36"
+  },
+  "vanilla": {
+   "edge_percent": 79.343,
+   "donor_edges": 909225968,
+   "test_edges": 463998022,
+   "overlap_functions": 5212,
+   "donor_sha256": "7678bbe493e4270163a8f88bf7fd05919f75b8826783f84ef718c8ca5816de16",
+   "heldout_sha256": "16dee8d36319e55ecfb716b842dc05d349ee4edb20296d5e6c6509baf6f37289"
+  }
+ },
+ "3mm": {
+  "learned": {
+   "edge_percent": 68.625,
+   "donor_edges": 1250964695,
+   "test_edges": 2154000681,
+   "overlap_functions": 6210,
+   "donor_sha256": "f9929beca18692656e70d310bded0b2165b8d80781131438a854fc6aa964bd46",
+   "heldout_sha256": "c8313beacafc5efb9522121b9377b2ce67ddd3a1fafe69ee6f62307f3b55448e"
+  },
+  "vanilla": {
+   "edge_percent": 70.337,
+   "donor_edges": 909225968,
+   "test_edges": 1053363853,
+   "overlap_functions": 5212,
+   "donor_sha256": "7678bbe493e4270163a8f88bf7fd05919f75b8826783f84ef718c8ca5816de16",
+   "heldout_sha256": "9f5118c18bbebada923b9190caf6492144b480da06527b25b9a73ed155d44b61"
+  }
+ }
+}
