@@ -4371,5 +4371,171 @@
         ]
       }
     ]
+  },
+  {
+    "id": "85-existing-owners",
+    "section": "两个已存实例的反事实",
+    "title": "两个已有 owner 真能一步合并吗？",
+    "status": "已测 · 原生物理存储",
+    "q": "在真实源图的副本上先分配两个独立 owner，让两者经历一个 Run 后再原子转交。以完整引用、代次、读者和后续修复为条件。",
+    "arms": "a　保留两份已分配的 owner。b　在已验证覆盖双方的全部成员后转交到一份。c　漏掉一个仍活跃的成员或破坏代次，检查转移会被拒绝。",
+    "fix": "保持相同逻辑成员、外部可读句柄和原程序调度。区分自然布局中能直接执行的动作与受控分配后可执行的动作。记录分配期间峰值及之后的 union。",
+    "measure": "dot-product 的两个旧 owner 含 2＋1 个成员，真实退役 1 个，净释放 124 B；stable-argmax 净释放 96 B。两者的临时峰值都增加 304 B。另一个原生小图也从 2→1，内存却净增 224 B。",
+    "note": "dot-product 的自然布局有 278,811 次组件访问横跨两个 owner，完整覆盖两边全部成员的次数为零。这组物理样本由受控干预取得，模型信用为零。",
+    "src": "S74",
+    "diagram": [
+      {
+        "title": "Two live owners",
+        "layers": [
+          [
+            [
+              "s",
+              "A and B published"
+            ]
+          ],
+          [
+            [
+              "s",
+              "external readers"
+            ]
+          ],
+          [
+            [
+              "v",
+              "snapshot all ports"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Atomic transfer",
+        "layers": [
+          [
+            [
+              "v",
+              "whole member check"
+            ]
+          ],
+          [
+            [
+              "w",
+              "retire old owner"
+            ]
+          ],
+          [
+            [
+              "s",
+              "stable port reads"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Replay source",
+        "layers": [
+          [
+            [
+              "s",
+              "original Run order"
+            ]
+          ],
+          [
+            [
+              "v",
+              "union and repair"
+            ]
+          ],
+          [
+            [
+              "w",
+              "compare bytes"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "86-forward-feasibility",
+    "section": "多父候选生成",
+    "title": "只选了一部分父端口，何时可以停？",
+    "status": "已测 · 四个真实 Pass 3",
+    "q": "让编译器列出剩余关系能从已选端口确定的列。用学习签名检查必要条件，在发行完整元组前终止没有后继的前缀。",
+    "arms": "a　按原顺序全部签发。b　用一列或两列签名排除没有相容键的关系。c　加入每个签名下的最大可见 epoch，排除整条推导都不可能足够新的前缀。",
+    "fix": "同一权重、单视图、零半径，完全相同的源输入与有序写入。签名目录只提供缺失或陈旧证据，所有获胜父地址仍由模型先签发、后验真。",
+    "measure": "Jacobi 的完整提案 122,523→84,705，整轮 220.15→184.92 ms；共轭梯度 765,670→531,346，928.47→746.91 ms。同组原生为 106.34 和 338.67 ms。",
+    "note": "共轭梯度只开存在性是 857.60 ms，只开新鲜度是 803.59 ms。所有端点、获胜父子和真实新 Cell 身份都对齐。",
+    "src": "S75",
+    "diagram": [
+      {
+        "title": "Sealed tuple",
+        "layers": [
+          [
+            [
+              "n",
+              "propose each parent"
+            ]
+          ],
+          [
+            [
+              "w",
+              "full parent tuple"
+            ]
+          ],
+          [
+            [
+              "v",
+              "source verification"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Partial key",
+        "layers": [
+          [
+            [
+              "n",
+              "proposed slots"
+            ]
+          ],
+          [
+            [
+              "s",
+              "signature directory"
+            ]
+          ],
+          [
+            [
+              "v",
+              "possible suffix"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Fresh support",
+        "layers": [
+          [
+            [
+              "s",
+              "max visible epoch"
+            ]
+          ],
+          [
+            [
+              "v",
+              "test watermark"
+            ]
+          ],
+          [
+            [
+              "w",
+              "seal survivors"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
