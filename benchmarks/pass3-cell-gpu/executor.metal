@@ -406,6 +406,11 @@ inline int find_key(device const int *,device const long *,device const int *,de
                     device const int *,int,int,thread long *);
 inline device const int *anchor(device const int *meta,int row){return meta+BIRTH_RUN+ROW_CAP+5*row;}
 inline device int *anchor(device int *meta,int row){return meta+BIRTH_RUN+ROW_CAP+5*row;}
+#if COMPOUND
+struct CompoundClaim {int parent,join,ordinal,row,ticket,verified,bank,winner,status,attempts,next;};
+inline device CompoundClaim *claims(device int *meta){return reinterpret_cast<device CompoundClaim *>(meta+COM_RECORDS);}
+inline device const CompoundClaim *claims(device const int *meta){return reinterpret_cast<device const CompoundClaim *>(meta+COM_RECORDS);}
+#endif
 inline void publish_anchor(device const int *rom,device int *state,device int *meta,int t,int row,
                            int root,int producer,int depth,device int *pending=nullptr,int effect=-1){
     if(!SPINE_ON || row<0 || !root || !rom[DEMANDED+t])return;
@@ -422,6 +427,16 @@ inline void publish_anchor(device const int *rom,device int *state,device int *m
     pub[0]=state[9];pub[1]=effect;pub[2]=row;pub[3]=t;
 #endif
     h[0]=root;h[1]=producer;h[2]=depth;h[3]=state[3];h[4]=++state[17];
+#if COMPOUND
+    if(state[76])for(int lane=0;lane<2;lane++){
+        int id=(state[3]-1)*2+lane;device CompoundClaim &c=claims(meta)[id];
+        if(c.status!=1 || c.parent+1!=state[76])continue;
+        constant int *link=compound_joins+4*c.join;
+        if(link[2]!=effect || neural_catalog[4*link[3]+3]!=t)continue;
+        c.ordinal=state[9];c.row=row;c.ticket=h[4];c.status=2;
+        meta[COM_QUEUE+state[75]++]=id;
+    }
+#endif
 #if BLOCK_STUDY
     refresh_cursor(meta,state,t,row,state[3]);
 #endif
@@ -472,6 +487,13 @@ inline void route(device int *state,device const int *rom,device const long *lit
                     closed=true;break;
                 }
             }
+#if COMPOUND
+            device const int *index=meta+COM_HEAD+2*seed;
+            if(index[0]==state[3])for(int id=index[1]-1;id>=0;id=claims(meta)[id].next-1){
+                constant int *e=neural_catalog+4*compound_joins[4*claims(meta)[id].join+3];
+                closed|=e[0]==int((rule-rom-RULE)/7) && e[1]==pivot;
+            }
+#endif
             if(closed){
                 if(COUNT_WORK)atomic_fetch_add_explicit((device atomic_int *)(state+69),1,memory_order_relaxed);
                 continue;
@@ -953,10 +975,23 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
 #if CO_TRACE
             state[CO_COUNTER+10]=values[width+1]?int(values[width])+1:0;
 #endif
+#if COMPOUND
+            state[76]=0;
+            if(values[width]>=0){
+                device const int *index=meta+COM_HEAD+2*int(values[width]);
+                if(index[0]==run)for(int id=index[1]-1;id>=0;id=claims(meta)[id].next-1){
+                    device CompoundClaim &c=claims(meta)[id];
+                    if(neural_catalog[4*compound_joins[4*c.join+3]]==rid && c.bank==pos){c.winner=state[9];c.status=6;}
+                }
+            }
+#endif
 #if NEURAL_ACTIVE
             for(int n=0;n<NEURAL_SLOTS;n++){
                 device const int *mark=meta+NEURAL_BASE+4*n;
                 if(mark[0]==rid && mark[3]==pos){
+#if COMPOUND
+                    state[76]=n+1;
+#endif
 #if NEURAL_ORDINAL
                     meta[NEURAL_BASE+4*NEURAL_SLOTS+NEURAL_SLOTS*(run-1)+n]=state[9];
 #else

@@ -25,7 +25,7 @@ The clearest next comparison is to expand executable proposal coverage, includin
 
 ## Full Pass 3 follow-ups
 
-The [receipt study](receipts/README.md) follows the generated token across several waves of the same source Run. The [composed-certificate study](receipts/composable-proposals.md) gives a separate coverage denominator for multiple RHS per certificate, with an example tied to the actual producer effect ports, and measures frozen policies over 1–16 waves. It also registers the pending-parent versus wave-verified comparison; that online comparison remains open.
+The [receipt study](receipts/README.md) follows the generated token across several waves of the same source Run. The [composed-certificate study](receipts/composable-proposals.md) gives a separate coverage denominator for multiple RHS per certificate, with an example tied to the actual producer effect ports, and measures frozen policies over 1–16 waves. The [pending-parent experiment](pending/README.md) now measures that comparison on the same trained actor and checks every resulting child against its actual source publication.
 
 ## Reproduction
 

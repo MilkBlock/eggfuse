@@ -42,3 +42,21 @@ def validate_device_contracts(image,entries):
         n,at,_,_=map(int,rom[layout['SPINE']+4*rid:][:4])
         if [pivot,path] not in rom[at:at+2*n].reshape(-1,2).tolist() or int(rom[path])!=table:
             raise ValueError('unproved route in recurrent leaf bank')
+
+
+def validate_join_ports(image,entries,joins):
+    """Each admitted child must read the table actually published by the chosen parent effect."""
+    spec=read(image/'device.json')
+    layout=spec['layout']
+    with np.load(image/'device.npz',allow_pickle=False) as packed:rom=packed['rom']
+    units=set()
+    for unit,left,port,right in joins:
+        if (unit in units or unit<len(entries) or not 0<=left<len(entries) or not 0<=right<len(entries)):
+            raise ValueError('invalid joined leaf')
+        units.add(unit)
+        rid=entries[left][0]
+        if rid<0 or entries[right][0]<0:continue
+        size,start=map(int,rom[layout['RULE']+7*rid+2:layout['RULE']+7*rid+4])
+        if not 0<=port<size:raise ValueError('unknown RHS output port')
+        kind,table=map(int,rom[start+5*port:start+5*port+2])
+        if kind not in (1,2) or table!=entries[right][3]:raise ValueError('incompatible joined port')

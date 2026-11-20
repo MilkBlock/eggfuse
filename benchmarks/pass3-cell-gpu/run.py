@@ -138,6 +138,32 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         limits.update(NEURAL_ORDINAL=1,NEURAL_ACTIVE=int(not ncapture),NEURAL_CAPTURE=int(ncapture),NEURAL_BASE=nbase,
                       NEURAL_ROWS=nr,NEURAL_RANKS=ranks,NEURAL_LEAVES=leaves,NEURAL_ACTIONS=ranks*leaves,NEURAL_H=hidden,
                       NEURAL_CLOSE=int(neural.get('close',True)),NEURAL_SHADOW=int(neural.get('shadow',False)),NEURAL_INTERVENTION=neural.get('intervention',0))
+    compound=neural.get('compound') if neural else None
+    replay=compound.get('replay') if compound is not None else None
+    host_actor=compound.get('host_actor') if compound is not None else None
+    host_control=host_actor is not None or bool(compound and compound.get('host_control'))
+    if host_actor is not None:
+        if replay is not None or not compound['batch']:raise ValueError('CPU policy requires an online pending-parent batch')
+        limits['COM_REPLAY_RUNS']=steps
+    limits['HOST_CONTROL']=int(host_control)
+    external_tokens=replay is not None or host_actor is not None
+    if replay is not None:
+        if replay.dtype!=np.float32 or replay.ndim!=3 or replay.shape[1:]!=(4,12) or not 0<len(replay)<=steps or not np.isfinite(replay).all():
+            raise ValueError('invalid frozen compound token stream')
+        limits['COM_REPLAY_RUNS']=len(replay)
+    if compound is not None:
+        if (waves,nr,hidden,ranks)!=(2,2,8,8) or fusion or ncapture or stop_on_null:
+            raise ValueError('compound policy requires two waves of two online rows')
+        joins=compound['joins']
+        if not joins or any(len(j)!=4 or not 0<=j[1]<leaves or not 0<=j[3]<leaves or j[2]<0 for j in joins):
+            raise ValueError('invalid compound policy joins')
+        if len(compound['child'])!=24*len(joins)+18:
+            raise ValueError('invalid compound policy weight size')
+        records=nbase+(4+steps)*per_run
+        queue=records+11*nr*steps
+        limits.update(COMPOUND=1,COM_JOINS=len(joins),COM_BATCH=int(compound['batch']),
+                      COM_MASK_PARENT=int(compound.get('mask_parent',False)),
+                      COM_RECORDS=records,COM_QUEUE=queue,COM_HEAD=queue+nr*steps)
     constants='\n'.join(f'#define {k} {v}' for k,v in {**layout,**limits}.items())
     if block_study:
         for name,values in [('bake_entries',block_study['entries']),('repair_shapes',block_study['shapes']),('bake_pivots',block_study['pivots']),('bake_tables',block_study['tables'])]:
@@ -165,9 +191,13 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     if neural is not None:
         catalog=','.join(str(int(i)) for row in neural['catalog'] for i in row)
         constants+='\nconstant int neural_catalog[]={'+catalog+'};'
+        if compound is not None:
+            constants+='\nconstant int compound_joins[]={'+','.join(str(int(v)) for j in joins for v in j)+'};'
         module=HERE/'recurrent-generator'
         kernels=(module/'features.metal').read_text()
         if not ncapture:kernels+='\n'+(module/'actor.metal').read_text()
+        if compound is not None:kernels+='\n'+(module/'compound.metal').read_text()
+        if external_tokens:kernels+='\n'+(module/'compound_replay.metal').read_text()
         shader=shader.replace('// NEURAL_DEVICE_KERNELS',kernels)
     lib=torch.mps.compile_shader(constants+'\n'+shader)
     def ints(v):return torch.tensor(v,dtype=torch.int32,device=dev)
@@ -176,13 +206,14 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     cap=limits['ROW_CAP'];uf_size=cap+layout['NSYMBOLS']+2
     union_log=6*cap+2*uf_size+2*limits['TRACE_CAP']
     birth_run=union_log+4*uf_size
-    state=zeros(75 if neural is not None else reg_counter+7 if region else group_counter+16 if grouping else 88+3*len(block_study['ids'])+2*(1+max(block_study['shapes'])) if block_study else 69 if sets_enabled else 56);regs=zeros(layout['REGS'])
+    state=zeros(77 if compound is not None else 75 if neural is not None else reg_counter+7 if region else group_counter+16 if grouping else 88+3*len(block_study['ids'])+2*(1+max(block_study['shapes'])) if block_study else 69 if sets_enabled else 56);regs=zeros(layout['REGS'])
     meta_words=birth_run+(10*cap if router else 9*cap if tiles>1 else (6+2*int(lookup=='hash'))*cap)
     if sets_enabled:meta_words=set_base+126
     if neural is not None:
         meta_words=nbase+(limits['TRACE_CAP'] if ncapture else (4+steps)*per_run)
         if capture_receipts:meta_words+=steps*leaves*ranks
         if capture_edges:meta_words+=cap+5*limits['TRACE_CAP']
+    if compound is not None:meta_words=limits['COM_HEAD']+2*cap
     if block_study:meta_words=limits['BLOCK_BASE']+3*cap+layout["TABLES"]*lanes*tiles
     if region:
         region_windows=steps//window+1
@@ -240,7 +271,12 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
             policy=torch.tensor(neural['weights'],device=dev,dtype=torch.float32)
             raw_trace=torch.zeros((steps,per_run,hidden+4),device=dev,dtype=torch.float32)
             verdict=zeros((steps,per_run,4))
+            if compound is not None:child_weights=torch.tensor(compound['child'],device=dev,dtype=torch.float32)
+    if replay is not None:
+        frozen=torch.tensor(replay,device=dev,dtype=torch.float32).contiguous()
+    if host_actor is not None:frozen=raw_trace
     def infer():
+        if host_actor is not None:host_actor.reset()
         if batch_runs:
             for base in range(0,steps,batch_runs):
                 lib.run_batch(prog,literal,state,regs,meta,dyn,head,wm,count,tokens,rhs,writes,runs,resumes,
@@ -254,7 +290,32 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
                         lib.neural_snapshot_anchors(state,meta,threads=cap)
                     if fusion!=2:
                         lib.neural_features(prog,state,meta,head,wm,feats,threads=leaves*ranks)
-                    if fusion:
+                    if compound is not None:
+                        if host_control:
+                            observed=feats.cpu()
+                            if observed[0,0,1].item()<0:break
+                            if host_actor is not None:
+                                raw_trace[iteration].copy_(host_actor.emit(observed,iteration+1))
+                        parent,children=frontier[1],frontier[0]
+                        if not external_tokens:
+                            lib.neural_propose(state,feats,policy,children,parent,raw_trace,verdict,0,
+                                               threads=nr,arg_casts={7:'int32'})
+                        else:
+                            lib.frozen_compound_wave(state,meta,frozen,parent,raw_trace,0,threads=1,arg_casts={5:'int32'})
+                        if compound['batch']:
+                            if not external_tokens:
+                                lib.compound_child(state,meta,child_weights,parent,children,raw_trace,verdict,threads=nr)
+                            else:
+                                lib.frozen_compound_wave(state,meta,frozen,children,raw_trace,1,threads=1,arg_casts={5:'int32'})
+                        lib.neural_verify(prog,literal,state,meta,dyn,head,wm,count,tokens,parent,verdict,0,
+                                          threads=1,arg_casts={11:'int32'})
+                        if not compound['batch']:
+                            if not external_tokens:
+                                lib.compound_child(state,meta,child_weights,parent,children,raw_trace,verdict,threads=nr)
+                            else:
+                                lib.frozen_compound_wave(state,meta,frozen,children,raw_trace,1,threads=1,arg_casts={5:'int32'})
+                        lib.compound_resume(prog,literal,state,meta,dyn,head,wm,count,tokens,threads=1)
+                    elif fusion:
                         lib.neural_exchange(prog,literal,state,meta,dyn,head,wm,count,tokens,feats,policy,
                                             frontier,raw_trace,verdict,threads=32,group_size=32)
                     elif not ncapture:
@@ -305,18 +366,24 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
             if capture_edges:
                 mem=meta.view(-1)
                 if st[17]>limits['TRACE_CAP']:raise ValueError('anchor publication log overflow')
-                start=limits['EDGE_PUBLISHED']
-                extra['publications']=mem[start:start+4*st[17]].reshape(-1,4).cpu().numpy()
-                start=limits['EDGE_CONSUMED']
-                extra['consumed']=mem[start:start+st[9]].cpu().numpy()
+                offset=limits['EDGE_PUBLISHED']
+                extra['publications']=mem[offset:offset+4*st[17]].reshape(-1,4).cpu().numpy()
+                offset=limits['EDGE_CONSUMED']
+                extra['consumed']=mem[offset:offset+st[9]].cpu().numpy()
             if capture_receipts:
-                start=nbase+limits['TRACE_CAP']
-                extra['receipt']=meta.view(-1)[start:start+st[11]*leaves*ranks].reshape(st[11],leaves*ranks).cpu().numpy()
+                offset=nbase+limits['TRACE_CAP']
+                extra['receipt']=meta.view(-1)[offset:offset+st[11]*leaves*ranks].reshape(st[11],leaves*ranks).cpu().numpy()
             np.savez_compressed(root/'neural-inputs.npz',**extra,features=feats[:st[11]].cpu().numpy(),
                                 pivot=meta.view(-1)[nbase:nbase+st[9]].cpu().numpy())
         else:
             flags=meta.view(-1)[nbase+4*per_run:nbase+(4+st[11])*per_run].reshape(-1,per_run)
             neural_wins=int((flags!=0).sum().item())
+            if compound is not None:
+                offset=limits['COM_RECORDS']
+                claims=meta.view(-1)[offset:offset+st[11]*nr*11].reshape(st[11],nr,11).cpu().numpy()
+                np.savez_compressed(root/'compound-output.npz',claims=claims)
+                child_wins=int((claims[:,:,7]>0).sum())
+                neural_wins+=child_wins
             np.savez_compressed(root/'neural-output.npz',raw=raw_trace[:st[11]].cpu().numpy(),
                                 verdict=verdict[:st[11]].cpu().numpy(),committed=(flags!=0).cpu().numpy(),
                                 rhs_ordinal=flags.cpu().numpy())
@@ -380,6 +447,18 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         record['execution_roles'].update(binding_generator='recurrent_neural_proposals_and_exact_metal_completion' if residual else ('recurrent_neural_proposals_and_exact_empty_lhs' if bootstrap else 'recurrent_neural_proposals_only'),
             rhs_inputs_from_exact_search=st[9]-neural_wins,rhs_inputs_from_recurrent_neural_proposals=neural_wins,
             next_run_state='generated_device_token_and_committed_graph',recurrent_neural_token_input=True)
+    if compound is not None:
+        record['execution_roles'].update(root_rhs=neural_wins-child_wins,child_rhs=child_wins,
+                                         verification='pending_parent_batch' if compound['batch'] else 'per_wave')
+    if replay is not None:
+        record['execution_roles'].update(binding_generator='frozen_neural_proposal_replay_with_gpu_verification',
+                                         rhs_inputs_from_frozen_proposals=neural_wins,
+                                         rhs_inputs_from_recurrent_neural_proposals=0,
+                                         recurrent_neural_token_input=False,
+                                         next_run_state='frozen_tokens_and_committed_device_graph')
+    if host_actor is not None:
+        record['execution_roles'].update(binding_generator='cpu_recurrent_neural_proposals_with_gpu_verification',
+                                         next_run_state='cpu_generated_latent_and_committed_device_graph')
     (root/'run.json').write_text(json.dumps(record,indent=1)+'\n')
     print({k:record[k] for k in ('lanes','completed','fault','fault_rule','finished')},flush=True)
     if st[5]:raise SystemExit(2)

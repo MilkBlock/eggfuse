@@ -3,7 +3,12 @@
 inline void read_features(device const int *rom,device const int *state,device int *meta,
                             device const int *head,device const int *wm,device int *features,
                             uint gid) {
-    if(state[5]||state[7])return;
+    if(state[5]||state[7]){
+#if HOST_CONTROL
+        if(gid==0)features[1]=-1;
+#endif
+        return;
+    }
     int leaf=int(gid)/NEURAL_RANKS,rank=int(gid)%NEURAL_RANKS;
     constant int *entry=neural_catalog+4*leaf;
     int rid=entry[0],table_id=entry[3],run=state[3];

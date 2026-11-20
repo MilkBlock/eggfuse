@@ -1,0 +1,74 @@
+{
+ "sum-bits": {
+  "seed": 1709,
+  "eligible_forks": 5,
+  "issue_run": 102,
+  "masked_parent_row": 0,
+  "masked_parent_original_rhs": 561,
+  "orphaned_child_original_rhs": 688,
+  "surviving_parent_row": 1,
+  "surviving_parent_rhs": 562,
+  "surviving_child_rhs": 689,
+  "changed_child_winner_slots": [
+   [
+    102,
+    0
+   ]
+  ],
+  "all_source_outputs_aligned": true
+ },
+ "dot-product": {
+  "seed": 1709,
+  "eligible_forks": 6,
+  "issue_run": 135,
+  "masked_parent_row": 0,
+  "masked_parent_original_rhs": 1046,
+  "orphaned_child_original_rhs": 1272,
+  "surviving_parent_row": 1,
+  "surviving_parent_rhs": 1047,
+  "surviving_child_rhs": 1273,
+  "changed_child_winner_slots": [
+   [
+    135,
+    0
+   ]
+  ],
+  "all_source_outputs_aligned": true
+ },
+ "gemm-bias-relu": {
+  "seed": 1709,
+  "eligible_forks": 5,
+  "issue_run": 171,
+  "masked_parent_row": 0,
+  "masked_parent_original_rhs": 1629,
+  "orphaned_child_original_rhs": 2007,
+  "surviving_parent_row": 1,
+  "surviving_parent_rhs": 1630,
+  "surviving_child_rhs": 2008,
+  "changed_child_winner_slots": [
+   [
+    171,
+    0
+   ]
+  ],
+  "all_source_outputs_aligned": true
+ },
+ "stable-argmax": {
+  "seed": 1709,
+  "eligible_forks": 6,
+  "issue_run": 114,
+  "masked_parent_row": 0,
+  "masked_parent_original_rhs": 956,
+  "orphaned_child_original_rhs": 1174,
+  "surviving_parent_row": 1,
+  "surviving_parent_rhs": 957,
+  "surviving_child_rhs": 1175,
+  "changed_child_winner_slots": [
+   [
+    114,
+    0
+   ]
+  ],
+  "all_source_outputs_aligned": true
+ }
+}

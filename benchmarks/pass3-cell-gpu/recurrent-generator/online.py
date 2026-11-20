@@ -2,7 +2,7 @@
 import argparse,hashlib
 from pathlib import Path
 import sys
-from catalog import read,validate_device_contracts
+from catalog import read,validate_device_contracts,validate_join_ports
 GPU=Path(__file__).resolve().parents[1];sys.path.insert(0,str(GPU))
 from run import execute
 
@@ -10,6 +10,17 @@ def run(packet,reader,ports,catalog,checkpoint,out,completion=True,bootstrap_onl
     static=read(catalog);model=read(checkpoint)
     if hashlib.sha256(packet.read_bytes()).hexdigest()!=static['image_sha256']:
         raise ValueError('catalog from different program')
+    compound=model['schema']=='eggfuse.compound-pair/v1'
+    if compound:
+        entries=static['entries']
+        if static['schema']!='eggfuse.compound-catalog/v1' or static['joins']!=model['joins']:
+            raise ValueError('policy/catalog joins differ')
+        validate_device_contracts(packet.parent,entries)
+        validate_join_ports(packet.parent,entries,static['joins'])
+        if len(entries)!=32 or len(model['roots'])!=783:raise ValueError('invalid root policy shape')
+        return execute(packet,reader,ports,2048,2,out,neural=dict(catalog=entries,weights=model['roots'],rows=2,
+            hidden=8,ranks=8,waves=2,complete_residual=completion,bootstrap_only=bootstrap_only,
+            compound=dict(joins=static['joins'],child=model['child'],batch=True)))
     receipt_head = model['schema']=='eggfuse.recurrent-receipts/v1'
     if static['schema']!='eggfuse.leaf-catalog/v1' or not (receipt_head or model['schema']=='eggfuse.recurrent-leaf/v1'):
         raise ValueError('unsupported neural action format')

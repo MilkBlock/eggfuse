@@ -1,0 +1,234 @@
+{
+ "sum-bits": {
+  "neural_only": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1428,
+   "actual_runs": 208,
+   "source_rhs": 7265,
+   "actual_rhs": 0,
+   "first_schedule_or_count_difference": 1,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_only",
+    "rhs_inputs_from_exact_search": 0,
+    "rhs_inputs_from_recurrent_neural_proposals": 0,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false,
+    "root_rhs": 0,
+    "child_rhs": 0,
+    "verification": "pending_parent_batch"
+   },
+   "device_stopped": true
+  },
+  "assisted": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1428,
+   "actual_runs": 1428,
+   "source_rhs": 7265,
+   "actual_rhs": 7265,
+   "first_schedule_or_count_difference": null,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+    "rhs_inputs_from_exact_search": 7148,
+    "rhs_inputs_from_recurrent_neural_proposals": 117,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false,
+    "root_rhs": 91,
+    "child_rhs": 26,
+    "verification": "pending_parent_batch"
+   },
+   "device_stopped": true
+  }
+ },
+ "dot-product": {
+  "neural_only": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1535,
+   "actual_runs": 208,
+   "source_rhs": 6704,
+   "actual_rhs": 0,
+   "first_schedule_or_count_difference": 1,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_only",
+    "rhs_inputs_from_exact_search": 0,
+    "rhs_inputs_from_recurrent_neural_proposals": 0,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false,
+    "root_rhs": 0,
+    "child_rhs": 0,
+    "verification": "pending_parent_batch"
+   },
+   "device_stopped": true
+  },
+  "assisted": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1535,
+   "actual_runs": 1535,
+   "source_rhs": 6704,
+   "actual_rhs": 6704,
+   "first_schedule_or_count_difference": null,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+    "rhs_inputs_from_exact_search": 6614,
+    "rhs_inputs_from_recurrent_neural_proposals": 90,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false,
+    "root_rhs": 74,
+    "child_rhs": 16,
+    "verification": "pending_parent_batch"
+   },
+   "device_stopped": true
+  }
+ },
+ "gemm-bias-relu": {
+  "neural_only": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1652,
+   "actual_runs": 208,
+   "source_rhs": 15462,
+   "actual_rhs": 0,
+   "first_schedule_or_count_difference": 1,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_only",
+    "rhs_inputs_from_exact_search": 0,
+    "rhs_inputs_from_recurrent_neural_proposals": 0,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false,
+    "root_rhs": 0,
+    "child_rhs": 0,
+    "verification": "pending_parent_batch"
+   },
+   "device_stopped": true
+  },
+  "assisted": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1652,
+   "actual_runs": 1652,
+   "source_rhs": 15462,
+   "actual_rhs": 15462,
+   "first_schedule_or_count_difference": null,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+    "rhs_inputs_from_exact_search": 15376,
+    "rhs_inputs_from_recurrent_neural_proposals": 86,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false,
+    "root_rhs": 66,
+    "child_rhs": 20,
+    "verification": "pending_parent_batch"
+   },
+   "device_stopped": true
+  }
+ },
+ "stable-argmax": {
+  "neural_only": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1149,
+   "actual_runs": 208,
+   "source_rhs": 8190,
+   "actual_rhs": 0,
+   "first_schedule_or_count_difference": 1,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_only",
+    "rhs_inputs_from_exact_search": 0,
+    "rhs_inputs_from_recurrent_neural_proposals": 0,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false,
+    "root_rhs": 0,
+    "child_rhs": 0,
+    "verification": "pending_parent_batch"
+   },
+   "device_stopped": true
+  },
+  "assisted": {
+   "opened": [
+    "actor.json",
+    "catalog.json",
+    "device.json",
+    "device.npz",
+    "ports.pt",
+    "reader.pt"
+   ],
+   "source_runs": 1149,
+   "actual_runs": 1149,
+   "source_rhs": 8190,
+   "actual_rhs": 8190,
+   "first_schedule_or_count_difference": null,
+   "roles": {
+    "binding_generator": "recurrent_neural_proposals_and_exact_metal_completion",
+    "rhs_inputs_from_exact_search": 8113,
+    "rhs_inputs_from_recurrent_neural_proposals": 77,
+    "next_run_state": "generated_device_token_and_committed_graph",
+    "recurrent_neural_token_input": true,
+    "ingress_reader": "learned",
+    "learned_entry_router": false,
+    "root_rhs": 59,
+    "child_rhs": 18,
+    "verification": "pending_parent_batch"
+   },
+   "device_stopped": true
+  }
+ }
+}
